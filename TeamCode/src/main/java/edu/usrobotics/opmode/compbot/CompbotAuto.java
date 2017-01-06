@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import edu.usrobotics.opmode.LoggedOp;
 import edu.usrobotics.opmode.RobotOp;
 import edu.usrobotics.opmode.Route;
+import edu.usrobotics.opmode.compbot.CompbotHardware;
 import edu.usrobotics.opmode.task.ConcurrentTaskSet;
 import edu.usrobotics.opmode.task.Goal;
 import edu.usrobotics.opmode.task.MotorTask;
@@ -35,61 +36,6 @@ public abstract class CompbotAuto extends RobotOp {
         robot.setDirection(CompbotHardware.MovementDirection.NORTH);
 
         int maxMotorSpeed = 5000000;
-
-        Goal<Integer> encoderGoal = new Goal<> (robot.inchesToEncoderTicks(12));
-        ConcurrentTaskSet forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
-        ) {
-            @Override
-            public boolean onExecuted() {
-                LoggedOp.debugOut = robot.frontLeft.getCurrentPosition()  + ", " + robot.frontRight.getCurrentPosition()  + ", " + isTaskCompleted (1) + ", " + isTaskCompleted (0) + " " + System.currentTimeMillis();
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
-            }
-
-            @Override
-            public void onReached() {
-                super.onReached();
-
-                robot.setDirection(CompbotHardware.MovementDirection.NORTH);
-            }
-
-            @Override
-            public void onCompleted () {
-                super.onCompleted();
-                //LoggedOp.debugOut = "cpleted";
-            }
-        };
-
-        Goal<Integer> better_encoder_goal = new Goal<> (robot.inchesToEncoderTicks(6));
-        ConcurrentTaskSet better_forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, better_encoder_goal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, better_encoder_goal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, better_encoder_goal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, better_encoder_goal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
-        ) {
-            @Override
-            public boolean onExecuted() {
-                LoggedOp.debugOut = robot.frontLeft.getCurrentPosition()  + ", " + robot.frontRight.getCurrentPosition()  + ", " + isTaskCompleted (1) + ", " + isTaskCompleted (0) + " " + System.currentTimeMillis();
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
-            }
-
-            @Override
-            public void onReached() {
-                super.onReached();
-
-                robot.setDirection(CompbotHardware.MovementDirection.NORTH);
-            }
-
-            @Override
-            public void onCompleted () {
-                super.onCompleted();
-                //LoggedOp.debugOut = "cpleted";
-            }
-        };
-
 
         Task shoot = new Task() {
             ElapsedTime shooterTime;
@@ -141,8 +87,35 @@ public abstract class CompbotAuto extends RobotOp {
             }
         };
 
+        Goal<Integer> encoderGoal = new Goal<> (robot.inchesToEncoderTicks(12));
+        ConcurrentTaskSet forward = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                LoggedOp.debugOut = robot.frontLeft.getCurrentPosition()  + ", " + robot.frontRight.getCurrentPosition()  + ", " + isTaskCompleted (1) + ", " + isTaskCompleted (0) + " " + System.currentTimeMillis();
+                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.NORTH);
+            }
+
+            @Override
+            public void onCompleted () {
+                super.onCompleted();
+                //LoggedOp.debugOut = "cpleted";
+            }
+        };
+
         // CRAB DIAGONAL TO BEACON
-        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(43.6f));
+        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(40f));
         ConcurrentTaskSet crab1 = new ConcurrentTaskSet( // this is crabbing
                 new MotorTask(robot.frontLeft, encoderGoal3, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backRight, encoderGoal3, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
@@ -342,6 +315,8 @@ public abstract class CompbotAuto extends RobotOp {
     @Override
     public void start () {
 
+        robot.start();
+
         super.start();
 
     }
@@ -349,9 +324,12 @@ public abstract class CompbotAuto extends RobotOp {
     @Override
     public void loop(){
 
-        telemetry.addData("FOR BUTTON CS R,G,B", robot.buttonPresserColorSensor.red() + ", " + robot.buttonPresserColorSensor.green() + ", " + robot.buttonPresserColorSensor.blue());
-        telemetry.addData("FOR BOTTOM LEFT CS R,G,B", robot.leftBottomColorSensor.red() + ", " + robot.leftBottomColorSensor.green() + ", " + robot.leftBottomColorSensor.blue());
-        telemetry.addData("FR,FL,BR,BL", robot.frontRight.getCurrentPosition() + ", " + robot.frontLeft.getCurrentPosition() + ", " + robot.backRight.getCurrentPosition() + ", " + robot.backLeft.getCurrentPosition());
+        telemetry.addData("buttonPresserColorSensor", robot.buttonPresserColorSensor.red() + " " + robot.buttonPresserColorSensor.green() + " " + robot.buttonPresserColorSensor.blue());
+
+        telemetry.addData("bottomFrontColorSensor", robot.bottomFrontColorSensor.red() + " " + robot.bottomFrontColorSensor.green() + " " + robot.bottomFrontColorSensor.blue());
+        telemetry.addData("bottomBackColorSensor", robot.bottomBackColorSensor.red() + " " + robot.bottomBackColorSensor.green() + " " + robot.bottomBackColorSensor.blue());
+        telemetry.addData("bottomRightColorSensor", robot.bottomRightColorSensor.red() + " " + robot.bottomRightColorSensor.green() + " " + robot.bottomRightColorSensor.blue());
+        telemetry.addData("bottomLeftColorSensor", robot.bottomLeftColorSensor.red() + " " + robot.bottomLeftColorSensor.green() + " " + robot.bottomLeftColorSensor.blue());
 
         super.loop();
 

@@ -46,6 +46,13 @@ public class CompbotTele extends RobotOp {
     }
 
     @Override
+    public void start(){
+
+        robot.start();
+
+    }
+
+    @Override
     public void loop(){
 
         float frInputs = 0;
@@ -248,8 +255,6 @@ public class CompbotTele extends RobotOp {
 
         robot.liftServo.setPosition(liftServoPosition);
 
-        robot.lockServo.setPosition(lockServoPosition);
-
         telemetry.addData("Front right encoder: ", robot.frontRight.getCurrentPosition());
         telemetry.addData("Front left encoder: ", robot.frontLeft.getCurrentPosition());
         telemetry.addData("Back right encoder: ", robot.backRight.getCurrentPosition());
@@ -281,6 +286,13 @@ public class CompbotTele extends RobotOp {
         telemetry.addData("liftServoPosition", liftServoPosition);
 
         telemetry.addData("lockServoPosition", lockServoPosition);
+
+        telemetry.addData("buttonPresserColorSensor", robot.buttonPresserColorSensor.red() + " " + robot.buttonPresserColorSensor.green() + " " + robot.buttonPresserColorSensor.blue());
+
+        telemetry.addData("bottomFrontColorSensor", robot.bottomFrontColorSensor.red() + " " + robot.bottomFrontColorSensor.green() + " " + robot.bottomFrontColorSensor.blue());
+        telemetry.addData("bottomBackColorSensor", robot.bottomBackColorSensor.red() + " " + robot.bottomBackColorSensor.green() + " " + robot.bottomBackColorSensor.blue());
+        telemetry.addData("bottomRightColorSensor", robot.bottomRightColorSensor.red() + " " + robot.bottomRightColorSensor.green() + " " + robot.bottomRightColorSensor.blue());
+        telemetry.addData("bottomLeftColorSensor", robot.bottomLeftColorSensor.red() + " " + robot.bottomLeftColorSensor.green() + " " + robot.bottomLeftColorSensor.blue());
 
     }
 }

@@ -64,7 +64,6 @@ public abstract class ProtobotAuto extends RobotOp {
             @Override
             public void onReached() {
                 super.onReached();
-                LoggedOp.debugOut="fsk";
 
                 robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
             }

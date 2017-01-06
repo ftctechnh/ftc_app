@@ -30,10 +30,13 @@ public class CompbotHardware extends BaseHardware {
     public DcMotor shooterLeft;
 
     public Servo liftServo;
-    public Servo lockServo;
 
     public ColorSensor buttonPresserColorSensor;
-    public ColorSensor leftBottomColorSensor;
+
+    public ColorSensor bottomLeftColorSensor;
+    public ColorSensor bottomRightColorSensor;
+    public ColorSensor bottomFrontColorSensor;
+    public ColorSensor bottomBackColorSensor;
 
     public DeviceInterfaceModule dim;
 
@@ -42,15 +45,15 @@ public class CompbotHardware extends BaseHardware {
     public boolean brCorrectDirection = false;
     public boolean blCorrectDirection = true;
 
-    public boolean harvesterCorrectDirection = false;
+    public boolean harvesterCorrectDirection = true;
 
     public boolean liftCorrectDirection = true;
 
     public boolean rightShooterCorrectDirection = true;
     public boolean leftShooterCorrectDirection = false;
 
-    public double liftServoClosePosition = 0f;
-    public double liftServoOpenPosition = 0.5f;
+    public double liftServoClosePosition = 0.5f;
+    public double liftServoOpenPosition = 0f;
 
     public double lockServoStartPosition;
     public double lockServoMaxPosition;
@@ -97,18 +100,25 @@ public class CompbotHardware extends BaseHardware {
 
         liftServo = hardwareMap.servo.get("ls");
 
-        lockServo = hardwareMap.servo.get("los");
-
-        lockServoStartPosition = lockServo.MIN_POSITION;
-        lockServoMaxPosition = lockServo.MAX_POSITION;
-
         buttonPresserColorSensor = hardwareMap.colorSensor.get("cs");
+        buttonPresserColorSensor.setI2cAddress(I2cAddr.create7bit(0x26));
         buttonPresserColorSensor.enableLed(false);
 
-        dim = hardwareMap.deviceInterfaceModule.get("dim");
+        bottomFrontColorSensor = hardwareMap.colorSensor.get("brcs");
+        bottomFrontColorSensor.setI2cAddress(I2cAddr.create7bit(0x2e));
+        bottomFrontColorSensor.enableLed(false);
 
-        leftBottomColorSensor = hardwareMap.colorSensor.get("lcs");
-        leftBottomColorSensor.enableLed(true);
+        bottomLeftColorSensor = hardwareMap.colorSensor.get("blcs");
+        bottomLeftColorSensor.setI2cAddress(I2cAddr.create7bit(0x36));
+        bottomLeftColorSensor.enableLed(false);
+
+        bottomRightColorSensor = hardwareMap.colorSensor.get("brcs");
+        bottomRightColorSensor.setI2cAddress(I2cAddr.create7bit(0x3e));
+        bottomRightColorSensor.enableLed(false);
+
+        bottomBackColorSensor = hardwareMap.colorSensor.get("bbcs");
+        bottomBackColorSensor.setI2cAddress(I2cAddr.create7bit(0x1e));
+        bottomBackColorSensor.enableLed(false);
 
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
@@ -119,7 +129,16 @@ public class CompbotHardware extends BaseHardware {
 
         liftServo.setPosition(liftServoClosePosition);
 
-        lockServo.setPosition(lockServoStartPosition);
+    }
+
+    public void start(){
+
+        buttonPresserColorSensor.enableLed(false);
+
+        bottomFrontColorSensor.enableLed(true);
+        bottomLeftColorSensor.enableLed(true);
+        bottomRightColorSensor.enableLed(true);
+        bottomBackColorSensor.enableLed(true);
 
     }
 

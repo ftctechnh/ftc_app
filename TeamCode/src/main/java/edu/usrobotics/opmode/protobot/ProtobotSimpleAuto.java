@@ -1,6 +1,7 @@
 package edu.usrobotics.opmode.protobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by dsiegler19 on 11/7/16.
  */
 @Autonomous(name="Protobot Auto SIMPLE", group="Protobot")
+@Disabled
 public class ProtobotSimpleAuto extends OpMode{
 
     ProtobotHardware robot = new ProtobotHardware();

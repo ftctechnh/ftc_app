@@ -2,14 +2,15 @@ package edu.usrobotics.opmode.compbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import edu.usrobotics.opmode.compbot.CompbotAuto;
 /**
- * Created by Max on 11/12/2016.
+ * Created by dsiegler19 on 1/5/17.
  */
 
 @Autonomous(name="Compbot Auto Blue", group="Compbot")
-public class CompbotBlue extends CompbotAuto {
+public class CompbotAutoBlue extends CompbotAuto {
 
-    public CompbotBlue() {
+    public CompbotAutoBlue() {
         super(true);
     }
 }
