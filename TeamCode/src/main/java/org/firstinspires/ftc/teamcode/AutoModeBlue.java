@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 //import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
@@ -67,7 +68,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="Golden Eagles: AutoModeBlue", group="Pushbot")
 @Disabled
-public class AutoMode extends LinearOpMode {
+public class AutoModeBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareK9bot robot = new HardwareK9bot(); // Use a Pushbot's hardware
@@ -102,7 +103,7 @@ public class AutoMode extends LinearOpMode {
         // This should move the Cap ball already.
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
-        while (opModeIsActive() && (runtime.seconds() < 1.5) {
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -110,7 +111,7 @@ public class AutoMode extends LinearOpMode {
         // Turn (for a quick moment) to park (0.5 seconds)
         robot.leftMotor.setPower(0.8);
         robot.rightMotor.setPower(0.5);
-        while (opModeIsActive() && (runtime.seconds() < 2.0) {
+        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
