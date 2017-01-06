@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
  *
  * This is an example LinearOpMode that shows how to use
  * a legacy (NXT-compatible) Light Sensor.
  * It assumes that the light sensor is configured with a name of "sensor_light".
- *
- * You can use the X button on gamepad1 to turn Toggle the LED on and off.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
@@ -25,6 +24,9 @@ public class DistanceAuto extends LinearOpMode {
     DeviceInterfaceModule dim;                  // Device Object
     AnalogInput distanceSensor;
     double voltage, maxVoltage, voltsPerInch, voltageInInches;
+    private ElapsedTime runtime = new ElapsedTime();
+    String kev = "klk";
+    double expectedCloseVal = 12.51;
 
     @Override
     public void runOpMode() {
@@ -44,7 +46,11 @@ public class DistanceAuto extends LinearOpMode {
             maxVoltage = distanceSensor.getMaxVoltage();
             voltsPerInch = 5.0/512.0;
             voltageInInches = voltage/voltsPerInch;
-
+        while (voltageInInches <= 12.512218963831867) {
+            if (runtime.seconds() > 3.0) {
+                telemetry.addData("okayyy", kev);
+            }
+        }
 
             // send the info back to driver station using telemetry function.
             telemetry.addData("Voltage", voltageInInches);
