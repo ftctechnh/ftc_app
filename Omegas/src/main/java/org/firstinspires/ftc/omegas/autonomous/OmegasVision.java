@@ -135,6 +135,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
         telemetry.addData("Vision Size", "Width: " + width + " Height: " + height);
         telemetry.addData("Data", "Light amount: " + light);
         telemetry.update();
+        telemetry.addData("Data", "Light sensor activated: " + (light > 0.4));
 
         if (!startedDriving) {
             driveThread.start();
