@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import java.util.ArrayList;
 
 /**
@@ -42,6 +44,7 @@ public abstract class HardwareOmegas {
 
     private ArrayList<DcMotor> motors;
     private Context appContext;
+    private Telemetry telemetry;
 
     private static final double MS_PER_RADIAN = 340.0;
     private static boolean isExtending = false;
@@ -102,6 +105,10 @@ public abstract class HardwareOmegas {
 
     protected void initAppContext(HardwareMap hwMap) {
         appContext = hwMap.appContext;
+    }
+
+    protected void initTelemetry(Telemetry telemetry) {
+        this.telemetry = telemetry;
     }
 
     /**
@@ -208,6 +215,11 @@ public abstract class HardwareOmegas {
 
     public void positionServo(Servo beaconator, double pos) {
         beaconator.setPosition(Math.abs(pos));
+    }
+
+    protected void sayMessage() {
+        telemetry.addData("", "Good luck, nerds!");
+        telemetry.update();
     }
 
     public LightSensor getLightSensor() {
