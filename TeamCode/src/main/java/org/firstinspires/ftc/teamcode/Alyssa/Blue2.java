@@ -74,6 +74,7 @@ public class Blue2 extends LinearOpMode {
 
     /* Declare OpMode members. */
 
+
     InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
 
     private ElapsedTime     runtime = new ElapsedTime();
@@ -155,26 +156,24 @@ public class Blue2 extends LinearOpMode {
         // 10. Drive backwards onto the corner vortex.
 
 
-     //  Color sensor.
-     int red = robot.beaconSensor.red();
-     int blue = robot.beaconSensor.blue();
+// Willow and James tested this color sensing on the beacon successfully
+//     //  Color sensor.
+//     robot.beaconSensor.enableLed(false);
+//     int red = robot.beaconSensor.red();
+//     int blue = robot.beaconSensor.blue();
+//
+//     while (robot.beaconSensor.blue() < 5){
+//         robot.leftMotor.setPower(1);
+//         robot.rightMotor.setPower(1);
+//     }
+//     robot.leftMotor.setPower(0);
+//     robot.rightMotor.setPower(0);
 
-     while (blue < 50){
-         robot.leftMotor.setPower(1);
-         robot.rightMotor.setPower(1);
-     }
-     robot.leftMotor.setPower(0);
-     robot.rightMotor.setPower(0);
+        // Step 6: Drive to the white tape on the floor
+        robot.WaitForReflectedLight(6,true);
 
-        while (robot.UDS.getDistance(DistanceUnit.CM) > 10 ){
-
-                robot.leftMotor.setPower(1);
-                robot.rightMotor.setPower(1);
-    }
-     robot.leftMotor.setPower(0);
-     robot.rightMotor.setPower(0);
-
-
+        // Step 4: Drive forward to the beacon wall
+        robot.DistanceDrive(30,DistanceUnit.CM,1);
 
 
 
@@ -183,10 +182,13 @@ public class Blue2 extends LinearOpMode {
 
 
 
+
+    robot.GyroTurn(1,90);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.

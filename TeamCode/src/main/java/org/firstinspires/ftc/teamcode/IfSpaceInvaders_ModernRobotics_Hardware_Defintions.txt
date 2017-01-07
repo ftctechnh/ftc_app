@@ -1,4 +1,4 @@
-Device Type	P/N	Serial#	USB ID#		Velocity Vortex Config	PCB Silkscreen
+Device Type	    P/N	    Serial#	USB ID#		Velocity Vortex Config	PCB Silkscreen
 Core Motor Ctrl	45-2203	M504655	AL00VVEH	"Shooter"
 Core Motor Ctrl	45-2203	M504670	AL00VI0L	"Cap Ball"
 Core Motor Ctrl	45-2203	M609605	A7008OKU	"Drive Controller"	<-- We suspect this is a faulty controller, not sure yet

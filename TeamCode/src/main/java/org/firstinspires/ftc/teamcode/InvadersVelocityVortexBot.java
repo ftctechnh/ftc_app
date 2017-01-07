@@ -140,10 +140,12 @@ public class InvadersVelocityVortexBot
         }
     }
 
+
     public void DistanceDrive(float distance, DistanceUnit distanceUnit, float power) {
+        leftMotor.setPower(power);
+        rightMotor.setPower(power);
         while (UDS.getDistance(distanceUnit) > distance) {
-            leftMotor.setPower(power);
-            rightMotor.setPower(power);
+
         }
 
         leftMotor.setPower(0);
@@ -179,6 +181,12 @@ public class InvadersVelocityVortexBot
         }
         rightMotor.setPower(0);
         leftMotor.setPower(0);
+    }
+
+    public void WaitForReflectedLight(int intensity, boolean enableLed){
+        floorSensor.enableLed(enableLed);
+        while (floorSensor.alpha() < intensity){
+        }
     }
 
     /* Constructor */
