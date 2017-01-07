@@ -366,7 +366,7 @@ public class AutonomousGeneral_newName extends LinearOpMode{
 
     public void wallDrive(double targetWallDist) {
 
-        double sensorGapInCM = 30.0;
+        double sensorGapInCM = 33.9;
         double frontRead = 0.0;
         double rearRead = 0.0;
         double measureWallDist = 0.0;
@@ -386,14 +386,13 @@ public class AutonomousGeneral_newName extends LinearOpMode{
         sleep(1000);
 
         while(true) {
-            straightDrive(0.1);
+            straightDrive(0.3);
 
             frontRead = frontUltra.getDistance(DistanceUnit.CM);
             rearRead = rearUltra.getDistance(DistanceUnit.CM);
 
-            measureWallDist = Math.sqrt(
-                    Math.pow(((frontRead + rearRead) / 2), 2.0)-
-                            ((Math.pow(sensorGapInCM, 2) + Math.pow((rearRead - frontRead), 2))) / 2);
+            measureWallDist = sensorGapInCM*((frontRead + rearRead) / 2)/
+                    Math.sqrt((Math.pow(sensorGapInCM, 2) + Math.pow((rearRead - frontRead), 2)));
 
             telemetry.addData("mesureWallDist", measureWallDist);
             telemetry.addData("frontRead", frontRead);
@@ -401,26 +400,63 @@ public class AutonomousGeneral_newName extends LinearOpMode{
             telemetry.addData("targetWallDist", targetWallDist);
             telemetry.update();
 
+            while(measureWallDist > targetWallDist) {
+
+                frontRead = frontUltra.getDistance(DistanceUnit.CM);
+                rearRead = rearUltra.getDistance(DistanceUnit.CM);
+
+                measureWallDist = sensorGapInCM*((frontRead + rearRead) / 2)/
+                                Math.sqrt((Math.pow(sensorGapInCM, 2) + Math.pow((rearRead - frontRead), 2)));
+
+                telemetry.addData("mesureWallDist", measureWallDist);
+                telemetry.addData("frontRead", frontRead);
+                telemetry.addData("rearRead", rearRead);
+                telemetry.addData("targetWallDist", targetWallDist);
+                telemetry.update();
+
+                frontRead = frontUltra.getDistance(DistanceUnit.CM);
+                rearRead = rearUltra.getDistance(DistanceUnit.CM);
+
+                straightDrive(0.3);
+            }
 
             while(frontRead < rearRead) {
 
-                turnLeft(0.1);
+                turnLeft(0.3);
                 frontRead = frontUltra.getDistance(DistanceUnit.CM);
                 rearRead = rearUltra.getDistance(DistanceUnit.CM);
+
+                telemetry.addData("WDLeft: frontRead", frontRead);
+                telemetry.addData("WDLeft: rearRead", rearRead);
+                telemetry.addData("WDLeft: targetWallDist", targetWallDist);
+                telemetry.update();
             }
 
             while(frontRead > rearRead) {
 
-                turnRight(0.1);
+                turnRight(0.3);
                 frontRead = frontUltra.getDistance(DistanceUnit.CM);
                 rearRead = rearUltra.getDistance(DistanceUnit.CM);
+
+                telemetry.addData("WDright: frontRead", frontRead);
+                telemetry.addData("WDright: rearRead", rearRead);
+                telemetry.addData("WDright: targetWallDist", targetWallDist);
+                telemetry.update();
             }
 
-            while(frontRead == rearRead){
+            while(frontRead == rearRead && currentColor.equals("other")){
 
-                straightDrive(0.1);
+                readColor();
+                straightDrive(0.3);
                 frontRead = frontUltra.getDistance(DistanceUnit.CM);
                 rearRead = rearUltra.getDistance(DistanceUnit.CM);
+
+                telemetry.addData("WDStright: frontRead", frontRead);
+                telemetry.addData("WDStright: rearRead", rearRead);
+                telemetry.addData("WDStright: targetWallDist", targetWallDist);
+                telemetry.update();
+
+                readColor();
             }
         }
     }

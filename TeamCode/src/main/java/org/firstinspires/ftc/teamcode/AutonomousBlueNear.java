@@ -33,16 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.AutonomousGeneral;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -71,9 +62,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: AutonomousRedNear", group="Pushbot")
+@Autonomous(name="Pushbot: AutonomousBlueNear", group="Pushbot")
 
-public class AutonomousRedNear extends AutonomousGeneral {
+public class AutonomousBlueNear extends AutonomousGeneral {
 
 
     private ElapsedTime     runtime = new ElapsedTime();
@@ -93,7 +84,7 @@ public class AutonomousRedNear extends AutonomousGeneral {
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  62.23,  62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -62.23,  -62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
       //  encoderDrive(DRIVE_SPEED,  -6,  6, 5.0);
          // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
@@ -106,118 +97,29 @@ public class AutonomousRedNear extends AutonomousGeneral {
         shootingDrive(0.8, 850);
 
         sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1800);
+        intakeDrive(0.8, 1100);
 
         shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1800);
+        intakeDrive(0.8, 1100);
 
         shootingDrive(0.8, 850);
-        sleep(500);
-
-        if (operation_beacon_press == true) {
-
-            encoderDrive(0.6, 55, 55, 10);
-
-            //turn to face wall
-            sleep(500);
-            gyro.calibrate();
-            while(gyro.isCalibrating()){
-
-            }
-            turnLeft(0.05);
-            while((gyro.getHeading() > 235) ||(gyro.getHeading() < 10)){ //turn left until the angle becomes as small as you want it
-                //gyro.getHeading() returns values from 0 to 359
-                telemetry.addData("current gyro pos", gyro.getHeading());
-                telemetry.update();
-            }
-            stopMotors();
-
-            //drive forward to wall
-//            while(rangeSensor.getDistance(DistanceUnit.CM) > 15){//distance is the desired distance from the wall
-//                front_left_motor.setPower(0.5);
-//                back_left_motor.setPower(0.5);
-//                front_right_motor.setPower(0.5);
-//                back_right_motor.setPower(0.5);
-//            }
-//            stopMotors();
-
-
-
-            //turn left so that the beacon pusher faces the wall
-
-           // encoderDrive(0.6, 30, 30, 5);
-
-            newBeacon("red", 15);
-
-//            while(rangeSensor.getDistance(DistanceUnit.CM) > 16) {
-//                front_left_motor.setPower(-0.5);
-//                back_left_motor.setPower(-0.5);
-//                front_right_motor.setPower(-0.35);
-//                back_right_motor.setPower(-0.35);
-//            } stopMotors();
-//
-//            while(colorSensor.red() < colorSensor.blue()) {
-//                front_left_motor.setPower(-0.3);
-//                back_left_motor.setPower(-0.3);
-//                front_right_motor.setPower(-0.3);
-//                back_right_motor.setPower(-0.3);
-//            }
-//
-//            beaconPress.setPosition(0.2);
-//
-//            sleep(5000);
-//
-//            beaconPress.setPosition(0.8);
-//
-//            sleep(1000);
-//
-//            while(rangeSensor.getDistance(DistanceUnit.CM ) > 13){
-//                front_left_motor.setPower(-0.35);
-//                back_left_motor.setPower(-0.35);
-//                front_right_motor.setPower(-0.5);
-//                back_right_motor.setPower(-0.5);
-//            } stopMotors();
-
-
-//            gyro.calibrate();
-//            while(gyro.isCalibrating()){
-//
-//            }
-//
-//            turnLeft(0.5);
-//            while(gyro.getHeading() > 270 || gyro.getHeading() < 10 ){
-//
-//            }
-            stopMotors();
-
-
-
-
-            //drive
-
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
-
-
-        }
-        else {
-            // pause for servos to move
-            encoderDrive(DRIVE_SPEED, 6, -6, 5.0);
-            // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
-            //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
-            encoderDrive(DRIVE_SPEED, 330, 99, 5.0);
-            encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
-            encoderDrive(DRIVE_SPEED, -10, -10, 5.0);
-            encoderDrive(DRIVE_SPEED, 30, 30, 5.0);
+        sleep(500);     // pause for servos to move
+       // encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
+       // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
+      //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
+        encoderDrive(DRIVE_SPEED, -330,-99 , 5.0);
+        encoderDrive(DRIVE_SPEED,  -20,-20  , 5.0);
+        encoderDrive(DRIVE_SPEED,  10, 10, 5.0);
+      //  encoderDrive(DRIVE_SPEED,  -30,-30  , 5.0);
         /*while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
             turnRight(0.5);
         }*/
-            ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
-            //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        }
+        ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
     }
 
 

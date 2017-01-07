@@ -26,7 +26,7 @@ public class beaconpress_linearauto extends AutonomousGeneral_newName {
 
         waitForStart();
 
-        newBeacon("blue");
+        wallDrive(8.3);
 
 
     }
