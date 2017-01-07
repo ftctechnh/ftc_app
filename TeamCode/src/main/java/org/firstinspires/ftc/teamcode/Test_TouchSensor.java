@@ -51,9 +51,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
 */
-@TeleOp(name = "TouchTest", group = "Testing")
+@TeleOp(name = "Test_TouchSensor", group = "Testing")
 @Disabled
-public class TouchTest extends LinearOpMode {
+public class Test_TouchSensor extends LinearOpMode {
 
   final int BLUE_LED_CHANNEL = 0;      // address for BLUE LED on the Device Interface Module
   final int RED_LED_CHANNEL = 1;       // address for RED LED on the Device Interface Module
