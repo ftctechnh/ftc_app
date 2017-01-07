@@ -40,7 +40,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
 
 @SuppressWarnings("unused")
 @Autonomous(name = "Omegas: Autonomous Controls", group = "Linear Opmode")
-class OmegasAutonomous extends LinearOpMode {
+public class OmegasAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     private final ElapsedTime runtime = new ElapsedTime();
