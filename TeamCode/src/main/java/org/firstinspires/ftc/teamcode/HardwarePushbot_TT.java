@@ -104,6 +104,8 @@ public class HardwarePushbot_TT
         I2cAddr i2CAddressColorBottom = I2cAddr.create8bit(0x3a);
         color.setI2cAddress(i2CAddressColorFront);
         color2.setI2cAddress(i2CAddressColorBottom);
+        color.enableLed(false);
+        color2.enableLed(false);
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);

@@ -65,20 +65,20 @@ public class SensorMRColor_TT extends LinearOpMode {
   public void runOpMode() {
 
     // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F,0F,0F};
+    float hsvValues[] = {0F,0,0F};
 
     // values is a reference to the hsvValues array.
     final float values[] = hsvValues;
 
     robot.init(hardwareMap);
-    colorLocal = robot.color ;
+    colorLocal = robot.color2 ;
 
     // bLedOn represents the state of the LED.
-    boolean bLedOn = false;
+    boolean bLedOn = true;
 
     // get a reference to our ColorSensor object.
     // Set the LED in the beginning
-//    colorLocal.enableLed(bLedOn);
+    robot.color2.enableLed(bLedOn);
 
     // while the op mode is active, loop and read the RGB data.
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
@@ -90,11 +90,11 @@ public class SensorMRColor_TT extends LinearOpMode {
 
     while (opModeIsActive()) {
 
-      if (robot.color.red() > robot.color.blue()) {
+      if (robot.color2.red() > robot.color2.blue()) {
         telemetry.addData("Detecting", "Red");
 //        telemetry.update();
       }
-      else if (robot.color.red() < robot.color.blue()){
+      else if (robot.color2.red() < robot.color2.blue()){
         telemetry.addData("Detecting", "Blue");
 //        telemetry.update();
       }
@@ -112,8 +112,8 @@ public class SensorMRColor_TT extends LinearOpMode {
 //      telemetry.addData("Hue", hsvValues[0]);
 //      telemetry.addData("Saturation", hsvValues[1]);
 //      telemetry.addData("Values", hsvValues[2]);
-//      telemetry.addData("1 Address", robot.color.getI2cAddress()) ;
-//      telemetry.addData("1 Connection", robot.color.getConnectionInfo()) ;
+//      telemetry.addData("1 Address", robot.color2.getI2cAddress()) ;
+//      telemetry.addData("1 Connection", robot.color2.getConnectionInfo()) ;
 //      telemetry.addData("2 Address", robot.color2.getI2cAddress()) ;
 //      telemetry.addData("2 Connection", robot.color2.getConnectionInfo()) ;
       telemetry.addData("Front color", robot.color.argb());
@@ -121,10 +121,12 @@ public class SensorMRColor_TT extends LinearOpMode {
       telemetry.update();
 
 
+
       // convert the RGB values to HSV values.
 //      Color.RGBToHSV(colorLocal.red() * 8, colorLocal.green() * 8, colorLocal.blue() * 8, hsvValues);
 //      waitForStart();
     }
 
+    robot.color2.enableLed(false);
   }
 }
