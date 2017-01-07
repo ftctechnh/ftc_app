@@ -24,6 +24,9 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 @Autonomous(name="AutonomousBlueTwo")
 public class AutonomousFarStart extends AutonomousGeneral {
 
+    //blue: tangent to blue line
+    //red: tangent to red line
+
     private ElapsedTime runtime = new ElapsedTime();
 
     static  int             INITIAL_SHOOTERPOS;

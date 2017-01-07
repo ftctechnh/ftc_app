@@ -355,13 +355,13 @@ Declare global variables here
         }
     }
 
-    /*public void encoderlift(double liftSpeed,
+    public void encoderlift(double liftSpeed,
                             double lift_cm,
                             double timeoutS){
         int newLiftTarget;
 
         // Ensure that the opmode is still active
-        {
+
 
             // Determine new target position, and pass to motor controller
             newLiftTarget = lift_motor.getCurrentPosition() + (int)(lift_cm * COUNTS_PER_CM);
@@ -391,7 +391,7 @@ Declare global variables here
             lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
-        }*/
+        }
 /*
 ---------------------------------------------------------------------------------------------
 */
