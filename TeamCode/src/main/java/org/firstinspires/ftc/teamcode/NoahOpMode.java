@@ -14,27 +14,40 @@ public class NoahOpMode extends OpMode {
     DcMotor left2;
     DcMotor right1;
     DcMotor right2;
-    DcMotor sweeper2;
 
     @Override
-    public void init()
-    {
+    public void init() {
         left1 = hardwareMap.dcMotor.get("left1");
         left2 = hardwareMap.dcMotor.get("left2");
         right1 = hardwareMap.dcMotor.get("right1");
         right2 = hardwareMap.dcMotor.get("right2");
-        sweeper2 = hardwareMap.dcMotor.get("sweeper2");
     }
     //Noah was here
 
     @Override
     public void loop()
     {
-        left1.setPower(gamepad1.left_stick_y);
-        left2.setPower(gamepad1.left_stick_y);
+        //Forward/Backwards
+        left1.setPower(gamepad1.right_stick_y);
+        left2.setPower(gamepad1.right_stick_y);
         right2.setPower(-1*(gamepad1.right_stick_y));
         right1.setPower(-1*(gamepad1.right_stick_y));
-        sweeper2.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+        //Left/Right
+        left1.setPower(-1*(gamepad1.right_stick_x));
+        left2.setPower(gamepad1.right_stick_x);
+        right1.setPower(-1*(gamepad1.right_stick_x));
+        right2.setPower(gamepad1.right_stick_x);
+        //Diagonals
+        left2.setPower(gamepad1.left_stick_y);
+        right1.setPower(-1*(gamepad1.left_stick_y));
+        
+        left1.setPower(gamepad1.left_stick_x);
+        right2.setPower(gamepad1.left_stick_x);
 
+        //non mecanum wheels config
+//        left1.setPower(gamepad1.left_stick_y);
+//        left2.setPower(gamepad1.left_stick_y);
+//        right2.setPower(-1*(gamepad1.right_stick_y));
+//        right1.setPower(-1*(gamepad1.right_stick_y));
     }
 }
