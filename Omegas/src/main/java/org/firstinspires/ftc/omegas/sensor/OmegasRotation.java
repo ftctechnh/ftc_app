@@ -28,6 +28,9 @@ public class OmegasRotation extends LinearOpMode {
             @Override
             public void init() {
                 initDriveMotors(hardwareMap);
+                initTelemetry(telemetry);
+
+                sayMessage();
             }
         };
 

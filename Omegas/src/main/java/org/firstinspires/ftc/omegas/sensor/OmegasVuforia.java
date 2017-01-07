@@ -137,6 +137,9 @@ public class OmegasVuforia extends LinearOpMode {
             @Override
             public void init() {
                 initAppContext(hardwareMap);
+                initTelemetry(telemetry);
+
+                sayMessage();
             }
         };   // Use our robot's hardware
 

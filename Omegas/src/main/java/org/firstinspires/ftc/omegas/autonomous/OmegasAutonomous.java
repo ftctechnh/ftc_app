@@ -60,6 +60,9 @@ public class OmegasAutonomous extends LinearOpMode {
             public void init() {
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
+                initTelemetry(telemetry);
+
+                sayMessage();
             }
         };
 
