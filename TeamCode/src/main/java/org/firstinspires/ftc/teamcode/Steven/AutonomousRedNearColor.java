@@ -33,10 +33,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Steven;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_newName;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -65,21 +66,25 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: NewAutonomousRedNear", group="Pushbot")
+@Autonomous(name="Pushbot: AutonomousRedNearColor", group="Pushbot")
 
-public class RedNearAutonomous extends AutonomousGeneral {
+public class AutonomousRedNearColor extends AutonomousGeneral_newName {
 
 
     private ElapsedTime     runtime = new ElapsedTime();
 
     static  int             INITIAL_SHOOTERPOS;
 
+    ColorSensor linecolorSensor;
+
     @Override
     public void runOpMode() {
 
         initiate();
+        linecolorSensor = hardwareMap.colorSensor.get("lineColorSensor");
 
-        INITIAL_SHOOTERPOS = shooting_motor.getCurrentPosition();
+
+        INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
 
         telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
 
@@ -88,88 +93,18 @@ public class RedNearAutonomous extends AutonomousGeneral {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
-        //drive forward a general distance
-        encoderDrive(DRIVE_SPEED,  45.72,  45.72, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1000);     // pause for servos to move
-
-
-        //shoot three times
-        encoderShoot(0.8);
-        sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 900);
-        encoderShoot(0.8);
-        sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1100);
-        encoderShoot(0.8);
-        sleep(500);     // pause for servos to move
-
-
-        encoderDrive(DRIVE_SPEED, 48, 48, 5.0);
-        sleep(1000);
-
-        //turn to face wall
-        gyro.calibrate();
-        while(gyro.isCalibrating()){
+        straightDrive(0.5);
+        if((linecolorSensor.red()>0||linecolorSensor.blue()>0||linecolorSensor.green()>0)){
 
         }
-        turnLeft(0.4);
-        while(gyro.getHeading() > 310 || gyro.getHeading() < 10){ //turn left until the angle becomes as small as you want it
-            //gyro.getHeading() returns values from 0 to 359
-
-        }
-        stopMotors();
-
-        //drive forward to wall
-        while(rangeSensor.getDistance(DistanceUnit.CM) > 15){//distance is the desired distance from the wall
-            front_left_motor.setPower(0.5);
-            back_left_motor.setPower(0.5);
-            front_right_motor.setPower(0.5);
-            back_right_motor.setPower(0.5);
-        }
-        stopMotors();
-
-
-
-        //turn left so that the beacon pusher faces the wall
-        gyro.calibrate();
-        while(gyro.isCalibrating()){
-
-        }
-
-        turnLeft(0.5);
-        while(gyro.getHeading() > 270 || gyro.getHeading() < 10 ){
-
-        }
-        stopMotors();
-
-        //drive
-
-
-
-
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+        //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
     }
 
 
 
 
-
-    /**public void resetShooter(double speed){
-        shooting_motor.setTargetPosition(INITIAL_SHOOTERPOS);
-        shooting_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        shooting_motor.setPower(Math.abs(speed));
-
-        while(shooting_motor.isBusy()){
-
-        }
-        shooting_motor.setPower(0);
-
-        shooting_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-    }*/
 }

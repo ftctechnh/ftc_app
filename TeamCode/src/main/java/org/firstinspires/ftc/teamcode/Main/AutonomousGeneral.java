@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Main;
 
 import android.graphics.Color;
 
@@ -305,6 +305,7 @@ public class AutonomousGeneral extends LinearOpMode {
 
     }
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutonomousGeneral.java
     public void readColor() {
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
@@ -346,6 +347,8 @@ public class AutonomousGeneral extends LinearOpMode {
         telemetry.update();
     }
 
+=======
+>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Main/AutonomousGeneral.java
     public void gyro_leftTurn(int degrees, double speed){
         gyro.calibrate();
         while(gyro.isCalibrating()){
@@ -375,6 +378,7 @@ public class AutonomousGeneral extends LinearOpMode {
     }
 
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutonomousGeneral.java
     public void newBeacon(String team, double wallTarget) {
 
         double wallDistRead = 0.0;
@@ -460,4 +464,6 @@ public class AutonomousGeneral extends LinearOpMode {
         telemetry.addData("pressed!", currentColor);
         telemetry.update();
     }
+=======
+>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Main/AutonomousGeneral.java
 }

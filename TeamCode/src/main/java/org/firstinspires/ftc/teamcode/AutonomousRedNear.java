@@ -33,16 +33,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+<<<<<<< HEAD
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+=======
+import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.

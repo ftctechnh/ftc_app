@@ -1,14 +1,7 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Main;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.media.MediaCodecInfo;
-import android.view.View;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,9 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by inspirationteam on 11/20/2016.
  */
 
-@TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
+@TeleOp(name = "#11183: TeleOp Competition Alpha", group = "Robot")
 
-public class TeleOpCompetition extends OpMode {
+public class TeleOpCompetitionAlpha extends OpMode {
 
 
 /*
@@ -54,25 +47,26 @@ public class TeleOpCompetition extends OpMode {
 /*
  ----------------------------------------------------------------------------------------------
 Declare global variables here
-*/public enum cap_ball_arm_state_type {
-    CAP_BALL_INIT_POS,
-    CAP_BALL_ARM_OPEN,
-    CAP_BALL_BALL_HOLD,
-    CAP_BALL_LIFT_BALL,
-    CAP_BALL_DROP_BALL
-}
-    cap_ball_arm_state_type cap_ball_arm_state;
-
-    static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
-
-
-    private ElapsedTime runtime = new ElapsedTime();
-    static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
-    static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
-    static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
-            (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
-    // Define class members
+*/
+//public enum cap_ball_arm_state_type {
+//    CAP_BALL_INIT_POS,
+//    CAP_BALL_ARM_OPEN,
+//    CAP_BALL_BALL_HOLD,
+//    CAP_BALL_LIFT_BALL,
+//    CAP_BALL_DROP_BALL
+//}
+//    cap_ball_arm_state_type cap_ball_arm_state;
+//
+//    static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
+//
+//
+//    private ElapsedTime runtime = new ElapsedTime();
+//    static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
+//    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
+//    static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
+//    static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
+//            (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
+//    // Define class members
     //   Servo right_servo;
 
 
@@ -92,11 +86,12 @@ Declare global variables here
         ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
-
-        lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
-     //   lift_motor.setDirection(DcMotor.Direction.REVERSE);
-
-        cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_BALL_HOLD;
+//        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
+//
+//        lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
+//        lift_motor.setDirection(DcMotor.Direction.REVERSE);
+//
+//        cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_INIT_POS;
     }
 /*
 ---------------------------------------------------------------------------------------------
@@ -129,7 +124,6 @@ Declare global variables here
         CollectBalls();
         //BallShooter();
         shoot();
-        CapBallLift();
 
     }
 
@@ -261,123 +255,123 @@ Declare global variables here
     }*/
 
 
-    public void CapBallLift()
-    {
+//    public void CapBallLift()
+//    {
+//
+//        /*
+//        CAP_BALL_INIT_POS,
+//        CAP_BALL_ARM_OPEN,
+//        CAP_BALL_BALL_HOLD,
+//        CAP_BALL_LIFT_BALL,
+//        CAP_BALL_DROP_BALL
+//        */
+//
+//        //       INITIAL STATE        TRIGGER         FINAL STATE         Description
+//        //       CAP_BALL_INIT_POS    gamepad.x        CAP_BALL_ARM_OPEN   opening the arm
+//        //       CAP_BALL_ARM_OPEN      gamepad.y       CAP_BALL_BALL_HOLD  holding the ball
+//        //
+//        //
+//        //
+//        //
+//        switch (cap_ball_arm_state)
+//        {
+//            case CAP_BALL_INIT_POS:
+//                if (gamepad2.x)
+//                {
+//                    lift_servo.setPosition(.2);
+//                    cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_ARM_OPEN;
+//                }
+//                break;
+//            case CAP_BALL_ARM_OPEN:
+//                if (gamepad2.y)
+//                {
+//                    lift_servo.setPosition(.4);
+//                    cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_BALL_HOLD;
+//                }
+//                break;
+//            case CAP_BALL_BALL_HOLD: {
+//                lift_motor.setDirection(DcMotor.Direction.FORWARD);
+//                //  encoderlift(1.0, -120, 6);
+//                float leftY_gp1 = -gamepad2.left_stick_y;
+//                //  float rightY_gp1 = -gamepad1.right_stick_y;
+//
+//                //run the motors by setting power to the motors with the game pad values
+//                lift_motor.setPower(leftY_gp1);
+//            }
+//            if (gamepad2.b)
+//            {
+//                lift_motor.setPower(0);
+//                cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_LIFT_BALL;
+//            }
+//            break;
+//            case CAP_BALL_LIFT_BALL:
+//                if (gamepad2.a)
+//                {
+//                    lift_servo.setPosition(.2);
+//                    cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_DROP_BALL;
+//                }
+//                break;
+//            case CAP_BALL_DROP_BALL:
+//            {
+//                lift_motor.setDirection(DcMotor.Direction.REVERSE);
+//                //  encoderlift(1.0, -120, 6);
+//                float leftY_gp1 = -gamepad2.left_stick_y;
+//                //  float rightY_gp1 = -gamepad1.right_stick_y;
+//
+//                //run the motors by setting power to the motors with the game pad values
+//                lift_motor.setPower(leftY_gp1);
+//            }
+//            if (gamepad2.x)
+//            {
+//                lift_motor.setPower(0);
+//                lift_motor.setDirection(DcMotor.Direction.REVERSE);
+//                lift_servo.setPosition(.8);
+//                //  encoderlift(1.0, 120, 6);
+//                cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_INIT_POS;
+//            }
+//            break;
+//        }
+//    }
 
-        /*
-        CAP_BALL_INIT_POS,
-        CAP_BALL_ARM_OPEN,
-        CAP_BALL_BALL_HOLD,
-        CAP_BALL_LIFT_BALL,
-        CAP_BALL_DROP_BALL
-        */
-
-        //       INITIAL STATE        TRIGGER         FINAL STATE         Description
-        //       CAP_BALL_INIT_POS    gamepad.x        CAP_BALL_ARM_OPEN   opening the arm
-        //       CAP_BALL_ARM_OPEN      gamepad.y       CAP_BALL_BALL_HOLD  holding the ball
-        //
-        //
-        //
-        //
-        switch (cap_ball_arm_state)
-        {
-            case CAP_BALL_INIT_POS:
-                if (gamepad2.x)
-                {
-                    lift_servo.setPosition(.2);
-                    cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_ARM_OPEN;
-                }
-                break;
-            case CAP_BALL_ARM_OPEN:
-                if (gamepad2.y)
-                {
-                    lift_servo.setPosition(.4);
-                    cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_BALL_HOLD;
-                }
-                break;
-            case CAP_BALL_BALL_HOLD: {
-                lift_motor.setDirection(DcMotor.Direction.FORWARD);
-                //  encoderlift(1.0, -120, 6);
-                float leftY_gp1 = -gamepad2.left_stick_y;
-                //  float rightY_gp1 = -gamepad1.right_stick_y;
-
-                //run the motors by setting power to the motors with the game pad values
-                lift_motor.setPower(leftY_gp1);
-            }
-            if (gamepad2.b)
-            {
-                lift_motor.setPower(0);
-                cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_LIFT_BALL;
-            }
-            break;
-            case CAP_BALL_LIFT_BALL:
-                if (gamepad2.a)
-                {
-                    lift_servo.setPosition(.2);
-                    cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_DROP_BALL;
-                }
-                break;
-            case CAP_BALL_DROP_BALL:
-            {
-                lift_motor.setDirection(DcMotor.Direction.REVERSE);
-                //  encoderlift(1.0, -120, 6);
-                float leftY_gp1 = -gamepad2.left_stick_y;
-                //  float rightY_gp1 = -gamepad1.right_stick_y;
-
-                //run the motors by setting power to the motors with the game pad values
-                lift_motor.setPower(leftY_gp1);
-            }
-            if (gamepad2.x)
-            {
-                lift_motor.setPower(0);
-                lift_motor.setDirection(DcMotor.Direction.REVERSE);
-                lift_servo.setPosition(.8);
-                //  encoderlift(1.0, 120, 6);
-                cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_INIT_POS;
-            }
-            break;
-        }
-    }
-
-    public void encoderlift(double liftSpeed,
-                            double lift_cm,
-                            double timeoutS){
-        int newLiftTarget;
-
-        // Ensure that the opmode is still active
-        {
-
-            // Determine new target position, and pass to motor controller
-            newLiftTarget = lift_motor.getCurrentPosition() + (int)(lift_cm * COUNTS_PER_CM);
-            lift_motor.setTargetPosition(newLiftTarget);
-
-
-            // Turn On RUN_TO_POSITION
-            lift_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            lift_motor.setPower(Math.abs(liftSpeed));
-
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (lift_motor.isBusy()) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d ", newLiftTarget);
-                telemetry.addData("Path2",  "Running at %7d ", lift_motor.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            lift_motor.setPower(0);
-
-
-            // Turn off RUN_TO_POSITION
-            lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
-        }
+//    public void encoderlift(double liftSpeed,
+//                            double lift_cm,
+//                            double timeoutS){
+//        int newLiftTarget;
+//
+//        // Ensure that the opmode is still active
+//        {
+//
+//            // Determine new target position, and pass to motor controller
+//            newLiftTarget = lift_motor.getCurrentPosition() + (int)(lift_cm * COUNTS_PER_CM);
+//            lift_motor.setTargetPosition(newLiftTarget);
+//
+//
+//            // Turn On RUN_TO_POSITION
+//            lift_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            lift_motor.setPower(Math.abs(liftSpeed));
+//
+//
+//            // keep looping while we are still active, and there is time left, and both motors are running.
+//            while (lift_motor.isBusy()) {
+//
+//                // Display it for the driver.
+//                telemetry.addData("Path1",  "Running to %7d ", newLiftTarget);
+//                telemetry.addData("Path2",  "Running at %7d ", lift_motor.getCurrentPosition());
+//                telemetry.update();
+//            }
+//
+//            // Stop all motion;
+//            lift_motor.setPower(0);
+//
+//
+//            // Turn off RUN_TO_POSITION
+//            lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//            //  sleep(250);   // optional pause after each move
+//        }
 /*
 ---------------------------------------------------------------------------------------------
 */
-}}
+}
 
