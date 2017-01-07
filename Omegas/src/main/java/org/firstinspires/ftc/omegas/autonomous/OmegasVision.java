@@ -35,7 +35,6 @@ abstract class OmegasVision extends ManualVisionOpMode {
     private boolean startedDriving = false;
     private HardwareOmegas Ω = null;
     private Thread driveThread = null;
-    private boolean lightSensorActivated = false;
 
     private static final ColorHSV lowerBoundRed = new ColorHSV((int) (305 / 360.0 * 255.0), (int) (0.200 * 255.0), (int) (0.300 * 255.0));
     private static final ColorHSV upperBoundRed = new ColorHSV((int) ((360.0 + 5.0) / 360.0 * 255.0), 255, 255);
@@ -127,14 +126,11 @@ abstract class OmegasVision extends ManualVisionOpMode {
         leftBlue /= leftCount;
         rightBlue /= rightCount;
 
-        lightSensorActivated &= (light > 0.4);
-
         telemetry.addData("Vision FPS", fps.getFPSString());
         telemetry.addData("Vision Color", Arrays.toString(currentBeaconColors));
         telemetry.addData("Analysis Confidence", "Left: " + leftBlue + " Right: " + rightBlue);
         telemetry.addData("Vision Size", "Width: " + width + " Height: " + height);
         telemetry.addData("Data", "Light amount: " + light);
-        telemetry.addData("Data", "Light sensor activated: " + lightSensorActivated);
         telemetry.update();
 
         if (!startedDriving) {

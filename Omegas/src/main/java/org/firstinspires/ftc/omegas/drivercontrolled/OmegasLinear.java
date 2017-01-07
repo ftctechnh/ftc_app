@@ -102,9 +102,9 @@ public class OmegasLinear extends LinearOpMode {
         }.start();
 
         if (gamepad2.a) {
-            Ω.getLiftServo().setPosition(Ω.getLiftServo().getPosition()+0.25);
+            Ω.getLiftServo().setPosition(Ω.getLiftServo().getPosition() + 0.25);
         } else if (gamepad2.b) {
-            Ω.getLiftServo().setPosition(Ω.getLiftServo().getPosition()-0.25);
+            Ω.getLiftServo().setPosition(Ω.getLiftServo().getPosition() - 0.25);
         }
 
         // run until the end of the match (driver presses STOP)
