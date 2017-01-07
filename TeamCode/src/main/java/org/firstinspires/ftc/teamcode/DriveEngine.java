@@ -62,12 +62,12 @@ public class DriveEngine
         }
     }
 
-    public Double getLeftPower()
+    public double getLeftPower()
     {
         return leftPower;
     }
 
-    public Double getRightPower()
+    public double getRightPower()
     {
         return rightPower;
     }
@@ -75,6 +75,15 @@ public class DriveEngine
     public void setEngineMode(engineMode mode)
     {
         this.mode = mode;
+    }
+
+    //Returns pace in seconds per inch, preferably.
+    private double getPace(double power){
+        return power; //TODO find pace
+    }
+    //Returns number of second is required to complete a circle at .1 power
+    private double getPeriod(){
+        return 3.4; //TODO find period
     }
 
     public void invertDirection()
@@ -159,14 +168,37 @@ public class DriveEngine
          */
     }
 
-    public void turn(double degree)
-    {
-        /*
+    /*
         For Autonomous mode we will need to be able to turn.
         This function will take the degree of the turn we wish to make.
         A good first assumption is that only one wheel is turning at a time.
         A sloping turn will have both wheels moving at different speeds...
-         */
+    */
+    /*
+        Assume that straight forward is 0 degrees.
+        Positive degrees is turning a steering wheel to the left.
+     */
+    public void turn(boolean forwards, double degrees)
+    {
+        double numRevolutions = degrees / 360;
+        if(forwards)
+        {
+            if(degrees >= 0){
+                drive(getPeriod() * numRevolutions, 0, .1);
+            }
+            else{
+                drive(getPeriod() * numRevolutions, .1, 0);
+            }
+        }
+        else
+        {
+            if(degrees >= 0){
+                drive(getPeriod() * numRevolutions, 0, -.1);
+            }
+            else{
+                drive(getPeriod() * numRevolutions, -.1, 0);
+            }
+        }
     }
 
     public void setCircleMotorPower(double radius, double maxPower, boolean turnRight)
