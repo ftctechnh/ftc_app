@@ -90,7 +90,7 @@ Declare global variables here
         lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
         lift_motor.setDirection(DcMotor.Direction.REVERSE);
 
-        cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_INIT_POS;
+        cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_BALL_HOLD;
 
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
@@ -320,11 +320,11 @@ Declare global variables here
                 //run the motors by setting power to the motors with the game pad values
                 lift_motor.setPower(leftY_gp1);
             }
-            if (gamepad2.b)
+           /* if (gamepad2.b)
             {
                 lift_motor.setPower(0);
                 cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_LIFT_BALL;
-            }
+            } */
             break;
             case CAP_BALL_LIFT_BALL:
                 if (gamepad2.a)
