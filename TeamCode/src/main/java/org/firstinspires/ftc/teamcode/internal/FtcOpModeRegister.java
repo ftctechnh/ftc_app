@@ -40,7 +40,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.teamcode.Aditya.BeaconPress;
 import org.firstinspires.ftc.teamcode.Ivan.VuforiaOp;
 import org.firstinspires.ftc.teamcode.Steven.TankTeleOp;
-import org.firstinspires.ftc.teamcode.Main.Jan6TeleOpCompetitionBeta;
+import org.firstinspires.ftc.teamcode.OldCode.Jan6TeleOpCompetitionBeta;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.

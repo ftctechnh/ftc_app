@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OldCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,10 +11,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by inspirationteam on 11/20/2016.
  */
 
-@TeleOp(name = "#11183: TeleOp CompetitionTrigger", group = "Robot")
+@TeleOp(name = "#11183: TeleOp CompetitionJoystick", group = "Robot")
 @Disabled
 
-public class TeleOpCompetitionTrigger extends OpMode {
+public class TeleOpCompetitionJoystick extends OpMode {
 
 
 /*
@@ -123,8 +123,8 @@ Declare global variables here
     public void loop() {
         FourWheelDrive();
         CollectBalls();
-        //BallShooter();
-        shoot();
+        BallShooter();
+        //shoot();
 
     }
 
@@ -180,7 +180,7 @@ Declare global variables here
 /*---------------------------------------------------------------------------------------------
 */
 
-    /*public void BallShooter(){
+    public void BallShooter(){
         float shoot = -gamepad2.right_stick_y;//gets value from 2nd gamepad's joystick
 
         ballShooterMotor.setPower(Math.abs(shoot));//set power
@@ -195,15 +195,15 @@ Declare global variables here
         } else {
             ballShooterMotor.setPower(-1);
             ballShooterMotor.setPower(0)
-        }
+        }*/
 
 
 
-    }*/
+    }
 
 /*---------------------------------------------------------------------------------------------
 */
-    public void shoot(){
+   /* public void shoot(){
 
         if (gamepad2.right_bumper){
         ballShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -212,14 +212,15 @@ Declare global variables here
         ballShooterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ballShooterMotor.setPower(1);
         while (ballShooterMotor.isBusy()){
-
+            telemetry.addData("", "Shooting...");
+            telemetry.update();
         }
-
+        telemetry.addData("", "Done Shooting");
+        telemetry.update();
         ballShooterMotor.setPower(0);
-        ballShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
-    }
+    }*/
     /* Read the color sensor and return "b" for Blue or "r" for Red */
    /* public char ReadColorSensor(){
 

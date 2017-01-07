@@ -1,8 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OldCode;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.media.MediaCodecInfo;
+import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,10 +17,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by inspirationteam on 11/20/2016.
  */
 
-@TeleOp(name = "#11183: TeleOp CompetitionJoystick", group = "Robot")
+@TeleOp(name = "#11183: TeleOp Competition Beta 1.6.17", group = "Robot")
 @Disabled
-
-public class TeleOpCompetitionJoystick extends OpMode {
+public class Jan6TeleOpCompetitionBeta extends OpMode {
 
 
 /*
@@ -54,14 +59,15 @@ Declare global variables here
     CAP_BALL_ARM_OPEN,
     CAP_BALL_BALL_HOLD,
     CAP_BALL_LIFT_BALL,
-    CAP_BALL_DROP_BALL
+    CAP_BALL_DROP_BALL;
 }
+
     cap_ball_arm_state_type cap_ball_arm_state;
 
-    static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
+    //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
 
 
-    private ElapsedTime runtime = new ElapsedTime();
+    //private ElapsedTime runtime = new ElapsedTime();
     static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
     static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
@@ -87,7 +93,7 @@ Declare global variables here
         ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
-        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
+//        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
 
         lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
         lift_motor.setDirection(DcMotor.Direction.REVERSE);
@@ -123,8 +129,9 @@ Declare global variables here
     public void loop() {
         FourWheelDrive();
         CollectBalls();
-        BallShooter();
-        //shoot();
+        //BallShooter();
+        shoot();
+        CapBallLift();
 
     }
 
@@ -149,8 +156,8 @@ Declare global variables here
         /*
         read the gamepad values and put into variables
          */
-        telemetry.addData("leftWheel Motor front encoder value: %d ", leftWheelMotorFront.getCurrentPosition());
-        telemetry.update();
+        /*telemetry.addData("leftWheel Motor front encoder value: %d ", leftWheelMotorFront.getCurrentPosition());
+        telemetry.update();*/
         float leftY_gp1 = -gamepad1.left_stick_y;
         float rightY_gp1 = -gamepad1.right_stick_y;
 
@@ -180,7 +187,7 @@ Declare global variables here
 /*---------------------------------------------------------------------------------------------
 */
 
-    public void BallShooter(){
+    /*public void BallShooter(){
         float shoot = -gamepad2.right_stick_y;//gets value from 2nd gamepad's joystick
 
         ballShooterMotor.setPower(Math.abs(shoot));//set power
@@ -195,15 +202,15 @@ Declare global variables here
         } else {
             ballShooterMotor.setPower(-1);
             ballShooterMotor.setPower(0)
-        }*/
+        }
 
 
 
-    }
+    }*/
 
 /*---------------------------------------------------------------------------------------------
 */
-   /* public void shoot(){
+    public void shoot(){
 
         if (gamepad2.right_bumper){
         ballShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -212,15 +219,15 @@ Declare global variables here
         ballShooterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ballShooterMotor.setPower(1);
         while (ballShooterMotor.isBusy()){
-            telemetry.addData("", "Shooting...");
-            telemetry.update();
+            /*telemetry.addData("", "Shooting...");
+            telemetry.update();*/
         }
-        telemetry.addData("", "Done Shooting");
-        telemetry.update();
+        /*telemetry.addData("", "Done Shooting");
+        telemetry.update();*/
         ballShooterMotor.setPower(0);
         }
 
-    }*/
+    }
     /* Read the color sensor and return "b" for Blue or "r" for Red */
    /* public char ReadColorSensor(){
 
@@ -334,7 +341,7 @@ Declare global variables here
         }
     }
 
-    public void encoderlift(double liftSpeed,
+    /*public void encoderlift(double liftSpeed,
                             double lift_cm,
                             double timeoutS){
         int newLiftTarget;
@@ -366,13 +373,13 @@ Declare global variables here
             lift_motor.setPower(0);
 
 
-            // Turn off RUN_TO_POSITION
+            // Turn off RUN_TO_POSITIONs
             lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
-        }
+        }*/
 /*
 ---------------------------------------------------------------------------------------------
 */
-}}
+}
 
