@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -199,6 +200,9 @@ public class DriveEngine
                 drive(getPeriod() * numRevolutions, -.1, 0);
             }
         }
+    }
+    public void turn(double degrees){
+        turn(true, degrees);
     }
 
     public void setCircleMotorPower(double radius, double maxPower, boolean turnRight)

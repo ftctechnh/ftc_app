@@ -64,12 +64,8 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
     private ElapsedTime timer = new ElapsedTime();
     private double timeToHit = 0;
 
-    //The engine which controls our drive motors
-    DriveEngine engine = null;
-
-    //Sensors
-    Sensors sensors=null;
-    RangePair rangepair = null;
+    //Our robot
+    Bogg bogg;
 
     //Time constants
     private static final double TIME_ONE = 2;
@@ -91,13 +87,10 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
 
     @Override
     public void runOpMode() {
-        engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
-        sensors = new Sensors(hardwareMap);
-        rangepair = new RangePair(hardwareMap, 9, sensors);
-
+        bogg = new Bogg(hardwareMap, gamepad1);
         if(blue){
-            engine.invertDirection();
-            rangepair.invertDirection();
+            bogg.driveEngine.invertDirection();
+            bogg.rangePair.invertDirection();
         }
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -108,73 +101,15 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
             // Point robot to closer white line
             // Then curve, and press the second beacon
 
-            while(sensors.isBottomWhite())
+            while(bogg.sensors.isBottomWhite())
             if(numDistancesensors == 2){
-                driveAlongWall(8, engine.inchesBetweenMotors, .7, blue);
+                bogg.driveAlongWall(8, bogg.driveEngine.inchesBetweenMotors, .7, blue);
             }
 
         }
 
     }
 
-   public void driveAlongWall(double targetDistanceFromWall, double distanceBetweenMotors, double maxPower, boolean sensorsOnLeft)
-   {
-       double inchesAway = rangepair.minDistanceAway();
-       double distanceToTarget = inchesAway - targetDistanceFromWall;
-       double radius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
-       boolean targetOnRight = sensorsOnLeft == (distanceToTarget < 0);
-
-       //If not facing the direction we want to go, always curve towards the target
-       if(rangepair.angleToWall() < 0 && distanceToTarget > 0 || rangepair.angleToWall() > 0 && distanceToTarget < 0)
-       {
-           curveTowards(targetDistanceFromWall, distanceBetweenMotors, maxPower, targetOnRight);
-       }
-
-
-       else if(distanceToTarget < 3)
-       {
-           curveAway(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
-       }
-
-       //ensures that we can curve without going over the target line
-       else if(radius < (distanceBetweenMotors+2))
-       {
-           curveAway(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
-       }
-
-       else
-       {
-           curveTowards(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
-       }
-   }
-
-    public void curveAway(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean targetOnRight)
-    {
-        //Finds the radius of the target circular path
-        //Turns away from the target line
-
-        double radius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
-
-
-        engine.setCircleMotorPower(radius, maxPower, !targetOnRight);
-    }
-
-    public void curveTowards(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean targetOnRight)
-    {
-        // First, curves robot to  60 degrees from the target based on a
-        // circle centered at where the distance beams hit the wall.
-        // This ensures that they will always hit the correct wall, thus making the curve the most efficient for our robot
-        // Then continues at 60 degrees until the curve radius is less than the distance between the motors (driveAlongWall switches to curve)
-        // Turns towards the target line
-
-        double radius = distanceToTarget / Math.cos(rangepair.angleToWall());
-
-        if(rangepair.angleToWall() < 60)
-        {
-            engine.setCircleMotorPower(radius, maxPower, targetOnRight);
-        }
-
-    }
 
 
 
