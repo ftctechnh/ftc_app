@@ -93,10 +93,9 @@ Declare global variables here
         ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOpCompetition.java
-=======
+
 //        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
->>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Main/TeleOpCompetitionBeta.java
+
 
         lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
      //   lift_motor.setDirection(DcMotor.Direction.REVERSE);

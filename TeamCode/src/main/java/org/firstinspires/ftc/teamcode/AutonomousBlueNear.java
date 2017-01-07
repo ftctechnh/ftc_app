@@ -98,20 +98,22 @@ public class AutonomousBlueNear extends AutonomousGeneral {
 
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
+        sleep(500);
 
         shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
 
+        sleep(500);
         shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
        // encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
        // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
       //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
-        encoderDrive(DRIVE_SPEED, -330,-99 , 5.0);
-        encoderDrive(DRIVE_SPEED,  -20,-20  , 5.0);
+        encoderDrive(DRIVE_SPEED, -285,-99 , 5.0);
+        encoderDrive(DRIVE_SPEED,  -10,-10  , 5.0);
         encoderDrive(DRIVE_SPEED,  10, 10, 5.0);
-      //  encoderDrive(DRIVE_SPEED,  -30,-30  , 5.0);
+        encoderDrive(DRIVE_SPEED,  -15,-15  , 5.0);
         /*while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
             turnRight(0.5);
         }*/

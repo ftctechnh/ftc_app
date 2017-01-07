@@ -38,21 +38,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-<<<<<<< HEAD
-<<<<<<< HEAD
+//<<<<<<< HEAD
+//<<<<<<< HEAD
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-=======
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
->>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180
-=======
+//=======
+import org.firstinspires.ftc.teamcode.AutonomousGeneral;
+/*>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180
+=======*/
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
->>>>>>> 55f5f2acfb873f3f0a66e8649853b5de3df60115
+//>>>>>>> 55f5f2acfb873f3f0a66e8649853b5de3df60115
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -81,8 +81,8 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-//@Autonomous(name="Pushbot: AutonomousRedNear", group="Pushbot")
-@Disabled
+@Autonomous(name="Pushbot: AutonomousRedNear", group="Pushbot")
+//@Disabled
 public class AutonomousRedNear extends AutonomousGeneral {
 
 
@@ -118,14 +118,34 @@ public class AutonomousRedNear extends AutonomousGeneral {
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1800);
 
+        sleep(500);
         shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1800);
+        sleep(500);
 
         shootingDrive(0.8, 850);
         sleep(500);
 
-        if (operation_beacon_press == true) {
+        if (operation_beacon_press == false)
+         {
+            // pause for servos to move
+            encoderDrive(DRIVE_SPEED, 6, -6, 5.0);
+            // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
+            //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
+            encoderDrive(DRIVE_SPEED, 285, 99, 5.0);
+            encoderDrive(DRIVE_SPEED, 10, 10, 5.0);
+            encoderDrive(DRIVE_SPEED, -10, -10, 5.0);
+            encoderDrive(DRIVE_SPEED, 15, 15, 5.0);
+        /*while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
+            turnRight(0.5);
+        }*/
+            ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            telemetry.addData("Path", "Complete");
+            telemetry.update();
+            //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        }
+        else{
 
             encoderDrive(0.6, 55, 55, 10);
 
@@ -211,23 +231,7 @@ public class AutonomousRedNear extends AutonomousGeneral {
 
 
         }
-        else {
-            // pause for servos to move
-            encoderDrive(DRIVE_SPEED, 6, -6, 5.0);
-            // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
-            //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
-            encoderDrive(DRIVE_SPEED, 330, 99, 5.0);
-            encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
-            encoderDrive(DRIVE_SPEED, -10, -10, 5.0);
-            encoderDrive(DRIVE_SPEED, 30, 30, 5.0);
-        /*while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
-            turnRight(0.5);
-        }*/
-            ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
-            //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        }
+
     }
 
 
