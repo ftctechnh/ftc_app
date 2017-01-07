@@ -1,7 +1,21 @@
 package org.firstinspires.ftc.teamcode.Main;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.media.MediaCodecInfo;
+import android.view.View;
+import android.widget.Button;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 /**
  * Created by adityamavalankar on 1/5/17.
@@ -9,6 +23,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="AutonomousBlueTwo")
 public class AutonomousFarStart extends AutonomousGeneral {
+
+    //blue: tangent to blue line
+    //red: tangent to red line
 
     private ElapsedTime runtime = new ElapsedTime();
 

@@ -33,11 +33,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Steven;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_newName;
+import org.firstinspires.ftc.teamcode.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.AutonomousGeneral_newName;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -67,6 +68,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_newName;
  */
 
 @Autonomous(name="Pushbot: AutonomousRedNearColor", group="Pushbot")
+@Disabled
 
 public class AutonomousRedNearColor extends AutonomousGeneral_newName {
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Steven;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Created by inspirationteam on 12/11/2016.
  */
 @Autonomous(name = "gyroTest", group = "PushBot")
+@Disabled
 public class GyroTest extends OpMode {
 
     GyroSensor gyroSensor;

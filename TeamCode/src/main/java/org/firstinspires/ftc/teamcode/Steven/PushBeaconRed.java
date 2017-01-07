@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Steven;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  * Created by inspirationteam on 12/2/2016.
  */
 @Autonomous(name = "pushBeacon", group = "Pushbot")
+@Disabled
 public class PushBeaconRed extends OpMode {
     Servo beaconPress;
     boolean bLedOn;

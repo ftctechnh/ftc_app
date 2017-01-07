@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name = "#11183: Beacon Press", group = "Robot")
+@Disabled
 
 public class BeaconPress extends OpMode {
 

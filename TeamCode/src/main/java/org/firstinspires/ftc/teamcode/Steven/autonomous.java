@@ -69,6 +69,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Pushbot: AutonomousRedFar", group="Pushbot")
+@Disabled
 
 public class autonomous extends LinearOpMode {
 

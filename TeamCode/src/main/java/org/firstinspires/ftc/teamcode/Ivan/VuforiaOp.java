@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.R;
 
 @Autonomous(name="VuforiaExample", group="Vuforia")
 @Disabled
+
 public class VuforiaOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

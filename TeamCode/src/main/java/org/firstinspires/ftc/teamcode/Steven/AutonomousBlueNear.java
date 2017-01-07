@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -79,10 +80,10 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: AutonomousblueFar", group="Pushbot")
+@Autonomous(name="Pushbot: AutonomousBlueNear", group="Pushbot")
 @Disabled
 
-public class AutonomousBlueFar extends LinearOpMode {
+public class AutonomousBlueNear extends LinearOpMode {
 
     /* Declare OpMode members. */
     //   motors to drive the robot
@@ -99,7 +100,7 @@ public class AutonomousBlueFar extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_MOTOR_REV    = 757;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.3333 ;     // 56/24
     static final double     WHEEL_PERIMETER_CM   = 29;     // For figuring circumference
     static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
@@ -167,8 +168,8 @@ public class AutonomousBlueFar extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  10,  30, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  -22,  22, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -20,  -20, 5.0);
+       // encoderDrive(DRIVE_SPEED,  -6,  6, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
 
@@ -176,22 +177,23 @@ public class AutonomousBlueFar extends LinearOpMode {
 
         // intakeDrive(0.8, 900);
 
-        shootingDrive(1.0, 800);
+        shootingDrive(.5, 850);
 
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
 
-        shootingDrive(1.0, 800);
+        shootingDrive(.5, 850);
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
 
-        shootingDrive(1.0, 800);
+        shootingDrive(.5, 850);
         sleep(500);     // pause for servos to move
+        //encoderDrive(DRIVE_SPEED,  -10,  10, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
         //encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -100, -38, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
     }
 
@@ -327,4 +329,3 @@ public class AutonomousBlueFar extends LinearOpMode {
 
     }
 }
-

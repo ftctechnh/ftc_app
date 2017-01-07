@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 @TeleOp(name = "Capball", group = "Robot")
+@Disabled
 
 public class capballGrabber extends OpMode {
 

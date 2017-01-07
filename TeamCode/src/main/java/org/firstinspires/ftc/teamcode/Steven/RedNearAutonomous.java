@@ -33,10 +33,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Steven;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -66,6 +67,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
  */
 
 @Autonomous(name="Pushbot: NewAutonomousRedNear", group="Pushbot")
+@Disabled
 
 public class RedNearAutonomous extends AutonomousGeneral {
 
