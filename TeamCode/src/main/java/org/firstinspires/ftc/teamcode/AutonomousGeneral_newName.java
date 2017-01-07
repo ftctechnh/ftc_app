@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 

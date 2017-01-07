@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name = "#11183: TeleOp Competition Alpha", group = "Robot")
+@Disabled
 
 public class TeleOpCompetitionAlpha extends OpMode {
 
@@ -27,8 +29,8 @@ public class TeleOpCompetitionAlpha extends OpMode {
     DcMotor ballCollectorMotor;
     DcMotor ballShooterMotor;
 
-    Servo lift_servo;
-    DcMotor lift_motor;
+    //Servo lift_servo;
+    //DcMotor lift_motor;
 
     double shooterGearRatio = 2.333;
 //asdfasdf
@@ -148,8 +150,8 @@ Declare global variables here
         /*
         read the gamepad values and put into variables
          */
-        telemetry.addData("leftWheel Motor front encoder value: %d ", leftWheelMotorFront.getCurrentPosition());
-        telemetry.update();
+        /*telemetry.addData("leftWheel Motor front encoder value: %d ", leftWheelMotorFront.getCurrentPosition());
+        telemetry.update();*/
         float leftY_gp1 = -gamepad1.left_stick_y;
         float rightY_gp1 = -gamepad1.right_stick_y;
 
@@ -211,11 +213,11 @@ Declare global variables here
         ballShooterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ballShooterMotor.setPower(1);
         while (ballShooterMotor.isBusy()){
-            telemetry.addData("", "Shooting...");
-            telemetry.update();
+            /*telemetry.addData("", "Shooting...");
+            telemetry.update();*/
         }
-        telemetry.addData("", "Done Shooting");
-        telemetry.update();
+       /* telemetry.addData("", "Done Shooting");
+        telemetry.update();*/
         ballShooterMotor.setPower(0);
         }
 

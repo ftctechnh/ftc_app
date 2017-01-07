@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Autonomous(name = "beacon press auto", group = "Robot")
-
+@Disabled
 
 
 

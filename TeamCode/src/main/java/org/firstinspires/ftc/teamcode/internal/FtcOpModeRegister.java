@@ -40,7 +40,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 import org.firstinspires.ftc.teamcode.Aditya.BeaconPress;
 import org.firstinspires.ftc.teamcode.Ivan.VuforiaOp;
 import org.firstinspires.ftc.teamcode.Steven.TankTeleOp;
-import org.firstinspires.ftc.teamcode.Main.TeleOpCompetitionBeta;
+import org.firstinspires.ftc.teamcode.Main.Jan6TeleOpCompetitionBeta;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
@@ -74,7 +74,7 @@ public class FtcOpModeRegister implements OpModeRegister {
          */
         manager.register("TankTeleOp", TankTeleOp.class);
         manager.register("VuforiaExample", VuforiaOp.class);
-        manager.register("11183: TeleOp Competition", TeleOpCompetitionBeta.class);
+        manager.register("11183: TeleOp Competition", Jan6TeleOpCompetitionBeta.class);
         manager.register("#11183: Beacon Press", BeaconPress.class);
         BlocksOpMode.registerAll(manager);
 
