@@ -91,6 +91,14 @@ Declare global variables here
         lift_motor.setDirection(DcMotor.Direction.REVERSE);
 
         cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_INIT_POS;
+
+//This is closed-loop speed control. Encoders are required for this mode.
+// SetPower() in this mode is actually requesting a certain speed, based on the top speed of
+// encoder 4000 pulses per second.
+        leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 /*
 ---------------------------------------------------------------------------------------------
@@ -119,7 +127,8 @@ Declare global variables here
 
     @Override
     public void loop() {
-        FourWheelDrive();
+        FourWheelDriveEncoder();
+        //FourWheelDrive();
         CollectBalls();
         BallShooter();
         //shoot();
@@ -143,6 +152,19 @@ Declare global variables here
     Functions go here
  */
 
+    public void FourWheelDriveEncoder(){
+        /*
+        read the gamepad values and put into variables
+         */
+        float leftY_gp1 = (-gamepad1.left_stick_y)*leftWheelMotorFront.getMaxSpeed();
+        float rightY_gp1 = (-gamepad1.right_stick_y)*leftWheelMotorFront.getMaxSpeed();
+
+        //run the motors by setting power to the motors with the game pad values
+        leftWheelMotorFront.setPower(leftY_gp1);
+        leftWheelMotorBack.setPower(leftY_gp1);
+        rightWheelMotorFront.setPower(rightY_gp1);
+        rightWheelMotorBack.setPower(rightY_gp1);
+    }
 
     public void FourWheelDrive(){
         /*
@@ -158,6 +180,8 @@ Declare global variables here
         leftWheelMotorBack.setPower(leftY_gp1);
         rightWheelMotorFront.setPower(rightY_gp1);
         rightWheelMotorBack.setPower(rightY_gp1);
+
+
 
     }
 /*---------------------------------------------------------------------------------------------
