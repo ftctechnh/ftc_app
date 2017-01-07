@@ -30,15 +30,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.Alyssa;
+package org.firstinspires.ftc.teamcode.Matthew;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
@@ -68,24 +66,33 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Blue2", group="Pushbot")
+@Autonomous(name="FunctionTest", group="Pushbot")
 //@Disabled
-public class Blue2 extends LinearOpMode {
+public class FuntionTest extends LinearOpMode {
 
     /* Declare OpMode members. */
-
-
     InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
-
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    public int GyroDegrees = 0;
+
+    public void RunWithEncoders(float speed, float LeftDistance, float RightDistance, float timeout) {
+        try {
+            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
+            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
+        }
+        catch (InterruptedException ex) {
+        }
+    }
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -109,71 +116,17 @@ public class Blue2 extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                robot.leftMotor.getCurrentPosition(),
-                robot.rightMotor.getCurrentPosition());
+                          robot.leftMotor.getCurrentPosition(),
+                          robot.rightMotor.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-//        // Step through each leg of the path,
-//        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-//        encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // Drive to Cap Ball
-//        encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
-//        encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-//        encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-//
-//        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-//        //robot.rightClaw.setPosition(0.0);
-//        sleep(1000);     // pause for servos to move
-//
+        //Code Goes Here
 
-
-        /* @todo: Alyssa now that you have our ten steps clearly defined, its time to start calling
-           the robot functions required to make the robot do the things we want it to.  Matthew
-           added some functions to InvadersVelocityVortexBot.java that you can use to do
-           gyro turns and driving using the ultrasonic sensor.  You can access them by typing:
-               robot.GyroTurn(...);
-               robot.DistanceDrive(...);
-           You can read the color sensor value by typing
-                robot.color1.red();
-                robot.color1.blue();
-           Of course, our robot should have two color sensors (one for the beacon and one for the
-           line, so hopefully someone changes color1's name to something more descriptive, so we
-           aren't accidentally trying to read the line color sensor when trying to decide which
-           beacon to press.
-        */
-
-        // 1.  Use our shoot function to shoot the particles into the center vortex.
-        // 2.  Drive forward using the encoders (or timing)
-        // 3.  Use our gyro turn function to turn 90 degrees.
-        // 4.  Use our drive forward with the distance sensor function to drive to the wall.
-        // 5.  Turn using the gyro sensor another 90 degrees so we are lined up with the wall.
-        // 6.  Make a function that drives us forward until the line sensor sees the white tape.
-        // 7.  Drive forward abut 2 inches.
-        // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the button.
-        // 9.  Do the same for the next beacon.
-        // 10. Drive backwards onto the corner vortex.
-
-
-// Willow and James tested this color sensing on the beacon successfully
-//     //  Color sensor.
-//     robot.beaconSensor.enableLed(false);
-//     int red = robot.beaconSensor.red();
-//     int blue = robot.beaconSensor.blue();
-//
-//     while (robot.beaconSensor.blue() < 5){
-//         robot.leftMotor.setPower(1);
-//         robot.rightMotor.setPower(1);
-//     }
-//     robot.leftMotor.setPower(0);
-//     robot.rightMotor.setPower(0);
-
-        // Step 6: Drive to the white tape on the floor
-        robot.WaitForReflectedLight(6,true);
-
-        // Step 4: Drive forward to the beacon wall
-        robot.DistanceDrive(30,DistanceUnit.CM,1);
+        robot.GyroTurn(1, 360);
+        robot.GyroTurn(1, -360);
 
 
 
@@ -183,12 +136,16 @@ public class Blue2 extends LinearOpMode {
 
 
 
-    robot.GyroTurn(1,90);
+        //Code Ends Here
 
+
+
+        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        //robot.rightClaw.setPosition(0.0);
+        //// TODO: 1/2/2017 Add a "Sleep" here. 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
@@ -198,7 +155,7 @@ public class Blue2 extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
+    public void  encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) throws InterruptedException {
         int newLeftTarget;
@@ -222,26 +179,28 @@ public class Blue2 extends LinearOpMode {
                     (runtime.seconds() < timeoutS) &&
                     (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
-                // Turn On RUN_TO_POSITION
-                robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // Turn On RUN_TO_POSITION
+            robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftMotor.getCurrentPosition(),
-                        robot.rightMotor.getCurrentPosition());
+                                            robot.leftMotor.getCurrentPosition(),
+                                            robot.rightMotor.getCurrentPosition());
                 telemetry.update();
-
 
                 // Allow time for other processes to run.
                 idle();
+
+
             }
 
             // Stop all motion;
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
+
             // Turn off RUN_TO_POSITION
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

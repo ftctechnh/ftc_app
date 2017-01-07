@@ -6,10 +6,13 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -51,6 +54,11 @@ public class InvadersVelocityVortexBot
     public DcMotor sweeper = null;
     public DcMotor capBall  = null;
 
+    //public UltrasonicSensor UDS = null;
+    public ColorSensor color1 = null;
+    public ColorSensor color2 = null;
+    public GyroSensor gyro = null;
+    public TouchSensor downLimit = null;
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
 
@@ -107,6 +115,8 @@ public class InvadersVelocityVortexBot
 
            I don't actually know which will be easier to use in the long run, but the logic/math
            below will need to be updated slightly depending on how we decide to proceed.
+
+           It is a relative heading, I think this will be easier to use in the long run.
  */
 
         int GyroDegrees = 0;
@@ -118,7 +128,10 @@ public class InvadersVelocityVortexBot
                 // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
                 // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
                 // the gyro sensor's value here.
+                GyroDegrees = gyro.getHeading();
+
             }
+
             leftMotor.setPower(0);
             rightMotor.setPower(0);
         }
@@ -127,6 +140,7 @@ public class InvadersVelocityVortexBot
             leftMotor.setPower(-0.2);
             rightMotor.setPower(0.2);
             while (GyroDegrees < degrees == true) {
+                GyroDegrees = gyro.getHeading();
                 // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
                 // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
                 // the gyro sensor's value here.
