@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
@@ -127,7 +128,7 @@ public class Blue2 extends LinearOpMode {
 //
 
 
-        /* TODO: Alyssa now that you have our ten steps clearly defined, its time to start calling
+        /* @todo: Alyssa now that you have our ten steps clearly defined, its time to start calling
            the robot functions required to make the robot do the things we want it to.  Matthew
            added some functions to InvadersVelocityVortexBot.java that you can use to do
            gyro turns and driving using the ultrasonic sensor.  You can access them by typing:
@@ -152,6 +153,33 @@ public class Blue2 extends LinearOpMode {
         // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the button.
         // 9.  Do the same for the next beacon.
         // 10. Drive backwards onto the corner vortex.
+
+
+     //  Color sensor.
+     int red = robot.beaconSensor.red();
+     int blue = robot.beaconSensor.blue();
+
+     while (blue < 50){
+         robot.leftMotor.setPower(1);
+         robot.rightMotor.setPower(1);
+     }
+     robot.leftMotor.setPower(0);
+     robot.rightMotor.setPower(0);
+
+        while (robot.UDS.getDistance(DistanceUnit.CM) > 10 ){
+
+                robot.leftMotor.setPower(1);
+                robot.rightMotor.setPower(1);
+    }
+     robot.leftMotor.setPower(0);
+     robot.rightMotor.setPower(0);
+
+
+
+
+
+
+
 
 
 

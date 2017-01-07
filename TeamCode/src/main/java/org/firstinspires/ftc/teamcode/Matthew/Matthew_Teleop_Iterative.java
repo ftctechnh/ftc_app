@@ -177,14 +177,14 @@ public class Matthew_Teleop_Iterative extends OpMode {
                 }
             }
             case 1: {
-                robot.pusher.setPosition(0.751);
+                //robot.pusher.setPosition(0.751);
                 robot.ballElevator.setPower(0);
             }
             case 2: {
                 //Pause
             }
             case 3: {
-                robot.pusher.setPosition(0.25);
+                //robot.pusher.setPosition(0.25);
             }
         }
     }
