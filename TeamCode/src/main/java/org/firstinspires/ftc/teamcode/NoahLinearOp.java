@@ -31,11 +31,18 @@ public class NoahLinearOp extends OpMode {
 
     @Override
     public void loop() {
-        if (time < 5)
+        if (time < 2)
         {
             right1.setPower(-1);
             right2.setPower(-1);
             left1.setPower(1);
+            left2.setPower(1);
+        }
+        else if (time < 4)
+        {
+            right1.setPower(-1);
+            right2.setPower(1);
+            left1.setPower(-1);
             left2.setPower(1);
         }
         else
