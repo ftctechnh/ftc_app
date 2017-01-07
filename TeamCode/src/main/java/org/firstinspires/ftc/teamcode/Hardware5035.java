@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode;
 
 import android.hardware.Sensor;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -41,6 +44,15 @@ public class Hardware5035 {
     public TouchSensor balldumpup;
     public LightSensor leftLightSensor;
     public LightSensor rightLightSensor;
+    public ColorSensor colorDetector;
+    public UltrasonicSensor frontUltra;
+    public OpticalDistanceSensor sideUltra;
+    public Servo constServo;
+    //color
+    //ultrasonic
+    //light
+    //servo
+    //ultrasonic
 
 
 
@@ -59,6 +71,10 @@ public class Hardware5035 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+        colorDetector = hwMap.colorSensor.get("Detector");
+        frontUltra = hwMap.ultrasonicSensor.get("front ultra");
+        sideUltra = hwMap.opticalDistanceSensor.get("side ultra");
+        constServo = hwMap.servo.get("const servo");
         ballBooster1 = hwMap.dcMotor.get("ball booster 1");
         ballBooster2 = hwMap.dcMotor.get("ball booster 2");
         leftMotor = hwMap.dcMotor.get("left driveReverse");
@@ -80,7 +96,6 @@ public class Hardware5035 {
         rightLightSensor.enableLed(true);
 
 
-
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
@@ -88,6 +103,7 @@ public class Hardware5035 {
         ballBooster2.setPower(0);
         ballDump.setPower(0.10);
         popUp.setPosition(1);
+        constServo.setPosition(0.51);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
