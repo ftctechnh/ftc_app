@@ -17,8 +17,9 @@ public class ColorSensorTest extends OpMode {
     DcMotor right2;
     ColorSensor red;
     boolean lookForRed;
-    boolean 
-    @Override
+
+@Override
+
     public void init() {
         left1 = hardwareMap.dcMotor.get("left1");
         left2 = hardwareMap.dcMotor.get("left2");
@@ -42,7 +43,7 @@ public class ColorSensorTest extends OpMode {
             right2.setPower(-1);
             left1.setPower(1);
             left2.setPower(1);
-            red.red
+
         }
 
         if (time < 5)
