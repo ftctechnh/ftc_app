@@ -79,7 +79,7 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.4;
+    static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.1;
     static final double     PUSH_SPEED             = 0.1;
 
@@ -143,108 +143,150 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
         telemetry.addData("Step 1 GyroDrive", " Completed");
         telemetry.update();
-        sleep(2500);
+        sleep(250);
 
         //Step 2
         gyroTurn( TURN_SPEED, -55.0);         // Turn  CCW to -55 Degrees
         telemetry.addData("Step 2 GyroTurn", " Completed");
         telemetry.update();
-        sleep(2500);
+        sleep(250);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 2 Gyro HOLD", " Completed");
 //        telemetry.update();
 //        sleep(2000);
 
+
 //        Step 3
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
         encoderDrive(DRIVE_SPEED, 42, 42, 10.0); // Drive fwd
         telemetry.addData("Step 3a GyroDrive", " Completed");
         telemetry.update();
-        sleep(2500);
+        sleep(250);
 
-        encoderDrive(PUSH_SPEED, 12, 12, 10.0); // Drive fwd
+        encoderDrive(PUSH_SPEED, 9 , 9, 10.0); // Drive fwd
         telemetry.addData("Step 3b GyroDrive", " Completed");
         telemetry.update();
 
 
-        sleep(2500);
+        sleep(250);
 
         //Step 4
         gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
         telemetry.addData("Step 4 GyroTurn", " Completed");
         telemetry.update();
-        sleep(2500);
+        sleep(250);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 4 Gyro HOLD", " Completed");
 //        telemetry.update();
 //        sleep(2000);
 
-        encoderDrive(DRIVE_SPEED, 3, 3, 3.0); //  Forward 24 inches with 3 Sec timeout
+        //encoderDrive(DRIVE_SPEED, 4, 4, 3.0);
+        telemetry.addData("Before Color sense", "loop");
+        telemetry.update();
         sleep(2500);
 
-//        //Touch sensor loop - TODO
-//        while (!robot.touch.isPressed() && sensorLoopCycles < 6) {
-//            if (robot.touch.isPressed()) {
-//                telemetry.addData("Touch", "Is Pressed");
-//                encoderDrive(DRIVE_SPEED, -12, -12, 3.0);
-//            }else{
-//            telemetry.addData("Touch", "Is Not Pressed");
-//            encoderDrive(PUSH_SPEED, 1, 1, 3.0);
-//
-//            telemetry.update();
-//            }
-//            sensorLoopCycles = sensorLoopCycles + 1 ;
-//        }
-
-        // Light sensor loop - TODO
-        sensorLoopCycles = 0;
-        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
-            encoderDrive(PUSH_SPEED,1,1,3.0);
-
-            if (robot.color.blue() < robot.color.red()) {
-                colorBlueSensed = 1;
-                telemetry.addData("Detecting", "Red");
-                telemetry.update();
-                sleep(250);
-            } else if (robot.color.blue() > robot.color.red()){
-                colorBlueSensed = 2;
-                telemetry.addData("Detecting", "Blue");
-                telemetry.update();
-                sleep(250);
-            } else {
-                colorBlueSensed = 0;
-                telemetry.addData("Detecting", "Neither");
-                telemetry.update();
-                sleep(250);
-            }
-            sensorLoopCycles = sensorLoopCycles + 1 ;
-        }
-
+        // Light sensor loop
         if (robot.color.red() > robot.color.blue()) {
             colorBlueSensed = 1;
             telemetry.addData("Detecting", "Red");
-            telemetry.update();
 //            sleep(500);
             encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
 //            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            gyroTurn(TURN_SPEED, 60.0);
+            gyroTurn(TURN_SPEED, -60.0);
             encoderDrive(PUSH_SPEED,    20,20,3.0);
-            gyroTurn(TURN_SPEED, 90.0);
+            gyroTurn(TURN_SPEED, -90.0);
             encoderDrive(PUSH_SPEED,    9,9,3.0);
         } else if (robot.color.blue() > robot.color.red()){
             colorBlueSensed = 2;
             telemetry.addData("Detecting", "Blue");
-            telemetry.update();
 //            sleep(500);
             encoderDrive(PUSH_SPEED, 4,4, 3.0);
         } else {
             colorBlueSensed = 0;
             telemetry.addData("Detecting", "Neither");
-            telemetry.update();
 //            sleep(500);
         }
+
+        //Did not find either color. So now start the loop
+        sensorLoopCycles = 0;
+        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
+            encoderDrive(PUSH_SPEED,1,1,3.0);
+
+            if (robot.color.red() > robot.color.blue()) {
+                colorBlueSensed = 1;
+                telemetry.addData("Detecting", "Red");
+//            sleep(500);
+                encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
+//            encoderDrive(TURN_SPEED,    -3,6,3.0);
+                gyroTurn(TURN_SPEED, -60.0);
+                encoderDrive(PUSH_SPEED,    20,20,3.0);
+                gyroTurn(TURN_SPEED, -90.0);
+                encoderDrive(PUSH_SPEED,    9,9,3.0);
+            } else if (robot.color.blue() > robot.color.red()){
+                colorBlueSensed = 2;
+                telemetry.addData("Detecting", "Blue");
+//            sleep(500);
+                encoderDrive(PUSH_SPEED, 4,4, 3.0);
+            } else {
+                colorBlueSensed = 0;
+                telemetry.addData("Detecting", "Neither");
+//            sleep(500);
+            }
+            sensorLoopCycles = sensorLoopCycles + 1 ;
+        }
+        telemetry.addData("First Color sense loop", "completed");
+        telemetry.update();
+
+        //Look for the second beacon
+        encoderDrive(DRIVE_SPEED, -5,-5, 3.0);
+        gyroTurn(TURN_SPEED,0.0);
+        encoderDrive(DRIVE_SPEED, 30,30, 3.0);
+
+
+        // Looking for white line
+        robot.color2.enableLed(true);
+        sensorLoopCycles = 0;
+        while ((robot.color2.alpha() < 4 || robot.color2.red() < 4 || robot.color2.green()<4 || robot.color2.blue()< 4) && sensorLoopCycles < 6){
+            encoderDrive(PUSH_SPEED,1,1,3.0);
+            sensorLoopCycles = sensorLoopCycles + 1 ;
+        }
+
+        //Now we are on white line
+        //Turning off active mode on color 2 as white line has been found
+        robot.color2.enableLed(false);
+        gyroTurn(TURN_SPEED,-90.0);
+        encoderDrive(DRIVE_SPEED, 4, 4, 3.0); //  Forward 24 inches with 3 Sec timeout
+
+        // Light sensor loop
+        sensorLoopCycles = 0;
+        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
+            encoderDrive(PUSH_SPEED,1,1,3.0);
+
+            if (robot.color.red() > robot.color.blue()) {
+                colorBlueSensed = 1;
+                telemetry.addData("Detecting", "Red");
+//            sleep(500);
+                encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
+//            encoderDrive(TURN_SPEED,    -3,6,3.0);
+                gyroTurn(TURN_SPEED, -60.0);
+                encoderDrive(PUSH_SPEED,    20,20,3.0);
+                gyroTurn(TURN_SPEED, -90.0);
+                encoderDrive(PUSH_SPEED,    9,9,3.0);
+            } else if (robot.color.blue() > robot.color.red()){
+                colorBlueSensed = 2;
+                telemetry.addData("Detecting", "Blue");
+//            sleep(500);
+                encoderDrive(PUSH_SPEED, 4,4, 3.0);
+            } else {
+                colorBlueSensed = 0;
+                telemetry.addData("Detecting", "Neither");
+//            sleep(500);
+            }
+            sensorLoopCycles = sensorLoopCycles + 1 ;
+        }
+        telemetry.update();
 
         encoderDrive(DRIVE_SPEED,  -48, -48, 3.0); // Back up and park
         telemetry.addData("Path", "Complete");
