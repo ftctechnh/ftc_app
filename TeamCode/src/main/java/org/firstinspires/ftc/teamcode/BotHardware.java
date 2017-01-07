@@ -26,6 +26,8 @@ public class BotHardware
     public Servo leftServo = null;
     public Servo rightServo = null;
     public Servo ballGate = null;
+    public Servo leftLift = null;
+    public Servo rightLift = null;
 
     public MuxColor leftSensor = null;
     public MuxColor rightSensor = null;
@@ -109,6 +111,8 @@ public class BotHardware
         leftServo = hw.getServo("servo_left");
         rightServo = hw.getServo("servo_right");
         ballGate = hw.getServo("servo_gate");
+        leftLift = hw.getServo("servo_lift_left");
+        rightLift = hw.getServo("servo_lift_right");
 
         // change directions if necessary
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -142,11 +146,15 @@ public class BotHardware
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
         ballGate.setDirection(Servo.Direction.REVERSE);
+        leftLift.setDirection(Servo.Direction.FORWARD);
+        rightLift.setDirection(Servo.Direction.REVERSE);
 
         //set servos default positions
         leftServo.setPosition(0.0);
         rightServo.setPosition(0.0);
         ballGate.setPosition(0.0);
+        leftLift.setPosition(0.0);
+        rightLift.setPosition(0.0);
     }
 
     public class NavXHeading implements HeadingSensor{

@@ -110,11 +110,11 @@ public class TeleOpMain extends OpMode {
         }
 
         // run lifter motor
-        if(gamepad2.left_trigger > 0.0) {
+        if(gamepad1.left_trigger > 0.0 || gamepad2.b) {
             robot.lifterMotor.setPower(1.0);
             robot.sweeperMotor.setPower(-1.0);
         }
-        else if(gamepad2.right_trigger > 0.0) {
+        else if(gamepad1.right_trigger > 0.0 || gamepad2.b) {
             robot.lifterMotor.setPower(-1.0);
             robot.sweeperMotor.setPower(1.0);
         }
@@ -138,19 +138,24 @@ public class TeleOpMain extends OpMode {
             robot.ballGate.setPosition(0.0);
         }
 
+
+        //open/close cap ball mech
+        robot.leftLift.setPosition(gamepad2.left_trigger);
+        robot.rightLift.setPosition(gamepad2.right_trigger);
+
         // toggle button pushers
-        if(!lastLeftBumperState && gamepad2.left_bumper) {
+        if(!lastLeftBumperState && gamepad1.left_bumper) {
             leftPusherState *= -1.0;
         }
-        if(!lastRightBumperState && gamepad2.right_bumper) {
+        if(!lastRightBumperState && gamepad1.right_bumper) {
             rightPusherState *= -1.0;
         }
 
         robot.leftServo.setPosition(leftPusherState);
         robot.rightServo.setPosition(rightPusherState);
 
-        lastLeftBumperState = gamepad2.left_bumper;
-        lastRightBumperState = gamepad2.right_bumper;
+        lastLeftBumperState = gamepad1.left_bumper;
+        lastRightBumperState = gamepad1.right_bumper;
     }
 
 

@@ -141,6 +141,7 @@ public class LineDrive extends OpenCVLib {
         if(red){
             mDrive.add(new AutoLib.GyroTurnStep(modePointer, 180, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.3f, 3.0f, true));
             mDrive.add(new AutoLib.GyroTurnStep(modePointer, 180, robot.getNavXHeadingSensor(), robot.getMotorArray(), -0.2f, 3.0f, true));
+            mDrive.add(new AutoLib.LogTimeStep(this, "YAY!", 0.1));
 
             heading = 180;
             rightAngle = -90;
@@ -152,7 +153,7 @@ public class LineDrive extends OpenCVLib {
 
         mDrive.add(new AutoLib.SquirrleyAzimuthTimedDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, time - 0.5f, false));
         mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new UltraSensors(robot.distSensor, 60), true));
-        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, rightAngle, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(25), mGPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame), true));
+        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, rightAngle, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mGPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame), true));
 
         mSequence.add(mDrive);
 
@@ -219,7 +220,7 @@ public class LineDrive extends OpenCVLib {
 
     @Override
     public void start(){
-
+        robot.navX.zeroYaw();
     }
 
     @Override
@@ -369,7 +370,7 @@ public class LineDrive extends OpenCVLib {
             if(dist > 200) dist = 200;
             else if (dist < 5) dist = 5;
 
-            dist += angleError * Kp;
+            //dist += angleError * Kp;
 
             return dist - mDist;
         }
