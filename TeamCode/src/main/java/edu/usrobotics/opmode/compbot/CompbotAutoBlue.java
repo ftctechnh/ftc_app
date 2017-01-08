@@ -1,6 +1,7 @@
 package edu.usrobotics.opmode.compbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import edu.usrobotics.opmode.compbot.CompbotAuto;
 /**
@@ -8,6 +9,7 @@ import edu.usrobotics.opmode.compbot.CompbotAuto;
  */
 
 @Autonomous(name="Compbot Auto Blue", group="Compbot")
+@Disabled
 public class CompbotAutoBlue extends CompbotAuto {
 
     public CompbotAutoBlue() {

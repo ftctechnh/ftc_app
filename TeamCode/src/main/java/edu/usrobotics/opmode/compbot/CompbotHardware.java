@@ -38,8 +38,6 @@ public class CompbotHardware extends BaseHardware {
     public ColorSensor bottomFrontColorSensor;
     public ColorSensor bottomBackColorSensor;
 
-    public DeviceInterfaceModule dim;
-
     public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
     public boolean brCorrectDirection = false;
@@ -239,6 +237,12 @@ public class CompbotHardware extends BaseHardware {
     public DcMotorSimple.Direction getMotorDirection(DcMotorSimple.Direction regular, boolean correctDirection) {
 
         return (correctDirection ? regular : (regular.equals(DcMotorSimple.Direction.REVERSE) ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE));
+
+    }
+
+    public boolean sensingWhite(ColorSensor sensor){
+
+        return sensor.red() > 4 && sensor.green() > 4 && sensor.blue() > 4;
 
     }
 

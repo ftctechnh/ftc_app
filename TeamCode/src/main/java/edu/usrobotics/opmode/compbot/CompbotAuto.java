@@ -13,6 +13,7 @@ import edu.usrobotics.opmode.task.Goal;
 import edu.usrobotics.opmode.task.MotorTask;
 import edu.usrobotics.opmode.task.Task;
 import edu.usrobotics.opmode.task.TaskType;
+import edu.usrobotics.opmode.task.WaitTask;
 
 /**
  * Created by mborsch19 & dsiegler19 on 10/13/16.
@@ -26,8 +27,12 @@ public abstract class CompbotAuto extends RobotOp {
         this.isBlueTeam = isBlueTeam;
     }
 
+    Goal<Integer> encoderGoal7 = new Goal<> (robot.inchesToEncoderTicks(4f));
+
+    int numTimesHitBeacon = 1;
+
     @Override
-    public void init () {
+    public void init() {
 
         robot.init(hardwareMap);
 
@@ -35,7 +40,7 @@ public abstract class CompbotAuto extends RobotOp {
 
         robot.setDirection(CompbotHardware.MovementDirection.NORTH);
 
-        int maxMotorSpeed = 5000000;
+        final int maxMotorSpeed = 50000;
 
         Task shoot = new Task() {
             ElapsedTime shooterTime;
@@ -85,19 +90,20 @@ public abstract class CompbotAuto extends RobotOp {
 
                 completed = true;
             }
+
         };
 
-        Goal<Integer> encoderGoal = new Goal<> (robot.inchesToEncoderTicks(12));
-        ConcurrentTaskSet forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        // Forward then turn the forward as an alternative to diagonals
+        Goal<Integer> forward1EncoderGoal = new Goal<> (robot.inchesToEncoderTicks(35f));
+        ConcurrentTaskSet forward1 = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, forward1EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, forward1EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, forward1EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, forward1EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
         ) {
             @Override
             public boolean onExecuted() {
-                LoggedOp.debugOut = robot.frontLeft.getCurrentPosition()  + ", " + robot.frontRight.getCurrentPosition()  + ", " + isTaskCompleted (1) + ", " + isTaskCompleted (0) + " " + System.currentTimeMillis();
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
+                return isTaskCompleted (0) || isTaskCompleted(1);
             }
 
             @Override
@@ -105,18 +111,75 @@ public abstract class CompbotAuto extends RobotOp {
                 super.onReached();
 
                 robot.setDirection(CompbotHardware.MovementDirection.NORTH);
-            }
 
-            @Override
-            public void onCompleted () {
-                super.onCompleted();
-                //LoggedOp.debugOut = "cpleted";
             }
         };
 
-        // CRAB DIAGONAL TO BEACON
-        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(40f));
-        ConcurrentTaskSet crab1 = new ConcurrentTaskSet( // this is crabbing
+        Goal<Integer> turnEncoderGoal = new Goal<> (robot.degreesToEncoderTicks(90));
+        ConcurrentTaskSet turnBlue = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0) || isTaskCompleted(1);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.TURN_RIGHT);
+
+            }
+        };
+
+        ConcurrentTaskSet turnRed = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, turnEncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0) || isTaskCompleted(1);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.TURN_LEFT);
+
+            }
+        };
+
+        Goal<Integer> forward2EncoderGoal = new Goal<> (robot.inchesToEncoderTicks(35f));
+        ConcurrentTaskSet forward2 = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, forward2EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, forward2EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, forward2EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, forward2EncoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0) || isTaskCompleted(1);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.NORTH);
+
+            }
+        }; // another turn
+
+        // Diagonal to the beacon wall
+        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(50f));
+        ConcurrentTaskSet crabToBeaconWallBlue = new ConcurrentTaskSet(
                 new MotorTask(robot.frontLeft, encoderGoal3, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backRight, encoderGoal3, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
         ) {
@@ -130,20 +193,18 @@ public abstract class CompbotAuto extends RobotOp {
                 super.onReached();
 
                 robot.setDirection(CompbotHardware.MovementDirection.NORTH_EAST);
+
             }
         };
 
-        // MOVE TO OTHER BUTTON
-        Goal<Integer> encoderGoal5 = new Goal<> (robot.inchesToEncoderTicks(4.5f));
-        final ConcurrentTaskSet move_to_other_button = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        // Diagonal to the beacon wall
+        ConcurrentTaskSet crabToBeaconWallRed = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal3, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal3, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
         ) {
             @Override
             public boolean onExecuted() {
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
+                return isTaskCompleted (0) || isTaskCompleted(1);
             }
 
             @Override
@@ -151,20 +212,67 @@ public abstract class CompbotAuto extends RobotOp {
                 super.onReached();
 
                 robot.setDirection(CompbotHardware.MovementDirection.NORTH);
+
             }
         };
 
-        // HIT BUTTON WEST SIDE
-        Goal<Integer> encoderGoal6 = new Goal<> (robot.inchesToEncoderTicks(5));
-        final ConcurrentTaskSet hit_button_west = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+        // Find the white line with the front cs
+        Goal<Integer> encoderGoal4 = new Goal<> (robot.inchesToEncoderTicks(100f));
+        ConcurrentTaskSet searchForLineWithFrontCs = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return robot.sensingWhite(robot.bottomFrontColorSensor);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.NORTH_EAST);
+
+            }
+
+        };
+
+        // Find the white line with the middle color sensors
+        Goal<Integer> encoderGoal5 = new Goal<> (robot.inchesToEncoderTicks(100f));
+        ConcurrentTaskSet searchForLineWithMiddleCs = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal5, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return (robot.sensingWhite(robot.bottomRightColorSensor)) || robot.sensingWhite(robot.bottomLeftColorSensor);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.NORTH_EAST);
+
+            }
+
+        };
+
+        // Make the first approach to the beacon
+        Goal<Integer> encoderGoal6 = new Goal<> (robot.inchesToEncoderTicks(10f));
+        ConcurrentTaskSet beaconFirstApproachBlue = new ConcurrentTaskSet(
                 new MotorTask(robot.frontLeft, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backRight, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backLeft, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
         ) {
             @Override
             public boolean onExecuted() {
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
+                return isTaskCompleted (0) || isTaskCompleted(1);
             }
 
             @Override
@@ -172,20 +280,21 @@ public abstract class CompbotAuto extends RobotOp {
                 super.onReached();
 
                 robot.setDirection(CompbotHardware.MovementDirection.EAST);
+
             }
+
         };
 
-        // LEAVE BUTTON WEST SIDE
-        Goal<Integer> encoderGoal8 = new Goal<> (robot.inchesToEncoderTicks(5));
-        final ConcurrentTaskSet leave_button_west = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        // Make the first hit to the beacon
+        ConcurrentTaskSet beaconFirstApproachRed = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal6, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
         ) {
             @Override
             public boolean onExecuted() {
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
+                return isTaskCompleted (0) || isTaskCompleted(1);
             }
 
             @Override
@@ -193,20 +302,119 @@ public abstract class CompbotAuto extends RobotOp {
                 super.onReached();
 
                 robot.setDirection(CompbotHardware.MovementDirection.WEST);
+
             }
+
         };
 
-        // MOVE TO NEXT BEACON
-        Goal<Integer> encoderGoal7 = new Goal<> (robot.inchesToEncoderTicks(48f));
-        final ConcurrentTaskSet move_to_next_beacon = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+        // Make the next few hits to the beacon
+        final ConcurrentTaskSet beaconHitBlue = new ConcurrentTaskSet(
                 new MotorTask(robot.frontLeft, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backRight, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backLeft, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
         ) {
             @Override
             public boolean onExecuted() {
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
+                return isTaskCompleted (0) || isTaskCompleted(1);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.EAST);
+
+            }
+
+        };
+
+        final ConcurrentTaskSet beaconHitRed = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal7, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0) || isTaskCompleted(1);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.WEST);
+
+            }
+
+        };
+
+        // Turns used to align with the line
+        ConcurrentTaskSet backUpAndCheckIfCorrectColor = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, encoderGoal7, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal7, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal7, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal7, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f)
+        ) {
+
+            @Override
+            public boolean onExecuted() {
+
+                return isTaskCompleted (0) || isTaskCompleted(1);
+
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.SOUTH);
+
+            }
+
+            @Override
+            public void onCompleted(){
+
+                numTimesHitBeacon++;
+
+                if(numTimesHitBeacon <= 3){
+
+                    happyTrail.addTask(new WaitTask(3000));
+
+                    // Check if the color on the beacon is what it should be
+                    if(isBlueTeam && !(robot.buttonPresserColorSensor.blue() > 3)){
+
+                        encoderGoal7 = new Goal<>(robot.inchesToEncoderTicks(4f));
+                        happyTrail.addTask(beaconHitBlue);
+                        happyTrail.addTask(this);
+
+                    }
+
+                    else if(!isBlueTeam && !(robot.buttonPresserColorSensor.red() > 3)){
+
+                        encoderGoal7 = new Goal<>(robot.inchesToEncoderTicks(4f));
+                        happyTrail.addTask(beaconHitRed);
+                        happyTrail.addTask(this);
+
+                    }
+
+                }
+
+            }
+
+        };
+
+        final Goal<Integer> encoderGoal8 = new Goal<>(robot.inchesToEncoderTicks(4f));
+        final ConcurrentTaskSet moveToSecondBeacon = new ConcurrentTaskSet(
+                new MotorTask(robot.frontLeft, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal8, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0) || isTaskCompleted(1);
             }
 
             @Override
@@ -214,99 +422,28 @@ public abstract class CompbotAuto extends RobotOp {
                 super.onReached();
 
                 robot.setDirection(CompbotHardware.MovementDirection.NORTH);
-            }
-
-            @Override
-            public void onCompleted() {
-                super.onCompleted();
-
-                if (robot.buttonPresserColorSensor.red() > robot.buttonPresserColorSensor.blue() && isBlueTeam) { // If it is red and we are blue move forward
-                    happyTrail.addTask(move_to_other_button);
-                }
-
-                happyTrail.addTask(hit_button_west);
-                happyTrail.addTask(leave_button_west);
 
             }
+
         };
 
-        // STRAFE TO BEACON BLUE
-        Goal<Integer> encoderGoal4 = new Goal<> (robot.inchesToEncoderTicks(16));
-        ConcurrentTaskSet strafeBlue = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
-        ) {
-            @Override
-            public boolean onExecuted() {
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
-            }
-
-            @Override
-            public void onReached() {
-                super.onReached();
-
-                robot.setDirection(CompbotHardware.MovementDirection.NORTH_EAST);
-            }
-
-            @Override
-            public void onCompleted() {
-                super.onCompleted();
-
-                if (robot.buttonPresserColorSensor.red() > robot.buttonPresserColorSensor.blue() && isBlueTeam) { // If it is red and we are blue move forward
-                    happyTrail.addTask(move_to_other_button);
-                }
-
-                happyTrail.addTask(hit_button_west);
-                happyTrail.addTask(leave_button_west);
-                happyTrail.addTask(move_to_next_beacon);
-            }
-        };
-
-        // STRAFE TO BEACON BLUE
-        Goal<Integer> encoderGoal18 = new Goal<> (robot.inchesToEncoderTicks(17));
-        ConcurrentTaskSet strafeRed = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal4, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
-        ) {
-            @Override
-            public boolean onExecuted() {
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
-            }
-
-            @Override
-            public void onReached() {
-                super.onReached();
-
-                robot.setDirection(CompbotHardware.MovementDirection.NORTH_EAST);
-            }
-
-            @Override
-            public void onCompleted() {
-                super.onCompleted();
-
-                if (robot.buttonPresserColorSensor.red() > robot.buttonPresserColorSensor.blue() && isBlueTeam) { // If it is red and we are blue move forward
-                    happyTrail.addTask(move_to_other_button);
-                }
-
-                happyTrail.addTask(hit_button_west);
-                happyTrail.addTask(leave_button_west);
-                happyTrail.addTask(move_to_next_beacon);
-            }
-        };
-
-        happyTrail.addTask(forward);
         happyTrail.addTask(shoot);
-        happyTrail.addTask(forward);
-        happyTrail.addTask(crab1);
-        happyTrail.addTask(isBlueTeam ? strafeBlue : strafeRed);
+        happyTrail.addTask(isBlueTeam ? crabToBeaconWallBlue : crabToBeaconWallRed);
+        //happyTrail.addTask(forward1);
+        //happyTrail.addTask(isBlueTeam ? turnBlue : turnRed);
+        //happyTrail.addTask(forward2);
+        //another turn
+        happyTrail.addTask(searchForLineWithFrontCs);
+        happyTrail.addTask(searchForLineWithMiddleCs);
+        happyTrail.addTask(isBlueTeam ? beaconFirstApproachBlue : beaconFirstApproachRed);
+        happyTrail.addTask(backUpAndCheckIfCorrectColor);
+        happyTrail.addTask(moveToSecondBeacon);
+        encoderGoal7 = new Goal<>(robot.inchesToEncoderTicks(4f));
+        happyTrail.addTask(isBlueTeam ? beaconHitBlue : beaconHitRed);
+        numTimesHitBeacon = 1;
+        happyTrail.addTask(backUpAndCheckIfCorrectColor);
 
         addRoute(happyTrail);
-
-        //addTracker(new VuforiaTracker());
 
         super.init();
 

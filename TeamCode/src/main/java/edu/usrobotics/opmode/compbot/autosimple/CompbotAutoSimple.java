@@ -37,33 +37,6 @@ public abstract class CompbotAutoSimple extends RobotOp {
 
         int maxMotorSpeed = 5000000;
 
-        /*Goal<Integer> encoderGoal = new Goal<> (robot.inchesToEncoderTicks(12));
-        ConcurrentTaskSet forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.frontLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal, maxMotorSpeed, 0.5f, 0.7f, null, 0.1f)
-        ) {
-            @Override
-            public boolean onExecuted() {
-                LoggedOp.debugOut = robot.frontLeft.getCurrentPosition()  + ", " + robot.frontRight.getCurrentPosition()  + ", " + isTaskCompleted (1) + ", " + isTaskCompleted (0) + " " + System.currentTimeMillis();
-                return isTaskCompleted (0) || isTaskCompleted (1) || isTaskCompleted (2) || isTaskCompleted (3);
-            }
-
-            @Override
-            public void onReached() {
-                super.onReached();
-
-                robot.setDirection(CompbotHardware.MovementDirection.NORTH);
-            }
-
-            @Override
-            public void onCompleted () {
-                super.onCompleted();
-                //LoggedOp.debugOut = "cpleted";
-            }
-        };*/
-
         // CRAB DIAGONAL TO BEACON
         Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(60f));
         ConcurrentTaskSet crab1Blue = new ConcurrentTaskSet( // this is crabbing
