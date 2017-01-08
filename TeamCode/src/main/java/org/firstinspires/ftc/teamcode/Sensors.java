@@ -26,6 +26,11 @@ public class Sensors {
     ColorSensor colorSensorRight = null;
     ColorSensor colorSensorBottom = null;
 
+    //Distance between the range sensors
+    private double distanceApart;
+    //Direction
+    private boolean forwards;
+
     ModernRoboticsI2cRangeSensor rangeSensorFront = null;
     ModernRoboticsI2cRangeSensor rangeSensorBack = null;
 
@@ -38,8 +43,8 @@ public class Sensors {
         dim = hardwareMap.deviceInterfaceModule.get("dim");
         opSensorBottom = hardwareMap.opticalDistanceSensor.get("op_sense1");
 //        opSensor2 = hardwareMap.opticalDistanceSensor.get("op_sense2");
-        touchSensor = hardwareMap.touchSensor.get("sensor_touch");
-        colorSensorLeft = hardwareMap.colorSensor.get("sensor_color_left");
+//        touchSensor = hardwareMap.touchSensor.get("sensor_touch");
+ //       colorSensorLeft = hardwareMap.colorSensor.get("sensor_color_left");
 //        colorSensorRight = hardwareMap.colorSensor.get("sensor_color_right");
 //        colorSensorBottom = hardwareMap.colorSensor.get("sensor_color_bottom");
 //        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
@@ -123,5 +128,36 @@ public class Sensors {
         if (index == 2)
             return opSensor2;
         return null;
+    }
+
+    public double meanDistance()
+    {
+        return (rangeSensorBack.getDistance(DistanceUnit.INCH)+rangeSensorFront.getDistance(DistanceUnit.INCH))/2;
+    }
+
+    public double minDistanceAway()
+    {
+        return Math.min(rangeSensorBack.getDistance(DistanceUnit.INCH), rangeSensorFront.getDistance(DistanceUnit.INCH));
+    }
+
+    public double angleToWall()
+    {
+        double frontDistance = rangeSensorFront.getDistance(DistanceUnit.INCH);
+        double backDistance = rangeSensorBack.getDistance(DistanceUnit.INCH);
+        //gives positive values when angled towards wall
+        double difference = backDistance - frontDistance;
+
+        if(forwards){
+            return Math.atan(difference/distanceApart);
+        }
+        else{
+            return -1 * Math.atan(difference/distanceApart);
+        }
+
+    }
+
+    public void invertDirection()
+    {
+        forwards = !forwards;
     }
 }

@@ -22,6 +22,7 @@ public class Bogg
         driveEngine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad);
         sensors = new Sensors(hardwareMap);
         rangePair = new RangePair(hardwareMap, 9, sensors);
+
     }
     
     //methods that utilize both driveEngine and rangePair
