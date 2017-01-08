@@ -27,31 +27,31 @@ public class NoahOpMode extends OpMode {
     @Override
     public void loop()
     {
-       // if(gamepad2.left_stick_x == 0)//Forward/Backwards
         if(gamepad1.right_bumper)
         {
+            //horizontal
+            left1.setPower(-1*(gamepad1.right_stick_x));
+            left2.setPower(gamepad1.right_stick_x);
+            right1.setPower (gamepad1.right_stick_x);
+            right2.setPower(-1 *(gamepad1.right_stick_x));
+
+        }
+        //turn
+        else if(gamepad1.left_bumper)
+        {
+            left1.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+            left2.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+            right1.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+            right2.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+
+        }
+        else
+        {
+            //vertical
             left1.setPower(gamepad1.right_stick_y);
             left2.setPower(gamepad1.right_stick_y);
             right2.setPower(-1 * (gamepad1.right_stick_y));
             right1.setPower(-1 * (gamepad1.right_stick_y));
-       }
-// Left/Right
-//        else if(gamepad1.left_trigger == 0) {
-//            left2.setPower(gamepad1.left_stick_y);
-//            right1.setPower(-1 * (gamepad1.left_stick_y));
-//        }
-//        else if(gamepad1.a == false) {
-//            left1.setPower(gamepad1.left_stick_x);
-//            right2.setPower(-1 * (gamepad1.left_stick_x));
-//        }
-//
-
-        else
-        {
-            left1.setPower(gamepad1.right_stick_x);
-            left2.setPower(-1 * (gamepad1.right_stick_x));
-            right1.setPower(-1 * (gamepad1.right_stick_x));
-            right2.setPower(gamepad1.right_stick_x);
         }
         //Diagonals
 //       else if(gamepad1.left_trigger ==0) {
