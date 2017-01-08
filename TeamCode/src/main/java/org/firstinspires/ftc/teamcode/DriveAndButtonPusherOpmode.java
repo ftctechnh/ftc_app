@@ -76,7 +76,7 @@ public class DriveAndButtonPusherOpmode extends LinearOpMode {
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        pusherLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        pusherLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         pusherRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
