@@ -25,28 +25,23 @@ public class NoahOpMode extends OpMode {
     //Noah was here
 
     @Override
-    public void loop()
-    {
-        if(gamepad1.right_bumper)
-        {
+    public void loop() {
+        if (gamepad1.right_bumper) {
             //horizontal
-            left1.setPower(-1*(gamepad1.right_stick_x));
-            left2.setPower(gamepad1.right_stick_x);
-            right1.setPower (gamepad1.right_stick_x);
-            right2.setPower(-1 *(gamepad1.right_stick_x));
+            left1.setPower(-1 * (gamepad1.left_stick_x));
+            left2.setPower(gamepad1.left_stick_x);
+            right1.setPower(gamepad1.left_stick_x);
+            right2.setPower(-1 * (gamepad1.left_stick_x));
 
         }
         //turn
-        else if(gamepad1.left_bumper)
-        {
+        else if (gamepad1.left_bumper) {
             left1.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             left2.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             right1.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             right2.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
 
-        }
-        else
-        {
+        } else {
             //vertical
             left1.setPower(gamepad1.right_stick_y);
             left2.setPower(gamepad1.right_stick_y);
