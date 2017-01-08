@@ -38,13 +38,6 @@ public class NoahLinearOp extends OpMode {
             left1.setPower(1);
             left2.setPower(1);
         }
-        else if (time < 4)
-        {
-            right1.setPower(-1);
-            right2.setPower(1);
-            left1.setPower(-1);
-            left2.setPower(1);
-        }
         else
         {
             right1.setPower(0);
