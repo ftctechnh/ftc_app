@@ -61,6 +61,7 @@ public class DriveAndButtonPusherOpmode extends LinearOpMode {
     DcMotor leftMotor = null;
     DcMotor rightMotor = null;
     DcMotor pusherLeftMotor = null;
+    DcMotor pusherRightMotor = null;
 
     @Override
     public void runOpMode() {
@@ -68,12 +69,15 @@ public class DriveAndButtonPusherOpmode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
         leftMotor  = hardwareMap.dcMotor.get("left_drive");
         rightMotor = hardwareMap.dcMotor.get("right_drive");
+        pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
+        pusherRightMotor = hardwareMap.dcMotor.get("pusher_right");
+
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         pusherLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        pusherRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -88,6 +92,20 @@ public class DriveAndButtonPusherOpmode extends LinearOpMode {
 
             leftMotor.setPower(-gamepad1.left_stick_y);
             rightMotor.setPower(-gamepad1.right_stick_y);
+
+            if (gamepad1.left_bumper) {
+                pusherLeftMotor.setPower(gamepad1.left_trigger);
+            }
+            else {
+                pusherLeftMotor.setPower(-gamepad1.left_trigger);
+            }
+
+            if (gamepad1.right_bumper) {
+                pusherRightMotor.setPower(gamepad1.right_trigger);
+            }
+            else {
+                pusherRightMotor.setPower(-gamepad1.right_trigger);
+            }
 
             telemetry.update();
 
