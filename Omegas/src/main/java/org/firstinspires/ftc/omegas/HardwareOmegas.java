@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.omegas;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -46,6 +47,7 @@ public abstract class HardwareOmegas {
     private ArrayList<DcMotor> motors;
     private Context appContext;
     private Telemetry telemetry;
+    private MediaPlayer messagePlayer;
 
     private static final double MS_PER_RADIAN = 340.0;
     private static boolean isExtending = false;
@@ -114,6 +116,10 @@ public abstract class HardwareOmegas {
 
     protected void initTelemetry(Telemetry telemetry) {
         this.telemetry = telemetry;
+    }
+
+    protected void initAudio() {
+        messagePlayer = MediaPlayer.create(appContext, R.raw.goodlucknerds);
     }
 
     /**
@@ -225,6 +231,8 @@ public abstract class HardwareOmegas {
     protected void sayMessage() {
         telemetry.addData("", "Good luck, nerds!");
         telemetry.update();
+
+        messagePlayer.start();
     }
 
     public LightSensor getLightSensor() {
