@@ -30,6 +30,7 @@ public class OmegasLightSensor extends LinearOpMode {
                 initLightSensor(hardwareMap);
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
+                initAppContext(hardwareMap);
                 initTelemetry(telemetry);
 
                 getLightSensor().enableLed(true);

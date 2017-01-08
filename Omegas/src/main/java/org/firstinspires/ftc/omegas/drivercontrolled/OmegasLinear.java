@@ -78,6 +78,7 @@ public class OmegasLinear extends LinearOpMode {
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
                 initLiftServo(hardwareMap);
+                initAppContext(hardwareMap);
                 initTelemetry(telemetry);
 
                 sayMessage();
