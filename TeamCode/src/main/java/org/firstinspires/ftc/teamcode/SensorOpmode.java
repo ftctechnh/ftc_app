@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="SensorOpmode", group="Testing")  // @Autonomous(...) is the other common choice
-@Disabled
+//@Disabled
 public class SensorOpmode extends LinearOpMode {
     Sensors sensors = null;
 
@@ -58,8 +58,7 @@ public class SensorOpmode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            telemetry.addData("Op1", sensors.getOp(1).getLightDetected());
-            telemetry.addData("Op2", sensors.getOp(2).getLightDetected());
+            telemetry.addData("op_sense1", sensors.opSensorBottom.getLightDetected());
             telemetry.update();
 
             idle();     // allow something else to run (aka, release the CPU)

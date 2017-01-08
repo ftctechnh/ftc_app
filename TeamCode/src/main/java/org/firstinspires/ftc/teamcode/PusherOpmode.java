@@ -30,6 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -40,10 +41,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.ArrayList;
-
 import java.util.List;
 
-@TeleOp(name="PusherOpmode", group="Testing")  // @Autonomous(...) is the other common choice
+@TeleOp(name="PusherOpmode", group="Competition")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class PusherOpmode extends LinearOpMode {
 
@@ -56,16 +56,23 @@ public class PusherOpmode extends LinearOpMode {
 
     //The engine which controlls our drive motors
     DriveEngine engine = null;
+    Sensors sensors = null;
 
     //Servos used to move particles
     Servo servoSlicer = null;
     Servo servoPusher = null;
 
+    DcMotor pusherMotorLeft = null;
+    DcMotor pusherMotorRight = null;
+
     @Override
     public void runOpMode() {
 
         engine = new DriveEngine(DriveEngine.engineMode.defaultMode, hardwareMap, gamepad1);
+//        sensors  = new Sensors(hardwareMap);
 
+        pusherMotorLeft = hardwareMap.dcMotor.get("left_slider");
+        pusherMotorRight = hardwareMap.dcMotor.get("right_slider");
         servoSlicer = hardwareMap.servo.get("ball_slicer");
         servoPusher = hardwareMap.servo.get("ball_pusher");
 
@@ -101,6 +108,34 @@ public class PusherOpmode extends LinearOpMode {
                 servoSlicer.setPosition(SLICER_UP);
             }
 
+            if(gamepad1.dpad_up)
+            {
+                pusherMotorLeft.setPower(.2);
+            }
+            else if(gamepad1.dpad_down)
+            {
+                pusherMotorLeft.setPower(-.2);
+            }
+            else
+            {
+                pusherMotorLeft.setPower(0);
+            }
+
+            if(gamepad1.dpad_left)
+            {
+                pusherMotorRight.setPower(.2);
+            }
+            else if(gamepad1.dpad_right)
+            {
+                pusherMotorRight.setPower(-.2);
+            }
+            else
+            {
+                pusherMotorRight.setPower(0);
+            }
+
+            telemetry.addData("leftStick", engine.gamepad.left_stick_y);
+            telemetry.addData("rightStick", engine.gamepad.right_stick_y);
             telemetry.addData("leftPower", engine.getLeftPower());
             telemetry.addData("rightPower", engine.getRightPower());
             telemetry.addData("pusher", servoPusher.getPosition());

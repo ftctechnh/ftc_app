@@ -19,6 +19,7 @@ public class RangePair
 
     public RangePair(HardwareMap hardwareMap, double inBetweenSensors, Sensors sensors)
     {
+        this.sensors = sensors;
         distanceApart = inBetweenSensors;
     }
 

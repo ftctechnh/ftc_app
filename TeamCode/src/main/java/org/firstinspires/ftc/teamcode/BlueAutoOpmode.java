@@ -35,10 +35,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Disabled
 public class BlueAutoOpmode extends LinearOpMode
 {
-    RedAutoOpmodeBallAndBeacons redAutoOpmodeBallAndBeacons = new RedAutoOpmodeBallAndBeacons(true);
+    RedAutoOpmodeJustBeacons redAutoOpmodeJustBeacons = new RedAutoOpmodeJustBeacons(true);
     @Override
     public void runOpMode() {
-        redAutoOpmodeBallAndBeacons.runOpMode();
+        redAutoOpmodeJustBeacons.runOpMode();
     }
 
 }
