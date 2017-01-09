@@ -228,7 +228,7 @@ public abstract class HardwareOmegas {
         beaconator.setPosition(Math.abs(pos));
     }
 
-    protected void sayMessage() {
+    public void sayMessage() {
         telemetry.addData("", "Good luck, nerds!");
         telemetry.update();
 
