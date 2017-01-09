@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class EeyoreHardware
@@ -34,7 +35,7 @@ public class EeyoreHardware
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define and Initialize Motors
+        // Define and Initialize Motors and Sensors
         l1 = hwMap.dcMotor.get("l1");
         l2 = hwMap.dcMotor.get("l2");
         r1 = hwMap.dcMotor.get("r1");
@@ -97,5 +98,6 @@ public class EeyoreHardware
         // Reset the cycle clock for the next pass.
         period.reset();
     }
+
 }
 

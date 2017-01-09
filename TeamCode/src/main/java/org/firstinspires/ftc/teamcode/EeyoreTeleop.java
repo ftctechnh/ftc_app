@@ -43,8 +43,8 @@ public class EeyoreTeleop extends OpMode {
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = Range.clip(gamepad1.left_stick_y - gamepad1.left_stick_x, -1, 1);
-        right = Range.clip(gamepad1.left_stick_y + gamepad1.left_stick_x, -1, 1);
+        left = Range.clip(gamepad1.left_stick_y + gamepad1.left_stick_x, -1, 1);
+        right = Range.clip(gamepad1.left_stick_y - gamepad1.left_stick_x, -1, 1);
         robot.l1.setPower(left);
         robot.l2.setPower(left);
         robot.r1.setPower(right);
@@ -54,33 +54,75 @@ public class EeyoreTeleop extends OpMode {
         if(gamepad1.a) {
             if(robot.collection.getPower() == 0) {
                 robot.collection.setPower(1);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             } else {
                 robot.collection.setPower(0);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             }
+
         } else if(gamepad1.y) {
             if(robot.collection.getPower() == 0) {
                 robot.collection.setPower(-1);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             } else {
                 robot.collection.setPower(0);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
 
         // Shooter control
         if(gamepad1.x) {
             if(robot.shooter1.getPower() == 0) {
-                robot.shooter1.setPower(1);
-                robot.shooter2.setPower(1);
+                robot.shooter1.setPower(0.75);
+                robot.shooter2.setPower(0.75);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             } else {
                 robot.shooter1.setPower(0);
                 robot.shooter2.setPower(0);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             }
         } else if(gamepad1.b) {
             if(robot.shooter1.getPower() == 0) {
-                robot.shooter1.setPower(-1);
-                robot.shooter2.setPower(-1);
+                robot.shooter1.setPower(-0.75);
+                robot.shooter2.setPower(-0.75);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+
             } else {
                 robot.shooter1.setPower(0);
                 robot.shooter2.setPower(0);
+                try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+                    Thread.sleep(50);
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
 
