@@ -62,10 +62,10 @@ public class OmegasAutonomous extends LinearOpMode {
                 initBeaconators(hardwareMap);
                 initAppContext(hardwareMap);
                 initTelemetry(telemetry);
-
-                sayMessage();
             }
         };
+
+        boolean messageSaid = false;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -75,6 +75,11 @@ public class OmegasAutonomous extends LinearOpMode {
             for (DcMotor motor : Ω.getMotors()) {
                 motor.setPower((runtime.milliseconds() < 10000) ? 0.0
                         : (runtime.milliseconds() < 12500) ? 0.25 : 0.0);
+
+                if (runtime.milliseconds() < 10000 && !messageSaid) {
+                    Ω.sayMessage();
+                    messageSaid = true;
+                }
             }
         }
     }
