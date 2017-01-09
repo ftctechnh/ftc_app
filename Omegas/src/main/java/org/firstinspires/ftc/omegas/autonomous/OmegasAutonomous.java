@@ -77,7 +77,7 @@ public class OmegasAutonomous extends LinearOpMode {
                 motor.setPower((runtime.milliseconds() < 10000) ? 0.0
                         : (runtime.milliseconds() < 12500) ? 0.25 : 0.0);
 
-                if (runtime.milliseconds() < 8000 && !messageSaid) {
+                if (runtime.milliseconds() > 8000 && !messageSaid) {
                     Ω.sayMessage();
                     messageSaid = true;
                 }
