@@ -30,6 +30,7 @@ public class OmegasRotation extends LinearOpMode {
                 initDriveMotors(hardwareMap);
                 initAppContext(hardwareMap);
                 initTelemetry(telemetry);
+                initAudio();
 
                 sayMessage();
             }

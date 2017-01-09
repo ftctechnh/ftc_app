@@ -80,6 +80,7 @@ public class OmegasLinear extends LinearOpMode {
                 initLiftServo(hardwareMap);
                 initAppContext(hardwareMap);
                 initTelemetry(telemetry);
+                initAudio();
 
                 sayMessage();
             }

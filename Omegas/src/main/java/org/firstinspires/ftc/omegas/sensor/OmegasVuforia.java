@@ -138,6 +138,7 @@ public class OmegasVuforia extends LinearOpMode {
             public void init() {
                 initAppContext(hardwareMap);
                 initTelemetry(telemetry);
+                initAudio();
 
                 sayMessage();
             }

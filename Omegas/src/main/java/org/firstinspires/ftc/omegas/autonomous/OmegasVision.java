@@ -61,6 +61,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 initBeaconators(hardwareMap);
                 initAppContext(hardwareMap);
                 initTelemetry(telemetry);
+                initAudio();
 
                 getLightSensor().enableLed(true);
                 sayMessage();
