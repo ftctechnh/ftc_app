@@ -26,8 +26,8 @@ public class DistanceAuto extends LinearOpMode {
     double voltage, maxVoltage, voltsPerInch, voltageInInches;
     private ElapsedTime runtime = new ElapsedTime();
     String kev = "klk";
-    double expectedCloseVal = 12.51;
-
+//    double finalViI = (double) Math.round(voltageInInches * 100) / 100;
+//    double expectedCloseVal = 12.51;
     @Override
     public void runOpMode() {
 
@@ -46,11 +46,12 @@ public class DistanceAuto extends LinearOpMode {
             maxVoltage = distanceSensor.getMaxVoltage();
             voltsPerInch = 5.0/512.0;
             voltageInInches = voltage/voltsPerInch;
-        while (voltageInInches <= 12.512218963831867) {
-            if (runtime.seconds() > 3.0) {
-                telemetry.addData("okayyy", kev);
+            while (voltageInInches <= 12.512218963831867) {
+                runtime.reset();
+                if (runtime.seconds() > 3.0) {
+                    telemetry.addData("okayyy", kev);
+                }
             }
-        }
 
             // send the info back to driver station using telemetry function.
             telemetry.addData("Voltage", voltageInInches);
