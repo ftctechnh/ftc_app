@@ -85,6 +85,8 @@ public class HardwareDM
     public final static double BEACON_MIN_RANGE  = 0.0;
     public final static double BEACON_MAX_RANGE  = 0.52;
 
+    public final static double DEPLOY_WAIT = 1000;  // Wait 1 second for ball pickup to deploy
+
     /* Local OpMode members. */
     HardwareMap hwMap  = null;
     private ElapsedTime period  = new ElapsedTime();

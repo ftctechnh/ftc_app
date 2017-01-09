@@ -38,7 +38,7 @@ import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -81,11 +81,18 @@ public class TeleOpMain extends OpMode{
     static double           shootSpeed              = .925;
     static boolean          shootPressed            = false;
 
+    boolean intakeIn = false;       // intake running forward
+    boolean intakeOut = false;      // intake running backward
+    boolean intakeInPressed = false;    // Is button pressed
+    boolean intakeOutPressed = false;    // Is button pressed
+
     /* Servo positions and constants */
     double          beaconPos = robot.BEACON_HOME;
     double          pivotPos = robot.PIVOT_HOME;
     double          BEACON_SPEED = 0.1;
     double          PIVOT_SPEED = 0.1;
+
+    boolean         pickupDeployed = false;     // Has the cap ball forks been released
 
     // State used for reading Gyro b
     Orientation angles;
@@ -97,6 +104,8 @@ public class TeleOpMain extends OpMode{
     // values is a reference to the hsvValues array.
     final float values[] = hsvValues;
     View relativeLayout;
+
+    ElapsedTime pickupDeployTimer = new ElapsedTime();
 
 
     /*
@@ -193,10 +202,10 @@ public class TeleOpMain extends OpMode{
 
         // Adjust shooter speed
         if (gamepad2.dpad_down && !shootPressed) {
-            shootSpeed -= 0.025;
+            shootSpeed -= 0.005;
             shootPressed = true;
         } else if (gamepad2.dpad_up && !shootPressed) {
-            shootSpeed += 0.025;
+            shootSpeed += 0.005;
             shootPressed = true;
         }
         if (shootPressed && !gamepad2.dpad_down && !gamepad2.dpad_up) {
@@ -204,30 +213,53 @@ public class TeleOpMain extends OpMode{
             shootPressed = false;
         }
 
-        double beaconPos = robot.beacon.getPosition();
-        double pivotPos = robot.pivot.getPosition();
+        beaconPos = robot.beacon.getPosition();
+        pivotPos = robot.pivot.getPosition();
 
         // Adjust beacon servo position
         if (gamepad1.right_bumper) {
             beaconPos = robot.BEACON_MAX_RANGE;
         } else beaconPos = robot.BEACON_MIN_RANGE;
 
+
+
+        // Check if ready to release the cap pickup forks
+        // BOTH drivers must push button together to make this happen
+        if (gamepad1.left_bumper && gamepad2.left_bumper) {
+            if (pickupDeployed == false) {
+                // First time we are trying to deploy
+                pickupDeployed = true;
+                pickupDeployTimer.reset();      // Set timer of how long to wait
+                // Insert code to actually move the servo here
+            }
+        }
+
         // Adjust lift's pivot servo position
-        if (gamepad1.left_bumper) {
-            pivotPos = robot.PIVOT_MAX_RANGE;
-        } else pivotPos = robot.PIVOT_MIN_RANGE;
+        if (pickupDeployed == true && pickupDeployTimer.milliseconds() > robot.DEPLOY_WAIT) {
+            // The cap ball lift mechanism is ready to go!
+            if (gamepad2.left_stick_y < -0.2) {
+                pivotPos = robot.PIVOT_MAX_RANGE;
+            } else pivotPos = robot.PIVOT_MIN_RANGE;
+
+            pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
+            robot.pivot.setPosition(pivotPos);
+
+
+            // Lift up and down
+            if ((gamepad2.right_stick_y < -0.2) && (!robot.liftLimit.isPressed())) {
+                robot.liftMotor.setPower(1.0);
+            } else if (gamepad2.right_stick_y > 0.2) {
+                robot.liftMotor.setPower(-0.10);
+            } else robot.liftMotor.setPower(0.0);
+
+        }
+
 
         beaconPos = Range.clip(beaconPos, robot.BEACON_MIN_RANGE, robot.BEACON_MAX_RANGE);
         robot.beacon.setPosition(beaconPos);
-        pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
-        robot.pivot.setPosition(pivotPos);
 
-        // Lift up and down
-        if ((gamepad1.dpad_up) && (!robot.liftLimit.isPressed())) {
-            robot.liftMotor.setPower(1.0);
-        } else if (gamepad1.dpad_down) {
-            robot.liftMotor.setPower(-0.25);
-        } else robot.liftMotor.setPower(0.0);
+        pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
+
 
 
         shootSpeed = Range.clip(shootSpeed, 0.0, 1.0);
@@ -236,25 +268,50 @@ public class TeleOpMain extends OpMode{
         //telemetry.addData("pivotPos", pivotPos);
 
 
-        // Drive the ball intake
-        /*
-        if (gamepad1.b) {
-            robot.intake.setPower(0.0);
-        } else if (gamepad1.a) {
-            // feed in
-            robot.intake.setPower(1.0);
-        } else if (gamepad1.y) {
-            // feed reverse
-            robot.intake.setPower(-1.0);
+        // Ball intake on/off
+        if (gamepad1.left_trigger > 0.2) {
+            // Pressing intake reverse button
+            if (!intakeOutPressed) {
+                // Haven't read this button press yet
+                intakeOutPressed = true;
+                if (intakeOut) {
+                    // Already running out so stop it
+                    robot.intake.setPower(0.0);
+                    intakeOut = false;
+                    intakeIn = false;
+                } else {
+                    // Not already in reverse so set it so
+                    robot.intake.setPower(-1.0);
+                    intakeOut = true;
+                    intakeIn = false;
+                }
+            }
+        } else {
+            // Intake reverse button is not pressed
+            intakeOutPressed = false;
         }
-        */
         if (gamepad1.right_trigger > 0.2) {
-            robot.intake.setPower(1.0);
-        } else if (gamepad1.left_trigger > 0.2) {
-            robot.intake.setPower(-1.0);
-        } else if (gamepad1.a ){
-            robot.intake.setPower(0.0);
+            // Pressing intake forward button
+            if (!intakeInPressed) {
+                // Haven't read this button press yet
+                intakeInPressed = true;
+                if (intakeIn) {
+                    // Already running out so stop it
+                    robot.intake.setPower(0.0);
+                    intakeOut = false;
+                    intakeIn = false;
+                } else {
+                    // Not already in forward so set it so
+                    robot.intake.setPower(1.0);
+                    intakeOut = false;
+                    intakeIn = true;
+                }
+            }
+        } else {
+            // Intake reverse button is not pressed
+            intakeInPressed = false;
         }
+
 
         // Read and report heading
         angles   = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
