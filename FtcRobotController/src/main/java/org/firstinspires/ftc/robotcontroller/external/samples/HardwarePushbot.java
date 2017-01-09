@@ -6,28 +6,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * Created by Robotics on 11/9/2016.
  */
+
 public class HardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
+    public DcMotor leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  armMotor    = null;
-    public Servo    leftClaw    = null;
+    public DcMotor  BCM         = null;
+    public Servo leftClaw    = null;
     public Servo    rightClaw   = null;
 
     public static final double MID_SERVO       =  0.5 ;
@@ -52,6 +41,8 @@ public class HardwarePushbot
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
         armMotor    = hwMap.dcMotor.get("left_arm");
+        BCM         = hwMap.dcMotor.get("BCM");
+
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -59,12 +50,14 @@ public class HardwarePushbot
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         armMotor.setPower(0);
+        BCM.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BCM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
         leftClaw = hwMap.servo.get("left_hand");
@@ -98,4 +91,3 @@ public class HardwarePushbot
         period.reset();
     }
 }
-

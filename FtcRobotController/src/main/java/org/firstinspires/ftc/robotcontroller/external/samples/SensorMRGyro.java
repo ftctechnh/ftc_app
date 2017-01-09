@@ -35,7 +35,10 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -52,63 +55,80 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 @Disabled
 public class SensorMRGyro extends LinearOpMode {
 
-  @Override
-  public void runOpMode() {
+    @Override
+    public void runOpMode() {
 
-    ModernRoboticsI2cGyro gyro;   // Hardware Device Object
-    int xVal, yVal, zVal = 0;     // Gyro rate Values
-    int heading = 0;              // Gyro integrated heading
-    int angleZ = 0;
-    boolean lastResetState = false;
-    boolean curResetState  = false;
+        ModernRoboticsI2cGyro gyro;   // Hardware Device Object
+        int xVal, yVal, zVal = 0;     // Gyro rate Values
+        int heading = 0;              // Gyro integrated heading
+        int angleZ = 0;
+        boolean lastResetState = false;
+        boolean curResetState = false;
 
-    // get a reference to a Modern Robotics GyroSensor object.
-    gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
+        // get a reference to a Modern Robotics GyroSensor object.
+        gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
-    // start calibrating the gyro.
-    telemetry.addData(">", "Gyro Calibrating. Do Not move!");
-    telemetry.update();
-    gyro.calibrate();
+        // start calibrating the gyro.
+        telemetry.addData(">", "Gyro Calibrating. Do Not move!");
+        telemetry.update();
+        gyro.calibrate();
 
-    // make sure the gyro is calibrated.
-    while (!isStopRequested() && gyro.isCalibrating())  {
-      sleep(50);
-      idle();
+        // make sure the gyro is calibrated.
+        while (!isStopRequested() && gyro.isCalibrating()) {
+            sleep(50);
+            idle();
+        }
+
+        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
+        telemetry.update();
+
+        // wait for the start button to be pressed.
+        waitForStart();
+
+        while (opModeIsActive()) {
+
+            // if the A and B buttons are pressed just now, reset Z heading.
+            curResetState = (gamepad1.a && gamepad1.b);
+            if (curResetState && !lastResetState) {
+                gyro.resetZAxisIntegrator();
+            }
+            lastResetState = curResetState;
+
+            // get the x, y, and z values (rate of change of angle).
+            xVal = gyro.rawX();
+            yVal = gyro.rawY();
+            zVal = gyro.rawZ();
+
+            // get the heading info.
+            // the Modern Robotics' gyro sensor keeps
+            // track of the current heading for the Z axis only.
+            heading = gyro.getHeading();
+            angleZ = gyro.getIntegratedZValue();
+
+            telemetry.addData(">", "Press A & B to reset Heading.");
+            telemetry.addData("0", "Heading %03d", heading);
+            telemetry.addData("1", "Int. Ang. %03d", angleZ);
+            telemetry.addData("2", "X av. %03d", xVal);
+            telemetry.addData("3", "Y av. %03d", yVal);
+            telemetry.addData("4", "Z av. %03d", zVal);
+            telemetry.update();
+        }
     }
-
-    telemetry.addData(">", "Gyro Calibrated.  Press Start.");
-    telemetry.update();
-
-    // wait for the start button to be pressed.
-    waitForStart();
-
-    while (opModeIsActive())  {
-
-      // if the A and B buttons are pressed just now, reset Z heading.
-      curResetState = (gamepad1.a && gamepad1.b);
-      if(curResetState && !lastResetState)  {
-        gyro.resetZAxisIntegrator();
-      }
-      lastResetState = curResetState;
-
-      // get the x, y, and z values (rate of change of angle).
-      xVal = gyro.rawX();
-      yVal = gyro.rawY();
-      zVal = gyro.rawZ();
-
-      // get the heading info.
-      // the Modern Robotics' gyro sensor keeps
-      // track of the current heading for the Z axis only.
-      heading = gyro.getHeading();
-      angleZ  = gyro.getIntegratedZValue();
-
-      telemetry.addData(">", "Press A & B to reset Heading.");
-      telemetry.addData("0", "Heading %03d", heading);
-      telemetry.addData("1", "Int. Ang. %03d", angleZ);
-      telemetry.addData("2", "X av. %03d", xVal);
-      telemetry.addData("3", "Y av. %03d", yVal);
-      telemetry.addData("4", "Z av. %03d", zVal);
-      telemetry.update();
-    }
-  }
 }
+
+    /**
+     * This is NOT an opmode.
+     *
+     * This class can be used to define all the specific hardware for a single robot.
+     * In this case that robot is a Pushbot.
+     * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
+     *
+     * This hardware class assumes the following device names have been configured on the robot:
+     * Note:  All names are lower case and some have single spaces between words.
+     *
+     * Motor channel:  Left  drive motor:        "left_drive"
+     * Motor channel:  Right drive motor:        "right_drive"
+     * Motor channel:  Manipulator drive motor:  "left_arm"
+     * Servo channel:  Servo to open left claw:  "left_hand"
+     * Servo channel:  Servo to open right claw: "right_hand"
+     */

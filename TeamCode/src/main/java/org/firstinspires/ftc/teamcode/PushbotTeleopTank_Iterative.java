@@ -30,12 +30,14 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -96,14 +98,21 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void loop() {
-        double left;
-        double right;
+
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        // basic scaling for driving
+        if(gamepad1.left_stick_y != 0){
+            robot.leftMotor.setPower((double) gamepad1.left_stick_y/2.5);
+        }else{
+            robot.leftMotor.setPower(0.0);
+        }
+
+        if(gamepad1.right_stick_y != 0){
+            robot.rightMotor.setPower((double) gamepad1.right_stick_y/2.5);
+        }else{
+            robot.rightMotor.setPower(0.0);
+        }
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
@@ -124,11 +133,26 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         else
             robot.armMotor.setPower(0.0);
 
+
+        //spinning arm thing
+        if (gamepad1.dpad_up == true){
+            robot.BCM.setPower(-1.0);
+        }
+        else if (gamepad1.dpad_down == true){
+            robot.BCM.setPower(.3);
+        }
+        else {
+            robot.BCM.setPower(0.0);
+        }
+
+
+
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("left",  "%.2f", (gamepad1.left_stick_y/2.5));
+        telemetry.addData("right", "%.2f", (gamepad2.right_stick_y/2.5));
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
