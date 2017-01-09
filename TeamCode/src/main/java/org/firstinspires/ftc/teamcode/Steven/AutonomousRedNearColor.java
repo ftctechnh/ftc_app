@@ -73,18 +73,14 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral_newName;
 public class AutonomousRedNearColor extends AutonomousGeneral_newName {
 
 
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
-    static  int             INITIAL_SHOOTERPOS;
-
-    ColorSensor linecolorSensor;
+    static int INITIAL_SHOOTERPOS;
 
     @Override
     public void runOpMode() {
 
         initiate();
-        linecolorSensor = hardwareMap.colorSensor.get("lineColorSensor");
-
 
         INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
 
@@ -94,19 +90,39 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        encoderDrive(DRIVE_SPEED, 62.23, 62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);     // pause for servos to move
 
-        straightDrive(0.5);
-        if((linecolorSensor.red()>0||linecolorSensor.blue()>0||linecolorSensor.green()>0)){
 
-        }
+        // intakeDrive(0.8, 900);
+        encoderShoot(0.8);
+        //shootingDrive(0.8, 850);
 
+
+        sleep(500);     // pause for servos to move
+        intakeDrive(0.8, 1800);
+        sleep(500);
+        encoderShoot(0.8);
+        //shootingDrive(0.8, 850);
+
+
+        sleep(500);     // pause for servos to move
+        intakeDrive(0.8, 1800);
+        sleep(500);
+        encoderShoot(0.8);
+        //shootingDrive(0.8, 850);
+        sleep(500);
+
+
+
+
+
+
+        ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
         //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
+
     }
-
-
-
-
 }
