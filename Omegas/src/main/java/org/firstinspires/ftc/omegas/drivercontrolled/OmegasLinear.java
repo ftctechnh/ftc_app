@@ -79,6 +79,7 @@ public class OmegasLinear extends LinearOpMode {
                 initBeaconators(hardwareMap);
                 initAppContext(hardwareMap);
                 initTelemetry(telemetry);
+                initAudio();
 
                 sayMessage();
             }

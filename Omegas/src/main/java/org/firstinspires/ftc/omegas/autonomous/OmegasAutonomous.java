@@ -62,6 +62,7 @@ public class OmegasAutonomous extends LinearOpMode {
                 initBeaconators(hardwareMap);
                 initAppContext(hardwareMap);
                 initTelemetry(telemetry);
+                initAudio();
             }
         };
 
