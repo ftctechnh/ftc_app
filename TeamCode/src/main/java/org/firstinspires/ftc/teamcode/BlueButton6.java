@@ -12,7 +12,7 @@ public class BlueButton6 extends AutonomousBase{
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(actualRuntime() > 5 && !gyro.isCalibrating()) {
+                if(actualRuntime() > 1 && !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
                     map.setRobot(6,11.25);
@@ -49,7 +49,7 @@ public class BlueButton6 extends AutonomousBase{
                     gameState = 4;
                 }
                 break;
-            case 4: //Move paralell to wall
+            case 4: //Move parallel to wall
                 map.setGoal(9,0);
                 if(linedUp()){
                     moveState = MoveState.STOP;
@@ -73,11 +73,11 @@ public class BlueButton6 extends AutonomousBase{
                     moveState = MoveState.RIGHT_SLOW;
                 }else {
                     if (touchRight.isPressed()) {
-                        if (colorRight.blue() > colorRight.red() && colorLeft.red() < colorRight.red()) {
+                        if (colorRight.blue() > colorRight.red() && colorLeft.blue() < colorLeft.red()) {
                             moveState = MoveState.SERVO_L;
                             gameState = 7;
                             pTime = getRuntime();
-                        } else if (colorRight.blue() < colorRight.red() && colorLeft.red() > colorRight.red()) {
+                        } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() > colorLeft.red()) {
                             moveState = MoveState.SERVO_R;
                             gameState = 7;
                             pTime = getRuntime();
@@ -94,7 +94,7 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 7: // moves out from wall
-                if(getRuntime() - pTime > 3){
+                if(getRuntime() - pTime > 1){
                     map.setGoal(11.5, map.getRobotY());
                     moveState = MoveState.LEFT;
                     if(map.distanceToGoal()<= .1){
@@ -103,7 +103,6 @@ public class BlueButton6 extends AutonomousBase{
                     }
                 }else{
                     map.setRobot(12,7); //Since we're positive of our position after pressing the button, we might as well use that
-                    moveState = MoveState.RIGHT;
                 }
                 break;
             case 8: // moves up to push Beacon B
@@ -132,21 +131,27 @@ public class BlueButton6 extends AutonomousBase{
                 break;
             case 10: //move back  and button press B
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
-                if(touchRight.isPressed()){
-//                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
-//                        moveState = MoveState.SERVO_L;
-//                    }
-//                    else{
-                        moveState = MoveState.SERVO_R;
-//                    }
-                    gameState = 11;
-                    pTime = getRuntime();
-                }
-                else{
-                    if(linedUp()){
-                        moveState = MoveState.BACKWARD_SLOW;
-                    }else{
-                        moveState = MoveState.TURN_TOWARDS_GOAL;
+                if(!touchWall.isPressed()){
+                    moveState = MoveState.RIGHT_SLOW;
+                }else {
+                    if (touchRight.isPressed()) {
+                        if (colorRight.blue() > colorRight.red() && colorLeft.blue() < colorLeft.red()) {
+                            moveState = MoveState.SERVO_L;
+                            gameState = 11;
+                            pTime = getRuntime();
+                        } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() > colorLeft.red()) {
+                            moveState = MoveState.SERVO_R;
+                            gameState = 11;
+                            pTime = getRuntime();
+                        } else {
+                            moveState = MoveState.LEFT_SLOW;
+                        }
+                    } else {
+                        if (linedUp()) {
+                            moveState = MoveState.BACKWARD_SLOW;
+                        } else {
+                            moveState = MoveState.TURN_TOWARDS_GOAL;
+                        }
                     }
                 }
                 break;

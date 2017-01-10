@@ -14,7 +14,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 @TeleOp(name="Oriented Protobot Tank", group="Protobot")
 public class OrientedProtoBot extends OpMode {
 
-    private DcMotor motorCap;
     private DcMotor motorUp;
     private DcMotor motorDown;
     private DcMotor motorLeft;
@@ -22,8 +21,9 @@ public class OrientedProtoBot extends OpMode {
     private DcMotor motorRightShooter;
     private DcMotor motorLeftShooter;
     private DcMotor motorConveyer;
-    private Servo servoCap;
+    private DcMotor motorCap;
     private Servo servoCollector;
+    private Servo servoCap;
     private Servo servoLeftButton;
     private Servo servoRightButton;
     private TouchSensor touchRight;
@@ -40,10 +40,12 @@ public class OrientedProtoBot extends OpMode {
         motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
         motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
         motorConveyer = hardwareMap.dcMotor.get("conveyor");
+        motorCap = hardwareMap.dcMotor.get("cap_ball");
 
         servoCollector = hardwareMap.servo.get("collector");
         servoLeftButton = hardwareMap.servo.get("l_button");
         servoRightButton = hardwareMap.servo.get("r_button");
+        servoCap = hardwareMap.servo.get("cap");
         
         touchRight = hardwareMap.touchSensor.get("right_touch");
         gyro = hardwareMap.gyroSensor.get("gyro");
@@ -52,9 +54,6 @@ public class OrientedProtoBot extends OpMode {
         motorUp.setDirection(DcMotor.Direction.REVERSE);
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
         motorRightShooter.setDirection(DcMotor.Direction.REVERSE);
-
-        motorCap = hardwareMap.dcMotor.get("cap");
-        servoCap = hardwareMap.servo.get("cap_seatbelt");
     }
     public void loop(){
         int heading = gyro.getHeading();
@@ -130,6 +129,16 @@ public class OrientedProtoBot extends OpMode {
         else{
             motorConveyer.setPower(0);
         }
+        // Cap Ball code
+        if(gamepad2.dpad_up) {
+            motorCap.setPower(1);
+        } else if (gamepad1.dpad_down) {
+            motorCap.setPower(-1);
+        } else if(gamepad2.dpad_right){
+            servoCap.setPosition(1);
+        } else if(gamepad2.dpad_left) {
+            servoCap.setPosition(0);
+        }
         // Button press
         if(gamepad2.right_bumper){
             servoLeftButton.setPosition(0);
@@ -144,16 +153,7 @@ public class OrientedProtoBot extends OpMode {
         if(gamepad1.left_stick_button){
             gyro.calibrate();
         }
-        //Cap Ball
-        if(gamepad2.dpad_up){
-            motorCap.setPower(1);
-        }else if (gamepad2.dpad_down){
-            motorCap.setPower(-1);
-        }else if (gamepad2.dpad_right) {
-            servoCap.setPosition(1);
-        }else if (gamepad2.dpad_left){
-            servoCap.setPosition(0);
-        }
+        
         // Put telemetry here
         telemetry.addData("motor speed", motorSpeed);
         telemetry.addData("theta", heading);
