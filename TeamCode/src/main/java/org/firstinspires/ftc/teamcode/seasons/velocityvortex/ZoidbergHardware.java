@@ -21,10 +21,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class ZoidbergHardware {
 
-    public static final I2cAddr FRONT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x28);
-    public static final I2cAddr LEFT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x2a);
+    public static final int WHEEL_DIAMETER_INCHES = 4;
 
-    public static final int RANGE_SENSOR_REG_START = 0x04;
+    public static final int COUNTS_PER_MOTOR_REV = 1120;
+
+    public static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
+            (WHEEL_DIAMETER_INCHES * Math.PI));
 
     private DcMotorController attachmentsController;
 
@@ -83,15 +85,15 @@ public class ZoidbergHardware {
         colorSensor = hardwareMap.colorSensor.get("clr");
         colorSensor.enableLed(false);
 
-        frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
-        leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
+//        frontRange = (ModernRoboticsI2cRangeSensor)hardwareMap.get("frs");
+//        leftRange = (ModernRoboticsI2cRangeSensor)hardwareMap.get("lrs");
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
         ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
-//        gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
-//        gyroSensor.calibrate();
+        gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
+        gyroSensor.calibrate();
 
         // reverse all drive motors
         backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -99,7 +101,7 @@ public class ZoidbergHardware {
         frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // initialize positions
+        // initialize servo positions
         blue1.setPosition(1.0);
         red2.setPosition(0.0);
         door3.setPosition(0.53);
@@ -180,6 +182,81 @@ public class ZoidbergHardware {
         launcherMotor.setPower(0);
     }
 
+    public boolean areDriveMotorsBusy() {
+        return frontLeftDrive.isBusy() && frontRightDrive.isBusy()
+                && backLeftDrive.isBusy() && backRightDrive.isBusy();
+    }
+
+    public void encoderDrive(double speed, double leftInches, double rightInches, boolean stopCondition) {
+        int leftTarget = (int)(leftInches * COUNTS_PER_INCH);
+        int rightTarget = (int)(rightInches * COUNTS_PER_INCH);
+
+        // set the target position for each motor
+        frontLeftDrive.setTargetPosition(leftTarget);
+        frontRightDrive.setTargetPosition(-rightTarget);
+        backRightDrive.setTargetPosition(-rightTarget);
+        backLeftDrive.setTargetPosition(leftTarget);
+
+        // set RUN_TO_POSITION for each motor
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // set the power for the left drive motors
+        frontLeftDrive.setPower(speed);
+        backLeftDrive.setPower(speed);
+
+        // set the power for the right drive motors
+        frontRightDrive.setPower(speed);
+        backRightDrive.setPower(speed);
+
+        while(stopCondition && areDriveMotorsBusy()) {
+            stopRobot();
+        }
+
+        // set RUN_TO_POSITION for each motor
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void encoderStrafe(double speed, double frontInches, double backInches, boolean stopCondition) {
+        int frontTarget = (int)(frontInches * COUNTS_PER_INCH);
+        int backTarget = (int)(backInches * COUNTS_PER_INCH);
+
+        // set the target position for each motor
+        frontLeftDrive.setTargetPosition(-frontTarget);
+        frontRightDrive.setTargetPosition(-frontTarget);
+        backRightDrive.setTargetPosition(backTarget);
+        backLeftDrive.setTargetPosition(backTarget);
+
+        // set RUN_TO_POSITION for each motor
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // set the power for the left drive motors
+        frontLeftDrive.setPower(speed);
+        backLeftDrive.setPower(speed);
+
+        // set the power for the right drive motors
+        frontRightDrive.setPower(speed);
+        backRightDrive.setPower(speed);
+
+        while(stopCondition && areDriveMotorsBusy()) {
+            stopRobot();
+        }
+
+        // set RUN_TO_POSITION for each motor
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     public DcMotor getIntakeMotor() {
         return intakeMotor;
     }
@@ -238,9 +315,9 @@ public class ZoidbergHardware {
         return ods3;
     }
 
-//    public ModernRoboticsI2cGyro getGyroSensor() {
-//        return gyroSensor;
-//    }
+    public ModernRoboticsI2cGyro getGyroSensor() {
+        return gyroSensor;
+    }
 
     public ElapsedTime getRuntime() {
         return runtime;

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -13,7 +14,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class ProgrammingRobotHardware {
 
-    public static double COUNTS_PER_INCH = 0;
+    public static final double WHEEL_DIAMETER_INCHES = 4;
+
+    public static final double COUNTS_PER_MOTOR_REV = 1120;
+
+    public static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
+
+    public static final double P_DRIVE_COEFF = 0.15;
 
     private DcMotor frontLeft;
     private DcMotor frontRight;
@@ -30,17 +38,36 @@ public class ProgrammingRobotHardware {
         backRight = hardwareMap.dcMotor.get("br");
 
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        gyro.calibrate();
 
         colorSensor = hardwareMap.colorSensor.get("clrs");
         colorSensor.enableLed(true);
 
-        // set all motors to run using encoders
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // reset the encoders for each drive motor
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        gyro.calibrate();
+        // set the motor directions
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public boolean areDriveMotorsBusy() {
+        return frontLeft.isBusy() &&
+                frontRight.isBusy() &&
+                backLeft.isBusy() &&
+                backRight.isBusy();
+    }
+
+    public void stopDriveMotors() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
     }
 
     public ModernRoboticsI2cGyro getGyroSensor() {

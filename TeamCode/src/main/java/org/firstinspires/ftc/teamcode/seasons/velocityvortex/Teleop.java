@@ -57,9 +57,7 @@ public class Teleop extends LinearOpMode {
             handleIntake();
             handleLauncher();
 
-            telemetry.addData("ods2 : ", robot.getDiskOds().getRawLightDetected());
-            telemetry.addData("launcher ods", robot.getLauncherOds().getLightDetected());
-            telemetry.update();
+            handleTelemetry();
 
             idle();
         }
@@ -85,7 +83,7 @@ public class Teleop extends LinearOpMode {
         // if the Y button on the second gamepad was previously pressed
         if(yButtonPressed) {
             // if white is essentially detected by the ODS sensor
-            if (robot.getDiskOds().getRawLightDetected() > 2) {
+            if (robot.getDiskOds().getRawLightDetected() > 1) {
                 // run the launcher motor at a slower speed to find the black stripe
                 robot.getLauncherMotor().setPower(0.3);
             } else {
@@ -110,6 +108,19 @@ public class Teleop extends LinearOpMode {
             // until it detects the black stripe in the above if-statement will be executed
             yButtonPressed = true;
         }
+    }
+
+    private void handleTelemetry() {
+
+        telemetry.addData("ods2 : ", robot.getDiskOds().getRawLightDetected());
+        telemetry.addData("launcher ods", robot.getLauncherOds().getLightDetected());
+
+        telemetry.addData("front left mode", robot.getFrontLeftDrive().getMode());
+        telemetry.addData("front right mode", robot.getFrontRightDrive().getMode());
+        telemetry.addData("back left mode", robot.getBackLeftDrive().getMode());
+        telemetry.addData("back right mode", robot.getBackRightDrive().getMode());
+
+        telemetry.update();
     }
 
     private void handlePivot() {
