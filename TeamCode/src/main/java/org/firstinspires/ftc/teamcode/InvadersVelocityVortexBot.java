@@ -57,7 +57,6 @@ public class InvadersVelocityVortexBot
     //public UltrasonicSensor UDS = null;
     public ColorSensor color1 = null;
     public ColorSensor color2 = null;
-    public GyroSensor gyro = null;
     public TouchSensor downLimit = null;
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
@@ -66,7 +65,7 @@ public class InvadersVelocityVortexBot
     public OpticalDistanceSensor ODS = null; // Best for short-range sensing (<12")
     public ColorSensor beaconSensor = null;
     public ColorSensor floorSensor = null;
-    ModernRoboticsI2cGyro gyroSensor = null;
+    ModernRoboticsI2cGyro gyro = null;
     public TouchSensor touchSensor = null;
 /*
      @todo Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
@@ -121,36 +120,24 @@ public class InvadersVelocityVortexBot
 
         int GyroDegrees = 0;
         if(degrees > 0 == true){
-            GyroDegrees = 0;
             leftMotor.setPower(0.2);
             rightMotor.setPower(-0.2);
             while (GyroDegrees < degrees == true){
-                // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
-                // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
-                // the gyro sensor's value here.
                 GyroDegrees = gyro.getHeading();
-
             }
 
             leftMotor.setPower(0);
             rightMotor.setPower(0);
         }
         else {
-            GyroDegrees = 0;
             leftMotor.setPower(-0.2);
             rightMotor.setPower(0.2);
             while (GyroDegrees < degrees == true) {
                 GyroDegrees = gyro.getHeading();
-                // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
-                // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
-                // the gyro sensor's value here.
             }
 
             leftMotor.setPower(0);
             rightMotor.setPower(0);
-
-
-
         }
     }
 
@@ -259,7 +246,7 @@ public class InvadersVelocityVortexBot
         ODS = hwMap.opticalDistanceSensor.get("ODS");
         beaconSensor = hwMap.colorSensor.get("beaconSensor");
         floorSensor = hwMap.colorSensor.get("floorSensor");
-        gyroSensor = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
+        gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
     }
 
     /***
@@ -286,4 +273,28 @@ public class InvadersVelocityVortexBot
         // Reset the cycle clock for the next pass.
         period.reset();
     }
+
+
+    void setCapBallMotorPower(double power)
+    {
+        capBall.setPower(power);
+    }
+
+    void setBallElevator(float power)
+    {
+        //@todo Write to a file what we're about to do to the motor here
+        ballElevator.setPower(power);
+    }
+
+    void setLauncherPower(float power){
+        leftBallLauncher.setPower(-power);
+        rightBallLauncher.setPower(-power);
+    }
+
+    void setSweeperPower(float power){
+        sweeper.setPower(power);
+    }
+
+
+
 }
