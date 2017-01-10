@@ -224,7 +224,7 @@ public abstract class HardwareOmegas {
     }
 
     public void sayMessage() {
-        telemetry.addData("", "Good luck, nerds!");
+        telemetry.addData("cat /etc/motd", "Good luck, nerds!");
         telemetry.update();
 
         messagePlayer.start();
