@@ -265,5 +265,13 @@ public abstract class HardwareOmegas {
     public Context getAppContext() {
         return appContext;
     }
+
+    public Telemetry getTelemetry() {
+        return telemetry;
+    }
+
+    public MediaPlayer getMessagePlayer() {
+        return messagePlayer;
+    }
 }
 
