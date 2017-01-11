@@ -158,6 +158,12 @@ public class DriveEngine
         leftPower = lPower;
     }
 
+    public void setEngineToPower(double power)
+    {
+        rightPower = power;
+        leftPower = power;
+    }
+
     public void setEngineToLevel()
     {
         /*
