@@ -14,28 +14,25 @@ public class Bogg
     HardwareMap hardwareMap;
     DriveEngine driveEngine;
     Sensors sensors;
-    RangePair rangePair;
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad)
     {
         this.hardwareMap = hardwareMap;
         this.gamepad = gamepad;
         driveEngine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad);
         sensors = new Sensors(hardwareMap);
-        rangePair = new RangePair(hardwareMap, 9, sensors);
-
     }
     
-    //methods that utilize both driveEngine and rangePair
+    //methods that utilize both driveEngine and sensors
 
     public void driveAlongWall(double targetDistanceFromWall, double distanceBetweenMotors, double maxPower, boolean sensorsOnLeft)
     {
-        double inchesAway = rangePair.minDistanceAway();
+        double inchesAway = sensors.minDistanceAway();
         double distanceToTarget = inchesAway - targetDistanceFromWall;
-        double radius = Math.tan(90-rangePair.angleToWall()) * Math.abs(distanceToTarget);
+        double radius = Math.tan(90-sensors.angleToWall()) * Math.abs(distanceToTarget);
         boolean targetOnRight = sensorsOnLeft == (distanceToTarget < 0);
 
         //If not facing the direction we want to go, always curve towards the target
-        if(rangePair.angleToWall() < 0 && distanceToTarget > 0 || rangePair.angleToWall() > 0 && distanceToTarget < 0)
+        if(sensors.angleToWall() < 0 && distanceToTarget > 0 || sensors.angleToWall() > 0 && distanceToTarget < 0)
         {
             curveTowards(targetDistanceFromWall, distanceBetweenMotors, maxPower, targetOnRight);
         }
@@ -63,7 +60,7 @@ public class Bogg
         //Finds the radius of the target circular path
         //Turns away from the target line
 
-        double radius = Math.tan(90-rangePair.angleToWall()) * Math.abs(distanceToTarget);
+        double radius = Math.tan(90-sensors.angleToWall()) * Math.abs(distanceToTarget);
 
 
         driveEngine.setCircleMotorPower(radius, maxPower, !targetOnRight);
@@ -77,9 +74,9 @@ public class Bogg
         // Then continues at 60 degrees until the curve radius is less than the distance between the motors (driveAlongWall switches to curve)
         // Turns towards the target line
 
-        double radius = distanceToTarget / Math.cos(rangePair.angleToWall());
+        double radius = distanceToTarget / Math.cos(sensors.angleToWall());
 
-        if(rangePair.angleToWall() < 60)
+        if(sensors.angleToWall() < 60)
         {
             driveEngine.setCircleMotorPower(radius, maxPower, targetOnRight);
         }

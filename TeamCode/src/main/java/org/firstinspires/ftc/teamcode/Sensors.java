@@ -27,7 +27,7 @@ public class Sensors {
     ColorSensor colorSensorBottom = null;
 
     //Distance between the range sensors
-    private double distanceApart;
+    private double distanceApart = 9; //inches
     //Direction
     private boolean forwards;
 
@@ -128,11 +128,6 @@ public class Sensors {
         if (index == 2)
             return opSensor2;
         return null;
-    }
-
-    public double meanDistance()
-    {
-        return (rangeSensorBack.getDistance(DistanceUnit.INCH)+rangeSensorFront.getDistance(DistanceUnit.INCH))/2;
     }
 
     public double minDistanceAway()
