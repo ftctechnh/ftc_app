@@ -30,7 +30,9 @@ public class TeleOp5035 extends OpMode {
     boolean BallBoosterPoweringUp = false;
     boolean touchPressedLastLoop = false;
     boolean GuidePressedLastFrame = false;
+    boolean YPressedLastFrame = false;
     boolean Reverse = false;
+    boolean SweeperPower = false;
     int PosNum = 0;
     int counter = 0;
     static final double DurDown = 350;
@@ -48,15 +50,18 @@ public class TeleOp5035 extends OpMode {
     @Override
     public void loop() {
 
-        //tank driveReverse add
+        //Reverse drive when guide button is pressed
         if (gamepad1.guide && !GuidePressedLastFrame) {
             Reverse = !Reverse;
+            robot.setDrivePower(0);
         }
 
         if (Reverse) {
+            //Reverse Drive
             if (null != robot.leftMotor) robot.leftMotor.setPower(-gamepad1.right_stick_y);
             if (null != robot.rightMotor) robot.rightMotor.setPower(-gamepad1.left_stick_y);
         } else {
+            //Forward Drive
             if (null != robot.leftMotor) robot.leftMotor.setPower(gamepad1.left_stick_y);
             if (null != robot.rightMotor) robot.rightMotor.setPower(gamepad1.right_stick_y);
         }
@@ -70,6 +75,7 @@ public class TeleOp5035 extends OpMode {
         if (gamepad2.x == true) {
             BallBoosterPoweringUp = true;
         }
+        //when a button is hit on gamepade 2 it turns off the ballBoosters and sets BallBoosterPowerUp
         if (gamepad2.a == true) {
             BallBoosterPoweringUp = false;
             if (null != robot.ballBooster1) robot.ballBooster1.setPower(0);
@@ -77,14 +83,15 @@ public class TeleOp5035 extends OpMode {
         }
         if (BallBoosterPoweringUp) {
             if (null != robot.ballBooster1)
-                robot.ballBooster1.setPower(Math.max(robot.ballBooster1.getPower() + .000005, 1));
+                robot.ballBooster1.setPower(Math.max(robot.ballBooster1.getPower() + .000005, 1));//Slowly increase speed of the ballBoosters
             if (null != robot.ballBooster2)
-                robot.ballBooster2.setPower(Math.max(robot.ballBooster2.getPower() + .000005, 1));
+                robot.ballBooster2.setPower(Math.max(robot.ballBooster2.getPower() + .000005, 1));//Slowly increase speed of the ballBoosters
         }
         //if ball boosters are on or the gamepad2.guide button is pressed, and the gamepad2.righttrigger is pressed, the pop up servo fires.
         if ((robot.ballBooster1.getPower() > 0.9 || gamepad2.guide == true) && gamepad2.right_trigger > 0.5) {
             robot.triggered();
         }
+        //if trigger is not pressed then it is reset
         if (gamepad2.right_trigger < 0.25) {
             robot.detriggered();
         }
@@ -92,41 +99,24 @@ public class TeleOp5035 extends OpMode {
 
     //pos bot 0 mid 150 top 325
     public void ballPickupLoop() {
-
-
-        /*
-        if (!IsMovingBallPickUpArm) {
-            if (gamepad2.right_stick_x > .15) {
-                BallPickUpTimer.reset();
-                robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                robot.ballDump.setPower(0.17);
-            } else if (gamepad2.right_stick_y > .15) {
-                BallPickUpTimer.reset();
-                robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                robot.ballDump.setPower(-0.02);
-            } else {
-                 //robot.ballDump.setPower(BallDumpIdlePower);
-            }
-        }
-        */
-
-
-        //Code Bellow is all for driver 1's arm motions
+        //Code Bellow is all for driver 2's arm motions
         //VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-        if (gamepad1.right_trigger > .15 && !IsMovingBallPickUpArm && !robot.grabbutton.isPressed()) {
+        if (gamepad2.right_trigger > .15 && !IsMovingBallPickUpArm && !robot.grabbutton.isPressed()) {
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.ballDump.setPower(-0.50);// power of arm in the down direction
+            robot.ballDump.setPower(-0.25);// power of arm in the down direction
+            SweeperPower = true;
         }
-        /*
-        if (gamepad1.right_bumper && !IsMovingBallPickUpArm){
-            IsMovingBallPickUpArm = true;
-            BallPickUpTimer.reset();
-            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.ballDump.setPower(-1);
+
+        if(gamepad2.y == true && !YPressedLastFrame){
+            SweeperPower = !SweeperPower;
         }
-        */
+
+        if(SweeperPower && !IsUp) {
+            if (null != robot.sweeperMotor)
+                robot.sweeperMotor.setPower(Math.max(robot.sweeperMotor.getPower() + .05, 1));//Slowly increase speed of the sweeperMotor
+        }
 
         if ((BallPickUpTimer.milliseconds() >= DurDown && robot.ballDump.getPower() < 0)) {
             IsMovingBallPickUpArm = false;
@@ -135,11 +125,15 @@ public class TeleOp5035 extends OpMode {
             robot.ballDump.setPower(0);
         }
 
-        if (gamepad1.left_trigger > .15 && !IsMovingBallPickUpArm && !robot.balldumpup.isPressed()) {// if trigger is pressed and the arm is not currently moving and the top button is not currently pressed move arm up
+        if (gamepad2.left_trigger > .15 && !IsMovingBallPickUpArm && !robot.balldumpup.isPressed()) {// if trigger is pressed and the arm is not currently moving and the top button is not currently pressed move arm up
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(PickUpSpeed);//setting up arm motor up power
+        }
+        if(IsUp){
+            SweeperPower = false; //if the arm is up the Sweeper turns off
+            robot.sweeperMotor.setPower(0);
         }
 //        if (BallPickUpTimer.time() < 750 && robot.ballDump.getPower() > 0) {
 //            robot.ballDump.setPower(Math.max(BallPickUpTimer.time() / 1000.0, .40));
@@ -166,6 +160,7 @@ public class TeleOp5035 extends OpMode {
         telemetry.update(); //this should work
         touchPressedLastLoop = robot.grabbutton.isPressed();
         GuidePressedLastFrame = gamepad1.guide;
+        YPressedLastFrame = gamepad1.guide;
     }
 
 }

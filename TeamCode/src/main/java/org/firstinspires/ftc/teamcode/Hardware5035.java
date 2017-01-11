@@ -39,6 +39,7 @@ public class Hardware5035 {
     public DcMotor ballBooster1 = null;
     public DcMotor ballBooster2 = null;
     public DcMotor ballDump = null;
+    public DcMotor sweeperMotor = null;
     public Servo popUp = null;
     public TouchSensor grabbutton;
     public TouchSensor balldumpup;
@@ -81,6 +82,7 @@ public class Hardware5035 {
         rightMotor = hwMap.dcMotor.get("right driveReverse");
         ballDump = hwMap.dcMotor.get("ball dump");
         popUp = hwMap.servo.get("pop up");
+        sweeperMotor = hwMap.dcMotor.get("sweeperMotor");
         grabbutton = hwMap.touchSensor.get("grab button");
         balldumpup = hwMap.touchSensor.get("ballarmup");
         leftLightSensor = hwMap.lightSensor.get("left Sensor");
@@ -97,6 +99,7 @@ public class Hardware5035 {
 
 
         // Set all motors to zero power
+        sweeperMotor.setPower(0);
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         ballBooster1.setPower(0);
