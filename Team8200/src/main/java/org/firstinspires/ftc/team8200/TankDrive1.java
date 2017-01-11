@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team8200;
 /*
 Copyright (c) 2016 Robert Atkinson
 
@@ -55,12 +55,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Golden Eagles: TankDrive1", group="K9bot")
-@Disabled
+@TeleOp(name="TankDrive1", group="K9bot")
 public class TankDrive1 extends LinearOpMode {
 
-    // Declare OpMode members.
-    HardwareK9bot robot = new HardwareK9bot();       // Use a K9'shardware
+    /* Declare OpMode members. */
+    HardwareK9bot   robot           = new HardwareK9bot();              // Use a K9'shardware
 
     @Override
     public void runOpMode() {
@@ -88,54 +87,55 @@ public class TankDrive1 extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
+            left = gamepad1.left_stick_y;
+            right = gamepad1.right_stick_y;
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
-/*
-            // Turn motor on when up on the DPAD is pressed, turn off when down is pressed
-            if (gamepad1.dpad_up) {
-               robot.midMotor.setPower(1);
-            }
-            else if (gamepad1.dpad_down) {
-                robot.midMotor.setPower(0);
-            }
 
-            // Set harvester speed based on the buttons pressed (from team8200; Steel Hawks)
-            if (gamepad1.right_trigger > 0.2) {
-                
+
+
+
+            /*  Harvester
+            float harvesterPower = gamepad1.right_trigger;
+            float harvesterPowerReversed = gamepad1.left_trigger;
+
+            if (harvesterPower > 0.2) {
                 if (gamepad1.right_bumper) {
                     robot.harvester.setPower(1);
                 } else {
                     robot.harvester.setPower(0.5);
                 }
-                
             }
-            else if (gamepad1.left_trigger > 0.2) {
-                
+            else if (harvesterPowerReversed > 0.2) {
                 if (gamepad1.left_bumper) {
                     robot.harvester.setPower(-1);
                 } else {
                     robot.harvester.setPower(-0.5);
                 }
-                
             } else {
                 robot.harvester.setPower(0);
             }
+            */
 
-            // Get the motors' power (for telemetry)
-            middle = robot.midMotor.getPower();
-            harvester = robot.harvester.getPower();
-*/
+
+
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
-//          telemetry.addData("middle", "%.2f", middle);
-//          telemetry.addData("harvester", "%.2f", harvester);
+            /*
+            telemetry.addData("harvester", "%.2f", harvesterPower);
+            telemetry.addData("harvester", "%.2f", harvesterPowerReversed);
+            */
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
             robot.waitForTick(40);
+
+
         }
+
+
+
+
     }
 }

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.team8200;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,29 +24,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *   As the arm servo approaches 0, the arm position moves up (away from the floor).
  *   As the claw servo approaches 0, the claw opens up (drops the game element).
  */
-public class HardwareK9bot
+public class HardwareK9bot2
 {
     /* Public OpMode members. */
-    public DcMotor leftMotor = null;
-    public DcMotor rightMotor = null;
-    public LightSensor lightSensor = null;
-    public DcMotor leftWheelShooter = null;
-    public DcMotor rightWheelShooter = null;
-    public DcMotor harvester = null;
-    public DcMotor elevator = null;
+    public DcMotor  leftMotor   = null;
+    public DcMotor  rightMotor  = null;
 
-    /*
-    public final static double ARM_HOME = 0.2;
-    public final static double ARM_MIN_RANGE  = 0.20;
-    public final static double ARM_MAX_RANGE  = 0.90;
-    */
 
-    /* Local OpMode members. */
-    HardwareMap hwMap = null;
-    private ElapsedTime period = new ElapsedTime();
+    /* Local OpMode members.  */
+    public HardwareMap hwMap = null;
+    private ElapsedTime period  = new ElapsedTime();
+
 
     /* Constructor */
-    public HardwareK9bot() {
+    public HardwareK9bot2() {
     }
 
     /* Initialize standard Hardware interfaces */
@@ -56,33 +46,22 @@ public class HardwareK9bot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor = hwMap.dcMotor.get("motor_left");
-        rightMotor = hwMap.dcMotor.get("motor_right");
-        leftWheelShooter = hwMap.dcMotor.get("leftWS");
-        rightWheelShooter = hwMap.dcMotor.get("rightWS");
-        harvester = hwMap.dcMotor.get("harvester");
-        elevator = hwMap.dcMotor.get("elevator");
-
-        leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor   = hwMap.dcMotor.get("left_drive");
+        rightMotor  = hwMap.dcMotor.get("right_drive");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-        leftWheelShooter.setPower(0);
-        rightWheelShooter.setPower(0);
-        harvester.setPower(0);
-        elevator.setPower(0);
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //Define and initialize ALL sensors
-        lightSensor = hwMap.lightSensor.get("light");
     }
 
-    /*
+    /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
@@ -90,7 +69,6 @@ public class HardwareK9bot
      *
      * @param periodMs  Length of wait cycle in mSec.
      */
-    /*
     public void waitForTick(long periodMs) {
 
         long  remaining = periodMs - (long)period.milliseconds();
@@ -106,7 +84,5 @@ public class HardwareK9bot
 
         // Reset the cycle clock for the next pass.
         period.reset();
-        */
     }
-
-
+}

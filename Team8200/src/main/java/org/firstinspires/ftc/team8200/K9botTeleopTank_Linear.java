@@ -166,13 +166,110 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             // telemetry.addData("leftX",  "%.2f", leftX);
             // telemetry.addData("righXt", "%.2f", rightX);
+            robot.leftMotor.setPower(leftY);
+            robot.rightMotor.setPower(rightY);
+
+            /*
+             left = the power x
+             right = the powerx
+            leftup = the power y
+            right up = the power y
+            if(left > 0 || right > 0)
+            {
+            left.motor.setPower(1)
+            rightMotor.setPower(1)
+            }
+            if(left < 0 || right < 0)
+            {
+            left.motor.setPower(-1)
+            rightMotor.setPower(-1)
+            }
+            if(leftup > 0)
+            {
+            LEFTmotor.setPower(leftup)
+            rightMotorsetpOWER(leftUp*-1)
+            }
+            f(rightUp > 0)
+            {
+            rightmotor.setPower(rightUp)
+            leftMotorsetpOWER(rightUp*-1)
+            }
+            if(leftup < 0)
+            {
+            LEFTmotor.setPower(leftup)
+            rightMotorsetpOWER(leftUp*-1)
+            }
+            f(rightUp < 0)
+            {
+            rightmotor.setPower(rightUp)
+            leftMotorsetpOWER(rightUp*-1)
+            }
+                         */
+
+            /*if(leftY > 0 && rightY >0)
+            {
+                robot.leftMotor.setPower(1);
+                robot.rightMotor.setPower(1)  ;
+            }
+            else if(leftY < 0 && rightY < 0)
+            {
+                robot.leftMotor.setPower(-1);
+                robot.rightMotor.setPower(-1)  ;
+            }
+
+            else if(rightX > 0)
+            {
+                robot.leftMotor.setPower(0.5);
+                robot.rightMotor.setPower(-0.5)  ;
+            }
+            else if(rightX < 0)
+            {
+                robot.leftMotor.setPower(-0.5);
+                robot.rightMotor.setPower(0.5)  ;
+            }
+
+            else if(leftX > 0)
+            {
+                robot.leftMotor.setPower(-0.5);
+                robot.rightMotor.setPower(0.5)  ;
+            }
+            else if(leftX < 0)
+            {
+                robot.leftMotor.setPower(0.5);
+                robot.rightMotor.setPower(-0.5)  ;
+            }
+            else
+            {
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0)  ;
+            }
+
+
+            // Use gamepad Y & A raise and lower the arm
+           /* if (gamepad1.a)
+                armPosition = 0.9;
+            else if (gamepad1.y)
+                armPosition = 0.1;
+
+            // Use gamepad X & B to open and close the claw
+            /*if (gamepad1.x)
+                clawPosition += CLAW_SPEED;
+            else if (gamepad1.b)
+                clawPosition -= CLAW_SPEED;
+                */
+
+            // Send telemetry message to signify robot running;
+
+
+           // telemetry.addData("leftX",  "%.2f", leftX);
+           // telemetry.addData("righXt", "%.2f", rightX);
             telemetry.addData("leftY",  "%.2f", leftY);
             telemetry.addData("rightY", "%.2f", rightY);
             telemetry.update();
 
             // Pause for metronome tick.
             // 40 ms each cycle = update 25 times a second.
-            robot.waitForTick(40);
+//            robot.waitForTick(40);
         }
     }
 }
