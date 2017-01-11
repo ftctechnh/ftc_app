@@ -37,7 +37,6 @@ public class Test_ServoPosition extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         servoSlicer = hardwareMap.servo.get("ball_slicer");
         servoPusher = hardwareMap.servo.get("ball_pusher");

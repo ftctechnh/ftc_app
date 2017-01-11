@@ -43,21 +43,7 @@ public class RedAutoOpmodeJustBall extends LinearOpMode
     private ElapsedTime timer = new ElapsedTime();
     private double timeToHit = 0;
 
-    //The engine which controls our drive motors
-    DriveEngine engine = null;
-
-    //The touch sensor devices
-    DeviceInterfaceModule dim = null;
-    DigitalChannel touchSensor = null;
-
-    //Button Pushers
-    ButtonPusher pusher1 = null;
-    ButtonPusher pusher2 = null;
-
-    //Sensors
-
-
-
+    Bogg bogg;
     //Time constants
     private static final double TIME_ONE = 2;
     private static final double TIME_TWO = 10;
@@ -78,9 +64,7 @@ public class RedAutoOpmodeJustBall extends LinearOpMode
 
     @Override
     public void runOpMode() {
-        engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
-        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
-        touchSensor = hardwareMap.get(DigitalChannel.class, "sensor_touch");
+        bogg = new Bogg(hardwareMap, gamepad1);
 
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -89,13 +73,13 @@ public class RedAutoOpmodeJustBall extends LinearOpMode
         //Run until the end of autonomous
         while (opModeIsActive()) {
             //Run until we hit something
-            while (!touchSensor.getState()) {
+            while (!bogg.sensors.touchSensor.isPressed()) {
                 if (timer.seconds() < TIME_ONE)
-                    engine.drive(LOW_POWER);
+                    bogg.driveEngine.drive(LOW_POWER);
                 else if (timer.seconds() < TIME_TWO)
-                    engine.drive(MID_POWER);
+                    bogg.driveEngine.drive(MID_POWER);
                 else
-                    engine.drive(HIGH_POWER);
+                    bogg.driveEngine.drive(HIGH_POWER);
             }
             timeToHit = timer.seconds();
 
@@ -104,11 +88,11 @@ public class RedAutoOpmodeJustBall extends LinearOpMode
 
             //Keep moving just a little longer to land on the black square
             while (timer.seconds() < TIME_EXTRA) {
-                engine.drive(HIGH_POWER);
+                bogg.driveEngine.drive(HIGH_POWER);
             }
 
             //Stop everything
-            engine.stop();
+            bogg.driveEngine.stop();
 
             telemetry.addLine("Stopped");
             telemetry.update();
@@ -116,7 +100,5 @@ public class RedAutoOpmodeJustBall extends LinearOpMode
         }
 
     }
-
-   // public void driveAlongWall()
 
 }

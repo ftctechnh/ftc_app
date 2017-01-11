@@ -14,11 +14,20 @@ public class Bogg
     HardwareMap hardwareMap;
     DriveEngine driveEngine;
     Sensors sensors;
+    DcMotor pusherLeftMotor;
+    DcMotor pusherRightMotor;
+
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad)
     {
         this.hardwareMap = hardwareMap;
         this.gamepad = gamepad;
         driveEngine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad);
+
+        pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
+        pusherRightMotor = hardwareMap.dcMotor.get("pusher_right");
+        pusherLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        pusherRightMotor.setDirection(DcMotor.Direction.FORWARD);
+
         sensors = new Sensors(hardwareMap);
     }
     

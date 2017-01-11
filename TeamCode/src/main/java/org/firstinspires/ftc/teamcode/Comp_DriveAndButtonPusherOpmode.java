@@ -58,10 +58,7 @@ public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor = null;
-    DcMotor rightMotor = null;
-    DcMotor pusherLeftMotor = null;
-    DcMotor pusherRightMotor = null;
+    Bogg bogg;
 
     @Override
     public void runOpMode() {
@@ -69,15 +66,7 @@ public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
-        pusherRightMotor = hardwareMap.dcMotor.get("pusher_right");
-
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        pusherLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        pusherRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        bogg = new Bogg(hardwareMap, gamepad1);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -90,21 +79,20 @@ public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
             telemetry.addData("y", gamepad1.right_stick_y);
             telemetry.update();
 
-            leftMotor.setPower(-gamepad1.left_stick_y);
-            rightMotor.setPower(-gamepad1.right_stick_y);
+            bogg.driveEngine.setEngineMode(DriveEngine.engineMode.defaultMode);
 
             if (gamepad1.left_bumper) {
-                pusherLeftMotor.setPower(gamepad1.left_trigger);
+                bogg.pusherLeftMotor.setPower(gamepad1.left_trigger);
             }
             else {
-                pusherLeftMotor.setPower(-gamepad1.left_trigger);
+                bogg.pusherLeftMotor.setPower(-gamepad1.left_trigger);
             }
 
             if (gamepad1.right_bumper) {
-                pusherRightMotor.setPower(gamepad1.right_trigger);
+                bogg.pusherRightMotor.setPower(gamepad1.right_trigger);
             }
             else {
-                pusherRightMotor.setPower(-gamepad1.right_trigger);
+                bogg.pusherRightMotor.setPower(-gamepad1.right_trigger);
             }
 
             telemetry.update();

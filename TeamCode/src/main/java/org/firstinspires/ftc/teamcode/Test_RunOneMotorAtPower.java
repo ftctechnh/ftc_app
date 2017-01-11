@@ -41,14 +41,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="Test_RunOneMotorAtPower", group="Testing")  // @Autonomous(...) is the other common choice
 @Disabled
 public class Test_RunOneMotorAtPower extends LinearOpMode {
-    DcMotor beaconL = null;
+    Bogg bogg;
 
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
 
-        beaconL  = hardwareMap.dcMotor.get("Beacon_LMotor");
+        bogg = new Bogg(hardwareMap, gamepad1);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -57,8 +57,8 @@ public class Test_RunOneMotorAtPower extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            beaconL.setPower(.2);
-            telemetry.addData("beacon", beaconL.getPower());
+            bogg.pusherLeftMotor.setPower(.2);
+            telemetry.addData("beacon", bogg.pusherLeftMotor.getPower());
             telemetry.update();
 
             idle();     // allow something else to run (aka, release the CPU)

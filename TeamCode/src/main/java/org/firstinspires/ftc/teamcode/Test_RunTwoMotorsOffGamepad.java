@@ -58,8 +58,8 @@ public class Test_RunTwoMotorsOffGamepad extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor = null;
-    DcMotor rightMotor = null;
+
+    Bogg bogg;
 
     @Override
     public void runOpMode() {
@@ -67,11 +67,8 @@ public class Test_RunTwoMotorsOffGamepad extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        bogg = new Bogg(hardwareMap, gamepad1);
+        bogg.driveEngine.setEngineMode(DriveEngine.engineMode.defaultMode);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -83,9 +80,6 @@ public class Test_RunTwoMotorsOffGamepad extends LinearOpMode {
             telemetry.addData("x", gamepad1.left_stick_y);
             telemetry.addData("y", gamepad1.right_stick_y);
             telemetry.update();
-
-            leftMotor.setPower(-gamepad1.left_stick_y);
-            rightMotor.setPower(-gamepad1.right_stick_y);
 
             idle();     // allow something else to run (aka, release the CPU)
         }

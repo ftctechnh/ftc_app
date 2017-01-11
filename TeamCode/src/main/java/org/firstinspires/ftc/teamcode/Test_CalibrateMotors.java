@@ -41,9 +41,7 @@ public class Test_CalibrateMotors extends LinearOpMode {
     //This is our timer
     private ElapsedTime timer = new ElapsedTime();
 
-    //The engine which controls our drive motors
-    DriveEngine engine = null;
-    Sensors sensors = null;
+    Bogg bogg;
 
     //Power constants
     private static final double LOW_POWER = .1;
@@ -58,8 +56,7 @@ public class Test_CalibrateMotors extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
-        sensors = new Sensors(hardwareMap);
+        bogg = new Bogg(hardwareMap, gamepad1);
 
         leftCalibrator = 1;
         rightCalibrator = 1;
@@ -76,10 +73,10 @@ public class Test_CalibrateMotors extends LinearOpMode {
             while(timer.seconds()<TIME_ONE)
             {
                 //Sets the default power to low_power
-                engine.drive(1, LOW_POWER * rightCalibrator, LOW_POWER * leftCalibrator);
+                bogg.driveEngine.drive(1, LOW_POWER * rightCalibrator, LOW_POWER * leftCalibrator);
 
                 //Modifies the power to the motors using a decrement
-                if(sensors.angleToWall()>0)
+                if(bogg.sensors.angleToWall()>0)
                 {
                     if(leftCalibrator == 1)
                         rightCalibrator -= calibrationDecrement;
@@ -89,7 +86,7 @@ public class Test_CalibrateMotors extends LinearOpMode {
                         leftCalibrator = 1;
                 }
 
-                if(sensors.angleToWall()<0)
+                if(bogg.sensors.angleToWall()<0)
                 {
                     if(leftCalibrator == 1)
                         rightCalibrator -= calibrationDecrement;
@@ -101,7 +98,7 @@ public class Test_CalibrateMotors extends LinearOpMode {
             }
 
 
-            engine.stop();
+            bogg.driveEngine.stop();
 
             telemetry.addData("LeftCalibrator", leftCalibrator);
             telemetry.addData("RightCalibrator", rightCalibrator);
