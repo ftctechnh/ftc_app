@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="AutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 @Disabled
-public class CalibrationOpMode extends LinearOpMode {
+public class Test_CalibrateMotors extends LinearOpMode {
 
     //This is our timer
     private ElapsedTime timer = new ElapsedTime();
@@ -56,13 +56,10 @@ public class CalibrationOpMode extends LinearOpMode {
     //Time constants
     private static final double TIME_ONE = 10.0;
 
-    RangePair rangePair = null;
-
     @Override
     public void runOpMode() {
         engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
         sensors = new Sensors(hardwareMap);
-        rangePair = new RangePair(hardwareMap, 30, sensors);
 
         leftCalibrator = 1;
         rightCalibrator = 1;
@@ -82,7 +79,7 @@ public class CalibrationOpMode extends LinearOpMode {
                 engine.drive(1, LOW_POWER * rightCalibrator, LOW_POWER * leftCalibrator);
 
                 //Modifies the power to the motors using a decrement
-                if(rangePair.angleToWall()>0)
+                if(sensors.angleToWall()>0)
                 {
                     if(leftCalibrator == 1)
                         rightCalibrator -= calibrationDecrement;
@@ -92,7 +89,7 @@ public class CalibrationOpMode extends LinearOpMode {
                         leftCalibrator = 1;
                 }
 
-                if(rangePair.angleToWall()<0)
+                if(sensors.angleToWall()<0)
                 {
                     if(leftCalibrator == 1)
                         rightCalibrator -= calibrationDecrement;

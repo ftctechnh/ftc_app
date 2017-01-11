@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="BlueAuto", group="Testing")  // @Autonomous(...) is the other common choice
 @Disabled
-public class BlueAutoOpmode extends LinearOpMode
+public class Comp_BlueAutoOpmode extends LinearOpMode
 {
     RedAutoOpmodeJustBeacons redAutoOpmodeJustBeacons = new RedAutoOpmodeJustBeacons(true);
     @Override

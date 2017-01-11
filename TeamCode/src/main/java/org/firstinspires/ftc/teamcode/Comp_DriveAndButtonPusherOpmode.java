@@ -52,9 +52,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="DriveAndButtonPusherOpmode", group="Competition")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Comp_DriveAndButtonPusherOpmode", group="Competition")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class DriveAndButtonPusherOpmode extends LinearOpMode {
+public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
