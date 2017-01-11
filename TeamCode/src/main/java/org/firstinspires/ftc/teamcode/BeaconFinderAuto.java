@@ -28,6 +28,8 @@ public class BeaconFinderAuto extends LinearOpMode {
     boolean lastResetState = false;
     boolean curResetState  = false;
 
+    GyroSensor Gyro;
+
 
 
 
@@ -46,6 +48,17 @@ public class BeaconFinderAuto extends LinearOpMode {
 //            Thread.sleep(50);
 //            idle()
 //          }
+        Gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
+        telemetry.addData("Gyro Calibration:", "Running");
+        telemetry.update();
+        Gyro.calibrate();
+        try {
+            Thread.sleep(10000);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        telemetry.addData("Gyro Calibration:", "Finished");
+        telemetry.update();
 
 
 
@@ -66,18 +79,16 @@ public class BeaconFinderAuto extends LinearOpMode {
             telemetry.update();
         }
 
+
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         //reachBeacon();
         //pushBeacons();
         GyroMovement(0.3, 90, 5000); //pull forward off the wall
-
-        ModernRoboticsI2cGyro Gyro;   // Hardware Device Object
-        Gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
-        Gyro.calibrate();
-
-
+        GyroMovement(0.3, 270, 5000);
+        //GyroTest()  ;
 
 
         // run until the end of the match (driver presses STOP)
@@ -128,45 +139,23 @@ public class BeaconFinderAuto extends LinearOpMode {
 
     public void GyroMovement(double speed, int targetDirection, int time) //Speed is from -1 to 1 and direction is 0 to 360 degrees
     {
-        ModernRoboticsI2cGyro Gyro;   // Hardware Device Object
-        Gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
-        Gyro.calibrate();
-        try {
-            Thread.sleep(1000);
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
 
 
         int currentDirection = Gyro.getHeading();
+        double turnMultiplier = 0.05;
+        double driveMultiplier = 0.03;
 
-        int error_prior = 0;
-        int integral = 0;
-        double P = 1;
-        double I = 0.1;
-        double D = 0.1;
 
         //First, check to see if we are pointing in the correct direction
         while(Math.abs(targetDirection - currentDirection) > 5) //If we are more than 5 degrees off target, make corrections before moving
         {
             currentDirection = Gyro.getHeading();
+
             int error = targetDirection - currentDirection;
-            // In order to prevent issues when crossing from 360 to zero or vice versa,
-            // we need to adjust error to compensate
+            double speedAdjustment = turnMultiplier * error;
 
-            if(error > 360)
-            {
-                error = error - 360;
-            }
-
-            integral = integral + error;
-            int derivative = error-error_prior;
-            double pidOutput = 0.1 * P * error; //+ I * integral + D * derivative; //Value will be based off the amount of degrees we've deviated from the target, but there'll be some amount of modification done to this value
-
-            //If pidOutput is negative, we need to turn left, and if it's positive we need to turn right
-
-            double leftPower = -pidOutput;
-            double rightPower = pidOutput;
+            double leftPower = .5 * Range.clip(speedAdjustment, -1, 1);
+            double rightPower = .5 * Range.clip(-speedAdjustment, -1, 1);
 
             //Finally, assign these values to the motors
 
@@ -176,10 +165,9 @@ public class BeaconFinderAuto extends LinearOpMode {
             robot.l2.setPower(leftPower);
             String currentMode = "Turning";
             telemetry.addData("Current Mode", currentMode);
-            telemetry.addData("rightPower", rightPower);
-            telemetry.addData("leftPower", leftPower);
-            telemetry.addData("PID Output", pidOutput);
+            telemetry.addData("PID Output", driveMultiplier);
             telemetry.addData("Gyro output", currentDirection);
+            telemetry.addData("Heading", Gyro.getHeading());
 
             telemetry.update();
         }
@@ -192,19 +180,10 @@ public class BeaconFinderAuto extends LinearOpMode {
         {
             currentDirection = Gyro.getHeading();
             int error = targetDirection - currentDirection;
+            double speedAdjustment = driveMultiplier * error;
 
-            if(error > 360)
-            {
-                error = error - 360;
-            }
-
-            integral = integral + error;
-            int derivative = error-error_prior;
-            double pidOutput = P * error; //+ I * integral + D * derivative; //Value will be based off the amount of degrees we've deviated from the target, but there'll be some amount of modification done to this value
-            //Now we just need to use this error value to determine our motor speeds
-            //We need to determine whether we are turning left or right first
-            double leftPower = speed; //+ (-pidOutput * 0.006);
-            double rightPower = speed; //+ (pidOutput * 0.006);
+            double leftPower = Range.clip(speed + speedAdjustment, -1, 1);
+            double rightPower = Range.clip(speed - speedAdjustment, -1, 1);
 
             //Finally, assign these values to the motors
             robot.r1.setPower(rightPower);
@@ -216,7 +195,7 @@ public class BeaconFinderAuto extends LinearOpMode {
             telemetry.addData("Current Mode", currentMode);
             telemetry.addData("rightPower", rightPower);
             telemetry.addData("leftPower", leftPower);
-            telemetry.addData("PID Output", pidOutput);
+            telemetry.addData("PID Output", speedAdjustment);
             telemetry.addData("Gyro output", currentDirection);
             telemetry.update();
         }
@@ -226,4 +205,22 @@ public class BeaconFinderAuto extends LinearOpMode {
         robot.l2.setPower(0);
 
     }
+    public void GyroTest()
+    {
+        ModernRoboticsI2cGyro Gyro;   // Hardware Device Object
+        Gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
+        Gyro.calibrate();
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+
+        while(true)
+        {
+            telemetry.addData("Gyro Output", Gyro.getHeading());
+            telemetry.update();
+        }
+    }
+
 }
