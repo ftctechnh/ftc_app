@@ -65,13 +65,7 @@ public class TankDrive1 extends LinearOpMode {
     @Override
     public void runOpMode() {
         double left, right, middle, harvester;
-/*
-        // Show motor names to driver for configuration before continuing
-        while (!gamepad1.guide) {
-            telemetry.addData("Motor names:", "l-motor, r-motor, h-motor, m-motor");
-            telemetry.update();
-        }
-*/
+        
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
