@@ -152,6 +152,10 @@ public class Blue2 extends LinearOpMode {
         // 6.  Make a function that drives us forward until the line sensor sees the white tape.
         // 7.  Drive forward abut 2 inches.
         // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the other button.
+        //      a.extend beacon pusher to about 80 ish
+        //      b. read color
+        //      c. if its blue, press the button.
+        //      d. if its red, drive 14 cm forward
         // 9.  Do the same for the next beacon.
         // 10. Drive backwards onto the corner vortex.
 
@@ -191,6 +195,14 @@ public class Blue2 extends LinearOpMode {
 
         // step 7: drive 2.5 centimeters or two inches
         robot.DistanceDrive(5,DistanceUnit.CM,1);
+
+
+        // Step 8: Push Beacon if Blue
+        if(robot.doIseeBlue()) {
+            // Do Step 8.c
+        } else {
+            // Do Step 8.d
+        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

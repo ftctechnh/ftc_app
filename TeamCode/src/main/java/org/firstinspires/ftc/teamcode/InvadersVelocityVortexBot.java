@@ -59,9 +59,6 @@ public class InvadersVelocityVortexBot
     public DcMotor capBall  = null;
 
     //public UltrasonicSensor UDS = null;
-    public ColorSensor color1 = null;
-    public ColorSensor color2 = null;
-    public TouchSensor downLimit = null;
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
 
@@ -273,6 +270,16 @@ public class InvadersVelocityVortexBot
             rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+
+
+    public boolean doIseeBlue () {
+
+        return (beaconSensor.blue() >= 5);
+    }
+
+
+
+
 
     public void gyroTurn (  double speed, double angle) {
 
