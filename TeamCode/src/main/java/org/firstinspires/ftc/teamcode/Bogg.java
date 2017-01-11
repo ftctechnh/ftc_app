@@ -43,28 +43,28 @@ public class Bogg
         //If not facing the direction we want to go, always curve towards the target
         if(sensors.angleToWall() < 0 && distanceToTarget > 0 || sensors.angleToWall() > 0 && distanceToTarget < 0)
         {
-            curveTowards(targetDistanceFromWall, distanceBetweenMotors, maxPower, targetOnRight);
+            curveTowards(targetDistanceFromWall, maxPower, targetOnRight);
         }
 
 
         else if(distanceToTarget < 3)
         {
-            curveAway(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
+            curveAway(distanceToTarget,  maxPower, targetOnRight);
         }
 
         //ensures that we can curve without going over the target line
         else if(radius < (distanceBetweenMotors+2))
         {
-            curveAway(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
+            curveAway(distanceToTarget, maxPower, targetOnRight);
         }
 
         else
         {
-            curveTowards(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
+            curveTowards(distanceToTarget, maxPower, targetOnRight);
         }
     }
 
-    public void curveAway(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean targetOnRight)
+    public void curveAway(double distanceToTarget, double maxPower, boolean targetOnRight)
     {
         //Finds the radius of the target circular path
         //Turns away from the target line
@@ -75,7 +75,7 @@ public class Bogg
         driveEngine.setCircleMotorPower(radius, maxPower, !targetOnRight);
     }
 
-    public void curveTowards(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean targetOnRight)
+    public void curveTowards(double distanceToTarget, double maxPower, boolean targetOnRight)
     {
         // First, curves robot to  60 degrees from the target based on a
         // circle centered at where the distance beams hit the wall.
