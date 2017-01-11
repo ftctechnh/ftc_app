@@ -264,6 +264,8 @@ public class Hardware5035 {
 
             ++count;
         }
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
 
     }
 
