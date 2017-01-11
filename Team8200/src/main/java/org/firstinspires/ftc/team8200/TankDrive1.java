@@ -35,8 +35,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
-//import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
 
 /**
  * This OpMode uses the common HardwareK9bot class to define the devices on the robot.
@@ -63,21 +64,18 @@ public class TankDrive1 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        double left, right, middle, harvester;
-/*
-        // Show motor names to driver for configuration before continuing
-        while (!gamepad1.guide) {
-            telemetry.addData("Motor names:", "l-motor, r-motor, h-motor, m-motor");
-            telemetry.update();
-        }
-*/
+        double left;
+        double right;
+        double up;
+        double down;
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");
+        telemetry.addData("Say", "Hello Driver");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
