@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -60,7 +61,6 @@ public class InvadersVelocityVortexBot
     //public UltrasonicSensor UDS = null;
     public ColorSensor color1 = null;
     public ColorSensor color2 = null;
-    public GyroSensor gyro = null;
     public TouchSensor downLimit = null;
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
@@ -69,7 +69,7 @@ public class InvadersVelocityVortexBot
     public OpticalDistanceSensor ODS = null; // Best for short-range sensing (<12")
     public ColorSensor beaconSensor = null;
     public ColorSensor floorSensor = null;
-    ModernRoboticsI2cGyro gyroSensor = null;
+    ModernRoboticsI2cGyro gyro = null;
     public TouchSensor touchSensor = null;
 /*
      @todo Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
@@ -124,36 +124,24 @@ public class InvadersVelocityVortexBot
 
         int GyroDegrees = 0;
         if(degrees > 0 == true){
-            GyroDegrees = 0;
             leftMotor.setPower(0.2);
             rightMotor.setPower(-0.2);
             while (GyroDegrees < degrees == true){
-                // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
-                // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
-                // the gyro sensor's value here.
                 GyroDegrees = gyro.getHeading();
-
             }
 
             leftMotor.setPower(0);
             rightMotor.setPower(0);
         }
         else {
-            GyroDegrees = 0;
             leftMotor.setPower(-0.2);
             rightMotor.setPower(0.2);
             while (GyroDegrees < degrees == true) {
                 GyroDegrees = gyro.getHeading();
-                // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
-                // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
-                // the gyro sensor's value here.
             }
 
             leftMotor.setPower(0);
             rightMotor.setPower(0);
-
-
-
         }
     }
 
@@ -167,6 +155,11 @@ public class InvadersVelocityVortexBot
 
         leftMotor.setPower(0);
         rightMotor.setPower(0);
+    }
+
+    //// TODO: 1/10/2017 Fix this some time in the future.
+    private boolean opModeIsActive(){
+        return true;
     }
 
     /**
@@ -183,6 +176,9 @@ public class InvadersVelocityVortexBot
      * @param Blue
      * @param Green
      */
+
+
+
     public void ColorDrive(int Red, int Blue, int Green){
         while (floorSensor.red() < Red){
             rightMotor.setPower(0.5);
@@ -198,6 +194,180 @@ public class InvadersVelocityVortexBot
         }
         rightMotor.setPower(0);
         leftMotor.setPower(0);
+    }
+
+    public void gyroDrive ( double speed,
+                            double distance,
+                            double angle) {
+
+        int     newLeftTarget;
+        int     newRightTarget;
+        int     moveCounts;
+        double  max;
+        double  error;
+        double  steer;
+        double  leftSpeed;
+        double  rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
+            newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
+
+            // Set Target and Turn On RUN_TO_POSITION
+            leftMotor.setTargetPosition(newLeftTarget);
+            rightMotor.setTargetPosition(newRightTarget);
+
+            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // start motion.
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            leftMotor.setPower(speed);
+            rightMotor.setPower(speed);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() &&
+                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+
+                // adjust relative speed based on heading error.
+                error = getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                leftSpeed = speed - steer;
+                rightSpeed = speed + steer;
+
+                // Normalize speeds if any one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0)
+                {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
+                }
+
+                leftMotor.setPower(leftSpeed);
+                rightMotor.setPower(rightSpeed);
+
+                // Display drive status for the driver.
+                //telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
+                //telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
+                //telemetry.addData("Actual",  "%7d:%7d",      robot.leftMotor.getCurrentPosition(),
+                        rightMotor.getCurrentPosition();
+                //telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
+                //telemetry.update();
+            }
+
+            // Stop all motion;
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void gyroTurn (  double speed, double angle) {
+
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+            // Update telemetry & Allow time for other processes to run.
+            //telemetry.update();
+        }
+    }
+
+    public void gyroHold( double speed, double angle, double holdTime) {
+
+        ElapsedTime holdTimer = new ElapsedTime();
+
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
+            // Update telemetry & Allow time for other processes to run.
+            onHeading(speed, angle, P_TURN_COEFF);
+            //telemetry.update();
+        }
+
+        // Stop all motion;
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+    }
+
+    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+
+    boolean onHeading(double speed, double angle, double PCoeff) {
+        double   error ;
+        double   steer ;
+        boolean  onTarget = false ;
+        double leftSpeed;
+        double rightSpeed;
+
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed  = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        }
+        else {
+            steer = getSteer(error, PCoeff);
+            rightSpeed  = speed * steer;
+            leftSpeed   = -rightSpeed;
+        }
+
+        // Send desired speeds to motors.
+        leftMotor.setPower(leftSpeed);
+        rightMotor.setPower(rightSpeed);
+
+        // Display it for the driver.
+        //telemetry.addData("Target", "%5.2f", angle);
+        //telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        //telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    /**
+     * getError determines the error between the target angle and the robot's current heading
+     * @param   targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
+     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
+     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
+     */
+    public double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        robotError = targetAngle - gyro.getIntegratedZValue();
+        while (robotError > 180)  robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    /**
+     * returns desired steering force.  +/- 1 range.  +ve = steer left
+     * @param error   Error angle in robot relative degrees
+     * @param PCoeff  Proportional Gain Coefficient
+     * @return
+     */
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
     }
 
     public void WaitForReflectedLight(int intensity, boolean enableLed){
@@ -292,7 +462,7 @@ public class InvadersVelocityVortexBot
         ODS = hwMap.opticalDistanceSensor.get("ODS");
         beaconSensor = hwMap.colorSensor.get("beaconSensor");
         floorSensor = hwMap.colorSensor.get("floorSensor");
-        gyroSensor = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
+        gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
     }
 
     /***
@@ -319,4 +489,28 @@ public class InvadersVelocityVortexBot
         // Reset the cycle clock for the next pass.
         period.reset();
     }
+
+
+    void setCapBallMotorPower(double power)
+    {
+        capBall.setPower(power);
+    }
+
+    void setBallElevator(float power)
+    {
+        //@todo Write to a file what we're about to do to the motor here
+        ballElevator.setPower(power);
+    }
+
+    void setLauncherPower(float power){
+        leftBallLauncher.setPower(-power);
+        rightBallLauncher.setPower(-power);
+    }
+
+    void setSweeperPower(float power){
+        sweeper.setPower(power);
+    }
+
+
+
 }

@@ -150,61 +150,58 @@ public class InvadersPushbot_Iterative extends OpMode{
         //Beacon button and pusher button
         robot.beaconLeft.setPosition(1 - gamepad1.left_trigger);
         robot.beaconRight.setPosition(1 - gamepad1.left_trigger);
-        robot.sweeper.setPower(1 - gamepad1.right_trigger);
+        //arobot.sweeper.setPower(1 - gamepad1.right_trigger);
 
         if (gamepad1.a == true) {
             if (robot.touchSensor.isPressed() == true) {
-                setBallElevator(0);
+                robot.setBallElevator(0);
             } else {
 
-                setBallElevator(-1); // Elevator down
+                robot.setBallElevator(-1); // Elevator down
             }
         } else if (gamepad1.y == true) {
             //robot.ballElevator.setPower(1);
-            setBallElevator(1);
+            robot.setBallElevator(1);
         } else {
-            setBallElevator(0);
+            robot.setBallElevator(0);
         }
 
         if (gamepad1.start == true) {
             //robot.leftBallLauncher.setPower(-1);
             //robot.rightBallLauncher.setPower(-1);
-            setLauncherPower(1);
+            robot.setLauncherPower(1);
         } else if (gamepad1.back == true) {
             //robot.leftBallLauncher.setPower(0);
             //robot.rightBallLauncher.setPower(0);
-            setLauncherPower(0);
+            robot.setLauncherPower(0);
             if (!limitTriggered) {
-                setBallElevator(-1);  //Elevator down
+                robot.setBallElevator(-1);  //Elevator down
             }
         }
         //CapBall lifter
         if (gamepad1.dpad_up) {
-            setCapBallMotorPower(0.5);
+            robot.setCapBallMotorPower(0.5);
         } else if (gamepad1.dpad_down) {
-            setCapBallMotorPower(-0.5);
+            robot.setCapBallMotorPower(-0.5);
         } else
         {
-            setCapBallMotorPower(0);
+            robot.setCapBallMotorPower(0);
         }
 
+        if (gamepad1.dpad_left) {
+            robot.setSweeperPower(1);
+        }
+        else if (gamepad1.dpad_right) {
+            robot.setSweeperPower(-1);
+        }
+        else {
+            robot.setSweeperPower(0);
+        }
     }
 
-    void setCapBallMotorPower(double power)
-    {
-    robot.capBall.setPower(power);
-    }
 
-    void setBallElevator(float power)
-    {
-        //@todo Write to a file what we're about to do to the motor here
-        robot.ballElevator.setPower(power);
-    }
 
-    void setLauncherPower(float power){
-        robot.leftBallLauncher.setPower(-power);
-        robot.rightBallLauncher.setPower(-power);
-    }
+
     /*
      * Code to run ONCE after the driver hits STOP
      */

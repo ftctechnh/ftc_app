@@ -83,6 +83,7 @@ public class FuntionTest extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
     public int GyroDegrees = 0;
 
+
     public void RunWithEncoders(float speed, float LeftDistance, float RightDistance, float timeout) {
         try {
             encoderDrive(1.0, LeftDistance, RightDistance, timeout);
@@ -123,10 +124,12 @@ public class FuntionTest extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+
         //Code Goes Here
 
         robot.GyroTurn(1, 360);
         robot.GyroTurn(1, -360);
+
 
 
 
@@ -143,8 +146,8 @@ public class FuntionTest extends LinearOpMode {
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
         //// TODO: 1/2/2017 Add a "Sleep" here. 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        //telemetry.addData("Path", "Complete");
+        //telemetry.update();
     }
 
     /*
