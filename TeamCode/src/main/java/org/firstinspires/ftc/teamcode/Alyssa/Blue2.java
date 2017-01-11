@@ -151,7 +151,7 @@ public class Blue2 extends LinearOpMode {
         // 5.  Turn using the gyro sensor another 90 degrees so we are lined up with the wall.
         // 6.  Make a function that drives us forward until the line sensor sees the white tape.
         // 7.  Drive forward abut 2 inches.
-        // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the button.
+        // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the other button.
         // 9.  Do the same for the next beacon.
         // 10. Drive backwards onto the corner vortex.
 
@@ -169,25 +169,39 @@ public class Blue2 extends LinearOpMode {
 //     robot.leftMotor.setPower(0);
 //     robot.rightMotor.setPower(0);
 
+      //step 1: shoot the particles into the center vortex
+        robot.ohshoot();
+
+     //step 2: drive forward for god knows how long (24 inches right now) ;)
+        robot.DistanceDrive(60,DistanceUnit.CM,1);
+
+//step 3: turn 90 degrees
+        robot.GyroTurn(1,90);
+
+// Step 4: Drive forward to the beacon wall
+        robot.DistanceDrive(30,DistanceUnit.CM,1);
+
+        //step 5: turn another 90 degrees so we are lined up with the wall
+        robot.GyroTurn(1,90);
+
         // Step 6: Drive to the white tape on the floor
         robot.WaitForReflectedLight(6,true);
 
-        // Step 4: Drive forward to the beacon wall
-        robot.DistanceDrive(30,DistanceUnit.CM,1);
 
 
-
-
-
-
-
-
-
-    robot.GyroTurn(1,90);
+        // step 7: drive 2.5 centimeters or two inches
+        robot.DistanceDrive(5,DistanceUnit.CM,1);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
+
+
+
+
     }
+
+
 
 
     /*

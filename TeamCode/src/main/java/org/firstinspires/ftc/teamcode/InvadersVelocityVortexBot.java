@@ -17,6 +17,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import static android.R.attr.delay;
+import java.lang.Thread.*;
+
 /**
  * This is NOT an opmode.
  *
@@ -207,6 +210,36 @@ public class InvadersVelocityVortexBot
     public InvadersVelocityVortexBot(){
 
     }
+
+    public void  ohshoot()
+    {
+      rightBallLauncher.setPower(1);
+      leftBallLauncher.setPower(1);
+
+     //five second delay
+        sleepMs(5000);
+
+        ballElevator.setPower(1);
+
+     //insert 5 second delay
+        sleepMs(5000);
+
+     ballElevator.setPower(0);
+      rightBallLauncher.setPower(0);
+      leftBallLauncher.setPower(0);
+
+
+    }
+
+
+    public void sleepMs(int millis)
+    {
+        try { Thread.sleep(millis); } catch (Exception e) {}
+
+    }
+
+
+
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
