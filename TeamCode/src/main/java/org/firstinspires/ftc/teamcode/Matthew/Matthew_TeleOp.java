@@ -33,7 +33,7 @@ public class Matthew_TeleOp {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-            robot.init(hardwareMap);
+            robot.init(hardwareMap, telemetry);
 
             // Send telemetry message to signify robot waiting;
             telemetry.addData("Say", "Ready player 1");    //

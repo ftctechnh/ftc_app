@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import static android.R.attr.delay;
@@ -46,8 +47,43 @@ public class InvadersVelocityVortexBot
 {
     public static final double MID_SERVO       =  0.5 ;
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap           = null;
+    Telemetry telemetry         = null;
+
+    /* Matthew, Willow, Alyssa - I just changed the 'period' variable below from private to public.
+       This means that you can see this variable from your opModes (e.g. robot.period.reset()).
+       This is a useful object for calculating how much time has elapsed (in milliseconds)
+       Usage Example:
+       // 1st: Define a variable for how many milliseconds you want to do something
+       int maxTimeInMilliSecondsIwantMyFunctionToTake = 5000; // 5000mS = 5 seconds
+
+       // 2nd: Reset the elapsed timer with the reset() method
+       period.reset(); // Call reset to 'start' the timer
+
+       // 3rd: Do a bunch of work inside a while loop()
+       // Here is an example that shows how you could try to see a blue beacon while driving and then
+       // stop either when you found it, or when your timer expired.
+          boolean iSawBlue = false;
+
+          // Start Driving Forwards
+          leftDrive.setPower(1);
+          leftDrive.setPower(1);
+          while(period.time() < maxTimeInMilliSecondsIwantMyFunctionToTake) {
+             // Keep checking the doIseeBlue() function inside this while loop to look for the beacon
+             if(doISeeBlue()) {
+                 // Hooray: We found the beacon!  Set our boolean variable to true!
+                 iSawBlue = true;
+                 break; // This 'break' will halt the while loop.
+          }
+          // Stop driving.  We either saw blue, or we timed out after 5 seconds.
+          leftDrive.setPower(0);
+          rightDrive.setPower(0);
+
+          if(iSawBlue == true) {
+             // Do something neat if we saw blue (maybe activate our beacon pusher (or drive again until we see red)
+          }
+     */
+    public ElapsedTime period  = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
     /* Public OpMode members. */
     public DcMotor leftMotor   = null;
@@ -419,9 +455,12 @@ public class InvadersVelocityVortexBot
 
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, Telemetry opModeTelemetry) {
         // Save reference to Hardware map
         hwMap = ahwMap;
+
+        // Save reference to the OpMode's Telemetry
+        telemetry = opModeTelemetry;
 
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("backLeft");

@@ -104,7 +104,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
          */
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry);
         gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyroSensor");
 
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
