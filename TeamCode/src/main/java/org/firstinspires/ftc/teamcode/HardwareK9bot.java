@@ -53,6 +53,7 @@ public class HardwareK9bot
 //      harvester  = hwMap.dcMotor.get("h-motor");
         
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
+//      leftShooter.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
