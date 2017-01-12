@@ -99,6 +99,7 @@ public class GoldenWumpus extends OpMode {
     /*
      * Code to run ONCE when the driver hits PLAY
      */
+    public double SpeedReduction = 0;
     @Override
     public void start() {
     }
@@ -108,6 +109,8 @@ public class GoldenWumpus extends OpMode {
      */
     @Override
     public void loop() {
+        //This makes the slow mode possible by reducing the speed of all of the motors.
+
         double left;
         double right;
 
@@ -116,7 +119,7 @@ public class GoldenWumpus extends OpMode {
         
         
         // Use the left joystick to move the robot forwards/backwards and turn left/right
-        //// TODO: 1/12/2017 Fix this so that we drive with two sticks instead of one. Finally. 
+        //// TODO: 1/12/2017 Fix this so that we drive with two sticks instead of one. Finally.
         double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
         double y = -gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
 
@@ -125,9 +128,40 @@ public class GoldenWumpus extends OpMode {
         left = Range.clip(y - x, -1, +1);
         right = Range.clip(y + x, -1, +1);
 
+        //Determine if we are in fine or coarse control mode.
+        //Gamepad 2 gets to control this.
+        if (gamepad2.b == true){
+            SpeedReduction = 0.5;
+        }
+        else if (gamepad2.x == true){
+            SpeedReduction = 0;
+        }
+        else{
+            //Nothing is being pressed, don't change the value.
+        }
+
+        //Control system for the beacon pushers. Controlled by the triggers on Gamepad 1.
+
+        if (gamepad1.right_trigger > 0.7){
+            robot.beaconRight.setPosition(1);
+        }
+        else if (gamepad1.left_trigger > 0.7){
+            robot.beaconLeft.setPosition(1);
+        }
+        else{
+            robot.beaconRight.setPosition(0.2);
+            robot.beaconLeft.setPosition(0.2);
+        }
+
         // Call the setPower functions with our calculated values to activate the motors
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        robot.leftMotor.setPower(left - SpeedReduction);
+        robot.rightMotor.setPower(right - SpeedReduction);
+
+
+
+
+
+
     }
 
 
