@@ -125,19 +125,7 @@ public class ColorSensorRed extends LinearOpMode {
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive())  {
 
-            // check the status of the x button on gamepad.
-            bCurrState = gamepad1.x;
 
-            // check for button-press state transitions.
-            if ((bCurrState == true) && (bCurrState != bPrevState))  {
-
-                // button is transitioning to a pressed state. Toggle the LED.
-                bLedOn = !bLedOn;
-                cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
-            }
-
-            // update previous state variable.
-            bPrevState = bCurrState;
 
             // convert the RGB values to HSV values.
             Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
