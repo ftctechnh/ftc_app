@@ -217,6 +217,29 @@ public class Blue2 extends LinearOpMode {
             // Do Step 8.d
         }
 
+        // Going to next beacon.
+
+        // Step 9 (repeating step 6) : Drive to the white tape on the floor
+        robot.WaitForReflectedLight(6,true);
+
+
+
+        // step 10 (repeating step 7) : drive 2.5 centimeters or two inches
+        robot.DistanceDrive(5,DistanceUnit.CM,1);
+
+
+        // Step 11 (repeating step 8) : Push Beacon if Blue
+        if(robot.doIseeBlue()) {
+            // Do Step 8.c
+        } else {
+            // Do Step 8.d
+        }
+
+
+
+
+
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
