@@ -99,7 +99,7 @@ public class GoldenWumpus extends OpMode {
     /*
      * Code to run ONCE when the driver hits PLAY
      */
-    public double SpeedReduction = 0;
+    public double SpeedReduction = 1;
     @Override
     public void start() {
     }
@@ -134,7 +134,8 @@ public class GoldenWumpus extends OpMode {
             SpeedReduction = 0.5;
         }
         else if (gamepad2.x == true){
-            SpeedReduction = 0;
+            //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
+            SpeedReduction = 1;
         }
         else{
             //Nothing is being pressed, don't change the value.
@@ -153,12 +154,12 @@ public class GoldenWumpus extends OpMode {
         else{
             //robot.beaconRight.setPosition(0.2);
             //robot.beaconLeft.setPosition(0.2);
-            telemetry.addLine("Both servos are in.")
+            telemetry.addLine("Both servos are in.");
         }
 
         // Call the setPower functions with our calculated values to activate the motors
-        robot.leftMotor.setPower(left - SpeedReduction);
-        robot.rightMotor.setPower(right - SpeedReduction);
+        robot.leftMotor.setPower(left / SpeedReduction);
+        robot.rightMotor.setPower(right / SpeedReduction);
 
 
 
