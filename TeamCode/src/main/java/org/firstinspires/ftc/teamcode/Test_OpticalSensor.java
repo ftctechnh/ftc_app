@@ -58,7 +58,7 @@ public class Test_OpticalSensor extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            telemetry.addData("op_sense1", sensors.opSensorBottom.getLightDetected());
+            telemetry.addData("optical_ball", sensors.opSensorFront.getLightDetected());
             telemetry.update();
 
             idle();     // allow something else to run (aka, release the CPU)

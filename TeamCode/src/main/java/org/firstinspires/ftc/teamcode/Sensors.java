@@ -19,7 +19,7 @@ public class Sensors {
     TouchSensor touchSensor = null;
 
     //Probably wont use these...
-    OpticalDistanceSensor opSensorBottom = null;
+    //OpticalDistanceSensor opSensorBottom = null;
     OpticalDistanceSensor opSensorFront = null;
 
     ColorSensor colorSensorLeft = null;
@@ -41,8 +41,8 @@ public class Sensors {
 
     public Sensors(HardwareMap hardwareMap) {
         dim = hardwareMap.deviceInterfaceModule.get("dim");
-        opSensorBottom = hardwareMap.opticalDistanceSensor.get("op_sense1");
-        opSensorFront = hardwareMap.opticalDistanceSensor.get("op_sense2");
+        //opSensorBottom = hardwareMap.opticalDistanceSensor.get("optical_ball");
+        opSensorFront = hardwareMap.opticalDistanceSensor.get("optical_ball");
 //        touchSensor = hardwareMap.touchSensor.get("sensor_touch");
  //       colorSensorLeft = hardwareMap.colorSensor.get("sensor_color_left");
 //        colorSensorRight = hardwareMap.colorSensor.get("sensor_color_right");
@@ -107,10 +107,12 @@ public class Sensors {
         }
     }
 
+    /*
     boolean opIsBottomWhite()
     {
         return opSensorBottom.getLightDetected() > 200;
     }
+    */
 
     double getFrontDistance()
     {
@@ -124,7 +126,7 @@ public class Sensors {
 
     public OpticalDistanceSensor getOp(int index) {
         if (index == 1)
-            return opSensorBottom;
+            return null;   //TODO: fix opSensorBottom;
         if (index == 2)
             return opSensorFront;
         return null;

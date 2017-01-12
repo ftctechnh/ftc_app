@@ -32,11 +32,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -52,13 +50,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Comp_DriveAndButtonPusherOpmode", group="Competition")  // @Autonomous(...) is the other common choice
+//Custom opmode for debugging the left/right pusher motors
+
+@TeleOp(name="MotorPusherEncoderOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
+public class MotorPusherEncoderOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    Bogg bogg;
+    DcMotor pusherLeftMotor = null;
+    DcMotor pusherRightMotor = null;
+
+    static int posA = 1000;
+    static int posB = 3000;
+    boolean gotoPosA = true;
 
     @Override
     public void runOpMode() {
@@ -66,7 +71,29 @@ public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        bogg = new Bogg(hardwareMap, gamepad1);
+        pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
+        pusherRightMotor = hardwareMap.dcMotor.get("pusher_right");
+
+        pusherLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        pusherRightMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update();
+
+        pusherLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pusherRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        idle();
+
+        pusherLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pusherRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        pusherLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pusherRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0",  "Starting at %7d :%7d",
+                pusherLeftMotor.getCurrentPosition(),
+                pusherRightMotor.getCurrentPosition());
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -74,31 +101,57 @@ public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-//            telemetry.addData("Run Time: " + runtime.toString());
-            telemetry.addData("x", gamepad1.left_stick_y);
-            telemetry.addData("y", gamepad1.right_stick_y);
-            //telemetry.update();
-
-            bogg.driveEngine.setEngineMode(DriveEngine.engineMode.defaultMode);
-
-            if (gamepad1.left_bumper) {
-                bogg.pusherLeftMotor.setPower(gamepad1.left_trigger);
+            if (gamepad1.a) {
+                gotoPosA = true;
+            }
+            if (gamepad1.b) {
+                gotoPosA = false;
+            }
+            if (gotoPosA ) {
+                // Turn On RUN_TO_POSITION
+                pusherLeftMotor.setTargetPosition(posA);
+                pusherRightMotor.setTargetPosition(posA);
             }
             else {
-                bogg.pusherLeftMotor.setPower(-gamepad1.left_trigger);
+                // Turn On RUN_TO_POSITION
+                pusherLeftMotor.setTargetPosition(posB);
+                pusherRightMotor.setTargetPosition(posB);
             }
+            pusherLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            pusherRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            if (gamepad1.right_bumper) {
-                bogg.pusherRightMotor.setPower(gamepad1.right_trigger);
-            }
-            else {
-                bogg.pusherRightMotor.setPower(-gamepad1.right_trigger);
-            }
+            // reset the timeout time and start motion.
+            runtime.reset();
+            pusherLeftMotor.setPower(Math.abs(100));   // setPower range is 0 to 100%
+            pusherRightMotor.setPower(Math.abs(100));
 
-            telemetry.addData("Pushers",  "Position %7d :%7d",
-                    bogg.pusherLeftMotor.getCurrentPosition(),
-                    bogg.pusherRightMotor.getCurrentPosition());
+            telemetry.addData("Path:",  "Starting at %7d :%7d",
+                    pusherLeftMotor.getCurrentPosition(),
+                    pusherRightMotor.getCurrentPosition());
             telemetry.update();
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < 10) &&
+                    (pusherLeftMotor.isBusy() && pusherRightMotor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d :%7d", 3000,  3000);
+                telemetry.addData("Path2",  "Running at %7d :%7d",
+                        pusherLeftMotor.getCurrentPosition(),
+                        pusherRightMotor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            telemetry.update();
+
+            // Stop all motion;
+            pusherLeftMotor.setPower(0);
+            pusherRightMotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            pusherLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            pusherRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             idle();     // allow something else to run (aka, release the CPU)
         }

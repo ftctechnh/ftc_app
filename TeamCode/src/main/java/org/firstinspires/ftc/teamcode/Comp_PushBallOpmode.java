@@ -26,91 +26,86 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+/*
+PushBall is for the Moses Lake FTC Interleague Competition (1/14/17)
+Goal: The robot drives forward, knocks the ball off and parks on the platform
+ */
 
-@Autonomous(name="RedAuto-JustBeacon", group="Competition")  // @Autonomous(...) is the other common choice
-@Disabled
-public class RedAutoOpmodeJustBeacons extends LinearOpMode
+@Autonomous(name="Comp_PushBall", group="Competition")  // @Autonomous(...) is the other common choice
+//@Disabled
+public class Comp_PushBallOpmode extends LinearOpMode
 {
-    //Variable code by what mechanical pieces we have
-    int numSideColorSensors = 1;
-    int numButtonPushers = 1;
-    int numDistancesensors = 0;
-
-    public enum Goal
-    {
-        ballColors,
-        justColors,
-        justBall,
-    }
-
-    public enum PusherMode
-    {
-        //How many pushers, how many color sensors
-        P1S1,
-        P1S2,
-        P2S1,
-        P2S2,
-    }
-    PusherMode pusherMode = PusherMode.P1S1;
-
     //This is our timer
     private ElapsedTime timer = new ElapsedTime();
-    private double timeToHit = 0;
+    private double timeBallDetected = 0;
 
-    //Our robot
     Bogg bogg;
 
     //Time constants
-    private static final double TIME_ONE = 2;
-    private static final double TIME_TWO = 10;
-    private static final double TIME_EXTRA = .2;
+    private static final double LOW_POWER_TIME = 2;     //start slow, don't burn rubber
+    private static final double MID_POWER_TIME = 4;     //start going faster
+    private static final double PARKING_TIME = .5;      //time between ball detection and robot parking
+    private static final double MAX_DRIVE_TIME = 20;    //failsafe, stop the robot if ball isn't seen
 
     //Power constants
     private static final double LOW_POWER = .1;
     private static final double MID_POWER = .15;
     private static final double HIGH_POWER = .2;
 
-    //If blue
-    boolean blue = false;
-
-    RedAutoOpmodeJustBeacons(boolean blue)
-    {
-        this.blue = blue;
-    }
+    //Sensor constants
+    private static final double OPTICAL_BALL_THRESHOLD = 0.01;  //magic number, 0-threshold is nothing seen
+                                                                //getLightDetected() ranges from 0 - 1
 
     @Override
     public void runOpMode() {
         bogg = new Bogg(hardwareMap, gamepad1);
-        if(blue){
-            bogg.driveEngine.invertDirection();
-            bogg.sensors.invertDirection();     //TODO: verify the switch from rangePair to sensors
-        }
+
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
         timer.reset();
 
         //Run until the end of autonomous
         while (opModeIsActive()) {
-            // Point robot to closer white line
-            // Then curve, and press the second beacon
+            //Run until we see something
+            while (bogg.sensors.opSensorFront.getLightDetected() < OPTICAL_BALL_THRESHOLD) {
+                if (timer.seconds() < LOW_POWER_TIME) {
+                    bogg.driveEngine.setEngineToPower(LOW_POWER);
 
-            while(bogg.sensors.isBottomWhite())
-            if(numDistancesensors == 2){
-                bogg.driveAlongWall(8, bogg.driveEngine.inchesBetweenMotors, .7, blue);
+                } else if (timer.seconds() < MID_POWER_TIME) {
+                    bogg.driveEngine.setEngineToPower(MID_POWER);
+
+                } else if (timer.seconds() > MAX_DRIVE_TIME){
+                    bogg.driveEngine.stop();
+                    telemetry.addData("Status", "MAX TIME Exceeded");
+                    break;
+
+                } else {
+                    bogg.driveEngine.setEngineToPower(HIGH_POWER);
+                }
+
+                telemetry.addData("Status", "Light: " + ((int)(1000*bogg.sensors.opSensorFront.getLightDetected())/1000.));
+                telemetry.update();
+            }
+            timeBallDetected = timer.seconds();
+
+            //Reset the timer
+            timer.reset();
+            //Keep moving just a little longer to land on the black square
+            while (timer.seconds() < PARKING_TIME) {
+                telemetry.addData("Parking", timer.seconds());
+                telemetry.update();
+                bogg.driveEngine.setEngineToPower(HIGH_POWER);
             }
 
+            bogg.driveEngine.stop();
+
+            break;    //all done, exit
         }
 
     }
 
-
-
-
-}
+ }

@@ -26,7 +26,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -39,20 +38,25 @@ PushBall is for the Moses Lake FTC Interleague Competition (1/14/17)
 Goal: The robot drives forward, knocks the ball off and parks on the platform
  */
 
-@Autonomous(name="PushBall", group="Competition")  // @Autonomous(...) is the other common choice
-@Disabled
-public class PushBallOpmode extends LinearOpMode
+@Autonomous(name="PushBall_Raw", group="Competition")  // @Autonomous(...) is the other common choice
+//@Disabled
+public class PushBallOpmode_Raw extends LinearOpMode
 {
     //This is our timer
     private ElapsedTime timer = new ElapsedTime();
     private double timeBallDetected = 0;
 
-    Bogg bogg;
+    DcMotor leftMotor = null;
+    DcMotor rightMotor = null;
+
+    //The sensor devices
+    DeviceInterfaceModule dim = null;
+    OpticalDistanceSensor opticalBallSensor = null;
 
     //Time constants
     private static final double LOW_POWER_TIME = 2;     //start slow, don't burn rubber
     private static final double MID_POWER_TIME = 4;     //start going faster
-    private static final double PARKING_TIME = .5;      //time between ball detection and robot parking
+    private static final double PARKING_TIME = 2;      //time between ball detection and robot parking
     private static final double MAX_DRIVE_TIME = 20;    //failsafe, stop the robot if ball isn't seen
 
     //Power constants
@@ -66,7 +70,14 @@ public class PushBallOpmode extends LinearOpMode
 
     @Override
     public void runOpMode() {
-        bogg = new Bogg(hardwareMap, gamepad1);
+        DcMotor leftMotor = hardwareMap.dcMotor.get("left_drive");;
+        DcMotor rightMotor = hardwareMap.dcMotor.get("right_drive");
+
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
+        opticalBallSensor = hardwareMap.opticalDistanceSensor.get("optical_ball");
 
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -75,23 +86,24 @@ public class PushBallOpmode extends LinearOpMode
         //Run until the end of autonomous
         while (opModeIsActive()) {
             //Run until we see something
-            while (bogg.sensors.opSensorFront.getLightDetected() < OPTICAL_BALL_THRESHOLD) {
+            while (opticalBallSensor.getLightDetected() < OPTICAL_BALL_THRESHOLD) {
                 if (timer.seconds() < LOW_POWER_TIME) {
-                    bogg.driveEngine.setEngineToPower(LOW_POWER)
-                    ;
+                    leftMotor.setPower(LOW_POWER);
+                    rightMotor.setPower(LOW_POWER);
                 } else if (timer.seconds() < MID_POWER_TIME) {
-                    bogg.driveEngine.setEngineToPower(MID_POWER);
-
+                    leftMotor.setPower(MID_POWER);
+                    rightMotor.setPower(MID_POWER);
                 } else if (timer.seconds() > MAX_DRIVE_TIME){
-                    bogg.driveEngine.stop();
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
                     telemetry.addData("Status", "MAX TIME Exceeded");
                     break;
-
                 } else {
-                    bogg.driveEngine.setEngineToPower(HIGH_POWER);
+                    leftMotor.setPower(HIGH_POWER);
+                    rightMotor.setPower(HIGH_POWER);
                 }
 
-                telemetry.addData("Status", "Light: " + ((int)(1000*bogg.sensors.opSensorFront.getLightDetected())/1000.));
+                telemetry.addData("Status", "Light: " + ((int)(1000*opticalBallSensor.getLightDetected())/1000.));
                 telemetry.update();
             }
             timeBallDetected = timer.seconds();
@@ -102,10 +114,12 @@ public class PushBallOpmode extends LinearOpMode
             while (timer.seconds() < PARKING_TIME) {
                 telemetry.addData("Parking", timer.seconds());
                 telemetry.update();
-                bogg.driveEngine.setEngineToPower(HIGH_POWER);
+                leftMotor.setPower(HIGH_POWER);
+                rightMotor.setPower(HIGH_POWER);
             }
 
-            bogg.driveEngine.stop();
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
 
             break;    //all done, exit
         }
