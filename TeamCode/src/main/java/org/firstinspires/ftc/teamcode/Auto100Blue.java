@@ -32,18 +32,21 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
+import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -72,9 +75,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto PID Tuning", group="DM")
-//@Disabled
-public class AutoTestPID extends LinearOpMode {
+@Autonomous(name="Auto Blue Full 100", group="DM")
+// @Disabled
+public class Auto100Blue extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareDM         robot   = new HardwareDM ();   // Use a Pushbot's hardware
@@ -89,54 +92,72 @@ public class AutoTestPID extends LinearOpMode {
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.8;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED_SLOW        = 0.5;
+    static final double     TURN_SPEED              = 1.0;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+    static final double     HEADING_THRESHOLD       = 4 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.009;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.05;     // Larger is more responsive, but also less stable
 
+    static final double     WHITE_THRESHOLD         = 2.0;      // Line finder
+    static final double     BEACON_ALPHA_MIN        = 100.0;
 
-
+    static final double     BLUE_MIN                = -180;
+    static final double     BLUE_MAX                = -100;
+    static final double     RED_MIN                 = -40;
+    static final double     RED_MAX                 = 40;
 
     // State used for reading Gyro
-    Orientation angles;
-    Acceleration gravity;
+    Orientation             angles;
+
+    double                  headingBias = 0.0;            // Gyro heading adjustment
 
     // Keep track of the reference start heading at start of match
     double startHeading;
 
+    double distCorrection = 0.0;
 
     /* Shooter constants */
 
     static final int     NR_MAX_RPM              = 6600;
     static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
 
-    static double           shootSpeed              = .65;
-    static boolean          shootPressed            = false;
+    static double           shootSpeed              = .925;
 
-    ModernRoboticsUsbDcMotorController lfMC, lrMC, rfMC, rrMC; // Motor controllers
-    int lfMCC, lrMCC, rfMCC, rrMCC;  // Motor controller channels
+    // adaHSV is an array that will hold the hue, saturation, and value information.
+    float[] adaHSV = {0F, 0F, 0F};
+
+    // adaValues is a reference to the adaHSV array.
+    final float adaValues[] = adaHSV;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        int beacon = 0;         // What color beacon do we see
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
+        DbgLog.msg("DM10337- Starting auto init");
         robot.init(hardwareMap);
 
 
-        robot.lfDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rfDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.stripeColor.enableLed(true);
+
+        // Send telemetry message to signify robot waiting;
+        //telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update();
+
+        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
 
-        robot.lfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.lrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        // Send telemetry message to indicate successful Encoder reset
+        //telemetry.addData("Path0",  "Starting at %7d :%7d",
+        //                  robot.lfDrive.getCurrentPosition(),
+        //                  robot.rfDrive.getCurrentPosition());
+        telemetry.update();
 
         // Setup max shooter motor speed limit
         robot.lShoot.setMaxSpeed(SHOOT_MAX_RPM);
@@ -146,54 +167,124 @@ public class AutoTestPID extends LinearOpMode {
         robot.lShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        lfMC = (ModernRoboticsUsbDcMotorController)robot.lfDrive.getController();
-        lrMC = (ModernRoboticsUsbDcMotorController)robot.lrDrive.getController();
-        rfMC = (ModernRoboticsUsbDcMotorController)robot.rfDrive.getController();
-        rrMC = (ModernRoboticsUsbDcMotorController)robot.rrDrive.getController();
-
-        lfMCC = robot.lfDrive.getPortNumber();
-        lrMCC = robot.lrDrive.getPortNumber();
-        rfMCC = robot.rfDrive.getPortNumber();
-        rrMCC = robot.rrDrive.getPortNumber();
-
-
-        // Read a MC and display PID values
-        DifferentialControlLoopCoefficients coef = lfMC.getDifferentialControlLoopCoefficients(lfMCC);
-
-        telemetry.addData("P", (byte)coef.p);
-        telemetry.addData("I", (byte)coef.i);
-        telemetry.addData("D", (byte)coef.d);
-
-        telemetry.update();
-
+        DbgLog.msg("DM10337- Finished Init");
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        DbgLog.msg("DM10337- Auto Pressed Start");
         // Step through each leg of the path,
 
+        // Make sure the gyro is zeroed
+        zeroGyro();
+
+        DbgLog.msg("DM10337 - Gyro bias set to " + headingBias);
+
         // Spin up the shooter
-        //robot.lShoot.setPower(shootSpeed);
-        //robot.rShoot.setPower(shootSpeed);
-        telemetry.addData("Path", " Start");
+        robot.lShoot.setPower(shootSpeed);
+        robot.rShoot.setPower(shootSpeed);
+        //telemetry.addData("Path", " Start");
         telemetry.update();
 
         // Move forward 26 inches
-        encoderDrive(DRIVE_SPEED,  26,  26, 5.0, false);  // S1: Forward 24 Inches with 5 Sec timeout
-
-        sleep(500);
-
-        gyroTurn(TURN_SPEED, 90);
-
-
+        encoderDrive(DRIVE_SPEED,  26.0, 5.0, true, 0.0);  // S1: Forward 26 Inches with 5 Sec timeout
 
         // Fire the balls
-        //robot.fire.setPower(1.0);
-        //sleep(5000);        // Wait 5 seconds for shot to finish
+        robot.fire.setPower(1.0);
+        sleep(1500);        // Wait 2 seconds for shot to finish
+
+        gyroTurn(TURN_SPEED, amIBlue()?-70.0:65.0);
 
         // Stop the shooter
-        //robot.fire.setPower(0.0);
-        //robot.lShoot.setPower(0.0);
-        //robot.rShoot.setPower(0.0);
+        robot.fire.setPower(0.0);
+        robot.lShoot.setPower(0.0);
+        robot.rShoot.setPower(0.0);
+
+
+        encoderDrive(DRIVE_SPEED, amIBlue()?51.5:51.75, 5.0,
+                true, amIBlue()?-70.0:65.0);
+
+        gyroTurn(TURN_SPEED, amIBlue()?0.0:175.0);
+
+        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?8.0:2.0, 1.0, true,
+                amIBlue()?0.0:180.0);
+
+        findLine(amIBlue()?0.2:0.2, 3.0);
+
+        // Wait for beacon color sensor
+        sleep(1000);
+
+        // Check the beacon color
+        beacon = beaconColor();
+
+        //sleep(5000);
+
+        if (beacon == 1) {
+            // We see blue
+            distCorrection = amIBlue()?2.25:-3.50;
+        } else if (beacon == -1) {
+            // We see red
+            distCorrection = amIBlue()?-3.25:2.50;
+        } else {
+            // We see neither
+            distCorrection = 0;
+        }
+
+        if (beacon != 0) {
+           // We saw a beacon color so move to align beacon pusher
+            encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
+                    amIBlue()?(0-4*beacon):(180+4*beacon));
+            robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
+            sleep (1000);
+            robot.beacon.setPosition((robot.BEACON_HOME));
+
+        }
+
+        //sleep(5000);
+
+        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?43.0:-44.0 - distCorrection, 4.0,
+                true, amIBlue()?0.0:179.0);
+
+        findLine(amIBlue()?0.2:-0.2, 3.0);
+
+        // wait for color sensor
+        sleep(1000);
+
+        // Check the beacon color
+        beacon = beaconColor();
+
+        //sleep(5000);
+
+
+        if (beacon == 1) {
+            // I see blue
+            distCorrection = amIBlue()?2.25:-3.50;
+        } else if (beacon == -1) {
+            // I see red
+            distCorrection = amIBlue()?-3.25:2.50;
+        } else {
+            // I see neither
+            distCorrection = 0;
+        }
+
+        if (beacon != 0) {
+            // We saw a beacon color so move to align beacon pusher
+            encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
+                    amIBlue()?(0-4*beacon):(180+4*beacon));
+
+            robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
+            sleep (1000);
+            robot.beacon.setPosition((robot.BEACON_HOME));
+
+        }
+
+        robot.intake.setPower(-1.0);
+        encoderDrive(1.0, amIBlue()?-75.0:74.0, 10.0, true,
+                amIBlue()?-60.0:250);
+
+        DbgLog.msg("DM10337- Finished last move of auto");
+        sleep(10000);
+        robot.intake.setPower(0.0);
+
 
         // Intake full reverse to push cap ball
         //robot.intake.setPower(-1.0);
@@ -212,7 +303,8 @@ public class AutoTestPID extends LinearOpMode {
         //robot.intake.setPower(0.0);
 
 
-        telemetry.addData("Path", "Complete");
+
+        //telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
@@ -225,9 +317,10 @@ public class AutoTestPID extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS,
-                             boolean useGyro) throws InterruptedException {
+                             double distance,
+                             double timeout,
+                             boolean useGyro,
+                             double heading) throws InterruptedException {
         int newLFTarget;
         int newRFTarget;
         int newLRTarget;
@@ -236,8 +329,6 @@ public class AutoTestPID extends LinearOpMode {
         final double MINSPEED = 0.30;
         final double SPEEDINCR = 0.015;
         double curSpeed;                // Keep track of speed as we ramp up
-
-        double holdHeading;
 
         double error;
         double steer;
@@ -250,21 +341,21 @@ public class AutoTestPID extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
 
-            newLFTarget = robot.lfDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLRTarget = robot.lrDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRFTarget = robot.rfDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRRTarget = robot.rrDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLFTarget = robot.lfDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newLRTarget = robot.lrDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newRFTarget = robot.rfDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newRRTarget = robot.rrDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
 
             while(robot.lfDrive.getTargetPosition() != newLFTarget){
                 robot.lfDrive.setTargetPosition(newLFTarget);
                 sleep(1);
             }
-            while(robot.lrDrive.getTargetPosition() != newLRTarget){
-                robot.lrDrive.setTargetPosition(newLRTarget);
-                sleep(1);
-            }
             while(robot.rfDrive.getTargetPosition() != newRFTarget){
                 robot.rfDrive.setTargetPosition(newRFTarget);
+                sleep(1);
+            }
+            while(robot.lrDrive.getTargetPosition() != newLRTarget){
+                robot.lrDrive.setTargetPosition(newLRTarget);
                 sleep(1);
             }
             while(robot.rrDrive.getTargetPosition() != newRRTarget){
@@ -272,36 +363,19 @@ public class AutoTestPID extends LinearOpMode {
                 sleep(1);
             }
 
-            // Record the starting heading
-            angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-            holdHeading = angles.firstAngle;
-
-            // Turn On RUN_TO_POSITION
-            while (robot.lfDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.lfDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-               sleep(1);
-            }
-
-            while (robot.lrDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.lrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(1);
-            }
-            while (robot.rfDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.rfDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(1);
-            }
-            while (robot.rrDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(1);
-            }
-
+            // Turn On motors to RUN_TO_POSITION
+            robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
+            DbgLog.msg("DM10337- Starting encoderDrive speed:" + speed +
+            "  distance:" + distance + "  timeout:" + timeout +
+            "  useGyro:" + useGyro + " heading:" + heading);
 
             speed = Math.abs(speed);    // Make sure its positive
             curSpeed = Math.min(MINSPEED,speed);
 
+            // Power only the fronts -- let the rears glide
             robot.lfDrive.setPower(Math.abs(curSpeed));
             robot.lrDrive.setPower(Math.abs(curSpeed));
             robot.rfDrive.setPower(Math.abs(curSpeed));
@@ -309,9 +383,11 @@ public class AutoTestPID extends LinearOpMode {
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   ((robot.lfDrive.isBusy())
-                           || (robot.rfDrive.isBusy()))) {
+                   (runtime.seconds() < timeout) &&
+                    robot.lfDrive.isBusy() &&
+                    robot.lrDrive.isBusy() &&
+                    robot.rfDrive.isBusy() &&
+                    robot.rrDrive.isBusy()) {
 
                 // Ramp up motor powers as needed
                 if (curSpeed < speed) {
@@ -323,11 +399,11 @@ public class AutoTestPID extends LinearOpMode {
 
                 if (useGyro){
                     // adjust relative speed based on heading error if desired
-                    error = getError(holdHeading);
+                    error = getError(heading);
                     steer = getSteer(error, P_DRIVE_COEFF);
 
                     // if driving in reverse, the motor correction also needs to be reversed
-                    if (leftInches < 0)
+                    if (distance < 0)
                         steer *= -1.0;
 
                     leftSpeed -= steer;
@@ -344,26 +420,32 @@ public class AutoTestPID extends LinearOpMode {
 
                 }
 
-                // And rewrite the motor speeds
+                // And rewrite the front motor speeds
                 robot.lfDrive.setPower(Math.abs(leftSpeed));
                 robot.lrDrive.setPower(Math.abs(leftSpeed));
                 robot.rfDrive.setPower(Math.abs(rightSpeed));
                 robot.rrDrive.setPower(Math.abs(rightSpeed));
 
+
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d %7d : %7d %7d", newLFTarget,  newLRTarget,
-                    newRFTarget, newRRTarget);
-                telemetry.addData("Path2",  "Running at %7d %7d : %7d  %7d",
-                                            robot.lfDrive.getCurrentPosition(),
-                                            robot.lrDrive.getCurrentPosition(),
-                                            robot.rfDrive.getCurrentPosition(),
-                                            robot.rrDrive.getCurrentPosition());
+                //telemetry.addData("Path1",  "Running to %7d: %7d", newLFTarget,
+                //    newRFTarget);
+                //telemetry.addData("Path2",  "Running at %7d : %7d",
+                //                            robot.lfDrive.getCurrentPosition(),
+                //                            robot.rfDrive.getCurrentPosition());
                 telemetry.update();
 
                 // Allow time for other processes to run.
                 idle();
             }
 
+
+                       DbgLog.msg("DM10337- encoderDrive done" +
+                    "  lftarget: " +newLFTarget + "  lfactual:" + robot.lfDrive.getCurrentPosition() +
+                    "  lrtarget: " +newLRTarget + "  lractual:" + robot.lrDrive.getCurrentPosition() +
+                    "  rftarget: " +newRFTarget + "  rfactual:" + robot.rfDrive.getCurrentPosition() +
+                    "  rrtarget: " +newRRTarget + "  rractual:" + robot.rrDrive.getCurrentPosition() +
+                    "  heading:" + readGyro());
 
             // Stop all motion;
             robot.lfDrive.setPower(0);
@@ -372,23 +454,42 @@ public class AutoTestPID extends LinearOpMode {
             robot.rrDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            while (robot.lfDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.lfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            while (robot.lrDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.lrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            while (robot.rfDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.rfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            while (robot.rrDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-
-
+            robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
+    /**
+     * Method to find white line
+     */
+    public boolean findLine(double speed, double timeout) {
+        // Try to find white line
+        // loop and read the RGB data.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+        robot.setDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
+        runtime.reset();
+        while (opModeIsActive() &&
+                robot.stripeColor.alpha() < WHITE_THRESHOLD &&
+                runtime.seconds() < timeout) {
+
+            // Drive til we see the stripe
+            robot.lfDrive.setPower(speed);
+            robot.lrDrive.setPower(speed);
+            robot.rfDrive.setPower(speed);
+            robot.rrDrive.setPower(speed);
+            idle();
+        }
+
+        boolean finished = (runtime.seconds() < timeout);
+
+        robot.lfDrive.setPower(0.0);
+        robot.lrDrive.setPower(0.0);
+        robot.rfDrive.setPower(0.0);
+        robot.rrDrive.setPower(0.0);
+
+        robot.setDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        return finished;
+    }
 
     /**
      *  Method to spin on central axis to point in a new direction.
@@ -403,41 +504,18 @@ public class AutoTestPID extends LinearOpMode {
      */
     public void gyroTurn (  double speed, double angle) {
 
+        DbgLog.msg("DM10337- gyroTurn start  speed:" + speed +
+            "  heading:" + angle);
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
-            telemetry.update();
-        }
-    }
-
-    /**
-     *  Method to obtain & hold a heading for a finite amount of time
-     *  Move will stop once the requested time has elapsed
-     *
-     * @param speed      Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     * @param holdTime   Length of time (in seconds) to hold the specified heading.
-     */
-    public void gyroHold( double speed, double angle, double holdTime) {
-
-        ElapsedTime holdTimer = new ElapsedTime();
-
-        // keep looping while we have time remaining.
-        holdTimer.reset();
-        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
-            // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, P_TURN_COEFF);
-            telemetry.update();
+            //telemetry.update();
+            idle();
         }
 
-        // Stop all motion;
-        robot.lfDrive.setPower(0);
-        robot.lrDrive.setPower(0);
-        robot.rfDrive.setPower(0);
-        robot.rrDrive.setPower(0);
+        DbgLog.msg("DM10337- gyroTurn done   heading actual:" + readGyro());
     }
+
 
     /**
      * Perform one cycle of closed loop heading control.
@@ -467,20 +545,20 @@ public class AutoTestPID extends LinearOpMode {
         }
         else {
             steer = getSteer(error, PCoeff);
-            rightSpeed  = -speed * steer;
+            rightSpeed  = speed * steer;
             leftSpeed   = -rightSpeed;
         }
 
         // Send desired speeds to motors.
         robot.lfDrive.setPower(leftSpeed);
-        robot.lrDrive.setPower(rightSpeed);
-        robot.rfDrive.setPower(leftSpeed);
+        robot.lrDrive.setPower(leftSpeed);
+        robot.rfDrive.setPower(rightSpeed);
         robot.rrDrive.setPower(rightSpeed);
 
         // Display it for the driver.
-        telemetry.addData("Target", "%5.2f", angle);
-        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
-        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+        //telemetry.addData("Target", "%5.2f", angle);
+        //telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        //telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
 
         return onTarget;
     }
@@ -495,11 +573,9 @@ public class AutoTestPID extends LinearOpMode {
 
         double robotError;
 
-        // Read IMU
-        angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
 
         // calculate error in -179 to +180 range  (
-        robotError = targetAngle - angles.firstAngle;
+        robotError = targetAngle - readGyro();
         while (robotError > 180)  robotError -= 360;
         while (robotError <= -180) robotError += 360;
         return robotError;
@@ -515,8 +591,80 @@ public class AutoTestPID extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
+    public int beaconColor () {
 
-    public double amIBlue() {
-        return 1.0;
+        // Return 1 for Blue and -1 for Red
+        // convert the RGB adaValues to HSV adaValues.
+        Color.RGBToHSV((robot.beaconColor.red() * 255) / 800, (robot.beaconColor.green() * 255) / 800,
+                (robot.beaconColor.blue() * 255) / 800, adaHSV);
+
+        // Normalize hue to -180 to 180 degrees
+        if (adaHSV[0] > 180.0) {
+            adaHSV[0] -= 360.0;
+        }
+
+        telemetry.addData("Alpha", robot.beaconColor.alpha());
+        telemetry.addData("Hue",  adaHSV[0]);
+
+
+        // Only continue if we see beacon i.e. enough light
+        if (robot.beaconColor.alpha() < BEACON_ALPHA_MIN) {
+            telemetry.addData("beacon", 0);
+            telemetry.update();
+            DbgLog.msg("DM10337- Beacon color red nothing found   alpha:" +
+                robot.beaconColor.alpha());
+            return 0;
+        }
+
+        // Return 1 for Blue and -1 for Red
+        // convert the RGB adaValues to HSV adaValues.
+
+        // Check for blue
+        if (adaHSV[0] > BLUE_MIN && adaHSV[0] < BLUE_MAX) {
+            // we see blue so return 1.0
+            telemetry.addData("beacon", 1);
+            telemetry.update();
+            DbgLog.msg("DM10337- Beacon color found blue  alpha:" +
+                robot.beaconColor.alpha() +
+                "  hue:" + adaHSV[0] );
+            return 1;
+        }
+
+        // Check for red
+        if (adaHSV[0] > RED_MIN && adaHSV[0] < RED_MAX) {
+            telemetry.addData("beacon", -1);
+            telemetry.update();
+            DbgLog.msg("DM10337- Beacon color found red  alpha:" +
+                    robot.beaconColor.alpha() +
+                    "  hue:" + adaHSV[0] );
+            return -1;
+        }
+
+        telemetry.addData("beacon", 100);
+        telemetry.update();
+        DbgLog.msg("DM10337- Beacon color found neither  alpha:" +
+                robot.beaconColor.alpha() +
+                "  hue:" + adaHSV[0] );
+        return 0;         // We didn't see either color so don't know
+    }
+
+    /**
+     * Record the current heading and use that as the 0 heading point for gyro reads
+     * @return
+     */
+    void zeroGyro() {
+        angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+        headingBias = angles.firstAngle;
+    }
+
+
+    double readGyro() {
+        angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+        return angles.firstAngle - headingBias;
+    }
+
+
+    public boolean amIBlue() {
+        return true;
     }
 }

@@ -59,7 +59,7 @@ import java.util.Locale;
  */
 
 @TeleOp(name = "Sensor: Adafruit IMU", group = "Sensor")
-// @Disabled                            // Uncomment this to add to the opmode list
+@Disabled                            // Uncomment this to add to the opmode list
 public class TestGyro extends LinearOpMode
     {
     //----------------------------------------------------------------------------------------------

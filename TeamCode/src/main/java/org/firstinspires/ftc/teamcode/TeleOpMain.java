@@ -160,6 +160,12 @@ public class TeleOpMain extends OpMode{
         double throttle = -gamepad1.left_stick_y;
         double direction = gamepad1.right_stick_x;
 
+        if (pickupDeployed) {
+            // Slow down the driving since we have a cap ball -- and reverse which is front of robot
+            throttle = -1.0 * throttle;
+            direction = -0.8 * direction;
+        }
+
         double right = throttle - direction;
         double left = throttle + direction;
 
@@ -167,6 +173,8 @@ public class TeleOpMain extends OpMode{
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
+
+
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
@@ -249,7 +257,7 @@ public class TeleOpMain extends OpMode{
             if ((gamepad2.right_stick_y < -0.2) && (!robot.liftLimit.isPressed())) {
                 robot.liftMotor.setPower(1.0);
             } else if (gamepad2.right_stick_y > 0.2) {
-                robot.liftMotor.setPower(-0.10);
+                robot.liftMotor.setPower(-0.20);
             } else robot.liftMotor.setPower(0.0);
 
         }

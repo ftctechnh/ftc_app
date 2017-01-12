@@ -68,8 +68,8 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Auto ShootCap Blue", group="DM")
-// @Disabled
-public class AutoShootCapBlue extends LinearOpMode {
+@Disabled
+public class AutoFromScrimmage extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareDM         robot   = new HardwareDM ();   // Use a Pushbot's hardware
