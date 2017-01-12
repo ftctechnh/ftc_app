@@ -46,7 +46,7 @@ public class DistanceAuto extends LinearOpMode {
             maxVoltage = distanceSensor.getMaxVoltage();
             voltsPerInch = 5.0/512.0;
             voltageInInches = voltage/voltsPerInch;
-            while (voltageInInches <= 12.512218963831867) {
+            while (voltageInInches <= 13) {
                 runtime.reset();
                 if (runtime.seconds() > 3.0) {
                     telemetry.addData("okayyy", kev);
