@@ -28,7 +28,8 @@ public class HardwareK9bot
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-//  public DcMotor  midMotor    = null;
+//  public DcMotor  leftShooter    = null;
+//  public DcMotor  rightShooter    = null;
 //  public DcMotor  harvester   = null;
 
     /* Local OpMode members. */
@@ -45,9 +46,10 @@ public class HardwareK9bot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("l-motor");
-        rightMotor  = hwMap.dcMotor.get("r-motor");
-//      midMotor  = hwMap.dcMotor.get("m-motor");
+        leftMotor   = hwMap.dcMotor.get("ld-motor");
+        rightMotor  = hwMap.dcMotor.get("rd-motor");
+//      leftShooter  = hwMap.dcMotor.get("ls-motor");
+//      rightShooter  = hwMap.dcMotor.get("rs-motor");
 //      harvester  = hwMap.dcMotor.get("h-motor");
         
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -55,14 +57,16 @@ public class HardwareK9bot
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-//      midMotor.setPower(0);
+//      leftShooter.setPower(0);
+//      rightShooter.setPower(0);
 //      harvester.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//      midMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//      leftShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//      rightShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //      harvester.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }

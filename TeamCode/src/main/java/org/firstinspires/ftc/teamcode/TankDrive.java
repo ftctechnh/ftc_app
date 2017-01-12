@@ -64,7 +64,7 @@ public class TankDrive1 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        double left, right, middle, harvester;
+        double left, right, leftShooter, rightShooter, harvester;
         
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -89,10 +89,12 @@ public class TankDrive1 extends LinearOpMode {
 /*
             // Turn motor on when up on the DPAD is pressed, turn off when down is pressed
             if (gamepad1.dpad_up) {
-               robot.midMotor.setPower(1);
+               robot.leftShooter.setPower(1);
+               robot.rightShooter.setPower(1);
             }
             else if (gamepad1.dpad_down) {
-                robot.midMotor.setPower(0);
+               robot.leftShooter.setPower(0);
+               robot.rightShooter.setPower(0);
             }
 
             // Set harvester speed based on the buttons pressed (from team8200; Steel Hawks)
@@ -118,13 +120,15 @@ public class TankDrive1 extends LinearOpMode {
             }
 
             // Get the motors' power (for telemetry)
-            middle = robot.midMotor.getPower();
+            leftShooter = robot.leftShooter.getPower();
+            rightShooter = robot.rightShooter.getPower();
             harvester = robot.harvester.getPower();
 */
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
-//          telemetry.addData("middle", "%.2f", middle);
+//          telemetry.addData("left shooter", "%.2f", leftShooter);
+//          telemetry.addData("right shooter", "%.2f", rightShooter);
 //          telemetry.addData("harvester", "%.2f", harvester);
             telemetry.update();
 
