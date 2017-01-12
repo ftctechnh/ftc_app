@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -75,24 +77,7 @@ import com.qualcomm.robotcore.util.Range;
 public class GyroOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
-    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
-    ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
-
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-
-    // These constants define the desired driving/control characteristics
-    // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.1 ;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.1;     // Nominal half speed for better accuracy.
-
-    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
-
+    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use our custom hardware
 
     @Override
     public void runOpMode() {
@@ -101,49 +86,73 @@ public class GyroOpmode extends LinearOpMode {
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
          */
-        robot.init(hardwareMap);
-        gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyroSensor");
-
-        // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
-        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.init(this);
 
         // Send telemetry message to alert driver that we are calibrating;
         telemetry.addData(">", "Mommy says people my age shouldn't suck their thumbs.");    //
         telemetry.update();
-
-        gyro.calibrate();
-
-        // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && gyro.isCalibrating())  {
-            sleep(50);
-            idle();
-        }
-
         telemetry.addData(">", "Robot Ready.");    //
         telemetry.update();
 
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
-            telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
+            telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
             telemetry.update();
             idle();
         }
-        gyro.resetZAxisIntegrator();
 
         // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
         //Actual code goes here.
 
-        robot.gyroDrive(1, 24, 0);
-        robot.gyroDrive(1, -24, 0);
+        // Drive in a square to the left
+        for(int i=0; i<4; ++i) {
+            robot.encoderDrive(1,24,24,3);
+            robot.sleepMs(500);
+            robot.simpleGyroTurn(1, -90, 2500);
+            robot.sleepMs(500);
+        }
+
+        // About Face!
+        robot.simpleGyroTurn(1,180,2500);
+        
+        // Drive in a square to the right
+        for(int i=0; i<4; ++i) {
+            robot.encoderDrive(1,24,24,3);
+            robot.sleepMs(500);
+            robot.simpleGyroTurn(1, 90, 2500);
+            robot.sleepMs(500);
+        }
+
+        //robot.DistanceDrive(1, DistanceUnit.INCH, 1);
+        //robot.gyroTurn(0.2, 81);
+        //robot.rightMotor.setPower(0.2);
+        //robot.leftMotor.setPower(0.2);
+        //while (robot.doIseeBlue() == false){
+        //Just wait.
+        //}
+        //robot.rightMotor.setPower(0);
+        //robot.leftMotor.setPower(0);
+        //robot.beaconRight.setPosition(1);
+        //robot.gyroDrive(0.1, 1, 0);
+        //robot.gyroDrive(0.1, -2, 0);
+        //robot.gyroDrive(0.1, 1, 0);
+        //robot.beaconRight.setPosition(0);
+        //robot.rightMotor.setPower(0.2);
+        //robot.leftMotor.setPower(0.2);
+        //while (robot.doIseeBlue() == false){
+            //Just wait again.
+        //}
+        //robot.leftMotor.setPower(0);
+        //robot.rightMotor.setPower(0);
+        //robot.beaconRight.setPosition(1);
+        //robot.gyroDrive(0.1, 1, 0);
+        //robot.gyroDrive(0.1, -2, 0);
+        //robot.gyroDrive(0.1, 1, 0);
+        //robot.beaconRight.setPosition(0);
         
 
         telemetry.addData("Path", "Complete");
-        telemetry.update();
+        //telemetry.update();
     }
 }

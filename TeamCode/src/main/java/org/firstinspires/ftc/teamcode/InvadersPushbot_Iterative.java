@@ -84,7 +84,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap, telemetry);
+        robot.init(this);
 
         // Send telemetry message to signify robot waiting;
          updateTelemetry(telemetry);
@@ -118,8 +118,8 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         // Algorithm for setting power to left/right motors based on joystick x/y values
         // note: The Range.clip function just ensures we stay between Â±100%
-        left = Range.clip(y - x, -1, +1);
-        right = Range.clip(y + x, -1, +1);
+        left = Range.clip(y + x, -1, +1);
+        right = Range.clip(y - x, -1, +1);
 
         // Call the setPower functions with our calculated values to activate the motors
         robot.leftMotor.setPower(left);

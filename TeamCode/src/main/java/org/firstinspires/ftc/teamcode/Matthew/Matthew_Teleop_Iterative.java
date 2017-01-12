@@ -77,7 +77,7 @@ public class Matthew_Teleop_Iterative extends OpMode {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap, telemetry);
+        robot.init(this);
 
         // Connect our limit switch TouchSensor object to the Robot
         limitSwitch = hardwareMap.touchSensor.get("down limit");

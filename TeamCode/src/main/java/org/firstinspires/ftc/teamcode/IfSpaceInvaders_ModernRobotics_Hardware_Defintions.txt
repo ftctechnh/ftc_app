@@ -44,5 +44,5 @@ Velocity Vortex Config
 	3	Servo		"beaconRight"
 
 "Drive Controller"
-	Motor 1: "backLeft"
-	Motor 2: "backRight"
+	Motor 1: "backRight"
+	Motor 2: "backLeft"

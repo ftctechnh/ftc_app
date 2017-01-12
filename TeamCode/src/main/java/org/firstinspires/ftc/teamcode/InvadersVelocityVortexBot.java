@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +22,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import static android.R.attr.delay;
+import static android.R.attr.left;
+
 import java.lang.Thread.*;
 
 /**
@@ -49,6 +53,7 @@ public class InvadersVelocityVortexBot
     /* local OpMode members. */
     HardwareMap hwMap           = null;
     Telemetry telemetry         = null;
+    OpMode activeOpMode         = null;
 
     /* Matthew, Willow, Alyssa - I just changed the 'period' variable below from private to public.
        This means that you can see this variable from your opModes (e.g. robot.period.reset()).
@@ -102,7 +107,7 @@ public class InvadersVelocityVortexBot
     public OpticalDistanceSensor ODS = null; // Best for short-range sensing (<12")
     public ColorSensor beaconSensor = null;
     public ColorSensor floorSensor = null;
-    ModernRoboticsI2cGyro gyro = null;
+    public ModernRoboticsI2cGyro gyro = null;
     public TouchSensor touchSensor = null;
 /*
      @todo Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
@@ -132,50 +137,12 @@ public class InvadersVelocityVortexBot
      * GyroTurn function allows our robot to do make precise +/- degrees turns using the gyro sensor
      * @param speed currently unused.
      * @param degrees indicates the number of degrees to turn left or right.  Positive numbers
-     *                will turn the robot left the specified degrees, negative numbers will turn the
-     *                robot right the specified number of degrees.
+     *                will turn the robot right the specified degrees, negative numbers will turn the
+     *                robot left the specified number of degrees.
+     *
      */
     public void GyroTurn(float speed, float degrees) {
-/*
-        @todo Matthew, Alyssa, or Willow - we need to decide here what 'degrees' means here.
-           Should it be an Absolute heading  (ie turn to 350° always means the same direction,
-           regardless of what direction we were facing when we started).
-           If we use this approach, we should only zeroize our gyro sensor once (at the start of the
-           op-mode) and then every time we pass in a degree value, or robot will turn precisely to
-           the specified direction regardless of where it happened to be facing at the time.
-
-           Or...
-           Should it be a Relative heading (ie turn to 10° means turn left by ten degrees).
-           If we use this approach, then we should zeroize the gyro at the start of this function,
-           wait a moment for it to stabilize, and then turn left/right by the specified degrees.
-
-           I don't actually know which will be easier to use in the long run, but the logic/math
-           below will need to be updated slightly depending on how we decide to proceed.
-
-           It is a relative heading, I think this will be easier to use in the long run.
- */
-
-        int GyroDegrees = 0;
-        if(degrees > 0 == true){
-            leftMotor.setPower(0.2);
-            rightMotor.setPower(-0.2);
-            while (GyroDegrees < degrees == true){
-                GyroDegrees = gyro.getHeading();
-            }
-
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-        }
-        else {
-            leftMotor.setPower(-0.2);
-            rightMotor.setPower(0.2);
-            while (GyroDegrees < degrees == true) {
-                GyroDegrees = gyro.getHeading();
-            }
-
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-        }
+        simpleGyroTurn(speed,degrees,5000);
     }
 
 
@@ -192,7 +159,13 @@ public class InvadersVelocityVortexBot
 
     //// TODO: 1/10/2017 Fix this some time in the future.
     private boolean opModeIsActive(){
-        return true;
+        boolean isActive = true;
+        // If we're running a linear op mode, then make sure we stop when our opmode is no longer active
+        if(activeOpMode instanceof LinearOpMode)
+        {
+            isActive = ((LinearOpMode)activeOpMode).opModeIsActive();
+        }
+        return isActive;
     }
 
     /**
@@ -229,83 +202,85 @@ public class InvadersVelocityVortexBot
         leftMotor.setPower(0);
     }
 
-    public void gyroDrive ( double speed,
-                            double distance,
-                            double angle) {
-
-        int     newLeftTarget;
-        int     newRightTarget;
-        int     moveCounts;
-        double  max;
-        double  error;
-        double  steer;
-        double  leftSpeed;
-        double  rightSpeed;
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            moveCounts = (int)(distance * COUNTS_PER_INCH);
-            newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
-            newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
-
-            // Set Target and Turn On RUN_TO_POSITION
-            leftMotor.setTargetPosition(newLeftTarget);
-            rightMotor.setTargetPosition(newRightTarget);
-
-            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // start motion.
-            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            leftMotor.setPower(speed);
-            rightMotor.setPower(speed);
-
-            // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
-
-                // adjust relative speed based on heading error.
-                error = getError(angle);
-                steer = getSteer(error, P_DRIVE_COEFF);
-
-                // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    steer *= -1.0;
-
-                leftSpeed = speed - steer;
-                rightSpeed = speed + steer;
-
-                // Normalize speeds if any one exceeds +/- 1.0;
-                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
-                if (max > 1.0)
-                {
-                    leftSpeed /= max;
-                    rightSpeed /= max;
-                }
-
-                leftMotor.setPower(leftSpeed);
-                rightMotor.setPower(rightSpeed);
-
-                // Display drive status for the driver.
-                //telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
-                //telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
-                //telemetry.addData("Actual",  "%7d:%7d",      robot.leftMotor.getCurrentPosition(),
-                        rightMotor.getCurrentPosition();
-                //telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
-                //telemetry.update();
-            }
-
-            // Stop all motion;
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
+//    // This function is currently disabled.  It just drives straight for now.
+//    public void gyroDrive ( double speed,
+//                            double distance,
+//                            double angle) {
+//
+//        int     newLeftTarget;
+//        int     newRightTarget;
+//        int     moveCounts;
+//        double  max;
+//        double  error;
+//        double  steer;
+//        double  leftSpeed;
+//        double  rightSpeed;
+//
+//        // Ensure that the opmode is still active
+//        if (opModeIsActive()) {
+//
+//            // Determine new target position, and pass to motor controller
+//            moveCounts = (int)(distance * COUNTS_PER_INCH);
+//            newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
+//            newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
+//
+//            // Set Target and Turn On RUN_TO_POSITION
+//            leftMotor.setTargetPosition(newLeftTarget);
+//            rightMotor.setTargetPosition(newRightTarget);
+//
+//            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            // start motion.
+//            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+//            leftMotor.setPower(speed);
+//            rightMotor.setPower(speed);
+//
+//            // keep looping while we are still active, and BOTH motors are running.
+//            while (opModeIsActive() &&
+//                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+//
+//                // DISABLED THE STEERING BY SETTING IT TO ZERO BECAUSE THIS DOESN'T WORK ON OUR ROBOT
+//                // adjust relative speed based on heading error.
+//                //error = getError(angle);
+//                steer = 0;//getSteer(error, P_DRIVE_COEFF);
+//
+//                // if driving in reverse, the motor correction also needs to be reversed
+//                if (distance < 0)
+//                    steer *= -1.0;
+//
+//                leftSpeed = speed - steer;
+//                rightSpeed = speed + steer;
+//
+//                // Normalize speeds if any one exceeds +/- 1.0;
+//                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+//                if (max > 1.0)
+//                {
+//                    leftSpeed /= max;
+//                    rightSpeed /= max;
+//                }
+//
+//                leftMotor.setPower(leftSpeed);
+//                rightMotor.setPower(rightSpeed);
+//
+//                // Display drive status for the driver.
+//                //telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
+//                //telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
+//                //telemetry.addData("Actual",  "%7d:%7d",      robot.leftMotor.getCurrentPosition(),
+//                        rightMotor.getCurrentPosition();
+//                //telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
+//                //telemetry.update();
+//            }
+//
+//            // Stop all motion;
+//            leftMotor.setPower(0);
+//            rightMotor.setPower(0);
+//
+//            // Turn off RUN_TO_POSITION
+//            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        }
+//    }
 
 
     public boolean doIseeBlue () {
@@ -313,105 +288,192 @@ public class InvadersVelocityVortexBot
         return (beaconSensor.blue() >= 5);
     }
 
-
-
-
-
-    public void gyroTurn (  double speed, double angle) {
-
-        // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
-            // Update telemetry & Allow time for other processes to run.
-            //telemetry.update();
+    // Right/Clockwise = Positive Turn Degrees
+    // Left/CounterClockwise = Negative Turn Degrees
+    // timeoutMs provides a sanity check to make sure we don't turn forever
+    void simpleGyroTurn(double speed, double turnDegrees, int timeoutMs)
+    {
+        // Our turn degrees has a bit of slop in it.  Try to correct the user input to match reality
+        // If turnDegrees == 100, then reset to 75 (which makes our robot turn 100)
+        if((turnDegrees > 15) || (turnDegrees < 15)) {
+            turnDegrees *= .75;
         }
-    }
-
-    public void gyroHold( double speed, double angle, double holdTime) {
-
-        ElapsedTime holdTimer = new ElapsedTime();
-
-        // keep looping while we have time remaining.
-        holdTimer.reset();
-        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
-            // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, P_TURN_COEFF);
-            //telemetry.update();
+        else {
+            turnDegrees *= .85;
         }
 
-        // Stop all motion;
+        double targetHeading = gyro.getIntegratedZValue() - turnDegrees;
+
+        // Early Return (do nothing) if we are giving a zero degree turn
+        if(turnDegrees == 0) return;
+
+        // Power should be scaled based on how far away we are from our target
+        period.reset();
+        double MinMotorPower = 0.05; // 5% speed is the slowest we'll try to turn
+        double MaxMotorPower = speed;
+
+        // Make sure our Max Power is at least as big as our minimum power
+        if (MaxMotorPower < MinMotorPower) MaxMotorPower = MinMotorPower;
+
+        double MaxSpeedError = 75; //If we're more than MaxSpeedError Degrees away from our target heading, use the MaxSpeed to get there
+        double MinSpeedError = 25; //If we're less than MinSpeedError Degrees away from our target heading, use the MinSpeed to get there
+        double errorDegrees;
+        double targetSpeed;
+        if(turnDegrees > 0) {
+            while (period.time() < timeoutMs && opModeIsActive()) {
+                int currentHeading = gyro.getIntegratedZValue();
+                errorDegrees = currentHeading - targetHeading;
+
+                // Exit our while loop because we're at our destination
+                if(errorDegrees <= 0) break;
+
+                targetSpeed = MaxMotorPower;
+                if(errorDegrees < MaxSpeedError) {
+                    if(errorDegrees > MinSpeedError)
+                    {
+                        targetSpeed = (MaxMotorPower-MinMotorPower)/(MaxSpeedError-MinSpeedError)*(errorDegrees-MinSpeedError)+MinMotorPower;
+                    }
+                    else
+                    {
+                        targetSpeed = MinMotorPower;
+
+                    }
+                }
+                telemetry.addData("RT", "Robot Heading = %d, targetHeading: %.02f, targetSpeed: %.02f", currentHeading,targetHeading, targetSpeed);
+                telemetry.update();
+                leftMotor.setPower(targetSpeed);
+                rightMotor.setPower(-targetSpeed);
+            }
+        }
+        else {
+            while (period.time() < timeoutMs && opModeIsActive()) {
+                int currentHeading = gyro.getIntegratedZValue();
+                errorDegrees = targetHeading - currentHeading;
+
+                // Exit our while loop because we're at our destination
+                if(errorDegrees <= 0) break;
+
+                targetSpeed = MaxMotorPower;
+                if(errorDegrees < MaxSpeedError) {
+                    if(errorDegrees > MinSpeedError)
+                    {
+                        targetSpeed = (MaxMotorPower-MinMotorPower)/(MaxSpeedError-MinSpeedError)*(errorDegrees-MinSpeedError)+MinMotorPower;
+                    }
+                    else
+                    {
+                        targetSpeed = MinMotorPower;
+
+                    }
+                }
+                telemetry.addData("LT", "Robot Heading = %d, targetHeading: %.02f, targetSpeed: %.02f", currentHeading,targetHeading, targetSpeed);
+                telemetry.update();
+
+                leftMotor.setPower(-targetSpeed);
+                rightMotor.setPower(targetSpeed);
+             }
+        }
         leftMotor.setPower(0);
         rightMotor.setPower(0);
     }
 
-    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
-
-    boolean onHeading(double speed, double angle, double PCoeff) {
-        double   error ;
-        double   steer ;
-        boolean  onTarget = false ;
-        double leftSpeed;
-        double rightSpeed;
-
-        // determine turn power based on +/- error
-        error = getError(angle);
-
-        if (Math.abs(error) <= HEADING_THRESHOLD) {
-            steer = 0.0;
-            leftSpeed  = 0.0;
-            rightSpeed = 0.0;
-            onTarget = true;
-        }
-        else {
-            steer = getSteer(error, PCoeff);
-            rightSpeed  = speed * steer;
-            leftSpeed   = -rightSpeed;
-        }
-
-        // Send desired speeds to motors.
-        leftMotor.setPower(leftSpeed);
-        rightMotor.setPower(rightSpeed);
-
-        // Display it for the driver.
-        //telemetry.addData("Target", "%5.2f", angle);
-        //telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
-        //telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
-
-        return onTarget;
-    }
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
-    /**
-     * getError determines the error between the target angle and the robot's current heading
-     * @param   targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
-     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
-     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
-     */
-    public double getError(double targetAngle) {
+// These gyro turn functions do not work on our robot.  No investigation why yet.  Just use 'simpleGyroTurn' function instead.
+//    public void gyroTurn (  double speed, double angle) {
+//
+//        // keep looping while we are still active, and not on heading.
+//        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+//            // Update telemetry & Allow time for other processes to run.
+//            //telemetry.update();
+//        }
+//    }
+//
+//    public void gyroHold( double speed, double angle, double holdTime) {
+//
+//        ElapsedTime holdTimer = new ElapsedTime();
+//
+//        // keep looping while we have time remaining.
+//        holdTimer.reset();
+//        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
+//            // Update telemetry & Allow time for other processes to run.
+//            onHeading(speed, angle, P_TURN_COEFF);
+//            //telemetry.update();
+//        }
+//
+//        // Stop all motion;
+//        leftMotor.setPower(0);
+//        rightMotor.setPower(0);
+//    }
 
-        double robotError;
+//    boolean onHeading(double speed, double angle, double PCoeff) {
+//        double   error ;
+//        double   steer ;
+//        boolean  onTarget = false ;
+//        double leftSpeed;
+//        double rightSpeed;
+//
+//        // determine turn power based on +/- error
+//        error = getError(angle);
+//
+//        if (Math.abs(error) <= HEADING_THRESHOLD) {
+//            steer = 0.0;
+//            leftSpeed  = 0.0;
+//            rightSpeed = 0.0;
+//            onTarget = true;
+//        }
+//        else {
+//            steer = getSteer(error, PCoeff);
+//            rightSpeed  = speed * steer;
+//            leftSpeed   = -rightSpeed;
+//        }
+//
+//        // Send desired speeds to motors.
+//        leftMotor.setPower(leftSpeed);
+//        rightMotor.setPower(rightSpeed);
+//
+//        // Display it for the driver.
+//        //telemetry.addData("Target", "%5.2f", angle);
+//        //telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+//        //telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+//
+//        return onTarget;
+//    }
+//
+//    /**
+//     * getError determines the error between the target angle and the robot's current heading
+//     * @param   targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
+//     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
+//     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
+//     */
+//    public double getError(double targetAngle) {
+//
+//        double robotError;
+//
+//        // calculate error in -179 to +180 range  (
+//        robotError = targetAngle - gyro.getIntegratedZValue();
+//        while (robotError > 180)  robotError -= 360;
+//        while (robotError <= -180) robotError += 360;
+//        return robotError;
+//    }
+//
+//    /**
+//     * returns desired steering force.  +/- 1 range.  +ve = steer left
+//     * @param error   Error angle in robot relative degrees
+//     * @param PCoeff  Proportional Gain Coefficient
+//     * @return
+//     */
+//    public double getSteer(double error, double PCoeff) {
+//        return Range.clip(error * PCoeff, -1, 1);
+//    }
+//
 
-        // calculate error in -179 to +180 range  (
-        robotError = targetAngle - gyro.getIntegratedZValue();
-        while (robotError > 180)  robotError -= 360;
-        while (robotError <= -180) robotError += 360;
-        return robotError;
-    }
-
-    /**
-     * returns desired steering force.  +/- 1 range.  +ve = steer left
-     * @param error   Error angle in robot relative degrees
-     * @param PCoeff  Proportional Gain Coefficient
-     * @return
-     */
-    public double getSteer(double error, double PCoeff) {
-        return Range.clip(error * PCoeff, -1, 1);
-    }
 
     public void WaitForReflectedLight(int intensity, boolean enableLed){
         floorSensor.enableLed(enableLed);
@@ -455,12 +517,15 @@ public class InvadersVelocityVortexBot
 
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap, Telemetry opModeTelemetry) {
+    public void init(OpMode activeOpMode) {
         // Save reference to Hardware map
-        hwMap = ahwMap;
+        hwMap = activeOpMode.hardwareMap;
 
         // Save reference to the OpMode's Telemetry
-        telemetry = opModeTelemetry;
+        telemetry = activeOpMode.telemetry;
+
+        // Save reference to the active OpMode
+        this.activeOpMode = activeOpMode;
 
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("backLeft");
@@ -470,8 +535,8 @@ public class InvadersVelocityVortexBot
         capBall = hwMap.dcMotor.get("CapBall");
         sweeper = hwMap.dcMotor.get("Sweeper");
 
-        leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
         leftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
         capBall.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -485,10 +550,12 @@ public class InvadersVelocityVortexBot
         capBall.setPower(0);
         sweeper.setPower(0);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        // Set all non-driving motors to run without encoders.
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         rightBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         capBall.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -509,6 +576,15 @@ public class InvadersVelocityVortexBot
         beaconSensor = hwMap.colorSensor.get("beaconSensor");
         floorSensor = hwMap.colorSensor.get("floorSensor");
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
+
+        gyro.calibrate();
+
+        // make sure the gyro is calibrated before continuing
+        while (gyro.isCalibrating())  {
+            sleepMs(50);
+        }
+        gyro.resetZAxisIntegrator();
+
     }
 
     /***
@@ -558,5 +634,61 @@ public class InvadersVelocityVortexBot
     }
 
 
+    /*
+ *  Method to perfmorm a relative move, based on encoder counts.
+ *  Encoders are not reset as the move is based on the current position.
+ *  Move will stop if any of three conditions occur:
+ *  1) Move gets to the desired position
+ *  2) Move runs out of time
+ *  3) Driver stops the opmode running.
+ */
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches,
+                             double timeoutS) {
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightTarget = rightMotor.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            leftMotor.setTargetPosition(newLeftTarget);
+            rightMotor.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            period.reset();
+            leftMotor.setPower(Math.abs(speed));
+            rightMotor.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (period.seconds() < timeoutS) &&
+                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        leftMotor.getCurrentPosition(),
+                        rightMotor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            sleepMs(250);   // optional pause after each move
+        }
+    }
 
 }
