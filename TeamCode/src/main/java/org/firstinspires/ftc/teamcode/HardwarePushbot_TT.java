@@ -75,8 +75,8 @@ public class HardwarePushbot_TT
         armMotor    = hwMap.dcMotor.get("ArmMotor");
         flyRight = hwMap.dcMotor.get("FlyRight");
         flyLeft = hwMap.dcMotor.get("FlyLeft");
-//        leftServo = hwMap.servo.get("LeftServo") ;
-//        rightServo = hwMap.servo.get("RightServo") ;
+        leftServo = hwMap.servo.get("LeftServo") ;
+        rightServo = hwMap.servo.get("RightServo") ;
 
         // Set defaults for the Drive Motors
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
@@ -86,8 +86,8 @@ public class HardwarePushbot_TT
 
         // Set defaults for the Linear Slide motors
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-//        leftServo.setDirection(Servo.Direction.REVERSE);
-//        rightServo.setDirection(Servo.Direction.FORWARD);
+        leftServo.setDirection(Servo.Direction.REVERSE);
+        rightServo.setDirection(Servo.Direction.FORWARD);
 
         // Set defaults for the fly wheel thrower motors
         flyLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -126,8 +126,8 @@ public class HardwarePushbot_TT
         flyLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flyRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-//        leftServo.setPosition(Servo.MIN_POSITION);
-//        rightServo.setPosition(Servo.MIN_POSITION);
+        leftServo.setPosition(Servo.MIN_POSITION);
+        rightServo.setPosition(Servo.MIN_POSITION);
 
     }
 

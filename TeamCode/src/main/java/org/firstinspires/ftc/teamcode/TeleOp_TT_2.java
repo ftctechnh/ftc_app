@@ -1,34 +1,6 @@
 /*
 Copyright (c) 2016 Robert Atkinson
 
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted (subject to the limitations in the disclaimer below) provided that
-the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this list
-of conditions and the following disclaimer.
-
-Redistributions in binary form must reproduce the above copyright notice, this
-list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-
-Neither the name of Robert Atkinson nor the names of his contributors may be used to
-endorse or promote products derived from this software without specific prior
-written permission.
-
-NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
-LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
@@ -70,11 +42,9 @@ public class TeleOp_TT_2 extends OpMode {
     private double          maxMotorSpeed = 0.95;             // adjust this value to set the maximum motor speed, depends on motor type
 
     public final static double LEFT_CLAW_FOLD = 1.0;
-    public final static double RIGHT_CLAW_FOLD = 0.0;
+    public final static double RIGHT_CLAW_FOLD = 1.0;
     public final static double LEFT_CLAW_OPEN  = 0.50;
-    public final static double RIGHT_CLAW_OPEN  = 0.10;
-    public final static double LEFT_CLAW_CLOSE  = 1.00;
-    public final static double RIGHT_CLAW_CLOSE  = 0.30;
+    public final static double RIGHT_CLAW_OPEN  = 0.50;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -139,8 +109,8 @@ public class TeleOp_TT_2 extends OpMode {
         double armUp = 0.0;
         double armDown = 0.0;
         boolean openClawA = false;
-        boolean closeClawB = false; //May need to change
-        boolean foldClawX = false;
+        boolean rightClawB = false; //May need to change
+        boolean leftClawX = false;
 
         // ClawState = 0 for Home, 1 for Open, 2 for holding the ball
         int iPrevStateClaw = 0;
@@ -153,8 +123,8 @@ public class TeleOp_TT_2 extends OpMode {
         right = -gamepad1.right_stick_y;
         armUp = -gamepad1.right_trigger;
         openClawA = gamepad2.a;
-        closeClawB = gamepad2.b;
-        foldClawX = gamepad2.x;
+        rightClawB = gamepad2.b;
+        leftClawX = gamepad2.x;
 
         bCurrState = gamepad1.x;
 
@@ -184,33 +154,34 @@ public class TeleOp_TT_2 extends OpMode {
 //            iPrevStateClaw = iCurrStateClaw ;
             iCurrStateClaw = 1;
             openClawA = false;
-            closeClawB = false;
-            foldClawX = false;
+            rightClawB = false;
+            leftClawX = false;
             robot.backLeftMotor.setPower(leftMotorSpeed/2);
             robot.frontLeftMotor.setPower(leftMotorSpeed/2);
             robot.backRightMotor.setPower(rightMotorSpeed/2);
             robot.frontRightMotor.setPower(rightMotorSpeed/2);
 
-            robot.rightServo.setPosition(LEFT_CLAW_OPEN+.3);
+            robot.leftServo.setPosition(LEFT_CLAW_OPEN);
             try {
-                sleep(500);
+                sleep(100);
+            robot.rightServo.setPosition(RIGHT_CLAW_OPEN);
             }
             catch (InterruptedException e) {
                 //do nothing
             }
 
-        } else if (closeClawB == true) {
+        } else if (rightClawB == true) {
 //            iPrevStateClaw = iCurrStateClaw ;
             iCurrStateClaw = 2;
             openClawA = false;
-            closeClawB = false;
-            foldClawX = false;
+            rightClawB = false;
+            leftClawX = false;
             robot.backLeftMotor.setPower(leftMotorSpeed/2);
             robot.frontLeftMotor.setPower(leftMotorSpeed/2);
             robot.backRightMotor.setPower(rightMotorSpeed/2);
             robot.frontRightMotor.setPower(rightMotorSpeed/2);
 
-            robot.leftServo.setPosition(RIGHT_CLAW_CLOSE-.3);
+            robot.rightServo.setPosition(RIGHT_CLAW_FOLD);
             try {
                 sleep(500);
             }
@@ -219,18 +190,17 @@ public class TeleOp_TT_2 extends OpMode {
             }
 
 
-        } else if (foldClawX == true) {
+        } else if (leftClawX == true) {
 //            iPrevStateClaw = iCurrStateClaw ;
             iCurrStateClaw = 0;
             openClawA = false;
-            closeClawB = false;
-            foldClawX = false;
+            rightClawB = false;
+            leftClawX = false;
             robot.backLeftMotor.setPower(leftMotorSpeed);
             robot.frontLeftMotor.setPower(leftMotorSpeed);
             robot.backRightMotor.setPower(rightMotorSpeed);
             robot.frontRightMotor.setPower(rightMotorSpeed);
             robot.leftServo.setPosition(LEFT_CLAW_FOLD);
-            robot.rightServo.setPosition(RIGHT_CLAW_FOLD);
         }
 
         telemetry.addData("Left Servo", robot.leftServo.getPosition()) ;
