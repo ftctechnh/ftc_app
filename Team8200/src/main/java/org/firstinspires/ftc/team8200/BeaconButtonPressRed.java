@@ -96,7 +96,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
         // bLedOn represents the state of the LED.
         boolean bLedOn = true;
         robot.init(hardwareMap);
-        robot.cdim = hardwareMap.deviceInterfaceModule.get("dim");
+        robot.cdim = hardwareMap.deviceInterfaceModule.get("cdim");
         //colorSensor = robot.colorSensor;
 
         bLedOn = true;
