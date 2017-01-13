@@ -126,9 +126,11 @@ public class HardwarePushbot_TT
         flyLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flyRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftServo.setPosition(Servo.MIN_POSITION);
-        rightServo.setPosition(Servo.MIN_POSITION);
+//        leftServo.setPosition(Servo.MIN_POSITION);
+//        rightServo.setPosition(Servo.MIN_POSITION);
 
+        leftServo.setPosition(Servo.MAX_POSITION);
+        rightServo.setPosition(Servo.MAX_POSITION);
     }
 
     /***

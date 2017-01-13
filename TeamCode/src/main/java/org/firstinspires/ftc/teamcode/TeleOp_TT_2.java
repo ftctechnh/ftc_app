@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -161,10 +162,10 @@ public class TeleOp_TT_2 extends OpMode {
             robot.backRightMotor.setPower(rightMotorSpeed/2);
             robot.frontRightMotor.setPower(rightMotorSpeed/2);
 
-            robot.leftServo.setPosition(LEFT_CLAW_OPEN);
+            robot.leftServo.setPosition(Servo.MIN_POSITION);
             try {
-                sleep(100);
-            robot.rightServo.setPosition(RIGHT_CLAW_OPEN);
+                sleep(250);
+            robot.rightServo.setPosition(Servo.MIN_POSITION);
             }
             catch (InterruptedException e) {
                 //do nothing
