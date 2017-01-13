@@ -23,10 +23,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name="8200: Red Button Press", group="K9bot")
 
 public class BeaconButtonPressRed extends LinearOpMode {
-    LightSensor lightSensor;
 
-    ColorSensor sensorRGB;
-    DeviceInterfaceModule cdim;
 
 
     HardwareK9bot robot = new HardwareK9bot(); // Hardware Device Object
@@ -43,8 +40,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
     public void runOpMode() {
 
         robot.init(hardwareMap);
-        cdim = hardwareMap.deviceInterfaceModule.get("dim");
-        lightSensor = robot.lightSensor;
+        robot.cdim = hardwareMap.deviceInterfaceModule.get("dim");
         //colorSensor = robot.colorSensor;
 
 
@@ -52,17 +48,15 @@ public class BeaconButtonPressRed extends LinearOpMode {
         bLedOn = true;
 
 //        // get a reference to our Light Sensor object.
-        lightSensor = hardwareMap.lightSensor.get("light");
 
 //        // Set the LED state in the beginning.
-        lightSensor.enableLed(bLedOn);
-        cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
+        robot.lightSensor.enableLed(bLedOn);
+        robot.cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
         // get a reference to our ColorSensor object.
-        sensorRGB = hardwareMap.colorSensor.get("sensor_color");
 
         // turn the LED on in the beginning, just so user will know that the sensor is active.
-        cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
+        robot.cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
 
         // wait for the start button to be pressed.
 
@@ -70,29 +64,15 @@ public class BeaconButtonPressRed extends LinearOpMode {
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive())  {
 
-            // check the status of the x button on gamepad.
-            bCurrState = gamepad1.x;
-
-            // check for button-press state transitions.
-            if ((bCurrState == true) && (bCurrState != bPrevState))  {
-
-                // button is transitioning to a pressed state. Toggle the LED.
-                // bLedOn = !bLedOn;
-                cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
-            }
-
-            // update previous state variable.
-            bPrevState = bCurrState;
-
             // convert the RGB values to HSV values.
-            Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
+            Color.RGBToHSV((robot.colorSensor.red() * 255) / 800, (robot.colorSensor.green() * 255) / 800, (robot.colorSensor.blue() * 255) / 800, hsvValues);
 
             // send the info back to driver station using telemetry function.
             telemetry.addData("LED", bLedOn ? "On" : "Off");
-            telemetry.addData("Clear", sensorRGB.alpha());
-            telemetry.addData("Red  ", sensorRGB.red());
-            telemetry.addData("Green", sensorRGB.green());
-            telemetry.addData("Blue ", sensorRGB.blue());
+            telemetry.addData("Clear", robot.colorSensor.alpha());
+            telemetry.addData("Red  ", robot.colorSensor.red());
+            telemetry.addData("Green", robot.colorSensor.green());
+            telemetry.addData("Blue ", robot.colorSensor.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.
@@ -112,7 +92,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     public void MoveToBeacon() {
         // Move to white line
-        while (lightSensor.getLightDetected() < WHITE_THRESHOLD) {
+        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(MOTOR_POWER);
             robot.rightMotor.setPower(MOTOR_POWER);
             updateTelemetry();
@@ -132,13 +112,13 @@ public class BeaconButtonPressRed extends LinearOpMode {
             while (opModeIsActive() && (runtime.seconds() < 0.01)) {
                 robot.leftMotor.setPower(0);
                 robot.rightMotor.setPower(MOTOR_POWER);
-                telemetry.addData("Raw", lightSensor.getRawLightDetected());
+                telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
                 telemetry.addData("Say", "Motors turning.");
                 telemetry.update();
             }
 
             //step 4 follow the line
-            while (lightSensor.getLightDetected() >= WHITE_THRESHOLD) { //follows white light is above threshold AND touch sensor is not touching
+            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) { //follows white light is above threshold AND touch sensor is not touching
                 robot.leftMotor.setPower(MOTOR_POWER);
                 robot.rightMotor.setPower(MOTOR_POWER);
                 telemetry.addData("Say", "Motors following line.");
@@ -150,8 +130,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     public void updateTelemetry() {
 
-        telemetry.addData("Raw", lightSensor.getRawLightDetected());
-        telemetry.addData("Normal", lightSensor.getLightDetected());
+        telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
+        telemetry.addData("Normal", robot.lightSensor.getLightDetected());
         telemetry.update();
 
     }
@@ -174,17 +154,6 @@ public class BeaconButtonPressRed extends LinearOpMode {
     // bLedOn represents the state of the LED.
     boolean bLedOn = true;
 
-
-    ///////Errors start from here
-
-
-    // get a reference to our DeviceInterfaceModule object.
-
-
-
-    // set the digital channel to output mode.
-    // remember, the Adafruit sensor is actually two devices.
-    // It's an I2C sensor and it's also an LED that can be turned on or off.
 
         }
 

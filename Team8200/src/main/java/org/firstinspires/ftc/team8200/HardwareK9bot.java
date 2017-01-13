@@ -3,6 +3,7 @@ package org.firstinspires.ftc.team8200;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
@@ -30,6 +31,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class HardwareK9bot
 {
+
     /* Public OpMode members. */
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
@@ -42,6 +44,8 @@ public class HardwareK9bot
     public DcMotor elevator = null;
     public Servo armLeft = null;
     public Servo armRight = null;
+    public DeviceInterfaceModule cdim = null;
+
 
     /*
     public final static double ARM_HOME = 0.2;
@@ -71,6 +75,8 @@ public class HardwareK9bot
         elevator = hwMap.dcMotor.get("elevator");
         armLeft = hwMap.servo.get("armLeft");
         armRight = hwMap.servo.get("armRight");
+        cdim = hwMap.deviceInterfaceModule.get("dim");
+
 
 
         leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
