@@ -39,40 +39,36 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     @Override
 
-    public void runOpMode()
-    {
+    public void runOpMode() {
         waitForStart();
         MoveToBeacon();
         distanceSensorCode();
     }
 
-   public void distanceSensorCode() {
+    public void distanceSensorCode() {
         dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
         distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
 
         waitForStart();
-            while (opModeIsActive()) {
-                voltage = robot.distanceSensor.getLightDetected();
-                maxVoltage = robot.distanceSensor.getRawLightDetectedMax();
-                voltsPerInch = 5.0 / 512.0;
-                voltageInInches = voltage / voltsPerInch;
-                while (voltageInInches <= 13)
-                {
-                        runtime.reset();
-                         if (runtime.seconds() > 3.0)
-                         {
-                             telemetry.addData("distanceTest. will print klk", kev);
-                             telemetry.update();
-                         }
-                 }
+        while (opModeIsActive()) {
+            voltage = robot.distanceSensor.getLightDetected();
+            maxVoltage = robot.distanceSensor.getRawLightDetectedMax();
+            voltsPerInch = 5.0 / 512.0;
+            voltageInInches = voltage / voltsPerInch;
+            while (voltageInInches <= 13) {
+                runtime.reset();
+                if (runtime.seconds() > 3.0) {
+                    telemetry.addData("distanceTest. will print klk", kev);
+                    telemetry.update();
+                }
+            }
             telemetry.addData("Voltage", voltageInInches);
             telemetry.addData("Max Voltage", maxVoltage);
             telemetry.update();
         }
     }
 
-    public void colorSensorCode()
-    {
+    public void colorSensorCode() {
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -95,7 +91,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
         bLedOn = true;
 
-/       // Set the LED state in the beginning.
+               // Set the LED state in the beginning.
         robot.lightSensor.enableLed(bLedOn);
         robot.cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
@@ -132,16 +128,14 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     public void MoveToBeacon() {
         // Move to white line
-        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD)
-        {
+        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(MOTOR_POWER);
             robot.rightMotor.setPower(MOTOR_POWER);
             updateTelemetry();
         }
 
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
             runtime.reset();
@@ -154,8 +148,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
             }
 
             //step 4 follow the line
-            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD)
-            {
+            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) {
                 //follows white light is above threshold AND touch sensor is not touching
                 robot.leftMotor.setPower(MOTOR_POWER);
                 robot.rightMotor.setPower(MOTOR_POWER);
@@ -171,6 +164,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
         telemetry.addData("Normal", robot.lightSensor.getLightDetected());
         telemetry.update();
     }
+
 }
 
 
