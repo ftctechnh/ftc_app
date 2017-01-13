@@ -28,9 +28,9 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     HardwareK9bot robot = new HardwareK9bot(); // Hardware Device Object
     static final double WHITE_THRESHOLD = 0.4;
-    static final double MOTOR_POWER = .1;
+    static final double MOTOR_POWER = 0.1;
     static final int LED_CHANNEL = 5;
-    DeviceInterfaceModule dim;                  // Device Object
+    DeviceInterfaceModule dim;
     AnalogInput distanceSensor;
     double voltage, maxVoltage, voltsPerInch, voltageInInches;
     private ElapsedTime runtime = new ElapsedTime();
@@ -41,16 +41,10 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     public void runOpMode()
     {
-
-
-//        // wait for the start button to be pressed.
-            waitForStart();
-
-            MoveToBeacon();
-            distanceSensorCode();
+        waitForStart();
+        MoveToBeacon();
+        distanceSensorCode();
     }
-
-
 
    public void distanceSensorCode() {
         dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
@@ -101,7 +95,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
         bLedOn = true;
 
-//        // Set the LED state in the beginning.
+/       // Set the LED state in the beginning.
         robot.lightSensor.enableLed(bLedOn);
         robot.cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
@@ -135,8 +129,6 @@ public class BeaconButtonPressRed extends LinearOpMode {
                     relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
                 }
             });
-
-
         }
     }
 
@@ -181,16 +173,12 @@ public class BeaconButtonPressRed extends LinearOpMode {
         }
     }
 
-
     public void updateTelemetry() {
-
         telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
         telemetry.addData("Normal", robot.lightSensor.getLightDetected());
         telemetry.update();
-
     }
-
-    }
+}
 
 
 
