@@ -75,7 +75,7 @@ public class AutonomousFarStart extends AutonomousGeneral {
 
         encoderDrive(0.5, 100, 100, 8);
         encoderDrive(0.5, -15, -15, 8);
-        encoderDrive(0.5, 15, 15, 8);
+        encoderDrive(0.5, 35, 35, 8);
         telemetry.addData("it is done!", "");
         telemetry.update();
     }
