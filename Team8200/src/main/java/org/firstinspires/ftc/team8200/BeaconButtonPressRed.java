@@ -26,7 +26,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class BeaconButtonPressRed extends LinearOpMode {
 
 
-
     HardwareK9bot robot = new HardwareK9bot(); // Hardware Device Object
     static final double WHITE_THRESHOLD = 0.4;
     static final double MOTOR_POWER = .1;
@@ -40,8 +39,62 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     @Override
 
-    public void runOpMode() {
+    public void runOpMode()
+    {
 
+
+//        // wait for the start button to be pressed.
+            waitForStart();
+
+            MoveToBeacon();
+            distanceSensorCode();
+    }
+
+
+
+   public void distanceSensorCode() {
+        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
+        distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
+
+        waitForStart();
+            while (opModeIsActive()) {
+                voltage = distanceSensor.getVoltage();
+                maxVoltage = distanceSensor.getMaxVoltage();
+                voltsPerInch = 5.0 / 512.0;
+                voltageInInches = voltage / voltsPerInch;
+                while (voltageInInches <= 13)
+                {
+                        runtime.reset();
+                         if (runtime.seconds() > 3.0)
+                         {
+                             telemetry.addData("distanceTest. will print klk", kev);
+                             telemetry.update();
+                         }
+                 }
+            telemetry.addData("Voltage", voltageInInches);
+            telemetry.addData("Max Voltage", maxVoltage);
+            telemetry.update();
+        }
+    }
+
+    public void colorSensorCode()
+    {
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
+
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
+
+        // bLedOn represents the state of the LED.
+        boolean bLedOn = true;
         robot.init(hardwareMap);
         robot.cdim = hardwareMap.deviceInterfaceModule.get("dim");
         //colorSensor = robot.colorSensor;
@@ -61,7 +114,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
         // loop and read the RGB data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-        while (opModeIsActive())  {
+        while (opModeIsActive()) {
 
             // convert the RGB values to HSV values.
             Color.RGBToHSV((robot.colorSensor.red() * 255) / 800, (robot.colorSensor.green() * 255) / 800, (robot.colorSensor.blue() * 255) / 800, hsvValues);
@@ -83,16 +136,14 @@ public class BeaconButtonPressRed extends LinearOpMode {
                 }
             });
 
-//        // wait for the start button to be pressed.
-        waitForStart();
 
-        MoveToBeacon();
-        distanceSensor();
-    }}
+        }
+    }
 
     public void MoveToBeacon() {
         // Move to white line
-        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
+        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD)
+        {
             robot.leftMotor.setPower(MOTOR_POWER);
             robot.rightMotor.setPower(MOTOR_POWER);
             updateTelemetry();
@@ -106,7 +157,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
         telemetry.update();
 
 
-        while (opModeIsActive()) { //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
+        while (opModeIsActive())
+        { //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 0.01)) {
@@ -118,7 +170,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
             }
 
             //step 4 follow the line
-            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) { //follows white light is above threshold AND touch sensor is not touching
+            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD)
+            { //follows white light is above threshold AND touch sensor is not touching
                 robot.leftMotor.setPower(MOTOR_POWER);
                 robot.rightMotor.setPower(MOTOR_POWER);
                 telemetry.addData("Say", "Motors following line.");
@@ -128,6 +181,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
         }
     }
 
+
     public void updateTelemetry() {
 
         telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
@@ -136,50 +190,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     }
 
-
-
-
-    // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F, 0F, 0F};
-
-    // values is a reference to the hsvValues array.
-    final float values[] = hsvValues;
-
-    // get a reference to the RelativeLayout so we can change the background
-    // color of the Robot Controller app to match the hue detected by the RGB sensor.
-    final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
-
-    // bPrevState and bCurrState represent the previous and current state of the button.
-    boolean bPrevState = false;
-    boolean bCurrState = false;
-
-    // bLedOn represents the state of the LED.
-    boolean bLedOn = true;
-
-
-
-    public void distanceSensor() {
-        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
-        distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
-
-        waitForStart();
-        while (opModeIsActive()) {
-            voltage = distanceSensor.getVoltage();
-            maxVoltage = distanceSensor.getMaxVoltage();
-            voltsPerInch = 5.0/512.0;
-            voltageInInches = voltage/voltsPerInch;
-            while (voltageInInches <= 13) {
-                runtime.reset();
-                if (runtime.seconds() > 3.0) {
-                    telemetry.addData("distanceTest. will print klk", kev);
-                    telemetry.update();
-                }
-            }
-            telemetry.addData("Voltage", voltageInInches);
-            telemetry.addData("Max Voltage", maxVoltage);
-            telemetry.update();
-        }
     }
-}
+
 
 
