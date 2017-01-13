@@ -42,7 +42,6 @@ public class BeaconButtonPressRed extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
         MoveToBeacon();
-        distanceSensorCode();
     }
 
     public void distanceSensorCode() {
@@ -150,8 +149,6 @@ public class BeaconButtonPressRed extends LinearOpMode {
             robot.rightMotor.setPower(MOTOR_POWER);
             updateTelemetry();
         }
-
-
         while (opModeIsActive()) {
             //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
@@ -167,12 +164,13 @@ public class BeaconButtonPressRed extends LinearOpMode {
             //step 4 follow the line
             while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) {
                 //follows white light is above threshold AND touch sensor is not touching
+                distanceSensorCode();
                 robot.leftMotor.setPower(MOTOR_POWER);
                 robot.rightMotor.setPower(MOTOR_POWER);
                 telemetry.addData("Say", "Motors following line.");
                 telemetry.update();
+                colorSensorCode();
             }
-
         }
     }
 
@@ -181,5 +179,4 @@ public class BeaconButtonPressRed extends LinearOpMode {
         telemetry.addData("Normal", robot.lightSensor.getLightDetected());
         telemetry.update();
     }
-
 }
