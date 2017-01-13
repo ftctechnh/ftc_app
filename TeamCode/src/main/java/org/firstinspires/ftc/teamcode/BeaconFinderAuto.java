@@ -29,7 +29,7 @@ public class BeaconFinderAuto extends LinearOpMode {
     boolean curResetState  = false;
 
     GyroSensor Gyro;
-
+    ColorSensor color_sensor;
 
 
 
@@ -48,6 +48,8 @@ public class BeaconFinderAuto extends LinearOpMode {
 //            Thread.sleep(50);
 //            idle()
 //          }
+        color_sensor = hardwareMap.colorSensor.get("color");
+        color_sensor.enableLed(false);
         Gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
         telemetry.addData("Gyro Calibration:", "Running");
         telemetry.update();
@@ -83,39 +85,52 @@ public class BeaconFinderAuto extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        GyroMovement(0.3, 0, 1100); //pull forward off the wall
+        GyroMovement(0.3, 45, 1000); //drive diagonally to line up w/ the beacon
+        GyroMovement(0.3, 90, 1250); //pull up to the beacon
+        pushBeacons();
 
-        //reachBeacon();
-        //pushBeacons();
-        GyroMovement(0.3, 90, 5000); //pull forward off the wall
-        GyroMovement(0.3, 270, 5000);
-        //GyroTest()  ;
 
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        while (opModeIsActive())
+        {
+            telemetry.addData("Clear", color_sensor.alpha());
+            telemetry.addData("Red  ", color_sensor.red());
+            telemetry.addData("Green", color_sensor.green());
+            telemetry.addData("Blue ", color_sensor.blue());
+            telemetry.update();
             idle();
         }
     }
 
     public void pushBeacons() {
         //Now that we are in front of the first beacon, we need to figure out the color
-        robot.init(hardwareMap);
-        int ColorBlue = 0;
-        int ColorRed = 0;
-        if (Color.blue(ColorBlue) > Color.red(ColorRed)) {
+        if (color_sensor.blue() > color_sensor.red()) {
             color = 1; //Beacon is blue
-        } else if (Color.blue(ColorBlue) < Color.red(ColorRed)) {
+            telemetry.addData("Beacon color:", "Blue");
+        } else if (color_sensor.blue() < color_sensor.red()) {
             color = -1; //Beacon is red
+            telemetry.addData("Beacon color:", "Red");
         } else {
             color = 0; //Beacon color is unknown for some reason (This should NEVER happen, unless red and blue are exactly equal
+            telemetry.addData("Beacon color:", "ERROR");
+            telemetry.addData("Color Sensor Red", color_sensor.red());
+            telemetry.addData("Color Sensor Blue", color_sensor.blue());
         }
+        telemetry.update();
         if (color == teamColor)//If the side of the beacon we are viewing is our color
         {
             //Push this side so we can score
+            GyroMovement(0.3, 90, 250);
+            GyroMovement(-0.3, 90, 250);
         }
-        else if (color == -1)
+        else if (color != 0)
         {
-            //Push the other side to score
+            //Press the other button
+            GyroMovement(0.2, 0, 250);
+            GyroMovement(0.2, 90, 350);
+            GyroMovement(-0.2, 90, 250);
         }
     }
 
