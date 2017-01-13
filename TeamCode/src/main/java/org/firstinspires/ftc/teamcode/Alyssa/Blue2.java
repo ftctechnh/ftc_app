@@ -202,7 +202,7 @@ public class Blue2 extends LinearOpMode {
 
 
         // Step 6: Drive to the white tape on the floor
-        robot.WaitForReflectedLight(6,true,3500);
+        robot.DriveToWhiteLine(.5, 6,true,3500);
 
 
 
@@ -220,7 +220,7 @@ public class Blue2 extends LinearOpMode {
         // Going to next beacon.
 
         // Step 9 (repeating step 6) : Drive to the white tape on the floor
-        robot.WaitForReflectedLight(6,true,3500);
+        robot.DriveToWhiteLine(0.5,6,true,3500);
 
 
 

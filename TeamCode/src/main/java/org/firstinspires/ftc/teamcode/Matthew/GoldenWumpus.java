@@ -131,7 +131,7 @@ public class GoldenWumpus extends OpMode {
         //Determine if we are in fine or coarse control mode.
         //Gamepad 2 gets to control this.
         if (gamepad2.b == true){
-            SpeedReduction = 4;
+            SpeedReduction = 20;
         }
         else if (gamepad2.x == true){
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.

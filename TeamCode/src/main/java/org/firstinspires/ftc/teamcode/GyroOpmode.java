@@ -97,6 +97,8 @@ public class GyroOpmode extends LinearOpMode {
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
             telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
+            telemetry.addData(">", "Floor AlphaLv = %d", robot.floorSensor.alpha());
+            telemetry.addData(">", "Floor Hue     = %d", robot.floorSensor.argb());
             telemetry.update();
             idle();
         }
@@ -174,11 +176,11 @@ public class GyroOpmode extends LinearOpMode {
         //All the actual opmode code goes here.
 
         robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards to the plywood base with the capball.
-        robot.simpleGyroTurn(0.1, -65, 1500); //Turn left towards the beacons.
+        robot.simpleGyroTurn(0.1, -90, 1500); //Turn left towards the beacons.
         robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
         robot.DistanceDrive(6, DistanceUnit.INCH, 0.1); //Use the range sensor to get nice and close to the wall.
-        robot.simpleGyroTurn(0.1, 65, 1500); //Turn right to drive alongside the beacons.
-
+        robot.simpleGyroTurn(0.1, 90, 1500); //Turn right to drive alongside the beacons.
+        robot.DriveToWhiteLine(0.5,2,true,3500); // Drive to the white line
 
 
 
