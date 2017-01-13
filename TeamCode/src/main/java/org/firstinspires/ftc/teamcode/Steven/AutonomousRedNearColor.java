@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.Steven;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
@@ -67,14 +68,17 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral_newName;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: AutonomousRedNearColor", group="Pushbot")
+@Autonomous(name="Pushbot: AutonomousRedNearLine", group="Pushbot")
 @Disabled
 
 public class AutonomousRedNearColor extends AutonomousGeneral_newName {
 
 
     private ElapsedTime runtime = new ElapsedTime();
-
+    OpticalDistanceSensor ODS;
+    OpticalDistanceSensor ODS2;
+    double baseline1;
+    double baseline2;
     static int INITIAL_SHOOTERPOS;
 
     @Override
@@ -82,6 +86,11 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
 
         initiate();
 
+        ODS = hardwareMap.opticalDistanceSensor.get("ODS");
+        ODS2 = hardwareMap.opticalDistanceSensor.get("ODS2");
+
+        baseline1 = ODS.getRawLightDetected();
+        baseline2 = ODS2.getRawLightDetected();
         INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
 
         telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
@@ -94,9 +103,9 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
         sleep(1000);     // pause for servos to move
 
 
-        // intakeDrive(0.8, 900);
+
         encoderShoot(0.8);
-        //shootingDrive(0.8, 850);
+
 
 
         sleep(500);     // pause for servos to move
@@ -112,6 +121,28 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
         encoderShoot(0.8);
         //shootingDrive(0.8, 850);
         sleep(500);
+
+
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+
+        }
+        //turn horizontal to wall
+        while(gyro.getHeading() < 45 && gyro.getHeading() > 350){
+            turnLeft(TURN_SPEED);
+        }
+        stopMotors();
+
+
+        //drive until white line
+        while(!whiteLineDetected()){
+            straightDrive(DRIVE_SPEED);
+        }
+        stopMotors();
+
+
+        //follow white line
+
 
 
 
@@ -124,5 +155,11 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
         //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
 
+    }
+    public boolean whiteLineDetected(){
+        if ((ODS.getRawLightDetected() > (baseline1*5))||(ODS2.getRawLightDetected()> baseline2*5)){
+            return true;
+        }
+        return false;
     }
 }
