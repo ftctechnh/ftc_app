@@ -54,8 +54,7 @@ public class CompbotHardware extends BaseHardware {
     public double liftServoOpenPosition = 0f;
 
     public double lockServoStartPosition;
-    public double lockServoMaxPosition;
-    public double lockServoDelta = 0.25f;
+    public double lockServoDelta = 0.3f;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
@@ -242,7 +241,7 @@ public class CompbotHardware extends BaseHardware {
 
     public boolean sensingWhite(ColorSensor sensor){
 
-        return sensor.red() > 4 && sensor.green() > 4 && sensor.blue() > 4;
+        return sensor.red() >= 2 && sensor.green() >= 2 && sensor.blue() >= 2;
 
     }
 

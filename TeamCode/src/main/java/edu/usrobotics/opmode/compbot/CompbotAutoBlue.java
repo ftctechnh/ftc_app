@@ -9,7 +9,6 @@ import edu.usrobotics.opmode.compbot.CompbotAuto;
  */
 
 @Autonomous(name="Compbot Auto Blue", group="Compbot")
-@Disabled
 public class CompbotAutoBlue extends CompbotAuto {
 
     public CompbotAutoBlue() {
