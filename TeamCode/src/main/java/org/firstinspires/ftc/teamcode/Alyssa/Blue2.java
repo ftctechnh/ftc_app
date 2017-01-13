@@ -260,7 +260,9 @@ public class Blue2 extends LinearOpMode {
 
         }
 
-
+       robot.GyroTurn(1,30 );
+        robot.encoderDrive(1,36,36,3);
+        robot.GyroTurn(1,40);
 
 
 
