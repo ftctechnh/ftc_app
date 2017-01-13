@@ -185,7 +185,10 @@ public class BeaconButtonPressRed extends LinearOpMode {
     // remember, the Adafruit sensor is actually two devices.
     // It's an I2C sensor and it's also an LED that can be turned on or off.
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
         }
     }
 }
