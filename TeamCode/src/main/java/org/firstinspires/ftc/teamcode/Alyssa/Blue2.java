@@ -184,21 +184,21 @@ public class Blue2 extends LinearOpMode {
 
 
       // step 1:drive forward 4 inches so we can actually do things
-        robot.DistanceDrive(10,DistanceUnit.CM,1);
+        robot.encoderDrive(1,4,4,5.0);
 
       // step 2: turn -40 degrees
       robot.GyroTurn(1,-40);
 
 
      //step 3: drive forward for god knows how long (about 5 ft right now) ;)
-        robot.DistanceDrive(154,DistanceUnit.CM,1);
+        robot.encoderDrive(1,60,60,5.0);
 
        // step 4:turn 40 degrees to align with the wall.
        robot.GyroTurn(1,40);
 
 
 // Step 5: drive backwards a bit and adjust
-        robot.DistanceDrive(-20,DistanceUnit.CM,1);
+       /* robot.DistanceDrive(-20,DistanceUnit.CM,1);*/
 
 
         // Step 6: Drive to the white tape on the floor
@@ -207,14 +207,26 @@ public class Blue2 extends LinearOpMode {
 
 
         // step 7: drive 2.5 centimeters or two inches
-        robot.DistanceDrive(5,DistanceUnit.CM,1);
+        robot.DriveToWall(5,DistanceUnit.CM,1);
 
 
         // Step 8: Push Beacon if Blue
-        if(robot.doIseeBlue()) {
+        //step 8.A
+        robot.beaconRight.setPosition(80);
+        if(robot.doIseeBlue() == true) {
             // Do Step 8.c
-        } else { robot.DistanceDrive(14,DistanceUnit.CM,1);
+
+            robot.beaconRight.setPosition(100);
+            robot.sleepMs(1000);
+            robot.beaconRight.setPosition(0.1);
+
             // Do Step 8.d
+        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
+                robot.beaconRight.setPosition(70);
+                robot.sleepMs(1000);
+                robot.beaconRight.setPosition(0.1);
+
+
         }
 
         // Going to next beacon.
@@ -225,16 +237,28 @@ public class Blue2 extends LinearOpMode {
 
 
         // step 10 (repeating step 7) : drive 2.5 centimeters or two inches
-        robot.DistanceDrive(5,DistanceUnit.CM,1);
+        robot.DriveToWall(5,DistanceUnit.CM,1);
 
 
         // Step 11 (repeating step 8) : Push Beacon if Blue
-        if(robot.doIseeBlue()) {
+        // Step 8: Push Beacon if Blue
+        //step 8.A
+        robot.beaconRight.setPosition(80);
+        if(robot.doIseeBlue() == true) {
             // Do Step 8.c
-        } else {
-            // Do Step 8.d
-        }
 
+            robot.beaconRight.setPosition(100);
+            robot.sleepMs(1000);
+            robot.beaconRight.setPosition(0.1);
+
+            // Do Step 8.d
+        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
+            robot.beaconRight.setPosition(70);
+            robot.sleepMs(1000);
+            robot.beaconRight.setPosition(0.1);
+
+
+        }
 
 
 
