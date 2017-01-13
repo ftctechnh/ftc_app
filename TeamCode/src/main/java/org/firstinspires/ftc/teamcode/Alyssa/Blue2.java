@@ -161,7 +161,7 @@ public class Blue2 extends LinearOpMode {
         // 9.   Do the same for the next beacon.
         // 10.  Drive backwards onto the corner vortex.
 
-        
+
 
 // Willow and James tested this color sensing on the beacon successfully
 //     //  Color sensor.
@@ -184,14 +184,14 @@ public class Blue2 extends LinearOpMode {
 
 
       // step 1:drive forward 4 inches so we can actually do things
-        robot.encoderDrive(1,4,4,5.0);
+        robot.encoderDrive(1,4,4,0.5);
 
       // step 2: turn -40 degrees
       robot.GyroTurn(1,-40);
 
 
      //step 3: drive forward for god knows how long (about 5 ft right now) ;)
-        robot.encoderDrive(1,60,60,5.0);
+        robot.encoderDrive(1,60,60,2.5);
 
        // step 4:turn 40 degrees to align with the wall.
        robot.GyroTurn(1,40);
@@ -207,7 +207,7 @@ public class Blue2 extends LinearOpMode {
 
 
         // step 7: drive 2.5 centimeters or two inches
-        robot.DriveToWall(5,DistanceUnit.CM,1);
+        robot.DistanceDrive(5,DistanceUnit.CM,1);
 
 
         // Step 8: Push Beacon if Blue
@@ -221,7 +221,7 @@ public class Blue2 extends LinearOpMode {
             robot.beaconRight.setPosition(0.1);
 
             // Do Step 8.d
-        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
+        } else { robot.DistanceDrive(14,DistanceUnit.CM,1);
                 robot.beaconRight.setPosition(70);
                 robot.sleepMs(1000);
                 robot.beaconRight.setPosition(0.1);
@@ -237,7 +237,7 @@ public class Blue2 extends LinearOpMode {
 
 
         // step 10 (repeating step 7) : drive 2.5 centimeters or two inches
-        robot.DriveToWall(5,DistanceUnit.CM,1);
+        robot.DistanceDrive(5,DistanceUnit.CM,1);
 
 
         // Step 11 (repeating step 8) : Push Beacon if Blue
@@ -252,7 +252,7 @@ public class Blue2 extends LinearOpMode {
             robot.beaconRight.setPosition(0.1);
 
             // Do Step 8.d
-        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
+        } else { robot.DistanceDrive(14,DistanceUnit.CM,1);
             robot.beaconRight.setPosition(70);
             robot.sleepMs(1000);
             robot.beaconRight.setPosition(0.1);

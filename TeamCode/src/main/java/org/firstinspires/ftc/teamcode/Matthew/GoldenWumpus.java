@@ -143,11 +143,11 @@ public class GoldenWumpus extends OpMode {
 
         //Control system for the beacon pushers. Controlled by the triggers on Gamepad 1.
 
-        if (gamepad1.right_trigger > 0.7){
+        if (gamepad1.right_trigger > 0.9){
             //robot.beaconRight.setPosition(1);
             telemetry.addLine("BeaconRight is out");
         }
-        else if (gamepad1.left_trigger > 0.7){
+        else if (gamepad1.left_trigger > 0.9){
             //robot.beaconLeft.setPosition(1);
             telemetry.addLine("BeaconLeft is out");
         }
@@ -167,7 +167,7 @@ public class GoldenWumpus extends OpMode {
             robot.capBall.setPower(0);
         }
 
-        if(gamepad2.)
+        //if(gamepad2.)
 
 
 
