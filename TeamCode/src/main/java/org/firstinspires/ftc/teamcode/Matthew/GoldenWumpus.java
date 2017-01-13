@@ -58,7 +58,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  */
 
 @TeleOp(name="Golden Wumpus", group="Pushbot")
-@Disabled
+//@Disabled
 public class GoldenWumpus extends OpMode {
 
     /* Declare OpMode members. */
@@ -66,8 +66,9 @@ public class GoldenWumpus extends OpMode {
     // could also use HardwarePushbotMatrix class.
     double clawOffset = 0.0;                  // Servo mid position
     final double CLAW_SPEED = 0.02;                 // sets rate to move servo
-    TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
+    //TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
     int robotState = -1;
+    double SpeedReduction = 1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -80,8 +81,8 @@ public class GoldenWumpus extends OpMode {
         robot.init(this);
 
         // Connect our limit switch TouchSensor object to the Robot
-        limitSwitch = hardwareMap.touchSensor.get("down limit");
-        assert (limitSwitch != null);
+        //limitSwitch = hardwareMap.touchSensor.get("down limit");
+        //assert (limitSwitch != null);
 
         // Send telemetry message to signify robot waiting;
         updateTelemetry(telemetry);
@@ -99,7 +100,7 @@ public class GoldenWumpus extends OpMode {
     /*
      * Code to run ONCE when the driver hits PLAY
      */
-    public double SpeedReduction = 1;
+
     @Override
     public void start() {
     }
@@ -113,7 +114,6 @@ public class GoldenWumpus extends OpMode {
 
         double left;
         double right;
-
         //Gamepad 1 handles the driving and the beacons.
         //Gamepad 2 handles basically everything else.
         
@@ -131,7 +131,7 @@ public class GoldenWumpus extends OpMode {
         //Determine if we are in fine or coarse control mode.
         //Gamepad 2 gets to control this.
         if (gamepad2.b == true){
-            SpeedReduction = 0.5;
+            SpeedReduction = 4;
         }
         else if (gamepad2.x == true){
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
@@ -158,8 +158,10 @@ public class GoldenWumpus extends OpMode {
         }
 
         // Call the setPower functions with our calculated values to activate the motors
-        robot.leftMotor.setPower(left / SpeedReduction);
-        robot.rightMotor.setPower(right / SpeedReduction);
+        left = left / SpeedReduction;
+        right = right / SpeedReduction;
+        robot.leftMotor.setPower(left);
+        robot.rightMotor.setPower(right);
 
 
 
