@@ -106,6 +106,23 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
             // convert the RGB values to HSV values.
             Color.RGBToHSV((robot.colorSensor.red() * 255) / 800, (robot.colorSensor.green() * 255) / 800, (robot.colorSensor.blue() * 255) / 800, hsvValues);
+            //1st if statement is for red, 2nd if statement is for blue
+            if(robot.colorSensor.red() > 180 && robot.colorSensor.green() < 100 && robot.colorSensor.blue() < 100)
+            {
+                robot.armLeft.setPosition(0.8);
+                robot.armRight.setPosition(0);
+            }
+
+            else if(robot.colorSensor.red() < 100 && robot.colorSensor.green() < 100 && robot.colorSensor.blue() > 180)
+            {
+                robot.armLeft.setPosition(0);
+                robot.armRight.setPosition(0.8);
+            }
+            else
+            {
+                robot.armLeft.setPosition(0);
+                robot.armRight.setPosition(0);
+            }
 
             // send the info back to driver station using telemetry function.
             telemetry.addData("LED", bLedOn ? "On" : "Off");
