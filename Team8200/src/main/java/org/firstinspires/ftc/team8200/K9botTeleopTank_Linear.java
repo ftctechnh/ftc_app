@@ -160,6 +160,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             boolean isArmExtendedRight = false;
 
 
+
             if (gamepad2.x && !isArmExtendedLeft) {
                 robot.armLeft.setPosition(1);
                 isArmExtendedLeft = true;
@@ -174,15 +175,15 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             }
 
             if (gamepad2.b && !isArmExtendedRight) {
-                robot.armRight.setPosition(1);
+                robot.armRight.setPosition(0);
                 isArmExtendedRight = true;
             }
             else if (gamepad2.b && isArmExtendedRight) {
-                robot.armRight.setPosition(0);
+                robot.armRight.setPosition(1);
                 isArmExtendedRight = false;
             }
             else {
-                robot.armRight.setPosition(0);
+                robot.armRight.setPosition(1);
                 isArmExtendedRight = false;
             }
 

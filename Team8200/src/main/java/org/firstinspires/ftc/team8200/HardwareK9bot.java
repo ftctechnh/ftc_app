@@ -105,7 +105,7 @@ public class HardwareK9bot
         elevator.setPower(0);
         */
         armLeft.setPosition(0);
-        armRight.setPosition(0);
+        armRight.setPosition(1);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
