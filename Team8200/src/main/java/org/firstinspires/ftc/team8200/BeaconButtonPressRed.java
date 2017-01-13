@@ -95,7 +95,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
         bLedOn = true;
 
-/       // Set the LED state in the beginning.
+       // Set the LED state in the beginning.
         robot.lightSensor.enableLed(bLedOn);
         robot.cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
