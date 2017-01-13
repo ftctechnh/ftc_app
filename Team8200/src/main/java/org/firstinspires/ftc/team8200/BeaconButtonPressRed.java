@@ -159,7 +159,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
 
     public void distanceSensor() {
-        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
+        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
         distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
 
         waitForStart();
@@ -178,8 +178,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
             telemetry.addData("Voltage", voltageInInches);
             telemetry.addData("Max Voltage", maxVoltage);
             telemetry.update();
-            }
         }
     }
+}
 
 
