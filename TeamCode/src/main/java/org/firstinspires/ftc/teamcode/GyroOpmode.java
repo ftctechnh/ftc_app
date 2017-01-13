@@ -102,38 +102,39 @@ public class GyroOpmode extends LinearOpMode {
         }
 
 
-        while(robot.UDS.getDistance(DistanceUnit.INCH) > 12)
-        {
-            telemetry.addData("INCHS", robot.UDS.getDistance(DistanceUnit.INCH));
-            telemetry.update();
-        }
+        //while(robot.UDS.getDistance(DistanceUnit.INCH) > 12)
+        //{
+            //telemetry.addData("INCHS", robot.UDS.getDistance(DistanceUnit.INCH));
+            //telemetry.update();
+        //}
 
-        robot.encoderDrive(0.1,30,30,2);
-        robot.WaitForReflectedLight(5,true,3500);
+        //robot.encoderDrive(0.1,30,30,2);
+        //robot.WaitForReflectedLight(5,true,3500);
 
-        robot.simpleGyroTurn(.1,-180,2000);
+        //robot.simpleGyroTurn(.1,-162,2000);
         // Step through each leg of the path,
         // Put a hold after each turn
         //Actual code goes here.
 
         // Drive in a square to the left
-        for(int i=0; i<4; ++i) {
-            robot.encoderDrive(1,24,24,1);
-            robot.sleepMs(500);
-            robot.simpleGyroTurn(.1, -90, 2500);
-            robot.sleepMs(500);
-        }
+        //This one works really well, don't delete it.
+        //for(int i=0; i<4; ++i) {
+            //robot.encoderDrive(0.01,6,6,2 );
+            //robot.sleepMs(500);
+            //robot.simpleGyroTurn(.01, -81, 4000);
+            //robot.sleepMs(500);
+        //}
 
         // About Face!
-        robot.simpleGyroTurn(1,270,2500);
-        
+        //robot.simpleGyroTurn(1,270,2500);
+
         // Drive in a square to the right
-        for(int i=0; i<4; ++i) {
-            robot.encoderDrive(1,24,24,3);
-            robot.sleepMs(500);
-            robot.simpleGyroTurn(1, 90, 2500);
-            robot.sleepMs(500);
-        }
+        //for(int i=0; i<4; ++i) {
+            //robot.encoderDrive(1,6,6,3);
+            //robot.sleepMs(500);
+            //robot.simpleGyroTurn(0.2, 81, 8000);
+            //robot.sleepMs(500);
+        //}
 
         //robot.DistanceDrive(1, DistanceUnit.INCH, 1);
         //robot.gyroTurn(0.2, 81);
@@ -161,7 +162,29 @@ public class GyroOpmode extends LinearOpMode {
         //robot.gyroDrive(0.1, -2, 0);
         //robot.gyroDrive(0.1, 1, 0);
         //robot.beaconRight.setPosition(0);
-        
+
+
+
+
+        // Right/Clockwise = Positive Turn Degrees
+        // Left/CounterClockwise = Negative Turn Degrees
+
+
+
+        //All the actual opmode code goes here.
+
+        robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards to the plywood base with the capball.
+        robot.simpleGyroTurn(0.1, -65, 1500); //Turn left towards the beacons.
+        robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
+        robot.DistanceDrive(6, DistanceUnit.INCH, 0.1); //Use the range sensor to get nice and close to the wall.
+        robot.simpleGyroTurn(0.1, 65, 1500); //Turn right to drive alongside the beacons.
+
+
+
+
+
+
+
 
         telemetry.addData("Path", "Complete");
         //telemetry.update();

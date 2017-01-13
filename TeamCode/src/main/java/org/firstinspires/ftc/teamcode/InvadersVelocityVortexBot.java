@@ -148,6 +148,7 @@ public class InvadersVelocityVortexBot
 
 
     public void DistanceDrive(float distance, DistanceUnit distanceUnit, float power) {
+    public void DistanceDrive(float distance, DistanceUnit distanceUnit, double power) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
         while (UDS.getDistance(distanceUnit) > distance) {
@@ -565,6 +566,10 @@ public class InvadersVelocityVortexBot
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         rightBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -687,6 +692,7 @@ public class InvadersVelocityVortexBot
                         leftMotor.getCurrentPosition(),
                         rightMotor.getCurrentPosition());
                 telemetry.addData("UDS", "Distance CM: %.02f", UDS.getDistance(DistanceUnit.CM));
+                //telemetry.addData("UDS", "Distance CM: %.02f", UDS.getDistance(DistanceUnit.CM));
                 telemetry.update();
             }
 
