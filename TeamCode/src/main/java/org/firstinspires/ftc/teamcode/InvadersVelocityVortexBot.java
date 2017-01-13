@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -158,7 +160,6 @@ public class InvadersVelocityVortexBot
         rightMotor.setPower(0);
     }
 
-    //// TODO: 1/10/2017 Fix this some time in the future.
     private boolean opModeIsActive(){
         boolean isActive = true;
         // If we're running a linear op mode, then make sure we stop when our opmode is no longer active
@@ -599,6 +600,7 @@ public class InvadersVelocityVortexBot
         ODS = hwMap.opticalDistanceSensor.get("ODS");
         beaconSensor = hwMap.colorSensor.get("beaconSensor");
         floorSensor = hwMap.colorSensor.get("floorSensor");
+        floorSensor.setI2cAddress(I2cAddr.create7bit(0x3A));
         floorSensor.enableLed(true);
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
 
