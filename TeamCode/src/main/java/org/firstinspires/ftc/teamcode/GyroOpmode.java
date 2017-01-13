@@ -180,7 +180,7 @@ public class GyroOpmode extends LinearOpMode {
         robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
         robot.DistanceDrive(6, DistanceUnit.INCH, 0.1); //Use the range sensor to get nice and close to the wall.
         robot.simpleGyroTurn(0.1, 90, 1500); //Turn right to drive alongside the beacons.
-        robot.DriveToWhiteLine(0.5,2,true,3500); // Drive to the white line
+        robot.DriveToWhiteLine(0.05,8,true,20000); // Drive to the white line
 
 
 

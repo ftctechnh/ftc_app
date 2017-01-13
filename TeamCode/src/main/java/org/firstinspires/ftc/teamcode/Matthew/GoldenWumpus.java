@@ -157,6 +157,20 @@ public class GoldenWumpus extends OpMode {
             telemetry.addLine("Both servos are in.");
         }
 
+        if(gamepad2.y == true){
+            robot.capBall.setPower(1 / SpeedReduction);
+        }
+        else if (gamepad2.a == true){
+            robot.capBall.setPower(-0.2);
+        }
+        else {
+            robot.capBall.setPower(0);
+        }
+
+        if(gamepad2.)
+
+
+
         // Call the setPower functions with our calculated values to activate the motors
         left = left / SpeedReduction;
         right = right / SpeedReduction;

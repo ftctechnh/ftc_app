@@ -283,6 +283,7 @@ public class InvadersVelocityVortexBot
 //        }
 //    }
 
+    //Helloaq
 
     public boolean doIseeBlue () {
 
@@ -636,7 +637,7 @@ public class InvadersVelocityVortexBot
         period.reset();
     }
 
-
+//Cold pizza normally.
     void setCapBallMotorPower(double power)
     {
         capBall.setPower(power);
