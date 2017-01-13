@@ -207,7 +207,7 @@ public class Blue2 extends LinearOpMode {
 
 
         // step 7: drive 2.5 centimeters or two inches
-        robot.DistanceDrive(5,DistanceUnit.CM,1);
+        robot.DriveToWall(5,DistanceUnit.CM,1);
 
 
         // Step 8: Push Beacon if Blue
@@ -221,7 +221,7 @@ public class Blue2 extends LinearOpMode {
             robot.beaconRight.setPosition(0.1);
 
             // Do Step 8.d
-        } else { robot.DistanceDrive(14,DistanceUnit.CM,1);
+        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
                 robot.beaconRight.setPosition(70);
                 robot.sleepMs(1000);
                 robot.beaconRight.setPosition(0.1);
@@ -237,7 +237,7 @@ public class Blue2 extends LinearOpMode {
 
 
         // step 10 (repeating step 7) : drive 2.5 centimeters or two inches
-        robot.DistanceDrive(5,DistanceUnit.CM,1);
+        robot.DriveToWall(5,DistanceUnit.CM,1);
 
 
         // Step 11 (repeating step 8) : Push Beacon if Blue
@@ -252,7 +252,7 @@ public class Blue2 extends LinearOpMode {
             robot.beaconRight.setPosition(0.1);
 
             // Do Step 8.d
-        } else { robot.DistanceDrive(14,DistanceUnit.CM,1);
+        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
             robot.beaconRight.setPosition(70);
             robot.sleepMs(1000);
             robot.beaconRight.setPosition(0.1);
