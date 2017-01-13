@@ -160,7 +160,7 @@ public class Blue2 extends LinearOpMode {
         //      d. if its red, drive 14 cm forward
         // 9.   Do the same for the next beacon.
         // 10.  Drive backwards onto the corner vortex.
-
+        // 11.
 
 
 // Willow and James tested this color sensing on the beacon successfully
@@ -241,17 +241,17 @@ public class Blue2 extends LinearOpMode {
 
 
         // Step 11 (repeating step 8) : Push Beacon if Blue
-        // Step 8: Push Beacon if Blue
-        //step 8.A
+        // Step 11: Push Beacon if Blue
+        //step 11.A
         robot.beaconRight.setPosition(80);
         if(robot.doIseeBlue() == true) {
-            // Do Step 8.c
+            // Do Step 11.c
 
             robot.beaconRight.setPosition(100);
             robot.sleepMs(1000);
             robot.beaconRight.setPosition(0.1);
 
-            // Do Step 8.d
+            // Do Step 11.d
         } else { robot.DriveToWall(14,DistanceUnit.CM,1);
             robot.beaconRight.setPosition(70);
             robot.sleepMs(1000);
