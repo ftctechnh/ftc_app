@@ -7,6 +7,7 @@ import android.view.View;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
@@ -27,12 +28,14 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
 
     HardwareK9bot robot = new HardwareK9bot(); // Hardware Device Object
-    private ElapsedTime runtime = new ElapsedTime();
-
     static final double WHITE_THRESHOLD = 0.4;
     static final double MOTOR_POWER = .1;
     static final int LED_CHANNEL = 5;
-
+    DeviceInterfaceModule dim;                  // Device Object
+    AnalogInput distanceSensor;
+    double voltage, maxVoltage, voltsPerInch, voltageInInches;
+    private ElapsedTime runtime = new ElapsedTime();
+    String kev = "klk";
 
 
     @Override
@@ -43,11 +46,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
         robot.cdim = hardwareMap.deviceInterfaceModule.get("dim");
         //colorSensor = robot.colorSensor;
 
-
-//        // bLedOn represents the state of the LED.
         bLedOn = true;
-
-//        // get a reference to our Light Sensor object.
 
 //        // Set the LED state in the beginning.
         robot.lightSensor.enableLed(bLedOn);
@@ -88,6 +87,7 @@ public class BeaconButtonPressRed extends LinearOpMode {
         waitForStart();
 
         MoveToBeacon();
+        distanceSensor();
     }}
 
     public void MoveToBeacon() {
@@ -137,6 +137,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
     }
 
 
+
+
     // hsvValues is an array that will hold the hue, saturation, and value information.
     float hsvValues[] = {0F, 0F, 0F};
 
@@ -155,5 +157,29 @@ public class BeaconButtonPressRed extends LinearOpMode {
     boolean bLedOn = true;
 
 
+
+    public void distanceSensor() {
+        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
+        distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
+
+        waitForStart();
+        while (opModeIsActive()) {
+            voltage = distanceSensor.getVoltage();
+            maxVoltage = distanceSensor.getMaxVoltage();
+            voltsPerInch = 5.0/512.0;
+            voltageInInches = voltage/voltsPerInch;
+            while (voltageInInches <= 13) {
+                runtime.reset();
+                if (runtime.seconds() > 3.0) {
+                    telemetry.addData("distanceTest. will print klk", kev);
+                    telemetry.update();
+                }
+            }
+            telemetry.addData("Voltage", voltageInInches);
+            telemetry.addData("Max Voltage", maxVoltage);
+            telemetry.update();
+            }
         }
+    }
+
 
