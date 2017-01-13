@@ -100,7 +100,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.leftMotor.setPower(leftY);
             robot.rightMotor.setPower(rightY);
 
-            leftWS = -gamepad2.left_stick_y;
+            /*leftWS = -gamepad2.left_stick_y;
             rightWS = -gamepad2.right_stick_y;
 
             rightWS = Range.clip(rightWS, -1, 1);
@@ -108,18 +108,18 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             robot.leftWheelShooter.setPower(leftWS);
             robot.rightWheelShooter.setPower(rightWS);
-
+*/
             float harvesterPower = gamepad1.right_trigger;
             float harvesterPowerReversed = gamepad1.left_trigger;
 
             if (harvesterPower > 0.2 && harvesterPowerReversed == 0) {
-                robot.harvester.setPower(1);
+                robot.legacyController.setMotorPower(2, 1);
             }
             else if (harvesterPowerReversed > 0.2 && harvesterPower == 0) {
-                robot.harvester.setPower(-1);
+                robot.legacyController.setMotorPower(2, -1);
             }
             else {
-                robot.harvester.setPower(0);
+                robot.legacyController.setMotorPower(2, 0);
             }
 
 
@@ -128,22 +128,22 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             if(elevatorPower > 0.2 && elevatorPowerReversed == 0)
             {
-                robot.elevator.setPower(0.5);
+                robot.legacyController.setMotorPower(1, 0.5);
             }
             else if(elevatorPowerReversed > 0.2 && elevatorPower == 0)
             {
-                robot.elevator.setPower(-0.5);
+                robot.legacyController.setMotorPower(1, -0.5);
             }
             else
             {
-                robot.elevator.setPower(0);
+                robot.legacyController.setMotorPower(1, 0);
             }
 
             boolean isButtonAPressed = gamepad2.a;
             if(isButtonAPressed)
             {
-                robot.leftWheelShooter.setPower(-0.3);
-                robot.rightWheelShooter.setPower(0.3);
+                robot.leftWheelShooter.setPower(-1);
+                robot.rightWheelShooter.setPower(-1);
             }
             else
             {

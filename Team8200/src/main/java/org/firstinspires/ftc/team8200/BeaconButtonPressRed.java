@@ -21,8 +21,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by student on 1/12/17.
  */
 
-@Autonomous(name="8200: Red Button Press", group="K9bot")
-
+//@Autonomous(name="8200: Red Button Press", group="K9bot")
+/*
 public class BeaconButtonPressRed extends LinearOpMode {
 
 
@@ -180,3 +180,4 @@ public class BeaconButtonPressRed extends LinearOpMode {
         telemetry.update();
     }
 }
+*/

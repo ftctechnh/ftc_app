@@ -36,16 +36,19 @@ public class HardwareK9bot
     /* Public OpMode members. */
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
+    /*
     public LightSensor lightSensor = null;
     public ColorSensor colorSensor = null;
     public OpticalDistanceSensor distanceSensor = null;
+    */
     public DcMotor leftWheelShooter = null;
     public DcMotor rightWheelShooter = null;
+    /*
     public DcMotor harvester = null;
     public DcMotor elevator = null;
-
+    */
     //our legacy motor controller
-    public DcMotorController legacyController;
+    public DcMotorController legacyController = null;
 
 
     public Servo armLeft = null;
@@ -77,12 +80,15 @@ public class HardwareK9bot
         rightMotor = hwMap.dcMotor.get("motor_right");
         leftWheelShooter = hwMap.dcMotor.get("leftWS");
         rightWheelShooter = hwMap.dcMotor.get("rightWS");
+
+        /*  -- Because we are using a legacy module, we are not using these names at this time ---
         harvester = hwMap.dcMotor.get("harvester");
         elevator = hwMap.dcMotor.get("elevator");
+        */
         armLeft = hwMap.servo.get("armLeft");
         armRight = hwMap.servo.get("armRight");
         cdim = hwMap.deviceInterfaceModule.get("dim");
-
+        legacyController = hwMap.dcMotorController.get("legacy_controller");
 
 
         leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
@@ -93,8 +99,11 @@ public class HardwareK9bot
         rightMotor.setPower(0);
         leftWheelShooter.setPower(0);
         rightWheelShooter.setPower(0);
+
+        /*
         harvester.setPower(0);
         elevator.setPower(0);
+        */
         armLeft.setPosition(0);
         armRight.setPosition(0);
         // Set all motors to run without encoders.
@@ -103,9 +112,11 @@ public class HardwareK9bot
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Define and initialize ALL sensors
-        lightSensor = hwMap.lightSensor.get("light");
+        /*lightSensor = hwMap.lightSensor.get("light");
         colorSensor = hwMap.colorSensor.get("color");
+
         distanceSensor = hwMap.opticalDistanceSensor.get("distance");
+        */
     }
 
     /*
