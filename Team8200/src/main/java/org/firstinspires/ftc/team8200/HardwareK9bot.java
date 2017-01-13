@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.team8200;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -31,6 +33,8 @@ public class HardwareK9bot
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
     public LightSensor lightSensor = null;
+    public ColorSensor colorSensor = null;
+    public DistanceSensor distanceSensor = null;
     public DcMotor leftWheelShooter = null;
     public DcMotor rightWheelShooter = null;
     public DcMotor harvester = null;
@@ -67,6 +71,7 @@ public class HardwareK9bot
         armLeft = hwMap.servo.get("armLeft");
         armRight = hwMap.servo.get("armRight");
 
+
         leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -86,6 +91,8 @@ public class HardwareK9bot
 
         //Define and initialize ALL sensors
         lightSensor = hwMap.lightSensor.get("light");
+        colorSensor = hwMap.colorSensor.get("color");
+        //distanceSensor = hwMap.opticalDistanceSensor.get("distance");
     }
 
     /*

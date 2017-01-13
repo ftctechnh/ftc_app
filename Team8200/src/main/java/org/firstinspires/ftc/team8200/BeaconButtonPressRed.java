@@ -43,6 +43,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
         robot.init(hardwareMap);
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
+        lightSensor = robot.lightSensor;
+        //colorSensor = robot.colorSensor;
 
 
 //        // bLedOn represents the state of the LED.
@@ -184,7 +186,6 @@ public class BeaconButtonPressRed extends LinearOpMode {
     // It's an I2C sensor and it's also an LED that can be turned on or off.
 
 
-        telemetry.update();
         }
     }
 }
