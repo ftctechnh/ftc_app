@@ -68,7 +68,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Willow auto drive linear", group="Pushbot")
-//@Disabled
+@Disabled
 public class Willow_auto_drive_linear extends LinearOpMode {
 
     /* Declare OpMode members. */

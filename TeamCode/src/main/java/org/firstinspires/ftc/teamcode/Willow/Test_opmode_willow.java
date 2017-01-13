@@ -67,7 +67,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 //@Autonomous(name="early test", group="Pushbot")
 //origin/Invaders
-//@Disabled
+@Disabled
 public class Test_opmode_willow extends LinearOpMode {
 
     /* Declare OpMode members. */

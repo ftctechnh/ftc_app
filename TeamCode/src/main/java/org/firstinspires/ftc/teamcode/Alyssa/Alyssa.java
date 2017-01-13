@@ -63,7 +63,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Alyssa3", group="Pushbot")
-//@Disabled
+@Disabled
 public class Alyssa extends LinearOpMode {
 
     /* Declare OpMode members. */

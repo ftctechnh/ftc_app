@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Alyssa;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -68,7 +69,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  */
 
 @Autonomous(name="Blue1", group="Pushbot")
-//@Disabled
+@Disabled
 public class Blue1 extends LinearOpMode {
 
     /* Declare OpMode members. */

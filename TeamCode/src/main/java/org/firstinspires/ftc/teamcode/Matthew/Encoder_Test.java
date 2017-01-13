@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 public class Encoder_Test {
     @TeleOp(name = "Encoder Test", group = "Pushbot")
-    //@Disabled
+    @Disabled
     public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         /* Declare OpMode members. */

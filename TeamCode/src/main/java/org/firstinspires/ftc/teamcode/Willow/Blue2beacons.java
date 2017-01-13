@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Willow;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 public class Blue2beacons { @Autonomous(name="getting to the blue beacon #2", group="Pushbot")
-//@Disabled
+@Disabled
 public class redbeaconleft extends LinearOpMode {
 
     /* Declare OpMode members. */

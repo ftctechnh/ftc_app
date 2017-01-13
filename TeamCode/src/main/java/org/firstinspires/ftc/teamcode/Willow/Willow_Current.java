@@ -61,7 +61,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Willow CURRENT. USE THIS ONE!", group="Pushbot")
-//@Disabled
+@Disabled
 public class Willow_Current extends LinearOpMode {
 
     /* Declare OpMode members. */

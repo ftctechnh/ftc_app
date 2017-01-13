@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.teamcode;
 
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -85,7 +86,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Invaders CV", group ="concept")
-//@Disabled
+@Disabled
 //@TeleOp(name="Invaders: Vuforia", group="Pushbot")
 
 public class ConceptVuforiaNavigation extends LinearOpMode {
