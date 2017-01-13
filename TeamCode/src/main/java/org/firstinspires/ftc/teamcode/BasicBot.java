@@ -19,6 +19,7 @@ public class BasicBot extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initialized");
     }
 
     /*

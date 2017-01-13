@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.EeyoreHardware;
 public class EeyoreTeleop extends OpMode {
     EeyoreHardware robot = new EeyoreHardware();
 
+    int reverseDirection = 1; //If set to 1, drive forward. -1, drive backwards
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -42,9 +43,40 @@ public class EeyoreTeleop extends OpMode {
         double left;
         double right;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = Range.clip(gamepad1.left_stick_y + gamepad1.left_stick_x, -1, 1);
-        right = Range.clip(gamepad1.left_stick_y - gamepad1.left_stick_x, -1, 1);
+
+        double speed = -gamepad1.left_stick_y; //How fast we want the robot to move
+        double direction = gamepad1.left_stick_x; //how much we want the robot to turn
+        double maxSpeed; //This multiplier determines how fast we allow the robot to move for this loop
+
+
+
+        if(Math.abs(direction) < 0.2)
+        {
+            maxSpeed = 0.6;
+        }
+        else if(Math.abs(direction) > 0.85)
+        {
+            maxSpeed = 0;
+        }
+        else
+        {
+            maxSpeed = 1;
+        }
+
+        if(gamepad1.dpad_left)
+        {
+            reverseDirection = -1;
+        }
+        if(gamepad1.dpad_right)
+        {
+            reverseDirection = 1;
+        }
+
+
+        //Now, we need to work out how much power each motor gets
+        left = reverseDirection * Range.clip((maxSpeed * speed) + direction, -1, 1);
+        right = reverseDirection * Range.clip((maxSpeed * speed) - direction, -1, 1);
+
         robot.l1.setPower(left);
         robot.l2.setPower(left);
         robot.r1.setPower(right);
@@ -55,14 +87,14 @@ public class EeyoreTeleop extends OpMode {
             if(robot.collection.getPower() == 0) {
                 robot.collection.setPower(1);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
             } else {
                 robot.collection.setPower(0);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
@@ -72,14 +104,14 @@ public class EeyoreTeleop extends OpMode {
             if(robot.collection.getPower() == 0) {
                 robot.collection.setPower(-1);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
             } else {
                 robot.collection.setPower(0);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
@@ -92,7 +124,7 @@ public class EeyoreTeleop extends OpMode {
                 robot.shooter1.setPower(0.75);
                 robot.shooter2.setPower(0.75);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
@@ -100,7 +132,7 @@ public class EeyoreTeleop extends OpMode {
                 robot.shooter1.setPower(0);
                 robot.shooter2.setPower(0);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
@@ -110,7 +142,7 @@ public class EeyoreTeleop extends OpMode {
                 robot.shooter1.setPower(-0.75);
                 robot.shooter2.setPower(-0.75);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
@@ -119,7 +151,7 @@ public class EeyoreTeleop extends OpMode {
                 robot.shooter1.setPower(0);
                 robot.shooter2.setPower(0);
                 try {   //Not sure this portion will work, we need to test it and find out if it's accurate
-                    Thread.sleep(50);
+                    Thread.sleep(150);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
