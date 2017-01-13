@@ -86,11 +86,11 @@ public class TankDrive1 extends LinearOpMode {
             right = -gamepad1.right_stick_y;
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
-/*
+
             // Turn motor on when up on the DPAD is pressed, turn off when down is pressed
             if (gamepad1.dpad_up) {
-               robot.leftShooter.setPower(1);
-               robot.rightShooter.setPower(1);
+               robot.leftShooter.setPower(-1);
+               robot.rightShooter.setPower(-1);
             }
             else if (gamepad1.dpad_down) {
                robot.leftShooter.setPower(0);
@@ -123,13 +123,13 @@ public class TankDrive1 extends LinearOpMode {
             leftShooter = robot.leftShooter.getPower();
             rightShooter = robot.rightShooter.getPower();
             harvester = robot.harvester.getPower();
-*/
+
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
-//          telemetry.addData("left shooter", "%.2f", leftShooter);
-//          telemetry.addData("right shooter", "%.2f", rightShooter);
-//          telemetry.addData("harvester", "%.2f", harvester);
+            telemetry.addData("left shooter", "%.2f", leftShooter);
+            telemetry.addData("right shooter", "%.2f", rightShooter);
+            telemetry.addData("harvester", "%.2f", harvester);
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
