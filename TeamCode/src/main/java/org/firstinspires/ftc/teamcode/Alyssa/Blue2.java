@@ -237,13 +237,12 @@ public class Blue2 extends LinearOpMode {
 
 
         // step 10 (repeating step 7) : drive 2.5 centimeters or two inches
-        robot.DriveToWall(5,DistanceUnit.CM,1);
-
+        
 
         // Step 11 (repeating step 8) : Push Beacon if Blue
         // Step 11: Push Beacon if Blue
         //step 11.A
-        robot.beaconRight.setPosition(80);
+       /* robot.beaconRight.setPosition(80);
         if(robot.doIseeBlue() == true) {
             // Do Step 11.c
 
@@ -258,7 +257,7 @@ public class Blue2 extends LinearOpMode {
             robot.beaconRight.setPosition(0.1);
 
 
-        }
+        }*/
 
        robot.GyroTurn(1,30 );
         robot.encoderDrive(1,36,36,3);
