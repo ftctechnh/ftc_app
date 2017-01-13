@@ -3,6 +3,7 @@ package org.firstinspires.ftc.team8200;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -42,6 +43,11 @@ public class HardwareK9bot
     public DcMotor rightWheelShooter = null;
     public DcMotor harvester = null;
     public DcMotor elevator = null;
+
+    //our legacy motor controller
+    public DcMotorController legacyController;
+
+
     public Servo armLeft = null;
     public Servo armRight = null;
     public DeviceInterfaceModule cdim = null;
