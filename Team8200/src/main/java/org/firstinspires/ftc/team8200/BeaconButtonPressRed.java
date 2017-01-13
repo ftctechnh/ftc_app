@@ -52,8 +52,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
         waitForStart();
             while (opModeIsActive()) {
-                voltage = distanceSensor.getVoltage();
-                maxVoltage = distanceSensor.getMaxVoltage();
+                voltage = robot.distanceSensor.getLightDetected();
+                maxVoltage = robot.distanceSensor.getRawLightDetectedMax();
                 voltsPerInch = 5.0 / 512.0;
                 voltageInInches = voltage / voltsPerInch;
                 while (voltageInInches <= 13)
@@ -99,12 +99,10 @@ public class BeaconButtonPressRed extends LinearOpMode {
         robot.lightSensor.enableLed(bLedOn);
         robot.cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
-        // get a reference to our ColorSensor object.
 
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         robot.cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
 
-        // wait for the start button to be pressed.
 
         // loop and read the RGB data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
@@ -141,16 +139,10 @@ public class BeaconButtonPressRed extends LinearOpMode {
             updateTelemetry();
         }
 
-        //step 2
-        robot.rightMotor.setPower(0);
-        robot.leftMotor.setPower(0);
-
-        telemetry.addData("Say", "Motors just stopped.");
-        telemetry.update();
-
 
         while (opModeIsActive())
-        { //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
+        {
+            //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 0.01)) {
@@ -163,7 +155,8 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
             //step 4 follow the line
             while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD)
-            { //follows white light is above threshold AND touch sensor is not touching
+            {
+                //follows white light is above threshold AND touch sensor is not touching
                 robot.leftMotor.setPower(MOTOR_POWER);
                 robot.rightMotor.setPower(MOTOR_POWER);
                 telemetry.addData("Say", "Motors following line.");
