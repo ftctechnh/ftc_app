@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class BeaconButtonPressRed extends LinearOpMode {
     LightSensor lightSensor;
+
     ColorSensor sensorRGB;
     DeviceInterfaceModule cdim;
 

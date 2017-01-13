@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -34,7 +35,7 @@ public class HardwareK9bot
     public DcMotor rightMotor = null;
     public LightSensor lightSensor = null;
     public ColorSensor colorSensor = null;
-    public DistanceSensor distanceSensor = null;
+    public OpticalDistanceSensor distanceSensor = null;
     public DcMotor leftWheelShooter = null;
     public DcMotor rightWheelShooter = null;
     public DcMotor harvester = null;
@@ -92,7 +93,7 @@ public class HardwareK9bot
         //Define and initialize ALL sensors
         lightSensor = hwMap.lightSensor.get("light");
         colorSensor = hwMap.colorSensor.get("color");
-        //distanceSensor = hwMap.opticalDistanceSensor.get("distance");
+        distanceSensor = hwMap.opticalDistanceSensor.get("distance");
     }
 
     /*
