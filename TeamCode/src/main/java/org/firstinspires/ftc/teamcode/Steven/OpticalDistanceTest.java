@@ -12,9 +12,17 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 //@Disabled
 public class OpticalDistanceTest extends OpMode{
     OpticalDistanceSensor ODS;
+    OpticalDistanceSensor ODS2;
+    double baseline1;
+    double baseline2;
     @Override
     public void init() {
+
         ODS = hardwareMap.opticalDistanceSensor.get("ODS");
+        ODS2 = hardwareMap.opticalDistanceSensor.get("ODS2");
+
+        baseline1 = ODS.getRawLightDetected();
+        baseline2 = ODS2.getRawLightDetected();
     }
 
     @Override
@@ -25,9 +33,27 @@ public class OpticalDistanceTest extends OpMode{
     @Override
     public void loop(){
 
-        telemetry.addData("LightDetected", ODS.getLightDetected());
-        telemetry.addData("RawLightDetected",ODS.getRawLightDetected());
-        telemetry.addData("RawLightDetectedMax",ODS.getRawLightDetectedMax());
+        telemetry.addData("1 LightDetected", ODS.getLightDetected());
+        telemetry.addData("1 RawLightDetected",ODS.getRawLightDetected());
+        telemetry.addData("1 RawLightDetectedMax",ODS.getRawLightDetectedMax());
+        telemetry.addData("2 LightDetected", ODS2.getLightDetected());
+        telemetry.addData("2 RawLightDetected",ODS2.getRawLightDetected());
+        telemetry.addData("2 RawLightDetectedMax",ODS2.getRawLightDetectedMax());
+        if (whiteLineDetected()) {
+            telemetry.addData("Status: ", "White Line");
+        }
+        else{
+            telemetry.addData("Status: ", "No White Line");
+        }
         telemetry.update();
+        //gray sheet's rawlight detected around: 0.7, 0.03
+        //white line's rawlight detected around: 4.9, 0.1
+    }
+
+    public boolean whiteLineDetected(){
+        if ((ODS.getRawLightDetected() > (baseline1*5))||(ODS2.getRawLightDetected()> baseline2*5)){
+            return true;
+        }
+        return false;
     }
 }
