@@ -147,7 +147,7 @@ public class InvadersVelocityVortexBot
     }
 
 
-    public void DistanceDrive(float distance, DistanceUnit distanceUnit, double power) {
+    public void DriveToWall(float distance, DistanceUnit distanceUnit, double power) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
         while (UDS.getDistance(distanceUnit) > distance && opModeIsActive()) {
