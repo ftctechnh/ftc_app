@@ -135,6 +135,28 @@ public class FtcRobotControllerActivity extends Activity {
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
 
+  // poor coding style here.  Shouldn't have to duplicate these routines for regular and linear OpModes.
+  public void initPreviewLinear(final Camera camera, final CameraProcessor context, final Camera.PreviewCallback previewCallback) {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        context.preview = new CameraPreview(FtcRobotControllerActivity.this, camera, previewCallback);
+        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.cameraLayout);
+        previewLayout.addView(context.preview);
+      }
+    });
+  }
+
+  public void removePreviewLinear(final CameraProcessor context) {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.cameraLayout);
+        previewLayout.removeAllViews();
+      }
+    });
+  }
+
   protected class RobotRestarter implements Restarter {
     public void requestRestart() {
       requestRobotRestart();

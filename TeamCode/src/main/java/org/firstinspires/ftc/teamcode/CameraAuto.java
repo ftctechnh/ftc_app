@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
+import android.provider.Settings;
+import android.util.Log;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcontroller.internal.CameraProcessor;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * TeleOp Mode
@@ -15,80 +19,88 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "Camera: Auto", group = "Linear OpMode")
 //@Disabled
 public class CameraAuto extends CameraProcessor {
-    int ds2 = 2;  // additional downsampling of the image
-    // set to 1 to disable further downsampling
+    public class ColorCoordinate {
+        int x;
+        int y;
+        int color = 0;
+    }
 
     @Override
     public void runOpMode() {
-        String colorString = "NONE";
+        telemetry.addData("Status:", "Initializing");
+        telemetry.update();
 
-        if(isCameraAvailable()) {
-            setCameraDownsampling(8);
-            // parameter determines how downsampled you want your images
-            // 8, 4, 2, or 1.
-            // higher number is more downsampled, so less resolution but faster
-            // 1 is original resolution, which is detailed but slow
-            // must be called before super.init sets up the camera
+        setCameraDownsampling(9);
+        startCamera();
 
-            telemetry.addLine("Wait for camera to finish initializing!");
-            telemetry.update();
-            startCamera();  // can take a while.
-            // best started before waitForStart
-            telemetry.addLine("Camera ready!");
-            telemetry.update();
+        telemetry.addData("Status:", "Initialized (waiting for start)");
+        telemetry.update();
 
-            try {
-                waitForStart();
-            } catch(Exception e) {
-
-            }
-
-            while (opModeIsActive()) {
-                if (imageReady()) { // only do this if an image has been returned from the camera
-                    int redValue = 0;
-                    int blueValue = 0;
-                    int greenValue = 0;
-
-                    // get image, rotated so (0,0) is in the bottom left of the preview window
-                    Bitmap rgbImage;
-                    rgbImage = convertYuvImageToRgb(yuvImage, width, height, ds2);
-
-                    for (int x = 0; x < rgbImage.getWidth(); x++) {
-                        for (int y = 0; y < rgbImage.getHeight(); y++) {
-                            int pixel = rgbImage.getPixel(x, y);
-                            redValue += red(pixel);
-                            blueValue += blue(pixel);
-                            greenValue += green(pixel);
-                        }
-                    }
-                    int color = highestColor(redValue, greenValue, blueValue);
-
-                    switch (color) {
-                        case 0:
-                            colorString = "RED";
-                            break;
-                        case 1:
-                            colorString = "GREEN";
-                            break;
-                        case 2:
-                            colorString = "BLUE";
-                    }
-
-                } else {
-                    colorString = "NONE";
-                }
-
-                telemetry.addData("Color:", "Color detected is: " + colorString);
-                telemetry.update();
-
-                try {
-                    sleep(10);
-                } catch(Exception e) {
-
-                }
-            }
-            stopCamera();
+        try {
+            waitForStart();
+        } catch(Exception e) {
 
         }
+
+        while (opModeIsActive()) {
+            if(!imageReady()) { // only do this if an image has been returned from the camera
+                telemetry.addData("Status:", "Waiting for image...");
+                telemetry.update();
+                continue;
+            }
+
+            long startTime = System.currentTimeMillis();
+
+            Bitmap image = convertYuvImageToRgb(yuvImage, size.width, size.height, 1);
+
+            int left_intensity = 0;
+
+            for(int x = 0; x < image.getWidth() / 2; x++) {
+                for(int y = 0; y < image.getHeight(); y++) {
+                    int pixel = image.getPixel(x, y);
+                    int pixel_red = red(pixel);
+                    int pixel_blue = blue(pixel);
+
+                    if(pixel_blue > pixel_red) {
+                        left_intensity += pixel_blue;
+                    }
+                }
+            }
+
+            int right_intensity = 0;
+
+            for(int x = image.getWidth() / 2; x < image.getWidth(); x++) {
+                for(int y = 0; y < image.getHeight(); y++) {
+                    int pixel = image.getPixel(x, y);
+                    int pixel_red = red(pixel);
+                    int pixel_blue = blue(pixel);
+
+                    if(pixel_blue > pixel_red) {
+                        right_intensity += pixel_blue;
+                    }
+                }
+            }
+
+            String left;
+            String right;
+
+            if(left_intensity > right_intensity) {
+                left = "BLUE";
+                right = "RED";
+            } else {
+                left = "RED";
+                right = "BLUE";
+            }
+
+            telemetry.addData("Status:", "Running");
+            telemetry.addData("Time:", System.currentTimeMillis() - startTime);
+            telemetry.addData("Image size:", image.getWidth() + "x" + image.getHeight() + " (" + size.width + "x" + size.height + ")");
+            telemetry.addData("Image left:", left_intensity);
+            telemetry.addData("Image right:", right_intensity);
+            telemetry.addData("Image result:", "left: " + left + " | right: " + right);
+            telemetry.update();
+        }
+
+        stopCamera();
     }
 }

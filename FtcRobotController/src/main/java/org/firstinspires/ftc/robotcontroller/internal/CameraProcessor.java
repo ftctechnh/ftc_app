@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.robotcontroller.internal;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,8 +11,6 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
-
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -21,17 +19,15 @@ import java.io.ByteArrayOutputStream;
  * Enables control of the robot via the gamepad
  */
 public class CameraProcessor extends LinearOpMode {
-    public Camera camera;
 
-    public int width;
-    public int height;
+    public Camera camera;
+    public CameraPreview preview;
+
+    public Camera.Size size;
     public YuvImage yuvImage = null;
 
     volatile private boolean imageReady = false;
-
-    private int looped = 0;
-    private String data;
-    private int ds = 1; // downsampling parameter
+    private int ds = 0;
 
     @Override
     // should be overwritten by extension class
@@ -42,12 +38,11 @@ public class CameraProcessor extends LinearOpMode {
     public Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera) {
             try {
-                Camera.Parameters parameters = camera.getParameters();
-                width = parameters.getPreviewSize().width;
-                height = parameters.getPreviewSize().height;
-                yuvImage = new YuvImage(data, ImageFormat.NV21, width, height, null);
+                //Camera.Parameters parameters = camera.getParameters();
+                //width = parameters.getPreviewSize().width;
+                //height = parameters.getPreviewSize().height;
+                yuvImage = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
                 imageReady = true;
-                looped += 1;
             } catch (Exception e) {
 
             }
@@ -69,7 +64,7 @@ public class CameraProcessor extends LinearOpMode {
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) { // Camera.CameraInfo.CAMERA_FACING_FRONT or BACK
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 cameraId = i;
                 break;
             }
@@ -92,7 +87,7 @@ public class CameraProcessor extends LinearOpMode {
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(i, info);
-            if (info.facing == cameraInfoType) { // Camera.CameraInfo.CAMERA_FACING_FRONT or BACK
+            if (info.facing == cameraInfoType) {
                 cameraId = i;
                 break;
             }
@@ -106,23 +101,23 @@ public class CameraProcessor extends LinearOpMode {
     }
 
     public void startCamera() {
-        camera = openCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        camera = openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
         camera.setPreviewCallback(previewCallback);
 
         Camera.Parameters parameters = camera.getParameters();
 
-        width = parameters.getPreviewSize().width / ds;
-        height = parameters.getPreviewSize().height / ds;
-        parameters.setPreviewSize(width, height);
+        size = parameters.getSupportedPreviewSizes().get(ds);
+        parameters.setPreviewSize(size.width, size.height);
 
         camera.setParameters(parameters);
 
-        data = parameters.flatten();
+        if (preview == null) {
+            ((FtcRobotControllerActivity) hardwareMap.appContext).initPreviewLinear(camera, this, previewCallback);
+        }
     }
 
     public void stopCameraInSecs(int duration) {
         Thread cameraKillThread = new Thread(new CameraKillThread(duration));
-
         cameraKillThread.start();
     }
 
@@ -147,6 +142,10 @@ public class CameraProcessor extends LinearOpMode {
 
     public void stopCamera() {
         if (camera != null) {
+            if (preview != null) {
+                ((FtcRobotControllerActivity) hardwareMap.appContext).removePreviewLinear(this);
+                preview = null;
+            }
             camera.stopPreview();
             camera.setPreviewCallback(null);
             if (camera != null) {
@@ -183,6 +182,7 @@ public class CameraProcessor extends LinearOpMode {
         return value;
     }
 
+    // returns ROTATED image, to match preview window
     static public Bitmap convertYuvImageToRgb(YuvImage yuvImage, int width, int height, int downSample) {
         Bitmap rgbImage;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
