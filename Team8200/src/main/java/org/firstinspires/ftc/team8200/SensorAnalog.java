@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.AnalogInputController;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /*
@@ -57,6 +58,7 @@ public class SensorAnalog extends LinearOpMode {
   DeviceInterfaceModule dim;                  // Device Object
   AnalogInput distanceSensor;
   double voltage, maxVoltage;
+  private ElapsedTime runtime = new ElapsedTime();
 
   @Override
   public void runOpMode() {
@@ -64,6 +66,9 @@ public class SensorAnalog extends LinearOpMode {
     dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
     distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
 
+    HardwareK9bot robot = new HardwareK9bot();
+    LightExceed lineFinder = new LightExceed();
+    ColorSensorRed colorSensor = new ColorSensorRed();
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -80,6 +85,19 @@ public class SensorAnalog extends LinearOpMode {
       telemetry.addData("Max Voltage", maxVoltage);
 
       telemetry.update();
+
+      // go from angle, go straight after X seconds, detect line and activate colorsensor file, done
+
+      runtime.reset();
+      if(runtime.seconds() < 10) {
+        robot.leftMotor.setPower(1);
+        robot.rightMotor.setPower(1);
+      } else {
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        lineFinder.MoveToBeacon();
+      }
+
     }
   }
 }

@@ -30,18 +30,11 @@ public class DistanceAuto extends LinearOpMode {
 //    double expectedCloseVal = 12.51;
     @Override
     public void runOpMode() {
-
         dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
         distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
 
-
-        // wait for the start button to be pressed.
         waitForStart();
-
-        // while the op mode is active, loop
-        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
-
             voltage = distanceSensor.getVoltage();
             maxVoltage = distanceSensor.getMaxVoltage();
             voltsPerInch = 5.0/512.0;
@@ -49,14 +42,12 @@ public class DistanceAuto extends LinearOpMode {
             while (voltageInInches <= 13) {
                 runtime.reset();
                 if (runtime.seconds() > 3.0) {
-                    telemetry.addData("okayyy", kev);
+                    telemetry.addData("distanceTest. will print klk", kev);
+                    telemetry.update();
                 }
             }
-
-            // send the info back to driver station using telemetry function.
             telemetry.addData("Voltage", voltageInInches);
             telemetry.addData("Max Voltage", maxVoltage);
-
             telemetry.update();
         }
     }

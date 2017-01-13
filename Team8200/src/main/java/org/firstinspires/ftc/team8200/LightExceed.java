@@ -109,7 +109,7 @@ public class LightExceed extends LinearOpMode {
         while (opModeIsActive()) { //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
             runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.25)) {
+            while (opModeIsActive() && (runtime.seconds() < 0.01)) {
                 robot.leftMotor.setPower(0);
                 robot.rightMotor.setPower(MOTOR_POWER);
                 telemetry.addData("Raw", lightSensor.getRawLightDetected());

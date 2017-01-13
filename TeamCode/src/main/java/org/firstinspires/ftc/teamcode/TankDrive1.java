@@ -65,7 +65,7 @@ public class TankDrive1 extends LinearOpMode {
     @Override
     public void runOpMode() {
         double left, right, leftShooter, rightShooter, harvester;
-        
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -99,23 +99,24 @@ public class TankDrive1 extends LinearOpMode {
 
             // Set harvester speed based on the buttons pressed (from team8200; Steel Hawks)
             if (gamepad1.right_trigger > 0.2) {
-                
+
                 if (gamepad1.right_bumper) {
                     robot.harvester.setPower(1);
                 } else {
                     robot.harvester.setPower(0.5);
                 }
-                
+
             }
             else if (gamepad1.left_trigger > 0.2) {
-                
+
                 if (gamepad1.left_bumper) {
                     robot.harvester.setPower(-1);
                 } else {
                     robot.harvester.setPower(-0.5);
                 }
-                
-            } else {
+
+            }
+            else {
                 robot.harvester.setPower(0);
             }
 

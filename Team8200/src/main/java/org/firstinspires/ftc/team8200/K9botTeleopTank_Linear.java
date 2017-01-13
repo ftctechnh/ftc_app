@@ -81,7 +81,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello BASE Studen");
+        telemetry.addData("Say", "Hello BASE Student");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -109,160 +109,90 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.leftWheelShooter.setPower(leftWS);
             robot.rightWheelShooter.setPower(rightWS);
 
-            // HARVESTER IS COMMENTED SINCE WE ARE NOT USING
             float harvesterPower = gamepad1.right_trigger;
             float harvesterPowerReversed = gamepad1.left_trigger;
 
-            if (harvesterPower > 0.2) {
-                if (gamepad1.right_bumper) {
-                    robot.harvester.setPower(1);
-                } else {
-                    robot.harvester.setPower(0.5);
-                }
+            if (harvesterPower > 0.2 && harvesterPowerReversed == 0) {
+                robot.harvester.setPower(1);
             }
-            else if (harvesterPowerReversed > 0.2) {
-                if (gamepad1.left_bumper) {
-                    robot.harvester.setPower(-1);
-                } else {
-                    robot.harvester.setPower(-0.5);
-                }
-            } else {
+            else if (harvesterPowerReversed > 0.2 && harvesterPower == 0) {
+                robot.harvester.setPower(-1);
+            }
+            else {
                 robot.harvester.setPower(0);
             }
-            float elevatorPower = gamepad1.right_trigger;
-            float elevatorPowerReversed = gamepad1.left_trigger;
-            if(elevatorPower > 0.2)
+
+
+            float elevatorPower = gamepad2.right_trigger;
+            float elevatorPowerReversed = gamepad2.left_trigger;
+
+            if(elevatorPower > 0.2 && elevatorPowerReversed == 0)
             {
                 robot.elevator.setPower(0.5);
             }
-            else if(elevatorPowerReversed > 0.2)
+            else if(elevatorPowerReversed > 0.2 && elevatorPower == 0)
             {
-                robot.elevator.setPower(0.5);
+                robot.elevator.setPower(-0.5);
             }
             else
             {
                 robot.elevator.setPower(0);
             }
 
-
-
-            /* UNCOMMENT WHEN 'ARM' IS NEEDED FOR USAGE
-            if (gamepad1.dpad_up) {
-                robot.arm.setPosition(armHitPosition);
-            }
-            robot.leftMotor.setPower(leftY);
-            robot.rightMotor.setPower(leftY);
-
-            if (gamepad1.dpad_up) {
-                robot.arm.setPosition(armPosition);
-            }
-            else if(gamepad1.dpad_down) {
-                robot.arm.setPosition(armPosition);
-            }
-            */
-
-            // Send telemetry message to signify robot running
-            // Telemetry messages go here if we need in the future
-
-            // telemetry.addData("leftX",  "%.2f", leftX);
-            // telemetry.addData("righXt", "%.2f", rightX);
-            robot.leftMotor.setPower(leftY);
-            robot.rightMotor.setPower(rightY);
-
-            /*
-             left = the power x
-             right = the powerx
-            leftup = the power y
-            right up = the power y
-            if(left > 0 || right > 0)
+            boolean isButtonAPressed = gamepad2.a;
+            if(isButtonAPressed)
             {
-            left.motor.setPower(1)
-            rightMotor.setPower(1)
-            }
-            if(left < 0 || right < 0)
-            {
-            left.motor.setPower(-1)
-            rightMotor.setPower(-1)
-            }
-            if(leftup > 0)
-            {
-            LEFTmotor.setPower(leftup)
-            rightMotorsetpOWER(leftUp*-1)
-            }
-            f(rightUp > 0)
-            {
-            rightmotor.setPower(rightUp)
-            leftMotorsetpOWER(rightUp*-1)
-            }
-            if(leftup < 0)
-            {
-            LEFTmotor.setPower(leftup)
-            rightMotorsetpOWER(leftUp*-1)
-            }
-            f(rightUp < 0)
-            {
-            rightmotor.setPower(rightUp)
-            leftMotorsetpOWER(rightUp*-1)
-            }
-                         */
-
-            /*if(leftY > 0 && rightY >0)
-            {
-                robot.leftMotor.setPower(1);
-                robot.rightMotor.setPower(1)  ;
-            }
-            else if(leftY < 0 && rightY < 0)
-            {
-                robot.leftMotor.setPower(-1);
-                robot.rightMotor.setPower(-1)  ;
-            }
-
-            else if(rightX > 0)
-            {
-                robot.leftMotor.setPower(0.5);
-                robot.rightMotor.setPower(-0.5)  ;
-            }
-            else if(rightX < 0)
-            {
-                robot.leftMotor.setPower(-0.5);
-                robot.rightMotor.setPower(0.5)  ;
-            }
-
-            else if(leftX > 0)
-            {
-                robot.leftMotor.setPower(-0.5);
-                robot.rightMotor.setPower(0.5)  ;
-            }
-            else if(leftX < 0)
-            {
-                robot.leftMotor.setPower(0.5);
-                robot.rightMotor.setPower(-0.5)  ;
+                robot.leftWheelShooter.setPower(-0.3);
+                robot.rightWheelShooter.setPower(0.3);
             }
             else
             {
-                robot.leftMotor.setPower(0);
-                robot.rightMotor.setPower(0)  ;
+                robot.leftWheelShooter.setPower(0);
+                robot.rightWheelShooter.setPower(0);
             }
 
 
-            // Use gamepad Y & A raise and lower the arm
-           /* if (gamepad1.a)
-                armPosition = 0.9;
-            else if (gamepad1.y)
-                armPosition = 0.1;
 
-            // Use gamepad X & B to open and close the claw
-            /*if (gamepad1.x)
-                clawPosition += CLAW_SPEED;
-            else if (gamepad1.b)
-                clawPosition -= CLAW_SPEED;
-                */
+            //Arm
+            //Press once to extend button pressing arm, press again to retract arm
+
+            boolean isArmExtendedLeft = false;
+            boolean isArmExtendedRight = false;
+
+
+            if (gamepad2.x && !isArmExtendedLeft) {
+                robot.armLeft.setPosition(1);
+                isArmExtendedLeft = true;
+            }
+            else if (gamepad2.x && isArmExtendedLeft) {
+                robot.armLeft.setPosition(0);
+                isArmExtendedLeft = false;
+            }
+            else {
+                robot.armLeft.setPosition(0);
+                isArmExtendedLeft = false;
+            }
+
+            if (gamepad2.b && !isArmExtendedRight) {
+                robot.armRight.setPosition(1);
+                isArmExtendedRight = true;
+            }
+            else if (gamepad2.b && isArmExtendedRight) {
+                robot.armRight.setPosition(0);
+                isArmExtendedRight = false;
+            }
+            else {
+                robot.armRight.setPosition(0);
+                isArmExtendedRight = false;
+            }
+
+            // Send telemetry message to signify robot running
+            // Telemetry messages go here if we need in the future
+            //robot.leftMotor.setPower(leftY);
+            //robot.rightMotor.setPower(rightY);
+
 
             // Send telemetry message to signify robot running;
-
-
-           // telemetry.addData("leftX",  "%.2f", leftX);
-           // telemetry.addData("righXt", "%.2f", rightX);
             telemetry.addData("leftY",  "%.2f", leftY);
             telemetry.addData("rightY", "%.2f", rightY);
             telemetry.update();

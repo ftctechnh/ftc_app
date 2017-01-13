@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.team8200;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,14 +31,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class HardwareK9bot
 {
+
     /* Public OpMode members. */
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
     public LightSensor lightSensor = null;
+    public ColorSensor colorSensor = null;
+    public OpticalDistanceSensor distanceSensor = null;
     public DcMotor leftWheelShooter = null;
     public DcMotor rightWheelShooter = null;
     public DcMotor harvester = null;
     public DcMotor elevator = null;
+    public Servo armLeft = null;
+    public Servo armRight = null;
+    public DeviceInterfaceModule cdim = null;
+
 
     /*
     public final static double ARM_HOME = 0.2;
@@ -62,6 +73,11 @@ public class HardwareK9bot
         rightWheelShooter = hwMap.dcMotor.get("rightWS");
         harvester = hwMap.dcMotor.get("harvester");
         elevator = hwMap.dcMotor.get("elevator");
+        armLeft = hwMap.servo.get("armLeft");
+        armRight = hwMap.servo.get("armRight");
+        cdim = hwMap.deviceInterfaceModule.get("dim");
+
+
 
         leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -73,6 +89,8 @@ public class HardwareK9bot
         rightWheelShooter.setPower(0);
         harvester.setPower(0);
         elevator.setPower(0);
+        armLeft.setPosition(0);
+        armRight.setPosition(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -80,6 +98,8 @@ public class HardwareK9bot
 
         //Define and initialize ALL sensors
         lightSensor = hwMap.lightSensor.get("light");
+        colorSensor = hwMap.colorSensor.get("color");
+        distanceSensor = hwMap.opticalDistanceSensor.get("distance");
     }
 
     /*
