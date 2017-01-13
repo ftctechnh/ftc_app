@@ -101,20 +101,31 @@ public class GyroOpmode extends LinearOpMode {
             idle();
         }
 
+
+        while(robot.UDS.getDistance(DistanceUnit.INCH) > 12)
+        {
+            telemetry.addData("INCHS", robot.UDS.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+        }
+
+        robot.encoderDrive(0.1,30,30,2);
+        robot.WaitForReflectedLight(5,true,3500);
+
+        robot.simpleGyroTurn(.1,-180,2000);
         // Step through each leg of the path,
         // Put a hold after each turn
         //Actual code goes here.
 
         // Drive in a square to the left
         for(int i=0; i<4; ++i) {
-            robot.encoderDrive(1,24,24,3);
+            robot.encoderDrive(1,24,24,1);
             robot.sleepMs(500);
-            robot.simpleGyroTurn(1, -90, 2500);
+            robot.simpleGyroTurn(.1, -90, 2500);
             robot.sleepMs(500);
         }
 
         // About Face!
-        robot.simpleGyroTurn(1,180,2500);
+        robot.simpleGyroTurn(1,270,2500);
         
         // Drive in a square to the right
         for(int i=0; i<4; ++i) {

@@ -476,9 +476,18 @@ public class InvadersVelocityVortexBot
 //
 
 
-    public void WaitForReflectedLight(int intensity, boolean enableLed){
+    public void WaitForReflectedLight(int intensity, boolean enableLed, int timeoutMs){
         floorSensor.enableLed(enableLed);
-        while (floorSensor.alpha() < intensity){
+        period.reset();
+        while (opModeIsActive()){
+            int currentIntensity = floorSensor.alpha();
+            telemetry.addData("Alpha: ", "%03d", currentIntensity);
+
+            // Break out of the loop if we found the line
+            if(currentIntensity >= intensity) break;
+
+            // Break out of the loop if we have timed out
+            if(period.time() > timeoutMs) break;
         }
     }
 
@@ -677,6 +686,7 @@ public class InvadersVelocityVortexBot
                 telemetry.addData("Path2", "Running at %7d :%7d",
                         leftMotor.getCurrentPosition(),
                         rightMotor.getCurrentPosition());
+                telemetry.addData("UDS", "Distance CM: %.02f", UDS.getDistance(DistanceUnit.CM));
                 telemetry.update();
             }
 
