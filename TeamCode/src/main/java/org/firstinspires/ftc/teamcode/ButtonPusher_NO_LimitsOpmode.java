@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -51,19 +50,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="MotorEncoderOpmode", group="Testing")  // @Autonomous(...) is the other common choice
-@Disabled
-public class MotorEncoderOpmode extends LinearOpMode {
+@TeleOp(name="ButtonPusher_NO_Limits", group="Testing")  // @Autonomous(...) is the other common choice
+//@Disabled
+public class ButtonPusher_NO_LimitsOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor = null;
-    DcMotor rightMotor = null;
-    DcMotor pusherLeftMotor = null;
+    Bogg bogg;
 
-    static int posA = 1000;
-    static int posB = 3000;
-    boolean gotoPosA = true;
+    //set crazy limits to effective disable limits
+    private static int PUSHER_IN_LIMIT = 99999;     // pusher rod is about 5000 encoder steps
+    private static int PUSHER_OUT_LIMIT = -99999;   // limits based upon starting at "0"
+                                                    // need a overrun buffer of ~250 steps
+    private int leftPusherEncoder;
+    private int rightPusherEncoder;
 
     @Override
     public void runOpMode() {
@@ -71,31 +71,17 @@ public class MotorEncoderOpmode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
-        leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
+        bogg = new Bogg(hardwareMap, gamepad1);
 
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        pusherLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //resetting the pusher "zero" setpoint/scale
+        bogg.pusherLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bogg.pusherRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                leftMotor.getCurrentPosition(),
-                rightMotor.getCurrentPosition());
+        //put the motors back into run mode
+        bogg.pusherLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bogg.pusherRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        idle();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -103,57 +89,54 @@ public class MotorEncoderOpmode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if (gamepad1.a) {
-                gotoPosA = true;
-            }
-            if (gamepad1.b) {
-                gotoPosA = false;
-            }
-            if (gotoPosA ) {
-                // Turn On RUN_TO_POSITION
-                leftMotor.setTargetPosition(posA);
-                rightMotor.setTargetPosition(posA);
+//            telemetry.addData("Run Time: " + runtime.toString());
+            telemetry.addData("x", gamepad1.left_stick_y);
+            telemetry.addData("y", gamepad1.right_stick_y);
+            //telemetry.update();
+
+            bogg.driveEngine.setEngineMode(DriveEngine.engineMode.defaultMode);
+
+            //Running the left pusher
+            leftPusherEncoder = bogg.pusherLeftMotor.getCurrentPosition();
+            if (gamepad1.left_bumper) {
+                // reverse (encoder values increase)
+                if (leftPusherEncoder < PUSHER_IN_LIMIT) {
+                    bogg.pusherLeftMotor.setPower(gamepad1.left_trigger);
+                } else {
+                    bogg.pusherLeftMotor.setPower(0);
+                }
             }
             else {
-                // Turn On RUN_TO_POSITION
-                leftMotor.setTargetPosition(posB);
-                rightMotor.setTargetPosition(posB);
-            }
-            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            leftMotor.setPower(Math.abs(100));   // setPower range is 0 to 100%
-            rightMotor.setPower(Math.abs(100));
-
-            telemetry.addData("Path:",  "Starting at %7d :%7d",
-                    leftMotor.getCurrentPosition(),
-                    rightMotor.getCurrentPosition());
-            telemetry.update();
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < 10) &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", 3000,  3000);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        leftMotor.getCurrentPosition(),
-                        rightMotor.getCurrentPosition());
-                telemetry.update();
+                //forward (encoder values decrease)
+                if (leftPusherEncoder > PUSHER_OUT_LIMIT) {
+                    bogg.pusherLeftMotor.setPower(-gamepad1.left_trigger);
+                } else {
+                    bogg.pusherLeftMotor.setPower(0);
+                }
             }
 
+            //Running the right pusher
+            rightPusherEncoder = bogg.pusherRightMotor.getCurrentPosition();
+            if (gamepad1.right_bumper) {
+                // reverse (encoder values increase)
+                if (rightPusherEncoder < PUSHER_IN_LIMIT) {
+                    bogg.pusherRightMotor.setPower(gamepad1.right_trigger);
+                } else {
+                    bogg.pusherRightMotor.setPower(0);
+                }            }
+            else {
+                //forward (encoder values decrease)
+                if (rightPusherEncoder > PUSHER_OUT_LIMIT) {
+                    bogg.pusherRightMotor.setPower(-gamepad1.right_trigger);
+                } else {
+                    bogg.pusherRightMotor.setPower(0);
+                }
+            }
+
+            telemetry.addData("Pushers",  "Position %7d :%7d",
+                    bogg.pusherLeftMotor.getCurrentPosition(),
+                    bogg.pusherRightMotor.getCurrentPosition());
             telemetry.update();
-
-            // Stop all motion;
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             idle();     // allow something else to run (aka, release the CPU)
         }

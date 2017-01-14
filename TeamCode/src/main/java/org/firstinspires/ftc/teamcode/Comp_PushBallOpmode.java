@@ -48,7 +48,7 @@ public class Comp_PushBallOpmode extends LinearOpMode
     //Time constants
     private static final double LOW_POWER_TIME = 2;     //start slow, don't burn rubber
     private static final double MID_POWER_TIME = 4;     //start going faster
-    private static final double PARKING_TIME = .5;      //time between ball detection and robot parking
+    private static final double PARKING_TIME = 1;      //time between ball detection and robot parking
     private static final double MAX_DRIVE_TIME = 20;    //failsafe, stop the robot if ball isn't seen
 
     //Power constants
@@ -57,26 +57,25 @@ public class Comp_PushBallOpmode extends LinearOpMode
     private static final double HIGH_POWER = .2;
 
     //Sensor constants
-    private static final double OPTICAL_BALL_THRESHOLD = 0.01;  //magic number, 0-threshold is nothing seen
+    private static final double OPTICAL_BALL_THRESHOLD = 0.02;  //magic number, 0-threshold is nothing seen
                                                                 //getLightDetected() ranges from 0 - 1
 
     @Override
     public void runOpMode() {
         bogg = new Bogg(hardwareMap, gamepad1);
-
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
         timer.reset();
-
+        bogg.driveEngine.invertDirection();
         //Run until the end of autonomous
         while (opModeIsActive()) {
             //Run until we see something
             while (bogg.sensors.opSensorFront.getLightDetected() < OPTICAL_BALL_THRESHOLD) {
                 if (timer.seconds() < LOW_POWER_TIME) {
-                    bogg.driveEngine.setEngineToPower(LOW_POWER);
+                    bogg.driveEngine.drive(LOW_POWER);
 
                 } else if (timer.seconds() < MID_POWER_TIME) {
-                    bogg.driveEngine.setEngineToPower(MID_POWER);
+                    bogg.driveEngine.drive(MID_POWER);
 
                 } else if (timer.seconds() > MAX_DRIVE_TIME){
                     bogg.driveEngine.stop();
@@ -84,7 +83,7 @@ public class Comp_PushBallOpmode extends LinearOpMode
                     break;
 
                 } else {
-                    bogg.driveEngine.setEngineToPower(HIGH_POWER);
+                    bogg.driveEngine.drive(HIGH_POWER);
                 }
 
                 telemetry.addData("Status", "Light: " + ((int)(1000*bogg.sensors.opSensorFront.getLightDetected())/1000.));
@@ -98,7 +97,7 @@ public class Comp_PushBallOpmode extends LinearOpMode
             while (timer.seconds() < PARKING_TIME) {
                 telemetry.addData("Parking", timer.seconds());
                 telemetry.update();
-                bogg.driveEngine.setEngineToPower(HIGH_POWER);
+                bogg.driveEngine.drive(HIGH_POWER);
             }
 
             bogg.driveEngine.stop();

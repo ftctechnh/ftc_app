@@ -84,6 +84,8 @@ public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
         bogg.pusherRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         idle();
 
+        bogg.driveEngine.setEngineMode(DriveEngine.engineMode.defaultMode);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -93,9 +95,8 @@ public class Comp_DriveAndButtonPusherOpmode extends LinearOpMode {
 //            telemetry.addData("Run Time: " + runtime.toString());
             telemetry.addData("x", gamepad1.left_stick_y);
             telemetry.addData("y", gamepad1.right_stick_y);
+            bogg.driveEngine.drive();
             //telemetry.update();
-
-            bogg.driveEngine.setEngineMode(DriveEngine.engineMode.defaultMode);
 
             //Running the left pusher
             leftPusherEncoder = bogg.pusherLeftMotor.getCurrentPosition();

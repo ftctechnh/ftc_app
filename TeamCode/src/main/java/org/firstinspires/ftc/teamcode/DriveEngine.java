@@ -28,8 +28,8 @@ public class DriveEngine
 
     engineMode mode = engineMode.defaultMode;
 
-    DcMotor.Direction leftDirection = DcMotor.Direction.REVERSE;
-    DcMotor.Direction rightDirection = DcMotor.Direction.FORWARD;
+    DcMotor.Direction leftDirection = DcMotor.Direction.FORWARD;
+    DcMotor.Direction rightDirection = DcMotor.Direction.REVERSE;
     double leftPower = 0;  //[0.0, 1.0]
     double rightPower = 0; //[0.0, 1.0]
 
@@ -98,6 +98,9 @@ public class DriveEngine
             rightDirection = DcMotor.Direction.REVERSE;
         else
             rightDirection = DcMotor.Direction.FORWARD;
+
+        leftMotor.setDirection(leftDirection);
+        rightMotor.setDirection(rightDirection);
     }
 
     private void resetJoyStickSamples(float value)
