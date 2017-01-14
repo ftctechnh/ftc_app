@@ -155,16 +155,15 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         if (gamepad1.a == true) {
             if (robot.touchSensor.isPressed() == true) {
-                robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.OFF);
+                robot.setBallElevator(0,InvadersVelocityVortexBot.BallElevatorState.OFF);
             } else {
 
-                robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.DOWN); // Elevator down
+                robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.DOWN); // Elevator down
             }
         } else if (gamepad1.y == true) {
-            //robot.ballElevator.setPower(1);
-            robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.UP);
+            robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.UP);
         } else {
-            robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.OFF);
+            robot.setBallElevator(0,InvadersVelocityVortexBot.BallElevatorState.OFF);
         }
 
         if (gamepad1.start == true) {
@@ -176,7 +175,7 @@ public class InvadersPushbot_Iterative extends OpMode{
             //robot.rightBallLauncher.setPower(0);
             robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.OFF);
             if (!limitTriggered) {
-                robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.DOWN);  //Elevator down
+                robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.DOWN);  //Elevator down
             }
         }
         //CapBall lifter

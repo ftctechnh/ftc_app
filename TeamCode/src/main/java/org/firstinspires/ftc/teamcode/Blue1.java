@@ -98,15 +98,23 @@ public class Blue1 extends LinearOpMode {
             telemetry.update();
             idle();
         }
+// This bit was tested with FauxBot
+//        robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards to the plywood base with the capball.
+//        robot.simpleGyroTurn(0.1, 90, 1500); //Turn left towards the beacons.
+//        robot.encoderDrive (0.2, 55, 55, 1.7); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
+//        robot.DriveToWall(6, DistanceUnit.INCH, 0.1); //Use the range sensor to get nice and close to the wall.
+//        robot.simpleGyroTurn(0.1, -90, 1500); //Turn right to drive alongside the beacons.
+//        robot.DriveToWhiteLine(0.05,8,true,20000); // Drive to the white line
 
-
-        robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards to the plywood base with the capball.
-        robot.simpleGyroTurn(0.1, 90, 1500); //Turn left towards the beacons.
-        robot.encoderDrive (0.2, 55, 55, 1.7); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
-        robot.DriveToWall(6, DistanceUnit.INCH, 0.1); //Use the range sensor to get nice and close to the wall.
-        robot.simpleGyroTurn(0.1, -90, 1500); //Turn right to drive alongside the beacons.
-        robot.DriveToWhiteLine(0.05,8,true,20000); // Drive to the white line
-
+//  This bit was tested with Ankle-biter
+        robot.timedDrive(0.2,1900); //Drive forwards to the plywood base with the capball.
+        //robot.simpleGyroTurn(0.3, -90, 1500); //Turn left towards the beacons.
+        robot.turnToAbsoluteHeading(0.3,90,3000);
+        robot.timedDrive(0.2, 3000); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
+        robot.DriveToWall(6, DistanceUnit.INCH, 0.15); //Use the range sensor to get nice and close to the wall.
+        //robot.simpleGyroTurn(0.3, -90, 1500); //Turn right to drive alongside the beacons.
+        robot.turnToAbsoluteHeading(0.3,0,3000);
+        robot.DriveToWhiteLine(0.3,8,true,5000); // Drive to the white line
 
         telemetry.addData("Path", "Complete");
         //telemetry.update();

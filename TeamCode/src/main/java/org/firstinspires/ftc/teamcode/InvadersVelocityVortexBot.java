@@ -145,7 +145,7 @@ public class InvadersVelocityVortexBot
      *                robot left the specified number of degrees.
      *
      */
-    public void GyroTurn(float speed, float degrees,int timeoutMs) {
+    public void GyroTurn(double speed, double degrees,int timeoutMs) {
         simpleGyroTurn(speed,degrees,timeoutMs);
     }
 
@@ -207,7 +207,7 @@ public class InvadersVelocityVortexBot
         if(rightMotor != null) rightMotor.setPower(rightPower);
     }
 
-//    // This function is currently disabled.  It just drives straight for now.
+    // This function is currently disabled.
 //    public void gyroDrive ( double speed,
 //                            double distance,
 //                            double angle) {
@@ -245,10 +245,8 @@ public class InvadersVelocityVortexBot
 //            while (opModeIsActive() &&
 //                    (leftMotor.isBusy() && rightMotor.isBusy())) {
 //
-//                // DISABLED THE STEERING BY SETTING IT TO ZERO BECAUSE THIS DOESN'T WORK ON OUR ROBOT
-//                // adjust relative speed based on heading error.
-//                //error = getError(angle);
-//                steer = 0;//getSteer(error, P_DRIVE_COEFF);
+//                error = getError(angle);
+//                steer = getSteer(error, P_DRIVE_COEFF);
 //
 //                // if driving in reverse, the motor correction also needs to be reversed
 //                if (distance < 0)
@@ -300,11 +298,16 @@ public class InvadersVelocityVortexBot
 
     public void stop()
     {
-        setCapBallMotorPower(0,CapBallState.DOWN);
+        setCapBallMotorPower(0,CapBallState.OFF);
         setSweeperPower(0,SweeperDirection.IN);
         setLauncherState(LauncherState.OFF);
         setDriveTrainPower(0);
     }
+
+    void turnToAbsoluteHeading(double speed, double absoluteHeading, int timeoutMs) {
+        simpleGyroTurn(speed,absoluteHeading-gyro.getIntegratedZValue(),timeoutMs);
+    }
+
     // Right/Clockwise = Positive Turn Degrees
     // Left/CounterClockwise = Negative Turn Degrees
     // timeoutMs provides a sanity check to make sure we don't turn forever
@@ -418,7 +421,6 @@ public class InvadersVelocityVortexBot
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
-// These gyro turn functions do not work on our robot.  No investigation why yet.  Just use 'simpleGyroTurn' function instead.
 //    public void gyroTurn (  double speed, double angle) {
 //
 //        // keep looping while we are still active, and not on heading.
@@ -444,7 +446,7 @@ public class InvadersVelocityVortexBot
 //        leftMotor.setPower(0);
 //        rightMotor.setPower(0);
 //    }
-
+//
 //    boolean onHeading(double speed, double angle, double PCoeff) {
 //        double   error ;
 //        double   steer ;
@@ -472,9 +474,9 @@ public class InvadersVelocityVortexBot
 //        rightMotor.setPower(rightSpeed);
 //
 //        // Display it for the driver.
-//        //telemetry.addData("Target", "%5.2f", angle);
-//        //telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
-//        //telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+//        telemetry.addData("Target", "%5.2f", angle);
+//        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+//        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
 //
 //        return onTarget;
 //    }
@@ -505,7 +507,7 @@ public class InvadersVelocityVortexBot
 //    public double getSteer(double error, double PCoeff) {
 //        return Range.clip(error * PCoeff, -1, 1);
 //    }
-//
+
 
 
     public void DriveToWhiteLine(double power, int intensity, boolean enableLed, int timeoutMs){
@@ -595,7 +597,7 @@ public class InvadersVelocityVortexBot
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
         leftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
-        capBall.setDirection(DcMotorSimple.Direction.FORWARD);
+        capBall.setDirection(DcMotorSimple.Direction.REVERSE);
         sweeper.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set all motors to zero power
@@ -699,7 +701,7 @@ public class InvadersVelocityVortexBot
         OFF
     }
 
-    public void setBallElevator(BallElevatorState state)
+    public void setBallElevator(double power, BallElevatorState state)
     {
         // Early return if we don't have a ball elevator
         if(ballElevator == null) return;
@@ -707,10 +709,12 @@ public class InvadersVelocityVortexBot
         //@todo Write to a file what we're about to do to the motor here
         switch(state) {
             case UP:
-                ballElevator.setPower(1);
+                // Set positive value regardless of power positive/negative
+                ballElevator.setPower(Math.abs(power));
                 break;
             case DOWN:
-                ballElevator.setPower(-1);
+                // Set negative value regardless of power positive/negative
+                ballElevator.setPower(-Math.abs(power));
                 break;
             case OFF:
                 ballElevator.setPower(0);
@@ -728,7 +732,8 @@ public class InvadersVelocityVortexBot
         // If the onOrOff parameter equals ON, then set the power
         if(onOrOff == LauncherState.ON)
         {
-            power = 1;
+            // Launchers are always at full power
+            power = -1;
         }
         if(rightBallLauncher != null) rightBallLauncher.setPower(power);
         if(leftBallLauncher != null) leftBallLauncher.setPower(power);
@@ -742,10 +747,10 @@ public class InvadersVelocityVortexBot
     public void setSweeperPower(float power, SweeperDirection direction) {
         if(sweeper != null) {
             if(direction == SweeperDirection.IN) {
-                sweeper.setPower(power);
+                sweeper.setPower(Math.abs(power));
             }
             else {
-                sweeper.setPower(-power);
+                sweeper.setPower(-Math.abs(power));
             }
         }
     }
@@ -824,4 +829,31 @@ public class InvadersVelocityVortexBot
         }
     }
 
+    /*
+ *  Method to perfmorm a relative move, based on encoder counts.
+ *  Encoders are not reset as the move is based on the current position.
+ *  Move will stop if any of three conditions occur:
+ *  1) Move gets to the desired position
+ *  2) Move runs out of time
+ *  3) Driver stops the opmode running.
+ */
+    public void timedDrive(double speed, double durationMs) {
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            // Grab a snapshot of our heading (because we jerk to the side when we stop)
+            int targetHeading = gyro.getIntegratedZValue();
+            setDriveTrainPower(speed);
+            period.reset();
+            while(period.time() < durationMs) {
+            }
+            // Stop all motion;
+            setDriveTrainPower(0);
+
+            // Turn back to the correct heading
+            int currentHeading = gyro.getIntegratedZValue();
+            simpleGyroTurn(speed,currentHeading-targetHeading,1000);
+
+            sleepMs(250);
+        }
+    }
 }

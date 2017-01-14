@@ -155,8 +155,8 @@ public class PlatinumWumpus extends OpMode {
         left = Range.clip(y - x, -1, +1);
         right = Range.clip(y + x, -1, +1);
 
-        //Control system for the beacon pushers. Controlled by the triggers on Gamepad 1.
-        robot.beaconRight.setPosition(gamepad1.right_trigger);
+        //Control system for the beacon pushers both tied to left trigger
+        robot.beaconRight.setPosition(gamepad1.left_trigger);
         robot.beaconLeft.setPosition(gamepad1.left_trigger);
 
         if(gamepad1.y == true) {
@@ -172,7 +172,7 @@ public class PlatinumWumpus extends OpMode {
         // Call the setPower functions with our calculated values to activate the motors
         left = left / SpeedReduction;
         right = right / SpeedReduction;
-        robot.setDriveTrainPower(-left,-right);
+        robot.setDriveTrainPower(left,right);
     }
 
     @Override

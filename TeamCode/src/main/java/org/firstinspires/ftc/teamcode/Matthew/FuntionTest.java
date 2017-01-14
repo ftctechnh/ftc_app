@@ -84,75 +84,85 @@ public class FuntionTest extends LinearOpMode {
         robot.init(this);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Starting Function Test");    //
         telemetry.update();
 
         idle();
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftMotor.getCurrentPosition(),
-                          robot.rightMotor.getCurrentPosition());
-        telemetry.update();
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        telemetry.addLine("Turning Launcher ON");
-        robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.ON);
-        robot.sleepMs(2500);
-
-        telemetry.addLine("Turning Launcher OFF");
-        robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.OFF);
-        robot.sleepMs(2500);
+//        telemetry.addLine("Turning Launcher ON");
+//        robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.ON);
+//        robot.sleepMs(2500);
+//
+//        telemetry.addLine("Turning Launcher OFF");
+//        robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.OFF);
+//        robot.sleepMs(2500);
 
         telemetry.addLine("BallElevator UP");
-        robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.UP);
+        telemetry.update();
+        robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.UP);
         robot.sleepMs(2500);
 
         telemetry.addLine("BallElevator DOWN");
-        robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.DOWN);
+        telemetry.update();
+        robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.DOWN);
         robot.sleepMs(2500);
 
         telemetry.addLine("BallElevator OFF");
-        robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.OFF);
+        robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.OFF);
         robot.sleepMs(2500);
 
-        telemetry.addLine("CapBall Up");
-        robot.setCapBallMotorPower(0.05, InvadersVelocityVortexBot.CapBallState.UP);
-        robot.sleepMs(2500);
+//        telemetry.addLine("CapBall Up");
+//        robot.setCapBallMotorPower(0.05, InvadersVelocityVortexBot.CapBallState.UP);
+//        robot.sleepMs(2500);
+//
+//        telemetry.addLine("CapBall Up-2");
+//        robot.setCapBallMotorPower(-0.05, InvadersVelocityVortexBot.CapBallState.UP);
+//        robot.sleepMs(2500);
+//
+//        telemetry.addLine("CapBall Dowm");
+//        robot.setCapBallMotorPower(0.05, InvadersVelocityVortexBot.CapBallState.DOWN);
+//        robot.sleepMs(2500);
+//
+//        telemetry.addLine("CapBall Dowm-2");
+//        robot.setCapBallMotorPower(-0.05, InvadersVelocityVortexBot.CapBallState.DOWN);
+//        robot.sleepMs(2500);
 
-        telemetry.addLine("CapBall Up-2");
-        robot.setCapBallMotorPower(-0.05, InvadersVelocityVortexBot.CapBallState.UP);
-        robot.sleepMs(2500);
+//        telemetry.addData("FORWARD","48");
+//        telemetry.update();
+//        robot.encoderDrive(1,48,48,15);
+//        robot.sleepMs(2000);
+//
+//        telemetry.addData("BACKWARD", "48");
+//        telemetry.update();
+//        robot.encoderDrive(1,-48,-48,15);
+//        robot.sleepMs(2000);
 
-        telemetry.addLine("CapBall Dowm");
-        robot.setCapBallMotorPower(0.05, InvadersVelocityVortexBot.CapBallState.DOWN);
-        robot.sleepMs(2500);
-
-        telemetry.addLine("CapBall Dowm-2");
-        robot.setCapBallMotorPower(-0.05, InvadersVelocityVortexBot.CapBallState.DOWN);
-        robot.sleepMs(2500);
-
-        //Code Goes Here
-        telemetry.addData("FORWARD","48");
+        telemetry.addData("TURN","CW -> +360");
         telemetry.update();
-        robot.encoderDrive(1,4800,4800,15);
+        robot.GyroTurn(.25,360,5000);
         robot.sleepMs(2000);
 
-        telemetry.addData("BACKWARD", "48");
+        telemetry.addData("TURN","CCW -> -360");
         telemetry.update();
-        robot.encoderDrive(1,-4800,-4800,15);
+        robot.GyroTurn(.25,-360,5000);
         robot.sleepMs(2000);
 
-        telemetry.addData("TURN","CW -> +720");
-        telemetry.update();
-        robot.GyroTurn(1,720,20000);
-
-
-        telemetry.addData("TURN","CCW -> -720");
-        telemetry.update();
-        robot.GyroTurn(1,-720,20000);
+//        for(int i=0; i<4; ++i) {
+//
+//            int angle = (i*90);
+//            telemetry.addData("gyroTurn", "To: %d", angle);
+//            telemetry.update();
+//            robot.gyroTurn(0.5, angle);
+//            robot.sleepMs(2000);
+//
+//            int milliSeconds = 2500;
+//            telemetry.addData("timedDrive", "For: %d", milliSeconds);
+//            robot.timedDrive(0.5,milliSeconds);
+//            robot.sleepMs(2000);
+//        }
 
         //Code Ends Here
 

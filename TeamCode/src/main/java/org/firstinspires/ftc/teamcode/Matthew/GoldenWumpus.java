@@ -137,18 +137,21 @@ public class GoldenWumpus extends OpMode {
 
         // Sweeper Controls
         if(gamepad2.right_bumper == true) {
-            robot.sweeper.setPower(1);   // Sweep Balls In
+            // Sweep Balls In
+            robot.setSweeperPower(1, InvadersVelocityVortexBot.SweeperDirection.IN);
         } else {
-            robot.sweeper.setPower(gamepad2.right_trigger); // Push Balls Out (Speed proportional to trigger)
+            // Push Balls Out (Speed proportional to trigger)
+            robot.setSweeperPower(gamepad2.right_trigger, InvadersVelocityVortexBot.SweeperDirection.OUT);
         }
 
         // Ball Elevator Controls
         if (gamepad1.left_bumper == true) {
-             robot.ballElevator.setPower(1); // Elevator Up
+            //Elevator Up
+            robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.UP);
         } else {
-            robot.ballElevator.setPower(gamepad2.left_trigger); //Elevator Down (Speed proportional to trigger)
+            //Elevator Down (Speed proportional to trigger)
+            robot.setBallElevator(gamepad2.left_trigger,InvadersVelocityVortexBot.BallElevatorState.DOWN);
         }
-
 
         // Use the left joystick to move the robot forwards/backwards and turn left/right
         //// TODO: 1/12/2017 Fix this so that we drive with two sticks instead of one. Finally.
@@ -165,13 +168,13 @@ public class GoldenWumpus extends OpMode {
         robot.beaconLeft.setPosition(gamepad1.left_trigger);
 
         if((gamepad2.y == true) || (gamepad1.y == true)) {
-            robot.capBall.setPower(1 / SpeedReduction);
+            robot.setCapBallMotorPower((1 / SpeedReduction), InvadersVelocityVortexBot.CapBallState.UP);
         }
-        else if ((gamepad2.a == true) || (gamepad1.a == true)) {
-            robot.capBall.setPower(-0.2);
+        else if ((gamepad2.a == true) && (gamepad1.a == true)) {
+            robot.setCapBallMotorPower(-0.2, InvadersVelocityVortexBot.CapBallState.DOWN);
         }
         else {
-            robot.capBall.setPower(0);
+            robot.setCapBallMotorPower(0, InvadersVelocityVortexBot.CapBallState.OFF);
         }
 
         // Call the setPower functions with our calculated values to activate the motors
