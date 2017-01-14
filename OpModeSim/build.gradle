@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
+}
+
+copy {
+    from(zipTree('../libs/RobotCore-release.aar'))
+    into('libs')
+    include('classes.jar')
+    rename('classes.jar', 'RobotCore-release.jar')
+}
+
+dependencies {
+    compile files('libs/RobotCore-release.jar')
+    compile project(':TelemetryAPI')
+}

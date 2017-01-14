@@ -16,15 +16,20 @@ import javax.swing.JComponent;
  */
 public class JWindowTag extends JComponent {
 
-    String title;
-    int height = 80;
+    public String title;
+    public int height = 80;
 
-    public JWindowTag (String title) {
+    public JWindowTag (String title, int height) {
+        this.height = height;
         this.title = title;
 
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setMinimumSize(new Dimension(0, height));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
+    }
+
+    public JWindowTag () {
+        this ("Unnamed", 80);
     }
 
     public void paintComponent(Graphics g) {

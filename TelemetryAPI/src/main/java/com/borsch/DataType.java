@@ -11,4 +11,10 @@ public enum DataType {
     UPDATE_MAP,
 
     STOP,
+
+    LOG,
+
+    WARN,
+
+    ERROR,
 }

@@ -26,7 +26,7 @@ public class MapFrame extends CustomFrame {
     @Override
     public void build() {
         setSize(new Dimension(mapSize + 60, mapSize + 60));
-        setLocation(TelemetryClient.logFrame.getLocation().x - 400, TelemetryClient.logFrame.getLocation().y);
+        setLocation(TelemetryClient.startupWindow.getLocation().x, TelemetryClient.startupWindow.getLocation().y + 220);
         setType(javax.swing.JFrame.Type.UTILITY);
         setBackground(new Color(1.0f, 1.0f, 1.0f, 0f));
 

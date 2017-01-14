@@ -3,27 +3,34 @@ package edu.usrobotics.client;
 
 import com.borsch.TelemetryCodec;
 import com.borsch.TelemetryData;
+import edu.usrobotics.client.ui.LogWindow;
+import edu.usrobotics.client.ui.StartupWindow;
 
+import javax.bluetooth.RemoteDevice;
+import javax.swing.*;
+import javax.swing.text.Style;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.bluetooth.RemoteDevice;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
 public class TelemetryClient {
 
-    static LogFrame logFrame;
-    static MapFrame mapFrame;
-    static TelemetryFrame telemetryFrame;
-    static String deviceName;
-    static RemoteDevice device;
-    static String connectionURL;
-    static Receiver receiver;
+    public static StartupWindow startupWindow;
+    private static boolean ignoreFocusEvent;
+    public static LogWindow logWindow;
+    public static MapFrame mapFrame;
+    public static TelemetryFrame telemetryFrame;
 
-    static float inch_mm = 25.4f;
-    static Transform RobotSize = new Transform(18 * inch_mm, 18 * inch_mm, 18 * inch_mm);
-    static float FTCFieldWidth_mm = (12*12 - 2) * inch_mm;   // the FTC field is ~11'10" center-to-center of the glass panels
+    /**
+     * Current source of telemetry input (Bluetooth server, file path, or HTTP server)
+     */
+    public static String inputURI;
+    public static RemoteDevice device;
+    public static String connectionURL;
+    public static Receiver receiver;
+
+    public static float inch_mm = 25.4f;
+    public static Transform RobotSize = new Transform(18 * inch_mm, 18 * inch_mm, 18 * inch_mm);
+    public static float FTCFieldWidth_mm = (12*12 - 2) * inch_mm;   // the FTC field is ~11'10" center-to-center of the glass panels
 
     public static void main(String[] args) {
 
@@ -33,45 +40,60 @@ public class TelemetryClient {
             log("Failed to set look and feel");
         }
 
-        logFrame = new LogFrame();
+        startupWindow = new StartupWindow();
+        logWindow = new LogWindow();
         mapFrame = new MapFrame();
         telemetryFrame = new TelemetryFrame();
 
-        logFrame.addWindowListener(new WindowAdapter() {
+
+        startupWindow.addWindowListener(new WindowAdapter() {
             public void windowActivated(WindowEvent e) {
-                if (TelemetryClient.mapFrame != null) {
-                    TelemetryClient.mapFrame.toFront();
+                if (!e.getWindow().equals(startupWindow)) {
+                    return;
+                } else if (ignoreFocusEvent) {
+                    ignoreFocusEvent = false;
+                    return;
                 }
 
-                if (TelemetryClient.telemetryFrame != null) {
-                    TelemetryClient.telemetryFrame.toFront();
+                mapFrame.toFront();
+                telemetryFrame.toFront();
+                logWindow.toFront();
+                if (startupWindow.isVisible()) {
+                    ignoreFocusEvent = true;
+                    startupWindow.toFront();
                 }
             }
         });
+    }
 
-        while (deviceName == null || deviceName.length() < 1) {
-            deviceName = getDeviceName();
-            if (deviceName == null) {
-                System.exit(0);
-            }
+    public static void startTelemetry (String inputPath) {
+        if (inputPath == null || inputPath.length() < 1) {
+            startupWindow.invalidServer();
+
+            return;
         }
+
+        inputURI = inputPath;
 
         // If input is a file path
-        if (deviceName.indexOf(".txt") > 0) {
-            log ("Playback from file: "+deviceName);
+        if (inputURI.indexOf(".txt") > 0) {
+            log ("Playback from file: "+ inputURI);
             fileInput();
+            legacy ();
 
         } else {
-            log ("Connecting to BT: "+deviceName);
+            log ("Connecting to BT: "+ inputURI);
             bluetoothInput();
         }
+    }
 
+    private static void legacy () {
         TelemetryData lastData = null;
         while (true) {
             if (receiver.hasNext()) {
                 try {
                     lastData = processData(TelemetryCodec.Decode(receiver.getNext()), lastData);
-                    if (lastData == null) {
+                    if (lastData == null) { // Null only on STOP code
                         break;
                     }
                 } catch (InterruptedException e) {
@@ -98,25 +120,45 @@ public class TelemetryClient {
                 mapFrame.updateTrackable(data.id, Float.parseFloat(data.data[0]), Float.parseFloat(data.data[1]), Float.parseFloat(data.data[2]), Float.parseFloat(data.data[3]), Float.parseFloat(data.data[4]), Float.parseFloat(data.data[5]));
                 break;
 
+            case LOG:
+                log(data.data[0], LogWindow.LOG_STYLE);
+                break;
+
+            case WARN:
+                log(data.data[0], LogWindow.WARN_STYLE);
+                break;
+
+            case ERROR:
+                log(data.data[0], LogWindow.ERROR_STYLE);
+                break;
+
             case STOP:
                 return null;
 
             default:
-                log("Unhandled telemetry DataType: " + data.type.name());
+                log("Unhandled telemetry DataType: " + data.type.name(), LogWindow.WARN_STYLE);
         }
 
         return data;
     }
 
-    static void log (String msg) {
+    public static void log (String msg, Style style) {
         System.out.println (msg);
-        if (logFrame != null) {
-            logFrame.log (msg);
+
+        if (logWindow != null) {
+            logWindow.log(msg, style);
         }
     }
 
+    public static void log (String msg) {
+        log(msg, LogWindow.LOG_STYLE);
+    }
+
     static void fileInput() {
-        receiver = new FileReceiver(deviceName);
+        receiver = new FileReceiver(inputURI);
+
+        log("Created FileReceiver for path '" + inputURI + "', starting read thread...");
+
         Thread receiverThread = new Thread((Runnable) receiver);
         receiverThread.start();
     }
@@ -126,13 +168,13 @@ public class TelemetryClient {
 
 
         while (device == null) {
-            device = ss.getBluetoothDevice(deviceName);
+            device = ss.getBluetoothDevice(inputURI);
             if (device == null) {
                 Object[] options = {"Retry",
                         "Cancel"
                 };
 
-                int n = JOptionPane.showOptionDialog(logFrame,
+                int n = JOptionPane.showOptionDialog(startupWindow,
                         "Could not find bluetooth device.",
                         "Device Not Found",
                         JOptionPane.YES_NO_OPTION,
@@ -141,24 +183,26 @@ public class TelemetryClient {
                         options,
                         options[0]);
 
-                if (n == 1) System.exit(0);
+                if (n == 1) {
+                    return;
+                }
             }
         }
 
         connectionURL = ss.getBluetoothServiceURL(device, "446118f08b1e11e29e960800200c9a69");
 
-        System.out.println (connectionURL);
+        log ("Acquired BT Service URL: " + connectionURL, LogWindow.LOG_STYLE);
 
         receiver = new BluetoothReceiver(connectionURL);
         Thread receiverThread = new Thread((Runnable) receiver);
         receiverThread.start();
-        log ("BT Connected");
+        log ("BT Connected", LogWindow.LOG_STYLE);
 
     }
 
-    static String getDeviceName() {
+    private static String getInputURI() {
         return (String) JOptionPane.showInputDialog(
-                logFrame,
+                startupWindow,
                 "Enter bluetooth device name:",
                 "BT Device Name",
                 JOptionPane.PLAIN_MESSAGE,

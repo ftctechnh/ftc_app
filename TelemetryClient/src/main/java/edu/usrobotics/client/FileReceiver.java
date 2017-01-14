@@ -11,8 +11,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class FileReceiver implements Receiver, Runnable {
 
-    LinkedBlockingQueue<String> receivedQueue = new LinkedBlockingQueue<>();
-    String path;
+    private LinkedBlockingQueue<String> receivedQueue = new LinkedBlockingQueue<>();
+    private String path;
 
     public FileReceiver (String path) {
         this.path = path;

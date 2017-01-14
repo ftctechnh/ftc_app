@@ -39,11 +39,9 @@ public class CustomFrame extends javax.swing.JFrame {
         });
 
         build();
-
-        setVisible(true);
     }
 
-    void build () {
+    public void build () {
 
     }
 }

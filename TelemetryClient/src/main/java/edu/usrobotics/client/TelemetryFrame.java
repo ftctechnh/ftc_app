@@ -26,7 +26,7 @@ public class TelemetryFrame extends CustomFrame {
         setTitle("Telemetry");
         setResizable(true);
         setSize(new Dimension(400, 340));
-        setLocation(TelemetryClient.logFrame.getLocation().x + 400, TelemetryClient.logFrame.getLocation().y);
+        setLocation(TelemetryClient.startupWindow.getLocation().x + 400, TelemetryClient.logWindow.getLocation().y);
         setType(javax.swing.JFrame.Type.UTILITY);
         setBackground(new Color(1.0f, 1.0f, 1.0f, 0f));
 
@@ -63,7 +63,7 @@ public class TelemetryFrame extends CustomFrame {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
-        contentPane.add(new JWindowTag("Telemetry"));
+        contentPane.add(new JWindowTag("Telemetry", 80));
         contentPane.add(contentPanel);
     }
 

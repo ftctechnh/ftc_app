@@ -14,8 +14,8 @@ import javax.microedition.io.StreamConnection;
  */
 public class BluetoothReceiver implements Runnable, Receiver {
 
-    LinkedBlockingQueue<String> receivedQueue = new LinkedBlockingQueue<> ();
-    String connectionURL;
+    private LinkedBlockingQueue<String> receivedQueue = new LinkedBlockingQueue<> ();
+    private String connectionURL;
 
     public BluetoothReceiver(String connectionURL) {
         this.connectionURL = connectionURL;

@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class BaseOp extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
+  public boolean simulated = false;
 
   @Override
   public void init() {
