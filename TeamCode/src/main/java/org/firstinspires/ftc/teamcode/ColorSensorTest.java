@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 /**
  * Created by Noah Pietrafesa on 12/17/16.
  */
-@Autonomous
+//@Autonomous
 
 public class ColorSensorTest extends OpMode {
     DcMotor left1;
