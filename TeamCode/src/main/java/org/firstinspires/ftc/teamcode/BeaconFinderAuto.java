@@ -50,6 +50,7 @@ public class BeaconFinderAuto extends CameraProcessor {
             {
                 teamColor = "BLUE";
             }
+
             if (gamepad1.b) //If the driver pushes b, set the team color to red
             {
                 teamColor = "RED";
@@ -65,8 +66,22 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.addData("Status:", "Moving...");
         telemetry.update();
 
-        GyroMovement(0.3, 0, 1100); //pull forward off the wall
-        GyroMovement(0.3, 45, 1100); //drive diagonally to line up w/ the beacon
+        GyroMovement(0.25, 0, 1200); //pull forward off the wall
+        Thread.sleep(1000);
+        //At this point, we can try to score the pre-loaded balls
+        robot.shooter1.setPower(1);
+        robot.shooter2.setPower(1);
+        Thread.sleep(1300);
+        robot.shooter1.setPower(0);
+        robot.shooter2.setPower(0);
+        Thread.sleep(1000);
+        robot.shooter1.setPower(1);
+        robot.shooter2.setPower(1);
+        Thread.sleep(1000);
+        robot.shooter1.setPower(0);
+        robot.shooter2.setPower(0);
+        //Now that both balls are scored, proceed to the beacon
+        GyroMovement(0.25, 45, 1150); //drive diagonally to line up w/ the beacon
         GyroMovement(0.3, 90, 750); //pull closer to teh beacon so we can
 
         Thread.sleep(2000);
@@ -76,17 +91,14 @@ public class BeaconFinderAuto extends CameraProcessor {
 
         String firstBeaconSide = getBeaconSide();
 
-        Thread.sleep(1000);
-
         if (firstBeaconSide == "LEFT") //We need to push the left side
         {
-            GyroMovement(0.2, 45, 200);
-            GyroMovement(0.3, 90, 700);
+            GyroMovement(0.3, 45, 200);
+            GyroMovement(0.3, 90, 750);
         }
         else if (firstBeaconSide == "RIGHT")//We need to push the right side
         {
-            GyroMovement(0.2, 135, 200);
-            GyroMovement(0.3, 90, 700);
+            GyroMovement(0.3, 90, 750);
         }
 
         stopCamera();
@@ -179,7 +191,7 @@ public class BeaconFinderAuto extends CameraProcessor {
 
 
         int currentDirection = Gyro.getHeading();
-        double turnMultiplier = 0.07;
+        double turnMultiplier = 0.05;
         double driveMultiplier = 0.03;
 
         long turnStartTime = System.currentTimeMillis();
