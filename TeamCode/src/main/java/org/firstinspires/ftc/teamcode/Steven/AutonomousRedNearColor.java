@@ -81,6 +81,9 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
     double baseline1;
     double baseline2;
     static int INITIAL_SHOOTERPOS;
+    boolean rightDetected;
+    boolean leftDetected;
+
 
     @Override
     public void runOpMode() {
@@ -107,49 +110,60 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
 
 
 
-        shootingDrive(0.8, 850);;
 
-
-
-        sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1800);
-        sleep(500);
-        shootingDrive(0.8, 850);;
-        //shootingDrive(0.8, 850);
-
-
-        sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1800);
-        sleep(500);
-        shootingDrive(0.8, 850);;
-        //shootingDrive(0.8, 850);
-        sleep(500);
 
 
         //turn to be parallel to wall
         //gyroturn(45,true);//turn 45, turnright is true
-        encoderDrive(0.5,10,-10,5.0);
+       // encoderDrive(0.5,5,-5,5.0);
+        //encoderDrive(0.5,6,-6,5);
+        sleep(500);
+
 
         //drive until either the left or right ODS senses the white line
-        while(!(whiteLineDetectedRight() || whiteLineDetectedLeft())){
+        rightDetected = false;
+        leftDetected=false;
+        while(!(whiteLineDetectedRight()) && !(whiteLineDetectedLeft())){
             straightDrive(0.2);
+
         }
         stopMotors();
 
+
         //if it is the left side that detects the line, turn right until the right detects it to
         //this will make the robot perpendicular to the line
-        if (whiteLineDetectedLeft()){
-            while(!whiteLineDetectedRight()){
+        if (rightDetected){
+            while(!whiteLineDetectedLeft()){
                 turnRight(TURN_SPEED);
             }
             stopMotors();
         }
-        else if (whiteLineDetectedRight()){
+        else if (leftDetected){
             while(!whiteLineDetectedRight()){
                 turnLeft(TURN_SPEED);
             }
             stopMotors();
         }
+
+        shootingDrive(0.8, 850);;
+
+
+
+        sleep(500);     // pause for servos to move
+        intakeDrive(0.8, 1800);
+        sleep(500);
+        shootingDrive(0.8, 850);;
+        //shootingDrive(0.8, 850);
+
+
+        sleep(500);     // pause for servos to move
+        intakeDrive(0.8, 1800);
+        sleep(500);
+        shootingDrive(0.8, 850);;
+        //shootingDrive(0.8, 850);
+        sleep(500);
+        encoderDrive(0.3,-20,20,10);
+        encoderDrive(0.3,10,10,5);//edit this later so that it drives based on color
 
 
 
@@ -170,14 +184,18 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
     }
     public boolean whiteLineDetectedRight(){
         if ((ODSRight.getRawLightDetected() > (baseline1*5))){
+            rightDetected = true;
             return true;
         }
+        rightDetected = false;
         return false;
     }
     public boolean whiteLineDetectedLeft(){
         if ((ODSLeft.getRawLightDetected() > (baseline2*5))){
+            leftDetected = true;
             return true;
         }
+        leftDetected = false;
         return false;
     }
 

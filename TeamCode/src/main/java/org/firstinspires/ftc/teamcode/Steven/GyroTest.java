@@ -21,9 +21,18 @@ public class GyroTest extends OpMode {
         telemetry.addData(">", "Gyro Calibrating. Do Not move!");
         telemetry.update();
         gyroSensor.calibrate();
-        
 
-}
+
+        // make sure the gyro is calibrated.
+        while (gyroSensor.isCalibrating())  {
+
+        }
+
+        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
+        telemetry.update();
+
+
+    }
 
     @Override
     public void init_loop() {
@@ -37,9 +46,7 @@ public class GyroTest extends OpMode {
 
     @Override
     public void loop() {
-        while(gyroSensor.isCalibrating()){
 
-        }
         telemetry.addData("Gyro heading value (Z axis value): ", gyroSensor.getHeading());
         telemetry.update();
         //if (gyroSensor.getHeading() == 0){
