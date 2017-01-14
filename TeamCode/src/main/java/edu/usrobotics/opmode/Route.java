@@ -31,6 +31,13 @@ public class Route {
         return tasks.get(taskIndex);
     }
 
+    public void clearTasks(){
+
+        tasks.clear();
+        taskIndex = 0;
+
+    }
+
     public void addTask (Task task) {
         tasks.add(task);
     }
