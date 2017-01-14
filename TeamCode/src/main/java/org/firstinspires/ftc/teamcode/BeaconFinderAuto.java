@@ -20,6 +20,9 @@ public class BeaconFinderAuto extends CameraProcessor {
 
     GyroSensor Gyro;
     ColorSensor color_sensor;
+    String leftBeaconColor;
+    String rightBeaconColor;
+    String returnedSide;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -66,12 +69,12 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.addData("Status:", "Moving...");
         telemetry.update();
 
-        GyroMovement(0.25, 0, 1200); //pull forward off the wall
+        GyroMovement(0.25, 0, 1000); //pull forward off the wall
         Thread.sleep(1000);
         //At this point, we can try to score the pre-loaded balls
         robot.shooter1.setPower(1);
         robot.shooter2.setPower(1);
-        Thread.sleep(1300);
+        Thread.sleep(800);
         robot.shooter1.setPower(0);
         robot.shooter2.setPower(0);
         Thread.sleep(1000);
@@ -81,7 +84,8 @@ public class BeaconFinderAuto extends CameraProcessor {
         robot.shooter1.setPower(0);
         robot.shooter2.setPower(0);
         //Now that both balls are scored, proceed to the beacon
-        GyroMovement(0.25, 45, 1150); //drive diagonally to line up w/ the beacon
+        GyroMovement(0.25, 45, 14
+                50); //drive diagonally to line up w/ the beacon
         GyroMovement(0.3, 90, 750); //pull closer to teh beacon so we can
 
         Thread.sleep(2000);
@@ -90,11 +94,16 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.update();
 
         String firstBeaconSide = getBeaconSide();
+        returnedSide = firstBeaconSide;
+        telemetry.addData("Returned Side:", returnedSide);
+        telemetry.addData("Left Color:", leftBeaconColor);
+        telemetry.addData("Right Color:", rightBeaconColor);
+        telemetry.update();
 
         if (firstBeaconSide == "LEFT") //We need to push the left side
         {
-            GyroMovement(0.3, 45, 200);
-            GyroMovement(0.3, 90, 750);
+            GyroMovement(0.2, 0, 750);
+            GyroMovement(0.3, 90, 800);
         }
         else if (firstBeaconSide == "RIGHT")//We need to push the right side
         {
@@ -104,10 +113,18 @@ public class BeaconFinderAuto extends CameraProcessor {
         stopCamera();
 
         telemetry.addData("Status:", "Idling...");
+        telemetry.addData("Returned Side:", returnedSide);
+        telemetry.addData("Left Color:", leftBeaconColor);
+        telemetry.addData("Right Color:", rightBeaconColor);
         telemetry.update();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addData("Status:", "Idling...");
+            telemetry.addData("Returned Side:", returnedSide);
+            telemetry.addData("Left Color:", leftBeaconColor);
+            telemetry.addData("Right Color:", rightBeaconColor);
+            telemetry.update();
             idle();
         }
     }
@@ -128,7 +145,7 @@ public class BeaconFinderAuto extends CameraProcessor {
                 int pixel_red = red(pixel);
                 int pixel_blue = blue(pixel);
 
-                if(pixel_blue > pixel_red) {
+                if(pixel_red > 200 && pixel_blue < 200) {
                     left_intensity += pixel_blue;
                 }
             }
@@ -142,7 +159,7 @@ public class BeaconFinderAuto extends CameraProcessor {
                 int pixel_red = red(pixel);
                 int pixel_blue = blue(pixel);
 
-                if(pixel_blue > pixel_red) {
+                if(pixel_red > 200 && pixel_blue < 200) {
                     right_intensity += pixel_blue;
                 }
             }
@@ -154,22 +171,24 @@ public class BeaconFinderAuto extends CameraProcessor {
         if(left_intensity > right_intensity) {
             left = "BLUE";
             right = "RED";
+            leftBeaconColor = left;
+            rightBeaconColor = right;
         } else {
             left = "RED";
             right = "BLUE";
         }
 
-        if((left == "BLUE") && (teamColor == "BLUE")) {
+        if(left == teamColor)
+        {
             return "LEFT";
-        } else if((left == "RED") && (teamColor == "RED")) {
-            return "LEFT";
-        } else if((right == "BLUE") && (teamColor == "BLUE")) {
-            return "RIGHT";
-        } else if((right == "RED") && (teamColor == "RED")) {
+        }
+        else if (right == teamColor)
+        {
             return "RIGHT";
         }
-
-        return "ERROR";
+        else {
+            return "ERROR";
+        }
     }
 
     public void moveRobot(int speed, int time)

@@ -49,8 +49,8 @@ public class CameraAuto extends CameraProcessor {
                     int pixel_red = red(pixel);
                     int pixel_blue = blue(pixel);
 
-                    if(pixel_blue > pixel_red) {
-                        left_intensity += pixel_blue;
+                    if(pixel_red > 200 && pixel_blue < 200) {
+                        left_intensity += 1;
                     }
                 }
             }
@@ -63,8 +63,8 @@ public class CameraAuto extends CameraProcessor {
                     int pixel_red = red(pixel);
                     int pixel_blue = blue(pixel);
 
-                    if(pixel_blue > pixel_red) {
-                        right_intensity += pixel_blue;
+                    if(pixel_red > 200 && pixel_blue < 200) {
+                        right_intensity += 1;
                     }
                 }
             }
@@ -72,7 +72,8 @@ public class CameraAuto extends CameraProcessor {
             String left;
             String right;
 
-            if(left_intensity > right_intensity) {
+            if(left_intensity <
+                    right_intensity) {
                 left = "BLUE";
                 right = "RED";
             } else {
