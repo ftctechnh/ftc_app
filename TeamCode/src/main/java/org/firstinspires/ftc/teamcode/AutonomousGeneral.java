@@ -63,6 +63,8 @@ public class AutonomousGeneral extends LinearOpMode {
         shooting_motor = hardwareMap.dcMotor.get("ballShooterMotor");
         intake_motor = hardwareMap.dcMotor.get("ballCollectorMotor");
 
+        gyro = hardwareMap.gyroSensor.get("gyro");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
         //Initiate sensors:
         if (operation_beacon_press == true) {
             gyro = hardwareMap.gyroSensor.get("gyro");

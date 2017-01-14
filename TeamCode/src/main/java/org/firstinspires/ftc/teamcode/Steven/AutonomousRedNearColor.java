@@ -69,14 +69,15 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral_newName;
  */
 
 @Autonomous(name="Pushbot: AutonomousRedNearLine", group="Pushbot")
-@Disabled
+//@Disabled
 
-public class AutonomousRedNearColor extends AutonomousGeneral_newName {
+public class AutonomousRedNearColor extends AutonomousGeneral {
 
 
     private ElapsedTime runtime = new ElapsedTime();
-    OpticalDistanceSensor ODS;
-    OpticalDistanceSensor ODS2;
+    OpticalDistanceSensor ODSRight;
+    OpticalDistanceSensor ODSLeft;
+    OpticalDistanceSensor ODSCenter;
     double baseline1;
     double baseline2;
     static int INITIAL_SHOOTERPOS;
@@ -86,12 +87,13 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
 
         initiate();
 
-        ODS = hardwareMap.opticalDistanceSensor.get("ODS");
-        ODS2 = hardwareMap.opticalDistanceSensor.get("ODS2");
+        ODSRight = hardwareMap.opticalDistanceSensor.get("ODSRight");
+        ODSLeft = hardwareMap.opticalDistanceSensor.get("ODSLeft");
+        ODSCenter = hardwareMap.opticalDistanceSensor.get("ODSCenter");
 
-        baseline1 = ODS.getRawLightDetected();
-        baseline2 = ODS2.getRawLightDetected();
-        INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
+        baseline1 = ODSRight.getRawLightDetected();
+        baseline2 = ODSLeft.getRawLightDetected();
+        //INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
 
         telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
 
@@ -123,22 +125,31 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
         sleep(500);
 
 
-        gyro.calibrate();
-        while(gyro.isCalibrating()){
-
-        }
-        //turn horizontal to wall
-        while(gyro.getHeading() < 45 && gyro.getHeading() > 350){
-            turnLeft(TURN_SPEED);
-        }
-        stopMotors();
+        //turn to be parallel to wall
+        gyroturn(45,true);//turn 45, turnright is true
 
 
-        //drive until white line
-        while(!whiteLineDetected()){
+        //drive until either the left or right ODS senses the white line
+        while(!(whiteLineDetectedRight() || whiteLineDetectedLeft())){
             straightDrive(DRIVE_SPEED);
         }
         stopMotors();
+
+        //if it is the left side that detects the line, turn right until the right detects it to
+        //this will make the robot perpendicular to the line
+        if (whiteLineDetectedLeft()){
+            while(!whiteLineDetectedRight()){
+                turnRight(TURN_SPEED);
+            }
+            stopMotors();
+        }
+        else if (whiteLineDetectedRight()){
+            while(!whiteLineDetectedRight()){
+                turnLeft(TURN_SPEED);
+            }
+            stopMotors();
+        }
+
 
 
         //follow white line
@@ -156,10 +167,37 @@ public class AutonomousRedNearColor extends AutonomousGeneral_newName {
 
 
     }
-    public boolean whiteLineDetected(){
-        if ((ODS.getRawLightDetected() > (baseline1*5))||(ODS2.getRawLightDetected()> baseline2*5)){
+    public boolean whiteLineDetectedRight(){
+        if ((ODSRight.getRawLightDetected() > (baseline1*5))){
             return true;
         }
         return false;
+    }
+    public boolean whiteLineDetectedLeft(){
+        if ((ODSLeft.getRawLightDetected() > (baseline2*5))){
+            return true;
+        }
+        return false;
+    }
+
+    public void gyroturn(int degrees,boolean Right){
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+
+        }
+
+        if(Right) {
+            //turn horizontal to wall
+            while (gyro.getHeading() < degrees || gyro.getHeading() > 350) {
+                turnRight(TURN_SPEED);
+            }
+            stopMotors();
+        }
+        else{
+            while (gyro.getHeading() > (360 - degrees) || gyro.getHeading() < 10) {
+                turnLeft(TURN_SPEED);
+            }
+            stopMotors();
+        }
     }
 }
