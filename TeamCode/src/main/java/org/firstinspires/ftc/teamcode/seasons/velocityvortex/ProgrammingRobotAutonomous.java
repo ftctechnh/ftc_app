@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by ftc6347 on 12/30/16.
  */
+@Disabled
 @Autonomous(name = "Programming Robot Autonomous", group = "autonomous")
 public class ProgrammingRobotAutonomous extends LinearOpMode {
 

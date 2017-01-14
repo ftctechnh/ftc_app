@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by ftc6347 on 11/30/16.
  */
+@Disabled
 @Autonomous(name = "Red beacons", group = "autonomous")
 public class BeaconsAutonomousRed extends LinearOpMode {
 

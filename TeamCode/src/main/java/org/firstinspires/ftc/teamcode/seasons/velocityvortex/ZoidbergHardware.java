@@ -85,15 +85,15 @@ public class ZoidbergHardware {
         colorSensor = hardwareMap.colorSensor.get("clr");
         colorSensor.enableLed(false);
 
-//        frontRange = (ModernRoboticsI2cRangeSensor)hardwareMap.get("frs");
-//        leftRange = (ModernRoboticsI2cRangeSensor)hardwareMap.get("lrs");
+        frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
+        leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
         ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
-        gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
-        gyroSensor.calibrate();
+//        gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
+//        gyroSensor.calibrate();
 
         // reverse all drive motors
         backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -166,6 +166,14 @@ public class ZoidbergHardware {
         backRightDrive.setPower(-power);
     }
 
+    public void resetDriveEncoders() {
+        // reset the encoders
+        backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
     public void launchParticle() {
         runtime.reset();
 
@@ -175,7 +183,7 @@ public class ZoidbergHardware {
         }
 
         // stop the launcher motor on the black line
-        while(diskOds.getRawLightDetected() > 2) {
+        while(diskOds.getRawLightDetected() > 1) {
             launcherMotor.setPower(0.3);
         }
 
@@ -185,76 +193,6 @@ public class ZoidbergHardware {
     public boolean areDriveMotorsBusy() {
         return frontLeftDrive.isBusy() && frontRightDrive.isBusy()
                 && backLeftDrive.isBusy() && backRightDrive.isBusy();
-    }
-
-    public void encoderDrive(double speed, double leftInches, double rightInches, boolean stopCondition) {
-        int leftTarget = (int)(leftInches * COUNTS_PER_INCH);
-        int rightTarget = (int)(rightInches * COUNTS_PER_INCH);
-
-        // set the target position for each motor
-        frontLeftDrive.setTargetPosition(leftTarget);
-        frontRightDrive.setTargetPosition(-rightTarget);
-        backRightDrive.setTargetPosition(-rightTarget);
-        backLeftDrive.setTargetPosition(leftTarget);
-
-        // set RUN_TO_POSITION for each motor
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // set the power for the left drive motors
-        frontLeftDrive.setPower(speed);
-        backLeftDrive.setPower(speed);
-
-        // set the power for the right drive motors
-        frontRightDrive.setPower(speed);
-        backRightDrive.setPower(speed);
-
-        while(stopCondition && areDriveMotorsBusy()) {
-            stopRobot();
-        }
-
-        // set RUN_TO_POSITION for each motor
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void encoderStrafe(double speed, double frontInches, double backInches, boolean stopCondition) {
-        int frontTarget = (int)(frontInches * COUNTS_PER_INCH);
-        int backTarget = (int)(backInches * COUNTS_PER_INCH);
-
-        // set the target position for each motor
-        frontLeftDrive.setTargetPosition(-frontTarget);
-        frontRightDrive.setTargetPosition(-frontTarget);
-        backRightDrive.setTargetPosition(backTarget);
-        backLeftDrive.setTargetPosition(backTarget);
-
-        // set RUN_TO_POSITION for each motor
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // set the power for the left drive motors
-        frontLeftDrive.setPower(speed);
-        backLeftDrive.setPower(speed);
-
-        // set the power for the right drive motors
-        frontRightDrive.setPower(speed);
-        backRightDrive.setPower(speed);
-
-        while(stopCondition && areDriveMotorsBusy()) {
-            stopRobot();
-        }
-
-        // set RUN_TO_POSITION for each motor
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public DcMotor getIntakeMotor() {

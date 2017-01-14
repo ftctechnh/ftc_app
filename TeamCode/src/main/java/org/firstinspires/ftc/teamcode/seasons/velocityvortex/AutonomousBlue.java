@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 /**
  * Created by ftc6347 on 10/30/16.
  */
+@Disabled
 @Autonomous(name = "Blue 2 ball, park", group = "autonomous")
 public class AutonomousBlue extends LinearOpMode {
 

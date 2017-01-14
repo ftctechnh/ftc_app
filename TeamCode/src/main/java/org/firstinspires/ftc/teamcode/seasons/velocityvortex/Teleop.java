@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by ftc6347 on 10/16/16.
@@ -23,6 +24,12 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new ZoidbergHardware(hardwareMap);
+
+        // run without encoders
+        robot.getBackLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getBackRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getFrontRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         gamepad1.setJoystickDeadzone(JOYSTICK_DEADZONE);
         gamepad2.setJoystickDeadzone(JOYSTICK_DEADZONE);
@@ -113,12 +120,9 @@ public class Teleop extends LinearOpMode {
     private void handleTelemetry() {
 
         telemetry.addData("ods2 : ", robot.getDiskOds().getRawLightDetected());
+        telemetry.addData("ods3", robot.getOds3().getRawLightDetected());
         telemetry.addData("launcher ods", robot.getLauncherOds().getLightDetected());
-
-        telemetry.addData("front left mode", robot.getFrontLeftDrive().getMode());
-        telemetry.addData("front right mode", robot.getFrontRightDrive().getMode());
-        telemetry.addData("back left mode", robot.getBackLeftDrive().getMode());
-        telemetry.addData("back right mode", robot.getBackRightDrive().getMode());
+        telemetry.addData("front range", robot.getFrontRange().cmUltrasonic());
 
         telemetry.update();
     }

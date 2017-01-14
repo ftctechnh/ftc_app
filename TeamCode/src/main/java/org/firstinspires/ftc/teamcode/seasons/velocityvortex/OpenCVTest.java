@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
@@ -17,6 +18,7 @@ import static org.opencv.imgproc.Imgproc.cvtColor;
 /**
  * Created by ftc6347 on 10/3/16.
  */
+@Disabled
 @Autonomous(name = "OpenCV test", group = "Tests")
 public class OpenCVTest extends LinearOpMode {
 
