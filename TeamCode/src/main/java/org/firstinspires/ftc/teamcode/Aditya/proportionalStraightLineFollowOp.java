@@ -30,11 +30,14 @@ public class proportionalStraightLineFollowOp extends OpMode {
         rightWheelMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
         rightWheelMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        callibratePerfectColor(15);
+
     }
 
     @Override
     public void init_loop() {
+
+        callibratePerfectColor(15);
+
     }
 
     @Override
@@ -73,6 +76,10 @@ public class proportionalStraightLineFollowOp extends OpMode {
         }
 
         PERFECT_COLOR_VALUE = PERFECT_COLOR_VALUE / timesToAverage;
+
+        telemetry.addData("the perfect color is...", PERFECT_COLOR_VALUE);
+        telemetry.update();
+
     }
 
     public void sensorReadDrive(){

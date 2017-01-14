@@ -29,7 +29,7 @@ public class AutonomousGeneral extends LinearOpMode {
     protected GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
     protected ModernRoboticsI2cRangeSensor rangeSensor;
     protected ColorSensor colorSensor;
-    String currentColor = "other";
+    //String currentColor = "other";
     protected static final double DRIVE_SPEED = .5;
     protected static final double TURN_SPEED = 0.5;
     // motor definition to shoot the small ball
@@ -308,46 +308,46 @@ public class AutonomousGeneral extends LinearOpMode {
     }
 
 //<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutonomousGeneral.java
-    public void readColor() {
-
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
-
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-
-
-        //convert the RGB values to HSV values
-        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
-
-        int red = colorSensor.red();
-        int blue = colorSensor.blue();
-        int green = colorSensor.green();
-//declares the colors that it sees by default, in a different name!
-
-        colorSensor.enableLed(true);
-
-        if (red > blue && red > green) {
-            currentColor = "red";
-        } else if (blue > red && blue > green) {
-            currentColor = "blue";
-        } else if (green > red && green > blue) {
-            currentColor = "green";
-        } else {
-            currentColor = "other";
-        }
-        //checks which color the side currently is
-
-        telemetry.addData("r value", colorSensor.red());
-        telemetry.addData("g value", colorSensor.green());
-        telemetry.addData("b value", colorSensor.blue());
-        telemetry.addData("current beacon color", currentColor);
-        telemetry.addData("Hue", hsvValues[0]);
-        telemetry.addData("Saturation", hsvValues[1]);
-        telemetry.addData("Value", hsvValues[2]);
-
-        telemetry.update();
-    }
+//    public void readColor() {
+//
+//        // hsvValues is an array that will hold the hue, saturation, and value information.
+//        float hsvValues[] = {0F, 0F, 0F};
+//
+//        // values is a reference to the hsvValues array.
+//        final float values[] = hsvValues;
+//
+//
+//        //convert the RGB values to HSV values
+//        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+//
+//        int red = colorSensor.red();
+//        int blue = colorSensor.blue();
+//        int green = colorSensor.green();
+////declares the colors that it sees by default, in a different name!
+//
+//        colorSensor.enableLed(true);
+//
+//        if (red > blue && red > green) {
+//            currentColor = "red";
+//        } else if (blue > red && blue > green) {
+//            currentColor = "blue";
+//        } else if (green > red && green > blue) {
+//            currentColor = "green";
+//        } else {
+//            currentColor = "other";
+//        }
+//        //checks which color the side currently is
+//
+//        telemetry.addData("r value", colorSensor.red());
+//        telemetry.addData("g value", colorSensor.green());
+//        telemetry.addData("b value", colorSensor.blue());
+//        telemetry.addData("current beacon color", currentColor);
+//        telemetry.addData("Hue", hsvValues[0]);
+//        telemetry.addData("Saturation", hsvValues[1]);
+//        telemetry.addData("Value", hsvValues[2]);
+//
+//        telemetry.update();
+//    }
 
 //=======
 //>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Main/AutonomousGeneral.java
@@ -365,13 +365,13 @@ public class AutonomousGeneral extends LinearOpMode {
         stopMotors();
     }
 
-    public void gyro_rightTurn(int degrees, double speed){
+    public void gyro_rightTurn(int degrees, double speed) {
         gyro.calibrate();
-        while(gyro.isCalibrating()){
+        while (gyro.isCalibrating()) {
 
         }
         turnRight(speed);
-        while((gyro.getHeading() < degrees) ||(gyro.getHeading() > 350)){ //turn left until the angle becomes as small as you want it
+        while ((gyro.getHeading() < degrees) || (gyro.getHeading() > 350)) { //turn left until the angle becomes as small as you want it
             //gyro.getHeading() returns values from 0 to 359
             telemetry.addData("current gyro pos", gyro.getHeading());
             telemetry.update();
@@ -379,93 +379,111 @@ public class AutonomousGeneral extends LinearOpMode {
         stopMotors();
     }
 
+    public void newTurnLeft(double speed){
+
+        back_left_motor.setPower(-speed);
+        front_left_motor.setPower(-speed);
+        front_right_motor.setPower(speed);
+        back_right_motor.setPower(speed);
+
+    }
+
+    public void newTurnRight(double speed){
+
+        back_left_motor.setPower(speed);
+        front_left_motor.setPower(speed);
+        front_right_motor.setPower(-speed);
+        back_right_motor.setPower(-speed);
+
+    }
+
 
 //<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutonomousGeneral.java
-    public void newBeacon(String team, double wallTarget) {
-
-        double wallDistRead = 0.0;
-        int driveDegree = 0;
-        double delta_power = 0;
-        double straight_drive_power = -.15;
-        int num_beacon_press = 0;
-        wallDistRead = rangeSensor.getDistance(DistanceUnit.CM);
-        telemetry.addData("wall Dist read", wallDistRead);
-        telemetry.update();
-
-        if(wallDistRead > wallTarget){
-            gyro_leftTurn(350,0.05);
-
-            while(wallDistRead > wallTarget){
-
-                straightDrive(-0.2);
-                wallDistRead = rangeSensor.getDistance(DistanceUnit.CM);
-                telemetry.addData("wall Dist read", wallDistRead);
-                telemetry.update();
-            }
-
-            gyro_rightTurn(10,0.05);
-            telemetry.addData("wall Dist read", wallDistRead);
-            telemetry.update();
-        } else {
-
-            gyro_rightTurn(10,0.05);
-
-            while(wallDistRead < wallTarget){
-
-                straightDrive(-0.2);
-                wallDistRead = rangeSensor.getDistance(DistanceUnit.CM);
-                telemetry.addData("wall Dist read", wallDistRead);
-                telemetry.update();
-            }
-
-            gyro_leftTurn(350,0.05);
-            telemetry.addData("wall Dist read", wallDistRead);
-            telemetry.update();
-        }
-
-        readColor();
-
-        gyro.calibrate();
-        while(gyro.isCalibrating()){
-
-        }
-        while ((num_beacon_press <3) /*||(range sensor front < 20 cm) */) {
-            driveDegree = gyro.getHeading();
-            telemetry.addData("current gyro pos", gyro.getHeading());
-            telemetry.update();
-
-            if (driveDegree <180)
-            {
-                delta_power = .1*straight_drive_power;
-            }
-            else
-            {
-                delta_power = -.1*straight_drive_power;
-            }
-
-
-            back_left_motor.setPower(straight_drive_power +delta_power);
-            front_left_motor.setPower(straight_drive_power+delta_power);
-            back_right_motor.setPower(straight_drive_power-delta_power);
-            front_right_motor.setPower(straight_drive_power-delta_power);
-          //  straightDrive(-0.25);
-            readColor();
-
-
-        if (currentColor.equals(team)) {
-           // encoderDrive(0.4, 3, 3, 5);
-            sleep(750);
-            beaconPress.setPosition(0.2);
-            sleep(3000);
-            beaconPress.setPosition(0.7);
-            num_beacon_press++;
-        }
-        }
-        readColor();
-
-        telemetry.addData("pressed!", currentColor);
-        telemetry.update();
-    }
+//    public void newBeacon(String team, double wallTarget) {
+//
+//        double wallDistRead = 0.0;
+//        int driveDegree = 0;
+//        double delta_power = 0;
+//        double straight_drive_power = -.15;
+//        int num_beacon_press = 0;
+//        wallDistRead = rangeSensor.getDistance(DistanceUnit.CM);
+//        telemetry.addData("wall Dist read", wallDistRead);
+//        telemetry.update();
+//
+//        if(wallDistRead > wallTarget){
+//            gyro_leftTurn(350,0.05);
+//
+//            while(wallDistRead > wallTarget){
+//
+//                straightDrive(-0.2);
+//                wallDistRead = rangeSensor.getDistance(DistanceUnit.CM);
+//                telemetry.addData("wall Dist read", wallDistRead);
+//                telemetry.update();
+//            }
+//
+//            gyro_rightTurn(10,0.05);
+//            telemetry.addData("wall Dist read", wallDistRead);
+//            telemetry.update();
+//        } else {
+//
+//            gyro_rightTurn(10,0.05);
+//
+//            while(wallDistRead < wallTarget){
+//
+//                straightDrive(-0.2);
+//                wallDistRead = rangeSensor.getDistance(DistanceUnit.CM);
+//                telemetry.addData("wall Dist read", wallDistRead);
+//                telemetry.update();
+//            }
+//
+//            gyro_leftTurn(350,0.05);
+//            telemetry.addData("wall Dist read", wallDistRead);
+//            telemetry.update();
+//        }
+//
+//        readColor();
+//
+//        gyro.calibrate();
+//        while(gyro.isCalibrating()){
+//
+//        }
+//        while ((num_beacon_press <3) /*||(range sensor front < 20 cm) */) {
+//            driveDegree = gyro.getHeading();
+//            telemetry.addData("current gyro pos", gyro.getHeading());
+//            telemetry.update();
+//
+//            if (driveDegree <180)
+//            {
+//                delta_power = .1*straight_drive_power;
+//            }
+//            else
+//            {
+//                delta_power = -.1*straight_drive_power;
+//            }
+//
+//
+//            back_left_motor.setPower(straight_drive_power +delta_power);
+//            front_left_motor.setPower(straight_drive_power+delta_power);
+//            back_right_motor.setPower(straight_drive_power-delta_power);
+//            front_right_motor.setPower(straight_drive_power-delta_power);
+//          //  straightDrive(-0.25);
+//            readColor();
+//
+//
+//        if (currentColor.equals(team)) {
+//           // encoderDrive(0.4, 3, 3, 5);
+//            sleep(750);
+//            beaconPress.setPosition(0.2);
+//            sleep(3000);
+//            beaconPress.setPosition(0.7);
+//            num_beacon_press++;
+//        }
+//        }
+//        readColor();
+//
+//        telemetry.addData("pressed!", currentColor);
+//        telemetry.update();
+//    }
 //=======
 //>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Main/AutonomousGeneral.java
 }
