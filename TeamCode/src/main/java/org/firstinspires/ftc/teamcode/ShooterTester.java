@@ -20,7 +20,10 @@ public class ShooterTester extends AutonomousBase{
                 break;
             case 1:
                 cumDist += dDistW;
-                moveState = MoveState.SHOOT;
+                moveState = MoveState.SHOOT_WHEEL;
+                if(sTime > 1){
+                    moveState = MoveState.SHOOT;
+                }
                 telemetry.addData("Wheel Speed", cumDist/(getRuntime()-sTime)/1440);
                 break;
         }
