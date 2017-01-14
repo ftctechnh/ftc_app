@@ -175,7 +175,19 @@ public class Matthew_Encoder extends LinearOpMode {
             }
 
             // Stop all motion;
-            robot.leftMotor.setPower(0);
+            robot.
+
+
+
+
+
+
+
+
+
+
+
+                    leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
 
             // Turn off RUN_TO_POSITION

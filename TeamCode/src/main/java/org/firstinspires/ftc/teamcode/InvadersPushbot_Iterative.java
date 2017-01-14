@@ -155,48 +155,48 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         if (gamepad1.a == true) {
             if (robot.touchSensor.isPressed() == true) {
-                robot.setBallElevator(0);
+                robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.OFF);
             } else {
 
-                robot.setBallElevator(-1); // Elevator down
+                robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.DOWN); // Elevator down
             }
         } else if (gamepad1.y == true) {
             //robot.ballElevator.setPower(1);
-            robot.setBallElevator(1);
+            robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.UP);
         } else {
-            robot.setBallElevator(0);
+            robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.OFF);
         }
 
         if (gamepad1.start == true) {
             //robot.leftBallLauncher.setPower(-1);
             //robot.rightBallLauncher.setPower(-1);
-            robot.setLauncherPower(1);
+            robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.ON);
         } else if (gamepad1.back == true) {
             //robot.leftBallLauncher.setPower(0);
             //robot.rightBallLauncher.setPower(0);
-            robot.setLauncherPower(0);
+            robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.OFF);
             if (!limitTriggered) {
-                robot.setBallElevator(-1);  //Elevator down
+                robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.DOWN);  //Elevator down
             }
         }
         //CapBall lifter
         if (gamepad1.dpad_up) {
-            robot.setCapBallMotorPower(0.5);
+            robot.setCapBallMotorPower(0.5, InvadersVelocityVortexBot.CapBallState.UP);
         } else if (gamepad1.dpad_down) {
-            robot.setCapBallMotorPower(-0.5);
+            robot.setCapBallMotorPower(0.5, InvadersVelocityVortexBot.CapBallState.DOWN);
         } else
         {
-            robot.setCapBallMotorPower(0);
+            robot.setCapBallMotorPower(0, InvadersVelocityVortexBot.CapBallState.OFF);
         }
 
         if (gamepad1.dpad_left) {
-            robot.setSweeperPower(1);
+            robot.setSweeperPower(1, InvadersVelocityVortexBot.SweeperDirection.IN);
         }
         else if (gamepad1.dpad_right) {
-            robot.setSweeperPower(-1);
+            robot.setSweeperPower(1, InvadersVelocityVortexBot.SweeperDirection.OUT);
         }
         else {
-            robot.setSweeperPower(0);
+            robot.setSweeperPower(0, InvadersVelocityVortexBot.SweeperDirection.IN);
         }
     }
 

@@ -67,34 +67,12 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="FunctionTest", group="Pushbot")
-@Disabled
+@Autonomous(name="FunctionTest", group="Coach")
+//@Disabled
 public class FuntionTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
-
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-    public int GyroDegrees = 0;
-
-
-    public void RunWithEncoders(float speed, float LeftDistance, float RightDistance, float timeout) {
-        try {
-            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
-            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
-        }
-        catch (InterruptedException ex) {
-        }
-    }
-
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -109,12 +87,7 @@ public class FuntionTest extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
-
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -125,91 +98,63 @@ public class FuntionTest extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        telemetry.addLine("Turning Launcher ON");
+        robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.ON);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("Turning Launcher OFF");
+        robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.OFF);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("BallElevator UP");
+        robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.UP);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("BallElevator DOWN");
+        robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.DOWN);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("BallElevator OFF");
+        robot.setBallElevator(InvadersVelocityVortexBot.BallElevatorState.OFF);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("CapBall Up");
+        robot.setCapBallMotorPower(0.05, InvadersVelocityVortexBot.CapBallState.UP);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("CapBall Up-2");
+        robot.setCapBallMotorPower(-0.05, InvadersVelocityVortexBot.CapBallState.UP);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("CapBall Dowm");
+        robot.setCapBallMotorPower(0.05, InvadersVelocityVortexBot.CapBallState.DOWN);
+        robot.sleepMs(2500);
+
+        telemetry.addLine("CapBall Dowm-2");
+        robot.setCapBallMotorPower(-0.05, InvadersVelocityVortexBot.CapBallState.DOWN);
+        robot.sleepMs(2500);
 
         //Code Goes Here
+        telemetry.addData("FORWARD","48");
+        telemetry.update();
+        robot.encoderDrive(1,4800,4800,15);
+        robot.sleepMs(2000);
 
-        robot.GyroTurn(1, 360);
-        robot.GyroTurn(1, -360);
+        telemetry.addData("BACKWARD", "48");
+        telemetry.update();
+        robot.encoderDrive(1,-4800,-4800,15);
+        robot.sleepMs(2000);
+
+        telemetry.addData("TURN","CW -> +720");
+        telemetry.update();
+        robot.GyroTurn(1,720,20000);
 
 
-
-
-
-
-
-
-
+        telemetry.addData("TURN","CCW -> -720");
+        telemetry.update();
+        robot.GyroTurn(1,-720,20000);
 
         //Code Ends Here
 
-
-
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
-        //// TODO: 1/2/2017 Add a "Sleep" here. 
-        //telemetry.addData("Path", "Complete");
-        //telemetry.update();
-    }
-
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
-    public void  encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) throws InterruptedException {
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.leftMotor.setTargetPosition(newLeftTarget);
-            robot.rightMotor.setTargetPosition(newRightTarget);
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.leftMotor.setPower(Math.abs(speed));
-            robot.rightMotor.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
-
-            // Turn On RUN_TO_POSITION
-            robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftMotor.getCurrentPosition(),
-                                            robot.rightMotor.getCurrentPosition());
-                telemetry.update();
-
-                // Allow time for other processes to run.
-                idle();
-
-
-            }
-
-            // Stop all motion;
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
-        }
     }
 }

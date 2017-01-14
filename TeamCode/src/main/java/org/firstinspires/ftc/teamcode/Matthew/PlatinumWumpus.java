@@ -32,11 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.Matthew;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
@@ -57,9 +54,9 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Golden Wumpus", group="Pushbot")
+@TeleOp(name="Platinum  Wumpus", group="Pushbot")
 //@Disabled
-public class GoldenWumpus extends OpMode {
+public class PlatinumWumpus extends OpMode {
 
     /* Declare OpMode members. */
     InvadersVelocityVortexBot robot = new InvadersVelocityVortexBot(); // Invaders Robot HW
@@ -113,14 +110,14 @@ public class GoldenWumpus extends OpMode {
 
         double left;
         double right;
-        //Gamepad 1 handles the driving and the beacons.
-        //Gamepad 2 handles basically everything else.
+        //Gamepad 1 handles EVERYTHING
+
 
         // Speed Mode
-        if ((gamepad2.x == true) || (gamepad1.x == true)) {
+        if (gamepad1.x == true) {
             SpeedReduction = 10;
         }
-        else if ((gamepad2.b == true) || (gamepad1.b == true)) {
+        else if (gamepad1.b == true) {
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
             SpeedReduction = 1;
         }
@@ -129,25 +126,23 @@ public class GoldenWumpus extends OpMode {
         }
 
         // Shooter Motor - Enable/Disable
-        if(gamepad2.start || gamepad1.start) {
+        if(gamepad1.start) {
             robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.ON);
-        } else if(gamepad2.back || gamepad1.back) {
+        } else if(gamepad1.back) {
             robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.OFF);
         }
 
         // Sweeper Controls
-        if(gamepad2.right_bumper == true) {
-            robot.sweeper.setPower(1);   // Sweep Balls In
+        if(gamepad1.right_bumper == true) {
+            robot.sweeper.setPower(-1);   // Sweep Balls In
         } else {
-            robot.sweeper.setPower(gamepad2.right_trigger); // Push Balls Out (Speed proportional to trigger)
+            robot.sweeper.setPower(gamepad1.right_trigger); // Push Balls Out (Speed proportional to trigger)
         }
 
         // Ball Elevator Controls
-        if (gamepad1.left_bumper == true) {
-             robot.ballElevator.setPower(1); // Elevator Up
-        } else {
-            robot.ballElevator.setPower(gamepad2.left_trigger); //Elevator Down (Speed proportional to trigger)
-        }
+
+        robot.ballElevator.setPower(gamepad1.right_stick_y); //Elevator Down (Speed proportional to trigger)
+
 
 
         // Use the left joystick to move the robot forwards/backwards and turn left/right
@@ -164,20 +159,20 @@ public class GoldenWumpus extends OpMode {
         robot.beaconRight.setPosition(gamepad1.right_trigger);
         robot.beaconLeft.setPosition(gamepad1.left_trigger);
 
-        if((gamepad2.y == true) || (gamepad1.y == true)) {
-            robot.capBall.setPower(1 / SpeedReduction);
+        if(gamepad1.y == true) {
+            robot.setCapBallMotorPower(1 / SpeedReduction, InvadersVelocityVortexBot.CapBallState.UP);
         }
-        else if ((gamepad2.a == true) || (gamepad1.a == true)) {
-            robot.capBall.setPower(-0.2);
+        else if (gamepad1.right_stick_button == true && gamepad1.left_stick_button == true) {
+            robot.setCapBallMotorPower(-0.2, InvadersVelocityVortexBot.CapBallState.DOWN);
         }
         else {
-            robot.capBall.setPower(0);
+            robot.setCapBallMotorPower(0, InvadersVelocityVortexBot.CapBallState.OFF);
         }
 
         // Call the setPower functions with our calculated values to activate the motors
         left = left / SpeedReduction;
         right = right / SpeedReduction;
-        robot.setDriveTrainPower(left,right);
+        robot.setDriveTrainPower(-left,-right);
     }
 
     @Override

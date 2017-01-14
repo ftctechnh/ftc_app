@@ -187,14 +187,14 @@ public class Blue2 extends LinearOpMode {
         robot.encoderDrive(1,4,4,0.5);
 
       // step 2: turn -40 degrees
-      robot.GyroTurn(1,-40);
+      robot.GyroTurn(1,-40,3000);
 
 
      //step 3: drive forward for god knows how long (about 5 ft right now) ;)
         robot.encoderDrive(1,60,60,2.5);
 
        // step 4:turn 40 degrees to align with the wall.
-       robot.GyroTurn(1,40);
+       robot.GyroTurn(1,40,3000);
 
 
 // Step 5: drive backwards a bit and adjust
@@ -260,9 +260,9 @@ public class Blue2 extends LinearOpMode {
 
         }*/
 
-       robot.GyroTurn(1,30 );
+       robot.GyroTurn(1,30,3500 );
         robot.encoderDrive(1,36,36,3);
-        robot.GyroTurn(1,40);
+        robot.GyroTurn(1,40,3500);
 
 
 
