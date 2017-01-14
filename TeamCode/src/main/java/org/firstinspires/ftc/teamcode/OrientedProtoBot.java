@@ -21,7 +21,9 @@ public class OrientedProtoBot extends OpMode {
     private DcMotor motorRightShooter;
     private DcMotor motorLeftShooter;
     private DcMotor motorConveyer;
+    private DcMotor motorCap;
     private Servo servoCollector;
+    private Servo servoCap;
     private Servo servoLeftButton;
     private Servo servoRightButton;
     private TouchSensor touchRight;
@@ -38,10 +40,12 @@ public class OrientedProtoBot extends OpMode {
         motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
         motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
         motorConveyer = hardwareMap.dcMotor.get("conveyor");
+        motorCap = hardwareMap.dcMotor.get("cap_ball");
 
         servoCollector = hardwareMap.servo.get("collector");
         servoLeftButton = hardwareMap.servo.get("l_button");
         servoRightButton = hardwareMap.servo.get("r_button");
+        servoCap = hardwareMap.servo.get("cap");
         
         touchRight = hardwareMap.touchSensor.get("right_touch");
         gyro = hardwareMap.gyroSensor.get("gyro");
@@ -124,6 +128,16 @@ public class OrientedProtoBot extends OpMode {
         }
         else{
             motorConveyer.setPower(0);
+        }
+        // Cap Ball code
+        if(gamepad2.dpad_up) {
+            motorCap.setPower(1);
+        } else if (gamepad1.dpad_down) {
+            motorCap.setPower(-1);
+        } else if(gamepad2.dpad_right){
+            servoCap.setPosition(1);
+        } else if(gamepad2.dpad_left) {
+            servoCap.setPosition(0);
         }
         // Button press
         if(gamepad2.right_bumper){
