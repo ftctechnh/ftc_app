@@ -15,6 +15,7 @@ public class NoahOpMode extends OpMode {
     DcMotor right1;
     DcMotor right2;
 
+
     @Override
     public void init() {
         left1 = hardwareMap.dcMotor.get("left1");
@@ -26,16 +27,16 @@ public class NoahOpMode extends OpMode {
 
     @Override
     public void loop() {
+        //horizontal
         if (gamepad1.right_bumper) {
-            //horizontal
-            left1.setPower(-1 * (gamepad1.left_stick_x));
-            left2.setPower(gamepad1.left_stick_x);
+            left1.setPower(gamepad1.left_stick_x);
+            left2.setPower(-1 * (gamepad1.left_stick_x));
             right1.setPower(gamepad1.left_stick_x);
             right2.setPower(-1 * (gamepad1.left_stick_x));
 
         }
-        //turn
         else if (gamepad1.left_bumper) {
+            //turn
             left1.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             left2.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             right1.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
