@@ -40,36 +40,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
- * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
  *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that you have a Modern Robotics I2C gyro with the name "gyro"
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *  This code requires that the drive Motors have been configured such that a positive
- *  power command moves them forward, and causes the encoders to count UP.
- *
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- *  In order to calibrate the Gyro correctly, the robot must remain stationary during calibration.
- *  This is performed when the INIT button is pressed on the Driver Station.
- *  This code assumes that the robot is stationary when the INIT button is pressed.
- *  If this is not the case, then the INIT should be performed again.
- *
- *  Note: in this example, all angles are referenced to the initial coordinate frame set during the
- *  the Gyro Calibration process, or whenever the program issues a resetZAxisIntegrator() call on the Gyro.
- *
- *  The angle of movement/rotation is assumed to be a standardized rotation around the robot Z axis,
- *  which means that a Positive rotation is Counter Clock Wise, looking down on the field.
- *  This is consistent with the FTC field coordinate conventions set out in the document:
- *  ftc_app\doc\tutorial\FTC_FieldCoordinateSystemDefinition.pdf
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
 @Autonomous(name="Comp Red 1 Beacons", group="Pushbot")
@@ -103,92 +74,12 @@ public class GyroOpmode extends LinearOpMode {
             idle();
         }
 
-
-        //while(robot.UDS.getDistance(DistanceUnit.INCH) > 12)
-        //{
-            //telemetry.addData("INCHS", robot.UDS.getDistance(DistanceUnit.INCH));
-            //telemetry.update();
-        //}
-
-        //robot.encoderDrive(0.1,30,30,2);
-        //robot.WaitForReflectedLight(5,true,3500);
-
-        //robot.simpleGyroTurn(.1,-162,2000);
-        // Step through each leg of the path,
-        // Put a hold after each turn
-        //Actual code goes here.
-
-        // Drive in a square to the left
-        //This one works really well, don't delete it.
-        //for(int i=0; i<4; ++i) {
-            //robot.encoderDrive(0.01,6,6,2 );
-            //robot.sleepMs(500);
-            //robot.simpleGyroTurn(.01, -81, 4000);
-            //robot.sleepMs(500);
-        //}
-
-        // About Face!
-        //robot.simpleGyroTurn(1,270,2500);
-
-        // Drive in a square to the right
-        //for(int i=0; i<4; ++i) {
-            //robot.encoderDrive(1,6,6,3);
-            //robot.sleepMs(500);
-            //robot.simpleGyroTurn(0.2, 81, 8000);
-            //robot.sleepMs(500);
-        //}
-
-        //robot.DistanceDrive(1, DistanceUnit.INCH, 1);
-        //robot.gyroTurn(0.2, 81);
-        //robot.rightMotor.setPower(0.2);
-        //robot.leftMotor.setPower(0.2);
-        //while (robot.doIseeBlue() == false){
-        //Just wait.
-        //}
-        //robot.rightMotor.setPower(0);
-        //robot.leftMotor.setPower(0);
-        //robot.beaconRight.setPosition(1);
-        //robot.gyroDrive(0.1, 1, 0);
-        //robot.gyroDrive(0.1, -2, 0);
-        //robot.gyroDrive(0.1, 1, 0);
-        //robot.beaconRight.setPosition(0);
-        //robot.rightMotor.setPower(0.2);
-        //robot.leftMotor.setPower(0.2);
-        //while (robot.doIseeBlue() == false){
-            //Just wait again.
-        //}
-        //robot.leftMotor.setPower(0);
-        //robot.rightMotor.setPower(0);
-        //robot.beaconRight.setPosition(1);
-        //robot.gyroDrive(0.1, 1, 0);
-        //robot.gyroDrive(0.1, -2, 0);
-        //robot.gyroDrive(0.1, 1, 0);
-        //robot.beaconRight.setPosition(0);
-
-
-
-
-        // Right/Clockwise = Positive Turn Degrees
-        // Left/CounterClockwise = Negative Turn Degrees
-
-
-
         //All the actual opmode code goes here.
-
         robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards to the plywood base with the capball.
-        robot.simpleGyroTurn(0.1, -90, 1500); //Turn left towards the beacons.
-        robot.encoderDrive(0.2, 55, 55, 1.7); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
+        robot.simpleGyroTurn(0.3, -90, 1500); //Turn left towards the beacons.
+        robot.encoderDrive(0.2, 55, 55, 2.0); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
         robot.DriveToWall(6, DistanceUnit.INCH, 0.1); //Use the range sensor to get nice and close to the wall.
-        robot.simpleGyroTurn(0.1, 90, 1500); //Turn right to drive alongside the beacons.
-        robot.DriveToWhiteLine(0.05,8,true,20000); // Drive to the white line
-
-
-
-
-
-
-
-        telemetry.addData("Path", "Complete");
-        //telemetry.update();
+        robot.simpleGyroTurn(0.3, -90, 1500); //Turn right to drive alongside the beacons.
+        robot.DriveToWhiteLine(-0.3,8,true,8000); // Drive to the white line
     }
 }
