@@ -1,14 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
-import android.provider.Settings;
-import android.util.Log;
-
-import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.robotcontroller.internal.CameraProcessor;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * TeleOp Mode
@@ -19,12 +13,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp(name = "Camera: Auto", group = "Linear OpMode")
 //@Disabled
 public class CameraAuto extends CameraProcessor {
-    public class ColorCoordinate {
-        int x;
-        int y;
-        int color = 0;
-    }
-
     @Override
     public void runOpMode() {
         telemetry.addData("Status:", "Initializing");

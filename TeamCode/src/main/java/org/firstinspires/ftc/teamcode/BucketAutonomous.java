@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.Range;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name="Beacon Finder", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@Autonomous(name="Bucket Autonomous", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 public class BucketAutonomous extends LinearOpMode {
     EeyoreHardware robot = new EeyoreHardware();
 
@@ -43,10 +43,6 @@ public class BucketAutonomous extends LinearOpMode {
         }
         telemetry.addData("Gyro Calibration:", "Finished");
         telemetry.update();
-
-
-
-
 
         //We need to determine what team we are on currently
         while(!gamepad1.a) //Keep checking until the driver presses a to confirm his team selection
@@ -92,10 +88,6 @@ public class BucketAutonomous extends LinearOpMode {
             Thread.currentThread().interrupt();
         }
 
-    }
-    public void reachBeacon()
-    {
-        GyroMovement(0.5, 0, 5000); //pull forward off the wall
     }
 
     public void GyroMovement(double speed, int targetDirection, int time) //Speed is from -1 to 1 and direction is 0 to 360 degrees

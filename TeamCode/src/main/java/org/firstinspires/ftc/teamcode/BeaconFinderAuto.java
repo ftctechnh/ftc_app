@@ -1,137 +1,163 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
-import org.firstinspires.ftc.teamcode.EeyoreHardware;
+import android.graphics.Bitmap;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.hardware.modernrobotics.PretendModernRoboticsUsbDevice;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.Range;
-import java.util.concurrent.TimeUnit;
+
+import org.firstinspires.ftc.robotcontroller.internal.CameraProcessor;
+
+import java.lang.reflect.Array;
 
 @Autonomous(name="Beacon Finder", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-public class BeaconFinderAuto extends LinearOpMode {
+public class BeaconFinderAuto extends CameraProcessor {
     EeyoreHardware robot = new EeyoreHardware();
 
-    int color = 0;
-    int teamColor = 3; //Not zero because I don't want color and teamColor to be equal initially
-
-    int xVal, yVal, zVal = 0;     // Gyro rate Values
-    int heading = 0;              // Gyro integrated heading
-    int angleZ = 0;
-    boolean lastResetState = false;
-    boolean curResetState  = false;
+    String teamColor = "NONE"; //Not zero because I don't want color and teamColor to be equal initially
 
     GyroSensor Gyro;
     ColorSensor color_sensor;
-
-
-
 
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
-//        ModernRoboticsI2cGyro Gyro;   // Hardware Device Object
-//
-//        Gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
-//
-//        Gyro.calibrate();
-//
-//        while (Gyro.isCalibrating())  {
-//            Thread.sleep(50);
-//            idle()
-//          }
-        color_sensor = hardwareMap.colorSensor.get("color");
-        color_sensor.enableLed(false);
+        telemetry.addData("Status:", "Initializing");
+        telemetry.update();
+
         Gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
-        telemetry.addData("Gyro Calibration:", "Running");
+        telemetry.addData("Gyro:", "Running");
         telemetry.update();
+
         Gyro.calibrate();
-        try {
-            Thread.sleep(10000);
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-        telemetry.addData("Gyro Calibration:", "Finished");
+
+        setCameraDownsampling(9);
+        startCamera();
+
+        Thread.sleep(6000);
+
+        telemetry.addData("Status:", "Initialized (waiting for start)");
+        telemetry.addData("Gyro:", "Finished");
         telemetry.update();
-
-
-
-
 
         //We need to determine what team we are on currently
         while(!gamepad1.a) //Keep checking until the driver presses a to confirm his team selection
         {
-            if ( gamepad1.b) //If the driver pushes b, set the team color to blue
+            if ( gamepad1.x) //If the driver pushes x, set the team color to blue
             {
-                teamColor = 1;
+                teamColor = "BLUE";
             }
-            if (gamepad1.x) //If the driver pushes x, set the team color to red
+            if (gamepad1.b) //If the driver pushes b, set the team color to red
             {
-                teamColor = -1;
+                teamColor = "RED";
             }
-            telemetry.addData("Team Color is:", teamColor);
+
+            telemetry.addData("Team Color:", teamColor);
             telemetry.update();
         }
 
-
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        telemetry.addData("Status:", "Moving...");
+        telemetry.update();
+
         GyroMovement(0.3, 0, 1100); //pull forward off the wall
-        GyroMovement(0.3, 45, 1000); //drive diagonally to line up w/ the beacon
-        GyroMovement(0.3, 90, 1250); //pull up to the beacon
-        pushBeacons();
+        GyroMovement(0.3, 45, 1100); //drive diagonally to line up w/ the beacon
+        GyroMovement(0.3, 90, 750); //pull closer to teh beacon so we can
 
+        Thread.sleep(2000);
 
+        telemetry.addData("Status:", "Detecting beacon color...");
+        telemetry.update();
+
+        String firstBeaconSide = getBeaconSide();
+
+        Thread.sleep(1000);
+
+        if (firstBeaconSide == "LEFT") //We need to push the left side
+        {
+            GyroMovement(0.2, 45, 200);
+            GyroMovement(0.3, 90, 700);
+        }
+        else if (firstBeaconSide == "RIGHT")//We need to push the right side
+        {
+            GyroMovement(0.2, 135, 200);
+            GyroMovement(0.3, 90, 700);
+        }
+
+        stopCamera();
+
+        telemetry.addData("Status:", "Idling...");
+        telemetry.update();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive())
-        {
-            telemetry.addData("Clear", color_sensor.alpha());
-            telemetry.addData("Red  ", color_sensor.red());
-            telemetry.addData("Green", color_sensor.green());
-            telemetry.addData("Blue ", color_sensor.blue());
-            telemetry.update();
+        while (opModeIsActive()) {
             idle();
         }
     }
 
-    public void pushBeacons() {
-        //Now that we are in front of the first beacon, we need to figure out the color
-        if (color_sensor.blue() > color_sensor.red()) {
-            color = 1; //Beacon is blue
-            telemetry.addData("Beacon color:", "Blue");
-        } else if (color_sensor.blue() < color_sensor.red()) {
-            color = -1; //Beacon is red
-            telemetry.addData("Beacon color:", "Red");
+    public String getBeaconSide() {
+        while(!imageReady()) {
+            telemetry.addData("Camera:", "Waiting for image...");
+            telemetry.update();
+        }
+
+        Bitmap image = convertYuvImageToRgb(yuvImage, size.width, size.height, 1);
+
+        int left_intensity = 0;
+
+        for(int x = 0; x < image.getWidth() / 2; x++) {
+            for(int y = 0; y < image.getHeight(); y++) {
+                int pixel = image.getPixel(x, y);
+                int pixel_red = red(pixel);
+                int pixel_blue = blue(pixel);
+
+                if(pixel_blue > pixel_red) {
+                    left_intensity += pixel_blue;
+                }
+            }
+        }
+
+        int right_intensity = 0;
+
+        for(int x = image.getWidth() / 2; x < image.getWidth(); x++) {
+            for(int y = 0; y < image.getHeight(); y++) {
+                int pixel = image.getPixel(x, y);
+                int pixel_red = red(pixel);
+                int pixel_blue = blue(pixel);
+
+                if(pixel_blue > pixel_red) {
+                    right_intensity += pixel_blue;
+                }
+            }
+        }
+
+        String left;
+        String right;
+
+        if(left_intensity > right_intensity) {
+            left = "BLUE";
+            right = "RED";
         } else {
-            color = 0; //Beacon color is unknown for some reason (This should NEVER happen, unless red and blue are exactly equal
-            telemetry.addData("Beacon color:", "ERROR");
-            telemetry.addData("Color Sensor Red", color_sensor.red());
-            telemetry.addData("Color Sensor Blue", color_sensor.blue());
+            left = "RED";
+            right = "BLUE";
         }
-        telemetry.update();
-        if (color == teamColor)//If the side of the beacon we are viewing is our color
-        {
-            //Push this side so we can score
-            GyroMovement(0.3, 90, 250);
-            GyroMovement(-0.3, 90, 250);
+
+        if((left == "BLUE") && (teamColor == "BLUE")) {
+            return "LEFT";
+        } else if((left == "RED") && (teamColor == "RED")) {
+            return "LEFT";
+        } else if((right == "BLUE") && (teamColor == "BLUE")) {
+            return "RIGHT";
+        } else if((right == "RED") && (teamColor == "RED")) {
+            return "RIGHT";
         }
-        else if (color != 0)
-        {
-            //Press the other button
-            GyroMovement(0.2, 0, 250);
-            GyroMovement(0.2, 90, 350);
-            GyroMovement(-0.2, 90, 250);
-        }
+
+        return "ERROR";
     }
 
     public void moveRobot(int speed, int time)
@@ -147,20 +173,16 @@ public class BeaconFinderAuto extends LinearOpMode {
         }
 
     }
-    public void reachBeacon()
-    {
-        GyroMovement(0.5, 0, 5000); //pull forward off the wall
-    }
 
     public void GyroMovement(double speed, int targetDirection, int time) //Speed is from -1 to 1 and direction is 0 to 360 degrees
     {
 
 
         int currentDirection = Gyro.getHeading();
-        double turnMultiplier = 0.05;
+        double turnMultiplier = 0.07;
         double driveMultiplier = 0.03;
 
-
+        long turnStartTime = System.currentTimeMillis();
         //First, check to see if we are pointing in the correct direction
         while(Math.abs(targetDirection - currentDirection) > 5) //If we are more than 5 degrees off target, make corrections before moving
         {
