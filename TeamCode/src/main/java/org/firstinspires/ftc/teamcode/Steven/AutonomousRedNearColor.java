@@ -96,6 +96,7 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
         //INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
 
         telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
+        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -106,32 +107,32 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
 
 
 
-        encoderShoot(0.8);
+        shootingDrive(0.8, 850);;
 
 
 
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1800);
         sleep(500);
-        encoderShoot(0.8);
+        shootingDrive(0.8, 850);;
         //shootingDrive(0.8, 850);
 
 
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1800);
         sleep(500);
-        encoderShoot(0.8);
+        shootingDrive(0.8, 850);;
         //shootingDrive(0.8, 850);
         sleep(500);
 
 
         //turn to be parallel to wall
-        gyroturn(45,true);//turn 45, turnright is true
-
+        //gyroturn(45,true);//turn 45, turnright is true
+        encoderDrive(0.5,10,-10,5.0);
 
         //drive until either the left or right ODS senses the white line
         while(!(whiteLineDetectedRight() || whiteLineDetectedLeft())){
-            straightDrive(DRIVE_SPEED);
+            straightDrive(0.2);
         }
         stopMotors();
 
