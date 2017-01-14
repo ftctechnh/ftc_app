@@ -178,7 +178,7 @@ public class AutonomousRedNear extends AutonomousGeneral {
 
            // encoderDrive(0.6, 30, 30, 5);
 
-            newBeacon("red", 15);
+            //newBeacon("red", 15);
 
 //            while(rangeSensor.getDistance(DistanceUnit.CM) > 16) {
 //                front_left_motor.setPower(-0.5);
