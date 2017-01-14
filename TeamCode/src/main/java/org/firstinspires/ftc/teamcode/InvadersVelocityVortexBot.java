@@ -291,6 +291,19 @@ public class InvadersVelocityVortexBot
         return (beaconSensor.blue() >= 5);
     }
 
+    public boolean doIseeRed () {
+        return (beaconSensor.red() >= 5);
+    }
+
+    public void stop()
+    {
+        if(capBall != null) capBall.setPower(0);
+        if(sweeper != null) sweeper.setPower(0);
+        if(rightBallLauncher != null) rightBallLauncher.setPower(0);
+        if(leftBallLauncher != null) leftBallLauncher.setPower(0);
+        if(leftMotor != null) leftMotor.setPower(0);
+        if(rightMotor != null) rightMotor.setPower(0);
+    }
     // Right/Clockwise = Positive Turn Degrees
     // Left/CounterClockwise = Negative Turn Degrees
     // timeoutMs provides a sanity check to make sure we don't turn forever
@@ -640,23 +653,23 @@ public class InvadersVelocityVortexBot
     }
 
 //Cold pizza normally.
-    void setCapBallMotorPower(double power)
+    public void setCapBallMotorPower(double power)
     {
         capBall.setPower(power);
     }
 
-    void setBallElevator(float power)
+    public void setBallElevator(float power)
     {
         //@todo Write to a file what we're about to do to the motor here
         ballElevator.setPower(power);
     }
 
-    void setLauncherPower(float power){
+    public void setLauncherPower(float power){
         leftBallLauncher.setPower(-power);
         rightBallLauncher.setPower(-power);
     }
 
-    void setSweeperPower(float power){
+    public void setSweeperPower(float power){
         sweeper.setPower(power);
     }
 

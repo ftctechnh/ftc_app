@@ -18,7 +18,7 @@ Velocity Vortex Config
 	PWM Devices: N/A
 	I2C Devices:
 		0	Color Sensor	"beaconSensor"
-		1	Color Sensor	"floorSensor"
+		1	Color Sensor	"floorSensor" (Marked with 0x3A on the back)
 		2	Gyro		"gyroSensor"
 		3	MR Range Sensor	"UDS"
 

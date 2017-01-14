@@ -80,14 +80,8 @@ public class GoldenWumpus extends OpMode {
          */
         robot.init(this);
 
-        // Connect our limit switch TouchSensor object to the Robot
-        //limitSwitch = hardwareMap.touchSensor.get("down limit");
-        //assert (limitSwitch != null);
-
         // Send telemetry message to signify robot waiting;
         updateTelemetry(telemetry);
-        //robot.leftClaw.setPosition(0.0);
-        // robot.rightClaw.setPosition(0.0);
     }
 
     /*
@@ -95,6 +89,11 @@ public class GoldenWumpus extends OpMode {
      */
     @Override
     public void init_loop() {
+        telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
+        telemetry.addData(">", "Floor AlphaLv = %d", robot.floorSensor.alpha());
+        telemetry.addData(">", "DoISeeBlue = %s [%d]",   robot.doIseeBlue() ? "YES" : "NO", robot.beaconSensor.blue());
+        telemetry.addData(">", "DoISeeRed = %s [%d]",   robot.doIseeRed() ? "YES" : "NO", robot.beaconSensor.red());
+        telemetry.update();
     }
 
     /*
@@ -116,8 +115,41 @@ public class GoldenWumpus extends OpMode {
         double right;
         //Gamepad 1 handles the driving and the beacons.
         //Gamepad 2 handles basically everything else.
-        
-        
+
+        // Speed Mode
+        if ((gamepad2.x == true) || (gamepad1.x == true)) {
+            SpeedReduction = 10;
+        }
+        else if ((gamepad2.b == true) || (gamepad1.b == true)) {
+            //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
+            SpeedReduction = 1;
+        }
+        else{
+            //Nothing is being pressed, don't change the value.
+        }
+
+        // Shooter Motor - Enable/Disable
+        if(gamepad2.start || gamepad1.start) {
+            robot.setLauncherPower(1);
+        } else if(gamepad2.back || gamepad1.back) {
+            robot.setLauncherPower(0);
+        }
+
+        // Sweeper Controls
+        if(gamepad2.right_bumper == true) {
+            robot.sweeper.setPower(-1);   // Sweep Balls In
+        } else {
+            robot.sweeper.setPower(gamepad2.right_trigger); // Push Balls Out (Speed proportional to trigger)
+        }
+
+        // Ball Elevator Controls
+        if (gamepad1.left_bumper == true) {
+             robot.ballElevator.setPower(1); // Elevator Up
+        } else {
+            robot.ballElevator.setPower(gamepad2.left_trigger); //Elevator Down (Speed proportional to trigger)
+        }
+
+
         // Use the left joystick to move the robot forwards/backwards and turn left/right
         //// TODO: 1/12/2017 Fix this so that we drive with two sticks instead of one. Finally.
         double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
@@ -128,75 +160,29 @@ public class GoldenWumpus extends OpMode {
         left = Range.clip(y - x, -1, +1);
         right = Range.clip(y + x, -1, +1);
 
-        //Determine if we are in fine or coarse control mode.
-        //Gamepad 2 gets to control this.
-        if (gamepad2.b == true){
-            SpeedReduction = 20;
-        }
-        else if (gamepad2.x == true){
-            //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
-            SpeedReduction = 1;
-        }
-        else{
-            //Nothing is being pressed, don't change the value.
-        }
-
         //Control system for the beacon pushers. Controlled by the triggers on Gamepad 1.
+        robot.beaconRight.setPosition(gamepad1.right_trigger);
+        robot.beaconLeft.setPosition(gamepad1.left_trigger);
 
-        if (gamepad1.right_trigger > 0.9){
-            //robot.beaconRight.setPosition(1);
-            telemetry.addLine("BeaconRight is out");
-        }
-        else if (gamepad1.left_trigger > 0.9){
-            //robot.beaconLeft.setPosition(1);
-            telemetry.addLine("BeaconLeft is out");
-        }
-        else{
-            //robot.beaconRight.setPosition(0.2);
-            //robot.beaconLeft.setPosition(0.2);
-            telemetry.addLine("Both servos are in.");
-        }
-
-        if(gamepad2.y == true){
+        if((gamepad2.y == true) || (gamepad1.y == true)) {
             robot.capBall.setPower(1 / SpeedReduction);
         }
-        else if (gamepad2.a == true){
+        else if ((gamepad2.a == true) || (gamepad1.a == true)) {
             robot.capBall.setPower(-0.2);
         }
         else {
             robot.capBall.setPower(0);
         }
 
-        //if(gamepad2.)
-
-
-
         // Call the setPower functions with our calculated values to activate the motors
         left = left / SpeedReduction;
         right = right / SpeedReduction;
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
-
-
-
-
-
-
     }
 
-
-
-
-       
-
-       
-    
-
-
-        @Override
-        public void stop()
-        {
-
-
+    @Override
+    public void stop() {
+        robot.stop();
     }
 }
