@@ -3,6 +3,7 @@ package edu.usrobotics.opmode.compbot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import edu.usrobotics.opmode.LoggedOp;
 import edu.usrobotics.opmode.RobotOp;
 import edu.usrobotics.opmode.Route;
 import edu.usrobotics.opmode.task.ConcurrentTaskSet;
@@ -143,8 +144,8 @@ public abstract class CompbotAuto extends RobotOp {
 
         // Diagonal to the beacon wall
         ConcurrentTaskSet crabToLineRed = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal3, maxMotorSpeed, 0.4f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backLeft, encoderGoal3, maxMotorSpeed, 0.4f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontRight, encoderGoal3, maxMotorSpeed, 0.3f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal3, maxMotorSpeed, 0.3f, 0.7f, null, 0.1f),
                 new MotorTask(robot.frontRight, encoderGoal3, maxMotorSpeed, 0f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backLeft, encoderGoal3, maxMotorSpeed, 0f, 0.7f, null, 0.1f)
         ) {
@@ -163,12 +164,34 @@ public abstract class CompbotAuto extends RobotOp {
 
         };
 
-        Goal<Integer> encoderGoal3AndAHalf = new Goal<> (robot.inchesToEncoderTicks(3f));
-        ConcurrentTaskSet calibrationBackUp = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal3AndAHalf, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f),
+        Goal<Integer> encoderGoal3AndAHalf = new Goal<> (robot.inchesToEncoderTicks(4.5f));
+        final ConcurrentTaskSet calibrationBackUp = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal3AndAHalf, maxMotorSpeed, 0.3f, 0.7f, null, 0.1f),
                 new MotorTask(robot.frontLeft, encoderGoal3AndAHalf, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f),
-                new MotorTask(robot.backRight, encoderGoal3AndAHalf, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal3AndAHalf, maxMotorSpeed, 0.3f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backLeft, encoderGoal3AndAHalf, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f)
+        ) {
+
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0) || isTaskCompleted(1) || robot.sensingWhite(robot.bottomRightColorSensor) || robot.sensingWhite(robot.bottomLeftColorSensor);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(CompbotHardware.MovementDirection.SOUTH);
+
+            }
+        };
+
+        Goal<Integer> encoderGoal3AndThreeQuarters = new Goal<> (robot.inchesToEncoderTicks(5.5f));
+        final ConcurrentTaskSet calibrationBackUpSecondBeacon = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal3AndThreeQuarters, maxMotorSpeed, 0.3f, 0.7f, null, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal3AndThreeQuarters, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal3AndThreeQuarters, maxMotorSpeed, 0.3f, 0.7f, null, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal3AndThreeQuarters, maxMotorSpeed, 0.2f, 0.7f, null, 0.1f)
         ) {
 
             @Override
@@ -321,21 +344,35 @@ public abstract class CompbotAuto extends RobotOp {
 
         };
 
-        final Goal<Integer> encoderGoal9 = new Goal<>(robot.inchesToEncoderTicks(60f));
+        final Goal<Integer> encoderGoal9 = new Goal<>(robot.inchesToEncoderTicks(65f));
         final ConcurrentTaskSet moveToSecondBeacon = new ConcurrentTaskSet(
                 new MotorTask(robot.frontLeft, encoderGoal9, maxMotorSpeed, 0.4f, 0.7f, null, 0.1f),
                 new MotorTask(robot.frontRight, encoderGoal9, maxMotorSpeed, 0.4f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backRight, encoderGoal9, maxMotorSpeed, 0.4f, 0.7f, null, 0.1f),
                 new MotorTask(robot.backLeft, encoderGoal9, maxMotorSpeed, 0.4f, 0.7f, null, 0.1f)
         ) {
+
+            long start;
+
             @Override
             public boolean onExecuted() {
-                return isTaskCompleted (0) || isTaskCompleted(1) || robot.sensingWhite(robot.bottomRightColorSensor) || robot.sensingWhite(robot.bottomLeftColorSensor);
+                LoggedOp.debugOut=((System.currentTimeMillis() - start) + "");
+                if(System.currentTimeMillis() - start >= 1000){
+
+                    return isTaskCompleted (0) || isTaskCompleted(1) || robot.sensingWhite(robot.bottomRightColorSensor) || robot.sensingWhite(robot.bottomLeftColorSensor);
+
+
+                }
+
+                return false;
+
             }
 
             @Override
             public void onReached() {
                 super.onReached();
+
+                this.start = System.currentTimeMillis();
 
                 robot.setDirection(CompbotHardware.MovementDirection.NORTH);
 
@@ -344,8 +381,14 @@ public abstract class CompbotAuto extends RobotOp {
             @Override
             public void onCompleted(){
 
-                /*happyTrail.addTask(isBlueTeam ? beaconHitBlue : beaconHitRed);
-                happyTrail.addTask(checkIfCorrectColor);*/
+                encoderGoal7 = new Goal<> (robot.inchesToEncoderTicks(buttonPressingDistance));
+                happyTrail.addTask(isBlueTeam ? beaconHitBlue : beaconHitRed);
+                happyTrail.addTask(calibrationBackUpSecondBeacon);
+                encoderGoal7 = new Goal<> (robot.inchesToEncoderTicks(buttonPressingDistance));
+                happyTrail.addTask(isBlueTeam ? beaconHitBlue : beaconHitRed);
+                happyTrail.addTask(isBlueTeam ? backUpBlue : backUpRed);
+                numTimesHitBeacon = 0;
+                happyTrail.addTask(checkIfCorrectColor);
 
             }
 
@@ -420,43 +463,36 @@ public abstract class CompbotAuto extends RobotOp {
 
                 numTimesHitBeacon++;
 
-                if(numTimesHitBeacon <= 2){
+                if (!isColorGood()) {
 
-                    if (!isColorGood()) {
+                    if (isBlueTeam) {
+                        encoderGoal7 = new Goal<>(robot.inchesToEncoderTicks(buttonPressingDistance));
+                        happyTrail.addTask(beaconHitBlue);
+                        encoderGoal8 = new Goal<>(robot.inchesToEncoderTicks(buttonPressingDistance));
+                        happyTrail.addTask(this);
 
-                        if (isBlueTeam) {
-                            encoderGoal7 = new Goal<>(robot.inchesToEncoderTicks(buttonPressingDistance));
-                            happyTrail.addTask(beaconHitBlue);
-                            encoderGoal8 = new Goal<>(robot.inchesToEncoderTicks(buttonPressingDistance));
-                            happyTrail.addTask(this);
-
-                        } else {
-                            encoderGoal7 = new Goal<>(robot.inchesToEncoderTicks(buttonPressingDistance));
-                            happyTrail.addTask(beaconHitRed);
-                            happyTrail.addTask(this);
-
-                        }
-                    }
-
-                    else{
-
-                        if(!onSecondBeacon){
-
-                            encoderGoal8 = new Goal<> (robot.inchesToEncoderTicks(buttonPressingDistance * 2f));
-                            happyTrail.addTask(backUpBlue);
-                            happyTrail.addTask(moveToSecondBeacon);
-
-                        }
-
-                        onSecondBeacon = true;
+                    } else {
+                        encoderGoal7 = new Goal<>(robot.inchesToEncoderTicks(buttonPressingDistance));
+                        happyTrail.addTask(beaconHitRed);
+                        happyTrail.addTask(this);
 
                     }
-
                 }
 
                 else{
 
-                    happyTrail.addTask(moveToSecondBeacon);
+                    if(!onSecondBeacon){
+
+                        LoggedOp.debugOut = "not on 2nd beacon and correct color";
+
+                        happyTrail.clearTasks();
+                        encoderGoal8 = new Goal<> (robot.inchesToEncoderTicks(buttonPressingDistance * 2f));
+                        happyTrail.addTask(backUpBlue);
+                        happyTrail.addTask(moveToSecondBeacon);
+
+                    }
+
+                    onSecondBeacon = true;
 
                 }
 
