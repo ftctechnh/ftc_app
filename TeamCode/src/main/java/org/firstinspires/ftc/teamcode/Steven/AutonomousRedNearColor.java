@@ -105,11 +105,65 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED, 62.23, 62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1000);     // pause for servos to move
+        encoderDrive(0.3, 38.1, 38.1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(500);
+        //sleep(1000);     // pause for servos to move
+
+        encoderDrive(0.3,-25,25,5);
+        sleep(1000);
+
+
+        shootingDrive(0.8,850);
 
 
 
+        sleep(500);     // pause for servos to move
+        intakeDrive(0.8, 1800);
+        sleep(800);
+        shootingDrive(0.8, 850);;
+        //shootingDrive(0.8, 850);
+
+
+        sleep(500);     // pause for servos to move
+        intakeDrive(0.8, 1800);
+        sleep(800);
+        shootingDrive(0.8, 850);;
+        //shootingDrive(0.8, 850);
+        sleep(500);
+
+        encoderDrive(0.3, 10.5,-10.5,5);
+        sleep(500);
+
+        //drive until either the left or right ODS senses the white line
+        rightDetected = false;
+        leftDetected=false;
+        straightDrive(0.2);
+        while(!(whiteLineDetectedRight()||whiteLineDetectedLeft())){
+
+
+        }
+        stopMotors();
+        sleep(1000);
+
+
+        //if it is the left side that detects the line, turn right until the right detects it to
+        //this will make the robot perpendicular to the line
+        if (rightDetected){
+            telemetry.addData("","Right Detected");
+            telemetry.update();
+            while(!whiteLineDetectedLeft()){
+                turnRight(0.3);
+            }
+            stopMotors();
+        }
+        else if (leftDetected){
+            telemetry.addData("","Left Detected");
+            telemetry.update();
+            while(!whiteLineDetectedRight()){
+                turnLeft(0.3);
+            }
+            stopMotors();
+        }
 
 
 
@@ -117,53 +171,14 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
         //gyroturn(45,true);//turn 45, turnright is true
        // encoderDrive(0.5,5,-5,5.0);
         //encoderDrive(0.5,6,-6,5);
-        sleep(500);
-
-
-        //drive until either the left or right ODS senses the white line
-        rightDetected = false;
-        leftDetected=false;
-        while(!(whiteLineDetectedRight()) && !(whiteLineDetectedLeft())){
-            straightDrive(0.2);
-
-        }
-        stopMotors();
-
-
-        //if it is the left side that detects the line, turn right until the right detects it to
-        //this will make the robot perpendicular to the line
-        if (rightDetected){
-            while(!whiteLineDetectedLeft()){
-                turnRight(TURN_SPEED);
-            }
-            stopMotors();
-        }
-        else if (leftDetected){
-            while(!whiteLineDetectedRight()){
-                turnLeft(TURN_SPEED);
-            }
-            stopMotors();
-        }
-
-        shootingDrive(0.8, 850);;
+        /*sleep(500);
 
 
 
-        sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1800);
-        sleep(500);
-        shootingDrive(0.8, 850);;
-        //shootingDrive(0.8, 850);
 
 
-        sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1800);
-        sleep(500);
-        shootingDrive(0.8, 850);;
-        //shootingDrive(0.8, 850);
-        sleep(500);
         encoderDrive(0.3,-20,20,10);
-        encoderDrive(0.3,10,10,5);//edit this later so that it drives based on color
+        encoderDrive(0.3,10,10,5);//edit this later so that it drives based on color*/
 
 
 
