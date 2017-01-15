@@ -174,11 +174,11 @@ public class ZoidbergHardware {
         frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void launchParticle() {
+    public void launchParticle(boolean stopCondition) {
         runtime.reset();
 
         // run launcher motor for an entire rotation
-        while(runtime.milliseconds() < 900) {
+        while(stopCondition && runtime.milliseconds() < 900) {
             launcherMotor.setPower(1.0);
         }
 

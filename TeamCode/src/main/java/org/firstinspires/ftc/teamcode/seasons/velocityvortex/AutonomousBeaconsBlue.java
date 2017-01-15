@@ -57,7 +57,7 @@ public class AutonomousBeaconsBlue extends LinearOpMode {
         }
 
         robot.getRuntime().reset();
-        while (robot.getRuntime().milliseconds() < 250) {
+        while (opModeIsActive() && robot.getRuntime().milliseconds() < 250) {
             robot.resetDriveEncoders();
             idle();
         }
@@ -93,7 +93,7 @@ public class AutonomousBeaconsBlue extends LinearOpMode {
 
         // pause for 0.25 seconds
         robot.getRuntime().reset();
-        while (robot.getRuntime().milliseconds() < 250) {
+        while (opModeIsActive() && robot.getRuntime().milliseconds() < 250) {
             robot.resetDriveEncoders();
             idle();
         }
@@ -114,7 +114,7 @@ public class AutonomousBeaconsBlue extends LinearOpMode {
         robot.resetDriveEncoders();
         robot.stopRobot();
 
-        // claim the second beacon
+        // claim the first beacon
         claimBeacon();
 
         // turn right for launching
@@ -124,7 +124,7 @@ public class AutonomousBeaconsBlue extends LinearOpMode {
         encoderDrive(0.5, -12, -12);
 
         // launch the first (loaded) particle
-        robot.launchParticle();
+        robot.launchParticle(opModeIsActive());
 
         // open intake door
         robot.getDoor3().setPosition(0.25);
@@ -137,7 +137,7 @@ public class AutonomousBeaconsBlue extends LinearOpMode {
         robot.getIntakeMotor().setPower(0);
 
         // launch the second particle
-        robot.launchParticle();
+        robot.launchParticle(opModeIsActive());
     }
 
     private void claimBeacon() {

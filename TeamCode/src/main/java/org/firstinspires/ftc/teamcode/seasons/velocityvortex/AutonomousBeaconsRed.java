@@ -57,7 +57,7 @@ public class AutonomousBeaconsRed extends LinearOpMode {
         }
 
         robot.getRuntime().reset();
-        while (robot.getRuntime().milliseconds() < 250) {
+        while (opModeIsActive() && robot.getRuntime().milliseconds() < 250) {
             robot.resetDriveEncoders();
             idle();
         }
@@ -68,6 +68,7 @@ public class AutonomousBeaconsRed extends LinearOpMode {
         robot.getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // look for the white line leading to the second beacon
         while(opModeIsActive() && robot.getOds3().getRawLightDetected() < 1.5) {
             robot.driveLeft(0.2);
             telemetry.addData("ods3", robot.getOds3().getRawLightDetected());
@@ -77,23 +78,8 @@ public class AutonomousBeaconsRed extends LinearOpMode {
         robot.resetDriveEncoders();
         robot.stopRobot();
 
+        // claim the first beacon
         claimBeacon();
-
-        // launch the first (loaded) particle
-//        robot.launchParticle();
-
-        // open intake door
-//        robot.getDoor3().setPosition(0.25);
-
-        // run the intake
-//        robot.getRuntime().reset();
-//        while(opModeIsActive() && robot.getRuntime().milliseconds() < 500) {
-//            robot.getIntakeMotor().setPower(-1);
-//        }
-//        robot.getIntakeMotor().setPower(0);
-
-        // launch the second particle
-//        robot.launchParticle();
 
         // strafe to the right to second beacon
         encoderStrafe(0.5, 24, 24);
@@ -108,7 +94,7 @@ public class AutonomousBeaconsRed extends LinearOpMode {
 
         // pause for 0.25 seconds
         robot.getRuntime().reset();
-        while (robot.getRuntime().milliseconds() < 250) {
+        while (opModeIsActive() && robot.getRuntime().milliseconds() < 250) {
             robot.resetDriveEncoders();
             idle();
         }
@@ -139,7 +125,7 @@ public class AutonomousBeaconsRed extends LinearOpMode {
         encoderDrive(0.5, -12, -12);
 
         // launch the first (loaded) particle
-        robot.launchParticle();
+        robot.launchParticle(opModeIsActive());
 
         // open intake door
         robot.getDoor3().setPosition(0.25);
@@ -152,7 +138,7 @@ public class AutonomousBeaconsRed extends LinearOpMode {
         robot.getIntakeMotor().setPower(0);
 
         // launch the second particle
-        robot.launchParticle();
+        robot.launchParticle(opModeIsActive());
     }
 
     private void claimBeacon() {
