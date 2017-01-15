@@ -115,7 +115,7 @@ public class PlatinumWumpus extends OpMode {
 
         // Speed Mode
         if (gamepad1.x == true) {
-            SpeedReduction = 10;
+            SpeedReduction = 5;
         }
         else if (gamepad1.b == true) {
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
@@ -147,8 +147,8 @@ public class PlatinumWumpus extends OpMode {
 
         // Use the left joystick to move the robot forwards/backwards and turn left/right
         //// TODO: 1/12/2017 Fix this so that we drive with two sticks instead of one. Finally.
-        double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
-        double y = -gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
+        double x =  -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
+        double y = gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
 
         // Algorithm for setting power to left/right motors based on joystick x/y values
         // note: The Range.clip function just ensures we stay between Â±100%

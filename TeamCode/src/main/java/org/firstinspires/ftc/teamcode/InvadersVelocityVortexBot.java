@@ -554,7 +554,7 @@ public class InvadersVelocityVortexBot
 
         ballElevator.setPower(1);
 
-     //insert 5 second delay
+     // 5 second delay
         sleepMs(5000);
 
      ballElevator.setPower(0);

@@ -37,8 +37,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
@@ -68,15 +66,12 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Blue2", group="Pushbot")
+@Autonomous(name="GoCrookedBlue1", group="Pushbot")
 //@Disabled
-public class Blue2 extends LinearOpMode {
-
     /* Declare OpMode members. */
+    public class Go_crooked_blue_1 extends LinearOpMode {
 
-
-    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
-
+    InvadersVelocityVortexBot  robot = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -96,187 +91,37 @@ public class Blue2 extends LinearOpMode {
          */
         robot.init(this);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
 
-        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
 
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                robot.leftMotor.getCurrentPosition(),
-                robot.rightMotor.getCurrentPosition());
-        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-//        // Step through each leg of the path,
-//        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-//        encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // Drive to Cap Ball
-//        encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
-//        encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-//        encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-//
-//        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-//        //robot.rightClaw.setPosition(0.0);
-//        sleep(1000);     // pause for servos to move
-//
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+         // Drive to Cap Ball
+        //encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
+        //encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        robot.sleepMs(10000);
 
-
-        /* @todo: Alyssa now that you have our ten steps clearly defined, its time to start calling
-           the robot functions required to make the robot do the things we want it to.  Matthew
-           added some functions to InvadersVelocityVortexBot.java that you can use to do
-           gyro turns and driving using the ultrasonic sensor.  You can access them by typing:
-               robot.GyroTurn(...);
-               robot.DistanceDrive(...);
-           You can read the color sensor value by typing
-                robot.color1.red();
-                robot.color1.blue();
-           Of course, our robot should have two color sensors (one for the beacon and one for the
-           line, so hopefully someone changes color1's name to something more descriptive, so we
-           aren't accidentally trying to read the line color sensor when trying to decide which
-           beacon to press.
-        */
-
-        //
-        // 0.  Use our shoot function to shoot the particles into the center vortex.
-        // 1.drive forward 4 inches so we can turn
-        // 2. turn -40 degrees
-        // 3.  Drive forward using the encoders (or timing)
-        // 4.  Use our gyro turn function to turn 40 degrees.
-        // 5. ajust to get near the beacons
-        // 6.   Make a function that drives us forward until the line sensor sees the white tape.
-        // 7. Drive forward abut 2 inches.
-        // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the other button.
-        //      a.extend beacon pusher to about 80 ish
-        //      b. read color
-        //      c. if its blue, press the button.
-        //      d. if its red, drive 14 cm forward
-        // 9.   Do the same for the next beacon.
-        // 10.  Drive backwards onto the corner vortex.
-        // 11.
-
-
-// Willow and James tested this color sensing on the beacon successfully
-//     //  Color sensor.
-//     robot.beaconSensor.enableLed(false);
-//     int red = robot.beaconSensor.red();
-//     int blue = robot.beaconSensor.blue();
-//
-//     while (robot.beaconSensor.blue() < 5){
-//         robot.leftMotor.setPower(1);
-//         robot.rightMotor.setPower(1);
-//     }
-//     robot.leftMotor.setPower(0);
-//     robot.rightMotor.setPower(0);
-
-
-
-
-        //step 0: shoot the particles into the center vortex
-        robot.ohshoot();
-
-
-      // step 1:drive forward 4 inches so we can actually do things
-        robot.timedDrive(0.5,900);
-
-      // step 2: turn -40 degrees
-      robot.GyroTurn(1,40,3000);
-
-
-     //step 3: drive forward for god knows how long (about 5 ft right now) ;)
         robot.timedDrive(1,2000);
+        robot.GyroTurn(1,55,3000);
+        robot.timedDrive(1,4000);
 
-       // step 4:turn 40 degrees to align with the wall.
-       robot.GyroTurn(1,40,3000);
+        //robot.leftMotor.setPower(1);
+        //robot.rightMotor.setPower(1);
+        //sleep(5000);
+        //robot.leftMotor.setPower(0);
+        //robot.rightMotor.setPower(0);
 
-
-// Step 5: drive backwards a bit and adjust
-       /* robot.DistanceDrive(-20,DistanceUnit.CM,1);*/
-
-
-        // Step 6: Drive to the white tape on the floor
-        robot.DriveToWhiteLine(.5, 6,true,3500);
-
-
-
-        // step 7: drive 2.5 centimeters or two inches
-
-        robot.timedDrive(1,400);
-
-        // Step 8: Push Beacon if Blue
-        //step 8.A
-      /*
-        robot.beaconRight.setPosition(80);
-        if(robot.doIseeBlue() == true) {
-            // Do Step 8.c
-
-            robot.beaconRight.setPosition(100);
-            robot.sleepMs(1000);
-            robot.beaconRight.setPosition(0.1);
-
-            // Do Step 8.d
-        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
-                robot.beaconRight.setPosition(70);
-                robot.sleepMs(1000);
-                robot.beaconRight.setPosition(0.1);
-
-
-        } */
-
-        // Going to next beacon.
-
-        // Step 9 (repeating step 6) : Drive to the white tape on the floor
-        robot.DriveToWhiteLine(0.5,6,true,3500);
-
-
-
-        // step 10 (repeating step 7) : drive 2.5 centimeters or two inches
-        
-
-        // Step 11 (repeating step 8) : Push Beacon if Blue
-        // Step 11: Push Beacon if Blue
-        //step 11.A
-       /* robot.beaconRight.setPosition(80);
-        if(robot.doIseeBlue() == true) {
-            // Do Step 11.c
-
-            robot.beaconRight.setPosition(100);
-            robot.sleepMs(1000);
-            robot.beaconRight.setPosition(0.1);
-
-            // Do Step 11.d
-        } else { robot.DriveToWall(14,DistanceUnit.CM,1);
-            robot.beaconRight.setPosition(70);
-            robot.sleepMs(1000);
-            robot.beaconRight.setPosition(0.1);
-
-
-        }*/
-
-       robot.GyroTurn(1,30,3500 );
-        robot.encoderDrive(1,36,36,3);
-        robot.GyroTurn(1,40,3500);
-
-
+        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        //robot.rightClaw.setPosition(0.0);
+        //sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-
-
-
-
-
     }
-
-
-
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
@@ -330,6 +175,7 @@ public class Blue2 extends LinearOpMode {
             // Stop all motion;
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
+
             // Turn off RUN_TO_POSITION
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
