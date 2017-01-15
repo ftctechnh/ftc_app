@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -8,11 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by ftc6347 on 10/16/16.
  */
 @TeleOp(name = "Teleop", group = "teleop")
-public class Teleop extends LinearOpMode {
+public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
-
-    private ZoidbergHardware robot;
 
     private float frontLeftPower;
     private float frontRightPower;
@@ -23,13 +20,11 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new ZoidbergHardware(hardwareMap);
-
         // run without encoders
-        robot.getBackLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.getBackRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.getFrontRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        getBackRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         gamepad1.setJoystickDeadzone(JOYSTICK_DEADZONE);
         gamepad2.setJoystickDeadzone(JOYSTICK_DEADZONE);
@@ -56,10 +51,10 @@ public class Teleop extends LinearOpMode {
             }
 
             // set the actual motor powers
-            robot.getFrontLeftDrive().setPower(frontLeftPower);
-            robot.getFrontRightDrive().setPower(frontRightPower);
-            robot.getBackLeftDrive().setPower(backLeftPower);
-            robot.getBackRightDrive().setPower(backRightPower);
+            getFrontLeftDrive().setPower(frontLeftPower);
+            getFrontRightDrive().setPower(frontRightPower);
+            getBackLeftDrive().setPower(backLeftPower);
+            getBackRightDrive().setPower(backRightPower);
 
             handleIntake();
             handleLauncher();
@@ -72,16 +67,16 @@ public class Teleop extends LinearOpMode {
 
     private void handleIntake() {
         if (gamepad2.b){
-            robot.getDoor3().setPosition(0.25);
-            robot.getIntakeMotor().setPower(-1.0);
+            getDoor3().setPosition(0.25);
+            getIntakeMotor().setPower(-1.0);
         }
         else if(gamepad2.right_stick_y >= 0.2 || gamepad2.right_stick_y <= -0.2 ){
-            robot.getDoor3().setPosition(0.55);
-            robot.getIntakeMotor().setPower(gamepad2.right_stick_y);
+            getDoor3().setPosition(0.55);
+            getIntakeMotor().setPower(gamepad2.right_stick_y);
         }
         else {
-            robot.getIntakeMotor().setPower(0);
-            robot.getDoor3().setPosition(0.25);
+            getIntakeMotor().setPower(0);
+            getDoor3().setPosition(0.25);
         }
     }
 
@@ -90,12 +85,12 @@ public class Teleop extends LinearOpMode {
         // if the Y button on the second gamepad was previously pressed
         if(yButtonPressed) {
             // if white is essentially detected by the ODS sensor
-            if (robot.getDiskOds().getRawLightDetected() > 1) {
+            if (getDiskOds().getRawLightDetected() > 1) {
                 // run the launcher motor at a slower speed to find the black stripe
-                robot.getLauncherMotor().setPower(0.3);
+                getLauncherMotor().setPower(0.3);
             } else {
                 // stop the motor once the black stripe is detected
-                robot.getLauncherMotor().setPower(0);
+                getLauncherMotor().setPower(0);
 
                 // forget that the Y button was pressed so that the launcher
                 // motor will not run until it detects the black stripe
@@ -103,13 +98,13 @@ public class Teleop extends LinearOpMode {
             }
         // run the launcher motor at full speed to launch the particle when the Y button is pressed
         } else if(gamepad2.y) {
-            robot.getRuntime().reset();
+            getRobotRuntime().reset();
             
-            while(robot.getRuntime().milliseconds() < 900) {
-                robot.getLauncherMotor().setPower(1);
+            while(getRobotRuntime().milliseconds() < 900) {
+                getLauncherMotor().setPower(1);
             }
             
-            robot.getLauncherMotor().setPower(0);
+            getLauncherMotor().setPower(0);
 
             // remember that the Y button was pressed so that the code that runs the launcher motor
             // until it detects the black stripe in the above if-statement will be executed
@@ -119,10 +114,10 @@ public class Teleop extends LinearOpMode {
 
     private void handleTelemetry() {
 
-        telemetry.addData("ods2 : ", robot.getDiskOds().getRawLightDetected());
-        telemetry.addData("ods3", robot.getOds3().getRawLightDetected());
-        telemetry.addData("launcher ods", robot.getLauncherOds().getLightDetected());
-        telemetry.addData("front range", robot.getFrontRange().cmUltrasonic());
+        telemetry.addData("ods2 : ", getDiskOds().getRawLightDetected());
+        telemetry.addData("ods3", getOds3().getRawLightDetected());
+        telemetry.addData("launcher ods", getLauncherOds().getLightDetected());
+        telemetry.addData("front range", getFrontRange().cmUltrasonic());
 
         telemetry.update();
     }
