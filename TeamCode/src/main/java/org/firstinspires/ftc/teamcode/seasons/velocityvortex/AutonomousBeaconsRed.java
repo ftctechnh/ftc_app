@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 1/9/17.
  */
-@Autonomous(name = "Red Beacons Autonomous 2", group = "autonomous programs")
-public class AutonomousRed2 extends LinearOpMode {
+@Autonomous(name = "Red Beacons Autonomous", group = "autonomous programs")
+public class AutonomousBeaconsRed extends LinearOpMode {
 
     private ZoidbergHardware robot;
 
@@ -28,7 +28,7 @@ public class AutonomousRed2 extends LinearOpMode {
         telemetry.addData("color sensor blue", robot.getColorSensor().blue());
         telemetry.update();
 
-        // initialization loop
+        // wait for initialization
         waitForStart();
 
         // set target position for initial diagonal drive motion
@@ -79,9 +79,6 @@ public class AutonomousRed2 extends LinearOpMode {
 
         claimBeacon();
 
-        // run the intake
-//        robot.getLauncherMotor().setPower(-1);
-
         // launch the first (loaded) particle
 //        robot.launchParticle();
 
@@ -122,6 +119,7 @@ public class AutonomousRed2 extends LinearOpMode {
         robot.getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // look for the white line leading to the second beacon
         while(opModeIsActive() && robot.getOds3().getRawLightDetected() < 1.5) {
             robot.driveRight(0.2);
             telemetry.addData("ods3", robot.getOds3().getRawLightDetected());
@@ -133,6 +131,28 @@ public class AutonomousRed2 extends LinearOpMode {
 
         // claim the second beacon
         claimBeacon();
+
+        // turn left for launching
+        encoderDrive(0.5, -8, 8);
+
+        // drive backward for launching
+        encoderDrive(0.5, -12, -12);
+
+        // launch the first (loaded) particle
+        robot.launchParticle();
+
+        // open intake door
+        robot.getDoor3().setPosition(0.25);
+
+        // run the intake
+        robot.getRuntime().reset();
+        while(opModeIsActive() && robot.getRuntime().milliseconds() < 500) {
+            robot.getIntakeMotor().setPower(-1);
+        }
+        robot.getIntakeMotor().setPower(0);
+
+        // launch the second particle
+        robot.launchParticle();
     }
 
     private void claimBeacon() {
@@ -158,7 +178,7 @@ public class AutonomousRed2 extends LinearOpMode {
         // drive backward
         encoderDrive(0.5, -2, -2);
 
-        // continually check for blue
+        // check for blue
         if(robot.getColorSensor().blue() > 0) {
             robot.getRuntime().reset();
             while(opModeIsActive() && robot.getRuntime().milliseconds() < 5000) {
