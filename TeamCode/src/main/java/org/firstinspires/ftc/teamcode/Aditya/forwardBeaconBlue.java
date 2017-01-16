@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 /**
- * Created by adityamavalankar on 1/13/17.
+ * Made with Love by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "newBeaconPressAuto")
-public class newBeaconPress extends AutonomousGeneral {
+@Autonomous(name = "forward beacon blue")
+public class forwardBeaconBlue extends AutonomousGeneral{
 
-    String currentTeam = "red";
+    String currentTeam = "blue";
     String currentColor = "blank";
 
     @Override
@@ -22,46 +22,19 @@ public class newBeaconPress extends AutonomousGeneral {
 
         initiate();
 
-        readNewColor();
 
         waitForStart();
+        {
+
+            readNewColor();
+
+            if (currentColor == currentTeam) {
 
 
-        if (colorSensor.red() > colorSensor.blue()) {
-            currentColor = "red";
-        } else if (colorSensor.red() < colorSensor.blue()) {
-            currentColor = "blue";
-        }
+                 encoderDrive(0.3, 25, 25, 8);
 
-        if (currentColor.equals(currentTeam)) {
-
-            encoderDrive(0.25, 17, 17, 7);
-
-            sleep(400);
-
-            encoderDrive(0.5, -15, -15, 6);
-
-        } else {
-
-            encoderDrive(0.5, -7, -7, 5);
-
-            sleep(500);
-
-            encoderDrive(0.4, -7.5, 7.5, 4);
-            //currently, this turn value is made for alpha. Adjust for beta
-
-            sleep(150);
-
-            encoderDrive(0.25, 28, 28, 8);
-
-            sleep(400);
-
-            encoderDrive(0.5, -15, -15, 6);
-
-            sleep(150);
-
-            encoderDrive(0.7, 7.5, -7.5, 7);
-            //currently, this turn value is made for alpha. Adjust for beta
+                readNewColor();
+            }
         }
     }
 
@@ -86,7 +59,3 @@ public class newBeaconPress extends AutonomousGeneral {
         }
     }
 }
-
-//-------------------------------------------------------------------//
-
-

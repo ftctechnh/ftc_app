@@ -397,10 +397,8 @@ public class AutonomousGeneral extends LinearOpMode {
         front_left_motor.setPower(speed);
         front_right_motor.setPower(-speed);
         back_right_motor.setPower(-speed);
-
     }
-
-
+}
 //<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutonomousGeneral.java
 //    public void newBeacon(String team, double wallTarget) {
 //
@@ -489,4 +487,3 @@ public class AutonomousGeneral extends LinearOpMode {
 //    }
 //=======
 //>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Main/AutonomousGeneral.java
-}
