@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 /**
@@ -140,10 +141,14 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
         straightDrive(0.2);
         runtime.reset();//
 
-        while(!(whiteLineDetectedRight()||whiteLineDetectedLeft()) && runtime.seconds() < 5){
+        while(!(whiteLineDetectedRight()||whiteLineDetectedLeft()) && runtime.seconds() < 5 ){
             if(whiteLineDetectedRight()||whiteLineDetectedLeft()){
                 stopMotors();
                 break;
+            }
+            if(rangeSensor.getDistance(DistanceUnit.CM) <20){
+                encoderDrive(0.3,-10,-10,5);
+                encoderDrive(0.3,20,-20,5);
             }
 
 
@@ -178,10 +183,14 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
             stopMotors();
         }
 
+
+        //sleep(500);
+        //encoderDrive(0.4,10,10,5);
         sleep(500);
-        encoderDrive(0.4,10,10,5);
-        sleep(500);
-        encoderDrive(0.3,-27,27,5);
+        encoderDrive(0.3,-19,19,5);
+        while(rangeSensor.getDistance(DistanceUnit.CM) > 8){
+            straightDrive(0.2);
+        }
 
 
 
