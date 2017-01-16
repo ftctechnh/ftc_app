@@ -8,10 +8,23 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class AutonomousColorTest extends AutonomousBase{
     public void gameState(){
         super.gameState();
-        if(colorLeft.blue() > colorLeft.red() && colorRight.red() > colorRight.blue()){
-            moveState = MoveState.SERVO_R;
-        }else{
-            moveState = MoveState.SERVO_L;
+        switch(gameState){
+            case 0:
+                moveState = MoveState.BACKWARD_SLOW;
+                if(colorLeft.alpha() > 2 && colorRight.alpha() > 2){
+                    moveState = MoveState.STOP;
+                    gameState = 1;
+                }
+            break;
+            case 1: 
+                if(colorLeft.red() > colorLeft.blue() && colorRight.red() < colorRight.blue()){
+                    telemetry.addData("Right color:", "Blue");
+                    telemetry.addData("Left color:", "Red");
+                }else{
+                    telemetry.addData("Right color:", "Red");
+                    telemetry.addData("Left color:", "Blue");
+                }
+            break;
         }
     }
 }

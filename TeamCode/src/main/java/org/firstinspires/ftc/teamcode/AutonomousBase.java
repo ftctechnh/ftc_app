@@ -268,8 +268,8 @@ public abstract class AutonomousBase extends OpMode {
                 break;
              case MoveState.SHOOT:
                 // Shoots ball out of conveyor
-                motorLeftShooter.setPower(1);
-                motorRightShooter.setPower(1);
+                motorLeftShooter.setPower(.75);
+                motorRightShooter.setPower(.75);
                 motorConveyor.setPower(1);
                 break;
             case MoveState.FULL_STOP:
@@ -291,8 +291,8 @@ public abstract class AutonomousBase extends OpMode {
                 break;
            case MoveState.SHOOT_WHEEL:
                 // Spins fly-wheels
-                motorLeftShooter.setPower(1);
-                motorRightShooter.setPower(1);
+                motorLeftShooter.setPower(.75);
+                motorRightShooter.setPower(.75);
                 break;
            case MoveState.SHOOT_CONVEYOR:
                 // Pushed ball towards flywheel

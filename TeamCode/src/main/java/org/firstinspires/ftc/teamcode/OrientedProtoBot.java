@@ -132,12 +132,17 @@ public class OrientedProtoBot extends OpMode {
         // Cap Ball code
         if(gamepad2.dpad_up) {
             motorCap.setPower(1);
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad2.dpad_down) {
             motorCap.setPower(-1);
-        } else if(gamepad2.dpad_right){
+        }else{
+            motorCap.setPower(0);
+        }
+        if(gamepad2.dpad_right){
             servoCap.setPosition(1);
         } else if(gamepad2.dpad_left) {
             servoCap.setPosition(0);
+        }else{
+            servoCap.setPosition(.5);
         }
         // Button press
         if(gamepad2.right_bumper){
