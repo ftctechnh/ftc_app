@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.Eric;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -75,6 +76,7 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
     OpticalDistanceSensor ODSRight;
     OpticalDistanceSensor ODSLeft;
     OpticalDistanceSensor ODSCenter;
+    ModernRoboticsI2cRangeSensor rangeSensor;
     double baseline1;
     double baseline2;
     static int INITIAL_SHOOTERPOS;
@@ -90,6 +92,7 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
         ODSRight = hardwareMap.opticalDistanceSensor.get("ODSRight");
         ODSLeft = hardwareMap.opticalDistanceSensor.get("ODSLeft");
         ODSCenter = hardwareMap.opticalDistanceSensor.get("ODSCenter");
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
         baseline1 = ODSRight.getRawLightDetected();
         baseline2 = ODSLeft.getRawLightDetected();
