@@ -103,9 +103,9 @@ public class PambotTeleop extends LinearOpMode {
             robot.rightMotor.setPower(right);
 
             // Use gamepad left & right Bumpers to open and close the claw
-            if (gamepad1.right_bumper)
+            if (gamepad2.right_bumper)
                 clawOffset += CLAW_SPEED;
-            else if (gamepad1.left_bumper)
+            else if (gamepad2.left_bumper)
                 clawOffset -= CLAW_SPEED;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
@@ -114,9 +114,9 @@ public class PambotTeleop extends LinearOpMode {
             robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
-            if (gamepad1.y)
+            if (gamepad2.y)
                 robot.armMotor.setPower(robot.ARM_UP_POWER);
-            else if (gamepad1.a)
+            else if (gamepad2.a)
                 robot.armMotor.setPower(robot.ARM_DOWN_POWER);
             else
                 robot.armMotor.setPower(0.0);
