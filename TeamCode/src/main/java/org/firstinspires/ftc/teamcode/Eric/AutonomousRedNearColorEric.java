@@ -30,17 +30,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-package org.firstinspires.ftc.teamcode.Steven;
+package org.firstinspires.ftc.teamcode.Eric;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
-import org.firstinspires.ftc.teamcode.AutonomousGeneral_newName;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -68,11 +64,11 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral_newName;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Disabled
+
 @Autonomous(name="Pushbot: AutonomousRedNearLine", group="Pushbot")
 //@Disabled
 
-public class AutonomousRedNearColor extends AutonomousGeneral {
+public class AutonomousRedNearColorEric extends AutonomousGeneral {
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -99,18 +95,18 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
         baseline2 = ODSLeft.getRawLightDetected();
         //INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
 
-        telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
-        telemetry.update();
+        //telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
+        //telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(0.3, 38.1, 38.1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(0.3, 38.1, 38.1, 8.0);  // S1: Forward 47 Inches with 5 Sec timeout
         sleep(500);
         //sleep(1000);     // pause for servos to move
 
-        encoderDrive(0.3,-25,25,5);
+        encoderDrive(0.3,-27,27,8.0);
         sleep(1000);
 
 
@@ -132,39 +128,57 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
         //shootingDrive(0.8, 850);
         sleep(500);
 
-        encoderDrive(0.3, 10.5,-10.5,5);
+        encoderDrive(0.3, 11.5,-11.5,5);
         sleep(500);
 
         //drive until either the left or right ODS senses the white line
         rightDetected = false;
         leftDetected=false;
         straightDrive(0.2);
-        while(!(whiteLineDetectedRight()||whiteLineDetectedLeft())){
+        runtime.reset();//
+
+        while(!(whiteLineDetectedRight()||whiteLineDetectedLeft()) && runtime.seconds() < 5){
+            if(whiteLineDetectedRight()||whiteLineDetectedLeft()){
+                stopMotors();
+                break;
+            }
 
 
         }
         stopMotors();
-        sleep(1000);
-
+        sleep(800);
 
         //if it is the left side that detects the line, turn right until the right detects it to
         //this will make the robot perpendicular to the line
         if (rightDetected){
-            telemetry.addData("","Right Detected");
-            telemetry.update();
-            while(!whiteLineDetectedLeft()){
+            //telemetry.addData("","Right Detected");
+            //telemetry.update();
+            runtime.reset();
+            while(!whiteLineDetectedLeft() && runtime.seconds() < 3){
+                if(whiteLineDetectedLeft()){
+                    break;
+                }
                 turnRight(0.3);
             }
             stopMotors();
         }
         else if (leftDetected){
-            telemetry.addData("","Left Detected");
-            telemetry.update();
-            while(!whiteLineDetectedRight()){
+           // telemetry.addData("","Left Detected");
+            //telemetry.update();
+            runtime.reset();
+            while(!whiteLineDetectedRight()&& runtime.seconds()<3){
+                if(whiteLineDetectedRight()){
+                    break;
+                }
                 turnLeft(0.3);
             }
             stopMotors();
         }
+
+        sleep(500);
+        encoderDrive(0.4,10,10,5);
+        sleep(500);
+        encoderDrive(0.3,-27,27,5);
 
 
 
@@ -192,8 +206,8 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
 
 
         ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        //telemetry.addData("Path", "Complete");
+        //telemetry.update();
         //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
 
@@ -215,7 +229,7 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
         return false;
     }
 
-    public void gyroturn(int degrees,boolean Right){
+   /* public void gyroturn(int degrees,boolean Right){
         gyro.calibrate();
         while(gyro.isCalibrating()){
 
@@ -232,8 +246,7 @@ public class AutonomousRedNearColor extends AutonomousGeneral {
             while (gyro.getHeading() > (360 - degrees) || gyro.getHeading() < 10) {
                 turnLeft(TURN_SPEED);
             }
-            stopMotors();
+           stopMotors();*/
         }
-    }
-}
-
+    //}
+//}
