@@ -194,7 +194,6 @@ public abstract class HardwareOmegas {
             } else if (timePushed.milliseconds() < 3000) {
                 positionServo(beaconator, 1.0);
             } else {
-                positionServo(beaconator, 1.0);
                 isExtending = false;
                 return;
             }
@@ -212,7 +211,6 @@ public abstract class HardwareOmegas {
             } else if (timePushed.milliseconds() < 3000) {
                 positionServo(beaconator, 0.0);
             } else {
-                positionServo(beaconator, 0.0);
                 isExtending = false;
                 return;
             }

@@ -233,7 +233,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
             //Prepare beacon instance
             Beacon beacon = new Beacon(Beacon.AnalysisMethod.COMPLEX);
             //You may need to change the Screen Orientation to your preference
-            ScreenOrientation orientation = ScreenOrientation.LANDSCAPE_REVERSE;
+            ScreenOrientation orientation = ScreenOrientation.PORTRAIT;
             //Analyze the frame and return the analysis
             colorAnalysis = beacon.analyzeFrame(detectorBlue, detectorRed, rgba, gray,
                     orientation);
