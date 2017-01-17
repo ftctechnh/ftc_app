@@ -18,7 +18,7 @@ public class RedWait9 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(5, 8.5);
+                map.setGoal(7.5, 2.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -41,10 +41,10 @@ public class RedWait9 extends AutonomousBase {
                 break;
             case 3: // ... and shoots
                  moveState = MoveState.SHOOT_WHEEL;
-                 if(getRuntime() - sTime >= 1){
+                 if(getRuntime() - sTime >= 3){
                      moveState = MoveState.SHOOT_CONVEYOR;
                  }
-                 if(getRuntime() - sTime >= 3) {
+                 if(getRuntime() - sTime >= 6) {
                      moveState = MoveState.SHOOT_STOP;
                      gameState = 4;
                  }
