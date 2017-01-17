@@ -225,7 +225,7 @@ public class TeleOpMain extends OpMode{
             if (!shooterHot) {
                 // Not already running so log start event
                 shooterHot = true;
-                DbgLog.msg("DM10337 -- Starting shooter flywheels");
+                DbgLog.msg("DM10337 -- Stopping shooter flywheels");
             }
 
         } else if (gamepad2.left_trigger > 0.2) {
@@ -235,7 +235,7 @@ public class TeleOpMain extends OpMode{
             if (shooterHot) {
                 // Was running before so log stop event
                 shooterHot = false;
-                DbgLog.msg("DM10337 -- Stopping shooter flywheels");
+                DbgLog.msg("DM10337 -- Starting shooter flywheels");
             }
         }
 
@@ -313,12 +313,12 @@ public class TeleOpMain extends OpMode{
 
             // For safety verify servo position and then move it
             pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
-            robot.pivot.setPosition(pivotPos);
+            // robot.pivot.setPosition(pivotPos);
 
             // And process the lift motor
             if ((gamepad2.right_stick_y < -0.2) && (!robot.liftLimit.isPressed())) {
                 // Lift it up
-                robot.liftMotor.setPower(robot.LIFT_UP_SPEED);
+                // robot.liftMotor.setPower(robot.LIFT_UP_SPEED);
                 if (!liftMotorUp) {
                     // We weren't going up before so log event
                     liftMotorUp = true;
@@ -327,7 +327,7 @@ public class TeleOpMain extends OpMode{
                 }
             } else if (gamepad2.right_stick_y > 0.2) {
                 // Or drop it down
-                robot.liftMotor.setPower(robot.LIFT_DOWN_SPEED);
+                // robot.liftMotor.setPower(robot.LIFT_DOWN_SPEED);
                 if (!liftMotorDown) {
                     // We weren't moving down before so log event
                     liftMotorDown = true;
@@ -335,9 +335,6 @@ public class TeleOpMain extends OpMode{
                     DbgLog.msg("DM10337 -- Cap Ball Lift moving down");
                 }
             } else robot.liftMotor.setPower(0.0);
-
-            // Move the pivot
-            pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
 
         }
 
@@ -356,12 +353,14 @@ public class TeleOpMain extends OpMode{
                     intakeOut = false;
                     intakeIn = false;
                     DbgLog.msg("DM10337 -- Intake stopped from reverse");
+                    telemetry.addData("Intake", "Intake: stopped  ");
                 } else {
                     // Not already in reverse so set it so
                     robot.intake.setPower(robot.INTAKE_OUT_SPEED);
                     intakeOut = true;
                     intakeIn = false;
                     DbgLog.msg("DM10337 -- Intake start reverse");
+                    telemetry.addData("Intake", "Intake: reverse  ");
                 }
             }
         } else {
@@ -379,17 +378,26 @@ public class TeleOpMain extends OpMode{
                     intakeOut = false;
                     intakeIn = false;
                     DbgLog.msg("DM10337 -- Intake stopped from forward");
+                    telemetry.addData("Intake", "Intake: stopped  ");
                 } else {
                     // Not already in forward so set it so
                     robot.intake.setPower(robot.INTAKE_IN_SPEED);
                     intakeOut = false;
                     intakeIn = true;
                     DbgLog.msg("DM10337 -- Intake start forward");
+                    telemetry.addData("Intake", "Intake: forward  ");
                 }
             }
         } else {
             // Intake reverse button is not pressed
             intakeInPressed = false;
+        }
+
+        if (gamepad1.a) {
+            // Emergency stop on intake
+            intakeIn = false;
+            intakeOut = false;
+            robot.intake.setPower(0.0);
         }
 
         // Finally update the telemetry for this cycle

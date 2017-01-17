@@ -77,9 +77,10 @@ public class Auto100Blue extends LinearOpMode {
     static final double     DRIVE_SPEED_SLOW        = 0.5;     // Slower speed where required
     static final double     TURN_SPEED              = 1.0;     // Turn speed
 
-    static final double     HEADING_THRESHOLD       = 4 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.009;     // Larger is more responsive, but also less accurate
-    static final double     P_DRIVE_COEFF           = 0.05;     // Larger is more responsive, but also less accurate
+    static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.010;   // Larger is more responsive, but also less accurate
+    static final double     P_DRIVE_COEFF_1         = 0.05;  // Larger is more responsive, but also less accurate
+    static final double     P_DRIVE_COEFF_2         = 0.03;
 
     // White line finder thresholds
     static final double     WHITE_THRESHOLD         = 2.0;      // Line finder
@@ -150,9 +151,9 @@ public class Auto100Blue extends LinearOpMode {
         robot.lShoot.setPower(robot.SHOOT_DEFAULT);
         robot.rShoot.setPower(robot.SHOOT_DEFAULT);
 
-        // Move forward 26 inches to line up for shooting particles
+        // Move forward  to line up for shooting particles
         // Use gyro to hold heading
-        encoderDrive(DRIVE_SPEED,  26.0, 5.0, true, 0.0);
+        encoderDrive(DRIVE_SPEED,  25.75, 5.0, true, 0.0, false);
 
         // Fire the balls
         robot.fire.setPower(1.0);
@@ -168,17 +169,17 @@ public class Auto100Blue extends LinearOpMode {
 
         // Drive towards the beacon wall
         // Use gyro to hold heading
-        encoderDrive(DRIVE_SPEED, amIBlue()?51.5:51.75, 5.0,
-                true, amIBlue()?-70.0:65.0);
+        encoderDrive(DRIVE_SPEED, amIBlue()?51.5:52.5, 5.0,
+                true, amIBlue()?-70.0:65.0, false);
 
         // Turn parallel to beacon wall using gyro
         // Had to tweak the red direction off of 180 to correct alignment error after turn
-        gyroTurn(TURN_SPEED, amIBlue()?0.0:175.0);
+        gyroTurn(TURN_SPEED, amIBlue()?0.0:180.0);
 
         // Move slowly to approach 1st beacon -- Slow allows us to be more accurate w/ alignment
         // Autocorrects any heading errors while driving
-        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?8.0:2.0, 1.0, true,
-                amIBlue()?0.0:180.0);
+        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?8.0:1.0, 1.0, true,
+                amIBlue()?0.0:180.0, true);
 
         // Use line finder to align to white line
         findLine(amIBlue()?0.2:0.2, 3.0);
@@ -190,7 +191,7 @@ public class Auto100Blue extends LinearOpMode {
         beacon = beaconColor();
         if (beacon == 1) {
             // We see blue
-            distCorrection = amIBlue()?2.25:-3.50;
+            distCorrection = amIBlue()?2.25:-3.75;
         } else if (beacon == -1) {
             // We see red
             distCorrection = amIBlue()?-3.25:2.50;
@@ -203,7 +204,7 @@ public class Auto100Blue extends LinearOpMode {
             // We saw a beacon color so move to align beacon pusher
             // We turn by +/- 4 degrees to account for curved front of beacon
             encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
-                    amIBlue()?(0-4*beacon):(180+4*beacon));
+                    amIBlue()?(0-4*beacon):(180+5*beacon), true);
 
             // And press the beacon button
             robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
@@ -215,7 +216,7 @@ public class Auto100Blue extends LinearOpMode {
 
         // Drive to the 2nd beacon.  Tweaked Red heading to correct alignment errors.
         encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?43.0:-44.0 - distCorrection, 4.0,
-                true, amIBlue()?0.0:179.0);
+                true, amIBlue()?0.0:178.0, false);
 
         // Find the 2nd white line
         findLine(amIBlue()?0.2:-0.2, 3.0);
@@ -240,7 +241,7 @@ public class Auto100Blue extends LinearOpMode {
             // We saw a beacon color so move to align beacon pusher
             // Adjust by +/- 4 degrees to account for curved front of beacon
             encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
-                    amIBlue()?(0-4*beacon):(180+4*beacon));
+                    amIBlue()?(0-4*beacon):(180+5*beacon), true);
 
             // And press the beacon button
             robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
@@ -255,7 +256,7 @@ public class Auto100Blue extends LinearOpMode {
         // And drive to the center vortex, knock cap ball, and park
         // Note that we are turning while moving to save time at the expense of accuracy
         encoderDrive(1.0, amIBlue()?-75.0:74.0, 10.0, true,
-                amIBlue()?-60.0:250);
+                amIBlue()?-60.0:245, false);
 
         // And stop
         robot.intake.setPower(0.0);
@@ -294,7 +295,8 @@ public class Auto100Blue extends LinearOpMode {
                              double distance,
                              double timeout,
                              boolean useGyro,
-                             double heading) throws InterruptedException {
+                             double heading,
+                             boolean aggressive) throws InterruptedException {
 
         // Calculated encoder targets
         int newLFTarget;
@@ -371,7 +373,8 @@ public class Auto100Blue extends LinearOpMode {
                 if (useGyro){
                     // adjust relative speed based on heading
                     double error = getError(heading);
-                    double steer = getSteer(error, P_DRIVE_COEFF);
+                    double steer = getSteer(error,
+                            (aggressive?P_DRIVE_COEFF_1:P_DRIVE_COEFF_2));
 
                     // if driving in reverse, the motor correction also needs to be reversed
                     if (distance < 0)

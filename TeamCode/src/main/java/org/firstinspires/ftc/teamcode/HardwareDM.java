@@ -214,8 +214,8 @@ public class HardwareDM
 
         // Setup shooter motor max speeds
         // Should remove this code -- deprecated -- but will have to return default speed
-        lShoot.setMaxSpeed(SHOOT_MAX_RPM);
-        rShoot.setMaxSpeed(SHOOT_MAX_RPM);
+        //lShoot.setMaxSpeed(SHOOT_MAX_RPM);
+        //rShoot.setMaxSpeed(SHOOT_MAX_RPM);
 
 
         // Set up the parameters with which we will use our IMU. Note that integration
