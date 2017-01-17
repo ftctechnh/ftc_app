@@ -22,11 +22,11 @@ public class BlueButton6 extends AutonomousBase{
 //                  moveState = MoveState.SHOOT;
 //                  if(getRuntime() - sTime >= 3){
 //                    moveState = MoveState.SHOOT_STOP;
-                    gameState = 2;
+                    gameState = 3;
 //                  }
                 break;
             case 2:
-                map.setGoal(6,9);
+                map.setGoal(10,5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -38,7 +38,7 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 3: //Move to beacon A push pos.
-                map.setGoal(9,6);
+                map.setGoal(10, 5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{

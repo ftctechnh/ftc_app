@@ -109,11 +109,11 @@ public class OrientedProtoBot extends OpMode {
         // GAME PAD 2 CODE
         // Activates shooters
         if(gamepad2.right_trigger > .1){
-            motorRightShooter.setPower(1);
-            motorLeftShooter.setPower(1);
-        }else if(gamepad2.left_trigger > .1){
-            motorRightShooter.setPower(-1);
-            motorLeftShooter.setPower(-1);
+            motorRightShooter.setPower(.65);
+            motorLeftShooter.setPower(.65);
+        }else if(gamepad2.left_trigger > .65){
+            motorRightShooter.setPower(-.65);
+            motorLeftShooter.setPower(-.65);
         }else{
             motorRightShooter.setPower(0);
             motorLeftShooter.setPower(0);
@@ -130,9 +130,9 @@ public class OrientedProtoBot extends OpMode {
             motorConveyer.setPower(0);
         }
         // Cap Ball code
-        if(gamepad2.dpad_up) {
+        if(gamepad1.dpad_up) {
             motorCap.setPower(1);
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad1.dpad_down) {
             motorCap.setPower(-1);
         }else{
             motorCap.setPower(0);
