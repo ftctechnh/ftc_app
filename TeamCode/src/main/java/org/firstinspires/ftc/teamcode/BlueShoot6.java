@@ -44,7 +44,7 @@ public class BlueShoot6 extends AutonomousBase {
                  if(getRuntime() - sTime >= 3){
                      moveState = MoveState.SHOOT_CONVEYOR;
                  }
-                 if(getRuntime() - sTime >= 3) {
+                 if(getRuntime() - sTime >= 6) {
                      moveState = MoveState.SHOOT_STOP;
                      gameState = 4;
                  }
