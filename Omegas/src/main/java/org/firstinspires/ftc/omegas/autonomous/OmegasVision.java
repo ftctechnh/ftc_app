@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.omegas.autonomous;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
 import org.firstinspires.ftc.omegas.OmegasAlliance;
@@ -31,10 +32,12 @@ import java.util.Arrays;
 abstract class OmegasVision extends ManualVisionOpMode {
 
     /* Declare OpMode members. */
-    private boolean approachingBeaconator = false;
+    private boolean shouldApproachBeaconator = false;
+    private boolean shouldApproachCapBall = false;
     private boolean startedDriving = false;
     private HardwareOmegas Ω = null;
     private Thread driveThread = null;
+    private final ElapsedTime runtime = new ElapsedTime();
 
     private static final ColorHSV lowerBoundRed = new ColorHSV((int) (305 / 360.0 * 255.0), (int) (0.200 * 255.0), (int) (0.300 * 255.0));
     private static final ColorHSV upperBoundRed = new ColorHSV((int) ((360.0 + 5.0) / 360.0 * 255.0), 255, 255);
@@ -71,14 +74,15 @@ abstract class OmegasVision extends ManualVisionOpMode {
         driveThread = new Thread() {
             public void run() {
                 while (true) {
-                    if (!approachingBeaconator) {
+                    if (!shouldApproachBeaconator) {
                         if (Ω.getLightSensor().getLightDetected() >= 0.4) {
-                            Ω.rotate(Math.PI * 4 / 9, getColor() == OmegasAlliance.BLUE);
+                            Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
                             Ω.driveForward(600.0);
-                            approachingBeaconator = true;
+
+                            shouldApproachBeaconator = true;
                         } else {
                             for (DcMotor motor : Ω.getMotors()) {
-                                motor.setPower(0.25);
+                                motor.setPower(0.15);
                             }
                         }
                     } else {
@@ -144,46 +148,74 @@ abstract class OmegasVision extends ManualVisionOpMode {
             startedDriving = true;
         }
 
-        if (approachingBeaconator) {
-            final boolean blueBeacon = leftBlue > rightBlue;
-
-            /**
-             * Beacon: Which beacon is blue - `leftBlue > rightBlue`
-             *      true: Left beacon
-             *      false: Right beacon
-             * Alliance: Which alliance we are - `getColor() == OmegasAlliance.RED`
-             *      true: Blue alliance
-             *      false: Red alliance
-             * Beaconator: Which beaconator to extend - `Beacon == Alliance`
-             *      true: Left beaconator
-             *      false: Right beaconator
-             *
-             * XNOR/Equality Logic Table:
-             *
-             * |                       | Left (Beacon==true)       | Right (Beacon==false)     |
-             * |-----------------------|---------------------------|---------------------------|
-             * | Blue (Alliance==true) | Left (Beaconator==true)   | Right (Beaconator==false) |
-             * | Red (Alliance==false) | Right (Beaconator==false) | Left (Beaconator==true)   |
-             */
-            new Thread() {
-                @Override
-                public void run() {
-                    if (blueBeacon == (getColor() == OmegasAlliance.RED)) {
-                        Ω.rightBeaconatorSequence(Ω.getRightBeaconator());
-                    } else {
-                        Ω.leftBeaconatorSequence(Ω.getRightBeaconator());
-                    }
-                }
-            }.start();
-
-            approachingBeaconator = false;
-        }
+        if (shouldApproachCapBall) approachCapBall();
+        if (shouldApproachBeaconator) approachBeaconator(leftBlue, rightBlue);
 
         try {
             Thread.sleep(2);
         } catch (Exception e) {
             System.err.print("Thread.sleep failure");
         }
+    }
+
+    private void approachBeaconator(double leftBlue, double rightBlue) {
+        final boolean blueBeacon = leftBlue > rightBlue;
+
+        /**
+         * Beacon: Which beacon is blue - `leftBlue > rightBlue`
+         *      true: Left beacon
+         *      false: Right beacon
+         * Alliance: Which alliance we are - `getColor() == OmegasAlliance.RED`
+         *      true: Blue alliance
+         *      false: Red alliance
+         * Beaconator: Which beaconator to extend - `Beacon == Alliance`
+         *      true: Left beaconator
+         *      false: Right beaconator
+         *
+         * XNOR/Equality Logic Table:
+         *
+         * |                       | Left (Beacon==true)       | Right (Beacon==false)     |
+         * |-----------------------|---------------------------|---------------------------|
+         * | Blue (Alliance==true) | Left (Beaconator==true)   | Right (Beaconator==false) |
+         * | Red (Alliance==false) | Right (Beaconator==false) | Left (Beaconator==true)   |
+         */
+        new Thread() {
+            @Override
+            public void run() {
+                /**
+                 * Three times for good luck.
+                 *
+                 * Yes, we also believe in wizardry.
+                 */
+                for (int i = 0; i < 3; i++) {
+                    if (blueBeacon == (getColor() == OmegasAlliance.RED)) {
+                        Ω.rightBeaconatorSequence(Ω.getRightBeaconator());
+                    } else {
+                        Ω.leftBeaconatorSequence(Ω.getLeftBeaconator());
+                    }
+                }
+
+                shouldApproachCapBall = true;
+            }
+        }.start();
+
+        shouldApproachBeaconator = false;
+    }
+
+    private void approachCapBall() {
+        new Thread() {
+            public void run() {
+                runtime.reset();
+
+                while (!(runtime.milliseconds() > 3000)) {
+                    for (DcMotor motor : Ω.getMotors()) {
+                        motor.setPower((runtime.milliseconds() < 2500) ? -0.25 : -0.0);
+                    }
+                }
+            }
+        };
+
+        shouldApproachCapBall = false;
     }
 
     abstract OmegasAlliance getColor();
