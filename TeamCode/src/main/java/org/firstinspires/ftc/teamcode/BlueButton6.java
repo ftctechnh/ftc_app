@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Blue Button 6", group="Blue")
 public class BlueButton6 extends AutonomousBase{
+    double xTime;
     @Override
     public void gameState() {
         super.gameState();
@@ -71,18 +72,22 @@ public class BlueButton6 extends AutonomousBase{
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(!touchWall.isPressed()){
                     moveState = MoveState.RIGHT_SLOW;
+                    xTime = 0;
                 }else {
                     if (touchRight.isPressed()) {
-                        if (colorRight.blue() > colorRight.red() && colorLeft.blue() < colorLeft.red()) {
-                            moveState = MoveState.SERVO_L;
-                            gameState = 7;
-                            pTime = getRuntime();
-                        } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() > colorLeft.red()) {
-                            moveState = MoveState.SERVO_R;
-                            gameState = 7;
-                            pTime = getRuntime();
-                        } else {
-                            moveState = MoveState.LEFT_SLOW;
+                        if(xTime == 0){
+                            xTime = getRuntime();
+                            moveState = MoveState.STOP;
+                        }else if(getRuntime() - xTime > 1){
+                            if (colorRight.blue() > colorRight.red() && colorLeft.blue() < colorLeft.red()) {
+                                moveState = MoveState.SERVO_L;
+                                gameState = 7;
+                                pTime = getRuntime();
+                            } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() > colorLeft.red()) {
+                                moveState = MoveState.SERVO_R;
+                                gameState = 7;
+                                pTime = getRuntime();
+                            }
                         }
                     } else {
                         if (linedUp()) {
