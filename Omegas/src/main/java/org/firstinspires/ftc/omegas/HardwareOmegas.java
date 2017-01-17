@@ -168,7 +168,7 @@ public abstract class HardwareOmegas {
 
         while (timePushed.milliseconds() < duration) {
             for (DcMotor motor : getMotors()) {
-                motor.setPower(0.5);
+                motor.setPower(0.25);
             }
         }
         stopDriving();

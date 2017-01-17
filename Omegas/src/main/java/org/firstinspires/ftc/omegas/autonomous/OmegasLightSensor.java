@@ -48,7 +48,7 @@ public class OmegasLightSensor extends LinearOpMode {
             telemetry.update();
 
             if (light < 0.4) {
-                Ω.driveForward(50.0);
+                Ω.driveForward(100.0);
             } else {
                 try {
                     Thread.sleep(200);
