@@ -76,12 +76,13 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 while (true) {
                     if (!shouldApproachBeaconator) {
                         if (Ω.getLightSensor().getLightDetected() >= 0.4) {
-                            Ω.rotate(Math.PI * 4 / 9, getColor() == OmegasAlliance.BLUE);
+                            Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
                             Ω.driveForward(600.0);
+
                             shouldApproachBeaconator = true;
                         } else {
                             for (DcMotor motor : Ω.getMotors()) {
-                                motor.setPower(0.25);
+                                motor.setPower(0.15);
                             }
                         }
                     } else {
@@ -147,8 +148,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
             startedDriving = true;
         }
 
-        if (shouldApproachBeaconator) approachBeaconator(leftBlue, rightBlue);
         if (shouldApproachCapBall) approachCapBall();
+        if (shouldApproachBeaconator) approachBeaconator(leftBlue, rightBlue);
 
         try {
             Thread.sleep(2);
@@ -187,21 +188,25 @@ abstract class OmegasVision extends ManualVisionOpMode {
                     Ω.leftBeaconatorSequence(Ω.getLeftBeaconator());
                 }
 
-                shouldApproachBeaconator = false;
                 shouldApproachCapBall = true;
             }
         }.start();
+
+        shouldApproachBeaconator = false;
     }
 
     private void approachCapBall() {
-        runtime.reset();
-
-        while (!(runtime.milliseconds() > 13000)) {
-            for (DcMotor motor : Ω.getMotors()) {
-                motor.setPower((runtime.milliseconds() < 10000) ? 0.0
-                        : (runtime.milliseconds() < 12500) ? 0.25 : 0.0);
+        new Thread() {
+            public void run() {
+                while (!(runtime.milliseconds() > 3000)) {
+                    for (DcMotor motor : Ω.getMotors()) {
+                        motor.setPower((runtime.milliseconds() < 2500) ? -0.25 : -0.0);
+                    }
+                }
             }
-        }
+        };
+
+        shouldApproachCapBall = false;
     }
 
     abstract OmegasAlliance getColor();
