@@ -48,7 +48,7 @@ public abstract class HardwareOmegas {
     private Telemetry telemetry;
     private MediaPlayer messagePlayer;
 
-    private static final double MS_PER_RADIAN = 340.0;
+    private static final double MS_PER_RADIAN = 170.0;
     private static boolean isExtending = false;
 
     /* local OpMode members. */
