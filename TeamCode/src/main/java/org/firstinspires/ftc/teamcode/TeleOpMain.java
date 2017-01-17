@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Robert Atkinson
+Copyright (c) 2017 Dark Matter FTC 10337
 
 All rights reserved.
 
@@ -29,40 +29,36 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+
+ */
+
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
 import java.util.Locale;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
+ * This file provides  Telop driving for Dark Matter 2016-17 robot.
+ *
  * The code is structured as an Iterative OpMode
  *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
+ * This OpMode uses the common HardwareDM hardware class to define the devices on the robot.
+ * All device access is managed through the HardwareDM class.
  *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name="TeleOpMain", group="DM")
 // @Disabled
@@ -72,40 +68,37 @@ public class TeleOpMain extends OpMode{
     /* Declare OpMode members. */
     HardwareDM robot       = new HardwareDM(); // use the class created to define a robot hardware
 
-    /* Shooter constants */
-    static final int     COUNTS_PER_MOTOR_REV    = 7 ;    // Neverrest w/ BB 4:1
+    // Drivetrain constants when in Cap Ball Mode
+    final double         CAP_DRIVE_SPEED         = -1.0;        // Reverse the direction
+    final double         CAP_TURN_SPEED          = 0.8;         // Slow down the turns a bit
 
-    static final int     NR_MAX_RPM              = 6600;
-    static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
+    /* Shooter status */
+    double               shootSpeed              = robot.SHOOT_DEFAULT;
+    static boolean       shootPressed            = false;
+    boolean              shooterHot              = false;
+    boolean              fireCamHot              = false;
 
-    static double           shootSpeed              = .925;
-    static boolean          shootPressed            = false;
+    // Keep track of the status of the intake
+    boolean              intakeIn                = false;    // intake running forward
+    boolean              intakeOut               = false;    // intake running backward
+    boolean              intakeInPressed         = false;    // Is intake button pressed
+    boolean              intakeOutPressed        = false;    // Is intake button pressed
 
-    boolean intakeIn = false;       // intake running forward
-    boolean intakeOut = false;      // intake running backward
-    boolean intakeInPressed = false;    // Is button pressed
-    boolean intakeOutPressed = false;    // Is button pressed
+    /* Servo current positions */
+    double               beaconPos               = robot.BEACON_HOME;
+    double               pivotPos                = robot.PIVOT_HOME;
+    double               liftDeployPos           = robot.LIFT_DEPLOY_HOME;
 
-    /* Servo positions and constants */
-    double          beaconPos = robot.BEACON_HOME;
-    double          pivotPos = robot.PIVOT_HOME;
-    double          BEACON_SPEED = 0.1;
-    double          PIVOT_SPEED = 0.1;
+    boolean              beaconDeployed          = false;
+    boolean              pivotDeployed           = false;
 
-    boolean         pickupDeployed = false;     // Has the cap ball forks been released
-
-    // State used for reading Gyro b
-    Orientation angles;
-    Acceleration gravity;
-
-    // Variables used for reading and processing Adafruit color sensor
-    // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F,0F,0F};
-    // values is a reference to the hsvValues array.
-    final float values[] = hsvValues;
-    View relativeLayout;
-
-    ElapsedTime pickupDeployTimer = new ElapsedTime();
+    /*  Keep track of whether we have deployed the ball pickup.  Can't move the lift or pivot
+        until this is deployed.
+     */
+    boolean              pickupDeployed          = false;
+    boolean              liftMotorUp             = false;
+    boolean              liftMotorDown           = false;
+    ElapsedTime          pickupDeployTimer       = new ElapsedTime();
 
 
     /*
@@ -113,20 +106,14 @@ public class TeleOpMain extends OpMode{
      */
     @Override
     public void init() {
+        DbgLog.msg("DM10337 -- Starting TeleOpMain Init.");
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
 
-        // Setup max shooter motor speed limit
-        robot.lShoot.setMaxSpeed(SHOOT_MAX_RPM);
-        robot.rShoot.setMaxSpeed(SHOOT_MAX_RPM);
-
-
-        //Setup for Adafruit RGB sensor
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        relativeLayout = ((Activity) robot.hwMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
+        DbgLog.msg("DM10337 -- Finished robot.init");
 
         updateTelemetry(telemetry);
     }
@@ -143,6 +130,7 @@ public class TeleOpMain extends OpMode{
      */
     @Override
     public void start() {
+        DbgLog.msg("DM10337 -- Start pressed.");
     }
 
     /*
@@ -152,146 +140,228 @@ public class TeleOpMain extends OpMode{
     public void loop() {
 
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        // throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-        // 1 is full down
-        // direction: left_stick_x ranges from -1 to 1, where -1 is full left
-        // and 1 is full right
+        /*
+           Driving code -- read joysticks and drive the motors
+        */
+
+        //Read thejoysticks -- Y axis is reversed so negate it
         double throttle = -gamepad1.left_stick_y;
         double direction = gamepad1.right_stick_x;
 
+        // Smooth and deadzone the joytick values
+        throttle = smoothPowerCurve(deadzone(throttle,0.10));
+        direction = smoothPowerCurve(deadzone(direction,0.10));
+
+        // If we deployed into Cap Ball mode the robot drives differently
         if (pickupDeployed) {
-            // Slow down the driving since we have a cap ball -- and reverse which is front of robot
-            throttle = -1.0 * throttle;
-            direction = -0.8 * direction;
+            // Slow down the turns since we have a cap ball -- and reverse which is front of robot
+            throttle = CAP_DRIVE_SPEED * throttle;
+            direction = CAP_TURN_SPEED * direction;
         }
 
+        // Calculate the drive motors for left and right
         double right = throttle - direction;
         double left = throttle + direction;
-
-
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
 
-
-
-        // scale the joystick value to make it easier to control
-        // the robot more precisely at slower speeds.
-        right = (float)smoothPowerCurve(deadzone(right,0.10));
-        left = (float)smoothPowerCurve(deadzone(left,0.10));
-
+        // And lets drive
         robot.lfDrive.setPower(left);
         robot.lrDrive.setPower(left);
         robot.rfDrive.setPower(right);
         robot.rrDrive.setPower(right);
 
 
-        // Send telemetry message to signify robot running;
-        //telemetry.addData("left",  "%.2f", left);
-        //telemetry.addData("right", "%.2f", right);
-
-
-        // Firing cam
+        /*
+            Code for the shooter firing cam
+         */
         if (gamepad2.right_trigger <= 0.2) {
+            // Stopped when not pressed
             robot.fire.setPower(0.0);
+            if (!fireCamHot) {
+                // Not already running it up so log start event
+                DbgLog.msg("DM10337 -- Starting firing cam");
+                fireCamHot = true;
+            }
         } else if (gamepad2.right_trigger > 0.2) {
+            // Running when pressed
             robot.fire.setPower(1.0);
+            if (fireCamHot) {
+                // Was running so log stop event
+                DbgLog.msg("DM10337 -- Stopping firing cam");
+                fireCamHot = false;
+            }
         }
 
-        // Shooter flywheel on/off
-        if (gamepad2.left_trigger <= 0.2) {
-            robot.lShoot.setPower(0.0);
-            robot.rShoot.setPower(0.0);
-        } else if (gamepad2.left_trigger > 0.2) {
-            robot.lShoot.setPower(shootSpeed);
-            robot.rShoot.setPower(shootSpeed);
-        }
-
+        /*
+            Code to adjust the shooter flywheel speed
+         */
         // Adjust shooter speed
         if (gamepad2.dpad_down && !shootPressed) {
-            shootSpeed -= 0.005;
+            // Newly pressed  speed down button
+            shootSpeed -= robot.SHOOT_SPEED_INCR;
             shootPressed = true;
+            DbgLog.msg("DM10337 -- Shooter speed adjusted to " + shootSpeed);
         } else if (gamepad2.dpad_up && !shootPressed) {
-            shootSpeed += 0.005;
+            // Newly pressed speed up button
+            shootSpeed += robot.SHOOT_SPEED_INCR;
             shootPressed = true;
+            DbgLog.msg("DM10337 -- Shooter speed adjusted to " + shootSpeed);
         }
         if (shootPressed && !gamepad2.dpad_down && !gamepad2.dpad_up) {
-            // Reset since no shoot speed adjustment pressed
+            // Reset flag since no shoot speed adjustment pressed
             shootPressed = false;
         }
+        shootSpeed = Range.clip(shootSpeed, 0.0, 1.0);
 
-        beaconPos = robot.beacon.getPosition();
-        pivotPos = robot.pivot.getPosition();
+        /*
+            Code for the shooter flywheels
+         */
+        if (gamepad2.left_trigger <= 0.2) {
+            // Stopped when not pressed
+            robot.lShoot.setPower(0.0);
+            robot.rShoot.setPower(0.0);
+            if (!shooterHot) {
+                // Not already running so log start event
+                shooterHot = true;
+                DbgLog.msg("DM10337 -- Starting shooter flywheels");
+            }
 
-        // Adjust beacon servo position
+        } else if (gamepad2.left_trigger > 0.2) {
+            // Running when pressed
+            robot.lShoot.setPower(shootSpeed);
+            robot.rShoot.setPower(shootSpeed);
+            if (shooterHot) {
+                // Was running before so log stop event
+                shooterHot = false;
+                DbgLog.msg("DM10337 -- Stopping shooter flywheels");
+            }
+        }
+
+        telemetry.addData("Shoot", shootSpeed);
+
+
+        /*
+            Beacon pusher code
+         */
         if (gamepad1.right_bumper) {
+            // Pressed so deploy the beacon pusher
             beaconPos = robot.BEACON_MAX_RANGE;
-        } else beaconPos = robot.BEACON_MIN_RANGE;
+            if (!beaconDeployed) {
+                // Newly pressed so log beacon deploy
+                beaconDeployed = true;
+                DbgLog.msg("DM10337 -- Deploying beacon presser");
+            }
+        } else {
+            // Not pressed so retract it
+            beaconPos = robot.BEACON_MIN_RANGE;
+            if (beaconDeployed) {
+                // Was deployed so log beacon withdrawal
+                beaconDeployed = false;
+                DbgLog.msg("DM10337 == Beacon presser off");
 
+            }
+        }
 
+        // Set the beacon pusher
+        beaconPos = Range.clip(beaconPos, robot.BEACON_MIN_RANGE, robot.BEACON_MAX_RANGE);
+        robot.beacon.setPosition(beaconPos);
 
-        // Check if ready to release the cap pickup forks
-        // BOTH drivers must push button together to make this happen
+        /*
+            Cap ball forks deployment code.  Keep track of whether the cap ball list if deployed.
+            For safety, both drivers have to press a button simultaneously to deploy!
+            We will use a timer to make sure we don't try and move it too quickly, to propect
+            hardware from damage.  Cap ball lift and pivot are disabled until after this timer expires.
+         */
         if (gamepad1.left_bumper && gamepad2.left_bumper) {
             if (pickupDeployed == false) {
                 // First time we are trying to deploy
                 pickupDeployed = true;
                 pickupDeployTimer.reset();      // Set timer of how long to wait
-                // Insert code to actually move the servo here
+
+                // Deploy the cap ball lift forks
+                //robot.liftDeploy.setPosition(robot.LIFT_DEPLOY_MAX_RANGE);
+
+                DbgLog.msg("DM10337 -- Deploying the cap ball lift forks");
             }
         }
 
-        // Adjust lift's pivot servo position
+        /*
+            Code for the cap ball lift.  It is disabled until lift forks deployed and enough time
+            has elapsed to safely move it.
+         */
         if (pickupDeployed == true && pickupDeployTimer.milliseconds() > robot.DEPLOY_WAIT) {
             // The cap ball lift mechanism is ready to go!
-            if (gamepad2.left_stick_y < -0.2) {
-                pivotPos = robot.PIVOT_MAX_RANGE;
-            } else pivotPos = robot.PIVOT_MIN_RANGE;
 
+            // Process the pivot servo
+            if (gamepad2.left_stick_y < -0.2) {
+                // Pressed stick so pivot the lift down
+                pivotPos = robot.PIVOT_MAX_RANGE;
+                if (!pivotDeployed) {
+                    pivotDeployed = true;
+                    DbgLog.msg("DM10337 -- Pivoting the Lift Down");
+                }
+            } else {
+                // Not pressed so pivot it to the up (default) position
+                pivotPos = robot.PIVOT_MIN_RANGE;
+                if (pivotDeployed) {
+                    pivotDeployed = false;
+                    DbgLog.msg("DM10337 -- Pivoting the Lift Up");
+                }
+            }
+
+            // For safety verify servo position and then move it
             pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
             robot.pivot.setPosition(pivotPos);
 
-
-            // Lift up and down
+            // And process the lift motor
             if ((gamepad2.right_stick_y < -0.2) && (!robot.liftLimit.isPressed())) {
-                robot.liftMotor.setPower(1.0);
+                // Lift it up
+                robot.liftMotor.setPower(robot.LIFT_UP_SPEED);
+                if (!liftMotorUp) {
+                    // We weren't going up before so log event
+                    liftMotorUp = true;
+                    liftMotorDown = false;
+                    DbgLog.msg("DM10337 -- Cap Ball Lift moving up");
+                }
             } else if (gamepad2.right_stick_y > 0.2) {
-                robot.liftMotor.setPower(-0.20);
+                // Or drop it down
+                robot.liftMotor.setPower(robot.LIFT_DOWN_SPEED);
+                if (!liftMotorDown) {
+                    // We weren't moving down before so log event
+                    liftMotorDown = true;
+                    liftMotorUp = false;
+                    DbgLog.msg("DM10337 -- Cap Ball Lift moving down");
+                }
             } else robot.liftMotor.setPower(0.0);
+
+            // Move the pivot
+            pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
 
         }
 
 
-        beaconPos = Range.clip(beaconPos, robot.BEACON_MIN_RANGE, robot.BEACON_MAX_RANGE);
-        robot.beacon.setPosition(beaconPos);
-
-        pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
-
-
-
-        shootSpeed = Range.clip(shootSpeed, 0.0, 1.0);
-        telemetry.addData("Shoot", shootSpeed);
-        //telemetry.addData("beaconPos", beaconPos);
-        //telemetry.addData("pivotPos", pivotPos);
-
-
-        // Ball intake on/off
+        /*
+            Code for the ball intake
+         */
         if (gamepad1.left_trigger > 0.2) {
             // Pressing intake reverse button
             if (!intakeOutPressed) {
-                // Haven't read this button press yet
+                // Haven't read this button press yet so process it
                 intakeOutPressed = true;
                 if (intakeOut) {
                     // Already running out so stop it
                     robot.intake.setPower(0.0);
                     intakeOut = false;
                     intakeIn = false;
+                    DbgLog.msg("DM10337 -- Intake stopped from reverse");
                 } else {
                     // Not already in reverse so set it so
-                    robot.intake.setPower(-1.0);
+                    robot.intake.setPower(robot.INTAKE_OUT_SPEED);
                     intakeOut = true;
                     intakeIn = false;
+                    DbgLog.msg("DM10337 -- Intake start reverse");
                 }
             }
         } else {
@@ -301,18 +371,20 @@ public class TeleOpMain extends OpMode{
         if (gamepad1.right_trigger > 0.2) {
             // Pressing intake forward button
             if (!intakeInPressed) {
-                // Haven't read this button press yet
+                // Haven't read this button press yet so process it
                 intakeInPressed = true;
                 if (intakeIn) {
                     // Already running out so stop it
                     robot.intake.setPower(0.0);
                     intakeOut = false;
                     intakeIn = false;
+                    DbgLog.msg("DM10337 -- Intake stopped from forward");
                 } else {
                     // Not already in forward so set it so
-                    robot.intake.setPower(1.0);
+                    robot.intake.setPower(robot.INTAKE_IN_SPEED);
                     intakeOut = false;
                     intakeIn = true;
+                    DbgLog.msg("DM10337 -- Intake start forward");
                 }
             }
         } else {
@@ -320,26 +392,7 @@ public class TeleOpMain extends OpMode{
             intakeInPressed = false;
         }
 
-
-        // Read and report heading
-        angles   = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-
-        telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle) );
-
-
-        // Read and report Adafruit RGB sensor
-
-        // convert the RGB values to HSV values.
-        Color.RGBToHSV((robot.beaconColor.red() * 255) / 800, (robot.beaconColor.green() * 255) / 800,
-                (robot.beaconColor.blue() * 255) / 800, hsvValues);
-
-        // send the info back to driver station using telemetry function.
-        //telemetry.addData("Clear", robot.beaconColor.alpha());
-        //telemetry.addData("Red  ", robot.beaconColor.red());
-        //telemetry.addData("Green", robot.beaconColor.green());
-        //telemetry.addData("Blue ", robot.beaconColor.blue());
-        telemetry.addData("Hue", hsvValues[0]);
-
+        // Finally update the telemetry for this cycle
         updateTelemetry(telemetry);
 
 
@@ -347,11 +400,22 @@ public class TeleOpMain extends OpMode{
 
 
     /*
-     * Code to run ONCE after the driver hits STOP
+     * Code to run ONCE after the driver hits STOP.  Make all motion stops
      */
     @Override
     public void stop() {
+        robot.lfDrive.setPower(0.0);
+        robot.lrDrive.setPower(0.0);
+        robot.rfDrive.setPower(0.0);
+        robot.rrDrive.setPower(0.0);
+        robot.lShoot.setPower(0.0);
+        robot.rShoot.setPower(0.0);
+        robot.intake.setPower(0.0);
+        robot.liftMotor.setPower(0.0);
+        robot.fire.setPower(0.0);
+        DbgLog.msg("Teleop Stop Pressed");
     }
+
 
     /**
      * This does the cubic smoothing equation on joystick value.
@@ -409,62 +473,5 @@ public class TeleOpMain extends OpMode{
         }
     }
 
-    void composeTelemetry() {
-
-        // At the beginning of each telemetry update, grab a bunch of data
-        // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            angles   = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-            gravity  = robot.imu.getGravity();
-        }
-        });
-
-        telemetry.addLine()
-                .addData("status", new Func<String>() {
-                    @Override public String value() {
-                        return robot.imu.getSystemStatus().toShortString();
-                    }
-                })
-                .addData("calib", new Func<String>() {
-                    @Override public String value() {
-                        return robot.imu.getCalibrationStatus().toString();
-                    }
-                });
-
-        telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
-
-
-    }
-
-    //----------------------------------------------------------------------------------------------
-    // Formatting
-    //----------------------------------------------------------------------------------------------
-
-    String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
-    String formatDegrees(double degrees){
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
 
 }
