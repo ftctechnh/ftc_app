@@ -68,55 +68,124 @@ public class BeaconFinderAuto extends CameraProcessor {
 
         telemetry.addData("Status:", "Moving...");
         telemetry.update();
+        if(teamColor == "BLUE") //We are blue team
 
-        GyroMovement(0.25, 0, 1000); //pull forward off the wall
-        Thread.sleep(1000);
-        //At this point, we can try to score the pre-loaded balls
-        robot.shooter1.setPower(1);
-        robot.shooter2.setPower(1);
-        Thread.sleep(800);
-        robot.shooter1.setPower(0);
-        robot.shooter2.setPower(0);
-        Thread.sleep(1000);
-        robot.shooter1.setPower(1);
-        robot.shooter2.setPower(1);
-        Thread.sleep(1000);
-        robot.shooter1.setPower(0);
-        robot.shooter2.setPower(0);
-        //Now that both balls are scored, proceed to the beacon
-        GyroMovement(0.25, 45, 14
-                50); //drive diagonally to line up w/ the beacon
-        GyroMovement(0.3, 90, 750); //pull closer to teh beacon so we can
-
-        Thread.sleep(2000);
-
-        telemetry.addData("Status:", "Detecting beacon color...");
-        telemetry.update();
-
-        String firstBeaconSide = getBeaconSide();
-        returnedSide = firstBeaconSide;
-        telemetry.addData("Returned Side:", returnedSide);
-        telemetry.addData("Left Color:", leftBeaconColor);
-        telemetry.addData("Right Color:", rightBeaconColor);
-        telemetry.update();
-
-        if (firstBeaconSide == "LEFT") //We need to push the left side
         {
-            GyroMovement(0.2, 0, 750);
-            GyroMovement(0.3, 90, 800);
+            GyroMovement(0.25, 0, 1050); //pull forward off the wall
+            Thread.sleep(1000);
+            //At this point, we can try to score the pre-loaded balls
+            robot.shooter1.setPower(1);
+            robot.shooter2.setPower(1);
+            Thread.sleep(800);
+            robot.shooter1.setPower(0);
+            robot.shooter2.setPower(0);
+            Thread.sleep(1000);
+            robot.shooter1.setPower(1);
+            robot.shooter2.setPower(1);
+            Thread.sleep(1000);
+            robot.shooter1.setPower(0);
+            robot.shooter2.setPower(0);
+            GyroMovement(0.25, 0, 750);
+            GyroMovement(0.25, 90, 200);
+            GyroMovement(0.25, 0, 500);
+            /*
+            //Now that both balls are scored, proceed to the beacon
+            GyroMovement(0.25, 45, 1850); //drive diagonally to line up w/ the beacon
+            GyroMovement(0.3, 90, 750); //pull closer to teh beacon so we can
+
+            Thread.sleep(2000);
+
+            telemetry.addData("Status:", "Detecting beacon color...");
+            telemetry.update();
+
+            String firstBeaconSide = getBeaconSide();
+            returnedSide = firstBeaconSide;
+            telemetry.addData("Returned Side:", returnedSide);
+            telemetry.addData("Left Color:", leftBeaconColor);
+            telemetry.addData("Right Color:", rightBeaconColor);
+            telemetry.update();
+
+            if (firstBeaconSide == "LEFT") //We need to push the left side
+            {
+                GyroMovement(0.2, 0, 1000);
+                Thread.sleep(1000);
+                GyroMovement(0.3, 90, 800);
+                Thread.sleep(1000);
+            }
+            else if (firstBeaconSide == "RIGHT")//We need to push the right side
+            {
+                GyroMovement(0.3, 90, 800);
+                Thread.sleep(1000);
+            }
+
+            stopCamera();
+
+            telemetry.addData("Status:", "Idling...");
+            telemetry.addData("Returned Side:", returnedSide);
+            telemetry.addData("Left Color:", leftBeaconColor);
+            telemetry.addData("Right Color:", rightBeaconColor);
+            telemetry.update();
+       */
         }
-        else if (firstBeaconSide == "RIGHT")//We need to push the right side
+        else //We are RED team
         {
-            GyroMovement(0.3, 90, 750);
+            GyroMovement(0.25, 0, 1000); //pull forward off the wall
+            Thread.sleep(1000);
+            //At this point, we can try to score the pre-loaded balls
+            robot.shooter1.setPower(1);
+            robot.shooter2.setPower(1);
+            Thread.sleep(800);
+            robot.shooter1.setPower(0);
+            robot.shooter2.setPower(0);
+            Thread.sleep(1000);
+            robot.shooter1.setPower(1);
+            robot.shooter2.setPower(1);
+            Thread.sleep(1000);
+            robot.shooter1.setPower(0);
+            robot.shooter2.setPower(0);
+            GyroMovement(0.25, 0, 750);
+            Thread.sleep(1000);
+            GyroMovement(0.25, 90, 200);
+            Thread.sleep(1000);
+            GyroMovement(0.25, 0, 1000);
+            Thread.sleep(1000);
+            /*
+            //Now that both balls are scored, proceed to the beacon
+            GyroMovement(0.25, 315, 1450); //drive diagonally to line up w/ the beacon
+            GyroMovement(0.3, 270, 750); //pull closer to teh beacon so we can determine color
+
+            Thread.sleep(2000);
+
+            telemetry.addData("Status:", "Detecting beacon color...");
+            telemetry.update();
+
+            String firstBeaconSide = getBeaconSide();
+            returnedSide = firstBeaconSide;
+            telemetry.addData("Returned Side:", returnedSide);
+            telemetry.addData("Left Color:", leftBeaconColor);
+            telemetry.addData("Right Color:", rightBeaconColor);
+            telemetry.update();
+
+            if (firstBeaconSide == "LEFT") //We need to push the left side
+            {
+                GyroMovement(0.2, 0, 750);
+                GyroMovement(0.3, 270, 800);
+            }
+            else if (firstBeaconSide == "RIGHT")//We need to push the right side
+            {
+                GyroMovement(0.3, 280, 750);
+            }
+
+            stopCamera();
+
+            telemetry.addData("Status:", "Idling...");
+            telemetry.addData("Returned Side:", returnedSide);
+            telemetry.addData("Left Color:", leftBeaconColor);
+            telemetry.addData("Right Color:", rightBeaconColor);
+            telemetry.update();
+            */
         }
 
-        stopCamera();
-
-        telemetry.addData("Status:", "Idling...");
-        telemetry.addData("Returned Side:", returnedSide);
-        telemetry.addData("Left Color:", leftBeaconColor);
-        telemetry.addData("Right Color:", rightBeaconColor);
-        telemetry.update();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -168,7 +237,7 @@ public class BeaconFinderAuto extends CameraProcessor {
         String left;
         String right;
 
-        if(left_intensity > right_intensity) {
+        if(left_intensity < right_intensity) {
             left = "BLUE";
             right = "RED";
             leftBeaconColor = left;

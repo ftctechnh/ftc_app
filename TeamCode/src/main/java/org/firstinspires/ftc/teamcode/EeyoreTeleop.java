@@ -74,8 +74,8 @@ public class EeyoreTeleop extends OpMode {
 
 
         //Now, we need to work out how much power each motor gets
-        left = reverseDirection * Range.clip((maxSpeed * speed) + direction, -1, 1);
-        right = reverseDirection * Range.clip((maxSpeed * speed) - direction, -1, 1);
+        left = Range.clip((maxSpeed * speed * reverseDirection) + direction, -1, 1);
+        right = Range.clip((maxSpeed * speed * reverseDirection) - direction, -1, 1);
 
         robot.l1.setPower(left);
         robot.l2.setPower(left);
