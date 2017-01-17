@@ -30,7 +30,7 @@ public class BlueWaitCorner8 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 180;
+                desiredAngle = 235;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
