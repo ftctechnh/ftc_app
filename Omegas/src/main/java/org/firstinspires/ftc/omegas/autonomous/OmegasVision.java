@@ -182,10 +182,17 @@ abstract class OmegasVision extends ManualVisionOpMode {
         new Thread() {
             @Override
             public void run() {
-                if (blueBeacon == (getColor() == OmegasAlliance.RED)) {
-                    Ω.rightBeaconatorSequence(Ω.getRightBeaconator());
-                } else {
-                    Ω.leftBeaconatorSequence(Ω.getLeftBeaconator());
+                /**
+                 * Three times for good luck.
+                 *
+                 * Yes, we also believe in wizardry.
+                 */
+                for (int i = 0; i < 3; i++) {
+                    if (blueBeacon == (getColor() == OmegasAlliance.RED)) {
+                        Ω.rightBeaconatorSequence(Ω.getRightBeaconator());
+                    } else {
+                        Ω.leftBeaconatorSequence(Ω.getLeftBeaconator());
+                    }
                 }
 
                 shouldApproachCapBall = true;
@@ -198,6 +205,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
     private void approachCapBall() {
         new Thread() {
             public void run() {
+                runtime.reset();
+
                 while (!(runtime.milliseconds() > 3000)) {
                     for (DcMotor motor : Ω.getMotors()) {
                         motor.setPower((runtime.milliseconds() < 2500) ? -0.25 : -0.0);
