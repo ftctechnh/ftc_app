@@ -17,12 +17,7 @@ public abstract class _RobotBase extends LinearOpMode
     //Drive motors (they are lists because it helps when we add on new motors.
     protected ArrayList <DcMotor> leftDriveMotors = new ArrayList <>(), rightDriveMotors = new ArrayList<>();
     //Other motors
-    protected DcMotor harvester, pusher;
-    protected Servo leftSensorServo, rightSensorServo; //Have to be initialized differently.
-    protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
-    protected final double LEFT_SERVO_OPEN = 0.48, RIGHT_SERVO_OPEN = 0.48;
-
-    protected OpticalDistanceSensor opticalDistanceSensor;
+    protected DcMotor harvester, flywheels;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
@@ -46,22 +41,18 @@ public abstract class _RobotBase extends LinearOpMode
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
-        rightDriveMotors.add(initialize(DcMotor.class, "right"));
+        rightDriveMotors.add(initialize(DcMotor.class, "frontRight"));
+        rightDriveMotors.add(initialize(DcMotor.class, "backRight"));
 
-        leftDriveMotors.add(initialize(DcMotor.class, "left"));
+        leftDriveMotors.add(initialize(DcMotor.class, "frontLeft"));
+        leftDriveMotors.add(initialize(DcMotor.class, "backLeft"));
         for(DcMotor motor : leftDriveMotors)
                 motor.setDirection(DcMotor.Direction.REVERSE);
 
         /*************************** OTHER MOTORS ***************************/
-        pusher = initialize(DcMotor.class, "pusher");
         harvester = initialize(DcMotor.class, "harvester");
-
-        leftSensorServo = initialize(Servo.class, "servoLeft");
-        leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
-        rightSensorServo = initialize(Servo.class, "servoRight");
-        rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
-
-        opticalDistanceSensor = initialize(OpticalDistanceSensor.class, "ods");
+        flywheels = initialize(DcMotor.class, "flywheels");
+        flywheels.setDirection(DcMotor.Direction.REVERSE);
 
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
