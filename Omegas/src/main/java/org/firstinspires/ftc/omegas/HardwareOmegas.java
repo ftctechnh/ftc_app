@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * Motor channel:  Left  drive motor:                "left_drive"
  * Motor channel:  Right drive motor:                "right_drive"
  * Servo channel:  Servo to push left beaconator:    "left_beaconator"
- * Servo channel:  Servo to open right beaconator:   "right_beaconator"
+ * Servo channel:  Servo to push right beaconator:   "right_beaconator"
  * Color sensor:  Color sensor for left beaconator:  "left_color_sensor"
  * Color sensor:  Color sensor for right beaconator: "right_color_sensor"
  * <p>
