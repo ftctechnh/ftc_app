@@ -1,14 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
-import android.provider.Settings;
-import android.util.Log;
-
-import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.robotcontroller.internal.CameraProcessor;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * TeleOp Mode
@@ -19,12 +13,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp(name = "Camera: Auto", group = "Linear OpMode")
 //@Disabled
 public class CameraAuto extends CameraProcessor {
-    public class ColorCoordinate {
-        int x;
-        int y;
-        int color = 0;
-    }
-
     @Override
     public void runOpMode() {
         telemetry.addData("Status:", "Initializing");
@@ -61,8 +49,8 @@ public class CameraAuto extends CameraProcessor {
                     int pixel_red = red(pixel);
                     int pixel_blue = blue(pixel);
 
-                    if(pixel_blue > pixel_red) {
-                        left_intensity += pixel_blue;
+                    if(pixel_red > 200 && pixel_blue < 200) {
+                        left_intensity += 1;
                     }
                 }
             }
@@ -75,8 +63,8 @@ public class CameraAuto extends CameraProcessor {
                     int pixel_red = red(pixel);
                     int pixel_blue = blue(pixel);
 
-                    if(pixel_blue > pixel_red) {
-                        right_intensity += pixel_blue;
+                    if(pixel_red > 200 && pixel_blue < 200) {
+                        right_intensity += 1;
                     }
                 }
             }
@@ -84,7 +72,8 @@ public class CameraAuto extends CameraProcessor {
             String left;
             String right;
 
-            if(left_intensity > right_intensity) {
+            if(left_intensity <
+                    right_intensity) {
                 left = "BLUE";
                 right = "RED";
             } else {
