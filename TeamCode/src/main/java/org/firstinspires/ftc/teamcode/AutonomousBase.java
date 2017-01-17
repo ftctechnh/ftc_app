@@ -291,8 +291,8 @@ public abstract class AutonomousBase extends OpMode {
                 break;
            case MoveState.SHOOT_WHEEL:
                 // Spins fly-wheels
-                motorLeftShooter.setPower(.75);
-                motorRightShooter.setPower(.75);
+                motorLeftShooter.setPower(.3);
+                motorRightShooter.setPower(.3);
                 break;
            case MoveState.SHOOT_CONVEYOR:
                 // Pushed ball towards flywheel
