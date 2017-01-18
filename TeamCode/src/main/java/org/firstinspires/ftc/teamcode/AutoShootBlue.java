@@ -63,9 +63,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * -- Drive to center vortex, knock cap ball, and park.
  */
 
-@Autonomous(name="Auto Blue Full 100", group="DM")
+@Autonomous(name="Auto Blue Option 2", group="DM")
 // @Disabled
-public class Auto100Blue extends LinearOpMode {
+public class AutoShootBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareDM         robot   = new HardwareDM ();   // Use a Pushbot's hardware
@@ -116,7 +116,7 @@ public class Auto100Blue extends LinearOpMode {
 
         int beacon = 0;         // What color beacon do we see
 
-        DbgLog.msg("DM10337- Starting Auto 100 init.  We are:" + (amIBlue()?"Blue":"Red"));
+        DbgLog.msg("DM10337- Starting Auto Option 2 init.  We are:" + (amIBlue()?"Blue":"Red"));
 
         // Init the robot hardware
         robot.init(hardwareMap);
@@ -151,112 +151,38 @@ public class Auto100Blue extends LinearOpMode {
         robot.lShoot.setPower(robot.SHOOT_DEFAULT);
         robot.rShoot.setPower(robot.SHOOT_DEFAULT);
 
+        // Wait for 10 seconds
+        sleep (10000);
+
         // Move forward  to line up for shooting particles
         // Use gyro to hold heading
-        encoderDrive(DRIVE_SPEED,  25.75, 5.0, true, 0.0, false);
+        encoderDrive(DRIVE_SPEED,  14.0, 3.0, true, 0.0, false);
+
+        // Turn towards the goal
+        gyroTurn(TURN_SPEED, amIBlue()?-45.0:45.0);
+
+        // Drive to the goal
+        encoderDrive(DRIVE_SPEED, 28.0, 3.0, true, amIBlue()?-45.0:45.0, false);
 
         // Fire the balls
         robot.fire.setPower(1.0);
-        sleep(1500);        // Wait for shot to finish
-
-        // Turn towards the beacons using gyro
-        gyroTurn(TURN_SPEED, amIBlue()?-70.0:65.0);
-
-        // Stop the shooter
-        robot.fire.setPower(0.0);
-        robot.lShoot.setPower(0.0);
-        robot.rShoot.setPower(0.0);
-
-        // Drive towards the beacon wall
-        // Use gyro to hold heading
-        encoderDrive(DRIVE_SPEED, amIBlue()?51.5:52.5, 5.0,
-                true, amIBlue()?-70.0:65.0, false);
-
-        // Turn parallel to beacon wall using gyro
-        // Had to tweak the red direction off of 180 to correct alignment error after turn
-        gyroTurn(TURN_SPEED, amIBlue()?0.0:175.0);
-
-        // Move slowly to approach 1st beacon -- Slow allows us to be more accurate w/ alignment
-        // Autocorrects any heading errors while driving
-        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?8.0:1.0, 1.0, true,
-                amIBlue()?0.0:180.0, true);
-
-        // Use line finder to align to white line
-        findLine(amIBlue()?0.2:0.2, 3.0);
-
-        // Wait for beacon color sensor
-        sleep(1000);
-
-        // Check the beacon color
-        beacon = beaconColor();
-        if (beacon == 1) {
-            // We see blue
-            distCorrection = amIBlue()?2.25:-3.75;
-        } else if (beacon == -1) {
-            // We see red
-            distCorrection = amIBlue()?-3.25:2.50;
-        } else {
-            // We see neither
-            distCorrection = 0;
-        }
-
-        if (beacon != 0) {
-            // We saw a beacon color so move to align beacon pusher
-            // We turn by +/- 4 degrees to account for curved front of beacon
-            encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
-                    amIBlue()?(0-4*beacon):(180+5*beacon), true);
-
-            // And press the beacon button
-            robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
-            sleep (1000);
-            robot.beacon.setPosition((robot.BEACON_HOME));
-
-        }
-
-
-        // Drive to the 2nd beacon.  Tweaked Red heading to correct alignment errors.
-        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?43.0:-44.0 - distCorrection, 4.0,
-                true, amIBlue()?0.0:178.0, false);
-
-        // Find the 2nd white line
-        findLine(amIBlue()?0.2:-0.2, 3.0);
-
-        // wait for color sensor
-        sleep(1000);
-
-        // Check the beacon color
-        beacon = beaconColor();
-        if (beacon == 1) {
-            // I see blue
-            distCorrection = amIBlue()?2.25:-3.50;
-        } else if (beacon == -1) {
-            // I see red
-            distCorrection = amIBlue()?-3.25:2.50;
-        } else {
-            // I see neither
-            distCorrection = 0;
-        }
-
-        if (beacon != 0) {
-            // We saw a beacon color so move to align beacon pusher
-            // Adjust by +/- 4 degrees to account for curved front of beacon
-            encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
-                    amIBlue()?(0-4*beacon):(180+5*beacon), true);
-
-            // And press the beacon button
-            robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
-            sleep (1000);
-            robot.beacon.setPosition((robot.BEACON_HOME));
-
-        }
+        sleep(2500);        // Wait for shot to finish
 
         // Reverse the intake to keep any particles or cap balls out of our way
         robot.intake.setPower(-1.0);
 
         // And drive to the center vortex, knock cap ball, and park
         // Note that we are turning while moving to save time at the expense of accuracy
-        encoderDrive(1.0, amIBlue()?-75.0:74.0, 10.0, true,
-                amIBlue()?-60.0:245, false);
+        encoderDrive(DRIVE_SPEED, 16.0, 10.0, true,
+                amIBlue()?-45.0:45.0, false);
+
+
+        // Stop the shooter
+        robot.fire.setPower(0.0);
+        robot.lShoot.setPower(0.0);
+        robot.rShoot.setPower(0.0);
+
+
 
         // And stop
         robot.intake.setPower(0.0);
