@@ -30,6 +30,7 @@ public class TeleopNew extends _RobotBase
         double leftPower, rightPower;
         boolean backwards = true;
         double lastTimeToggleDirectionPressed = 0;
+        double speedCoefficient = 1.0;
 
         //Other motor variables
 
@@ -47,9 +48,11 @@ public class TeleopNew extends _RobotBase
                 rightPower = gamepad1.right_stick_y;
             }
 
+
             // clip the right/left values so that the values never exceed +/- 1
-            rightPower = Range.clip(rightPower, -1, 1);
-            leftPower = Range.clip(leftPower, -1, 1);
+            rightPower = speedCoefficient*Range.clip(rightPower, -1, 1);
+            leftPower = speedCoefficient*Range.clip(leftPower, -1, 1);
+
 
             // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
             for (DcMotor lMotor : leftDriveMotors)
@@ -65,6 +68,13 @@ public class TeleopNew extends _RobotBase
                 outputNewLineToDriverStation("Toggled drive mode to " + (backwards ? "backwards" : "forwards"));
             }
 
+            if (gamepad1.left_bumper) {
+                speedCoefficient = 0.6;
+            }
+            else if (gamepad1.left_trigger > 0.5) {
+                speedCoefficient = 1.0;
+            }
+
             /******************** OTHER MOTORS ********************/
 
             //Harvester (hopefully just this simple)
@@ -78,8 +88,8 @@ public class TeleopNew extends _RobotBase
             if (gamepad2.dpad_up) {
                 flywheels.setPower(1.0);
             }
-            else if (gamepad2.dpad_up) {
-                flywheels.setPower(-1.0);
+            else if (gamepad2.dpad_down) {
+                flywheels.setPower(-0.6);
             }
             else {
                 flywheels.setPower(0.0);
