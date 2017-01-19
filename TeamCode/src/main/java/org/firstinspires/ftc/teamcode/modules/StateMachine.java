@@ -10,8 +10,15 @@ public final class StateMachine {
     protected State activeState;
     private ActiveStateThread activeStateThread;
 
+    private Map<String, Integer> parameterInt;
+    private Map<String, Boolean> parameterBool;
+    private Map<String, Double> parameterDouble;
+
     public StateMachine(State initialState, State... otherStates) {
         this.states = new HashMap<>();
+        this.parameterInt = new HashMap<>();
+        this.parameterBool = new HashMap<>();
+        this.parameterDouble = new HashMap<>();
 
         this.activeState = initialState;
         this.activeStateThread = new ActiveStateThread();
@@ -19,14 +26,15 @@ public final class StateMachine {
 
         this.states.put(activeState.id, activeState);
         for (State state : otherStates) {
-            this.states.put(state.id, state);
             state.stateMachine = this;
+            this.states.put(state.id, state);
         }
     }
 
     public void changeState(String stateId) {
         State result = this.states.get(stateId);
         if(result == null) {
+            result.sendData("adsf",true);
             Log.d("State", "State ID " + stateId + " is invalid!");
         }
         else {
@@ -42,25 +50,66 @@ public final class StateMachine {
     }
 
     private class ActiveStateThread extends Thread {
-        private boolean terminate = false;
+        private boolean terminate;
+
+        public ActiveStateThread() {
+            terminate = false;
+        }
 
         @Override
         public void run() {
             while(!terminate) {
-                StateMachine.this.activeState.run();
+                synchronized (this) {
+                    StateMachine.this.activeState.run();
+                }
             }
         }
     }
 
-    public void start() {
+    public StateMachine start() {
         activeStateThread.start();
+        return this;
     }
 
-    public void stop() {
+    public StateMachine stop() {
         this.activeStateThread.terminate = true;
+        this.activeStateThread = null;
+        return this;
     }
 
     public boolean isOn() {
         return !this.activeStateThread.terminate;
+    }
+
+
+
+    public void sendData(String key, int anInt) {
+        parameterInt.put(key, anInt);
+    }
+
+    public void sendData(String key, boolean aBool) {
+        parameterBool.put(key, aBool);
+    }
+
+    public void sendData(String key, Double aDouble) {
+        parameterDouble.put(key, aDouble);
+    }
+
+    public int getInt(String key) {
+        return parameterInt.get(key);
+    }
+
+    public boolean getBool(String key) {
+        return parameterBool.get(key);
+    }
+
+    public double getDouble(String key) {
+        Double dbl = parameterDouble.get(key);
+
+        if(dbl == null) {
+            return 0.0;
+        }
+
+        return dbl;
     }
 }
