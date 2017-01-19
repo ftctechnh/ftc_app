@@ -168,12 +168,12 @@ public abstract class HardwareOmegas {
      *
      * @param duration Time moved in milliseconds.
      */
-    public void driveForward(double duration) {
+    public void driveForward(double power, double duration) {
         ElapsedTime timePushed = new ElapsedTime();
 
         while (timePushed.milliseconds() < duration) {
             for (DcMotor motor : getMotors()) {
-                motor.setPower(0.25);
+                motor.setPower(power);
             }
         }
         stopDriving();

@@ -14,7 +14,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  */
 
 @SuppressWarnings("unused")
-@Autonomous(name = "Tetrix Ranger: Drive Test", group = "Tests")
+@Autonomous(name = "Omegas: Cap Ball Test", group = "Tests")
 public class OmegasCapBall extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -47,11 +47,7 @@ public class OmegasCapBall extends LinearOpMode {
         };
 
         // run until the end of the match (driver presses STOP)
-        while (!(runtime.milliseconds() > 3000)) {
-            for (DcMotor motor : Ω.getMotors()) {
-                motor.setPower((runtime.milliseconds() < 2500) ? -0.25 : -0.0);
-            }
-        }
+        Ω.driveForward(-0.25, 3000);
 
         for (DcMotor motor : Ω.getMotors()) {
             motor.setPower(0.0f);
