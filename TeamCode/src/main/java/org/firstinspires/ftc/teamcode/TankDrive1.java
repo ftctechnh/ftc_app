@@ -89,8 +89,8 @@ public class TankDrive1 extends LinearOpMode {
 
             // Turn motor on when up on the DPAD is pressed, turn off when down is pressed
             if (gamepad1.dpad_up) {
-               robot.leftShooter.setPower(1);
-               robot.rightShooter.setPower(1);
+               robot.leftShooter.setPower(-1);
+               robot.rightShooter.setPower(-1);
             }
             else if (gamepad1.dpad_down) {
                robot.leftShooter.setPower(0);
@@ -109,7 +109,7 @@ public class TankDrive1 extends LinearOpMode {
             // Get the motors' power (for telemetry)
             leftShooter = robot.leftShooter.getPower();
             rightShooter = robot.rightShooter.getPower();
-            //harvester = robot.harvester.getPower();
+
 
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
