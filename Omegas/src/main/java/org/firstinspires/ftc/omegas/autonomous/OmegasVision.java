@@ -33,10 +33,12 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
     /* Declare OpMode members. */
     private boolean shouldApproachBeaconator = false;
-    private boolean shouldApproachCapBall = false;
+    private boolean approachedCapBall = false;
     private boolean startedDriving = false;
     private HardwareOmegas Ω = null;
     private Thread driveThread = null;
+    private Thread beaconThread = null;
+    private Thread capBallThread = null;
     private final ElapsedTime runtime = new ElapsedTime();
 
     private static final ColorHSV lowerBoundRed = new ColorHSV((int) (305 / 360.0 * 255.0), (int) (0.200 * 255.0), (int) (0.300 * 255.0));
@@ -148,7 +150,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
             startedDriving = true;
         }
 
-        if (shouldApproachCapBall) approachCapBall();
+        if (approachedCapBall) approachCapBall();
         if (shouldApproachBeaconator) approachBeaconator(leftBlue, rightBlue);
 
         try {
@@ -179,7 +181,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
          * | Blue (Alliance==true) | Left (Beaconator==true)   | Right (Beaconator==false) |
          * | Red (Alliance==false) | Right (Beaconator==false) | Left (Beaconator==true)   |
          */
-        new Thread() {
+        beaconThread = new Thread() {
             @Override
             public void run() {
                 /**
@@ -194,28 +196,28 @@ abstract class OmegasVision extends ManualVisionOpMode {
                         Ω.leftBeaconatorSequence(Ω.getLeftBeaconator());
                     }
                 }
-
-                shouldApproachCapBall = true;
             }
-        }.start();
+        };
 
         shouldApproachBeaconator = false;
+        beaconThread.start();
     }
 
     private void approachCapBall() {
-        new Thread() {
+        capBallThread = new Thread() {
             public void run() {
                 runtime.reset();
 
-                while (!(runtime.milliseconds() > 3000)) {
+                while (runtime.milliseconds() <= 2600) {
                     for (DcMotor motor : Ω.getMotors()) {
-                        motor.setPower((runtime.milliseconds() < 2500) ? -0.25 : -0.0);
+                        motor.setPower((runtime.milliseconds() < 2500) ? -0.25 : 0.0);
                     }
                 }
             }
         };
 
-        shouldApproachCapBall = false;
+        approachedCapBall = true;
+        capBallThread.start();
     }
 
     abstract OmegasAlliance getColor();
@@ -225,6 +227,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
         super.stop();
 
         driveThread.interrupt();
+        if (beaconThread != null) beaconThread.interrupt();
+        if (capBallThread != null) capBallThread.interrupt();
     }
 
     @Override
