@@ -33,7 +33,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
     /* Declare OpMode members. */
     private boolean shouldApproachBeaconator = false;
-    private boolean shouldApproachCapBall = false;
+    private boolean approachedCapBall = false;
     private boolean startedDriving = false;
     private HardwareOmegas Ω = null;
     private Thread driveThread = null;
@@ -150,7 +150,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
             startedDriving = true;
         }
 
-        if (shouldApproachCapBall) approachCapBall();
+        if (approachedCapBall) approachCapBall();
         if (shouldApproachBeaconator) approachBeaconator(leftBlue, rightBlue);
 
         try {
@@ -196,17 +196,15 @@ abstract class OmegasVision extends ManualVisionOpMode {
                         Ω.leftBeaconatorSequence(Ω.getLeftBeaconator());
                     }
                 }
-
-                shouldApproachCapBall = true;
             }
         };
 
-        beaconThread.start();
         shouldApproachBeaconator = false;
+        beaconThread.start();
     }
 
     private void approachCapBall() {
-        new Thread() {
+        capBallThread = new Thread() {
             public void run() {
                 runtime.reset();
 
@@ -218,7 +216,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
             }
         };
 
-        shouldApproachCapBall = false;
+        approachedCapBall = true;
+        capBallThread.start();
     }
 
     abstract OmegasAlliance getColor();
