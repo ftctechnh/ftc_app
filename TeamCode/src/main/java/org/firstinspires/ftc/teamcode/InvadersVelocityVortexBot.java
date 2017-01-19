@@ -207,6 +207,7 @@ public class InvadersVelocityVortexBot
         if(rightMotor != null) rightMotor.setPower(rightPower);
     }
 
+
     // This function is currently disabled.
 //    public void gyroDrive ( double speed,
 //                            double distance,

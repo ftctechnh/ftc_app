@@ -65,7 +65,9 @@ public class PlatinumWumpus extends OpMode {
     final double CLAW_SPEED = 0.02;                 // sets rate to move servo
     //TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
     int robotState = -1;
-    double SpeedReduction = 1;
+    double DriveSpeedReduction = 1;
+    double LiftSpeedReduction = 1;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -107,7 +109,6 @@ public class PlatinumWumpus extends OpMode {
     @Override
     public void loop() {
         //This makes the slow mode possible by reducing the speed of all of the motors.
-
         double left;
         double right;
         //Gamepad 1 handles EVERYTHING
@@ -115,11 +116,13 @@ public class PlatinumWumpus extends OpMode {
 
         // Speed Mode
         if (gamepad1.x == true) {
-            SpeedReduction = 10;
+            DriveSpeedReduction = 1;
+            LiftSpeedReduction = 1;
         }
         else if (gamepad1.b == true) {
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
-            SpeedReduction = 1;
+            DriveSpeedReduction = 9;
+            LiftSpeedReduction = 5;
         }
         else{
             //Nothing is being pressed, don't change the value.
@@ -160,7 +163,7 @@ public class PlatinumWumpus extends OpMode {
         robot.beaconLeft.setPosition(gamepad1.left_trigger);
 
         if(gamepad1.y == true) {
-            robot.setCapBallMotorPower(1 / SpeedReduction, InvadersVelocityVortexBot.CapBallState.UP);
+            robot.setCapBallMotorPower(1 / LiftSpeedReduction, InvadersVelocityVortexBot.CapBallState.UP);
         }
         else if (gamepad1.right_stick_button == true && gamepad1.left_stick_button == true) {
             robot.setCapBallMotorPower(-0.2, InvadersVelocityVortexBot.CapBallState.DOWN);
@@ -170,8 +173,8 @@ public class PlatinumWumpus extends OpMode {
         }
 
         // Call the setPower functions with our calculated values to activate the motors
-        left = left / SpeedReduction;
-        right = right / SpeedReduction;
+        left = left / DriveSpeedReduction;
+        right = right / DriveSpeedReduction;
         robot.setDriveTrainPower(left,right);
     }
 
