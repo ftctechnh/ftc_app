@@ -67,6 +67,7 @@ public class OmegasAutonomous extends LinearOpMode {
         };
 
         boolean messageSaid = false;
+        boolean finishedDrive = false;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -77,8 +78,9 @@ public class OmegasAutonomous extends LinearOpMode {
                 if (runtime.milliseconds() > 8000 && !messageSaid) {
                     Ω.sayMessage();
                     messageSaid = true;
-                } else if (runtime.milliseconds() > 10000) {
+                } else if (runtime.milliseconds() > 10000 && !finishedDrive) {
                     Ω.driveForward(0.5, 2500);
+                    finishedDrive = true;
                 }
             }
         }
