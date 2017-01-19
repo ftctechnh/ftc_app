@@ -74,12 +74,11 @@ public class OmegasAutonomous extends LinearOpMode {
             telemetry.update();
 
             for (DcMotor motor : Ω.getMotors()) {
-                motor.setPower((runtime.milliseconds() < 10000) ? 0.0
-                        : (runtime.milliseconds() < 12500) ? 0.25 : 0.0);
-
                 if (runtime.milliseconds() > 8000 && !messageSaid) {
                     Ω.sayMessage();
                     messageSaid = true;
+                } else if (runtime.milliseconds() > 10000) {
+                    Ω.driveForward(0.5, 2500);
                 }
             }
         }

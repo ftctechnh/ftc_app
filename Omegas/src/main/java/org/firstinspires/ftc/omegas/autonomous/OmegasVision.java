@@ -79,12 +79,12 @@ abstract class OmegasVision extends ManualVisionOpMode {
                     if (!shouldApproachBeaconator) {
                         if (Ω.getLightSensor().getLightDetected() >= 0.4) {
                             Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
-                            Ω.driveForward(600.0);
+                            Ω.driveForward(0.25, 600.0);
 
                             shouldApproachBeaconator = true;
                         } else {
                             for (DcMotor motor : Ω.getMotors()) {
-                                motor.setPower(0.15);
+                                motor.setPower(0.25);
                             }
                         }
                     } else {
@@ -210,11 +210,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
             public void run() {
                 runtime.reset();
 
-                while (runtime.milliseconds() <= 2600) {
-                    for (DcMotor motor : Ω.getMotors()) {
-                        motor.setPower((runtime.milliseconds() < 2500) ? -0.25 : 0.0);
-                    }
-                }
+                Ω.driveForward(-0.25, 3000);
             }
         };
 
