@@ -82,15 +82,15 @@ public class TankDrive1 extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
+            left = gamepad1.left_stick_y;
+            right = gamepad1.right_stick_y;
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
 
             // Turn motor on when up on the DPAD is pressed, turn off when down is pressed
             if (gamepad1.dpad_up) {
-               robot.leftShooter.setPower(-1);
-               robot.rightShooter.setPower(-1);
+               robot.leftShooter.setPower(1);
+               robot.rightShooter.setPower(1);
             }
             else if (gamepad1.dpad_down) {
                robot.leftShooter.setPower(0);
@@ -98,46 +98,25 @@ public class TankDrive1 extends LinearOpMode {
             }
 
             // Set harvester speed based on the buttons pressed (from team8200; Steel Hawks)
-            if (gamepad1.right_trigger > 0.2) {
 
-                if (gamepad1.right_bumper) {
-                    robot.legacyController.setMotorPower(1, 1);
-                } else {
-                    robot.legacyController.setMotorPower(1, 0.5);
-                }
-
-            }
-            else if (gamepad1.left_trigger > 0.2) {
-
-                if (gamepad1.left_bumper) {
-                    robot.legacyController.setMotorPower(1, -1);
-                } else {
-                    robot.legacyController.setMotorPower(1, -0.5);
-                }
-
+            if (gamepad1.left_trigger > 0.2 || gamepad1.right_trigger > 0.2) {
+                robot.legacyController.setMotorPower(1, -1);
             }
             else {
-                robot.legacyController.setMotorPower(1,0);
+                robot.legacyController.setMotorPower(1, 0);
             }
 
             // Get the motors' power (for telemetry)
             leftShooter = robot.leftShooter.getPower();
             rightShooter = robot.rightShooter.getPower();
-<<<<<<< HEAD
             //harvester = robot.harvester.getPower();
-=======
-            harvester = robot.harvester.getPower();
->>>>>>> origin/master
 
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.addData("left shooter", "%.2f", leftShooter);
             telemetry.addData("right shooter", "%.2f", rightShooter);
-<<<<<<< HEAD
-=======
-            telemetry.addData("harvester", "%.2f", harvester);
->>>>>>> origin/master
+
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.

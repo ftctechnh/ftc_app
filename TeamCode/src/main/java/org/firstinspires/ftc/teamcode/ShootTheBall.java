@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -66,15 +65,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Golden Eagles: CenterAutoModeBlue", group="Pushbot")
+@Autonomous(name="Golden Eagles: SHOOT THE BALL", group="Pushbot")
 //@Disabled
-public class CenterAutoModeBlue extends LinearOpMode {
+public class ShootTheBall extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareK9bot robot = new HardwareK9bot(); // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    
-    static final double FORWARD_SPEED = 0.5;
+
 
     @Override
     public void runOpMode() {
@@ -95,38 +93,34 @@ public class CenterAutoModeBlue extends LinearOpMode {
         //                 -------------
         //                |   C O D E   |
         //                 -------------
-        
-        
-        runtime.reset();
-        
-        // Go straight for 1.5 seconds
-        // This should move the Cap ball already.
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        
-        // Turn (for a quick moment) to park (0.5 seconds)
-        robot.leftMotor.setPower(0.8);
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        
-        // THIS IS THE END
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
 
-        telemetry.addData("Path", "Complete");
+
+        runtime.reset();
+
+        // Part 1: Shooting the ball (time: 10 sec)
+
+        robot.leftShooter.setPower(1);
+        robot.rightShooter.setPower(1);
+        robot.legacyController.setMotorPower(1, -1);
+
+        while (opModeIsActive() && (runtime.seconds() < 10.0)) {
+            telemetry.addData("Say", "SPINNING...");
+            telemetry.update();
+        }
+
+        // End
+
+        robot.leftShooter.setPower(0);
+        robot.rightShooter.setPower(0);
+        robot.legacyController.setMotorPower(1, 0);
+
+        telemetry.addData("Say", "Done! Now I get to relax.");
         telemetry.update();
-        
-        
+
+
         //          ---------------------------
         //         |   E N D   O F   C O D E   |
         //          ---------------------------
-            
+
     }
 }

@@ -31,11 +31,8 @@ public class HardwareK9bot
     public DcMotor  rightMotor  = null;
     public DcMotor  leftShooter    = null;
     public DcMotor  rightShooter    = null;
-<<<<<<< HEAD
     public DcMotorController legacyController = null; //for legacy motor controller
-=======
-    public DcMotor  harvester   = null;
->>>>>>> origin/master
+
 
     /* Local OpMode members. */
     HardwareMap hwMap  = null;
@@ -53,16 +50,10 @@ public class HardwareK9bot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("ld-motor");
         rightMotor  = hwMap.dcMotor.get("rd-motor");
-<<<<<<< HEAD
-      leftShooter  = hwMap.dcMotor.get("ls-motor");
-      rightShooter  = hwMap.dcMotor.get("rs-motor");
         legacyController  = hwMap.dcMotorController.get("legacy-controller");
-=======
         leftShooter  = hwMap.dcMotor.get("ls-motor");
         rightShooter  = hwMap.dcMotor.get("rs-motor");
-        harvester  = hwMap.dcMotor.get("h-motor");
->>>>>>> origin/master
-        
+
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShooter.setDirection(DcMotor.Direction.REVERSE);
 
@@ -71,11 +62,8 @@ public class HardwareK9bot
         rightMotor.setPower(0);
         leftShooter.setPower(0);
         rightShooter.setPower(0);
-<<<<<<< HEAD
+        legacyController.setMotorPower(1,0);
 
-=======
-        harvester.setPower(0);
->>>>>>> origin/master
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -83,10 +71,6 @@ public class HardwareK9bot
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-<<<<<<< HEAD
-=======
-        harvester.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
->>>>>>> origin/master
 
     }
 

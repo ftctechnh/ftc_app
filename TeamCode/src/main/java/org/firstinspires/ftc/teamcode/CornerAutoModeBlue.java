@@ -67,14 +67,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Golden Eagles: CornerAutoModeBlue", group="Pushbot")
-@Disabled
+//@Disabled
 public class CornerAutoModeBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareK9bot robot = new HardwareK9bot(); // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    
-    static final double FORWARD_SPEED = 0.8;
+
+    static final double FORWARD_SPEED = 0.5;
 
     @Override
     public void runOpMode() {
@@ -95,10 +95,10 @@ public class CornerAutoModeBlue extends LinearOpMode {
         //                 -------------
         //                |   C O D E   |
         //                 -------------
-        
-        
+
+
         runtime.reset();
-        
+
         // Go forward for 0.5 second
         robot.leftMotor.setPower(0.3);
         robot.rightMotor.setPower(0.3);
@@ -106,42 +106,42 @@ public class CornerAutoModeBlue extends LinearOpMode {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        
-        // Rotate in place for 1 second
-        robot.leftMotor.setPower(0.5);
-        robot.rightMotor.setPower(-0.5);
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+
+        // Rotate in place for 0.5 second
+        robot.leftMotor.setPower(FORWARD_SPEED);
+        robot.rightMotor.setPower(-FORWARD_SPEED);
+        while (opModeIsActive() && (runtime.seconds() < 3.5)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        
+
         // Go straight to the corner vortex for 2 seconds
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
-        while (opModeIsActive() && (runtime.seconds() < 3.5)) {
+        while (opModeIsActive() && (runtime.seconds() < 5.5)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        
-        // Turn a little while slowly going forward to park (2 seconds)
-        robot.leftMotor.setPower(0.5);
-        robot.rightMotor.setPower(0.2);
-        while (opModeIsActive() && (runtime.seconds() < 5.5)) {
+
+        // Turn a little while slowly going forward to park (2.5 seconds)
+        robot.leftMotor.setPower(FORWARD_SPEED);
+        robot.rightMotor.setPower(0.1);
+        while (opModeIsActive() && (runtime.seconds() < 8.0)) {
             telemetry.addData("Path", "Leg 4: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        
+
         // THIS IS THE END
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        
-        
+
+
         //          ---------------------------
         //         |   E N D   O F   C O D E   |
         //          ---------------------------
-            
+
     }
 }

@@ -21,8 +21,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by student on 1/12/17.
  */
 
-@Autonomous(name="8200: Red Button Press", group="K9bot")
-
+//@Autonomous(name="8200: Red Button Press", group="K9bot")
+/*
 public class BeaconButtonPressRed extends LinearOpMode {
 
 
@@ -39,40 +39,35 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     @Override
 
-    public void runOpMode()
-    {
+    public void runOpMode() {
         waitForStart();
         MoveToBeacon();
-        distanceSensorCode();
     }
 
-   public void distanceSensorCode() {
+    public void distanceSensorCode() {
         dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
         distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
 
         waitForStart();
-            while (opModeIsActive()) {
-                voltage = distanceSensor.getVoltage();
-                maxVoltage = distanceSensor.getMaxVoltage();
-                voltsPerInch = 5.0 / 512.0;
-                voltageInInches = voltage / voltsPerInch;
-                while (voltageInInches <= 13)
-                {
-                        runtime.reset();
-                         if (runtime.seconds() > 3.0)
-                         {
-                             telemetry.addData("distanceTest. will print klk", kev);
-                             telemetry.update();
-                         }
-                 }
+        while (opModeIsActive()) {
+            voltage = robot.distanceSensor.getLightDetected();
+            maxVoltage = robot.distanceSensor.getRawLightDetectedMax();
+            voltsPerInch = 5.0 / 512.0;
+            voltageInInches = voltage / voltsPerInch;
+            while (voltageInInches <= 13) {
+                runtime.reset();
+                if (runtime.seconds() > 3.0) {
+                    telemetry.addData("distanceTest. will print klk", kev);
+                    telemetry.update();
+                }
+            }
             telemetry.addData("Voltage", voltageInInches);
             telemetry.addData("Max Voltage", maxVoltage);
             telemetry.update();
         }
     }
 
-    public void colorSensorCode()
-    {
+    public void colorSensorCode() {
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -95,16 +90,14 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
         bLedOn = true;
 
-/       // Set the LED state in the beginning.
+        // Set the LED state in the beginning.
         robot.lightSensor.enableLed(bLedOn);
         robot.cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
-        // get a reference to our ColorSensor object.
 
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         robot.cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
 
-        // wait for the start button to be pressed.
 
         // loop and read the RGB data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
@@ -112,6 +105,23 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
             // convert the RGB values to HSV values.
             Color.RGBToHSV((robot.colorSensor.red() * 255) / 800, (robot.colorSensor.green() * 255) / 800, (robot.colorSensor.blue() * 255) / 800, hsvValues);
+            //1st if statement is for red, 2nd if statement is for blue
+            if(robot.colorSensor.red() > 180 && robot.colorSensor.green() < 100 && robot.colorSensor.blue() < 100)
+            {
+                robot.armLeft.setPosition(0.8);
+                robot.armRight.setPosition(0);
+            }
+
+            else if(robot.colorSensor.red() < 100 && robot.colorSensor.green() < 100 && robot.colorSensor.blue() > 180)
+            {
+                robot.armLeft.setPosition(0);
+                robot.armRight.setPosition(0.8);
+            }
+            else
+            {
+                robot.armLeft.setPosition(0);
+                robot.armRight.setPosition(0);
+            }
 
             // send the info back to driver station using telemetry function.
             telemetry.addData("LED", bLedOn ? "On" : "Off");
@@ -134,23 +144,13 @@ public class BeaconButtonPressRed extends LinearOpMode {
 
     public void MoveToBeacon() {
         // Move to white line
-        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD)
-        {
+        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(MOTOR_POWER);
             robot.rightMotor.setPower(MOTOR_POWER);
             updateTelemetry();
         }
-
-        //step 2
-        robot.rightMotor.setPower(0);
-        robot.leftMotor.setPower(0);
-
-        telemetry.addData("Say", "Motors just stopped.");
-        telemetry.update();
-
-
-        while (opModeIsActive())
-        { //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
+        while (opModeIsActive()) {
+            //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 0.01)) {
@@ -162,14 +162,15 @@ public class BeaconButtonPressRed extends LinearOpMode {
             }
 
             //step 4 follow the line
-            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD)
-            { //follows white light is above threshold AND touch sensor is not touching
+            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) {
+                //follows white light is above threshold AND touch sensor is not touching
+                distanceSensorCode();
                 robot.leftMotor.setPower(MOTOR_POWER);
                 robot.rightMotor.setPower(MOTOR_POWER);
                 telemetry.addData("Say", "Motors following line.");
                 telemetry.update();
+                colorSensorCode();
             }
-
         }
     }
 
@@ -179,6 +180,4 @@ public class BeaconButtonPressRed extends LinearOpMode {
         telemetry.update();
     }
 }
-
-
-
+*/
