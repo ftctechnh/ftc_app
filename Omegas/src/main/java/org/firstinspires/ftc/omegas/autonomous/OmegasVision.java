@@ -196,6 +196,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
                         Ω.leftBeaconatorSequence(Ω.getLeftBeaconator());
                     }
                 }
+
+                approachCapBall();
             }
         };
 
