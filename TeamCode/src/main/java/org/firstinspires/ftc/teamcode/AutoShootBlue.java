@@ -168,13 +168,20 @@ public class AutoShootBlue extends LinearOpMode {
         robot.fire.setPower(1.0);
         sleep(2500);        // Wait for shot to finish
 
-        // Reverse the intake to keep any particles or cap balls out of our way
-        robot.intake.setPower(-1.0);
 
-        // And drive to the center vortex, knock cap ball, and park
-        // Note that we are turning while moving to save time at the expense of accuracy
-        encoderDrive(DRIVE_SPEED, 16.0, 10.0, true,
-                amIBlue()?-45.0:45.0, false);
+        if (capBallPush()) {
+            // Reverse the intake to keep any particles or cap balls out of our way
+            robot.intake.setPower(-1.0);
+
+            // And drive to the center vortex, knock cap ball, and park
+            // Note that we are turning while moving to save time at the expense of accuracy
+            encoderDrive(DRIVE_SPEED, 16.0, 10.0, true,
+                    amIBlue()?-45.0:45.0, false);
+
+
+        } else {
+            encoderDrive(DRIVE_SPEED, -28.0, 3.0, false, 0.0, false);
+        }
 
 
         // Stop the shooter
@@ -568,4 +575,6 @@ public class AutoShootBlue extends LinearOpMode {
     public boolean amIBlue() {
         return true;
     }
+
+    public boolean capBallPush() { return true;}
 }

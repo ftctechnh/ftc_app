@@ -107,7 +107,7 @@ public class HardwareDM
 
     // Intake motor speeds
     public final static double INTAKE_IN_SPEED = 1.0;
-    public final static double INTAKE_OUT_SPEED = 1.0;
+    public final static double INTAKE_OUT_SPEED = -1.0;
 
     /* Shooter constants */
     static final int     COUNTS_PER_MOTOR_REV    = 7 ;    // Neverrest w/ BaneBots 4:1
