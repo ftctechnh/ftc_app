@@ -83,7 +83,7 @@ public class GyroOpmode extends LinearOpMode {
         //robot.simpleGyroTurn(0.3, -90, 1500); //Turn right to drive alongside the beacons.
         robot.turnToAbsoluteHeading(0.3,-180,3000);
         robot.DriveToWhiteLine(-0.3,8,true,5000); // Drive to the white line
-        if(robot.doIseeBlue())
+        if(robot.soIseeBlueLeft())
         {
             robot.beaconRight.setPosition(1);
             robot.sleepMs(1500);

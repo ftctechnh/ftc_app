@@ -214,7 +214,7 @@ public class Blue2 extends LinearOpMode {
         //step 8.A
       /*
         robot.beaconRight.setPosition(80);
-        if(robot.doIseeBlue() == true) {
+        if(robot.soIseeBlueLeft() == true) {
             // Do Step 8.c
 
             robot.beaconRight.setPosition(100);
@@ -244,7 +244,7 @@ public class Blue2 extends LinearOpMode {
         // Step 11: Push Beacon if Blue
         //step 11.A
        /* robot.beaconRight.setPosition(80);
-        if(robot.doIseeBlue() == true) {
+        if(robot.soIseeBlueLeft() == true) {
             // Do Step 11.c
 
             robot.beaconRight.setPosition(100);

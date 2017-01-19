@@ -78,8 +78,8 @@ public class InvadersVelocityVortexBot
           leftDrive.setPower(1);
           leftDrive.setPower(1);
           while(period.time() < maxTimeInMilliSecondsIwantMyFunctionToTake) {
-             // Keep checking the doIseeBlue() function inside this while loop to look for the beacon
-             if(doISeeBlue()) {
+             // Keep checking the soIseeBlueLeft() function inside this while loop to look for the beacon
+             if(soIseeBlueLeft()) {
                  // Hooray: We found the beacon!  Set our boolean variable to true!
                  iSawBlue = true;
                  break; // This 'break' will halt the while loop.
@@ -107,9 +107,11 @@ public class InvadersVelocityVortexBot
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
 
-    public ModernRoboticsI2cRangeSensor UDS = null; // Best for longer range sensing (>12")
+    public ModernRoboticsI2cRangeSensor UDSLeft = null; // Best for longer range sensing (>12")
+    public ModernRoboticsI2cRangeSensor UDSRight = null;
     public OpticalDistanceSensor ODS = null; // Best for short-range sensing (<12")
-    public ColorSensor beaconSensor = null;
+    public ColorSensor beaconSensorLeft = null;
+    public ColorSensor beaconSensorRight = null;
     public ColorSensor floorSensor = null;
     public ModernRoboticsI2cGyro gyro = null;
     public TouchSensor touchSensor = null;
@@ -152,7 +154,7 @@ public class InvadersVelocityVortexBot
 
     public void DriveToWall(float distance, DistanceUnit distanceUnit, double power) {
         setDriveTrainPower(power);
-        while (UDS.getDistance(distanceUnit) > distance && opModeIsActive()) {
+        while (UDSRight.getDistance(distanceUnit) > distance && opModeIsActive()) {
 
         }
 
@@ -288,13 +290,13 @@ public class InvadersVelocityVortexBot
 
     //Helloaq
 
-    public boolean doIseeBlue () {
+    public boolean soIseeBlueLeft () {
 
-        return (beaconSensor.blue() >= 5);
+        return (beaconSensorLeft.blue() >= 5);
     }
 
-    public boolean doIseeRed () {
-        return (beaconSensor.red() >= 5);
+    public boolean doIseeRedLeft () {
+        return (beaconSensorLeft.red() >= 5);
     }
 
     public void stop()
@@ -628,9 +630,11 @@ public class InvadersVelocityVortexBot
 
         // Define our sensors
         touchSensor = hwMap.touchSensor.get("downLimit");
-        UDS = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDS");
-        ODS = hwMap.opticalDistanceSensor.get("ODS");
-        beaconSensor = hwMap.colorSensor.get("beaconSensor");
+        UDSLeft = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSLeft");
+        UDSRight = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSRight");
+        //ODS = hwMap.opticalDistanceSensor.get("ODS");
+        beaconSensorLeft = hwMap.colorSensor.get("beaconSensorLeft");
+        beaconSensorRight = hwMap.colorSensor.get("beaconSsnsorRight");
         floorSensor = hwMap.colorSensor.get("floorSensor");
         floorSensor.setI2cAddress(I2cAddr.create8bit(0x3A));
         floorSensor.enableLed(true);
