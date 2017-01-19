@@ -108,6 +108,35 @@ public class CenterVortex extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        //harvester code
+        while(opModeIsActive() && runtime.seconds() < 3.0)
+        {
+            robot.leftWheelShooter.setPower(-1);
+            robot.rightWheelShooter.setPower(-1);
+        }
+       while(opModeIsActive() && runtime.seconds() > 3.0 && runtime.seconds() < 6.0)
+       {
+           robot.leftWheelShooter.setPower(-1);
+           robot.rightWheelShooter.setPower(-1);
+       }
+        while(opModeIsActive() && runtime.seconds() > 6.0 && runtime.seconds() < 10.0)
+        {
+            robot.rightMotor.setPower(-1);
+            robot.leftMotor.setPower(-1);
+        }
+        while(opModeIsActive() && runtime.seconds() > 10.0 )
+        {
+            robot.rightMotor.setPower(0);
+            robot.leftMotor.setPower(0);
+
+            robot.leftWheelShooter.setPower(0);
+            robot.rightWheelShooter.setPower(0);
+        }
+        robot.rightMotor.setPower(0);
+        robot.leftMotor.setPower(0);
+
+        robot.leftWheelShooter.setPower(0);
+        robot.rightWheelShooter.setPower(0);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
@@ -131,7 +160,7 @@ public class CenterVortex extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
+   /* public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -156,7 +185,6 @@ public class CenterVortex extends LinearOpMode {
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() && (runtime.seconds() < timeoutS) && (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
-                // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d", robot.leftMotor.getCurrentPosition(), robot.rightMotor.getCurrentPosition());
                 telemetry.update();

@@ -91,8 +91,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            leftY = -gamepad1.left_stick_y;
-            rightY = -gamepad1.right_stick_y;
+            leftY = gamepad1.left_stick_y;
+            rightY = gamepad1.right_stick_y;
 
             rightY = Range.clip(rightY, -1, 1);
             leftY = Range.clip(leftY, -1, 1);
@@ -113,10 +113,10 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             float harvesterPowerReversed = gamepad1.left_trigger;
 
             if (harvesterPower > 0.2 && harvesterPowerReversed == 0) {
-                robot.legacyController.setMotorPower(2, 1);
+                robot.legacyController.setMotorPower(2, 0.5);
             }
             else if (harvesterPowerReversed > 0.2 && harvesterPower == 0) {
-                robot.legacyController.setMotorPower(2, -1);
+                robot.legacyController.setMotorPower(2, -0.5);
             }
             else {
                 robot.legacyController.setMotorPower(2, 0);
