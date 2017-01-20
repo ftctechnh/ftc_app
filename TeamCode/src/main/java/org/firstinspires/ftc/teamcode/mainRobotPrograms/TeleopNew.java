@@ -27,10 +27,13 @@ public class TeleopNew extends _RobotBase
         //Audio Control Variables
 
         //Normal mode variables
-        double leftPower, rightPower;
+        double leftPower, rightPower, pusherPower;
         boolean backwards = true;
         double lastTimeToggleDirectionPressed = 0;
         double speedCoefficient = 1.0;
+        double flywheelCoefficient = 0.5;
+        boolean capBallMode = false;
+        boolean pressingFlywheelC = false;
 
         //Other motor variables
 
@@ -48,6 +51,9 @@ public class TeleopNew extends _RobotBase
                 rightPower = gamepad1.right_stick_y;
             }
 
+            if (gamepad1.back) {
+                backwards = !backwards;
+            }
 
             // clip the right/left values so that the values never exceed +/- 1
             rightPower = speedCoefficient*Range.clip(rightPower, -1, 1);
@@ -69,31 +75,87 @@ public class TeleopNew extends _RobotBase
             }
 
             if (gamepad1.left_bumper) {
-                speedCoefficient = 0.6;
+                speedCoefficient = 0.7;
+                backwards = false;
             }
             else if (gamepad1.left_trigger > 0.5) {
                 speedCoefficient = 1.0;
+                backwards = true;
             }
 
             /******************** OTHER MOTORS ********************/
 
             //Harvester (hopefully just this simple)
+
             if (gamepad2.b)
-                harvester.setPower(-0.5);
+                harvester.setPower(-0.5); // Reverse harvester
             else if (gamepad2.a)
-                harvester.setPower(0.5);
+                harvester.setPower(0.5); // Collect
             else
                 harvester.setPower(0);
 
-            if (gamepad2.dpad_up) {
-                flywheels.setPower(1.0);
+            if (gamepad2.dpad_up)
+                flywheels.setPower(flywheelCoefficient*1.0); // Shoot
+            else if (gamepad2.dpad_down)
+                flywheels.setPower(-0.6); // Reverse flywheels
+            else
+                flywheels.setPower(0.0);
+
+            if (gamepad2.left_trigger > 0.5 && !pressingFlywheelC) {
+                flywheelCoefficient = Range.clip(flywheelCoefficient - 0.1, 0.5, 1.0);
+                pressingFlywheelC = true;
             }
-            else if (gamepad2.dpad_down) {
-                flywheels.setPower(-0.6);
+            else if (gamepad2.left_bumper && !pressingFlywheelC) {
+                flywheelCoefficient = Range.clip(flywheelCoefficient + 0.1, 0.5, 1.0);
+                pressingFlywheelC = true;
+            }
+
+            if (!(gamepad2.left_trigger > 0.5) && !gamepad2.left_bumper) {
+                pressingFlywheelC = false;
+            }
+
+            if (gamepad2.right_bumper && capBallMode) {
+                lift.setPower(1.0);
+            }
+            else if (gamepad2.right_trigger > 0.5 && capBallMode) {
+                lift.setPower(-0.5);
             }
             else {
-                flywheels.setPower(0.0);
+                lift.setPower(0.0);
             }
+
+            if (gamepad2.x) {
+                capBallMode = true;
+            }
+
+            if (gamepad2.y && capBallMode) {
+                rightLifterServo.setPosition(RIGHT_SERVO_UNLOCKED);
+                leftLifterServo.setPosition(LEFT_SERVO_UNLOCKED);
+            }
+
+            pusherPower = gamepad2.right_stick_x;
+
+            // clip the right/left values so that the values never exceed +/- 1
+            pusherPower = speedCoefficient*Range.clip(pusherPower, -1, 1);
+
+            if (pusherPower > 0.5) {
+                leftButtonPusher.setPosition(1.0);
+                rightButtonPusher.setPosition(1.0);
+            }
+            else if (pusherPower < -0.5) {
+                leftButtonPusher.setPosition(0.0);
+                rightButtonPusher.setPosition(0.0);
+            }
+            else {
+                leftButtonPusher.setPosition(0.5);
+                rightButtonPusher.setPosition(0.5);
+            }
+
+            outputConstantLinesToDriverStation(new String[] {
+                    "Fly wheel power = " + flywheelCoefficient,
+                    "Drive power = " + speedCoefficient,
+                    "Cap ball mode = " + capBallMode
+            });
 
             idle();
 

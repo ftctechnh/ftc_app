@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.ArrayList;
@@ -17,7 +16,10 @@ public abstract class _RobotBase extends LinearOpMode
     //Drive motors (they are lists because it helps when we add on new motors.
     protected ArrayList <DcMotor> leftDriveMotors = new ArrayList <>(), rightDriveMotors = new ArrayList<>();
     //Other motors
-    protected DcMotor harvester, flywheels;
+    protected DcMotor harvester, flywheels, lift;
+    protected Servo leftLifterServo, rightLifterServo;
+    protected Servo leftButtonPusher, rightButtonPusher;
+    protected final double RIGHT_SERVO_LOCKED = 0.3, LEFT_SERVO_LOCKED = 0.35, RIGHT_SERVO_UNLOCKED = 0.55, LEFT_SERVO_UNLOCKED = 0.07;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
@@ -53,6 +55,16 @@ public abstract class _RobotBase extends LinearOpMode
         harvester = initialize(DcMotor.class, "harvester");
         flywheels = initialize(DcMotor.class, "flywheels");
         flywheels.setDirection(DcMotor.Direction.REVERSE);
+
+        leftLifterServo = initialize(Servo.class, "leftServo");
+        leftLifterServo.setPosition(LEFT_SERVO_LOCKED);
+        rightLifterServo = initialize(Servo.class, "rightServo");
+        rightLifterServo.setPosition(RIGHT_SERVO_LOCKED);
+        lift = initialize(DcMotor.class, "lift");
+        leftButtonPusher = initialize(Servo.class, "leftButtonPusher");
+        leftButtonPusher.setPosition(0.5);
+        rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
+        rightButtonPusher.setPosition(0.5);
 
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
