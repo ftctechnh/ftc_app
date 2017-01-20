@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral;
  * Created by adityamavalankar on 1/5/17.
  */
 
-@Autonomous(name="AutonomousBlueTwo")
+@Autonomous(name="Autonomous Far Start")
 public class AutonomousFarStart extends AutonomousGeneral {
 
     //blue: tangent to blue line
@@ -47,7 +47,7 @@ public class AutonomousFarStart extends AutonomousGeneral {
         //gyro_leftTurn(70, 0.1);
 
         //drive foward to line up in front of beacon
-        encoderDrive(0.5,-75,75,8);
+        encoderDrive(0.5,-43 ,43,3.7);
 
         //wait for motors to settle
         sleep(250);
@@ -69,13 +69,13 @@ public class AutonomousFarStart extends AutonomousGeneral {
 
         //gyro_rightTurn(70, 0.1);
         //turn back to line up for vortex
-        encoderDrive(0.5,90,-90,8);
+        encoderDrive(0.5, 45 ,-45,3.7);
         //wait 0.5 sec
         sleep(150);
 
         encoderDrive(0.5, 100, 100, 8);
-        encoderDrive(0.5, -15, -15, 8);
-        encoderDrive(0.5, 35, 35, 8);
+        sleep(100);
+        encoderDrive(0.3, 50, 50, 8);
         telemetry.addData("it is done!", "");
         telemetry.update();
     }
