@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Aditya;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -9,6 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="Blue New Auto", group="Pushbot")
-
+@Disabled
 public class blue_newauto {
 }

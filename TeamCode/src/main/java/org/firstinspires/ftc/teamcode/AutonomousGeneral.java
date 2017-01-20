@@ -6,6 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -29,6 +30,13 @@ public class AutonomousGeneral extends LinearOpMode {
     protected GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
     protected ModernRoboticsI2cRangeSensor rangeSensor;
     protected ColorSensor colorSensor;
+    public String currentColor = "blank";
+
+    OpticalDistanceSensor ODSFront;
+    OpticalDistanceSensor ODSBack;
+    double baseline1;
+    double baseline2;
+
     //String currentColor = "other";
     protected static final double DRIVE_SPEED = .5;
     protected static final double TURN_SPEED = 0.5;
@@ -65,6 +73,12 @@ public class AutonomousGeneral extends LinearOpMode {
 
         gyro = hardwareMap.gyroSensor.get("gyro");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
+
+        ODSFront = hardwareMap.opticalDistanceSensor.get("ODSFront");
+        ODSBack = hardwareMap.opticalDistanceSensor.get("ODSBack");
+
+        baseline1 = ODSFront.getRawLightDetected();
+        baseline2 = ODSBack.getRawLightDetected();
         //Initiate sensors:
         if (operation_beacon_press == true) {
             gyro = hardwareMap.gyroSensor.get("gyro");
@@ -173,10 +187,14 @@ public class AutonomousGeneral extends LinearOpMode {
                 leftSpeed = (speed * leftInches) / rightInches;
             }
             runtime.reset();
-            back_left_motor.setPower(Math.abs(leftSpeed));
-            back_right_motor.setPower(Math.abs(rightSpeed));
+            //if(leftInches != -rightInches)
+            {
+                back_left_motor.setPower(Math.abs(leftSpeed));
+                back_right_motor.setPower(Math.abs(rightSpeed));
+            }
             front_left_motor.setPower(Math.abs(leftSpeed));
             front_right_motor.setPower(Math.abs(rightSpeed));
+
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
@@ -294,6 +312,56 @@ public class AutonomousGeneral extends LinearOpMode {
 
     }
 
+    public void readNewColor() {
+
+        currentColor = "blank";
+
+        if (colorSensor.red() > colorSensor.blue()) {
+            currentColor = "red";
+
+            telemetry.addData("current color is red", colorSensor.red());
+            telemetry.update();
+        } else if (colorSensor.red() < colorSensor.blue()) {
+            currentColor = "blue";
+
+            telemetry.addData("current color is blue", colorSensor.blue());
+            telemetry.update();
+
+        } else {
+
+            currentColor = "blank";
+        }
+    }
+
+    public boolean whiteLineDetectedFront(){
+        if ((ODSFront.getRawLightDetected() > (baseline1*5))){
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean whiteLineDetectedBack(){
+        if ((ODSBack.getRawLightDetected() > (baseline2*5))){
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public void allignRangeDist(double distInCM){
+
+        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM){
+            straightDrive(0.1);
+        }
+
+        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM){
+            straightDrive(-0.1);
+        }
+        stopMotors();
+    }
     public boolean isWhite() {
         colorSensor.enableLed(true);
 

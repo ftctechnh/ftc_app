@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral;
  * Made with Love by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "forward beacon blue")
+@Disabled
 public class forwardBeaconBlue extends AutonomousGeneral{
 
     String currentTeam = "blue";

@@ -16,7 +16,8 @@ import org.firstinspires.ftc.teamcode.Eric.AutonomousRedNearColorEric;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "newBeaconPressAuto")
+@Autonomous(name = "newBeaconPressAuto_original")
+@Disabled
 public class newBeaconPress extends AutonomousGeneral {
 
     OpticalDistanceSensor ODSFront;
@@ -47,7 +48,7 @@ public class newBeaconPress extends AutonomousGeneral {
         readNewColor();
 
         waitForStart();
-
+/*
         encoderDrive(0.3, 38.1, 38.1, 8.0);  // S1: Forward 47 Inches with 5 Sec timeout
         sleep(500);
         //sleep(1000);     // pause for servos to move
@@ -70,23 +71,35 @@ public class newBeaconPress extends AutonomousGeneral {
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1800);
         sleep(800);
-        shootingDrive(0.8, 850);;
+        //shootingDrive(0.8, 850);;
         //shootingDrive(0.8, 850);
         sleep(500);
 
-        encoderDrive(0.3, 11.5,-11.5,5);
+        encoderDrive(0.3, 8.5,-8.5,5);
         sleep(500);
         //end of steven's code
-
+*/
         if (colorSensor.red() > colorSensor.blue()) {
             currentColor = "red";
         } else if (colorSensor.red() < colorSensor.blue()) {
             currentColor = "blue";
         }
 
+        readNewColor();
+       // lineAlignRed();
+
         pressBeacon();
 
-        sleep(150);
+        sleep(200);
+
+        moveToNextBeaconRed();
+
+        sleep(200);
+
+        readNewColor();
+        sleep(50);
+        pressBeacon();
+        /*sleep(150);
 
             if (currentTeam.equals("red")){
                 moveToNextBeaconRed();
@@ -96,7 +109,7 @@ public class newBeaconPress extends AutonomousGeneral {
 
         sleep(150);
 
-        pressBeacon();
+        pressBeacon();  */
 
         }
 
@@ -171,12 +184,14 @@ public class newBeaconPress extends AutonomousGeneral {
 
     public void allignRangeDist(double distInCM){
 
-        while (rangeSensor.cmOptical() > distInCM){
-            straightDrive(0.3);
+        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM){
+            straightDrive(0.2);
         }
-        while (rangeSensor.cmOptical() < distInCM){
-            straightDrive(-0.3);
+
+        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM){
+            straightDrive(-0.2);
         }
+        stopMotors();
     }
 
     public void pressBeacon() {
@@ -187,16 +202,18 @@ public class newBeaconPress extends AutonomousGeneral {
             lineAlignRed();
         }
 
+        allignRangeDist(19.1);
+        //sleep(5000);
+
         readNewColor();
         if (currentColor.equals(currentTeam)) {
 
-            allignRangeDist(19.1);
 
-            encoderDrive(0.3, 3.5, -3.5, 5);
+          //  encoderDrive(0.2, 3.5, -3.5, 5);
 
-            sleep(150);
+          //  sleep(150);
 
-            encoderDrive(0.25, 17, 17, 7);
+            encoderDrive(0.2, 19, 19, 7);
 
             sleep(400);
 
@@ -204,31 +221,30 @@ public class newBeaconPress extends AutonomousGeneral {
 
             sleep(200);
 
-            encoderDrive(0.3, -3.5, 3.5, 5);
+         //   encoderDrive(0.3, -3.5, 3.5, 5);
 
-            sleep(150);
+         //   sleep(150);
         } else {
 
-            allignRangeDist(19.1);
 
-            encoderDrive(0.5, -7, -7, 5);
+         //   encoderDrive(0.5, -7, -7, 5);
 
             sleep(500);
 
-            encoderDrive(0.4, -7.5, 7.5, 4);
+            encoderDrive(0.3, 10, -10, 4);
             //currently, this turn value is made for alpha. Adjust for beta
 
             sleep(150);
 
-            encoderDrive(0.25, 28, 28, 8);
+            encoderDrive(0.25, 21, 21, 8);
 
             sleep(400);
 
-            encoderDrive(0.5, -15, -15, 6);
+            encoderDrive(0.5, -21, -21, 6);
 
             sleep(150);
 
-            encoderDrive(0.7, 7.5, -7.5, 7);
+            encoderDrive(0.7, -10, -10, 7);
             //currently, this turn value is made for alpha. Adjust for beta
 
             sleep(450);
@@ -241,23 +257,28 @@ public class newBeaconPress extends AutonomousGeneral {
 
         while (whiteLineDetectedFront() == false) {
 
-            straightDrive(0.4);
+            straightDrive(0.2);
 
             if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
-                encoderDrive(0.4, 10, 10, 6);
+                encoderDrive(0.4, -15, -15, 6);
                 sleep(250);
                 encoderDrive(0.6, 20, -20, 8);
             }
         }
 
-        encoderDrive(0.3, 8, 8, 4);
+        encoderDrive(0.2, 6.35, 6.35, 4);
+        sleep(100);
 
-        while (whiteLineDetectedFront() == false) {
+        while (whiteLineDetectedBack() == false) {
 
-            newTurnRight(0.3);
+            newTurnLeft(0.1);
         }
+        stopMotors();
+        sleep(100);
+            encoderDrive(0.1, -1, 1, 6);
+       // stopMotors();
+        sleep(100);
 
-        encoderDrive(0.3, 5, -5, 6);
     }
 
     public void lineAlignBlue() {
@@ -267,7 +288,7 @@ public class newBeaconPress extends AutonomousGeneral {
             straightDrive(0.4);
 
             if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
-                encoderDrive(0.4, 10, 10, 6);
+                encoderDrive(0.4, -10, -10, 6);
                 sleep(250);
                 encoderDrive(0.6, -20, 20, 8);
             }
@@ -280,7 +301,7 @@ public class newBeaconPress extends AutonomousGeneral {
             newTurnLeft(0.3);
         }
 
-        encoderDrive(0.3, -5, 5, 6);
+        //encoderDrive(0.3, -5, 5, 6);
     }
 }
 //-------------------------------------------------------------------//

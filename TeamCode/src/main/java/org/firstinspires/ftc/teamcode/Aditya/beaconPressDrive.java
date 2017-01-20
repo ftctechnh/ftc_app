@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "beaconPressDrive")
+@Disabled
 public class beaconPressDrive extends AutonomousGeneral {
 
     String currentTeam = "red";

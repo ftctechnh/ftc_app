@@ -74,15 +74,17 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
 
 
     private ElapsedTime runtime = new ElapsedTime();
-    OpticalDistanceSensor ODSRight;
-    OpticalDistanceSensor ODSLeft;
-    OpticalDistanceSensor ODSCenter;
+    OpticalDistanceSensor ODSBack;
+  //  OpticalDistanceSensor ODSLeft;
+    OpticalDistanceSensor ODSFront;
+
     ModernRoboticsI2cRangeSensor rangeSensor;
     double baseline1;
     double baseline2;
     static int INITIAL_SHOOTERPOS;
-    boolean rightDetected;
-    boolean leftDetected;
+    boolean backDetected;
+   // boolean leftDetected;
+    boolean frontDetected;
 
 
     @Override
@@ -90,13 +92,13 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
 
         initiate();
 
-        ODSRight = hardwareMap.opticalDistanceSensor.get("ODSRight");
-        ODSLeft = hardwareMap.opticalDistanceSensor.get("ODSLeft");
-        ODSCenter = hardwareMap.opticalDistanceSensor.get("ODSCenter");
+        ODSBack = hardwareMap.opticalDistanceSensor.get("ODSRight");
+      //  ODSLeft = hardwareMap.opticalDistanceSensor.get("ODSLeft");
+        ODSFront = hardwareMap.opticalDistanceSensor.get("ODSCenter");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
-        baseline1 = ODSRight.getRawLightDetected();
-        baseline2 = ODSLeft.getRawLightDetected();
+        baseline1 = ODSFront.getRawLightDetected();
+        baseline2 = ODSBack.getRawLightDetected();
         //INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
 
         //telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
@@ -135,53 +137,44 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
         encoderDrive(0.3, 11.5,-11.5,5);
         sleep(500);
 
+
+        encoderDrive(0.3, 50,50,5);
+        encoderDrive(0.3, 11.5,-11.5,5);
+
         //drive until either the left or right ODS senses the white line
-        rightDetected = false;
-        leftDetected=false;
+        frontDetected = false;
+        backDetected=false;
+
         straightDrive(0.2);
         runtime.reset();//
 
-        while(!(whiteLineDetectedRight()||whiteLineDetectedLeft()) && runtime.seconds() < 5 ){
-            if(whiteLineDetectedRight()||whiteLineDetectedLeft()){
-                stopMotors();
-                break;
-            }
+        while(!(whiteLineDetectedFront()||whiteLineDetectedBack()) && runtime.seconds() < 5 ){
             if(rangeSensor.getDistance(DistanceUnit.CM) <20){
                 encoderDrive(0.3,-10,-10,5);
                 encoderDrive(0.3,20,-20,5);
             }
-
-
         }
         stopMotors();
         sleep(800);
 
+
         //if it is the left side that detects the line, turn right until the right detects it to
         //this will make the robot perpendicular to the line
-        if (rightDetected){
+        if (frontDetected){
+
+            encoderDrive(0.3, 8,8,5);
             //telemetry.addData("","Right Detected");
             //telemetry.update();
             runtime.reset();
-            while(!whiteLineDetectedLeft() && runtime.seconds() < 3){
-                if(whiteLineDetectedLeft()){
+            while(!whiteLineDetectedBack() && runtime.seconds() < 3){
+                if(whiteLineDetectedBack()){
                     break;
                 }
                 turnRight(0.3);
             }
             stopMotors();
         }
-        else if (leftDetected){
-           // telemetry.addData("","Left Detected");
-            //telemetry.update();
-            runtime.reset();
-            while(!whiteLineDetectedRight()&& runtime.seconds()<3){
-                if(whiteLineDetectedRight()){
-                    break;
-                }
-                turnLeft(0.3);
-            }
-            stopMotors();
-        }
+
 
 
         //sleep(500);
@@ -224,22 +217,24 @@ public class AutonomousRedNearColorEric extends AutonomousGeneral {
 
 
     }
-    public boolean whiteLineDetectedRight(){
-        if ((ODSRight.getRawLightDetected() > (baseline1*5))){
-            rightDetected = true;
+    public boolean whiteLineDetectedFront(){
+        if ((ODSFront.getRawLightDetected() > (baseline1*5))){
+            frontDetected = true;
             return true;
         }
-        rightDetected = false;
+        frontDetected = false;
         return false;
     }
-    public boolean whiteLineDetectedLeft(){
-        if ((ODSLeft.getRawLightDetected() > (baseline2*5))){
-            leftDetected = true;
+    public boolean whiteLineDetectedBack(){
+        if ((ODSBack.getRawLightDetected() > (baseline2*5))){
+            backDetected = true;
             return true;
         }
-        leftDetected = false;
+        backDetected = false;
         return false;
     }
+
+
 
    /* public void gyroturn(int degrees,boolean Right){
         gyro.calibrate();
