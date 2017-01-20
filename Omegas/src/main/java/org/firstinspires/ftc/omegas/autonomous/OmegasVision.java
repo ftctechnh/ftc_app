@@ -126,7 +126,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
         if (driveThread == null) driveThread = new Thread() {
             public void run() {
                 while (true) {
-                    if (interrupted()) {
+                    if (interrupted() || shouldApproachBeaconator) {
                         return;
                     } else if (!shouldApproachBeaconator) {
                         if (Ω.getLightSensor().getLightDetected() >= 0.4) {
@@ -139,8 +139,6 @@ abstract class OmegasVision extends ManualVisionOpMode {
                                 motor.setPower(0.25);
                             }
                         }
-                    } else {
-                        return;
                     }
                 }
             }
@@ -220,7 +218,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
     public void stop() {
         super.stop();
 
-        driveThread.interrupt();
+        if (driveThread != null) driveThread.interrupt();
         if (beaconThread != null) beaconThread.interrupt();
         if (capBallThread != null) capBallThread.interrupt();
     }
