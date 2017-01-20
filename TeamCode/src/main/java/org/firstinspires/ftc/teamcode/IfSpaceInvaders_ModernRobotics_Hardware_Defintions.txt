@@ -20,7 +20,7 @@ Velocity Vortex Config
 		0	Color Sensor	"beaconSensor"
 		1	Color Sensor	"floorSensor" (Marked with 0x3A on the back)
 		2	Gyro		"gyroSensor"
-		3	MR Range Sensor	"UDS"
+		3	MR Range Sensor	"UDSLeft"
 
 	Analog Input Devices:
 		0

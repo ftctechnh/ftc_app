@@ -103,7 +103,7 @@ public class InvadersVelocityVortexBot
     public DcMotor sweeper = null;
     public DcMotor capBall  = null;
 
-    //public UltrasonicSensor UDS = null;
+    //public UltrasonicSensor UDSLeft = null;
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
 
@@ -123,8 +123,8 @@ public class InvadersVelocityVortexBot
 
      Reference GitHub Commit: https://github.com/IfSpace/ftc_app/commit/9bc2de71a8464b4a608382e7af89070efbdd0301
      An example variable for our ultrasonic distance sensor (which we declared on line 46 above as
-     'UDS' would look like this:
-          public FtcI2cDeviceState UDSstate;
+     'UDSLeft' would look like this:
+          public FtcI2cDeviceState UDSLeftstate;
      Notes:
      1) Don't forget to #import the new FtcI2cDeviceState class at the top of this file so the
         FtcI2cDeviceState class type is recognized.  e.g. "import org.firstinspires.ftc.teamcode.FtcI2cDeviceState;"
@@ -154,7 +154,7 @@ public class InvadersVelocityVortexBot
 
     public void DriveToWall(float distance, DistanceUnit distanceUnit, double power) {
         setDriveTrainPower(power);
-        while (UDSRight.getDistance(distanceUnit) > distance && opModeIsActive()) {
+        while (UDSLeft.getDistance(distanceUnit) > distance && opModeIsActive()) {
 
         }
 
@@ -169,6 +169,57 @@ public class InvadersVelocityVortexBot
             isActive = ((LinearOpMode)activeOpMode).opModeIsActive();
         }
         return isActive;
+    }
+
+    public void UDSAlign(float speed, double DistanceFromTarget){
+        double rightDistance = UDSRight.getDistance(DistanceUnit.INCH);
+        double leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+
+        if(leftDistance > rightDistance == true){
+            leftMotor.setPower(0.3);
+            rightMotor.setPower(-0.3);
+            while(leftDistance > rightDistance == true){
+                rightDistance = UDSRight.getDistance(DistanceUnit.INCH);
+                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+            }
+            rightMotor.setPower(0);
+            leftMotor.setPower(0);
+            leftMotor.setPower(speed);
+            rightMotor.setPower(speed);
+            while (leftDistance > DistanceFromTarget){
+                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+            }
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+
+        }
+        else if (leftDistance < rightDistance == true){
+            leftMotor.setPower(-0.3);
+            rightMotor.setPower(0.3);
+            while(leftDistance < rightDistance == true){
+                rightDistance = UDSRight.getDistance(DistanceUnit.INCH);
+                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+            }
+            rightMotor.setPower(0);
+            leftMotor.setPower(0);
+            leftMotor.setPower(speed);
+            rightMotor.setPower(speed);
+            while (leftDistance > DistanceFromTarget){
+                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+            }
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+        }
+        else if (leftDistance == rightDistance){
+            leftMotor.setPower(speed);
+            rightMotor.setPower(speed);
+            while (leftDistance > DistanceFromTarget){
+                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+            }
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+        }
+
     }
 
     /**
@@ -805,7 +856,7 @@ public class InvadersVelocityVortexBot
                 telemetry.addData("Path2", "Running at %7d :%7d",
                         leftMotor.getCurrentPosition(),
                         rightMotor.getCurrentPosition());
-                //telemetry.addData("UDS", "Distance CM: %.02f", UDS.getDistance(DistanceUnit.CM));
+                //telemetry.addData("UDSLeft", "Distance CM: %.02f", UDSLeft.getDistance(DistanceUnit.CM));
                 telemetry.update();
 
                 if(gyroUpdate.time()>250) {

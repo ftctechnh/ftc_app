@@ -144,7 +144,7 @@ public class InvadersPushbot_Iterative extends OpMode{
                 robot.floorSensor.green(),
                 robot.floorSensor.blue(),
                 robot.floorSensor.alpha());
-        telemetry.addData("UDS:", "%.2fcm", robot.UDS.getDistance(DistanceUnit.CM));
+        telemetry.addData("UDSLeft:", "%.2fcm", robot.UDSLeft.getDistance(DistanceUnit.CM));
         telemetry.addData("ODS:", "%.2fpercent", robot.ODS.getLightDetected());
         updateTelemetry(telemetry);
 
