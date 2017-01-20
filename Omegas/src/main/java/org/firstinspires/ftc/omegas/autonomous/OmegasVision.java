@@ -34,7 +34,6 @@ abstract class OmegasVision extends ManualVisionOpMode {
     /* Declare OpMode members. */
     private boolean shouldApproachBeaconator = false;
     private boolean approachedCapBall = false;
-    private boolean startedDriving = false;
     private HardwareOmegas Ω = null;
     private Thread driveThread = null;
     private Thread beaconThread = null;
@@ -70,27 +69,6 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
                 getLightSensor().enableLed(true);
                 sayMessage();
-            }
-        };
-
-        driveThread = new Thread() {
-            public void run() {
-                while (true) {
-                    if (!shouldApproachBeaconator) {
-                        if (Ω.getLightSensor().getLightDetected() >= 0.4) {
-                            Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
-                            Ω.driveForward(0.25, 600.0);
-
-                            shouldApproachBeaconator = true;
-                        } else {
-                            for (DcMotor motor : Ω.getMotors()) {
-                                motor.setPower(0.25);
-                            }
-                        }
-                    } else {
-                        return;
-                    }
-                }
             }
         };
 
@@ -145,10 +123,28 @@ abstract class OmegasVision extends ManualVisionOpMode {
         telemetry.addData("Data", "Light sensor activated: " + (light > 0.4));
         telemetry.update();
 
-        if (!startedDriving) {
-            driveThread.start();
-            startedDriving = true;
-        }
+        if (driveThread == null) driveThread = new Thread() {
+            public void run() {
+                while (true) {
+                    if (interrupted()) {
+                        return;
+                    } else if (!shouldApproachBeaconator) {
+                        if (Ω.getLightSensor().getLightDetected() >= 0.4) {
+                            Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
+                            Ω.driveForward(0.25, 600.0);
+
+                            shouldApproachBeaconator = true;
+                        } else {
+                            for (DcMotor motor : Ω.getMotors()) {
+                                motor.setPower(0.25);
+                            }
+                        }
+                    } else {
+                        return;
+                    }
+                }
+            }
+        };
 
         if (approachedCapBall) approachCapBall();
         if (shouldApproachBeaconator) approachBeaconator(leftBlue, rightBlue);
