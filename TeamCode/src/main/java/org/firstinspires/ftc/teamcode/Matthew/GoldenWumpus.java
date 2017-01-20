@@ -178,8 +178,10 @@ public class GoldenWumpus extends OpMode {
         }
 
         // Call the setPower functions with our calculated values to activate the motors
-        left = left / SpeedReduction;
-        right = right / SpeedReduction;
+        //left = left / SpeedReduction;
+        //right = right / SpeedReduction;
+
+
         robot.setDriveTrainPower(left,right);
     }
 
