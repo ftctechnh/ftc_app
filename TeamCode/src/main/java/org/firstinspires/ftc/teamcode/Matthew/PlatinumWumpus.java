@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 
@@ -176,6 +177,10 @@ public class PlatinumWumpus extends OpMode {
         left = left / DriveSpeedReduction;
         right = right / DriveSpeedReduction;
         robot.setDriveTrainPower(left,right);
+
+        if(gamepad1.left_bumper == true){
+            robot.AlignToWall(3, DistanceUnit.INCH);
+        }
     }
 
     @Override

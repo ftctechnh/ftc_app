@@ -171,11 +171,13 @@ public class InvadersVelocityVortexBot
         return isActive;
     }
 
-    public void UDSAlign(float speed, double DistanceFromTarget){
-        double rightDistance = UDSRight.getDistance(DistanceUnit.INCH);
+    public void AlignToWall(double DistanceFromTarget, DistanceUnit unit){
+        double rightDistance = UDSRight.getDistance(unit);
         double leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
 
         if(leftDistance > rightDistance == true){
+            //leftMotor.setMaxSpeed(1000);
+            //rightMotor.setMaxSpeed(1000);
             leftMotor.setPower(0.3);
             rightMotor.setPower(-0.3);
             while(leftDistance > rightDistance == true){
@@ -184,13 +186,7 @@ public class InvadersVelocityVortexBot
             }
             rightMotor.setPower(0);
             leftMotor.setPower(0);
-            leftMotor.setPower(speed);
-            rightMotor.setPower(speed);
-            while (leftDistance > DistanceFromTarget){
-                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
-            }
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
+
 
         }
         else if (leftDistance < rightDistance == true){
@@ -202,22 +198,10 @@ public class InvadersVelocityVortexBot
             }
             rightMotor.setPower(0);
             leftMotor.setPower(0);
-            leftMotor.setPower(speed);
-            rightMotor.setPower(speed);
-            while (leftDistance > DistanceFromTarget){
-                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
-            }
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
+
         }
         else if (leftDistance == rightDistance){
-            leftMotor.setPower(speed);
-            rightMotor.setPower(speed);
-            while (leftDistance > DistanceFromTarget){
-                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
-            }
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
+
         }
 
     }
