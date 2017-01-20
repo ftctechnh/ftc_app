@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "newRedBeaconPressAuto_two")
-public class newredBeaconPress_autoTwo extends AutonomousGeneral {
+@Autonomous(name = "epirimentBlindBeacon")
+public class expirimentBlindBeacon extends AutonomousGeneral {
 
     OpticalDistanceSensor ODSFront;
     OpticalDistanceSensor ODSBack;
@@ -134,7 +134,7 @@ public class newredBeaconPress_autoTwo extends AutonomousGeneral {
         sleep(100);
         encoderDrive(0.2, -5, -5, 5);
 
-        sleep(150);
+        sleep(5000);
 
         telemetry.addData("","readNewColor");
         telemetry.update();
