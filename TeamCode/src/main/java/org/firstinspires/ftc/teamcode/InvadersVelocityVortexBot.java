@@ -631,8 +631,8 @@ public class InvadersVelocityVortexBot
         capBall = hwMap.dcMotor.get("CapBall");
         sweeper = hwMap.dcMotor.get("Sweeper");
 
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
         rightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
         leftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
         capBall.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -669,7 +669,7 @@ public class InvadersVelocityVortexBot
         UDSRight = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSRight");
         //ODS = hwMap.opticalDistanceSensor.get("ODS");
         beaconSensorLeft = hwMap.colorSensor.get("beaconSensorLeft");
-        beaconSensorRight = hwMap.colorSensor.get("beaconSsnsorRight");
+        beaconSensorRight = hwMap.colorSensor.get("beaconSensorRight");
         floorSensor = hwMap.colorSensor.get("floorSensor");
         floorSensor.setI2cAddress(I2cAddr.create8bit(0x3A));
         floorSensor.enableLed(true);
