@@ -35,15 +35,17 @@ public class AutoVortexBeacon extends OpMode {
 
     private double heading = 0;
 
+    private StateMachine shooter;
+
     @Override
     public void init() {
         robot.init(hardwareMap);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new AccelerationIntegrator();
 
         robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -54,112 +56,183 @@ public class AutoVortexBeacon extends OpMode {
         robot.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        searchForBeacon = new StateMachine(
-                new State("stop") {
+        shooter = new StateMachine(
+                new State("off") {
                     @Override
                     public void run() {
-                        color.enableLed(false);
+                        robot.shooter.setPower(0);
                     }
                 },
-                new State("start") {
+                new State("on") {
                     @Override
                     public void run() {
-                        color.enableLed(true);
-                        robot.light.enableLed(false);
-                        move(0.25);
-                        changeState("detectWhiteLine");
-                    }
-                },
-                new State("detectWhiteLine") {
-                    @Override
-                    public void run() {
-                        double elapsedTime = time - getDouble("startTime");
-
-                        if (robot.light.getLightDetected() > 0.05 || elapsedTime > 5.0) {
-                            move(0);
-                            resetEncoders(true);
-                            sendData("resetEncoders0", time);
-                            changeState("resetEncoders0");
-                        }
-                    }
-                },
-                new State("resetEncoders0") {
-                    @Override
-                    public void run() {
-                        double elapsedTime = time - getDouble("resetEncoders0");
-                        if (elapsedTime > 0.75) {
-                            resetEncoders(false);
-                            move(-0.25);
-                            sendData("startTime1", time);
-                            changeState("driveToButton0");
-                        }
-                    }
-                },
-                new State("driveToButton0") {
-                    @Override
-                    public void run() {
-                        double elapsedTime = time - getDouble("startTime1");
-                        if (reachedDestination(500, 2.0, elapsedTime)) {
-                            move(0);
-                        }
-                    }
-                },
-                new State("finished") {
-                    @Override
-                    public void run() {
+                        robot.shooter.setPower(HardwareVortex.SHOOTER_POWER);
                     }
                 }
         );
 
         main = new StateMachine(
+
                 new State("stop") {
                     @Override
                     public void run() {
-                        robot.leftLift.setPosition(HardwareVortex.LEFT_LIFT_INIT);
-                        robot.rightLift.setPosition(HardwareVortex.RIGHT_LIFT_INIT);
+                        move(0);
                     }
                 },
-                new State("driveToWall") {
+
+                new State("drive to vortex") {
                     @Override
                     public void run() {
-                        double elapsedTime = time - getDouble("startTime0");
-                        if (elapsedTime > delay) {
-                            move(0.35);
-                            sendData("startTime1", time);
-                            changeState("reachedWall");
+                        move(-0.5);
+                        shooter.changeState("on");
+                        sendData("shooter start", time);
+                        changeState("reach vortex");
+                    }
+                },
+
+                new State("reach vortex") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(1750, 3000)) {
+                            move(0);
+                            changeState("shoot the ball");
                         }
                     }
                 },
-                new State("reachedWall") {
+
+                new State("shoot the ball") {
                     @Override
                     public void run() {
-                        double elapsedTime = time - getDouble("startTime1");
-                        if (reachedDestination(2500, 4.0, elapsedTime)) {
-                            searchForBeacon.sendData("startTime", time);
-                            searchForBeacon.changeState("start");
-                            changeState("beacon0Scored");
+                        double elapsedTime = getDouble("shooter start") - time;
+                        if (elapsedTime > 3.0) {
+                            robot.intake.setPower(1);
+                            sendData("shooting time", time);
+                            changeState("turn to line");
                         }
                     }
                 },
-                new State("beacon0Scored") {
+
+                new State("turn to line") {
                     @Override
                     public void run() {
-                        if (searchForBeacon.getActiveState().equals("scored")) {
-                            searchForBeacon.sendData("startTime", time);
-                            searchForBeacon.changeState("start");
-                            changeState("beacon1Scored");
+                        double elapsedTime = getDouble("shooting time") - time;
+                        if (elapsedTime > 5.0) {
+                            robot.intake.setPower(0);
+                            shooter.changeState("off");
+                            turn(-0.5);
+                            changeState("drive tp line");
                         }
                     }
                 },
-                new State("beacon1Scored") {
+
+                new State("drive to line") {
                     @Override
                     public void run() {
-                        if (searchForBeacon.getActiveState().equals("scored")) {
-                            changeState("stop");
+                        if (turnedDegrees(70, 3000)) {
+                            move(0.5);
+                            changeState("turn");
                         }
+                    }
+                },
+
+                new State("turn") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(1750, 3000)) {
+                            turn(1);
+                            changeState("drive to wall");
+                        }
+                    }
+                },
+
+                new State("drive to wall") {
+                    @Override
+                    public void run() {
+                        if (turnedDegrees(1000000000, 10000)) {
+                            move(0.5);
+                            changeState("sense color");
+                        }
+                    }
+                },
+
+                new State("sense color") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(1000, 3000)) {
+                            changeState("push button");
+                        }
+                    }
+                },
+
+                new State("push button") {
+                    @Override
+                    public void run() {
+                        changeState("back up");
+                    }
+                },
+
+                new State("back up") {
+                    @Override
+                    public void run() {
+                        move(-0.5);
+                        changeState("turn to other line");
+                    }
+                },
+
+                new State("turn to other line") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(1000, 3000)) {
+                            turn(-1);
+                            changeState("drive to other line");
+                        }
+                    }
+                },
+
+                new State("drive to other line") {
+                    @Override
+                    public void run() {
+                        if (turnedDegrees(90, 2000)) {
+                            move(0.5);
+                            changeState("turn on other line");
+                        }
+                    }
+                },
+
+                new State("turn to other line") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(2000, 5000)) {
+                            turn(0.5);
+                            changeState("drive down other line");
+                        }
+                    }
+                },
+
+                new State("drive down other line") {
+                    @Override
+                    public void run() {
+                        if (turnedDegrees()){
+
+                        }
+                    }
+                },
+
+        new State("turn to cap ball") {
+                    @Override
+                    public void run() {
+
+                    }
+                },
+
+                new State("drive to ball") {
+                    @Override
+                    public void run() {
+
                     }
                 }
-        ).start();
+        );
+
     }
 
     @Override
@@ -224,6 +297,14 @@ public class AutoVortexBeacon extends OpMode {
         robot.backRight.setPower(power);
     }
 
+    public void turn(double power) {
+        power *= -1.0;
+        robot.frontLeft.setPower(power);
+        robot.frontRight.setPower(-power);
+        robot.backLeft.setPower(power);
+        robot.backRight.setPower(-power);
+    }
+
     public void resetEncoders(boolean partOne) {
         if (partOne) {
             robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -239,8 +320,12 @@ public class AutoVortexBeacon extends OpMode {
         }
     }
 
-    public boolean reachedDestination(int target, double timeout, double elapsedTime) {
+    public boolean reachedDestination(int target, int timeout) {
         return (robot.frontLeft.getCurrentPosition() >= target && robot.frontRight.getCurrentPosition() >= target && robot.backLeft.getCurrentPosition() >= target && robot.backRight.getCurrentPosition() >= target) || elapsedTime > timeout;
+    }
+
+    public boolean turnedDegrees(double degrees, int timeout){
+        return true;
     }
 
     public void updateSensors() {
@@ -251,4 +336,6 @@ public class AutoVortexBeacon extends OpMode {
         heading = angles.firstAngle;
         telemetry.addData("IMU", "heading: %s", String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, heading))));
     }
+
+
 }
