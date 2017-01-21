@@ -442,7 +442,7 @@ public class InvadersVelocityVortexBot
                 }
                 telemetry.addData("LT", "Robot Heading = %d, targetHeading: %.02f, targetSpeed: %.02f", currentHeading,targetHeading, targetSpeed);
                 telemetry.update();
-                setDriveTrainPower(-targetSpeed,targetSpeed);
+                setDriveTrainPower(targetSpeed,-targetSpeed);
              }
         }
         setDriveTrainPower(0);
