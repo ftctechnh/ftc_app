@@ -885,7 +885,7 @@ public class InvadersVelocityVortexBot
             int targetHeading = gyro.getIntegratedZValue();
             setDriveTrainPower(speed);
             period.reset();
-            while(period.time() < durationMs) {
+            while((period.time() < durationMs) && opModeIsActive()) {
             }
             // Stop all motion;
             setDriveTrainPower(0);
