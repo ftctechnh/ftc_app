@@ -109,7 +109,6 @@ public class InvadersVelocityVortexBot
 
     public ModernRoboticsI2cRangeSensor UDSLeft = null; // Best for longer range sensing (>12")
     public ModernRoboticsI2cRangeSensor UDSRight = null;
-    public OpticalDistanceSensor ODS = null; // Best for short-range sensing (<12")
     public ColorSensor beaconSensorLeft = null;
     public ColorSensor beaconSensorRight = null;
     public ColorSensor floorSensor = null;
@@ -667,11 +666,18 @@ public class InvadersVelocityVortexBot
         touchSensor = hwMap.touchSensor.get("downLimit");
         UDSLeft = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSLeft");
         UDSRight = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSRight");
-        //ODS = hwMap.opticalDistanceSensor.get("ODS");
         beaconSensorLeft = hwMap.colorSensor.get("beaconSensorLeft");
         beaconSensorRight = hwMap.colorSensor.get("beaconSensorRight");
         floorSensor = hwMap.colorSensor.get("floorSensor");
+
+        //**Custom I2C Addresses Go Here!
+
         floorSensor.setI2cAddress(I2cAddr.create8bit(0x3A));
+        //beaconSensorLeft.setI2cAddress(I2cAddr.create8bit(0x32));
+        beaconSensorRight.setI2cAddress(I2cAddr.create8bit(0x36));
+        UDSRight.setI2cAddress(I2cAddr.create8bit(0x28));
+        UDSLeft.setI2cAddress(I2cAddr.create8bit(0x10));
+        //gyro.setI2cAddress(I2cAddr.create8bit(0x20));
         floorSensor.enableLed(true);
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
 
