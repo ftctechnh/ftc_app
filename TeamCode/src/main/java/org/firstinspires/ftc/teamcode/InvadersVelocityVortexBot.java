@@ -352,7 +352,7 @@ public class InvadersVelocityVortexBot
         // Our turn by degrees algorithm has a bit of slop in it.
         // Try to correct the user input to match reality
         // If turnDegrees == 100, then reset to 90 (which makes our robot turn 100)
-        turnDegrees *= .90;
+        //turnDegrees *= .90;
 
 
         double targetHeading = gyro.getIntegratedZValue() - turnDegrees;
@@ -845,7 +845,7 @@ public class InvadersVelocityVortexBot
                 telemetry.update();
 
                 if(gyroUpdate.time()>250) {
-                    sleepMs(250);   // optional pause after each move
+                    //sleepMs(250);   // optional pause after each move
                     // Turn back to the correct heading
                     int currentHeading = gyro.getIntegratedZValue();
                     simpleGyroTurn(speed, currentHeading - targetHeading, 1000);
