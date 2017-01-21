@@ -16,6 +16,7 @@ public class NoahLinearOp extends OpMode {
     DcMotor right1;
     DcMotor right2;
 
+
     @Override
     public void init() {
         left1 = hardwareMap.dcMotor.get("left1");
