@@ -13,7 +13,8 @@ public class AutonomousSimple extends LinearOpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
         initializeHardware();
-        resetDriveEncoders();
+        // reset drive encoders
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // use encoders
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);

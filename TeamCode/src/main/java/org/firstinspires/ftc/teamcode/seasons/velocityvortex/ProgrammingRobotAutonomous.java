@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by ftc6347 on 12/30/16.
  */
-@Disabled
 @Autonomous(name = "Programming Robot Autonomous", group = "autonomous")
 public class ProgrammingRobotAutonomous extends LinearOpMode {
 
@@ -18,6 +17,8 @@ public class ProgrammingRobotAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new ProgrammingRobotHardware(hardwareMap, telemetry);
+
+        robot.getGyroSensor().calibrate();
 
         // make sure the gyro is calibrated before continuing
         while (!isStopRequested() && robot.getGyroSensor().isCalibrating()) {
@@ -30,100 +31,76 @@ public class ProgrammingRobotAutonomous extends LinearOpMode {
         telemetry.addData(">", "Gyro Calibrated");
         telemetry.update();
 
-        // Wait for the game to start (Display Gyro value), and reset gyro before we move..
-        while (!isStarted()) {
+        while(!isStarted()) {
+            telemetry.addData("init loop", isStarted());
             telemetry.addData(">", "Integrated Z value = %d", robot.getGyroSensor().getIntegratedZValue());
+            telemetry.addData(">", "Gyro error from 90 degrees = %f", getGyroError(90));
             telemetry.update();
             idle();
         }
 
+        robot.getFrontLeft().setPower(0.5);
+        robot.getFrontRight().setPower(0.5);
+        robot.getBackLeft().setPower(0.5);
+        robot.getBackRight().setPower(0.5);
+
+        // turn 90 degrees
+        gyroPivot(0.5, 90);
+
         while(opModeIsActive()) {
-            telemetry.addData("steer", getSteer(getGyroError(90)));
-            telemetry.addData("error", getGyroError(90));
+            telemetry.addData("gyro error", getGyroError(90));
             telemetry.update();
         }
-
-//        gyroDrive(90, 8, 0.2);
-//        encoderDrive(0.2, 4);
     }
 
-    public void gyroDrive(int angle, int distance, double speed) {
-        int moveCounts = (int)(distance * ProgrammingRobotHardware.COUNTS_PER_INCH);
+    protected void proportionalLineFollow(double speed) {
 
-        int leftSideTarget = robot.getFrontLeft().getCurrentPosition() + moveCounts;
-        int rightSideTarget = robot.getFrontRight().getCurrentPosition() + moveCounts;
+        // this method should only be used in a loop
 
-        // set the target position for the left drive motors
-        robot.getFrontLeft().setTargetPosition(leftSideTarget);
-        robot.getBackLeft().setTargetPosition(leftSideTarget);
+        // TODO: find actual LIGHT_SENSOR_PERFECT_VALUE value
 
-        // set the target position for the right drive motors
-        robot.getFrontRight().setTargetPosition(-rightSideTarget);
-        robot.getBackRight().setTargetPosition(-rightSideTarget);
+        double correction = ProgrammingRobotHardware.LIGHT_SENSOR_PERFECT_VALUE
+                - robot.getFrontLightSensor().getRawLightDetected();
 
-        // set all motors to be RUN_TO_POSITION
-        robot.getFrontLeft().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.getFrontRight().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.getBackLeft().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.getBackRight().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // correction positively affects one side and negatively affects other
+        robot.getFrontLeft().setPower(speed - correction);
+        robot.getBackLeft().setPower(speed - correction);
+        robot.getFrontRight().setPower(speed + correction);
+        robot.getBackLeft().setPower(speed + correction);
+    }
 
-        // set the initial speed for the left drive motors
-        robot.getFrontLeft().setPower(speed);
-        robot.getBackLeft().setPower(speed);
+    protected void gyroPivot(double speed, double angle) {
 
-        // set the initial speed for the right drive motors
-        robot.getFrontRight().setPower(speed);
-        robot.getBackRight().setPower(speed);
+        double steer;
+        double threshold = getGyroError(angle) > 0 ? ProgrammingRobotHardware.GYRO_ERROR_THRESHOLD
+                : -ProgrammingRobotHardware.GYRO_ERROR_THRESHOLD;
 
-        while(opModeIsActive() && robot.areDriveMotorsBusy()) {
-            double steer = getSteer(getGyroError(angle));
-            double leftPower;
-            double rightPower;
+        while(opModeIsActive() && Math.abs(getGyroError(angle)) > threshold) {
 
-//            telemetry.addData("steer", steer);
-//            telemetry.update();
+            steer = Range.clip(getGyroError(angle)
+                    * ProgrammingRobotHardware.P_GYRO_TURN_COEFF , -1, 1);
 
-            if(distance < 0) {
-                steer *= -1;
-            }
+            double proportionalSpeed = speed * steer;
 
-            // set target to negative if necessary
-            if(getGyroError(angle) < 0) {
-                int newTarget = -robot.getFrontRight().getTargetPosition();
-                robot.getFrontRight().setTargetPosition(newTarget);
-                robot.getBackRight().setTargetPosition(newTarget);
-            }
+            robot.getFrontLeft().setPower(proportionalSpeed);
+            robot.getFrontRight().setPower(proportionalSpeed);
 
-            leftPower = speed + steer;
-            rightPower = speed + steer;
-
-            // normalize speeds if any one exceeds +/- 1.0;
-            double max = Math.max(Math.abs(leftPower), Math.abs(rightPower));
-            if (max > 1.0) {
-                leftPower /= max;
-                rightPower /= max;
-            }
-
-            // set the corrected speed for the left drive motors
-            robot.getFrontLeft().setPower(leftPower);
-            robot.getBackLeft().setPower(leftPower);
-
-            // set the corrected speed for the right drive motors
-            robot.getFrontRight().setPower(rightPower);
-            robot.getBackRight().setPower(rightPower);
-
-            telemetry.addData("left speed", robot.getFrontLeft().getPower());
-            telemetry.addData("right speed", robot.getFrontRight().getPower());
-            telemetry.update();
+            robot.getBackLeft().setPower(proportionalSpeed);
+            robot.getBackRight().setPower(proportionalSpeed);
         }
 
-        robot.stopDriveMotors();
+        // when we're on target, stop the robot
+        robot.stopRobot();
+    }
 
-        // set all motors to be RUN_USING_ENCODER
-        robot.getFrontLeft().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.getFrontRight().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.getBackLeft().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.getBackRight().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    private double getGyroError(double targetAngle) {
+        double error = targetAngle - robot.getGyroSensor().getIntegratedZValue();
+
+        // keep the error on a range of -179 to 180
+        while(opModeIsActive() && error > 180)  error -= 360;
+        while(opModeIsActive() && error <= -180) error += 360;
+
+        return error;
     }
 
     public void encoderDrive(double speed, double inches) {
@@ -160,17 +137,5 @@ public class ProgrammingRobotAutonomous extends LinearOpMode {
         robot.getFrontRight().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.getBackRight().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.getBackLeft().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public double getSteer(double error) {
-        return Range.clip(Math.abs(error)
-                * ProgrammingRobotHardware.P_DRIVE_COEFF, 0, 1);
-    }
-
-    public double getGyroError(double targetAngle) {
-        double robotError = targetAngle - robot.getGyroSensor().getIntegratedZValue();
-        while (robotError > 180 && opModeIsActive())  robotError -= 360;
-        while (robotError <= -180 && opModeIsActive()) robotError += 360;
-        return robotError;
     }
 }

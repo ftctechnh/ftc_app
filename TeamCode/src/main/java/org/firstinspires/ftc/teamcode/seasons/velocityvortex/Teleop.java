@@ -20,6 +20,8 @@ public class Teleop extends LinearOpModeBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        initializeHardware();
+
         // run without encoders
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -58,11 +60,18 @@ public class Teleop extends LinearOpModeBase {
 
             handleIntake();
             handleLauncher();
+            handleCapBallMechanism();
 
             handleTelemetry();
 
             idle();
         }
+    }
+
+    private void handleCapBallMechanism() {
+        double spoolMotorSpeed = -gamepad2.left_stick_y;
+        getSpoolMotor1().setPower(spoolMotorSpeed);
+        getSpoolMotor2().setPower(spoolMotorSpeed);
     }
 
     private void handleIntake() {

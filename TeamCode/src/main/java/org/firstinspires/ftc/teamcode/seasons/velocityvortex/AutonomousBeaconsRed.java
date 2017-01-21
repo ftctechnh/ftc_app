@@ -13,13 +13,11 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
         initializeHardware();
-        resetDriveEncoders();
+        // reset drive encoders
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // use encoders
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("color sensor red", getColorSensor().red());
         telemetry.addData("color sensor blue", getColorSensor().blue());
@@ -56,7 +54,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 
         getRobotRuntime().reset();
         while (opModeIsActive() && getRobotRuntime().milliseconds() < 250) {
-            resetDriveEncoders();
+            // reset drive encoders
+            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             idle();
         }
 
@@ -73,7 +72,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
             telemetry.update();
         }
 
-        resetDriveEncoders();
+        // reset drive encoders
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stopRobot();
 
         // claim the first beacon
@@ -93,7 +93,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // pause for 0.25 seconds
         getRobotRuntime().reset();
         while (opModeIsActive() && getRobotRuntime().milliseconds() < 250) {
-            resetDriveEncoders();
+            // reset drive encoders
+            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             idle();
         }
 
@@ -110,7 +111,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
             telemetry.update();
         }
 
-        resetDriveEncoders();
+        // reset drive encoders
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stopRobot();
 
         // claim the second beacon

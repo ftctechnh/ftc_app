@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LightSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -17,6 +18,12 @@ public class ProgrammingRobotHardware {
     public static final double WHEEL_DIAMETER_INCHES = 4;
 
     public static final double COUNTS_PER_MOTOR_REV = 1120;
+
+    public static final double GYRO_ERROR_THRESHOLD = 5;
+
+    public static final double LIGHT_SENSOR_PERFECT_VALUE = 0.2; // random value for now
+
+    public static final double P_GYRO_TURN_COEFF = 0.008;
 
     public static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI);
@@ -31,6 +38,8 @@ public class ProgrammingRobotHardware {
     private ModernRoboticsI2cGyro gyro;
     private ColorSensor colorSensor;
 
+    private LightSensor frontLightSensor;
+
     public ProgrammingRobotHardware(HardwareMap hardwareMap, Telemetry telemetry) {
         frontLeft = hardwareMap.dcMotor.get("fl");
         frontRight = hardwareMap.dcMotor.get("fr");
@@ -38,22 +47,38 @@ public class ProgrammingRobotHardware {
         backRight = hardwareMap.dcMotor.get("br");
 
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-        gyro.calibrate();
 
         colorSensor = hardwareMap.colorSensor.get("clrs");
         colorSensor.enableLed(true);
 
+        frontLightSensor = hardwareMap.lightSensor.get("fls");
+        frontLightSensor.enableLed(true);
+
         // reset the encoders for each drive motor
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // set the motor directions
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    protected void stopRobot() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+    }
+
+    protected void setDriveMotorsMode(DcMotor.RunMode runMode) {
+        backLeft.setMode(runMode);
+        backRight.setMode(runMode);
+        frontLeft.setMode(runMode);
+        frontRight.setMode(runMode);
     }
 
     public boolean areDriveMotorsBusy() {
@@ -92,5 +117,9 @@ public class ProgrammingRobotHardware {
 
     public DcMotor getBackRight() {
         return backRight;
+    }
+
+    public LightSensor getFrontLightSensor() {
+        return frontLightSensor;
     }
 }

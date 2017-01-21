@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by ftc6347 on 10/16/16.
@@ -22,10 +23,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private static final int COUNTS_PER_MOTOR_REV = 1120;
 
+    private static final double GYRO_ERROR_THRESHOLD = 5;
+
+    private static final double P_GYRO_TURN_COEFF = 0.01;
+
     protected static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI));
-
-    private DcMotorController attachmentsController;
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -34,6 +37,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private DcMotor launcherMotor;
     private DcMotor intakeMotor;
+
+    private DcMotor spoolMotor1;
+    private DcMotor spoolMotor2;
 
     private Servo blue1;
     private Servo red2;
@@ -59,8 +65,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         // initialize robotRuntime instance variable
         robotRuntime = new ElapsedTime();
 
-        attachmentsController = hardwareMap.dcMotorController.get("mc3");
-
         frontLeftDrive = hardwareMap.dcMotor.get("fl");
         frontRightDrive = hardwareMap.dcMotor.get("fr");
         backLeftDrive = hardwareMap.dcMotor.get("bl");
@@ -69,15 +73,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         launcherMotor = hardwareMap.dcMotor.get("launcher");
         intakeMotor = hardwareMap.dcMotor.get("intake");
 
+        spoolMotor1 = hardwareMap.dcMotor.get("s1");
+        spoolMotor2 = hardwareMap.dcMotor.get("s2");
+
         blue1 = hardwareMap.servo.get("b1");    // Up =.3 Down =1.0
         red2 = hardwareMap.servo.get("r2");     //Up =.7 Down =0.0
         door3 = hardwareMap.servo.get("d3");   //Closed = 0.55 Open = 0.25
-
-        frontLightSensor = hardwareMap.lightSensor.get("fls");
-        backLightSensor = hardwareMap.lightSensor.get("bls");
-
-        frontLightSensor.enableLed(true);
-        backLightSensor.enableLed(true);
 
         colorSensor = hardwareMap.colorSensor.get("clr");
         colorSensor.enableLed(false);
@@ -92,10 +93,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
 
         // reverse all drive motors
-        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        // reverse only one spool motor
+        spoolMotor1.setDirection(DcMotor.Direction.REVERSE);
+        spoolMotor2.setDirection(DcMotor.Direction.FORWARD);
 
         // initialize servo positions
         blue1.setPosition(1.0);
@@ -139,7 +144,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             idle();
         }
 
-        resetDriveEncoders();
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // drive backward
         encoderDrive(0.5, -2, -2);
@@ -156,7 +161,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                 driveForward(0.2);
             }
 
-            resetDriveEncoders();
+            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             // second drive backward
             encoderDrive(0.5, -2, -2);
@@ -182,8 +187,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     protected void encoderDrive(double speed, double leftInches, double rightInches) {
-        int leftTarget = (int)(leftInches * LinearOpModeBase.COUNTS_PER_INCH);
-        int rightTarget = (int)(rightInches * LinearOpModeBase.COUNTS_PER_INCH);
+        int leftTarget = (int)(leftInches * COUNTS_PER_INCH);
+        int rightTarget = (int)(rightInches * COUNTS_PER_INCH);
 
         // set the target position for each motor
         getFrontLeftDrive().setTargetPosition(leftTarget);
@@ -192,10 +197,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         getBackLeftDrive().setTargetPosition(leftTarget);
 
         // set RUN_TO_POSITION for each motor
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // set the power for the left drive motors
         getFrontLeftDrive().setPower(speed);
@@ -211,18 +213,15 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         stopRobot();
 
-        resetDriveEncoders();
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // set RUN_WITHOUT_ENCODER for each motor
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     protected void encoderStrafe(double speed, double frontInches, double backInches) {
-        int frontTarget = (int)(frontInches * LinearOpModeBase.COUNTS_PER_INCH);
-        int backTarget = (int)(backInches * LinearOpModeBase.COUNTS_PER_INCH);
+        int frontTarget = (int)(frontInches * COUNTS_PER_INCH);
+        int backTarget = (int)(backInches * COUNTS_PER_INCH);
 
         // set the target position for each motor
         getFrontLeftDrive().setTargetPosition(frontTarget);
@@ -232,10 +231,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         getBackLeftDrive().setTargetPosition(-backTarget);
 
         // set RUN_TO_POSITION for each motor
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // set the power for the left drive motors
         getFrontLeftDrive().setPower(speed);
@@ -251,13 +247,20 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         stopRobot();
 
-        resetDriveEncoders();
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // set RUN_WITHOUT_ENCODER for each motor
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    private double getGyroError(double targetAngle) {
+        double error = targetAngle - gyroSensor.getIntegratedZValue();
+
+        // keep the error on a range of -179 to 180
+        while (opModeIsActive() && error > 180)  error -= 360;
+        while (opModeIsActive() && error <= -180) error += 360;
+
+        return Range.clip(error * P_GYRO_TURN_COEFF, -1, 1);
     }
 
     protected void driveRight(double power) {
@@ -295,6 +298,30 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(0);
     }
 
+    protected void gyroPivot(double speed, double angle) {
+
+        double steer;
+        double error = getGyroError(angle);
+
+        while(opModeIsActive() && Math.abs(error) > GYRO_ERROR_THRESHOLD) {
+
+            error = getGyroError(angle);
+
+            steer = Range.clip(error * P_GYRO_TURN_COEFF , -1, 1);
+
+            double proportionalSpeed = speed * steer;
+
+            getFrontLeftDrive().setPower(proportionalSpeed);
+            getFrontRightDrive().setPower(proportionalSpeed);
+
+            getBackLeftDrive().setPower(proportionalSpeed);
+            getBackRightDrive().setPower(proportionalSpeed);
+        }
+
+        // when we're on target, stop the robot
+        stopRobot();
+    }
+
     protected void pivotLeft(double power) {
         frontLeftDrive.setPower(power);
         frontRightDrive.setPower(power);
@@ -309,12 +336,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(-power);
     }
 
-    protected void resetDriveEncoders() {
-        // reset the encoders
-        backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    protected void setDriveMotorsMode(DcMotor.RunMode runMode) {
+        backLeftDrive.setMode(runMode);
+        backRightDrive.setMode(runMode);
+        frontLeftDrive.setMode(runMode);
+        frontRightDrive.setMode(runMode);
     }
 
     protected boolean areDriveMotorsBusy() {
@@ -344,6 +370,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected DcMotor getLauncherMotor() {
         return launcherMotor;
+    }
+
+    protected DcMotor getSpoolMotor1() {
+        return spoolMotor1;
+    }
+
+    protected DcMotor getSpoolMotor2() {
+        return spoolMotor2;
     }
 
     protected Servo getBlue1() { return blue1; }
