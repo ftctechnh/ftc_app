@@ -140,16 +140,16 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         // This is for the nearest blue beacon towards our robot
         //Step 1
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
-        encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
+        encoderDrive(DRIVE_SPEED, 21, 21, 10.0); // Drive fwd
         telemetry.addData("Step 1 GyroDrive", " Completed");
         telemetry.update();
-        sleep(250);
+//        sleep(250);
 
         //Step 2
         gyroTurn( TURN_SPEED, -55.0);         // Turn  CCW to -55 Degrees
         telemetry.addData("Step 2 GyroTurn", " Completed");
         telemetry.update();
-        sleep(250);
+//        sleep(250);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 2 Gyro HOLD", " Completed");
@@ -162,20 +162,20 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         encoderDrive(DRIVE_SPEED, 42, 42, 10.0); // Drive fwd
         telemetry.addData("Step 3a GyroDrive", " Completed");
         telemetry.update();
-        sleep(250);
+//        sleep(250);
 
         encoderDrive(PUSH_SPEED, 9 , 9, 10.0); // Drive fwd
         telemetry.addData("Step 3b GyroDrive", " Completed");
         telemetry.update();
 
 
-        sleep(250);
+//        sleep(250);
 
         //Step 4
         gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
         telemetry.addData("Step 4 GyroTurn", " Completed");
         telemetry.update();
-        sleep(250);
+//        sleep(250);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 4 Gyro HOLD", " Completed");
@@ -185,110 +185,115 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         //encoderDrive(DRIVE_SPEED, 4, 4, 3.0);
         telemetry.addData("Before Color sense", "loop");
         telemetry.update();
-        sleep(2500);
+//        sleep(1000);
 
         // Light sensor loop
         if (robot.color.red() > robot.color.blue()) {
             colorBlueSensed = 1;
-            telemetry.addData("Detecting", "Red");
-//            sleep(500);
-            encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
+            telemetry.addData("Detecting", "Red in IF");
+//            sleep(2000);
+            encoderDrive(PUSH_SPEED,    -10, -10, 3.0);
 //            encoderDrive(TURN_SPEED,    -3,6,3.0);
             gyroTurn(TURN_SPEED, -60.0);
-            encoderDrive(PUSH_SPEED,    20,20,3.0);
+            encoderDrive(PUSH_SPEED,    18,18,3.0);
             gyroTurn(TURN_SPEED, -90.0);
             encoderDrive(PUSH_SPEED,    9,9,3.0);
         } else if (robot.color.blue() > robot.color.red()){
             colorBlueSensed = 2;
-            telemetry.addData("Detecting", "Blue");
-//            sleep(500);
-            encoderDrive(PUSH_SPEED, 4,4, 3.0);
+            telemetry.addData("Detecting", "Blue in IF");
+//            sleep(2000);
+            encoderDrive(PUSH_SPEED, 11,11, 3.0);
         } else {
             colorBlueSensed = 0;
-            telemetry.addData("Detecting", "Neither");
-//            sleep(500);
+            telemetry.addData("Detecting", "Neither in IF");
+//            sleep(2000);
         }
 
         //Did not find either color. So now start the loop
         sensorLoopCycles = 0;
-        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
+        while (robot.color.blue() == 0 && robot.color.red() == 0 && colorBlueSensed == 0 && sensorLoopCycles < 6){
             encoderDrive(PUSH_SPEED,1,1,3.0);
 
             if (robot.color.red() > robot.color.blue()) {
                 colorBlueSensed = 1;
-                telemetry.addData("Detecting", "Red");
-//            sleep(500);
-                encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
+                telemetry.addData("Detecting", "Red in Loop");
+//            sleep(1000);
+                encoderDrive(PUSH_SPEED,    -10, -10, 3.0);
 //            encoderDrive(TURN_SPEED,    -3,6,3.0);
                 gyroTurn(TURN_SPEED, -60.0);
-                encoderDrive(PUSH_SPEED,    20,20,3.0);
+                encoderDrive(PUSH_SPEED,    18,18,3.0);
                 gyroTurn(TURN_SPEED, -90.0);
                 encoderDrive(PUSH_SPEED,    9,9,3.0);
             } else if (robot.color.blue() > robot.color.red()){
                 colorBlueSensed = 2;
-                telemetry.addData("Detecting", "Blue");
-//            sleep(500);
-                encoderDrive(PUSH_SPEED, 4,4, 3.0);
+                telemetry.addData("Detecting", "Blue in Loop");
+//            sleep(2000);
+                encoderDrive(PUSH_SPEED, 10,10, 3.0);
             } else {
                 colorBlueSensed = 0;
-                telemetry.addData("Detecting", "Neither");
-//            sleep(500);
+                telemetry.addData("Detecting", "Neither in loop");
+//            sleep(2000);
             }
             sensorLoopCycles = sensorLoopCycles + 1 ;
         }
         telemetry.addData("First Color sense loop", "completed");
         telemetry.update();
+//        sleep(5000);
 
         //Look for the second beacon
-        encoderDrive(DRIVE_SPEED, -5,-5, 3.0);
-        gyroTurn(TURN_SPEED,0.0);
-        encoderDrive(DRIVE_SPEED, 30,30, 3.0);
+//        encoderDrive(DRIVE_SPEED, -5,-5, 3.0);
+//        gyroTurn(TURN_SPEED,0.0);
+//        encoderDrive(DRIVE_SPEED, 30,30, 3.0);
+//
+//
+//        // Looking for white line
+//        robot.color2.enableLed(true);
+//        sensorLoopCycles = 0;
+//        while ((robot.color2.alpha() < 4 || robot.color2.red() < 4 || robot.color2.green()<4 || robot.color2.blue()< 4) && sensorLoopCycles < 6){
+//            encoderDrive(PUSH_SPEED,1,1,3.0);
+//            sensorLoopCycles = sensorLoopCycles + 1 ;
+//        }
+//
+//        //Now we are on white line
+//        //Turning off active mode on color 2 as white line has been found
+//        robot.color2.enableLed(false);
+//        gyroTurn(TURN_SPEED,-90.0);
+//        encoderDrive(DRIVE_SPEED, 4, 4, 3.0); //  Forward 24 inches with 3 Sec timeout
+//
+//        // Light sensor loop
+//        sensorLoopCycles = 0;
+//        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
+//            encoderDrive(PUSH_SPEED,1,1,3.0);
+//
+//            if (robot.color.red() > robot.color.blue()) {
+//                colorBlueSensed = 1;
+//                telemetry.addData("Detecting", "Red");
+////            sleep(500);
+//                encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
+////            encoderDrive(TURN_SPEED,    -3,6,3.0);
+//                gyroTurn(TURN_SPEED, -60.0);
+//                encoderDrive(PUSH_SPEED,    20,20,3.0);
+//                gyroTurn(TURN_SPEED, -90.0);
+//                encoderDrive(PUSH_SPEED,    9,9,3.0);
+//            } else if (robot.color.blue() > robot.color.red()){
+//                colorBlueSensed = 2;
+//                telemetry.addData("Detecting", "Blue");
+////            sleep(500);
+//                encoderDrive(PUSH_SPEED, 4,4, 3.0);
+//            } else {
+//                colorBlueSensed = 0;
+//                telemetry.addData("Detecting", "Neither");
+////            sleep(500);
+//            }
+//            sensorLoopCycles = sensorLoopCycles + 1 ;
+//        }
+//        telemetry.update();
 
-
-        // Looking for white line
-        robot.color2.enableLed(true);
-        sensorLoopCycles = 0;
-        while ((robot.color2.alpha() < 4 || robot.color2.red() < 4 || robot.color2.green()<4 || robot.color2.blue()< 4) && sensorLoopCycles < 6){
-            encoderDrive(PUSH_SPEED,1,1,3.0);
-            sensorLoopCycles = sensorLoopCycles + 1 ;
-        }
-
-        //Now we are on white line
-        //Turning off active mode on color 2 as white line has been found
-        robot.color2.enableLed(false);
-        gyroTurn(TURN_SPEED,-90.0);
-        encoderDrive(DRIVE_SPEED, 4, 4, 3.0); //  Forward 24 inches with 3 Sec timeout
-
-        // Light sensor loop
-        sensorLoopCycles = 0;
-        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
-            encoderDrive(PUSH_SPEED,1,1,3.0);
-
-            if (robot.color.red() > robot.color.blue()) {
-                colorBlueSensed = 1;
-                telemetry.addData("Detecting", "Red");
-//            sleep(500);
-                encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
-//            encoderDrive(TURN_SPEED,    -3,6,3.0);
-                gyroTurn(TURN_SPEED, -60.0);
-                encoderDrive(PUSH_SPEED,    20,20,3.0);
-                gyroTurn(TURN_SPEED, -90.0);
-                encoderDrive(PUSH_SPEED,    9,9,3.0);
-            } else if (robot.color.blue() > robot.color.red()){
-                colorBlueSensed = 2;
-                telemetry.addData("Detecting", "Blue");
-//            sleep(500);
-                encoderDrive(PUSH_SPEED, 4,4, 3.0);
-            } else {
-                colorBlueSensed = 0;
-                telemetry.addData("Detecting", "Neither");
-//            sleep(500);
-            }
-            sensorLoopCycles = sensorLoopCycles + 1 ;
-        }
-        telemetry.update();
-
-        encoderDrive(DRIVE_SPEED,  -48, -48, 3.0); // Back up and park
+        encoderDrive(DRIVE_SPEED,  -10, -10, 3.0); // Back up and park
+        gyroTurn(TURN_SPEED, -100.0);
+        encoderDrive(DRIVE_SPEED,  -24, -24, 3.0); // Back up and park
+        gyroTurn(TURN_SPEED, -75.0);
+        encoderDrive(DRIVE_SPEED,  -18, -18, 3.0); // Back up and park
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }

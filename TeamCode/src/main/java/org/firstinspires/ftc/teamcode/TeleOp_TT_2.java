@@ -36,6 +36,8 @@ public class TeleOp_TT_2 extends OpMode {
     private double          leftMotorSpeed = 0.0;               // remember what was requested based on joystick position
     private double          rightMotorSpeed = 0.0;               // remember what was requested based on joystick position
     private double          armMotorSpeed = 0.0;
+    private double          flyLeft = 1.0;
+    private double          flyRight = 1.0;
     private double          leftServoPos = 0.0;
     private double          rightServoPos = 0.0;
 
@@ -109,9 +111,10 @@ public class TeleOp_TT_2 extends OpMode {
         double right = 0.0;
         double armUp = 0.0;
         double armDown = 0.0;
-        boolean openClawA = false;
-        boolean rightClawB = false; //May need to change
-        boolean leftClawX = false;
+        float openClawLeft = 0;
+        boolean closeClawLeft = false; //May need to change
+        boolean closeClawRight = false;
+        float openClawRight = 0;
 
         // ClawState = 0 for Home, 1 for Open, 2 for holding the ball
         int iPrevStateClaw = 0;
@@ -123,9 +126,10 @@ public class TeleOp_TT_2 extends OpMode {
         left = -gamepad1.left_stick_y;   // (note: The joystick goes negative when pushed forwards, so negate it)
         right = -gamepad1.right_stick_y;
         armUp = -gamepad1.right_trigger;
-        openClawA = gamepad2.a;
-        rightClawB = gamepad2.b;
-        leftClawX = gamepad2.x;
+        openClawLeft = gamepad2.left_trigger;
+        closeClawLeft = gamepad2.left_bumper;
+        openClawRight = gamepad2.right_trigger;
+        closeClawRight = gamepad2.right_bumper;
 
         bCurrState = gamepad1.x;
 
@@ -150,65 +154,73 @@ public class TeleOp_TT_2 extends OpMode {
         rightMotorSpeed = right;
         armMotorSpeed = armUp;
 
-
-        if (openClawA == true) {
+        if (openClawLeft != 0) {
 //            iPrevStateClaw = iCurrStateClaw ;
             iCurrStateClaw = 1;
-            openClawA = false;
-            rightClawB = false;
-            leftClawX = false;
-            robot.backLeftMotor.setPower(leftMotorSpeed/2);
-            robot.frontLeftMotor.setPower(leftMotorSpeed/2);
-            robot.backRightMotor.setPower(rightMotorSpeed/2);
-            robot.frontRightMotor.setPower(rightMotorSpeed/2);
+            closeClawLeft = false;
 
-            robot.leftServo.setPosition(Servo.MIN_POSITION);
-            try {
-                sleep(250);
-            robot.rightServo.setPosition(Servo.MIN_POSITION);
-            }
-            catch (InterruptedException e) {
-                //do nothing
-            }
-
-        } else if (rightClawB == true) {
-//            iPrevStateClaw = iCurrStateClaw ;
-            iCurrStateClaw = 2;
-            openClawA = false;
-            rightClawB = false;
-            leftClawX = false;
-            robot.backLeftMotor.setPower(leftMotorSpeed/2);
-            robot.frontLeftMotor.setPower(leftMotorSpeed/2);
-            robot.backRightMotor.setPower(rightMotorSpeed/2);
-            robot.frontRightMotor.setPower(rightMotorSpeed/2);
-
-            robot.rightServo.setPosition(RIGHT_CLAW_FOLD);
-            try {
-                sleep(500);
-            }
-            catch (InterruptedException e) {
-                //do nothing
-            }
-
-
-        } else if (leftClawX == true) {
-//            iPrevStateClaw = iCurrStateClaw ;
-            iCurrStateClaw = 0;
-            openClawA = false;
-            rightClawB = false;
-            leftClawX = false;
             robot.backLeftMotor.setPower(leftMotorSpeed);
             robot.frontLeftMotor.setPower(leftMotorSpeed);
             robot.backRightMotor.setPower(rightMotorSpeed);
             robot.frontRightMotor.setPower(rightMotorSpeed);
-            robot.leftServo.setPosition(LEFT_CLAW_FOLD);
+
+            robot.leftServo.setPosition(Servo.MIN_POSITION);
+//            try {
+//                sleep(250);
+//            robot.rightServo.setPosition(Servo.MIN_POSITION);
+//            }
+//            catch (InterruptedException e) {
+//                //do nothing
+//            }
+
+        } else if (closeClawLeft == true) {
+//            iPrevStateClaw = iCurrStateClaw ;
+            iCurrStateClaw = 0;
+            openClawLeft = 1;
+
+            robot.backLeftMotor.setPower(leftMotorSpeed);
+            robot.frontLeftMotor.setPower(leftMotorSpeed);
+            robot.backRightMotor.setPower(rightMotorSpeed);
+            robot.frontRightMotor.setPower(rightMotorSpeed);
+            robot.leftServo.setPosition(Servo.MAX_POSITION);
         }
 
-        telemetry.addData("Left Servo", robot.leftServo.getPosition()) ;
+        if (closeClawRight == true) {
+//            iPrevStateClaw = iCurrStateClaw ;
+        iCurrStateClaw = 0;
+        openClawRight = 1;
+
+        robot.backLeftMotor.setPower(leftMotorSpeed);
+        robot.frontLeftMotor.setPower(leftMotorSpeed);
+        robot.backRightMotor.setPower(rightMotorSpeed);
+        robot.frontRightMotor.setPower(rightMotorSpeed);
+        robot.rightServo.setPosition(Servo.MAX_POSITION);
+        } else if (openClawRight != 0) {
+//            iPrevStateClaw = iCurrStateClaw ;
+            iCurrStateClaw = 2;
+            closeClawRight = false;
+
+            robot.backLeftMotor.setPower(leftMotorSpeed);
+            robot.frontLeftMotor.setPower(leftMotorSpeed);
+            robot.backRightMotor.setPower(rightMotorSpeed);
+            robot.frontRightMotor.setPower(rightMotorSpeed);
+
+            robot.rightServo.setPosition(Servo.MIN_POSITION);
+//            try {
+//                sleep(500);
+//            }
+//            catch (InterruptedException e) {
+//                //do nothing
+//            }
+        }
+
+
+            telemetry.addData("Left Servo", robot.leftServo.getPosition()) ;
         telemetry.addData("Right Servo", robot.rightServo.getPosition()) ;
-        telemetry.addData("x State", gamepad2.x);
-        telemetry.addData("a State", gamepad2.a) ;
-        telemetry.addData("b State", gamepad2.b) ;
+        telemetry.addData("Right Open State", gamepad2.right_trigger);
+        telemetry.addData("Right Close State", gamepad2.right_bumper) ;
+        telemetry.addData("Left Open State", gamepad2.left_trigger) ;
+        telemetry.addData("Left Close State", gamepad2.left_bumper) ;
         telemetry.addData("Curr State", iCurrStateClaw);
     }
 
