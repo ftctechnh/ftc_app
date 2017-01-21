@@ -290,9 +290,11 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 //        telemetry.update();
 
         encoderDrive(DRIVE_SPEED,  -10, -10, 3.0); // Back up and park
-        gyroTurn(TURN_SPEED, -100.0);
+     //   gyroTurn(TURN_SPEED, -100.0);
+        encoderDrive(DRIVE_SPEED, 6,-6,3.0);
         encoderDrive(DRIVE_SPEED,  -24, -24, 3.0); // Back up and park
-        gyroTurn(TURN_SPEED, -75.0);
+       // gyroTurn(TURN_SPEED, -75.0);
+        encoderDrive(DRIVE_SPEED,-9,6,3.0);
         encoderDrive(DRIVE_SPEED,  -18, -18, 3.0); // Back up and park
         telemetry.addData("Path", "Complete");
         telemetry.update();
