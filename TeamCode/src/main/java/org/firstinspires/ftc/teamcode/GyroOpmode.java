@@ -76,25 +76,25 @@ public class GyroOpmode extends LinearOpMode {
 
         //All the actual opmode code goes here.
         robot.timedDrive(0.2,1900); //Drive forwards to the plywood base with the capball.
-        //robot.simpleGyroTurn(0.3, -90, 1500); //Turn left towards the beacons.
-        robot.turnToAbsoluteHeading(0.3,-90,3000);
+        robot.simpleGyroTurn(0.3, -90, 1500); //Turn left towards the beacons.
+        //robot.turnToAbsoluteHeading(0.3,-90,3000);
         robot.timedDrive(0.2, 3000); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
         robot.DriveToWall(6, DistanceUnit.INCH, 0.15); //Use the range sensor to get nice and close to the wall.
-        //robot.simpleGyroTurn(0.3, -90, 1500); //Turn right to drive alongside the beacons.
-        robot.turnToAbsoluteHeading(0.3,-180,3000);
+        robot.simpleGyroTurn(0.3, 90, 1500); //Turn right to drive alongside the beacons.
+        //robot.turnToAbsoluteHeading(0.3,-180,3000);
         robot.DriveToWhiteLine(-0.3,8,true,5000); // Drive to the white line
-        if(robot.soIseeBlueLeft())
-        {
-            robot.beaconRight.setPosition(1);
-            robot.sleepMs(1500);
-            robot.beaconRight.setPosition(0);
-        }
-        else
-        {
-            robot.timedDrive(0.2,250);
-            robot.beaconRight.setPosition(1);
-            robot.sleepMs(1500);
-            robot.beaconRight.setPosition(0);
-        }
+        //if(robot.soIseeBlueLeft())
+        //{
+            //robot.beaconRight.setPosition(1);
+            //robot.sleepMs(1500);
+            //robot.beaconRight.setPosition(0);
+        //}
+        //else
+        //{
+            //robot.timedDrive(0.2,250);
+            //robot.beaconRight.setPosition(1);
+            //robot.sleepMs(1500);
+            //robot.beaconRight.setPosition(0);
+        //}
     }
 }

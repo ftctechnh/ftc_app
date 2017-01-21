@@ -22,7 +22,7 @@ Velocity Vortex Config
 		2	Gyro		    "gyroSensor" (I2C: 0x20)
 		3	MR Range Sensor	"UDSRight" (I2C: 0x28g)
 		4	Color Sensor    "beaconSensorLeft" (I2C: 0x32)
-		5   MR Range Sensor "UDSLeft" (I2C: 0x10)
+		5   MR Range Sensor "UDSLeft" (I2C: 0x26)
 
 	Analog Input Devices:
 		0

@@ -9,25 +9,14 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import static android.R.attr.delay;
-import static android.R.attr.left;
-import static android.R.attr.switchMinWidth;
-
-import java.lang.Thread.*;
 
 /**
  * This is NOT an opmode.
@@ -172,37 +161,47 @@ public class InvadersVelocityVortexBot
 
     public void AlignToWall(double DistanceFromTarget, DistanceUnit unit){
         double rightDistance = UDSRight.getDistance(unit);
-        double leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+        double leftDistance = UDSLeft.getDistance(unit);
+        //leftMotor.setMaxSpeed(1000);
+        //rightMotor.setMaxSpeed(1000);
 
         if(leftDistance > rightDistance == true){
-            //leftMotor.setMaxSpeed(1000);
-            //rightMotor.setMaxSpeed(1000);
+            telemetry.addData("TURNING", "RIGHT");
+            telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
+            telemetry.update();
+            sleepMs(3000);
             leftMotor.setPower(0.3);
             rightMotor.setPower(-0.3);
             while(leftDistance > rightDistance == true){
-                rightDistance = UDSRight.getDistance(DistanceUnit.INCH);
-                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+                rightDistance = UDSRight.getDistance(unit);
+                leftDistance = UDSLeft.getDistance(unit);
+                telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
+                telemetry.update();
             }
-            rightMotor.setPower(0);
-            leftMotor.setPower(0);
-
-
         }
         else if (leftDistance < rightDistance == true){
+            telemetry.addData("TURNING", "LEFT");
+            telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
+            telemetry.update();
+            sleepMs(3000);
             leftMotor.setPower(-0.3);
             rightMotor.setPower(0.3);
             while(leftDistance < rightDistance == true){
-                rightDistance = UDSRight.getDistance(DistanceUnit.INCH);
-                leftDistance = UDSLeft.getDistance(DistanceUnit.INCH);
+                rightDistance = UDSRight.getDistance(unit);
+                leftDistance = UDSLeft.getDistance(unit);
+                telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
+                telemetry.update();
             }
-            rightMotor.setPower(0);
-            leftMotor.setPower(0);
-
         }
         else if (leftDistance == rightDistance){
-
+            // Do Nothing - We are aligned to the wall
+            telemetry.addData("TURNING", "-----");
+            telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
+            telemetry.update();
+            sleepMs(3000);
         }
-
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
     }
 
     /**
@@ -670,17 +669,13 @@ public class InvadersVelocityVortexBot
         beaconSensorRight = hwMap.colorSensor.get("beaconSensorRight");
         floorSensor = hwMap.colorSensor.get("floorSensor");
 
-        //**Custom I2C Addresses Go Here!
-
+        // Custom I2C Addresses Go Here!
         floorSensor.setI2cAddress(I2cAddr.create8bit(0x3A));
-        //beaconSensorLeft.setI2cAddress(I2cAddr.create8bit(0x32));
         beaconSensorRight.setI2cAddress(I2cAddr.create8bit(0x36));
-        UDSRight.setI2cAddress(I2cAddr.create8bit(0x28));
-        UDSLeft.setI2cAddress(I2cAddr.create8bit(0x10));
-        //gyro.setI2cAddress(I2cAddr.create8bit(0x20));
+        UDSLeft.setI2cAddress(I2cAddr.create8bit(0x26));
+
         floorSensor.enableLed(true);
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
-
         gyro.calibrate();
 
         // make sure the gyro is calibrated before continuing

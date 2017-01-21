@@ -89,10 +89,11 @@ public class PlatinumWumpus extends OpMode {
      */
     @Override
     public void init_loop() {
-        telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
-        telemetry.addData(">", "Floor AlphaLv = %d", robot.floorSensor.alpha());
-        telemetry.addData(">", "soIseeBlueLeft = %s [%d]",   robot.soIseeBlueLeft() ? "YES" : "NO", robot.beaconSensorLeft.blue());
-        telemetry.addData(">", "doIseeRedLeft = %s [%d]",   robot.doIseeRedLeft() ? "YES" : "NO", robot.beaconSensorLeft.red());
+        telemetry.addData("HEADING", "%d", robot.gyro.getIntegratedZValue());
+        telemetry.addData("BEACON SENSOR", "R: = %d, L: %d", robot.beaconSensorRight.alpha(), robot.beaconSensorLeft.alpha());
+//        telemetry.addData(">", "doIseeBlueLeft = %s [%d]",   robot.soIseeBlueLeft() ? "YES" : "NO", robot.beaconSensorLeft.blue());
+//        telemetry.addData(">", "doIseeRedLeft = %s [%d]",   robot.doIseeRedLeft() ? "YES" : "NO", robot.beaconSensorLeft.red());
+        telemetry.addData("RANGE: ","R: %.02f, L: %.02f", robot.UDSRight.getDistance(DistanceUnit.CM), robot.UDSLeft.getDistance(DistanceUnit.CM));
         telemetry.update();
     }
 

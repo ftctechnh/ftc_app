@@ -145,7 +145,7 @@ public class InvadersPushbot_Iterative extends OpMode{
                 robot.floorSensor.blue(),
                 robot.floorSensor.alpha());
         telemetry.addData("UDSLeft:", "%.2fcm", robot.UDSLeft.getDistance(DistanceUnit.CM));
-        telemetry.addData("ODS:", "%.2fpercent", robot.ODS.getLightDetected());
+        //telemetry.addData("ODS:", "%.2fpercent", robot.ODS.getLightDetected());
         updateTelemetry(telemetry);
 
         //Beacon button and pusher button
