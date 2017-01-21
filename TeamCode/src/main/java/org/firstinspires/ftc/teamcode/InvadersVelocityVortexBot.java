@@ -161,8 +161,11 @@ public class InvadersVelocityVortexBot
     public void AlignToWall(double DistanceFromTarget, DistanceUnit unit){
         double rightDistance = UDSRight.getDistance(unit);
         double leftDistance = UDSLeft.getDistance(unit);
-        leftMotor.setMaxSpeed(500);
-        rightMotor.setMaxSpeed(500);
+
+        int oldMaxSpeedRight = rightMotor.getMaxSpeed();
+        int oldMaxSpeedLeft = leftMotor.getMaxSpeed();
+        leftMotor.setMaxSpeed(250);
+        rightMotor.setMaxSpeed(250);
 
         if(leftDistance > rightDistance == true){
             telemetry.addData("TURNING", "RIGHT");
@@ -202,8 +205,8 @@ public class InvadersVelocityVortexBot
         }
         rightMotor.setPower(0);
         leftMotor.setPower(0);
-        leftMotor.setMaxSpeed(2550);
-        rightMotor.setMaxSpeed(2550);
+        leftMotor.setMaxSpeed(oldMaxSpeedLeft);
+        rightMotor.setMaxSpeed(oldMaxSpeedRight);
     }
 
     public void setDriveTrainPower(double power)
