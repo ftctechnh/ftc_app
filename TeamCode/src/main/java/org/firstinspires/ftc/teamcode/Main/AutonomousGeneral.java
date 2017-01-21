@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Main;
 
 import android.graphics.Color;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -17,38 +18,38 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /**
  * Created by inspirationteam on 12/18/2016.
  */
-@Disabled
+//@Disabled
 public class AutonomousGeneral extends LinearOpMode {
-    private static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
-    private static double DRIVE_GEAR_REDUCTION;     // 56/24
-    private static double WHEEL_PERIMETER_CM;     // For figuring circumference
-    private static double COUNTS_PER_CM;
-    protected DcMotor front_right_motor;
-    protected DcMotor front_left_motor;
-    protected DcMotor back_right_motor;
-    protected DcMotor back_left_motor;
-    protected GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
-    protected ModernRoboticsI2cRangeSensor rangeSensor;
-    protected ColorSensor colorSensor;
+    public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
+    public static double DRIVE_GEAR_REDUCTION;     // 56/24
+    public static double WHEEL_PERIMETER_CM;     // For figuring circumference
+    public static double COUNTS_PER_CM;
+    public DcMotor front_right_motor;
+    public DcMotor front_left_motor;
+    public DcMotor back_right_motor;
+    public DcMotor back_left_motor;
+    public GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
+    public ModernRoboticsI2cRangeSensor rangeSensor;
+    public ColorSensor colorSensor;
     public String currentColor = "blank";
 
-    OpticalDistanceSensor ODSFront;
-    OpticalDistanceSensor ODSBack;
+    public OpticalDistanceSensor ODSFront;
+    public OpticalDistanceSensor ODSBack;
     double baseline1;
     double baseline2;
 
     //String currentColor = "other";
-    protected static final double DRIVE_SPEED = .5;
-    protected static final double TURN_SPEED = 0.5;
+    public static final double DRIVE_SPEED = .5;
+    public static final double TURN_SPEED = 0.5;
     // motor definition to shoot the small ball
-    protected DcMotor shooting_motor;
-    protected Servo beaconPress;
+    public DcMotor shooting_motor;
+    public Servo beaconPress;
 
 
     // motor definition to intake the small ball
-    protected DcMotor intake_motor;
-    protected static ElapsedTime runtime = new ElapsedTime();
-    public boolean operation_beacon_press = false;
+    public DcMotor intake_motor;
+    public static ElapsedTime runtime = new ElapsedTime();
+    public boolean operation_beacon_press = true;
 
     public void initiate() {
         COUNTS_PER_MOTOR_REV = 1440;
@@ -84,12 +85,12 @@ public class AutonomousGeneral extends LinearOpMode {
             gyro = hardwareMap.gyroSensor.get("gyro");
             rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
             colorSensor = hardwareMap.colorSensor.get("colorSensor");
-            beaconPress = hardwareMap.servo.get("beaconPress");
+            //beaconPress = hardwareMap.servo.get("beaconPress");
             //calibrate gyro
-            gyro.calibrate();
-            while (gyro.isCalibrating()) {
-
-            }
+//            gyro.calibrate();
+//            while (gyro.isCalibrating()) {
+//
+//            }
         }
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -108,8 +109,6 @@ public class AutonomousGeneral extends LinearOpMode {
         front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
 
 
         // Send telemetry message to indicate successful Encoder reset
@@ -333,8 +332,8 @@ public class AutonomousGeneral extends LinearOpMode {
         }
     }
 
-    public boolean whiteLineDetectedFront(){
-        if ((ODSFront.getRawLightDetected() > (baseline1*5))){
+    public boolean whiteLineDetectedFront() {
+        if ((ODSFront.getRawLightDetected() > (baseline1 * 5))) {
 
             return true;
         }
@@ -342,8 +341,8 @@ public class AutonomousGeneral extends LinearOpMode {
         return false;
     }
 
-    public boolean whiteLineDetectedBack(){
-        if ((ODSBack.getRawLightDetected() > (baseline2*5))){
+    public boolean whiteLineDetectedBack() {
+        if ((ODSBack.getRawLightDetected() > (baseline2 * 5))) {
 
             return true;
         }
@@ -351,16 +350,183 @@ public class AutonomousGeneral extends LinearOpMode {
         return false;
     }
 
-    public void allignRangeDist(double distInCM){
+    public void encoderRangeAllign(double distInCM){
 
-        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM){
+        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM) {
             straightDrive(0.1);
         }
-
-        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM){
+        stopMotors();
+        sleep(400);
+        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM) {
             straightDrive(-0.1);
         }
         stopMotors();
+        sleep(150);
+
+        double finalDist = rangeSensor.getDistance(DistanceUnit.CM);
+
+        double encoderDriveTarget = 3000 + ((int) finalDist*getCountsPerCm());
+
+        front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        back_left_motor.setTargetPosition(back_left_motor.getCurrentPosition() + (int) encoderDriveTarget);
+        back_right_motor.setTargetPosition(back_right_motor.getCurrentPosition() + (int) encoderDriveTarget);
+        front_right_motor.setTargetPosition(front_right_motor.getCurrentPosition() + (int) encoderDriveTarget);
+        front_left_motor.setTargetPosition(front_left_motor.getCurrentPosition() + (int) encoderDriveTarget);
+
+        back_right_motor.setPower(0.7);
+        back_left_motor.setPower(0.7);
+        front_right_motor.setPower(0.7);
+        front_left_motor.setPower(0.7);
+
+        sleep(200);
+
+        back_right_motor.setPower(0);
+        back_left_motor.setPower(0);
+        front_right_motor.setPower(0);
+        front_left_motor.setPower(0);
+
+        sleep(200);
+
+        back_left_motor.setTargetPosition(back_left_motor.getCurrentPosition() - (int) encoderDriveTarget);
+        back_right_motor.setTargetPosition(back_right_motor.getCurrentPosition() - (int) encoderDriveTarget);
+        front_right_motor.setTargetPosition(front_right_motor.getCurrentPosition() - (int) encoderDriveTarget);
+        front_left_motor.setTargetPosition(front_left_motor.getCurrentPosition() - (int) encoderDriveTarget);
+
+        back_right_motor.setPower(-0.7);
+        back_left_motor.setPower(-0.7);
+        front_right_motor.setPower(-0.7);
+        front_left_motor.setPower(-0.7);
+
+        sleep(200);
+
+        back_right_motor.setPower(0);
+        back_left_motor.setPower(0);
+        front_right_motor.setPower(0);
+        front_left_motor.setPower(0);
+
+        back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    }
+    public void encoderDriveShootBlue(double speed,
+                                      double leftInches, double rightInches,
+                                      double timeoutS, double left_motor_shoot_position, int num_shoot) {
+        int newLeftTarget;
+        int newRightTarget;
+        int leftShootPosition;
+        int shoot_count = 0;
+        double leftSpeed;
+        double rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
+            leftShootPosition = back_left_motor.getCurrentPosition() + (int) (left_motor_shoot_position * getCountsPerCm());
+            newRightTarget = back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm());
+            back_left_motor.setTargetPosition(newLeftTarget);
+            back_right_motor.setTargetPosition(newRightTarget);
+            front_left_motor.setTargetPosition(newLeftTarget);
+            front_right_motor.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            if (Math.abs(leftInches) > Math.abs(rightInches)) {
+                leftSpeed = speed;
+                rightSpeed = (speed * rightInches) / leftInches;
+            } else {
+                rightSpeed = speed;
+                leftSpeed = (speed * leftInches) / rightInches;
+            }
+            runtime.reset();
+            //if(leftInches != -rightInches)
+            {
+                back_left_motor.setPower(Math.abs(leftSpeed));
+                back_right_motor.setPower(Math.abs(rightSpeed));
+            }
+            front_left_motor.setPower(Math.abs(leftSpeed));
+            front_right_motor.setPower(Math.abs(rightSpeed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (back_left_motor.isBusy() && back_right_motor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        back_left_motor.getCurrentPosition(),
+                        back_right_motor.getCurrentPosition());
+                telemetry.update();
+                if (back_left_motor.getCurrentPosition()< leftShootPosition)
+                {
+                    if (shoot_count < num_shoot)
+                    {
+                        shoot_count++;
+                        shootingDrive(0.8,850);
+
+                        // sleep(500);     // pause for servos to move
+                        if (shoot_count < (num_shoot))
+                        {
+                            intakeDrive(0.8, 1800);
+                        }
+                    }
+                }
+            }
+
+            // Stop all motion;
+            back_left_motor.setPower(0);
+            back_right_motor.setPower(0);
+            front_left_motor.setPower(0);
+            front_right_motor.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            back_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            front_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
+
+    }
+    public void allignRangeDist(double distInCM) {
+
+        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM) {
+            straightDrive(0.1);
+        }
+        stopMotors();
+        sleep(400);
+        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM) {
+            straightDrive(-0.1);
+        }
+        stopMotors();
+    }
+
+    public void rangeCorrection()
+    {
+        if(rangeSensor.getDistance(DistanceUnit.CM)<20)
+
+        {
+            encoderDrive(0.4, -10, -10, 6);
+            sleep(250);
+            encoderDrive(0.6, 15, -15, 8);
+        }
+
     }
     public boolean isWhite() {
         colorSensor.enableLed(true);
@@ -465,6 +631,97 @@ public class AutonomousGeneral extends LinearOpMode {
         front_left_motor.setPower(speed);
         front_right_motor.setPower(-speed);
         back_right_motor.setPower(-speed);
+    }
+
+    public void encoderDriveShootRed(double speed,
+                                     double leftInches, double rightInches,
+                                     double timeoutS, double left_motor_shoot_position, int num_shoot) {
+        int newLeftTarget;
+        int newRightTarget;
+        int leftShootPosition;
+        int shoot_count = 0;
+        double leftSpeed;
+        double rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
+            leftShootPosition = back_left_motor.getCurrentPosition() + (int) (left_motor_shoot_position * getCountsPerCm());
+            newRightTarget = back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm());
+            back_left_motor.setTargetPosition(newLeftTarget);
+            back_right_motor.setTargetPosition(newRightTarget);
+            front_left_motor.setTargetPosition(newLeftTarget);
+            front_right_motor.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            if (Math.abs(leftInches) > Math.abs(rightInches)) {
+                leftSpeed = speed;
+                rightSpeed = (speed * rightInches) / leftInches;
+            } else {
+                rightSpeed = speed;
+                leftSpeed = (speed * leftInches) / rightInches;
+            }
+            runtime.reset();
+            //if(leftInches != -rightInches)
+            {
+                back_left_motor.setPower(Math.abs(leftSpeed));
+                back_right_motor.setPower(Math.abs(rightSpeed));
+            }
+            front_left_motor.setPower(Math.abs(leftSpeed));
+            front_right_motor.setPower(Math.abs(rightSpeed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (back_left_motor.isBusy() && back_right_motor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        back_left_motor.getCurrentPosition(),
+                        back_right_motor.getCurrentPosition());
+                telemetry.update();
+                if (back_left_motor.getCurrentPosition()>leftShootPosition)
+                {
+                    if (shoot_count < num_shoot)
+                    {
+                        shoot_count++;
+                        shootingDrive(0.8,850);
+
+                        // sleep(500);     // pause for servos to move
+                        if (shoot_count < (num_shoot))
+                        {
+                            intakeDrive(0.8, 1200);
+                        }
+                    }
+                }
+            }
+
+            // Stop all motion;
+            back_left_motor.setPower(0);
+            back_right_motor.setPower(0);
+            front_left_motor.setPower(0);
+            front_right_motor.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            back_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            front_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
+
     }
 }
 //<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutonomousGeneral.java

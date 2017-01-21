@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Aditya;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="Proportional Line Follower")
-
+@Disabled
 public class proportionalStraightLineFollowOp extends OpMode {
 
     DcMotor leftWheelMotorFront, leftWheelMotorBack, rightWheelMotorFront, rightWheelMotorBack;

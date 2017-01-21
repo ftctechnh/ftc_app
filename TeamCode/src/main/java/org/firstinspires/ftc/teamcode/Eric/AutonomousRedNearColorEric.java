@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.

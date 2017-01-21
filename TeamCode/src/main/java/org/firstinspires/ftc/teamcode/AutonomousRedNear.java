@@ -34,24 +34,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 //<<<<<<< HEAD
 //<<<<<<< HEAD
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 //=======
-import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 /*>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180
 =======*/
-import org.firstinspires.ftc.teamcode.AutonomousGeneral;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 //>>>>>>> 55f5f2acfb873f3f0a66e8649853b5de3df60115
 
 /**
@@ -82,7 +73,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Pushbot: AutonomousRedNear", group="Pushbot")
-//@Disabled
+@Disabled
 public class AutonomousRedNear extends AutonomousGeneral {
 
 
