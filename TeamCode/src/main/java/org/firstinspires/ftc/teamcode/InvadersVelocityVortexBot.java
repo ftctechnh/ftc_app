@@ -442,7 +442,7 @@ public class InvadersVelocityVortexBot
                 }
                 telemetry.addData("LT", "Robot Heading = %d, targetHeading: %.02f, targetSpeed: %.02f", currentHeading,targetHeading, targetSpeed);
                 telemetry.update();
-                setDriveTrainPower(targetSpeed,-targetSpeed);
+                setDriveTrainPower(-targetSpeed,targetSpeed);
              }
         }
         setDriveTrainPower(0);
@@ -629,8 +629,8 @@ public class InvadersVelocityVortexBot
         capBall = hwMap.dcMotor.get("CapBall");
         sweeper = hwMap.dcMotor.get("Sweeper");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
         leftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
         capBall.setDirection(DcMotorSimple.Direction.REVERSE);
