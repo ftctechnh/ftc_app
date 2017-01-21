@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
+import org.firstinspires.ftc.teamcode.ModernRoboticsI2cRangeSensor26;
 /**
  * This is NOT an opmode.
  *
@@ -25,19 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * In this case that robot is the IfSpace Invaders 2016/2017 Velocity Vortex season robot.
  *
  * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * @todo Matthew, Alyssa, or Willow, please update these Motor Channel comments to match what we are
- * actually using.  These current definitions were left over from last-year's pushbot robot.
- * Also, please add in the Sensor definitions as well.  The goal is that the comment section here
- * clearly shows all of the sensors/motors were using on the robot and has names that match what
- * we are supposed to use in our Robot Controller Configuration file.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * Ref: .\IfSpaceInvaders_ModernRobotics_Hardware_Defintions.txt for details
  */
 public class InvadersVelocityVortexBot
 {
@@ -96,8 +84,8 @@ public class InvadersVelocityVortexBot
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
 
-    public ModernRoboticsI2cRangeSensor UDSLeft = null; // Best for longer range sensing (>12")
-    public ModernRoboticsI2cRangeSensor UDSRight = null;
+    public ModernRoboticsI2cRangeSensor26 UDSLeft = null; // Default I2C Address: 0x26
+    public ModernRoboticsI2cRangeSensor UDSRight = null;  // Default I2C Address: 0x28
     public ColorSensor beaconSensorLeft = null;
     public ColorSensor beaconSensorRight = null;
     public ColorSensor floorSensor = null;
@@ -145,7 +133,6 @@ public class InvadersVelocityVortexBot
         while (UDSLeft.getDistance(distanceUnit) > distance && opModeIsActive()) {
 
         }
-
         setDriveTrainPower(0);
     }
 
@@ -204,33 +191,6 @@ public class InvadersVelocityVortexBot
         leftMotor.setPower(0);
     }
 
-    /**
-     * ColorDrive @todo Matthew, Alyssa, or Willow - we need to decide how this function is going to
-     * work.  How do we use this to drive to the white line?  The current logic below has us
-     * driving until red matches, then checking green, then blue.  But what if blue matched first
-     * but we drove past it looking for a red match?  This is going to be tricky.  I think we may
-     * either need to key off of just a single color or rename the red, blue, green variables to
-     * something like redChange, blueChange, and greenChange and then drive until all three colors
-     * have changed from their initial values to at least what our changed values are.  Testing this
-     * by passing a color sensor over a black sheet of paper with a white taped line on it may help
-     * you decide what is best to look for.
-     * @param Red @todo add the color parameter descriptions for Red, Blue, and Green once you decide what they mean.
-     * @param Blue
-     * @param Green
-     */
-    public void ColorDrive(int Red, int Blue, int Green){
-        while (floorSensor.red() < Red){
-            setDriveTrainPower(0.5);
-        }
-        while (floorSensor.green() < Green){
-            setDriveTrainPower(0.5);
-        }
-        while (floorSensor.blue() < Blue){
-            setDriveTrainPower(0.5);
-        }
-       setDriveTrainPower(0);
-    }
-
     public void setDriveTrainPower(double power)
     {
         setDriveTrainPower(power,power);
@@ -243,7 +203,7 @@ public class InvadersVelocityVortexBot
     }
 
 
-    // This function is currently disabled.
+// This function is currently disabled.
 //    public void gyroDrive ( double speed,
 //                            double distance,
 //                            double angle) {
@@ -321,9 +281,7 @@ public class InvadersVelocityVortexBot
 //        }
 //    }
 
-    //Helloaq
-
-    public boolean soIseeBlueLeft () {
+    public boolean doIseeBlueLeft () {
 
         return (beaconSensorLeft.blue() >= 5);
     }
@@ -663,7 +621,7 @@ public class InvadersVelocityVortexBot
 
         // Define our sensors
         touchSensor = hwMap.touchSensor.get("downLimit");
-        UDSLeft = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSLeft");
+        UDSLeft = hwMap.get(ModernRoboticsI2cRangeSensor26.class, "UDSLeft");
         UDSRight = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSRight");
         beaconSensorLeft = hwMap.colorSensor.get("beaconSensorLeft");
         beaconSensorRight = hwMap.colorSensor.get("beaconSensorRight");
