@@ -18,12 +18,16 @@ public class DriveBackward extends _AutonomousBase
     }
 
     //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO()
+    protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
         for (DcMotor lMotor : leftDriveMotors)
             lMotor.setPower(-.6);
         for (DcMotor rMotor : rightDriveMotors)
             rMotor.setPower(-.6);
+
+
+        while (opModeIsActive())
+            idle();
     }
 }

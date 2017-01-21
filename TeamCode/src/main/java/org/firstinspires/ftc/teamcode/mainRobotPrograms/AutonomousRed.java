@@ -38,31 +38,34 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * A simple example of a linear op mode that will approach an IR beacon
  */
 
-@Autonomous(name="Drive Forward", group = "Utility Group")
-public class DriveForward extends _AutonomousBase
+@Autonomous(name="Autonomous - Red Edition", group = "Autonomous Group")
+public class AutonomousRed extends _AutonomousBase
 {
 
     //Custom initialization
     @Override
     protected void driverStationSaysINITIALIZE()
     {
-        //Set the motor powers.
-        for (DcMotor lMotor : leftDriveMotors)
-            lMotor.setPower(-.3);
-        for (DcMotor rMotor : rightDriveMotors)
-            rMotor.setPower(.3);
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        //Set the motor powers.
-        for (DcMotor lMotor : leftDriveMotors)
-            lMotor.setPower(.6);
-        for (DcMotor rMotor : rightDriveMotors)
-            rMotor.setPower(.6);
+        driveForTime(-0.5, 800);
 
-        while (opModeIsActive())
-            idle();
+        flywheels.setPower(0.5);
+        sleep(2000);
+        harvester.setPower(1.0);
+
+        sleep(4000);
+
+        harvester.setPower(0);
+        flywheels.setPower(0);
+
+        driveForTime(-0.5, 1200);
+
+        turnToHeading(800, TurnMode.BOTH); //Doesn't use gyro.
+        turnToHeading(-800, TurnMode.BOTH);
+        driveForTime(-0.3, 700);
     }
 }
