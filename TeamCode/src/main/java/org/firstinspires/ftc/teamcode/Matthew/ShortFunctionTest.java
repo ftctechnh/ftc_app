@@ -74,6 +74,8 @@ public class ShortFunctionTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        robot.init(this);
+
         robot.GyroTurn(0.5, 90, 3);
         sleep(5000);
         robot.GyroTurn(0.5, -90, 3);
