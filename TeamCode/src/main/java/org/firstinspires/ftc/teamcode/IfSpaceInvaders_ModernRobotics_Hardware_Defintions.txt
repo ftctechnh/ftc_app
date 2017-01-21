@@ -17,10 +17,12 @@ Velocity Vortex Config
 "Sensor Controller"
 	PWM Devices: N/A
 	I2C Devices:
-		0	Color Sensor	"beaconSensor"
-		1	Color Sensor	"floorSensor" (Marked with 0x3A on the back)
-		2	Gyro		"gyroSensor"
-		3	MR Range Sensor	"UDSLeft"
+		0	Color Sensor	"beaconSensorRight" (I2C: 0x36)
+		1	Color Sensor	"floorSensor" (I2C: 0x3A)
+		2	Gyro		    "gyroSensor" (I2C: 0x20)
+		3	MR Range Sensor	"UDSRight" (I2C: 0x28g)
+		4	Color Sensor    "beaconSensorLeft" (I2C: 0x32)
+		5   MR Range Sensor "UDSLeft" (I2C: 0x10)
 
 	Analog Input Devices:
 		0
@@ -30,7 +32,7 @@ Velocity Vortex Config
 		4
 		5
 		6
-		7	Optical Distance Sensor	"ODS"
+		7
 	Digital Sensors:
 		0	Touch Sensor	"downLimit"
 
@@ -46,12 +48,3 @@ Velocity Vortex Config
 "Drive Controller"
 	Motor 1: "backRight"
 	Motor 2: "backLeft"
-
----HERE ARE THE CURRENT I2C ADDRESSES--
-
-Left Beacon Sensor = 0x32
-Right Beacon Sensor = 0x36
-Floor Beacon Sensor = 0x3a
-Right Range Sensor = 0x28
-Left Range Sensor = 0x10
-Gyro = 0x20
