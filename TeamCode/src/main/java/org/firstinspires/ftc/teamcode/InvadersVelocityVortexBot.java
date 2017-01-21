@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-
+import org.firstinspires.ftc.teamcode.FtcI2cDeviceState;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -85,11 +85,23 @@ public class InvadersVelocityVortexBot
     public Servo   beaconRight  = null;
 
     public ModernRoboticsI2cRangeSensor26 UDSLeft = null; // Default I2C Address: 0x26
+    public FtcI2cDeviceState UDSLeftState;
+
     public ModernRoboticsI2cRangeSensor UDSRight = null;  // Default I2C Address: 0x28
+    public FtcI2cDeviceState UDSRightState;
+
     public ColorSensor beaconSensorLeft = null;
+    public FtcI2cDeviceState beaconSensorLeftState;
+
     public ColorSensor beaconSensorRight = null;
+    public FtcI2cDeviceState beaconSensorRightState;
+
     public ColorSensor floorSensor = null;
+    public FtcI2cDeviceState floorSensorState;
+
     public ModernRoboticsI2cGyro gyro = null;
+    public FtcI2cDeviceState gyroState;
+
     public TouchSensor touchSensor = null;
 /*
      @todo Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
@@ -149,16 +161,17 @@ public class InvadersVelocityVortexBot
     public void AlignToWall(double DistanceFromTarget, DistanceUnit unit){
         double rightDistance = UDSRight.getDistance(unit);
         double leftDistance = UDSLeft.getDistance(unit);
-        //leftMotor.setMaxSpeed(1000);
-        //rightMotor.setMaxSpeed(1000);
+        leftMotor.setMaxSpeed(500);
+        rightMotor.setMaxSpeed(500);
 
         if(leftDistance > rightDistance == true){
             telemetry.addData("TURNING", "RIGHT");
             telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
             telemetry.update();
-            sleepMs(3000);
-            leftMotor.setPower(0.3);
-            rightMotor.setPower(-0.3);
+            //sleepMs(3000);
+
+            leftMotor.setPower(1);
+            rightMotor.setPower(-1);
             while(leftDistance > rightDistance == true){
                 rightDistance = UDSRight.getDistance(unit);
                 leftDistance = UDSLeft.getDistance(unit);
@@ -170,9 +183,9 @@ public class InvadersVelocityVortexBot
             telemetry.addData("TURNING", "LEFT");
             telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
             telemetry.update();
-            sleepMs(3000);
-            leftMotor.setPower(-0.3);
-            rightMotor.setPower(0.3);
+            //sleepMs(3000);
+            leftMotor.setPower(-1);
+            rightMotor.setPower(1);
             while(leftDistance < rightDistance == true){
                 rightDistance = UDSRight.getDistance(unit);
                 leftDistance = UDSLeft.getDistance(unit);
@@ -185,10 +198,12 @@ public class InvadersVelocityVortexBot
             telemetry.addData("TURNING", "-----");
             telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
             telemetry.update();
-            sleepMs(3000);
+            //sleepMs(3000);
         }
         rightMotor.setPower(0);
         leftMotor.setPower(0);
+        leftMotor.setMaxSpeed(2550);
+        rightMotor.setMaxSpeed(2550);
     }
 
     public void setDriveTrainPower(double power)
