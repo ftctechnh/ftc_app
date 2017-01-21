@@ -643,10 +643,10 @@ public class InvadersVelocityVortexBot
         setLauncherState(LauncherState.OFF);
 
         // Set all non-driving motors to run without encoders.
-        //leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
