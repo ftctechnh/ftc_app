@@ -46,3 +46,12 @@ Velocity Vortex Config
 "Drive Controller"
 	Motor 1: "backRight"
 	Motor 2: "backLeft"
+
+---HERE ARE THE CURRENT I2C ADDRESSES--
+
+Left Beacon Sensor = 0x32
+Right Beacon Sensor = 0x36
+Floor Beacon Sensor = 0x3a
+Right Range Sensor = 0x28
+Left Range Sensor = 0x10
+Gyro = 0x20
