@@ -1,0 +1,50 @@
+Device Type	    P/N	    Serial#	USB ID#		Velocity Vortex Config	PCB Silkscreen
+Core Motor Ctrl	45-2203	M504655	AL00VVEH	"Shooter"
+Core Motor Ctrl	45-2203	M504670	AL00VI0L	"Cap Ball"
+Core Motor Ctrl	45-2203	M609605	A7008OKU	"Drive Controller"	<-- We suspect this is a faulty controller, not sure yet
+Core Motor Ctrl 45-2203 M609640	A7008NTJ	"Drive Controller"
+Servo Ctrl	45-2204	S601447	AL026DMG	"Servo Controller"	USB Servo Controller Rev 2.0 MRI (c) 2014
+Servo Ctrl	45-2204	S503506	AL00XOBP	N/A
+Core DIM	45-2201	D503575	AL00VGJS	"Sensor Controller"
+
+
+Velocity Vortex Config
+-----------------------
+"Cap Ball"
+	Motor 1: "CapBall"
+	Motor 2: "Sweeper"
+
+"Sensor Controller"
+	PWM Devices: N/A
+	I2C Devices:
+		0	Color Sensor	"beaconSensorRight" (I2C: 0x36)
+		1	Color Sensor	"floorSensor" (I2C: 0x3A)
+		2	Gyro		    "gyroSensor" (I2C: 0x20)
+		3	MR Range Sensor	"UDSRight" (I2C: 0x28g)
+		4	Color Sensor    "beaconSensorLeft" (I2C: 0x32)
+		5   MR Range Sensor "UDSLeft" (I2C: 0x26)
+
+	Analog Input Devices:
+		0
+		1
+		2
+		3
+		4
+		5
+		6
+		7
+	Digital Sensors:
+		0	Touch Sensor	"downLimit"
+
+"Shooter"
+	Motor 1: "LeftLauncher"
+	Motor 2: "RightLauncher"
+
+"Servo Controller"
+	1	CR Servo	"BallElevator"
+	2	Servo		"beaconLeft"
+	3	Servo		"beaconRight"
+
+"Drive Controller"
+	Motor 1: "backRight"
+	Motor 2: "backLeft"
