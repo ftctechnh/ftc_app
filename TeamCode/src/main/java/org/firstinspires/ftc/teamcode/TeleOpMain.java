@@ -132,7 +132,7 @@ public class TeleOpMain extends OpMode {
         }
 
         //open ball gate
-        if (gamepad2.left_trigger > 0.0 || gamepad2.right_trigger > 0.0){
+        if (gamepad2.y){
             robot.ballGate.setPosition(1.0);
         } else {
             robot.ballGate.setPosition(0.0);

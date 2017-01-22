@@ -53,6 +53,7 @@ public class BotHardware
         initMotors(opMode, debug);
 
         try{
+
             final int[] ports = {6,7};
             final int milliSeconds = 48;
             mux = new MultiplexColorSensor(opMode.hardwareMap, "mux", "color",
@@ -63,6 +64,10 @@ public class BotHardware
 
             leftSensor = new MuxColor(ports[1], mux);
             rightSensor = new MuxColor(ports[0], mux);
+
+
+            //leftSensor = opMode.hardwareMap.colorSensor.get("sensor_left");
+            //rightSensor = opMode.hardwareMap.colorSensor.get("sensor_right");
         }
         catch (Exception e) {
             opMode.telemetry.addData("Color sensors failed to load!", "");

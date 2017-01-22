@@ -27,85 +27,14 @@ import java.util.Iterator;
 //@Disabled
 public class AutonomousTesting extends OpMode {
 
-    AutoLib.Sequence mSequence;             // the root of the sequence tree
-    boolean bDone;                          // true when the programmed sequence is done
-    DcMotor mMotors[];                      // motors, some of which can be null: assumed order is fr, br, fl, bl
-
-    //VuforiaLib_FTC2016 Vuf;
-
-    BotHardware robot = new BotHardware();
-
-    //some constants to make navigating the field easier
-    static final double mmToEncode = 1; //TODO: Find this value
-    static final double inchToMm = 25.4;
-    static final double footToMm = inchToMm * 12;
-    static final double squareToMm = footToMm * 2;
-
-    // create an autonomous sequence with the steps to drive
-    static final float power = 0.5f;
-    static final float error = 5.0f;       // get us within 10 degrees for this test
-    static final float targetZ = 6*25.4f;
-
-    final boolean debug = false;
-
-    final static String TAG = "MouseUSBMess";
-
-    final Context mahContext = FtcRobotControllerActivity.getAppContext();
+    BotHardware bot;
 
     @Override
-    public void init() {
+    public void init(){
+        bot = new BotHardware();
 
-        UsbManager mManager = (UsbManager) mahContext.getSystemService(Context.USB_SERVICE);
-        HashMap<String, UsbDevice> deviceList = mManager.getDeviceList();
-        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        bot.init(this, false);
 
-        while (deviceIterator.hasNext())
-        {
-            UsbDevice device = deviceIterator.next();
-            RobotLog.vv(TAG,"Model: " + device.getDeviceName());
-            RobotLog.vv(TAG,"ID: " + device.getDeviceId());
-            RobotLog.vv(TAG,"Class: " + device.getDeviceClass());
-            RobotLog.vv(TAG,"Protocol: " + device.getDeviceProtocol());
-            RobotLog.vv(TAG,"Vendor ID " + device.getVendorId());
-            RobotLog.vv(TAG,"Product ID: " + device.getProductId());
-            RobotLog.vv(TAG,"Interface count: " + device.getInterfaceCount());
-            RobotLog.vv(TAG,"---------------------------------------");
-            // Get interface details
-            for (int index = 0; index < device.getInterfaceCount(); index++)
-            {
-                UsbInterface mUsbInterface = device.getInterface(index);
-                RobotLog.vv(TAG,"  *****     *****");
-                RobotLog.vv(TAG,"  Interface index: " + index);
-                RobotLog.vv(TAG,"  Interface ID: " + mUsbInterface.getId());
-                RobotLog.vv(TAG,"  Inteface class: " + mUsbInterface.getInterfaceClass());
-                RobotLog.vv(TAG,"  Interface protocol: " + mUsbInterface.getInterfaceProtocol());
-                RobotLog.vv(TAG,"  Endpoint count: " + mUsbInterface.getEndpointCount());
-                // Get endpoint details
-                for (int epi = 0; epi < mUsbInterface.getEndpointCount(); epi++)
-                {
-                    UsbEndpoint mEndpoint = mUsbInterface.getEndpoint(epi);
-                    RobotLog.vv(TAG,"    ++++   ++++   ++++");
-                    RobotLog.vv(TAG,"    Endpoint index: " + epi);
-                    RobotLog.vv(TAG,"    Attributes: " + mEndpoint.getAttributes());
-                    RobotLog.vv(TAG,"    Direction: " + mEndpoint.getDirection());
-                    RobotLog.vv(TAG,"    Number: " + mEndpoint.getEndpointNumber());
-                    RobotLog.vv(TAG,"    Interval: " + mEndpoint.getInterval());
-                    RobotLog.vv(TAG,"    Packet size: " + mEndpoint.getMaxPacketSize());
-                    RobotLog.vv(TAG,"    Type: " + mEndpoint.getType());
-                }
-            }
-        }
-        RobotLog.vv(TAG," No more devices connected.");
-
-        //robot.init(this, debug);
-
-        //Vuf = new VuforiaLib_FTC2016();
-        //Vuf.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
-
-        // start out not-done
-        bDone = false;
-
-        //robot.startNavX();
     }
 
     @Override
@@ -116,6 +45,11 @@ public class AutonomousTesting extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("Color Sensor Left Red", bot.leftSensor.red());
+        telemetry.addData("Color Sensor Left Blue", bot.leftSensor.blue());
+        telemetry.addData("Color Sensor Right Red", bot.rightSensor.red());
+        telemetry.addData("Color Sensor Right Blue", bot.rightSensor.blue());
+
         // until we're done, keep looping through the current Step(s)
         //if (!bDone)
         //    bDone = mSequence.loop();       // returns true when we're done
@@ -123,8 +57,6 @@ public class AutonomousTesting extends OpMode {
         //    telemetry.addData("First sequence finished", "");
 
         //Vuf.loop(true);
-        telemetry.addData("Heading", robot.distSensor.getUltrasonicLevel());
-
         //telemetry.addData("Red R", robot.rightSensor.red());
         //telemetry.addData("Blue R", robot.rightSensor.blue());
         //telemetry.addData("Green R", robot.rightSensor.green());

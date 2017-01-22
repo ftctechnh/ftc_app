@@ -66,6 +66,7 @@ public final class PushyLib {
         }
 
         public boolean loop(){
+            super.loop();
             if(firstLoopCall()){
                 //compare sensor values
                 if(mRed){
