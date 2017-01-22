@@ -319,6 +319,7 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
                 telemetry.addData("Pos", "Unknown");
             }
             telemetry.update();
+            idle();
         }
     }
 
