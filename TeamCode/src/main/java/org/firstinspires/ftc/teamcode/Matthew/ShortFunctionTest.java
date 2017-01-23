@@ -76,9 +76,7 @@ public class ShortFunctionTest extends LinearOpMode {
 
         robot.init(this);
 
-        robot.GyroTurn(0.5, 90, 3);
-        sleep(5000);
-        robot.GyroTurn(0.5, -90, 3);
+        robot.sensorTroubleshoot(false);
 
     }
 }

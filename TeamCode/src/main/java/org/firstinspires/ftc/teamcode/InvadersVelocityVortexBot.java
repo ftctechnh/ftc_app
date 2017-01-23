@@ -220,6 +220,79 @@ public class InvadersVelocityVortexBot
         if(rightMotor != null) rightMotor.setPower(rightPower);
     }
 
+    public void sensorTroubleshoot(boolean wiggletest){
+        int leftmotorstartpos = leftMotor.getCurrentPosition();
+        int rightmotorstartpos = rightMotor.getCurrentPosition();
+        double rightbeaconstartpos = beaconRight.getPosition();
+        double leftbeaconstartpos = beaconLeft.getPosition();
+        double gyrostartpos = gyro.getHeading();
+        int leftstartblue = beaconSensorLeft.blue();
+        int leftstartred = beaconSensorLeft.red();
+        int rightstartred = beaconSensorRight.red();
+        int rightstartblue = beaconSensorRight.blue();
+        int floorsensorastart = floorSensor.alpha();
+        double rightudsstart = UDSRight.getDistance(DistanceUnit.INCH);
+        double leftudsstart = UDSLeft.getDistance(DistanceUnit.INCH);
+        int Errors = 0;
+
+        rightMotor.setPower(0.2);
+        leftMotor.setPower(0.2);
+        sleepMs(500);
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
+        if (rightmotorstartpos != rightMotor.getCurrentPosition()){
+            telemetry.addData("Right Encoder Functioning Properly", "");
+        }
+        else{
+            telemetry.addData("Check Right Encoder", "");
+            Errors ++;
+        }
+        if(leftmotorstartpos != leftMotor.getCurrentPosition()){
+            telemetry.addData("Left Encoder Functioning Properly", "");
+        }
+        else {
+            telemetry.addData("Check Left Encoder", "");
+            Errors ++;
+        }
+        if (leftudsstart != UDSLeft.getDistance(DistanceUnit.INCH)){
+            telemetry.addData("Left UDS Functioning Properly.", "");
+        }
+        else {
+            telemetry.addData("Check Left UDS", "");
+        }
+        if (rightudsstart != UDSRight.getDistance(DistanceUnit.INCH)){
+            telemetry.addData("Right UDS Functioning Properly","");
+        }
+        else {
+            telemetry.addData("Check Right UDS", "");
+        }
+
+        beaconRight.setPosition(0.3);
+        beaconLeft.setPosition(0.3);
+        sleepMs(1000);
+        beaconLeft.setPosition(leftbeaconstartpos);
+        beaconRight.setPosition(rightbeaconstartpos);
+
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(-0.5);
+        sleepMs(500);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+        if (gyro.getHeading() != gyrostartpos){
+            telemetry.addData("Gyro Function Correctly", "");
+        }
+        else {
+            telemetry.addData("Check Gyro Sensor", "");
+            Errors ++;
+        }
+
+
+        telemetry.update();
+        sleepMs(10000);
+
+
+    }
+
 
 // This function is currently disabled.
 //    public void gyroDrive ( double speed,
