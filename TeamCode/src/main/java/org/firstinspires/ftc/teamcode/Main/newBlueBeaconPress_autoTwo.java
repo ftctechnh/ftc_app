@@ -25,7 +25,7 @@ public class newBlueBeaconPress_autoTwo extends AutonomousGeneral {
         initiate();
 
 
-        readNewColor();
+        readNewColorLeft();
 
         waitForStart();
         second_beacon_press = false;
@@ -86,7 +86,7 @@ public class newBlueBeaconPress_autoTwo extends AutonomousGeneral {
         encoderDrive(0.2, -6, -6, 5);
         telemetry.addData("range:",rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
-        readNewColor();
+        readNewColorLeft();
         telemetry.addData("current color is", currentColor);
         telemetry.update();
 

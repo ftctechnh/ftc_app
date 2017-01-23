@@ -74,9 +74,9 @@ public class newBeaconPress extends AutonomousGeneral {
         sleep(500);
         //end of steven's code
 */
-        if (colorSensor.red() > colorSensor.blue()) {
+        if (bColorSensorLeft.red() > bColorSensorLeft.blue()) {
             currentColor = "red";
-        } else if (colorSensor.red() < colorSensor.blue()) {
+        } else if (bColorSensorLeft.red() < bColorSensorLeft.blue()) {
             currentColor = "blue";
         }
 
@@ -112,15 +112,15 @@ public class newBeaconPress extends AutonomousGeneral {
 
         currentColor = "blank";
 
-        if (colorSensor.red() > colorSensor.blue()) {
+        if (bColorSensorLeft.red() > bColorSensorLeft.blue()) {
             currentColor = "red";
 
-            telemetry.addData("current color is red", colorSensor.red());
+            telemetry.addData("current color is red", bColorSensorLeft.red());
             telemetry.update();
-        } else if (colorSensor.red() < colorSensor.blue()) {
+        } else if (bColorSensorLeft.red() < bColorSensorLeft.blue()) {
             currentColor = "blue";
 
-            telemetry.addData("current color is blue", colorSensor.blue());
+            telemetry.addData("current color is blue", bColorSensorLeft.blue());
             telemetry.update();
 
         } else {

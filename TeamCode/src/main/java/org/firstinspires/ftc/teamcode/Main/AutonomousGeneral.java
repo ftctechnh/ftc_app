@@ -30,7 +30,10 @@ public class AutonomousGeneral extends LinearOpMode {
     public DcMotor back_left_motor;
     public GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
     public ModernRoboticsI2cRangeSensor rangeSensor;
-    public ColorSensor colorSensor;
+    public ColorSensor bColorSensorLeft;
+    public ColorSensor bColorSensorRight;
+    public String currentColorBeaconLeft = "blank";
+    public String currentColorBeaconRight = "blank";
     public String currentColor = "blank";
 
     public OpticalDistanceSensor ODSFront;
@@ -43,13 +46,14 @@ public class AutonomousGeneral extends LinearOpMode {
     public static final double TURN_SPEED = 0.5;
     // motor definition to shoot the small ball
     public DcMotor shooting_motor;
-    public Servo beaconPress;
+    public Servo beaconPresser;
 
 
     // motor definition to intake the small ball
     public DcMotor intake_motor;
     public static ElapsedTime runtime = new ElapsedTime();
     public boolean operation_beacon_press = true;
+    public boolean initbColorSensorRight = true;
 
     public void initiate() {
         COUNTS_PER_MOTOR_REV = 1440;
@@ -73,7 +77,6 @@ public class AutonomousGeneral extends LinearOpMode {
         intake_motor = hardwareMap.dcMotor.get("ballCollectorMotor");
 
         gyro = hardwareMap.gyroSensor.get("gyro");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         ODSFront = hardwareMap.opticalDistanceSensor.get("ODSFront");
         ODSBack = hardwareMap.opticalDistanceSensor.get("ODSBack");
@@ -84,7 +87,11 @@ public class AutonomousGeneral extends LinearOpMode {
         if (operation_beacon_press == true) {
             gyro = hardwareMap.gyroSensor.get("gyro");
             rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
-            colorSensor = hardwareMap.colorSensor.get("colorSensor");
+            bColorSensorLeft = hardwareMap.colorSensor.get("bColorSensorLeft");
+
+            if (initbColorSensorRight){
+                bColorSensorRight = hardwareMap.colorSensor.get("bColorSensorRight");
+            }
             //beaconPress = hardwareMap.servo.get("beaconPress");
             //calibrate gyro
 //            gyro.calibrate();
@@ -311,24 +318,45 @@ public class AutonomousGeneral extends LinearOpMode {
 
     }
 
-    public void readNewColor() {
+    public void readNewColorLeft() {
 
-        currentColor = "blank";
+        currentColorBeaconLeft = "blank";
 
-        if (colorSensor.red() > colorSensor.blue()) {
-            currentColor = "red";
+        if (bColorSensorLeft.red() > bColorSensorLeft.blue()) {
+            currentColorBeaconLeft = "red";
 
-            telemetry.addData("current color is red", colorSensor.red());
+            telemetry.addData("current color is red", bColorSensorLeft.red());
             telemetry.update();
-        } else if (colorSensor.red() < colorSensor.blue()) {
-            currentColor = "blue";
+        } else if (bColorSensorLeft.red() < bColorSensorLeft.blue()) {
+            currentColorBeaconLeft = "blue";
 
-            telemetry.addData("current color is blue", colorSensor.blue());
+            telemetry.addData("current color is blue", bColorSensorLeft.blue());
             telemetry.update();
 
         } else {
 
-            currentColor = "blank";
+            currentColorBeaconLeft = "blank";
+        }
+    }
+
+    public void readNewColorRight() {
+
+        currentColorBeaconRight = "blank";
+
+        if (bColorSensorRight.red() > bColorSensorRight.blue()) {
+            currentColorBeaconRight = "red";
+
+            telemetry.addData("current color (two) is red", bColorSensorRight.red());
+            telemetry.update();
+        } else if (bColorSensorRight.red() < bColorSensorRight.blue()) {
+            currentColorBeaconRight = "blue";
+
+            telemetry.addData("current color (two) is blue", bColorSensorRight.blue());
+            telemetry.update();
+
+        } else {
+
+            currentColorBeaconRight = "blank";
         }
     }
 
@@ -517,6 +545,19 @@ public class AutonomousGeneral extends LinearOpMode {
         stopMotors();
     }
 
+    public void allignRangeDistReverse(double distInCM) {
+
+        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM) {
+            straightDrive(-0.1);
+        }
+        stopMotors();
+        sleep(400);
+        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM) {
+            straightDrive(0.1);
+        }
+        stopMotors();
+    }
+
     public void rangeCorrection()
     {
         if(rangeSensor.getDistance(DistanceUnit.CM)<20)
@@ -529,14 +570,14 @@ public class AutonomousGeneral extends LinearOpMode {
 
     }
     public boolean isWhite() {
-        colorSensor.enableLed(true);
+        bColorSensorLeft.enableLed(true);
 
         /* hsvValues is an array that will hold the hue, saturation, and value information */
         //float hsvValues[] = {0F,0F,0F};
         /* convert the RGB values to HSV values*/
-        //Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+        //Color.RGBToHSV(bColorSensor.red() * 8, bColorSensor.green() * 8, bColorSensor.blue() * 8, hsvValues);
 
-        if (colorSensor.red() == colorSensor.blue() && colorSensor.blue() == colorSensor.green()) {
+        if (bColorSensorLeft.red() == bColorSensorLeft.blue() && bColorSensorLeft.blue() == bColorSensorLeft.green()) {
             return true;
         } else {
             return false;
@@ -555,14 +596,14 @@ public class AutonomousGeneral extends LinearOpMode {
 //
 //
 //        //convert the RGB values to HSV values
-//        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+//        Color.RGBToHSV(bColorSensor.red() * 8, bColorSensor.green() * 8, bColorSensor.blue() * 8, hsvValues);
 //
-//        int red = colorSensor.red();
-//        int blue = colorSensor.blue();
-//        int green = colorSensor.green();
+//        int red = bColorSensor.red();
+//        int blue = bColorSensor.blue();
+//        int green = bColorSensor.green();
 ////declares the colors that it sees by default, in a different name!
 //
-//        colorSensor.enableLed(true);
+//        bColorSensor.enableLed(true);
 //
 //        if (red > blue && red > green) {
 //            currentColor = "red";
@@ -575,9 +616,9 @@ public class AutonomousGeneral extends LinearOpMode {
 //        }
 //        //checks which color the side currently is
 //
-//        telemetry.addData("r value", colorSensor.red());
-//        telemetry.addData("g value", colorSensor.green());
-//        telemetry.addData("b value", colorSensor.blue());
+//        telemetry.addData("r value", bColorSensor.red());
+//        telemetry.addData("g value", bColorSensor.green());
+//        telemetry.addData("b value", bColorSensor.blue());
 //        telemetry.addData("current beacon color", currentColor);
 //        telemetry.addData("Hue", hsvValues[0]);
 //        telemetry.addData("Saturation", hsvValues[1]);

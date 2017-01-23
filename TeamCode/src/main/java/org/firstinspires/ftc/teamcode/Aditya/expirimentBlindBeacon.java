@@ -41,7 +41,7 @@ public class expirimentBlindBeacon extends AutonomousGeneral {
         baseline1 = ODSFront.getRawLightDetected();
         baseline2 = ODSBack.getRawLightDetected();
 
-        readNewColor();
+        readNewColorLeft();
 
         waitForStart();
         second_beacon_press = false;
@@ -140,7 +140,7 @@ public class expirimentBlindBeacon extends AutonomousGeneral {
 
         telemetry.addData("","readNewColor");
         telemetry.update();
-        readNewColor();
+        readNewColorLeft();
 
 
         if (currentColor.equals(currentTeam)) {

@@ -26,12 +26,12 @@ public class beaconPressDrive extends AutonomousGeneral {
         while(currentColor != currentTeam){
             //This turns the robot and reads the color until it sees the color it wants
             turnLeft(0.25);
-            readNewColor();
+            readNewColorLeft();
         }
 
         encoderDrive(0.85, 25, 22, 15);
 
-        readNewColor();
+        readNewColorLeft();
 
         if(currentColor == currentTeam){
 
@@ -40,25 +40,25 @@ public class beaconPressDrive extends AutonomousGeneral {
         }
     }
 
-    public void readNewColor(){
-
-        String currentColor = "blank";
-
-        if(colorSensor.red() > colorSensor.blue()){
-            currentColor = "red";
-
-            telemetry.addData("current color is red", colorSensor.red());
-            telemetry.update();
-        }
-
-        else if(colorSensor.red() > colorSensor.blue()){
-            currentColor = "blue";
-
-            telemetry.addData("current color is blue", colorSensor.blue());
-            telemetry.update();
-        } else {
-
-            currentColor = "blank";
-        }
-    }
+//    public void readNewColor(){
+//
+//        String currentColor = "blank";
+//
+//        if(colorSensor.red() > colorSensor.blue()){
+//            currentColor = "red";
+//
+//            telemetry.addData("current color is red", colorSensor.red());
+//            telemetry.update();
+//        }
+//
+//        else if(colorSensor.red() > colorSensor.blue()){
+//            currentColor = "blue";
+//
+//            telemetry.addData("current color is blue", colorSensor.blue());
+//            telemetry.update();
+//        } else {
+//
+//            currentColor = "blank";
+//        }
+//    }
 }

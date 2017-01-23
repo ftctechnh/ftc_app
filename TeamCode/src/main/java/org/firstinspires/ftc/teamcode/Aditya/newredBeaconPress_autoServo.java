@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "newRedBeaconPressAuto_two")
+@Autonomous(name = "newRedBeaconPressAutoServo")
 public class newredBeaconPress_autoServo extends AutonomousGeneral {
 
 
@@ -27,7 +27,7 @@ public class newredBeaconPress_autoServo extends AutonomousGeneral {
 
 
 
-        readNewColor();
+        readNewColorLeft();
 
         waitForStart();
         second_beacon_press = false;
@@ -87,7 +87,7 @@ public class newredBeaconPress_autoServo extends AutonomousGeneral {
         encoderDrive(0.2, -5, -5, 5);
         telemetry.addData("range:",rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
-        readNewColor();
+        readNewColorLeft();
         telemetry.addData("current color is", currentColor);
         telemetry.update();
 

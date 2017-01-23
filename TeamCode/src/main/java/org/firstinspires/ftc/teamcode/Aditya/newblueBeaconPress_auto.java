@@ -21,7 +21,7 @@ public class newblueBeaconPress_auto extends AutonomousGeneral {
 
         initiate();
 
-        readNewColor();
+        readNewColorLeft();
 
         waitForStart();
 
@@ -62,7 +62,7 @@ public class newblueBeaconPress_auto extends AutonomousGeneral {
 
         allignRangeDist(7);
 
-        readNewColor();
+        readNewColorLeft();
         if (currentColor.equals(currentTeam)) {
             telemetry.addData("","correct color");
             telemetry.update();
