@@ -40,6 +40,7 @@ public abstract class AutonomousBase extends OpMode {
       public static final int TURN_TOWARDS_ANGLE = 16;
       public static final int LEFT_SLOW = 17;
       public static final int RIGHT_SLOW = 18;
+        public static final int TURN_TOWARDS_ANGLE_SLOW= 19;
     }
 
 
@@ -85,10 +86,10 @@ public abstract class AutonomousBase extends OpMode {
         motorLeft = hardwareMap.dcMotor.get("left");
         motorRight = hardwareMap.dcMotor.get("right");
         
-        motorUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorDown.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //motorUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //motorDown.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         
         motorDown.setDirection(DcMotor.Direction.REVERSE);
         motorRight.setDirection(DcMotor.Direction.REVERSE);
@@ -254,6 +255,27 @@ public abstract class AutonomousBase extends OpMode {
                     motorRight.setPower(power);
                 }
                 break;
+            case MoveState.TURN_TOWARDS_ANGLE_SLOW:
+                // Orients the bot to face at desiredAngle.
+                power = .15;
+                if(heading<=180){
+                    turnRight = heading <= desiredAngle && heading + 180 >= desiredAngle;
+                }else{
+                    turnRight = !(heading >= desiredAngle && heading - 180 <= desiredAngle);
+                }
+
+                if(turnRight){
+                    motorUp.setPower(power);
+                    motorDown.setPower(-power);
+                    motorLeft.setPower(power);
+                    motorRight.setPower(-power);
+                }else{
+                    motorUp.setPower(-power);
+                    motorDown.setPower(power);
+                    motorLeft.setPower(-power);
+                    motorRight.setPower(power);
+                }
+                break;
             case MoveState.SERVO_R:
                 // Hits right button with wumbo
                 servoLeftButton.setPosition(1);
@@ -268,8 +290,8 @@ public abstract class AutonomousBase extends OpMode {
                 break;
              case MoveState.SHOOT:
                 // Shoots ball out of conveyor
-                motorLeftShooter.setPower(.65);
-                motorRightShooter.setPower(.65);
+                motorLeftShooter.setPower(.3);
+                motorRightShooter.setPower(.3);
                 motorConveyor.setPower(1);
                 break;
             case MoveState.FULL_STOP:

@@ -30,7 +30,7 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 235;
+                desiredAngle = 220;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -41,28 +41,23 @@ public class BlueShoot3 extends AutonomousBase {
                 break;
             case 3: // ... and shoots
                 moveState = MoveState.SHOOT_WHEEL;
-                if(getRuntime() - sTime >= 3) {
+                if(getRuntime() - sTime >= 2) {
                     moveState = MoveState.SHOOT_CONVEYOR;
                 }
-                if(getRuntime() - sTime >= 6) {
+                if(getRuntime() - sTime >= 5) {
                     moveState = MoveState.SHOOT_STOP;
+                    gameState = 100;
+                    sTime = getRuntime();
+                }
+                break;
+            case 100:
+                if (getRuntime() - sTime > 1) {
                     gameState = 4;
                 }
+                moveState = MoveState.STOP;
                 break;
             case 4: //MOVE TO KNOCK OFF BALL
-                map.setGoal(5,10);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
-                    gameState = 5;
-                }
-                break;
-            case 5: //MOVE TO KNOCK OFF BALL
-                map.setGoal(6.5,6.5);
+                map.setGoal(7,7);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{

@@ -30,13 +30,13 @@ public class BlueShoot8 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 235;
+                desiredAngle = 230;
                 if (linedUpAngle()) {
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
                 } else {
-                    moveState = MoveState.TURN_TOWARDS_ANGLE;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
                 }
                 break;
             case 3: // ... and shoots

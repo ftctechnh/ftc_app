@@ -18,7 +18,7 @@ public class BlueShoot6 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(4.5, 9.5);
+                map.setGoal(4, 10);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -30,13 +30,13 @@ public class BlueShoot6 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 235;
+                desiredAngle = 230;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_ANGLE;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
                 }
                 break;
             case 3: // ... and shoots
@@ -49,7 +49,7 @@ public class BlueShoot6 extends AutonomousBase {
                      gameState = 4;
                  }
                 break;
-            case 4: // Line up with cap ball
+            /*case 4: // Line up with cap ball
                 map.setGoal(4,10);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
@@ -60,7 +60,7 @@ public class BlueShoot6 extends AutonomousBase {
                     moveState = MoveState.STOP;
                     gameState = 5;
                 }
-                break;
+                break;*/
             case 5: // Knock off cap ball and park
                 map.setGoal(6.5,6.5);
                 if(linedUp()){
