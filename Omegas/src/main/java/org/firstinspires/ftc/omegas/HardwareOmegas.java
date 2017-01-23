@@ -156,13 +156,13 @@ public abstract class HardwareOmegas {
         double multiplier = right ? 1 : -1;
 
         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
-            if (Thread.interrupted()) return;
-
             getLeftBackMotor().setPower(0.75 * multiplier);
             getLeftFrontMotor().setPower(0.75 * multiplier);
             getRightBackMotor().setPower(-0.75 * multiplier);
             getRightFrontMotor().setPower(-0.75 * multiplier);
         }
+
+        stopDriving();
     }
 
     /**
@@ -174,12 +174,11 @@ public abstract class HardwareOmegas {
         ElapsedTime timePushed = new ElapsedTime();
 
         while (timePushed.milliseconds() < duration) {
-            if (Thread.interrupted()) return;
-
             for (DcMotor motor : getMotors()) {
                 motor.setPower(power);
             }
         }
+
         stopDriving();
     }
 
@@ -198,8 +197,6 @@ public abstract class HardwareOmegas {
         else isExtending = true;
 
         while (true) {
-            if (Thread.interrupted()) return;
-
             if (timePushed.milliseconds() < 1500) {
                 positionServo(beaconator, 0.0);
             } else if (timePushed.milliseconds() < 3000) {
@@ -217,8 +214,6 @@ public abstract class HardwareOmegas {
         else isExtending = true;
 
         while (true) {
-            if (Thread.interrupted()) return;
-
             if (timePushed.milliseconds() < 1500) {
                 positionServo(beaconator, 1.0);
             } else if (timePushed.milliseconds() < 3000) {

@@ -1,0 +1,43 @@
+Index: Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision 58390be11dba7f8d590dbda859e9cfe8716454b5)
++++ Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision )
+@@ -150,7 +150,7 @@
+         ElapsedTime timePushed = new ElapsedTime();
+         double multiplier = right ? 1 : -1;
+ 
++        while (timePushed.milliseconds() < radians * MS_PER_RADIAN && !Thread.interrupted()) {
+-        while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
+             getLeftBackMotor().setPower(0.75 * multiplier);
+             getLeftFrontMotor().setPower(0.75 * multiplier);
+             getRightBackMotor().setPower(-0.75 * multiplier);
+@@ -168,7 +168,7 @@
+     public void driveForward(double power, double duration) {
+         ElapsedTime timePushed = new ElapsedTime();
+ 
++        while (timePushed.milliseconds() < duration && !Thread.interrupted()) {
+-        while (timePushed.milliseconds() < duration) {
+             for (DcMotor motor : getMotors()) {
+                 motor.setPower(power);
+             }
+@@ -192,8 +192,6 @@
+         else isExtending = true;
+ 
+         while (true) {
++            if (Thread.interrupted()) return;
++
+             if (timePushed.milliseconds() < 1500) {
+                 positionServo(beaconator, 0.0);
+             } else if (timePushed.milliseconds() < 3000) {
+@@ -211,8 +209,6 @@
+         else isExtending = true;
+ 
+         while (true) {
++            if (Thread.interrupted()) return;
++
+             if (timePushed.milliseconds() < 1500) {
+                 positionServo(beaconator, 1.0);
+             } else if (timePushed.milliseconds() < 3000) {
