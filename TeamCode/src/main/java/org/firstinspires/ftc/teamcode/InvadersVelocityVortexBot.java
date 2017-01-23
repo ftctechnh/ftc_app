@@ -316,14 +316,14 @@ public class InvadersVelocityVortexBot
         setDriveTrainPower(0);
     }
 
-    void turnToAbsoluteHeading(double speed, double absoluteHeading, int timeoutMs) {
+    public void turnToAbsoluteHeading(double speed, double absoluteHeading, int timeoutMs) {
         simpleGyroTurn(speed,absoluteHeading-gyro.getIntegratedZValue(),timeoutMs);
     }
 
     // Right/Clockwise = Positive Turn Degrees
     // Left/CounterClockwise = Negative Turn Degrees
     // timeoutMs provides a sanity check to make sure we don't turn forever
-    void simpleGyroTurn(double speed, double turnDegrees, int timeoutMs)
+    public void simpleGyroTurn(double speed, double turnDegrees, int timeoutMs)
     {
         // Our turn by degrees algorithm has a bit of slop in it.
         // Try to correct the user input to match reality
