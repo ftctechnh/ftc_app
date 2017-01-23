@@ -37,8 +37,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * A simple example of a linear op mode that will approach an IR beacon
  */
 
-@Autonomous(name="Autonomous - Blue (No Shoot) Edition", group = "Autonomous Group")
-public class AutonomousBlueNoShoot extends _AutonomousBase
+@Autonomous(name="Autonomous - Doesn't Work Edition", group = "Autonomous Group")
+public class AutonomousRedShootBallWeird extends _AutonomousBase
 {
 
     //Custom initialization
@@ -50,12 +50,21 @@ public class AutonomousBlueNoShoot extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        driveForTime(-0.5, 1000);
+        driveForTime(-0.5, 1300);
 
-        driveForTime(-0.5, 1200);
+        flywheels.setPower(0.4);
+        sleep(2000);
+        harvester.setPower(1.0);
 
-        turnToHeading(-400, TurnMode.BOTH); //Doesn't use gyro.
-        turnToHeading(1000, TurnMode.BOTH);
+        sleep(4000);
+
+        harvester.setPower(0);
+        flywheels.setPower(0);
+
+        driveForTime(-0.5, 800);
+
+        turnToHeading(800, TurnMode.BOTH); //Doesn't use gyro.
+        turnToHeading(-800, TurnMode.BOTH);
         driveForTime(-0.3, 1000);
     }
 }

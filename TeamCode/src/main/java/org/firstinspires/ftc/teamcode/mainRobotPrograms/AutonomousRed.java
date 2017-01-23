@@ -51,9 +51,9 @@ public class AutonomousRed extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        driveForTime(-0.5, 800);
+        driveForTime(-0.5, 1000);
 
-        flywheels.setPower(0.5);
+        flywheels.setPower(0.4);
         sleep(2000);
         harvester.setPower(1.0);
 
@@ -66,6 +66,6 @@ public class AutonomousRed extends _AutonomousBase
 
         turnToHeading(800, TurnMode.BOTH); //Doesn't use gyro.
         turnToHeading(-800, TurnMode.BOTH);
-        driveForTime(-0.3, 700);
+        driveForTime(-0.3, 1000);
     }
 }

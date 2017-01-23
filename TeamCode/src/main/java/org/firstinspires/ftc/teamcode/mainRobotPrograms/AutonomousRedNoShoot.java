@@ -50,12 +50,12 @@ public class AutonomousRedNoShoot extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        driveForTime(-0.5, 800);
+        driveForTime(-0.5, 1000);
 
         driveForTime(-0.5, 1200);
 
         turnToHeading(800, TurnMode.BOTH); //Doesn't use gyro.
         turnToHeading(-800, TurnMode.BOTH);
-        driveForTime(-0.3, 700);
+        driveForTime(-0.3, 1000);
     }
 }
