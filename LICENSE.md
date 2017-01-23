@@ -1,6 +1,4 @@
-License information
-
-================================================================================
+## License information
 
 FtcDriverStation, FtcRobotController, FtcCommon, Hardware, RobotCore, ModernRobotics, Analytics, WirelessP2p, and Omegas have the following license, derived from the [3-clause Modified BSD License](https://en.wikipedia.org/wiki/BSD_licenses#3-clause_license_.28.22Revised_BSD_License.22.2C_.22New_BSD_License.22.2C_or_.22Modified_BSD_License.22.29) with an added analytics clause:
 
