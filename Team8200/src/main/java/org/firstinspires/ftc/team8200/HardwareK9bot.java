@@ -41,7 +41,7 @@ public class HardwareK9bot {
 
     public Servo leftArm = null;
     public Servo rightArm = null;
-    public DeviceInterfaceModule cdim = null;
+    public DeviceInterfaceModule dim = null;
 
     public LightSensor lightSensor = null; //our Lego Light Sensor
     public ColorSensor colorSensor = null; //our AdaFruit color sensor
@@ -77,10 +77,10 @@ public class HardwareK9bot {
         rightArm = hwMap.servo.get("rightarm");
         legacyController = hwMap.dcMotorController.get("legacy");
 
-        cdim = hwMap.deviceInterfaceModule.get("dim"); //the Device Interface module connects the sensors
+        dim = hwMap.deviceInterfaceModule.get("dim"); //the Device Interface module connects the sensors
         //sets LED channel (by default 5) to output mode
         //this lights the sensor's LED
-        cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
+        dim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
         distanceSensor = hwMap.get(AnalogInput.class, "distance");
         lightSensor = hwMap.lightSensor.get("light");
@@ -122,7 +122,7 @@ public class HardwareK9bot {
      *
      * @param periodMs  Length of wait cycle in mSec.
      */
-
+/*
     public void waitForTick(long periodMs) {
 
         long remaining = periodMs - (long) period.milliseconds();
@@ -140,6 +140,7 @@ public class HardwareK9bot {
         period.reset();
 
     }
+    */
 }
 
 

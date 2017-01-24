@@ -37,8 +37,8 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     //static variables (to avoid Magic Number issues)
     static final double WHITE_THRESHOLD = 0.4;
-    static final double DRIVE_SPEED = 0.5;
-    static final double DRIVE_SLOW_SPEED = 0.1;
+    static final double DRIVE_SPEED = -0.5;
+    static final double DRIVE_SLOW_SPEED = 0.25;
     static final double TURN_SPEED = 0.25;
     static final int LED_CHANNEL = 5;
     static final String allianceColor = "red"; // takes either value "red" or "blue"
@@ -57,57 +57,71 @@ public class CompleteAutonomousRed extends LinearOpMode {
     @Override
 
     public void runOpMode() {
-
+/*
         bLedOn = true;
 
         // Set the LED state in the beginning.
         robot.lightSensor.enableLed(bLedOn);
 
         // turn the LED on in the beginning, just so user will know that the sensor is active.
-        robot.cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
+        robot.dim.setDigitalChannelState(LED_CHANNEL, bLedOn);
+*/
 
+        robot.init(hardwareMap); // Do not erase to avoid NullPointerException
 
-        waitForStart(); //prewritten function, waits for opmode to start
+        waitForStart(); //pre-written function, waits for opmode to start
         moveForwardForShot(); //robot moves forward into range of basket
 
-
         shoot(); //robot shoots two balls
-        moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
-
-        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
-        while (opModeIsActive() && !pressButton()) {
-
-            // send the info back to driver station using telemetry function.
-            updateTelemetry();
-        }
-
-        moveToBeacon2(); //robot turns to its left, goes toward next beacon, stops a little after reaching white line, and turns toward beacon
-
-        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
-        while (opModeIsActive() && !pressButton()) {
-
-            // send the info back to driver station using telemetry function.
-            updateTelemetry();
-
-        }
-        pressButton(); //robot again presses button depending on color of alliance
-        moveToCenterVortex(); //robot turns around and heads to park on center vortex, knocking cap ball on the way
+//        moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
+//
+//        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
+//        while (opModeIsActive() && !pressButton()) {
+//
+//            // send the info back to driver station using telemetry function.
+//            updateTelemetry();
+//        }
+//
+//        moveToBeacon2(); //robot turns to its left, goes toward next beacon, stops a little after reaching white line, and turns toward beacon
+//
+//        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
+//        while (opModeIsActive() && !pressButton()) {
+//
+//            // send the info back to driver station using telemetry function.
+//            updateTelemetry();
+//
+//        }
+//        moveToCenterVortex(); //robot turns around and heads to park on center vortex, knocking cap ball on the way
     }
 
     /* moveForwardForShot() moves the robot in position for shot, using encoders to travel the correct distance */
 
-    public void moveForwardForShot()
-    {
-
-
+    public void moveForwardForShot() {
+        runtime.reset();
+        while (runtime.seconds() <= 1) {
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+        }
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
     }
 
     /* shoot() runs the wheeled shooters briefly before powers up the elevator to launch two balls at the target */
 
-    public void shoot()
-    {
-
-
+    public void shoot() {
+        runtime.reset();
+        while (runtime.seconds() < 2.0) {
+            robot.leftWheelShooter.setPower(-1);
+            robot.rightWheelShooter.setPower(-1);
+        }
+        while (runtime.seconds() >= 2.0) {
+            robot.legacyController.setMotorPower(1, -0.5);// Run elevator
+        }
+        while (runtime.seconds() <= 5.0) {
+            robot.legacyController.setMotorPower(1, 0);// Stop elevator
+            robot.leftWheelShooter.setPower(0);
+            robot.rightWheelShooter.setPower(0);
+        }
     }
 
     /* moveToBeacon() moves the robot from its shooting position to the first beacon
