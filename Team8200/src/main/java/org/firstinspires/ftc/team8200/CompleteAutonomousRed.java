@@ -75,7 +75,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
         moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
 
         //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
-        while (!pressButton()) {
+        while (opModeIsActive() && !pressButton()) {
 
             // send the info back to driver station using telemetry function.
             updateTelemetry();
@@ -84,7 +84,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
         moveToBeacon2(); //robot turns to its left, goes toward next beacon, stops a little after reaching white line, and turns toward beacon
 
         //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
-        while (!pressButton()) {
+        while (opModeIsActive() && !pressButton()) {
 
             // send the info back to driver station using telemetry function.
             updateTelemetry();
@@ -267,7 +267,12 @@ public class CompleteAutonomousRed extends LinearOpMode {
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
-    /* stopResetEncoders() is a utility function that kills all motor activity and resets the encoder position to zero.
+    /* encoderDrive() is a function that allows the robot to move according to the number of encoder ticks
+        the speed should be one of the static variables defined above
+        leftInches and rightInches is the distance in actual inches; however, the wheel diameter and gearing
+        ratio must be accurate in order to ensure this works properly
+        timeoutS is the failsafe for if the encoders are not working properly; they should not be used as a
+        replacement for our typical motor timing algorithm which uses the ElapsedTime class)
 
       */
     public void encoderDrive(double speed,
