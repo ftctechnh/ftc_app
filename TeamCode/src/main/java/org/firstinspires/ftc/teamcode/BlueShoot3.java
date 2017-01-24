@@ -18,7 +18,7 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(4.5, 9.5);
+                map.setGoal(4, 10);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -36,7 +36,7 @@ public class BlueShoot3 extends AutonomousBase {
                     gameState = 3;
                     sTime = getRuntime();
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_ANGLE;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
                 }
                 break;
             case 3: // ... and shoots

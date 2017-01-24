@@ -63,6 +63,7 @@ public class BlueButton6 extends AutonomousBase{
             case 5: //Move to wall 
                 map.setGoal(12,map.getRobotY());
                 moveState = MoveState.RIGHT;
+                moveState = MoveState.SERVO_DEPLOY;
                 if(touchWall.isPressed()){
                     moveState = MoveState.STOP;
 		            gameState = 6;

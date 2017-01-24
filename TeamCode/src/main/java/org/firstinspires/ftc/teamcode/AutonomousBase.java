@@ -41,6 +41,7 @@ public abstract class AutonomousBase extends OpMode {
       public static final int LEFT_SLOW = 17;
       public static final int RIGHT_SLOW = 18;
         public static final int TURN_TOWARDS_ANGLE_SLOW= 19;
+        public static final int SERVO_DEPLOY = 20;
     }
 
 
@@ -54,6 +55,8 @@ public abstract class AutonomousBase extends OpMode {
     Servo servoCollector;
     Servo servoLeftButton;
     Servo servoRightButton;
+    Servo servoBeaconDeploy;
+    TouchSensor beaconButton;
     TouchSensor touchRight;
     TouchSensor touchWall;
     ColorSensor colorLeft;
@@ -104,6 +107,7 @@ public abstract class AutonomousBase extends OpMode {
         servoCollector = hardwareMap.servo.get("collector");
         servoLeftButton = hardwareMap.servo.get("l_button");
         servoRightButton = hardwareMap.servo.get("r_button");
+        servoBeaconDeploy = hardwareMap.servo.get("b_servo");
 
         touchRight = hardwareMap.touchSensor.get("right_touch");
         touchWall = hardwareMap.touchSensor.get("wall_touch");
@@ -257,7 +261,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.TURN_TOWARDS_ANGLE_SLOW:
                 // Orients the bot to face at desiredAngle.
-                power = .15;
+                power = .2;
                 if(heading<=180){
                     turnRight = heading <= desiredAngle && heading + 180 >= desiredAngle;
                 }else{
@@ -284,14 +288,17 @@ public abstract class AutonomousBase extends OpMode {
                 // Hits left button with wumbo
                 servoLeftButton.setPosition(0);
                 break;
+            case MoveState.SERVO_DEPLOY:
+                servoBeaconDeploy.setPosition(1);
+                break;
              case MoveState.SERVO_M:
                 // Retracts wumbo
                 servoLeftButton.setPosition(.5);
                 break;
              case MoveState.SHOOT:
                 // Shoots ball out of conveyor
-                motorLeftShooter.setPower(.3);
-                motorRightShooter.setPower(.3);
+                motorLeftShooter.setPower(.4);
+                motorRightShooter.setPower(.4);
                 motorConveyor.setPower(1);
                 break;
             case MoveState.FULL_STOP:
@@ -313,12 +320,13 @@ public abstract class AutonomousBase extends OpMode {
                 break;
            case MoveState.SHOOT_WHEEL:
                 // Spins fly-wheels
-                motorLeftShooter.setPower(.3);
-                motorRightShooter.setPower(.3);
+                motorLeftShooter.setPower(.4);
+                motorRightShooter.setPower(.4);
                 break;
            case MoveState.SHOOT_CONVEYOR:
                 // Pushed ball towards flywheel
                 motorConveyor.setPower(1);
+                servoCollector.setPosition(1);
                 break;
         }
         map.moveRobot(dDistS * DEGREES_TO_FEET, (heading+90%360));

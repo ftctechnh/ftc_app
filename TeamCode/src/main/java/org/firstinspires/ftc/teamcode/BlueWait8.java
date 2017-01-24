@@ -18,7 +18,7 @@ public class BlueWait8 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(4.5, 9.5);
+                map.setGoal(4, 10);
                 if (linedUp()) {
                     moveState = MoveState.FORWARD;
                 } else {
@@ -30,7 +30,7 @@ public class BlueWait8 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 235;
+                desiredAngle = 220;
                 if (linedUpAngle()) {
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -46,23 +46,11 @@ public class BlueWait8 extends AutonomousBase {
                 }
                 if (getRuntime() - sTime >= 6) {
                     moveState = MoveState.SHOOT_STOP;
-                    gameState = 4;
-                }
-                break;
-            case 4:
-                map.setGoal(4, 10);
-                if (linedUp()) {
-                    moveState = MoveState.FORWARD;
-                } else {
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                if (map.distanceToGoal() <= .1) {
-                    moveState = MoveState.STOP;
                     gameState = 5;
                 }
                 break;
             case 5: //MOVE TO KNOCK OFF BALL
-                map.setGoal(6.5, 6.5);
+                map.setGoal(7, 7);
                 if (linedUp()) {
                     moveState = MoveState.FORWARD;
                 } else {
