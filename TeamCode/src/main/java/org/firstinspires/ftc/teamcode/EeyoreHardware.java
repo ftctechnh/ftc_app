@@ -7,26 +7,111 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 public class EeyoreHardware
 {
     /* Public OpMode members. */
-    public DcMotor l1   = null;
-    public DcMotor l2   = null;
-    public DcMotor r1   = null;
-    public DcMotor r2   = null;
-    public DcMotor shooter1   = null;
-    public DcMotor shooter2   = null;
-    public DcMotor collection   = null;
+    public DcMotor l1 = null;
+    public DcMotor l2 = null;
+    public DcMotor r1 = null;
+    public DcMotor r2 = null;
+    public DcMotor shooter1 = null;
+    public DcMotor shooter2 = null;
+    public DcMotor collection = null;
+    public Servo leftPresser = null;
+    public Servo rightPresser = null;
     public GyroSensor gyro = null;
+    public ColorSensor color = null;
 
     /* local OpMode members. */
-    HardwareMap hwMap           = null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
     public EeyoreHardware() {
 
+    }
+
+    public void shootShooter(int power) {
+        shooter1.setPower(power);
+        shooter2.setPower(power);
+    }
+
+    public void pressLeftButton() {
+        leftPresser.setPosition(0);
+
+        try {
+            Thread.sleep(1500);
+        } catch(Exception e) {
+
+        }
+
+        leftPresser.setPosition(0.275);
+    }
+
+    public void pressRightButton() {
+        rightPresser.setPosition(0);
+
+        try {
+            Thread.sleep(1500);
+        } catch(Exception e) {
+
+        }
+
+        rightPresser.setPosition(0.275);
+    }
+
+    public void moveRobotGyro(double speed, int targetDirection, int time) //Speed is from -1 to 1 and direction is 0 to 360 degrees
+    {
+        int currentDirection = gyro.getHeading();
+        double turnMultiplier = 0.05;
+        double driveMultiplier = 0.03;
+
+        long turnStartTime = System.currentTimeMillis();
+        //First, check to see if we are pointing in the correct direction
+        while(Math.abs(targetDirection - currentDirection) > 5) //If we are more than 5 degrees off target, make corrections before moving
+        {
+            currentDirection = gyro.getHeading();
+
+            int error = targetDirection - currentDirection;
+            double speedAdjustment = turnMultiplier * error;
+
+            double leftPower = 0.5 * Range.clip(speedAdjustment, -1, 1);
+            double rightPower = 0.5 * Range.clip(-speedAdjustment, -1, 1);
+
+            //Finally, assign these values to the motors
+
+            r1.setPower(rightPower);
+            r2.setPower(rightPower);
+            l1.setPower(leftPower);
+            l2.setPower(leftPower);
+        }
+
+        //Now we can move forward, making corrections as needed
+
+        long startTime = System.currentTimeMillis(); //Determine the time as we enter the loop
+
+        while(System.currentTimeMillis() - startTime < time) //Loop for the desired amount of time
+        {
+            currentDirection = gyro.getHeading();
+            int error = targetDirection - currentDirection;
+            double speedAdjustment = driveMultiplier * error;
+
+            double leftPower = Range.clip(speed + speedAdjustment, -1, 1);
+            double rightPower = Range.clip(speed - speedAdjustment, -1, 1);
+
+            //Finally, assign these values to the motors
+            r1.setPower(rightPower);
+            r2.setPower(rightPower);
+            l1.setPower(leftPower);
+            l2.setPower(leftPower);
+        }
+
+        r1.setPower(0);
+        r2.setPower(0);
+        l1.setPower(0);
+        l2.setPower(0);
     }
 
     /* Initialize standard Hardware interfaces */
@@ -42,7 +127,10 @@ public class EeyoreHardware
         shooter1 = hwMap.dcMotor.get("shooter1");
         shooter2 = hwMap.dcMotor.get("shooter2");
         collection = hwMap.dcMotor.get("collection");
+        leftPresser = hwMap.servo.get("button_left");
+        rightPresser = hwMap.servo.get("button_right");
 
+        color = hwMap.colorSensor.get("color");
         gyro = hwMap.gyroSensor.get("gyro");
 
         // Set motor direction
@@ -53,6 +141,10 @@ public class EeyoreHardware
         shooter1.setDirection(DcMotor.Direction.FORWARD);
         shooter2.setDirection(DcMotor.Direction.FORWARD);
         collection.setDirection(DcMotor.Direction.FORWARD);
+
+        // Set servo direction
+        leftPresser.setDirection(Servo.Direction.FORWARD);
+        rightPresser.setDirection(Servo.Direction.REVERSE);
 
         // Set all motors to zero power
         l1.setPower(0);
@@ -72,8 +164,10 @@ public class EeyoreHardware
         shooter1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shooter2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         collection.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // Define and initialize ALL installed servos.
-        // None yet
+
+        // Initialize servos
+        leftPresser.setPosition(0.275);
+        rightPresser.setPosition(0.275);
     }
 
     /***
@@ -96,6 +190,5 @@ public class EeyoreHardware
         // Reset the cycle clock for the next pass.
         period.reset();
     }
-
 }
 

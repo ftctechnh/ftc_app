@@ -179,7 +179,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:id="@+id/cameraLayout"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true" />
