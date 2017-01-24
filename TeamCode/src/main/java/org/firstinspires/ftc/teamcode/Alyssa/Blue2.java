@@ -184,17 +184,17 @@ public class Blue2 extends LinearOpMode {
 
 
       // step 1:drive forward 4 inches so we can actually do things
-        robot.timedDrive(0.5,900);
+        robot.encoderDrive(1,1,4,4);
 
-      // step 2: turn -40 degrees
+      // step 2: turn 40 degrees
       robot.GyroTurn(1,40,3000);
 
 
-     //step 3: drive forward for god knows how long (about 5 ft right now) ;)
-        robot.timedDrive(1,2000);
+     //step 3: drive forward for god knows how long (about 5 ft right now)
+        robot.encoderDrive(1,1,60,60);
 
-       // step 4:turn 40 degrees to align with the wall.
-       robot.GyroTurn(1,40,3000);
+       // step 4: align to wall.
+       robot.AlignToWall(40,20);
 
 
 // Step 5: drive backwards a bit and adjust
@@ -208,7 +208,7 @@ public class Blue2 extends LinearOpMode {
 
         // step 7: drive 2.5 centimeters or two inches
 
-        robot.timedDrive(1,400);
+        robot.encoderDrive(1,1,2,2);
 
         // Step 8: Push Beacon if Blue
         //step 8.A
