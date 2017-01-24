@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -30,7 +31,8 @@ public class HardwareK9bot
     public DcMotor  rightMotor  = null;
     public DcMotor  leftShooter    = null;
     public DcMotor  rightShooter    = null;
-    public DcMotor  harvester   = null;
+    public DcMotorController legacyController = null; //for legacy motor controller
+
 
     /* Local OpMode members. */
     HardwareMap hwMap  = null;
@@ -48,10 +50,10 @@ public class HardwareK9bot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("ld-motor");
         rightMotor  = hwMap.dcMotor.get("rd-motor");
+        legacyController  = hwMap.dcMotorController.get("legacy-controller");
         leftShooter  = hwMap.dcMotor.get("ls-motor");
         rightShooter  = hwMap.dcMotor.get("rs-motor");
-        harvester  = hwMap.dcMotor.get("h-motor");
-        
+
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShooter.setDirection(DcMotor.Direction.REVERSE);
 
@@ -60,7 +62,9 @@ public class HardwareK9bot
         rightMotor.setPower(0);
         leftShooter.setPower(0);
         rightShooter.setPower(0);
-        harvester.setPower(0);
+        legacyController.setMotorPower(1,0);
+
+
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -68,7 +72,7 @@ public class HardwareK9bot
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        harvester.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
     }
 

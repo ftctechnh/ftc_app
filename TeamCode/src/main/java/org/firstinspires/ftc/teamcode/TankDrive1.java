@@ -56,7 +56,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="Golden Eagles: TankDrive1", group="K9bot")
-@Disabled
+//@Disabled
 public class TankDrive1 extends LinearOpMode {
 
     // Declare OpMode members.
@@ -98,39 +98,25 @@ public class TankDrive1 extends LinearOpMode {
             }
 
             // Set harvester speed based on the buttons pressed (from team8200; Steel Hawks)
-            if (gamepad1.right_trigger > 0.2) {
 
-                if (gamepad1.right_bumper) {
-                    robot.harvester.setPower(1);
-                } else {
-                    robot.harvester.setPower(0.5);
-                }
-
-            }
-            else if (gamepad1.left_trigger > 0.2) {
-
-                if (gamepad1.left_bumper) {
-                    robot.harvester.setPower(-1);
-                } else {
-                    robot.harvester.setPower(-0.5);
-                }
-
+            if (gamepad1.left_trigger > 0.2 || gamepad1.right_trigger > 0.2) {
+                robot.legacyController.setMotorPower(1, -1);
             }
             else {
-                robot.harvester.setPower(0);
+                robot.legacyController.setMotorPower(1, 0);
             }
 
             // Get the motors' power (for telemetry)
             leftShooter = robot.leftShooter.getPower();
             rightShooter = robot.rightShooter.getPower();
-            harvester = robot.harvester.getPower();
+
 
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.addData("left shooter", "%.2f", leftShooter);
             telemetry.addData("right shooter", "%.2f", rightShooter);
-            telemetry.addData("harvester", "%.2f", harvester);
+
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.

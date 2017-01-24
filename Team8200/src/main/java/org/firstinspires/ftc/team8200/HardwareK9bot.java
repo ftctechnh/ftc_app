@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.team8200;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
@@ -16,51 +18,37 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This is NOT an opmode.
  *
  * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a K9 robot.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Servo channel:  Servo to raise/lower arm: "arm"
- * Servo channel:  Servo to open/close claw: "claw"
- *
- * Note: the configuration of the servos is such that:
- *   As the arm servo approaches 0, the arm position moves up (away from the floor).
- *   As the claw servo approaches 0, the claw opens up (drops the game element).
+
  */
-public class HardwareK9bot
-{
+public class HardwareK9bot {
 
     /* Public OpMode members. */
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
-    /*
-    public LightSensor lightSensor = null;
-    public ColorSensor colorSensor = null;
-    public OpticalDistanceSensor distanceSensor = null;
-    */
+
     public DcMotor leftWheelShooter = null;
     public DcMotor rightWheelShooter = null;
+
     /*
+    Commented this out because the harvester/elevator is using the legacy controller
     public DcMotor harvester = null;
     public DcMotor elevator = null;
     */
-    //our legacy motor controller
+
+    //our legacy motor controller that controls harvester/elevator
     public DcMotorController legacyController = null;
 
 
-    public Servo armLeft = null;
-    public Servo armRight = null;
+    public Servo leftArm = null;
+    public Servo rightArm = null;
     public DeviceInterfaceModule cdim = null;
 
+    public LightSensor lightSensor = null; //our Lego Light Sensor
+    public ColorSensor colorSensor = null; //our AdaFruit color sensor
+    public AnalogInput distanceSensor = null; //our MaxBotix ultrasonic distance sensor
 
-    /*
-    public final static double ARM_HOME = 0.2;
-    public final static double ARM_MIN_RANGE  = 0.20;
-    public final static double ARM_MAX_RANGE  = 0.90;
-    */
+    public static final int LED_CHANNEL = 5;
+
 
     /* Local OpMode members. */
     HardwareMap hwMap = null;
@@ -76,21 +64,30 @@ public class HardwareK9bot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor = hwMap.dcMotor.get("motor_left");
-        rightMotor = hwMap.dcMotor.get("motor_right");
-        leftWheelShooter = hwMap.dcMotor.get("leftWS");
-        rightWheelShooter = hwMap.dcMotor.get("rightWS");
+        leftMotor = hwMap.dcMotor.get("leftmotor");
+        rightMotor = hwMap.dcMotor.get("rightmotor");
+        leftWheelShooter = hwMap.dcMotor.get("leftws");
+        rightWheelShooter = hwMap.dcMotor.get("rightws");
 
         /*  -- Because we are using a legacy module, we are not using these names at this time ---
         harvester = hwMap.dcMotor.get("harvester");
         elevator = hwMap.dcMotor.get("elevator");
         */
-        armLeft = hwMap.servo.get("armLeft");
-        armRight = hwMap.servo.get("armRight");
-        cdim = hwMap.deviceInterfaceModule.get("dim");
-        legacyController = hwMap.dcMotorController.get("legacy_controller");
+        leftArm = hwMap.servo.get("leftarm");
+        rightArm = hwMap.servo.get("rightarm");
+        legacyController = hwMap.dcMotorController.get("legacy");
+
+        cdim = hwMap.deviceInterfaceModule.get("dim"); //the Device Interface module connects the sensors
+        //sets LED channel (by default 5) to output mode
+        //this lights the sensor's LED
+        cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
+
+        distanceSensor = hwMap.get(AnalogInput.class, "distance");
+        lightSensor = hwMap.lightSensor.get("light");
+        colorSensor = hwMap.colorSensor.get("color");
 
 
+        //Reverses direction of these motors to ease coding
         leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -100,23 +97,21 @@ public class HardwareK9bot
         leftWheelShooter.setPower(0);
         rightWheelShooter.setPower(0);
 
-        /*
+        /* Sets harvester and elevator to 0 power - disabled because we are using legacy module
         harvester.setPower(0);
         elevator.setPower(0);
         */
-        armLeft.setPosition(0);
-        armRight.setPosition(1);
-        // Set all motors to run without encoders.
+
+        //Sets arms to default position
+        leftArm.setPosition(0);
+        rightArm.setPosition(1);
+
+        // Set all drivetrain motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //Define and initialize ALL sensors
-        /*lightSensor = hwMap.lightSensor.get("light");
-        colorSensor = hwMap.colorSensor.get("color");
 
-        distanceSensor = hwMap.opticalDistanceSensor.get("distance");
-        */
     }
 
     /*
@@ -127,10 +122,10 @@ public class HardwareK9bot
      *
      * @param periodMs  Length of wait cycle in mSec.
      */
-    /*
+
     public void waitForTick(long periodMs) {
 
-        long  remaining = periodMs - (long)period.milliseconds();
+        long remaining = periodMs - (long) period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
         if (remaining > 0) {
@@ -143,7 +138,8 @@ public class HardwareK9bot
 
         // Reset the cycle clock for the next pass.
         period.reset();
-        */
+
     }
+}
 
 

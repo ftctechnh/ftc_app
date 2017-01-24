@@ -66,9 +66,13 @@ public class SensorAnalog extends LinearOpMode {
     dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
     distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
 
+    /* THIS should not be in this analog distance sensor test file
+      Please create a NEW op mode without any of these
+
     HardwareK9bot robot = new HardwareK9bot();
     LightExceed lineFinder = new LightExceed();
     ColorSensorRed colorSensor = new ColorSensorRed();
+    */
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -88,6 +92,9 @@ public class SensorAnalog extends LinearOpMode {
 
       // go from angle, go straight after X seconds, detect line and activate colorsensor file, done
 
+      /* THIS should not be in this file
+        Create a new class for your autonomous opmode
+
       runtime.reset();
       if(runtime.seconds() < 10) {
         robot.leftMotor.setPower(1);
@@ -97,7 +104,7 @@ public class SensorAnalog extends LinearOpMode {
         robot.rightMotor.setPower(0);
         lineFinder.MoveToBeacon();
       }
-
+      */
     }
   }
 }

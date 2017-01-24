@@ -77,8 +77,7 @@ public class ColorSensorRed extends LinearOpMode {
 
     ColorSensor sensorRGB;
     DeviceInterfaceModule cdim;
-    Servo leftArm;
-    Servo rightArm;
+
 
     // we assume that the LED pin of the RGB sensor is connected to
     // digital port 5 (zero indexed).
@@ -130,22 +129,7 @@ public class ColorSensorRed extends LinearOpMode {
             // convert the RGB values to HSV values.
             Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
             //1st if statement is for red, 2nd if statement is for blue
-            if(sensorRGB.red() > 180 && sensorRGB.green() < 100 && sensorRGB.blue() < 100)
-            {
-              leftArm.setPosition(0.8);
-                rightArm.setPosition(0);
-            }
 
-            else if(sensorRGB.red() < 100 && sensorRGB.green() < 100 && sensorRGB.blue() > 180)
-            {
-                leftArm.setPosition(0);
-                rightArm.setPosition(0.8);
-            }
-            else
-            {
-                leftArm.setPosition(0);
-                rightArm.setPosition(0);
-            }
 
             // send the info back to driver station using telemetry function.
             telemetry.addData("LED", bLedOn ? "On" : "Off");

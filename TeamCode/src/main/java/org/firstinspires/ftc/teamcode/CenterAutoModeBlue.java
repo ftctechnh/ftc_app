@@ -67,14 +67,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Golden Eagles: CenterAutoModeBlue", group="Pushbot")
-@Disabled
+//@Disabled
 public class CenterAutoModeBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareK9bot robot = new HardwareK9bot(); // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
     
-    static final double FORWARD_SPEED = 0.8;
+    static final double FORWARD_SPEED = 0.5;
 
     @Override
     public void runOpMode() {
@@ -110,7 +110,7 @@ public class CenterAutoModeBlue extends LinearOpMode {
         
         // Turn (for a quick moment) to park (0.5 seconds)
         robot.leftMotor.setPower(0.8);
-        robot.rightMotor.setPower(0.5);
+        robot.rightMotor.setPower(FORWARD_SPEED);
         while (opModeIsActive() && (runtime.seconds() < 2.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
