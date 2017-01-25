@@ -38,7 +38,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
     //static variables (to avoid Magic Number issues)
     static final double WHITE_THRESHOLD = 0.4;
     static final double DRIVE_SPEED = 0.5;
-    static final double DRIVE_SLOW_SPEED = 0.25;
+    static final double DRIVE_SLOW_SPEED = 0.1;
     static final double TURN_SPEED = 0.25;
     static final double MAX_WHEEL_SHOOTER_SPEED = 1;
     static final int LED_CHANNEL = 5;
@@ -58,17 +58,17 @@ public class CompleteAutonomousRed extends LinearOpMode {
     @Override
 
     public void runOpMode() {
-/*
+        robot.init(hardwareMap); // Do not erase to avoid NullPointerException. This MUST be first in runOpMode()
+
         bLedOn = true;
 
-        // Set the LED state in the beginning.
+        // Set the LED state for the Lego Light Sensor
         robot.lightSensor.enableLed(bLedOn);
 
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         robot.dim.setDigitalChannelState(LED_CHANNEL, bLedOn);
-*/
 
-        robot.init(hardwareMap); // Do not erase to avoid NullPointerException
+
 
         waitForStart(); //pre-written function, waits for opmode to start
        // moveForwardForShot(); //robot moves forward into range of basket
@@ -146,17 +146,18 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     // Move to white line
      while (opModeIsActive() && robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
-            robot.leftMotor.setPower(DRIVE_SPEED);
-            robot.rightMotor.setPower(DRIVE_SPEED);
+            robot.leftMotor.setPower(-DRIVE_SPEED);
+            robot.rightMotor.setPower(-DRIVE_SPEED);
             updateTelemetry();
         }
         while (opModeIsActive()) {
             //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
             runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.01)) {
+            while (opModeIsActive() && (runtime.seconds() < 0.05)) {
                 robot.rightMotor.setPower(TURN_SPEED);
-                telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
+                robot.leftMotor.setPower(-TURN_SPEED);
+                telemetry.addData("Light", robot.lightSensor.getLightDetected());
                 telemetry.addData("Say", "Motors turning.");
                 telemetry.update();
             }
@@ -164,8 +165,8 @@ public class CompleteAutonomousRed extends LinearOpMode {
             //step 4 follow the line
             while (opModeIsActive() && robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) {
                 //follows white light is above threshold AND touch sensor is not touching
-                robot.leftMotor.setPower(TURN_SPEED);
-                robot.rightMotor.setPower(TURN_SPEED);
+                robot.leftMotor.setPower(-DRIVE_SLOW_SPEED);
+                robot.rightMotor.setPower(-DRIVE_SLOW_SPEED);
                 telemetry.addData("Say", "Motors following line.");
                 telemetry.update();
             }
