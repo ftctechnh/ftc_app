@@ -48,14 +48,9 @@ public class BlueShoot6 extends AutonomousBase {
                      gameState = 4;
                  }
                 break;
-            case 4
-                    : // Knock off cap ball and park
+            case 4: // Knock off cap ball and park
                 map.setGoal(7,7);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
                     gameState = 777;
                 }

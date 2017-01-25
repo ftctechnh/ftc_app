@@ -26,7 +26,7 @@ public class RedCorner4 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 130;
+                desiredAngle = 135;
                 if(linedUpAngle(5)){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -40,43 +40,28 @@ public class RedCorner4 extends AutonomousBase {
                     gameState = 2;
                 }
                 moveState = MoveState.SHOOT_WHEEL;
-                if (getRuntime() - sTime >= 3) {
+                if (getRuntime() - sTime >= 2) {
                     moveState = MoveState.SHOOT_CONVEYOR;
                 }
-                if (getRuntime() - sTime >= 6) {
+                if (getRuntime() - sTime >= 5) {
                     moveState = MoveState.SHOOT_STOP;
                     gameState = 4;
                 }
                 break;
             case 4: // Line up with cap ball
-                map.setGoal(5, 10);
-                if (linedUp()) {
-                    moveState = MoveState.FORWARD;
-                } else {
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
+                map.setGoal(3, 9);
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if (map.distanceToGoal() <= .1) {
                     moveState = MoveState.STOP;
                     gameState = 5;
                 }
                 break;
             case 5: // Knock off cap ball and park
-                map.setGoal(6.5, 6.5);
-                if (linedUp()) {
-                    moveState = MoveState.FORWARD;
-                } else {
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                if (map.distanceToGoal() <= .1) {
-                    moveState = MoveState.STOP;
-                    gameState = 6;
-                }
-                break;
-            case 6: //Park in Corner Vortex
-                map.setGoal(11.5, 11.5);
+                map.setGoal(1, 11);
                 moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if (map.distanceToGoal() <= .1) {
-                    moveState = MoveState.STOP;
+                    moveState = MoveState.FULL_STOP;
+                    gameState = 6;
                 }
                 break;
             case 777:

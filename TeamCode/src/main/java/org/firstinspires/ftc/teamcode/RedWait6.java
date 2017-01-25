@@ -37,7 +37,7 @@ public class RedWait6 extends AutonomousBase {
                 break;
             case 3: // ... and shoots
                 if(!linedUpAngle(5)){
-                    moveState = 2;
+                    gameState = 2;
                 }
                 moveState = MoveState.SHOOT_WHEEL;
                 if(getRuntime() - sTime >= 2){

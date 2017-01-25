@@ -57,7 +57,7 @@ public class RedCorner9 extends AutonomousBase {
                 }
                 break;
             case 5: //Park in Corner Vortex
-                map.setGoal(2, 10);
+                map.setGoal(1, 11);
                 moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if (map.distanceToGoal() <= .1) {
                     moveState = MoveState.STOP;

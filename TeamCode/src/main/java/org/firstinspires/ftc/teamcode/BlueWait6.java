@@ -19,11 +19,7 @@ public class BlueWait6 extends AutonomousBase {
                 break;
             case 1: //moves to shooter post
                 map.setGoal(4, 10);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                     gameState = 2;
@@ -31,37 +27,36 @@ public class BlueWait6 extends AutonomousBase {
                 break;
             case 2: // turns ...
                 desiredAngle = 220;
-                if(linedUpAngle()){
+                if(linedUpAngle(5)){
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_ANGLE;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
                 }
                 break;
             case 3: // ... and shoots
-                moveState = MoveState.SHOOT_WHEEL;
-                if(getRuntime() - sTime >= 3){
-                    moveState = MoveState.SHOOT_CONVEYOR;
+                if(!linedUpAngle(5)){
+                    gameState = 2;
                 }
-                if(getRuntime() - sTime >= 6) {
-                    moveState = MoveState.SHOOT_STOP;
-                    gameState = 5;
-                }
+                 moveState = MoveState.SHOOT_WHEEL;
+                 if(getRuntime() - sTime >= 3){
+                     moveState = MoveState.SHOOT_CONVEYOR;
+                 }
+                 if(getRuntime() - sTime >= 6) {
+                     moveState = MoveState.SHOOT_STOP;
+                     gameState = 4;
+                 }
                 break;
-            case 5: // Knock off cap ball and park
+            case 4: // Knock off cap ball and park
                 map.setGoal(7,7);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
+                    gameState = 777;
                 }
                 break;
             case 777:
-                moveState = MoveState.STOP;
+                moveState = MoveState.FULL_STOP;
                 break;
         }
     }

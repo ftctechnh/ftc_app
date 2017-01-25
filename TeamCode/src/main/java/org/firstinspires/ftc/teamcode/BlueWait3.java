@@ -51,11 +51,7 @@ public class BlueWait3 extends AutonomousBase {
                 break;
             case 5: //MOVE TO KNOCK OFF BALL
                 map.setGoal(7,7);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                 }
