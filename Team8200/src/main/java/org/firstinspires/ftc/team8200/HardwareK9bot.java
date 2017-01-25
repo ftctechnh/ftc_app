@@ -85,11 +85,11 @@ public class HardwareK9bot {
         distanceSensor = hwMap.get(AnalogInput.class, "distance");
         lightSensor = hwMap.lightSensor.get("light");
         colorSensor = hwMap.colorSensor.get("color");
+        //colorSensor = hwMap.colorSensor.get("color");
 
 
         //Reverses direction of these motors to ease coding
-        leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+
         rightWheelShooter.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 

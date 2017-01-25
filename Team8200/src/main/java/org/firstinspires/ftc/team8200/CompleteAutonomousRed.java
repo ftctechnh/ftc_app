@@ -45,10 +45,10 @@ public class CompleteAutonomousRed extends LinearOpMode {
     static final String allianceColor = "red"; // takes either value "red" or "blue"
 
     //static variables for encoders
-    static final double     COUNTS_PER_MOTOR_REV    = 280 ;    // according to NeveRest 40 spec sheet
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP, pretty sure direct drive is 1.0?
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference, needs to be updated
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_MOTOR_REV = 280;    // according to NeveRest 40 spec sheet
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP, pretty sure direct drive is 1.0?
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference, needs to be updated
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
     double voltage, maxVoltage, voltsPerInch, voltageInInches;
@@ -71,10 +71,10 @@ public class CompleteAutonomousRed extends LinearOpMode {
         robot.init(hardwareMap); // Do not erase to avoid NullPointerException
 
         waitForStart(); //pre-written function, waits for opmode to start
-        moveForwardForShot(); //robot moves forward into range of basket
+       // moveForwardForShot(); //robot moves forward into range of basket
 
-        shoot(); //robot shoots two balls
-       moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
+        //shoot(); //robot shoots two balls
+        moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
 //
 //        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
 //        while (opModeIsActive() && !pressButton()) {
@@ -107,16 +107,21 @@ public class CompleteAutonomousRed extends LinearOpMode {
         robot.rightMotor.setPower(0);
     }
 
-    /* shoot() runs the wheeled shooters briefly before powers up the elevator to launch two balls at the target */
+    /*
+
+    shoot() runs the wheeled shooters briefly before powers up the elevator to launch two balls at the target */
+
 
     public void shoot() {
         runtime.reset();
         while (opModeIsActive() && runtime.seconds() < 2.0) {
-            robot.leftWheelShooter.setPower(-1);
-            robot.rightWheelShooter.setPower(-1);
+            robot.leftWheelShooter.setPower(1);
+            robot.rightWheelShooter.setPower(1);
         }
-        while (opModeIsActive() && runtime.seconds() >= 2.0 && runtime.seconds() < 3.0) {
+        while (opModeIsActive() && runtime.seconds() >= 2.0 && runtime.seconds() < 5.0) {
             robot.legacyController.setMotorPower(1, -0.5);// Run elevator
+            robot.leftWheelShooter.setPower(1);
+            robot.rightWheelShooter.setPower(1);
         }
 
         //Kill wheelShooter Power and elevator
@@ -131,9 +136,16 @@ public class CompleteAutonomousRed extends LinearOpMode {
       * then it follows the white line to the beacon
       * the ODS recognizes when you have gotten close enough, and the robot comes to a stop
      */
+
+
+
+
+
+
     public void moveToBeacon() {
-        // Move to white line
-        while (robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
+
+    // Move to white line
+     while (opModeIsActive() && robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(DRIVE_SPEED);
             robot.rightMotor.setPower(DRIVE_SPEED);
             updateTelemetry();
@@ -143,7 +155,6 @@ public class CompleteAutonomousRed extends LinearOpMode {
             // step 3 turning for ___ seconds
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 0.01)) {
-                robot.leftMotor.setPower(0);
                 robot.rightMotor.setPower(TURN_SPEED);
                 telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
                 telemetry.addData("Say", "Motors turning.");
@@ -151,7 +162,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
             }
 
             //step 4 follow the line
-            while (robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) {
+            while (opModeIsActive() && robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) {
                 //follows white light is above threshold AND touch sensor is not touching
                 robot.leftMotor.setPower(TURN_SPEED);
                 robot.rightMotor.setPower(TURN_SPEED);
@@ -159,12 +170,18 @@ public class CompleteAutonomousRed extends LinearOpMode {
                 telemetry.update();
             }
         }
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        robot.leftWheelShooter.setPower(0);
+        robot.rightWheelShooter.setPower(0);
+        robot.legacyController.setMotorPower(1, 0);
+        robot.legacyController.setMotorPower(2, 0);
     }
 
     /* pressButton() assumes the colorSensor is looking at the left beacon light. If it senses the color indicated in
     *   allianceColor, then it will move the leftArm, else it will move the right arm.
      */
-    public boolean pressButton()
+   /* public boolean pressButton()
     {
 
         if (allianceColor == "red")
@@ -219,6 +236,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     }
 
+
     /*  moveToBeacon2() moves the robot toward the second beacon by turning the robot 90 degrees, driving toward the second
         tape line, detecting that tape line, and then turning 90 degrees to the right to face the beacon head on
         This method may require some testing to get the exact distance after passing the tape line correct
@@ -239,8 +257,8 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     /* updateTelemetry method outputs telemetry data to the driver station when called */
     public void updateTelemetry() {
-        telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
-        telemetry.addData("Normal", robot.lightSensor.getLightDetected());
+        //  telemetry.addData("Raw", robot.lightSensor.getRawLightDetected());
+        //telemetry.addData("Normal", robot.lightSensor.getLightDetected());
         telemetry.addData("Clear", robot.colorSensor.alpha());
         telemetry.addData("Red  ", robot.colorSensor.red());
         telemetry.addData("Green", robot.colorSensor.green());
@@ -261,10 +279,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
         if (degrees > 0) //clockwise turn to the right
         {
             encoderDrive(TURN_SPEED, motorInches, -motorInches, 5000);
-        }
-
-        else if (degrees < 0)
-        {
+        } else if (degrees < 0) {
             encoderDrive(TURN_SPEED, -motorInches, motorInches, 5000);
         }
     }
@@ -283,6 +298,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
+
     /* encoderDrive() is a function that allows the robot to move according to the number of encoder ticks
         the speed should be one of the static variables defined above
         leftInches and rightInches is the distance in actual inches; however, the wheel diameter and gearing
@@ -301,8 +317,8 @@ public class CompleteAutonomousRed extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.leftMotor.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.rightMotor.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
             robot.leftMotor.setTargetPosition(newLeftTarget);
             robot.rightMotor.setTargetPosition(newRightTarget);
 
@@ -321,8 +337,8 @@ public class CompleteAutonomousRed extends LinearOpMode {
                     (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
                         robot.leftMotor.getCurrentPosition(),
                         robot.rightMotor.getCurrentPosition());
                 telemetry.update();
@@ -339,5 +355,5 @@ public class CompleteAutonomousRed extends LinearOpMode {
             sleep(250);   // optional pause after each move
         }
     }
-
 }
+
