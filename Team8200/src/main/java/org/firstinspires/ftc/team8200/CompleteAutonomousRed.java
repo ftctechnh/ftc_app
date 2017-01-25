@@ -118,11 +118,12 @@ public class CompleteAutonomousRed extends LinearOpMode {
         while (opModeIsActive() && runtime.seconds() >= 2.0 && runtime.seconds() < 3.0) {
             robot.legacyController.setMotorPower(1, -0.5);// Run elevator
         }
-        while (opModeIsActive() && runtime.seconds() >= 5.0) {
-            robot.legacyController.setMotorPower(1, 0);// Stop elevator
-            robot.leftWheelShooter.setPower(0);
-            robot.rightWheelShooter.setPower(0);
-        }
+
+        //Kill wheelShooter Power and elevator
+        robot.legacyController.setMotorPower(1, 0);// Stop elevator
+        robot.leftWheelShooter.setPower(0);
+        robot.rightWheelShooter.setPower(0);
+
     }
 
     /* moveToBeacon() moves the robot from its shooting position to the first beacon
