@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="Blue Shoot 3", group="Blue")
-public class BlueShoot3 extends AutonomousBase {
+@Autonomous(name="TestRun6", group="Blue")
+public class TestRun6 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
@@ -14,13 +14,13 @@ public class BlueShoot3 extends AutonomousBase {
             case 0: //Start
                 if(actualRuntime() > 3 && !gyro.isCalibrating()) {
                     gameState = 1;
-                    map.setRobot(3,11.25);
+                    map.setRobot(6,12);
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(4, 10);
+                map.setGoal(4.5, 9.5);
                 if(linedUp()){
-                    moveState = MoveState.FORWARD;
+                    moveState = MoveState.BACKWARD;
                 }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
@@ -30,7 +30,7 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 220;
+                desiredAngle = 140;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -60,7 +60,7 @@ public class BlueShoot3 extends AutonomousBase {
             case 4: //MOVE TO KNOCK OFF BALL
                 map.setGoal(7,7);
                 if(linedUp()){
-                    moveState = MoveState.FORWARD;
+                    moveState = MoveState.BACKWARD;
                 }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
@@ -74,3 +74,4 @@ public class BlueShoot3 extends AutonomousBase {
         }
     }
 }
+

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
  * Created by minds on 1/23/2016.
  */
 public abstract class AutonomousBase extends OpMode {
-    public final double HEADING_TOLERANCE = 10; //tolerance for heading calculations
+    public final double HEADING_TOLERANCE = 7; //tolerance for heading calculations
     public final double DISTANCE_TOLERANCE = 1.0/12; //tolerance for heading calculations
     public final double DEGREES_TO_FEET = 3.96*Math.PI/1120/12;
     //EXPLAINATION:
@@ -42,6 +42,7 @@ public abstract class AutonomousBase extends OpMode {
       public static final int RIGHT_SLOW = 18;
         public static final int TURN_TOWARDS_ANGLE_SLOW= 19;
         public static final int SERVO_DEPLOY = 20;
+        public static final int SERVO_C = 21;
     }
 
 
@@ -56,7 +57,6 @@ public abstract class AutonomousBase extends OpMode {
     Servo servoLeftButton;
     Servo servoRightButton;
     Servo servoBeaconDeploy;
-    TouchSensor beaconButton;
     TouchSensor touchRight;
     TouchSensor touchWall;
     ColorSensor colorLeft;
@@ -219,7 +219,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.TURN_TOWARDS_GOAL:
                 // Orients the bot to face the goal
-                power = .3;
+                power = .25;
                 if(heading<=180){
                     turnRight = heading <= map.angleToGoal() && heading + 180 >= map.angleToGoal();
                 }else{
@@ -295,6 +295,9 @@ public abstract class AutonomousBase extends OpMode {
                 // Retracts wumbo
                 servoLeftButton.setPosition(.5);
                 break;
+            case MoveState.SERVO_C:
+                 servoCollector.setPosition(1);
+                 break;
              case MoveState.SHOOT:
                 // Shoots ball out of conveyor
                 motorLeftShooter.setPower(.4);
@@ -317,6 +320,7 @@ public abstract class AutonomousBase extends OpMode {
                 motorLeftShooter.setPower(0);
                 motorRightShooter.setPower(0);
                 motorConveyor.setPower(0);
+                  servoCollector.setPosition(.5);
                 break;
            case MoveState.SHOOT_WHEEL:
                 // Spins fly-wheels
