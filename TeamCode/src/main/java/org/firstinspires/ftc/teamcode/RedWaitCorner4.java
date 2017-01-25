@@ -20,7 +20,7 @@ public class RedWaitCorner4 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(7.5, 2.5);
+                map.setGoal(8, 10);
                 if (linedUp()) {
                     moveState = MoveState.FORWARD;
                 } else {
@@ -32,7 +32,7 @@ public class RedWaitCorner4 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 180;
+                desiredAngle = 120;
                 if (linedUpAngle()) {
                     moveState = MoveState.STOP;
                     gameState = 3;

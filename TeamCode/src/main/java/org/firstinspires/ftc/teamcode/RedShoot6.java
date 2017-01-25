@@ -18,7 +18,7 @@ public class RedShoot6 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(7.5, 2.5);
+                map.setGoal(8, 10);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -30,7 +30,7 @@ public class RedShoot6 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 180;
+                desiredAngle = 120;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -49,19 +49,7 @@ public class RedShoot6 extends AutonomousBase {
                      gameState = 4;
                  }
                 break;
-            case 4: // Line up with cap ball
-                map.setGoal(8,10);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
-                    gameState = 5;
-                }
-                break;
-            case 5: //MOVE TO KNOCK OFF BALL
+            case 4: //MOVE TO KNOCK OFF BALL
                 map.setGoal(5.5,6.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;

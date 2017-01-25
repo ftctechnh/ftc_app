@@ -12,13 +12,13 @@ public class RedWait4 extends AutonomousBase {
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(actualRuntime() > 3 && !gyro.isCalibrating()) {
+                if(actualRuntime() > 15 && !gyro.isCalibrating()) {
                     gameState = 1;
                     map.setRobot(4,11.25);
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(7.5, 2.5);
+                map.setGoal(8, 10);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -30,7 +30,7 @@ public class RedWait4 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 180;
+                desiredAngle = 120;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -39,7 +39,7 @@ public class RedWait4 extends AutonomousBase {
                     moveState = MoveState.TURN_TOWARDS_ANGLE;
                 }
                 break;
-            case 3: // ... and shoots
+            case 3: // ... and shoots3
                  moveState = MoveState.SHOOT_WHEEL;
                  if(getRuntime() - sTime >= 3){
                      moveState = MoveState.SHOOT_CONVEYOR;
