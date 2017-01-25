@@ -99,7 +99,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     public void moveForwardForShot() {
         runtime.reset();
-        while (runtime.seconds() <= 1) {
+        while (opModeIsActive() && runtime.seconds() <= 1) {
             robot.leftMotor.setPower(DRIVE_SPEED);
             robot.rightMotor.setPower(DRIVE_SPEED);
         }
@@ -111,14 +111,14 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     public void shoot() {
         runtime.reset();
-        while (runtime.seconds() < 2.0) {
+        while (opModeIsActive() && runtime.seconds() < 2.0) {
             robot.leftWheelShooter.setPower(-1);
             robot.rightWheelShooter.setPower(-1);
         }
-        while (runtime.seconds() >= 2.0) {
+        while (opModeIsActive() && runtime.seconds() >= 2.0 && runtime.seconds() < 3.0) {
             robot.legacyController.setMotorPower(1, -0.5);// Run elevator
         }
-        while (runtime.seconds() <= 5.0) {
+        while (opModeIsActive() && runtime.seconds() >= 5.0) {
             robot.legacyController.setMotorPower(1, 0);// Stop elevator
             robot.leftWheelShooter.setPower(0);
             robot.rightWheelShooter.setPower(0);
