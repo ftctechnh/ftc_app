@@ -26,18 +26,18 @@ public class RedShoot6 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 130;
+                desiredAngle = 135;
                 if(linedUpAngle(5)){
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_ANGLE;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
                 }
                 break;
             case 3: // ... and shoots
-                 if(linedUpAngle(5)){
-                     moveState = 2;
+                 if(!linedUpAngle(5)){
+                     gameState = 2;
                  }
                  moveState = MoveState.SHOOT_WHEEL;
                  if(getRuntime() - sTime >= 2){

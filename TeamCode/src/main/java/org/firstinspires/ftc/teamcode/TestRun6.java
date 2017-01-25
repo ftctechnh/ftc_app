@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="TestRun6", group="Blue")
+@Autonomous(name="TestRun6", group="Test")
 public class TestRun6 extends AutonomousBase {
     @Override
     public void gameState() {
