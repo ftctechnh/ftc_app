@@ -37,9 +37,10 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     //static variables (to avoid Magic Number issues)
     static final double WHITE_THRESHOLD = 0.4;
-    static final double DRIVE_SPEED = -0.5;
+    static final double DRIVE_SPEED = 0.5;
     static final double DRIVE_SLOW_SPEED = 0.25;
     static final double TURN_SPEED = 0.25;
+    static final double MAX_WHEEL_SHOOTER_SPEED = 1;
     static final int LED_CHANNEL = 5;
     static final String allianceColor = "red"; // takes either value "red" or "blue"
 
@@ -73,7 +74,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
         moveForwardForShot(); //robot moves forward into range of basket
 
         shoot(); //robot shoots two balls
-//        moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
+       moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
 //
 //        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
 //        while (opModeIsActive() && !pressButton()) {

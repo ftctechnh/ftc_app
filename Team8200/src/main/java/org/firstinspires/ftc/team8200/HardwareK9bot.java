@@ -90,6 +90,8 @@ public class HardwareK9bot {
         //Reverses direction of these motors to ease coding
         leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelShooter.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
