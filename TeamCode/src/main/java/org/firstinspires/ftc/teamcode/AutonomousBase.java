@@ -40,9 +40,9 @@ public abstract class AutonomousBase extends OpMode {
       public static final int TURN_TOWARDS_ANGLE = 16;
       public static final int LEFT_SLOW = 17;
       public static final int RIGHT_SLOW = 18;
-        public static final int TURN_TOWARDS_ANGLE_SLOW= 19;
-        public static final int SERVO_DEPLOY = 20;
-        public static final int SERVO_C = 21;
+      public static final int TURN_TOWARDS_ANGLE_SLOW= 19;
+      public static final int SERVO_DEPLOY = 20;
+      public static final int SERVO_C = 21;
     }
 
 
@@ -89,10 +89,10 @@ public abstract class AutonomousBase extends OpMode {
         motorLeft = hardwareMap.dcMotor.get("left");
         motorRight = hardwareMap.dcMotor.get("right");
         
-        //motorUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //motorDown.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorDown.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         
         motorDown.setDirection(DcMotor.Direction.REVERSE);
         motorRight.setDirection(DcMotor.Direction.REVERSE);
@@ -208,7 +208,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.STRAFE_TOWARDS_GOAL:
                 // Moves the bot towards the goal, while always pointing at desiredAngle
-                double P = .25;
+                double P = .5;
                 double H = Math.toRadians(heading);
                 double Ht = Math.toRadians(map.angleToGoal());
 
@@ -307,6 +307,7 @@ public abstract class AutonomousBase extends OpMode {
             case MoveState.FULL_STOP:
                 // Stop ALL robot movement, and resets servo to default pos
                 servoLeftButton.setPosition(.5);
+                servoCollector.setPosition(.5);
                 motorUp.setPower(0);
                 motorDown.setPower(0);
                 motorLeft.setPower(0);
@@ -401,6 +402,15 @@ public abstract class AutonomousBase extends OpMode {
             return false;
         }
     }
+
+    public boolean linedUpAngle(int HEADING_TOLERANCE) {
+        if (Math.abs(heading - desiredAngle) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && desiredAngle < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && desiredAngle > 360 - HEADING_TOLERANCE))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean linedUpRev() {
         if (Math.abs(heading - map.angleToGoalRev()) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && map.angleToGoalRev() < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && map.angleToGoalRev() > 360 - HEADING_TOLERANCE))) {
             return true;

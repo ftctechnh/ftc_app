@@ -19,11 +19,7 @@ public class BlueShoot3 extends AutonomousBase {
                 break;
             case 1: //moves to shooter post
                 map.setGoal(4, 10);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                     gameState = 2;
@@ -47,29 +43,23 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 if(getRuntime() - sTime >= 5) {
                     moveState = MoveState.SHOOT_STOP;
-                    gameState = 100;
+                    gameState = 4;
                     sTime = getRuntime();
                 }
-                break;
-            case 100:
-                if (getRuntime() - sTime > 1) {
-                    gameState = 4;
-                }
-                moveState = MoveState.STOP;
                 break;
             case 4: //MOVE TO KNOCK OFF BALL
                 map.setGoal(7,7);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 }
                 if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
+                    gameState = 777;
                 }
                 break;
             case 777:
-                moveState = MoveState.STOP;
+                moveState = MoveState.FULL_STOP;
                 break;
         }
     }
