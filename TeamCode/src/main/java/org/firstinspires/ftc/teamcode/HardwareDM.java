@@ -34,6 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -46,6 +47,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 /**
  * This is NOT an opmode.
@@ -153,6 +155,9 @@ public class HardwareDM
      */
     public void init(HardwareMap ahwMap) {
         // save reference to HW Map
+
+        DbgLog.msg("DM10337 -- Starting HardwareDM Init");
+
         hwMap = ahwMap;
 
         // Define and Initialize Motors
@@ -177,6 +182,8 @@ public class HardwareDM
 
         // Define touch sensor
         liftLimit = hwMap.touchSensor.get("ts");
+
+        DbgLog.msg("DM10337 -- Finished mapping all hardware.");
 
         // Set all motors to zero power
         lfDrive.setPower(0.0);
@@ -217,6 +224,7 @@ public class HardwareDM
         //lShoot.setMaxSpeed(SHOOT_MAX_RPM);
         //rShoot.setMaxSpeed(SHOOT_MAX_RPM);
 
+        DbgLog.msg("DM10337 -- Motor modes set.");
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -235,16 +243,21 @@ public class HardwareDM
         adaGyro = hwMap.get(BNO055IMU.class, "gyro");
         adaGyro.initialize(parameters);
 
+        DbgLog.msg("DM10337 -- Gyro modes set and gyro initialized.");
+
         // Retrieve and initialize the Adafruit color sensor
         beaconColor = hwMap.colorSensor.get("color");
         cdim = hwMap.deviceInterfaceModule.get("dim");
         cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
         cdim.setDigitalChannelState(LED_CHANNEL, false); // Turn RGB light off -- never needs to be on
 
+        DbgLog.msg("DM10337 -- Adafruit color sensor setup.");
+
         // And also for the MR color sensor
         stripeColor = hwMap.colorSensor.get("stripe");
         stripeColor.enableLed(false);
 
+        DbgLog.msg("DM10337 -- MR color sensor setup.");
     }
 
     /**
