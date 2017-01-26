@@ -137,7 +137,7 @@ public class Blue1beacons extends LinearOpMode {
 
         //All the actual opmode code goes here.
         robot.encoderDrive(0.5, 15, 15, 10);            // Drive forwards towards center vortex
-        robot.simpleGyroTurn(0.3,35,3000);             // Slight Left Turn to take shot at Center Vortex
+        robot.simpleGyroTurn(0.3,30,3000);             // Slight Left Turn to take shot at Center Vortex
 
         // Decide whether to attempt the beacon run (if the color sensors are working, then go for it)
         if(robot.beaconSensorRight.red() != 255) {
