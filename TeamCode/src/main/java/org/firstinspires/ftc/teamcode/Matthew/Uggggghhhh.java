@@ -76,6 +76,9 @@ public class Uggggghhhh extends LinearOpMode {
 
         robot.init(this);
 
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        
         robot.setDriveTrainPower(0.3);
         sleep(1500);
         robot.setDriveTrainPower(0);
