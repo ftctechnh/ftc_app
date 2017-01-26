@@ -51,21 +51,21 @@ public class Blue1beacons extends LinearOpMode {
     /// This method assumes the robot is aligned to the white line on the floor in front of the beacon
     private void doRightSideBeaconPushingStuff()
     {
-        if(robot.doIseeBlueLeft())
+        if(robot.doIseeBlueRight())
         {
-            robot.encoderDrive(0.2,1,1,1000);           // Drive forward 1" so the beacon pusher is aligned with the left beacon button
-            robot.beaconLeft.setPosition(1);            // Press the Red Beacon to claim it.
+            robot.encoderDrive(0.2,1,1,1000);           // Drive forward 1" so the beacon pusher is aligned with the Right beacon button
+            robot.beaconRight.setPosition(1);            // Press the Red Beacon to claim it.
             robot.sleepMs(1000);
-            robot.beaconLeft.setPosition(0);            // Retract the beacon pusher
+            robot.beaconRight.setPosition(0);            // Retract the beacon pusher
         }
         else
         {
             robot.encoderDrive(0.2,4,4,1000);           // Drive forward 4" so the beacon pusher is aligned with the right beacon light
-            if(robot.doIseeBlueLeft()) {
+            if(robot.doIseeBlueRight()) {
                 robot.encoderDrive(0.2, 1, 1, 1000);    // Drive forward 1" so the beacon pusher is aligned with the right beacon button
-                robot.beaconLeft.setPosition(1);        // Press the Red Beacon to claim it.
+                robot.beaconRight.setPosition(1);        // Press the Red Beacon to claim it.
                 robot.sleepMs(1000);
-                robot.beaconLeft.setPosition(0);        // Retract the beacon pusher
+                robot.beaconRight.setPosition(0);        // Retract the beacon pusher
             }
         }
         robot.sleepMs(1000);                            // Final sleep so beacon pusher can retract
@@ -74,7 +74,7 @@ public class Blue1beacons extends LinearOpMode {
     public void goForTheBeacons()
     {
         robot.encoderDrive(0.5, 30, 30, 10);            // Drive forwards towards center vortex
-        robot.simpleGyroTurn(0.3, 46, 5000);           // Complete the rest of the left turn towards the beacon-wall.
+        robot.simpleGyroTurn(0.3, 46, 5000);           // Complete the rest of the Right turn towards the beacon-wall.
         robot.encoderDrive(0.5, 80, 80, 10);            // Drive forwards about half way to the beacon-wall (and to get past CapBall)
         robot.DriveToWall(3, DistanceUnit.INCH, 0.15, 5000);  // Use the range sensor to get 3" away from the wall.
         robot.AlignToWall(3, DistanceUnit.INCH);
@@ -86,12 +86,12 @@ public class Blue1beacons extends LinearOpMode {
         // Find the 1st beacon and try to press the correct button
         robot.DriveToWhiteLine(0.1, 5, true, 5000);        // Slowly creep foward, looking for the white line
         robot.encoderDrive(0.2, -2, -2, 1000);             // Drive back 2" so the color sensor is looking at the left beacon light
-        doLeftSideBeaconPushingStuff();
+        doRightSideBeaconPushingStuff();
 
         // Find the 2nd beacon and try to press the correct button
         robot.encoderDrive(0.5, 36, 36, 5000);             // Fast drive towards the next beacon line
         robot.DriveToWhiteLine(0.1, 5, true, 5000);        // Slowly creep forward looking for the white line
-        doLeftSideBeaconPushingStuff();
+        doRightSideBeaconPushingStuff();
     }
 
     /// This should knock the ball off and leave our robot partially on the board - 10pts total
@@ -102,27 +102,7 @@ public class Blue1beacons extends LinearOpMode {
     }
 
 
-    private void doLeftSideBeaconPushingStuff()
-    {
-        if(robot.doIseeRedLeft())
-        {
-            robot.encoderDrive(0.2,1,1,1000);           // Drive forward 1" so the beacon pusher is aligned with the left beacon button
-            robot.beaconLeft.setPosition(1);            // Press the Red Beacon to claim it.
-            robot.sleepMs(1000);
-            robot.beaconLeft.setPosition(0);            // Retract the beacon pusher
-        }
-        else
-        {
-            robot.encoderDrive(0.2,4,4,1000);           // Drive forward 4" so the beacon pusher is aligned with the right beacon light
-            if(robot.doIseeBlueLeft()) {
-                robot.encoderDrive(0.2, 1, 1, 1000);    // Drive forward 1" so the beacon pusher is aligned with the right beacon button
-                robot.beaconLeft.setPosition(1);        // Press the Red Beacon to claim it.
-                robot.sleepMs(1000);
-                robot.beaconLeft.setPosition(0);        // Retract the beacon pusher
-            }
-        }
-        robot.sleepMs(1000);                            // Final sleep so beacon pusher can retract
-    }
+    
     @Override
     public void runOpMode() {
 
@@ -143,10 +123,10 @@ public class Blue1beacons extends LinearOpMode {
             telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
             telemetry.addData(">", "Floor AlphaLv = %d", robot.floorSensor.alpha());
             telemetry.addData(">", "Floor Hue     = %d", robot.floorSensor.argb());
-            telemetry.addData("L_Red", "%d", robot.beaconSensorLeft.red());
-            telemetry.addData("L_Blue", "%d", robot.beaconSensorLeft.blue());
-            telemetry.addData("L_DoISeeRed", "%s", robot.doIseeRedLeft() ? "YES" : "NO");
-            telemetry.addData("L_DoISeeBlue", "%s", robot.doIseeBlueLeft() ? "YES" : "NO");
+            telemetry.addData("L_Red", "%d", robot.beaconSensorRight.red());
+            telemetry.addData("L_Blue", "%d", robot.beaconSensorRight.blue());
+            telemetry.addData("L_DoISeeRed", "%s", robot.doIseeRedRight() ? "YES" : "NO");
+            telemetry.addData("L_DoISeeBlue", "%s", robot.doIseeBlueRight() ? "YES" : "NO");
             telemetry.addData("R_Red", "%d", robot.beaconSensorRight.red());
             telemetry.addData("R_Blue", "%d", robot.beaconSensorRight.blue());
             telemetry.addData("R_DoISeeRed", "%s", robot.doIseeRedRight() ? "YES" : "NO");
@@ -160,7 +140,7 @@ public class Blue1beacons extends LinearOpMode {
         robot.simpleGyroTurn(0.3,35,3000);             // Slight Left Turn to take shot at Center Vortex
 
         // Decide whether to attempt the beacon run (if the color sensors are working, then go for it)
-        if(robot.beaconSensorLeft.red() != 255) {
+        if(robot.beaconSensorRight.red() != 255) {
             // Take the shot right away, we've got to keep moving if we want to finish all of our movements
             robot.ohshoot();                            // SHOOT! - This takes 12 seconds (+30-points)
             goForTheBeacons();                          // Go for the beacons (+60 points)
