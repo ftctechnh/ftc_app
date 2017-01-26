@@ -666,17 +666,20 @@ public class InvadersVelocityVortexBot
 
     public void  ohshoot()
     {
+        // turn on the shooter wheels
       rightBallLauncher.setPower(1);
       leftBallLauncher.setPower(1);
 
      //five second delay
         sleepMs(5000);
 
+        //turn on the elevator
         ballElevator.setPower(1);
 
      // 5 second delay
         sleepMs(5000);
 
+     //turn everything off
      ballElevator.setPower(0);
       rightBallLauncher.setPower(0);
       leftBallLauncher.setPower(0);

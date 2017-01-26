@@ -105,9 +105,9 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
         //encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
         robot.sleepMs(10000);
 
-        robot.timedDrive(1,2000);
+        robot.encoderDrive(1,1,12,12,);
         robot.GyroTurn(1,55,3000);
-        robot.timedDrive(1,4000);
+        robot.encoderDrive(1,1,36,36);
 
         //robot.leftMotor.setPower(1);
         //robot.rightMotor.setPower(1);

@@ -105,11 +105,14 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
         //encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
+
+
         robot.ohshoot();
 
         robot.sleepMs(15000);
 
-        robot.timedDrive(1,4000);
+        robot.encoderdrive(1,1,50,50);
+
 
         //robot.leftMotor.setPower(1);
         //robot.rightMotor.setPower(1);
