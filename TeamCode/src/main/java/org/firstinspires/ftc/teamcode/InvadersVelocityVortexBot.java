@@ -81,15 +81,11 @@ public class InvadersVelocityVortexBot
     public DcMotor sweeper = null;
     public DcMotor capBall  = null;
 
-    //public UltrasonicSensor UDSLeft = null;
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
 
     public ModernRoboticsI2cRangeSensor26 UDSLeft = null; // Default I2C Address: 0x26
-    public FtcI2cDeviceState UDSLeftState;
-
     public ModernRoboticsI2cRangeSensor UDSRight = null;  // Default I2C Address: 0x28
-    public FtcI2cDeviceState UDSRightState;
 
     public ColorSensor beaconSensorLeft = null;
     public FtcI2cDeviceState beaconSensorLeftState;
@@ -141,10 +137,12 @@ public class InvadersVelocityVortexBot
     }
 
 
-    public void DriveToWall(float distance, DistanceUnit distanceUnit, double power) {
+    public void DriveToWall(float distance, DistanceUnit distanceUnit, double power, int timeoutMs) {
+        period.reset();
         setDriveTrainPower(power);
-        while (UDSLeft.getDistance(distanceUnit) > distance && opModeIsActive()) {
-
+        while ((period.time() < timeoutMs) && opModeIsActive()) {
+            if(UDSLeft.getDistance(distanceUnit) <= distance) break;
+            if(UDSRight.getDistance(distanceUnit) <= distance) break;
         }
         setDriveTrainPower(0);
     }
@@ -162,21 +160,23 @@ public class InvadersVelocityVortexBot
     public void AlignToWall(double DistanceFromTarget, DistanceUnit unit){
         double rightDistance = UDSRight.getDistance(unit);
         double leftDistance = UDSLeft.getDistance(unit);
-
+        int timeoutMs = 3000; // Limit this function to a maximum of 3s
         int oldMaxSpeedRight = rightMotor.getMaxSpeed();
         int oldMaxSpeedLeft = leftMotor.getMaxSpeed();
         leftMotor.setMaxSpeed(250);
         rightMotor.setMaxSpeed(250);
 
         if(leftDistance > rightDistance == true){
-            telemetry.addData("TURNING", "RIGHT");
+            telemetry.addData("ATW TURNING", "RIGHT");
             telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
             telemetry.update();
+            //Thread.yield();
             //sleepMs(3000);
 
+            period.reset();
             leftMotor.setPower(1);
             rightMotor.setPower(-1);
-            while(leftDistance > rightDistance == true){
+            while(opModeIsActive() && (period.time() <= timeoutMs) && (leftDistance > rightDistance)){
                 rightDistance = UDSRight.getDistance(unit);
                 leftDistance = UDSLeft.getDistance(unit);
                 telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
@@ -184,13 +184,16 @@ public class InvadersVelocityVortexBot
             }
         }
         else if (leftDistance < rightDistance == true){
-            telemetry.addData("TURNING", "LEFT");
+            telemetry.addData("ATW TURNING", "LEFT");
             telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
             telemetry.update();
+            //Thread.yield();
             //sleepMs(3000);
+
+            period.reset();
             leftMotor.setPower(-1);
             rightMotor.setPower(1);
-            while(leftDistance < rightDistance == true){
+            while(opModeIsActive() && (period.time() <= timeoutMs) && (leftDistance < rightDistance)){
                 rightDistance = UDSRight.getDistance(unit);
                 leftDistance = UDSLeft.getDistance(unit);
                 telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
@@ -202,6 +205,7 @@ public class InvadersVelocityVortexBot
             telemetry.addData("TURNING", "-----");
             telemetry.addData("RANGE: ","R: %.02f, L: %.02f", rightDistance, leftDistance);
             telemetry.update();
+            //Thread.yield();
             //sleepMs(3000);
         }
         rightMotor.setPower(0);
@@ -408,12 +412,19 @@ public class InvadersVelocityVortexBot
 //    }
 
     public boolean doIseeBlueLeft () {
-
         return (beaconSensorLeft.blue() >= 5);
     }
 
     public boolean doIseeRedLeft () {
         return (beaconSensorLeft.red() >= 5);
+    }
+
+    public boolean doIseeBlueRight () {
+        return (beaconSensorRight.blue() >= 5);
+    }
+
+    public boolean doIseeRedRight () {
+        return (beaconSensorRight.red() >= 5);
     }
 
     public void stop()
@@ -438,95 +449,29 @@ public class InvadersVelocityVortexBot
         // If turnDegrees == 100, then reset to 90 (which makes our robot turn 100)
         //turnDegrees *= .90;
 
-
-        double targetHeading = gyro.getIntegratedZValue() - turnDegrees;
+        int currentHeading = gyro.getIntegratedZValue();
+        double targetHeading = currentHeading - turnDegrees;
 
         // Early Return (do nothing) if we are giving a zero degree turn
         if(turnDegrees == 0) return;
 
-        // Power should be scaled based on how far away we are from our target
+        // Start our timeout-detection timer
         period.reset();
-        double MinMotorPower = 0.15; // 15% speed is the slowest we'll try to turn
-        double MaxMotorPower = speed;
 
-        // Make sure our Max Power is at least as big as our minimum power
-        if (MaxMotorPower < MinMotorPower) MaxMotorPower = MinMotorPower;
-
-        double MaxSpeedError = 75; //If we're more than MaxSpeedError Degrees away from our target heading, use the MaxSpeed to get there
-        double MinSpeedError = 25; //If we're less than MinSpeedError Degrees away from our target heading, use the MinSpeed to get there
-        double errorDegrees;
-        double targetSpeed;
-        double lastHeading = gyro.getIntegratedZValue();
-        double extraOomphPercent = 0.01;
         if(turnDegrees > 0) {
-            ElapsedTime stallDetection = null;
-            while (period.time() < timeoutMs && opModeIsActive()) {
-                int currentHeading = gyro.getIntegratedZValue();
-
-                errorDegrees = currentHeading - targetHeading;
-
+            setDriveTrainPower(speed,-speed);
+            while ((period.time() < timeoutMs) && opModeIsActive()) {
+                currentHeading = gyro.getIntegratedZValue();
                 // Exit our while loop because we're at our destination
-                if(errorDegrees <= 0) break;
-
-                targetSpeed = MaxMotorPower;
-                if(errorDegrees < MaxSpeedError) {
-                    if(errorDegrees > MinSpeedError)
-                    {
-                        targetSpeed = (MaxMotorPower-MinMotorPower)/(MaxSpeedError-MinSpeedError)*(errorDegrees-MinSpeedError)+MinMotorPower;
-                    }
-                    else
-                    {
-                        targetSpeed = MinMotorPower;
-                    }
-                }
-
-                // Make sure we don't stall while turning (give ourselves a speed boost if we can't change our heading in 50mS)
-                if(currentHeading == lastHeading) {
-                    if(stallDetection != null)
-                    {
-                        if(stallDetection.time() >= 50)
-                        {
-                            targetSpeed += extraOomphPercent++;
-                            stallDetection.reset();
-                        }
-                    }
-                    else {
-                        stallDetection = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-                        stallDetection.reset();
-                    }
-                }
-                else {
-                    stallDetection = null;
-                }
-                lastHeading = currentHeading;
-                telemetry.addData("RT", "Robot Heading = %d, targetHeading: %.02f, targetSpeed: %.02f", currentHeading,targetHeading, targetSpeed);
-                telemetry.update();
-                setDriveTrainPower(targetSpeed,-targetSpeed);
+                if((currentHeading - targetHeading) <= 0) break;
             }
         }
         else {
-            while (period.time() < timeoutMs && opModeIsActive()) {
-                int currentHeading = gyro.getIntegratedZValue();
-                errorDegrees = targetHeading - currentHeading;
-
+            setDriveTrainPower(-speed,speed);
+            while ((period.time() < timeoutMs) && opModeIsActive()) {
+                currentHeading = gyro.getIntegratedZValue();
                 // Exit our while loop because we're at our destination
-                if(errorDegrees <= 0) break;
-
-                targetSpeed = MaxMotorPower;
-                if(errorDegrees < MaxSpeedError) {
-                    if(errorDegrees > MinSpeedError)
-                    {
-                        targetSpeed = (MaxMotorPower-MinMotorPower)/(MaxSpeedError-MinSpeedError)*(errorDegrees-MinSpeedError)+MinMotorPower;
-                    }
-                    else
-                    {
-                        targetSpeed = MinMotorPower;
-
-                    }
-                }
-                telemetry.addData("LT", "Robot Heading = %d, targetHeading: %.02f, targetSpeed: %.02f", currentHeading,targetHeading, targetSpeed);
-                telemetry.update();
-                setDriveTrainPower(-targetSpeed,targetSpeed);
+                if((targetHeading - currentHeading) <= 0) break;
              }
         }
         setDriveTrainPower(0);
@@ -631,9 +576,6 @@ public class InvadersVelocityVortexBot
 
 
     public void DriveToWhiteLine(double power, int intensity, boolean enableLed, int timeoutMs){
-        // Grab a snapshot of our heading (because we jerk to the side when we stop)
-        int targetHeading = gyro.getIntegratedZValue();
-
         setDriveTrainPower(power);
         floorSensor.enableLed(enableLed);
         period.reset();
@@ -648,15 +590,8 @@ public class InvadersVelocityVortexBot
             if(period.time() > timeoutMs) break;
         }
 
-        sleepMs(250);   // optional pause after each move
-
-        // Turn back to the correct heading
-        int currentHeading = gyro.getIntegratedZValue();
-        simpleGyroTurn(power,currentHeading-targetHeading,1000);
-
-        sleepMs(250);
-
         setDriveTrainPower(0);
+        floorSensor.enableLed(false);
     }
 
     /* Constructor */
@@ -667,34 +602,32 @@ public class InvadersVelocityVortexBot
     public void  ohshoot()
     {
         // turn on the shooter wheels
-      rightBallLauncher.setPower(1);
-      leftBallLauncher.setPower(1);
+        setLauncherState(InvadersVelocityVortexBot.LauncherState.ON);
 
-     //five second delay
-        sleepMs(5000);
+        //three second delay
+        sleepMs(3000);
 
         //turn on the elevator
-        ballElevator.setPower(1);
+        setBallElevator(1,BallElevatorState.UP);
 
-     // 5 second delay
-        sleepMs(5000);
+        // 3 second delay
+        sleepMs(3000);
 
-     //turn everything off
-     ballElevator.setPower(0);
-      rightBallLauncher.setPower(0);
-      leftBallLauncher.setPower(0);
+        // turn on the sweeper to load second shot (elevator is still on)
+        setSweeperPower(1,SweeperDirection.IN);
+        sleepMs(6000);
 
-
+        //turn everything off
+        setBallElevator(0,BallElevatorState.OFF);
+        setSweeperPower(0,SweeperDirection.IN);
+        setLauncherState(LauncherState.OFF);
     }
 
 
     public void sleepMs(int millis)
     {
         try { Thread.sleep(millis); } catch (Exception e) {}
-
     }
-
-
 
 
     /* Initialize standard Hardware interfaces */
@@ -740,12 +673,10 @@ public class InvadersVelocityVortexBot
         capBall.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         sweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Define and initialize ALL installed servos.
+        // Define installed servos
         beaconLeft = hwMap.servo.get("beaconLeft");
         beaconRight = hwMap.servo.get("beaconRight");
         ballElevator = hwMap.crservo.get("BallElevator");
-        beaconLeft.setPosition(0.1);
-        beaconRight.setPosition(0.1);
         ballElevator.setPower(0.0);
 
         // Define our sensors
@@ -759,9 +690,12 @@ public class InvadersVelocityVortexBot
         // Custom I2C Addresses Go Here!
         floorSensor.setI2cAddress(I2cAddr.create8bit(0x3A));
         beaconSensorRight.setI2cAddress(I2cAddr.create8bit(0x36));
-        UDSLeft.setI2cAddress(I2cAddr.create8bit(0x26));
 
-        floorSensor.enableLed(true);
+        // Initialize Color Sensor LEDs to off
+        beaconSensorLeft.enableLed(false);
+        beaconSensorRight.enableLed(false);
+        floorSensor.enableLed(false);
+
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
         gyro.calibrate();
 
@@ -770,7 +704,6 @@ public class InvadersVelocityVortexBot
             sleepMs(50);
         }
         gyro.resetZAxisIntegrator();
-
     }
 
     /***
@@ -838,11 +771,11 @@ public class InvadersVelocityVortexBot
         switch(state) {
             case UP:
                 // Set positive value regardless of power positive/negative
-                ballElevator.setPower(Math.abs(power));
+                ballElevator.setPower(-Math.abs(power));
                 break;
             case DOWN:
                 // Set negative value regardless of power positive/negative
-                ballElevator.setPower(-Math.abs(power));
+                ballElevator.setPower(Math.abs(power));
                 break;
             case OFF:
                 ballElevator.setPower(0);
@@ -875,10 +808,10 @@ public class InvadersVelocityVortexBot
     public void setSweeperPower(float power, SweeperDirection direction) {
         if(sweeper != null) {
             if(direction == SweeperDirection.IN) {
-                sweeper.setPower(Math.abs(power));
+                sweeper.setPower(-Math.abs(power));
             }
             else {
-                sweeper.setPower(-Math.abs(power));
+                sweeper.setPower(Math.abs(power));
             }
         }
     }
@@ -900,9 +833,6 @@ public class InvadersVelocityVortexBot
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-            // Grab a snapshot of our heading (because we jerk to the side when we stop)
-            int targetHeading = gyro.getIntegratedZValue();
-
             // Determine new target position, and pass to motor controller
             newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
             newRightTarget = rightMotor.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
@@ -918,7 +848,6 @@ public class InvadersVelocityVortexBot
             setDriveTrainPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
-            ElapsedTime gyroUpdate = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
             while (opModeIsActive() &&
                     (period.seconds() < timeoutS) &&
                     (leftMotor.isBusy() && rightMotor.isBusy())) {
@@ -928,17 +857,7 @@ public class InvadersVelocityVortexBot
                 telemetry.addData("Path2", "Running at %7d :%7d",
                         leftMotor.getCurrentPosition(),
                         rightMotor.getCurrentPosition());
-                //telemetry.addData("UDSLeft", "Distance CM: %.02f", UDSLeft.getDistance(DistanceUnit.CM));
                 telemetry.update();
-// This bit here was supposed to allow our encoder drive to perform periodic course corrections (every 250ms)
-// but, now that the encoders are working, this is not really as necessary and just slows us down.
-//                if(gyroUpdate.time()>250) {
-//                    //sleepMs(250);   // optional pause after each move
-//                    // Turn back to the correct heading
-//                    int currentHeading = gyro.getIntegratedZValue();
-//                    simpleGyroTurn(speed, currentHeading - targetHeading, 1000);
-//                    gyroUpdate.reset();
-//                }
             }
 
             // Stop all motion;
@@ -949,12 +868,6 @@ public class InvadersVelocityVortexBot
             rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleepMs(250);   // optional pause after each move
-
-            // Turn back to the correct heading
-            //int currentHeading = gyro.getIntegratedZValue();
-            //simpleGyroTurn(speed,currentHeading-targetHeading,1000);
-
-            sleepMs(250);
         }
     }
 
@@ -969,18 +882,12 @@ public class InvadersVelocityVortexBot
     public void timedDrive(double speed, double durationMs) {
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-            // Grab a snapshot of our heading (because we jerk to the side when we stop)
-            int targetHeading = gyro.getIntegratedZValue();
             setDriveTrainPower(speed);
             period.reset();
             while((period.time() < durationMs) && opModeIsActive()) {
             }
             // Stop all motion;
             setDriveTrainPower(0);
-
-            // Turn back to the correct heading
-            int currentHeading = gyro.getIntegratedZValue();
-            simpleGyroTurn(speed,currentHeading-targetHeading,1000);
 
             sleepMs(250);
         }

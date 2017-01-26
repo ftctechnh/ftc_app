@@ -30,12 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.Matthew;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
@@ -50,6 +46,59 @@ public class Red1Beacons extends LinearOpMode {
 
     /* Declare OpMode members. */
     InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use our custom hardware
+
+    /// This method assumes the robot is aligned to the white line on the floor in front of the beacon
+    private void doLeftSideBeaconPushingStuff()
+    {
+        if(robot.doIseeRedLeft())
+        {
+            robot.encoderDrive(0.2,1,1,1000);           // Drive forward 1" so the beacon pusher is aligned with the left beacon button
+            robot.beaconLeft.setPosition(1);            // Press the Red Beacon to claim it.
+            robot.sleepMs(1000);
+            robot.beaconLeft.setPosition(0);            // Retract the beacon pusher
+        }
+        else
+        {
+            robot.encoderDrive(0.2,4,4,1000);           // Drive forward 4" so the beacon pusher is aligned with the right beacon light
+            if(robot.doIseeBlueLeft()) {
+                robot.encoderDrive(0.2, 1, 1, 1000);    // Drive forward 1" so the beacon pusher is aligned with the right beacon button
+                robot.beaconLeft.setPosition(1);        // Press the Red Beacon to claim it.
+                robot.sleepMs(1000);
+                robot.beaconLeft.setPosition(0);        // Retract the beacon pusher
+            }
+        }
+        robot.sleepMs(1000);                            // Final sleep so beacon pusher can retract
+    }
+
+    public void goForTheBeacons()
+    {
+        robot.encoderDrive(0.5, 30, 30, 10);            // Drive forwards towards center vortex
+        robot.simpleGyroTurn(0.3, -46, 5000);           // Complete the rest of the left turn towards the beacon-wall.
+        robot.encoderDrive(0.5, 80, 80, 10);            // Drive forwards about half way to the beacon-wall (and to get past CapBall)
+        robot.DriveToWall(3, DistanceUnit.INCH, 0.15, 5000);  // Use the range sensor to get 3" away from the wall.
+        robot.AlignToWall(3, DistanceUnit.INCH);
+        robot.simpleGyroTurn(0.3, 162, 5000);           // About Face!  Turn front of robot away from beacon wall
+        //robot.encoderDrive(0.2,-12,-12,5000);           // Crash our butt into the wall... slowly!... to make sure we're square with the wall
+        robot.encoderDrive(0.3, -12, -12, 5000);           // Back up slowly towards the wall
+        robot.simpleGyroTurn(0.3, -81, 5000);           // Turn left towards the beacons
+
+        // Find the 1st beacon and try to press the correct button
+        robot.DriveToWhiteLine(0.1, 5, true, 5000);        // Slowly creep foward, looking for the white line
+        robot.encoderDrive(0.2, -2, -2, 1000);             // Drive back 2" so the color sensor is looking at the left beacon light
+        doLeftSideBeaconPushingStuff();
+
+        // Find the 2nd beacon and try to press the correct button
+        robot.encoderDrive(0.5, 36, 36, 5000);             // Fast drive towards the next beacon line
+        robot.DriveToWhiteLine(0.1, 5, true, 5000);        // Slowly creep forward looking for the white line
+        doLeftSideBeaconPushingStuff();
+    }
+
+    /// This should knock the ball off and leave our robot partially on the board - 10pts total
+    public void goForThePedestal()
+    {
+        // Go for knocking the cap ball off the pedestal and parking there
+        robot.encoderDrive(0.5, 50, 50, 5);            // Drive forwards towards center vortex
+    }
 
     @Override
     public void runOpMode() {
@@ -71,43 +120,34 @@ public class Red1Beacons extends LinearOpMode {
             telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
             telemetry.addData(">", "Floor AlphaLv = %d", robot.floorSensor.alpha());
             telemetry.addData(">", "Floor Hue     = %d", robot.floorSensor.argb());
+            telemetry.addData("L_Red", "%d", robot.beaconSensorLeft.red());
+            telemetry.addData("L_Blue", "%d", robot.beaconSensorLeft.blue());
+            telemetry.addData("L_DoISeeRed", "%s", robot.doIseeRedLeft() ? "YES" : "NO");
+            telemetry.addData("L_DoISeeBlue", "%s", robot.doIseeBlueLeft() ? "YES" : "NO");
+            telemetry.addData("R_Red", "%d", robot.beaconSensorRight.red());
+            telemetry.addData("R_Blue", "%d", robot.beaconSensorRight.blue());
+            telemetry.addData("R_DoISeeRed", "%s", robot.doIseeRedRight() ? "YES" : "NO");
+            telemetry.addData("R_DoISeeBlue", "%s", robot.doIseeBlueRight() ? "YES" : "NO");
             telemetry.update();
             idle();
         }
 
         //All the actual opmode code goes here.
-        //robot.timedDrive(0.2,1900); //Drive forwards to the plywood base with the capball.
-        //robot.encoderDrive(0.5, 45, 45, 10); <-- THIS IS THE ORIGINAL / TESTED VALUE
-        robot.encoderDrive(0.5, 12, 12, 10); // THIS IS JUST FOR TESTING
+        robot.encoderDrive(0.5, 15, 15, 10);            // Drive forwards towards center vortex
+        robot.simpleGyroTurn(0.3,-35,3000);             // Slight Left Turn to take shot at Center Vortex
 
-        robot.simpleGyroTurn(0.3, -84, 5000); //Turn left towards the beacons.
-        //robot.turnToAbsoluteHeading(0.3,-70,3000);
-        //robot.timedDrive(0.2, 3000); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
-
-
-        //robot.encoderDrive(0.5, 80, 80, 10);  <-- THIS IS THE ORIGINAL / TESTED VALUE
-        robot.encoderDrive(0.5, 12, 12, 10); // THIS IS JUST FOR TESTING
-
-
-        //robot.turnToAbsoluteHeading(0.3, -70, 3000);
-        robot.DriveToWall(12, DistanceUnit.INCH, 0.15); //Use the range sensor to get nice and close to the wall.
-        robot.simpleGyroTurn(0.3, 84, 5000);
-        //robot.turnToAbsoluteHeading(0.3, 0, 3000);
-        //Turn right to drive alongside the beacons.
-        //robot.turnToAbsoluteHeading(0.3,-180,3000);
-        //robot.DriveToWhiteLine(-0.3,8,true,5000); // Drive to the white line
-        //if(robot.soIseeBlueLeft())
-        //{
-            //robot.beaconRight.setPosition(1);
-            //robot.sleepMs(1500);
-            //robot.beaconRight.setPosition(0);
-        //}
-        //else
-        //{
-            //robot.timedDrive(0.2,250);
-            //robot.beaconRight.setPosition(1);
-            //robot.sleepMs(1500);
-            //robot.beaconRight.setPosition(0);
-        //}
+        // Decide whether to attempt the beacon run (if the color sensors are working, then go for it)
+        if(robot.beaconSensorLeft.red() != 255) {
+            // Take the shot right away, we've got to keep moving if we want to finish all of our movements
+            robot.ohshoot();                            // SHOOT! - This takes 12 seconds (+30-points)
+            goForTheBeacons();                          // Go for the beacons (+60 points)
+                                                        // Target Point Count: 90pts
+        }
+        else {
+            robot.sleepMs(10000);                       // Take a break to let our alliance partner do their thing
+            robot.ohshoot();                            // SHOOT! - This takes 12 seconds (+30-points)
+            goForThePedestal();                         // Knock the CapBall off the pedestal and park (+10 points)
+                                                        // Target Point Count: 40pts
+        }
     }
 }
