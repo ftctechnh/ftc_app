@@ -194,7 +194,7 @@ public class Blue2 extends LinearOpMode {
         robot.encoderDrive(1,1,60,60);
 
        // step 4: align to wall.
-       robot.AlignToWall(40,20);
+       robot.AlignToWall(40,DistanceUnit.INCH);
 
 
 // Step 5: drive backwards a bit and adjust
