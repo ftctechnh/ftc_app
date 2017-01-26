@@ -384,6 +384,7 @@ public class AutoLib {
         }
 
         public boolean loop() {
+            super.loop();
             // initialize previous-time on our first call -> dt will be zero on first call
             if (firstLoopCall()) {
                 mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
@@ -503,6 +504,7 @@ public class AutoLib {
 
         public boolean loop()
         {
+            super.loop();
             // compute absolute direction vector to target position on field
             VectorF position = mLocSensor.getLocation();
             if (position == null) {
@@ -616,6 +618,7 @@ public class AutoLib {
 
         public boolean loop()
         {
+            super.loop();
             // compute absolute direction vector to target position on field
             VectorF position = mLocSensor.getLocation();
             if (position == null){
@@ -723,6 +726,7 @@ public class AutoLib {
 
         public boolean loop()
         {
+            super.loop();
             //check if heading exists
             float heading;
             try{
@@ -804,6 +808,7 @@ public class AutoLib {
 
         public boolean loop()
         {
+            super.loop();
             // initialize previous-time on our first call -> dt will be zero on first call
             if (firstLoopCall()) {
                 mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
@@ -864,6 +869,7 @@ public class AutoLib {
         }
 
         public boolean loop(){
+            super.loop();
             if(firstLoopCall()){
                 lastPosition = mServo.getPosition();
                 mServo.setPosition(mPosition);
@@ -1041,6 +1047,7 @@ public class AutoLib {
         }
 
         public boolean loop(){
+            super.loop();
             funcPoint.run();
             return true;
         }

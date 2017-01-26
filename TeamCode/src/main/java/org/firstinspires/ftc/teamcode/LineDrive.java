@@ -128,7 +128,7 @@ public class LineDrive extends OpenCVLib {
         float time;
 
         if(red)
-            time = 1.5f;
+            time = 1.7f;
         else
             time = 2.0f;
 
@@ -233,8 +233,10 @@ public class LineDrive extends OpenCVLib {
                 modePointer.telemetry.addData("sequence finished", "");
         }
         catch (Exception e){
-            telemetry.addData("Exception: ", e.getMessage());
-            init();
+            modePointer.telemetry.addData("Exception: ", e.getMessage());
+            telemetry.update();
+            robot.waitForTick(2000);
+            //init();
         }
     }
 
@@ -411,6 +413,7 @@ public class LineDrive extends OpenCVLib {
         }
 
         public boolean loop() {
+            super.loop();
             // initialize previous-time on our first call -> dt will be zero on first call
             if (firstLoopCall()) {
                 mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
@@ -456,8 +459,8 @@ public class LineDrive extends OpenCVLib {
             // log some data
             if (mOpMode != null) {
                 mOpMode.telemetry.addData("heading ", heading);
-                mOpMode.telemetry.addData("front power ", mp.Front());
-                mOpMode.telemetry.addData("back power ", mp.Back());
+                //mOpMode.telemetry.addData("front power ", mp.Front());
+                //mOpMode.telemetry.addData("back power ", mp.Back());
             }
 
             // guidance step always returns "done" so the CS in which it is embedded completes when

@@ -191,6 +191,7 @@ public final class LineFollowLib {
         }
 
         public boolean loop() {
+            super.loop();
             // initialize previous-time on our first call -> dt will be zero on first call
             if (firstLoopCall()) {
                 mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
