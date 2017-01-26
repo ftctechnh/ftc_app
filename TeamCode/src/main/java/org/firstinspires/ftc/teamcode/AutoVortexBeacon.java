@@ -37,6 +37,8 @@ public class AutoVortexBeacon extends OpMode {
 
     private StateMachine shooter;
 
+    private StateMachine button;
+
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -71,6 +73,16 @@ public class AutoVortexBeacon extends OpMode {
                 }
         );
 
+        button = new StateMachine(
+                new State("push") {
+                    @Override
+                    public void run() {
+
+                    }
+                }
+
+        );
+
         main = new StateMachine(
 
                 new State("stop") {
@@ -83,7 +95,6 @@ public class AutoVortexBeacon extends OpMode {
                 new State("drive to vortex") {
                     @Override
                     public void run() {
-                        move(-0.5);
                         shooter.changeState("on");
                         sendData("shooter start", time);
                         changeState("reach vortex");
@@ -93,7 +104,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("reach vortex") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1750, 3000)) {
+                        if (reachedDestination(1750, 3000, -0.5)) {
                             move(0);
                             changeState("shoot the ball");
                         }
@@ -119,7 +130,6 @@ public class AutoVortexBeacon extends OpMode {
                         if (elapsedTime > 5.0) {
                             robot.intake.setPower(0);
                             shooter.changeState("off");
-                            turn(-0.5);
                             changeState("drive tp line");
                         }
                     }
@@ -128,8 +138,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("drive to line") {
                     @Override
                     public void run() {
-                        if (turnedDegrees(70, 3000)) {
-                            move(0.5);
+                        if (turnedDegrees(70, 3000, -0.5)) {
                             changeState("turn");
                         }
                     }
@@ -138,8 +147,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("turn") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1750, 3000)) {
-                            turn(1);
+                        if (reachedDestination(1750, 3000, 0.5)) {
                             changeState("drive to wall");
                         }
                     }
@@ -148,8 +156,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("drive to wall") {
                     @Override
                     public void run() {
-                        if (turnedDegrees(1000000000, 10000)) {
-                            move(0.5);
+                        if (turnedDegrees(1000000000, 10000, 1)) {
                             changeState("sense color");
                         }
                     }
@@ -158,7 +165,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("sense color") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1000, 3000)) {
+                        if (reachedDestination(1000, 3000, 0.5)) {
                             changeState("push button");
                         }
                     }
@@ -174,7 +181,6 @@ public class AutoVortexBeacon extends OpMode {
                 new State("back up") {
                     @Override
                     public void run() {
-                        move(-0.5);
                         changeState("turn to other line");
                     }
                 },
@@ -182,8 +188,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("turn to other line") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1000, 3000)) {
-                            turn(-1);
+                        if (reachedDestination(1000, 3000, -0.5)) {
                             changeState("drive to other line");
                         }
                     }
@@ -192,8 +197,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("drive to other line") {
                     @Override
                     public void run() {
-                        if (turnedDegrees(90, 2000)) {
-                            move(0.5);
+                        if (turnedDegrees(90, 2000, -1)) {
                             changeState("turn on other line");
                         }
                     }
@@ -202,8 +206,7 @@ public class AutoVortexBeacon extends OpMode {
                 new State("turn to other line") {
                     @Override
                     public void run() {
-                        if (reachedDestination(2000, 5000)) {
-                            turn(0.5);
+                        if (reachedDestination(2000, 5000, 0.5)) {
                             changeState("drive down other line");
                         }
                     }
@@ -212,23 +215,52 @@ public class AutoVortexBeacon extends OpMode {
                 new State("drive down other line") {
                     @Override
                     public void run() {
-                        if (turnedDegrees()){
-
+                        if (turnedDegrees(90, 2000, -0.5)) {
+                            changeState("other button");
                         }
                     }
                 },
 
-        new State("turn to cap ball") {
+                new State("other button") {
                     @Override
                     public void run() {
+                        if (reachedDestination(1000, 3000, 0.5)) {
+                            changeState("back up again");
+                        }
+                    }
+                },
 
+                new State("back up again") {
+                    @Override
+                    public void run() {
+                        changeState("turn to cap ball");
+                    }
+                },
+
+                new State("turn to cap ball") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(1000, 3000, -0.5)) {
+                            changeState("drive to ball");
+                        }
                     }
                 },
 
                 new State("drive to ball") {
                     @Override
                     public void run() {
+                        if (turnedDegrees(120, 4000, -1)) {
+                            changeState("hit ball");
+                        }
+                    }
+                },
 
+                new State("hit ball") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(2500, 4000, 1)){
+                            changeState("stop");
+                        }
                     }
                 }
         );
@@ -320,11 +352,13 @@ public class AutoVortexBeacon extends OpMode {
         }
     }
 
-    public boolean reachedDestination(int target, int timeout) {
-        return (robot.frontLeft.getCurrentPosition() >= target && robot.frontRight.getCurrentPosition() >= target && robot.backLeft.getCurrentPosition() >= target && robot.backRight.getCurrentPosition() >= target) || elapsedTime > timeout;
+    public boolean reachedDestination(int target, int timeout, double power) {
+
+        return true;
     }
 
-    public boolean turnedDegrees(double degrees, int timeout){
+    public boolean turnedDegrees(double degrees, int timeout, double power){
+
         return true;
     }
 
