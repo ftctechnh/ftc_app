@@ -1,6 +1,4 @@
 /*
-Copyright (c) 2016 Robert Atkinson
-
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -32,156 +30,147 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.Willow;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
- * This file illustrates the concept of driving a path based on time.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
  *
- * The code assumes that you do NOT have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *   The desired path in this example is:
- *   - Drive forward for 3 seconds
- *   - Spin right for 1.3 seconds
- *   - Drive Backwards for 1 Second
- *   - Stop and close the claw.
- *
- *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Time", group="Pushbot")
-@Disabled
+@Autonomous(name="Comp Blue 1 Beacons", group="Pushbot")
+//@Disabled
 public class Blue1beacons extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use our custom hardware
+
+    /// This method assumes the robot is aligned to the white line on the floor in front of the beacon
+    private void doRightSideBeaconPushingStuff()
+    {
+        if(robot.doIseeBlueLeft())
+        {
+            robot.encoderDrive(0.2,1,1,1000);           // Drive forward 1" so the beacon pusher is aligned with the left beacon button
+            robot.beaconLeft.setPosition(1);            // Press the Red Beacon to claim it.
+            robot.sleepMs(1000);
+            robot.beaconLeft.setPosition(0);            // Retract the beacon pusher
+        }
+        else
+        {
+            robot.encoderDrive(0.2,4,4,1000);           // Drive forward 4" so the beacon pusher is aligned with the right beacon light
+            if(robot.doIseeBlueLeft()) {
+                robot.encoderDrive(0.2, 1, 1, 1000);    // Drive forward 1" so the beacon pusher is aligned with the right beacon button
+                robot.beaconLeft.setPosition(1);        // Press the Red Beacon to claim it.
+                robot.sleepMs(1000);
+                robot.beaconLeft.setPosition(0);        // Retract the beacon pusher
+            }
+        }
+        robot.sleepMs(1000);                            // Final sleep so beacon pusher can retract
+    }
+
+    public void goForTheBeacons()
+    {
+        robot.encoderDrive(0.5, 30, 30, 10);            // Drive forwards towards center vortex
+        robot.simpleGyroTurn(0.3, 46, 5000);           // Complete the rest of the left turn towards the beacon-wall.
+        robot.encoderDrive(0.5, 80, 80, 10);            // Drive forwards about half way to the beacon-wall (and to get past CapBall)
+        robot.DriveToWall(3, DistanceUnit.INCH, 0.15, 5000);  // Use the range sensor to get 3" away from the wall.
+        robot.AlignToWall(3, DistanceUnit.INCH);
+        robot.simpleGyroTurn(0.3, -162, 5000);           // About Face!  Turn front of robot away from beacon wall
+        //robot.encoderDrive(0.2,-12,-12,5000);           // Crash our butt into the wall... slowly!... to make sure we're square with the wall
+        robot.encoderDrive(0.3, -12, -12, 5000);           // Back up slowly towards the wall
+        robot.simpleGyroTurn(0.3, 81, 5000);           // Turn left towards the beacons
+
+        // Find the 1st beacon and try to press the correct button
+        robot.DriveToWhiteLine(0.1, 5, true, 5000);        // Slowly creep foward, looking for the white line
+        robot.encoderDrive(0.2, -2, -2, 1000);             // Drive back 2" so the color sensor is looking at the left beacon light
+        doLeftSideBeaconPushingStuff();
+
+        // Find the 2nd beacon and try to press the correct button
+        robot.encoderDrive(0.5, 36, 36, 5000);             // Fast drive towards the next beacon line
+        robot.DriveToWhiteLine(0.1, 5, true, 5000);        // Slowly creep forward looking for the white line
+        doLeftSideBeaconPushingStuff();
+    }
+
+    /// This should knock the ball off and leave our robot partially on the board - 10pts total
+    public void goForThePedestal()
+    {
+        // Go for knocking the cap ball off the pedestal and parking there
+        robot.encoderDrive(0.5, 50, 50, 5);            // Drive forwards towards center vortex
+    }
 
 
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
-
+    private void doLeftSideBeaconPushingStuff()
+    {
+        if(robot.doIseeRedLeft())
+        {
+            robot.encoderDrive(0.2,1,1,1000);           // Drive forward 1" so the beacon pusher is aligned with the left beacon button
+            robot.beaconLeft.setPosition(1);            // Press the Red Beacon to claim it.
+            robot.sleepMs(1000);
+            robot.beaconLeft.setPosition(0);            // Retract the beacon pusher
+        }
+        else
+        {
+            robot.encoderDrive(0.2,4,4,1000);           // Drive forward 4" so the beacon pusher is aligned with the right beacon light
+            if(robot.doIseeBlueLeft()) {
+                robot.encoderDrive(0.2, 1, 1, 1000);    // Drive forward 1" so the beacon pusher is aligned with the right beacon button
+                robot.beaconLeft.setPosition(1);        // Press the Red Beacon to claim it.
+                robot.sleepMs(1000);
+                robot.beaconLeft.setPosition(0);        // Retract the beacon pusher
+            }
+        }
+        robot.sleepMs(1000);                            // Final sleep so beacon pusher can retract
+    }
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
-        /*redbeaconleft
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
+        /*
+         * Initialize the standard drive system variables.
+         * The init() method of the hardware class does most of the work here
          */
-        robot.init(hardwareMap);
+        robot.init(this);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
+        // Send telemetry message to alert driver that we are calibrating;
+        telemetry.addData(">", "Mommy says people my age shouldn't suck their thumbs.");    //
+        telemetry.update();
+        telemetry.addData(">", "Robot Ready.");    //
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-
-        // Step 1:  Drive forward for .5 seconds
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        runtime.reset();
-
-        while (runtime.seconds() < 0.5)
-        {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        // Wait for the game to start (Display Gyro value), and reset gyro before we move..
+        while (!isStarted()) {
+            telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
+            telemetry.addData(">", "Floor AlphaLv = %d", robot.floorSensor.alpha());
+            telemetry.addData(">", "Floor Hue     = %d", robot.floorSensor.argb());
+            telemetry.addData("L_Red", "%d", robot.beaconSensorLeft.red());
+            telemetry.addData("L_Blue", "%d", robot.beaconSensorLeft.blue());
+            telemetry.addData("L_DoISeeRed", "%s", robot.doIseeRedLeft() ? "YES" : "NO");
+            telemetry.addData("L_DoISeeBlue", "%s", robot.doIseeBlueLeft() ? "YES" : "NO");
+            telemetry.addData("R_Red", "%d", robot.beaconSensorRight.red());
+            telemetry.addData("R_Blue", "%d", robot.beaconSensorRight.blue());
+            telemetry.addData("R_DoISeeRed", "%s", robot.doIseeRedRight() ? "YES" : "NO");
+            telemetry.addData("R_DoISeeBlue", "%s", robot.doIseeBlueRight() ? "YES" : "NO");
             telemetry.update();
             idle();
         }
 
+        //All the actual opmode code goes here.
+        robot.encoderDrive(0.5, 15, 15, 10);            // Drive forwards towards center vortex
+        robot.simpleGyroTurn(0.3,35,3000);             // Slight Left Turn to take shot at Center Vortex
 
-        // Step 2:  Spin right for 1.0 seconds
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        runtime.reset();
-        //while (
-
-                //Blue1beacons() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-            idle();
+        // Decide whether to attempt the beacon run (if the color sensors are working, then go for it)
+        if(robot.beaconSensorLeft.red() != 255) {
+            // Take the shot right away, we've got to keep moving if we want to finish all of our movements
+            robot.ohshoot();                            // SHOOT! - This takes 12 seconds (+30-points)
+            goForTheBeacons();                          // Go for the beacons (+60 points)
+            // Target Point Count: 90pts
         }
-
-        // Step 3:  Drive forward for 1 second
-        //robot.leftMotor.setPower(FORWARD_SPEED);
-        //robot.rightMotor.setPower(FORWARD_SPEED);
-        //runtime.reset();
-
-        //while (runtime.seconds() < 1.0)
-        {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        //    idle();
+        else {
+            robot.sleepMs(10000);                       // Take a break to let our alliance partner do their thing
+            robot.ohshoot();                            // SHOOT! - This takes 12 seconds (+30-points)
+            goForThePedestal();                         // Knock the CapBall off the pedestal and park (+10 points)
+            // Target Point Count: 40pts
         }
-
-
-        // Step 2:  Spin left for 1.3 seconds
-        //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        //runtime.reset();
-        //while (
-
-          //      Blue1beacons() && (runtime.seconds() < 1.3)) {
-            //telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            //telemetry.update();
-            //idle();
-        }
-
-        // Step 2:  Spin right for 1.3 seconds
-        //robot.rightMotor.setPower(TURN_SPEED);
-        //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        //runtime.reset();
-        //while (
-
-          //      Blue1beacons() && (runtime.seconds() < 1.0)) {
-          //  telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-          //  telemetry.update();
-          //  idle();
-        //}
-
-        // Step 1:  Drive forward for .5 seconds
-        //robot.leftMotor.setPower(FORWARD_SPEED);
-        //robot.rightMotor.setPower(FORWARD_SPEED);
-        //runtime.reset();
-
-        //while (runtime.seconds() < 0.5)
-        //{
-          //  telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            //telemetry.update();
-            //idle();
-        //}
-
-
-        // Step 4:  Stop and close the claw.
-        //robot.leftMotor.setPower(0);
-        //robot.rightMotor.setPower(0);
-        //robot.leftClaw.setPosition(1.0);
-        //robot.rightClaw.setPosition(0.0);
-
-        //telemetry.addData("Path", "Complete");
-        //telemetry.update();
-        //sleep(1000);
-        //idle();
-    //}
-//}
+    }
+}
