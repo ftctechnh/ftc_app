@@ -106,7 +106,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
         robot.sleepMs(2000);
 
         robot.encoderDrive(1,12,12,5000);
-        robot.GyroTurn(1,55,3000);
+        robot.GyroTurn(1,-25,3000);
         robot.encoderDrive(1,36,36,5000);
 
         //robot.leftMotor.setPower(1);

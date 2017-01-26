@@ -110,7 +110,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
         robot.encoderDrive(1,12,12,5000);
 
-        robot.GyroTurn(1,-55,5000);
+        robot.GyroTurn(1,25,5000);
 
         robot.encoderDrive(1,36,36,5000);
 
