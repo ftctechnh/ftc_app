@@ -28,9 +28,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * knocking away the capball in the process.
  */
 
-@Autonomous(name="8200: Complete Autonomous Red", group="K9bot")
+@Autonomous(name="8200: Complete Autonomous Blue", group="K9bot")
 
-public class CompleteAutonomousRed extends LinearOpMode {
+public class CompleteAutonomousBlue extends LinearOpMode {
 
 
     HardwareK9bot robot = new HardwareK9bot(); // Hardware Device Object
@@ -72,7 +72,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
 
         waitForStart(); //pre-written function, waits for opmode to start
-       // moveForwardForShot(); //robot moves forward into range of basket
+        // moveForwardForShot(); //robot moves forward into range of basket
 
         //shoot(); //robot shoots two balls
         moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
@@ -142,24 +142,24 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     public void moveToBeacon() {
 
-    // Move to white line
+        // Move to white line
 
-     while (opModeIsActive() && robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
+        while (opModeIsActive() && robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(-DRIVE_SPEED);
             robot.rightMotor.setPower(-DRIVE_SPEED);
             updateTelemetry();
             telemetry.addData("Say", "Initial approach.");
 
 
-     }
+        }
         while (opModeIsActive()) {
 
             //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 0.05)) {
-                robot.rightMotor.setPower(TURN_SPEED);
-                robot.leftMotor.setPower(-TURN_SPEED);
+                robot.rightMotor.setPower(-TURN_SPEED);
+                robot.leftMotor.setPower(TURN_SPEED);
                 telemetry.addData("Light", robot.lightSensor.getLightDetected());
                 telemetry.addData("Say", "Motors turning.");
                 telemetry.update();
