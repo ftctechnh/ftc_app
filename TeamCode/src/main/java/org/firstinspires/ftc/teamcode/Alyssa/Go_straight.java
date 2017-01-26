@@ -106,11 +106,13 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
         //encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
 
-
+        //run ohshoot
         robot.ohshoot();
 
+          //wait 5 seconds
         robot.sleepMs(5000);
 
+        //drive 50 inches
         robot.encoderDrive(1,50,50,5000);
 
 
