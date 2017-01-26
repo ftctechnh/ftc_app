@@ -109,7 +109,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
         robot.ohshoot();
 
-        robot.sleepMs(15000);
+        robot.sleepMs(5000);
 
         robot.encoderDrive(1,50,50,5000);
 
