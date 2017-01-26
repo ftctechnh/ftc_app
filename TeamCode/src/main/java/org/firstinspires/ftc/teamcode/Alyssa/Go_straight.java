@@ -111,7 +111,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
         robot.sleepMs(15000);
 
-        robot.encoderdrive(1,1,50,50);
+        robot.encoderDrive(1,50,50,5000);
 
 
         //robot.leftMotor.setPower(1);

@@ -207,9 +207,7 @@ public class InvadersPushbot_Iterative extends OpMode{
      */
     @Override
     public void stop() {
-        // Reset/Stop the servos
-        robot.beaconLeft.setPosition(0.5);
-        robot.beaconRight.setPosition(0.5);
+        // Reset/Stop the continuous rotation servo(s)
         robot.ballElevator.setPower(0);
 
         // Stop the motors

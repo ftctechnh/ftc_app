@@ -91,7 +91,7 @@ public class GoldenWumpus extends OpMode {
     public void init_loop() {
         telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
         telemetry.addData(">", "Floor AlphaLv = %d", robot.floorSensor.alpha());
-        telemetry.addData(">", "soIseeBlueLeft = %s [%d]",   robot.soIseeBlueLeft() ? "YES" : "NO", robot.beaconSensorLeft.blue());
+        telemetry.addData(">", "doIseeBlueLeft = %s [%d]",   robot.doIseeBlueLeft() ? "YES" : "NO", robot.beaconSensorLeft.blue());
         telemetry.addData(">", "doIseeRedLeft = %s [%d]",   robot.doIseeRedLeft() ? "YES" : "NO", robot.beaconSensorLeft.red());
         telemetry.update();
     }

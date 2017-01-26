@@ -28,12 +28,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Matthew;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -111,7 +112,7 @@ public class Blue1 extends LinearOpMode {
         //robot.simpleGyroTurn(0.3, -90, 1500); //Turn left towards the beacons.
         robot.turnToAbsoluteHeading(0.3,90,3000);
         robot.timedDrive(0.2, 3000); //Drive forwards about half way to the wall. Then we will switch to using the distance sensor. We don't want the ball to confuse us though.
-        robot.DriveToWall(6, DistanceUnit.INCH, 0.15); //Use the range sensor to get nice and close to the wall.
+        robot.DriveToWall(6, DistanceUnit.INCH, 0.15, 10000); //Use the range sensor to get nice and close to the wall.
         //robot.simpleGyroTurn(0.3, -90, 1500); //Turn right to drive alongside the beacons.
         robot.turnToAbsoluteHeading(0.3,0,3000);
         robot.DriveToWhiteLine(0.3,8,true,5000); // Drive to the white line
