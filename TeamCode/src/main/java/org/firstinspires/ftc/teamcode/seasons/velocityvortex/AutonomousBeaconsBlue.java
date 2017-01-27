@@ -60,10 +60,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         }
 
         // run using encoders again
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive right to white line
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
@@ -99,10 +96,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         }
 
         // run using encoders again
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
