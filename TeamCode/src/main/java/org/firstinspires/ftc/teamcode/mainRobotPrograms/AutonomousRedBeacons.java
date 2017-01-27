@@ -1,127 +1,60 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name = "Autonomous - Red Beacons Edition", group = "Autonomous Group")
-//@Disabled
+@Autonomous(name="Autonomous - Red Beacons", group = "Autonomous Group")
 
 public class AutonomousRedBeacons extends _AutonomousBase
 {
-    //Autonomous code for the Blue alliance
-
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        //Make color sensor available.
-        leftSensorServo.setPosition(RIGHT_SERVO_OPEN);
+        driveForTime(.6, 700); //Drive a little ways from the wall.
 
-        //Drive forward a bit
-        driveForTime(-0.9, 600);
-        outputNewLineToDriverStation("Went forward");
+        setPrecisionFactor(10); //We can afford to be a bit inaccurate for this turn.
+        turnToHeading(-45, TurnMode.LEFT);
 
-        //Turn to face between the lines
-        setInitialTurnPower(.16);
-        setPrecision(20);
-        turnToHeading(-24, turnMode.BOTH);
-        outputNewLineToDriverStation("Turned to face toward intermediary part of white line");
-        int currentHeading = getValidGyroHeading();
+        driveForTime(.8, 1500); //Dash over across the corner goal.
 
-        //Drive toward the wall.
-        driveForTime(-0.9, 1800);
-        outputNewLineToDriverStation("Driving forward toward that part.");
+        //Turn until the range sensors detect that we are parallel with the wall.
+        turnToHeading(45, TurnMode.RIGHT);
 
-        //Turn to face the wall
-        setPrecision(24);
-        turnToHeading(-currentHeading - 90, turnMode.BOTH);
-        outputNewLineToDriverStation("Turning to face wall.  ");
-
-        //Drive to the wall until touch sensor registered.
-        zeroHeading();
-        setMovementPower(-0.5);
-        while(touchSensor.isPressed() == false)
-            idle();
-        stopDriving();
-        //The wall resets our heading (YES)
-        zeroHeading();
-        sleep(300);
-        driveForTime(0.1, 5);
-
-        setInitialTurnPower(.2);
-        setPrecision(4);
-        turnToHeading(-92, turnMode.LEFT); //Back facing to near beacon
-
-        driveForTime(0.2, 1200);
-
-        //Drive to the first color line.
-        zeroHeading();
-        setMovementPower(-0.2);
-        while (bottomColorSensor.alpha() < 10)
-            updateMotorPowersBasedOnGyroHeading();
-        stopDriving();
-        adjustHeading();
-
-        /********   BUTTON PUSHING SEQUENCE GOES HERE   ********/
-
-        driveForTime(0.1, 700);
-
-        if (leftColorSensor.red() >= 2 && leftColorSensor.blue() <= 2)
-            pushButton();
-        else
+        for (int i = 0; i < 2; i++) //Two beacons.
         {
-            driveForTime(0.2, 550);
-            pushButton();
+            setMovementPower(.3);
+            while (bottomColorSensor.alpha() < 3)
+                updateMotorPowersBasedOnRangeSensors();
+
+            //We have reached the line and are parallel to the wall.
+            outputNewLineToDrivers("Beacon reached, at " + frontRangeSensor.getDistance(DistanceUnit.CM) + " cm from the front and " + backRangeSensor.getDistance(DistanceUnit.CM) + " cm from the back.");
+
+            double startTime = System.currentTimeMillis();
+            while (System.currentTimeMillis() - startTime < 300)
+                updateMotorPowersBasedOnRangeSensors();
+
+            //Check first color.
+            if (rightColorSensor.blue() < 2 && rightColorSensor.red() > 2) //Looking at the blue one, so move forward a set distance.
+            {
+                startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime < 700)
+                    updateMotorPowersBasedOnRangeSensors();
+            }
+
+            //Run the continuous rotation servo out to press, then back in.
+            leftButtonPusher.setPosition(.8);
+            sleep(1000);
+            leftButtonPusher.setPosition(.2);
+            sleep(600);
+            leftButtonPusher.setPosition(.5);
+
+            if (i == 0)
+            {
+                setMovementPower(.7);
+                startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime < 3000) //Three seconds parallel to wall.
+                    updateMotorPowersBasedOnRangeSensors();
+            }
         }
-
-        outputNewLineToDriverStation("red is " + rightColorSensor.red() + " blue is " + rightColorSensor.blue());
-
-        setPrecision(2);
-        adjustHeading();
-
-        /********        END BUTTON PUSH SEQUENCE       ********/
-
-        //Drive a little ways forward from the first line
-        driveForTime(-0.2, 800);
-
-        //Drive to the second color line.
-        zeroHeading();
-        setMovementPower(-0.2);
-        while (opModeIsActive() && bottomColorSensor.alpha() < 10)
-            updateMotorPowersBasedOnGyroHeading();
-        stopDriving();
-        adjustHeading();
-
-        /********   BUTTON PUSHING SEQUENCE GOES HERE   ********/
-
-        driveForTime(0.1, 700);
-
-        if (leftColorSensor.red() >= 2 && leftColorSensor.blue() <= 2)
-            pushButton();
-        else
-        {
-            driveForTime(0.2, 550);
-            pushButton();
-        }
-
-        /********        END BUTTON PUSH SEQUENCE       ********/
-
-    }
-
-    //Should be constant among all classes.
-    protected void pushButton() throws InterruptedException
-    {
-        //Press button
-        pusher.setPower(-.12);
-        sleep(1800);
-        pusher.setPower(.12);
-        sleep(1600);
-        pusher.setPower(0);
-
-    }
-
-    @Override
-    protected void driverStationSaysSTOP()
-    {
-        leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
     }
 }
