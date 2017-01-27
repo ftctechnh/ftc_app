@@ -66,12 +66,6 @@ public class Teleop extends LinearOpModeBase {
 
             handleTelemetry();
 
-            if(gamepad2.dpad_left) {
-                getBlue1().setPosition(0.2);
-            } else if(gamepad2.dpad_right) {
-                getRed2().setPosition(0.7);
-            }
-
             idle();
         }
     }
