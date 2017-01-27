@@ -81,19 +81,19 @@ public class HardwareVortex {
 
     public void resetEncoders(){
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void generateTelemetry(Telemetry telemetry, Boolean encoders) {
-        telemetry.addData(DRIVE_MOTOR_TAG, "FL: %f FR: %f, BL: %f, BR %f", frontLeft.getPower(), frontRight.getPower(), backLeft.getPower(), backRight.getPower());
-        telemetry.addData(ENCODER_TAG, "FL: %d FR: %d BL %d BR %d", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backLeft.getCurrentPosition(), backRight.getCurrentPosition());
+        telemetry.addData(DRIVE_MOTOR_TAG, "FL: %f FR: %f, BL: %f, BR: %f", frontLeft.getPower(), frontRight.getPower(), backLeft.getPower(), backRight.getPower());
+        telemetry.addData(ENCODER_TAG, "FL: %d FR: %d BL: %d BR: %d", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition(), backLeft.getCurrentPosition(), backRight.getCurrentPosition());
         telemetry.addData(GENERIC_MOTOR_TAG, "intake: %f shooter: %f lift: %f flipper: %f", intake.getPower(), shooter.getPower(), lift.getPower(), flipper.getPower());
         telemetry.addData(SERVO_TAG, "L: %f R: %f PL: %f PR: %f", leftLift.getPosition(), rightLift.getPosition(), pusherLeft.getPosition(), pusherRight.getPosition());
     }

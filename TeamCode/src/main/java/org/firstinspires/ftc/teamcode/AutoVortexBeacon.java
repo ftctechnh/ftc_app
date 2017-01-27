@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.modules.AccelerationIntegrator;
 import org.firstinspires.ftc.teamcode.modules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.modules.Precision;
 import org.firstinspires.ftc.teamcode.modules.State;
 import org.firstinspires.ftc.teamcode.modules.StateMachine;
 
@@ -23,11 +24,11 @@ import java.util.Locale;
 public class AutoVortexBeacon extends OpMode {
     private HardwareVortex robot = new HardwareVortex();
 
+    private DcMotor[] leftDrive, rightDrive, driveMotors;
+
     private ColorSensor color;
 
     private StateMachine main;
-    private StateMachine searchForBeacon;
-    private StateMachine pushBeacon;
 
     private double delay = 0;
 
@@ -58,6 +59,21 @@ public class AutoVortexBeacon extends OpMode {
         robot.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        leftDrive = new DcMotor[] {
+                robot.frontLeft,
+                robot.backLeft
+        };
+        rightDrive = new DcMotor[] {
+                robot.frontRight,
+                robot.backRight
+        };
+        driveMotors = new DcMotor[] {
+                robot.frontLeft,
+                robot.frontRight,
+                robot.backLeft,
+                robot.backRight
+        };
+
         shooter = new StateMachine(
                 new State("off") {
                     @Override
@@ -71,7 +87,7 @@ public class AutoVortexBeacon extends OpMode {
                         robot.shooter.setPower(HardwareVortex.SHOOTER_POWER);
                     }
                 }
-        );
+        ).start();
 
         button = new StateMachine(
                 new State("push") {
@@ -263,7 +279,7 @@ public class AutoVortexBeacon extends OpMode {
                         }
                     }
                 }
-        );
+        ).start();
 
     }
 
@@ -302,11 +318,7 @@ public class AutoVortexBeacon extends OpMode {
 
     @Override
     public void start() {
-        main.sendData("startTime0", time);
-        //main.changeState("driveToWall");
-        searchForBeacon.start();
-        searchForBeacon.sendData("startTime", time);
-        searchForBeacon.changeState("start");
+        main.changeState("drive to vortex");
     }
 
     @Override
@@ -352,18 +364,16 @@ public class AutoVortexBeacon extends OpMode {
         }
     }
 
-    public boolean reachedDestination(int target, int timeout, double power) {
-
-        return true;
+    private boolean reachedDestination(int target, int timeout, double power) {
+        return Precision.destinationReached(driveMotors, power, Math.signum(power)*0.125, target, 2.0, 10, timeout);
     }
 
-    public boolean turnedDegrees(double degrees, int timeout, double power){
-
-        return true;
+    private boolean turnedDegrees(double degrees, int timeout, double power) {
+        return Precision.angleTurned(leftDrive, rightDrive, heading, power, 0.45, degrees, 2.0, 0.75, timeout);
     }
 
-    public void updateSensors() {
-        telemetry.addData("State", searchForBeacon.getActiveState());
+    private void updateSensors() {
+        telemetry.addData("State", main.getActiveState());
         telemetry.addData("Color", "R: %d G: %d B: %d A: %d", color.red(), color.green(), color.blue(), color.alpha());
         telemetry.addData("Light", robot.light.getLightDetected());
         Orientation angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
