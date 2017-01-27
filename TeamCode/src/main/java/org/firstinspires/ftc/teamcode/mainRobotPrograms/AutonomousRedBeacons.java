@@ -12,17 +12,13 @@ public class AutonomousRedBeacons extends _AutonomousBase
     {
         driveForTime(.6, 700); //Drive a little ways from the wall.
 
-        setPrecisionFactor(25); //We can afford to be a bit inaccurate for this turn.
+        setPrecisionFactor(10); //We can afford to be a bit inaccurate for this turn.
         turnToHeading(-45, TurnMode.LEFT);
 
         driveForTime(.8, 1500); //Dash over across the corner goal.
 
         //Turn until the range sensors detect that we are parallel with the wall.
-        setRightPower(.2);
-        while (frontRangeSensor.getDistance(DistanceUnit.CM) != backRangeSensor.getDistance(DistanceUnit.CM))
-            idle();
-
-        stopDriving();
+        turnToHeading(45, TurnMode.RIGHT);
 
         for (int i = 0; i < 2; i++) //Two beacons.
         {
