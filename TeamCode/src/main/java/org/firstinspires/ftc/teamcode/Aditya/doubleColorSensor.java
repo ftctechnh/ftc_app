@@ -25,30 +25,25 @@ public class doubleColorSensor extends AutonomousGeneral {
 
         initiate();
 
-        bColorSensorLeft.enableLed(true);
-        bColorSensorRight.enableLed(true);
-        sleep(250);
-        bColorSensorLeft.enableLed(false);
-        bColorSensorRight.enableLed(false);
-        sleep(250);
-        bColorSensorLeft.enableLed(true);
-        bColorSensorRight.enableLed(true);
-        sleep(250);
-        bColorSensorLeft.enableLed(false);
-        bColorSensorRight.enableLed(false);
-        sleep(250);
-        bColorSensorLeft.enableLed(true);
-        bColorSensorRight.enableLed(true);
-        sleep(250);
-        bColorSensorLeft.enableLed(false);
-        bColorSensorRight.enableLed(false);
-        sleep(250);
+        // wait for the start button to be pressed.
+        waitForStart();
 
+        bColorSensorLeft.enableLed(false);
+        bColorSensorRight.enableLed(false);
+        sleep(3000);
         readNewColorLeft();
         readNewColorRight();
         printColorsSeen();
-
-        sleep(28500);
+        telemetry.addData("right red", bColorSensorRight.red());
+        telemetry.addData("right blue", bColorSensorRight.blue());
+        telemetry.addData("right green", bColorSensorRight.green());
+        telemetry.addData("right alpha", bColorSensorRight.alpha());
+        telemetry.addData("left red", bColorSensorLeft.red());
+        telemetry.addData("left blue", bColorSensorLeft.blue());
+        telemetry.addData("left green", bColorSensorLeft.green());
+        telemetry.addData("left alpha", bColorSensorLeft.alpha());
+        telemetry.update();
+        sleep(22000);
 
 //        waitForStart();
 //        second_beacon_press = false;

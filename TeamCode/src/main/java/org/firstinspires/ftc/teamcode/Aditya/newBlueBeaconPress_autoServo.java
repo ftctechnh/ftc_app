@@ -178,17 +178,17 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
         }
 
         if(currentColorBeaconLeft.equals(currentTeam)){
-            beaconPresser.setPosition(0.1);
+            beaconPresser.setPosition(0.0);
         }
         else if(currentColorBeaconRight.equals(currentTeam)){
-            beaconPresser.setPosition(0.9);
+            beaconPresser.setPosition(1.0);
         }
 
         sleep(300);
 
         double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)-2;
 
-        encoderDrive(-0.3, distFromWall, distFromWall, 6);
+        encoderDrive(0.3, -distFromWall, -distFromWall, 6);
 
         sleep(750);
 
@@ -201,6 +201,13 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
         if(currentColorBeaconLeft.equals(currentTeam) && currentColorBeaconRight.equals(currentTeam)){
 
             printColorsSeen();
+            sleep(400);
+
+            encoderDrive(0.2, 8, -8, 5);
+            encoderDrive(0.5, 110, 130, 5);
+            sleep(500);
+            encoderDrive(0.2, -10, -10, 5);
+            encoderDrive(0.2, 30, 30, 5);
         }
         else{
 
@@ -211,7 +218,7 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
 
                 encoderDrive(-0.3, distFromWall, distFromWall, 6);
 
-                sleep(750);
+                sleep(2000);
 
                 encoderDrive(0.3, distFromWall, distFromWall, 6);
 
@@ -221,6 +228,13 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
                 telemetry.update();
 
             }
+            sleep(400);
+
+            encoderDrive(0.2, 8, -8, 5);
+            encoderDrive(0.5, 110, 130, 5);
+            sleep(500);
+            encoderDrive(0.2, -10, -10, 5);
+            encoderDrive(0.2, 30, 30, 5);
         }
     }
 

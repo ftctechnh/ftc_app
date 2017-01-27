@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
@@ -88,11 +88,14 @@ public class AutonomousGeneral extends LinearOpMode {
             gyro = hardwareMap.gyroSensor.get("gyro");
             rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
             bColorSensorLeft = hardwareMap.colorSensor.get("bColorSensorLeft");
+            bColorSensorLeft.setI2cAddress(I2cAddr.create8bit(0x3c));
 
             if (initbColorSensorRight){
                 bColorSensorRight = hardwareMap.colorSensor.get("bColorSensorRight");
+                bColorSensorRight.setI2cAddress(I2cAddr.create8bit(0x70));
+
             }
-            //beaconPress = hardwareMap.servo.get("beaconPress");
+            beaconPresser = hardwareMap.servo.get("beaconPresser");
             //calibrate gyro
 //            gyro.calibrate();
 //            while (gyro.isCalibrating()) {
