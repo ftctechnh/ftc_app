@@ -4,15 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-/**
- * TeleOp Mode
- * <p/>
- * Enables control of the robot via the gamepad
- */
-
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
-//@Disabled
 
 public class Teleop extends _RobotBase
 {

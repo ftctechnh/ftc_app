@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name="Drive Backward", group = "Utility Group")
+
 public class DriveBackward extends _AutonomousBase
 {
     //Custom initialization
@@ -11,21 +12,16 @@ public class DriveBackward extends _AutonomousBase
     protected void driverStationSaysINITIALIZE()
     {
         //Set the motor powers.
-        for (DcMotor lMotor : leftDriveMotors)
-            lMotor.setPower(.3);
-        for (DcMotor rMotor : rightDriveMotors)
-            rMotor.setPower(-.3);
+        setLeftPower(.3);
+        setRightPower(-.3);
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        for (DcMotor lMotor : leftDriveMotors)
-            lMotor.setPower(-.6);
-        for (DcMotor rMotor : rightDriveMotors)
-            rMotor.setPower(-.6);
-
+        setLeftPower(-.6);
+        setLeftPower(-.6);
 
         while (opModeIsActive())
             idle();

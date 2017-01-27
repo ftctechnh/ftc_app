@@ -7,9 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.ArrayList;
 
-//Edited in order to have all of the important constants as final, so that no unintentional modifications are made.
-//This class should be used so that any changes made to the robot configuration propagates through all parts of the code that has been written.
-
 public abstract class _RobotBase extends LinearOpMode
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/

@@ -27,14 +27,9 @@ public abstract class _AutonomousBase extends _RobotBase
         leftColorSensor = initialize(ColorSensor.class, "colorLeft");
         leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
         leftColorSensor.enableLed(true);
-        rightColorSensor = initialize(ColorSensor.class, "colorRight");
-        rightColorSensor.setI2cAddress(I2cAddr.create8bit(0x2c));
-        rightColorSensor.enableLed(true);
         bottomColorSensor = initialize(ColorSensor.class, "colorBottom");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         bottomColorSensor.enableLed(true);
-
-        touchSensor = initialize(TouchSensor.class, "touchSensor");
 
         //initialize gyroscope (will output whether it was found or not.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");
@@ -53,10 +48,11 @@ public abstract class _AutonomousBase extends _RobotBase
             outputNewLineToDrivers("Gyroscope Calibration Complete!");
         }
 
+        //Init the range sensors for autonomous.
         frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
-        //frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x?c));
+        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x99c));
         backRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
-        //backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x?c));
+        backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x99c));
     }
 
     //All children should have special instructions.
@@ -94,8 +90,8 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //More complex method that adjusts the heading based on the gyro heading.
-    protected double offCourseSensitivity = 42; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
-    protected double gyroLeftCoefficient = 1, gyroRightCoefficient = 1;
+    protected double gyroLeftCoefficient = .5, gyroRightCoefficient = .5;
+    protected double gyroOffCourseSensitivity = 42; //0 < r < 100
     protected void updateMotorPowersBasedOnGyroHeading() throws InterruptedException
     {
         if (gyroscope != null)
@@ -104,7 +100,7 @@ public abstract class _AutonomousBase extends _RobotBase
             int heading = getValidGyroHeading();
 
             //Create values.
-            double gyroFactor = (heading) / (100.0 - offCourseSensitivity);
+            double gyroFactor = (heading) / (100.0 - gyroOffCourseSensitivity);
             gyroLeftCoefficient += gyroFactor;
             gyroRightCoefficient -= gyroFactor;
 
@@ -139,25 +135,46 @@ public abstract class _AutonomousBase extends _RobotBase
         idle();
     }
 
-    double rangeLeftCoefficient = .5, rangeRightCoefficient = .5;
-    double changeCoeff = .05;
+    private double rangeLeftCoefficient = .5, rangeRightCoefficient = .5;
+    private double rangeOffCourseSensitivity = 42; //0 < r < 100
     protected void updateMotorPowersBasedOnRangeSensors() throws InterruptedException
     {
-        //Drive to the i^th color sensor line, then stop.
-        double frontDist = frontRangeSensor.getDistance(DistanceUnit.CM), backDist = backRangeSensor.getDistance(DistanceUnit.CM);
-        double diff = frontDist - backDist;
+        if (frontRangeSensor != null && backRangeSensor != null) {
+            //Drive to the i^th color sensor line, then stop.
+            double frontDist = frontRangeSensor.getDistance(DistanceUnit.CM), backDist = backRangeSensor.getDistance(DistanceUnit.CM);
+            double diff = frontDist - backDist;
 
-        rangeRightCoefficient += changeCoeff * diff;
-        rangeLeftCoefficient -= changeCoeff * diff;
+            rangeRightCoefficient += diff / (100 - rangeOffCourseSensitivity);
+            rangeLeftCoefficient -= diff / (100 - rangeOffCourseSensitivity);
 
-        //Measure the ideal length of the robot from the wall and verify it's position here.
-        double newLeftPower = movementPower * rangeLeftCoefficient, newRightPower = movementPower * rangeRightCoefficient;
-        newLeftPower = Range.clip(newLeftPower, -1, 1);
-        newRightPower = Range.clip(newRightPower, -1, 1);
+            //Measure the ideal length of the robot from the wall and verify it's position here.
+            double newLeftPower = movementPower * rangeLeftCoefficient, newRightPower = movementPower * rangeRightCoefficient;
+            newLeftPower = Range.clip(newLeftPower, -1, 1);
+            newRightPower = Range.clip(newRightPower, -1, 1);
 
-        setLeftPower(newLeftPower);
-        setRightPower(newRightPower);
+            setLeftPower(newLeftPower);
+            setRightPower(newRightPower);
 
+            //Output debugging data
+            outputConstantDataToDrivers(
+                    new String[]
+                            {
+                                    "Wall distance from front = " + frontDist,
+                                    "Wall distance from back = " + backDist,
+                                    "Left coefficient = " + rangeLeftCoefficient,
+                                    "Right coefficient = " + rangeRightCoefficient
+                            }
+            );
+        }
+        else
+        {
+            outputConstantDataToDrivers(
+                    new String[]
+                            {
+                                    "I'M DRIVIN' BLIND!"
+                            }
+            );
+        }
         idle();
     }
 
@@ -284,9 +301,7 @@ public abstract class _AutonomousBase extends _RobotBase
     //Stops all drive motors.
     protected void stopDriving ()
     {
-        for (DcMotor lMotor: leftDriveMotors)
-            lMotor.setPower(0);
-        for (DcMotor rMotor : rightDriveMotors)
-            rMotor.setPower(0);
+        setLeftPower(0);
+        setRightPower(0);
     }
 }
