@@ -32,7 +32,7 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
         waitForStart();
         second_beacon_press = false;
 
-        encoderDriveShootBlue(0.2, -135, -108, 8.0, -20, 2);
+        //encoderDriveShootBlue(0.2, -135, -108, 8.0, -20, 2);
 
         sleep(250);
 
@@ -160,22 +160,23 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
         readNewColorRight();
         printColorsSeen();
 
-
+        sleep(2000);
 
         if(currentColorBeaconLeft.equals("blank")){
             while(currentColorBeaconLeft.equals("blank")){
-                turnRight(0.15);
+                turnRight(0.05);
                 readNewColorLeft();
                 printColorsSeen();
             }
         }
         else if(currentColorBeaconRight.equals("blank")){
             while(currentColorBeaconRight.equals("blank")){
-                turnLeft(0.15);
+                turnLeft(0.05);
                 readNewColorRight();
                 printColorsSeen();
             }
         }
+        //alligns with beacon if out of range
 
         if(currentColorBeaconLeft.equals(currentTeam)){
             beaconPresser.setPosition(0.0);
@@ -183,59 +184,62 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
         else if(currentColorBeaconRight.equals(currentTeam)){
             beaconPresser.setPosition(1.0);
         }
+        //allign servo!
 
         sleep(300);
 
-        double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)-2;
-
-        encoderDrive(0.3, -distFromWall, -distFromWall, 6);
-
-        sleep(750);
-
-        encoderDrive(0.3, distFromWall, distFromWall, 6);
+//        double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)-2;
+//
+//        encoderDrive(0.3, -distFromWall, -distFromWall, 6);
+//
+//        sleep(750);
+//
+//        encoderDrive(0.3, distFromWall, distFromWall, 6);
+        //presses beacon!
 
         readNewColorRight();
         readNewColorLeft();
         printColorsSeen();
+        //presses beacon!
 
-        if(currentColorBeaconLeft.equals(currentTeam) && currentColorBeaconRight.equals(currentTeam)){
-
-            printColorsSeen();
-            sleep(400);
-
-            encoderDrive(0.2, 8, -8, 5);
-            encoderDrive(0.5, 110, 130, 5);
-            sleep(500);
-            encoderDrive(0.2, -10, -10, 5);
-            encoderDrive(0.2, 30, 30, 5);
-        }
-        else{
-
-            if (currentColorBeaconLeft == currentColorBeaconRight){
-                sleep(4000);
-
-                distFromWall = rangeSensor.getDistance(DistanceUnit.CM)-2;
-
-                encoderDrive(-0.3, distFromWall, distFromWall, 6);
-
-                sleep(2000);
-
-                encoderDrive(0.3, distFromWall, distFromWall, 6);
-
-            }
-            else{
-                telemetry.addData("failed", "we are currently working on a solution :)");
-                telemetry.update();
-
-            }
-            sleep(400);
-
-            encoderDrive(0.2, 8, -8, 5);
-            encoderDrive(0.5, 110, 130, 5);
-            sleep(500);
-            encoderDrive(0.2, -10, -10, 5);
-            encoderDrive(0.2, 30, 30, 5);
-        }
+//        if(currentColorBeaconLeft.equals(currentTeam) && currentColorBeaconRight.equals(currentTeam)){
+//
+//            printColorsSeen();
+//            sleep(400);
+//
+//            encoderDrive(0.2, 8, -8, 5);
+//            encoderDrive(0.5, 110, 130, 5);
+//            sleep(500);
+//            encoderDrive(0.2, -10, -10, 5);
+//            encoderDrive(0.2, 30, 30, 5);
+//        }
+//        else{
+//
+//            if (currentColorBeaconLeft == currentColorBeaconRight){
+//                sleep(4000);
+//
+//                distFromWall = rangeSensor.getDistance(DistanceUnit.CM)-2;
+//
+//                encoderDrive(-0.3, distFromWall, distFromWall, 6);
+//
+//                sleep(2000);
+//
+//                encoderDrive(0.3, distFromWall, distFromWall, 6);
+//
+//            }
+//            else{
+//                telemetry.addData("failed", "we are currently working on a solution :)");
+//                telemetry.update();
+//
+//            }
+//            sleep(400);
+//
+//            encoderDrive(0.2, 8, -8, 5);
+//            encoderDrive(0.5, 110, 130, 5);
+//            sleep(500);
+//            encoderDrive(0.2, -10, -10, 5);
+//            encoderDrive(0.2, 30, 30, 5);
+//        }
     }
 
     public void printColorsSeen(){
