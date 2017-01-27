@@ -19,7 +19,8 @@ public abstract class _RobotBase extends LinearOpMode
     protected DcMotor harvester, flywheels, lift;
     protected Servo leftLifterServo, rightLifterServo;
     protected Servo leftButtonPusher, rightButtonPusher;
-    protected final double RIGHT_SERVO_LOCKED = 0.3, LEFT_SERVO_LOCKED = 0.35, RIGHT_SERVO_UNLOCKED = 0.55, LEFT_SERVO_UNLOCKED = 0.07;
+    protected Servo clamp;
+    protected final double RIGHT_SERVO_LOCKED = 0.55, LEFT_SERVO_LOCKED = 0.35, RIGHT_SERVO_UNLOCKED = 0.3, LEFT_SERVO_UNLOCKED = 0.07, CLAMP_CLOSED = 0, CLAMP_OPEN = 1;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
@@ -31,7 +32,7 @@ public abstract class _RobotBase extends LinearOpMode
         }
         catch (Exception e)
         {
-            outputNewLineToDriverStation("Could not find " + name + " in hardware map.");
+            outputNewLineToDrivers("Could not find " + name + " in hardware map.");
             return null;
         }
     }
@@ -45,11 +46,11 @@ public abstract class _RobotBase extends LinearOpMode
         /*************************** DRIVING MOTORS ***************************/
         rightDriveMotors.add(initialize(DcMotor.class, "frontRight"));
         rightDriveMotors.add(initialize(DcMotor.class, "backRight"));
+        for(DcMotor motor : rightDriveMotors)
+            motor.setDirection(DcMotor.Direction.REVERSE);
 
         leftDriveMotors.add(initialize(DcMotor.class, "frontLeft"));
         leftDriveMotors.add(initialize(DcMotor.class, "backLeft"));
-        for(DcMotor motor : leftDriveMotors)
-                motor.setDirection(DcMotor.Direction.REVERSE);
 
         /*************************** OTHER MOTORS ***************************/
         harvester = initialize(DcMotor.class, "harvester");
@@ -66,10 +67,8 @@ public abstract class _RobotBase extends LinearOpMode
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
         rightButtonPusher.setPosition(0.5);
 
-        //NOTE: Actually attempting to use null motors will cause the program to terminate.
-        //This advanced system is designed for when only specific hardware is required.
-        //This code should tell you which motors and sensors are not configured before the program starts running.
-        //Kudos Makiah
+        clamp = initialize(Servo.class, "clamperooni");
+        clamp.setPosition(CLAMP_CLOSED);
 
         //Actual program thread
         //Custom Initialization steps.
@@ -99,7 +98,7 @@ public abstract class _RobotBase extends LinearOpMode
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
     ArrayList<String> linesAccessible = new ArrayList<>();
     private int maxLines = 7;
-    protected void outputNewLineToDriverStation(String newLine)
+    protected void outputNewLineToDrivers(String newLine)
     {
         //Add new line at beginning of the lines.
         linesAccessible.add(0, newLine);
@@ -115,11 +114,23 @@ public abstract class _RobotBase extends LinearOpMode
     }
 
     //Allows for more robust output of actual data instead of line by line without wrapping.  Used for driving and turning.
-    protected void outputConstantLinesToDriverStation (String[] data)
+    protected void outputConstantDataToDrivers(String[] data)
     {
         telemetry.update();
         for (String s : data)
             telemetry.addLine(s);
         telemetry.update();
+    }
+
+    protected void setRightPower(double power)
+    {
+        for (DcMotor motor : rightDriveMotors)
+            motor.setPower(power);
+    }
+
+    protected void setLeftPower(double power)
+    {
+        for (DcMotor motor : leftDriveMotors)
+            motor.setPower(power);
     }
 }

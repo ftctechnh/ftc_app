@@ -32,7 +32,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * A simple example of a linear op mode that will approach an IR beacon
@@ -51,7 +50,7 @@ public class AutonomousRed extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        driveForTime(-0.5, 1000);
+        driveForTime(0.5, 1000);
 
         flywheels.setPower(0.4);
         sleep(2000);
@@ -62,10 +61,10 @@ public class AutonomousRed extends _AutonomousBase
         harvester.setPower(0);
         flywheels.setPower(0);
 
-        driveForTime(-0.5, 1200);
+        driveForTime(0.5, 1200);
 
         turnToHeading(800, TurnMode.BOTH); //Doesn't use gyro.
         turnToHeading(-800, TurnMode.BOTH);
-        driveForTime(-0.3, 1000);
+        driveForTime(0.3, 1000);
     }
 }

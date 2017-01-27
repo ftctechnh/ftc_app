@@ -40,7 +40,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(name="Autonomous - Red (No Shoot) Edition", group = "Autonomous Group")
 public class AutonomousRedNoShoot extends _AutonomousBase
 {
-
     //Custom initialization
     @Override
     protected void driverStationSaysINITIALIZE()
