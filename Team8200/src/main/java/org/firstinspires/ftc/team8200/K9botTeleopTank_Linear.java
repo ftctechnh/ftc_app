@@ -91,7 +91,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            leftY = gamepad1.left_stick_y;
+            leftY =  gamepad1.left_stick_y;
             rightY = gamepad1.right_stick_y;
 
             rightY = Range.clip(rightY, -1, 1);
@@ -142,8 +142,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             boolean isButtonAPressed = gamepad2.a;
             if(isButtonAPressed)
             {
-                robot.leftWheelShooter.setPower(-1);
-                robot.rightWheelShooter.setPower(-1);
+                robot.leftWheelShooter.setPower(1);
+                robot.rightWheelShooter.setPower(1);
             }
             else
             {

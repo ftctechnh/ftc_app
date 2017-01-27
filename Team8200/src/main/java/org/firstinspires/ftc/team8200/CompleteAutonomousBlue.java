@@ -28,9 +28,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * knocking away the capball in the process.
  */
 
-@Autonomous(name="8200: Complete Autonomous Red", group="K9bot")
+@Autonomous(name="8200: Complete Autonomous Blue", group="K9bot")
 
-public class CompleteAutonomousRed extends LinearOpMode {
+public class CompleteAutonomousBlue extends LinearOpMode {
 
 
     HardwareK9bot robot = new HardwareK9bot(); // Hardware Device Object
@@ -40,7 +40,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
     static final double WHITE_THRESHOLD = 0.4;
     static final double DRIVE_SPEED = 0.5;
     static final double DRIVE_SLOW_SPEED = 0.1;
-    static final double TURN_SPEED = 0.25;
+    static final double TURN_SPEED = 0.5;
     static final double MAX_WHEEL_SHOOTER_SPEED = 1;
     static final int LED_CHANNEL = 5;
     static final String allianceColor = "red"; // takes either value "red" or "blue"
@@ -54,18 +54,14 @@ public class CompleteAutonomousRed extends LinearOpMode {
 
     double voltage, maxVoltage, voltsPerInch, voltageInInches;
     boolean bLedOn = false;
-    boolean autoTurnRight = true;
 
 
     @Override
 
     public void runOpMode() {
-        if (allianceColor == "red") {
-            autoTurnRight = false;
-        }
-        else if (allianceColor == "blue") {
-            autoTurnRight = true;
-        }
+
+
+
         robot.init(hardwareMap); // Do not erase to avoid NullPointerException. This MUST be first in runOpMode()
 
         bLedOn = true;
@@ -77,8 +73,8 @@ public class CompleteAutonomousRed extends LinearOpMode {
         robot.dim.setDigitalChannelState(LED_CHANNEL, bLedOn);
 
         waitForStart(); //pre-written function, waits for opmode to start
-//        moveForwardForShot(); //robot moves forward into range of basket
-//        shoot(); //robot shoots two balls
+        moveForwardForShot(); //robot moves forward into range of basket
+        shoot(); //robot shoots two balls
         moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
 //
 //        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
@@ -134,11 +130,11 @@ public class CompleteAutonomousRed extends LinearOpMode {
      */
     public void moveToBeacon() {
         //Align to go for line
-//        runtime.reset();
-//        while (opModeIsActive() && runtime.seconds() < 1.25) {
-//            robot.leftMotor.setPower(-TURN_SPEED);
-//            robot.rightMotor.setPower(0);
-//        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 1.25) {
+            robot.rightMotor.setPower(-TURN_SPEED);
+            robot.leftMotor.setPower(0);
+        }
         // Move to white line
         while (opModeIsActive() && robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(-DRIVE_SPEED);
@@ -149,6 +145,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
         while (opModeIsActive()) {
             //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 3 turning for ___ seconds
+
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 0.05)) {
                 robot.rightMotor.setPower(-TURN_SPEED);
@@ -165,19 +162,8 @@ public class CompleteAutonomousRed extends LinearOpMode {
                 robot.rightMotor.setPower(0);
                 sleep(500);
                 */
-                if (autoTurnRight == false) {
-                    robot.leftMotor.setPower(-TURN_SPEED);
-                    robot.rightMotor.setPower(0);
-                    telemetry.addData("Say", "turn left");
-                    telemetry.update();
-                }
-                else if (autoTurnRight == true) {
-                    robot.leftMotor.setPower(0);
-                    robot.rightMotor.setPower(-TURN_SPEED);
-                    autoTurnRight = false;
-                    telemetry.addData("Say", "turn right");
-                    telemetry.update();
-                }
+                robot.rightMotor.setPower(-DRIVE_SLOW_SPEED);
+                robot.leftMotor.setPower(-DRIVE_SLOW_SPEED);
                 telemetry.addData("Say", "Motors following line.");
                 telemetry.update();
             }

@@ -85,11 +85,11 @@ public class HardwareK9bot {
         distanceSensor = hwMap.get(AnalogInput.class, "distance");
         lightSensor = hwMap.lightSensor.get("light");
         colorSensor = hwMap.colorSensor.get("color");
+        //colorSensor = hwMap.colorSensor.get("color");
 
 
         //Reverses direction of these motors to ease coding
-        leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+
         rightWheelShooter.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -110,8 +110,8 @@ public class HardwareK9bot {
 
         // Set all drivetrain motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }
