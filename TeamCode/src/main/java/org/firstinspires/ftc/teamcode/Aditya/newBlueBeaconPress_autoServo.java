@@ -34,9 +34,9 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
 
         //encoderDriveShootBlue(0.2, -135, -108, 8.0, -20, 2);
 
-        sleep(250);
+        sleep(250); //sleeps for 0.25 seconds
 
-        servoBeaconPress();
+        servoBeaconPress(); //presses beacon
 
 
 
@@ -64,59 +64,59 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
 
     public void moveToNextBeaconRed() {
         second_beacon_press = true;
-        sleep(250);
-        encoderDrive(0.4, -25, -25, 6);
-        sleep(450);
-        encoderDrive(0.2, 29, -29, 6);
+        sleep(250); // sleeps 0.25 seconds
+        encoderDrive(0.4, -25, -25, 6); //drives backward 25cm
+        sleep(450); // sleeps 0.45 seconds
+        encoderDrive(0.2, 29, -29, 6); //turns with making 29 cm on wheels
 
-        sleep(150);
-        encoderDrive(0.5, 65, 65, 6);
+        sleep(150); // sleeps 0.15 seconds
+        encoderDrive(0.5, 65, 65, 6); // drives foreward 65 cm
 }
 
 
     public void pressBeacon() {
       {
-            telemetry.addData("","lineAlignRed()");
-            telemetry.update();
-            lineAlign();
+            telemetry.addData("","lineAlignRed()"); // This is what gets semt to rc
+            telemetry.update(); // This updates the information above
+            lineAlign();//aligns to line
         }
 
-        telemetry.addData("","allignRangeDist(12)");
-        telemetry.update();
-        allignRangeDist(8);
-        sleep(400);
-        encoderDrive(0.2, 6, 6, 5);
-        sleep(400);
+        telemetry.addData("","allignRangeDist(12)"); // This is what gets semt to rc
+        telemetry.update(); // This updates the information above
+        allignRangeDist(8); // unknown
+        sleep(400); // sleeps 0.4 seconds
+        encoderDrive(0.2, 6, 6, 5); // drives foreward 6 cm
+        sleep(400); // sleeps 0.4 seconds
 
-        encoderDrive(0.2, -6, -6, 5);
-        telemetry.addData("range:",rangeSensor.getDistance(DistanceUnit.CM));
-        telemetry.update();
-        readNewColorLeft();
-        readNewColorRight();
-        telemetry.addData("current color is", currentColor);
-        telemetry.update();
+        encoderDrive(0.2, -6, -6, 5); // drives backward 6 cm
+        telemetry.addData("range:",rangeSensor.getDistance(DistanceUnit.CM)); // tells range sensor distance
+        telemetry.update(); //sends info above
+        readNewColorLeft(); // reads left color
+        readNewColorRight(); // reads right color
+        telemetry.addData("current color is", currentColor); // tells current color (of which?)
+        telemetry.update(); // sends info above
 
 
 
         if (currentColor.equals(currentTeam)) {
             //second_beacon_press = true;
         }else {
-            sleep(5000);
+            sleep(5000); // sleeps for 5 seconds
 
          //   encoderDrive(0.2, (8 + distance - 12), (8 + distance - 12), 5);
-            encoderDrive(0.2, 6, 6, 5);
-            sleep(400);
-            encoderDrive(0.2,-6,-6,10);
+            encoderDrive(0.2, 6, 6, 5); //drives 6 cm foreword
+            sleep(400); // waits 0.4 seconds
+            encoderDrive(0.2,-6,-6,10); // drives backward
 
             //second_beacon_press = false;
         }
-        sleep(400);
+        sleep(400); // sleeps for 0.4 seconds
 
-        encoderDrive(0.2, 10, -10, 5);
-        encoderDrive(0.5, -170, -120, 5);
-        sleep(500);
-        encoderDrive(0.2, 10, 10, 5);
-        encoderDrive(0.2, -20, -20, 5);
+        encoderDrive(0.2, 10, -10, 5); // turns both wheels 6 cm
+        encoderDrive(0.5, -170, -120, 5); // makes arc turn backward
+        sleep(500); // waits 0.5 seconds
+        encoderDrive(0.2, 10, 10, 5); // goes foreword 10 cm
+        encoderDrive(0.2, -20, -20, 5); /// goes backward 20 cm
     }
 
     public void lineAlign() {
@@ -128,25 +128,25 @@ public class newBlueBeaconPress_autoServo extends AutonomousGeneral {
          //   rangeCorrection();
 
         }
-        sleep(150);
+        sleep(150); // waits 0.15
         if (second_beacon_press == true)
         {
-            encoderDrive(0.1, -15, -15, 4);
+            encoderDrive(0.1, -15, -15, 4); // drive backward 15 cm
         }
         else
         {
-            encoderDrive(0.1, -15, -15, 4);
+            encoderDrive(0.1, -15, -15, 4); //  drives backward 15 cm
         }
 
-        sleep(150);
+        sleep(150); // waits 0.15 seconds
 
         while (whiteLineDetectedBack() == false) {
 
             newTurnRight(0.1);
         }
         stopMotors();
-      //  encoderDrive(0.1, 5, 5, 4);
-        sleep(150);
+      //  encoderDrive(0.1, 5, 5, 4); // drives foreward
+        sleep(150); // waits 0.15 seconds
 
     }
 
