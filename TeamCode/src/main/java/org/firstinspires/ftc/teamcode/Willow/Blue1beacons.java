@@ -74,7 +74,7 @@ public class Blue1beacons extends LinearOpMode {
     public void goForTheBeacons()
     {
         robot.encoderDrive(0.5, 30, 30, 10);            // Drive forwards towards center vortex
-        robot.simpleGyroTurn(0.3, 46, 5000);           // Complete the rest of the Right turn towards the beacon-wall.
+        robot.simpleGyroTurn(0.3, 35, 5000);           // Complete the rest of the Right turn towards the beacon-wall.
         robot.encoderDrive(0.5, 80, 80, 10);            // Drive forwards about half way to the beacon-wall (and to get past CapBall)
         robot.DriveToWall(3, DistanceUnit.INCH, 0.15, 5000);  // Use the range sensor to get 3" away from the wall.
         robot.AlignToWall(3, DistanceUnit.INCH);
