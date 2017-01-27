@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode.Matthew;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -79,6 +80,8 @@ public class PlatinumWumpus extends OpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(this);
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         updateTelemetry(telemetry);
@@ -118,13 +121,17 @@ public class PlatinumWumpus extends OpMode {
 
         // Speed Mode
         if (gamepad1.x == true) {
-            DriveSpeedReduction = 1;
+            //DriveSpeedReduction = 1;
             LiftSpeedReduction = 1;
+            robot.rightMotor.setMaxSpeed(2500);
+            robot.leftMotor.setMaxSpeed(2500);
         }
         else if (gamepad1.b == true) {
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
-            DriveSpeedReduction = 9;
-            LiftSpeedReduction = 5;
+            //DriveSpeedReduction = 9;
+            LiftSpeedReduction = 4;
+            robot.rightMotor.setMaxSpeed(1000);
+            robot.leftMotor.setMaxSpeed(1000);
         }
         else{
             //Nothing is being pressed, don't change the value.
@@ -175,13 +182,13 @@ public class PlatinumWumpus extends OpMode {
         }
 
         // Call the setPower functions with our calculated values to activate the motors
-        left = left / DriveSpeedReduction;
-        right = right / DriveSpeedReduction;
+        //left = left / DriveSpeedReduction;
+        //right = right / DriveSpeedReduction;
         robot.setDriveTrainPower(left,right);
 
-        if(gamepad1.left_bumper == true){
-            robot.AlignToWall(3, DistanceUnit.INCH);
-        }
+        //if(gamepad1.left_bumper == true){
+            //robot.AlignToWall(3, DistanceUnit.INCH);
+        //}
     }
 
     @Override
