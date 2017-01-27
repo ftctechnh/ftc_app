@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
  * Created by ftc6347 on 10/16/16.
@@ -17,6 +18,7 @@ public class Teleop extends LinearOpModeBase {
     private float backRightPower;
 
     private boolean yButtonPressed = false;
+    private boolean driveReversed = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -64,6 +66,12 @@ public class Teleop extends LinearOpModeBase {
 
             handleTelemetry();
 
+            if(gamepad2.dpad_left) {
+                getBlue1().setPosition(0.2);
+            } else if(gamepad2.dpad_right) {
+                getRed2().setPosition(0.7);
+            }
+
             idle();
         }
     }
@@ -72,6 +80,24 @@ public class Teleop extends LinearOpModeBase {
         double spoolMotorSpeed = -gamepad2.left_stick_y;
         getSpoolMotor1().setPower(spoolMotorSpeed);
         getSpoolMotor2().setPower(spoolMotorSpeed);
+
+        if (gamepad1.left_trigger > 0) {
+            // reverse all drive motors
+            getBackLeftDrive().setDirection(DcMotor.Direction.FORWARD);
+            getBackRightDrive().setDirection(DcMotor.Direction.FORWARD);
+            getFrontLeftDrive().setDirection(DcMotor.Direction.FORWARD);
+            getFrontRightDrive().setDirection(DcMotor.Direction.FORWARD);
+
+            driveReversed = true;
+        } else {
+            // reverse all drive motors
+            getBackLeftDrive().setDirection(DcMotor.Direction.REVERSE);
+            getBackRightDrive().setDirection(DcMotor.Direction.REVERSE);
+            getFrontLeftDrive().setDirection(DcMotor.Direction.REVERSE);
+            getFrontRightDrive().setDirection(DcMotor.Direction.REVERSE);
+
+            driveReversed = false;
+        }
     }
 
     private void handleIntake() {
@@ -132,10 +158,18 @@ public class Teleop extends LinearOpModeBase {
     }
 
     private void handlePivot() {
-        frontLeftPower -= gamepad1.left_stick_x;
-        frontRightPower -= gamepad1.left_stick_x;
-        backLeftPower -= gamepad1.left_stick_x;
-        backRightPower -= gamepad1.left_stick_x;
+        double pivotPower;
+
+        if(driveReversed) {
+            pivotPower = gamepad1.left_stick_x;
+        } else {
+            pivotPower = -gamepad1.left_stick_x;
+        }
+
+        frontLeftPower += pivotPower;
+        frontRightPower += pivotPower;
+        backLeftPower += pivotPower;
+        backRightPower += pivotPower;
     }
 
     private void handleStrafe() {
