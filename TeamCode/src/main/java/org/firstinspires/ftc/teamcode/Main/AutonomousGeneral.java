@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Main;
 
 import android.graphics.Color;
+import android.provider.Settings;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 
@@ -162,6 +163,39 @@ public class AutonomousGeneral extends LinearOpMode {
      * 2) Move runs out of time
      * 3) Driver stops the opmode running.
      **/
+    public void newEncoderDrive(double power, double leftDist, double rightDist, double timeINSec){
+
+        double initialTime = System.currentTimeMillis();
+        double endTime = initialTime + (timeINSec*1000);
+
+        if (opModeIsActive()) {
+            setMotorsToEnc(rightDist, leftDist, timeINSec);
+
+            if (leftDist <= 0) {
+                back_left_motor.setPower(-power);
+                front_left_motor.setPower(-power);
+            } else {
+                back_left_motor.setPower(power);
+                front_left_motor.setPower(power);
+            }
+
+            if (rightDist <= 0) {
+                back_right_motor.setPower(-power);
+                front_right_motor.setPower(-power);
+            } else {
+                back_right_motor.setPower(power);
+                front_right_motor.setPower(power);
+            }
+
+            while(System.currentTimeMillis() <= endTime){}
+
+            stopMotors();
+        }
+
+
+    }
+
+
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -172,6 +206,11 @@ public class AutonomousGeneral extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+
+            back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Determine new target position, and pass to motor controller
             newLeftTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
@@ -677,6 +716,24 @@ public class AutonomousGeneral extends LinearOpMode {
         back_right_motor.setPower(-speed);
     }
 
+    public void setMotorsToEnc(double leftDist, double rightDist, double time){
+
+        double rightTicks = (rightDist*getCountsPerCm())/time;
+        double leftTicks = (leftDist*getCountsPerCm())/time;
+        back_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        front_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        back_left_motor.setMaxSpeed((int) leftTicks);
+        front_left_motor.setMaxSpeed((int) leftTicks);
+        back_right_motor.setMaxSpeed((int) rightTicks);
+        front_right_motor.setMaxSpeed((int) rightTicks);
+    }
+
+    public void revertRunMode(){
+
+    }
     public void encoderDriveShootRed(double speed,
                                      double leftInches, double rightInches,
                                      double timeoutS, double left_motor_shoot_position, int num_shoot) {
