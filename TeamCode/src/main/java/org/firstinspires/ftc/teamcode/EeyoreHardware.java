@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,6 +13,11 @@ import com.qualcomm.robotcore.util.Range;
 
 public class EeyoreHardware
 {
+    static final double COUNTS_PER_MOTOR_REV = 1120;
+    static final double DRIVE_GEAR_REDUCTION = 0.75;
+    static final double WHEEL_DIAMETER_INCHES = 4.0;
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+
     /* Public OpMode members. */
     public DcMotor l1 = null;
     public DcMotor l2 = null;
@@ -31,87 +38,6 @@ public class EeyoreHardware
     /* Constructor */
     public EeyoreHardware() {
 
-    }
-
-    public void shootShooter(int power) {
-        shooter1.setPower(power);
-        shooter2.setPower(power);
-    }
-
-    public void pressLeftButton() {
-        leftPresser.setPosition(0);
-
-        try {
-            Thread.sleep(1500);
-        } catch(Exception e) {
-
-        }
-
-        leftPresser.setPosition(0.275);
-    }
-
-    public void pressRightButton() {
-        rightPresser.setPosition(0);
-
-        try {
-            Thread.sleep(1500);
-        } catch(Exception e) {
-
-        }
-
-        rightPresser.setPosition(0.275);
-    }
-
-    public void moveRobotGyro(double speed, int targetDirection, int time) //Speed is from -1 to 1 and direction is 0 to 360 degrees
-    {
-        int currentDirection = gyro.getHeading();
-        double turnMultiplier = 0.05;
-        double driveMultiplier = 0.03;
-
-        long turnStartTime = System.currentTimeMillis();
-        //First, check to see if we are pointing in the correct direction
-        while(Math.abs(targetDirection - currentDirection) > 5) //If we are more than 5 degrees off target, make corrections before moving
-        {
-            currentDirection = gyro.getHeading();
-
-            int error = targetDirection - currentDirection;
-            double speedAdjustment = turnMultiplier * error;
-
-            double leftPower = 0.5 * Range.clip(speedAdjustment, -1, 1);
-            double rightPower = 0.5 * Range.clip(-speedAdjustment, -1, 1);
-
-            //Finally, assign these values to the motors
-
-            r1.setPower(rightPower);
-            r2.setPower(rightPower);
-            l1.setPower(leftPower);
-            l2.setPower(leftPower);
-        }
-
-        //Now we can move forward, making corrections as needed
-
-        long startTime = System.currentTimeMillis(); //Determine the time as we enter the loop
-
-        while(System.currentTimeMillis() - startTime < time) //Loop for the desired amount of time
-        {
-            currentDirection = gyro.getHeading();
-            int error = targetDirection - currentDirection;
-            double speedAdjustment = driveMultiplier * error;
-
-            double leftPower = Range.clip(speed + speedAdjustment, -1, 1);
-            double rightPower = Range.clip(speed - speedAdjustment, -1, 1);
-
-            //Finally, assign these values to the motors
-            r1.setPower(rightPower);
-            r2.setPower(rightPower);
-            l1.setPower(leftPower);
-            l2.setPower(leftPower);
-        }
-
-        r1.setPower(0);
-        r2.setPower(0);
-        l1.setPower(0);
-        l2.setPower(0);
     }
 
     /* Initialize standard Hardware interfaces */
@@ -180,7 +106,6 @@ public class EeyoreHardware
      * @throws InterruptedException
      */
     public void waitForTick(long periodMs) throws InterruptedException {
-
         long  remaining = periodMs - (long)period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.

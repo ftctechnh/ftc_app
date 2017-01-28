@@ -4,13 +4,14 @@ import android.graphics.Bitmap;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.CameraProcessor;
 
-import java.lang.reflect.Array;
+import static org.firstinspires.ftc.teamcode.EeyoreHardware.COUNTS_PER_INCH;
 
 @Autonomous(name="Beacon Finder", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 public class BeaconFinderAuto extends CameraProcessor {
@@ -28,33 +29,24 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.addData("Status:", "Initializing");
         telemetry.update();
 
+        teamColor = "BLUE";
+
+        // Calibrate gyro
         robot.gyro.calibrate();
 
+        while(robot.gyro.isCalibrating()) {
+            Thread.sleep(50);
+            idle();
+        }
+
+        Thread.sleep(2000);
+
+        // Initiate camera
         setCameraDownsampling(9);
         startCamera();
 
-        Thread.sleep(6000);
-
         telemetry.addData("Status:", "Initialized (waiting for start)");
-        telemetry.addData("Gyro:", "Finished");
         telemetry.update();
-
-        //We need to determine what team we are on currently
-        while(!gamepad1.a) //Keep checking until the driver presses a to confirm his team selection
-        {
-            if( gamepad1.x) //If the driver pushes x, set the team color to blue
-            {
-                teamColor = "BLUE";
-            }
-
-            if(gamepad1.b) //If the driver pushes b, set the team color to red
-            {
-                teamColor = "RED";
-            }
-
-            telemetry.addData("Team Color:", teamColor);
-            telemetry.update();
-        }
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -62,52 +54,45 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.addData("Status:", "Moving...");
         telemetry.update();
 
-        robot.moveRobotGyro(0.25, 0, 1000); //pull forward off the wall
+        // Move off of the wall
+        moveStraight(27);
         Thread.sleep(1000);
-        //At this point, we can try to score the pre-loaded balls
-        robot.shootShooter(1);
+
+        // At this point, we can try to score the pre-loaded balls
+        shootShooter(1);
         Thread.sleep(800);
-        robot.shootShooter(0);
+        shootShooter(0);
         Thread.sleep(1000);
-        robot.shootShooter(1);
+        shootShooter(1);
         Thread.sleep(1000);
-        robot.shootShooter(0);
-        //Now that both balls are scored, proceed to the beacon
-        robot.moveRobotGyro(0.25, 90, 1000); //drive diagonally to line up w/ the beacon
-        robot.moveRobotGyro(0.25, 0, 0);//Turn to line up on the bacons sideways
+        shootShooter(0);
 
-        /*Thread.sleep(2000);
+        // Now we move on to the beacons
+        gyroTurn(45);
+        moveStraight(20);
+        gyroTurn(90);
+        moveStraight(40);
+        Thread.sleep(1000);
+        gyroTurn(0);
+        Thread.sleep(1000);
+        driveToLine();
 
-        telemetry.addData("Status:", "Detecting beacon color...");
-        telemetry.update();
+        // Press the beacon
+        String side = getBeaconSide();
 
-        String firstBeaconSide = getBeaconSide();
-        returnedSide = firstBeaconSide;
-        telemetry.addData("Returned Side:", returnedSide);
-        telemetry.addData("Left Color:", leftBeaconColor);
-        telemetry.addData("Right Color:", rightBeaconColor);
-        telemetry.update();
-
-        if (firstBeaconSide == "LEFT") //We need to push the left side
-        {
-            GyroMovement(0.2, 0, 750);
-            GyroMovement(0.3, 90, 800);
+        if(side == "LEFT") {
+            pressLeftButton();
+        } else if(side == "RIGHT") {
+            pressRightButton();
         }
-        else if (firstBeaconSide == "RIGHT")//We need to push the right side
-        {
-            GyroMovement(0.3, 90, 750);
-        }*/
+
+        telemetry.addData("Status:", "Shutting down...");
+        telemetry.update();
 
         stopCamera();
 
-        telemetry.addData("Status:", "Idling...");
-        telemetry.addData("Returned Side:", returnedSide);
-        telemetry.addData("Left Color:", leftBeaconColor);
-        telemetry.addData("Right Color:", rightBeaconColor);
-        telemetry.update();
-
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        // Run until the end of the match (driver presses STOP)
+        while(opModeIsActive()) {
             telemetry.addData("Status:", "Idling...");
             telemetry.addData("Returned Side:", returnedSide);
             telemetry.addData("Left Color:", leftBeaconColor);
@@ -117,8 +102,101 @@ public class BeaconFinderAuto extends CameraProcessor {
         }
     }
 
+    public void shootShooter(int power) {
+        robot.shooter1.setPower(power);
+        robot.shooter2.setPower(power);
+    }
+
+    public void setDrivePower(double power) {
+        robot.l1.setPower(power);
+        robot.l2.setPower(power);
+        robot.r1.setPower(power);
+        robot.r2.setPower(power);
+    }
+
+    public void pressLeftButton() throws InterruptedException {
+        robot.leftPresser.setPosition(0);
+        Thread.sleep(1500);
+        robot.leftPresser.setPosition(0.275);
+    }
+
+    public void pressRightButton() throws InterruptedException {
+        robot.rightPresser.setPosition(0);
+        Thread.sleep(1500);
+        robot.rightPresser.setPosition(0.275);
+    }
+
+    public void gyroTurn(int degree) throws InterruptedException
+    {
+        int currentDirection = robot.gyro.getHeading();
+        double turnMultiplier = 0.05;
+
+        robot.l1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.r2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        idle();
+
+        // First, check to see if we are pointing in the correct direction
+        while(Math.abs(degree - currentDirection) > 5) //If we are more than 5 degrees off target, make corrections before moving
+        {
+            currentDirection = robot.gyro.getHeading();
+
+            int error = degree - currentDirection;
+            double speedAdjustment = turnMultiplier * error;
+
+            double leftPower = 0.20 * Range.clip(speedAdjustment, -1, 1);
+            double rightPower = 0.20 * Range.clip(-speedAdjustment, -1, 1);
+
+            // Finally, assign these values to the motors
+            robot.r1.setPower(rightPower);
+            robot.r2.setPower(rightPower);
+            robot.l1.setPower(leftPower);
+            robot.l2.setPower(leftPower);
+        }
+
+        setDrivePower(0);
+    }
+
+    public void moveStraight(double inches) throws InterruptedException {
+        robot.l1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.r1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        idle();
+
+        robot.l1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.r1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        idle();
+
+        int targetLeft = robot.l1.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+        int targetRight = robot.r1.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+
+        setDrivePower(0.25);
+
+        while((robot.l1.getCurrentPosition() < targetLeft) && (robot.r1.getCurrentPosition() < targetRight)) {
+            telemetry.addData("Target", "left=" + targetLeft + " " + "right=" + targetRight);
+            telemetry.addData("Position", "left=" + robot.l1.getCurrentPosition() + " " + "right=" + robot.r1.getCurrentPosition());
+            telemetry.addData("Power", "left=" + robot.l1.getPower() + " " + "right=" + robot.r1.getPower());
+            telemetry.update();
+
+            idle();
+        }
+
+        setDrivePower(0);
+    }
+
+    public void driveToLine() throws InterruptedException {
+        while(robot.color.alpha() == 0) {
+            setDrivePower(0.1);
+            Thread.sleep(100);
+            setDrivePower(0);
+            telemetry.addData("Sensor Color", robot.color.alpha());
+            telemetry.update();
+            Thread.sleep(100);
+        }
+
+        setDrivePower(0);
+    }
+
     public String getBeaconSide() {
-        while(!imageReady()) {
+        while (!imageReady()) {
             telemetry.addData("Camera:", "Waiting for image...");
             telemetry.update();
         }
@@ -166,15 +244,11 @@ public class BeaconFinderAuto extends CameraProcessor {
             right = "BLUE";
         }
 
-        if(left == teamColor)
-        {
+        if(left == teamColor) {
             return "LEFT";
-        }
-        else if (right == teamColor)
-        {
+        } else if(right == teamColor) {
             return "RIGHT";
-        }
-        else {
+        } else {
             return "ERROR";
         }
     }
