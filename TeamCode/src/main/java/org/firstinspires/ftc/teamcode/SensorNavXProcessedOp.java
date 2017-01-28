@@ -54,7 +54,7 @@ public class SensorNavXProcessedOp extends OpMode {
   /* This is the port on the Core Device Interace Module */
   /* in which the navX-Micro is connected.  Modify this  */
   /* depending upon which I2C port you are using.        */
-  private final int NAVX_DIM_I2C_PORT = 0;
+  private final int NAVX_DIM_I2C_PORT = 5;
 
   private String startDate;
   private ElapsedTime runtime = new ElapsedTime();

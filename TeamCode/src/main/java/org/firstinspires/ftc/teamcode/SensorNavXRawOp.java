@@ -66,7 +66,7 @@ import java.text.DecimalFormat;
 @Disabled //Comment this in to remove this from the Driver Station OpMode List
 public class SensorNavXRawOp extends OpMode {
 
-  private final int NAVX_DIM_I2C_PORT = 0;
+  private final int NAVX_DIM_I2C_PORT = 5;
   private String startDate;
   private ElapsedTime runtime = new ElapsedTime();
   private AHRS navx_device;
@@ -93,12 +93,18 @@ public class SensorNavXRawOp extends OpMode {
    * This method will be called repeatedly in a loop
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
    */
+
+    @Override
+    public void start(){
+        navx_device.zeroYaw();
+    }
+
   @Override
   public void loop() {
 
       boolean connected = navx_device.isConnected();
       telemetry.addData("1 navX-Device", connected ? "Connected" : "Disconnected" );
-      String gyrocal, gyro_raw, accel_raw, mag_raw;
+      String gyrocal, gyro_raw, accel_raw, mag_raw, quat_raw;
       boolean magnetometer_calibrated;
       if ( connected ) {
           DecimalFormat df = new DecimalFormat("#.##");
@@ -109,6 +115,10 @@ public class SensorNavXRawOp extends OpMode {
           accel_raw = df.format(navx_device.getRawAccelX()) + ", " +
                       df.format(navx_device.getRawAccelY()) + ", " +
                       df.format(navx_device.getRawAccelZ());
+          quat_raw = df.format(navx_device.getQuaternionX()) + ", " +
+                     df.format(navx_device.getQuaternionY()) + ", " +
+                     df.format(navx_device.getQuaternionZ()) + ", " +
+                     df.format(navx_device.getQuaternionW());
           if ( magnetometer_calibrated ) {
               mag_raw = df.format(navx_device.getRawMagX()) + ", " +
                       df.format(navx_device.getRawMagY()) + ", " +
@@ -119,11 +129,13 @@ public class SensorNavXRawOp extends OpMode {
       } else {
         gyro_raw =
             accel_raw =
+                    quat_raw =
             mag_raw = "-------";
       }
       telemetry.addData("2 Gyros (Degrees/Sec):", gyro_raw);
       telemetry.addData("3 Accelerometers  (G):", accel_raw );
       telemetry.addData("4 Magnetometers  (uT):", mag_raw );
+      telemetry.addData("5 Quaternions    (?)", quat_raw);
   }
 
 }
