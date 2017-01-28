@@ -113,7 +113,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
         robot.sleepMs(5000);
 
         //drive 50 inches
-        robot.encoderDrive(1,50,50,5000);
+        robot.encoderDrive(0.5,75,75,15000);
 
 
         //robot.leftMotor.setPower(1);

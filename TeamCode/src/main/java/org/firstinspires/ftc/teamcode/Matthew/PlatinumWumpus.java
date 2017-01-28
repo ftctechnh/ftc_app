@@ -83,6 +83,7 @@ public class PlatinumWumpus extends OpMode {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
         // Send telemetry message to signify robot waiting;
         updateTelemetry(telemetry);
     }
@@ -107,7 +108,8 @@ public class PlatinumWumpus extends OpMode {
     @Override
     public void start() {
     }
-
+    //int startMaxSpeedL = robot.leftMotor.getMaxSpeed();
+    //int startMaxSpeedR = robot.rightMotor.getMaxSpeed();
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
@@ -123,8 +125,8 @@ public class PlatinumWumpus extends OpMode {
         if (gamepad1.x == true) {
             //DriveSpeedReduction = 1;
             LiftSpeedReduction = 1;
-            robot.rightMotor.setMaxSpeed(2500);
-            robot.leftMotor.setMaxSpeed(2500);
+            robot.rightMotor.setMaxSpeed(600000 );
+            robot.leftMotor.setMaxSpeed(600000);
         }
         else if (gamepad1.b == true) {
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
