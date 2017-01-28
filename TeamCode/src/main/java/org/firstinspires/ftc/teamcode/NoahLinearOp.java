@@ -30,28 +30,52 @@ public class NoahLinearOp extends OpMode {
         resetStartTime();
     }
 
+    public void goForward() {
+        right1.setPower(-1);
+        right2.setPower(-1);
+        left1.setPower(1);
+        left2.setPower(1);
+    }
+
+    public void stopRobot() {
+        right1.setPower(0);
+        right2.setPower(0);
+        left1.setPower(0);
+        left2.setPower(0);
+    }
+
+    public void goBackwards() {
+        right1.setPower(1);
+        right2.setPower(1);
+        left1.setPower(-1);
+        left2.setPower(-1);
+    }
+
+    public void turnLeft() {
+        right1.setPower(1);
+        right2.setPower(1);
+        left1.setPower(1);
+        left2.setPower(1);
+    }
+
     @Override
     public void loop() {
-        if (time < 2)
-        {
-            right1.setPower(1);
-            right2.setPower(1);
-            left1.setPower(-1);
-            left2.setPower(-1);
-        }
-        else if (time < 5)
-        {
 
+        if (time < 2.5) {
+            goBackwards();
         }
-
-        else
-        {
-            right1.setPower(0);
-            right2.setPower(0);
-            left1.setPower(0);
-            left2.setPower(0);
+        if (time > 2.5 && time < 3) {
+            turnLeft();
         }
+        if (time > 3 && time < 9) {
+            goForward();
+        }
+        if (time > 7) {
+            stopRobot();
+        }
+        telemetry.addData("Time", time);
     }
+
 }
 
 
