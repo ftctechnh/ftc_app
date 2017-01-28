@@ -2,12 +2,9 @@ package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -41,9 +38,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private DcMotor spoolMotor1;
     private DcMotor spoolMotor2;
 
-    private Servo blue1;
-    private Servo red2;
+    private Servo beaconsServo1;
+    private Servo beaconsServo2;
     private Servo door3;
+    private Servo latch4;
 
     private LightSensor frontLightSensor;
     private LightSensor backLightSensor;
@@ -76,9 +74,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         spoolMotor1 = hardwareMap.dcMotor.get("s1");
         spoolMotor2 = hardwareMap.dcMotor.get("s2");
 
-        blue1 = hardwareMap.servo.get("b1");    // Up =.3 Down =1.0
-        red2 = hardwareMap.servo.get("r2");     //Up =.7 Down =0.0
-        door3 = hardwareMap.servo.get("d3");   //Closed = 0.55 Open = 0.25
+        beaconsServo1 = hardwareMap.servo.get("b1");  // Up = 0.3, Down = 1.0
+        beaconsServo2 = hardwareMap.servo.get("r2");   // Up = 0.7, Down = 0.0
+        door3 = hardwareMap.servo.get("d3");  // Closed = 0.55, Open = 0.25
+        latch4 = hardwareMap.servo.get("l4"); // Up = 0.5
 
         colorSensor = hardwareMap.colorSensor.get("clr");
         colorSensor.enableLed(false);
@@ -102,10 +101,21 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         spoolMotor1.setDirection(DcMotor.Direction.REVERSE);
         spoolMotor2.setDirection(DcMotor.Direction.FORWARD);
 
-        // initialize servo positions
-        blue1.setPosition(1.0);
-        red2.setPosition(0.0);
+        robotRuntime.reset();
+        // initialize servo positions to up
+
+        while(robotRuntime.seconds() < 2)
+        {
+            beaconsServo1.setPosition(0.7);
+            beaconsServo2.setPosition(0.3);
+        }
+        // then put them back down
+        beaconsServo1.setPosition(1.0);
+        beaconsServo2.setPosition(0);
+
+
         door3.setPosition(0.53);
+        latch4.setPosition(0.5);
 
         // stop all motors
         launcherMotor.setPower(0);
@@ -126,7 +136,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.update();
     }
 
-    protected void claimBeacon() {
+    protected void claimBeaconRed() {
         // first push
         while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
             // run without encoders again
@@ -149,7 +159,51 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         // drive backward
         encoderDrive(0.5, -2, -2);
 
-        // check for red
+        // check for blue
+        if(getColorSensor().blue() > 0) {
+            getRobotRuntime().reset();
+            while(opModeIsActive() && getRobotRuntime().milliseconds() < 5000) {
+                idle();
+            }
+
+            // second push
+            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 5) {
+                driveForward(0.2);
+            }
+
+            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            // second drive backward
+            encoderDrive(0.5, -2, -2);
+        }
+
+        stopRobot();
+    }
+
+    protected void claimBeaconBlue() {
+        // first push
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
+            // run without encoders again
+            getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            driveForward(0.2);
+        }
+        stopRobot();
+
+        // pause for the beacon to change color
+        getRobotRuntime().reset();
+        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
+            idle();
+        }
+
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // drive backward
+        encoderDrive(0.5, -2, -2);
+
+        // check for blue
         if(getColorSensor().red() > 0) {
             getRobotRuntime().reset();
             while(opModeIsActive() && getRobotRuntime().milliseconds() < 5000) {
@@ -299,11 +353,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     protected void gyroPivot(double speed, double angle) {
-
         double steer;
         double error = getGyroError(angle);
 
         while(opModeIsActive() && Math.abs(error) > GYRO_ERROR_THRESHOLD) {
+
+            telemetry.addData("error", error);
+            telemetry.update();
 
             error = getGyroError(angle);
 
@@ -380,11 +436,15 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         return spoolMotor2;
     }
 
-    protected Servo getBlue1() { return blue1; }
+    protected Servo getBeaconsServo1() { return beaconsServo1; }
 
-    protected Servo getRed2() { return red2; }
+    protected Servo getBeaconsServo2() { return beaconsServo2; }
 
     protected Servo getDoor3() { return door3; }
+
+    protected Servo getLatch4() {
+        return latch4;
+    }
 
     protected LightSensor getFrontLightSensor() {
         return frontLightSensor;

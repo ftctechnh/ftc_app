@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by ftc6347 on 1/9/17.
  */
+@Disabled
 @Autonomous(name = "Blue Beacons Autonomous", group = "autonomous programs")
-public class AutonomousBeaconsBlue extends LinearOpModeBase {
+public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -73,7 +75,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         stopRobot();
 
         // claim first beacon
-        claimBeaconBlue();
+        claimBeaconRed();
 
         // strafe to the left to second beacon
         encoderStrafe(0.5, -24, -24);
@@ -109,7 +111,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         stopRobot();
 
         // claim the first beacon
-        claimBeaconBlue();
+        claimBeaconRed();
 
         // turn right for launching
         encoderDrive(0.5, 7, -7);
