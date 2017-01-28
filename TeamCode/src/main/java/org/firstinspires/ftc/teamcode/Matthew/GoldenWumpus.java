@@ -35,11 +35,9 @@ package org.firstinspires.ftc.teamcode.Matthew;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
+import org.firstinspires.ftc.teamcode.Competition.InvadersVelocityVortexBot;
 
 
 /**
@@ -58,7 +56,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  */
 
 @TeleOp(name="Golden Wumpus", group="Pushbot")
-//@Disabled
+@Disabled
 public class GoldenWumpus extends OpMode {
 
     /* Declare OpMode members. */

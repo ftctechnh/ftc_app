@@ -31,10 +31,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Matthew;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
+import org.firstinspires.ftc.teamcode.Competition.InvadersVelocityVortexBot;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -70,7 +71,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  */
 
 @Autonomous(name="Comp Blue 1", group="Pushbot")
-//@Disabled
+@Disabled
 public class Blue1 extends LinearOpMode {
 
     /* Declare OpMode members. */

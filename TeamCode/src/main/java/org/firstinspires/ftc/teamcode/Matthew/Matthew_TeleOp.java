@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
+import org.firstinspires.ftc.teamcode.Competition.InvadersVelocityVortexBot;
 
 /**
  * Created by matth on 11/5/2016.

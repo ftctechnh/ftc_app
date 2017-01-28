@@ -33,9 +33,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Matthew;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
+import org.firstinspires.ftc.teamcode.Competition.InvadersVelocityVortexBot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -65,7 +66,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  */
 
 @Autonomous(name="Testing the Gyro Functions", group="Coach")
-//@Disabled
+@Disabled
 public class GyroFunctionTest extends LinearOpMode {
 
     /* Declare OpMode members. */

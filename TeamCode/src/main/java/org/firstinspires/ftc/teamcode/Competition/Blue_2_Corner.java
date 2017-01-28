@@ -28,20 +28,18 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.Matthew;
+package org.firstinspires.ftc.teamcode.Competition;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
  *
  */
 
-@Autonomous(name="Red 2 CapBall", group="Pushbot")
+@Autonomous(name="Blue 2 Corner", group="Pushbot")
 //@Disabled
-public class Red2CapBall extends LinearOpMode {
+public class Blue_2_Corner extends LinearOpMode {
 
     /* Declare OpMode members. */
     InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use our custom hardware
@@ -55,13 +53,10 @@ public class Red2CapBall extends LinearOpMode {
         robot.init(this);
         waitForStart();
 
-        robot.sleepMs(5000);                 // Sleep for 10s - Let our alliance partner do great things
-        robot.ohshoot();                     // SHOOT! - This takes 12 seconds
-        robot.encoderDrive(0.3,6,6,2500);    // Move out slightly to clear away from the wall
-        robot.simpleGyroTurn(0.3,40, 2500); // Turn CCW ~45 degrees
-        robot.encoderDrive(0.3,30,30,5000);  // Drive forward 30in
-        robot.simpleGyroTurn(0.3,-71,2500);   // Turn CW ~90 degrees
-        robot.encoderDrive(0.3,30,30,5000);  // Drive to the center pedestal and park on it (knocking the cap ball off in the process)
-
+        robot.sleepMs(5000);
+        robot.ohshoot();
+        robot.encoderDrive(0.3,20,20,2500);
+        robot.simpleGyroTurn(0.3,81, 2500);
+        robot.encoderDrive(0.3,30,30,10000);
     }
 }

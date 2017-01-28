@@ -35,15 +35,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Competition.InvadersVelocityVortexBot;
 
 
 /**
@@ -66,7 +62,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 //This opmode lets the driver drive with only one stick. This means that we have a lot of buttons to map to other things.
 
 @TeleOp(name="Bigly", group="Pushbot")
-//@Disabled
+@Disabled
 public class InvadersPushbot_Iterative extends OpMode{
 
     /* Declare OpMode members. */

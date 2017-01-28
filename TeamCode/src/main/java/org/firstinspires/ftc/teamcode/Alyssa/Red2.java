@@ -33,13 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Alyssa;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
+import org.firstinspires.ftc.teamcode.Competition.InvadersVelocityVortexBot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -69,7 +70,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  */
 
 @Autonomous(name="Red2", group="Pushbot")
-//@Disabled
+@Disabled
 public class Red2 extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -38,7 +38,7 @@
 //import com.qualcomm.robotcore.util.Range;
 //
 //import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-//import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
+//import org.firstinspires.ftc.teamcode.Competition.InvadersVelocityVortexBot;
 //
 ///**
 // * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -74,7 +74,7 @@
 // */
 //
 //@Autonomous(name="Pushbot: Auto Drive By Gyro", group="Pushbot")
-////@Disabled
+//@Disabled
 //public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 //
 //    /* Declare OpMode members. */

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Competition;
 
 import org.firstinspires.ftc.teamcode.FtcI2cDeviceState;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
