@@ -39,7 +39,7 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
  *
  */
 
-@Autonomous(name="Blue 2 Corner", group="Pushbot")
+@Autonomous(name="Red 2 Corner", group="Pushbot")
 //@Disabled
 public class Red_2_Corner extends LinearOpMode {
 
