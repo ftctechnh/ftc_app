@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
 @TeleOp(name="Drive", group="Robot")
-//@Disabled
+@Disabled
 public class DRIVETEST extends LinearOpMode {
     public DcMotor leftMotor   = null;
     public DcMotor  rightMotor  = null;

@@ -20,56 +20,45 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor channel:  Intake motor:             "intake"
  * Servo channel:  Left side Servo:          "left servo"
  * Servo channel:  Right side Servo:         "right servo"
+ *
  * Note: the configuration of the servos is such that:
- *   As the Right side servo approaches 1, it moves towards the pressing position (facing away from the robot  |-->).
- *   As the Left side servo approaches 0, it moves towards the pressing position  (facing away from the robot  |-->).
+ *   As the _____ side servo approaches 1, it moves towards the pressing position (facing away from the robot  |-->).
+ *   As the _____ side servo approaches 0, it moves towards the pressing position (facing away from the robot  |-->).
  */
-public class ROUSAutoHardware_WithServos
+public class DriveForKidsHardware
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public Servo    PressR      = null;
-    public Servo    PressL      = null;
+    public DcMotor  leftMotor    = null;
+    public DcMotor  rightMotor   = null;
 
 
-
-    /* local OpMode members. */
-    HardwareMap hwMap           =  null;
+    /* Local OpMode members. */
+    HardwareMap hwMap  = null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ROUSAutoHardware_WithServos(){
-
+    public DriveForKidsHardware() {
     }
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map
+        // save reference to HW Map
         hwMap = ahwMap;
 
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left motor");
         rightMotor  = hwMap.dcMotor.get("right motor");
-       // leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
-
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-
 
         // Set all motors to run with encoders.
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        // Define and initialize ALL installed servos.
-        //PressL = hwMap.servo.get("left servo");
-       // PressR = hwMap.servo.get("right servo");
-        //Ex. Servo                  leftClaw = hwMap.servo.get("left_hand");
-        //Ex. Servo position set     leftClaw.setPosition(MID_SERVO);
+
 
     }
 
@@ -82,7 +71,7 @@ public class ROUSAutoHardware_WithServos
      * @param periodMs  Length of wait cycle in mSec.
      * @throws InterruptedException
      */
-    public void waitForTick(long periodMs) throws InterruptedException {
+    public void waitForTick(long periodMs)  throws InterruptedException {
 
         long  remaining = periodMs - (long)period.milliseconds();
 
@@ -94,4 +83,3 @@ public class ROUSAutoHardware_WithServos
         period.reset();
     }
 }
-

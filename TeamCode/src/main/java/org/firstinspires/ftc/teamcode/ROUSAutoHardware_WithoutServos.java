@@ -49,7 +49,6 @@ public class ROUSAutoHardware_WithoutServos
         leftMotor   = hwMap.dcMotor.get("left motor");
         rightMotor  = hwMap.dcMotor.get("right motor");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);

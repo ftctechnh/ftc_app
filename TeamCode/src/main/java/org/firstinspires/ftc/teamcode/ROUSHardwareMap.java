@@ -31,15 +31,11 @@ public class ROUSHardwareMap
     public DcMotor  leftMotor    = null;
     public DcMotor  rightMotor   = null;
     public DcMotor  Intake       = null;
-    //public Servo    PressR  = null;
-    //public Servo    PressL   = null;
+    public Servo    PressR  = null;
+    public Servo    PressL   = null;
 
-    public final static double rHOME = 0;
-    public final static double lHOME = 0;
-    public final static double PRESSRIGHT_MIN_RANGE  = 0;
-    public final static double PRESSRIGHT_MAX_RANGE  = 1;
-    public final static double PRESSLEFT_MIN_RANGE  = 0.;
-    public final static double PRESSLEFT_MAX_RANGE  = 1;
+    public final static double rHOME = 1;
+    public final static double lHOME = 1;
 
 
     /* Local OpMode members. */
@@ -59,8 +55,8 @@ public class ROUSHardwareMap
         leftMotor   = hwMap.dcMotor.get("left motor");
         rightMotor  = hwMap.dcMotor.get("right motor");
         Intake      = hwMap.dcMotor.get("intake");
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        //rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        //leftMotor.setDirection(DcMotor.Direction.REVERSE);
         //shootMotorR.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
@@ -73,11 +69,11 @@ public class ROUSHardwareMap
 
         // Define and initialize ALL installed servos.
         //claw = hwMap.servo.get("claw");      (Servo example)
-        //PressR = hwMap.servo.get("right servo");
-        //PressL = hwMap.servo.get("left servo");
+        PressR = hwMap.servo.get("right servo");
+        PressL = hwMap.servo.get("left servo");
 
-        // PressR.setPosition(rHOME);
-        // PressL.setPosition(lHOME);
+         //PressR.setPosition(rHOME);
+         //PressL.setPosition(lHOME);
 
 
 
