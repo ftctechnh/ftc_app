@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Main;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "newBlueBeaconPressAuto_two")
+@Disabled
 public class newBlueBeaconPress_autoTwo extends AutonomousGeneral {
 
 

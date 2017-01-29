@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Aditya;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 //import com.qualcomm.robotcore.hardware.DcMotor;
 
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "newRedBeaconPressAutoServo")
+@Disabled
 public class newredBeaconPress_autoServo extends AutonomousGeneral {
 
 
