@@ -36,15 +36,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
 
 
-@TeleOp(name="Drive", group="Robot")
-@Disabled
-public class Drive extends LinearOpMode {
+@TeleOp(name="Dirver", group="Robot")
+//@Disabled
+public class DriveForKids extends LinearOpMode {
 
     /* Declare OpMode members. */
-    ROUSHardwareMap robot = new ROUSHardwareMap();              //'Use a ROUS sharedware
+    DriveForKidsHardware robot = new DriveForKidsHardware();              //'Use a ROUS sharedware
     //public final static double press_r = .6;
     //public final static double press_l = .6;
 
@@ -52,9 +51,6 @@ public class Drive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         double Left;
         double Right;
-        double IntakeO; // intake motor spinning out --->
-        double IntakeI; // intake motor spinning in  <---
-        // double Aim;
 
 
         /* Initialize the hardware variables.
@@ -67,65 +63,19 @@ public class Drive extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-
-            IntakeO = gamepad2.left_trigger;         //Intake direction ---> (no negative before gampad2
-            //because we want the motor to spin in the opposite direction
-            // of IntakeI)
-            IntakeI = -gamepad2.right_trigger;       //Intake direction <---
-            //Aim = -gamepad2.right_stick_y / 2;
-
-            if (gamepad1.right_bumper) {
-                Left = gamepad1.left_stick_y;
-                Right = -gamepad1.right_stick_y;
-                robot.leftMotor.setPower(Right);
-                robot.rightMotor.setPower(Left);
-            } else {
+            if (gamepad1.left_bumper) {
                 Left = -gamepad1.left_stick_y;
                 Right = gamepad1.right_stick_y;
                 robot.leftMotor.setPower(Left);
                 robot.rightMotor.setPower(Right);
-            }
-            if (gamepad2.right_trigger >= .1) {           //The if/else statement is a safety mechanism so that the
-                //program doesn't crash in the event that both triggers
-                //are pressed simultaneously
-                robot.Intake.setPower(IntakeI);
+            } else  {
+                Left = -gamepad1.left_stick_y / 8;
+                Right = gamepad1.right_stick_y / 8;
+                robot.leftMotor.setPower(Left);
+                robot.rightMotor.setPower(Right);
 
-            } else {
-                robot.Intake.setPower(IntakeO);
-
-            }
-            if (gamepad2.left_bumper) {
-                robot.PressR.setPosition(.78);
-            } else {
-                robot.PressR.setPosition(.95);
-            }
-
-            if (gamepad2.right_bumper) {
-                    robot.PressL.setPosition(.76);
-            } else {
-                    robot.PressL.setPosition(.95);
-            }
-
-                //robot.AimingMotor.setPower(Aim);
-
-                //if (gamepad2.right_bumper) {
-                //robot.shootMotorL.setPower(1);
-                //robot.shootMotorR.setPower(1);
-
-                //}
-
-                //if (gamepad2.dpad_left) {
-                //      robot.Press_left.setPosition(press_l);
-
-                // }
-
-                //if (gamepad2.dpad_right) {
-                // robot.Press_right.setPosition(press_r);
-
-                // }
             }
         }
     }
+}
 

@@ -28,15 +28,24 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -71,15 +80,16 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Drive By Gyro", group="Pushbot")
-@Disabled
+@Autonomous(name="Drive Gyro", group="Pushbot")
+//@Disabled
 public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
-
+    static final int LED_CHANNEL = 5;
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    ROUSAutoHardware_WithServos         robot   = new ROUSAutoHardware_WithServos();   // Use a Pushbot's hardware
     ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
-
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    ColorSensor sensorRGB;
+    DeviceInterfaceModule cdim;
+    static final double     COUNTS_PER_MOTOR_REV    = 1220 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = .625 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -87,23 +97,56 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.3;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.1;     // Nominal half speed for better accuracy.
+    static final double     SCAN_SPEED              =.05;
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = 0.05;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.075;     // Larger is more responsive, but also less stable
+
+    static final double     UP                      = .95;
+    static final double     DOWN                    = .75;
 
 
     @Override
     public void runOpMode() {
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
 
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
+
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
+
+        // bLedOn represents the state of the LED.
+        boolean bLedOn = false;
+
+        // get a reference to our DeviceInterfaceModule object.
+        cdim = hardwareMap.deviceInterfaceModule.get("dim");
+
+        // set the digital channel to output mode.
+        // remember, the Adafruit sensor is actually two devices.
+        // It's an I2C sensor and it's also an LED that can be turned on or off.
+        cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
+
+        // get a reference to our ColorSensor object.
+        sensorRGB = hardwareMap.colorSensor.get("color");
+
+        // turn the LED on in the beginning, just so user will know that the sensor is active.
+        cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
         /*
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
          */
         robot.init(hardwareMap);
-        gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
+        gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
 
         // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
         robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -116,7 +159,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         gyro.calibrate();
 
         // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && gyro.isCalibrating())  {
+        while (!isStopRequested() && gyro.isCalibrating()) {
             sleep(50);
             idle();
         }
@@ -126,7 +169,38 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (bCurrState == true) {
 
+            // button is transitioning to a pressed state. Toggle the LED.
+            bLedOn = !bLedOn;
+            cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
+        } else {
+
+            bLedOn = false;
+        }
+
+        // update previous state variable.
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
+
+        // send the info back to driver station using telemetry function.
+        telemetry.addData("LED", bLedOn ? "On" : "Off");
+        telemetry.addData("Clear", sensorRGB.alpha());
+        telemetry.addData("Red  ", sensorRGB.red());
+        telemetry.addData("Green", sensorRGB.green());
+        telemetry.addData("Blue ", sensorRGB.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+
+        // change the background color to match the color detected by the RGB sensor.
+        // pass a reference to the hue, saturation, and value array as an argument
+        // to the HSVToColor method.
+        relativeLayout.post(new Runnable() {
+            public void run() {
+                relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+            }
+        });
+
+        telemetry.update();
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
             telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
@@ -138,18 +212,55 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
-        gyroDrive(DRIVE_SPEED, 48.0, 0.0);    // Drive FWD 48 inches
-        gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-        gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
-        gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
-        gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
-        gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
-        gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
-        gyroHold( TURN_SPEED,   0.0, 0.5);    // Hold  0 Deg heading for a 1/2 second
+        gyroDrive(DRIVE_SPEED, 12, 0.0);
+        gyroTurn(TURN_SPEED, -45.0);
+        gyroHold(TURN_SPEED, -45.0, 0.5);
+        gyroDrive(DRIVE_SPEED, 16.970f, -45);
+        gyroTurn(TURN_SPEED, -0);
+        gyroHold(TURN_SPEED, 0, .5);
+        gyroDrive(DRIVE_SPEED, 6.0, 0);
+        gyroTurn(TURN_SPEED, -90.0);
+        gyroHold(TURN_SPEED, -90.0, 0.5);
+        gyroDrive(SCAN_SPEED, 3 , -90);
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        while (opModeIsActive()) {
+            Boolean Blue = EvaluateColorSensor.EvaluateColor(sensorRGB, eColorState.blue);
+            Boolean Red = EvaluateColorSensor.EvaluateColor(sensorRGB, eColorState.red);
+            if (Blue) {
+                gyroDrive(SCAN_SPEED, -2, -90);
+                telemetry.addData("Color", "BLUE");
+                telemetry.update();
+                sleep(500);
+                telemetry.addData("Color", "BLUE");
+                telemetry.update();
+                sleep(125);
+                robot.PressL.setPosition(DOWN);
+                robot.PressR.setPosition(UP);
+                sleep(500);
+                gyroDrive(SCAN_SPEED, 5, -90);
+                sleep(125);
+                stop();
+
+            } else if (Red) {
+                gyroDrive(SCAN_SPEED, -2, -90);
+                telemetry.addData("Color", "RED");
+                telemetry.update();
+                sleep(500);
+                telemetry.addData("Color", "RED");
+                telemetry.update();
+                sleep(125);
+                robot.PressL.setPosition(UP);
+                robot.PressR.setPosition(DOWN);
+                sleep(500);
+                gyroDrive(SCAN_SPEED, 5, -90);
+                sleep(125);
+                stop();
+            } else {
+                gyroDrive(SCAN_SPEED, .5, -90);
+                telemetry.addData("Path", "Complete");
+                telemetry.update();
+            }
+        }
     }
 
 
@@ -289,8 +400,6 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
     }
-
-
 
     /**
      * Perform one cycle of closed loop heading control.

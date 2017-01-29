@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="AutoBlue(Ramp)", group="ROUS Robot")
-//@Disabled
+@Disabled
 public class drivingforward extends LinearOpMode {   //The word Purple in the name
 
     ROUSAutoHardware_WithoutServos robot   = new ROUSAutoHardware_WithoutServos();   // Use a Pushbot's hardware

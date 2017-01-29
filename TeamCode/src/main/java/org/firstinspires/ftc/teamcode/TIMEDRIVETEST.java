@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Created by ROUS on 10/29/2016.
  */
 @Autonomous(name="Auto Drive", group="Pushbot")
-//@Disabled
+@Disabled
 public class TIMEDRIVETEST extends LinearOpMode {
 
     /* Declare OpMode members. */

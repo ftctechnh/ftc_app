@@ -24,13 +24,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *   As the Right side servo approaches 1, it moves towards the pressing position (facing away from the robot  |-->).
  *   As the Left side servo approaches 0, it moves towards the pressing position  (facing away from the robot  |-->).
  */
-public class ROUSAutoHardware_WithServos
+public class SERVORPMTESTHARDWARE
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public Servo    PressR      = null;
-    public Servo    PressL      = null;
+    public Servo   servo      = null;
+    public DcMotor leftshooter = null;
+    public DcMotor rightshooter = null;
+    public DcMotor Intake      = null;
+
+
 
 
 
@@ -39,7 +41,7 @@ public class ROUSAutoHardware_WithServos
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ROUSAutoHardware_WithServos(){
+    public SERVORPMTESTHARDWARE(){
 
     }
 
@@ -49,25 +51,22 @@ public class ROUSAutoHardware_WithServos
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("left motor");
-        rightMotor  = hwMap.dcMotor.get("right motor");
-       // leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
         // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
 
 
-        // Set all motors to run with encoders.
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
 
         // Define and initialize ALL installed servos.
-        //PressL = hwMap.servo.get("left servo");
-       // PressR = hwMap.servo.get("right servo");
+        servo = hwMap.servo.get("flip");
+        leftshooter = hwMap.dcMotor.get("left shooter");
+        rightshooter = hwMap.dcMotor.get("right shooter");
+        Intake = hwMap.dcMotor.get("intake");
+
+        // PressR = hwMap.servo.get("right servo");
         //Ex. Servo                  leftClaw = hwMap.servo.get("left_hand");
         //Ex. Servo position set     leftClaw.setPosition(MID_SERVO);
 

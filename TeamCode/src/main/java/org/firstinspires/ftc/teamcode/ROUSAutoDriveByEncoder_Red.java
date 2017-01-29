@@ -10,31 +10,33 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
 
 @Autonomous(name="AutoRed", group="Pushbot")
 //@Disabled
 public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
     ColorSensor sensorRGB;
-    //DeviceInterfaceModule cdim;
+    DeviceInterfaceModule cdim;
 
 
     // we assume that the LED pin of the RGB sensor is connected to
     // digital port 5 (zero indexed).
-    //static final int LED_CHANNEL = 0;
+    static final int LED_CHANNEL = 5;
     /* Declare OpMode members. */
     ROUSAutoHardware_WithServos robot   = new ROUSAutoHardware_WithServos();   // Use ROUS robot hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = .625 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     Pi                      = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899f;
+    static final double     Pi                      = 3.141592653f;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/
             (WHEEL_DIAMETER_INCHES * Pi);
-    static final double     DRIVE_SPEED             = .5;
-    static final double     TURN_SPEED              = 0.3;
-    static final double     SCAN_SPEED              =.1;
+    static final double     DRIVE_SPEED             = .3;
+    static final double     TURN_SPEED              = 0.07;
+    static final double     SCAN_SPEED              =.05;
 
 
     @Override
@@ -54,21 +56,21 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
         boolean bCurrState = false;
 
         // bLedOn represents the state of the LED.
-        boolean bLedOn = true;
+        boolean bLedOn = false;
 
         // get a reference to our DeviceInterfaceModule object.
-        //cdim = hardwareMap.deviceInterfaceModule.get("dim");
+        cdim = hardwareMap.deviceInterfaceModule.get("dim");
 
         // set the digital channel to output mode.
         // remember, the Adafruit sensor is actually two devices.
         // It's an I2C sensor and it's also an LED that can be turned on or off.
-        //cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
+        cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
         // get a reference to our ColorSensor object.
         sensorRGB = hardwareMap.colorSensor.get("color");
 
         // turn the LED on in the beginning, just so user will know that the sensor is active.
-        //cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
+        cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
 
         // wait for the start button to be pressed.
         waitForStart();
@@ -80,15 +82,15 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
             // check the status of the x button on gamepad.
 
             // check for button-press state transitions.
-           // if (bCurrState == true){
+            if (bCurrState == true){
 
                 // button is transitioning to a pressed state. Toggle the LED.
-               // bLedOn = !bLedOn;
-                //cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
-            //} else {
+                bLedOn = !bLedOn;
+                cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
+            } else {
 
-              //  bLedOn = false;
-            //}
+                bLedOn = false;
+            }
 
             // update previous state variable.
             // convert the RGB values to HSV values.
@@ -140,7 +142,23 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
             //int difference = sensorRGB.red()- sensorRGB.blue();
             // Step through each leg of the path,
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
-            encoderDrive(DRIVE_SPEED, 24, 24, 20);
+            encoderDrive(DRIVE_SPEED, 8, 8, 5);
+            sleep(250);
+            encoderDrive(TURN_SPEED, 4.348721293, -4.348721293, 5);
+            sleep(250);
+            encoderDrive(DRIVE_SPEED, 55, 55, 5);
+            sleep(250);
+            encoderDrive(TURN_SPEED,4.505131132, -4.505131132, 5);
+            sleep(250);
+            encoderDrive(SCAN_SPEED, 24 , 24, 10);
+            sleep(250);
+            encoderDrive(DRIVE_SPEED, -4, -4, 10 );
+            sleep(250);
+
+
+
+
+            /*encoderDrive(DRIVE_SPEED, 24, 24, 20);
             sleep(250);                                                // S1: Forward 45 Inches with 20 Sec timeout
             encoderDrive(TURN_SPEED, 10.99557429, -10.99557429, 20);
             sleep(250);
@@ -164,41 +182,47 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
             //sleep(250);                                                            //S3: Turn 90deg to the left to return to a strait orientation// S5: Turn 90deg to the right
             //encoderDrive(DRIVE_SPEED, 42, 42, 10);
             //sleep(250);
-
+*/
             while (opModeIsActive()) {
                 Boolean Blue = EvaluateColorSensor.EvaluateColor(sensorRGB, eColorState.blue);
                 Boolean Red  = EvaluateColorSensor.EvaluateColor(sensorRGB,eColorState.red);
                 if (Blue) {                //red is more than blue
-                    encoderDrive(DRIVE_SPEED, 2, 2, 10);
+                    encoderDrive(DRIVE_SPEED, -2, -2, 10);
                     telemetry.addData("Color", "BLUE");
                     telemetry.update();
                     sleep(500);
                     telemetry.addData("Color", "BLUE");
                     telemetry.update();
                     sleep(125);
-                    robot.PressR.setPosition(1);
+                    robot.PressR.setPosition(.79);
+                    robot.PressL.setPosition(.95);
                     sleep(250);
-                    encoderDrive(SCAN_SPEED, -7, -7, 10);
+                    encoderDrive(SCAN_SPEED, 12, 12, 10);
                     sleep(125);
                     stop();
 
                 } else if (Red) {
-                    encoderDrive(DRIVE_SPEED, 2, 2, 10);
+                    encoderDrive(DRIVE_SPEED, -2, -2, 10);
                     telemetry.addData("Color", "RED");
                     telemetry.update();
                     sleep(500);
                     telemetry.addData("Color", "RED");
                     telemetry.update();
                     sleep(125);
-                    robot.PressL.setPosition(0);
+                    robot.PressL.setPosition(.76);
+                    robot.PressR.setPosition(.95);
                     sleep(250);
-                    encoderDrive(SCAN_SPEED, -7, -7, 10);
+                    encoderDrive(SCAN_SPEED, 12, 12, 10);
                     sleep(125);
                     stop();
                 } else {
-                    encoderDrive(SCAN_SPEED, -.5, -.5, 10);
+                    encoderDrive(SCAN_SPEED, .7, .5, 10);
 
                 }
+
+                telemetry.addData("Blue", Blue);
+                telemetry.addData("Red", Red);
+                telemetry.update();
                 // if (sensorRGB.red()- sensorRGB.blue()){
                 //   encoderDrive();
                 //}

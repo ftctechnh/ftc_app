@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.ROUSAutoHardware_WithoutServos;
  */
 
 @Autonomous(name="AutoRed(Ramp)", group="ROUS Robot")
-@Disabled
+//@Disabled
 public class ROUSAutoDriveByEncoder_PurpleRed extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -94,7 +94,7 @@ public class ROUSAutoDriveByEncoder_PurpleRed extends LinearOpMode {
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             encoderDrive(DRIVE_SPEED, 45, 45, 3);                // S1: Forward 45 Inches with 20 Sec timeout
             sleep(1000);
-            encoderDrive(DRIVE_SPEED, -19.264, 19.264, 20);  // S2: Turn 90deg to the right with 20 Sec timeout
+            encoderDrive(DRIVE_SPEED, 17.37693437, -17.37693437, 20);  // S2: Turn 90deg to the right with 20 Sec timeout
             sleep(1000);
             encoderDrive(DRIVE_SPEED, 60, 60, 5);
             stop();
