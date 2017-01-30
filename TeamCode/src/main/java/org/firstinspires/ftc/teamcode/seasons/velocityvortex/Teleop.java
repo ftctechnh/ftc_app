@@ -92,6 +92,13 @@ public class Teleop extends LinearOpModeBase {
 
             driveReversed = false;
         }
+
+        // control for the capball latch
+        if(gamepad2.dpad_down) {
+            getLatch4().setPosition(0.7);
+        } else {
+            getLatch4().setPosition(0.5);
+        }
     }
 
     private void handleIntake() {
