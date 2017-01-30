@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.GamepadV2;
 import org.firstinspires.ftc.teamcode.modules.MecanumDrive;
 import org.firstinspires.ftc.teamcode.modules.State;
@@ -19,13 +20,21 @@ public class TeleOpVortex extends OpMode {
 
     private boolean override = false;
 
+    private Telemetry.Item triggerWarning;
+
     @Override
     public void init() {
         robot.init(hardwareMap);
     }
 
     @Override
+    public void init_loop() {
+        triggerWarning = telemetry.addData("Trigger Warning", "left: %f right: %f right2: %f", gamepad2.left_trigger, gamepad2.right_trigger, gamepad1.right_trigger);
+    }
+
+    @Override
     public void start() {
+        telemetry.removeItem(triggerWarning);
         setupLift = new StateMachine(
                 new State("stop") {
                     @Override
@@ -151,12 +160,15 @@ public class TeleOpVortex extends OpMode {
         else if(pad1.x) {
             robot.shooter.setPower(-HardwareVortex.SHOOTER_POWER);
         }
+        else if (pad1.right_trigger()) {
+            robot.shooter.setPower(1);
+        }
         else {
             robot.shooter.setPower(0);
         }
 
         if(pad1.right_bumper) {
-            robot.intake.setPower(0.75);
+            robot.intake.setPower(0.85);
         }
         else if(pad1.left_bumper) {
             robot.intake.setPower(-0.50);
