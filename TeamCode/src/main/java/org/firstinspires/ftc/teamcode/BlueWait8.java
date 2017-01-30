@@ -12,7 +12,7 @@ public class BlueWait8 extends AutonomousBase {
         super.gameState();
         switch(gameState) {
             case 0: //Start
-                if (actualRuntime() > 3 && !gyro.isCalibrating()) {
+                if (actualRuntime() > 15 && !gyro.isCalibrating()) {
                     gameState = 1;
                     map.setRobot(8,11.25);
                 }
@@ -36,6 +36,9 @@ public class BlueWait8 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
+                if(!linedUpAngle(5)){
+                    gameState = 2;
+                }
                 moveState = MoveState.SHOOT_WHEEL;
                 if (getRuntime() - sTime >= 2) {
                     moveState = MoveState.SHOOT_CONVEYOR;
@@ -46,7 +49,7 @@ public class BlueWait8 extends AutonomousBase {
                 }
                 break;
             case 5: //MOVE TO KNOCK OFF BALL
-                map.setGoal(6, 7);
+                map.setGoal(7, 7);
                 moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if (map.distanceToGoal() <= .1) {
                     gameState = 777;

@@ -18,7 +18,7 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(4, 10);
+                map.setGoal(5, 9);
                 moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -36,10 +36,12 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
+                if(!linedUpAngle(5)) {
+                    gameState = 2;
+                }
                 moveState = MoveState.SHOOT_WHEEL;
                 if(getRuntime() - sTime >= 2) {
                     moveState = MoveState.SHOOT_CONVEYOR;
-                    moveState = MoveState.SERVO_C;
                 }
                 if(getRuntime() - sTime >= 5) {
                     moveState = MoveState.SHOOT_STOP;

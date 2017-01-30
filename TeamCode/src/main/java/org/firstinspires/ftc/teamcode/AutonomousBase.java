@@ -377,11 +377,10 @@ public abstract class AutonomousBase extends OpMode {
           map.getRobotX() + "," + 
           map.getRobotY() + ")");
         telemetry.addData("robot theta",heading);
-        telemetry.addData("Am I lined up?", linedUp());
+        telemetry.addData("Am I lined up?", linedUpAngle(5));
+        telemetry.addData("Desired Angle", desiredAngle);
         telemetry.addData("moveState", moveState);
         telemetry.addData("gameState", gameState);
-        telemetry.addData("desiredAngle", desiredAngle);
-        telemetry.addData("linedUp(5)", linedUpAngle(5));
     }
 
     @Override
@@ -405,8 +404,8 @@ public abstract class AutonomousBase extends OpMode {
         }
     }
 
-    public boolean linedUpAngle(int angle) {
-        if (Math.abs(heading - desiredAngle) < angle || (heading > 360 - angle && desiredAngle < angle || (heading < angle && desiredAngle > 360 - angle))) {
+    public boolean linedUpAngle(int HEADING_TOLERANCE) {
+        if (Math.abs(heading - desiredAngle) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && desiredAngle < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && desiredAngle > 360 - HEADING_TOLERANCE))) {
             return true;
         } else {
             return false;

@@ -36,10 +36,12 @@ public class BlueWaitCorner3 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
+                if(!linedUpAngle(5)){
+                    gameState = 2;
+                }
                 moveState = MoveState.SHOOT_WHEEL;
                 if(getRuntime() - sTime >= 2) {
                     moveState = MoveState.SHOOT_CONVEYOR;
-                    moveState = MoveState.SERVO_C;
                 }
                 if(getRuntime() - sTime >= 5) {
                     moveState = MoveState.SHOOT_STOP;
