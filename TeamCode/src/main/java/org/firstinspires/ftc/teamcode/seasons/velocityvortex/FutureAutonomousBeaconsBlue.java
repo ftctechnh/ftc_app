@@ -28,8 +28,8 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
         waitForStart();
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 79);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 79);
+        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 68);
+        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 68);
 
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -65,17 +65,22 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
 
         // drive right to white line
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-            driveRight(0.2);
+//            driveRight(0.2);
+            // drive diagonally
+            getFrontRightDrive().setPower(-0.2);
+            getBackLeftDrive().setPower(0.2);
+
             telemetry.addData("ods3", getOds3().getRawLightDetected());
             telemetry.update();
         }
 
-        // reset drive encoders
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stopRobot();
 
+        // reset drive encoders
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // claim first beacon
-        claimBeaconRed();
+        claimBeaconBlue();
 
         // strafe to the left to second beacon
         encoderStrafe(0.5, -24, -24);
@@ -83,7 +88,7 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
         // line up against wall
         encoderDrive(0.6, 6, 6);
 
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 8) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 16) {
             driveBackward(0.2);
         }
         stopRobot();
@@ -110,14 +115,14 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stopRobot();
 
-        // claim the first beacon
-        claimBeaconRed();
+        // claim the second beacon
+        claimBeaconBlue();
 
         // turn right for launching
         encoderDrive(0.5, 7, -7);
 
         // drive backward for launching
-        encoderDrive(0.5, -12, -12);
+        encoderDrive(0.5, -8, -8);
 
         // launch the first (loaded) particle
         launchParticle();

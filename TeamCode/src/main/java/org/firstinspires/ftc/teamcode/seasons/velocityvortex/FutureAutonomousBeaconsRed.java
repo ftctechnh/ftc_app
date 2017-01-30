@@ -28,8 +28,8 @@ public class FutureAutonomousBeaconsRed extends LinearOpModeBase {
         waitForStart();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 81);
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 81);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 79);
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 79);
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -63,10 +63,7 @@ public class FutureAutonomousBeaconsRed extends LinearOpModeBase {
         // run using encoders again
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // use the gyro to get the robot square with the wall
-        gyroPivot(0.5, 0);
-
-        // look for the white line leading to the first beacon
+        // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
             driveLeft(0.2);
             telemetry.addData("ods3", getOds3().getRawLightDetected());
@@ -77,6 +74,9 @@ public class FutureAutonomousBeaconsRed extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stopRobot();
 
+        // back up two inches
+        encoderDrive(0.5, -2, -2);
+
         // claim the first beacon
         claimBeaconRed();
 
@@ -86,7 +86,7 @@ public class FutureAutonomousBeaconsRed extends LinearOpModeBase {
         // line up against wall
         encoderDrive(0.6, 6, 6);
 
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 8) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 16) {
             driveBackward(0.2);
         }
         stopRobot();
@@ -102,8 +102,8 @@ public class FutureAutonomousBeaconsRed extends LinearOpModeBase {
         // run using encoders again
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // strafe past the white line
-        encoderStrafe(0.5, 16, 16);
+        // strafe 18 inches more to the right
+        encoderStrafe(0.5, 18, 18);
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
@@ -119,14 +119,11 @@ public class FutureAutonomousBeaconsRed extends LinearOpModeBase {
         // claim the second beacon
         claimBeaconRed();
 
-        // drive backward eight inches
-        encoderDrive(0.5, -6, -6);
-
         // turn left for launching
         encoderDrive(0.5, -7, 7);
 
         // drive backward for launching
-        encoderDrive(0.25, -14, -14);
+        encoderDrive(0.5, -12, -12);
 
         // launch the first (loaded) particle
         launchParticle();
