@@ -26,8 +26,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         waitForStart();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 79);
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 79);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 77);
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 77);
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -50,7 +50,6 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
             idle();
         }
 
-
         getRobotRuntime().reset();
         while (opModeIsActive() && getRobotRuntime().milliseconds() < 250) {
             // reset drive encoders
@@ -60,6 +59,9 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 
         // run using encoders again
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // drive right past white line
+        encoderStrafe(0.5, 4, 4);
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
@@ -81,7 +83,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // line up against wall
         encoderDrive(0.6, 6, 6);
 
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 8) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 12) {
             driveBackward(0.2);
         }
         stopRobot();
@@ -112,10 +114,10 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // turn left for launching
-        encoderDrive(0.5, -8, 8);
+        encoderDrive(0.5, -8.5, 8.5);
 
         // drive backward for launching
-        encoderDrive(0.5, -12, -12);
+        encoderDrive(0.5, -16, -16);
 
         // launch the first (loaded) particle
         launchParticle();

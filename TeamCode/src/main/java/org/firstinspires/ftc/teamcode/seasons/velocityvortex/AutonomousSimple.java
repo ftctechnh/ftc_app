@@ -28,6 +28,12 @@ public class AutonomousSimple extends LinearOpModeBase {
 
         waitForStart();
 
+        // ten second wait
+        getRobotRuntime().reset();
+        while(opModeIsActive() && getRobotRuntime().seconds() < 10) {
+            idle();
+        }
+
         // drive backward (since the robot is facing backward)
         encoderDrive(0.5, -12, -12);
 
@@ -46,5 +52,8 @@ public class AutonomousSimple extends LinearOpModeBase {
 
         // launch the second particle
         launchParticle();
+
+        // drive back three more feet
+        encoderDrive(0.5, -36, -36);
     }
 }

@@ -81,7 +81,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         // line up against wall
         encoderDrive(0.6, 6, 6);
 
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 8) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 12) {
             driveBackward(0.2);
         }
         stopRobot();
@@ -108,14 +108,14 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         stopRobot();
 
-        // claim the first beacon
+        // claim the second beacon
         claimBeaconBlue();
 
         // turn right for launching
-        encoderDrive(0.5, 7, -7);
+        encoderDrive(0.5, 7.5, -7.5);
 
         // drive backward for launching
-        encoderDrive(0.5, -12, -12);
+        encoderDrive(0.5, -16, -16);
 
         // launch the first (loaded) particle
         launchParticle();
