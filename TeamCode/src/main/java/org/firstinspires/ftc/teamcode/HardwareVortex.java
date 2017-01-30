@@ -33,7 +33,7 @@ public class HardwareVortex {
     public BNO055IMU imu;
 
     // CONSTANTS
-    public final static double SHOOTER_POWER = 0.85;
+    public final static double SHOOTER_POWER = 0.90;
 
     public final static double LEFT_LIFT_INIT = 220/255.0, LEFT_LIFT_PUSH = 70/255.0;
     public final static double RIGHT_LIFT_INIT = 0/255.0, RIGHT_LIFT_PUSH = 65/255.0;

@@ -59,6 +59,10 @@ public class AutoVortexBeacon extends OpMode {
         robot.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        robot.resetEncoders();
+
+        Precision.reset();
+
         leftDrive = new DcMotor[] {
                 robot.frontLeft,
                 robot.backLeft
@@ -120,9 +124,9 @@ public class AutoVortexBeacon extends OpMode {
                 new State("reach vortex") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1750, 3000, -0.5)) {
+                        if (reachedDestination(1600, 4000, -0.4)) {
                             move(0);
-                            changeState("shoot the ball");
+                            changeState("stop");
                         }
                     }
                 },
@@ -331,6 +335,7 @@ public class AutoVortexBeacon extends OpMode {
     @Override
     public void stop() {
         main.stop();
+        shooter.changeState("off");
     }
 
     public void move(double power) {
@@ -365,7 +370,7 @@ public class AutoVortexBeacon extends OpMode {
     }
 
     private boolean reachedDestination(int target, int timeout, double power) {
-        return Precision.destinationReached(driveMotors, power, Math.signum(power)*0.125, target, 2.0, 10, timeout);
+        return Precision.destinationReached(driveMotors, power, Math.signum(power)*0.15, target, 2.0, 10, timeout);
     }
 
     private boolean turnedDegrees(double degrees, int timeout, double power) {
