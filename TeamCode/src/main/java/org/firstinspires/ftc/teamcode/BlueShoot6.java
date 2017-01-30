@@ -10,6 +10,7 @@ public class BlueShoot6 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
+        int i = 0;
         switch(gameState){
             case 0: //Start
                 if(actualRuntime() > 3 && !gyro.isCalibrating()) {
@@ -36,9 +37,12 @@ public class BlueShoot6 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
-                if(!linedUpAngle(5)){
-                    gameState = 2;
-                }
+                 if(i < 10){
+                     if(!linedUpAngle(5)) {
+                         gameState = 2;
+                         i++;
+                     }
+                 }
                  moveState = MoveState.SHOOT_WHEEL;
                  if(getRuntime() - sTime >= 3){
                      moveState = MoveState.SHOOT_CONVEYOR;
