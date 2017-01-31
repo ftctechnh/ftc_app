@@ -175,7 +175,7 @@ public class AutoVortex extends OpMode {
                             robot.intake.setPower(1);
                             sendData("shooting time", time);
                             Precision.reset();
-                            changeState("turn a little right");
+                            changeState("shoot the ball");
                         }
                     }
                 },
@@ -188,7 +188,7 @@ public class AutoVortex extends OpMode {
                             move(0);
                             shooter.changeState("off");
                             robot.intake.setPower(0);
-                            changeState("push ball");
+                            changeState("turn a little right");
                         }
                     }
                 },
@@ -208,10 +208,8 @@ public class AutoVortex extends OpMode {
                 new State("turn to line") {
                     @Override
                     public void run() {
-                        if (elapsedTime(getDouble("shooting time")) > 5.0) {
-                            robot.intake.setPower(0);
-                            shooter.changeState("off");
-                            changeState("drive tp line");
+                        if (turnedDegrees(70, 3000, -0.5)) {
+                            changeState("drive to line");
                         }
                     }
                 },
@@ -219,7 +217,7 @@ public class AutoVortex extends OpMode {
                 new State("drive to line") {
                     @Override
                     public void run() {
-                        if (turnedDegrees(70, 3000, -0.5)) {
+                        if (reachedDestination(1750, 3000, 0.5)) {
                             changeState("turn");
                         }
                     }
@@ -228,7 +226,7 @@ public class AutoVortex extends OpMode {
                 new State("turn") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1750, 3000, 0.5)) {
+                        if (turnedDegrees(1000000000, 10000, 1)) {
                             changeState("drive to wall");
                         }
                     }
@@ -237,8 +235,8 @@ public class AutoVortex extends OpMode {
                 new State("drive to wall") {
                     @Override
                     public void run() {
-                        if (turnedDegrees(1000000000, 10000, 1)) {
-                            changeState("sense color");
+                        if (reachedDestination(1000, 3000, 0.5)) {
+                            changeState("push button");
                         }
                     }
                 },
@@ -246,27 +244,18 @@ public class AutoVortex extends OpMode {
                 new State("sense color") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1000, 3000, 0.5)) {
-                            changeState("push button");
-                        }
+                        changeState("back up");
                     }
                 },
 
                 new State("push button") {
                     @Override
                     public void run() {
-                        changeState("back up");
-                    }
-                },
-
-                new State("back up") {
-                    @Override
-                    public void run() {
                         changeState("turn to other line");
                     }
                 },
 
-                new State("turn to other line") {
+                new State("back up") {
                     @Override
                     public void run() {
                         if (reachedDestination(1000, 3000, -0.5)) {
@@ -275,7 +264,7 @@ public class AutoVortex extends OpMode {
                     }
                 },
 
-                new State("drive to other line") {
+                new State("turn to other line") {
                     @Override
                     public void run() {
                         if (turnedDegrees(90, 2000, -1)) {
@@ -284,7 +273,7 @@ public class AutoVortex extends OpMode {
                     }
                 },
 
-                new State("turn to other line") {
+                new State("drive to other line") {
                     @Override
                     public void run() {
                         if (reachedDestination(2000, 5000, 0.5)) {
@@ -293,7 +282,7 @@ public class AutoVortex extends OpMode {
                     }
                 },
 
-                new State("drive down other line") {
+                new State("turn on other line") {
                     @Override
                     public void run() {
                         if (turnedDegrees(90, 2000, -0.5)) {
@@ -302,7 +291,7 @@ public class AutoVortex extends OpMode {
                     }
                 },
 
-                new State("other button") {
+                new State("drive down other line") {
                     @Override
                     public void run() {
                         if (reachedDestination(1000, 3000, 0.5)) {
@@ -311,14 +300,21 @@ public class AutoVortex extends OpMode {
                     }
                 },
 
-                new State("back up again") {
+                new State("other color") {
+                    @Override
+                    public void run() {
+
+                    }
+                },
+
+                new State("other button") {
                     @Override
                     public void run() {
                         changeState("turn to cap ball");
                     }
                 },
 
-                new State("turn to cap ball") {
+                new State("back up again") {
                     @Override
                     public void run() {
                         if (reachedDestination(1000, 3000, -0.5)) {
@@ -327,7 +323,7 @@ public class AutoVortex extends OpMode {
                     }
                 },
 
-                new State("drive to ball") {
+                new State("turn to cap ball") {
                     @Override
                     public void run() {
                         if (turnedDegrees(120, 4000, -1)) {
@@ -336,7 +332,7 @@ public class AutoVortex extends OpMode {
                     }
                 },
 
-                new State("hit ball") {
+                new State("drive to ball") {
                     @Override
                     public void run() {
                         if (reachedDestination(2500, 4000, 1)){
@@ -422,6 +418,8 @@ public class AutoVortex extends OpMode {
     private boolean turnedDegrees(double degrees, int timeout, double power) {
         return Precision.angleTurned(leftDrive, rightDrive, heading, power, 0.45, degrees, 2.0, 0.75, timeout);
     }
+
+
 
     private void updateSensors() {
         telemetry.addData("State", main.getActiveState());
