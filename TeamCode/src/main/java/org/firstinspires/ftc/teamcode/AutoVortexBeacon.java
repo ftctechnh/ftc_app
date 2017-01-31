@@ -40,6 +40,7 @@ public class AutoVortexBeacon extends OpMode {
 
     private StateMachine button;
 
+
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -370,7 +371,7 @@ public class AutoVortexBeacon extends OpMode {
     }
 
     private boolean reachedDestination(int target, int timeout, double power) {
-        return Precision.destinationReached(driveMotors, power, Math.signum(power)*0.15, target, 2.0, 10, timeout);
+        return Precision.destinationReached(driveMotors, power, Math.signum(power)*0.160, target, 2.0, 10, timeout);
     }
 
     private boolean turnedDegrees(double degrees, int timeout, double power) {
