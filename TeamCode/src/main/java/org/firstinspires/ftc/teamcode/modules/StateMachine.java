@@ -34,7 +34,6 @@ public final class StateMachine {
     public void changeState(String stateId) {
         State result = this.states.get(stateId);
         if(result == null) {
-            result.sendData("adsf",true);
             Log.d("State", "State ID " + stateId + " is invalid!");
         }
         else {
