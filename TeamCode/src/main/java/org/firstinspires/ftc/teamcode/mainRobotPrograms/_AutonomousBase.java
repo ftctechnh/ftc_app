@@ -24,12 +24,18 @@ public abstract class _AutonomousBase extends _RobotBase
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
-        leftColorSensor = initialize(ColorSensor.class, "colorLeft");
+        leftColorSensor = initialize(ColorSensor.class, "Left Color Sensor");
         leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
         leftColorSensor.enableLed(true);
-        bottomColorSensor = initialize(ColorSensor.class, "colorBottom");
+        bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         bottomColorSensor.enableLed(true);
+
+        //Init the range sensors for autonomous.
+        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
+        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
+        backRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
+        backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x2c));
 
         //initialize gyroscope (will output whether it was found or not.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");
@@ -47,12 +53,6 @@ public abstract class _AutonomousBase extends _RobotBase
 
             outputNewLineToDrivers("Gyroscope Calibration Complete!");
         }
-
-        //Init the range sensors for autonomous.
-        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
-        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x99c));
-        backRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
-        backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x99c));
     }
 
     //All children should have special instructions.

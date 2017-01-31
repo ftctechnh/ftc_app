@@ -17,7 +17,7 @@ public abstract class _RobotBase extends LinearOpMode
     protected Servo leftLifterServo, rightLifterServo;
     protected Servo leftButtonPusher, rightButtonPusher;
     protected Servo clamp;
-    protected final double RIGHT_SERVO_LOCKED = 0.55, LEFT_SERVO_LOCKED = 0.35, RIGHT_SERVO_UNLOCKED = 0.3, LEFT_SERVO_UNLOCKED = 0.07, CLAMP_CLOSED = 0, CLAMP_OPEN = 1;
+    protected final double RIGHT_SERVO_LOCKED = 0.3, LEFT_SERVO_LOCKED = 0.65, RIGHT_SERVO_UNLOCKED = 0.8, LEFT_SERVO_UNLOCKED = 0.9, CLAMP_CLOSED = 0, CLAMP_OPEN = 1;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
@@ -64,7 +64,7 @@ public abstract class _RobotBase extends LinearOpMode
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
         rightButtonPusher.setPosition(0.5);
 
-        clamp = initialize(Servo.class, "clamperooni");
+        clamp = initialize(Servo.class, "clamp");
         clamp.setPosition(CLAMP_CLOSED);
 
         //Actual program thread

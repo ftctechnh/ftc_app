@@ -34,12 +34,12 @@ public class Teleop extends _RobotBase
             }
 
             /************** Motor Speed Control **************/
-            rightPower = speedCoefficient * Range.clip(rightPower, -1, 1);
-            leftPower = speedCoefficient * Range.clip(leftPower, -1, 1);
+            rightPower = Range.clip(rightPower, -1, 1);
+            leftPower = Range.clip(leftPower, -1, 1);
 
             // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-            setLeftPower(scaleInput(leftPower));
-            setRightPower(scaleInput(rightPower));
+            setLeftPower(scaleInput(leftPower) * speedCoefficient);
+            setRightPower(scaleInput(rightPower) * speedCoefficient);
 
             /************** Cap Ball Drive Mode **************/
             if (gamepad1.a) {
@@ -52,15 +52,12 @@ public class Teleop extends _RobotBase
             }
 
             /************** Cap Ball Lift **************/
-            if (gamepad1.right_bumper) {
+            if (gamepad1.right_bumper)
                 lift.setPower(1.0);
-            }
-            else if (gamepad1.right_trigger > 0.5) {
+            else if (gamepad1.right_trigger > 0.5)
                 lift.setPower(-0.5);
-            }
-            else {
+            else
                 lift.setPower(0.0);
-            }
 
             /************** Clamp **************/
             if (gamepad1.left_bumper)
@@ -86,7 +83,7 @@ public class Teleop extends _RobotBase
 
             /************** Flywheels **************/
             if (gamepad2.dpad_up)
-                flywheels.setPower(flywheelCoefficient*1.0); // Shoot
+                flywheels.setPower(flywheelCoefficient * 1.0); // Shoot
             else if (gamepad2.dpad_down)
                 flywheels.setPower(-0.6); // Reverse flywheels
             else
@@ -108,7 +105,7 @@ public class Teleop extends _RobotBase
 
             /************** Beacon Pushers **************/
             leftPusherPower = gamepad2.right_stick_x;
-            leftPusherPower = speedCoefficient * Range.clip(leftPusherPower, -1, 1);
+            leftPusherPower = Range.clip(leftPusherPower, -1, 1);
 
             if (leftPusherPower > 0.5)
                 leftButtonPusher.setPosition(1.0);
@@ -119,7 +116,7 @@ public class Teleop extends _RobotBase
 
 
             rightPusherPower = gamepad2.left_stick_x;
-            rightPusherPower = speedCoefficient * Range.clip(rightPusherPower, -1, 1);
+            rightPusherPower = Range.clip(rightPusherPower, -1, 1);
 
             if (rightPusherPower > 0.5)
                 rightButtonPusher.setPosition(1.0);

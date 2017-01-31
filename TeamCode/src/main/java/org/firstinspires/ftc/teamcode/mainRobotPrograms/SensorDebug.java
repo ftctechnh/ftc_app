@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @Autonomous(name = "Sensor Debug", group = "Autonomous Group")
 
 public class SensorDebug extends _AutonomousBase
@@ -23,12 +25,9 @@ public class SensorDebug extends _AutonomousBase
                             "ARGB: " + leftColorSensor.argb() + " Alpha: " + leftColorSensor.alpha(),
                             "Blue: " + leftColorSensor.blue() + " Red: " + leftColorSensor.red(),
                             "Green: " + leftColorSensor.green(),
-                            "Right Color Sensor",
-                            "--------------------",
-                            "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
-                            "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
-                            "Green: " + rightColorSensor.green(),
-                            "Heading: " + getValidGyroHeading()
+                            "Heading: " + getValidGyroHeading(),
+                            "Front Range Sensor: " + frontRangeSensor.getDistance(DistanceUnit.CM),
+                            "Back Range Sensor: " + backRangeSensor.getDistance(DistanceUnit.CM)
                     }
             );
             idle();
