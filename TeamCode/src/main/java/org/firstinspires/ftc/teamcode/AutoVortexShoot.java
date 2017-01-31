@@ -18,6 +18,8 @@ import org.firstinspires.ftc.teamcode.modules.Precision;
 import org.firstinspires.ftc.teamcode.modules.State;
 import org.firstinspires.ftc.teamcode.modules.StateMachine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 @Autonomous
@@ -266,6 +268,7 @@ public class AutoVortexShoot extends OpMode {
     @Override
     public void stop() {
         shooter.changeState("off");
+        shooter.stop();
         main.stop();
     }
 
@@ -290,6 +293,4 @@ public class AutoVortexShoot extends OpMode {
         heading = angles.firstAngle;
         telemetry.addData("IMU", "heading: %s", String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, heading))));
     }
-
-
 }

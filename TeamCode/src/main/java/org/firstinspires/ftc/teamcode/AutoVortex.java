@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.modules.StateMachine;
 import java.util.Locale;
 
 @Autonomous
-public class AutoVortexBeacon extends OpMode {
+public class AutoVortex extends OpMode {
     private HardwareVortex robot = new HardwareVortex();
 
     private DcMotor[] leftDrive, rightDrive, driveMotors;
@@ -30,16 +30,19 @@ public class AutoVortexBeacon extends OpMode {
 
     private StateMachine main;
 
+    //Parameters
     private double delay = 0;
-
     private boolean blue = false;
+    private boolean cornerStart = false;
+    private boolean beacon = true;
+    private boolean park = false;
+
 
     private double heading = 0;
 
     private StateMachine shooter;
 
     private StateMachine button;
-
 
     @Override
     public void init() {
@@ -59,10 +62,6 @@ public class AutoVortexBeacon extends OpMode {
         robot.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        robot.resetEncoders();
-
-        Precision.reset();
 
         leftDrive = new DcMotor[] {
                 robot.frontLeft,
@@ -116,18 +115,67 @@ public class AutoVortexBeacon extends OpMode {
                 new State("drive to vortex") {
                     @Override
                     public void run() {
-                        shooter.changeState("on");
-                        sendData("shooter start", time);
-                        changeState("reach vortex");
+                        if (elapsedTime(getDouble("start")) > delay) {
+                            shooter.changeState("on");
+                            sendData("shooter start", time);
+                            if (cornerStart) {
+                                changeState("drive to center line");
+                            } else {
+                                changeState("middle - reach vortex");
+                            }
+                        }
                     }
                 },
 
-                new State("reach vortex") {
+                // MIDDLE SPECIFIC START
+                new State("middle - reach vortex") {
                     @Override
                     public void run() {
-                        if (reachedDestination(1600, 4000, -0.4)) {
-                            move(0);
-                            changeState("stop");
+                        if (reachedDestination(1000, 4000, 0.4)) {
+                            changeState("turn a little left");
+                        }
+                    }
+                },
+                // MIDDLE SPECIFIC END
+
+                // CORNER SPECIFIC START
+                new State("drive to center line") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(300, 2000, 0.4)) {
+                            changeState("turn to vortex");
+                        }
+                    }
+                },
+
+                new State("turn to vortex") {
+                    @Override
+                    public void run() {
+                        if ((blue && turnedDegrees(-45, 3000, 0.8)) || (!blue && turnedDegrees(45, 3000, 0.8))) {
+                            robot.resetEncoders();
+                            changeState("corner - reach vortex");
+                        }
+                    }
+                },
+
+                new State("corner - reach vortex") {
+                    @Override
+                    public void run() {
+                        if (reachedDestination(650, 4000, 0.5)) {
+                            changeState("turn a little left");
+                        }
+                    }
+                },
+                // CORNER SPECIFIC START END
+
+                new State("turn a little left") {
+                    @Override
+                    public void run() {
+                        if (turnedDegrees(6, 1500, 0.5)) {
+                            robot.intake.setPower(1);
+                            sendData("shooting time", time);
+                            Precision.reset();
+                            changeState("turn a little right");
                         }
                     }
                 },
@@ -135,20 +183,32 @@ public class AutoVortexBeacon extends OpMode {
                 new State("shoot the ball") {
                     @Override
                     public void run() {
-                        double elapsedTime = getDouble("shooter start") - time;
-                        if (elapsedTime > 3.0) {
-                            robot.intake.setPower(1);
-                            sendData("shooting time", time);
-                            changeState("turn to line");
+                        double elapsedTime = time - getDouble("shooting time");
+                        if (elapsedTime > 5.0) {
+                            move(0);
+                            shooter.changeState("off");
+                            robot.intake.setPower(0);
+                            changeState("push ball");
                         }
                     }
                 },
 
+                new State("turn a little right") {
+                    @Override
+                    public void run() {
+                        if (turnedDegrees(-6, 1500, 0.5)) {
+                            changeState("stop");
+                            //changeState("turn to line");
+                        }
+                    }
+                },
+
+                // STUFF UP TO THIS WORKS
+
                 new State("turn to line") {
                     @Override
                     public void run() {
-                        double elapsedTime = getDouble("shooting time") - time;
-                        if (elapsedTime > 5.0) {
+                        if (elapsedTime(getDouble("shooting time")) > 5.0) {
                             robot.intake.setPower(0);
                             shooter.changeState("off");
                             changeState("drive tp line");
@@ -337,41 +397,26 @@ public class AutoVortexBeacon extends OpMode {
     public void stop() {
         main.stop();
         shooter.changeState("off");
+        shooter.stop();
     }
 
-    public void move(double power) {
-        power *= -1.0;
+    ///////////////
+    // FUNCTIONS //
+    ///////////////
+
+    private void move(double power) {
         robot.frontLeft.setPower(power);
         robot.frontRight.setPower(power);
         robot.backLeft.setPower(power);
         robot.backRight.setPower(power);
     }
 
-    public void turn(double power) {
-        power *= -1.0;
-        robot.frontLeft.setPower(power);
-        robot.frontRight.setPower(-power);
-        robot.backLeft.setPower(power);
-        robot.backRight.setPower(-power);
-    }
-
-    public void resetEncoders(boolean partOne) {
-        if (partOne) {
-            robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-        else {
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+    private double elapsedTime(double startTime) {
+        return time - startTime;
     }
 
     private boolean reachedDestination(int target, int timeout, double power) {
-        return Precision.destinationReached(driveMotors, power, Math.signum(power)*0.160, target, 2.0, 10, timeout);
+        return Precision.destinationReached(driveMotors, power, Math.signum(power)*0.125, target, 2.0, 10, timeout);
     }
 
     private boolean turnedDegrees(double degrees, int timeout, double power) {
