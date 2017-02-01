@@ -113,7 +113,7 @@ public class ShootTheBallBlue extends LinearOpMode {
 
         robot.leftShooter.setPower(1);
         robot.rightShooter.setPower(1);
-        robot.harvester.setMotorPower(1, -1);
+        robot.legacyController.setMotorPower(1, -1);
 
         while (opModeIsActive() && (runtime.seconds() < 10.5)) {
             telemetry.addData("Say", "SPINNING...");
@@ -147,7 +147,7 @@ public class ShootTheBallBlue extends LinearOpMode {
 
         robot.leftShooter.setPower(0);
         robot.rightShooter.setPower(0);
-        robot.harvester.setMotorPower(1, 0);
+        robot.legacyController.setMotorPower(1, 0);
 
         telemetry.addData("Say", "Done! Now I get to relax.");
         telemetry.update();

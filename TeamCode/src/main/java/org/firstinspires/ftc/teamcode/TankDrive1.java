@@ -100,10 +100,10 @@ public class TankDrive1 extends LinearOpMode {
             // Set harvester speed based on the buttons pressed (from team8200; Steel Hawks)
 
             if (gamepad1.left_trigger > 0.2 || gamepad1.right_trigger > 0.2) {
-                robot.legacyController.setMotorPower(1, -1);
+                robot.harvester.setMotorPower(1, -1);
             }
             else {
-                robot.legacyController.setMotorPower(1, 0);
+                robot.harvester.setMotorPower(1, 0);
             }
 
             // Get the motors' power (for telemetry)

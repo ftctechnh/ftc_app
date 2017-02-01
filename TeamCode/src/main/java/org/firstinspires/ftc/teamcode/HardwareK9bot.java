@@ -31,7 +31,7 @@ public class HardwareK9bot
     public DcMotor  rightMotor  = null;
     public DcMotor  leftShooter    = null;
     public DcMotor  rightShooter    = null;
-    public DcMotorController legacyController = null; //for legacy motor controller
+    public DcMotorController harvester = null; //for legacy motor controller
 
 
     /* Local OpMode members. */
@@ -50,7 +50,7 @@ public class HardwareK9bot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("ld-motor");
         rightMotor  = hwMap.dcMotor.get("rd-motor");
-        legacyController  = hwMap.dcMotorController.get("legacy-controller");
+        harvester  = hwMap.dcMotorController.get("harvester");
         leftShooter  = hwMap.dcMotor.get("ls-motor");
         rightShooter  = hwMap.dcMotor.get("rs-motor");
 
@@ -62,7 +62,7 @@ public class HardwareK9bot
         rightMotor.setPower(0);
         leftShooter.setPower(0);
         rightShooter.setPower(0);
-        legacyController.setMotorPower(1,0);
+        harvester.setMotorPower(1,0);
 
 
 
