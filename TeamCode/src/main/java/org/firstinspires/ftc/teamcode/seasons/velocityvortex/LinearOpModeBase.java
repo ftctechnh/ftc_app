@@ -20,7 +20,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private static final int COUNTS_PER_MOTOR_REV = 1120;
 
-    private static final double GYRO_ERROR_THRESHOLD = 5;
+    private static final double GYRO_ERROR_THRESHOLD = 2;
 
     private static final double P_GYRO_TURN_COEFF = 0.01;
 
@@ -115,28 +115,40 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         intakeMotor.setPower(0);
         stopRobot();
 
-//        telemetry.addData(">", "Calibrating Gyro");
-//        telemetry.update();
+        telemetry.addData(">", "Calibrating Gyro");
+        telemetry.update();
 
-//        gyroSensor.calibrate();
+        gyroSensor.calibrate();
 
         // make sure the gyro is calibrated before continuing
-//        while (!isStopRequested() && gyroSensor.isCalibrating()) {
-//            idle();
-//        }
+        while (!isStopRequested() && gyroSensor.isCalibrating()) {
+            idle();
+        }
 
-//        telemetry.addData(">", "Gyro caibrated");
-//        telemetry.update();
+        telemetry.addData(">", "Gyro caibrated");
+        telemetry.update();
     }
 
     protected void claimBeaconRed() {
+        // reset again after pressing beacon
+        gyroPivot(0.8, 0);
+
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // drive to 10cm from the wall
+        rangeSensorDrive(12, 0.1);
+
+        if(colorSensor.red() > colorSensor.blue()) {
+            beaconsServo1.setPosition(0.05);
+        } else {
+            beaconsServo2.setPosition(0.95);
+        }
+
+        stopRobot();
+
         // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6.5) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
             // run without encoders again
-            getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             driveForward(0.2);
         }
         stopRobot();
@@ -152,25 +164,47 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         // drive backward
         encoderDrive(0.5, -2, -2);
 
-        // check for blue
-        if(getColorSensor().blue() > 0) {
-            getRobotRuntime().reset();
-            while(opModeIsActive() && getRobotRuntime().milliseconds() < 5000) {
-                idle();
-            }
-
-            // second push
-            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 5) {
-                driveForward(0.2);
-            }
-
-            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            // second drive backward
-            encoderDrive(0.5, -2, -2);
-        }
-
-        stopRobot();
+//        // first push
+//        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6.5) {
+//            // run without encoders again
+//            getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            driveForward(0.2);
+//        }
+//        stopRobot();
+//
+//        // pause for the beacon to change color
+//        getRobotRuntime().reset();
+//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
+//            idle();
+//        }
+//
+//        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        // drive backward
+//        encoderDrive(0.5, -2, -2);
+//
+//        // check for blue
+//        if(getColorSensor().blue() > 0) {
+//            getRobotRuntime().reset();
+//            while(opModeIsActive() && getRobotRuntime().milliseconds() < 5000) {
+//                idle();
+//            }
+//
+//            // second push
+//            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 5) {
+//                driveForward(0.2);
+//            }
+//
+//            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//            // second drive backward
+//            encoderDrive(0.5, -2, -2);
+//        }
+//
+//        stopRobot();
 
 //        if(colorSensor.red() > colorSensor.blue()) {
 //            beaconsServo1.setPosition(0.05);
@@ -224,47 +258,49 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     protected void claimBeaconBlue() {
-        // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6.5) {
-            // run without encoders again
-            getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            driveForward(0.2);
-        }
-        stopRobot();
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // pause for the beacon to change color
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
-            idle();
-        }
-
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // drive backward
-        encoderDrive(0.5, -2, -2);
-
-        // check for blue
-        if(getColorSensor().red() > 0) {
-            getRobotRuntime().reset();
-            while(opModeIsActive() && getRobotRuntime().milliseconds() < 5000) {
-                idle();
-            }
-
-            // second push
-            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 5) {
+        if(getFrontRange().cmUltrasonic() > 10) {
+            while(opModeIsActive() && getFrontRange().cmUltrasonic() > 10) {
                 driveForward(0.2);
             }
-
-            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            // second drive backward
-            encoderDrive(0.5, -2, -2);
+        } else {
+            while(opModeIsActive() && getFrontRange().cmUltrasonic() < 10) {
+                driveBackward(0.2);
+            }
         }
-
         stopRobot();
+
+//        // pause for the beacon to change color
+//        getRobotRuntime().reset();
+//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
+//            idle();
+//        }
+//
+//        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        // drive backward
+//        encoderDrive(0.5, -2, -2);
+//
+//        // check for blue
+//        if(getColorSensor().red() > 0) {
+//            getRobotRuntime().reset();
+//            while(opModeIsActive() && getRobotRuntime().milliseconds() < 5000) {
+//                idle();
+//            }
+//
+//            // second push
+//            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 5) {
+//                driveForward(0.2);
+//            }
+//
+//            setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//            // second drive backward
+//            encoderDrive(0.5, -2, -2);
+//        }
+//
+//        stopRobot();
 
 //        if(colorSensor.blue() > colorSensor.red()) {
 //            beaconsServo1.setPosition(0.05);
@@ -414,7 +450,20 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         while (opModeIsActive() && error > 180)  error -= 360;
         while (opModeIsActive() && error <= -180) error += 360;
 
-        return Range.clip(error * P_GYRO_TURN_COEFF, -1, 1);
+        return error;
+    }
+
+    protected void rangeSensorDrive(int distanceCm, double speed) {
+        if(getFrontRange().cmUltrasonic() > distanceCm) {
+            while (opModeIsActive() && getFrontRange().cmUltrasonic() > distanceCm) {
+                driveForward(speed);
+            }
+        } else {
+            while (opModeIsActive() && getFrontRange().cmUltrasonic() < distanceCm) {
+                driveBackward(speed);
+            }
+        }
+        stopRobot();
     }
 
     protected void driveRight(double power) {
@@ -454,11 +503,24 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected void gyroPivot(double speed, double angle) {
         double steer;
+        double threshold;
         double error = getGyroError(angle);
+
+        // if the error, is less than two, just return
+        if(Math.abs(error) <= 2) {
+            return;
+        }
+
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        telemetry.addData("error", error);
+        telemetry.update();
 
         while(opModeIsActive() && Math.abs(error) > GYRO_ERROR_THRESHOLD) {
 
             telemetry.addData("error", error);
+            telemetry.addData("integrated Z axis", gyroSensor.getIntegratedZValue());
             telemetry.update();
 
             error = getGyroError(angle);
@@ -474,8 +536,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             getBackRightDrive().setPower(proportionalSpeed);
         }
 
+        telemetry.addData(">", "stop");
+        telemetry.update();
+
         // when we're on target, stop the robot
         stopRobot();
+
+        // reset to run without encoders
+        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     protected void pivotLeft(double power) {
