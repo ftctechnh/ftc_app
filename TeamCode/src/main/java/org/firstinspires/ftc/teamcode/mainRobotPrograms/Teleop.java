@@ -51,19 +51,11 @@ public class Teleop extends _RobotBase
                 backwards = false;
             }
 
-            /************** Cap Ball Lift **************/
-            if (gamepad1.right_bumper)
-                lift.setPower(1.0);
-            else if (gamepad1.right_trigger > 0.5)
-                lift.setPower(-0.5);
-            else
-                lift.setPower(0.0);
-
             /************** Clamp **************/
             if (gamepad1.left_bumper)
-                currentClampPos += 0.005;
+                currentClampPos += 0.01;
             else if (gamepad1.left_trigger > 0.5)
-                currentClampPos -= 0.005;
+                currentClampPos -= 0.01;
             currentClampPos = Range.clip(currentClampPos, CLAMP_CLOSED, CLAMP_OPEN);
             clamp.setPosition(currentClampPos);
 
@@ -71,7 +63,16 @@ public class Teleop extends _RobotBase
             if (gamepad1.back) {
                 rightLifterServo.setPosition(RIGHT_SERVO_UNLOCKED);
                 leftLifterServo.setPosition(LEFT_SERVO_UNLOCKED);
+                clamp.setPosition(CLAMP_OPEN);
             }
+
+            /************** Cap Ball Lift **************/
+            if (gamepad2.right_bumper)
+                lift.setPower(1.0);
+            else if (gamepad2.right_trigger > 0.5)
+                lift.setPower(-0.5);
+            else
+                lift.setPower(0.0);
 
             /************** Harvester **************/
             if (gamepad2.b)
