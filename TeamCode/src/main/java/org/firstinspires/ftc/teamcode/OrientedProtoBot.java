@@ -23,7 +23,9 @@ public class OrientedProtoBot extends OpMode {
     private DcMotor motorConveyer;
     private DcMotor motorCap;
     private Servo servoCollector;
-    private Servo servoCap;
+    private Servo servoCapSqueeze;
+    private Servo servoCapRelease;
+    private Servo servoBeaconDeploy;
     private Servo servoLeftButton;
     private Servo servoRightButton;
     private TouchSensor touchRight;
@@ -45,8 +47,10 @@ public class OrientedProtoBot extends OpMode {
         servoCollector = hardwareMap.servo.get("collector");
         servoLeftButton = hardwareMap.servo.get("l_button");
         servoRightButton = hardwareMap.servo.get("r_button");
-        servoCap = hardwareMap.servo.get("cap");
-        
+        servoCapSqueeze = hardwareMap.servo.get("cap_squeeze");
+        servoCapRelease = hardwareMap.servo.get("cap_release");
+        servoBeaconDeploy = hardwareMap.servo.get("b_servo");
+
         touchRight = hardwareMap.touchSensor.get("right_touch");
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
@@ -108,53 +112,46 @@ public class OrientedProtoBot extends OpMode {
 
         // GAME PAD 2 CODE
         // Activates shooters
-        if(gamepad2.right_trigger > .1){
-            motorRightShooter.setPower(.4);
-            motorLeftShooter.setPower(.4);
-        }else if(gamepad2.left_trigger > .65){
-            motorRightShooter.setPower(-.4);
-            motorLeftShooter.setPower(-.4);
+        if(gamepad2.left_trigger > .1){
+            motorRightShooter.setPower(.33);
+            motorLeftShooter.setPower(.33);
+        }else if(gamepad2.right_trigger > .65){
+            motorRightShooter.setPower(-.33);
+            motorLeftShooter.setPower(-.33);
         }else{
             motorRightShooter.setPower(0);
             motorLeftShooter.setPower(0);
         }
 
         // Activates Conveyer
-        if(gamepad2.b){
+        if(gamepad2.a){
             motorConveyer.setPower(1);
         }
-        else if(gamepad2.a){
+        else if(gamepad2.b){
             motorConveyer.setPower(-1);
         }
         else{
             motorConveyer.setPower(0);
         }
         // Cap Ball code
-        if(gamepad1.dpad_up) {
+        if(gamepad2.dpad_up) {
             motorCap.setPower(1);
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad2.dpad_down) {
             motorCap.setPower(-1);
         }else{
             motorCap.setPower(0);
         }
-        if(gamepad2.dpad_right){
-            servoCap.setPosition(1);
-        } else if(gamepad2.dpad_left) {
-            servoCap.setPosition(0);
-        }else{
-            servoCap.setPosition(.5);
-        }
-        // Button press
         if(gamepad2.right_bumper){
-            servoLeftButton.setPosition(0);
-            servoRightButton.setPosition(0);
-        }else if(gamepad2.left_bumper){
-            servoLeftButton.setPosition(1);
-            servoRightButton.setPosition(1);
-        }else{
-            servoLeftButton.setPosition(.5);
-            servoRightButton.setPosition(.5);
+            servoCapSqueeze.setPosition(1);
+        } else if(gamepad2.left_bumper) {
+            servoCapSqueeze.setPosition(0);
         }
+        if(gamepad2.dpad_right){
+            servoCapRelease.setPosition(1);
+        }else if(gamepad2.dpad_left){
+            servoCapRelease.setPosition(0);
+        }
+
         if(gamepad1.left_stick_button){
             gyro.calibrate();
         }

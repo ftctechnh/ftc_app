@@ -10,6 +10,7 @@ public class BlueShoot3 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
+        int i = 0;
         switch(gameState){
             case 0: //Start
                 if(actualRuntime() > 3 && !gyro.isCalibrating()) {
@@ -26,7 +27,7 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 220;
+                desiredAngle = 225;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -36,17 +37,23 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
-                if(!linedUpAngle(5)) {
-                    gameState = 2;
+                if(i < 5){
+                    if(!linedUpAngle(5)) {
+                        gameState = 2;
+                        i++;
+                    }
                 }
                 moveState = MoveState.SHOOT_WHEEL;
-                if(getRuntime() - sTime >= 2) {
+                if(getRuntime() - sTime >= 2){
                     moveState = MoveState.SHOOT_CONVEYOR;
                 }
-                if(getRuntime() - sTime >= 5) {
+
+                else if(getRuntime() - sTime >= 4){
+                    moveState = MoveState.SHOOT_CONVEYOR;
+                }
+                if(getRuntime() - sTime >= 6) {
                     moveState = MoveState.SHOOT_STOP;
                     gameState = 4;
-                    sTime = getRuntime();
                 }
                 break;
             case 4: //MOVE TO KNOCK OFF BALL

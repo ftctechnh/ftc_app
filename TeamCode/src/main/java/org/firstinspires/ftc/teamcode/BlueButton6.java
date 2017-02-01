@@ -26,24 +26,13 @@ public class BlueButton6 extends AutonomousBase{
                     gameState = 3;
 //                  }
                 break;
-            case 2:
-                map.setGoal(10,5);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
-                    gameState = 3;
-                }
-                break;
             case 3: //Move to beacon A push pos.
-                map.setGoal(10, 5);
+                map.setGoal(10.5, 6);
+                moveState = MoveState.SERVO_M;
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 }
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -51,9 +40,10 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 4: //Move parallel to wall
-                map.setGoal(9,0);
+                map.setGoal(10,0);
                 if(linedUp()){
                     moveState = MoveState.STOP;
+                    moveState = MoveState.SERVO_DEPLOY;
                     gameState = 5;
                 }
                 else{
@@ -61,12 +51,12 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 5: //Move to wall 
-                map.setGoal(12,map.getRobotY());
-                moveState = MoveState.RIGHT;
-                moveState = MoveState.SERVO_DEPLOY;
-                if(touchWall.isPressed()){
-                    moveState = MoveState.STOP;
+                map.setGoal(12, 6);
+                if(!touchWall.isPressed()){
+                    moveState = MoveState.RIGHT;
 		            gameState = 6;
+                } else{
+                    moveState = MoveState.STOP;
                 }
                 break;
             case 6: //back up and button press A
@@ -101,18 +91,19 @@ public class BlueButton6 extends AutonomousBase{
                 break;
             case 7: // moves out from wall
                 if(getRuntime() - pTime > 1){
-                    map.setGoal(11.5, map.getRobotY());
+                    map.setGoal(10.5, map.getRobotY());
+                    moveState = MoveState.SERVO_M;
                     moveState = MoveState.LEFT;
                     if(map.distanceToGoal()<= .1){
                         moveState = MoveState.STOP;
                         gameState = 8;
                     }
-                }else{
+                }/*else{
                     map.setRobot(12,7); //Since we're positive of our position after pressing the button, we might as well use that
-                }
+                }*/
                 break;
             case 8: // moves up to push Beacon B
-                map.setGoal(map.getRobotX(), 2);
+                map.setGoal(10.5, 2);
                 moveState = MoveState.FORWARD;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -120,17 +111,9 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 9: //moves to wall
-                map.setGoal(12.5 ,map.getRobotY());
+                map.setGoal(12 , 2);
                 moveState = MoveState.RIGHT;
                 if(touchWall.isPressed()){
-                    moveState = MoveState.STOP;
-                    gameState = 101;
-                }
-                break;
-            case 101:
-                map.setGoal(12.4,map.getRobotY());
-                moveState = MoveState.LEFT;
-                if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                     gameState = 10;
                 }
@@ -163,7 +146,7 @@ public class BlueButton6 extends AutonomousBase{
                 break;
             case 11: // moves out from wall
                 if(getRuntime() - pTime > 3){
-                    map.setGoal(11, map.getRobotY());
+                    map.setGoal(11, 2);
                     moveState = MoveState.LEFT;
                     if(map.distanceToGoal()<= .1){
                         moveState = MoveState.STOP;

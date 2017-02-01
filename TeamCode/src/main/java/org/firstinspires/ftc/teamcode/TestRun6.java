@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Created by Sean O on 11/23/2016.
  */
 @Autonomous(name="TestRun6", group="Test")
-public class TestRun6 extends AutonomousBase {
+public class    TestRun6 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
@@ -14,29 +14,31 @@ public class TestRun6 extends AutonomousBase {
             case 0: //Start
                 if(actualRuntime() > 3 && !gyro.isCalibrating()) {
                     gameState = 1;
-                    map.setRobot(6,12);
+                    map.setRobot(6,11.25);
                 }
                 break;
-            case 1: //moves to shooter post
-                map.setGoal(4.5, 9.5);
+            case 1: //moves to beacon post
+                map.setGoal(10.5, 7);
                 if(linedUp()){
-                    moveState = MoveState.BACKWARD;
+                    moveState = MoveState.FORWARD;
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
+                }
+                if(map.distanceToGoal()<=.1){
+                    moveState = MoveState.STOP;
+                    //gameState = 2;
+                }
+                break;
+            /*case 2: // HIT BEACON
+                map.setGoal(11, 7);
+                if(linedUp()){
+                    moveState = MoveState.FORWARD;
+                }else{
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 }
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                     gameState = 2;
-                }
-                break;
-            case 2: // turns ...
-                desiredAngle = 140;
-                if(linedUpAngle()){
-                    moveState = MoveState.STOP;
-                    gameState = 3;
-                    sTime = getRuntime();
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
                 }
                 break;
             case 3: // ... and shoots
@@ -67,7 +69,7 @@ public class TestRun6 extends AutonomousBase {
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                 }
-                break;
+                break;*/
             case 777:
                 moveState = MoveState.STOP;
                 break;

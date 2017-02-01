@@ -54,7 +54,7 @@ public abstract class AutonomousBase extends OpMode {
     DcMotor motorLeftShooter;
     DcMotor motorConveyor;
     Servo servoCollector;
-    Servo servoLeftButton;
+    //Servo servoLeftButton;
     Servo servoRightButton;
     Servo servoBeaconDeploy;
     TouchSensor touchRight;
@@ -105,7 +105,7 @@ public abstract class AutonomousBase extends OpMode {
         motorLeftShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         servoCollector = hardwareMap.servo.get("collector");
-        servoLeftButton = hardwareMap.servo.get("l_button");
+        //servoLeftButton = hardwareMap.servo.get("l_button");
         servoRightButton = hardwareMap.servo.get("r_button");
         servoBeaconDeploy = hardwareMap.servo.get("b_servo");
 
@@ -164,7 +164,7 @@ public abstract class AutonomousBase extends OpMode {
                     motorUp.setPower(0);
                     motorDown.setPower(0);
                 }
-                servoLeftButton.setPosition(.5); // HACK
+                //servoLeftButton.setPosition(.5); // HACK
                 break;               
             case MoveState.LEFT:
                 // Moves the bot left at half speed
@@ -282,18 +282,18 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.SERVO_R:
                 // Hits right button with wumbo
-                servoLeftButton.setPosition(1);
+                servoRightButton.setPosition(1);
                 break;
             case MoveState.SERVO_L:
                 // Hits left button with wumbo
-                servoLeftButton.setPosition(0);
+                servoRightButton.setPosition(0);
                 break;
             case MoveState.SERVO_DEPLOY:
                 servoBeaconDeploy.setPosition(1);
                 break;
              case MoveState.SERVO_M:
                 // Retracts wumbo
-                servoLeftButton.setPosition(.5);
+                servoRightButton.setPosition(.5);
                 break;
             case MoveState.SERVO_C:
                  servoCollector.setPosition(1);
@@ -306,7 +306,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.FULL_STOP:
                 // Stop ALL robot movement, and resets servo to default pos
-                servoLeftButton.setPosition(.5);
+                servoRightButton.setPosition(.5);
                 servoCollector.setPosition(.5);
                 motorUp.setPower(0);
                 motorDown.setPower(0);
@@ -325,8 +325,8 @@ public abstract class AutonomousBase extends OpMode {
                 break;
            case MoveState.SHOOT_WHEEL:
                 // Spins fly-wheels
-                motorLeftShooter.setPower(.4);
-                motorRightShooter.setPower(.4);
+                motorLeftShooter.setPower(.33);
+                motorRightShooter.setPower(.33);
                 break;
            case MoveState.SHOOT_CONVEYOR:
                 // Pushed ball towards flywheel
