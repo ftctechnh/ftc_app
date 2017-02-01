@@ -43,6 +43,7 @@ public abstract class AutonomousBase extends OpMode {
       public static final int TURN_TOWARDS_ANGLE_SLOW= 19;
       public static final int SERVO_DEPLOY = 20;
       public static final int SERVO_C = 21;
+      public static final int SERVO_DEPLOY_STOP = 22;
     }
 
 
@@ -289,7 +290,10 @@ public abstract class AutonomousBase extends OpMode {
                 servoRightButton.setPosition(0);
                 break;
             case MoveState.SERVO_DEPLOY:
-                servoBeaconDeploy.setPosition(1);
+                servoBeaconDeploy.setPosition(0);
+                break;
+            case MoveState.SERVO_DEPLOY_STOP:
+                servoBeaconDeploy.setPosition(.5);
                 break;
              case MoveState.SERVO_M:
                 // Retracts wumbo
@@ -381,6 +385,7 @@ public abstract class AutonomousBase extends OpMode {
         telemetry.addData("Desired Angle", desiredAngle);
         telemetry.addData("moveState", moveState);
         telemetry.addData("gameState", gameState);
+        telemetry.addData("wumbo pos", servoRightButton.getPosition());
     }
 
     @Override

@@ -150,6 +150,8 @@ public class OrientedProtoBot extends OpMode {
             servoCapRelease.setPosition(1);
         }else if(gamepad2.dpad_left){
             servoCapRelease.setPosition(0);
+        }else{
+            servoRightButton.setPosition(.5);
         }
 
         if(gamepad1.left_stick_button){
