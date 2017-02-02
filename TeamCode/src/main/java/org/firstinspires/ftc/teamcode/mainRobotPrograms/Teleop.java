@@ -61,8 +61,6 @@ public class Teleop extends _RobotBase
 
             /************** Cap Ball Servos **************/
             if (gamepad1.back) {
-                rightLifterServo.setPosition(RIGHT_SERVO_UNLOCKED);
-                leftLifterServo.setPosition(LEFT_SERVO_UNLOCKED);
                 clamp.setPosition(CLAMP_OPEN);
             }
 
