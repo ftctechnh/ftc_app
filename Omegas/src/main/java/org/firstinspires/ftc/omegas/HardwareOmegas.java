@@ -35,7 +35,8 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public abstract class HardwareOmegas {
     /* Public OpMode members. */
-    private LightSensor lightSensor;
+    private LightSensor frontLightSensor;
+    private LightSensor backLightSensor;
     private DcMotor leftFrontMotor;
     private DcMotor leftBackMotor;
     private DcMotor rightFrontMotor;
@@ -101,8 +102,10 @@ public abstract class HardwareOmegas {
 
     /* Initialize LineSensor interfaces */
     protected void initLightSensor(HardwareMap hwMap) {
-        lightSensor = hwMap.lightSensor.get("light_sensor");
-        getLightSensor().enableLed(true);
+        frontLightSensor = hwMap.lightSensor.get("front_light_sensor");
+        backLightSensor = hwMap.lightSensor.get("back_light_sensor");
+        getFrontLightSensor().enableLed(true);
+        getBackLightSensor().enableLed(true);
     }
 
     protected void initAppContext(HardwareMap hwMap) {
@@ -231,8 +234,12 @@ public abstract class HardwareOmegas {
         messagePlayer.start();
     }
 
-    public LightSensor getLightSensor() {
-        return lightSensor;
+    public LightSensor getFrontLightSensor() {
+        return frontLightSensor;
+    }
+
+    public LightSensor getBackLightSensor() {
+        return backLightSensor;
     }
 
     public DcMotor getLeftFrontMotor() {
