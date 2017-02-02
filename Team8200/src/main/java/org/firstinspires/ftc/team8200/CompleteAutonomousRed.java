@@ -55,6 +55,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
     double voltage, maxVoltage, voltsPerInch, voltageInInches;
     boolean bLedOn = false;
     boolean autoTurnRight = true;
+    boolean robotOnLine = false;
 
 
     @Override
@@ -77,10 +78,11 @@ public class CompleteAutonomousRed extends LinearOpMode {
         robot.dim.setDigitalChannelState(LED_CHANNEL, bLedOn);
 
         waitForStart(); //pre-written function, waits for opmode to start
-//        moveForwardForShot(); //robot moves forward into range of basket
-//        shoot(); //robot shoots two balls
+        moveForwardForShot(); //robot moves forward into range of basket
+        shoot(); //robot shoots two balls
+        alignForLine();
         moveToBeacon(); //robot turns and moves toward the beacons, using line follower code and sensors to bring it to beacon
-//
+        moveBackFromBeacon();
 //        //continues until color is sensed (might want to have a failsafe in here in case color isn't being sensed...)
 //        while (opModeIsActive() && !pressButton()) {
 //
@@ -97,20 +99,20 @@ public class CompleteAutonomousRed extends LinearOpMode {
 //            updateTelemetry();
 //
 //        }
-//        moveToCenterVortex(); //robot turns around and heads to park on center vortex, knocking cap ball on the way
+        moveToCenterVortex(); //robot turns around and heads to park on center vortex, knocking cap ball on the way
     }
 
     // moveForwardForShot() moves the robot in position for shot, using encoders to travel the correct distance
     public void moveForwardForShot() {
         runtime.reset();
         while (opModeIsActive() && runtime.seconds() <= 1) {
-            robot.leftMotor.setPower(-DRIVE_SPEED);
-            robot.rightMotor.setPower(-DRIVE_SPEED);
+            robot.leftMotor.setPower(1);
+            robot.rightMotor.setPower(1);
         }
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
     }
-    // shoot() runs the wheeled shooters briefly before powers up the elevator to launch two balls at the target
+    // shoot() runs the wheel shooters briefly before it powers up the elevator to launch two balls at the target
     public void shoot() {
         runtime.reset();
         while (opModeIsActive() && runtime.seconds() < 2.0) {
@@ -127,18 +129,34 @@ public class CompleteAutonomousRed extends LinearOpMode {
         robot.leftWheelShooter.setPower(0);
         robot.rightWheelShooter.setPower(0);
     }
+    // alignForLine() turns to go into the line
+    public void alignForLine() {
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 1.25) {
+            robot.leftMotor.setPower(-TURN_SPEED);
+            robot.rightMotor.setPower(0);
+        }
+    }
+    public void moveBackFromBeacon() {
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds() <= 1.0)
+        {
+            robot.leftMotor.setPower(0.5);
+            robot.rightMotor.setPower(0.5);
+        }
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds() <= 1.0)
+        {
+            robot.leftMotor.setPower(0.5);
+            robot.rightMotor.setPower(-0.5);
+        }
+    }
     /* moveToBeacon() moves the robot from its shooting position to the first beacon
      * it uses a light sensor to detect when the robot has reached the white line
      * then it follows the white line to the beacon
      * the ODS recognizes when you have gotten close enough, and the robot comes to a stop
      */
     public void moveToBeacon() {
-        //Align to go for line
-//        runtime.reset();
-//        while (opModeIsActive() && runtime.seconds() < 1.25) {
-//            robot.leftMotor.setPower(-TURN_SPEED);
-//            robot.rightMotor.setPower(0);
-//        }
         // Move to white line
         while (opModeIsActive() && robot.lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(-DRIVE_SPEED);
@@ -148,17 +166,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
         }
         while (opModeIsActive()) {
             //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
-            // step 3 turning for ___ seconds
-            runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.05)) {
-                robot.rightMotor.setPower(-TURN_SPEED);
-                robot.leftMotor.setPower(TURN_SPEED);
-                telemetry.addData("Light", robot.lightSensor.getLightDetected());
-                telemetry.addData("Say", "Motors turning.");
-                telemetry.update();
-            }
-
-            //step 4 follow the line
+            // step 4 follow the line
             while (opModeIsActive() && robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) {
                 //follows white light is above threshold AND touch sensor is not touching
                 /*robot.leftMotor.setPower(0);
@@ -168,6 +176,7 @@ public class CompleteAutonomousRed extends LinearOpMode {
                 if (autoTurnRight == false) {
                     robot.leftMotor.setPower(-TURN_SPEED);
                     robot.rightMotor.setPower(0);
+                    autoTurnRight = true;
                     telemetry.addData("Say", "turn left");
                     telemetry.update();
                 }
@@ -177,6 +186,25 @@ public class CompleteAutonomousRed extends LinearOpMode {
                     autoTurnRight = false;
                     telemetry.addData("Say", "turn right");
                     telemetry.update();
+                }
+
+                sleep(250);//time for turn to occur
+
+                runtime.reset(); //resetting timer so that we can see when it's truly "on the line"
+
+                while (opModeIsActive() && robot.lightSensor.getLightDetected() >= WHITE_THRESHOLD) { //should exit when touch sensors engaged
+                    robot.leftMotor.setPower(-TURN_SPEED);
+                    robot.rightMotor.setPower(-TURN_SPEED);
+                    telemetry.addData("Say", "I think I'm on the line so I'm going forward.");
+                    if (runtime.seconds() > 2.5) {
+                        robotOnLine = true;
+                        telemetry.addData("Say", "Yay I'm confident I'm on the line!");
+                    }
+                }
+                if (robotOnLine == true) {
+                    robot.leftMotor.setPower(-TURN_SPEED);
+                    robot.rightMotor.setPower(-TURN_SPEED);
+                    telemetry.addData("Say", "Yay I'm confident I'm on the line!");
                 }
                 telemetry.addData("Say", "Motors following line.");
                 telemetry.update();
@@ -262,8 +290,26 @@ public class CompleteAutonomousRed extends LinearOpMode {
     /* moveToCenterVortex() allows the robot to turn around and move toward the center vortex, knocking the cap ball out of
     the way and parking on the center vortex
      */
-    public void moveToCenterVortex() {
-
+    public void moveToCenterVortex()
+    {
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds() <= 1.0)
+        {
+            robot.leftMotor.setPower(0.5);
+            robot.rightMotor.setPower(0.5);
+        }
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds() <= 1.0)
+        {
+            robot.leftMotor.setPower(0.5);
+            robot.rightMotor.setPower(-0.5);
+        }
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds() <= 3.0)
+        {
+            robot.leftMotor.setPower(-0.5);
+            robot.rightMotor.setPower(-0.5);
+        }
 
     }
 
