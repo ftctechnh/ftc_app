@@ -29,9 +29,12 @@ public class HardwareK9bot
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-    public DcMotor  leftShooter    = null;
-    public DcMotor  rightShooter    = null;
+    public DcMotor  leftShooter = null;
+    public DcMotor  rightShooter= null;
+    public Servo    lever       = null;
     public DcMotorController harvester = null; //for legacy motor controller
+    
+    public final static double LEVER_HOME = 0.2;
 
 
     /* Local OpMode members. */
@@ -53,6 +56,7 @@ public class HardwareK9bot
         harvester  = hwMap.dcMotorController.get("harvester");
         leftShooter  = hwMap.dcMotor.get("ls-motor");
         rightShooter  = hwMap.dcMotor.get("rs-motor");
+        lever  = hwMap.servo.get("lever");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShooter.setDirection(DcMotor.Direction.REVERSE);
@@ -63,6 +67,7 @@ public class HardwareK9bot
         leftShooter.setPower(0);
         rightShooter.setPower(0);
         harvester.setMotorPower(1,0);
+        lever.setPosition(LEVER_HOME);
 
 
 
