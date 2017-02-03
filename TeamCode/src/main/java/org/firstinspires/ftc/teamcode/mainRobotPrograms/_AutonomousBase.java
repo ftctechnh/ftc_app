@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -16,7 +15,6 @@ public abstract class _AutonomousBase extends _RobotBase
     //Only used during autonomous.
     protected GyroSensor gyroscope;
     protected ColorSensor leftColorSensor, rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
-    protected TouchSensor touchSensor;
     protected ModernRoboticsI2cRangeSensor frontRangeSensor, backRangeSensor;
 
     // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
@@ -24,12 +22,18 @@ public abstract class _AutonomousBase extends _RobotBase
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
-        leftColorSensor = initialize(ColorSensor.class, "colorLeft");
-        leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
+        leftColorSensor = initialize(ColorSensor.class, "Left Color Sensor");
+        leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         leftColorSensor.enableLed(true);
-        bottomColorSensor = initialize(ColorSensor.class, "colorBottom");
-        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
+        bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
+        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
         bottomColorSensor.enableLed(true);
+
+        //Init the range sensors for autonomous.
+        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
+        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
+        backRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
+        backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
 
         //initialize gyroscope (will output whether it was found or not.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");
@@ -47,12 +51,6 @@ public abstract class _AutonomousBase extends _RobotBase
 
             outputNewLineToDrivers("Gyroscope Calibration Complete!");
         }
-
-        //Init the range sensors for autonomous.
-        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
-        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x99c));
-        backRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
-        backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x99c));
     }
 
     //All children should have special instructions.
@@ -74,6 +72,21 @@ public abstract class _AutonomousBase extends _RobotBase
         setRightPower(movementPower);
     }
 
+
+    /************* GYRO READING GUIDE *************/
+    /*
+                                0
+                                |
+                                |
+                                |
+            -45                 |                 45
+                    -           |        +
+                                |
+                                |
+                                |
+         -90 ------------------------------------------ 90
+     */
+
     //Just resets the gyro.
     protected void zeroHeading() throws InterruptedException
     {
@@ -82,46 +95,22 @@ public abstract class _AutonomousBase extends _RobotBase
         sleep(400); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
     }
 
-    //Account for drifting tendency of the bot.
-    protected void adjustHeading() throws InterruptedException
-    {
-        int headingOffset = getValidGyroHeading();
-        turnToHeading(-headingOffset, TurnMode.BOTH);
-    }
-
-    //More complex method that adjusts the heading based on the gyro heading.
-    protected double gyroLeftCoefficient = .5, gyroRightCoefficient = .5;
-    protected double gyroOffCourseSensitivity = 42; //0 < r < 100
-    protected void updateMotorPowersBasedOnGyroHeading() throws InterruptedException
+    //Method that adjusts the heading based on the gyro heading.  Called once per frame.
+    private double offCourseGyroCorrectionFactor = .05; //Less means less sensitive.
+    protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
         if (gyroscope != null)
         {
-            // Get the heading info.
-            int heading = getValidGyroHeading();
+            //Desired heading is 0.
+            double offFromHeading = getValidGyroHeading();
 
-            //Create values.
-            double gyroFactor = (heading) / (100.0 - gyroOffCourseSensitivity);
-            gyroLeftCoefficient += gyroFactor;
-            gyroRightCoefficient -= gyroFactor;
+            //If offFromHeading is positive, then we want to increase the right power and decrease the left power.  Vice versa also true
+            //We also want some sort of coefficient for the amount that each power is changed by.
+            double motorPowerChange = offFromHeading * offCourseGyroCorrectionFactor;
 
-            //Clamp values.
-            double newLeftPower = gyroLeftCoefficient * movementPower, newRightPower = gyroRightCoefficient * movementPower;
-            newLeftPower = Range.clip(newLeftPower, -1, 1);
-            newRightPower = Range.clip(newRightPower, -1, 1);
-
-            //Set the motor powers.
-            setLeftPower(newLeftPower);
-            setRightPower(newRightPower);
-
-            //Output data to the DS.
-            //Note: the 2nd parameter "%.2f" changes the output of the max decimal points.
-            outputConstantDataToDrivers(
-                    new String[] {
-                            "Heading: " + heading,
-                            "L Coeff: " + gyroLeftCoefficient,
-                            "R Coeff: " + gyroRightCoefficient
-                    }
-            );
+            //Now set the motor power of each motor equal to the current motor power plus the correction factor.
+            setLeftPower(Range.clip(movementPower - motorPowerChange, -1, 1));
+            setRightPower(Range.clip(movementPower + motorPowerChange, -1, 1));
         }
         else
         {
@@ -135,120 +124,102 @@ public abstract class _AutonomousBase extends _RobotBase
         idle();
     }
 
-    private double rangeLeftCoefficient = .5, rangeRightCoefficient = .5;
-    private double rangeOffCourseSensitivity = 42; //0 < r < 100
-    protected void updateMotorPowersBasedOnRangeSensors() throws InterruptedException
+    //Method that adjusts the heading based on the range sensor.  Called once per frame.
+    private double offCourseRangeCorrectionFactor = .005; //Less means less sensitive.
+    protected void adjustMotorPowersBasedOnRangeSensors() throws InterruptedException
     {
-        if (frontRangeSensor != null && backRangeSensor != null) {
-            //Drive to the i^th color sensor line, then stop.
-            double frontDist = frontRangeSensor.getDistance(DistanceUnit.CM), backDist = backRangeSensor.getDistance(DistanceUnit.CM);
-            double diff = frontDist - backDist;
+        if (gyroscope != null)
+        {
+            //Desired heading is 0.
+            double differenceInDistances = frontRangeSensor.getDistance(DistanceUnit.CM) - backRangeSensor.getDistance(DistanceUnit.CM);
 
-            rangeRightCoefficient += diff / (100 - rangeOffCourseSensitivity);
-            rangeLeftCoefficient -= diff / (100 - rangeOffCourseSensitivity);
+            //If the difference is positive, the front is closer to the wall, meaning that we want to decrease the power for the right side and increase the power for the left side.
+            double motorPowerChange = differenceInDistances * offCourseRangeCorrectionFactor;
 
-            //Measure the ideal length of the robot from the wall and verify it's position here.
-            double newLeftPower = movementPower * rangeLeftCoefficient, newRightPower = movementPower * rangeRightCoefficient;
-            newLeftPower = Range.clip(newLeftPower, -1, 1);
-            newRightPower = Range.clip(newRightPower, -1, 1);
-
-            setLeftPower(newLeftPower);
-            setRightPower(newRightPower);
-
-            //Output debugging data
-            outputConstantDataToDrivers(
-                    new String[]
-                            {
-                                    "Wall distance from front = " + frontDist,
-                                    "Wall distance from back = " + backDist,
-                                    "Left coefficient = " + rangeLeftCoefficient,
-                                    "Right coefficient = " + rangeRightCoefficient
-                            }
-            );
+            //Now set the motor power of each motor equal to the current motor power plus the correction factor.
+            setLeftPower(Range.clip(movementPower + motorPowerChange, -1, 1));
+            setRightPower(Range.clip(movementPower - motorPowerChange, -1, 1));
         }
         else
         {
             outputConstantDataToDrivers(
-                    new String[]
-                            {
-                                    "I'M DRIVIN' BLIND!"
-                            }
+                    new String[] {
+                            "Can't adjust heading, no gyro attached!"
+                    }
             );
         }
+
         idle();
     }
 
-    //Used to turn to a specified heading.
-    private double initialTurnPower = .1; //Can be any value less than 1 (but should be less than .5)
-    protected void setInitialTurnPower(double initialTurnPower) {this.initialTurnPower = initialTurnPower;}
-    private double successiveTurnReduction = 3.6; //Should be greater than 1 or will likely go on forever.
-    protected void setSuccessiveTurnReduction (double successiveTurnReduction) {this.successiveTurnReduction = successiveTurnReduction;}
-    private double accelerationFactor = 0.00012; //The rate at which the bot slowly speeds up while turning.
-    protected void setAccelerationFactor(double accelerationFactor) {this.accelerationFactor = accelerationFactor;}
-    private double precisionFactor = 5; //precisionFactor * 2 radius is acceptable.
-    protected void setPrecisionFactor (double precisionFactor) {this.precisionFactor = precisionFactor;}
+    //Used to turn to a specified heading, and returns the difference between the desired angle and the actual angle achieved.
     enum TurnMode {
         LEFT, RIGHT, BOTH
     }
-
-    protected void turnToHeading (int desiredHeading, TurnMode mode) throws InterruptedException
+    protected int turnToHeading (int desiredHeading, TurnMode mode, long maxTime) throws InterruptedException
     {
-        //Just exit the method if the heading is already achieved.
-        if (desiredHeading == 0)
-            return;
+        if (gyroscope != null)
+        {
+            zeroHeading();
 
-        if (gyroscope != null) {
-            zeroHeading(); //Initialization step.
+            //Get the startTime so that we know when to end.
+            long startTime = System.currentTimeMillis();
+            int priorHeading = 0;
+            long lastCheckedTime = startTime;
+            double minimumTurnSpeed = 0; //This will increase in the event that the robot notices that we are not turning at all.
 
-            //This variable changes for each successive turn.
-            double turnPower = initialTurnPower;
-            int previousHeading = getValidGyroHeading();
-            while (true) // Will eventually be BROKEN out of.
+            int currentHeading = 0;
+            //Adjust as fully as possible but not beyond the time limit.
+            while(System.currentTimeMillis() - startTime < maxTime && currentHeading != desiredHeading)
             {
-                double incrementValue = turnPower * accelerationFactor;
-                int initialSign = Integer.signum(getValidGyroHeading() - desiredHeading);
-                //Wait until the desired value is turned over or reached.
-                int currentSign = initialSign;
-                do {
-                    if (mode == TurnMode.LEFT || mode == TurnMode.BOTH)
-                        setLeftPower(currentSign * turnPower);
+                currentHeading = getValidGyroHeading();
 
-                    if (mode == TurnMode.RIGHT || mode == TurnMode.BOTH)
-                        setRightPower(-1 * currentSign * turnPower);
+                //Protection against stalling, increases power if no observed gyro change in last half second.
+                if (System.currentTimeMillis() - lastCheckedTime >= 500)
+                {
+                    if (priorHeading == currentHeading)
+                        minimumTurnSpeed += .05;
 
-                    currentSign = Integer.signum(getValidGyroHeading() - desiredHeading);
-                    idle();
-
-                    outputConstantDataToDrivers(new String[]{
-                            "Current gyro heading = " + getValidGyroHeading() + " and dHeading is " + desiredHeading + " so sign is " + currentSign
-                    });
-
-                    if (previousHeading == getValidGyroHeading())
-                        turnPower += incrementValue; //Increase the value by a marginal amount over time to prevent stalling.
-
-                    previousHeading = getValidGyroHeading();
-
-                    if (turnPower > 1)
-                        turnPower = 1;
+                    lastCheckedTime = System.currentTimeMillis();
+                    priorHeading = currentHeading;
                 }
-                while (currentSign == initialSign && opModeIsActive());
 
-                stopDriving();
-                sleep(300); //Give the gyro a short break to adjust.
+                //Turn at a speed proportional to the distance from the ideal heading.
+                int thetaFromHeading = currentHeading - desiredHeading;
 
-                if (!(getValidGyroHeading() - precisionFactor <= desiredHeading && desiredHeading <= getValidGyroHeading() + precisionFactor))
-                    turnPower /= successiveTurnReduction;
-                else
-                    return; //Exit the loop if the end has been achieved.
+                //Logarithmic turning that slows down upon becoming close to heading but is not scary fast when far from desired heading.
+                //Have to shift graph to left in order to prevent log10 from returning negative values upon becoming close to heading.
+                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * .1 + minimumTurnSpeed);
+
+                //Set clipped powers.
+                if (mode != TurnMode.RIGHT)
+                    setLeftPower(Range.clip(turnPower, -1, 1));
+                if (mode != TurnMode.LEFT)
+                    setRightPower(-1 * Range.clip(turnPower, -1, 1));
+
+                outputConstantDataToDrivers(
+                        new String[]
+                                {
+                                        "Turning to heading " + desiredHeading,
+                                        "Current heading = " + currentHeading,
+                                        "Turn Power is " + turnPower,
+                                        "I have " + (maxTime - (System.currentTimeMillis() - startTime)) + "ms left."
+                                }
+                );
             }
+
+            stopDriving();
+            return currentHeading - desiredHeading;
         }
         else
         {
+            //Turn pretty normally with no gyro sensor attached.
             int directionCoefficient = (desiredHeading < 0 ? -1 : 1);
-            setRightPower(-1 * .5 * directionCoefficient);
             setLeftPower(.5 * directionCoefficient);
-
+            setRightPower(-1 * .5 * directionCoefficient);
             sleep((long) Math.abs(desiredHeading));
+
+            return 0;
         }
     }
 
@@ -272,7 +243,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
             //Gyroscope turning mechanics.
             while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
-                updateMotorPowersBasedOnGyroHeading();
+                adjustMotorPowersBasedOnGyroSensor();
 
             //Stop the bot.
         }

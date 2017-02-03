@@ -17,7 +17,7 @@ public abstract class _RobotBase extends LinearOpMode
     protected Servo leftLifterServo, rightLifterServo;
     protected Servo leftButtonPusher, rightButtonPusher;
     protected Servo clamp;
-    protected final double RIGHT_SERVO_LOCKED = 0.55, LEFT_SERVO_LOCKED = 0.35, RIGHT_SERVO_UNLOCKED = 0.3, LEFT_SERVO_UNLOCKED = 0.07, CLAMP_CLOSED = 0, CLAMP_OPEN = 1;
+    protected final double CLAMP_CLOSED = 0.0, CLAMP_OPEN = 1.0;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
@@ -54,17 +54,13 @@ public abstract class _RobotBase extends LinearOpMode
         flywheels = initialize(DcMotor.class, "flywheels");
         flywheels.setDirection(DcMotor.Direction.REVERSE);
 
-        leftLifterServo = initialize(Servo.class, "leftServo");
-        leftLifterServo.setPosition(LEFT_SERVO_LOCKED);
-        rightLifterServo = initialize(Servo.class, "rightServo");
-        rightLifterServo.setPosition(RIGHT_SERVO_LOCKED);
         lift = initialize(DcMotor.class, "lift");
         leftButtonPusher = initialize(Servo.class, "leftButtonPusher");
         leftButtonPusher.setPosition(0.5);
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
         rightButtonPusher.setPosition(0.5);
 
-        clamp = initialize(Servo.class, "clamperooni");
+        clamp = initialize(Servo.class, "clamp");
         clamp.setPosition(CLAMP_CLOSED);
 
         //Actual program thread
