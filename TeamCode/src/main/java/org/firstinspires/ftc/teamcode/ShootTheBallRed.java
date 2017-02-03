@@ -67,7 +67,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Golden Eagles: ShootTheBall-RED", group="Pushbot")
-//@Disabled
+@Disabled
 public class ShootTheBallRed extends LinearOpMode {
 
     /* Declare OpMode members. */
