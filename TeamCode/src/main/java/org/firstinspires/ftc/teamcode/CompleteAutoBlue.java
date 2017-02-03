@@ -161,13 +161,13 @@ public class CompleteAutoBlue extends LinearOpMode {
         // (1) 1.5 sec
         robot.leftShooter.setPower(FULL_POWER);
         robot.rightShooter.setPower(FULL_POWER);
-        while (opModeIsActive() && (runtime.seconds() < 3.5)) {
+        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
             telemetry.addData("Status", "Running shootParticle() method (3).");
             telemetry.update();
         }
         // (2) 1 sec
         robot.trigger.setPosition(MAX_TRIGGER_POSITION);
-        while (opModeIsActive() && (runtime.seconds() < 3.5)) {
+        while (opModeIsActive() && (runtime.seconds() < 5.0)) {
             telemetry.addData("Status", "Running shootParticle() method (4).");
             telemetry.update();
         }
