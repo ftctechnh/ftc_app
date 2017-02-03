@@ -22,8 +22,8 @@ public class AutonomousBlue extends _AutonomousBase
 
         driveForTime(-0.5, 1200);
 
-        turnToHeading(-400, TurnMode.BOTH); //Doesn't use gyro.
-        turnToHeading(1000, TurnMode.BOTH);
+        turnToHeading(-400, TurnMode.BOTH, 3000); //Doesn't use gyro.
+        turnToHeading(1000, TurnMode.BOTH, 3000);
         driveForTime(-0.3, 1000);
     }
 }

@@ -13,12 +13,12 @@ public class AutonomousRedBeacons extends _AutonomousBase
         driveForTime(.3, 700); //Drive a little ways from the wall.
 
         //Know how much this missed by since it can be made up later in a different turn.
-        int missedBy = turnToHeading(50, TurnMode.LEFT, 2000);
+        turnToHeading(50, TurnMode.LEFT, 4000);
 
-        driveForTime(.8, 1200); //Dash over across the corner goal.
+        driveForTime(.5, 1200); //Dash over across the corner goal.
 
         //Turn back to become parallel with the wall.
-        turnToHeading(-(50 + missedBy), TurnMode.RIGHT, 3500); //Take a bit of extra time on this turn.
+        turnToHeading(0, TurnMode.RIGHT, 4500); //Take a bit of extra time on this turn.
 
         for (int i = 0; i < 2; i++) //Two beacons.
         {
@@ -34,12 +34,13 @@ public class AutonomousRedBeacons extends _AutonomousBase
                 adjustMotorPowersBasedOnRangeSensors();
 
             //Check beacon.
-            if (rightColorSensor.blue() < 2 && rightColorSensor.red() > 2) //Looking at the blue one, so move forward a set distance.
+            if (leftColorSensor.blue() < 2 && leftColorSensor.red() > 2) //Looking at the blue one, so move forward a set distance.
             {
                 startTime = System.currentTimeMillis();
                 while (System.currentTimeMillis() - startTime < 700)
                     adjustMotorPowersBasedOnRangeSensors();
             }
+            stopDriving();
 
             //Run the continuous rotation servo out to press, then back in.
             leftButtonPusher.setPosition(.8);

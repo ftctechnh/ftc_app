@@ -13,8 +13,8 @@ public class AutonomousRedNoShoot extends _AutonomousBase
 
         driveForTime(-0.5, 1200);
 
-        turnToHeading(800, TurnMode.BOTH); //Doesn't use gyro.
-        turnToHeading(-800, TurnMode.BOTH);
+        turnToHeading(800, TurnMode.BOTH, 3000); //Doesn't use gyro.
+        turnToHeading(-800, TurnMode.BOTH, 3000);
         driveForTime(-0.3, 1000);
     }
 }
