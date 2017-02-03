@@ -33,17 +33,15 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
-@Autonomous(name="Red Auto (Push Beacons)", group="Main")
+@Autonomous(name="Shoot Auto (Shoot Balls)", group="Main")
 //@Disabled
-public class RedAutoPointer extends OpMode {
+public class ShootAutoPointer extends OpMode {
 
     BotHardware robot = new BotHardware();
 
-    LineDrive auto = new LineDrive(this, true, false);
+    LineDrive auto = new LineDrive(this, false, true);
 
     @Override
     public void init(){

@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.content.*;
+import android.graphics.Path;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
+import android.widget.ArrayAdapter;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+import org.opencv.core.Mat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -67,96 +71,92 @@ public class AutonomousTesting extends OpMode {
         super.stop();
         //Vuf.stop();
     }
-}
 
-//deal with this sometime
-
-/*
-UsbManager usbManager;
-UsbDevice usbDevice;
-
-private void connect() {
-    this.usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-    HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
-
-    // just get the first enumerated USB device
-    Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-    if (deviceIterator.hasNext()) {
-        this.usbDevice = deviceIterator.next();
-    }
-
-    if (usbDevice == null) {
-        Log.w(TAG, "no USB device found");
-        return;
-    }
-
-    // ask for permission
-
-    final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-    final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (ACTION_USB_PERMISSION.equals(action)) {
-                synchronized (this) {
-                    UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-
-                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if(device != null){
-                            // call method to set up device communication
-                            Log.i(TAG, "permission granted. access mouse.");
-
-                            // repeat in a different thread
-                            transfer(device);
-                        }
-                    }
-                    else {
-                        Log.d(TAG, "permission denied for device " + device);
-                    }
-                }
-            } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-                UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                if (device != null) {
-                    // TODO:
-                    // call your method that cleans up and closes communication with the device
-                    // usbInterface.releaseInterface();
-                    // usbDeviceConnection.close();
-                }
-            }
+    private class NavXVelocity implements HeadingSensor{
+        public float getHeading(){
+            //TODO: figure out how to get integrated velocity from navx
+            return 0;
         }
-    };
+    }
 
-    PendingIntent mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-    IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-    context.registerReceiver(mUsbReceiver, filter);
+    static public class SquirleyNavXStep extends AutoLib.Step {
+        private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private float mDirection;                           // compass direction to drive robot at (relative to robot itself) (-180 .. +180 degrees
+        private OpMode mOpMode;                             // needed so we can log output (may be null)
+        private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
+        private HeadingSensor mVel;
+        private SensorLib.PID gPid;                         // proportional–integral–derivative controller (PID controller)
+        private SensorLib.PID vPid;
+        private double mPrevTime;                           // time of previous loop() call
+        private ArrayList<AutoLib.SetPower> mMotorSteps;    // the motor steps we're guiding - assumed order is right ... left ...
 
-    usbManager.requestPermission(usbDevice, mPermissionIntent);
+        public SquirleyNavXStep(OpMode mode, float direction, HeadingSensor gyro, HeadingSensor velocity, SensorLib.PID gpid, SensorLib.PID vpid,
+                                ArrayList<AutoLib.SetPower>motorSteps, float power){
+            mOpMode = mode;
+            mDirection = direction;
+            mGyro = gyro;
+            mVel = velocity;
+            gPid = gpid;
+            vPid = vpid;
+            mMotorSteps = motorSteps;
+            mPower = power;
+        }
+
+        public boolean loop(){
+            super.loop();
+            // initialize previous-time on our first call -> dt will be zero on first call
+            if (firstLoopCall()) {
+                mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
+            }
+
+            final float gError = SensorLib.Utils.wrapAngle(mGyro.getHeading());   // deviation from desired heading
+            // deviations to left are positive, to right are negative
+
+            final float vError = SensorLib.Utils.wrapAngle(mVel.getHeading() - mDirection);    // deviation from desired direction
+
+            // compute delta time since last call -- used for integration time of PID step
+            final double time = mOpMode.getRuntime();
+            final double dt = time - mPrevTime;
+            mPrevTime = time;
+
+            // feed error through PID to get motor power correction value
+            final float gCorrection = -gPid.loop(gError, (float) dt);
+            final float vCorrection = -vPid.loop(vError, (float) dt);
+
+            //calculate motor powers for ideal fancy wheels
+            AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(mDirection);
+
+            //calculate correction for each motors
+            final float leftPower = gCorrection;
+            final float rightPower = -gCorrection;
+            final float frontPower = -vCorrection;
+            final float backPower = vCorrection;
+
+            final float[] motorPowers = {frontPower + rightPower + (float)mp.Front(),
+                    backPower + rightPower + (float)mp.Back(),
+                    frontPower + leftPower + (float)mp.Front(),
+                    backPower + leftPower + (float)mp.Back()};
+
+            final float scale = AutoLib.scaleMotorFactor(motorPowers);
+
+            //set the powers
+            mMotorSteps.get(0).setPower(motorPowers[0] * scale * mPower);
+            mMotorSteps.get(1).setPower(motorPowers[1] * scale * mPower);
+            mMotorSteps.get(2).setPower(motorPowers[2] * scale * mPower);
+            mMotorSteps.get(3).setPower(motorPowers[3] * scale * mPower);
+
+            //log some data
+            if(mOpMode != null){
+                mOpMode.telemetry.addData("Heading", mGyro.getHeading());
+                mOpMode.telemetry.addData("Direction", mVel.getHeading());
+            }
+
+            // guidance step always returns "done" so the CS in which it is embedded completes when
+            // all the motors it's controlling are done
+            return true;
+        }
+    }
 }
 
-private void transfer(UsbDevice device) {
 
-    int TIMEOUT = 0;
-    boolean forceClaim = true;
-
-    // just grab the first endpoint
-    UsbInterface intf = device.getInterface(0);
-    UsbEndpoint endpoint = intf.getEndpoint(0);
-    UsbDeviceConnection connection = this.usbManager.openDevice(device);
-    connection.claimInterface(intf, forceClaim);
-
-    byte[] bytes = new byte[endpoint.getMaxPacketSize()];
-
-    connection.bulkTransfer(endpoint, bytes, bytes.length, TIMEOUT);
-
-    // depending on mouse firmware and vendor the information you're looking for may
-    // be in a different order or position. For some logitech devices the following
-    // is true:
-
-    int x = (int) bytes[1];
-    int y = (int) bytes[2];
-    int scrollwheel = (int) bytes[3]
-
-    // call a listener, process your data ...
-}
- */
 

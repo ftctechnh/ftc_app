@@ -41,7 +41,7 @@ public class BlueAutoPointer extends OpMode {
 
     BotHardware robot = new BotHardware();
 
-    LineDrive auto = new LineDrive(this, false);
+    LineDrive auto = new LineDrive(this, false, false);
 
     @Override
     public void init(){

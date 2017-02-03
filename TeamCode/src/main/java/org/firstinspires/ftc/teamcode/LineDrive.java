@@ -79,10 +79,12 @@ public class LineDrive extends OpenCVLib {
     final int countPerRotation = 280;
     
     OpMode modePointer = this;
-    
-    LineDrive(OpMode mode, boolean redColor){
+    boolean mJustShoot = false;
+
+    LineDrive(OpMode mode, boolean redColor, boolean justShoot){
         if(mode != null) modePointer = mode;
         red = redColor;
+        mJustShoot = justShoot;
     }
 
     @Override
@@ -226,11 +228,20 @@ public class LineDrive extends OpenCVLib {
     @Override
     public void loop() {
         try{
-            // until we're done, keep looping through the current Step(s)
-            if (!bDone)
-                bDone = mSequence.loop();       // returns true when we're done
-            else
-                modePointer.telemetry.addData("sequence finished", "");
+           if(mJustShoot){
+               // until we're done, keep looping through the current Step(s)
+               if (!bDone)
+                   bDone = mShoot.loop();       // returns true when we're done
+               else
+                   modePointer.telemetry.addData("sequence finished", "");
+           }
+            else {
+               // until we're done, keep looping through the current Step(s)
+               if (!bDone)
+                   bDone = mSequence.loop();       // returns true when we're done
+               else
+                   modePointer.telemetry.addData("sequence finished", "");
+           }
         }
         catch (Exception e){
             modePointer.telemetry.addData("Exception: ", e.getMessage());
