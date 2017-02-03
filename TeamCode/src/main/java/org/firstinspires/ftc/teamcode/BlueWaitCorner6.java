@@ -10,6 +10,7 @@ public class BlueWaitCorner6 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
+        int i = 0;
         switch(gameState){
             case 0: //Start
                 if(actualRuntime() > 15 && !gyro.isCalibrating()) {
@@ -18,7 +19,7 @@ public class BlueWaitCorner6 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(4, 10);
+                map.setGoal(5, 9);
                 moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -36,8 +37,11 @@ public class BlueWaitCorner6 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
-                if(!linedUpAngle(5)){
-                    gameState = 2;
+                if(i < 5){
+                    if(!linedUpAngle(5)) {
+                        gameState = 2;
+                        i++;
+                    }
                 }
                  moveState = MoveState.SHOOT_WHEEL;
                  if(getRuntime() - sTime >= 3){

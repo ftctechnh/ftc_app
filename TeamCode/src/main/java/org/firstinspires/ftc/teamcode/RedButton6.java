@@ -7,135 +7,178 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Red Button 6", group="Red")
 public class RedButton6 extends AutonomousBase{
+    double xTime;
     @Override
     public void gameState() {
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(actualRuntime() > 5 && !gyro.isCalibrating()) {
+                if(actualRuntime() > 1 && !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
                     map.setRobot(6,11.25);
                 }
                 break;
             case 1: //Shoot
-//                moveState = MoveState.SHOOT;
-//                if(getRuntime() - sTime >= 3){
-                    gameState = 2;
-//                }
-                break;
-            case 2:
-                map.setGoal(6,9);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
-                    gameState = 3;
-                }
+//                  moveState = MoveState.SHOOT;
+//                  if(getRuntime() - sTime >= 3){
+//                    moveState = MoveState.SHOOT_STOP;
+                moveState = MoveState.SERVO_DEPLOY;
+                moveState = MoveState.SERVO_M;
+                gameState = 3;
+//                  }
                 break;
             case 3: //Move to beacon A push pos.
-                map.setGoal(3,7.5);
+                map.setGoal(1.5, 8.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 }
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
+                    moveState = MoveState.SERVO_DEPLOY;
+                    moveState = MoveState.SERVO_M;
+                    xTime = getRuntime();
                     gameState = 4;
                 }
                 break;
-            case 4: //Move paralell to wall
-                map.setGoal(3,12);
+            case 4: //Move parallel to wall
+                map.setGoal(map.getRobotX(), 12);
                 if(linedUp()){
                     moveState = MoveState.STOP;
+                    moveState = MoveState.SERVO_M;
+                    moveState = MoveState.SERVO_DEPLOY;
                     gameState = 5;
                 }
-		else{
+                else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
                 break;
-            case 5: //Move to wall and back up and button press A
-                map.setGoal(0,map.getRobotY());
-                moveState = MoveState.RIGHT;
+            case 5: //Move to wall
+                map.setGoal(1, map.getRobotY());
+                if(!touchWall.isPressed()){
+                    moveState = MoveState.RIGHT;
+                } else{
+                    moveState = MoveState.STOP;
+                    gameState = 6;
+                }
+                break;
+            case 6: //back up and button press A
+                map.setGoal(map.getRobotX(),12); // I need the goal far away so moveState keeps going
+                if(!touchWall.isPressed()){
+                    moveState = MoveState.RIGHT_SLOW;
+                    xTime = 0;
+                }else {
+                    if (touchRight.isPressed()) {
+                        if(xTime == 0){
+                            xTime = getRuntime();
+                            moveState = MoveState.STOP;
+                        }else if(getRuntime() - xTime > 1){
+                            if (colorRight.blue() < colorRight.red() && colorLeft.blue() < colorLeft.red()) {
+                                moveState = MoveState.SERVO_L;
+                                gameState = 7;
+                                pTime = getRuntime();
+                            } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() < colorLeft.red()) {
+                                moveState = MoveState.SERVO_R;
+                                gameState = 7;
+                                pTime = getRuntime();
+                            }
+                        }
+                    } else {
+                        if (linedUp()) {
+                            moveState = MoveState.BACKWARD_SLOW;
+                        } else {
+                            moveState = MoveState.TURN_TOWARDS_GOAL;
+                        }
+                    }
+                }
+                break;
+            case 7: // moves out from wall
+                if(getRuntime() - pTime > 1){
+                    map.setGoal(1, map.getRobotY());
+                    moveState = MoveState.SERVO_M;
+                    moveState = MoveState.LEFT;
+                    if(map.distanceToGoal()<= .1){
+                        moveState = MoveState.STOP;
+                        gameState = 8;
+                    }
+                }else{
+                    map.setRobot(0,7); //Since we're positive of our position after pressing the button, we might as well use that
+                }
+                break;
+            case 8: //Move to beacon B push pos.
+                map.setGoal(1, 1.5);
+                if(linedUp()){
+                    moveState = MoveState.BACKWARD;
+                }else{
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
+                }
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
-		    gameState = 6;
-                }
-                break;
-           case 6:
-                map.setGoal(0,0);
-                if(touchRight.isPressed()){
-//                  if(colorLeft1.blue() < colorLeft2.blue()) { 
-//                    moveState = MoveState.SERVO_L;
-//                  }
-//                  else{
-                    moveState = MoveState.SERVO_R;
-//                  }
-                  gameState = 7;
-                  pTime = getRuntime();
-                  map.setRobot(.75,3);
-                }
-                else{
-		  moveState = MoveState.BACKWARD_SLOW;
-		}
-                break;
-	    case 7: // moves out from wall
-                if(getRuntime() - pTime > 3){
-	 	     map.setGoal(1.5, map.getRobotY());
-        	     moveState = MoveState.LEFT;
-	  	     if(map.distanceToGoal()<= .1){
-		       moveState = MoveState.STOP;
-		       gameState = 8;
-		     }
-                }else{
-                    moveState = MoveState.STOP;
-                }
-	        break;
-	    case 8: // moves up to push Beacon B
-		map.setGoal(map.getRobotX(), 5);
-		moveState = MoveState.BACKWARD;
-		if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
+                    moveState = MoveState.SERVO_M;
+                    xTime = getRuntime();
                     gameState = 9;
                 }
                 break;
-	    case 9: //moves to wall
-                map.setGoal(-.5, 4);
-                moveState = MoveState.RIGHT;
-                if(map.distanceToGoal()<= .1){
-		    moveState = MoveState.STOP;
-	            gameState = 10;
-	          }
-		break;
-            case 10: //move back  and button press B
-                if(touchRight.isPressed()){
-//                  if(colorLeft1.blue() > colorLeft2.blue()) { 
-//                    moveState = MoveState.SERVO_L;
-//                  }
-//                  else{
-                    moveState = MoveState.SERVO_R;
-//                  }
-                  gameState = 11;
-                  pTime = getRuntime();
+            case 9: //Move parallel to wall
+                map.setGoal(1,12);
+                if(linedUp()){
+                    moveState = MoveState.STOP;
+                    moveState = MoveState.SERVO_M;
+                    gameState = 10;
                 }
                 else{
-                  moveState = MoveState.BACKWARD_SLOW;
-		}
-            case 11: //Moves to the center and knocks off cap ball
-                map.setGoal(6.8,5.5);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
-                if(map.distanceToGoal()<=.1) {
+                break;
+            case 10: //Move to wall
+                map.setGoal(0, 1.5);
+                if(!touchWall.isPressed()){
+                    moveState = MoveState.RIGHT;
+                    gameState = 11;
+                } else{
                     moveState = MoveState.STOP;
                 }
                 break;
+            case 11: //move back  and button press B
+                map.setGoal(map.getRobotX(),0); // I need the goal far away so moveState keeps going
+                if (touchRight.isPressed()) {
+                    if(xTime == 0){
+                        xTime = getRuntime();
+                        moveState = MoveState.STOP;
+                    }else if(getRuntime() - xTime > 1){
+                        if (colorRight.blue() > colorRight.red() && colorLeft.blue() < colorLeft.red()) {
+                            moveState = MoveState.SERVO_L;
+                            gameState = 7;
+                            pTime = getRuntime();
+                        } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() > colorLeft.red()) {
+                            moveState = MoveState.SERVO_R;
+                            gameState = 7;
+                            pTime = getRuntime();
+                        }
+                    }
+                } else {
+                    if (linedUp()) {
+                        moveState = MoveState.BACKWARD_SLOW;
+                    } else {
+                        moveState = MoveState.TURN_TOWARDS_GOAL;
+                    }
+                }
+                break;
+            case 12: //Moves to the center and knocks off cap ball
+                if(getRuntime() - pTime > 1) {
+                    map.setGoal(5, 5);
+                    if (linedUp()) {
+                        moveState = MoveState.FORWARD;
+                    } else {
+                        moveState = MoveState.STRAFE_TOWARDS_GOAL;
+                    }
+                    if (map.distanceToGoal() <= .1) {
+                        moveState = MoveState.STOP;
+                    }
+                    break;
+                }
             case 777:
                 moveState = MoveState.STOP;
                 break;

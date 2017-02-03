@@ -290,7 +290,7 @@ public abstract class AutonomousBase extends OpMode {
                 servoRightButton.setPosition(0);
                 break;
             case MoveState.SERVO_DEPLOY:
-                servoBeaconDeploy.setPosition(0);
+                servoBeaconDeploy.setPosition(1);
                 break;
             case MoveState.SERVO_DEPLOY_STOP:
                 servoBeaconDeploy.setPosition(.5);
@@ -304,8 +304,8 @@ public abstract class AutonomousBase extends OpMode {
                  break;
              case MoveState.SHOOT:
                 // Shoots ball out of conveyor
-                motorLeftShooter.setPower(.4);
-                motorRightShooter.setPower(.4);
+                motorLeftShooter.setPower(.5);
+                motorRightShooter.setPower(.5);
                 motorConveyor.setPower(1);
                 break;
             case MoveState.FULL_STOP:

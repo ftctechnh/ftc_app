@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * Created by Team 10464 on 9/21/16.
  */
 @TeleOp(name="Oriented Protobot Tank", group="Protobot")
+
 public class OrientedProtoBot extends OpMode {
 
     private DcMotor motorUp;
@@ -113,11 +114,11 @@ public class OrientedProtoBot extends OpMode {
         // GAME PAD 2 CODE
         // Activates shooters
         if(gamepad2.left_trigger > .1){
-            motorRightShooter.setPower(.33);
-            motorLeftShooter.setPower(.33);
+            motorRightShooter.setPower(.5);
+            motorLeftShooter.setPower(.5);
         }else if(gamepad2.right_trigger > .65){
-            motorRightShooter.setPower(-.33);
-            motorLeftShooter.setPower(-.33);
+            motorRightShooter.setPower(-.5);
+            motorLeftShooter.setPower(-.5);
         }else{
             motorRightShooter.setPower(0);
             motorLeftShooter.setPower(0);
@@ -157,9 +158,17 @@ public class OrientedProtoBot extends OpMode {
         if(gamepad1.left_stick_button){
             gyro.calibrate();
         }
-        
+        /*if(gamepad1.dpad_left){
+            servoBeaconDeploy.setPosition(1);
+        } else{
+            servoBeaconDeploy.setPosition(.5);
+        }*/
         // Put telemetry here
         telemetry.addData("motor speed", motorSpeed);
         telemetry.addData("theta", heading);
+        telemetry.addData("motor 1", motorUp.getCurrentPosition());
+        telemetry.addData("motor 2", motorDown.getCurrentPosition());
+        telemetry.addData("motor 3", motorLeft.getCurrentPosition());
+        telemetry.addData("motor 4", motorRight.getCurrentPosition());
     }
 }
