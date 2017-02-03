@@ -20,8 +20,8 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
         // use encoders
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("color sensor red", getColorSensor().red());
-        telemetry.addData("color sensor blue", getColorSensor().blue());
+        telemetry.addData("color sensor red1", getColorSensor1().red());
+        telemetry.addData("color sensor blue1", getColorSensor1().blue());
         telemetry.update();
 
         // wait for initialization

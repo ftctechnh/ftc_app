@@ -5,6 +5,10 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDeviceReader;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -46,7 +50,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private LightSensor frontLightSensor;
     private LightSensor backLightSensor;
 
-    private ColorSensor colorSensor;
+    private ColorSensor colorSensor1;
+    private ColorSensor colorSensor2;
 
     private ModernRoboticsI2cRangeSensor frontRange;
     private ModernRoboticsI2cRangeSensor leftRange;
@@ -79,11 +84,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         door3 = hardwareMap.servo.get("d3");  // Closed = 0.55, Open = 0.25
         latch4 = hardwareMap.servo.get("l4"); // Up = 0.5
 
-        colorSensor = hardwareMap.colorSensor.get("clr");
-        colorSensor.enableLed(false);
+        colorSensor1 = hardwareMap.colorSensor.get("clr");
+        colorSensor1.setI2cAddress(I2cAddr.create8bit(0x3C));
+
+        colorSensor2 = hardwareMap.colorSensor.get("clr2");
+        colorSensor2.setI2cAddress(I2cAddr.create8bit(0x3E));
 
         frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
-        leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
+        //leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
@@ -115,30 +123,35 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         intakeMotor.setPower(0);
         stopRobot();
 
-        telemetry.addData(">", "Calibrating Gyro");
-        telemetry.update();
+//        telemetry.addData(">", "Calibrating Gyro");
+//        telemetry.update();
+//
+//        gyroSensor.calibrate();
+//
+//        // make sure the gyro is calibrated before continuing
+//        while (!isStopRequested() && gyroSensor.isCalibrating()) {
+//            idle();
+//        }
+//
+//        telemetry.addData(">", "Gyro caibrated");
+//        telemetry.update();
 
-        gyroSensor.calibrate();
-
-        // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && gyroSensor.isCalibrating()) {
-            idle();
-        }
-
-        telemetry.addData(">", "Gyro caibrated");
-        telemetry.update();
+        // reset gyro heading
+        gyroSensor.resetZAxisIntegrator();
     }
 
     protected void claimBeaconRed() {
-        // reset again after pressing beacon
-        gyroPivot(0.8, 0);
-
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // drive to 10cm from the wall
+        // drive to 12cm from the wall
         rangeSensorDrive(12, 0.1);
 
-        if(colorSensor.red() > colorSensor.blue()) {
+        // when the beacon is already claimed, moved on
+        if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
+            return;
+        }
+
+        if(colorSensor1.red() > colorSensor1.blue()) {
             beaconsServo1.setPosition(0.05);
         } else {
             beaconsServo2.setPosition(0.95);
@@ -146,23 +159,49 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         stopRobot();
 
+        // wait for the servo to raise
+        robotRuntime.reset();
+        while(robotRuntime.milliseconds() < 100) {
+            idle();
+        }
+
         // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
             // run without encoders again
             driveForward(0.2);
         }
-        stopRobot();
+        //stopRobot();
 
         // pause for the beacon to change color
         getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
+        while(opModeIsActive() && getRobotRuntime().milliseconds() < 100) {
             idle();
         }
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // drive backward
-        encoderDrive(0.5, -2, -2);
+        // drive to 12cm from the wall
+        rangeSensorDrive(12, 0.1);
+
+        // check if both color sensors do not detect red
+        if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
+            gyroPivot(0.8, 0);
+
+            // first push
+            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
+                // run without encoders again
+                driveForward(0.2);
+            }
+            stopRobot();
+        }
+
+        // drive backward to 15 cm
+        rangeSensorDrive(15, 0.1);
+
+        // lower button pushers
+        beaconsServo1.setPosition(1);
+        beaconsServo2.setPosition(0);
 
 //        // first push
 //        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6.5) {
@@ -622,8 +661,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         return backLightSensor;
     }
 
-    protected ColorSensor getColorSensor() {
-        return colorSensor;
+    protected ColorSensor getColorSensor1() {
+        return colorSensor1;
+    }
+
+    protected ColorSensor getColorSensor2() {
+        return colorSensor2;
     }
 
     protected ModernRoboticsI2cRangeSensor getFrontRange() {
