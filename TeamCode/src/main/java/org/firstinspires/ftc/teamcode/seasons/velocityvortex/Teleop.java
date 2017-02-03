@@ -93,11 +93,9 @@ public class Teleop extends LinearOpModeBase {
             driveReversed = false;
         }
 
-        // control for the capball latch
+        // control to open the cap ball latch
         if(gamepad2.dpad_down) {
             getLatch4().setPosition(0.7);
-        } else {
-            getLatch4().setPosition(0.5);
         }
     }
 
@@ -154,6 +152,12 @@ public class Teleop extends LinearOpModeBase {
         telemetry.addData("ods3", getOds3().getRawLightDetected());
         telemetry.addData("launcher ods", getLauncherOds().getLightDetected());
         telemetry.addData("front range", getFrontRange().cmUltrasonic());
+
+        telemetry.addData("color sensor red", getColorSensor1().red());
+        telemetry.addData("color sensor blue", getColorSensor1().blue());
+
+        telemetry.addData("color sensor red2", getColorSensor2().red());
+        telemetry.addData("color sensor blue2", getColorSensor2().blue());
 
         telemetry.update();
     }

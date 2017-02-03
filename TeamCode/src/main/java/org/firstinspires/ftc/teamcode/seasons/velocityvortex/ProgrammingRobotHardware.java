@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -28,7 +29,7 @@ public class ProgrammingRobotHardware {
     public static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI);
 
-    public static final double P_DRIVE_COEFF = 0.15;
+    public static final double P_LIGHT_FOLLOW_COEFF = 1.5;
 
     private DcMotor frontLeft;
     private DcMotor frontRight;
@@ -38,7 +39,7 @@ public class ProgrammingRobotHardware {
     private ModernRoboticsI2cGyro gyro;
     private ColorSensor colorSensor;
 
-    private LightSensor frontLightSensor;
+    private OpticalDistanceSensor frontLightSensor;
 
     public ProgrammingRobotHardware(HardwareMap hardwareMap, Telemetry telemetry) {
         frontLeft = hardwareMap.dcMotor.get("fl");
@@ -51,7 +52,7 @@ public class ProgrammingRobotHardware {
         colorSensor = hardwareMap.colorSensor.get("clrs");
         colorSensor.enableLed(true);
 
-        frontLightSensor = hardwareMap.lightSensor.get("fls");
+        frontLightSensor = hardwareMap.opticalDistanceSensor.get("fls");
         frontLightSensor.enableLed(true);
 
         // reset the encoders for each drive motor
@@ -119,7 +120,7 @@ public class ProgrammingRobotHardware {
         return backRight;
     }
 
-    public LightSensor getFrontLightSensor() {
+    public OpticalDistanceSensor getFrontLightSensor() {
         return frontLightSensor;
     }
 }

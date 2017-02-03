@@ -32,41 +32,50 @@ public class ProgrammingRobotAutonomous extends LinearOpMode {
         telemetry.update();
 
         while(!isStarted()) {
-            telemetry.addData("init loop", isStarted());
             telemetry.addData(">", "Integrated Z value = %d", robot.getGyroSensor().getIntegratedZValue());
-            telemetry.addData(">", "Gyro error from 90 degrees = %f", getGyroError(90));
             telemetry.update();
             idle();
         }
 
-        robot.getFrontLeft().setPower(0.5);
-        robot.getFrontRight().setPower(0.5);
-        robot.getBackLeft().setPower(0.5);
-        robot.getBackRight().setPower(0.5);
-
-        // turn 90 degrees
-        gyroPivot(0.5, 90);
-
         while(opModeIsActive()) {
-            telemetry.addData("gyro error", getGyroError(90));
+            telemetry.addData("light sensor", robot.getFrontLightSensor().getRawLightDetected());
             telemetry.update();
+
+            proportionalLineFollow(0.1);
+
         }
+
+
     }
 
     protected void proportionalLineFollow(double speed) {
-
-        // this method should only be used in a loop
-
-        // TODO: find actual LIGHT_SENSOR_PERFECT_VALUE value
-
-        double correction = ProgrammingRobotHardware.LIGHT_SENSOR_PERFECT_VALUE
+        double error = ProgrammingRobotHardware.LIGHT_SENSOR_PERFECT_VALUE
                 - robot.getFrontLightSensor().getRawLightDetected();
 
-        // correction positively affects one side and negatively affects other
-        robot.getFrontLeft().setPower(speed - correction);
-        robot.getBackLeft().setPower(speed - correction);
-        robot.getFrontRight().setPower(speed + correction);
-        robot.getBackLeft().setPower(speed + correction);
+        double correction =
+                Range.clip(error * ProgrammingRobotHardware.P_LIGHT_FOLLOW_COEFF, -1, 1);
+
+        double leftPower;
+        double rightPower;
+
+        telemetry.addData("correction", correction);
+
+        // if the ODS is on the middle of the line
+        if(error < 0) {
+            rightPower = speed - correction;
+            leftPower = speed;
+        } else {
+            leftPower = speed + correction;
+            rightPower = speed;
+        }
+
+        // set power for left side
+        robot.getFrontLeft().setPower(leftPower);
+        robot.getBackLeft().setPower(leftPower);
+
+        // set power for right side
+        robot.getFrontRight().setPower(-rightPower);
+        robot.getBackRight().setPower(-rightPower);
     }
 
     protected void gyroPivot(double speed, double angle) {

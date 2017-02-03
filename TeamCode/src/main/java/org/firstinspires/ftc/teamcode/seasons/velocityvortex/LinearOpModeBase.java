@@ -90,6 +90,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         colorSensor2 = hardwareMap.colorSensor.get("clr2");
         colorSensor2.setI2cAddress(I2cAddr.create8bit(0x3E));
 
+        // disable LEDs for both color sensors
+        colorSensor1.enableLed(false);
+        colorSensor2.enableLed(false);
+
         frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
         //leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
@@ -188,7 +192,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
             gyroPivot(0.8, 0);
 
-            // first push
+            // second push
             while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
                 // run without encoders again
                 driveForward(0.2);
@@ -416,6 +420,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     protected void encoderDrive(double speed, double leftInches, double rightInches) {
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         int leftTarget = (int)(leftInches * COUNTS_PER_INCH);
         int rightTarget = (int)(rightInches * COUNTS_PER_INCH);
 
@@ -442,13 +449,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         stopRobot();
 
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         // set RUN_WITHOUT_ENCODER for each motor
         setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     protected void encoderStrafe(double speed, double frontInches, double backInches) {
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         int frontTarget = (int)(frontInches * COUNTS_PER_INCH);
         int backTarget = (int)(backInches * COUNTS_PER_INCH);
 
@@ -460,7 +468,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         getBackLeftDrive().setTargetPosition(-backTarget);
 
         // set RUN_TO_POSITION for each motor
-        setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // set the power for the left drive motors
         getFrontLeftDrive().setPower(speed);
@@ -476,10 +484,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         stopRobot();
 
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // set RUN_WITHOUT_ENCODER for each motor
-        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // set RUN_USING_ENCODER for each motor
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     private double getGyroError(double targetAngle) {
@@ -542,7 +548,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected void gyroPivot(double speed, double angle) {
         double steer;
-        double threshold;
         double error = getGyroError(angle);
 
         // if the error, is less than two, just return
@@ -552,9 +557,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("error", error);
-        telemetry.update();
 
         while(opModeIsActive() && Math.abs(error) > GYRO_ERROR_THRESHOLD) {
 
@@ -582,7 +584,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         stopRobot();
 
         // reset to run without encoders
-        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     protected void pivotLeft(double power) {
