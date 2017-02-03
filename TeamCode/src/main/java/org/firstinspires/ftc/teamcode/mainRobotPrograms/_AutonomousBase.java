@@ -95,7 +95,7 @@ public abstract class _AutonomousBase extends _RobotBase
         sleep(400); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
     }
 
-    //More complex method that adjusts the heading based on the gyro heading.  Called once per frame.
+    //Method that adjusts the heading based on the gyro heading.  Called once per frame.
     private double offCourseGyroCorrectionFactor = .05; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
@@ -124,7 +124,7 @@ public abstract class _AutonomousBase extends _RobotBase
         idle();
     }
 
-    //More complex method that adjusts the heading based on the gyro heading.  Called once per frame.
+    //Method that adjusts the heading based on the range sensor.  Called once per frame.
     private double offCourseRangeCorrectionFactor = .005; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnRangeSensors() throws InterruptedException
     {
@@ -169,7 +169,8 @@ public abstract class _AutonomousBase extends _RobotBase
             double minimumTurnSpeed = 0; //This will increase in the event that the robot notices that we are not turning at all.
 
             int currentHeading = 0;
-            while(System.currentTimeMillis() - startTime < maxTime) //Adjust as fully as possible but not beyond the time limit.
+            //Adjust as fully as possible but not beyond the time limit.
+            while(System.currentTimeMillis() - startTime < maxTime && currentHeading != desiredHeading)
             {
                 currentHeading = getValidGyroHeading();
 
