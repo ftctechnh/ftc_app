@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -255,6 +257,38 @@ public abstract class _AutonomousBase extends _RobotBase
         stopDriving();
 
         outputNewLineToDrivers("Drove for " + length + " at " + power + ".");
+    }
+
+    protected void driveForDistance(double power, int length) throws InterruptedException {
+        // Setup
+        for (DcMotor motor : rightDriveMotors) {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        for (DcMotor motor : leftDriveMotors) {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        waitOneFullHardwareCycle();
+        // Drive to target position
+        for (DcMotor motor : rightDriveMotors) {
+            motor.setTargetPosition(length);
+            motor.setPower(power);
+        }
+        for (DcMotor motor : leftDriveMotors) {
+            motor.setTargetPosition(length);
+            motor.setPower(power);
+        }
+        // Reset
+        for (DcMotor motor : rightDriveMotors) {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        for (DcMotor motor : leftDriveMotors) {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
