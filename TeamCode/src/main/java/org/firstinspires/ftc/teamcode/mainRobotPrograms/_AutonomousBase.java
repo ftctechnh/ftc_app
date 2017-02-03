@@ -17,7 +17,7 @@ public abstract class _AutonomousBase extends _RobotBase
     //Only used during autonomous.
     protected GyroSensor gyroscope;
     protected int desiredHeading = 0;
-    protected ColorSensor leftColorSensor, bottomColorSensor; //Must have different I2C addresses.
+    protected ColorSensor rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
     protected ModernRoboticsI2cRangeSensor frontRangeSensor, backRangeSensor;
 
     // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
@@ -25,9 +25,9 @@ public abstract class _AutonomousBase extends _RobotBase
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
-        leftColorSensor = initialize(ColorSensor.class, "Left Color Sensor");
-        leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
-        leftColorSensor.enableLed(true);
+        rightColorSensor = initialize(ColorSensor.class, "Right Color Sensor");
+        rightColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
+        rightColorSensor.enableLed(false);
         bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
         bottomColorSensor.enableLed(true);
@@ -53,6 +53,11 @@ public abstract class _AutonomousBase extends _RobotBase
                 sleep(50);
 
             outputNewLineToDrivers("Gyroscope Calibration Complete!");
+        }
+
+        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 && backRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
+        {
+            outputNewLineToDrivers("RANGE SENSORS MISCONFIGURED");
         }
     }
 
@@ -128,13 +133,13 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Method that adjusts the heading based on the range sensor and logarithmic mathematics.  Called once per frame.
-    private double offCourseRangeCorrectionFactor = .1; //Less means less sensitive.
+    private double offCourseRangeCorrectionFactor = .07; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnRangeSensors() throws InterruptedException
     {
         if (gyroscope != null)
         {
             //Desired heading is 0.
-            double differenceInDistances = frontRangeSensor.getDistance(DistanceUnit.CM) - backRangeSensor.getDistance(DistanceUnit.CM);
+            double differenceInDistances = frontRangeSensor.cmUltrasonic() - backRangeSensor.cmUltrasonic();
 
             //If the difference is positive, the front is closer to the wall, meaning that we want to decrease the power for the right side and increase the power for the left side.
             double motorPowerChange = Math.signum(differenceInDistances) * (Math.log10(Math.abs(differenceInDistances) + 1) * offCourseRangeCorrectionFactor);

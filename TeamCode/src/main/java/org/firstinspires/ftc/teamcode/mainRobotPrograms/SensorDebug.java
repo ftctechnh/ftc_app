@@ -20,14 +20,14 @@ public class SensorDebug extends _AutonomousBase
                             "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
                             "Blue: " + bottomColorSensor.blue() + " Red: " + bottomColorSensor.red(),
                             "Green: " + bottomColorSensor.green(),
-                            "Left Color Sensor",
+                            "Right Color Sensor",
                             "--------------------",
-                            "ARGB: " + leftColorSensor.argb() + " Alpha: " + leftColorSensor.alpha(),
-                            "Blue: " + leftColorSensor.blue() + " Red: " + leftColorSensor.red(),
-                            "Green: " + leftColorSensor.green(),
+                            "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
+                            "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
+                            "Green: " + rightColorSensor.green(),
                             "Heading: " + getValidGyroHeading(),
-                            "Front Range Sensor: " + frontRangeSensor.getDistance(DistanceUnit.CM),
-                            "Back Range Sensor: " + backRangeSensor.getDistance(DistanceUnit.CM)
+                            "Front Range Sensor: " + frontRangeSensor.cmUltrasonic(),
+                            "Back Range Sensor: " + backRangeSensor.cmUltrasonic()
                     }
             );
             idle();
