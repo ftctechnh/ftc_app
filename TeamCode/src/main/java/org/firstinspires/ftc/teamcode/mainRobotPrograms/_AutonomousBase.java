@@ -95,8 +95,8 @@ public abstract class _AutonomousBase extends _RobotBase
         sleep(400); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
     }
 
-    //Method that adjusts the heading based on the gyro heading.  Called once per frame.
-    private double offCourseGyroCorrectionFactor = .05; //Less means less sensitive.
+    //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per frame.
+    private double offCourseGyroCorrectionFactor = .2; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
         if (gyroscope != null)
@@ -106,7 +106,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
             //If offFromHeading is positive, then we want to increase the right power and decrease the left power.  Vice versa also true
             //We also want some sort of coefficient for the amount that each power is changed by.
-            double motorPowerChange = offFromHeading * offCourseGyroCorrectionFactor;
+            double motorPowerChange = Math.signum(offFromHeading) * (Math.log10(Math.abs(offFromHeading) + 1) * offCourseGyroCorrectionFactor);
 
             //Now set the motor power of each motor equal to the current motor power plus the correction factor.
             setLeftPower(Range.clip(movementPower - motorPowerChange, -1, 1));
@@ -124,8 +124,8 @@ public abstract class _AutonomousBase extends _RobotBase
         idle();
     }
 
-    //Method that adjusts the heading based on the range sensor.  Called once per frame.
-    private double offCourseRangeCorrectionFactor = .005; //Less means less sensitive.
+    //Method that adjusts the heading based on the range sensor and logarithmic mathematics.  Called once per frame.
+    private double offCourseRangeCorrectionFactor = .2; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnRangeSensors() throws InterruptedException
     {
         if (gyroscope != null)
@@ -134,7 +134,7 @@ public abstract class _AutonomousBase extends _RobotBase
             double differenceInDistances = frontRangeSensor.getDistance(DistanceUnit.CM) - backRangeSensor.getDistance(DistanceUnit.CM);
 
             //If the difference is positive, the front is closer to the wall, meaning that we want to decrease the power for the right side and increase the power for the left side.
-            double motorPowerChange = differenceInDistances * offCourseRangeCorrectionFactor;
+            double motorPowerChange = Math.signum(differenceInDistances) * (Math.log10(Math.abs(differenceInDistances) + 1) * offCourseRangeCorrectionFactor);
 
             //Now set the motor power of each motor equal to the current motor power plus the correction factor.
             setLeftPower(Range.clip(movementPower + motorPowerChange, -1, 1));
