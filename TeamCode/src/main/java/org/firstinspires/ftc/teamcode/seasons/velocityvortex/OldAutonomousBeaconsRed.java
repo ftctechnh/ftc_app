@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by ftc6347 on 1/9/17.
  */
 @Disabled
-@Autonomous(name = "Blue Beacons Autonomous", group = "autonomous programs")
-public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
+@Autonomous(name = "Red Beacons Autonomous", group = "autonomous programs")
+public class OldAutonomousBeaconsRed extends LinearOpModeBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,31 +28,30 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
         waitForStart();
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 68);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 68);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 77);
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 77);
 
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        getFrontRightDrive().setPower(0.5);
-        getBackLeftDrive().setPower(0.5);
+        getFrontLeftDrive().setPower(0.5);
+        getBackRightDrive().setPower(0.5);
 
         // wait for the drive motors to stop
         while(opModeIsActive()
-                && getFrontRightDrive().isBusy()
-                && getBackLeftDrive().isBusy()) {
+                && getFrontLeftDrive().isBusy()
+                && getBackRightDrive().isBusy()) {
 
             telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontRightDrive().getCurrentPosition(),
-                    getBackLeftDrive().getCurrentPosition());
+                    getFrontLeftDrive().getCurrentPosition(),
+                    getBackRightDrive().getCurrentPosition());
 
-            telemetry.addData("front left target", getFrontRightDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackLeftDrive().getTargetPosition());
+            telemetry.addData("front left target", getFrontLeftDrive().getTargetPosition());
+            telemetry.addData("back right target", getBackRightDrive().getTargetPosition());
             telemetry.update();
             idle();
         }
 
-        // wait for 0.25 seconds and reset drive encoders
         getRobotRuntime().reset();
         while (opModeIsActive() && getRobotRuntime().milliseconds() < 250) {
             // reset drive encoders
@@ -63,32 +62,30 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
         // run using encoders again
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // drive right to white line
-        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-//            driveRight(0.2);
-            // drive diagonally
-            getFrontRightDrive().setPower(-0.2);
-            getBackLeftDrive().setPower(0.2);
+        // drive right past white line
+        encoderStrafe(0.5, 4, 4);
 
+        // look for the white line leading to the second beacon
+        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
+            driveLeft(0.2);
             telemetry.addData("ods3", getOds3().getRawLightDetected());
             telemetry.update();
         }
 
-        stopRobot();
-
         // reset drive encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        stopRobot();
 
-        // claim first beacon
-        claimBeaconBlue();
+        // claim the first beacon
+        claimBeaconRed();
 
-        // strafe to the left to second beacon
-        encoderStrafe(0.5, -24, -24);
+        // strafe to the right to second beacon
+        encoderStrafe(0.5, 24, 24);
 
         // line up against wall
         encoderDrive(0.6, 6, 6);
 
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 16) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() < 12) {
             driveBackward(0.2);
         }
         stopRobot();
@@ -106,7 +103,7 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-            driveLeft(0.2);
+            driveRight(0.2);
             telemetry.addData("ods3", getOds3().getRawLightDetected());
             telemetry.update();
         }
@@ -116,13 +113,13 @@ public class FutureAutonomousBeaconsBlue extends LinearOpModeBase {
         stopRobot();
 
         // claim the second beacon
-        claimBeaconBlue();
+        claimBeaconRed();
 
-        // turn right for launching
-        encoderDrive(0.5, 7, -7);
+        // turn left for launching
+        encoderDrive(0.5, -8.5, 8.5);
 
         // drive backward for launching
-        encoderDrive(0.5, -8, -8);
+        encoderDrive(0.5, -16, -16);
 
         // launch the first (loaded) particle
         launchParticle();
