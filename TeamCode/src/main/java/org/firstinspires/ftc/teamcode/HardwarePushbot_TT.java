@@ -35,6 +35,8 @@ public class HardwarePushbot_TT
     // Defining our motors in here - Varun
     public Servo leftServo = null;
     public Servo rightServo = null;
+    public Servo beaconServo = null;
+    public Servo armServo = null;
     public DcMotor backRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor frontRightMotor = null;
@@ -77,6 +79,8 @@ public class HardwarePushbot_TT
         flyLeft = hwMap.dcMotor.get("FlyLeft");
         leftServo = hwMap.servo.get("LeftServo") ;
         rightServo = hwMap.servo.get("RightServo") ;
+        beaconServo = hwMap.servo.get("BeaconPusher");
+        armServo = hwMap.servo.get("armServo");
 
         // Set defaults for the Drive Motors
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
@@ -88,6 +92,8 @@ public class HardwarePushbot_TT
         armMotor.setDirection(DcMotor.Direction.FORWARD);
         leftServo.setDirection(Servo.Direction.REVERSE);
         rightServo.setDirection(Servo.Direction.FORWARD);
+        beaconServo.setDirection(Servo.Direction.FORWARD);
+        armServo.setDirection(Servo.Direction.FORWARD);
 
         // Set defaults for the fly wheel thrower motors
         flyLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -131,6 +137,8 @@ public class HardwarePushbot_TT
 
         leftServo.setPosition(Servo.MAX_POSITION);
         rightServo.setPosition(Servo.MAX_POSITION);
+        beaconServo.setPosition(0.1);
+        armServo.setPosition(0.95);
     }
 
     /***
@@ -158,4 +166,3 @@ public class HardwarePushbot_TT
         period.reset();
     }
 }
-

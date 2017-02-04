@@ -67,7 +67,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @Autonomous(name="Auto Left (Red) 1 Gyro", group="Pushbot")
-//@Disabled
+@Disabled
 public class AutoLeft_1_Gyro extends LinearOpMode {
 
     /* Declare OpMode members. */

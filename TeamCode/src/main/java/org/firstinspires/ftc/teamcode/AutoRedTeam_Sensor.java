@@ -36,6 +36,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -58,7 +59,7 @@ import com.qualcomm.robotcore.util.Range;
  *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
  *  that performs the actual movement.
  *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform LOL XDDD based moves, but this method is probably the simplest.
+ *  There are other ways to perform based moves, but this method is probably the simplest.
  *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
@@ -86,7 +87,12 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
-
+//    static final double     BEACON_THEMPOS           = Servo.MIN_POSITION;
+//    static final double     BEACON_USPOS           = Servo.MAX_POSITION;
+    static final double     BEACON_THEMPOS           = 0.1;
+    static final double     BEACON_USPOS           = 0.9;
+    static final double     PARTICLE_PUSHPOS        = 0.3;
+    static final double     PARTICLE_PULLPOS        = 0.95;
     @Override
     public void runOpMode() {
 
@@ -135,15 +141,27 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.flyLeft.setDirection(DcMotor.Direction.REVERSE);
+        robot.flyLeft.setPower(1);
+        robot.flyRight.setDirection(DcMotor.Direction.FORWARD);
+        robot.flyRight.setPower(1);
+
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // This is for the nearest blue beacon towards our robot
         //Step 1
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
-        encoderDrive(DRIVE_SPEED, 21, 21, 10.0); // Drive fwd
+        encoderDrive(DRIVE_SPEED, 22, 22, 10.0); // Drive fwd
         telemetry.addData("Step 1 GyroDrive", " Completed");
         telemetry.update();
 //        sleep(250);
+
+        robot.armServo.setPosition(PARTICLE_PUSHPOS);
+        robot.armServo.setPosition(PARTICLE_PULLPOS);
+        sleep(1000);
+        robot.flyLeft.setPower(0);
+        robot.flyRight.setPower(0);
+
 
         //Step 2
         gyroTurn( TURN_SPEED, 55.0);         // Turn  CCW to -55 Degrees
@@ -151,14 +169,8 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
         telemetry.update();
 //        sleep(250);
 
-//        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-//        telemetry.addData("Step 2 Gyro HOLD", " Completed");
-//        telemetry.update();
-//        sleep(2000);
-
-
 //        Step 3
-//        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
+
         encoderDrive(DRIVE_SPEED, 42, 42, 10.0); // Drive fwd
         telemetry.addData("Step 3a GyroDrive", " Completed");
         telemetry.update();
@@ -177,11 +189,6 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
         telemetry.update();
 //        sleep(250);
 
-//        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-//        telemetry.addData("Step 4 Gyro HOLD", " Completed");
-//        telemetry.update();
-//        sleep(2000);
-
         //encoderDrive(DRIVE_SPEED, 4, 4, 3.0);
         telemetry.addData("Before Color sense", "loop");
         telemetry.update();
@@ -192,25 +199,25 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
             colorBlueSensed = 1;
             telemetry.addData("Detecting", "Red in IF");
 //            sleep(2000);
-            encoderDrive(PUSH_SPEED,    -10, -10, 3.0);
-//            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            gyroTurn(TURN_SPEED, 60.0);
-            encoderDrive(PUSH_SPEED,    18,18,3.0);
-            gyroTurn(TURN_SPEED, 90.0);
-            encoderDrive(PUSH_SPEED,    8,8,3.0);
+            robot.beaconServo.setPosition(BEACON_THEMPOS);
+            encoderDrive(PUSH_SPEED,    4,4,3.0);
         } else if (robot.color.red() > robot.color.blue()){
             colorBlueSensed = 2;
             telemetry.addData("Detecting", "Blue in IF");
 //            sleep(2000);
-            encoderDrive(PUSH_SPEED, 10,10, 3.0);
+            robot.beaconServo.setPosition(BEACON_USPOS);
+            encoderDrive(PUSH_SPEED, 4,4, 3.0);
         } else {
             colorBlueSensed = 0;
             telemetry.addData("Detecting", "Neither in IF");
 //            sleep(2000);
         }
+        telemetry.addData("First Color sense if", "completed");
+//        telemetry.update();
 
         //Did not find either color. So now start the loop
         sensorLoopCycles = 0;
+//        sleep(2000);
         while (robot.color.blue() == 0 && robot.color.red() == 0 && colorBlueSensed == 0 && sensorLoopCycles < 6){
             encoderDrive(PUSH_SPEED,1,1,3.0);
 
@@ -218,17 +225,14 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
                 colorBlueSensed = 1;
                 telemetry.addData("Detecting", "Red in Loop");
 //            sleep(1000);
-                encoderDrive(PUSH_SPEED,    -10, -10, 3.0);
-//            encoderDrive(TURN_SPEED,    -3,6,3.0);
-                gyroTurn(TURN_SPEED, 60.0);
-                encoderDrive(PUSH_SPEED,    18,18,3.0);
-                gyroTurn(TURN_SPEED, 90.0);
-                encoderDrive(PUSH_SPEED,    7,7,3.0);
+                robot.beaconServo.setPosition(BEACON_THEMPOS);
+                encoderDrive(PUSH_SPEED,    3,3,3.0);
             } else if (robot.color.red() > robot.color.blue()){
                 colorBlueSensed = 2;
                 telemetry.addData("Detecting", "Blue in Loop");
 //            sleep(2000);
-                encoderDrive(PUSH_SPEED, 8,8, 3.0);
+                robot.beaconServo.setPosition(BEACON_USPOS);
+                encoderDrive(PUSH_SPEED, 3, 3, 3.0);
             } else {
                 colorBlueSensed = 0;
                 telemetry.addData("Detecting", "Neither in loop");
@@ -238,7 +242,7 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
         }
         telemetry.addData("First Color sense loop", "completed");
         telemetry.update();
-//        sleep(5000);
+        sleep(5000);
 
         //Look for the second beacon
 //        encoderDrive(DRIVE_SPEED, -5,-5, 3.0);
@@ -294,7 +298,7 @@ public class AutoRedTeam_Sensor extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,-6,6,3.0);
         encoderDrive(DRIVE_SPEED,  -22, -22, 3.0); // Back up and park
   //      gyroTurn(TURN_SPEED, 75.0);
-        encoderDrive(DRIVE_SPEED,6,-6,3.0);
+        encoderDrive(DRIVE_SPEED,6,-9,3.0);
         encoderDrive(DRIVE_SPEED,  -18, -18, 3.0); // Back up and park
         telemetry.addData("Path", "Complete");
         telemetry.update();

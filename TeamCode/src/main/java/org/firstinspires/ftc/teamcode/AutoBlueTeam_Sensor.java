@@ -36,6 +36,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -86,6 +87,10 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+//    static final double     BEACON_THEMPOS           = Servo.MIN_POSITION;
+//    static final double     BEACON_USPOS           = Servo.MAX_POSITION;
+    static final double     BEACON_THEMPOS           = 0.1;
+    static final double     BEACON_USPOS           = 0.9;
 
     @Override
     public void runOpMode() {
@@ -140,7 +145,7 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         // This is for the nearest blue beacon towards our robot
         //Step 1
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
-        encoderDrive(DRIVE_SPEED, 21, 21, 10.0); // Drive fwd
+        encoderDrive(DRIVE_SPEED, 22, 22, 10.0); // Drive fwd
         telemetry.addData("Step 1 GyroDrive", " Completed");
         telemetry.update();
 //        sleep(250);
@@ -192,17 +197,14 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
             colorBlueSensed = 1;
             telemetry.addData("Detecting", "Red in IF");
 //            sleep(2000);
-            encoderDrive(PUSH_SPEED,    -10, -10, 3.0);
-//            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            gyroTurn(TURN_SPEED, -60.0);
-            encoderDrive(PUSH_SPEED,    18,18,3.0);
-            gyroTurn(TURN_SPEED, -90.0);
-            encoderDrive(PUSH_SPEED,    9,9,3.0);
+            robot.beaconServo.setPosition(BEACON_THEMPOS);
+            encoderDrive(PUSH_SPEED,    4,4,3.0);
         } else if (robot.color.blue() > robot.color.red()){
             colorBlueSensed = 2;
             telemetry.addData("Detecting", "Blue in IF");
 //            sleep(2000);
-            encoderDrive(PUSH_SPEED, 11,11, 3.0);
+            robot.beaconServo.setPosition(BEACON_USPOS);
+            encoderDrive(PUSH_SPEED, 4,4, 3.0);
         } else {
             colorBlueSensed = 0;
             telemetry.addData("Detecting", "Neither in IF");
@@ -218,17 +220,14 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
                 colorBlueSensed = 1;
                 telemetry.addData("Detecting", "Red in Loop");
 //            sleep(1000);
-                encoderDrive(PUSH_SPEED,    -10, -10, 3.0);
-//            encoderDrive(TURN_SPEED,    -3,6,3.0);
-                gyroTurn(TURN_SPEED, -60.0);
-                encoderDrive(PUSH_SPEED,    18,18,3.0);
-                gyroTurn(TURN_SPEED, -90.0);
-                encoderDrive(PUSH_SPEED,    9,9,3.0);
+                robot.beaconServo.setPosition(BEACON_THEMPOS);
+                encoderDrive(PUSH_SPEED,    4,4,3.0);
             } else if (robot.color.blue() > robot.color.red()){
                 colorBlueSensed = 2;
                 telemetry.addData("Detecting", "Blue in Loop");
 //            sleep(2000);
-                encoderDrive(PUSH_SPEED, 10,10, 3.0);
+                robot.beaconServo.setPosition(BEACON_USPOS);
+                encoderDrive(PUSH_SPEED, 4,4, 3.0);
             } else {
                 colorBlueSensed = 0;
                 telemetry.addData("Detecting", "Neither in loop");

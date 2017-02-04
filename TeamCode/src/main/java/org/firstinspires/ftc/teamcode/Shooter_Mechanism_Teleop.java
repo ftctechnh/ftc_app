@@ -101,11 +101,27 @@ public class Shooter_Mechanism_Teleop extends OpMode {
 
         boolean bPrevState = false;
         boolean bCurrState = false;
+        float bRunFlywheel = 0;
+
 
         flyLeft = gamepad1.left_trigger;   // (note: The joystick goes negative when pushed forwards, so negate it)
         flyRight = gamepad1.right_trigger;
 //            robot.flyLeft.setDirection(DcMotor.Direction.FORWARD);
 //            robot.flyRight.setDirection(DcMotor.Direction.REVERSE);
+
+        if (gamepad1.left_trigger > 0) {
+            robot.flyLeft.setDirection(DcMotor.Direction.REVERSE);
+            robot.flyLeft.setPower(1);
+            robot.flyRight.setDirection(DcMotor.Direction.FORWARD);
+            robot.flyRight.setPower(1);
+        }
+        if (gamepad1.right_trigger > 0) {
+            robot.armServo.setPosition(.3);
+        }
+
+
+
+
         bCurrState = gamepad1.x;
 
         // check for button state transitions.
