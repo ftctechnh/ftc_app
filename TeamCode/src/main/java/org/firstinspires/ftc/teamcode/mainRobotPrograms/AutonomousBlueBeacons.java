@@ -10,12 +10,14 @@ public class AutonomousBlueBeacons extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        driveForTime(.4, 400); //Drive a little ways from the wall.
+        //Drive a little ways from the wall.
+        driveForTime(.4, 400);
 
         //Know how much this missed by since it can be made up later in a different turn.
         turnToHeading(50, TurnMode.LEFT, 2750);
 
-        driveForTime(.4, 1500); //Dash over across the corner goal.
+        //Dash over across the diagonal of the corner goal.
+        driveForTime(.4, 1500);
 
         //Turn back to become parallel with the wall.
         turnToHeading(0, TurnMode.RIGHT, 3000); //Take a bit of extra time on this turn.
@@ -29,34 +31,31 @@ public class AutonomousBlueBeacons extends _AutonomousBase
             //We have reached the line and are parallel to the wall.
             outputNewLineToDrivers("Beacon reached, at " + frontRangeSensor.getDistance(DistanceUnit.CM) + " cm from the front and " + backRangeSensor.getDistance(DistanceUnit.CM) + " cm from the back.");
 
-            //Drive forward.
-            double startTime = System.currentTimeMillis();
-            setMovementPower(-0.2);
-            while (System.currentTimeMillis() - startTime < 1500)
-                adjustMotorPowersBasedOnGyroSensor();
+            //Drive backward beyond the first option.
+            driveForTime(-0.2, 1500);
 
             //Check beacon.
             setMovementPower(.2);
-            startTime = System.currentTimeMillis();
-            while (rightColorSensor.blue() < 2 && System.currentTimeMillis() - startTime < 3000) //Looking at the blue one, so move forward a set distance.
+            long startTime = System.currentTimeMillis(), permittedTime = 3000;
+            while (rightColorSensor.blue() < 2 && System.currentTimeMillis() - startTime < permittedTime) //Looking at the blue one, so move forward a set distance.
             {
                 adjustMotorPowersBasedOnGyroSensor();
                 outputConstantDataToDrivers(new String[]
                         {
-                                "Blue: " + rightColorSensor.blue()
+                                "Blue: " + rightColorSensor.blue(),
+                                "Will stop in " + (permittedTime - (System.currentTimeMillis() - startTime)) + "ms by default"
                         });
             }
             stopDriving();
 
             if (rightColorSensor.blue() >= 2)
             {
-                startTime = System.currentTimeMillis();
-                while(System.currentTimeMillis() - startTime < 600)
-                    adjustMotorPowersBasedOnGyroSensor();
-                stopDriving();
+                //Drive a little ways forward to place the pusher thingamabob next to the button.
+                driveForTime(0.2, 600);
 
+                //Determine the length to push the pusher out based on the distance from the wall (ONLY THING THE DARN RANGE SENSORS ARE USED FOR)
                 double frontDist = frontRangeSensor.cmUltrasonic();
-                double extendLength = 1000 * (frontDist == 255 ? backRangeSensor.cmUltrasonic() : frontDist) * .1;
+                double extendLength = 1000 * (frontDist == 255 ? backRangeSensor.cmUltrasonic() : frontDist) * 1.0/10;
 
                 //Run the continuous rotation servo out to press, then back in.
                 rightButtonPusher.setPosition(.2);
@@ -66,13 +65,9 @@ public class AutonomousBlueBeacons extends _AutonomousBase
                 rightButtonPusher.setPosition(.5);
             }
 
+            //If this is the first loop, drive a little ways forward before looking for the next line.
             if (i == 0)
-            {
-                setMovementPower(.25);
-                startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 1500) //Three seconds parallel to wall.
-                    adjustMotorPowersBasedOnGyroSensor();
-            }
+                driveForTime(0.25, 1500);
         }
     }
 }

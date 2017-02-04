@@ -104,7 +104,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per frame.
-    private double offCourseGyroCorrectionFactor = .1; //Less means less sensitive.
+    private double offCourseGyroCorrectionFactor = .1; //Less means less sensitive, .1 seems ideal.
     protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
         if (gyroscope != null)
@@ -142,7 +142,7 @@ public abstract class _AutonomousBase extends _RobotBase
             double differenceInDistances = frontRangeSensor.cmUltrasonic() - backRangeSensor.cmUltrasonic();
 
             //If the difference is positive, the front is closer to the wall, meaning that we want to decrease the power for the right side and increase the power for the left side.
-            double motorPowerChange = Math.signum(differenceInDistances) * (Math.log10(Math.abs(differenceInDistances) + 1) * offCourseRangeCorrectionFactor);
+            double motorPowerChange = differenceInDistances * offCourseRangeCorrectionFactor;
 
             //Now set the motor power of each motor equal to the current motor power plus the correction factor.
             setLeftPower(Range.clip(movementPower + motorPowerChange, -1, 1));
