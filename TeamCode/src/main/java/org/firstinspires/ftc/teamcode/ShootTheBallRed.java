@@ -67,7 +67,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Golden Eagles: ShootTheBall-RED", group="Pushbot")
-//@Disabled
+@Disabled
 public class ShootTheBallRed extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -113,7 +113,7 @@ public class ShootTheBallRed extends LinearOpMode {
 
         robot.leftShooter.setPower(1);
         robot.rightShooter.setPower(1);
-        robot.legacyController.setMotorPower(1, -1);
+        robot.harvester.setMotorPower(1, -1);
 
         while (opModeIsActive() && (runtime.seconds() < 5.0)) {
             telemetry.addData("Say", "SPINNING...");
@@ -147,7 +147,7 @@ public class ShootTheBallRed extends LinearOpMode {
 
         robot.leftShooter.setPower(0);
         robot.rightShooter.setPower(0);
-        robot.legacyController.setMotorPower(1, 0);
+        robot.harvester.setMotorPower(1, 0);
 
         telemetry.addData("Say", "Done! Now I get to relax.");
         telemetry.update();
