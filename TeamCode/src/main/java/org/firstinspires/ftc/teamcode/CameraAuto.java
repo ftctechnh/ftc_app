@@ -46,12 +46,9 @@ public class CameraAuto extends CameraProcessor {
             for(int x = 0; x < image.getWidth() / 2; x++) {
                 for(int y = 0; y < image.getHeight(); y++) {
                     int pixel = image.getPixel(x, y);
-                    int pixel_red = red(pixel);
                     int pixel_blue = blue(pixel);
 
-                    if(pixel_red > 200 && pixel_blue < 200) {
-                        left_intensity += 1;
-                    }
+                    left_intensity += pixel_blue;
                 }
             }
 
@@ -60,20 +57,16 @@ public class CameraAuto extends CameraProcessor {
             for(int x = image.getWidth() / 2; x < image.getWidth(); x++) {
                 for(int y = 0; y < image.getHeight(); y++) {
                     int pixel = image.getPixel(x, y);
-                    int pixel_red = red(pixel);
                     int pixel_blue = blue(pixel);
 
-                    if(pixel_red > 200 && pixel_blue < 200) {
-                        right_intensity += 1;
-                    }
+                    right_intensity += pixel_blue;
                 }
             }
 
             String left;
             String right;
 
-            if(left_intensity <
-                    right_intensity) {
+            if(left_intensity < right_intensity) {
                 left = "BLUE";
                 right = "RED";
             } else {

@@ -18,8 +18,6 @@ public class BeaconFinderAuto extends CameraProcessor {
     EeyoreHardware robot = new EeyoreHardware();
 
     String teamColor = "NONE"; //Not zero because I don't want color and teamColor to be equal initially
-    String leftBeaconColor;
-    String rightBeaconColor;
     String returnedSide;
 
     @Override
@@ -28,8 +26,6 @@ public class BeaconFinderAuto extends CameraProcessor {
 
         telemetry.addData("Status:", "Initializing");
         telemetry.update();
-
-        teamColor = "BLUE";
 
         // Calibrate gyro
         robot.gyro.calibrate();
@@ -44,6 +40,19 @@ public class BeaconFinderAuto extends CameraProcessor {
         // Initiate camera
         setCameraDownsampling(9);
         startCamera();
+
+        while(!gamepad1.a && (teamColor == "NONE")) {
+            if(gamepad1.b) {
+                teamColor = "RED";
+            } else if(gamepad1.x) {
+                teamColor = "BLUE";
+            }
+
+            telemetry.addData("Team Color:", teamColor);
+            telemetry.update();
+
+            idle();
+        }
 
         telemetry.addData("Status:", "Initialized (waiting for start)");
         telemetry.update();
@@ -68,21 +77,53 @@ public class BeaconFinderAuto extends CameraProcessor {
         shootShooter(0);
 
         // Now we move on to the beacons
-        gyroTurn(45);
-        moveStraight(20);
-        gyroTurn(90);
-        moveStraight(40);
-        Thread.sleep(1000);
-        gyroTurn(0);
-        Thread.sleep(1000);
+        if(teamColor == "RED") { //We are red
+            gyroTurn(315);
+            moveStraight(19);
+            gyroTurn(270);
+            moveStraight(37);
+            Thread.sleep(1000);
+            gyroTurn(180);
+            Thread.sleep(1000);
+
+            robot.l1.setDirection(DcMotor.Direction.FORWARD);
+            robot.l2.setDirection(DcMotor.Direction.FORWARD);
+            robot.r1.setDirection(DcMotor.Direction.REVERSE);
+            robot.r2.setDirection(DcMotor.Direction.REVERSE);
+
+        } else { //We are blue
+            gyroTurn(45);
+            moveStraight(19);
+            gyroTurn(90);
+            moveStraight(37);
+            Thread.sleep(1000);
+            gyroTurn(0);
+            Thread.sleep(1000);
+        }
+
+        // Press the beacons
         driveToLine();
+        Thread.sleep(2000);
 
-        // Press the beacon
-        String side = getBeaconSide();
+        String beacon1 = getBeaconSide();
 
-        if(side == "LEFT") {
+        if(beacon1 == "LEFT") {
             pressLeftButton();
-        } else if(side == "RIGHT") {
+        } else if(beacon1 == "RIGHT") {
+            pressRightButton();
+        }
+
+        // Move partly to the second beacon
+        moveStraight(32);
+
+        driveToLine();
+        Thread.sleep(2000);
+
+        String beacon2 = getBeaconSide();
+
+        if(beacon2 == "LEFT") {
+            pressLeftButton();
+        } else if(beacon2 == "RIGHT") {
             pressRightButton();
         }
 
@@ -95,8 +136,6 @@ public class BeaconFinderAuto extends CameraProcessor {
         while(opModeIsActive()) {
             telemetry.addData("Status:", "Idling...");
             telemetry.addData("Returned Side:", returnedSide);
-            telemetry.addData("Left Color:", leftBeaconColor);
-            telemetry.addData("Right Color:", rightBeaconColor);
             telemetry.update();
             idle();
         }
@@ -196,7 +235,7 @@ public class BeaconFinderAuto extends CameraProcessor {
     }
 
     public String getBeaconSide() {
-        while (!imageReady()) {
+        while(!imageReady()) {
             telemetry.addData("Camera:", "Waiting for image...");
             telemetry.update();
         }
@@ -208,12 +247,9 @@ public class BeaconFinderAuto extends CameraProcessor {
         for(int x = 0; x < image.getWidth() / 2; x++) {
             for(int y = 0; y < image.getHeight(); y++) {
                 int pixel = image.getPixel(x, y);
-                int pixel_red = red(pixel);
                 int pixel_blue = blue(pixel);
 
-                if(pixel_red > 200 && pixel_blue < 200) {
-                    left_intensity += pixel_blue;
-                }
+                left_intensity += pixel_blue;
             }
         }
 
@@ -222,23 +258,18 @@ public class BeaconFinderAuto extends CameraProcessor {
         for(int x = image.getWidth() / 2; x < image.getWidth(); x++) {
             for(int y = 0; y < image.getHeight(); y++) {
                 int pixel = image.getPixel(x, y);
-                int pixel_red = red(pixel);
                 int pixel_blue = blue(pixel);
 
-                if(pixel_red > 200 && pixel_blue < 200) {
-                    right_intensity += pixel_blue;
-                }
+                right_intensity += pixel_blue;
             }
         }
 
         String left;
         String right;
 
-        if(left_intensity > right_intensity) {
+        if(left_intensity < right_intensity) {
             left = "BLUE";
             right = "RED";
-            leftBeaconColor = left;
-            rightBeaconColor = right;
         } else {
             left = "RED";
             right = "BLUE";
