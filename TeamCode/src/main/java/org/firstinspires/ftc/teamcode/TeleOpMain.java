@@ -18,6 +18,7 @@ public class TeleOpMain extends OpMode {
 
     boolean lastLeftBumperState = false;
     boolean lastRightBumperState = false;
+    boolean lastAButtonState = false;
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
 
@@ -131,18 +132,6 @@ public class TeleOpMain extends OpMode {
             robot.launcherMotor.setPower(0.0);
         }
 
-        //open ball gate
-        if (gamepad2.y){
-            robot.ballGate.setPosition(1.0);
-        } else {
-            robot.ballGate.setPosition(0.0);
-        }
-
-
-        //open/close cap ball mech
-        robot.leftLift.setPosition(gamepad2.left_trigger);
-        robot.rightLift.setPosition(gamepad2.right_trigger);
-
         // toggle button pushers
         if(!lastLeftBumperState && gamepad1.left_bumper) {
             leftPusherState *= -1.0;
@@ -156,6 +145,13 @@ public class TeleOpMain extends OpMode {
 
         lastLeftBumperState = gamepad1.left_bumper;
         lastRightBumperState = gamepad1.right_bumper;
+
+        //toggle reversed steering
+        if(!lastAButtonState && gamepad1.a) {
+            robot.initMotors(this, false, !robot.isReversed());
+        }
+
+        lastAButtonState = gamepad1.a;
     }
 
 

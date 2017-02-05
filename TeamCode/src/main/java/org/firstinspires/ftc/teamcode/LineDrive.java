@@ -92,7 +92,7 @@ public class LineDrive extends OpenCVLib {
         //init hardware objects
         final boolean debug = false;
         robot = new BotHardware();
-        robot.init(modePointer, debug);
+        robot.init(modePointer, debug, true);
 
         // create a PID controller for the sequence
         mPid = new SensorLib.PID(Kp, Ki, Kd, KiCutoff);
@@ -119,7 +119,6 @@ public class LineDrive extends OpenCVLib {
         mShoot = new AutoLib.LinearSequence();
 
         mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
-        mShoot.add(new AutoLib.TimedServoStep(robot.ballGate, 1.0, 0.2, false));
         mShoot.add(new AutoLib.TimedMotorStep(robot.lifterMotor, 1.0, 1.0, true));
         mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
 
@@ -157,7 +156,7 @@ public class LineDrive extends OpenCVLib {
 
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
             public void run() {
-                robot.initMotors(thing, debug);
+                robot.initMotors(thing, debug, true);
             }
         }));
 
@@ -180,7 +179,7 @@ public class LineDrive extends OpenCVLib {
 
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
             public void run() {
-                robot.initMotors(thing, debug);
+                robot.initMotors(thing, debug, true);
             }
         }));
 

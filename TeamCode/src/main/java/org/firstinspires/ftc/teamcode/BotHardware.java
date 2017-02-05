@@ -4,6 +4,7 @@ import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,6 +15,7 @@ public class BotHardware
 {
 
     //comment
+    private boolean isReversed;
     /* Public OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
@@ -25,9 +27,6 @@ public class BotHardware
 
     public Servo leftServo = null;
     public Servo rightServo = null;
-    public Servo ballGate = null;
-    public Servo leftLift = null;
-    public Servo rightLift = null;
 
     public MuxColor leftSensor = null;
     public MuxColor rightSensor = null;
@@ -48,9 +47,9 @@ public class BotHardware
     public BotHardware() {}
 
     /* Initialize standard Hardware interfaces */
-    public void init(OpMode opMode, boolean debug) {
+    public void init(OpMode opMode, boolean debug, boolean reverse) {
 
-        initMotors(opMode, debug);
+        initMotors(opMode, debug, reverse);
 
         try{
 
@@ -96,7 +95,12 @@ public class BotHardware
         }
     }
 
-    public void initMotors(OpMode opMode, boolean debug){
+    public void init(OpMode opMode, boolean debug){
+        init(opMode, debug, false);
+    }
+
+
+    public void initMotors(OpMode opMode, boolean debug, boolean reversed){
         AutoLib.HardwareFactory hw;
 
         if (debug)
@@ -104,26 +108,39 @@ public class BotHardware
         else
             hw = new AutoLib.RealHardwareFactory(opMode);
 
-        // Define and Initialize Motors
-        frontLeftMotor = hw.getDcMotor("front_left");
-        frontRightMotor = hw.getDcMotor("front_right");
-        backLeftMotor = hw.getDcMotor("back_left");
-        backRightMotor = hw.getDcMotor("back_right");
+        if(!reversed){
+            // Define and Initialize Motors
+            frontLeftMotor = hw.getDcMotor("front_left");
+            frontRightMotor = hw.getDcMotor("front_right");
+            backLeftMotor = hw.getDcMotor("back_left");
+            backRightMotor = hw.getDcMotor("back_right");
+
+            // change directions if necessary
+            frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+            frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+            backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+            backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        }
+        else{
+            // swap motors so back of robot is now front
+            frontLeftMotor = hw.getDcMotor("front_right");
+            frontRightMotor = hw.getDcMotor("front_left");
+            backLeftMotor = hw.getDcMotor("back_right");
+            backRightMotor = hw.getDcMotor("back_left");
+
+            frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+            frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
+            backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+            backRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        }
+        isReversed = reversed;
+
         lifterMotor = hw.getDcMotor("lifter");
         launcherMotor = hw.getDcMotor("launcher");
         sweeperMotor = hw.getDcMotor("sweeper");
 
         leftServo = hw.getServo("servo_left");
         rightServo = hw.getServo("servo_right");
-        ballGate = hw.getServo("servo_gate");
-        leftLift = hw.getServo("servo_lift_left");
-        rightLift = hw.getServo("servo_lift_right");
-
-        // change directions if necessary
-        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);
@@ -150,16 +167,14 @@ public class BotHardware
         //set servo directions
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
-        ballGate.setDirection(Servo.Direction.REVERSE);
-        leftLift.setDirection(Servo.Direction.FORWARD);
-        rightLift.setDirection(Servo.Direction.REVERSE);
 
         //set servos default positions
         leftServo.setPosition(0.0);
         rightServo.setPosition(0.0);
-        ballGate.setPosition(0.0);
-        leftLift.setPosition(0.0);
-        rightLift.setPosition(0.0);
+    }
+
+    public void initMotors(OpMode opMode, boolean debug){
+        initMotors(opMode, debug, false);
     }
 
     public class NavXHeading implements HeadingSensor{
@@ -285,6 +300,10 @@ public class BotHardware
 
     public HeadingSensor getNavXHeadingSensor(){
         return navXHeading;
+    }
+
+    public boolean isReversed(){
+        return isReversed;
     }
 
     //start crappy code!
