@@ -29,8 +29,14 @@ public class ROUSAutoHardware_WithServos
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-    public Servo    PressR      = null;
-    public Servo    PressL      = null;
+   // public Servo    PressR      = null;
+   // public Servo    PressL      = null;
+    public Servo   servo      = null;
+    public Servo   button     =null;
+    public DcMotor leftshooter = null;
+    public DcMotor rightshooter = null;
+    public DcMotor Intake      = null;
+
 
 
 
@@ -51,8 +57,8 @@ public class ROUSAutoHardware_WithServos
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left motor");
         rightMotor  = hwMap.dcMotor.get("right motor");
-       // leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+       // rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
         // Set all motors to zero power
@@ -67,7 +73,12 @@ public class ROUSAutoHardware_WithServos
 
         // Define and initialize ALL installed servos.
         //PressL = hwMap.servo.get("left servo");
-       // PressR = hwMap.servo.get("right servo");
+        //PressR = hwMap.servo.get("right servo");
+        servo = hwMap.servo.get("flip");
+        button = hwMap.servo.get("press");
+        leftshooter = hwMap.dcMotor.get("left shooter");
+        rightshooter = hwMap.dcMotor.get("right shooter");
+        Intake = hwMap.dcMotor.get("intake");
         //Ex. Servo                  leftClaw = hwMap.servo.get("left_hand");
         //Ex. Servo position set     leftClaw.setPosition(MID_SERVO);
 
