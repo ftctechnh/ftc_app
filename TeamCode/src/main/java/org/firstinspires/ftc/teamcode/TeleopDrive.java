@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Shooter", group = "Pushbot")
 //@Disabled
-    public class SERVORPMTEST extends LinearOpMode {
+    public class TeleopDrive extends LinearOpMode {
            // Use a Pushbot's hardware
 
 
