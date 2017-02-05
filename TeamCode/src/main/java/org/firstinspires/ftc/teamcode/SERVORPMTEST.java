@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "Shooter test", group = "Pushbot")
+@TeleOp(name = "Shooter", group = "Pushbot")
 //@Disabled
     public class SERVORPMTEST extends LinearOpMode {
            // Use a Pushbot's hardware
@@ -19,10 +19,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SERVORPMTESTHARDWARE robot = new SERVORPMTESTHARDWARE();
+        ROUSAutoHardware_WithServos robot = new ROUSAutoHardware_WithServos();
 
-       // double Left;
-       // double Right;
+        double Left;
+        double Right;
         double IntakeOut; // intake motor spinning out --->
         double IntakeIn; // intake motor spinning in  <---
         // double Aim;
@@ -47,11 +47,21 @@ import com.qualcomm.robotcore.hardware.Servo;
             IntakeIn = -gamepad1.right_trigger;       //Intake direction <---
             //Aim = -gamepad2.right_stick_y / 2;
 
+            Left  = -gamepad1.left_stick_y;
+            Right = -gamepad1.right_stick_y;
 
-                robot.leftshooter.setPower(1);
-                robot.rightshooter.setPower(-1);
+               if (gamepad1.left_bumper){
+                   robot.leftshooter.setPower(-1);
+                   robot.rightshooter.setPower(1);
+               }else {
+                   robot.leftshooter.setPower(0);
+                   robot.rightshooter.setPower(0);
+               }
 
-            if (gamepad2.right_trigger >= .1) {           //The if/else statement is a safety mechanism so that the
+                robot.leftMotor.setPower(Left);
+                robot.rightMotor.setPower(Right);
+
+            if (gamepad1.right_trigger >= .1) {           //The if/else statement is a safety mechanism so that the
                 //program doesn't crash in the event that both triggers
                 //are pressed simultaneously
                 robot.Intake.setPower(IntakeIn);
@@ -60,12 +70,12 @@ import com.qualcomm.robotcore.hardware.Servo;
                 robot.Intake.setPower(IntakeOut);
 
             }
-            if (gamepad1.a){
-                robot.servo.setPosition(.5);
+            if (gamepad1.right_bumper){
+                robot.servo.setPosition(0);
 
 
             } else {
-                robot.servo.setPosition(0);
+                robot.servo.setPosition(.8);
             }
 
 
