@@ -234,8 +234,8 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
                 telemetry.addData("Color", "BLUE");
                 telemetry.update();
                 sleep(125);
-                robot.PressL.setPosition(DOWN);
-                robot.PressR.setPosition(UP);
+                //robot.PressL.setPosition(DOWN);
+                //robot.PressR.setPosition(UP);
                 sleep(500);
                 gyroDrive(SCAN_SPEED, 5, -90);
                 sleep(125);
@@ -249,8 +249,8 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
                 telemetry.addData("Color", "RED");
                 telemetry.update();
                 sleep(125);
-                robot.PressL.setPosition(UP);
-                robot.PressR.setPosition(DOWN);
+                //robot.PressL.setPosition(UP);
+                //robot.PressR.setPosition(DOWN);
                 sleep(500);
                 gyroDrive(SCAN_SPEED, 5, -90);
                 sleep(125);
