@@ -58,9 +58,9 @@ public class OmegasAutonomous extends LinearOpMode {
         Ω = new HardwareOmegas() {
             @Override
             public void init() {
+                initAppContext(hardwareMap);
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
-                initAppContext(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
             }

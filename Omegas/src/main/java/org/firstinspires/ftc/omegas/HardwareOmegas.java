@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public abstract class HardwareOmegas {
     /* Public OpMode members. */
+    private UltrasonicSensor ultrasonicSensor;
     private LightSensor lightSensor;
     private DcMotor leftFrontMotor;
     private DcMotor leftBackMotor;
@@ -63,10 +65,10 @@ public abstract class HardwareOmegas {
     /* Initialize Drive Motor interfaces */
     protected void initDriveMotors(HardwareMap hwMap) {
         // Define and Initialize Motors
-        leftFrontMotor = hwMap.dcMotor.get("left_front");
-        leftBackMotor = hwMap.dcMotor.get("left_back");
-        rightFrontMotor = hwMap.dcMotor.get("right_front");
-        rightBackMotor = hwMap.dcMotor.get("right_back");
+        leftFrontMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftFront));
+        leftBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftBack));
+        rightFrontMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightFront));
+        rightBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightBack));
 
         motors = new ArrayList<DcMotor>() {
             {
@@ -95,14 +97,18 @@ public abstract class HardwareOmegas {
     protected void initBeaconators(HardwareMap hwMap) {
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        leftBeaconator = hwMap.servo.get("left_beaconator");
-        rightBeaconator = hwMap.servo.get("right_beaconator");
+        leftBeaconator = hwMap.servo.get(appContext.getString(R.string.leftBeaconator));
+        rightBeaconator = hwMap.servo.get(appContext.getString(R.string.rightBeaconator));
     }
 
     /* Initialize LineSensor interfaces */
     protected void initLightSensor(HardwareMap hwMap) {
-        lightSensor = hwMap.lightSensor.get("light_sensor");
+        lightSensor = hwMap.lightSensor.get(appContext.getString(R.string.lightSensor));
         getLightSensor().enableLed(true);
+    }
+
+    protected void initUltrasonicSensor(HardwareMap hwMap) {
+        ultrasonicSensor = hwMap.ultrasonicSensor.get(appContext.getString(R.string.ultrasonicSensor));
     }
 
     protected void initAppContext(HardwareMap hwMap) {
@@ -229,6 +235,10 @@ public abstract class HardwareOmegas {
         telemetry.update();
 
         messagePlayer.start();
+    }
+
+    public UltrasonicSensor getUltrasonicSensor() {
+        return ultrasonicSensor;
     }
 
     public LightSensor getLightSensor() {

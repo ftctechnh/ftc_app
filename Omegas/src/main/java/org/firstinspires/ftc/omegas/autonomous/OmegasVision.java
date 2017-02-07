@@ -60,10 +60,10 @@ abstract class OmegasVision extends ManualVisionOpMode {
         Ω = new HardwareOmegas() {
             @Override
             public void init() {
+                initAppContext(hardwareMap);
                 initLightSensor(hardwareMap);
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
-                initAppContext(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 

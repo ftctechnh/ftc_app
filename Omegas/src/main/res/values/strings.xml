@@ -2,4 +2,12 @@
 <resources>
     <string name="app_name">Omegas Robot Controller</string>
     <string name="vuforiaLicense">AUXbF5H/////AAAAGfL+EWvfYUywmHOuQDPKMU1/rXrtr7WphpTVLmiSPoI6ym+rL3Kagi3Gb2djpb3UR20HLkor7kOfwY+eANbwW0GzqC3o6ib+3ndR36mooIdUgFEUdx6PpI+G/Ut/2H8vc/qjOgLf9cafCTxw0IOg6aiBWPE+8COqjwKii0jnmBIqetNxiIqE9b/ksnRRa0VwONNwjlIcaf1X9TwIKAVVd/SQ2aJ6JZ03+oQnO1QTWfnjpeYOFgXx0kZJCvRcATxvKCmb8Y1nbgs+V7BYEnwYJq0ganAiix46yJRTHmAKDclHQXVwjQ6+BCjBO9W9l/dMIh1dH+kuH6cRPpLOvBp4bZ7nspGLNKqemmeOE6T6eyb+</string>
+    <string name="leftFront">left_front</string>
+    <string name="leftBack">left_back</string>
+    <string name="rightFront">right_front</string>
+    <string name="rightBack">right_back</string>
+    <string name="leftBeaconator">left_beaconator</string>
+    <string name="rightBeaconator">right_beaconator</string>
+    <string name="lightSensor">light_sensor</string>
+    <string name="ultrasonicSensor">ultrasonic_sensor</string>
 </resources>
