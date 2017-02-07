@@ -16,21 +16,22 @@ public class Teleop extends _RobotBase
         double leftPower, rightPower, leftPusherPower, rightPusherPower;
         boolean backwards = false;
         double speedCoefficient = 1.0;
-        double flywheelCoefficient = 0.5;
+        double flywheelCoefficient = 0.4;
         boolean pressingFlywheelC = false;
         double currentClampPos = 0;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (opModeIsActive())
         {
+            /**************************** CONTROLLER #1 ********************************/
             /************** Direction Toggle **************/
             if (!backwards)
             { // Driving forward
-                leftPower = gamepad1.right_stick_y;
-                rightPower = gamepad1.left_stick_y;
-            } else { // Driving backward
                 leftPower = -gamepad1.left_stick_y;
                 rightPower = -gamepad1.right_stick_y;
+            } else { // Driving backward
+                leftPower = gamepad1.right_stick_y;
+                rightPower = gamepad1.left_stick_y;
             }
 
             /************** Motor Speed Control **************/
@@ -42,11 +43,11 @@ public class Teleop extends _RobotBase
             setRightPower(scaleInput(rightPower) * speedCoefficient);
 
             /************** Cap Ball Drive Mode **************/
-            if (gamepad1.a) {
-                speedCoefficient = 0.7;
+            if (gamepad1.right_trigger > 0.5) {
+                speedCoefficient = 0.5;
                 backwards = true;
             }
-            else if (gamepad1.b) {
+            else if (gamepad1.right_bumper) {
                 speedCoefficient = 1.0;
                 backwards = false;
             }
@@ -59,11 +60,12 @@ public class Teleop extends _RobotBase
             currentClampPos = Range.clip(currentClampPos, CLAMP_CLOSED, CLAMP_OPEN);
             clamp.setPosition(currentClampPos);
 
-            /************** Cap Ball Servos **************/
+            /************** Open Clamp **************/
             if (gamepad1.back) {
                 clamp.setPosition(CLAMP_OPEN);
             }
 
+            /**************************** CONTROLLER #2 ********************************/
             /************** Cap Ball Lift **************/
             if (gamepad2.right_bumper)
                 lift.setPower(1.0);
