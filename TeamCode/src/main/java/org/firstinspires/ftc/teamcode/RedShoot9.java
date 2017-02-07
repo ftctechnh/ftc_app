@@ -44,10 +44,10 @@ public class RedShoot9 extends AutonomousBase {
                     }
                 }
                  moveState = MoveState.SHOOT_WHEEL;
-                 if(getRuntime() - sTime >= 2){
+                 if(getRuntime() - sTime >= 3){
                      moveState = MoveState.SHOOT_CONVEYOR;
                  }
-                 if(getRuntime() - sTime >= 5) {
+                 if(getRuntime() - sTime >= 6) {
                      moveState = MoveState.SHOOT_STOP;
                      gameState = 4;
                  }

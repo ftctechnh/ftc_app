@@ -138,7 +138,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.FORWARD:
                 // Moves the bot forward at half speed
-                power = .5; //power coefficient
+                power = 1; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorUp.setPower(0);
                     motorDown.setPower(0);
@@ -148,7 +148,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.BACKWARD:
                 // Moves the bot backwards at half speed
-                power = -.5; //power coefficient
+                power = -1; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorUp.setPower(0);
                     motorDown.setPower(0);
@@ -169,7 +169,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;               
             case MoveState.LEFT:
                 // Moves the bot left at half speed
-                power = -.5; //power coefficient
+                power = -1; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(0);
                     motorRight.setPower(0);
@@ -179,7 +179,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.LEFT_SLOW:
                 // Moves the bot left at half speed
-                power = -.2; //power coefficient
+                power = -.5; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(0);
                     motorRight.setPower(0);
@@ -189,7 +189,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.RIGHT:
                 // Moves the bot right at half speed
-                power = .5; //power coefficient
+                power = 1; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(0);
                     motorRight.setPower(0);
@@ -199,7 +199,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.RIGHT_SLOW:
                 // Moves the bot right at half speed
-                power = .2; //power coefficient
+                power = .5; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(0);
                     motorRight.setPower(0);
@@ -209,7 +209,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.STRAFE_TOWARDS_GOAL:
                 // Moves the bot towards the goal, while always pointing at desiredAngle
-                double P = .5;
+                double P = 1;
                 double H = Math.toRadians(heading);
                 double Ht = Math.toRadians(map.angleToGoal());
 
@@ -304,8 +304,8 @@ public abstract class AutonomousBase extends OpMode {
                  break;
              case MoveState.SHOOT:
                 // Shoots ball out of conveyor
-                motorLeftShooter.setPower(.5);
-                motorRightShooter.setPower(.5);
+                motorLeftShooter.setPower(.6);
+                motorRightShooter.setPower(.6);
                 motorConveyor.setPower(1);
                 break;
             case MoveState.FULL_STOP:

@@ -19,17 +19,13 @@ public class BlueButton6 extends AutonomousBase{
                     map.setRobot(6,11.25);
                 }
                 break;
-            case 1: //Shoot
-//                  moveState = MoveState.SHOOT;
-//                  if(getRuntime() - sTime >= 3){
-//                    moveState = MoveState.SHOOT_STOP;
+            case 1:
                     moveState = MoveState.SERVO_DEPLOY;
                     moveState = MoveState.SERVO_M;
                     gameState = 3;
-//                  }
                 break;
             case 3: //Move to beacon A push pos.
-                map.setGoal(10.5, 6);
+                map.setGoal(9, 7);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -44,7 +40,7 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 4: //Move parallel to wall
-                map.setGoal(10,0);
+                map.setGoal(map.getRobotX(),0);
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     moveState = MoveState.SERVO_M;
@@ -154,11 +150,11 @@ public class BlueButton6 extends AutonomousBase{
                         }else if(getRuntime() - xTime > 1){
                             if (colorRight.blue() > colorRight.red() && colorLeft.blue() < colorLeft.red()) {
                                 moveState = MoveState.SERVO_L;
-                                gameState = 12;
+                                gameState = 101;
                                 pTime = getRuntime();
                             } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() > colorLeft.red()) {
                                 moveState = MoveState.SERVO_R;
-                                gameState = 12;
+                                gameState = 101;
                                 pTime = getRuntime();
                             }
                         }
@@ -171,19 +167,42 @@ public class BlueButton6 extends AutonomousBase{
                     }
                 }
                 break;
-            case 12: //Moves to the center and knocks off cap ball
+            case 101: //Shoot
                 if(getRuntime() - pTime > 1) {
-                    map.setGoal(7, 7);
-                    if (linedUp()) {
-                        moveState = MoveState.FORWARD;
-                    } else {
-                        moveState = MoveState.STRAFE_TOWARDS_GOAL;
-                    }
+                    map.setGoal(9.5, 3.5);
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
                     if (map.distanceToGoal() <= .1) {
                         moveState = MoveState.STOP;
+                        gameState = 102;
                     }
-                    break;
                 }
+                break;
+            case 102:
+                desiredAngle = 45;
+                if (linedUpAngle(5)) {
+                    sTime = getRuntime();
+                    moveState = MoveState.SHOOT_WHEEL;
+                    if (getRuntime() - sTime >= 3) {
+                        moveState = MoveState.SHOOT_CONVEYOR;
+                    }else if (getRuntime() - sTime >= 6) {
+                        moveState = MoveState.SHOOT_STOP;
+                        gameState = 12;
+                    }
+                } else {
+                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
+                }
+                break;
+            case 12: //Moves to the center and knocks off cap ball
+                map.setGoal(6.5, 6.5);
+                if (linedUp()) {
+                    moveState = MoveState.FORWARD;
+                } else {
+                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
+                }
+                if (map.distanceToGoal() <= .1) {
+                    moveState = MoveState.STOP;
+                }
+                break;
             case 777:
                     moveState = MoveState.STOP;
                     break;

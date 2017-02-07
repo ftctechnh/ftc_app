@@ -114,11 +114,11 @@ public class OrientedProtoBot extends OpMode {
         // GAME PAD 2 CODE
         // Activates shooters
         if(gamepad2.left_trigger > .1){
-            motorRightShooter.setPower(.5);
-            motorLeftShooter.setPower(.5);
+            motorRightShooter.setPower(.6);
+            motorLeftShooter.setPower(.6);
         }else if(gamepad2.right_trigger > .65){
-            motorRightShooter.setPower(-.5);
-            motorLeftShooter.setPower(-.5);
+            motorRightShooter.setPower(-.6);
+            motorLeftShooter.setPower(-.6);
         }else{
             motorRightShooter.setPower(0);
             motorLeftShooter.setPower(0);
