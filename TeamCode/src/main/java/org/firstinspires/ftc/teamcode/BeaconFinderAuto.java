@@ -11,6 +11,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.CameraProcessor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.firstinspires.ftc.teamcode.EeyoreHardware.COUNTS_PER_INCH;
 
 @Autonomous(name="Beacon Finder", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
@@ -64,7 +67,7 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.update();
 
         // Move off of the wall
-        moveStraight(27);
+        moveStraight(26);
         Thread.sleep(1000);
 
         // At this point, we can try to score the pre-loaded balls
@@ -93,9 +96,9 @@ public class BeaconFinderAuto extends CameraProcessor {
 
         } else { //We are blue
             gyroTurn(45);
-            moveStraight(19);
+            moveStraight(23);
             gyroTurn(90);
-            moveStraight(37);
+            moveStraight(33);
             Thread.sleep(1000);
             gyroTurn(0);
             Thread.sleep(1000);
@@ -154,15 +157,15 @@ public class BeaconFinderAuto extends CameraProcessor {
     }
 
     public void pressLeftButton() throws InterruptedException {
-        robot.leftPresser.setPosition(0);
-        Thread.sleep(1500);
-        robot.leftPresser.setPosition(0.275);
+        robot.leftPresser.setPosition(0.2);
+        Thread.sleep(5000);
+        robot.leftPresser.setPosition(0.8);
     }
 
     public void pressRightButton() throws InterruptedException {
-        robot.rightPresser.setPosition(0);
-        Thread.sleep(1500);
-        robot.rightPresser.setPosition(0.275);
+        robot.rightPresser.setPosition(0.2);
+        Thread.sleep(5000);
+        robot.rightPresser.setPosition(0.8);
     }
 
     public void gyroTurn(int degree) throws InterruptedException

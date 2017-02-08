@@ -57,9 +57,11 @@ public class EeyoreTeleop extends OpMode {
         }
 
         if(gamepad1.dpad_left) {
-            reverseDirection = -1;
+            robot.leftPresser.setPosition(0.2);
+            robot.rightPresser.setPosition(0.8);
         } if(gamepad1.dpad_right) {
-            reverseDirection = 1;
+            robot.leftPresser.setPosition(0.8);
+            robot.rightPresser.setPosition(0.2);
         }
 
 

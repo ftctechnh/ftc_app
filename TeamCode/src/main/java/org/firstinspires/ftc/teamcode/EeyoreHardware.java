@@ -69,7 +69,7 @@ public class EeyoreHardware
         collection.setDirection(DcMotor.Direction.FORWARD);
 
         // Set servo direction
-        leftPresser.setDirection(Servo.Direction.FORWARD);
+        leftPresser.setDirection(Servo.Direction.REVERSE);
         rightPresser.setDirection(Servo.Direction.REVERSE);
 
         // Set all motors to zero power
@@ -92,8 +92,8 @@ public class EeyoreHardware
         collection.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Initialize servos
-        leftPresser.setPosition(0.275);
-        rightPresser.setPosition(0.275);
+        leftPresser.setPosition(0.8);
+        rightPresser.setPosition(0.8);
     }
 
     /***
