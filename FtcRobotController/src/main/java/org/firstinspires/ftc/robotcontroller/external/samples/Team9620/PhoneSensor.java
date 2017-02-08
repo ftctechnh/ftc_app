@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.robotcontroller.external.samples.Team9620;
 
 /**
  * Makes it easier to use built-in phone sensors

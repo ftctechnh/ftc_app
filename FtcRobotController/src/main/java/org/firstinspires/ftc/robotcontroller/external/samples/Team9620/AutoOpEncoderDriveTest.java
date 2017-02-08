@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.robotcontroller.external.samples.Team9620;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  *
  */
-@Autonomous(name="Auto : Blue TestBot Encoder Drive", group ="Prototype")
-//@Disabled
+@Autonomous(name = "Concept: Blue Test Encoder Drive", group = "Concept")
+@Disabled
 public class AutoOpEncoderDriveTest extends LinearOpMode {
 
     public static final String TAG = "TestBot Blue Encoder Drive Test Nav OpMode";

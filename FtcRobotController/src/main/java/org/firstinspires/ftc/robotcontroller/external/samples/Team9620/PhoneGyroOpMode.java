@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.robotcontroller.external.samples.Team9620;
+
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
@@ -14,7 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @Disabled
 public class PhoneGyroOpMode extends LinearOpMode {
 
-    PhoneSensor accelerometer;
+    org.firstinspires.ftc.robotcontroller.external.samples.Team9620.PhoneSensor accelerometer;
 
     public void init(HardwareMap hwMap){
         accelerometer = new PhoneSensor(Sensor.TYPE_ACCELEROMETER, SensorManager.SENSOR_DELAY_FASTEST, hwMap);
