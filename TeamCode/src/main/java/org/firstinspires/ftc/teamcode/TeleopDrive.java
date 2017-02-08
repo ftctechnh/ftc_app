@@ -29,6 +29,7 @@ import com.qualcomm.robotcore.util.Range;
         double IntakeIn; // intake motor spinning in  <---(forward intake)
         double ServoFlipper = 0.8; //equals bottom
         double ServoButtonPusher = 0.0; //equals in position
+        boolean AButtonPreviousState = false;
 
         // double Aim;
 
@@ -77,6 +78,7 @@ import com.qualcomm.robotcore.util.Range;
             /**
              * Controller 2  mapping starts here
              * */
+
             //Spin wheels for shooter
             if (gamepad2.right_bumper){
                 //Full power when button is pushed
@@ -88,6 +90,30 @@ import com.qualcomm.robotcore.util.Range;
                 robot.rightshooter.setPower(0);
             }
 
+            //Button Press
+            if(AButtonPreviousState != gamepad2.a)
+            {
+                AButtonPreviousState = gamepad2.a;
+                if(gamepad2.a == true)
+                {
+                    robot.button.setPosition(1.0);
+                }
+                else
+                {
+                    robot.button.setPosition(0.0);
+                }
+            }
+
+            if(AButtonPreviousState == false) {
+
+                //Button pusher servo (2nd) for beacon
+                //Left Trigger
+                //Servo range factor is 1.0
+                //Servo range = Range factor * Trigger Value)
+                ServoButtonPusher = 1.0 * gamepad2.left_trigger;
+                robot.servo.setPosition(Range.clip(ServoButtonPusher, 0.0, 1.0));
+            }
+
             //Move servo(flipper) for shooter
             //Right Trigger
             //Servo range factor is 0.8/1.0
@@ -97,34 +123,11 @@ import com.qualcomm.robotcore.util.Range;
             ServoFlipper = 0.8 * (1.0 - gamepad2.right_trigger);
             robot.servo.setPosition(Range.clip(ServoFlipper, 0.0, 0.8));
 
-            //Button pusher servo (2nd) for beacon
-            //Left Trigger
-            //Servo range factor is 1.0
-            //Servo range = Range factor * Trigger Value)
-            ServoButtonPusher = 1.0 * gamepad2.left_trigger;
-            robot.servo.setPosition(Range.clip(ServoButtonPusher,0.0,1.0));
 
 
 
 
 
-            //robot.AimingMotor.setPower(Aim);
-
-            //if (gamepad2.right_bumper) {
-            //robot.shootMotorL.setPower(1);
-            //robot.shootMotorR.setPower(1);
-
-            //}
-
-            //if (gamepad2.dpad_left) {
-            //      robot.Press_left.setPosition(press_l);
-
-            // }
-
-            //if (gamepad2.dpad_right) {
-            // robot.Press_right.setPosition(press_r);
-
-            // }
         }
     }
 }
