@@ -21,7 +21,7 @@ public class DriveBackward extends _AutonomousBase
     {
         //Set the motor powers.
         setLeftPower(-.6);
-        setLeftPower(-.6);
+        setRightPower(-.6);
 
         while (opModeIsActive())
             idle();

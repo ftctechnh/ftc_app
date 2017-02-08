@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 //Add the teleop to the op mode register.
@@ -57,12 +56,12 @@ public class Teleop extends _RobotBase
                 currentClampPos += 0.01;
             else if (gamepad1.left_trigger > 0.5)
                 currentClampPos -= 0.01;
-            currentClampPos = Range.clip(currentClampPos, CLAMP_CLOSED, CLAMP_OPEN);
-            clamp.setPosition(currentClampPos);
+            currentClampPos = Range.clip(currentClampPos, CBH_CLOSED, CBH_OPEN);
+            capBallHolder.setPosition(currentClampPos);
 
             /************** Open Clamp **************/
             if (gamepad1.back) {
-                clamp.setPosition(CLAMP_OPEN);
+                capBallHolder.setPosition(CBH_OPEN);
             }
 
             /**************************** CONTROLLER #2 ********************************/

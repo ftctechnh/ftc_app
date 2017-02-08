@@ -1,42 +1,25 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.BaseFunctions;
 
 import java.util.ArrayList;
 
-public abstract class _RobotBase extends LinearOpMode
+public abstract class _RobotBase extends BaseFunctions
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors (they are lists because it helps when we add on new motors.
     protected ArrayList <DcMotor> leftDriveMotors = new ArrayList <>(), rightDriveMotors = new ArrayList<>();
     //Other motors
     protected DcMotor harvester, flywheels, lift;
-    protected Servo leftLifterServo, rightLifterServo;
     protected Servo leftButtonPusher, rightButtonPusher;
-    protected Servo clamp;
-    protected final double CLAMP_CLOSED = 0.0, CLAMP_OPEN = 1.0;
-
-    //This took a LONG TIME TO WRITE
-    protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
-    {
-        try
-        {
-            //Returns the last subclass (if this were a DcMotor it would pass back a Dc Motor.
-            return hardwareDevice.cast(hardwareMap.get(name));
-        }
-        catch (Exception e)
-        {
-            outputNewLineToDrivers("Could not find " + name + " in hardware map.");
-            return null;
-        }
-    }
+    protected Servo capBallHolder;
+    protected final double CBH_CLOSED = 0.0, CBH_OPEN = 1.0;
 
     // Called on initialization (once)
-    @Override
-    public void runOpMode() throws InterruptedException
+    protected void initializeHardware() throws InterruptedException
     {
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
@@ -49,7 +32,7 @@ public abstract class _RobotBase extends LinearOpMode
         leftDriveMotors.add(initialize(DcMotor.class, "frontLeft"));
         leftDriveMotors.add(initialize(DcMotor.class, "backLeft"));
 
-        /*************************** OTHER MOTORS ***************************/
+        /*************************** OTHER MOTORS AND SERVOS ***************************/
         harvester = initialize(DcMotor.class, "harvester");
         flywheels = initialize(DcMotor.class, "flywheels");
         flywheels.setDirection(DcMotor.Direction.REVERSE);
@@ -60,59 +43,8 @@ public abstract class _RobotBase extends LinearOpMode
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
         rightButtonPusher.setPosition(0.5);
 
-        clamp = initialize(Servo.class, "clamp");
-        clamp.setPosition(CLAMP_CLOSED);
-
-        //Actual program thread
-        //Custom Initialization steps.
-        try
-        {
-            driverStationSaysINITIALIZE();
-
-            //Wait for the start button to be pressed.
-            waitForStart();
-
-            driverStationSaysGO(); //This is where the child classes differ.
-        }
-        catch (InterruptedException e)
-        {
-            driverStationSaysSTOP();
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    //Optional overload.
-    protected void driverStationSaysINITIALIZE() throws InterruptedException {}
-    //Has to be implemented.
-    protected abstract void driverStationSaysGO() throws InterruptedException;
-    //Optional overload.
-    protected void driverStationSaysSTOP() {}
-
-    /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
-    ArrayList<String> linesAccessible = new ArrayList<>();
-    private int maxLines = 7;
-    protected void outputNewLineToDrivers(String newLine)
-    {
-        //Add new line at beginning of the lines.
-        linesAccessible.add(0, newLine);
-        //If there is more than 5 lines there, remove one.
-        if (linesAccessible.size() > maxLines)
-            linesAccessible.remove(maxLines);
-
-        //Output every line in order.
-        telemetry.update(); //Empty the output
-        for (String s : linesAccessible)
-            telemetry.addLine(s); //add all lines
-        telemetry.update(); //update the output with the added lines.
-    }
-
-    //Allows for more robust output of actual data instead of line by line without wrapping.  Used for driving and turning.
-    protected void outputConstantDataToDrivers(String[] data)
-    {
-        telemetry.update();
-        for (String s : data)
-            telemetry.addLine(s);
-        telemetry.update();
+        capBallHolder = initialize(Servo.class, "capBallHolder");
+        capBallHolder.setPosition(CBH_CLOSED);
     }
 
     protected void setRightPower(double power)

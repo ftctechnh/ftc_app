@@ -16,7 +16,8 @@ public abstract class _AutonomousBase extends _RobotBase
 {
     //Only used during autonomous.
     protected GyroSensor gyroscope;
-    protected int desiredHeading = 0;
+    protected int desiredHeading = 0; //This variable is super helpful to the program as a whole since it is accounted for for both the adjustMotor methods and the turn method.
+
     protected ColorSensor rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
     protected ModernRoboticsI2cRangeSensor frontRangeSensor, backRangeSensor;
 
@@ -197,7 +198,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
                 //Logarithmic turning that slows down upon becoming close to heading but is not scary fast when far from desired heading.
                 //Have to shift graph to left in order to prevent log10 from returning negative values upon becoming close to heading.
-                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * .2 + minimumTurnSpeed);
+                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * .3 + minimumTurnSpeed);
 
                 //Set clipped powers.
                 if (mode != TurnMode.RIGHT)
@@ -242,14 +243,13 @@ public abstract class _AutonomousBase extends _RobotBase
             //Gyroscope turning mechanics.
             while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
                 adjustMotorPowersBasedOnGyroSensor();
-
-            //Stop the bot.
         }
         else
         {
             sleep(length);
         }
 
+        //Stop the bot.
         stopDriving();
 
         outputNewLineToDrivers("Drove for " + length + " at " + power + ".");
@@ -280,6 +280,7 @@ public abstract class _AutonomousBase extends _RobotBase
             motor.setTargetPosition(length);
             motor.setPower(power);
         }
+
         // Reset
         for (DcMotor motor : rightDriveMotors) {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
