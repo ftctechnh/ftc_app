@@ -13,7 +13,7 @@ public class DriveForward extends _AutonomousBase
     {
         //Set the motor powers.
         setLeftPower(-.3);
-        setLeftPower(.3);
+        setRightPower(.3);
     }
 
     //Called after runOpMode() has finished initializing.
