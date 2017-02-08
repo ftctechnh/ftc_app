@@ -197,8 +197,8 @@ public class ROUSAutoDriveByEncoder_Blue extends LinearOpMode {
                     telemetry.addData("Color", "BLUE");
                     telemetry.update();
                     sleep(125);
-                    //  robot.PressL.setPosition(.76);
-                    // robot.PressR.setPosition(.95);
+                    //robot.PressL.setPosition(.76);
+                    //robot.PressR.setPosition(.95);
                     sleep(500);
                     encoderDrive(SCAN_SPEED, 12, 12, 10);
                     sleep(125);
@@ -212,8 +212,8 @@ public class ROUSAutoDriveByEncoder_Blue extends LinearOpMode {
                     telemetry.addData("Color", "RED");
                     telemetry.update();
                     sleep(125);
-                    // robot.PressR.setPosition(.79);
-                    // robot.PressL.setPosition(.95);
+                    //robot.PressR.setPosition(.79);
+                    //robot.PressL.setPosition(.95);
                     sleep(500);
                     encoderDrive(SCAN_SPEED, 12, 12, 10);
                     sleep(125);
