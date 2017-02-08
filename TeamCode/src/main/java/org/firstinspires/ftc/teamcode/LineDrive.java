@@ -119,7 +119,6 @@ public class LineDrive extends OpenCVLib {
         mShoot = new AutoLib.LinearSequence();
 
         mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
-        mShoot.add(new AutoLib.TimedMotorStep(robot.lifterMotor, 1.0, 1.0, true));
         mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
 
         mSequence.add(mShoot);

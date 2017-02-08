@@ -21,7 +21,6 @@ public class BotHardware
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
-    public DcMotor lifterMotor = null;
     public DcMotor launcherMotor = null;
     public DcMotor sweeperMotor = null;
 
@@ -135,7 +134,6 @@ public class BotHardware
         }
         isReversed = reversed;
 
-        lifterMotor = hw.getDcMotor("lifter");
         launcherMotor = hw.getDcMotor("launcher");
         sweeperMotor = hw.getDcMotor("sweeper");
 
@@ -147,7 +145,6 @@ public class BotHardware
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-        lifterMotor.setPower(0);
         launcherMotor.setPower(0);
         sweeperMotor.setPower(0);
 

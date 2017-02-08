@@ -53,11 +53,11 @@ public class AutonomousMain extends LinearOpMode {
         robot.launcherMotor.setPower(0.0);
 
         // load second ball
-        robot.lifterMotor.setPower(-1.0);
+        //robot.lifterMotor.setPower(-1.0);
 
         robot.waitForTick(5000);
 
-        robot.lifterMotor.setPower(0.0);
+        //robot.lifterMotor.setPower(0.0);
 
         // launch second ball
         robot.launcherMotor.setPower(1.0);

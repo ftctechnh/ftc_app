@@ -112,15 +112,12 @@ public class TeleOpMain extends OpMode {
 
         // run lifter motor
         if(gamepad1.left_trigger > 0.0 || gamepad2.left_trigger > 0.0 || gamepad2.right_trigger > 0.0) {
-            robot.lifterMotor.setPower(1.0);
             robot.sweeperMotor.setPower(-1.0);
         }
         else if(gamepad1.right_trigger > 0.0 || gamepad2.b) {
-            robot.lifterMotor.setPower(-1.0);
             robot.sweeperMotor.setPower(1.0);
         }
         else {
-            robot.lifterMotor.setPower(0.0);
             robot.sweeperMotor.setPower(0.0);
         }
 
@@ -146,12 +143,14 @@ public class TeleOpMain extends OpMode {
         lastLeftBumperState = gamepad1.left_bumper;
         lastRightBumperState = gamepad1.right_bumper;
 
+        /*
         //toggle reversed steering
         if(!lastAButtonState && gamepad1.a) {
             robot.initMotors(this, false, !robot.isReversed());
         }
 
         lastAButtonState = gamepad1.a;
+        */
     }
 
 
