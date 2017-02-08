@@ -38,6 +38,9 @@ public abstract class _AutonomousBase extends _RobotBase
         frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
         backRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
         backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
+        //The range sensors are odd and often return .269 with this method unless the robot is restarted.
+        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 && backRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
+            outputNewLineToDrivers("RANGE SENSORS MISCONFIGURED");
 
         //initialize gyroscope (will output whether it was found or not.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");
@@ -47,31 +50,20 @@ public abstract class _AutonomousBase extends _RobotBase
             outputNewLineToDrivers("Gyroscope Calibrating...");
             gyroscope.calibrate();
 
-            //Pause to prevent odd errors.
+            //Pause to prevent odd errors in which it says it's configured but is actually LYING.
             sleep(1000);
 
-            while (opModeIsActive() && gyroscope.isCalibrating())
+            while (gyroscope.isCalibrating())
                 sleep(50);
 
             zeroHeading();
 
             outputNewLineToDrivers("Gyroscope Calibration Complete!");
         }
-
-        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 && backRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
-        {
-            outputNewLineToDrivers("RANGE SENSORS MISCONFIGURED");
-        }
     }
 
     //All children should have special instructions.
     protected abstract void driverStationSaysGO() throws InterruptedException;
-
-    @Override
-    protected void driverStationSaysSTOP()
-    {
-
-    }
 
     //Used to set drive move power initially.
     protected double movementPower = .5;
@@ -107,7 +99,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per frame.
-    private double offCourseGyroCorrectionFactor = .1; //Less means less sensitive, .1 seems ideal.
+    private double offCourseGyroCorrectionFactor = .1; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
         if (gyroscope != null)
@@ -122,34 +114,6 @@ public abstract class _AutonomousBase extends _RobotBase
             //Now set the motor power of each motor equal to the current motor power plus the correction factor.
             setLeftPower(Range.clip(movementPower - motorPowerChange, -1, 1));
             setRightPower(Range.clip(movementPower + motorPowerChange, -1, 1));
-        }
-        else
-        {
-            outputConstantDataToDrivers(
-                    new String[] {
-                            "Can't adjust heading, no gyro attached!"
-                    }
-            );
-        }
-
-        idle();
-    }
-
-    //Method that adjusts the heading based on the range sensor and logarithmic mathematics.  Called once per frame.
-    private double offCourseRangeCorrectionFactor = .06; //Less means less sensitive.
-    protected void adjustMotorPowersBasedOnRangeSensors() throws InterruptedException
-    {
-        if (gyroscope != null)
-        {
-            //Desired heading is 0.
-            double differenceInDistances = frontRangeSensor.cmUltrasonic() - backRangeSensor.cmUltrasonic();
-
-            //If the difference is positive, the front is closer to the wall, meaning that we want to decrease the power for the right side and increase the power for the left side.
-            double motorPowerChange = differenceInDistances * offCourseRangeCorrectionFactor;
-
-            //Now set the motor power of each motor equal to the current motor power plus the correction factor.
-            setLeftPower(Range.clip(movementPower + motorPowerChange, -1, 1));
-            setRightPower(Range.clip(movementPower - motorPowerChange, -1, 1));
         }
         else
         {
@@ -243,7 +207,7 @@ public abstract class _AutonomousBase extends _RobotBase
             sleep(200);
 
             //Gyroscope turning mechanics.
-            while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
+            while (System.currentTimeMillis() - startTime < length)
                 adjustMotorPowersBasedOnGyroSensor();
         }
         else
@@ -297,9 +261,17 @@ public abstract class _AutonomousBase extends _RobotBase
     //This makes sure that the value makes sense for calculations.
     protected int getValidGyroHeading()
     {
+        //Get the heading.
         int heading = gyroscope.getHeading();
 
+        //Determine the actual heading on a logical basis (which makes sense with the calculations).
         if (heading > 180 && heading < 360)
+            heading -= 360;
+
+        //What this does is enable the 180 degree turn to be effectively made without resulting in erratic movement.
+        if (desiredHeading > 160 && heading < 0)
+            heading += 360;
+        else if (desiredHeading < -160 && heading > 0)
             heading -= 360;
 
         return heading;

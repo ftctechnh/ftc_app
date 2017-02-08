@@ -20,7 +20,7 @@ public class Teleop extends _RobotBase
         double currentClampPos = 0;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
-        while (opModeIsActive())
+        while (true)
         {
             /**************************** CONTROLLER #1 ********************************/
             /************** Direction Toggle **************/

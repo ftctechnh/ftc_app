@@ -11,7 +11,7 @@ public class SensorDebug extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        while (opModeIsActive()) {
+        while (true) {
             outputConstantDataToDrivers(
                     new String[]
                     {

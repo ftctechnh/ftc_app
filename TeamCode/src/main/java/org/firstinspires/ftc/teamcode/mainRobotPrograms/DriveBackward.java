@@ -23,7 +23,7 @@ public class DriveBackward extends _AutonomousBase
         setLeftPower(-.6);
         setRightPower(-.6);
 
-        while (opModeIsActive())
+        while (true)
             idle();
     }
 }
