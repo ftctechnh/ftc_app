@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -19,7 +17,7 @@ public abstract class _AutonomousBase extends _RobotBase
     protected int desiredHeading = 0; //This variable is super helpful to the program as a whole since it is accounted for for both the adjustMotor methods and the turn method.
 
     protected ColorSensor rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
-    protected ModernRoboticsI2cRangeSensor frontRangeSensor, backRangeSensor;
+    protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
 
     // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
     @Override
@@ -36,10 +34,10 @@ public abstract class _AutonomousBase extends _RobotBase
         //Init the range sensors for autonomous.
         frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
         frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
-        backRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
-        backRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
+        sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
+        sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
         //The range sensors are odd and often return .269 with this method unless the robot is restarted.
-        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 && backRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
+        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 && sideRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
             outputNewLineToDrivers("RANGE SENSORS MISCONFIGURED");
 
         //initialize gyroscope (will output whether it was found or not.
@@ -200,11 +198,10 @@ public abstract class _AutonomousBase extends _RobotBase
     {
         setMovementPower(power); // Set the initial power.
 
-        if (gyroscope != null) {
+        if (gyroscope != null)
+        {
             //Required variables.
-            double startTime = System.currentTimeMillis();
-
-            sleep(200);
+            long startTime = System.currentTimeMillis();
 
             //Gyroscope turning mechanics.
             while (System.currentTimeMillis() - startTime < length)

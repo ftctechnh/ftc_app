@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 @Autonomous(name = "Sensor Debug", group = "Autonomous Group")
 
 public class SensorDebug extends _AutonomousBase
@@ -27,7 +25,7 @@ public class SensorDebug extends _AutonomousBase
                             "Green: " + rightColorSensor.green(),
                             "Heading: " + getValidGyroHeading(),
                             "Front Range Sensor: " + frontRangeSensor.cmUltrasonic(),
-                            "Back Range Sensor: " + backRangeSensor.cmUltrasonic()
+                            "Back Range Sensor: " + sideRangeSensor.cmUltrasonic()
                     }
             );
             idle();
