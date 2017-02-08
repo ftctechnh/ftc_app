@@ -7,20 +7,41 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class AutonomousBlueBeacons extends _AutonomousBase
 {
+    long startTime = 0, permittedTime = 1000;
+
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Drive a little ways from the wall.
-        driveForTime(.4, 400);
+        setMovementPower(.3);
+        while(frontRangeSensor.cmUltrasonic() > 40)
+            adjustMotorPowersBasedOnGyroSensor();
+        stopDriving();
+
+        //Shoot the balls into the center vortex
+        flywheels.setPower(0.4);
+        sleep(300);
+        harvester.setPower(1.0);
+        sleep(3000);
+        flywheels.setPower(0);
+        harvester.setPower(0);
+
+        //Drive a bit further forward toward the cap ball
+        setMovementPower(.4);
+        while(frontRangeSensor.cmUltrasonic() > 20)
+            adjustMotorPowersBasedOnGyroSensor();
+        stopDriving();
 
         //Know how much this missed by since it can be made up later in a different turn.
-        turnToHeading(50, TurnMode.LEFT, 2750);
+        turnToHeading(90, TurnMode.BOTH, 4000);
 
         //Dash over across the diagonal of the corner goal.
-        driveForTime(.4, 1500);
+        while (frontRangeSensor.cmUltrasonic() > 45)
+            adjustMotorPowersBasedOnGyroSensor();
+        stopDriving();
 
         //Turn back to become parallel with the wall.
-        turnToHeading(0, TurnMode.RIGHT, 3000); //Take a bit of extra time on this turn.
+        turnToHeading(0, TurnMode.RIGHT, 4000); //Take a bit of extra time on this turn.
 
         for (int i = 0; i < 2; i++) //Two beacons.
         {
@@ -28,15 +49,13 @@ public class AutonomousBlueBeacons extends _AutonomousBase
             while (bottomColorSensor.alpha() < 3)
                 adjustMotorPowersBasedOnGyroSensor();
 
-            //We have reached the line and are parallel to the wall.
-            outputNewLineToDrivers("Beacon reached, at " + frontRangeSensor.getDistance(DistanceUnit.CM) + " cm from the front and " + backRangeSensor.getDistance(DistanceUnit.CM) + " cm from the back.");
-
             //Drive backward beyond the first option.
-            driveForTime(-0.2, 1500);
+            driveForTime(-0.25, 1500);
 
             //Check beacon.
-            setMovementPower(.2);
-            long startTime = System.currentTimeMillis(), permittedTime = 3000;
+            setMovementPower(.22);
+            startTime = System.currentTimeMillis();
+            permittedTime = 3000;
             while (rightColorSensor.blue() < 2 && System.currentTimeMillis() - startTime < permittedTime) //Looking at the blue one, so move forward a set distance.
             {
                 adjustMotorPowersBasedOnGyroSensor();
@@ -55,7 +74,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
 
                 //Determine the length to push the pusher out based on the distance from the wall (ONLY THING THE DARN RANGE SENSORS ARE USED FOR)
                 double frontDist = frontRangeSensor.cmUltrasonic();
-                double extendLength = 1000 * (frontDist == 255 ? backRangeSensor.cmUltrasonic() : frontDist) * 1.0/10;
+                double extendLength = 1000 * backRangeSensor.cmUltrasonic() * 1.0/10;
 
                 //Run the continuous rotation servo out to press, then back in.
                 rightButtonPusher.setPosition(.2);

@@ -43,7 +43,7 @@ public abstract class _RobotBase extends BaseFunctions
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
         rightButtonPusher.setPosition(0.5);
 
-        capBallHolder = initialize(Servo.class, "capBallHolder");
+        capBallHolder = initialize(Servo.class, "clamp");
         capBallHolder.setPosition(CBH_CLOSED);
     }
 

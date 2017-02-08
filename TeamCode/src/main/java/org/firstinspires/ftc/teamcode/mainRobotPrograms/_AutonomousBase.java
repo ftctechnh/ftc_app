@@ -53,6 +53,8 @@ public abstract class _AutonomousBase extends _RobotBase
             while (opModeIsActive() && gyroscope.isCalibrating())
                 sleep(50);
 
+            zeroHeading();
+
             outputNewLineToDrivers("Gyroscope Calibration Complete!");
         }
 
@@ -134,7 +136,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Method that adjusts the heading based on the range sensor and logarithmic mathematics.  Called once per frame.
-    private double offCourseRangeCorrectionFactor = .07; //Less means less sensitive.
+    private double offCourseRangeCorrectionFactor = .06; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnRangeSensors() throws InterruptedException
     {
         if (gyroscope != null)
@@ -198,7 +200,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
                 //Logarithmic turning that slows down upon becoming close to heading but is not scary fast when far from desired heading.
                 //Have to shift graph to left in order to prevent log10 from returning negative values upon becoming close to heading.
-                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * .3 + minimumTurnSpeed);
+                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * .2 + minimumTurnSpeed);
 
                 //Set clipped powers.
                 if (mode != TurnMode.RIGHT)
