@@ -79,6 +79,9 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // reset again after pressing beacon
         gyroPivot(0.8, 0);
 
+        // drive backward to get closer to center vortex
+        rangeSensorDrive(25, 0.2);
+
         // launch the first particle
         launchParticle();
 
@@ -122,7 +125,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // pivot to ninety degrees
-        gyroPivot(0.8, 90);
+        gyroPivot(0.8, 80);
 
         // reset the encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -130,8 +133,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
+        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
 
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -155,7 +158,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         }
 
         // pivot to ninety again
-        gyroPivot(0.8, 90);
+        gyroPivot(0.8, 80);
 
         // drive left a foot
         encoderStrafe(1.0, -12, -12);
