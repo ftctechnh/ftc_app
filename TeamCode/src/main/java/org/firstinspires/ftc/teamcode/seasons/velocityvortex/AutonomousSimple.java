@@ -22,8 +22,11 @@ public class AutonomousSimple extends LinearOpModeBase {
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        telemetry.addData("color sensor red1", getColorSensor1().red());
-        telemetry.addData("color sensor blue1", getColorSensor1().blue());
+        // print color sensor values
+        telemetry.addData("Left color sensor", "red: %d, blue: %d",
+                getColorSensor1().red(), getColorSensor1().blue());
+        telemetry.addData("Right color sensor", "red: %d, blue: %d",
+                getColorSensor2().red(), getColorSensor2().blue());
         telemetry.update();
 
         waitForStart();
@@ -35,7 +38,10 @@ public class AutonomousSimple extends LinearOpModeBase {
         }
 
         // drive backward (since the robot is facing backward)
-        encoderDrive(0.5, -12, -12);
+        encoderDrive(0.5, -20, -20);
+
+        // reset rotational position again before pressing beacon
+        gyroPivot(0.8, 0);
 
         // launch the first (loaded) particle
         launchParticle();
@@ -52,8 +58,5 @@ public class AutonomousSimple extends LinearOpModeBase {
 
         // launch the second particle
         launchParticle();
-
-        // drive back three more feet
-        encoderDrive(0.5, -36, -36);
     }
 }

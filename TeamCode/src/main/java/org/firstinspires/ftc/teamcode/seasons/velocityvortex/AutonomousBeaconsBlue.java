@@ -29,6 +29,11 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         // wait for initialization
         waitForStart();
 
+//        disableColorSensors();
+
+        // reset gyro heading
+        getGyroSensor().resetZAxisIntegrator();
+
         // set target position for initial diagonal drive motion
         getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 83);
         getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 83);

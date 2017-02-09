@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by ftc6347 on 12/30/16.
  */
+@Disabled
 @Autonomous(name = "Programming Robot Autonomous", group = "autonomous")
 public class ProgrammingRobotAutonomous extends LinearOpMode {
 
