@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
 
 @Autonomous(name="AutoRed", group="Pushbot")
-//@Disabled
+@Disabled
 public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
     ColorSensor sensorRGB;
     DeviceInterfaceModule cdim;
@@ -36,7 +37,7 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * Pi);
     static final double     DRIVE_SPEED             = .3;
     static final double     TURN_SPEED              = 0.07;
-    static final double     SCAN_SPEED              =.05;
+    static final double     SCAN_SPEED              =.08;
 
 
     @Override
@@ -194,8 +195,8 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
                     telemetry.addData("Color", "BLUE");
                     telemetry.update();
                     sleep(125);
-                    robot.PressR.setPosition(.79);
-                    robot.PressL.setPosition(.95);
+                    //robot.PressR.setPosition(.79);
+                    //robot.PressL.setPosition(.95);
                     sleep(250);
                     encoderDrive(SCAN_SPEED, 12, 12, 10);
                     sleep(125);
@@ -209,8 +210,8 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
                     telemetry.addData("Color", "RED");
                     telemetry.update();
                     sleep(125);
-                    robot.PressL.setPosition(.76);
-                    robot.PressR.setPosition(.95);
+                    //robot.PressL.setPosition(.76);
+                    //robot.PressR.setPosition(.95);
                     sleep(250);
                     encoderDrive(SCAN_SPEED, 12, 12, 10);
                     sleep(125);

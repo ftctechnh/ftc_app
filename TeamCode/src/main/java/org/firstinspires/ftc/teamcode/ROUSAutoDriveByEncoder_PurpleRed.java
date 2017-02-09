@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.ROUSAutoHardware_WithoutServos;
  */
 
 @Autonomous(name="AutoRed(Ramp)", group="ROUS Robot")
-//@Disabled
+@Disabled
 public class ROUSAutoDriveByEncoder_PurpleRed extends LinearOpMode {
 
     /* Declare OpMode members. */

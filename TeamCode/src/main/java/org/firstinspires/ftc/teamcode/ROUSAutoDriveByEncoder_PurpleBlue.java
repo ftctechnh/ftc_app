@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.ROUSAutoHardware_WithoutServos;
  */
 
 @Autonomous(name="AutoBlue(Ramp)", group="ROUS Robot")
-//@Disabled
+@Disabled
 public class ROUSAutoDriveByEncoder_PurpleBlue extends LinearOpMode {   //The word Purple in the name
                                                                         // signifies that no side specific
                                                                         // color sensor is in use
