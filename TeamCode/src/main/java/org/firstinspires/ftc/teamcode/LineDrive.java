@@ -118,8 +118,10 @@ public class LineDrive extends OpenCVLib {
 
         mShoot = new AutoLib.LinearSequence();
 
-        mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
-        mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
+        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.5, 2880, true));
+        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1440, true));
+        mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.4, 0.8, false));
+        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0, 1440, true));
 
         mSequence.add(mShoot);
 
@@ -198,7 +200,7 @@ public class LineDrive extends OpenCVLib {
 
         mPushy.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), -0.4, 1.0, true));
 
-        mSequence.add(mPushy);
+        //mSequence.add(mPushy);
 
         // start out not-done
         bDone = false;

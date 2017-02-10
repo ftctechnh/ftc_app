@@ -281,6 +281,7 @@ public class AutoLib {
         int mEncoderCount;      // target encoder count
         int mState;             // internal state machine state
         boolean mStop;          // stop motor when count is reached
+        double lastEncoder;
 
         public EncoderMotorStep(DcMotor motor, double power, int count, boolean stop) {
             mMotor = motor;
@@ -302,23 +303,22 @@ public class AutoLib {
 
             // we need a little state machine to make the encoders happy
             if (firstLoopCall()) {
-                // set up the motor on our first call
-                DcMotorSimple.Direction reverasl = mMotor.getDirection();
-                mMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                mMotor.setDirection(reverasl);
-                mMotor.setTargetPosition(mMotor.getCurrentPosition() + mEncoderCount);
-                mMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                mMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                lastEncoder = mMotor.getCurrentPosition();
                 mMotor.setPower(mPower);
                 mState++;
             }
 
             // the rest of the time, just update power and check to see if we're done
-            done = !mMotor.isBusy();
+            done = mMotor.getCurrentPosition()-lastEncoder >= mEncoderCount;
             if (done && mStop)
                 mMotor.setPower(0);     // optionally stop motor when target reached
             else
                 mMotor.setPower(mPower);        // update power in case it changed
 
+            if(done){
+                mMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            }
             return done;
         }
 

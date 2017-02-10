@@ -26,6 +26,7 @@ public class BotHardware
 
     public Servo leftServo = null;
     public Servo rightServo = null;
+    public Servo ballServo = null;
 
     public MuxColor leftSensor = null;
     public MuxColor rightSensor = null;
@@ -113,12 +114,6 @@ public class BotHardware
             frontRightMotor = hw.getDcMotor("front_right");
             backLeftMotor = hw.getDcMotor("back_left");
             backRightMotor = hw.getDcMotor("back_right");
-
-            // change directions if necessary
-            frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-            frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-            backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-            backRightMotor.setDirection(DcMotor.Direction.REVERSE);
         }
         else{
             // swap motors so back of robot is now front
@@ -126,19 +121,24 @@ public class BotHardware
             frontRightMotor = hw.getDcMotor("front_left");
             backLeftMotor = hw.getDcMotor("back_right");
             backRightMotor = hw.getDcMotor("back_left");
-
-            frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-            frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
-            backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-            backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         }
         isReversed = reversed;
+
+        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         launcherMotor = hw.getDcMotor("launcher");
         sweeperMotor = hw.getDcMotor("sweeper");
 
+        launcherMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         leftServo = hw.getServo("servo_left");
         rightServo = hw.getServo("servo_right");
+        ballServo = hw.getServo("ball");
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);
@@ -164,10 +164,12 @@ public class BotHardware
         //set servo directions
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
+        ballServo.setDirection(Servo.Direction.REVERSE);
 
         //set servos default positions
         leftServo.setPosition(0.0);
         rightServo.setPosition(0.0);
+        ballServo.setPosition(-0.2); //negative is closed
     }
 
     public void initMotors(OpMode opMode, boolean debug){
