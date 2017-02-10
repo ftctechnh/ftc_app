@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(name="Blue Button 6", group="Blue")
 public class BlueButton6 extends AutonomousBase{
     double xTime;
+    int i;
     @Override
     public void gameState() {
         super.gameState();
@@ -26,11 +27,7 @@ public class BlueButton6 extends AutonomousBase{
                 break;
             case 3: //Move to beacon A push pos.
                 map.setGoal(9, 7);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
-                }
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                     moveState = MoveState.SERVO_DEPLOY;
@@ -58,6 +55,7 @@ public class BlueButton6 extends AutonomousBase{
 		            gameState = 6;
                 } else{
                     moveState = MoveState.STOP;
+                    moveState = MoveState.SERVO_DEPLOY;
                 }
                 break;
             case 6: //back up and button press A
@@ -104,7 +102,7 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 8: //Move to beacon B push pos.
-                map.setGoal(11, 2.5);
+                map.setGoal(map.getRobotX(), 5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -150,11 +148,11 @@ public class BlueButton6 extends AutonomousBase{
                         }else if(getRuntime() - xTime > 1){
                             if (colorRight.blue() > colorRight.red() && colorLeft.blue() < colorLeft.red()) {
                                 moveState = MoveState.SERVO_L;
-                                gameState = 101;
+                                gameState = 113;
                                 pTime = getRuntime();
                             } else if (colorRight.blue() < colorRight.red() && colorLeft.blue() > colorLeft.red()) {
                                 moveState = MoveState.SERVO_R;
-                                gameState = 101;
+                                gameState = 113;
                                 pTime = getRuntime();
                             }
                         }
@@ -167,29 +165,40 @@ public class BlueButton6 extends AutonomousBase{
                     }
                 }
                 break;
-            case 101: //Shoot
+            case 113: //move to shooter post
                 if(getRuntime() - pTime > 1) {
-                    map.setGoal(9.5, 3.5);
+                    map.setGoal(9, 5);
                     moveState = MoveState.STRAFE_TOWARDS_GOAL;
                     if (map.distanceToGoal() <= .1) {
                         moveState = MoveState.STOP;
-                        gameState = 102;
+                        gameState = 110;
                     }
                 }
                 break;
-            case 102:
+            case 110: //Shoot
                 desiredAngle = 45;
-                if (linedUpAngle(5)) {
+                if(linedUpAngle(5)){
+                    moveState = MoveState.STOP;
+                    gameState = 111;
                     sTime = getRuntime();
-                    moveState = MoveState.SHOOT_WHEEL;
-                    if (getRuntime() - sTime >= 3) {
-                        moveState = MoveState.SHOOT_CONVEYOR;
-                    }else if (getRuntime() - sTime >= 6) {
-                        moveState = MoveState.SHOOT_STOP;
-                        gameState = 12;
-                    }
-                } else {
+                }else{
                     moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
+                }
+                break;
+            case 111: // ... and shoots
+                if(i < 5){
+                    if(!linedUpAngle(5)) {
+                        gameState = 110;
+                        i++;
+                    }
+                }
+                moveState = MoveState.SHOOT_WHEEL;
+                if(getRuntime() - sTime >= 2){
+                    moveState = MoveState.SHOOT_CONVEYOR;
+                }
+                if(getRuntime() - sTime >= 4) {
+                    moveState = MoveState.SHOOT_STOP;
+                    gameState = 12;
                 }
                 break;
             case 12: //Moves to the center and knocks off cap ball

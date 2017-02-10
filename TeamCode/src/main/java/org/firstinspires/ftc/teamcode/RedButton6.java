@@ -16,7 +16,7 @@ public class RedButton6 extends AutonomousBase{
                 if(actualRuntime() > 1 && !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
-                    map.setRobot(6,11.25);
+                    map.setRobot(6,12);
                 }
                 break;
             case 1: //Shoot
@@ -29,48 +29,33 @@ public class RedButton6 extends AutonomousBase{
 //                  }
                 break;
             case 3: //Move to beacon A push pos.
-                map.setGoal(3, 8);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.STRAFE_TOWARDS_GOAL;
-                }
+                map.setGoal(2, 8);
+                moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal()<=.1){
+                    moveState = MoveState.STOP;
+                    xTime = getRuntime();
+                    gameState = 4;
+                }
+                break;
+            case 4:
+                desiredAngle = 150;
+                if(linedUpAngle(5)){
                     moveState = MoveState.STOP;
                     moveState = MoveState.SERVO_DEPLOY;
                     moveState = MoveState.SERVO_M;
-                    xTime = getRuntime();
-                    gameState = 401;
-                }
-                break;
-            case 401:
-                desiredAngle = 170;
-                if(linedUpAngle(5)){
-                    moveState = MoveState.STOP;
                     gameState = 5;
                     sTime = getRuntime();
                 }else{
                     moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
                 }
                 break;
-            case 4: //Move parallel to wall
-                map.setGoal(map.getRobotX(), 12);
-                if(linedUp()){
-                    moveState = MoveState.STOP;
-                    moveState = MoveState.SERVO_M;
-                    moveState = MoveState.SERVO_DEPLOY;
-                    gameState = 5;
-                }
-                else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                break;
             case 5: //Move to wall
                 map.setGoal(0, map.getRobotY());
-                if(!touchWall.isPressed()){
-                    moveState = MoveState.RIGHT;
-                } else{
+                if (!touchWall.isPressed()) {
+                    moveState = MoveState.RIGHT_SLOW;
+                } else {
                     moveState = MoveState.STOP;
+                    moveState = MoveState.SERVO_DEPLOY;
                     gameState = 6;
                 }
                 break;
@@ -113,12 +98,12 @@ public class RedButton6 extends AutonomousBase{
                         moveState = MoveState.STOP;
                         gameState = 8;
                     }
-                }else{
+                }/*else{
                     map.setRobot(0,7); //Since we're positive of our position after pressing the button, we might as well use that
-                }
+                }*/
                 break;
             case 8: //Move to beacon B push pos.
-                map.setGoal(map.getRobotX(), 1.5);
+                map.setGoal(map.getRobotX(), 5.5);
                 if(linedUp()){
                     moveState = MoveState.BACKWARD;
                 }else{
@@ -128,27 +113,26 @@ public class RedButton6 extends AutonomousBase{
                     moveState = MoveState.STOP;
                     moveState = MoveState.SERVO_M;
                     xTime = getRuntime();
-                    gameState = 9;
-                }
-                break;
-            case 9: //Move parallel to wall
-                map.setGoal(map.getRobotX(),12);
-                if(linedUp()){
-                    moveState = MoveState.STOP;
-                    moveState = MoveState.SERVO_M;
                     gameState = 10;
                 }
-                else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
                 break;
+            /*case 9: //Move parallel to wall
+                desiredAngle = 160;
+                if(linedUpAngle(5)){
+                    moveState = MoveState.STOP;
+                    gameState = 10;
+                    sTime = getRuntime();
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_ANGLE_SLOW;
+                }
+                break;*/
             case 10: //Move to wall
                 map.setGoal(0, map.getRobotY());
                 if(!touchWall.isPressed()){
-                    moveState = MoveState.RIGHT;
-                    gameState = 11;
+                    moveState = MoveState.RIGHT_SLOW;
                 } else{
                     moveState = MoveState.STOP;
+                    gameState = 11;
                 }
                 break;
             case 11: //move back  and button press B
@@ -177,7 +161,7 @@ public class RedButton6 extends AutonomousBase{
                 }
                 break;
             case 12: //Moves to the center and knocks off cap ball
-                if(getRuntime() - pTime > 1) {
+                if(getRuntime() - pTime > 2) {
                     map.setGoal(5.5, 5.5);
                     if (linedUp()) {
                         moveState = MoveState.FORWARD;
