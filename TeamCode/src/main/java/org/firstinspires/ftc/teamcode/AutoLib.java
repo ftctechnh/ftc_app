@@ -759,7 +759,7 @@ public class AutoLib {
                 return true;
             }
 
-            float power = Range.clip(dist / 45.0f, -mPower, mPower);
+            float power = Range.clip(dist / 30.0f, -mPower, mPower);
 
             // compute new right/left motor powers
             float rightPower = power;

@@ -179,7 +179,7 @@ public class BotHardware
     public class NavXHeading implements HeadingSensor{
 
         public float getHeading(){
-            return navX.getYaw();
+            return -navX.getYaw();
         }
 
     }

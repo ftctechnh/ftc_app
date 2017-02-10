@@ -118,27 +118,28 @@ public class LineDrive extends OpenCVLib {
 
         mShoot = new AutoLib.LinearSequence();
 
-        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.5, 2880, true));
+        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 400, true));
+        mShoot.add(new AutoLib.LogTimeStep(modePointer, "YAY", 0.5));
         mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1440, true));
         mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.4, 0.8, false));
         mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0, 1440, true));
 
-        mSequence.add(mShoot);
+        //mSequence.add(mShoot);
 
         mDrive = new AutoLib.LinearSequence();
 
-        mDrive.add(new AutoLib.AzimuthCountedDriveStep(this, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 60.4f, 4000, true));
-        mDrive.add(new AutoLib.LogTimeStep(this, "YAY!", 0.1));
+        mDrive.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 2000, true));
+        mDrive.add(new AutoLib.LogTimeStep(modePointer, "YAY!", 0.1));
 
         int heading;
         float turnPower;
 
         if(red){
-            heading = 90;
+            heading = -90;
             turnPower = 0.4f;
         }
         else {
-            heading = -90;
+            heading = 90;
             turnPower = -0.4f;
         }
 
