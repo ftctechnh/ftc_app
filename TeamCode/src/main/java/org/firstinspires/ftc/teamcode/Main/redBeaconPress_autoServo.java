@@ -175,6 +175,12 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
             {
                 beacon_press_success = true;
             }
+            if((currentColorBeaconLeft.equals("blank"))){
+                beacon_press_success = true;
+                beaconPresser.setPosition(1.0);
+                sleep(100);
+                beaconPresser.setPosition(0.0);
+            }
         }
 
         if (beacon_press_success == true)
