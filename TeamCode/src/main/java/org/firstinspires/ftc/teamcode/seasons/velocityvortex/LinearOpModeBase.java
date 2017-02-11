@@ -86,6 +86,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         launcherMotor = hardwareMap.dcMotor.get("launcher");
         intakeMotor = hardwareMap.dcMotor.get("intake");
 
+
         spoolMotor1 = hardwareMap.dcMotor.get("s1");
         spoolMotor2 = hardwareMap.dcMotor.get("s2");
 
@@ -152,45 +153,15 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // reset gyro heading
 //        gyroSensor.resetZAxisIntegrator();
+        telemetry.addData("status","end of init");
+        telemetry.update();
     }
-
-    private void initializeColorSensors() {
-        // enable color sensors initially
-//        enableColorSensors();
-
-
-
-//        colorSensor2Controller = colorSensor2.getI2cController();
-//        colorSensor2Callback = colorSensor2Controller.getI2cPortReadyCallback(colorSensor2.getPort());
-    }
-
-//    protected void enableColorSensors() {
-//        if(colorSensorsDisabled) {
-//            if (colorSensor1Callback != null) {
-//                colorSensor1Controller.registerForI2cPortReadyCallback(colorSensor1Callback, colorSensor1.getPort());
-//            }
-//            if(colorSensor2Callback != null) {
-//                colorSensor2Controller.registerForI2cPortReadyCallback(colorSensor2Callback, colorSensor2.getPort());
-//            }
-//        }
-//        colorSensorsDisabled = false;
-//    }
-
-//    protected void disableColorSensors() {
-//        if(!colorSensorsDisabled) {
-//            colorSensor1Controller.deregisterForPortReadyCallback(colorSensor1.getPort());
-//            colorSensor2Controller.deregisterForPortReadyCallback(colorSensor2.getPort());
-//        }
-//        colorSensorsDisabled = true;
-//    }
 
     protected void claimBeaconRed() {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive to 10cm from the wall
         rangeSensorDrive(10, 0.1);
-
-//        enableColorSensors();
 
         // when the beacon is already claimed, moved on
         if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
@@ -201,13 +172,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
 
-        if(colorSensor1.red() > colorSensor1.blue()) {
+        if(colorSensor1.red() > 0) {
             beaconsServo1.setPosition(0.3);
-        } else {
+        } else if(colorSensor2.red() > 0) {
             beaconsServo2.setPosition(0.75);
+        } else {
+            telemetry.addData(">", "beacon not found");
+            telemetry.update();
         }
-
-//        disableColorSensors();
 
         stopRobot();
 
@@ -233,31 +205,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//        enableColorSensors();
-
         telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
 
         // check if both color sensors do not detect red
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
-            gyroPivot(0.8, 0);
-
-            rangeSensorDrive(12, 0.1);
-
-            // drive right past line
-            encoderStrafe(0.1, 4, 4);
-
-            // look for the white line leading to the second beacon
-            while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-                driveLeft(0.1);
-                telemetry.addData("ods3", getOds3().getRawLightDetected());
-                telemetry.update();
-            }
-            stopRobot();
-
-            // drive to 10cm from the wall
-            rangeSensorDrive(10, 0.1);
+            repositionBeacons();
 
             // second push
             while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
@@ -267,8 +221,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             stopRobot();
         }
 
-//        disableColorSensors();
-
         // drive backward to 15 cm
         rangeSensorDrive(15, 0.1);
 
@@ -277,36 +229,52 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         beaconsServo2.setPosition(0);
     }
 
+    private void repositionBeacons() {
+        gyroPivot(0.8, 0);
+
+        rangeSensorDrive(12, 0.1);
+
+        // drive right past line
+        encoderStrafe(0.1, 4, 4);
+
+        // look for the white line leading to the second beacon
+        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
+            driveLeft(0.1);
+            telemetry.addData("ods3", getOds3().getRawLightDetected());
+            telemetry.update();
+        }
+        stopRobot();
+
+        // drive to 10cm from the wall
+        rangeSensorDrive(10, 0.1);
+    }
+
     protected void claimBeaconBlue() {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//        enableColorSensors();
-
-        // drive to 12cm from the wall
-        rangeSensorDrive(12, 0.1);
-
-        telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
-        telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
-        telemetry.update();
+        // drive to 10cm from the wall
+        rangeSensorDrive(10, 0.1);
 
         // when the beacon is already claimed, moved on
         if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
             return;
         }
 
-        if(colorSensor1.blue() > colorSensor1.red()) {
-            beaconsServo1.setPosition(0.2);
-        } else {
-            beaconsServo2.setPosition(0.8);
-        }
+        telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
+        telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
+        telemetry.update();
 
-//        disableColorSensors();
+        if(colorSensor1.blue() > 0) {
+            beaconsServo1.setPosition(0.3);
+        } else if(colorSensor2.red() > 0) {
+            beaconsServo2.setPosition(0.75);
+        }
 
         stopRobot();
 
         // wait for the servo to raise
         robotRuntime.reset();
-        while(robotRuntime.milliseconds() < 100) {
+        while(robotRuntime.milliseconds() < 400) {
             idle();
         }
 
@@ -326,18 +294,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // drive to 12cm from the wall
-        rangeSensorDrive(12, 0.1);
-
-//        enableColorSensors();
-
         telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
 
         // check if both color sensors do not detect blue
         if(colorSensor1.red() > 0 || colorSensor2.red() > 0) {
-            gyroPivot(0.8, 0);
+            repositionBeacons();
 
             // second push
             while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
@@ -347,14 +310,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             stopRobot();
         }
 
-//        disableColorSensors();
-
         // drive backward to 15 cm
         rangeSensorDrive(15, 0.1);
 
         // lower button pushers
-        beaconsServo1.setPosition(1);
-        beaconsServo2.setPosition(0);
+        beaconsServo1.setPosition(0);
+        beaconsServo2.setPosition(1);
     }
 
     protected void launchParticle() {
@@ -405,6 +366,62 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // set RUN_WITHOUT_ENCODER for each motor
         setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    protected void rangeSensorStrafe(double speed) {
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        EncoderValues initialValues = new EncoderValues(
+                getFrontLeftDrive().getCurrentPosition(),
+                getFrontRightDrive().getCurrentPosition(),
+                getBackLeftDrive().getCurrentPosition(),
+                getBackRightDrive().getCurrentPosition());
+
+        telemetry.addData("initial encoder values", initialValues.toString());
+        telemetry.update();
+
+        // set the power for the left drive motors
+        getFrontLeftDrive().setPower(speed);
+        getBackLeftDrive().setPower(-speed);
+
+        // set the power for the right drive motors
+        getFrontRightDrive().setPower(speed);
+        getBackRightDrive().setPower(-speed);
+
+        EncoderValues currentValues;
+
+        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
+
+            currentValues = new EncoderValues(
+                    getFrontLeftDrive().getCurrentPosition(),
+                    getFrontRightDrive().getCurrentPosition(),
+                    getBackLeftDrive().getCurrentPosition(),
+                    getBackRightDrive().getCurrentPosition());
+
+            telemetry.addData("are encoder values less?", currentValues.isLessThan(initialValues));
+            telemetry.addData("current encoder values", initialValues.toString());
+            telemetry.addData("Light",getOds3().getRawLightDetected());
+            telemetry.update();
+            if(getFrontRange().cmUltrasonic() < 5) {
+                driveBackward(speed);
+            } else if(getFrontRange().cmUltrasonic() > 30){
+                driveForward(speed);
+            } else {
+                driveRight(speed);
+            }
+
+            // pivot while driving
+            gyroPivot(0.8, 0);
+
+            idle();
+        }
+        telemetry.addData("Light",getOds3().getRawLightDetected());
+        telemetry.update();
+        stopRobot();
+
+        // set RUN_USING_ENCODER for each motor
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     protected void encoderStrafe(double speed, double frontInches, double backInches) {
@@ -623,6 +640,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected OpticalDistanceSensor getDiskOds() { return diskOds; }
 
+    /**
+    ODS on the bottom
+     */
     protected OpticalDistanceSensor getOds3() {
         return ods3;
     }

@@ -24,9 +24,10 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
                 getColorSensor1().red(), getColorSensor1().blue());
         telemetry.addData("Right color sensor", "red: %d, blue: %d",
                 getColorSensor2().red(), getColorSensor2().blue());
-        telemetry.update();
 
         // wait for initialization
+        telemetry.addData("status","waiting");
+        telemetry.update();
         waitForStart();
 
 //        disableColorSensors();
@@ -99,16 +100,17 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         launchParticle();
 
         // strafe right
-        encoderStrafe(0.5, 24, 24);
+        encoderStrafe(0.5, 5, 5);
 
         // back up from wall
-        rangeSensorDrive(15, 0.2);
+        //rangeSensorDrive(15, 0.2);
+        rangeSensorStrafe(0.2);
 
         // gyro pivot
         gyroPivot(0.8, 0);
 
         // strafe past the second beacon line
-        encoderStrafe(0.4, 16, 16);
+        //encoderStrafe(0.4, 16, 16);
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
@@ -157,8 +159,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
             idle();
         }
 
-        // pivot to ninety again
-        gyroPivot(0.8, 80);
+        // pivot to eighty again
+        //gyroPivot(0.8, 80);
 
         // drive left a foot
         encoderStrafe(1.0, -12, -12);
