@@ -287,4 +287,25 @@ public class BeaconFinderAuto extends CameraProcessor {
             return "ERROR";
         }
     }
+    public void wallDrive(double speed, double time, double distance)
+    {
+        float startTime = System.currentTimeMillis();
+        while(System.currentTimeMillis() - startTime < time) {
+            double[] rangeCache = robot.getWallDistance();
+
+            double driveMultiplier = 0.05;
+
+            double error = distance - ((rangeCache[0] + rangeCache[1])/2);
+            double speedAdjustment = driveMultiplier * error;
+
+            double leftPower = Range.clip(speed - speedAdjustment, -1, 1);
+            double rightPower = Range.clip(speed + speedAdjustment, -1, 1);
+
+            robot.r1.setPower(rightPower);
+            robot.r2.setPower(rightPower);
+            robot.l1.setPower(leftPower);
+            robot.l2.setPower(leftPower);
+        }
+    }
+
 }
