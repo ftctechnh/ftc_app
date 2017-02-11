@@ -154,15 +154,12 @@ public class EeyoreHardware
         return range;
 
     }
-    public void moveRobotGyro(double speed, int targetDirection, int time) //Speed is from -1 to 1 and direction is 0 to 360 degrees
+    public void moveRobotGyro(int targetDirection) //Speed is from -1 to 1 and direction is 0 to 360 degrees
     {
         int currentDirection = gyro.getHeading();
-        double turnMultiplier = 0.05;
-        double driveMultiplier = 0.03;
+        double turnMultiplier = 0.07;
 
-        long turnStartTime = System.currentTimeMillis();
-        //First, check to see if we are pointing in the correct direction
-        while(Math.abs(targetDirection - currentDirection) > 5) //If we are more than 5 degrees off target, make corrections before moving
+        while(Math.abs(targetDirection - currentDirection) > 3) //If we are more than 5 degrees off target, make corrections before moving
         {
             currentDirection = gyro.getHeading();
 
@@ -174,26 +171,6 @@ public class EeyoreHardware
 
             //Finally, assign these values to the motors
 
-            r1.setPower(rightPower);
-            r2.setPower(rightPower);
-            l1.setPower(leftPower);
-            l2.setPower(leftPower);
-        }
-
-        //Now we can move forward, making corrections as needed
-
-        long startTime = System.currentTimeMillis(); //Determine the time as we enter the loop
-
-        while(System.currentTimeMillis() - startTime < time) //Loop for the desired amount of time
-        {
-            currentDirection = gyro.getHeading();
-            int error = targetDirection - currentDirection;
-            double speedAdjustment = driveMultiplier * error;
-
-            double leftPower = Range.clip(speed + speedAdjustment, -1, 1);
-            double rightPower = Range.clip(speed - speedAdjustment, -1, 1);
-
-            //Finally, assign these values to the motors
             r1.setPower(rightPower);
             r2.setPower(rightPower);
             l1.setPower(leftPower);

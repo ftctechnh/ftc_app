@@ -81,12 +81,12 @@ public class BeaconFinderAuto extends CameraProcessor {
 
         // Now we move on to the beacons
         if(teamColor == "RED") { //We are red
-            gyroTurn(315);
+            robot.moveRobotGyro(315);
             moveStraight(19);
-            gyroTurn(270);
+            robot.moveRobotGyro(270);
             moveStraight(37);
             Thread.sleep(1000);
-            gyroTurn(180);
+            robot.moveRobotGyro(180);
             Thread.sleep(1000);
 
             robot.l1.setDirection(DcMotor.Direction.FORWARD);
@@ -95,12 +95,12 @@ public class BeaconFinderAuto extends CameraProcessor {
             robot.r2.setDirection(DcMotor.Direction.REVERSE);
 
         } else { //We are blue
-            gyroTurn(45);
+            robot.moveRobotGyro(45);
             moveStraight(23);
-            gyroTurn(90);
+            robot.moveRobotGyro(90);
             moveStraight(33);
             Thread.sleep(1000);
-            gyroTurn(0);
+            robot.moveRobotGyro(0);
             Thread.sleep(1000);
         }
 
