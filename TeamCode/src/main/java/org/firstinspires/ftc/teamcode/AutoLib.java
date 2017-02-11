@@ -282,8 +282,19 @@ public class AutoLib {
         int mState;             // internal state machine state
         boolean mStop;          // stop motor when count is reached
         double lastEncoder;
+        OpMode mMode;
 
         public EncoderMotorStep(DcMotor motor, double power, int count, boolean stop) {
+            mMode = null;
+            mMotor = motor;
+            mPower = power;
+            mEncoderCount = count;
+            mState = 0;
+            mStop = stop;
+        }
+
+        public EncoderMotorStep(DcMotor motor, double power, int count, boolean stop, OpMode mode) {
+            mMode = mode;
             mMotor = motor;
             mPower = power;
             mEncoderCount = count;
@@ -310,14 +321,19 @@ public class AutoLib {
             }
 
             // the rest of the time, just update power and check to see if we're done
-            done = mMotor.getCurrentPosition()-lastEncoder >= mEncoderCount;
+            done = Math.abs(mMotor.getCurrentPosition()-lastEncoder) >= mEncoderCount;
             if (done && mStop)
                 mMotor.setPower(0);     // optionally stop motor when target reached
             else
                 mMotor.setPower(mPower);        // update power in case it changed
 
+            if(mMode != null){
+                mMode.telemetry.addData("Motor Position", mMotor.getCurrentPosition());
+                mMode.telemetry.addData("Amount Left", Math.abs(mMotor.getCurrentPosition()-lastEncoder));
+            }
+
             if(done){
-                mMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                //mMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             }
             return done;
         }

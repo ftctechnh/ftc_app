@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
-@Autonomous(name="Testing Color Code", group="Test")
+@Autonomous(name="Testing Sensor Code", group="Test")
 //@Disabled
 public class AutonomousTesting extends OpMode {
 
@@ -53,6 +53,7 @@ public class AutonomousTesting extends OpMode {
         telemetry.addData("Color Sensor Left Blue", bot.leftSensor.blue());
         telemetry.addData("Color Sensor Right Red", bot.rightSensor.red());
         telemetry.addData("Color Sensor Right Blue", bot.rightSensor.blue());
+        telemetry.addData("Ultra", bot.distSensor.getUltrasonicLevel());
 
         // until we're done, keep looping through the current Step(s)
         //if (!bDone)

@@ -132,7 +132,7 @@ public class BotHardware
         launcherMotor = hw.getDcMotor("launcher");
         sweeperMotor = hw.getDcMotor("sweeper");
 
-        launcherMotor.setDirection(DcMotor.Direction.REVERSE);
+        //launcherMotor.setDirection(DcMotor.Direction.REVERSE);
 
         launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -179,7 +179,9 @@ public class BotHardware
     public class NavXHeading implements HeadingSensor{
 
         public float getHeading(){
-            return -navX.getYaw();
+            //if(isReversed) return -navX.getYaw();
+            //else return navX.getYaw();
+            return navX.getYaw();
         }
 
     }

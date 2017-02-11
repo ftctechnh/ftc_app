@@ -64,8 +64,8 @@ public class LineDrive extends OpenCVLib {
     float Kd5 = 0;             // ... derivative term
     float Ki5Cutoff = 3.0f;    // maximum angle error for which we update integrator
 
-    final float ultraDistS1 = 20;
-    final float ultraDistS2 = 13;
+    final float ultraDistS1 = 22;
+    final float ultraDistS2 = 17;
 
     //constants for pushy pushy
     final double pushPos = 1.0;
@@ -118,17 +118,17 @@ public class LineDrive extends OpenCVLib {
 
         mShoot = new AutoLib.LinearSequence();
 
-        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 400, true));
+        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 1250, true));
         mShoot.add(new AutoLib.LogTimeStep(modePointer, "YAY", 0.5));
-        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1440, true));
-        mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.4, 0.8, false));
-        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0, 1440, true));
+        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1440, true, modePointer));
+        mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.6, 0.8, false));
+        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0, 1440, true, modePointer));
 
-        //mSequence.add(mShoot);
+         mSequence.add(mShoot);
 
         mDrive = new AutoLib.LinearSequence();
 
-        mDrive.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 2000, true));
+        mDrive.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 1000, true));
         mDrive.add(new AutoLib.LogTimeStep(modePointer, "YAY!", 0.1));
 
         int heading;
@@ -140,15 +140,16 @@ public class LineDrive extends OpenCVLib {
         }
         else {
             heading = 90;
-            turnPower = -0.4f;
+            turnPower = 0.4f;
         }
 
         mDrive.add(new AutoLib.GyroTurnStep(modePointer, heading, robot.getNavXHeadingSensor(), robot.getMotorArray(), turnPower, 3.0f, true));
         mDrive.add(new AutoLib.LogTimeStep(modePointer, "Yay!", 0.1));
 
         mDrive.add(new AutoLib.SquirrleyAzimuthTimedDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.5f, false));
-        mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new UltraSensors(robot.distSensor, 60, 30.0), true));
-        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mGPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame), true));
+        mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new UltraSensors(robot.distSensor, 65, 3.0), true));
+        mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(50), mGPid, muPid, robot.getMotorArray(), 0.6f, 1.0f, false));
+        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mGPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame), true));
 
         mSequence.add(mDrive);
 
@@ -176,7 +177,7 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new PushyLib.pushypushy(modePointer, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, pushyTime, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(20), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
 
 
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
@@ -201,7 +202,7 @@ public class LineDrive extends OpenCVLib {
 
         mPushy.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), -0.4, 1.0, true));
 
-        //mSequence.add(mPushy);
+        mSequence.add(mPushy);
 
         // start out not-done
         bDone = false;
@@ -260,6 +261,8 @@ public class LineDrive extends OpenCVLib {
         float mWait;
         ElapsedTime mTime;
 
+        final float dispOffset = 0.1f;
+
         LineSensors(OpenCVLib mode, Mat calib){
             mMode = mode;
             yValStore[0] = calib.rows() / 4;
@@ -308,7 +311,7 @@ public class LineDrive extends OpenCVLib {
                 else if (lastLinePos > 0) return 0.8f;
                 else return -0.8f;
             } else lastLinePos = linePos;
-            return (float) linePos;
+            return (float) linePos + dispOffset;
         }
 
         public boolean checkStop() {

@@ -19,12 +19,23 @@ public class TeleOpMain extends OpMode {
     boolean lastLeftBumperState = false;
     boolean lastRightBumperState = false;
     boolean lastAButtonState = false;
+    boolean isShooting = false;
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
 
+    AutoLib.LinearSequence mShoot;
+
+    private void initShoot(){
+        mShoot = new AutoLib.LinearSequence();
+
+        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1400, true));
+        mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.5, 0.2, false));
+        mShoot.add(new AutoLib.LogTimeStep(this, "WAIT", 0.2));
+    }
+
     @Override
     public void init() {
-
+        initShoot();
         telemetry.addData("Status", "Initialized");
 
         // hardware maps
@@ -122,19 +133,31 @@ public class TeleOpMain extends OpMode {
         }
 
         // run launcher motor
-        if(gamepad2.a) {
+
+        if(gamepad2.y) {
             robot.launcherMotor.setPower(1.0);
         }
         else {
             robot.launcherMotor.setPower(0.0);
         }
 
-        if(gamepad2.b) {
+        if(gamepad2.x) {
             robot.ballServo.setPosition(0.4);
         }
         else {
             robot.ballServo.setPosition(-0.2);
         }
+
+
+        if(gamepad2.a || isShooting){
+            if(mShoot.loop()){
+                isShooting = false;
+                initShoot();
+            }
+            else isShooting = true;
+        }
+
+
 
         // toggle button pushers
         if(!lastLeftBumperState && gamepad1.left_bumper) {
@@ -154,8 +177,14 @@ public class TeleOpMain extends OpMode {
         //toggle reversed steering
         if(!lastAButtonState && gamepad1.a) {
             robot.initMotors(this, false, !robot.isReversed());
-            if(robot.isReversed()) robot.dim.setLED(0, true);
-            else robot.dim.setLED(0, false);
+            if(robot.isReversed()){
+                robot.dim.setLED(0, true);
+                telemetry.addData("Reversed", "True");
+            }
+            else{
+                robot.dim.setLED(0, false);
+                telemetry.addData("Reversed", "False");
+            }
         }
 
         lastAButtonState = gamepad1.a;
