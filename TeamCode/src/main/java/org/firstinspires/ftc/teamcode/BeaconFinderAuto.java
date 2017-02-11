@@ -168,36 +168,7 @@ public class BeaconFinderAuto extends CameraProcessor {
         robot.rightPresser.setPosition(0.8);
     }
 
-    public void gyroTurn(int target) throws InterruptedException
-    {
-        robot.l1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.r1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        idle();
 
-        double heading = robot.gyro.getHeading();
-
-        while(true) {
-            if(target > 90) {
-                if(heading < (target - buffer)) {
-                    turnRight(drivePower);
-                } else if(heading > (target + buffer)) {
-                    turnLeft(drivePower);
-                } else if(heading < (target + buffer) && heading > (target - buffer)) {
-                    break;
-                }
-            } else if(target < 90) {
-                if(heading < (target - buffer)) {
-                    turnLeft(drivePower);
-                } else if(heading > (target + buffer)) {
-                    turnRight(drivePower);
-                } else if(heading < (target + buffer) && heading > (target - buffer)) {
-                    break;
-                }
-            }
-        }
-
-        setDrivePower(0);
-    }
 
     public void moveStraight(double inches) throws InterruptedException {
         robot.l1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
