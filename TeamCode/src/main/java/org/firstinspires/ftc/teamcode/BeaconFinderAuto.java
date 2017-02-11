@@ -168,31 +168,32 @@ public class BeaconFinderAuto extends CameraProcessor {
         robot.rightPresser.setPosition(0.8);
     }
 
-    public void gyroTurn(int degree) throws InterruptedException
+    public void gyroTurn(int target) throws InterruptedException
     {
-        int currentDirection = robot.gyro.getHeading();
-        double turnMultiplier = 0.05;
-
         robot.l1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.r2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.r1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         idle();
 
-        // First, check to see if we are pointing in the correct direction
-        while(Math.abs(degree - currentDirection) > 5) //If we are more than 5 degrees off target, make corrections before moving
-        {
-            currentDirection = robot.gyro.getHeading();
+        double heading = robot.gyro.getHeading();
 
-            int error = degree - currentDirection;
-            double speedAdjustment = turnMultiplier * error;
-
-            double leftPower = 0.20 * Range.clip(speedAdjustment, -1, 1);
-            double rightPower = 0.20 * Range.clip(-speedAdjustment, -1, 1);
-
-            // Finally, assign these values to the motors
-            robot.r1.setPower(rightPower);
-            robot.r2.setPower(rightPower);
-            robot.l1.setPower(leftPower);
-            robot.l2.setPower(leftPower);
+        while(true) {
+            if(target > 90) {
+                if(heading < (target - buffer)) {
+                    turnRight(drivePower);
+                } else if(heading > (target + buffer)) {
+                    turnLeft(drivePower);
+                } else if(heading < (target + buffer) && heading > (target - buffer)) {
+                    break;
+                }
+            } else if(target < 90) {
+                if(heading < (target - buffer)) {
+                    turnLeft(drivePower);
+                } else if(heading > (target + buffer)) {
+                    turnRight(drivePower);
+                } else if(heading < (target + buffer) && heading > (target - buffer)) {
+                    break;
+                }
+            }
         }
 
         setDrivePower(0);

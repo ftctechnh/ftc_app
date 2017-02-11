@@ -5,6 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -18,6 +22,15 @@ public class EeyoreHardware
     static final double WHEEL_DIAMETER_INCHES = 4.0;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
+    byte[] range1Cache; //The read will return an array of bytes. They are stored in this variable
+
+    I2cAddr RANGE1ADDRESS = new I2cAddr(0x14); //Default I2C address for MR Range (7-bit)
+    public static final int RANGE1_REG_START = 0x04; //Register to start reading
+    public static final int RANGE1_READ_LENGTH = 2; //Number of byte to read
+
+    public I2cDevice RANGE1;
+    public I2cDeviceSynch RANGE1Reader;
+
     /* Public OpMode members. */
     public DcMotor l1 = null;
     public DcMotor l2 = null;
@@ -30,6 +43,7 @@ public class EeyoreHardware
     public Servo rightPresser = null;
     public GyroSensor gyro = null;
     public ColorSensor color = null;
+    public
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -94,6 +108,10 @@ public class EeyoreHardware
         // Initialize servos
         leftPresser.setPosition(0.8);
         rightPresser.setPosition(0.8);
+
+        RANGE1 = hwMap.i2cDevice.get("range");
+        RANGE1Reader = new I2cDeviceSynchImpl(RANGE1, RANGE1ADDRESS, false);
+        RANGE1Reader.engage();
     }
 
     /***
