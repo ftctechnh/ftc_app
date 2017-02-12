@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.robotcontroller.external.samples.Team9620;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,9 +19,10 @@ public class EncoderDrive {
     public DcMotor  rightMotor   = null;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // AndyMark NeveRest 40 Never Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = .625 ;     // Motor is geared 40 : 1 but that is accounted for in ticks above - This is < 1.0 if geared UP or > 1.0 if reduced beyond ticks above
+    static final double     DRIVE_GEAR_REDUCTION    = .625 ;    // Motor is geared 40 : 1 but that is accounted for in ticks above - This is < 1.0 if geared UP or > 1.0 if reduced beyond ticks above
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV*DRIVE_GEAR_REDUCTION)/(WHEEL_DIAMETER_INCHES * Math.PI);
+    static final double     ROBOT_WHEEL_WIDTH       = 15.0;     // Width in inches from left drive wheel center to right drive wheel center
 
     /** Initialize EncoderDrive for Op Mode.*/
     public void initializeForOpMode( LinearOpMode opMode, HardwareMap hwMap ) throws InterruptedException {
@@ -205,7 +206,7 @@ public class EncoderDrive {
         /**
           * based on D = 2*PI*R * ( Angle/360 )
           */
-        double radius = RobotParameters.wheelBase/2.0;
+        double radius = ROBOT_WHEEL_WIDTH/2.0;
         double dist = ((2.0 * Math.PI * radius) * ( ccwAngle/ 360.0 ));
         opMode.telemetry.addData("Turn",  "PivotTurn F:%.04f LT:%.04f RT:%.04f", ccwAngle, -dist,  dist);
         encoderDriveBase( opMode, speed, -dist, dist, timeoutS );
@@ -225,7 +226,7 @@ public class EncoderDrive {
         /**
          * based on D = 2*PI*R * ( Angle/360 )
          */
-        double radius = RobotParameters.wheelBase/2.0;
+        double radius = ROBOT_WHEEL_WIDTH/2.0;
         double turnFactor = ( ccwAngle/ 360.0 )*(bForward ? 1.0 : -1.0);
         double distLeft = ((2.0 * Math.PI * ( arcRadius - radius )) * turnFactor);
         double distRight = ((2.0 * Math.PI * ( arcRadius + radius )) * turnFactor);
@@ -247,7 +248,7 @@ public class EncoderDrive {
         /**
          * based on D = 2*PI*R * ( Angle/360 )
          */
-        double radius = RobotParameters.wheelBase/2.0;
+        double radius = ROBOT_WHEEL_WIDTH/2.0;
         double turnFactor = ( ccwAngle/ 360.0 )*(bForward ? 1.0 : -1.0);
         double distLeft = ((2.0 * Math.PI * ( arcRadius + radius )) * turnFactor );
         double distRight = ((2.0 * Math.PI * ( arcRadius - radius )) * turnFactor );
