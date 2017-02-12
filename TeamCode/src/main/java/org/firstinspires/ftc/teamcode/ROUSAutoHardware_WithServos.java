@@ -57,8 +57,8 @@ public class ROUSAutoHardware_WithServos
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left motor");
         rightMotor  = hwMap.dcMotor.get("right motor");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-       // rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        //leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
         // Set all motors to zero power

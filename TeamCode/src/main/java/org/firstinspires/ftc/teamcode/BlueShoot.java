@@ -1,33 +1,3 @@
-/*
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted (subject to the limitations in the disclaimer below) provided that
-the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this list
-of conditions and the following disclaimer.
-
-Redistributions in binary form must reproduce the above copyright notice, this
-list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-
-Neither the name of Robert Atkinson nor the names of his contributors may be used to
-endorse or promote products derived from this software without specific prior
-written permission.
-
-NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
-LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITEDMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
@@ -40,51 +10,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
 /**
- * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that you have a Modern Robotics I2C gyro with the name "gyro"
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *  This code requires that the drive Motors have been configured such that a positive
- *  power command moves them forward, and causes the encoders to count UP.
- *
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- *  In order to calibrate the Gyro correctly, the robot must remain stationary during calibration.
- *  This is performed when the INIT button is pressed on the Driver Station.
- *  This code assumes that the robot is stationary when the INIT button is pressed.
- *  If this is not the case, then the INIT should be performed again.
- *
- *  Note: in this example, all angles are referenced to the initial coordinate frame set during the
- *  the Gyro Calibration process, or whenever the program issues a resetZAxisIntegrator() call on the Gyro.
- *
- *  The angle of movement/rotation is assumed to be a standardized rotation around the robot Z axis,
- *  which means that a Positive rotation is Counter Clock Wise, looking down on the field.
- *  This is consistent with the FTC field coordinate conventions set out in the document:
- *  ftc_app\doc\tutorial\FTC_FieldCoordinateSystemDefinition.pdf
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * Created by Connor on 2/9/2017.
  */
-
-@Autonomous(name="AutoFullBlue", group="Pushbot")
-@Disabled
-public class NewGyro extends LinearOpMode {
-
+@Autonomous(name="AutoShoot2Blue", group="Pushbot")
+//@Disabled
+public class BlueShoot extends LinearOpMode {
     /* Declare OpMode members. */
     ROUSAutoHardware_WithServos robot = new ROUSAutoHardware_WithServos();   // Use a Pushbot's hardware
     ModernRoboticsI2cGyro gyro = null;                    // Additional Gyro device
@@ -92,11 +28,11 @@ public class NewGyro extends LinearOpMode {
     DeviceInterfaceModule cdim;
     private ElapsedTime runtime = new ElapsedTime();
     static final int LED_CHANNEL = 5;
-    static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = .625 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     Pi                      = 3.141592653f;
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/
+    static final double COUNTS_PER_MOTOR_REV = 1680;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = .625;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double Pi = 3.141592653f;
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Pi);
 
     // These constants define the desired driving/control characteristics
@@ -135,7 +71,7 @@ public class NewGyro extends LinearOpMode {
         telemetry.addData(">", "Gyro is Calibrated.");    //
         telemetry.update();
         sleep(3000);
-        telemetry.addData(">","Initializing Color Sensor");
+        telemetry.addData(">", "Initializing Color Sensor");
         telemetry.update();
 // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
@@ -156,19 +92,42 @@ public class NewGyro extends LinearOpMode {
 
         // get a reference to our DeviceInterfaceModule object.
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
-sleep(500);
+        sleep(500);
         // set the digital channel to output mode.
         // remember, the Adafruit sensor is actually two devices.
         // It's an I2C sensor and it's also an LED that can be turned on or off.
         cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
-sleep(500);
+        sleep(500);
         // get a reference to our ColorSensor object.
         sensorRGB = hardwareMap.colorSensor.get("color");
-sleep(500);
+        sleep(500);
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
-sleep(500);
+        sleep(500);
         // wait for the start button to be pressed.
+            // send the info back to driver station using telemetry function.
+            telemetry.addData(">", "Color Sensor is Active");
+            telemetry.addData("LED", bLedOn ? "On" : "Off");
+            telemetry.addData("Clear", sensorRGB.alpha());
+            telemetry.addData("Red  ", sensorRGB.red());
+            telemetry.addData("Green", sensorRGB.green());
+            telemetry.addData("Blue ", sensorRGB.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+
+            // change the background color to match the color detected by the RGB sensor.
+            // pass a reference to the hue, saturation, and value array as an argument
+            // to the HSVToColor method.
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+                }
+            });
+
+            telemetry.update();
+            sleep(2000);
+
+
+            waitForStart();
         while (opModeIsActive()) {
 
             // check the status of the x button on gamepad.
@@ -187,39 +146,10 @@ sleep(500);
             // update previous state variable.
             // convert the RGB values to HSV values.
             Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
-sleep(500);
-            // send the info back to driver station using telemetry function.
-            telemetry.addData(">","Color Sensor is Active");
-            telemetry.addData(">","Please test to make sure it is working");
-            telemetry.addData("LED", bLedOn ? "On" : "Off");
-            telemetry.addData("Clear", sensorRGB.alpha());
-            telemetry.addData("Red  ", sensorRGB.red());
-            telemetry.addData("Green", sensorRGB.green());
-            telemetry.addData("Blue ", sensorRGB.blue());
-            telemetry.addData("Hue", hsvValues[0]);
+            sleep(500);
 
-            // change the background color to match the color detected by the RGB sensor.
-            // pass a reference to the hue, saturation, and value array as an argument
-            // to the HSVToColor method.
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-                }
-            });
-
-            telemetry.update();
-            sleep(10000);
-            telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
-            telemetry.addData("Clear", sensorRGB.alpha());
-            telemetry.addData("Red  ", sensorRGB.red());
-            telemetry.addData("Green", sensorRGB.green());
-            telemetry.addData("Blue ", sensorRGB.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-            telemetry.update();
-        waitForStart();
-
-        // loop and read the RGB data.
-        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+            // loop and read the RGB data.
+            // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
 
             robot.init(hardwareMap);
             // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
@@ -233,10 +163,9 @@ sleep(500);
 
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.button.setPosition(0);
-            robot.servo.setPosition(.8);
+            robot.button.setPosition(.65);
+            robot.servo.setPosition(.68);
             telemetry.update();
-            // Wait for the game to start (Display Gyro value), and reset gyro before we move..
             while (!isStarted()) {
                 telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
                 telemetry.addData("Clear", sensorRGB.alpha());
@@ -257,161 +186,34 @@ sleep(500);
             robot.rightshooter.setPower(1);
             sleep(250);
             gyroTurn(TURN_SPEED, 0);
-            Drive(DRIVE_SPEED2, 10, 10, 10000);
-            robot.servo.setPosition(.2);
-            sleep(250);
-            robot.servo.setPosition(.8);
+            Drive(DRIVE_SPEED2, 10, 10, 10);
+            gyroTurn(TURN_SPEED, 12);
+            sleep(1000);
+            robot.servo.setPosition(.3);
+            telemetry.addData(">", "Servo is in Up Position");
+            telemetry.update();
+            sleep(1000);
+            robot.servo.setPosition(.68);
+            telemetry.addData(">", "Servo is in Down Position");
+            telemetry.update();
+            robot.Intake.setPower(-1);
+            sleep(7500);
+            robot.servo.setPosition(.3);
+            telemetry.addData(">", "Servo is in Up Position");
+            telemetry.update();
+            sleep(1000);
+            robot.servo.setPosition(.68);
+            telemetry.addData(">", "Servo is in Down Position");
+            telemetry.update();
+            sleep(2500);
             robot.leftshooter.setPower(0);
             robot.rightshooter.setPower(0);
-            robot.Intake.setPower(-1);
-            TurnLeft(TURN_SPEED, 45, 10000);
-            Drive(DRIVE_SPEED, 90, 90, 10000);
-            robot.Intake.setPower(0);
-            gyroTurn(TURN_SPEED, 0);
-            Drive(DRIVE_SPEED2, 14, 14, 10000);
-            gyroTurn( TURN_SPEED, 0);
-
-            while (opModeIsActive()) {
-                Boolean Blue = EvaluateColorSensor.EvaluateColor(sensorRGB, eColorState.blue);
-                Boolean Red = EvaluateColorSensor.EvaluateColor(sensorRGB, eColorState.red);
-
-                if (Blue) {
-                    robot.leftshooter.setPower(-1);
-                    robot.rightshooter.setPower(1);
-                    gyroTurn( TURN_SPEED, 0);
-                    Drive(DRIVE_SPEED, 4, 4, 10000);
-                    telemetry.addData("Color", "BLUE");
-                    telemetry.update();
-                    sleep(125);
-                    robot.button.setPosition(1);
-                    sleep(500);
-                    robot.button.setPosition(0);
-                    gyroTurn(TURN_SPEED, 0);
-                    Drive(DRIVE_SPEED, -46, -46, 10000);
-                    gyroTurn(TURN_SPEED, 0);
-                    if (Blue){
-                        gyroTurn(TURN_SPEED,0);
-                        sleep(125);
-                        robot.button.setPosition(1);
-                        sleep(500);
-                        robot.button.setPosition(0);
-                        Drive(DRIVE_SPEED, 0,5,10);
-                        Drive(DRIVE_SPEED, 5, 5, 10);
-                        gyroTurn(TURN_SPEED, 90);
-                        robot.servo.setPosition(.2);
-                        sleep(250);
-                        robot.servo.setPosition(.8);
-                        stop();
-
-
-                    }else if (Red) {
-                        gyroTurn(TURN_SPEED,0);
-                        Drive(DRIVE_SPEED, -5, -5, 100);
-                        sleep(125);
-                        robot.button.setPosition(1);
-                        sleep(500);
-                        robot.button.setPosition(0);
-                        Drive(DRIVE_SPEED, 0,5,10);
-                        Drive(DRIVE_SPEED, 5, 5, 10);
-                        gyroTurn(TURN_SPEED, 90);
-                        robot.servo.setPosition(.2);
-                        sleep(250);
-                        robot.servo.setPosition(.8);
-                        stop();
-                    } else {
-                        robot.leftMotor.setPower(-.06);
-                        robot.rightMotor.setPower(-.06);
-                        telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
-                        telemetry.addData("Clear", sensorRGB.alpha());
-                        telemetry.addData("Red  ", sensorRGB.red());
-                        telemetry.addData("Green", sensorRGB.green());
-                        telemetry.addData("Blue ", sensorRGB.blue());
-                        telemetry.update();
-
-                    }
-
-
-
-
-
-                } else if (Red) {
-                    robot.leftshooter.setPower(-1);
-                    robot.rightshooter.setPower(1);
-                    gyroTurn( TURN_SPEED, 0);
-                    Drive(DRIVE_SPEED, 9, 9, 100000);
-                    telemetry.addData("Color", "RED");
-                    telemetry.update();
-                    sleep(125);
-                    robot.button.setPosition(1);
-                    sleep(500);
-                    robot.button.setPosition(0);
-                    gyroTurn(TURN_SPEED, 0);
-                    Drive(DRIVE_SPEED, -46, -46, 10000);
-                    gyroTurn( TURN_SPEED, 0);
-                    if (Blue){
-                        gyroTurn(TURN_SPEED,0);
-                        Drive(DRIVE_SPEED, 4, 4, 100);
-                        sleep(125);
-                        robot.button.setPosition(1);
-                        sleep(500);
-                        robot.button.setPosition(0);
-                        Drive(DRIVE_SPEED, 0,5,10);
-                        Drive(DRIVE_SPEED, 5, 5, 10);
-                        gyroTurn(TURN_SPEED, 90);
-                        robot.servo.setPosition(.2);
-                        sleep(250);
-                        robot.servo.setPosition(.8);
-                        stop();
-
-
-                    }else if (Red) {
-                        gyroTurn(TURN_SPEED,0);
-                        Drive(DRIVE_SPEED, 20, 20, 100);
-                        sleep(125);
-                        robot.button.setPosition(1);
-                        sleep(500);
-                        robot.button.setPosition(0);
-                        Drive(DRIVE_SPEED, 0,5,10);
-                        Drive(DRIVE_SPEED, 5, 5, 10);
-                        gyroTurn(TURN_SPEED, 90);
-                        robot.servo.setPosition(.2);
-                        sleep(250);
-                        robot.servo.setPosition(.8);
-                        stop();
-                    } else {
-                        robot.leftMotor.setPower(-.06);
-                        robot.rightMotor.setPower(-.06);
-                        telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
-                        telemetry.addData("Clear", sensorRGB.alpha());
-                        telemetry.addData("Red  ", sensorRGB.red());
-                        telemetry.addData("Green", sensorRGB.green());
-                        telemetry.addData("Blue ", sensorRGB.blue());
-                        telemetry.update();
-
-                    }
-
-
-
-                } else {
-                    robot.leftMotor.setPower(.06);
-                    robot.rightMotor.setPower(.06);
-                    telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
-                    telemetry.addData("Clear", sensorRGB.alpha());
-                    telemetry.addData("Red  ", sensorRGB.red());
-                    telemetry.addData("Green", sensorRGB.green());
-                    telemetry.addData("Blue ", sensorRGB.blue());
-                    telemetry.update();
-
-
-
-
-                }
-
-
-
-
-            }
-
+            TurnRight(TURN_SPEED, 6 , 10);
+            Drive(DRIVE_SPEED, 45, 45, 10);
+            TurnRight(DRIVE_SPEED,90, 10);
+            TurnLeft(TURN_SPEED, 90, 10);
+            Drive(DRIVE_SPEED, 7, 7, 10);
+            stop();
         }
     }
     public void Drive(double speed,
@@ -784,15 +586,15 @@ sleep(500);
             onTarget = true;
         } else {
             if (gyro.getIntegratedZValue() - angle >= 1) {
-                robot.rightMotor.setPower(speed);
-                robot.leftMotor.setPower(-speed);
+                robot.rightMotor.setPower(-speed);
+                robot.leftMotor.setPower(speed);
 
 
             } else {
                 if (gyro.getIntegratedZValue() - angle <= -1) {
 
-                    robot.rightMotor.setPower(-speed);
-                    robot.leftMotor.setPower(speed);
+                    robot.rightMotor.setPower(speed);
+                    robot.leftMotor.setPower(-speed);
                 }
             }
 
@@ -896,6 +698,4 @@ sleep(500);
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }
-
-
 }
