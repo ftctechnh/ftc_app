@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "Shooter", group = "Pushbot")
 //@Disabled
     public class TeleopDrive extends LinearOpMode {
-           // Use a Pushbot's hardware
+    // Use a Pushbot's hardware
 
 
     @Override
@@ -27,9 +27,9 @@ import com.qualcomm.robotcore.util.Range;
         double Right;
         double IntakeOut; // intake motor spinning out --->(reverse intake)
         double IntakeIn; // intake motor spinning in  <---(forward intake)
-        double ServoFlipper = 0.8; //equals bottom
-        double ServoButtonPusher = 0.0; //equals in position
-        boolean AButtonPreviousState = false;
+        //double ServoFlipper = 0.8; //equals bottom
+        // double ServoButtonPusher = 0.0; //equals in position
+        // boolean AButtonPreviousState = false;
 
         // double Aim;
 
@@ -38,7 +38,13 @@ import com.qualcomm.robotcore.util.Range;
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        robot.button.setPosition(.56);
+        robot.servo.setPosition(.68);
+        robot.leftshooter.setPower(-1);
+        robot.rightshooter.setPower(1);
+        sleep(1000);
+        robot.leftshooter.setPower(0);
+        robot.rightshooter.setPower(0);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -63,71 +69,70 @@ import com.qualcomm.robotcore.util.Range;
             } else {
                 robot.Intake.setPower(IntakeOut);
             }
-            if (gamepad1.right_bumper){
-                robot.servo.setPosition(0);
-            } else {
-                robot.servo.setPosition(.8);
-            }
+
 
             //Controlling the drive wheels with a range (robot moves when sticks are moved up and down)
-            Left  = -gamepad1.left_stick_y;
+            Left = -gamepad1.left_stick_y;
             Right = -gamepad1.right_stick_y;
-            robot.leftMotor.setPower(Left);
-            robot.rightMotor.setPower(Right);
+            if (gamepad1.right_bumper) {
 
+                robot.leftMotor.setPower(Left * .2);
+                robot.rightMotor.setPower(Right * .2);
+
+            } else {
+                robot.leftMotor.setPower(Left);
+                robot.rightMotor.setPower(Right);
+            }
             /**
              * Controller 2  mapping starts here
              * */
 
             //Spin wheels for shooter
-            if (gamepad2.right_bumper){
+            if (gamepad2.right_bumper) {
                 //Full power when button is pushed
                 robot.leftshooter.setPower(-1);
                 robot.rightshooter.setPower(1);
-            }else {
+            } else {
                 //No power when button is not pushed
                 robot.leftshooter.setPower(0);
                 robot.rightshooter.setPower(0);
             }
 
             //Button Press
-            if(AButtonPreviousState != gamepad2.a)
-            {
-                AButtonPreviousState = gamepad2.a;
-                if(gamepad2.a == true)
-                {
-                    robot.button.setPosition(1.0);
-                }
-                else
-                {
-                    robot.button.setPosition(0.0);
-                }
-            }
 
-            if(AButtonPreviousState == false) {
+            if (gamepad2.a) {
+                robot.button.setPosition(.76);
+            } else {
+                robot.button.setPosition(.56);
+
+                if (gamepad2.left_bumper) {
+                    robot.servo.setPosition(.3);
+
+                } else {
+                    robot.servo.setPosition(.68);
+                }
+                //if(AButtonPreviousState == false) {
 
                 //Button pusher servo (2nd) for beacon
                 //Left Trigger
                 //Servo range factor is 1.0
                 //Servo range = Range factor * Trigger Value)
-                ServoButtonPusher = 1.0 * gamepad2.left_trigger;
-                robot.servo.setPosition(Range.clip(ServoButtonPusher, 0.0, 1.0));
+                //     ServoButtonPusher = 1.0 * gamepad2.left_trigger;
+                //      robot.servo.setPosition(Range.clip(ServoButtonPusher, 0.0, 1.0));
+                //  }
+
+                //Move servo(flipper) for shooter
+                //Right Trigger
+                //Servo range factor is 0.8/1.0
+                //Top position = Up = 0.0
+                //Bottom position = Down = 0.8
+                //Servo range = Range factor * (1.0 - Trigger Value)
+                //ServoFlipper = 0.8 * (1.0 - gamepad2.right_trigger);
+                //robot.servo.setPosition(Range.clip(ServoFlipper, 0.0, 0.8));
+
+
             }
-
-            //Move servo(flipper) for shooter
-            //Right Trigger
-            //Servo range factor is 0.8/1.0
-            //Top position = Up = 0.0
-            //Bottom position = Down = 0.8
-            //Servo range = Range factor * (1.0 - Trigger Value)
-            ServoFlipper = 0.8 * (1.0 - gamepad2.right_trigger);
-            robot.servo.setPosition(Range.clip(ServoFlipper, 0.0, 0.8));
-
-
-
-
-
-
         }
+
     }
 }
