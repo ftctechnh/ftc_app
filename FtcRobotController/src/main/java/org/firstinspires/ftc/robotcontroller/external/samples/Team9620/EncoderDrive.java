@@ -15,6 +15,7 @@ public class EncoderDrive {
 
     private ElapsedTime runtime = new ElapsedTime();
 
+    public LinearOpMode opMode  = null;
     public DcMotor  leftMotor    = null;
     public DcMotor  rightMotor   = null;
 
@@ -25,11 +26,12 @@ public class EncoderDrive {
     static final double     ROBOT_WHEEL_WIDTH       = 15.0;     // Width in inches from left drive wheel center to right drive wheel center
 
     /** Initialize EncoderDrive for Op Mode.*/
-    public void initializeForOpMode( LinearOpMode opMode, HardwareMap hwMap ) throws InterruptedException {
+    public void initializeForOpMode( LinearOpMode opModeIn, HardwareMap hwMap ) throws InterruptedException {
 
         /**
          * Send telemetry message to signify robot waiting;
          */
+        opMode = opModeIn;
         opMode.telemetry.addData("Status", "Resetting Encoders");
         opMode.telemetry.update();
 
@@ -78,8 +80,7 @@ public class EncoderDrive {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDriveBase( LinearOpMode opMode,
-                             double speed,
+    public void encoderDriveBase( double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
         // Ensure that the opmode is still active
@@ -184,13 +185,13 @@ public class EncoderDrive {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDriveStraight( LinearOpMode opMode, double speed, double distance, boolean bForward, double timeoutS) {
+    public void encoderDriveStraight( double speed, double distance, boolean bForward, double timeoutS) {
         /** Calculates drive distance based on wheelbase*/
         /**
          * based on D = 2*PI*R * ( Angle/360 )
          */
         double dist = ( bForward ? distance : -distance );
-        encoderDriveBase( opMode, speed, dist, dist, timeoutS );
+        encoderDriveBase( speed, dist, dist, timeoutS );
     }
 
      /**
@@ -201,7 +202,7 @@ public class EncoderDrive {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderPivotTurn( LinearOpMode opMode, double speed, double ccwAngle, double timeoutS ) {
+    public void encoderPivotTurn( double speed, double ccwAngle, double timeoutS ) {
         /** Calculates drive distance based on wheelbase*/
         /**
           * based on D = 2*PI*R * ( Angle/360 )
@@ -209,7 +210,7 @@ public class EncoderDrive {
         double radius = ROBOT_WHEEL_WIDTH/2.0;
         double dist = ((2.0 * Math.PI * radius) * ( ccwAngle/ 360.0 ));
         opMode.telemetry.addData("Turn",  "PivotTurn F:%.04f LT:%.04f RT:%.04f", ccwAngle, -dist,  dist);
-        encoderDriveBase( opMode, speed, -dist, dist, timeoutS );
+        encoderDriveBase( speed, -dist, dist, timeoutS );
     }
 
     /**
@@ -221,7 +222,7 @@ public class EncoderDrive {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderArcTurnLeft( LinearOpMode opMode, double speed, double arcRadius, double ccwAngle, boolean bForward, double timeoutS ) {
+    public void encoderArcTurnLeft( double speed, double arcRadius, double ccwAngle, boolean bForward, double timeoutS ) {
         /** Calculates drive distance based on wheelbase*/
         /**
          * based on D = 2*PI*R * ( Angle/360 )
@@ -231,7 +232,7 @@ public class EncoderDrive {
         double distLeft = ((2.0 * Math.PI * ( arcRadius - radius )) * turnFactor);
         double distRight = ((2.0 * Math.PI * ( arcRadius + radius )) * turnFactor);
         opMode.telemetry.addData("Turn",  "ATLeft F:%.04f LT:%.04f RT:%.04f", turnFactor, distLeft,  distRight);
-        encoderDriveBase( opMode, speed, distLeft, distRight, timeoutS );
+        encoderDriveBase( speed, distLeft, distRight, timeoutS );
     }
 
     /**
@@ -243,7 +244,7 @@ public class EncoderDrive {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderArcTurnRight( LinearOpMode opMode, double speed, double arcRadius, double ccwAngle, boolean bForward, double timeoutS) {
+    public void encoderArcTurnRight( double speed, double arcRadius, double ccwAngle, boolean bForward, double timeoutS) {
         /** Calculates drive distance based on wheelbase*/
         /**
          * based on D = 2*PI*R * ( Angle/360 )
@@ -253,7 +254,7 @@ public class EncoderDrive {
         double distLeft = ((2.0 * Math.PI * ( arcRadius + radius )) * turnFactor );
         double distRight = ((2.0 * Math.PI * ( arcRadius - radius )) * turnFactor );
         opMode.telemetry.addData("Turn",  "ATRight F:%.04f LT:%.04f RT:%.04f", turnFactor, distLeft,  distRight);
-        encoderDriveBase( opMode, speed, distLeft, distRight, timeoutS );
+        encoderDriveBase( speed, distLeft, distRight, timeoutS );
     }
 
     static final String ZPMToString( DcMotor.ZeroPowerBehavior zpm ){

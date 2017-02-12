@@ -20,11 +20,8 @@ public class AutoOpEncoderDriveTest extends LinearOpMode {
     @Override public void runOpMode() throws InterruptedException {
 
         /**
-         * field and bot dimensions in mm - recommended because vuforia trackables are in mm
+         * For Vuforia recommend field and bot dimensions in mm  because vuforia trackables are in mm
          * so using mm simplifies the math.  Use Convert for convenience so you can specify in uint of choice.
-         *
-         * NOTE: this diagram needs to be updated once we identify proper locations,
-         * as do the rotation angles and translation distances below.
          *
          *
          *
@@ -36,11 +33,11 @@ public class AutoOpEncoderDriveTest extends LinearOpMode {
          *         |                   |             /     |
          *  +----+ |                   |          /        O legos
          *  |red | |                   |       /           |
-         *  |    | |                   |    /              |
-         *  |    | |                +--+--+                |
-         *  | -Y | +----------------+  +  +----------------+   Y
-         *  |    | |                +--+--+                |
-         *  |    | |              /    |       x  x x x x  O wheels
+         *  |    | |                   |    /            x |
+         *  |    | |                +--+--+              x |
+         *  | -Y | +----------------+  +  +-------------x-+   Y
+         *  |    | |                +--+--+           x    |
+         *  |    | |              /    |       x  x x      O wheels
          *  |    | |           /       |   x               |
          *  +----+ |        /          |x                  |
          *         |     /            x|                   |
@@ -66,32 +63,36 @@ public class AutoOpEncoderDriveTest extends LinearOpMode {
         /** Wait for the game to start (driver presses PLAY) */
         waitForStart();
 
-        do {
-            // drive forward 18 inches
-            if( !opModeIsActive()) {break;}
-            eDrive.encoderDriveBase(this, 0.2, 16.0, 16.0, 3.0);
+        String pathInfo = new String();
+        // drive forward 12 inches
+        eDrive.encoderDriveBase( 0.2, 12.0, 12.0, 3.0);
+        pathInfo += "DF 12.0\"\n";
+        telemetry.addData( "Path", pathInfo);
 
-            // pivot turn right 45 deg
-            if( !opModeIsActive()) {break;}
-            eDrive.encoderPivotTurn(this, 0.25, 45.0, 3.0); // CW is negative
+        // pivot turn right 45 deg
+        eDrive.encoderPivotTurn( 0.25, -45.0, 3.0); // CW is negative
+        pathInfo += "PT.Rt 45.0d\n";
+        telemetry.addData( "Path", pathInfo);
 
-            // drive forward 48 inches
-            if( !opModeIsActive()) {break;}
-            eDrive.encoderDriveStraight(this, 0.25, 48.0, true, 5.0);
+        // drive forward 36 inches
+        eDrive.encoderDriveStraight( 0.25, 36.0, true, 5.0);
+        pathInfo += "DF 36.0\"\n";
+        telemetry.addData( "Path", pathInfo);
 
-            // pivot turn right 45 deg
-            if( !opModeIsActive()) {break;}
-            eDrive.encoderPivotTurn(this, 0.25, 45.0, 3.0); // CW is negative
+        // pivot turn right 45 deg
+        eDrive.encoderPivotTurn( 0.25, -45.0, 3.0); // CW is negative
+        pathInfo += "PT.Rt 45.0d\n";
+        telemetry.addData( "Path", pathInfo);
 
-            // drive forward 12 inches
-            if( !opModeIsActive()) {break;}
-            eDrive.encoderDriveStraight(this, 0.25, 12, true, 3.0);
+        // drive forward 12 inches
+        eDrive.encoderDriveStraight( 0.25, 12, true, 3.0);
+        pathInfo += "DF 12.0\"\n";
+        telemetry.addData( "Path", pathInfo);
 
-            // arc turn forward 90 deg to the left with arch turn radius of 24 inches to center
-            if( !opModeIsActive()) {break;}
-            eDrive.encoderArcTurnLeft(this, 0.25, 24, 90, true, 3.0);
-
-        } while (false);
+        // arc turn forward 90 deg to the left with arch turn radius of 24 inches to center
+        eDrive.encoderArcTurnLeft( 0.25, 24, 90, true, 3.0);
+        pathInfo += "AT.left R 24.0\" A 90.0d\n";
+        telemetry.addData( "Path", pathInfo);
 
         while (opModeIsActive()) {
             idle();
