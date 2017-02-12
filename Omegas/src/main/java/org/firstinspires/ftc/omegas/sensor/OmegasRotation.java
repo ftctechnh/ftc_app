@@ -27,8 +27,8 @@ public class OmegasRotation extends LinearOpMode {
         Ω = new HardwareOmegas() {
             @Override
             public void init() {
-                initDriveMotors(hardwareMap);
                 initAppContext(hardwareMap);
+                initDriveMotors(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 

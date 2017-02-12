@@ -1,33 +1,23 @@
-package org.firstinspires.ftc.omegas.autonomous;
+package org.firstinspires.ftc.omegas.sensor;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
 
 /**
- * Created by ethertyper on 10/29/16.
+ * Created by ethertyper on 2/6/17.
  */
-
-@SuppressWarnings("unused")
-@Autonomous(name = "Tetrix Ranger: Drive Test", group = "Tests")
-public class OmegasRanger extends LinearOpMode {
+@Autonomous(name = "Omegas: Ultrasonic Test", group = "Tests")
+public class OmegasUltrasonic extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     HardwareOmegas Ω = null;
 
-    // IPS Units
-    static final double FORWARD_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -36,7 +26,7 @@ public class OmegasRanger extends LinearOpMode {
             @Override
             public void init() {
                 initAppContext(hardwareMap);
-                initDriveMotors(hardwareMap);
+                initUltrasonicSensor(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 
@@ -44,15 +34,8 @@ public class OmegasRanger extends LinearOpMode {
             }
         };
 
-        // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            for (DcMotor motor : Ω.getMotors()) {
-                motor.setPower(FORWARD_SPEED);
-            }
-        }
-
-        for (DcMotor motor : Ω.getMotors()) {
-            motor.setPower(0.0f);
+            telemetry.addData("Ultrasonic levels:", Ω.getUltrasonicSensor().getUltrasonicLevel());
         }
     }
 }
