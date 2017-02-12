@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.external.samples.Team9620;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,19 +10,18 @@ import com.qualcomm.robotcore.util.RobotLog;
 public class EncoderDrive {
 
     public static final String TAG = "EncoderDrive";
-    public final static String tag_left_wheel = "left_wheel";
-    public final static String tag_right_wheel = "right_wheel";
+    public final static String tag_left_wheel = "left motor";
+    public final static String tag_right_wheel = "right motor";
 
     private ElapsedTime runtime = new ElapsedTime();
 
     public DcMotor  leftMotor    = null;
     public DcMotor  rightMotor   = null;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // AndyMark NeveRest 40 Never Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // Motor is geared 40 : 1 but that is accounted for in ticks above - This is < 1.0 if geared UP or > 1.0 if reduced beyond ticks above
+    static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // AndyMark NeveRest 40 Never Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = .625 ;     // Motor is geared 40 : 1 but that is accounted for in ticks above - This is < 1.0 if geared UP or > 1.0 if reduced beyond ticks above
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV*DRIVE_GEAR_REDUCTION)/(WHEEL_DIAMETER_INCHES * Math.PI);
-    static final double     WHEEL_BASE_WIDTH        = 17.0 ;    // Robot wheelbase width from wheel center to center
 
     /** Initialize EncoderDrive for Op Mode.*/
     public void initializeForOpMode( LinearOpMode opMode, HardwareMap hwMap ) throws InterruptedException {
@@ -38,8 +37,8 @@ public class EncoderDrive {
         rightMotor  = hwMap.dcMotor.get(tag_right_wheel);
 
         // set initial direction
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
@@ -97,15 +96,16 @@ public class EncoderDrive {
             int initialLeftDelta = Math.abs( initialLeftPos-targetLeftPos );
             int initialRightDelta = Math.abs( initialRightPos-targetRightPos );
             int maxDelta = Math.max( initialLeftDelta, initialRightDelta );
+
             // one or both speeds will be <= speed without exceeding speed.
-            double leftSpeed = speed * (initialLeftDelta/maxDelta);
-            double rightSpeed = speed * (initialRightDelta/maxDelta);
+            double leftSpeed = speed * ((double)initialLeftDelta/(double)maxDelta);
+            double rightSpeed = speed * ((double)initialRightDelta/(double)maxDelta);
 
             // Display it for the drive
-            opMode.telemetry.addData("IS", "IS=%.04f", speed);
+            opMode.telemetry.addData("Speed", "IS=%.04f", speed);
             opMode.telemetry.addData("LS", "TS=%.04f CS=%.04f", leftSpeed, leftSpeed);
             opMode.telemetry.addData("RS", "TS=%.04f CS=%.04f", rightSpeed, rightSpeed);
-            opMode.telemetry.addData("TR", "LT=%.04f RT=%.04f", initialLeftDelta, initialRightDelta);
+            opMode.telemetry.addData("Tics", "LT=%7d RT=%7d", initialLeftDelta, initialRightDelta);
             opMode.telemetry.update();
 
             // pass target positions on to the motor controllers
@@ -133,8 +133,8 @@ public class EncoderDrive {
 
                 // calculate progress ratio in the range of 1.0 to 0.0 indicating how much of the distance is left to traverse
                 // check denominator to and assign value of 1.0 to avoid division by zero.
-                double leftProgressRatio = (0 != initialLeftDelta ?  (curLeftDelta/initialLeftDelta) : 0.0 );
-                double rightProgressRatio = (0 != initialRightDelta ?  (curRightDelta/initialRightDelta) : 0.0 );
+                double leftProgressRatio = (0 != initialLeftDelta ?  ((double)curLeftDelta/(double)initialLeftDelta) : 0.0 );
+                double rightProgressRatio = (0 != initialRightDelta ?  ((double)curRightDelta/(double)initialRightDelta) : 0.0 );
 
                 // if one side or the other is at it's target location it's power will go to zero
                 // the side that is lagging behind the other will represent the max ratio.
@@ -152,25 +152,15 @@ public class EncoderDrive {
                 rightMotor.setPower(Math.abs(rightSpeed));
 
                 // Display it for the drive
-                opMode.telemetry.addData("IS", "IS=%.04f", speed);
+                opMode.telemetry.addData("Speed", "IS=%.04f", speed);
                 opMode.telemetry.addData("LS", "TS=%.04f CS=%.04f", leftSpeed, newLeftSpeed);
                 opMode.telemetry.addData("RS", "TS=%.04f CS=%.04f", rightSpeed, newRightSpeed);
-                opMode.telemetry.addData("TR", "LT=%.04f RT=%.04f", curLeftDelta, curRightDelta);
+                opMode.telemetry.addData("Tics", "LT=%7d RT=%7d", curLeftDelta, curRightDelta);
                 opMode.telemetry.update();
 
                 // we may want to replace this idel() with sleep(50 or 100);
                 opMode.idle(); // give the system a moment as we wait for things to progress
             }
-
-            // Set zero power behavior to brake mode
-            RobotLog.ii(TAG, "ZP Behavior before - Left:=%s Right:=%s"
-                    , ZPMToString(leftMotor.getZeroPowerBehavior())
-                    , ZPMToString((rightMotor.getZeroPowerBehavior())));
-            leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            RobotLog.ii(TAG, "ZP Behavior after - Left:=%s Right:=%s"
-                    , ZPMToString(leftMotor.getZeroPowerBehavior())
-                    , ZPMToString((rightMotor.getZeroPowerBehavior())));
 
             // Stop all motion;
             leftMotor.setPower(0);
@@ -181,6 +171,7 @@ public class EncoderDrive {
             rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             opMode.sleep(100);   // optional pause after each move
+            opMode.idle();
         }
     }
 
@@ -214,7 +205,7 @@ public class EncoderDrive {
         /**
           * based on D = 2*PI*R * ( Angle/360 )
           */
-        double radius = WHEEL_BASE_WIDTH/2.0;
+        double radius = RobotParameters.wheelBase/2.0;
         double dist = ((2.0 * Math.PI * radius) * ( ccwAngle/ 360.0 ));
         opMode.telemetry.addData("Turn",  "PivotTurn F:%.04f LT:%.04f RT:%.04f", ccwAngle, -dist,  dist);
         encoderDriveBase( opMode, speed, -dist, dist, timeoutS );
@@ -234,7 +225,7 @@ public class EncoderDrive {
         /**
          * based on D = 2*PI*R * ( Angle/360 )
          */
-        double radius = WHEEL_BASE_WIDTH/2.0;
+        double radius = RobotParameters.wheelBase/2.0;
         double turnFactor = ( ccwAngle/ 360.0 )*(bForward ? 1.0 : -1.0);
         double distLeft = ((2.0 * Math.PI * ( arcRadius - radius )) * turnFactor);
         double distRight = ((2.0 * Math.PI * ( arcRadius + radius )) * turnFactor);
@@ -256,7 +247,7 @@ public class EncoderDrive {
         /**
          * based on D = 2*PI*R * ( Angle/360 )
          */
-        double radius = WHEEL_BASE_WIDTH/2.0;
+        double radius = RobotParameters.wheelBase/2.0;
         double turnFactor = ( ccwAngle/ 360.0 )*(bForward ? 1.0 : -1.0);
         double distLeft = ((2.0 * Math.PI * ( arcRadius + radius )) * turnFactor );
         double distRight = ((2.0 * Math.PI * ( arcRadius - radius )) * turnFactor );

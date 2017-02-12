@@ -29,7 +29,6 @@ import com.qualcomm.robotcore.util.Range;
         double IntakeIn; // intake motor spinning in  <---(forward intake)
         //double ServoFlipper = 0.8; //equals bottom
         // double ServoButtonPusher = 0.0; //equals in position
-        // boolean AButtonPreviousState = false;
 
         // double Aim;
 
@@ -39,7 +38,7 @@ import com.qualcomm.robotcore.util.Range;
          */
         robot.init(hardwareMap);
         robot.button.setPosition(.56);
-        robot.servo.setPosition(.68);
+        robot.servo.setPosition(.8);
         robot.leftshooter.setPower(-1);
         robot.rightshooter.setPower(1);
         sleep(1000);
@@ -99,40 +98,22 @@ import com.qualcomm.robotcore.util.Range;
             }
 
             //Button Press
-
             if (gamepad2.a) {
                 robot.button.setPosition(.76);
             } else {
                 robot.button.setPosition(.56);
-
-                if (gamepad2.left_bumper) {
-                    robot.servo.setPosition(.3);
-
-                } else {
-                    robot.servo.setPosition(.68);
-                }
-                //if(AButtonPreviousState == false) {
-
-                //Button pusher servo (2nd) for beacon
-                //Left Trigger
-                //Servo range factor is 1.0
-                //Servo range = Range factor * Trigger Value)
-                //     ServoButtonPusher = 1.0 * gamepad2.left_trigger;
-                //      robot.servo.setPosition(Range.clip(ServoButtonPusher, 0.0, 1.0));
-                //  }
-
-                //Move servo(flipper) for shooter
-                //Right Trigger
-                //Servo range factor is 0.8/1.0
-                //Top position = Up = 0.0
-                //Bottom position = Down = 0.8
-                //Servo range = Range factor * (1.0 - Trigger Value)
-                //ServoFlipper = 0.8 * (1.0 - gamepad2.right_trigger);
-                //robot.servo.setPosition(Range.clip(ServoFlipper, 0.0, 0.8));
-
-
             }
-        }
 
+            // Shooter servo flipper
+            if (gamepad2.left_bumper) {
+                robot.servo.setPosition(.4);
+            } else {
+                robot.servo.setPosition(.8);
+            }
+
+            telemetry.addData( "Button", "Val: %.04f", robot.button.getPosition());
+            telemetry.addData( "Flipper", "Val: %.04f", robot.servo.getPosition());
+            telemetry.update();
+        }
     }
 }
