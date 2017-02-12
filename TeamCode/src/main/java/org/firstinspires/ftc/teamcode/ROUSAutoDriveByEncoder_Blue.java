@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 @Autonomous(name="AutoBlue", group="Robot")
-//@Disabled
+@Disabled
 public class ROUSAutoDriveByEncoder_Blue extends LinearOpMode {
     ColorSensor sensorRGB;
     DeviceInterfaceModule cdim;
