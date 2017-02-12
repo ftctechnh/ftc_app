@@ -148,8 +148,8 @@ public class LineDrive extends OpenCVLib {
 
         mDrive.add(new AutoLib.SquirrleyAzimuthTimedDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.5f, false));
         mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new UltraSensors(robot.distSensor, 65, 3.0), true));
-        mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(50), mGPid, muPid, robot.getMotorArray(), 0.6f, 1.0f, false));
-        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mGPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame), true));
+        mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(40), mGPid, muPid, robot.getMotorArray(), 0.6f, 1.0f, false));
+        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mGPid, muPid, robot.getMotorArray(), 0.45f, new LineSensors(this, frame), true));
 
         mSequence.add(mDrive);
 

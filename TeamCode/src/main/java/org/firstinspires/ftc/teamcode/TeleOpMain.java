@@ -23,19 +23,18 @@ public class TeleOpMain extends OpMode {
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
 
-    AutoLib.LinearSequence mShoot;
+    AutoLib.Sequence mShoot;
 
     private void initShoot(){
         mShoot = new AutoLib.LinearSequence();
 
-        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1400, true));
+        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1400, true, this));
         mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.5, 0.2, false));
         mShoot.add(new AutoLib.LogTimeStep(this, "WAIT", 0.2));
     }
 
     @Override
     public void init() {
-        initShoot();
         telemetry.addData("Status", "Initialized");
 
         // hardware maps
@@ -43,6 +42,8 @@ public class TeleOpMain extends OpMode {
 
         robot.leftServo.setPosition(leftPusherState);
         robot.rightServo.setPosition(rightPusherState);
+
+        initShoot();
     }
 
     @Override
@@ -134,21 +135,21 @@ public class TeleOpMain extends OpMode {
 
         // run launcher motor
 
-        if(gamepad2.y) {
+        if(gamepad2.x) {
             robot.launcherMotor.setPower(1.0);
         }
         else {
             robot.launcherMotor.setPower(0.0);
         }
 
-        if(gamepad2.x) {
-            robot.ballServo.setPosition(0.4);
+        if(gamepad2.b) {
+            robot.ballServo.setPosition(0.6);
         }
         else {
             robot.ballServo.setPosition(-0.2);
         }
 
-
+        /*
         if(gamepad2.a || isShooting){
             if(mShoot.loop()){
                 isShooting = false;
@@ -156,7 +157,7 @@ public class TeleOpMain extends OpMode {
             }
             else isShooting = true;
         }
-
+        */
 
 
         // toggle button pushers
