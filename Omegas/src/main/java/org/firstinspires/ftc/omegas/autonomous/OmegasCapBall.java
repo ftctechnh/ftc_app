@@ -39,7 +39,6 @@ public class OmegasCapBall extends LinearOpMode {
             public void init() {
                 initAppContext(hardwareMap);
                 initDriveMotors(hardwareMap);
-                initAppContext(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 
