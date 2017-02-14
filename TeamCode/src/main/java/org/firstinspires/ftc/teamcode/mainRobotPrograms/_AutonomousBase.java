@@ -16,7 +16,7 @@ public abstract class _AutonomousBase extends _RobotBase
     protected GyroSensor gyroscope;
     protected int desiredHeading = 0; //This variable is super helpful to the program as a whole since it is accounted for for both the adjustMotor methods and the turn method.
 
-    protected ColorSensor rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
+    protected ColorSensor option1ColorSensor, option2ColorSensor; //Must have different I2C addresses.
     protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
 
     // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
@@ -24,12 +24,12 @@ public abstract class _AutonomousBase extends _RobotBase
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
-        rightColorSensor = initialize(ColorSensor.class, "Right Color Sensor");
-        rightColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
-        rightColorSensor.enableLed(false);
-        bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
-        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
-        bottomColorSensor.enableLed(true);
+        option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
+        option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
+        option1ColorSensor.enableLed(false);
+        option2ColorSensor = initialize(ColorSensor.class, "Option 2 Color Sensor");
+        option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
+        option2ColorSensor.enableLed(true);
 
         //Init the range sensors for autonomous.
         frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
@@ -256,6 +256,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
     //This makes sure that the value makes sense for calculations.
+    protected int gyroAdjustFactor;
     protected int getValidGyroHeading()
     {
         //Get the heading.
@@ -270,6 +271,8 @@ public abstract class _AutonomousBase extends _RobotBase
             heading += 360;
         else if (desiredHeading < -160 && heading > 0)
             heading -= 360;
+
+        heading += gyroAdjustFactor;
 
         return heading;
     }

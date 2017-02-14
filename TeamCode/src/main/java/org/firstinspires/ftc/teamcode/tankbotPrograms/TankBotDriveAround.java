@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.tankbotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -25,6 +26,7 @@ public class TankBotDriveAround extends BaseFunctions
         /*************************** DRIVING MOTORS ***************************/
         leftMotor = initialize(DcMotor.class, "Left Motor");
         rightMotor = initialize(DcMotor.class, "Right Motor");
+        rightMotor.setDirection (DcMotorSimple.Direction.REVERSE);
 
         turret = initialize(Servo.class, "Turret");
     }

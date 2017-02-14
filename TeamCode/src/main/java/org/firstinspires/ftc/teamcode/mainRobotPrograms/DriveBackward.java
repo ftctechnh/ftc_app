@@ -12,8 +12,8 @@ public class DriveBackward extends _AutonomousBase
     protected void driverStationSaysINITIALIZE()
     {
         //Set the motor powers.
-        setLeftPower(.3);
-        setRightPower(-.3);
+        setLeftPower(.4);
+        setRightPower(-.4);
     }
 
     //Called after runOpMode() has finished initializing.
