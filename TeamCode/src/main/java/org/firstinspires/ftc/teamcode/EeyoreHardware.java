@@ -1,14 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 public class EeyoreHardware
 {
@@ -18,13 +23,20 @@ public class EeyoreHardware
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
     byte[] range1Cache; //The read will return an array of bytes. They are stored in this variable
+    byte[] range2Cache;
 
     I2cAddr RANGE1ADDRESS = new I2cAddr(0x14); //Default I2C address for MR Range (7-bit)
+    I2cAddr RANGE2ADDRESS = new I2cAddr(0x14); //Default I2C address for MR Range (7-bit)
     public static final int RANGE1_REG_START = 0x04; //Register to start reading
+    public static final int RANGE2_REG_START = 0x04; //Register to start reading
     public static final int RANGE1_READ_LENGTH = 2; //Number of byte to read
+    public static final int RANGE2_READ_LENGTH = 2; //Number of byte to read
 
     public I2cDevice RANGE1;
+    public I2cDevice RANGE2;
+
     public I2cDeviceSynch RANGE1Reader;
+    public I2cDeviceSynch RANGE2Reader;
 
     /* Public OpMode members. */
     public DcMotor l1 = null;
@@ -104,9 +116,14 @@ public class EeyoreHardware
         leftPresser.setPosition(0.8);
         rightPresser.setPosition(0.8);
 
-        /*RANGE1 = hwMap.i2cDevice.get("range");
+        //Initialize range sensor
+        RANGE1 = hwMap.i2cDevice.get("range1");
         RANGE1Reader = new I2cDeviceSynchImpl(RANGE1, RANGE1ADDRESS, false);
-        RANGE1Reader.engage();*/
+        RANGE1Reader.engage();
+
+        RANGE2 = hwMap.i2cDevice.get("range1");
+        RANGE2Reader = new I2cDeviceSynchImpl(RANGE2, RANGE2ADDRESS, false);
+        RANGE2Reader.engage();
     }
 
     /***
@@ -128,5 +145,44 @@ public class EeyoreHardware
         // Reset the cycle clock for the next pass.
         period.reset();
     }
+    public double[] getWallDistance()
+    {
+        range1Cache = RANGE1Reader.read(RANGE1_REG_START, RANGE1_READ_LENGTH);
+        range2Cache = RANGE2Reader.read(RANGE2_REG_START, RANGE2_READ_LENGTH);
+
+        double range[] = {range1Cache[0] & 0xFF, range2Cache[0]};
+
+        return range;
+
+    }
+    public void moveRobotGyro(int targetDirection) //Speed is from -1 to 1 and direction is 0 to 360 degrees
+    {
+        int currentDirection = gyro.getHeading();
+        double turnMultiplier = 0.07;
+
+        while(Math.abs(targetDirection - currentDirection) > 3) //If we are more than 5 degrees off target, make corrections before moving
+        {
+            currentDirection = gyro.getHeading();
+
+            int error = targetDirection - currentDirection;
+            double speedAdjustment = turnMultiplier * error;
+
+            double leftPower = 0.5 * Range.clip(speedAdjustment, -1, 1);
+            double rightPower = 0.5 * Range.clip(-speedAdjustment, -1, 1);
+
+            //Finally, assign these values to the motors
+
+            r1.setPower(rightPower);
+            r2.setPower(rightPower);
+            l1.setPower(leftPower);
+            l2.setPower(leftPower);
+        }
+
+        r1.setPower(0);
+        r2.setPower(0);
+        l1.setPower(0);
+        l2.setPower(0);
+    }
+
 }
 
