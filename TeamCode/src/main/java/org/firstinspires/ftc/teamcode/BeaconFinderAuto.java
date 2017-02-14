@@ -164,17 +164,17 @@ public class BeaconFinderAuto extends CameraProcessor {
     }
 
     public void driveLeft(double power) {
-        robot.l1.setPower(power);
-        robot.l2.setPower(power);
-        robot.r1.setPower(-power);
-        robot.r2.setPower(-power);
-    }
-
-    public void driveRight(double power) {
         robot.l1.setPower(-power);
         robot.l2.setPower(-power);
         robot.r1.setPower(power);
         robot.r2.setPower(power);
+    }
+
+    public void driveRight(double power) {
+        robot.l1.setPower(power);
+        robot.l2.setPower(power);
+        robot.r1.setPower(-power);
+        robot.r2.setPower(-power);
     }
 
     public void pressLeftButton() throws InterruptedException {
@@ -192,9 +192,14 @@ public class BeaconFinderAuto extends CameraProcessor {
     public void turnTester() throws InterruptedException //Method to test the gyro code for pid calibration. Calls a bunch of Gyro Turns at varying degrees.
     {
         gyroTurn(90);
-        gyroTurn(270);
+        Thread.sleep(3000);
+        gyroTurn(-90);
+        Thread.sleep(3000);
         gyroTurn(0);
+        Thread.sleep(3000);
         gyroTurn(180);
+        Thread.sleep(3000);
+        gyroTurn(0);
     }
 
     public void gyroTurn(int target) throws InterruptedException
@@ -203,17 +208,18 @@ public class BeaconFinderAuto extends CameraProcessor {
         robot.r1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         idle();
 
-        double Kp = 4;
-        double Ki = 0;
-
-        double heading = 0;
-
+        double Kp = 1.25; //2.5 was the ideal time with no I or D
+        double Kd = 1.25;
+        double heading = robot.gyro.getHeading();
         double buffer = 3;
-        double integral = 0;
+        double lastLoopTime = System.currentTimeMillis();
+        double currentLoopTime = 0;
+        double error_prior = 0;
 
         while(Math.abs(heading - target) > buffer ) {
-            heading = robot.gyro.getHeading();
-
+            heading = robot.gyro.getHeading(); //Get the raw, signed z value
+            currentLoopTime = System.currentTimeMillis();
+            double iterationTime = currentLoopTime - lastLoopTime;
             /*if(target > heading) {
                 power = Range.clip((1 - (Math.round((heading / target) * 100.0) / 100.0)) * 0.2, 0.25, 1);
                 driveLeft(power);
@@ -223,17 +229,17 @@ public class BeaconFinderAuto extends CameraProcessor {
             }*/
 
             double error = (target - heading) / 360;
-            integral += error;
-            double output = Kp * error + Ki * integral;
+            double derivative = (error - error_prior) / (iterationTime + 0.0000000001);
+            double output = Range.clip((Kp * error + Kd * derivative), -0.7, 0.7);
 
-            if(target > heading) {
-                driveLeft(Range.clip((output), -1, 1));
-            } else {
-                driveRight(Range.clip((output), -1, 1));
-            }
+            robot.l1.setPower(output);
+            robot.l2.setPower(output);
+            robot.r1.setPower(-output);
+            robot.r2.setPower(-output);
 
             telemetry.addData("Power:", output);
             telemetry.addData("Error: ", error);
+            telemetry.addData("Derivative: ", derivative);
             telemetry.addData("Heading / Target:", heading + " / " + target);
             telemetry.update();
 
@@ -241,9 +247,9 @@ public class BeaconFinderAuto extends CameraProcessor {
             {
                 break;
             }
+            lastLoopTime = currentLoopTime;
             idle();
         }
-
         setDrivePower(0);
     }
 

@@ -158,7 +158,8 @@ public class EeyoreHardware
     public void moveRobotGyro(int targetDirection) //Speed is from -1 to 1 and direction is 0 to 360 degrees
     {
         int currentDirection = gyro.getHeading();
-        double turnMultiplier = 0.07;
+        double turnMultiplier = 0.06; //P value in PID-speak
+        double integral;
 
         while(Math.abs(targetDirection - currentDirection) > 3) //If we are more than 5 degrees off target, make corrections before moving
         {
