@@ -13,16 +13,16 @@ public class SensorDebug extends _AutonomousBase
             outputConstantDataToDrivers(
                     new String[]
                     {
-                            "Bottom Color Sensor",
+                            "Option 2 Color Sensor",
                             "--------------------",
-                            "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
-                            "Blue: " + bottomColorSensor.blue() + " Red: " + bottomColorSensor.red(),
-                            "Green: " + bottomColorSensor.green(),
-                            "Right Color Sensor",
+                            "ARGB: " + option2ColorSensor.argb() + " Alpha: " + option2ColorSensor.alpha(),
+                            "Blue: " + option2ColorSensor.blue() + " Red: " + option2ColorSensor.red(),
+                            "Green: " + option2ColorSensor.green(),
+                            "Option 1 Color Sensor",
                             "--------------------",
-                            "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
-                            "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
-                            "Green: " + rightColorSensor.green(),
+                            "ARGB: " + option2ColorSensor.argb() + " Alpha: " + option2ColorSensor.alpha(),
+                            "Blue: " + option2ColorSensor.blue() + " Red: " + option2ColorSensor.red(),
+                            "Green: " + option2ColorSensor.green(),
                             "Heading: " + getValidGyroHeading(),
                             "Front Range Sensor: " + frontRangeSensor.cmUltrasonic(),
                             "Back Range Sensor: " + sideRangeSensor.cmUltrasonic()

@@ -38,7 +38,7 @@ public class TheBlueBlur extends _AutonomousBase
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall...");
-        turnToHeading(90, TurnMode.BOTH, 3000);
+        turnToHeading(90, TurnMode.BOTH, 4000);
 
         //Drive to the wall and stop once a little ways away.
         setMovementPower (0.4);
@@ -52,7 +52,7 @@ public class TheBlueBlur extends _AutonomousBase
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
-        turnToHeading(0, TurnMode.RIGHT, 3000);
+        turnToHeading(0, TurnMode.RIGHT, 5000);
 
         //For each of the two beacons.
         for (int i = 0; i < 2; i++)
@@ -108,16 +108,25 @@ public class TheBlueBlur extends _AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
+                    driveForDistance (0.25, 50);
+                    pressButton();
+                    driveForDistance (-0.25, 50);
                 }
                 else if (option2Blue)
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
+                    driveForDistance (-0.25, 50);
+                    pressButton();
+                    driveForDistance (0.25, 50);
                 }
                 else if (option1Red && option2Red)
                 {
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
-                    //Use the option 1 button pusher to toggle beacon.
+                    //Toggle beacon.
+                    driveForDistance (0.25, 50);
+                    pressButton();
+                    driveForDistance (-0.25, 50);
                 }
 
                 idle();
@@ -132,7 +141,7 @@ public class TheBlueBlur extends _AutonomousBase
             outputNewLineToDrivers ("Success!  Beacon is completely blue.");
 
             //Drive a bit forward from the white line to set up for the next step.
-            driveForTime (0.5, 600);
+            driveForDistance (0.3, 500);
         }
 
         //Dash backward to the ramp somehow.
@@ -141,8 +150,6 @@ public class TheBlueBlur extends _AutonomousBase
 
     private void pressButton() throws InterruptedException
     {
-        driveForTime (0.25, 500);
-
         //Determine the length to push the pusher out based on the distance from the wall.
         double extendLength = 100 * sideRangeSensor.cmUltrasonic();
         extendLength = Range.clip(extendLength, 0, 3000);

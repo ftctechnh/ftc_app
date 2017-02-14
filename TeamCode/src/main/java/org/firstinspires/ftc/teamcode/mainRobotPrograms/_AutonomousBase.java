@@ -23,15 +23,15 @@ public abstract class _AutonomousBase extends _RobotBase
     @Override
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
-        //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
+        //Initialize color sensors.
         option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
         option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         option1ColorSensor.enableLed(false);
         option2ColorSensor = initialize(ColorSensor.class, "Option 2 Color Sensor");
         option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
-        option2ColorSensor.enableLed(true);
+        option2ColorSensor.enableLed(false);
 
-        //Init the range sensors for autonomous.
+        //Initialize the range sensors for autonomous.
         frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
         frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
         sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
@@ -73,31 +73,8 @@ public abstract class _AutonomousBase extends _RobotBase
         setRightPower(movementPower);
     }
 
-
-    /************* GYRO READING GUIDE *************/
-    /*
-                                0
-                                |
-                                |
-                                |
-            -45                 |                 45
-                    -           |        +
-                                |
-                                |
-                                |
-         -90 ------------------------------------------ 90
-     */
-
-    //Just resets the gyro.
-    protected void zeroHeading() throws InterruptedException
-    {
-        sleep(400);
-        gyroscope.resetZAxisIntegrator();
-        sleep(400); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
-    }
-
     //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per frame.
-    private double offCourseGyroCorrectionFactor = .1; //Less means less sensitive.
+    private double offCourseGyroCorrectionFactor = .08; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
         if (gyroscope != null)
@@ -147,12 +124,13 @@ public abstract class _AutonomousBase extends _RobotBase
             {
                 currentHeading = getValidGyroHeading();
 
-                //Protection against stalling, increases power if no observed gyro change in last half second.
-                if (System.currentTimeMillis() - lastCheckedTime >= 500)
+                //Protection against stalling, increases power if no observed heading change in last fraction of a second.
+                if (System.currentTimeMillis() - lastCheckedTime >= 300)
                 {
                     if (priorHeading == currentHeading)
-                        minimumTurnSpeed += .05;
+                        minimumTurnSpeed += 0.08;
 
+                    //Update other variables.
                     lastCheckedTime = System.currentTimeMillis();
                     priorHeading = currentHeading;
                 }
@@ -187,8 +165,8 @@ public abstract class _AutonomousBase extends _RobotBase
         {
             //Turn pretty normally with no gyro sensor attached.
             int directionCoefficient = (desiredHeading < 0 ? -1 : 1);
-            setLeftPower(.5 * directionCoefficient);
-            setRightPower(-1 * .5 * directionCoefficient);
+            setLeftPower(-1 * .5 * directionCoefficient);
+            setRightPower(.5 * directionCoefficient);
             sleep((long) Math.abs(desiredHeading));
         }
     }
@@ -218,45 +196,99 @@ public abstract class _AutonomousBase extends _RobotBase
         outputNewLineToDrivers("Drove for " + length + " at " + power + ".");
     }
 
+    //Used with encoders.
     protected void driveForDistance(double power, int length) throws InterruptedException
     {
-        // Setup
-        for (DcMotor motor : rightDriveMotors) {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        for (DcMotor motor : leftDriveMotors) {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+        try
+        {
+            outputNewLineToDrivers ("Driving at " + power + " for " + length + " encoder ticks.");
 
-        idle();
+            //Calculate the actual variables that will be used for driving (power HAS to be positive and distance varies instead).
+            length = (int) (Math.signum (power)) * length;
+            power = Math.abs (power);
 
-        // Drive to target position
-        for (DcMotor motor : rightDriveMotors) {
-            motor.setTargetPosition(length);
-            motor.setPower(power);
-        }
-        for (DcMotor motor : leftDriveMotors) {
-            motor.setTargetPosition(length);
-            motor.setPower(power);
-        }
+            //Set up the encoders so that they will work in correspondence with the motors.
+            for (DcMotor motor : rightDriveMotors)
+            {
+                motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motor.setTargetPosition (length);
+                motor.setMode (DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            for (DcMotor motor : leftDriveMotors)
+            {
+                motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motor.setTargetPosition (length);
+                motor.setMode (DcMotor.RunMode.RUN_TO_POSITION);
+            }
 
-        // Reset
-        for (DcMotor motor : rightDriveMotors) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-        for (DcMotor motor : leftDriveMotors) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+            //Set the motor powers simultaneously.
+            for (DcMotor motor : rightDriveMotors)
+                motor.setPower (power);
+            for (DcMotor motor : leftDriveMotors)
+                motor.setPower (power);
 
+            //Check to see if the motors are busy.
+            boolean motorsBusy = true;
+            while (motorsBusy)
+            {
+                //Adjust the motor powers based on the gyro even while driving with encoders.
+                adjustMotorPowersBasedOnGyroSensor ();
+
+                //These couple statements check to see if all of the motors are currently running.  If one is not, then the whole robot stops.
+                motorsBusy = true;
+
+                for (DcMotor motor : leftDriveMotors)
+                {
+                    if (!motor.isBusy ())
+                    {
+                        motorsBusy = false;
+                        break;
+                    }
+                }
+
+                if (motorsBusy)
+                {
+                    for (DcMotor motor : rightDriveMotors)
+                    {
+                        if (!motor.isBusy ())
+                        {
+                            motorsBusy = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //Tell the drivers that we finished driving.
+            outputNewLineToDrivers ("Drove for distance " + length);
+
+            //Stop driving.
+            stopDriving ();
+
+            // Reset both encoders (for some reason you have to do this.
+            for (DcMotor motor : rightDriveMotors)
+            {
+                motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+            for (DcMotor motor : leftDriveMotors)
+            {
+                motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+        }
+        catch (Exception e)
+        {
+            //If the drivers want to stop the program, then allow the program to be stopped.
+            if (e instanceof InterruptedException)
+                throw new InterruptedException ();
+
+            //Otherwise, this must be one of those weird encoder errors we get occasionally.
+            outputNewLineToDrivers ("Weird encoder error just occurred!  Stopping drive and continuing program.  ");
+            sleep(5000);
+        }
     }
 
-    //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
-    //This makes sure that the value makes sense for calculations.
-    protected int gyroAdjustFactor;
+    //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This method makes sure that the value makes sense for calculations.
+    protected int gyroAdjustFactor; //Based on range sensors.
     protected int getValidGyroHeading()
     {
         //Get the heading.
@@ -275,6 +307,14 @@ public abstract class _AutonomousBase extends _RobotBase
         heading += gyroAdjustFactor;
 
         return heading;
+    }
+
+    //Just resets the gyro.
+    protected void zeroHeading() throws InterruptedException
+    {
+        sleep(400);
+        gyroscope.resetZAxisIntegrator();
+        sleep(400); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
     }
 
     //Stops all drive motors.
