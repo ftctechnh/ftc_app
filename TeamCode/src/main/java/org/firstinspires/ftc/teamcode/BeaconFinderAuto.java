@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
+import android.provider.Settings;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,7 +21,7 @@ import static org.firstinspires.ftc.teamcode.EeyoreHardware.COUNTS_PER_INCH;
 public class BeaconFinderAuto extends CameraProcessor {
     EeyoreHardware robot = new EeyoreHardware();
 
-    String teamColor = "NONE"; //Not zero because I don't want color and teamColor to be equal initially
+    String teamColor = "NONE"; //Initialized as NONE because I don't want color and teamColor to be equal initially
     String returnedSide;
 
     @Override
@@ -66,12 +67,18 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.addData("Status:", "Moving...");
         telemetry.update();
 
-        /* Move off of the wall
-        moveStraight(26);
+        turnTester();
+
+        /*
+        // Move off of the wall
+        moveStraight(26, 0.2);
         Thread.sleep(1000);
+        gyroTurn(90);
+        Thread.sleep(2000);
+        gyroTurn(180);
 
         // At this point, we can try to score the pre-loaded balls
-        shootShooter(1);
+        /*shootShooter(1);
         Thread.sleep(800);
         shootShooter(0);
         Thread.sleep(1000);
@@ -133,10 +140,9 @@ public class BeaconFinderAuto extends CameraProcessor {
         telemetry.addData("Status:", "Shutting down...");
         telemetry.update();
 
-        stopCamera();
+        stopCamera();*/
 
         // Run until the end of the match (driver presses STOP)
-        */
         while(opModeIsActive()) {
             telemetry.addData("Status:", "Idling...");
             telemetry.addData("Returned Side:", returnedSide);
@@ -157,6 +163,20 @@ public class BeaconFinderAuto extends CameraProcessor {
         robot.r2.setPower(power);
     }
 
+    public void driveLeft(double power) {
+        robot.l1.setPower(power);
+        robot.l2.setPower(power);
+        robot.r1.setPower(-power);
+        robot.r2.setPower(-power);
+    }
+
+    public void driveRight(double power) {
+        robot.l1.setPower(-power);
+        robot.l2.setPower(-power);
+        robot.r1.setPower(power);
+        robot.r2.setPower(power);
+    }
+
     public void pressLeftButton() throws InterruptedException {
         robot.leftPresser.setPosition(0.2);
         Thread.sleep(5000);
@@ -169,38 +189,65 @@ public class BeaconFinderAuto extends CameraProcessor {
         robot.rightPresser.setPosition(0.8);
     }
 
+    public void turnTester() throws InterruptedException //Method to test the gyro code for pid calibration. Calls a bunch of Gyro Turns at varying degrees.
+    {
+        gyroTurn(90);
+        gyroTurn(270);
+        gyroTurn(0);
+        gyroTurn(180);
+    }
+
     public void gyroTurn(int target) throws InterruptedException
     {
         robot.l1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.r1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         idle();
 
-        double heading = robot.gyro.getHeading();
+        double Kp = 4;
+        double Ki = 0;
 
-        while(true) {
-            if(target > 90) {
-                if(heading < (target - buffer)) {
-                    turnRight(drivePower);
-                } else if(heading > (target + buffer)) {
-                    turnLeft(drivePower);
-                } else if(heading < (target + buffer) && heading > (target - buffer)) {
-                    break;
-                }
-            } else if(target < 90) {
-                if(heading < (target - buffer)) {
-                    turnLeft(drivePower);
-                } else if(heading > (target + buffer)) {
-                    turnRight(drivePower);
-                } else if(heading < (target + buffer) && heading > (target - buffer)) {
-                    break;
-                }
+        double heading = 0;
+
+        double buffer = 3;
+        double integral = 0;
+
+        while(Math.abs(heading - target) > buffer ) {
+            heading = robot.gyro.getHeading();
+
+            /*if(target > heading) {
+                power = Range.clip((1 - (Math.round((heading / target) * 100.0) / 100.0)) * 0.2, 0.25, 1);
+                driveLeft(power);
+            } else {
+                power = Range.clip((1 - (Math.round((heading / target) * 100.0) / 100.0)) * 0.2, -1, -0.25);
+                driveRight(power);
+            }*/
+
+            double error = (target - heading) / 360;
+            integral += error;
+            double output = Kp * error + Ki * integral;
+
+            if(target > heading) {
+                driveLeft(Range.clip((output), -1, 1));
+            } else {
+                driveRight(Range.clip((output), -1, 1));
             }
+
+            telemetry.addData("Power:", output);
+            telemetry.addData("Error: ", error);
+            telemetry.addData("Heading / Target:", heading + " / " + target);
+            telemetry.update();
+
+            if(!opModeIsActive())
+            {
+                break;
+            }
+            idle();
         }
 
         setDrivePower(0);
     }
 
-    public void moveStraight(double inches) throws InterruptedException {
+    public void moveStraight(double inches, double power) throws InterruptedException {
         robot.l1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.r1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
@@ -212,7 +259,7 @@ public class BeaconFinderAuto extends CameraProcessor {
         int targetLeft = robot.l1.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
         int targetRight = robot.r1.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
 
-        setDrivePower(0.25);
+        setDrivePower(power);
 
         while((robot.l1.getCurrentPosition() < targetLeft) && (robot.r1.getCurrentPosition() < targetRight)) {
             telemetry.addData("Target", "left=" + targetLeft + " " + "right=" + targetRight);
