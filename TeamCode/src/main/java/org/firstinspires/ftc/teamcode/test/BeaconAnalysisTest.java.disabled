@@ -1,0 +1,237 @@
+package org.firstinspires.ftc.teamcode.test;
+
+import android.graphics.Bitmap;
+import android.os.Environment;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.vuforia.CameraCalibration;
+import com.vuforia.HINT;
+import com.vuforia.Image;
+import com.vuforia.Matrix34F;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Tool;
+import com.vuforia.Vec3F;
+import com.vuforia.Vuforia;
+import com.vuforia.ar.pl.DebugLog;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.R;
+import org.opencv.android.Utils;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Arrays;
+
+/**
+ * Created by 292486 on 12/8/2016.
+ */
+
+@Autonomous
+public class BeaconAnalysisTest extends LinearOpMode {
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+        params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        params.vuforiaLicenseKey = "ARWfao3/////AAAAGShXvVW3Tk2+vd1uaNWPhiQakvDy25FBcrepFqO+jhVLsOEPsRlb061njMk5dQFc4Le7eTp32TTpn3eD2rXL3OeskF6Mj+9sY1KDzlUUtg8fLGhqsHZE96flU0bx4iKGX0PXv8k0C9XrKJzFi1c592kYK1O0+XEGLT7/7GAlsEBzMREFoHVvGavtleVRV0O78buXIDU/ihmuYcYFQZCTCdZ2o7+heZN8DJYpfBWSLSIFwHoVVf9QlchrJaYP8hKpN0sRL7aXmNybILOKZ23l/hbi4cvBueJUP44DRKaXvNvg8YHFUudAH1dmV0pzIgLtUrHWkUBW9AcVnjxR0FF9TPWrDAvYtcoHE66lyWyCYxHH\n";
+        params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;  //Teapot, buildings, feedback when found beacon
+
+        VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(params);
+
+        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
+        VuforiaTrackables beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
+        beacons.get(0).setName("Wheels");
+        beacons.get(1).setName("Legos");
+        beacons.get(2).setName("Tools");
+        beacons.get(3).setName("Gears");
+
+        waitForStart();
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
+        vuforia.setFrameQueueCapacity(10);   //Important to keep .getFrameQueue() working
+
+        beacons.activate();
+
+        sleep(1000);
+
+        VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().take(); //Takes frame at head of queue
+        telemetry.addData("BEACON: ", "getting image from frame");
+        telemetry.update();
+        Image rgb = imageFromFrame(frame, PIXEL_FORMAT.RGB565);
+        frame.close();
+
+        if(rgb!=null) {
+            telemetry.addData("BEACON: ", "got image from frame" + rgb + rgb.getFormat());
+            telemetry.update();
+        } else {
+            telemetry.addData("BEACON: ", "rgb is null :(");
+            telemetry.update();
+        }
+        /*
+        while(opModeIsActive()) {
+            telemetry.addData("BEACON: ", "%b", ((VuforiaTrackableDefaultListener) beacons.get(3).getListener()).isVisible());
+            telemetry.addData("BEACON: ", ((VuforiaTrackableDefaultListener) beacons.get(3).getListener()).getPose());
+            telemetry.update();
+        }
+        */
+       // int x = getBeaconConfig(rgb, beacons.get(3), vuforia.getCameraCalibration());
+        sleep(5000);
+    }
+
+    private int getBeaconConfig(Image img, VuforiaTrackable beacon, CameraCalibration calib)
+    {
+        int count = 0;
+        OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)beacon.getListener()).getPose();
+        if(pose != null && img != null && img.getPixels() != null)
+        {
+            telemetry.addData("BEACON: ", "pose, img, and .getpixles() exists");
+            telemetry.update();
+            // Flip/Reorganize position data
+            Matrix34F rawPose = new Matrix34F();
+            float[] poseData = Arrays.copyOfRange(pose.transposed().getData(), 0, 12);
+            rawPose.setData(poseData);
+            //
+            telemetry.addData("BEACON: ", "Pose Data " + poseData);
+            telemetry.update();
+            // Get the "corners" (approximation) of the beacon so we can crop it out later
+            float[][] corners = new float[4][2];
+            corners[0] = Tool.projectPoint(calib, rawPose, new Vec3F(-127, 276, 0)).getData();  //Top Left
+            corners[1] = Tool.projectPoint(calib, rawPose, new Vec3F(127, 276, 0)).getData();   //Top Right
+            corners[2] = Tool.projectPoint(calib, rawPose, new Vec3F(-127, 92, 0)).getData();   //Bottom Left
+            corners[3] = Tool.projectPoint(calib, rawPose, new Vec3F(127, 92, 0)).getData();    //Bottom Right
+            //
+
+            // Get the bitmap of the image target
+            Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);    // Copies size of img
+            bm.copyPixelsFromBuffer(img.getPixels());   // Copies actual pixels (as a buffer)
+                        saveFile(bm, "beacon1");
+            //
+
+            // Convert the bitmap to a Mat (matrix) usable by OpenCV
+            Mat crop = new Mat(bm.getHeight(), bm.getWidth(), CvType.CV_8UC3);
+            Utils.bitmapToMat(bm, crop);
+            //
+            sleep(1000);
+            telemetry.addData("BEACON: ", "Got matrix");
+            telemetry.update();
+            // Verify and organize the corners[][] because it could be in landscape?
+            float x = Math.min(
+                    Math.min(corners[1][0], corners[3][0]), Math.min(corners[0][0], corners[2][0])  // Lowest x-component
+            );
+            x = Math.max(x, 0); /* Prevent out-of-bounds error: cap it off */
+            float y = Math.min(
+                    Math.min(corners[1][1], corners[3][1]), Math.min(corners[0][1], corners[2][1])  // Lowest y-component
+            );
+            y = Math.max(y, 0); /* Prevent out-of-bounds error: cap it off */
+            float width = Math.max(
+                    Math.abs(corners[0][0] - corners[2][0]), Math.abs(corners[1][0] - corners[3][0])    // Top to bottom [VS] Right to left
+            );
+            width = (x + width > crop.cols()) ? (crop.cols() - x) : width;  /* Prevent out-of-bounds error: if corner + width is too big, move it over */
+            float height = Math.max(
+              Math.abs(corners[0][1] - corners[2][1]), Math.abs(corners[1][1] - corners[3][1])
+            );
+            height = (y + height > crop.rows()) ? (crop.rows() - y) : height; /* Prevent out-of-bounds error: if corner + height is too big, move it over */
+            //
+            telemetry.addData("BEACON: ", "did a bunch of math");
+            telemetry.update();
+            // Crop the Mat and convert it from (Red Green Blue) -> (Hue Saturation Value)
+            Mat cropped = new Mat(crop, new Rect( (int)x, (int)y, (int)width, (int)height));
+            Imgproc.cvtColor(cropped, cropped, Imgproc.COLOR_RGB2HSV_FULL); // par1 - source; par2 - destination; par3 - code (e.g. conversion)
+
+            // MASK IT
+            Mat mask = new Mat();
+            Scalar a=new Scalar(108, 0, 220), b=new Scalar(170, 225, 225);  // TODO: TESTING ONLY, it will be a static class var
+            Core.inRange(cropped, a, b, mask);  // par1 - source; par2 - lowerBound; par3 - upperBound; par4 - destination
+            //
+
+            // Calculate the moments and eventually the centroid components (i.e., where the "weight" of the image tends toward)
+            Moments mnt = Imgproc.moments(mask, true);  // par1 - the array; par2 - is it binary?
+            /*
+            mnt.get_m00() - mass
+            mnt.get_m10() - moment about x-axis
+            mnt.get_m01() - moment about y-axis
+             */
+            //
+
+            // ANALYSIS
+                    // **** BLUE IS WHITE **** //
+            /* TODO: is the image rotated vertically? The top would be the right side of the beacon */
+            if((mnt.get_m01()/mnt.get_m00()) > mask.total()*0.8)
+            {
+                // Too much blue
+                telemetry.addData("BEACON: ", "all blue");
+            } else if((mnt.get_m01()/mnt.get_m00()) < mask.total()*0.1){
+                // No blue
+                telemetry.addData("BEACON: ", "no blue");
+            }
+
+            if((mnt.get_m01()/mnt.get_m00()) < mask.rows()/2)
+            {
+                // Vertical image - left blue
+                telemetry.addData("BEACON: ", "left blue [Vertical]");
+            } else {
+                // Vertical image - right blue
+                telemetry.addData("BEACON: ", "right blue [Vertical]");
+            }
+
+            if((mnt.get_m10()/mnt.get_m00()) < mask.cols()/2)
+            {
+                // Horizontal image - left blue
+                telemetry.addData("BEACON: ", "left blue [Horizontal]");
+            } else {
+                // Horizontal image - right blue
+                telemetry.addData("BEACON: ", "right blue [Horizontal]");
+            }
+            //
+            telemetry.update();
+        } else {
+            //telemetry.addData("BEACON: ", "%f %d %d", pose.getData(), img.getFormat(), img.getPixels().arrayOffset());
+            telemetry.addData("BEACON: ", "failed" + pose + img);
+            telemetry.update();
+        }
+        return 0;
+    }
+
+    private Image imageFromFrame(VuforiaLocalizer.CloseableFrame frame, int pixelFormat)
+    {
+        long numImages = frame.getNumImages();
+        for(int i=0; i < numImages; i++) {
+            telemetry.addData("IMG: ", frame.getImage(i) + " " + frame.getImage(i).getFormat());
+            if (frame.getImage(i).getFormat() == pixelFormat) {
+                telemetry.update();
+                return frame.getImage(i);
+            }
+        }
+        return null;
+    }
+
+    private void saveFile(Bitmap bm, String fileName)
+    {
+        try{
+            String path = Environment.getExternalStorageDirectory() + "/" + fileName;
+
+            File file = new File(path);
+            file.createNewFile();
+
+            FileOutputStream fos = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+            fos.flush();
+
+            fos.close();
+        } catch (Exception e){
+            DebugLog.LOGD("BEACON: ", e.getStackTrace().toString());
+        }
+    }
+}
