@@ -73,12 +73,6 @@ public class TheBlueBlur extends _AutonomousBase
             //Drive until centered on the beacon.
             while (! ((option1Blue && option2Red) || (option1Red && option2Blue)))
             {
-                //Check both sensors and adjust booleans accordingly.
-                option1Red = option1ColorSensor.red () >= 2;
-                option1Blue = option1ColorSensor.blue () >= 2;
-                option2Red = option2ColorSensor.red () >= 2;
-                option2Blue = option2ColorSensor.blue () >= 2;
-
                 //Adjust gyro based on range sensor.
                 double currentDist = sideRangeSensor.cmUltrasonic ();
                 if (Math.abs (currentDist - idealDistance) >= 2)
@@ -93,24 +87,33 @@ public class TheBlueBlur extends _AutonomousBase
 
                 //Adjust motors based on gyro to remain parallel to wall.
                 adjustMotorPowersBasedOnGyroSensor ();
+
+                //Check both sensors and adjust booleans accordingly.
+                option1Red = option1ColorSensor.red () >= 2;
+                option1Blue = option1ColorSensor.blue () >= 2;
+                option2Red = option2ColorSensor.red () >= 2;
+                option2Blue = option2ColorSensor.blue () >= 2;
             }
             //Stop driving when centered.
             stopDriving ();
             outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
+
+            //Try to turn as close to parallel to the wall as possible, since we occasionally are a bit off course when we arrive.
+            turnToHeading (0, TurnMode.BOTH, 1500);
 
             //While the beacon is not completely blue (this is the verification step).
             while (! ((option1Blue && option2Blue) && !(option1Red || option2Red)))
             {
                 outputNewLineToDrivers ("Beacon is not completely blue, attempting to press the correct color!");
 
-                //Press the correct option.
+                //Based on this logic, the correct button should always be pressed.
                 if (option1Blue)
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.25, 50);
+                    driveForDistance (0.25, 55);
                     pressButton();
-                    driveForDistance (-0.25, 50);
+                    driveForDistance (-0.25, 55);
                 }
                 else if (option2Blue)
                 {
@@ -124,9 +127,9 @@ public class TheBlueBlur extends _AutonomousBase
                 {
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (0.25, 50);
+                    driveForDistance (0.25, 55);
                     pressButton();
-                    driveForDistance (-0.25, 50);
+                    driveForDistance (-0.25, 55);
                 }
 
                 idle();
@@ -141,10 +144,10 @@ public class TheBlueBlur extends _AutonomousBase
             outputNewLineToDrivers ("Success!  Beacon is completely blue.");
 
             //Drive a bit forward from the white line to set up for the next step.
-            driveForDistance (0.3, 500);
+            driveForDistance (0.3, 300);
         }
 
-        //Dash backward to the ramp somehow.
+        //Dash backward to the ramp afterward.  
 
     }
 

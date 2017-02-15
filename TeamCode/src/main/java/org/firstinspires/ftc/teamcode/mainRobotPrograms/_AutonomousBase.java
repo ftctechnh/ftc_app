@@ -106,6 +106,8 @@ public abstract class _AutonomousBase extends _RobotBase
     enum TurnMode {
         LEFT, RIGHT, BOTH
     }
+    //This battery factor, when updated, remains updated for all future turns so that the robot does not have to start changing it again.
+    double turnSpeedBatteryFactor = .2;
     protected void turnToHeading (int desiredHeading, TurnMode mode, long maxTime) throws InterruptedException
     {
         if (gyroscope != null)
@@ -116,7 +118,6 @@ public abstract class _AutonomousBase extends _RobotBase
             long startTime = System.currentTimeMillis();
             int priorHeading = getValidGyroHeading();
             long lastCheckedTime = startTime;
-            double minimumTurnSpeed = 0; //This will increase in the event that the robot notices that we are not turning at all.
 
             int currentHeading = getValidGyroHeading();
             //Adjust as fully as possible but not beyond the time limit.
@@ -125,10 +126,13 @@ public abstract class _AutonomousBase extends _RobotBase
                 currentHeading = getValidGyroHeading();
 
                 //Protection against stalling, increases power if no observed heading change in last fraction of a second.
-                if (System.currentTimeMillis() - lastCheckedTime >= 300)
+                if (System.currentTimeMillis() - lastCheckedTime >= 500)
                 {
                     if (priorHeading == currentHeading)
-                        minimumTurnSpeed += 0.08;
+                    {
+                        turnSpeedBatteryFactor += 0.05;
+                        outputNewLineToDrivers ("Increased turn speed to " + turnSpeedBatteryFactor + " because the robot was not turning.");
+                    }
 
                     //Update other variables.
                     lastCheckedTime = System.currentTimeMillis();
@@ -140,7 +144,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
                 //Logarithmic turning that slows down upon becoming close to heading but is not scary fast when far from desired heading.
                 //Have to shift graph to left in order to prevent log10 from returning negative values upon becoming close to heading.
-                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * .2 + minimumTurnSpeed);
+                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * turnSpeedBatteryFactor);
 
                 //Set clipped powers.
                 if (mode != TurnMode.RIGHT)
