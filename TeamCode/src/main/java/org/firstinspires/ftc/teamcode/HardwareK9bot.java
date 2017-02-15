@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -33,6 +34,7 @@ public class HardwareK9bot
     public DcMotor rightShooter = null;
     public Servo trigger = null;
     public DcMotorController harvester = null; //for legacy motor controller
+    public LightSensor lightSensor = null;
     
     // The servo's initial position
     public final static double TRIGGER_HOME = 0.2;
@@ -50,7 +52,7 @@ public class HardwareK9bot
     public void init(HardwareMap ahwMap) {
         // save reference to HW Map
         hwMap = ahwMap;
-
+        
         // Define and Initialize Motors
         leftMotor = hwMap.dcMotor.get("ld-motor");
         rightMotor = hwMap.dcMotor.get("rd-motor");
@@ -58,6 +60,7 @@ public class HardwareK9bot
         leftShooter = hwMap.dcMotor.get("ls-motor");
         rightShooter = hwMap.dcMotor.get("rs-motor");
         trigger = hwMap.servo.get("trigger");
+        lightSensor = hwMap.lightSensor.get("light");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShooter.setDirection(DcMotor.Direction.REVERSE);
