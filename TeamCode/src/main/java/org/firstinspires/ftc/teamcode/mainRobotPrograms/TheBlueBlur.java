@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.util.Range;
 
 public class TheBlueBlur extends _AutonomousBase
 {
-    //This value will be set a couple times to verify that we don't go too far.
-    long startTime = 0;
 
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException
@@ -94,6 +92,7 @@ public class TheBlueBlur extends _AutonomousBase
                 option2Red = option2ColorSensor.red () >= 2;
                 option2Blue = option2ColorSensor.blue () >= 2;
             }
+
             //Stop driving when centered.
             stopDriving ();
             outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
@@ -102,34 +101,35 @@ public class TheBlueBlur extends _AutonomousBase
             turnToHeading (0, TurnMode.BOTH, 1500);
 
             //While the beacon is not completely blue (this is the verification step).
-            while (! ((option1Blue && option2Blue) && !(option1Red || option2Red)))
+            int trials = 1; //The robot tries different drives for each trial.
+            while (! (option1Blue && option2Blue))
             {
                 outputNewLineToDrivers ("Beacon is not completely blue, attempting to press the correct color!");
 
-                //Based on this logic, the correct button should always be pressed.
+                //Based on this logic, the correct button should always be pressed.  The trial also affects the distance that the robot drives, since if the button is not pressed somehow, then something new happens.
                 if (option1Blue)
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.25, 55);
+                    driveForDistance (0.25, (int) (50 * (Math.log(trials) + 1)));
                     pressButton();
-                    driveForDistance (-0.25, 55);
+                    driveForDistance (-0.25, (int) (50 * (Math.log(trials) + 1))); //Drive a ways forward before looking for it again.
                 }
                 else if (option2Blue)
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.25, 50);
+                    driveForDistance (-0.25, (int) (80 * (Math.log(trials) + 1)));
                     pressButton();
-                    driveForDistance (0.25, 50);
+                    driveForDistance (0.25, (int) (80 * (Math.log(trials) + 1)));
                 }
                 else if (option1Red && option2Red)
                 {
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (0.25, 55);
+                    driveForDistance (0.25, (int) (50 * (Math.log(trials) + 1)));
                     pressButton();
-                    driveForDistance (-0.25, 55);
+                    driveForDistance (-0.25, (int) (50 * (Math.log(trials) + 1)));
                 }
 
                 idle();
@@ -139,6 +139,9 @@ public class TheBlueBlur extends _AutonomousBase
                 option1Blue = option1ColorSensor.blue () >= 2;
                 option2Red = option2ColorSensor.red () >= 2;
                 option2Blue = option2ColorSensor.blue () >= 2;
+
+                //Update the number of trials completed so that we know the new drive distance and such.
+                trials++;
             }
 
             outputNewLineToDrivers ("Success!  Beacon is completely blue.");
@@ -147,7 +150,7 @@ public class TheBlueBlur extends _AutonomousBase
             driveForDistance (0.3, 300);
         }
 
-        //Dash backward to the ramp afterward.  
+        //Dash backward to the ramp afterward.
 
     }
 
