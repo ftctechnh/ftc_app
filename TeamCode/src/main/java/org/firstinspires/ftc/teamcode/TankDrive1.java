@@ -64,7 +64,20 @@ public class TankDrive1 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        
+        // Some variables to initialize
         double left, right, leftShooter, rightShooter, harvester;
+        
+        // The position of the "trigger" servo
+        double triggerPos = 0.0;
+        
+        // The on / off status of the harvestor and wheel shooters
+        boolean harvesterOn, shootersOn;
+        
+        // The previous state of 2's "A" and "Y" button
+        boolean GP2a = false;
+        boolean GP2y = false;
+        
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -87,35 +100,73 @@ public class TankDrive1 extends LinearOpMode {
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
 
-            // Turn motor on when up on the DPAD is pressed, turn off when down is pressed
-            if (gamepad1.dpad_up) {
-               robot.leftShooter.setPower(-1);
-               robot.rightShooter.setPower(-1);
-            }
-            else if (gamepad1.dpad_down) {
-               robot.leftShooter.setPower(0);
-               robot.rightShooter.setPower(0);
-            }
 
-            // Set harvester speed based on the buttons pressed (from team8200; Steel Hawks)
-
-            if (gamepad1.left_trigger > 0.2 || gamepad1.right_trigger > 0.2) {
+            /*
+            If gamepad 2 was false before, but is now true,
+            toggle the state of the harvester.
+            
+            If it was true before, this doesn't do anything.
+            */
+            if (!GP2a && gamepad2.a) {
+                harvesterOn = !harvestorOn;
+            }
+            
+            // Same thing but with the wheel shooters
+            if (!GP2y && gamepad2.y) {
+                shootersOn = !shootersOn;
+            }
+            
+            
+            // Turn harvester on based on harvesterOn variable
+            if (harvesterOn) {
                 robot.harvester.setMotorPower(1, -1);
             }
             else {
                 robot.harvester.setMotorPower(1, 0);
             }
+            
+            // Turn shooters on based on shootersOn variable
+            if (shootersOn) {
+               robot.leftShooter.setPower(-1);
+               robot.rightShooter.setPower(-1);
+            }
+            else {
+               robot.leftShooter.setPower(0);
+               robot.rightShooter.setPower(0);
+            }
+
+            
+            // Increase "trigger" servo position when the left stick is up
+            // Decrease when the stick is down
+            if (gamepad2.left_stick_y > 0.2) {
+                if (triggerPos != 1.0) {
+                    triggerPos += 0.02;
+                }
+            }
+            if (gamepad2.left_stick_y < -0.2) {
+                if (triggerPos != -1.0) {
+                    triggerPos -= 0.02;
+                }
+            }
+
+            // Set position of "trigger" servo
+            robot.trigger.setPosition(triggerPos);
+
+            // Make the "now" into the "previous" for the next loop.
+            GP2a = gampad2.a;
+            GP2y = gampad2.y;
+
 
             // Get the motors' power (for telemetry)
             leftShooter = robot.leftShooter.getPower();
             rightShooter = robot.rightShooter.getPower();
-
 
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.addData("left shooter", "%.2f", leftShooter);
             telemetry.addData("right shooter", "%.2f", rightShooter);
+            telemetry.addData("trigger", "%.2f", triggerPos);
 
             telemetry.update();
 
