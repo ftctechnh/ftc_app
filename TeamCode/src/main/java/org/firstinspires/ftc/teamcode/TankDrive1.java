@@ -69,7 +69,7 @@ public class TankDrive1 extends LinearOpMode {
         double left, right, leftShooter, rightShooter, harvester;
         
         // The position of the "trigger" servo
-        double triggerPos = 0.0;
+        double triggerPos = 0.2;
         
         // The on / off status of the harvestor and wheel shooters
         boolean harvesterOn, shootersOn;
