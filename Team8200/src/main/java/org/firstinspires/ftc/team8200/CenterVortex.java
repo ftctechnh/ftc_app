@@ -116,8 +116,7 @@ public class CenterVortex extends LinearOpMode {
         }
         robot.rightMotor.setPower(0);
         robot.leftMotor.setPower(0);
-        robot.legacyController.setMotorPower(1, 0);
-        robot.legacyController.setMotorPower(2, 0);
+
         robot.leftWheelShooter.setPower(0);
         robot.rightWheelShooter.setPower(0);
 

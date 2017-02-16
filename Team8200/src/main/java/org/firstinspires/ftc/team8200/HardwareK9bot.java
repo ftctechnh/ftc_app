@@ -29,18 +29,12 @@ public class HardwareK9bot {
     public DcMotor leftWheelShooter = null;
     public DcMotor rightWheelShooter = null;
 
-    /*
-    Commented this out because the harvester/elevator is using the legacy controller
+
     public DcMotor harvester = null;
+
+
     public DcMotor elevator = null;
-    */
-
-    //our legacy motor controller that controls harvester/elevator
-    public DcMotorController legacyController = null;
-
-
-    public Servo leftArm = null;
-    public Servo rightArm = null;
+    public Servo arm = null;
     public DeviceInterfaceModule dim = null;
 
     public LightSensor lightSensor = null; //our Lego Light Sensor
@@ -73,18 +67,18 @@ public class HardwareK9bot {
         harvester = hwMap.dcMotor.get("harvester");
         elevator = hwMap.dcMotor.get("elevator");
         */
-        leftArm = hwMap.servo.get("leftarm");
-        rightArm = hwMap.servo.get("rightarm");
-        legacyController = hwMap.dcMotorController.get("legacy");
+      //  arm = hwMap.servo.get("arm");
+        //legacyController = hwMap.dcMotorController.get("legacy");
+        elevator = hwMap.dcMotor.get("elevator");
+
 
         dim = hwMap.deviceInterfaceModule.get("dim"); //the Device Interface module connects the sensors
         //sets LED channel (by default 5) to output mode
         //this lights the sensor's LED
         dim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
-        distanceSensor = hwMap.get(AnalogInput.class, "distance");
+       // distanceSensor = hwMap.get(AnalogInput.class, "distance");
         lightSensor = hwMap.lightSensor.get("light");
-        colorSensor = hwMap.colorSensor.get("color");
         //colorSensor = hwMap.colorSensor.get("color");
 
 
@@ -105,8 +99,7 @@ public class HardwareK9bot {
         */
 
         //Sets arms to default position
-        leftArm.setPosition(0);
-        rightArm.setPosition(1);
+      //  arm.setPosition(0);
 
         // Set all drivetrain motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
