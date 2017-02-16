@@ -176,7 +176,7 @@ public class CompleteAutoRed extends LinearOpMode {
         
         robot.leftShooter.setPower(NO_POWER);
         robot.rightShooter.setPower(NO_POWER);
-        robot.trigger.setPosition(MIN_TRIGGER_POSITION)
+        robot.trigger.setPosition(MIN_TRIGGER_POSITION);
         
     }
     
