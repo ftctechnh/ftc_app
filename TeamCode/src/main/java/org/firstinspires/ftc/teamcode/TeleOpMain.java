@@ -28,9 +28,9 @@ public class TeleOpMain extends OpMode {
     private void initShoot(){
         mShoot = new AutoLib.LinearSequence();
 
-        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1400, true, this));
-        mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.5, 0.2, false));
-        mShoot.add(new AutoLib.LogTimeStep(this, "WAIT", 0.2));
+        mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1500, true, this));
+        mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.5, 0.4, true));
+        //mShoot.add(new AutoLib.LogTimeStep(this, "WAIT", 0.2));
     }
 
     @Override
@@ -57,139 +57,143 @@ public class TeleOpMain extends OpMode {
     @Override
     public void loop() {
 
-        /*
-
-                         1,1,1,1
-                            |
-                 0,0,1,1    |    1,1,0,0
-                            |
-            -1,-1,1,1 ------------- 1,1,-1,-1
-                            |
-               -1,-1,0,0    |    0,0,-1,-1
-                            |
-                       -1,-1,-1,-1
-
-        float x = gamepad1.left_stick_x;
-        float y = -1 * gamepad1.left_stick_y;
-
-        float ySign = (y >= 0) ? 1 : -1;
-
-        float frontPower = (ySign * x > 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
-        float backPower = (ySign * x < 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
-
-        */
-
-        // run drivetrain motors
-        // dpad steering
-        if(gamepad1.dpad_up && gamepad1.dpad_left) {
-
-            robot.setFrontPower(0.0);
-            robot.setBackPower(1.0);
-        }
-        else if(gamepad1.dpad_up && gamepad1.dpad_right) {
-            robot.setFrontPower(1.0);
-            robot.setBackPower(0.0);
-        }
-        else if(gamepad1.dpad_down && gamepad1.dpad_left) {
-            robot.setFrontPower(-1.0);
-            robot.setBackPower(0.0);
-        }
-        else if(gamepad1.dpad_down && gamepad1.dpad_right) {
-            robot.setFrontPower(0.0);
-            robot.setBackPower(-1.0);
-        }
-        else if(gamepad1.dpad_up) {
-            robot.setFrontPower(1.0);
-            robot.setBackPower(1.0);
-        }
-        else if(gamepad1.dpad_left) {
-            robot.setFrontPower(-1.0);
-            robot.setBackPower(1.0);
-        }
-        else if(gamepad1.dpad_right) {
-            robot.setFrontPower(1.0);
-            robot.setBackPower(-1.0);
-        }
-        else if(gamepad1.dpad_down) {
-            robot.setFrontPower(-1.0);
-            robot.setBackPower(-1.0);
-        }
-        else {
-            // joystick tank steering
-            robot.frontLeftMotor.setPower(-gamepad1.left_stick_y);
-            robot.frontRightMotor.setPower(-gamepad1.right_stick_y);
-            robot.backLeftMotor.setPower(-gamepad1.left_stick_y);
-            robot.backRightMotor.setPower(-gamepad1.right_stick_y);
-        }
-
-        // run lifter motor
-        if(gamepad1.left_trigger > 0.0 || gamepad2.left_trigger > 0.0) {
-            robot.sweeperMotor.setPower(-1.0);
-        }
-        else if(gamepad1.right_trigger > 0.0 || gamepad2.right_trigger > 0.0) {
-            robot.sweeperMotor.setPower(1.0);
-        }
-        else {
-            robot.sweeperMotor.setPower(0.0);
-        }
-
-        // run launcher motor
-
-        if(gamepad2.x) {
-            robot.launcherMotor.setPower(1.0);
-        }
-        else {
-            robot.launcherMotor.setPower(0.0);
-        }
-
-        if(gamepad2.b) {
-            robot.ballServo.setPosition(0.6);
-        }
-        else {
-            robot.ballServo.setPosition(-0.2);
-        }
-
-        /*
-        if(gamepad2.a || isShooting){
-            if(mShoot.loop()){
-                isShooting = false;
+        if (gamepad2.a) {
+            //automation
+            if(gamepad2.a && !isShooting){
                 initShoot();
             }
-            else isShooting = true;
-        }
-        */
-
-
-        // toggle button pushers
-        if(!lastLeftBumperState && gamepad1.left_bumper) {
-            leftPusherState *= -1.0;
-        }
-        if(!lastRightBumperState && gamepad1.right_bumper) {
-            rightPusherState *= -1.0;
-        }
-
-        robot.leftServo.setPosition(leftPusherState);
-        robot.rightServo.setPosition(rightPusherState);
-
-        lastLeftBumperState = gamepad1.left_bumper;
-        lastRightBumperState = gamepad1.right_bumper;
-
-
-        //toggle reversed steering
-        if(!lastAButtonState && gamepad1.a) {
-            robot.initMotors(this, false, !robot.isReversed());
-            if(robot.isReversed()){
-                robot.dim.setLED(0, true);
-                telemetry.addData("Reversed", "True");
-            }
-            else{
-                robot.dim.setLED(0, false);
-                telemetry.addData("Reversed", "False");
+            if(gamepad2.a || isShooting){
+                robot.sweeperMotor.setPower(-1.0);
+                if(mShoot.loop()){
+                    isShooting = false;
+                    initShoot();
+                }
+                else isShooting = true;
             }
         }
+        else{
+            isShooting = false;
+            /*
 
-        lastAButtonState = gamepad1.a;
+                             1,1,1,1
+                                |
+                     0,0,1,1    |    1,1,0,0
+                                |
+                -1,-1,1,1 ------------- 1,1,-1,-1
+                                |
+                   -1,-1,0,0    |    0,0,-1,-1
+                                |
+                           -1,-1,-1,-1
 
+            float x = gamepad1.left_stick_x;
+            float y = -1 * gamepad1.left_stick_y;
+
+            float ySign = (y >= 0) ? 1 : -1;
+
+            float frontPower = (ySign * x > 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
+            float backPower = (ySign * x < 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
+
+            */
+
+            // run drivetrain motors
+            // dpad steering
+            if(gamepad1.dpad_up && gamepad1.dpad_left) {
+
+                robot.setFrontPower(0.0);
+                robot.setBackPower(1.0);
+            }
+            else if(gamepad1.dpad_up && gamepad1.dpad_right) {
+                robot.setFrontPower(1.0);
+                robot.setBackPower(0.0);
+            }
+            else if(gamepad1.dpad_down && gamepad1.dpad_left) {
+                robot.setFrontPower(-1.0);
+                robot.setBackPower(0.0);
+            }
+            else if(gamepad1.dpad_down && gamepad1.dpad_right) {
+                robot.setFrontPower(0.0);
+                robot.setBackPower(-1.0);
+            }
+            else if(gamepad1.dpad_up) {
+                robot.setFrontPower(1.0);
+                robot.setBackPower(1.0);
+            }
+            else if(gamepad1.dpad_left) {
+                robot.setFrontPower(-1.0);
+                robot.setBackPower(1.0);
+            }
+            else if(gamepad1.dpad_right) {
+                robot.setFrontPower(1.0);
+                robot.setBackPower(-1.0);
+            }
+            else if(gamepad1.dpad_down) {
+                robot.setFrontPower(-1.0);
+                robot.setBackPower(-1.0);
+            }
+            else {
+                // joystick tank steering
+                robot.frontLeftMotor.setPower(-gamepad1.left_stick_y);
+                robot.frontRightMotor.setPower(-gamepad1.right_stick_y);
+                robot.backLeftMotor.setPower(-gamepad1.left_stick_y);
+                robot.backRightMotor.setPower(-gamepad1.right_stick_y);
+            }
+
+            // run lifter motor
+            if(gamepad1.left_trigger > 0.0 || gamepad2.left_trigger > 0.0) {
+                robot.sweeperMotor.setPower(-1.0);
+            }
+            else if(gamepad1.right_trigger > 0.0 || gamepad2.right_trigger > 0.0) {
+                robot.sweeperMotor.setPower(1.0);
+            }
+            else {
+                robot.sweeperMotor.setPower(0.0);
+            }
+
+            // run launcher motor
+
+            if(gamepad2.x) {
+                robot.launcherMotor.setPower(1.0);
+            }
+            else {
+                robot.launcherMotor.setPower(0.0);
+            }
+
+            if(gamepad2.b) {
+                robot.ballServo.setPosition(0.6);
+            }
+            else {
+                robot.ballServo.setPosition(0.0);
+            }
+
+            // toggle button pushers
+            if(!lastLeftBumperState && gamepad1.left_bumper) {
+                leftPusherState *= -1.0;
+            }
+            if(!lastRightBumperState && gamepad1.right_bumper) {
+                rightPusherState *= -1.0;
+            }
+
+            robot.leftServo.setPosition(leftPusherState);
+            robot.rightServo.setPosition(rightPusherState);
+
+            lastLeftBumperState = gamepad1.left_bumper;
+            lastRightBumperState = gamepad1.right_bumper;
+
+
+            //toggle reversed steering
+            if(!lastAButtonState && gamepad1.a) {
+                robot.initMotors(this, false, !robot.isReversed());
+                if(robot.isReversed()){
+                    robot.dim.setLED(0, true);
+                    telemetry.addData("Reversed", "True");
+                }
+                else{
+                    robot.dim.setLED(0, false);
+                    telemetry.addData("Reversed", "False");
+                }
+            }
+            lastAButtonState = gamepad1.a;
+        }
     }
 
 
