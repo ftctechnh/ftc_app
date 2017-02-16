@@ -72,7 +72,8 @@ public class TankDrive1 extends LinearOpMode {
         double triggerPos = 0.2;
         
         // The on / off status of the harvestor and wheel shooters
-        boolean harvesterOn, shootersOn;
+        boolean harvesterOn = false;
+        boolean shootersOn = false;
         
         // The previous state of 2's "A" and "Y" button
         boolean GP2a = false;
@@ -153,8 +154,8 @@ public class TankDrive1 extends LinearOpMode {
             robot.trigger.setPosition(triggerPos);
 
             // Make the "now" into the "previous" for the next loop.
-            GP2a = gampad2.a;
-            GP2y = gampad2.y;
+            GP2a = gamepad2.a;
+            GP2y = gamepad2.y;
 
 
             // Get the motors' power (for telemetry)
