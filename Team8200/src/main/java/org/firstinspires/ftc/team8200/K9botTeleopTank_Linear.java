@@ -162,33 +162,33 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
 
 
-           /* if (gamepad2.x && !isArmExtendedLeft) {
-                robot.leftArm.setPosition(1);
+            if (gamepad2.x && !isArmExtendedLeft) {
+                robot.armLeft.setPosition(1);
                 isArmExtendedLeft = true;
             }
             else if (gamepad2.x && isArmExtendedLeft) {
-                robot.leftArm.setPosition(0);
+                robot.armLeft.setPosition(0);
                 isArmExtendedLeft = false;
             }
             else {
-                robot.leftArm.setPosition(0);
+                robot.armLeft.setPosition(0);
                 isArmExtendedLeft = false;
             }
 
             if (gamepad2.b && !isArmExtendedRight) {
-                robot.rightArm.setPosition(0);
+                robot.armRight.setPosition(0);
                 isArmExtendedRight = true;
             }
             else if (gamepad2.b && isArmExtendedRight) {
-                robot.rightArm.setPosition(1);
+                robot.armRight.setPosition(1);
                 isArmExtendedRight = false;
             }
             else {
-                robot.rightArm.setPosition(1);
+                robot.armRight.setPosition(1);
                 isArmExtendedRight = false;
             }
 
-*/
+
             // Send telemetry message to signify robot running
             // Telemetry messages go here if we need in the future
             //robot.leftMotor.setPower(leftY);

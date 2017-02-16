@@ -34,11 +34,15 @@ public class HardwareK9bot {
 
 
     public DcMotor elevator = null;
-    public Servo arm = null;
+    public Servo armLeft = null;
+    public Servo armRight = null;
     public DeviceInterfaceModule dim = null;
 
-    public LightSensor lightSensor = null; //our Lego Light Sensor
-    public ColorSensor colorSensor = null; //our AdaFruit color sensor
+    public LightSensor lightSensorLeft = null; //our Lego Light Sensor
+    public LightSensor lightSensorRight = null;
+    public ColorSensor colorSensorLeft = null;
+    public ColorSensor colorSensorRight = null;
+    //our AdaFruit color sensor
     public AnalogInput distanceSensor = null; //our MaxBotix ultrasonic distance sensor
 
     public static final int LED_CHANNEL = 5;
@@ -78,8 +82,11 @@ public class HardwareK9bot {
         dim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
        // distanceSensor = hwMap.get(AnalogInput.class, "distance");
-        lightSensor = hwMap.lightSensor.get("light");
-        //colorSensor = hwMap.colorSensor.get("color");
+        lightSensorLeft = hwMap.lightSensor.get("lsleft");
+        lightSensorRight = hwMap.lightSensor.get("lsright");
+
+        //colorSensorLeft = hwMap.colorSensor.get("colorleft");
+        //colorSensorRight = hwMap.colorSensor.get("colsorRight");
 
 
         //Reverses direction of these motors to ease coding
