@@ -60,7 +60,7 @@ public class CompleteAutonomousBlue2 extends LinearOpMode {
         bLedOn = true;
 
         // Set the LED state for the Lego Light Sensor
-        robot.lightSensor.enableLed(bLedOn);
+        robot.lightSensorLeft.enableLed(bLedOn);
 
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         robot.dim.setDigitalChannelState(LED_CHANNEL, bLedOn);
@@ -132,7 +132,7 @@ public class CompleteAutonomousBlue2 extends LinearOpMode {
     }
     /* What is this? */
 
-    public void sideMethod() {
+   /* public void sideMethod() {
         while (opModeIsActive() && robot.lightSensor.getLightDetected() < WHITE_THRESHOLD && robot.colorSensor.blue() < blueVal && robot.colorSensor.red() < redVal && robot.colorSensor.green() < greenVal) {
             robot.leftMotor.setPower(DRIVE_SPEED);
             robot.rightMotor.setPower(DRIVE_SPEED);
@@ -145,7 +145,7 @@ public class CompleteAutonomousBlue2 extends LinearOpMode {
     /* pressButton() assumes the colorSensor is looking at the left beacon light. If it senses the color indicated in
     *   allianceColor, then it will move the leftArm, else it will move the right arm.
      */
-    public boolean pressButton()
+    /*public boolean pressButton()
     {
 
         if (allianceColor == "red")
@@ -239,7 +239,7 @@ public class CompleteAutonomousBlue2 extends LinearOpMode {
     }
 
     /* updateTelemetry method outputs telemetry data to the driver station when called */
-    public void updateTelemetry() {
+   /* public void updateTelemetry() {
 
         telemetry.addData("Clear", robot.colorSensor.alpha());
         telemetry.addData("Red  ", robot.colorSensor.red());

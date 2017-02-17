@@ -62,13 +62,8 @@ public class EncoderTestMode extends LinearOpMode{
 
             waitForStart(); //pre-written function, waits for opmode to start
             stopResetEncoders();
-            encoderDrive(DRIVE_SPEED, 6, 6, 5000);
-            stopResetEncoders();
-            encoderDrive(DRIVE_SPEED, 12, 12, 10000);
-            stopResetEncoders();
-            encoderDrive(DRIVE_SLOW_SPEED, -12, -12, 10000);
-            stopResetEncoders();
-            encoderDrive(DRIVE_SLOW_SPEED, -6, -6, 10000);
+            encoderDrive(DRIVE_SPEED, 12.9, -12.9, 5000);
+
 
 
 
