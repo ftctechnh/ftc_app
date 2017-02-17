@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -27,16 +28,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareK9bot
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public DcMotor  leftShooter    = null;
-    public DcMotor  rightShooter    = null;
-    public DcMotorController legacyController = null; //for legacy motor controller
+    public DcMotor leftMotor = null;
+    public DcMotor rightMotor = null;
+    public DcMotor leftShooter = null;
+    public DcMotor rightShooter = null;
+    public Servo trigger = null;
+    public DcMotorController harvester = null; //for legacy motor controller
+    public LightSensor lightSensor = null;
+    
+    // The servo's initial position
+    public final static double TRIGGER_HOME = 1.0;
 
 
     /* Local OpMode members. */
-    HardwareMap hwMap  = null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
     public HardwareK9bot() {
@@ -46,13 +52,15 @@ public class HardwareK9bot
     public void init(HardwareMap ahwMap) {
         // save reference to HW Map
         hwMap = ahwMap;
-
+        
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("ld-motor");
-        rightMotor  = hwMap.dcMotor.get("rd-motor");
-        legacyController  = hwMap.dcMotorController.get("legacy-controller");
-        leftShooter  = hwMap.dcMotor.get("ls-motor");
-        rightShooter  = hwMap.dcMotor.get("rs-motor");
+        leftMotor = hwMap.dcMotor.get("ld-motor");
+        rightMotor = hwMap.dcMotor.get("rd-motor");
+        harvester = hwMap.dcMotorController.get("harvester");
+        leftShooter = hwMap.dcMotor.get("ls-motor");
+        rightShooter = hwMap.dcMotor.get("rs-motor");
+        trigger = hwMap.servo.get("trigger");
+        lightSensor = hwMap.lightSensor.get("light");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShooter.setDirection(DcMotor.Direction.REVERSE);
@@ -62,7 +70,8 @@ public class HardwareK9bot
         rightMotor.setPower(0);
         leftShooter.setPower(0);
         rightShooter.setPower(0);
-        legacyController.setMotorPower(1,0);
+        harvester.setMotorPower(1, 0);
+        trigger.setPosition(TRIGGER_HOME);
 
 
 

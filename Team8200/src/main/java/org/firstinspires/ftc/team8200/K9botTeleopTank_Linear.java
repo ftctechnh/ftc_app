@@ -97,8 +97,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             rightY = Range.clip(rightY, -1, 1);
             leftY = Range.clip(leftY, -1, 1);
 
-            robot.leftMotor.setPower(leftY);
-            robot.rightMotor.setPower(rightY);
+            robot.leftMotor.setPower(-leftY);
+            robot.rightMotor.setPower(-rightY);
 
             /*leftWS = -gamepad2.left_stick_y;
             rightWS = -gamepad2.right_stick_y;
@@ -109,7 +109,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.leftWheelShooter.setPower(leftWS);
             robot.rightWheelShooter.setPower(rightWS);
 */
-            float harvesterPower = gamepad1.right_trigger;
+           /* float harvesterPower = gamepad1.right_trigger;
             float harvesterPowerReversed = gamepad1.left_trigger;
 
             if (harvesterPower > 0.2 && harvesterPowerReversed == 0) {
@@ -121,6 +121,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             else {
                 robot.legacyController.setMotorPower(2, 0);
             }
+            */
 
 
             float elevatorPower = gamepad2.right_trigger;
@@ -128,22 +129,22 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             if(elevatorPower > 0.2 && elevatorPowerReversed == 0)
             {
-                robot.legacyController.setMotorPower(1, 0.5);
+                robot.elevator.setPower(0.5);
             }
             else if(elevatorPowerReversed > 0.2 && elevatorPower == 0)
             {
-                robot.legacyController.setMotorPower(1, -0.5);
+                robot.elevator.setPower(-0.5);
             }
             else
             {
-                robot.legacyController.setMotorPower(1, 0);
+                robot.elevator.setPower(0);
             }
 
             boolean isButtonAPressed = gamepad2.a;
             if(isButtonAPressed)
             {
-                robot.leftWheelShooter.setPower(1);
-                robot.rightWheelShooter.setPower(1);
+                robot.leftWheelShooter.setPower(-1);
+                robot.rightWheelShooter.setPower(-1);
             }
             else
             {
@@ -162,30 +163,31 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
 
             if (gamepad2.x && !isArmExtendedLeft) {
-                robot.leftArm.setPosition(1);
+                robot.armLeft.setPosition(1);
                 isArmExtendedLeft = true;
             }
             else if (gamepad2.x && isArmExtendedLeft) {
-                robot.leftArm.setPosition(0);
+                robot.armLeft.setPosition(0);
                 isArmExtendedLeft = false;
             }
             else {
-                robot.leftArm.setPosition(0);
+                robot.armLeft.setPosition(0);
                 isArmExtendedLeft = false;
             }
 
             if (gamepad2.b && !isArmExtendedRight) {
-                robot.rightArm.setPosition(0);
+                robot.armRight.setPosition(0);
                 isArmExtendedRight = true;
             }
             else if (gamepad2.b && isArmExtendedRight) {
-                robot.rightArm.setPosition(1);
+                robot.armRight.setPosition(1);
                 isArmExtendedRight = false;
             }
             else {
-                robot.rightArm.setPosition(1);
+                robot.armRight.setPosition(1);
                 isArmExtendedRight = false;
             }
+
 
             // Send telemetry message to signify robot running
             // Telemetry messages go here if we need in the future
