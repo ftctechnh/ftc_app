@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="The Blue Blur", group = "Beta Group")
+@Autonomous(name="The Red Revelation", group = "Beta Group")
 
-public class TheBlueBlur extends _AutonomousBase
+public class TheRedRevelation extends _AutonomousBase
 {
 
     //Called after runOpMode() has finished initializing by BaseFunctions.
@@ -36,21 +36,21 @@ public class TheBlueBlur extends _AutonomousBase
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall...");
-        turnToHeading(90, TurnMode.BOTH, 4000);
+        turnToHeading(-90, TurnMode.BOTH, 4000);
 
         //Drive to the wall and stop once a little ways away.
         setMovementPower (0.4);
         outputNewLineToDrivers("Driving to wall before turn...");
-        while (frontRangeSensor.cmUltrasonic() > 75)
+        while (frontRangeSensor.cmUltrasonic() > 60)
             adjustMotorPowersBasedOnGyroSensor();
         setMovementPower (0.17);
-        while (frontRangeSensor.cmUltrasonic () > 47)
+        while (frontRangeSensor.cmUltrasonic () > 20)
             adjustMotorPowersBasedOnGyroSensor ();
         stopDriving ();
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
-        turnToHeading(0, TurnMode.RIGHT, 5000);
+        turnToHeading(-180, TurnMode.LEFT, 5000);
 
         //For each of the two beacons.
         for (int i = 0; i < 2; i++)
@@ -59,7 +59,7 @@ public class TheBlueBlur extends _AutonomousBase
             outputNewLineToDrivers ("Looking for the blue beacon...");
 
             //Set movement speed.
-            setMovementPower(0.17);
+            setMovementPower(-0.17);
 
             //Variables required for range sensor adjustment.
             long lastAdjustTime = System.currentTimeMillis ();
@@ -98,7 +98,7 @@ public class TheBlueBlur extends _AutonomousBase
             outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
 
             //Try to turn as close to parallel to the wall as possible, since we occasionally are a bit off course when we arrive.
-            turnToHeading (0, TurnMode.BOTH, 1500);
+            turnToHeading (-180, TurnMode.BOTH, 1500);
 
             //While the beacon is not completely blue (this is the verification step).
             int trials = 1; //The robot tries different drives for each trial.
@@ -147,7 +147,7 @@ public class TheBlueBlur extends _AutonomousBase
             outputNewLineToDrivers ("Success!  Beacon is completely blue.");
 
             //Drive a bit forward from the white line to set up for the next step.
-            driveForDistance (0.3, 300);
+            driveForDistance (-0.3, 300);
         }
 
         //Dash backward to the ramp afterward.

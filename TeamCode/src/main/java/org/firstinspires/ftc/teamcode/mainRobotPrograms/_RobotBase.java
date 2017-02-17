@@ -26,11 +26,11 @@ public abstract class _RobotBase extends BaseFunctions
         /*************************** DRIVING MOTORS ***************************/
         rightDriveMotors.add(initialize(DcMotor.class, "frontRight"));
         rightDriveMotors.add(initialize(DcMotor.class, "backRight"));
-        for(DcMotor motor : rightDriveMotors)
-            motor.setDirection(DcMotor.Direction.REVERSE);
 
         leftDriveMotors.add(initialize(DcMotor.class, "frontLeft"));
         leftDriveMotors.add(initialize(DcMotor.class, "backLeft"));
+        for(DcMotor motor : leftDriveMotors)
+            motor.setDirection(DcMotor.Direction.REVERSE);
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
         harvester = initialize(DcMotor.class, "harvester");

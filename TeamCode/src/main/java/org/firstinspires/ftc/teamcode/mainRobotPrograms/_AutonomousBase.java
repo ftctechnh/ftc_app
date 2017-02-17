@@ -124,7 +124,7 @@ public abstract class _AutonomousBase extends _RobotBase
             long startTime = System.currentTimeMillis();
             int priorHeading = getValidGyroHeading();
             long lastCheckedTime = startTime;
-            double turnSpeedBatteryFactor = .2;
+            double turnSpeedBatteryFactor = .16;
 
             int currentHeading = getValidGyroHeading();
             //Adjust as fully as possible but not beyond the time limit.
