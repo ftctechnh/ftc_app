@@ -209,6 +209,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
     protected void driveForDistance (double power, int length) throws InterruptedException
     {
+
         //This set of instructions is MASSIVELY important.  The RUN_WITHOUT_ENCODER mode doesn't actually make the thing not use encoders, it just prevents the encoders from directly regulating motor powers.  Weird names for the RunMode options by the FTC folks.
         for (DcMotor motor : leftDriveMotors)
             motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
@@ -263,6 +264,7 @@ public abstract class _AutonomousBase extends _RobotBase
             //Give the drivers a bit of insight into which encoders are currently working (two out of four are currently operational).
             outputConstantDataToDrivers(
                     new String[] {
+                            "Driving at " + power + " for " + length,
                             "Encoder val 1 = " + leftDriveMotors.get(0).getCurrentPosition (),
                             "Encoder val 2 = " + leftDriveMotors.get(1).getCurrentPosition (),
                             "Encoder val 3 = " + rightDriveMotors.get(0).getCurrentPosition (),

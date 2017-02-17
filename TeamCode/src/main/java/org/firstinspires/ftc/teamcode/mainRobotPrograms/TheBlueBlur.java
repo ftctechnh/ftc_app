@@ -36,7 +36,7 @@ public class TheBlueBlur extends _AutonomousBase
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall...");
-        turnToHeading(90, TurnMode.BOTH, 4000);
+        turnToHeading(90, TurnMode.BOTH, 3500);
 
         //Drive to the wall and stop once a little ways away.
         setMovementPower (0.4);
@@ -50,7 +50,7 @@ public class TheBlueBlur extends _AutonomousBase
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
-        turnToHeading(0, TurnMode.RIGHT, 5000);
+        turnToHeading(0, TurnMode.RIGHT, 4500);
 
         //For each of the two beacons.
         for (int i = 0; i < 2; i++)
@@ -97,9 +97,6 @@ public class TheBlueBlur extends _AutonomousBase
             stopDriving ();
             outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
 
-            //Try to turn as close to parallel to the wall as possible, since we occasionally are a bit off course when we arrive.
-            turnToHeading (0, TurnMode.BOTH, 1500);
-
             //While the beacon is not completely blue (this is the verification step).
             int trials = 1; //The robot tries different drives for each trial.
             while (! (option1Blue && option2Blue))
@@ -111,25 +108,25 @@ public class TheBlueBlur extends _AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.25, (int) (50 * (Math.log(trials) + 1)));
+                    driveForDistance (0.25, 50 + 5 * trials);
                     pressButton();
-                    driveForDistance (-0.25, (int) (50 * (Math.log(trials) + 1))); //Drive a ways forward before looking for it again.
+                    driveForDistance (-0.25, 50 + 5 * trials); //Drive a ways forward before looking for it again.
                 }
                 else if (option1Red && option2Blue)
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.25, (int) (80 * (Math.log(trials) + 1)));
+                    driveForDistance (-0.25, 80 + 5 * trials);
                     pressButton();
-                    driveForDistance (0.25, (int) (80 * (Math.log(trials) + 1)));
+                    driveForDistance (0.25, 80 + 5 * trials);
                 }
                 else if (option1Red && option2Red)
                 {
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (0.25, (int) (50 * (Math.log(trials) + 1)));
+                    driveForDistance (0.25, 50 + 5 * trials);
                     pressButton();
-                    driveForDistance (-0.25, (int) (50 * (Math.log(trials) + 1)));
+                    driveForDistance (-0.25, 50 + 5 * trials);
                 }
 
                 idle();
