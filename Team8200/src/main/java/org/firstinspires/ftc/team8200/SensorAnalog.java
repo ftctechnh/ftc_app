@@ -29,19 +29,16 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.team8200;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
-import com.qualcomm.ftcrobotcontroller.R;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogInputController;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 /*
  *
@@ -54,55 +51,60 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: LEGO light", group = "Sensor")
-@Disabled
-public class SensorLEGOLight extends LinearOpMode {
+@TeleOp(name = "Sensor: Ultrasonic Distance Sensor", group = "Sensor")
+//@Disabled
+public class SensorAnalog extends LinearOpMode {
 
-  LightSensor lightSensor;  // Hardware Device Object
+  DeviceInterfaceModule dim;                  // Device Object
+  AnalogInput distanceSensor;
+  double voltage, maxVoltage;
+  private ElapsedTime runtime = new ElapsedTime();
 
   @Override
   public void runOpMode() {
 
-    // bPrevState and bCurrState represent the previous and current state of the button.
-    boolean bPrevState = false;
-    boolean bCurrState = false;
+    dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
+    distanceSensor = hardwareMap.get(AnalogInput.class, "distance");
 
-    // bLedOn represents the state of the LED.
-    boolean bLedOn = true;
+    /* THIS should not be in this analog distance sensor test file
+      Please create a NEW op mode without any of these
 
-    // get a reference to our Light Sensor object.
-    lightSensor = hardwareMap.lightSensor.get("light");
-
-    // Set the LED state in the beginning.
-    lightSensor.enableLed(bLedOn);
+    HardwareK9bot robot = new HardwareK9bot();
+    LightExceed lineFinder = new LightExceed();
+    ColorSensorRed colorSensor = new ColorSensorRed();
+    */
 
     // wait for the start button to be pressed.
     waitForStart();
 
-    // while the op mode is active, loop and read the light levels.
+    // while the op mode is active, loop
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
     while (opModeIsActive()) {
 
-      // check the status of the x button .
-      bCurrState = gamepad1.x;
-
-      // check for button state transitions.
-      if ((bCurrState == true) && (bCurrState != bPrevState))  {
-
-        // button is transitioning to a pressed state.  Toggle LED
-        bLedOn = !bLedOn;
-        lightSensor.enableLed(bLedOn);
-      }
-
-      // update previous state variable.
-      bPrevState = bCurrState;
+      voltage = distanceSensor.getVoltage();
+      maxVoltage = distanceSensor.getMaxVoltage();
 
       // send the info back to driver station using telemetry function.
-      telemetry.addData("LED", bLedOn ? "On" : "Off");
-      telemetry.addData("Raw", lightSensor.getRawLightDetected());
-      telemetry.addData("Normal", lightSensor.getLightDetected());
+      telemetry.addData("Voltage", voltage);
+      telemetry.addData("Max Voltage", maxVoltage);
 
       telemetry.update();
+
+      // go from angle, go straight after X seconds, detect line and activate colorsensor file, done
+
+      /* THIS should not be in this file
+        Create a new class for your autonomous opmode
+
+      runtime.reset();
+      if(runtime.seconds() < 10) {
+        robot.leftMotor.setPower(1);
+        robot.rightMotor.setPower(1);
+      } else {
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        lineFinder.MoveToBeacon();
+      }
+      */
     }
   }
 }
