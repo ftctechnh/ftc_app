@@ -84,7 +84,7 @@ public class TankDrive1 extends LinearOpMode {
 
 
         // Send telemetry message to signify robot ready.
-        telemetry.addData("Say", "Hello Driver");
+        telemetry.addData("Say", "I await your commands.");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
