@@ -37,7 +37,7 @@ public class HardwareK9bot
     public LightSensor lightSensor = null;
     
     // The servo's initial position
-    public final static double TRIGGER_HOME = 0.2;
+    public final static double TRIGGER_HOME = 1.0;
 
 
     /* Local OpMode members. */
