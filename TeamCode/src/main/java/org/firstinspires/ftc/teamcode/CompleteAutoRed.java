@@ -72,9 +72,7 @@ public class CompleteAutoRed extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap); //do not delete or you will get a NullPointerException
-
-        robot.lightSensor.enableLed(true);
+        robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting
         telemetry.addData("Status", "Ready to rumble!");
@@ -116,7 +114,7 @@ public class CompleteAutoRed extends LinearOpMode {
             telemetry.update();
         }
         
-        // Rotate CW in place (1 sec)
+        // Rotate right in place (1 sec)
         robot.leftMotor.setPower(-SLOW_FORWARD_SPEED);
         robot.rightMotor.setPower(SLOW_FORWARD_SPEED);
         while (opModeIsActive() && (runtime.seconds() < 2.0)) {
@@ -189,13 +187,7 @@ public class CompleteAutoRed extends LinearOpMode {
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Status", "Running parkInCenter() method (1).");
-            telemetry.update();
-        }
-        
-        // Continue when light sensor senses darkness. ooooh (0-∞ sec) 
-        while(opModeIsActive() && (robot.lightSensor.getLightDetected() < 0.6)) {
-            telemetry.addData("Status", "Running parkInCenter() method. (2)");
+            telemetry.addData("Status", "Running parkInCenter() method.");
             telemetry.update();
         }
         

@@ -100,7 +100,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.leftMotor.setPower(-leftY);
             robot.rightMotor.setPower(-rightY);
 
-            /*leftWS = -gamepad2.left_stick_y;
+            leftWS = -gamepad2.left_stick_y;
             rightWS = -gamepad2.right_stick_y;
 
             rightWS = Range.clip(rightWS, -1, 1);
@@ -108,20 +108,20 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             robot.leftWheelShooter.setPower(leftWS);
             robot.rightWheelShooter.setPower(rightWS);
-*/
-           /* float harvesterPower = gamepad1.right_trigger;
+
+            float harvesterPower = gamepad1.right_trigger;
             float harvesterPowerReversed = gamepad1.left_trigger;
 
             if (harvesterPower > 0.2 && harvesterPowerReversed == 0) {
-                robot.legacyController.setMotorPower(2, 0.5);
+                robot.harvester.setPower(0.5);
             }
             else if (harvesterPowerReversed > 0.2 && harvesterPower == 0) {
-                robot.legacyController.setMotorPower(2, -0.5);
+                robot.harvester.setPower(-0.5);
             }
             else {
-                robot.legacyController.setMotorPower(2, 0);
+                robot.harvester.setPower(0);
             }
-            */
+
 
 
             float elevatorPower = gamepad2.right_trigger;
@@ -163,7 +163,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
 
             if (gamepad2.x && !isArmExtendedLeft) {
-                robot.armLeft.setPosition(1);
+                robot.armLeft.setPosition(0.3);
                 isArmExtendedLeft = true;
             }
             else if (gamepad2.x && isArmExtendedLeft) {
@@ -180,11 +180,11 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
                 isArmExtendedRight = true;
             }
             else if (gamepad2.b && isArmExtendedRight) {
-                robot.armRight.setPosition(1);
+                robot.armRight.setPosition(0.3);
                 isArmExtendedRight = false;
             }
             else {
-                robot.armRight.setPosition(1);
+                robot.armRight.setPosition(0.3);
                 isArmExtendedRight = false;
             }
 
