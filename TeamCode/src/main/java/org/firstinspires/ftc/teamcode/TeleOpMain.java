@@ -139,10 +139,10 @@ public class TeleOpMain extends OpMode {
             }
 
             // run lifter motor
-            if(gamepad1.left_trigger > 0.0 || gamepad2.left_trigger > 0.0) {
+            if(gamepad1.left_trigger > 0.2 || gamepad2.left_trigger > 0.2) {
                 robot.sweeperMotor.setPower(-1.0);
             }
-            else if(gamepad1.right_trigger > 0.0 || gamepad2.right_trigger > 0.0) {
+            else if(gamepad1.right_trigger > 0.2 || gamepad2.right_trigger > 0.2) {
                 robot.sweeperMotor.setPower(1.0);
             }
             else {

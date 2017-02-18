@@ -118,7 +118,7 @@ public class LineDrive extends OpenCVLib {
 
         mShoot = new AutoLib.LinearSequence();
 
-        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 1250, true));
+        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 2500, true));
         mShoot.add(new AutoLib.LogTimeStep(modePointer, "YAY", 0.5));
         mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1440, true, modePointer));
         mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.6, 0.8, false));
@@ -128,7 +128,7 @@ public class LineDrive extends OpenCVLib {
 
         mDrive = new AutoLib.LinearSequence();
 
-        mDrive.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 1000, true));
+        mDrive.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4, 2000, true));
         mDrive.add(new AutoLib.LogTimeStep(modePointer, "YAY!", 0.1));
 
         int heading;
@@ -148,7 +148,7 @@ public class LineDrive extends OpenCVLib {
 
         mDrive.add(new AutoLib.SquirrleyAzimuthTimedDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.5f, false));
         mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new UltraSensors(robot.distSensor, 65, 3.0), true));
-        mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(40), mGPid, muPid, robot.getMotorArray(), 0.6f, 1.0f, false));
+        mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(40), mGPid, muPid, robot.getMotorArray(), 0.4f, 1.0f, false));
         mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mGPid, muPid, robot.getMotorArray(), 0.45f, new LineSensors(this, frame), true));
 
         mSequence.add(mDrive);
