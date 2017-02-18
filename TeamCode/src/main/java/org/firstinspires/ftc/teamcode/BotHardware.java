@@ -341,6 +341,13 @@ public class BotHardware
         backRightMotor.setTargetPosition(newPos + backRightMotor.getCurrentPosition());
     }
 
+    public void setMaxSpeedAll(int encoderTicks){
+        frontLeftMotor.setMaxSpeed(encoderTicks);
+        frontRightMotor.setMaxSpeed(encoderTicks);
+        backLeftMotor.setMaxSpeed(encoderTicks);
+        backRightMotor.setMaxSpeed(encoderTicks);
+    }
+
     public void setFrontPower(double power) {
         frontLeftMotor.setPower(power);
         frontRightMotor.setPower(power);

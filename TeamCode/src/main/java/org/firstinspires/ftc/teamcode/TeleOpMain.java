@@ -25,6 +25,10 @@ public class TeleOpMain extends OpMode {
 
     AutoLib.Sequence mShoot;
 
+    AutoLib.Timer mEncoderMeasure = new AutoLib.Timer(1.0);
+    int lastEncode = 0;
+    double avgEncode = 0;
+
     private void initShoot(){
         mShoot = new AutoLib.LinearSequence();
 
@@ -52,10 +56,24 @@ public class TeleOpMain extends OpMode {
     }
 
     @Override
-    public void start() {}
+    public void start() {
+        mEncoderMeasure.start();
+        lastEncode = robot.backLeftMotor.getCurrentPosition();
+    }
 
     @Override
     public void loop() {
+
+        if(mEncoderMeasure.done()) {
+            double encode = robot.frontRightMotor.getCurrentPosition() - lastEncode;
+            avgEncode = (avgEncode + encode)/2.0;
+            telemetry.addData("Encoder Current", robot.frontRightMotor.getCurrentPosition());
+            telemetry.addData("Encoders Per Second Current", encode);
+            telemetry.addData("Encoders Per Second Average", avgEncode);
+
+            lastEncode = robot.frontRightMotor.getCurrentPosition();
+            mEncoderMeasure.start();
+        }
 
         if (gamepad2.a) {
             //automation
