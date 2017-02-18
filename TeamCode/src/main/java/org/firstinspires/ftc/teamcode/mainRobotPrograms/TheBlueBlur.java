@@ -103,30 +103,30 @@ public class TheBlueBlur extends _AutonomousBase
             {
                 outputNewLineToDrivers ("Beacon is not completely blue, attempting to press the correct color!");
 
-                //Based on this logic, the correct button should always be pressed.  The trial also affects the distance that the robot drives, since if the button is not pressed somehow, then something new happens.
+                //Based on this logic, the correct button should always be pressed.  The trial also affects the distance that the robot drives, since if the button is not pressed somehow, then some new trial happens.
                 if (option1Blue && option2Red)
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.25, 50 + 5 * trials);
+                    driveForDistance (0.25, 50 + 10 * trials);
                     pressButton();
-                    driveForDistance (-0.25, 50 + 5 * trials); //Drive a ways forward before looking for it again.
+                    driveForDistance (-0.25, 50 + 10 * trials); //Drive a ways forward before looking for it again.
                 }
                 else if (option1Red && option2Blue)
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.25, 80 + 5 * trials);
+                    driveForDistance (-0.25, 80 + 10 * trials);
                     pressButton();
-                    driveForDistance (0.25, 80 + 5 * trials);
+                    driveForDistance (0.25, 80 + 10 * trials);
                 }
                 else if (option1Red && option2Red)
                 {
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (0.25, 50 + 5 * trials);
+                    driveForDistance (0.25, 50 + 10 * trials);
                     pressButton();
-                    driveForDistance (-0.25, 50 + 5 * trials);
+                    driveForDistance (-0.25, 50 + 10 * trials);
                 }
 
                 idle();

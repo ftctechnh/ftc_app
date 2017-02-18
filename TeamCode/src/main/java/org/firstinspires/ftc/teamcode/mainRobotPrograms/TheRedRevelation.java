@@ -119,9 +119,9 @@ public class TheRedRevelation extends _AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.25, 125 + 10 * trials);
+                    driveForDistance (-0.25, 115 + 10 * trials);
                     pressButton();
-                    driveForDistance (0.25, 125 + 10 * trials);
+                    driveForDistance (0.25, 115 + 10 * trials);
 
                     //Update the number of trials completed so that we know the new drive distance and such.
                     trials++;
