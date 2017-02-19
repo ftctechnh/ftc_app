@@ -71,13 +71,13 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         stopRobot();
 
         // reset again before pressing beacon
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // claim the first beacon
         claimBeaconRed();
 
         // reset again after pressing beacon
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // launch the first particle
         launchParticle();
@@ -102,13 +102,13 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         rangeSensorDrive(15, 0.2);
 
         // gyro pivot
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // strafe past the second beacon
         encoderStrafe(0.4, 20, 20);
 
         // reset again after pressing beacon
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
@@ -122,7 +122,7 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         claimBeaconRed();
 
         // pivot to ninety degrees
-        gyroPivot(1.0, 90);
+        gyroPivot(1.0, 90, false);
 
         // reset the encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -154,7 +154,7 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         }
 
         // pivot to ninety again
-        gyroPivot(0.8, 90);
+        gyroPivot(0.8, 0, false);
 
         // drive back a foot
         encoderStrafe(1.0, -12, -12);

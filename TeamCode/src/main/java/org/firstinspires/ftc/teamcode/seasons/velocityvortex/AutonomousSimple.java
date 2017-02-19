@@ -41,7 +41,7 @@ public class AutonomousSimple extends LinearOpModeBase {
         encoderDrive(0.5, -20, -20);
 
         // reset rotational position again before pressing beacon
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // launch the first (loaded) particle
         launchParticle();
