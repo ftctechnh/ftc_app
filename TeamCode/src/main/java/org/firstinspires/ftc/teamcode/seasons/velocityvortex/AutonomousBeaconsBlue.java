@@ -72,13 +72,13 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         stopRobot();
 
         // reset again before pressing beacon
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // claim the first beacon
         claimBeaconBlue();
 
         // reset again after pressing beacon
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // drive backward to get closer to center vortex
         rangeSensorDrive(20, 0.2);
@@ -108,7 +108,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         rangeSensorStrafe(-0.2);
 
         // gyro pivot
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // strafe past the second beacon line
         //encoderStrafe(0.4, 16, 16);
@@ -122,13 +122,13 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         stopRobot();
 
         // reset before pressing beacon
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         // claim the second beacon
         claimBeaconBlue();
 
         // pivot to eighty degrees
-        gyroPivot(0.8, -80);
+        gyroPivot(0.8, -80, false);
 
         // reset the encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

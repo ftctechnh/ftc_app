@@ -225,7 +225,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     private void repositionBeacons() {
-        gyroPivot(0.8, 0);
+        gyroPivot(0.8, 0, false);
 
         rangeSensorDrive(12, 0.1);
 
@@ -414,7 +414,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             }
 
             // pivot while driving
-            gyroPivot(0.8, 0);
+            gyroPivot(0.8, 0, false);
 
             idle();
         }
@@ -462,13 +462,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     private double getGyroError(double targetAngle) {
-        double error = targetAngle - gyroSensor.getIntegratedZValue();
-
-        // keep the error on a range of -179 to 180
-        while (opModeIsActive() && error > 180)  error -= 360;
-        while (opModeIsActive() && error <= -180) error += 360;
-
-        return error;
+         return targetAngle - gyroSensor.getIntegratedZValue();
     }
 
     protected void rangeSensorDrive(int distanceCm, double speed) {
@@ -519,13 +513,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(0);
     }
 
-    protected void gyroPivot(double speed, double angle) {
+    protected void gyroPivot(double speed, double angle, boolean absolute) {
         double steer;
+        double proportionalSpeed;
         double error = getGyroError(angle);
 
-        // if the error, is less than two, just return
-        if(Math.abs(error) <= 2) {
-            return;
+        if(!absolute) {
+            error += getGyroError(0);
         }
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -539,9 +533,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             error = getGyroError(angle);
 
+            if(!absolute) {
+                error += getGyroError(0);
+            }
+
             steer = Range.clip(error * P_GYRO_TURN_COEFF , -1, 1);
 
-            double proportionalSpeed = speed * steer;
+            proportionalSpeed = speed * steer;
 
             getFrontLeftDrive().setPower(proportionalSpeed);
             getFrontRightDrive().setPower(proportionalSpeed);
