@@ -17,7 +17,7 @@ public class Teleop extends LinearOpModeBase {
     private float backLeftPower;
     private float backRightPower;
 
-    private boolean yButtonPressed = false;
+    private volatile boolean yButtonPressed = false;
     private boolean driveReversed = false;
 
     @Override
@@ -33,7 +33,23 @@ public class Teleop extends LinearOpModeBase {
         gamepad1.setJoystickDeadzone(JOYSTICK_DEADZONE);
         gamepad2.setJoystickDeadzone(JOYSTICK_DEADZONE);
 
+        Thread launcherThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while(opModeIsActive()) {
+                        handleLauncher();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
         waitForStart();
+
+        // start the launcher thread after op-mode is started
+        launcherThread.start();
 
         while(opModeIsActive()) {
 
@@ -61,9 +77,7 @@ public class Teleop extends LinearOpModeBase {
             getBackRightDrive().setPower(backRightPower);
 
             handleIntake();
-            handleLauncher();
             handleCapBallMechanism();
-
             handleTelemetry();
 
             // controls for button pusher servos
@@ -128,44 +142,32 @@ public class Teleop extends LinearOpModeBase {
     private void handleLauncher() throws InterruptedException {
 
         // if the Y button on the second gamepad was previously pressed
-//        if(yButtonPressed) {
-//            // if white is essentially detected by the ODS sensor
-//            if (getDiskOds().getRawLightDetected() > 1) {
-//                // run the launcher motor at a slower speed to find the black stripe
-//                getLauncherMotor().setPower(0.3);
-//            } else {
-//                // stop the motor once the black stripe is detected
-//                getLauncherMotor().setPower(0);
-//
-//                // forget that the Y button was pressed so that the launcher
-//                // motor will not run until it detects the black stripe
-//                yButtonPressed = false;
-//            }
-//        // run the launcher motor at full speed to launch the particle when the Y button is pressed
-//        } else if(gamepad2.y) {
-//            getRobotRuntime().reset();
-//
-//            while(getRobotRuntime().milliseconds() < 900) {
-//                getLauncherMotor().setPower(1);
-//            }
-//
-//            getLauncherMotor().setPower(0);
-//
-//            // remember that the Y button was pressed so that the code that runs the launcher motor
-//            // until it detects the black stripe in the above if-statement will be executed
-//            yButtonPressed = true;
-//        }
-//    }
+        if(yButtonPressed) {
+            // if white is essentially detected by the ODS sensor
+            if (getDiskOds().getRawLightDetected() > 1) {
+                // run the launcher motor at a slower speed to find the black stripe
+                getLauncherMotor().setPower(0.3);
+            } else {
+                // stop the motor once the black stripe is detected
+                getLauncherMotor().setPower(0);
 
-        if(gamepad2.y) {
-            // start another thread to call launchParticle()
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    launchParticle();
-                }
-            };
-            t.start();
+                // forget that the Y button was pressed so that the launcher
+                // motor will not run until it detects the black stripe
+                yButtonPressed = false;
+            }
+        // run the launcher motor at full speed to launch the particle when the Y button is pressed
+        } else if(gamepad2.y) {
+            getRobotRuntime().reset();
+
+            while(getRobotRuntime().milliseconds() < 900) {
+                getLauncherMotor().setPower(1);
+            }
+
+            getLauncherMotor().setPower(0);
+
+            // remember that the Y button was pressed so that the code that runs the launcher motor
+            // until it detects the black stripe in the above if-statement will be executed
+            yButtonPressed = true;
         }
     }
 
