@@ -66,6 +66,17 @@ public class Teleop extends LinearOpModeBase {
 
             handleTelemetry();
 
+            // controls for button pusher servos
+            if(gamepad2.right_trigger > 0) {
+                // up for both
+                getBeaconsServo1().setPosition(0.3);
+                getBeaconsServo2().setPosition(0.75);
+            } else if(gamepad2.left_trigger > 0) {
+                // down for both
+                getBeaconsServo1().setPosition(1);
+                getBeaconsServo2().setPosition(0);
+            }
+
             idle();
         }
     }
@@ -117,38 +128,50 @@ public class Teleop extends LinearOpModeBase {
     private void handleLauncher() throws InterruptedException {
 
         // if the Y button on the second gamepad was previously pressed
-        if(yButtonPressed) {
-            // if white is essentially detected by the ODS sensor
-            if (getDiskOds().getRawLightDetected() > 1) {
-                // run the launcher motor at a slower speed to find the black stripe
-                getLauncherMotor().setPower(0.3);
-            } else {
-                // stop the motor once the black stripe is detected
-                getLauncherMotor().setPower(0);
+//        if(yButtonPressed) {
+//            // if white is essentially detected by the ODS sensor
+//            if (getDiskOds().getRawLightDetected() > 1) {
+//                // run the launcher motor at a slower speed to find the black stripe
+//                getLauncherMotor().setPower(0.3);
+//            } else {
+//                // stop the motor once the black stripe is detected
+//                getLauncherMotor().setPower(0);
+//
+//                // forget that the Y button was pressed so that the launcher
+//                // motor will not run until it detects the black stripe
+//                yButtonPressed = false;
+//            }
+//        // run the launcher motor at full speed to launch the particle when the Y button is pressed
+//        } else if(gamepad2.y) {
+//            getRobotRuntime().reset();
+//
+//            while(getRobotRuntime().milliseconds() < 900) {
+//                getLauncherMotor().setPower(1);
+//            }
+//
+//            getLauncherMotor().setPower(0);
+//
+//            // remember that the Y button was pressed so that the code that runs the launcher motor
+//            // until it detects the black stripe in the above if-statement will be executed
+//            yButtonPressed = true;
+//        }
+//    }
 
-                // forget that the Y button was pressed so that the launcher
-                // motor will not run until it detects the black stripe
-                yButtonPressed = false;
-            }
-        // run the launcher motor at full speed to launch the particle when the Y button is pressed
-        } else if(gamepad2.y) {
-            getRobotRuntime().reset();
-            
-            while(getRobotRuntime().milliseconds() < 900) {
-                getLauncherMotor().setPower(1);
-            }
-            
-            getLauncherMotor().setPower(0);
-
-            // remember that the Y button was pressed so that the code that runs the launcher motor
-            // until it detects the black stripe in the above if-statement will be executed
-            yButtonPressed = true;
+        if(gamepad2.y) {
+            // start another thread to call launchParticle()
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    launchParticle();
+                }
+            };
+            t.start();
         }
     }
 
     private void handleTelemetry() {
 
-        telemetry.addData("ods2 : ", getDiskOds().getRawLightDetected());
+        telemetry.addData("ods2: ", getDiskOds().getRawLightDetected());
         telemetry.addData("ods3", getOds3().getRawLightDetected());
         telemetry.addData("launcher ods", getLauncherOds().getLightDetected());
         telemetry.addData("front range", getFrontRange().cmUltrasonic());
