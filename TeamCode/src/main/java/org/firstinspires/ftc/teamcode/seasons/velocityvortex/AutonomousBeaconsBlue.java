@@ -36,8 +36,8 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         getGyroSensor().resetZAxisIntegrator();
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 83);
-        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 83);
+        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 83);
+        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 83);
 
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -64,7 +64,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
 
         // drive left to white line
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-            driveLeft(0.1);
+            driveRight(0.1);
 
             telemetry.addData("ods3", getOds3().getRawLightDetected());
             telemetry.update();
@@ -81,30 +81,31 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         gyroPivot(0.8, 0);
 
         // drive backward to get closer to center vortex
-        rangeSensorDrive(25, 0.2);
+        rangeSensorDrive(20, 0.2);
 
         // launch the first particle
         launchParticle();
 
-        // open intake door
-        getDoor3().setPosition(0.25);
-
-        // run the intake
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
-            getIntakeMotor().setPower(-1);
-        }
-        getIntakeMotor().setPower(0);
-
-        // launch the second particle
-        launchParticle();
+//        // open intake door
+//        getDoor3().setPosition(0.25);
+//
+//        // run the intake
+//        getRobotRuntime().reset();
+//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
+//            getIntakeMotor().setPower(-1);
+//        }
+//        getIntakeMotor().setPower(0);
+//
+//        // launch the second particle
+//        launchParticle();
 
         // strafe left
         encoderStrafe(0.5, -5, -5);
 
         // back up from wall
         //rangeSensorDrive(15, 0.2);
-        rangeSensorStrafe(0.2);
+
+        rangeSensorStrafe(-0.2);
 
         // gyro pivot
         gyroPivot(0.8, 0);
@@ -114,7 +115,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-            driveLeft(0.1);
+            driveRight(0.1);
             telemetry.addData("ods3", getOds3().getRawLightDetected());
             telemetry.update();
         }
@@ -126,8 +127,8 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         // claim the second beacon
         claimBeaconBlue();
 
-        // pivot to ninety degrees
-        gyroPivot(0.8, 80);
+        // pivot to eighty degrees
+        gyroPivot(0.8, -80);
 
         // reset the encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -135,26 +136,26 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
 
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        getFrontRightDrive().setPower(0.5);
-        getBackLeftDrive().setPower(0.5);
+        getBackRightDrive().setPower(0.5);
+        getFrontLeftDrive().setPower(0.5);
 
         // wait for the drive motors to stop
         while(opModeIsActive()
-                && getFrontRightDrive().isBusy()
-                && getBackLeftDrive().isBusy()) {
+                && getBackRightDrive().isBusy()
+                && getFrontLeftDrive().isBusy()) {
 
             telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontRightDrive().getCurrentPosition(),
-                    getBackLeftDrive().getCurrentPosition());
+                    getBackRightDrive().getCurrentPosition(),
+                    getFrontLeftDrive().getCurrentPosition());
 
-            telemetry.addData("front left target", getFrontRightDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackLeftDrive().getTargetPosition());
+            telemetry.addData("front left target", getBackRightDrive().getTargetPosition());
+            telemetry.addData("back right target", getFrontLeftDrive().getTargetPosition());
             telemetry.update();
             idle();
         }

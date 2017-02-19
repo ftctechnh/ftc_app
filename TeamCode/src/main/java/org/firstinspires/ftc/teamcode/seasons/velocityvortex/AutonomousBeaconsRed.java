@@ -81,23 +81,23 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         gyroPivot(0.8, 0);
 
         // drive backward to get closer to center vortex
-        rangeSensorDrive(25, 0.2);
+        rangeSensorDrive(20, 0.2);
 
         // launch the first particle
         launchParticle();
 
         // open intake door
-        getDoor3().setPosition(0.25);
+//        getDoor3().setPosition(0.25);
 
-        // run the intake
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
-            getIntakeMotor().setPower(-1);
-        }
-        getIntakeMotor().setPower(0);
-
-        // launch the second particle
-        launchParticle();
+//        // run the intake
+//        getRobotRuntime().reset();
+//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
+//            getIntakeMotor().setPower(-1);
+//        }
+//        getIntakeMotor().setPower(0);
+//
+//        // launch the second particle
+//        launchParticle();
 
         // strafe right
         encoderStrafe(0.5, 5, 5);
