@@ -66,14 +66,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private ElapsedTime robotRuntime;
 
-    private I2cController colorSensor1Controller;
-    private I2cController colorSensor2Controller;
-
-    private I2cController.I2cPortReadyCallback colorSensor1Callback;
-    private I2cController.I2cPortReadyCallback colorSensor2Callback;
-
-    private boolean colorSensorsDisabled;
-
     protected void initializeHardware() {
         // initialize robotRuntime instance variable
         robotRuntime = new ElapsedTime();
@@ -172,12 +164,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
 
-        if(colorSensor1.red() > 0) {
+        if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
             beaconsServo1.setPosition(0.3);
-        } else if(colorSensor2.red() > 0) {
+        } else if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
             beaconsServo2.setPosition(0.75);
         } else {
-            telemetry.addData(">", "beacon not found");
+            telemetry.addData(">", "beacon not detected!");
             telemetry.update();
         }
 
@@ -190,11 +182,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
 
         // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
             // run without encoders again
             driveForward(0.2);
         }
         //stopRobot();
+
+        // drive forward two inches
+        encoderDrive(0.5, 2, 2);
 
         // pause for the beacon to change color
         getRobotRuntime().reset();
@@ -214,7 +209,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             repositionBeacons();
 
             // second push
-            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
+            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
                 // run without encoders again
                 driveForward(0.2);
             }
@@ -264,10 +259,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
 
-        if(colorSensor1.blue() > 0) {
+        if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
             beaconsServo1.setPosition(0.3);
-        } else if(colorSensor2.red() > 0) {
+        } else if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
             beaconsServo2.setPosition(0.75);
+        } else {
+            telemetry.addData(">", "beacon not detected");
+            telemetry.update();
         }
 
         stopRobot();
@@ -279,10 +277,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
 
         // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
+        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
             // run without encoders again
             driveForward(0.2);
         }
+
+        // drive forward two inches
+        encoderDrive(0.5, 2, 2);
+
         //stopRobot();
 
         // pause for the beacon to change color
@@ -303,7 +305,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             repositionBeacons();
 
             // second push
-            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 7) {
+            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
                 // run without encoders again
                 driveForward(0.2);
             }
@@ -314,11 +316,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         rangeSensorDrive(15, 0.1);
 
         // lower button pushers
-        beaconsServo1.setPosition(0);
-        beaconsServo2.setPosition(1);
+        beaconsServo1.setPosition(1);
+        beaconsServo2.setPosition(0);
     }
 
-    protected void launchParticle() {
+    protected synchronized void launchParticle() {
         robotRuntime.reset();
 
         // run launcher motor for an entire rotation
@@ -404,9 +406,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             telemetry.addData("Light",getOds3().getRawLightDetected());
             telemetry.update();
             if(getFrontRange().cmUltrasonic() < 5) {
-                driveBackward(speed);
+                driveBackward(Math.abs(speed));
             } else if(getFrontRange().cmUltrasonic() > 30){
-                driveForward(speed);
+                driveForward(Math.abs(speed));
             } else {
                 driveRight(speed);
             }
