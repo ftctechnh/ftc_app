@@ -522,6 +522,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             error += getGyroError(0);
         }
 
+        // just return if the error is too low
+        if(Math.abs(error) <= 2) {
+            return;
+        }
+
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
