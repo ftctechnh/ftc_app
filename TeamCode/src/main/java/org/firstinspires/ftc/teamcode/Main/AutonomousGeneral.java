@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Main;
 import android.graphics.Color;
 import android.provider.Settings;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
 /**
  * Created by inspirationteam on 12/18/2016.
@@ -29,7 +31,7 @@ public class AutonomousGeneral extends LinearOpMode {
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
-    public GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
+    public ModernRoboticsI2cGyro gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
     public ModernRoboticsI2cRangeSensor rangeSensor;
     public ColorSensor bColorSensorLeft;
     public ColorSensor bColorSensorRight;
@@ -86,14 +88,17 @@ public class AutonomousGeneral extends LinearOpMode {
         baseline2 = ODSBack.getRawLightDetected();
         //Initiate sensors:
         if (operation_beacon_press == true) {
-            gyro = hardwareMap.gyroSensor.get("gyro");
+            gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+
             rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
             bColorSensorLeft = hardwareMap.colorSensor.get("bColorSensorLeft");
             bColorSensorLeft.setI2cAddress(I2cAddr.create8bit(0x3c));
+            bColorSensorLeft.enableLed(false);
 
             if (initbColorSensorRight){
                 bColorSensorRight = hardwareMap.colorSensor.get("bColorSensorRight");
                 bColorSensorRight.setI2cAddress(I2cAddr.create8bit(0x70));
+                bColorSensorRight.enableLed(false);
 
             }
             beaconPresser = hardwareMap.servo.get("beaconPresser");
@@ -169,7 +174,7 @@ public class AutonomousGeneral extends LinearOpMode {
         if (opModeIsActive()) {
 
 
-            setMotorsToEnc(Math.abs(leftDist), Math.abs(rightDist), timeINSec);
+            setMotorsToEnc(Math.abs(leftDist), Math.abs(rightDist), 0.7*timeINSec);
 
             runtime.reset();
 
@@ -209,7 +214,7 @@ public class AutonomousGeneral extends LinearOpMode {
         if (opModeIsActive()) {
 
 
-            setMotorsToEnc(Math.abs(leftDist), Math.abs(rightDist), timeINSec);
+            setMotorsToEnc(Math.abs(leftDist), Math.abs(rightDist), .7*timeINSec);
 
             runtime.reset();
 
@@ -397,7 +402,7 @@ public class AutonomousGeneral extends LinearOpMode {
     }
 
     public boolean whiteLineDetectedFront() {
-        if ((ODSFront.getRawLightDetected() > (baseline1 * 5))) {
+        if ((ODSFront.getRawLightDetected() > (baseline1 * 3))) {
 
             return true;
         }
@@ -406,7 +411,7 @@ public class AutonomousGeneral extends LinearOpMode {
     }
 
     public boolean whiteLineDetectedBack() {
-        if ((ODSBack.getRawLightDetected() > (baseline2 * 5))) {
+        if ((ODSBack.getRawLightDetected() > (baseline2 * 3))) {
 
             return true;
         }
@@ -486,7 +491,7 @@ public class AutonomousGeneral extends LinearOpMode {
 
     public void gyro_rightTurn(int degrees, double speed) {
 
-        gyro.calibrate();
+       gyro.calibrate();
         while (gyro.isCalibrating()) {
 
         }
@@ -498,6 +503,29 @@ public class AutonomousGeneral extends LinearOpMode {
             telemetry.update();
         }
         stopMotors();
+    }
+    public void newGyro_Turn(int degrees, double speed) {//based on absolute degrees
+
+        if(gyro.getHeading() < degrees) {//right turn
+            setMotorsModeToGyroSensing();
+            turnRight(speed);
+            while ((gyro.getHeading() < degrees)) { //turn left until the angle becomes as small as you want it
+                //gyro.getHeading() returns values from 0 to 359
+                telemetry.addData("current gyro pos", gyro.getHeading());
+                telemetry.update();
+            }
+            stopMotors();
+        }
+        else{
+            setMotorsModeToGyroSensing();
+            turnLeft(speed);
+            while((gyro.getHeading() > degrees)){ //turn left until the angle becomes as small as you want it
+                //gyro.getHeading() returns values from 0 to 359
+                telemetry.addData("current gyro pos", gyro.getHeading());
+                telemetry.update();
+            }
+            stopMotors();
+        }
     }
 
     public void newTurnLeft(double speed){
@@ -534,14 +562,14 @@ public class AutonomousGeneral extends LinearOpMode {
 
     public void setMotorsModeToColorSensing()
     {
-        setMotorsToEnc(29, 29, 2);
+        setMotorsToEnc(29, 29, 1);
     }
     public void setMotorsModeToRangeSensing()
     {
-        setMotorsToEnc(29, 29, 1.5);
+        setMotorsToEnc(29, 29, 1);
     }
     public void setMotorsModeToGyroSensing()  { setMotorsToEnc(29, 29, 2); }
-
+    public void setMotorsModeToEncDrive()   { setMotorsToEnc(50, 50, .5);  }
 
     public void encoderDriveShootRed(double speed,
                                      double leftInches, double rightInches,
@@ -556,7 +584,7 @@ public class AutonomousGeneral extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-
+            double time = runtime.seconds()+timeoutS;
             // Determine new target position, and pass to motor controller
             newLeftTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
             leftShootPosition = back_left_motor.getCurrentPosition() + (int) (left_motor_shoot_position * getCountsPerCm());
@@ -580,57 +608,36 @@ public class AutonomousGeneral extends LinearOpMode {
                 rightSpeed = speed;
                 leftSpeed = (speed * leftInches) / rightInches;
             }
-            runtime.reset();
-            //if(leftInches != -rightInches)
+
             {
+                front_left_motor.setPower(Math.abs(leftSpeed));
+                front_right_motor.setPower(Math.abs(rightSpeed));
                 back_left_motor.setPower(Math.abs(leftSpeed));
                 back_right_motor.setPower(Math.abs(rightSpeed));
             }
-            front_left_motor.setPower(Math.abs(leftSpeed));
-            front_right_motor.setPower(Math.abs(rightSpeed));
+
 
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+                    (runtime.seconds() < time) &&
                     (back_left_motor.isBusy() && back_right_motor.isBusy())) {
 
-                // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d",
-                        back_left_motor.getCurrentPosition(),
-                        back_right_motor.getCurrentPosition());
-                telemetry.update();
                 if (back_left_motor.getCurrentPosition()>leftShootPosition)
                 {
                     if (shoot_count < num_shoot)
                     {
                         shoot_count++;
-                        shootingDrive(0.8,850);
-
-                        // sleep(500);     // pause for servos to move
-                        if (shoot_count < (num_shoot))
-                        {
-                            intakeDrive(0.8, 1200);
-                        }
+                        shootingDrive(1,650);
+                        intake_motor.setPower(.8);
                     }
                 }
             }
 
-            // Stop all motion;
-            back_left_motor.setPower(0);
-            back_right_motor.setPower(0);
-            front_left_motor.setPower(0);
-            front_right_motor.setPower(0);
 
-
-            // Turn off RUN_TO_POSITION
-            back_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            front_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
+            stopMotors();
+            intake_motor.setPower(0);
+            shootingDrive(1,200);
         }
 
     }
@@ -643,8 +650,10 @@ public class AutonomousGeneral extends LinearOpMode {
         double rightSpeed;
 
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
+      //  if (opModeIsActive())
+        {
 
+            double time = runtime.seconds()+timeoutS;
             back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -658,11 +667,6 @@ public class AutonomousGeneral extends LinearOpMode {
             front_left_motor.setTargetPosition(newLeftTarget);
             front_right_motor.setTargetPosition(newRightTarget);
 
-            // Turn On RUN_TO_POSITION
-            back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             if (Math.abs(leftInches) > Math.abs(rightInches)) {
@@ -672,27 +676,21 @@ public class AutonomousGeneral extends LinearOpMode {
                 rightSpeed = speed;
                 leftSpeed = (speed * leftInches) / rightInches;
             }
-            runtime.reset();
+          //  runtime.reset();
             //if(leftInches != -rightInches)
             {
+                front_left_motor.setPower(Math.abs(leftSpeed));
+                front_right_motor.setPower(Math.abs(rightSpeed));
                 back_left_motor.setPower(Math.abs(leftSpeed));
                 back_right_motor.setPower(Math.abs(rightSpeed));
             }
-            front_left_motor.setPower(Math.abs(leftSpeed));
-            front_right_motor.setPower(Math.abs(rightSpeed));
+
 
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+                    (runtime.seconds() < time) &&
                     (back_left_motor.isBusy() && back_right_motor.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d",
-                        back_left_motor.getCurrentPosition(),
-                        back_right_motor.getCurrentPosition());
-                telemetry.update();
             }
 
             // Stop all motion;
@@ -700,15 +698,6 @@ public class AutonomousGeneral extends LinearOpMode {
             back_right_motor.setPower(0);
             front_left_motor.setPower(0);
             front_right_motor.setPower(0);
-
-
-            // Turn off RUN_TO_POSITION
-            back_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            front_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
         }
 
     }
@@ -725,6 +714,8 @@ public class AutonomousGeneral extends LinearOpMode {
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
+            double time = runtime.seconds()+timeoutS;
+
             // Determine new target position, and pass to motor controller
             newLeftTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
             leftShootPosition = back_left_motor.getCurrentPosition() + (int) (left_motor_shoot_position * getCountsPerCm());
@@ -748,19 +739,15 @@ public class AutonomousGeneral extends LinearOpMode {
                 rightSpeed = speed;
                 leftSpeed = (speed * leftInches) / rightInches;
             }
-            runtime.reset();
-            //if(leftInches != -rightInches)
-            {
-                back_left_motor.setPower(Math.abs(leftSpeed));
-                back_right_motor.setPower(Math.abs(rightSpeed));
-            }
+
             front_left_motor.setPower(Math.abs(leftSpeed));
             front_right_motor.setPower(Math.abs(rightSpeed));
-
+            back_left_motor.setPower(Math.abs(leftSpeed));
+            back_right_motor.setPower(Math.abs(rightSpeed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+                    (runtime.seconds() < time) &&
                     (back_left_motor.isBusy() && back_right_motor.isBusy())) {
 
                 // Display it for the driver.
@@ -774,31 +761,14 @@ public class AutonomousGeneral extends LinearOpMode {
                     if (shoot_count < num_shoot)
                     {
                         shoot_count++;
-                        shootingDrive(0.8,850);
-
-                        // sleep(500);     // pause for servos to move
-                        if (shoot_count < (num_shoot))
-                        {
-                            intakeDrive(0.8, 1800);
-                        }
+                        shootingDrive(1,650);
+                        intake_motor.setPower(.8);
                     }
                 }
             }
-
-            // Stop all motion;
-            back_left_motor.setPower(0);
-            back_right_motor.setPower(0);
-            front_left_motor.setPower(0);
-            front_right_motor.setPower(0);
-
-
-            // Turn off RUN_TO_POSITION
-            back_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            front_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
+            stopMotors();
+            intake_motor.setPower(0);
+            shootingDrive(1,200);
         }
 
     }

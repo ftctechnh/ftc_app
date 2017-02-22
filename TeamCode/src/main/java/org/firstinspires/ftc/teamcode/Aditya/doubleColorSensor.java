@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "doubleColorSensor")
-@Disabled
+//@Disabled
 public class doubleColorSensor extends AutonomousGeneral {
 
 

@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Main;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -12,9 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "redBeacon1")
-@Disabled
-public class redBeaconPress_autoServo extends AutonomousGeneral {
+@Autonomous(name = "redBeaconGyro")
+public class redBeaconPressGyroServo extends AutonomousGeneral {
 
 
 
@@ -22,7 +19,6 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
     boolean second_beacon_press = false;
     String currentTeam = "red";
     private ElapsedTime runtime = new ElapsedTime();
-    double[] timeprofile = new double[10];
     //String currentColor = "blank";
 
     @Override
@@ -30,7 +26,20 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
 
 
         initiate();
+        telemetry.addData(">", "Gyro Calibrating. Do Not move!");
+        telemetry.update();
+        gyro.calibrate();
 
+
+        // make sure the gyro is calibrated.
+        while (gyro.isCalibrating())  {
+
+        }
+
+        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
+        telemetry.update();
+//        readNewColorLeft();
+//        readNewColorRight();
 
 
         waitForStart();
@@ -38,13 +47,10 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
         second_beacon_press = false;
 
         //newEncoderDrive(1,-2,0,0.1);
-        runtime.reset();
-        timeprofile[0] = runtime.milliseconds();
-        newEncoderDriveShoot(1,135,125,1.5, 1, .1); // 150 = 5 feettime 2.5
 
-        //lineAlign();
-        //runtime.reset();
-        servoBeaconPress();
+        newEncoderDriveShoot(1,135,125,2, 1, .1); // 150 = 5 feettime 2.5
+        lineAlign();
+        //servoBeaconPress();
 
         }
 
@@ -55,7 +61,7 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
         newEncoderDrive(1, 15, 15, .5);
         sleep(100);
         intake_motor.setPower(.8);
-        newEncoderDriveShoot(1, -40, 40
+        newEncoderDriveShoot(1, -50, 50
                 , 2, 1, 1.6);
 //        gyro_leftTurn(270, 1);
 //        shooting_motor.setPower(.8);
@@ -63,8 +69,8 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
         shooting_motor.setPower(0);
         intake_motor.setPower(0);
         //sleep(450);
-//        newEncoderDrive(1, 105, 105, 1);
-//        servoBeaconPress();
+        newEncoderDrive(1, 105, 105, 1);
+        servoBeaconPress();
 }
 
 
@@ -80,23 +86,36 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
 
         }
         stopMotors();
+        //sleep(3000);
+        //sleep(5000);
+      //  encoderDrive(.1, -1, -1, 2);
+     //   sleep(150);
+//        if (second_beacon_press == true)
+//        {
+//            newEncoderDrive(1, -19, -19, .75);
+//        }
+//        else
+//        {
+//            newEncoderDrive(1, -19, -19, .75);
+//        }
 
-        encoderDrive(1, -3, -3, 1);
+     //   sleep(150);
 
-
+        //setMotorsModeToColorSensing();
+        /*telemetry.addData("","Turning");
+        telemetry.update();*/
+        telemetry.addData("","Gyro Turning");
+        telemetry.update();
         setMotorsModeToColorSensing();
-
-
-        while (whiteLineDetectedBack() == false) {
+        newGyro_Turn(180,0.7);
+        /*while (whiteLineDetectedBack() == false) {
 
             newTurnRight(1);
-        }
+        }*/
+        stopMotors();
 
-        front_right_motor.setPower(0);
-        front_left_motor.setPower(0);
-        back_right_motor.setPower(0);
-        back_left_motor.setPower(0);
-
+      //  encoderDrive(0.1, 5, 5, 4);
+     //   sleep(150);*/
 
     }
 
@@ -104,21 +123,21 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
         boolean left_detected = false;
         boolean beacon_press_success = false;
 
-        timeprofile[1] = runtime.milliseconds();
         lineAlign();
-        timeprofile[2] = runtime.milliseconds();
-
-
+      //  sleep(250);
+       // allignRangeDistReverse(11);
+        setMotorsModeToRangeSensing();
         while (rangeSensor.getDistance(DistanceUnit.CM) > 11) {
             straightDrive(-1);
         }
         stopMotors();
-        timeprofile[3] = runtime.milliseconds();
-
+        //sleep(250);
 
         readNewColorLeft();
         readNewColorRight();
 
+
+       // sleep(2000);
 
         if(currentColorBeaconLeft.equals("blank")){
             printColorsSeen();
@@ -140,7 +159,7 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
             }
             stopMotors();
         }
-        //aligns with beacon if out of range
+        //alligns with beacon if out of range
 
         if(currentColorBeaconLeft.equals(currentTeam)){
             beaconPresser.setPosition(0.0);
@@ -152,26 +171,19 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
         }
         //allign servo!
 
-
+     //   sleep(300);
 
         pressBeaconButton();
         //presses beacon!
-        timeprofile[4] = runtime.milliseconds();
-        //telemetry.update();
+
         readNewColorRight();
         readNewColorLeft();
-        moveToNextBeacon();
-        timeprofile[5] = runtime.milliseconds();
-        for(int i = 0; i < 6; i++){
-            telemetry.addData(""+i+": ", timeprofile[i]);
-        }
-        telemetry.update();
-        sleep(30000);
+
         //presses beacon!
 
 
         // below evaluate beacon press result and move to next step if it is success and handle failures if failures are seen
-       /* if (left_detected == true)
+        if (left_detected == true)
         {
             if(currentColorBeaconRight.equals(currentTeam))
             {
@@ -231,13 +243,14 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
             sleep(500);
 
             parkCenterVortex();
-        }*/
+
+        }
     }
 
     public void printColorsSeen(){
         telemetry.addData("left color", currentColorBeaconLeft);
         telemetry.addData("right color", currentColorBeaconRight);
-        //telemetry.update();
+        telemetry.update();
     }
 
     public void parkCenterVortex()
@@ -265,11 +278,11 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
     {
         double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)+10;
 
-        encoderDrive(1, -distFromWall, -distFromWall, 1);
+        newEncoderDrive(1, -distFromWall, -distFromWall, .4);
 //
         sleep(500);
 //
-        encoderDrive(1, distFromWall, distFromWall, 1);
+        newEncoderDrive(1, distFromWall, distFromWall, 1);
 
 //        encoderDrive(.3, -distFromWall, -distFromWall, 1);
 //        sleep(500);

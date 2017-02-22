@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
  * Created by Steven on 1/5/2017.
  */
 @TeleOp(name = "OpticalDistanceTest", group = "Pushbot")
-@Disabled
+//@Disabled
 public class OpticalDistanceTest extends OpMode{
     OpticalDistanceSensor ODS;
     OpticalDistanceSensor ODS2;
@@ -18,8 +18,8 @@ public class OpticalDistanceTest extends OpMode{
     @Override
     public void init() {
 
-        ODS = hardwareMap.opticalDistanceSensor.get("ODS");
-        ODS2 = hardwareMap.opticalDistanceSensor.get("ODS2");
+        ODS = hardwareMap.opticalDistanceSensor.get("ODSFront");
+        ODS2 = hardwareMap.opticalDistanceSensor.get("ODSBack");
 
         baseline1 = ODS.getRawLightDetected();
         baseline2 = ODS2.getRawLightDetected();
