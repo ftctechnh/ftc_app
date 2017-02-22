@@ -27,6 +27,7 @@ public class LineDrive extends OpenCVLib {
     AutoLib.Sequence mShoot;
     AutoLib.Sequence mDrive;
     AutoLib.Sequence mPushy;
+    AutoLib.Sequence mCharge;
     boolean bDone;                          // true when the programmed sequence is done
     BotHardware robot;                      // robot hardware object
     SensorLib.PID mPid;
@@ -36,24 +37,25 @@ public class LineDrive extends OpenCVLib {
     SensorLib.PID mGPid;
     // parameters of the PID controller for this sequence's first part
     float Kp = 0.05f;        // degree heading proportional term correction per degree of deviation
-    float Ki = 0.02f;         // ... integrator term
+    //float Ki = 0.02f;         // ... integrator term
+    float Ki = 0.00f;
     float Kd = 0;             // ... derivative term
     float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
 
     // parameters of the PID controller for the heading of the line following
-    float Kp2 = 0.500f;
+    float Kp2 = 0.250f;
     float Ki2 = 0.000f;
     float Kd2 = 0;
     float Ki2Cutoff = 0.0f;
 
     // parameters of the PID controller for the displacement of the line following
-    float Kp3 = 2.50f;
+    float Kp3 = 3.00f;
     float Ki3 = 0.0f;
     float Kd3 = 0;
     float Ki3Cutoff = 0.00f;
 
     // parameters of the PID controller for the ultrasonic sensor driving
-    float Kp4 = 0.05f;
+    float Kp4 = 0.025f;
     float Ki4 = 0.00f;
     float Kd4 = 0;
     float Ki4Cutoff = 0.00f;
@@ -65,7 +67,7 @@ public class LineDrive extends OpenCVLib {
     float Ki5Cutoff = 3.0f;    // maximum angle error for which we update integrator
 
     final float ultraDistS1 = 15;
-    final float ultraDistS2 = 10;
+    final float ultraDistS2 = 11;
 
     //constants for pushy pushy
     final double pushPos = 1.0;
@@ -125,11 +127,11 @@ public class LineDrive extends OpenCVLib {
         mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.6f, 0.8, false));
         mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0f, 1500, true, modePointer));
 
-         mSequence.add(mShoot);
+        mSequence.add(mShoot);
 
         mDrive = new AutoLib.LinearSequence();
 
-        mDrive.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.2f, 500, true));
+        mDrive.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.2f, 400, true));
         mDrive.add(new AutoLib.LogTimeStep(modePointer, "YAY!", 0.1));
 
         int heading;
@@ -147,10 +149,17 @@ public class LineDrive extends OpenCVLib {
         mDrive.add(new AutoLib.GyroTurnStep(modePointer, heading, robot.getNavXHeadingSensor(), robot.getMotorArray(), turnPower, 3.0f, true));
         mDrive.add(new AutoLib.LogTimeStep(modePointer, "Yay!", 0.1));
 
-        mDrive.add(new AutoLib.SquirrleyAzimuthTimedDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.0f, false));
-        mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new UltraSensors(robot.distSensor, 40, 1.5f), true));
-        //mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(23), mGPid, muPid, robot.getMotorArray(), 0.4f, 1.0f, false));
-        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(20), mGPid, muPid, robot.getMotorArray(), 0.3f, new LineSensors(this, frame), true));
+        mDrive.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
+            public void run() {
+                robot.initMotors(thing, debug, true);
+                robot.setMaxSpeedAll(2800);
+            }
+        }));
+
+        //mDrive.add(new AutoLib.SquirrleyAzimuthTimedDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.0f, false));
+        mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.5f, new UltraSensors(robot.distSensor, 70, 2.5), false));
+        mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(50), mPid, muPid, robot.getMotorArray(), 0.7f, 1.0f, false));
+        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(17), mPid, muPid, robot.getMotorArray(), 0.7f, new LineSensors(this, frame, 0.0f), true));
 
         mSequence.add(mDrive);
 
@@ -169,17 +178,19 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensor, ultraDistS1, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
         mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensor, ultraDistS2, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
 
+        /*
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
             public void run() {
                 robot.navX.zeroYaw();
             }
         }));
+        */
 
         //pushy pushy
         mPushy.add(new PushyLib.pushypushy(modePointer, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, pushyTime, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(20), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(17), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
 
 
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
@@ -193,20 +204,26 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensor, ultraDistS1, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
         mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensor, ultraDistS2, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
 
+        /*
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
             public void run() {
                 robot.navX.zeroYaw();
             }
         }));
+        */
 
         //pushy pushy
         mPushy.add(new PushyLib.pushypushy(modePointer, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, pushyTime, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), -0.4, 1.0, true));
-
         mSequence.add(mPushy);
 
+        mCharge = new AutoLib.LinearSequence();
+
+        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(30), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(1.0), false));
+        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(120), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(2.0), true));
+
+        mSequence.add(mCharge);
         // start out not-done
         bDone = false;
     }
@@ -393,6 +410,20 @@ public class LineDrive extends OpenCVLib {
             //dist += angleError * Kp;
 
             return dist - mDist;
+        }
+
+    }
+
+    static private class TimerFinish implements FinishSensor {
+        private AutoLib.Timer mTimer;
+
+        TimerFinish(double seconds){
+            mTimer = new AutoLib.Timer(seconds);
+        }
+
+        public boolean checkStop(){
+            if(!mTimer.isStarted()) mTimer.start();
+            return mTimer.done();
         }
 
     }

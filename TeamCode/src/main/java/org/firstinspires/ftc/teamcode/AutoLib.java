@@ -1203,6 +1203,10 @@ public class AutoLib {
         public boolean done() {
             return (remaining() <= 0);
         }
+
+        public boolean isStarted(){
+            return mStartTime != 0L;
+        }
     }
 
     // test hardware classes -- useful for testing when no hardware is available.
