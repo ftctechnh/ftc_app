@@ -21,6 +21,7 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
     boolean second_beacon_press = false;
     String currentTeam = "blue";
     private ElapsedTime runtime = new ElapsedTime();
+    public int gyro_corr_cnt =0;
     //String currentColor = "blank";
 
     @Override
@@ -30,6 +31,10 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
         idle();
         setMotorsModeToEncDrive();
         stopMotors();
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+            idle();
+        }
         telemetry.addData("","READY TO START");
         telemetry.update();
 
@@ -39,9 +44,9 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
         second_beacon_press = false;
 
 
-       // encoderMecanumDrive(0.8,100,100,5,-1);
+        encoderMecanumDrive(0.8,100,100,5,-1);
 
-        //encoderMecanumDrive(0.8,70,70,5,0);
+        encoderMecanumDrive(0.8,60,60,5,0);
 
         telemetry.addData("distance", rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
@@ -53,7 +58,7 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
     public void moveToNextBeacon() {
         second_beacon_press = true;
       //  sleep(250);
-        encoderMecanumDrive(0.7, -15, -15, 5,0);
+        encoderMecanumDrive(0.7, -8, -8, 5,0);
         sleep(100);
 
         idle();
@@ -84,16 +89,30 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
 
       //  sleep(250);
        // allignRangeDistReverse(11);
+
         setMotorsModeToRangeSensing();
 
+
+        gyroCorrection();
+
+        setMotorsModeToRangeSensing();
+        straightDrive(0.7);
         while (rangeSensor.getDistance(DistanceUnit.CM) > 17) {
-            straightDrive(0.7);
+
         }
         stopMotors();
         idle();
 
+        straightDrive(-0.7);
+        while (rangeSensor.getDistance(DistanceUnit.CM) < 14) {
+
+        }
+        stopMotors();
+idle();
+
         lineAlign();
 
+        setMotorsModeToRangeSensing();
         encoderMecanumDrive(0.7,10,10,2,1);
         idle();
 
@@ -104,6 +123,7 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
         }
         else {
             left_detected = false;
+            setMotorsModeToRangeSensing();
             encoderMecanumDrive(0.7,15,15,2,-1);
         }
         //allign servo!
@@ -113,9 +133,6 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
         pressBeaconButton();
         //presses beacon!
 
-        readNewColorLeft();
-
-        //presses beacon!
 
         if (second_beacon_press == false)
         {
@@ -123,6 +140,8 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
         }
         else
         {
+            setMotorsModeToRangeSensing();
+            gyroCorrection();
             parkCenterVortex();
         }
         // below evaluate beacon press result and move to next step if it is success and handle failures if failures are seen
@@ -136,11 +155,13 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
 
     public void parkCenterVortex()
     {
+        setMotorsModeToEncDrive();
+        stopMotors();
         if (second_beacon_press)
         {
-            encoderMecanumDrive(0.7,-15,-15,5,0);
+            //encoderMecanumDrive(0.7,-15,-15,5,0);
             encoderMecanumDrive(0.7,108,-108,5,0);
-
+            encoderMecanumDrive(0.7,-35,-35,5,0);
             encoderShoot(0.8);
             intakeDrive(0.8,1);
             encoderShoot(0.8);
@@ -166,16 +187,41 @@ public class blueAuto_charlie extends AutonomousGeneral_charlie {
         telemetry.addData("distance",distFromWall);
         telemetry.update();
 
-        encoderMecanumDrive(0.7, distFromWall, distFromWall, .4,0);
+        encoderMecanumDrive(0.7, distFromWall, distFromWall, 5,0);
 //
         sleep(500);
 //
-        encoderMecanumDrive(0.7, -distFromWall, -distFromWall, 1,0);
+        encoderMecanumDrive(0.7, -distFromWall, -distFromWall, 5,0);
 
 //        encoderDrive(.3, -distFromWall, -distFromWall, 1);
 //        sleep(500);
 //        encoderDrive(.3, distFromWall, distFromWall, 1);
     }
+    public void gyroCorrection(){
+        int gyro_read = gyro.getHeading();
+        if((gyro_read < 5) || (gyro_read > 355))
+        {
+            return;
+        }
+        if (gyro.getHeading()<180){//make sure the angle is correct
+            turnRight(0.7);
+            while(gyro.getHeading()<180){
+                idle();
+            }
+        }
+        else{
+            turnLeft(0.7);
+            while(gyro.getHeading()>180){
+                idle();
+            }
+        }
+        gyro_corr_cnt++;
+        telemetry.addData("gyroCorrection done", gyro.getHeading());
+        telemetry.addData("gyroCorrection cnt",gyro_corr_cnt);
+        telemetry.update();
+        stopMotors();
+    }
+
 
 }
 //-------------------------------------------------------------------//

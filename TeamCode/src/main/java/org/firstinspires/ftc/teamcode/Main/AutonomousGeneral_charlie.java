@@ -366,10 +366,13 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         front_left_motor.setPower(0);
         back_right_motor.setPower(0);
         back_left_motor.setPower(0);
+        sleep(100);
         back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //idle();
+        sleep(100);
     }
 
     // drive shooting motor for the given time in msec
@@ -773,6 +776,9 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
             back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        idle();
+        sleep(100);
 
             // Determine new target position, and pass to motor controller
             newLeftTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
