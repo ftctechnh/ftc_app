@@ -5,18 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
 import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
 
 
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "charlie red auto")
+@Autonomous(name = "charlie test")
 
 //due to a problem in initialization, all the drive motors should be given opposite values of what they are supposed to be
-public class redAuto_charlie extends AutonomousGeneral_charlie {
+public class TestCharlie extends AutonomousGeneral_charlie {
 
     //circumference of point turn: 2*pi*r = 2* pi * 10.5 inches = 65.973
     //
@@ -43,39 +41,22 @@ public class redAuto_charlie extends AutonomousGeneral_charlie {
         second_beacon_press = false;
         runtime.reset();
         timeprofile[profile_index++] = runtime.milliseconds();
-        //setMotorsModeToEncDrive();
-        //stopMotors();
-        //encoderDriveShootRed(.7,145,130,3, 2, 1);
-        //charlieBeaconPress(true);
-        //while (true) {
-        //  strafeRight(0.4);
-        //}
 
 
-
-        //drive and shoot
-        encoderDrive(0.5, 10, 10, 5);
+        setMotorsModeToEncDrive();
         stopMotors();
-        sleep(100);
-        encoderShoot(0.5);
-        shooting_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intake_motor.setPower(1);
-        sleep(2500);
-        intake_motor.setPower(0);
-        encoderShoot(0.5);
-        sleep(100);
-
-
-        //drive forward a little
-        encoderDrive(0.5,5,5,5);
+        encoderMecanumDrive(0.7, 100, 100, 5, 0);//0 = straight drive; +1 = right ,-1 = left
 
 
 
-        //turn and drive toward wall
-        strafeLeft(0.3);
+        sleep(5000);
+
+       // sleep(1000);
+        encoderMecanumDrive(0.7,100, 100, 5, 1);
+
+
         sleep(1000);
-        stopMotors();
-
+        encoderMecanumDrive(0.7,36, -36, 5, 0);
 
 
     }
