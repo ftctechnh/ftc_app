@@ -7,6 +7,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
+import org.opencv.optflow.DISOpticalFlow;
 
 import java.util.ArrayList;
 
@@ -20,10 +24,12 @@ public class TeleOpMain extends OpMode {
     boolean lastRightBumperState = false;
     boolean lastAButtonState = false;
     boolean isShooting = false;
+    boolean isBacon = false;
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
 
     AutoLib.Sequence mShoot;
+    AutoLib.Sequence mBeacon;
 
     AutoLib.Timer mEncoderMeasure = new AutoLib.Timer(1.0);
     int lastEncode = 0;
@@ -35,6 +41,35 @@ public class TeleOpMain extends OpMode {
         mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0,  1500, true, this));
         mShoot.add(new AutoLib.TimedServoStep(robot.ballServo, 0.5, 0.4, true));
         //mShoot.add(new AutoLib.LogTimeStep(this, "WAIT", 0.2));
+    }
+
+    private void initBeacon() {
+        final float Kp = 0.20f;
+        final float Ki = 0.00f;
+        final float Kd = 0.00f;
+        final float KiCut = 3.0f;
+
+        // parameters of the PID controller for the ultrasonic sensor driving
+        final float Kp4 = 0.025f;
+        final float Ki4 = 0.00f;
+        final float Kd4 = 0;
+        final float Ki4Cutoff = 0.00f;
+
+        SensorLib.PID mHeadingPid = new SensorLib.PID(Kp, Ki, Kd, KiCut);
+        SensorLib.PID mUltraPid = new SensorLib.PID(Kp4, Ki4, Kd4, Ki4Cutoff);
+
+        mBeacon = new AutoLib.LinearSequence();
+
+        mBeacon.add(new AutoLib.GyroTurnStep(this, 0, new UltraHeading(robot.distSensorLeft, robot.distSensorRight), robot.getMotorArray(), 1.0f, 5.0f, true));
+        mBeacon.add(new LineDrive.UltraSquirrleyAzimuthFinDriveStep(this, 0, 0, new UltraHeading(robot.distSensorLeft, robot.distSensorRight), new LineDrive.UltraCorrectedDisplacement(this, robot.distSensorLeft, 15), mHeadingPid, mUltraPid,
+            robot.getMotorArray(), 1.0f, new LineDrive.UltraSensors(robot.distSensorLeft, 15, 3.0f), true));
+
+        AutoLib.Sequence mPush = new AutoLib.ConcurrentSequence();
+
+        mPush.add(new AutoLib.TimedServoStep(robot.leftServo, 1.0, 0.2, false));
+        mPush.add(new AutoLib.TimedServoStep(robot.rightServo, 1.0, 0.2, false));
+
+        mBeacon.add(mPush);
     }
 
     @Override
@@ -87,6 +122,19 @@ public class TeleOpMain extends OpMode {
                     initShoot();
                 }
                 else isShooting = true;
+            }
+        }
+        else if (gamepad1.x){
+            //automation
+            if(gamepad1.x && !isBacon){
+                initBeacon();
+            }
+            if(gamepad1.x || isBacon){
+                if(mBeacon.loop()){
+                    isBacon = false;
+                    initBeacon();
+                }
+                else isBacon = true;
             }
         }
         else{
@@ -214,6 +262,20 @@ public class TeleOpMain extends OpMode {
         }
     }
 
+    public static class UltraHeading implements HeadingSensor {
+        UltrasonicSensor mLeft;
+        UltrasonicSensor mRight;
+
+        UltraHeading(UltrasonicSensor left, UltrasonicSensor right){
+            mLeft = left;
+            mRight = right;
+        }
+
+        public float getHeading(){
+            return (float)(mRight.getUltrasonicLevel() - mLeft.getUltrasonicLevel());
+        }
+
+    }
 
     public static float[] getCorrectedSquirrleyMotorPowers(float dt, float mDirection, float mHeading, HeadingSensor mGyro, SensorLib.PID mPid, float mPower) {
         final float heading = mGyro.getHeading();     // get latest reading from direction sensor

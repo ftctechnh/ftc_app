@@ -30,7 +30,8 @@ public class BotHardware
 
     public MuxColor leftSensor = null;
     public MuxColor rightSensor = null;
-    public UltrasonicSensor distSensor = null;
+    public UltrasonicSensor distSensorLeft = null;
+    public UltrasonicSensor distSensorRight = null;
     public DeviceInterfaceModule dim;
     public AHRS navX;
 
@@ -73,7 +74,8 @@ public class BotHardware
         }
 
         try {
-            distSensor = opMode.hardwareMap.ultrasonicSensor.get("ultra");
+            distSensorLeft = opMode.hardwareMap.ultrasonicSensor.get("ultra_left");
+            distSensorRight = opMode.hardwareMap.ultrasonicSensor.get("ultra_right");
         }
         catch (Exception e){
             opMode.telemetry.addData("Ultrasonic sensor fail to load!", "");

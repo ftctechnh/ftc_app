@@ -9,7 +9,10 @@ import android.hardware.usb.UsbManager;
 import android.widget.ArrayAdapter;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
@@ -48,23 +51,12 @@ public class AutonomousTesting extends OpMode {
 
     @Override
     public void loop() {
-
         telemetry.addData("Color Sensor Left Red", bot.leftSensor.red());
         telemetry.addData("Color Sensor Left Blue", bot.leftSensor.blue());
         telemetry.addData("Color Sensor Right Red", bot.rightSensor.red());
         telemetry.addData("Color Sensor Right Blue", bot.rightSensor.blue());
-        telemetry.addData("Ultra", bot.distSensor.getUltrasonicLevel());
-
-        // until we're done, keep looping through the current Step(s)
-        //if (!bDone)
-        //    bDone = mSequence.loop();       // returns true when we're done
-        //else
-        //    telemetry.addData("First sequence finished", "");
-
-        //Vuf.loop(true);
-        //telemetry.addData("Red R", robot.rightSensor.red());
-        //telemetry.addData("Blue R", robot.rightSensor.blue());
-        //telemetry.addData("Green R", robot.rightSensor.green());
+        telemetry.addData("Ultra Left", bot.distSensorLeft.getUltrasonicLevel());
+        telemetry.addData("Ultra Right", bot.distSensorRight.getUltrasonicLevel());
     }
 
     @Override
