@@ -26,8 +26,8 @@ public class Jan6TeleOpCompetitionBetaJoystick extends OpMode {
     DcMotor ballCollectorMotor;
     DcMotor ballShooterMotor;
 
-    Servo lift_servo;
-    DcMotor lift_motor;
+    //Servo lift_servo;
+    //DcMotor lift_motor;
 
     double shooterGearRatio = 2.333;
 //asdfasdf
@@ -87,8 +87,8 @@ Declare global variables here
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
 //        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
 
-        lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
-        lift_motor.setDirection(DcMotor.Direction.REVERSE);
+        //lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
+        //lift_motor.setDirection(DcMotor.Direction.REVERSE);
 
         cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_BALL_HOLD;
 
@@ -132,7 +132,7 @@ Declare global variables here
         CollectBalls();
         BallShooter();
         //shoot();
-        CapBallLift();
+        //CapBallLift();
 
     }
 
@@ -277,16 +277,16 @@ Declare global variables here
     }*/
 
 
-    public void CapBallLift()
+   /* public void CapBallLift()
     {
 
-        /*
-        CAP_BALL_INIT_POS,
-        CAP_BALL_ARM_OPEN,
-        CAP_BALL_BALL_HOLD,
-        CAP_BALL_LIFT_BALL,
-        CAP_BALL_DROP_BALL
-        */
+
+        //CAP_BALL_INIT_POS,
+        //CAP_BALL_ARM_OPEN,
+        //CAP_BALL_BALL_HOLD,
+        //CAP_BALL_LIFT_BALL,
+        //CAP_BALL_DROP_BALL
+
 
         //       INITIAL STATE        TRIGGER         FINAL STATE         Description
         //       CAP_BALL_INIT_POS    gamepad.x        CAP_BALL_ARM_OPEN   opening the arm
@@ -320,11 +320,11 @@ Declare global variables here
                 //run the motors by setting power to the motors with the game pad values
                 lift_motor.setPower(leftY_gp1);
             }
-           /* if (gamepad2.b)
-            {
-                lift_motor.setPower(0);
-                cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_LIFT_BALL;
-            } */
+           // if (gamepad2.b)
+            //{
+                //lift_motor.setPower(0);
+              //  cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_LIFT_BALL;
+            //}
             break;
             case CAP_BALL_LIFT_BALL:
                 if (gamepad2.a)
@@ -353,9 +353,9 @@ Declare global variables here
             }
             break;
         }
-    }
+    }*/
 
-    public void encoderlift(double liftSpeed,
+   /* public void encoderlift(double liftSpeed,
                             double lift_cm,
                             double timeoutS){
         int newLiftTarget;
@@ -391,7 +391,7 @@ Declare global variables here
             lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
-        }
+        }*/
 /*
 ---------------------------------------------------------------------------------------------
 */

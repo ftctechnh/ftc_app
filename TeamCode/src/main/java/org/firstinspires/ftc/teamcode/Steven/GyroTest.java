@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Created by inspirationteam on 12/11/2016.
  */
 @Autonomous(name = "gyroTest", group = "PushBot")
-@Disabled
+//@Disabled
 public class GyroTest extends OpMode {
 
     GyroSensor gyroSensor;
