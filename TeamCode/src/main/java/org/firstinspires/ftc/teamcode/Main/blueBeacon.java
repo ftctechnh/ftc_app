@@ -50,7 +50,7 @@ public class blueBeacon extends AutonomousGeneral {
         sleep(100);
         intake_motor.setPower(.8);
 
-        encoderDriveShootBlue(.6,-33,33,3, -20, 1); // 150 = 5 feettime 2.5
+        encoderDriveShootBlue(.6,-31,31,3, -20, 1); // 150 = 5 feettime 2.5
 
         sleep(100);
         shooting_motor.setPower(0);
@@ -58,49 +58,68 @@ public class blueBeacon extends AutonomousGeneral {
         //sleep(450);
         setMotorsModeToEncDrive();
         stopMotors();
-        encoderDrive(.7, 105, 105, 5);
+        encoderDrive(.7, -105, -105, 5);
         servoBeaconPress();
 }
 
 
     public void lineAlign() {
 
+        double targetDistLine = back_left_motor.getCurrentPosition() - (int) (20 * getCountsPerCm());
         setMotorsModeToColorSensing();
         straightDrive(-0.7);
-        while (whiteLineDetectedFront() == false)
+        while (whiteLineDetectedFront() == false && back_left_motor.getCurrentPosition() > targetDistLine)
         {
-            
+
         }
      //   timeprofile[profile_index++] = runtime.milliseconds();
         stopMotors();
-     //   timeprofile[profile_index++] = runtime.milliseconds();
-        if (second_beacon_press)
-        {
-           // encoderDrive(.7, -5, -5, 1);
+
+        if(back_left_motor.getCurrentPosition() <= targetDistLine){//if you havent reached the white line yet, correct for that
+            encoderDrive(.7,-15,15,5);
+            encoderDrive(.7, 20,20,5);
+            encoderDrive(.7,15,-15,5);
+
+            lineAlign();
         }
-                else
+        else
         {
-            encoderDrive(.7, -5, -5, 1);
-        }
 
-    //    timeprofile[profile_index++] = runtime.milliseconds();
-
-     //   encoderDrive(1, 30, -30, 3);
-
-        setMotorsModeToColorSensing();
-     //   timeprofile[profile_index++] = runtime.milliseconds();
+            //   timeprofile[profile_index++] = runtime.milliseconds();
+            if (second_beacon_press) {
+                // encoderDrive(.7, -5, -5, 1);
+            } else {
+                //encoderDrive(.7, -5, -5, 1);
+            }
 
 
-        while (whiteLineDetectedBack() == false) {
+            setMotorsModeToColorSensing();
+            //   timeprofile[profile_index++] = runtime.milliseconds();
 
+            targetDistLine = back_left_motor.getCurrentPosition() + (int) (40 * getCountsPerCm());
             newTurnRight(.7);
-        }
+            while (whiteLineDetectedBack() == false && back_left_motor.getCurrentPosition()<targetDistLine) {
 
-        //timeprofile[profile_index++] = runtime.milliseconds();
-        front_right_motor.setPower(0);
-        front_left_motor.setPower(0);
-        back_right_motor.setPower(0);
-        back_left_motor.setPower(0);
+
+            }
+
+            //timeprofile[profile_index++] = runtime.milliseconds();
+            front_right_motor.setPower(0);
+            front_left_motor.setPower(0);
+            back_right_motor.setPower(0);
+            back_left_motor.setPower(0);
+            if(back_left_motor.getCurrentPosition()>= targetDistLine){
+                double walldist = rangeSensor.getDistance(DistanceUnit.CM);
+                newTurnLeft(.7);
+                while(whiteLineDetectedBack() == false && walldist>= rangeSensor.getDistance(DistanceUnit.CM)){
+                    //search for a minimum distance, which would be when the robot is perpendicular to the wall
+                }
+                front_right_motor.setPower(0);
+                front_left_motor.setPower(0);
+                back_right_motor.setPower(0);
+                back_left_motor.setPower(0);
+            }
+        }
 
 
     }
@@ -115,7 +134,7 @@ public class blueBeacon extends AutonomousGeneral {
 
 
         while (rangeSensor.getDistance(DistanceUnit.CM) > 11) {
-            straightDrive(-.7);
+            straightDrive(-0.7);
         }
         stopMotors();
         timeprofile[profile_index++] = runtime.milliseconds();
@@ -256,10 +275,10 @@ public class blueBeacon extends AutonomousGeneral {
         if (second_beacon_press)
         {
 
-            encoderDrive(.7, 15, -15, 5);
+            encoderDrive(.7, -15, 15, 5);
             setMotorsModeToEncDrive();
             stopMotors();
-            encoderDrive(.8, 145, 135, 5);
+            encoderDrive(.8, 135, 145, 5);
             sleep(500);
             encoderDrive(.7, -10, -10, 5);
             encoderDrive(.7, 30, 30, 5);
