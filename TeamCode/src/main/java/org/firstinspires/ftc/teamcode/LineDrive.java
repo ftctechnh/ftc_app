@@ -43,13 +43,13 @@ public class LineDrive extends OpenCVLib {
     float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
 
     // parameters of the PID controller for the heading of the line following
-    float Kp2 = 0.250f;
+    float Kp2 = 0.35f;
     float Ki2 = 0.000f;
     float Kd2 = 0;
     float Ki2Cutoff = 0.0f;
 
     // parameters of the PID controller for the displacement of the line following
-    float Kp3 = 3.00f;
+    float Kp3 = 5.00f;
     float Ki3 = 0.0f;
     float Kd3 = 0;
     float Ki3Cutoff = 0.00f;
@@ -74,7 +74,7 @@ public class LineDrive extends OpenCVLib {
     final double pushyTime = 0.5;
     boolean red = false;
     final int colorThresh = 200;
-    final float driveTime = 0.025f;
+    final float driveTime = 0.040f;
     final int driveLoopCount = 1;
     final float pushyPower = 0.2f;
 
@@ -158,8 +158,8 @@ public class LineDrive extends OpenCVLib {
 
         //mDrive.add(new AutoLib.SquirrleyAzimuthTimedDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.0f, false));
         mDrive.add(new AutoLib.SquirrleyAzimuthFinDriveStep(modePointer, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.5f, new UltraSensors(robot.distSensorLeft, 70, 2.5), false));
-        if(red) mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 50), mPid, muPid, robot.getMotorArray(), 0.7f, 1.0f, false));
-        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 17), mPid, muPid, robot.getMotorArray(), 0.7f, new LineSensors(this, frame, 0.0f), true));
+        //if(red) mDrive.add(new UltraSquirrleyAzimuthTimedDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 50), mPid, muPid, robot.getMotorArray(), 0.7f, 1.0f, false));
+        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 16, robot.distSensorRight), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 0.0f), true));
 
         mSequence.add(mDrive);
 
@@ -170,13 +170,13 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
             public void run() {
                 robot.initMotors(thing, debug, true);
-                robot.setMaxSpeedAll(2500);
+                //robot.setMaxSpeedAll(2500);
             }
         }));
 
 
-        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS1, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS2, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
+        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS1, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS2, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
 
         /*
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
@@ -190,19 +190,19 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new PushyLib.pushypushy(modePointer, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, pushyTime, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 17), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 20, robot.distSensorRight), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
 
 
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
             public void run() {
                 robot.initMotors(thing, debug, true);
-                robot.setMaxSpeedAll(2500);
+                //robot.setMaxSpeedAll(2500);
             }
         }));
 
 
-        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS1, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS2, 4.0), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
+        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS1, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS2, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
 
         /*
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
@@ -220,8 +220,15 @@ public class LineDrive extends OpenCVLib {
 
         mCharge = new AutoLib.LinearSequence();
 
+        mCharge.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
+            public void run() {
+                robot.initMotors(thing, debug, true);
+                robot.setMaxSpeedAll(2800);
+            }
+        }));
+
         mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 30), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(1.0), false));
-        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 120), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(2.0), true));
+        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 120), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(1.75), true));
 
         mSequence.add(mCharge);
         // start out not-done
@@ -354,12 +361,20 @@ public class LineDrive extends OpenCVLib {
 
     public static class UltraSensors implements FinishSensor, DisplacementSensor {
         UltrasonicSensor mSensor;
+        UltrasonicSensor mSensor2;
         float mDist;
         float mHeading;
         double mSeconds;
         AutoLib.Timer mTime = null;
 
         UltraSensors(UltrasonicSensor sensor, float dist, double time) {
+            mSensor = sensor;
+            mDist = dist;
+            mSeconds = time;
+        }
+
+        UltraSensors(UltrasonicSensor sensor, float dist, double time, UltrasonicSensor sensor2) {
+            mSensor2 = sensor2;
             mSensor = sensor;
             mDist = dist;
             mSeconds = time;
@@ -372,7 +387,9 @@ public class LineDrive extends OpenCVLib {
             }
 
             //get ultrasonic distance
-            double dist = mSensor.getUltrasonicLevel();
+            double dist;
+            if(mSensor2 == null) dist = mSensor.getUltrasonicLevel();
+            else dist = (mSensor.getUltrasonicLevel() + mSensor2.getUltrasonicLevel()) / 2.0;
 
             //cutoff ridiculous values
             if (dist > 200 || dist < 5) return false;
@@ -395,6 +412,7 @@ public class LineDrive extends OpenCVLib {
         private final float Kp = 0.3f;
         private float mDist;
         private UltrasonicSensor mSensor;
+        private UltrasonicSensor mSensor2;
         private OpMode mMode;
 
         UltraCorrectedDisplacement(OpMode mode, UltrasonicSensor sensor, float dist) {
@@ -403,8 +421,17 @@ public class LineDrive extends OpenCVLib {
             mDist = dist;
         }
 
+        UltraCorrectedDisplacement(OpMode mode, UltrasonicSensor sensor, float dist, UltrasonicSensor sensor2) {
+            mSensor2 = sensor2;
+            mMode = mode;
+            mSensor = sensor;
+            mDist = dist;
+        }
+
         public float getDisp(float angleError){
-            float dist = (float)mSensor.getUltrasonicLevel();
+            float dist;
+            if(mSensor2 == null) dist = (float)mSensor.getUltrasonicLevel();
+            else dist = (float)((mSensor.getUltrasonicLevel() + mSensor2.getUltrasonicLevel()) / 2.0);
 
             mMode.telemetry.addData("Ultra", dist);
 

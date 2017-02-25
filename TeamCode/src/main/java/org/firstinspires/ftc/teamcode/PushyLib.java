@@ -16,7 +16,7 @@ public final class PushyLib {
 
     public static class pushypushy extends AutoLib.LinearSequence{
 
-        pushypushy(OpMode mode, DcMotor[] motors, ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo,
+        pushypushy(OpMode mode, DcMotor[] motors, BotHardware.MuxColor leftSensor, BotHardware.MuxColor rightSensor, Servo leftServo, Servo rightServo,
                    double pushPos, double time, boolean red, int colorThresh, float drivePower, float driveTime, int maxDriveLoop){
             //run color detection and pushing
             this.add(new pushyDetect(mode, motors, leftSensor, rightSensor, leftServo, rightServo, pushPos, time, red, colorThresh, drivePower, driveTime, maxDriveLoop));
@@ -32,8 +32,8 @@ public final class PushyLib {
 
     private static class pushyDetect extends AutoLib.Step {
         DcMotor[] mMotors;
-        ColorSensor mLeftSensor;
-        ColorSensor mRightSensor;
+        BotHardware.MuxColor mLeftSensor;
+        BotHardware.MuxColor mRightSensor;
         Servo mLeftServo;
         Servo mRightServo;
         final double mPushPos;
@@ -46,7 +46,7 @@ public final class PushyLib {
         int mMaxDriveLoop;
         OpMode mMode;
 
-        public pushyDetect(OpMode mode, DcMotor[] motors, ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo,
+        public pushyDetect(OpMode mode, DcMotor[] motors, BotHardware.MuxColor leftSensor, BotHardware.MuxColor rightSensor, Servo leftServo, Servo rightServo,
                            double pushPos, double time, boolean red, int colorThresh, float drivePower, float driveTime, int maxDriveLoop){
             //You know what, I think I'm missing some variables
             //oh never mind here they are
