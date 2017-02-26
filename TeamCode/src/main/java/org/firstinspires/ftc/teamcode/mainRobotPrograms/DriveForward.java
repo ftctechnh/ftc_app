@@ -9,7 +9,7 @@ public class DriveForward extends _AutonomousBase
 {
     //Custom initialization
     @Override
-    protected void driverStationSaysINITIALIZE()
+    protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //Set the motor powers.
         setLeftPower(-.4);
@@ -20,8 +20,7 @@ public class DriveForward extends _AutonomousBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        setLeftPower(.6);
-        setRightPower(.6);
+        setMovementPower(0.6);
 
         while (true)
             idle();

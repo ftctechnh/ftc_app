@@ -16,7 +16,7 @@ public abstract class _AutonomousBase extends _RobotBase
     protected GyroSensor gyroscope;
     protected int desiredHeading = 0; //This variable is super helpful to the program as a whole since it is accounted for in both the adjustMotor methods and the turn method, and thus enables insufficient turns to be completed later on.
 
-    protected ColorSensor option1ColorSensor, option2ColorSensor; //Must have different I2C addresses.
+    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor; //Must have different I2C addresses.
     protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
 
     // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
@@ -24,6 +24,9 @@ public abstract class _AutonomousBase extends _RobotBase
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //Initialize color sensors.
+        bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
+        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
+        bottomColorSensor.enableLed(true);
         option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
         option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         option1ColorSensor.enableLed(false);
@@ -37,7 +40,7 @@ public abstract class _AutonomousBase extends _RobotBase
         sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
         sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
         //The range sensors are odd and often return .269 with this method unless the robot is restarted.
-        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 && sideRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
+        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 || sideRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
             outputNewLineToDrivers("RANGE SENSORS MISCONFIGURED");
 
         //initialize gyroscope (will output whether it was found or not.
@@ -74,7 +77,8 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per frame.
-    private double offCourseGyroCorrectionFactor = .06; //Less means less sensitive.
+    //.15 and .2 work.
+    private double offCourseGyroCorrectionFactor = .15; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
         if (gyroscope != null)
@@ -84,18 +88,19 @@ public abstract class _AutonomousBase extends _RobotBase
 
             //If offFromHeading is positive, then we want to increase the right power and decrease the left power.  Vice versa also true
             //We also want some sort of coefficient for the amount that each power is changed by.
-            double motorPowerChange = Math.signum(offFromHeading) * (Math.log10(Math.abs(offFromHeading) + 1) * offCourseGyroCorrectionFactor);
+            double motorPowerChange = Math.signum(offFromHeading) * ((Math.log10(Math.abs(offFromHeading) + 1) * offCourseGyroCorrectionFactor + .02));
 
             //Now set the motor power of each motor equal to the current motor power plus the correction factor.
             setLeftPower(Range.clip(movementPower - motorPowerChange, -1, 1));
             setRightPower(Range.clip(movementPower + motorPowerChange, -1, 1));
 
-//            outputConstantDataToDrivers(
-//                    new String[] {
-//                            "Off from heading = " + offFromHeading,
-//                            "Motor power change = " + motorPowerChange
-//                    }
-//            );
+            outputConstantDataToDrivers(
+                    new String[] {
+                            "Desired heading = " + desiredHeading,
+                            "Off from heading = " + offFromHeading,
+                            "Motor power change = " + motorPowerChange
+                    }
+            );
         }
         else
         {
@@ -124,7 +129,7 @@ public abstract class _AutonomousBase extends _RobotBase
             long startTime = System.currentTimeMillis();
             int priorHeading = getValidGyroHeading();
             long lastCheckedTime = startTime;
-            double turnSpeedBatteryFactor = .16;
+            double turnSpeedBatteryFactor = .25;
 
             int currentHeading = getValidGyroHeading();
             //Adjust as fully as possible but not beyond the time limit.
