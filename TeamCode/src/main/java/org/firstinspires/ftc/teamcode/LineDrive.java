@@ -83,6 +83,8 @@ public class LineDrive extends OpenCVLib {
     OpMode modePointer = this;
     boolean mJustShoot = false;
 
+    AutoLib.Timer mWait = new AutoLib.Timer(20);
+
     LineDrive(OpMode mode, boolean redColor, boolean justShoot){
         if(mode != null) modePointer = mode;
         red = redColor;
@@ -245,6 +247,7 @@ public class LineDrive extends OpenCVLib {
     @Override
     public void start(){
         robot.navX.zeroYaw();
+        if(mJustShoot) mWait.start();
     }
 
     @Override
@@ -252,7 +255,7 @@ public class LineDrive extends OpenCVLib {
         try{
            if(mJustShoot){
                // until we're done, keep looping through the current Step(s)
-               if (!bDone)
+               if (!bDone && mWait.done())
                    bDone = mShoot.loop();       // returns true when we're done
                else
                    modePointer.telemetry.addData("sequence finished", "");
