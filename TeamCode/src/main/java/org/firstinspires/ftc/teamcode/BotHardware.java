@@ -135,6 +135,7 @@ public class BotHardware
         sweeperMotor = hw.getDcMotor("sweeper");
 
         //launcherMotor.setDirection(DcMotor.Direction.REVERSE);
+        sweeperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 

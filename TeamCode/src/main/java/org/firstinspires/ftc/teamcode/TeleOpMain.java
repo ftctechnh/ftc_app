@@ -98,7 +98,7 @@ public class TeleOpMain extends OpMode {
 
     @Override
     public void loop() {
-
+        /*
         if(mEncoderMeasure.done()) {
             double encode = robot.frontRightMotor.getCurrentPosition() - lastEncode;
             avgEncode = (avgEncode + encode)/2.0;
@@ -137,7 +137,9 @@ public class TeleOpMain extends OpMode {
                 else isBacon = true;
             }
         }
+
         else{
+        */
             isShooting = false;
             /*
 
@@ -257,7 +259,7 @@ public class TeleOpMain extends OpMode {
                     robot.dim.setLED(0, false);
                     telemetry.addData("Reversed", "False");
                 }
-            }
+            //}
             lastAButtonState = gamepad1.a;
         }
     }

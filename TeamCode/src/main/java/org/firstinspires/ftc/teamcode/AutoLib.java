@@ -727,6 +727,7 @@ public class AutoLib {
         private OpMode mOpMode;                             // needed so we can log output (may be null)
         private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
         private DcMotor[] mMotors;            // the motor steps we're guiding - assumed order is right ... left ...
+        private boolean mReversed;
 
         public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
                              DcMotor[] motors, float power, float error, boolean stop)
@@ -738,6 +739,20 @@ public class AutoLib {
             mPower = power;
             mError = error;
             mStop = stop;
+            mReversed = false;
+        }
+
+        public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
+                            DcMotor[] motors, float power, float error, boolean stop, boolean reversed)
+        {
+            mOpMode = mode;
+            mHeading = heading;
+            mGyro = gyro;
+            mMotors = motors;
+            mPower = power;
+            mError = error;
+            mStop = stop;
+            mReversed = reversed;
         }
 
         public boolean loop()
@@ -775,11 +790,19 @@ public class AutoLib {
                 return true;
             }
 
-            float power = Range.clip(dist / 30.0f, -mPower, mPower);
+            float power = Range.clip(dist / 2.0f, -mPower, mPower);//Range.clip(dist / 30.0f, -mPower, mPower);
 
             // compute new right/left motor powers
-            float rightPower = power;
-            float leftPower = -power;
+            float rightPower;
+            float leftPower;
+            if(!mReversed){
+                rightPower = power;
+                leftPower = -power;
+            }
+            else {
+                rightPower = -power;
+                leftPower = power;
+            }
 
             // log some data
             if (mOpMode != null) {
