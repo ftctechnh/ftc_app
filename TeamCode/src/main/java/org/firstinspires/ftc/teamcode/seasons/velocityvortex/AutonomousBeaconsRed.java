@@ -28,12 +28,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // wait for initialization
         telemetry.addData("status","waiting");
         telemetry.update();
+
         waitForStart();
-
-//        disableColorSensors();
-
-        // reset gyro heading
-        getGyroSensor().resetZAxisIntegrator();
 
         // set target position for initial diagonal drive motion
         getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 63);
@@ -50,9 +46,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         getBackRightDrive().setPower(0.5);
 
         // wait for the drive motors to stop
-        while(opModeIsActive()
-                && getFrontLeftDrive().isBusy()
-                && getBackRightDrive().isBusy()) {
+        while(opModeIsActive() &&
+                (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
 
             // run the other motors to drive at a steeper angle
             getFrontRightDrive().setPower(0.2);
@@ -72,13 +67,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive left to white line
-        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-            driveLeft(0.1);
-
-            telemetry.addData("ods3", getOds3().getRawLightDetected());
-            telemetry.update();
-        }
-        stopRobot();
+        stopOnLine(0.05, false);
 
         // reset again before pressing beacon
         gyroPivot(0.8, 0, false);
@@ -108,26 +97,21 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 //        // launch the second particle
 //        launchParticle();
 
-        // strafe right
+        // strafe right to skip first line
         encoderStrafe(0.5, 5, 5);
 
         // back up from wall
         //rangeSensorDrive(15, 0.2);
-        rangeSensorStrafe(0.2);
+        rangeSensorStrafe(1.0);
 
         // gyro pivot
-        gyroPivot(0.8, 0, false);
+        //gyroPivot(0.8, 0, false);
 
         // strafe past the second beacon line
         //encoderStrafe(0.4, 16, 16);
 
         // look for the white line leading to the second beacon
-        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-            driveLeft(0.1);
-            telemetry.addData("ods3", getOds3().getRawLightDetected());
-            telemetry.update();
-        }
-        stopRobot();
+        //stopOnLine(0.05, false);
 
         // reset before pressing beacon
         gyroPivot(0.8, 0, false);
@@ -154,9 +138,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         getBackLeftDrive().setPower(0.5);
 
         // wait for the drive motors to stop
-        while(opModeIsActive()
-                && getFrontRightDrive().isBusy()
-                && getBackLeftDrive().isBusy()) {
+        while(opModeIsActive() &&
+                (getFrontRightDrive().isBusy() || getBackLeftDrive().isBusy())) {
 
             telemetry.addData("Path",  "Running at %d :%d",
                     getFrontRightDrive().getCurrentPosition(),

@@ -33,6 +33,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     protected static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI));
 
+    private static final double LIGHT_SENSOR_PERFECT_VALUE = 2.5;
+
+    private static final double LIGHT_THRESHOLD = 0.5;
+
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
     private DcMotor backLeftDrive;
@@ -48,6 +52,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private Servo beaconsServo2;
     private Servo door3;
     private Servo latch4;
+    private Servo pusher5;
 
     private LightSensor frontLightSensor;
     private LightSensor backLightSensor;
@@ -78,7 +83,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         launcherMotor = hardwareMap.dcMotor.get("launcher");
         intakeMotor = hardwareMap.dcMotor.get("intake");
 
-
         spoolMotor1 = hardwareMap.dcMotor.get("s1");
         spoolMotor2 = hardwareMap.dcMotor.get("s2");
 
@@ -86,6 +90,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         beaconsServo2 = hardwareMap.servo.get("r2");   // Up = 0.7, Down = 0.0
         door3 = hardwareMap.servo.get("d3");  // Closed = 0.55, Open = 0.25
         latch4 = hardwareMap.servo.get("l4"); // Up = 0.5
+        pusher5 = hardwareMap.servo.get("p5"); // Up = 0.0, Down = 0.7
 
         colorSensor1 = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "clr");
         colorSensor1.setI2cAddress(I2cAddr.create8bit(0x3C));
@@ -124,6 +129,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         door3.setPosition(0.53);
         latch4.setPosition(0.5);
+        pusher5.setPosition(0);
 
         // stop all motors
         launcherMotor.setPower(0);
@@ -144,9 +150,33 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 //        telemetry.update();
 
         // reset gyro heading
-//        gyroSensor.resetZAxisIntegrator();
+        gyroSensor.resetZAxisIntegrator();
+
         telemetry.addData("status","end of init");
         telemetry.update();
+    }
+
+    protected void stopOnLine(double speed, boolean driveRight) {
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double error = LIGHT_SENSOR_PERFECT_VALUE - getOds3().getRawLightDetected();
+
+        while(opModeIsActive() && Math.abs(error) > LIGHT_THRESHOLD) {
+
+            error = LIGHT_SENSOR_PERFECT_VALUE - getOds3().getRawLightDetected();
+
+            // strafe
+            if(driveRight) {
+                driveRight(speed);
+            } else {
+                driveLeft(speed);
+            }
+
+            telemetry.addData("ods error", error);
+            telemetry.update();
+        }
+        stopRobot();
     }
 
     protected void claimBeaconRed() {
@@ -187,9 +217,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             driveForward(0.2);
         }
         //stopRobot();
-
-        // drive forward two inches
-        encoderDrive(0.5, 2, 2);
 
         // pause for the beacon to change color
         getRobotRuntime().reset();
@@ -281,9 +308,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             // run without encoders again
             driveForward(0.2);
         }
-
-        // drive forward two inches
-        encoderDrive(0.5, 2, 2);
 
         //stopRobot();
 
@@ -615,6 +639,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected Servo getLatch4() {
         return latch4;
+    }
+
+    protected Servo getPusher5() {
+        return pusher5;
     }
 
     protected LightSensor getFrontLightSensor() {
