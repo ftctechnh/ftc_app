@@ -191,7 +191,7 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new PushyLib.pushypushy(modePointer, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, pushyTime, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 20, robot.distSensorRight), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 25, robot.distSensorRight), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(this, frame, 3000.0f), true));
 
 
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
@@ -202,8 +202,8 @@ public class LineDrive extends OpenCVLib {
         }));
 
         //mPushy.add(new AutoLib.GyroTurnStep(modePointer, 0, new LineSensors(this, frame), robot.getMotorArray(), 0.1f, 0.5f, true, true));
-        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS1, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS2, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
+        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS1+1, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mPushy.add(new LineFollowLib.LineDriveStep(modePointer, 0, new LineSensors(this, frame), new LineSensors(this, frame), new UltraSensors(robot.distSensorLeft, ultraDistS2+1, 4.0, robot.distSensorRight), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
 
         /*
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
