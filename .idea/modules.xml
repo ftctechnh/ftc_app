@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" filepath="$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Omegas/Omegas.iml" filepath="$PROJECT_DIR$/Omegas/Omegas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ftc-visionlib/ftc-visionlib.iml" filepath="$PROJECT_DIR$/ftc-visionlib/ftc-visionlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ftc_app.iml" filepath="$PROJECT_DIR$/ftc_app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/opencv-java/opencv-java.iml" filepath="$PROJECT_DIR$/opencv-java/opencv-java.iml" />
+    </modules>
+  </component>
+</project>

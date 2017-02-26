@@ -1,0 +1,44 @@
+Index: Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision 00bbce4c0eb02b05236724a31e4a754bfcaac4d7)
++++ Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision )
+@@ -60,28 +60,28 @@
+ 
+         // Define and Initialize Motors
+         leftFrontMotor = hwMap.dcMotor.get("left_front");
+-        leftBackMotor = hwMap.dcMotor.get("left_back");
++//        leftBackMotor = hwMap.dcMotor.get("left_back");
+         rightFrontMotor = hwMap.dcMotor.get("right_front");
+-        rightBackMotor = hwMap.dcMotor.get("right_back");
++//        rightBackMotor = hwMap.dcMotor.get("right_back");
+ 
+         motors = new ArrayList<DcMotor>() {
+             {
+                 add(leftFrontMotor);
+-                add(leftBackMotor);
++//                add(leftBackMotor);
+                 add(rightFrontMotor);
+-                add(rightBackMotor);
++//                add(rightBackMotor);
+             }
+         };
+ 
+         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
+-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
++//        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
+         rightFrontMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
+-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
++//        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
+ 
+         // Connect to servo (Assume PushBot Left Hand)
+         // Change the text in quotes to match any servo name on your robot.
+-        leftBeaconator = hwMap.servo.get("left_beaconator");
+-        rightBeaconator = hwMap.servo.get("right_beaconator");
++//        leftBeaconator = hwMap.servo.get("left_beaconator");
++//        rightBeaconator = hwMap.servo.get("right_beaconator");
+ 
+         lineSensor = hwMap.lightSensor.get("left_color_sensor");
+         lineSensor.enableLed(true);

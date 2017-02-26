@@ -1,0 +1,68 @@
+Index: Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision cc24b030bf60708f6978938d9e3452a0255569aa)
++++ Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision )
+@@ -61,23 +61,23 @@
+ 
+         // Define and Initialize Motors
+         leftFrontMotor  = hwMap.dcMotor.get("left_front");
+-        leftBackMotor   = hwMap.dcMotor.get("left_back");
++//        leftBackMotor   = hwMap.dcMotor.get("left_back");
+         rightFrontMotor = hwMap.dcMotor.get("right_front");
+-        rightBackMotor  = hwMap.dcMotor.get("right_back");
++//        rightBackMotor  = hwMap.dcMotor.get("right_back");
+ 
+         motors = new ArrayList<DcMotor>(){
+             {
+                 add(leftFrontMotor);
+-                add(leftBackMotor);
++//                add(leftBackMotor);
+                 add(rightFrontMotor);
+-                add(rightBackMotor);
++//                add(rightBackMotor);
+             }
+         };
+ 
+         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
+-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
++//        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
+         rightFrontMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
+-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
++//        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
+ 
+         // Connect to servo (Assume PushBot Left Hand)
+         // Change the text in quotes to match any servo name on your robot.
+@@ -131,9 +131,9 @@
+         ElapsedTime timePushed = new ElapsedTime();
+ 
+         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
+-            leftBackMotor.setPower(1.0);
++//            leftBackMotor.setPower(1.0);
+             leftFrontMotor.setPower(1.0);
+-            rightBackMotor.setPower(-1.0);
++//            rightBackMotor.setPower(-1.0);
+             rightFrontMotor.setPower(-1.0);
+         }
+     }
+Index: Omegas/src/main/java/org/firstinspires/ftc/omegas/drivercontrolled/OmegasLinear.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Omegas/src/main/java/org/firstinspires/ftc/omegas/drivercontrolled/OmegasLinear.java	(revision cc24b030bf60708f6978938d9e3452a0255569aa)
++++ Omegas/src/main/java/org/firstinspires/ftc/omegas/drivercontrolled/OmegasLinear.java	(revision )
+@@ -100,9 +100,9 @@
+             telemetry.update();
+ 
+             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+-            Ω.leftBackMotor.setPower(-gamepad1.left_stick_y);
++//            Ω.leftBackMotor.setPower(-gamepad1.left_stick_y);
+             Ω.leftFrontMotor.setPower(-gamepad1.left_stick_y);
+-            Ω.rightBackMotor.setPower(-gamepad1.right_stick_y);
++//            Ω.rightBackMotor.setPower(-gamepad1.right_stick_y);
+             Ω.rightFrontMotor.setPower(-gamepad1.right_stick_y);
+         }
+     }

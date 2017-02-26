@@ -21,8 +21,8 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     signingConfigs {
         debug {
@@ -71,16 +71,11 @@ android {
     buildTypes {
         release {
             // Disable debugging for release versions so it can be uploaded to Google Play.
-            //debuggable true
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
+            ndk {}
         }
         debug {
             debuggable true
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
+            ndk {}
         }
     }
 

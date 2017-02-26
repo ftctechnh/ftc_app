@@ -12,14 +12,13 @@ android {
         targetSdkVersion 19
     }
 
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
 repositories {
     flatDir {
         dirs '../libs'
@@ -27,3 +26,6 @@ repositories {
 }
 
 apply from: 'build.release.gradle'
+
+dependencies {
+}
