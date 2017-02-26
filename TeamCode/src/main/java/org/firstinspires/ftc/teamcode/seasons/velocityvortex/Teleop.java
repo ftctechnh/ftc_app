@@ -80,17 +80,6 @@ public class Teleop extends LinearOpModeBase {
             handleCapBallMechanism();
             handleTelemetry();
 
-            // controls for button pusher servos
-            if(gamepad2.right_trigger > 0) {
-                // up for both
-                getBeaconsServo1().setPosition(0.3);
-                getBeaconsServo2().setPosition(0.75);
-            } else if(gamepad2.left_trigger > 0) {
-                // down for both
-                getBeaconsServo1().setPosition(1);
-                getBeaconsServo2().setPosition(0);
-            }
-
             idle();
         }
     }
@@ -120,14 +109,23 @@ public class Teleop extends LinearOpModeBase {
 
         // control to open the cap ball latch
         if(gamepad2.dpad_down) {
-            getLatch4().setPosition(0.7);
+            getLatch4().setPosition(1.0);
+        }
+
+        // controls for the cap ball
+        if(gamepad2.right_trigger > 0) {
+            // move up
+            getPusher5().setPosition(0.7);
+        } else if(gamepad2.left_trigger > 0) {
+            // move down
+            getPusher5().setPosition(0);
         }
     }
 
     private void handleIntake() {
         if (gamepad2.b){
             getDoor3().setPosition(0.25);
-            getIntakeMotor().setPower(-1.0);
+            getIntakeMotor().setPower(-0.5);
         }
         else if(gamepad2.right_stick_y >= 0.2 || gamepad2.right_stick_y <= -0.2 ){
             getDoor3().setPosition(0.55);
