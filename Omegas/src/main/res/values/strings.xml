@@ -10,6 +10,4 @@
     <string name="rightBeaconator">right_beaconator</string>
     <string name="lightSensor">light_sensor</string>
     <string name="ultrasonicSensor">ultrasonic_sensor</string>
-    <string name="frontLightSensor">front_light_sensor</string>
-    <string name="backLightSensor">back_light_sensor</string>
 </resources>

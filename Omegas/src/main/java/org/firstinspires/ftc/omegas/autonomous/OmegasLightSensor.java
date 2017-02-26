@@ -34,7 +34,7 @@ public class OmegasLightSensor extends LinearOpMode {
                 initTelemetry(telemetry);
                 initAudio();
 
-                getFrontLightSensor().enableLed(true);
+                getLightSensor().enableLed(true);
                 sayMessage();
             }
         };
@@ -43,7 +43,7 @@ public class OmegasLightSensor extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            light = Ω.getFrontLightSensor().getLightDetected();
+            light = Ω.getLightSensor().getLightDetected();
             telemetry.addData("Data", "Light amount: " + light);
             telemetry.update();
 
@@ -62,6 +62,6 @@ public class OmegasLightSensor extends LinearOpMode {
             }
         }
 
-        Ω.getFrontLightSensor().enableLed(false);
+        Ω.getLightSensor().enableLed(false);
     }
 }
