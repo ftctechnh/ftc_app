@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cController;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceImpl;
 import com.qualcomm.robotcore.hardware.I2cDeviceReader;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
@@ -177,6 +179,42 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             telemetry.update();
         }
         stopRobot();
+    }
+
+    protected void autonomousInitLoop() {
+        I2cDeviceSynch colorSensor1Sync =
+                new I2cDeviceSynchImpl((I2cDevice)colorSensor1, colorSensor1.getI2cAddress(), false);
+        I2cDeviceSynch colorSensor2Sync =
+                new I2cDeviceSynchImpl((I2cDevice)colorSensor1, colorSensor1.getI2cAddress(), false);
+
+        colorSensor1Sync.engage();
+        colorSensor2Sync.engage();
+
+        while(opModeIsActive() && !isStopRequested()) {
+            if (gamepad1.a) {
+                telemetry.addData(">", "Calibrating Gyro");
+                telemetry.update();
+
+                gyroSensor.calibrate();
+
+                // make sure the gyro is calibrated before continuing
+                while (!isStopRequested() && gyroSensor.isCalibrating()) {
+                    idle();
+                }
+
+                telemetry.addData(">", "Gyro calibrated");
+                telemetry.update();
+
+            } else if (gamepad1.b) {
+                telemetry.addData(">", "Performing black-level calibration...");
+                telemetry.update();
+
+                // command register = 0x03
+                // 0x43 = command for black-level calibration
+                colorSensor1Sync.write8(0x03, 0x42);
+                colorSensor2Sync.write8(0x03, 0x42);
+            }
+        }
     }
 
     protected void claimBeaconRed() {

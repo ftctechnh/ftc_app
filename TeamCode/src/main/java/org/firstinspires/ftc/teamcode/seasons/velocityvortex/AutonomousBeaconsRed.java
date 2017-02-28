@@ -29,7 +29,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         telemetry.addData("status","waiting");
         telemetry.update();
 
-        waitForStart();
+        autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
         getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 63);
