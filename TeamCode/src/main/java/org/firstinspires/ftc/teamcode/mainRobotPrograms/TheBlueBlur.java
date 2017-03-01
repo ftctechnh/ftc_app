@@ -3,11 +3,10 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="The Blue Blur", group = "Beta Group")
+@Autonomous(name="The Blue Blur", group = "Auto Group")
 
 public class TheBlueBlur extends _AutonomousBase
 {
-
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException
     {
@@ -51,16 +50,28 @@ public class TheBlueBlur extends _AutonomousBase
             outputNewLineToDrivers ("Looking for beacon " + (i + 1));
 
             //Set movement speed.
-            setMovementPower(0.26);
+            setMovementPower(0.4);
 
             //Variables required for range sensor adjustment.
             long lastAdjustTime = System.currentTimeMillis ();
             int idealDistance = 15;
 
             //Drive until centered on the beacon.
+            boolean aboutToSeeWhiteLine = false;
             while (bottomColorSensor.alpha() <= 5)
             {
-                //Adjust gyro based on range sensor.
+                //Slow down if we are really close to hitting the white line so that we definitely see it.
+                if (!aboutToSeeWhiteLine)
+                {
+                    updateColorSensorStates ();
+                    if (option1Red || option1Blue)
+                    {
+                        setMovementPower (0.17);
+                        aboutToSeeWhiteLine = true;
+                    }
+                }
+
+                //Adjust gyro based on range sensor readings.  Too far, decrement readings.  Too close, increment readings.
                 double currentDist = sideRangeSensor.cmUltrasonic ();
                 if (Math.abs (currentDist - idealDistance) >= 2)
                 {
@@ -79,16 +90,11 @@ public class TheBlueBlur extends _AutonomousBase
             //Stop driving when centered.
             stopDriving ();
 
-            //Changed as the loop below progresses.
-            boolean option1Red = option1ColorSensor.red () >= 2,
-                    option1Blue = option1ColorSensor.blue () >= 2,
-                    option2Red = option2ColorSensor.red () >= 2,
-                    option2Blue = option2ColorSensor.blue () >= 2;
-
             outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
 
             //While the beacon is not completely blue (this is the verification step).
-            int failedAttempts = 0; //The robot tries different drives for each trial.
+            int failedAttempts = 0; //The robot tries different drive lengths for each trial.
+            updateColorSensorStates ();
             while (! (option1Blue && option2Blue))
             {
                 outputNewLineToDrivers ("Beacon is not completely blue, attempting to press the correct color!");
@@ -124,29 +130,24 @@ public class TheBlueBlur extends _AutonomousBase
                 }
                 else
                 {
-                    outputNewLineToDrivers("Run provided weird values!");
-                    runProvidedWeirdValues = true;
+                    failedAttempts = -1; //This will be incremented and returned to 0, fear not.
+                    outputNewLineToDrivers("Run provided weird booleans!  Attempting reset!");
+                    driveForDistance (0.25, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
+                    driveBackwardsToRecenter = true;
                 }
 
                 //On occasion this does happen for some reason, in which all are false or something.  Sometimes they shift back to being valid, however.
-                if (!runProvidedWeirdValues) {
-                    //Set the movement power based on the direction we have to return to.
-                    setMovementPower((driveBackwardsToRecenter ? -1 : 1) * 0.25);
-                    while (bottomColorSensor.alpha() <= 5)
-                        adjustMotorPowersBasedOnGyroSensor();
-                    stopDriving();
+                //Set the movement power based on the direction we have to return to.
+                setMovementPower((driveBackwardsToRecenter ? -1 : 1) * 0.25);
+                while (bottomColorSensor.alpha() <= 5)
+                    adjustMotorPowersBasedOnGyroSensor();
+                stopDriving();
 
-                    //Update the number of trials completed so that we know the new drive distance and such.
-                    failedAttempts++;
-                }
-
-                idle();
+                //Update the number of trials completed so that we know the new drive distance and such.
+                failedAttempts++;
 
                 //Update beacon states to check loop condition.
-                option1Red = option1ColorSensor.red () >= 2;
-                option1Blue = option1ColorSensor.blue () >= 2;
-                option2Red = option2ColorSensor.red () >= 2;
-                option2Blue = option2ColorSensor.blue () >= 2;
+                updateColorSensorStates ();
             }
 
             outputNewLineToDrivers ("Success!  Beacon is completely blue.");
@@ -158,7 +159,7 @@ public class TheBlueBlur extends _AutonomousBase
 
         //Dash backward to the ramp afterward.
         turnToHeading(48, TurnMode.BOTH, 2200);
-        driveForDistance(-1.0, 3200); //CARAZZY FAST
+        driveForDistance(-1.0, 3200); //SPRINT TO THE CAP BALL TO PARK
 
     }
 

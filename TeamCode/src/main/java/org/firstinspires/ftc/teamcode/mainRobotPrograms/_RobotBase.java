@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -17,6 +18,8 @@ public abstract class _RobotBase extends BaseFunctions
     protected Servo leftButtonPusher, rightButtonPusher;
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.0, CBH_OPEN = 1.0;
+
+    protected ModernRoboticsI2cRangeSensor sideRangeSensor;
 
     // Called on initialization (once)
     protected void initializeHardware() throws InterruptedException

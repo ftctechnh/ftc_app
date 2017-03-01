@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="The Red Revelation", group = "Beta Group")
+@Autonomous(name="The Red Revelation", group = "Auto Group")
 
 public class TheRedRevelation extends _AutonomousBase
 {

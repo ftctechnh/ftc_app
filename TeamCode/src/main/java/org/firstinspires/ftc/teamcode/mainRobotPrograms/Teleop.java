@@ -145,7 +145,8 @@ public class Teleop extends _RobotBase
             outputConstantDataToDrivers(new String[] {
                     "Fly wheel power = " + flywheelCoefficient,
                     "Drive power = " + speedCoefficient,
-                    "Cap ball mode = " + capBallMode
+                    "Cap ball mode = " + capBallMode,
+                    "Distance from the wall = " + sideRangeSensor.cmUltrasonic ()
             });
 
             idle();

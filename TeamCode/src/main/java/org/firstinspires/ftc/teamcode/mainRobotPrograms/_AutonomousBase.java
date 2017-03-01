@@ -17,7 +17,17 @@ public abstract class _AutonomousBase extends _RobotBase
     protected int desiredHeading = 0; //This variable is super helpful to the program as a whole since it is accounted for in both the adjustMotor methods and the turn method, and thus enables insufficient turns to be completed later on.
 
     protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor; //Must have different I2C addresses.
-    protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
+    protected boolean option1Red, option2Red, option1Blue, option2Blue;
+    protected void updateColorSensorStates()
+    {
+        //Threshold is currently 2, but this could be changed.
+        option1Red = option1ColorSensor.red () >= 2;
+        option1Blue = option1ColorSensor.blue () >= 2;
+        option2Red = option2ColorSensor.red () >= 2;
+        option2Blue = option2ColorSensor.blue () >= 2;
+    }
+
+    protected ModernRoboticsI2cRangeSensor frontRangeSensor;
 
     // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
     @Override
@@ -78,7 +88,6 @@ public abstract class _AutonomousBase extends _RobotBase
 
     //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per frame.
     //.15 and .2 work.
-    private double offCourseGyroCorrectionFactor = .15; //Less means less sensitive.
     protected void adjustMotorPowersBasedOnGyroSensor() throws InterruptedException
     {
         if (gyroscope != null)
@@ -88,17 +97,22 @@ public abstract class _AutonomousBase extends _RobotBase
 
             //If offFromHeading is positive, then we want to increase the right power and decrease the left power.  Vice versa also true
             //We also want some sort of coefficient for the amount that each power is changed by.
-            double motorPowerChange = Math.signum(offFromHeading) * ((Math.log10(Math.abs(offFromHeading) + 1) * offCourseGyroCorrectionFactor + .02));
+            //The multiplication is the logarithmic factor, the addition is the minimum change to make a difference.
+            double motorPowerChangeFactor = Math.signum(movementPower) * Math.signum(offFromHeading) * (Math.log10(Math.abs(offFromHeading) + 1) * .5 + .06);
+
+            double rightPower = movementPower * (1 - motorPowerChangeFactor),
+                    leftPower = movementPower * (1 + motorPowerChangeFactor);
 
             //Now set the motor power of each motor equal to the current motor power plus the correction factor.
-            setLeftPower(Range.clip(movementPower - motorPowerChange, -1, 1));
-            setRightPower(Range.clip(movementPower + motorPowerChange, -1, 1));
+            setLeftPower(Range.clip(rightPower, -1, 1));
+            setRightPower(Range.clip(leftPower, -1, 1));
 
             outputConstantDataToDrivers(
                     new String[] {
                             "Desired heading = " + desiredHeading,
                             "Off from heading = " + offFromHeading,
-                            "Motor power change = " + motorPowerChange
+                            "Right power = " + rightPower,
+                            "Left power = " + leftPower
                     }
             );
         }
@@ -111,6 +125,7 @@ public abstract class _AutonomousBase extends _RobotBase
             );
         }
 
+        //Idle regardless.
         idle();
     }
 
@@ -129,7 +144,7 @@ public abstract class _AutonomousBase extends _RobotBase
             long startTime = System.currentTimeMillis();
             int priorHeading = getValidGyroHeading();
             long lastCheckedTime = startTime;
-            double turnSpeedBatteryFactor = .25;
+            double turnSpeedBatteryFactor = 0.25;
 
             int currentHeading = getValidGyroHeading();
             //Adjust as fully as possible but not beyond the time limit.
@@ -283,7 +298,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This method makes sure that the value makes sense for calculations.
-    protected int gyroAdjustFactor; //Based on range sensors.
+    protected int gyroAdjustFactor; //Changed based on range sensors.
     protected int getValidGyroHeading()
     {
         //Get the heading.
