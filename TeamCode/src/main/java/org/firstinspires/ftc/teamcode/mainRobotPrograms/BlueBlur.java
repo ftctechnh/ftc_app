@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="The Blue Blur", group = "Auto Group")
+@Autonomous(name="Blue Blur", group = "Auto Group")
 
-public class TheBlueBlur extends _AutonomousBase
+public class BlueBlur extends _AutonomousBase
 {
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException
@@ -21,28 +21,28 @@ public class TheBlueBlur extends _AutonomousBase
         outputNewLineToDrivers("Shooting balls into center vortex...");
         flywheels.setPower(0.3);
         sleep(300);
-        harvester.setPower(1.0);
+        harvester.setPower(-1.0);
         sleep(2500);
         flywheels.setPower(0);
         harvester.setPower(0);
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall at an angle...");
-        turnToHeading(82, TurnMode.BOTH, 3000);
+        turnToHeading(75, TurnMode.BOTH, 2500);
 
         //Drive to the wall and stop once a little ways away.
         setMovementPower (0.7);
         outputNewLineToDrivers("Driving to wall before turn...");
-        while (frontRangeSensor.cmUltrasonic () > 70)
+        while (frontRangeSensor.cmUltrasonic () > 68)
             adjustMotorPowersBasedOnGyroSensor ();
         setMovementPower(0.4);
-        while (frontRangeSensor.cmUltrasonic () > 44)
+        while (frontRangeSensor.cmUltrasonic () > 32)
             adjustMotorPowersBasedOnGyroSensor ();
         stopDriving ();
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
-        turnToHeading(0, TurnMode.BOTH, 4000);
+        turnToHeading(0, TurnMode.BOTH, 3500);
 
         //For each of the two beacons.
         for (int i = 0; i < 2; i++)
@@ -50,7 +50,7 @@ public class TheBlueBlur extends _AutonomousBase
             outputNewLineToDrivers ("Looking for beacon " + (i + 1));
 
             //Set movement speed.
-            setMovementPower(0.4);
+            setMovementPower(0.35);
 
             //Variables required for range sensor adjustment.
             long lastAdjustTime = System.currentTimeMillis ();
@@ -66,7 +66,7 @@ public class TheBlueBlur extends _AutonomousBase
                     updateColorSensorStates ();
                     if (option1Red || option1Blue)
                     {
-                        setMovementPower (0.17);
+                        setMovementPower (0.25);
                         aboutToSeeWhiteLine = true;
                     }
                 }
@@ -107,7 +107,7 @@ public class TheBlueBlur extends _AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.25, 80 + 10 * failedAttempts);
+                    driveForDistance (0.3, 90 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -115,7 +115,7 @@ public class TheBlueBlur extends _AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.25, 130 + 10 * failedAttempts);
+                    driveForDistance (-0.3, 130 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -124,7 +124,7 @@ public class TheBlueBlur extends _AutonomousBase
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (0.25, 80 + 10 * failedAttempts);
+                    driveForDistance (0.3, 80 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -132,13 +132,13 @@ public class TheBlueBlur extends _AutonomousBase
                 {
                     failedAttempts = -1; //This will be incremented and returned to 0, fear not.
                     outputNewLineToDrivers("Run provided weird booleans!  Attempting reset!");
-                    driveForDistance (0.25, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
+                    driveForDistance (0.3, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
                     driveBackwardsToRecenter = true;
                 }
 
                 //On occasion this does happen for some reason, in which all are false or something.  Sometimes they shift back to being valid, however.
                 //Set the movement power based on the direction we have to return to.
-                setMovementPower((driveBackwardsToRecenter ? -1 : 1) * 0.25);
+                setMovementPower((driveBackwardsToRecenter ? -1 : 1) * 0.3);
                 while (bottomColorSensor.alpha() <= 5)
                     adjustMotorPowersBasedOnGyroSensor();
                 stopDriving();

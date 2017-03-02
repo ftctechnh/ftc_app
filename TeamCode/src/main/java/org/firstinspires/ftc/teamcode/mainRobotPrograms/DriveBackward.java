@@ -12,16 +12,15 @@ public class DriveBackward extends _AutonomousBase
     protected void driverStationSaysINITIALIZE()
     {
         //Set the motor powers.
-        setLeftPower(.4);
-        setRightPower(-.4);
+        setLeftPower(.6);
+        setRightPower(-.6);
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        setLeftPower(-.6);
-        setRightPower(-.6);
+        setMovementPower (-.8);
 
         while (true)
             idle();

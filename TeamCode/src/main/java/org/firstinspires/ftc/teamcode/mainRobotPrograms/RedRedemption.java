@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="The Red Revelation", group = "Auto Group")
+@Autonomous(name="The Red Redemption", group = "Auto Group")
 
-public class TheRedRevelation extends _AutonomousBase
+public class RedRedemption extends _AutonomousBase
 {
 
     //Called after runOpMode() has finished initializing by BaseFunctions.
@@ -22,7 +22,7 @@ public class TheRedRevelation extends _AutonomousBase
         outputNewLineToDrivers("Shooting balls into center vortex...");
         flywheels.setPower(0.3);
         sleep(300);
-        harvester.setPower(1.0);
+        harvester.setPower(-1.0);
         sleep(2500);
         flywheels.setPower(0);
         harvester.setPower(0);

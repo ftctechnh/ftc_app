@@ -14,7 +14,7 @@ public class DriveTesting extends _AutonomousBase
         while (opModeIsActive ())
         {
             driveForDistance (Math.random () * 0.7 + 0.3, 2000);
-            turnToHeading (90 * (turns % 4 + 1), TurnMode.BOTH, 2000);
+            turnToHeading (90 * ((turns + 1) % 4), TurnMode.BOTH, 3000);
             turns++;
         }
     }

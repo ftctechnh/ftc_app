@@ -21,9 +21,9 @@ public abstract class _AutonomousBase extends _RobotBase
     protected void updateColorSensorStates()
     {
         //Threshold is currently 2, but this could be changed.
-        option1Red = option1ColorSensor.red () >= 2;
+        option1Red = option1ColorSensor.red () >= 1;
         option1Blue = option1ColorSensor.blue () >= 2;
-        option2Red = option2ColorSensor.red () >= 2;
+        option2Red = option2ColorSensor.red () >= 1;
         option2Blue = option2ColorSensor.blue () >= 2;
     }
 
@@ -154,8 +154,8 @@ public abstract class _AutonomousBase extends _RobotBase
                 if (System.currentTimeMillis() - lastCheckedTime >= 400)
                 {
                     //Don't start increasing power at the very start of the turn before the robot has had time to accelerate.
-                    if (priorHeading == currentHeading && (System.currentTimeMillis () - startTime) > 800)
-                        turnSpeedBatteryFactor += 0.07;
+                    if (priorHeading == currentHeading && (System.currentTimeMillis () - startTime) > 400)
+                        turnSpeedBatteryFactor += 0.1;
 
                     //Update other variables.
                     lastCheckedTime = System.currentTimeMillis();
@@ -233,14 +233,14 @@ public abstract class _AutonomousBase extends _RobotBase
             motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
         for (DcMotor motor : rightDriveMotors)
             motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
-        sleep(100); //Take a short break after each step, since the SDK we are using is not synchronous (it messed up our workflow)
+        sleep(300); //Take a short break after each step, since the SDK we are using is not synchronous (it messed up our workflow)
 
         //This HAS to have "RUN_USING_ENCODER" before it for some reason, or it just hangs forever.
         for (DcMotor motor : leftDriveMotors)
             motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         for (DcMotor motor : rightDriveMotors)
             motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sleep(100);
+        sleep(300);
 
         //This prevents the encoders from trying to regulate the motors on their own (they aren't qualified for that sort of work!), and affecting the gyro.
         for (DcMotor motor : leftDriveMotors)
@@ -258,26 +258,30 @@ public abstract class _AutonomousBase extends _RobotBase
             adjustMotorPowersBasedOnGyroSensor ();
 
             //These couple statements check to see if all of the motors are currently running.  If one is not, then the whole robot stops.
-            motorsBusy = true;
-            for (DcMotor motor : leftDriveMotors)
-            {
-                if (Math.abs(motor.getCurrentPosition ()) >= length)
-                {
-                    motorsBusy = false;
-                    break; //End the for loop if one has reached the end of its drive length.
-                }
-            }
-            if (motorsBusy)
-            {
-                for (DcMotor motor : rightDriveMotors)
-                {
-                    if (Math.abs(motor.getCurrentPosition ()) >= length)
-                    {
-                        motorsBusy = false;
-                        break;
-                    }
-                }
-            }
+//            motorsBusy = true;
+//            for (DcMotor motor : leftDriveMotors)
+//            {
+//                if (Math.abs(motor.getCurrentPosition ()) >= length)
+//                {
+//                    motorsBusy = false;
+//                    break; //End the for loop if one has reached the end of its drive length.
+//                }
+//            }
+//            if (motorsBusy)
+//            {
+//                for (DcMotor motor : rightDriveMotors)
+//                {
+//                    if (Math.abs(motor.getCurrentPosition ()) >= length)
+//                    {
+//                        motorsBusy = false;
+//                        break;
+//                    }
+//                }
+//            }
+
+            //Since only the last two work, we just look at those.
+            if (!(Math.abs(leftDriveMotors.get(1).getCurrentPosition ()) < length && Math.abs(rightDriveMotors.get (1).getCurrentPosition ()) < length))
+                break;
 
             //Give the drivers a bit of insight into which encoders are currently working (two out of four are currently operational).
             outputConstantDataToDrivers(

@@ -12,15 +12,15 @@ public class DriveForward extends _AutonomousBase
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //Set the motor powers.
-        setLeftPower(-.4);
-        setRightPower(.4);
+        setLeftPower(-.6);
+        setRightPower(.6);
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        setMovementPower(0.6);
+        setMovementPower(0.8);
 
         while (true)
             idle();
