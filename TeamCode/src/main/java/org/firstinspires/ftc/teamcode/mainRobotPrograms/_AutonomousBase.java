@@ -47,11 +47,9 @@ public abstract class _AutonomousBase extends _RobotBase
         //Initialize the range sensors for autonomous.
         frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
         frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
-        sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
-        sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
         //The range sensors are odd and often return .269 with this method unless the robot is restarted.
-        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0 || sideRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
-            outputNewLineToDrivers("RANGE SENSORS MISCONFIGURED");
+        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
+            outputNewLineToDrivers("Front range sensor misconfigured!");
 
         //initialize gyroscope (will output whether it was found or not.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");
@@ -98,7 +96,7 @@ public abstract class _AutonomousBase extends _RobotBase
             //If offFromHeading is positive, then we want to increase the right power and decrease the left power.  Vice versa also true
             //We also want some sort of coefficient for the amount that each power is changed by.
             //The multiplication is the logarithmic factor, the addition is the minimum change to make a difference.
-            double motorPowerChangeFactor = Math.signum(movementPower) * Math.signum(offFromHeading) * (Math.log10(Math.abs(offFromHeading) + 1) * .5 + .06);
+            double motorPowerChangeFactor = Math.signum(movementPower) * Math.signum(offFromHeading) * (Math.log10(Math.abs(offFromHeading) + 1) * .3 + .02);
 
             double rightPower = movementPower * (1 - motorPowerChangeFactor),
                     leftPower = movementPower * (1 + motorPowerChangeFactor);

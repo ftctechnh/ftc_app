@@ -12,12 +12,15 @@ public class Teleop extends _RobotBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Normal mode variables
-        double leftPower, rightPower, leftPusherPower, rightPusherPower;
+        double leftPower,
+                rightPower,
+                leftPusherPower,
+                rightPusherPower;
         boolean backwards = false;
         double speedCoefficient = 1.0;
         double flywheelCoefficient = 0.4;
         boolean pressingFlywheelC = false;
-        double currentClampPos = 0;
+        double currentCapBallHolderPos = 0;
         boolean capBallMode = false;
         double harvesterCoefficient = 1.0;
 
@@ -64,11 +67,11 @@ public class Teleop extends _RobotBase
 
             /************** Clamp **************/
             if (gamepad1.left_bumper || (gamepad2.left_bumper && capBallMode))
-                currentClampPos += 0.05;
+                currentCapBallHolderPos += 0.05;
             else if (gamepad1.left_trigger > 0.5 || (gamepad2.left_trigger > 0.5 && capBallMode))
-                currentClampPos -= 0.01;
-            currentClampPos = Range.clip(currentClampPos, CBH_CLOSED, CBH_OPEN);
-            capBallHolder.setPosition(currentClampPos);
+                currentCapBallHolderPos -= 0.01;
+            currentCapBallHolderPos = Range.clip(currentCapBallHolderPos, CBH_CLOSED, CBH_OPEN);
+            capBallHolder.setPosition(currentCapBallHolderPos);
 
             /************** Open Clamp **************/
             if (gamepad1.back || gamepad2.back) {

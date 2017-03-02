@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.BaseFunctions;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public abstract class _RobotBase extends BaseFunctions
     protected DcMotor harvester, flywheels, lift;
     protected Servo leftButtonPusher, rightButtonPusher;
     protected Servo capBallHolder;
-    protected final double CBH_CLOSED = 0.0, CBH_OPEN = 1.0;
+    protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
 
     protected ModernRoboticsI2cRangeSensor sideRangeSensor;
 
@@ -48,6 +50,12 @@ public abstract class _RobotBase extends BaseFunctions
 
         capBallHolder = initialize(Servo.class, "clamp");
         capBallHolder.setPosition(CBH_CLOSED);
+
+        sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
+        sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
+
+        if (sideRangeSensor.getDistance (DistanceUnit.CM) < 1)
+            outputNewLineToDrivers ("Side range sensor misconfigured!");
     }
 
     protected void setRightPower(double power)

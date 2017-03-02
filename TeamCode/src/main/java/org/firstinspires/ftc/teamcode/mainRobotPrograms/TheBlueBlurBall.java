@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="The Blue Blur - Ball", group = "Beta Group")
+@Autonomous(name="The Blue Blur - Ball", group = "Auto Group")
 
 public class TheBlueBlurBall extends _AutonomousBase
 {
