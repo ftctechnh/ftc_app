@@ -4,6 +4,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Path;
+
+import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,12 +31,14 @@ public class TeleOpMain extends OpMode {
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
 
+    double mLastTime;
+    double mLastEncoderCount;
+    double mMaxEncoderCount = 0;
+    double mLastAccelX = 0;
+    double mLastAccelY = 0;
+
     AutoLib.Sequence mShoot;
     AutoLib.Sequence mBeacon;
-
-    AutoLib.Timer mEncoderMeasure = new AutoLib.Timer(1.0);
-    int lastEncode = 0;
-    double avgEncode = 0;
 
     private void initShoot(){
         mShoot = new AutoLib.LinearSequence();
@@ -78,6 +83,7 @@ public class TeleOpMain extends OpMode {
 
         // hardware maps
         robot.init(this, false);
+        robot.setMaxSpeedAll(2500);
 
         robot.leftServo.setPosition(leftPusherState);
         robot.rightServo.setPosition(rightPusherState);
@@ -92,8 +98,8 @@ public class TeleOpMain extends OpMode {
 
     @Override
     public void start() {
-        mEncoderMeasure.start();
-        lastEncode = robot.backLeftMotor.getCurrentPosition();
+        mLastTime = getRuntime();
+        mLastEncoderCount = robot.backLeftMotor.getCurrentPosition();
     }
 
     @Override
@@ -259,9 +265,25 @@ public class TeleOpMain extends OpMode {
                     robot.dim.setLED(0, false);
                     telemetry.addData("Reversed", "False");
                 }
-            //}
+            }
             lastAButtonState = gamepad1.a;
-        }
+
+        //some fun telemetery
+        final double dt = getRuntime() - mLastTime;
+        final double jerkX = (robot.navX.getWorldLinearAccelX() - mLastAccelX) / dt;
+        final double jerkY = (robot.navX.getWorldLinearAccelY() - mLastAccelY) / dt;
+        final double vel = (robot.backLeftMotor.getCurrentPosition() - mLastEncoderCount) / dt;
+        if(mMaxEncoderCount < vel) mMaxEncoderCount = vel;
+        mLastEncoderCount = robot.backLeftMotor.getCurrentPosition();
+        mLastAccelX = robot.navX.getWorldLinearAccelX();
+        mLastAccelY = robot.navX.getWorldLinearAccelY();
+        telemetry.addData("X Axis Accel", robot.navX.getWorldLinearAccelX());
+        telemetry.addData("Y Axis Accel", robot.navX.getWorldLinearAccelY());
+        telemetry.addData("X Axis Jerk", jerkX);
+        telemetry.addData("Y Axis Jerk", jerkY);
+        telemetry.addData("Encode per second", vel);
+        telemetry.addData("Max Encode per second", mMaxEncoderCount);
+        //}
     }
 
     public static class UltraHeading implements HeadingSensor {
@@ -277,6 +299,55 @@ public class TeleOpMain extends OpMode {
             return (float)(mRight.getUltrasonicLevel() - mLeft.getUltrasonicLevel());
         }
 
+    }
+
+    private static class JerkCorrect {
+        OpMode mMode;
+        SensorLib.PID mPid;
+        DcMotor mMotor;
+        AHRS mAccel;
+        double mThresh;
+        double mLastEncoderCount = 0;
+        double mLastTime = 0;
+        double mLastAccel;
+
+        JerkCorrect(OpMode mode, DcMotor motor, AHRS accel, double thresh, SensorLib.PID pid){
+            mMode = mode;
+            mMotor = motor;
+            mAccel = accel;
+            mPid = pid;
+            mThresh = thresh;
+        }
+
+        public double loopCorrection(){
+            if(mLastEncoderCount == 0){
+                mLastEncoderCount = mMotor.getCurrentPosition();
+                mLastTime = mMode.getRuntime();
+                mLastAccel = mAccel.getRawAccelY();
+            }
+
+            //calculate delta time
+            final double dt = mMode.getRuntime() - mLastTime;
+            mLastTime = mMode.getRuntime();
+            //calculate current velocity
+            final double vel = (mMotor.getCurrentPosition() - mLastEncoderCount) / dt;
+            mLastEncoderCount = mMotor.getCurrentPosition();
+            //calculate current jerk, negative and y axis due to sensor mounting
+            final double jerk = -(mAccel.getWorldLinearAccelY() - mLastAccel) / dt;
+            mLastAccel = mAccel.getWorldLinearAccelY();
+
+
+            //check if jerk is beyond thresh
+            if(Math.abs(jerk) > mThresh){
+                //attempt to correct speed towards actual value if so
+                final double error = vel - (mMotor.getMaxSpeed() * mMotor.getPower());
+                //and return the correction
+                return -mPid.loop((float)error, (float)dt);
+            }
+
+            //else return 0
+            return 0;
+        }
     }
 
     public static float[] getCorrectedSquirrleyMotorPowers(float dt, float mDirection, float mHeading, HeadingSensor mGyro, SensorLib.PID mPid, float mPower) {
