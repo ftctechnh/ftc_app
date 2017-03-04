@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by ftc6347 on 10/16/16.
  */
-@TeleOp(name = "Teleop", group = "teleop")
+@TeleOp(name = "Teleop", group = "tele-op")
 public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
@@ -25,10 +25,7 @@ public class Teleop extends LinearOpModeBase {
         initializeHardware();
 
         // run without encoders
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         gamepad1.setJoystickDeadzone(JOYSTICK_DEADZONE);
         gamepad2.setJoystickDeadzone(JOYSTICK_DEADZONE);
@@ -36,12 +33,10 @@ public class Teleop extends LinearOpModeBase {
         Thread launcherThread = new Thread() {
             @Override
             public void run() {
-                try {
-                    while(opModeIsActive()) {
-                        handleLauncher();
+                while(opModeIsActive()) {
+                    if(gamepad2.y) {
+                        launchParticle();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         };
@@ -186,12 +181,10 @@ public class Teleop extends LinearOpModeBase {
     }
 
     private void handlePivot() {
-        double pivotPower;
+        double pivotPower = gamepad1.left_stick_x;
 
-        if(driveReversed) {
-            pivotPower = gamepad1.left_stick_x;
-        } else {
-            pivotPower = -gamepad1.left_stick_x;
+        if(!driveReversed) {
+            pivotPower *= -1;
         }
 
         frontLeftPower += pivotPower;
