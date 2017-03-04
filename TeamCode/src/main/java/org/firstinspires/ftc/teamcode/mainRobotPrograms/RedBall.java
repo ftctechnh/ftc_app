@@ -15,7 +15,7 @@ public class RedBall extends _AutonomousBase
 
         //Shoot the balls into the center vortex.
         outputNewLineToDrivers("Shooting balls into center vortex...");
-        flywheels.setPower(0.4);
+        flywheels.setPower(0.35);
         sleep(300);
         harvester.setPower(-1.0);
         sleep(2500);

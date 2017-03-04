@@ -21,9 +21,9 @@ public abstract class _AutonomousBase extends _RobotBase
     protected void updateColorSensorStates()
     {
         //Threshold is currently 2, but this could be changed.
-        option1Red = option1ColorSensor.red () >= 1;
+        option1Red = option1ColorSensor.red () >= 2;
         option1Blue = option1ColorSensor.blue () >= 2;
-        option2Red = option2ColorSensor.red () >= 1;
+        option2Red = option2ColorSensor.red () >= 2;
         option2Blue = option2ColorSensor.blue () >= 2;
     }
 
@@ -144,7 +144,7 @@ public abstract class _AutonomousBase extends _RobotBase
             int priorHeading = getValidGyroHeading();
             long lastCheckedTime = startTime;
             double turnCoefficient = 0.1,
-                    minTurnSpeed = 0.13;
+                    minTurnSpeed = 0.2;
 
             int currentHeading = getValidGyroHeading();
             //Adjust as fully as possible but not beyond the time limit.
@@ -158,7 +158,7 @@ public abstract class _AutonomousBase extends _RobotBase
                     //Don't start increasing power at the very start of the turn before the robot has had time to accelerate.
                     if (Math.abs(priorHeading - currentHeading) <= 2 && (System.currentTimeMillis () - startTime) > 1000)
                     {
-                        minTurnSpeed += 0.05;
+                        minTurnSpeed += 0.2;
                     }
 
                     //Update other variables.

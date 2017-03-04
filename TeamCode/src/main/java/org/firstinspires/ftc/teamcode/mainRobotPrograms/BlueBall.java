@@ -9,13 +9,15 @@ public class BlueBall extends _AutonomousBase
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException
     {
+        sleep(15000);
+
         //Drive to the cap ball.
         outputNewLineToDrivers ("Driving to shooting position.");
         driveForDistance (0.3, 2000);
 
         //Shoot the balls into the center vortex.
         outputNewLineToDrivers("Shooting balls into center vortex...");
-        flywheels.setPower(0.4);
+        flywheels.setPower(0.35);
         sleep(300);
         harvester.setPower(-1.0);
         sleep(2500);
