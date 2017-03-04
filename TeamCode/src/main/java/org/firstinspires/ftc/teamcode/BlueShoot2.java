@@ -18,9 +18,9 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by Connor on 2/9/2017.
  */
-@Autonomous(name="AutoShoot2Red", group="Pushbot")
+@Autonomous(name="AutoShoot2BlueP2", group="Pushbot")
 //@Disabled
-public class RedShoot extends LinearOpMode {
+public class BlueShoot2 extends LinearOpMode {
     /* Declare OpMode members. */
     ROUSAutoHardware_WithServos robot = new ROUSAutoHardware_WithServos();   // Use a Pushbot's hardware
     ModernRoboticsI2cGyro gyro = null;                    // Additional Gyro device
@@ -182,12 +182,14 @@ public class RedShoot extends LinearOpMode {
             // Step through each leg of the path,
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
-            robot.leftshooter.setPower(-.9);
-            robot.rightshooter.setPower(.9);
+            robot.leftshooter.setPower(-1);
+            robot.rightshooter.setPower(1);
             sleep(250);
             gyroTurn(TURN_SPEED, 0);
             Drive(DRIVE_SPEED2, 10, 10, 10);
-            gyroTurn(TURN_SPEED, 12);
+            gyroTurn(TURN_SPEED, -45);
+            Drive(DRIVE_SPEED, 20, 20, 10);
+            gyroTurn(TURN_SPEED, -44);
             sleep(1000);
             robot.servo.setPosition(UP);
             telemetry.addData(">", "Servo is in Up Position");
@@ -196,12 +198,10 @@ public class RedShoot extends LinearOpMode {
             robot.servo.setPosition(DOWN);
             telemetry.addData(">", "Servo is in Down Position");
             telemetry.update();
-            robot.leftshooter.setPower(-1);
-            robot.rightshooter.setPower(1);
             robot.Intake.setPower(-1);
-            sleep(5000);
+            sleep(4000);
             robot.Intake.setPower(0);
-            sleep(2000);
+            sleep(2500);
             robot.servo.setPosition(UP);
             telemetry.addData(">", "Servo is in Up Position");
             telemetry.update();
@@ -209,15 +209,14 @@ public class RedShoot extends LinearOpMode {
             robot.servo.setPosition(DOWN);
             telemetry.addData(">", "Servo is in Down Position");
             telemetry.update();
-            sleep(2000);
+            sleep(2500);
             robot.leftshooter.setPower(0);
             robot.rightshooter.setPower(0);
             //TurnLeft(TURN_SPEED, 12 , 10);
-            Drive(DRIVE_SPEED, 34, 34, 10);
-            TurnLeft(DRIVE_SPEED, 90, 10);
-            TurnRight(DRIVE_SPEED, 90, 10);
+            Drive(DRIVE_SPEED, 46, 46, 10);
+            //TurnRight(DRIVE_SPEED, 45, 10);
             gyroTurn(TURN_SPEED, 0);
-            Drive(DRIVE_SPEED, 16, 16, 10);
+            Drive(DRIVE_SPEED, 14, 14, 10);
             stop();
         }
     }
