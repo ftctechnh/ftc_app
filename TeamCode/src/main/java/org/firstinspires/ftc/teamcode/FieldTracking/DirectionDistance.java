@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.FieldTracking;
 
 import android.graphics.Path;
 
@@ -83,5 +83,10 @@ public class DirectionDistance {
 
     public Vector2d asVector2d(){
         return new Vector2d(Math.cos(this.dirRad)* this.distIn, Math.sin(this.dirRad)* this.distIn);
+    }
+
+    public static Vector2d CreateVector2d(double dirDeg, double distIn){
+        double dirRad = Math.toRadians(dirDeg);
+        return new Vector2d(Math.cos(dirRad)* distIn, Math.sin(dirRad)* distIn);
     }
 }
