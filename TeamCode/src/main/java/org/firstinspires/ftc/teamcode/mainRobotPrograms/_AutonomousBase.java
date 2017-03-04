@@ -75,7 +75,7 @@ public abstract class _AutonomousBase extends _RobotBase
     protected abstract void driverStationSaysGO() throws InterruptedException;
 
     //Used to set drive move power initially.
-    protected double movementPower = .5;
+    protected double movementPower = 0;
     protected void setMovementPower(double movementPower)
     {
         this.movementPower = movementPower;
@@ -96,7 +96,7 @@ public abstract class _AutonomousBase extends _RobotBase
             //If offFromHeading is positive, then we want to increase the right power and decrease the left power.  Vice versa also true
             //We also want some sort of coefficient for the amount that each power is changed by.
             //The multiplication is the logarithmic factor, the addition is the minimum change to make a difference.
-            double motorPowerChangeFactor = Math.signum(movementPower) * Math.signum(offFromHeading) * (Math.log10(Math.abs(offFromHeading) + 1) * .3 + .02);
+            double motorPowerChangeFactor = Math.signum(movementPower) * Math.signum(offFromHeading) * (Math.log10(Math.abs(offFromHeading) + 1) * .2 + .15);
 
             double rightPower = movementPower * (1 - motorPowerChangeFactor),
                     leftPower = movementPower * (1 + motorPowerChangeFactor);
@@ -110,7 +110,8 @@ public abstract class _AutonomousBase extends _RobotBase
                             "Desired heading = " + desiredHeading,
                             "Off from heading = " + offFromHeading,
                             "Right power = " + rightPower,
-                            "Left power = " + leftPower
+                            "Left power = " + leftPower,
+                            "Motor power change factor = " + motorPowerChangeFactor
                     }
             );
         }
@@ -142,7 +143,8 @@ public abstract class _AutonomousBase extends _RobotBase
             long startTime = System.currentTimeMillis();
             int priorHeading = getValidGyroHeading();
             long lastCheckedTime = startTime;
-            double turnSpeedBatteryFactor = 0.25;
+            double turnCoefficient = 0.1,
+                    minTurnSpeed = 0.13;
 
             int currentHeading = getValidGyroHeading();
             //Adjust as fully as possible but not beyond the time limit.
@@ -151,11 +153,13 @@ public abstract class _AutonomousBase extends _RobotBase
                 currentHeading = getValidGyroHeading();
 
                 //Protection against stalling, increases power if no observed heading change in last fraction of a second.
-                if (System.currentTimeMillis() - lastCheckedTime >= 400)
+                if (System.currentTimeMillis() - lastCheckedTime >= 800)
                 {
                     //Don't start increasing power at the very start of the turn before the robot has had time to accelerate.
-                    if (priorHeading == currentHeading && (System.currentTimeMillis () - startTime) > 400)
-                        turnSpeedBatteryFactor += 0.1;
+                    if (Math.abs(priorHeading - currentHeading) <= 2 && (System.currentTimeMillis () - startTime) > 1000)
+                    {
+                        minTurnSpeed += 0.05;
+                    }
 
                     //Update other variables.
                     lastCheckedTime = System.currentTimeMillis();
@@ -167,7 +171,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
                 //Logarithmic turning that slows down upon becoming close to heading but is not scary fast when far from desired heading.
                 //Have to shift graph to left in order to prevent log10 from returning negative values upon becoming close to heading.
-                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * turnSpeedBatteryFactor);
+                double turnPower = Math.signum(thetaFromHeading) * (Math.log10(Math.abs(thetaFromHeading) + 1) * turnCoefficient + minTurnSpeed);
 
                 //Set clipped powers.
                 if (mode != TurnMode.RIGHT)
@@ -183,7 +187,7 @@ public abstract class _AutonomousBase extends _RobotBase
                                         "Current heading = " + currentHeading,
                                         "Turn Power is " + turnPower,
                                         "I have " + (maxTime - (System.currentTimeMillis() - startTime)) + "ms left.",
-                                        "Turn battery factor = " + turnSpeedBatteryFactor
+                                        "Min turn speed = " + minTurnSpeed
                                 }
                 );
             }
@@ -227,27 +231,69 @@ public abstract class _AutonomousBase extends _RobotBase
 
     protected void driveForDistance (double power, int length) throws InterruptedException
     {
+        /******** INITIALIZATION STEPS *********/
+        //Required before any encoder values are examined.  Super important and afforded variable times.
+        boolean initializedSuccessfully = false;
+        int additionalTime = 0;
+        while (!initializedSuccessfully)
+        {
+            try
+            {
+                //This set of instructions is MASSIVELY important.  The RUN_WITHOUT_ENCODER mode doesn't actually make the thing not use encoders, it just prevents the encoders from directly regulating motor powers.  Weird names for the RunMode options by the FTC folks.
+                for (DcMotor motor : leftDriveMotors)
+                    motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+                for (DcMotor motor : rightDriveMotors)
+                    motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+                sleep (150 + additionalTime); //Take a short break after each step, since the SDK we are using is not synchronous (it messed up our workflow)
+                initializedSuccessfully = true;
+            } catch (Exception e)
+            {
+                outputNewLineToDrivers ("Error in RUN_USING_ENCODERS!");
+                additionalTime += 20;
+            }
+        }
 
-        //This set of instructions is MASSIVELY important.  The RUN_WITHOUT_ENCODER mode doesn't actually make the thing not use encoders, it just prevents the encoders from directly regulating motor powers.  Weird names for the RunMode options by the FTC folks.
-        for (DcMotor motor : leftDriveMotors)
-            motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
-        for (DcMotor motor : rightDriveMotors)
-            motor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
-        sleep(300); //Take a short break after each step, since the SDK we are using is not synchronous (it messed up our workflow)
+        initializedSuccessfully = false;
+        additionalTime = 0;
+        while (!initializedSuccessfully)
+        {
+            try
+            {
+                //This HAS to have "RUN_USING_ENCODER" before it for some reason, or it just hangs forever.
+                for (DcMotor motor : leftDriveMotors)
+                    motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                for (DcMotor motor : rightDriveMotors)
+                    motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep (150 + additionalTime);
+                initializedSuccessfully = true;
+            }
+            catch (Exception e)
+            {
+                outputNewLineToDrivers ("Error in STOP_AND_RESET_ENCODERS!");
+                additionalTime += 20;
+            }
+        }
 
-        //This HAS to have "RUN_USING_ENCODER" before it for some reason, or it just hangs forever.
-        for (DcMotor motor : leftDriveMotors)
-            motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        for (DcMotor motor : rightDriveMotors)
-            motor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sleep(300);
-
-        //This prevents the encoders from trying to regulate the motors on their own (they aren't qualified for that sort of work!), and affecting the gyro.
-        for (DcMotor motor : leftDriveMotors)
-            motor.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        for (DcMotor motor : rightDriveMotors)
-            motor.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sleep(100);
+        initializedSuccessfully = false;
+        additionalTime = 0;
+        while (!initializedSuccessfully)
+        {
+            try
+            {
+                //This prevents the encoders from trying to regulate the motors on their own (they aren't qualified for that sort of work!), and affecting the gyro.
+                for (DcMotor motor : leftDriveMotors)
+                    motor.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                for (DcMotor motor : rightDriveMotors)
+                    motor.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                sleep (80 + additionalTime);
+                initializedSuccessfully = true;
+            }
+            catch (Exception e)
+            {
+                outputNewLineToDrivers ("Error in RUN_WITHOUT_ENCODER!");
+                additionalTime += 20;
+            }
+        }
 
         setMovementPower (power);
 
@@ -280,8 +326,7 @@ public abstract class _AutonomousBase extends _RobotBase
 //            }
 
             //Since only the last two work, we just look at those.
-            if (!(Math.abs(leftDriveMotors.get(1).getCurrentPosition ()) < length && Math.abs(rightDriveMotors.get (1).getCurrentPosition ()) < length))
-                break;
+            motorsBusy = Math.abs(leftDriveMotors.get(1).getCurrentPosition ()) < length && Math.abs(rightDriveMotors.get (1).getCurrentPosition ()) < length;
 
             //Give the drivers a bit of insight into which encoders are currently working (two out of four are currently operational).
             outputConstantDataToDrivers(
