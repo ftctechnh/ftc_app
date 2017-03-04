@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by ftc6347 on 1/9/17.
  */
-@Autonomous(name = "Red Beacons Autonomous", group = "autonomous programs")
+@Autonomous(name = "Beacons 1 Red", group = "beacons")
 public class AutonomousBeaconsRed extends LinearOpModeBase {
 
     @Override
@@ -18,16 +17,6 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 
         // use encoders
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // print color sensor values
-        telemetry.addData("Left color sensor", "red: %d, blue: %d",
-                getColorSensor1().red(), getColorSensor1().blue());
-        telemetry.addData("Right color sensor", "red: %d, blue: %d",
-                getColorSensor2().red(), getColorSensor2().blue());
-
-        // wait for initialization
-        telemetry.addData("status","waiting");
-        telemetry.update();
 
         autonomousInitLoop();
 
@@ -102,7 +91,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 
         // back up from wall
         //rangeSensorDrive(15, 0.2);
-        rangeSensorStrafe(1.0);
+        rangeGyroStrafe(1.0, 0, 6, 16, 16);
 
         // gyro pivot
         //gyroPivot(0.8, 0, false);

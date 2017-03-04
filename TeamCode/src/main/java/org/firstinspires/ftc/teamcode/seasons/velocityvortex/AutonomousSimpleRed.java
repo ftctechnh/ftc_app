@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 10/30/16.
  */
-@Autonomous(name = "Simple autonomous", group = "autonomous")
-public class AutonomousSimple extends LinearOpModeBase {
+@Autonomous(name = "Simple 1 Red", group = "simple")
+public class AutonomousSimpleRed extends LinearOpModeBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -17,30 +17,13 @@ public class AutonomousSimple extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // use encoders
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // print color sensor values
-        telemetry.addData("Left color sensor", "red: %d, blue: %d",
-                getColorSensor1().red(), getColorSensor1().blue());
-        telemetry.addData("Right color sensor", "red: %d, blue: %d",
-                getColorSensor2().red(), getColorSensor2().blue());
-        telemetry.update();
-
-        waitForStart();
-
-        // ten second wait
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().seconds() < 10) {
-            idle();
-        }
+        autonomousInitLoop();
 
         // drive backward (since the robot is facing backward)
         encoderDrive(0.5, -20, -20);
 
-        // reset rotational position again before pressing beacon
         gyroPivot(0.8, 0, false);
 
         // launch the first (loaded) particle
@@ -58,5 +41,12 @@ public class AutonomousSimple extends LinearOpModeBase {
 
         // launch the second particle
         launchParticle();
+
+        // drive to the center vortex assembly base
+        encoderDrive(0.5, -10, -10);
+
+        gyroPivot(0.8, -20, false);
+
+        encoderStrafe(0.5, -5, -5);
     }
 }
