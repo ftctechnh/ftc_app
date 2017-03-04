@@ -81,7 +81,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Gyro Drive", group="Pushbot")
-//@Disabled
+@Disabled
 public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
     static final int LED_CHANNEL = 5;
     /* Declare OpMode members. */

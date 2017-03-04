@@ -18,9 +18,10 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by Connor on 2/9/2017.
  */
-@Autonomous(name="AutoShoot2Red", group="Pushbot")
+@Autonomous(name="BeaconBlue", group="Pushbot")
 //@Disabled
-public class RedShoot extends LinearOpMode {
+public class BeaconBlueTest extends LinearOpMode {
+
     /* Declare OpMode members. */
     ROUSAutoHardware_WithServos robot = new ROUSAutoHardware_WithServos();   // Use a Pushbot's hardware
     ModernRoboticsI2cGyro gyro = null;                    // Additional Gyro device
@@ -28,11 +29,11 @@ public class RedShoot extends LinearOpMode {
     DeviceInterfaceModule cdim;
     private ElapsedTime runtime = new ElapsedTime();
     static final int LED_CHANNEL = 5;
-    static final double COUNTS_PER_MOTOR_REV = 1680;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = .625;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
-    static final double Pi = 3.141592653f;
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = .625 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     Pi                      = 3.141592653f;
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/
             (WHEEL_DIAMETER_INCHES * Pi);
 
     // These constants define the desired driving/control characteristics
@@ -47,8 +48,8 @@ public class RedShoot extends LinearOpMode {
     static final double P_DRIVE_COEFF = .075;     // Larger is more responsive, but also less stable
     static final float Angle = 87;
 
-    static final double UP = .3;
-    static final double DOWN = .9;
+    static final double UP = .95;
+    static final double DOWN = .75;
 
 
     @Override
@@ -163,8 +164,8 @@ public class RedShoot extends LinearOpMode {
 
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.button.setPosition(.65);
-            robot.servo.setPosition(DOWN);
+            robot.button.setPosition(.64);
+            robot.servo.setPosition(.68);
             telemetry.update();
             while (!isStarted()) {
                 telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
@@ -182,43 +183,76 @@ public class RedShoot extends LinearOpMode {
             // Step through each leg of the path,
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Put a hold after each turn
-            robot.leftshooter.setPower(-.9);
-            robot.rightshooter.setPower(.9);
             sleep(250);
-            gyroTurn(TURN_SPEED, 0);
-            Drive(DRIVE_SPEED2, 10, 10, 10);
-            gyroTurn(TURN_SPEED, 12);
-            sleep(1000);
-            robot.servo.setPosition(UP);
-            telemetry.addData(">", "Servo is in Up Position");
+            Drive(DRIVE_SPEED2, 15.16, 15.16, 10000);
+            TurnRight(TURN_SPEED, 57, 10000);
+            gyroTurn(TURN_SPEED, -53);
+            Drive(DRIVE_SPEED, 49.87, 49.87, 10000);
+            TurnLeft(TURN_SPEED, 53, 10000);
+            gyroTurn(TURN_SPEED,0);
+            telemetry.addData(">", "End of Loop");
             telemetry.update();
             sleep(1000);
-            robot.servo.setPosition(DOWN);
-            telemetry.addData(">", "Servo is in Down Position");
-            telemetry.update();
-            robot.leftshooter.setPower(-1);
-            robot.rightshooter.setPower(1);
-            robot.Intake.setPower(-1);
-            sleep(5000);
-            robot.Intake.setPower(0);
-            sleep(2000);
-            robot.servo.setPosition(UP);
-            telemetry.addData(">", "Servo is in Up Position");
-            telemetry.update();
-            sleep(1000);
-            robot.servo.setPosition(DOWN);
-            telemetry.addData(">", "Servo is in Down Position");
-            telemetry.update();
-            sleep(2000);
-            robot.leftshooter.setPower(0);
-            robot.rightshooter.setPower(0);
-            //TurnLeft(TURN_SPEED, 12 , 10);
-            Drive(DRIVE_SPEED, 34, 34, 10);
-            TurnLeft(DRIVE_SPEED, 90, 10);
-            TurnRight(DRIVE_SPEED, 90, 10);
-            gyroTurn(TURN_SPEED, 0);
-            Drive(DRIVE_SPEED, 16, 16, 10);
-            stop();
+
+            while (opModeIsActive()) {
+                Boolean Blue = EvaluateColorSensor.EvaluateColor(sensorRGB, eColorState.blue);
+                Boolean Red = EvaluateColorSensor.EvaluateColor(sensorRGB, eColorState.red);
+
+                if (Blue) {
+                    gyroTurn(TURN_SPEED, 0);
+                    Drive(DRIVE_SPEED2, 4, 4, 10000);
+                    telemetry.addData("Color", "BLUE");
+                    telemetry.update();
+                    robot.button.setPosition(.85);
+                    sleep(1500);
+                    robot.button.setPosition(.65);
+                    sleep(1125);
+                    robot.button.setPosition(.85);
+                    sleep(1500);
+                    robot.button.setPosition(.65);
+                    sleep(1125);
+                    robot.button.setPosition(.85);
+                    sleep(1500);
+                    robot.button.setPosition(.65);
+                    stop();
+
+
+                } else if (Red) {
+                    gyroTurn(TURN_SPEED, 0);
+                    Drive(DRIVE_SPEED2, 10, 10, 100000);
+                    telemetry.addData("Color", "RED");
+                    telemetry.update();
+                    robot.button.setPosition(.85);
+                    sleep(1500);
+                    robot.button.setPosition(.65);
+                    sleep(1125);
+                    robot.button.setPosition(.85);
+                    sleep(1500);
+                    robot.button.setPosition(.65);
+                    sleep(1125);
+                    robot.button.setPosition(.85);
+                    sleep(1500);
+                    robot.button.setPosition(.65);
+                    stop();
+
+                } else {
+                    robot.leftMotor.setPower(.06);
+                    robot.rightMotor.setPower(.06);
+                    telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
+                    telemetry.addData("Clear", sensorRGB.alpha());
+                    telemetry.addData("Red  ", sensorRGB.red());
+                    telemetry.addData("Green", sensorRGB.green());
+                    telemetry.addData("Blue ", sensorRGB.blue());
+                    telemetry.update();
+
+
+                }
+
+
+
+
+            }
+
         }
     }
     public void Drive(double speed,
@@ -280,7 +314,7 @@ public class RedShoot extends LinearOpMode {
         }
     }
     public void TurnRight(double speed,
-                          float turndeg,
+                          double turndeg,
                           double timeoutS) throws InterruptedException {
         int newLeftTarget;
         int newRightTarget;
@@ -338,7 +372,7 @@ public class RedShoot extends LinearOpMode {
         }
     }
     public void TurnLeft(double speed,
-                         float turndeg,
+                         double turndeg,
                          double timeoutS) throws InterruptedException {
         int newLeftTarget;
         int newRightTarget;
@@ -703,4 +737,6 @@ public class RedShoot extends LinearOpMode {
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }
+
+
 }

@@ -33,13 +33,13 @@ public class EvaluateColorSensor {
         {
             return eColorState.unknown;
         } else {
-            if ( FuzzyEqual( hsvValues[0], 10.0f, 5.0f ) || FuzzyEqual( hsvValues[0], 360.0f, 5.0f )) {
+            if ( FuzzyEqual( hsvValues[0], 5.0f, 5.0f ) || FuzzyEqual( hsvValues[0], 355.0f, 5.0f )) {
                 return eColorState.red;
             } else {
-                if ( FuzzyEqual( hsvValues[0], 230.0f, 12.0f) ) {
+                if ( FuzzyEqual( hsvValues[0], 230.5f, 9.5f) ) {
                         return eColorState.blue;
                 } else {
-                    if ( FuzzyEqual( hsvValues[0], 110.0f, 25.0f) ) {
+                    if ( FuzzyEqual( hsvValues[0], 110.5f, 29.5f) ) {
                         return eColorState.green;
                     } else {
                         return eColorState.unknown;

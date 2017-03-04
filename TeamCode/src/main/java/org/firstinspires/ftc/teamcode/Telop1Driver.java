@@ -14,9 +14,9 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 
-@TeleOp(name = "Shooter", group = "Pushbot")
+@TeleOp(name = "1Driver", group = "Pushbot")
 //@Disabled
-    public class TeleopDrive extends LinearOpMode {
+public class Telop1Driver extends LinearOpMode {
     // Use a Pushbot's hardware
     ModernRoboticsI2cGyro gyro = null;
 
@@ -89,18 +89,18 @@ import com.qualcomm.robotcore.util.Range;
              * */
 
             //Spin wheels for shooter
-            if (gamepad2.right_bumper) {
+            if (gamepad1.left_bumper) {
                 //Full power when button is pushed
                 robot.leftshooter.setPower(-1);
                 robot.rightshooter.setPower(1);
             } else {
-                if (gamepad2.x){
-                 if (gamepad2.dpad_down){
-                    robot.leftshooter.setPower(1);
-                    robot.rightshooter.setPower(-1);
+                if (gamepad1.x){
+                    if (gamepad1.dpad_down){
+                        robot.leftshooter.setPower(1);
+                        robot.rightshooter.setPower(-1);
 
-                }
-            }else {
+                    }
+                }else {
                     robot.leftshooter.setPower(0);
                     robot.rightshooter.setPower(0);
 
@@ -111,14 +111,14 @@ import com.qualcomm.robotcore.util.Range;
 
             //Button Press
 
-            if (gamepad2.a) {
+            if (gamepad1.a) {
                 robot.button.setPosition(.79);
             } else {
                 robot.button.setPosition(.57);
-
-                if (gamepad2.left_bumper) {
-                   // robot.leftshooter.setPower(-1);
-                   // robot.rightshooter.setPower(1);
+            }
+                if (gamepad1.b) {
+                    // robot.leftshooter.setPower(-1);
+                    // robot.rightshooter.setPower(1);
                     //sleep(3000);
                     robot.servo.setPosition(.3);
                     //sleep(2000);
@@ -130,29 +130,20 @@ import com.qualcomm.robotcore.util.Range;
 
                 } else {
                     if (gamepad1.y){
-                        if (gamepad2.y){
                             robot.leftMotor.setPower(0);
                             robot.rightMotor.setPower(0);
                             robot.Intake.setPower(0);
                             robot.leftshooter.setPower(-1);
                             robot.rightshooter.setPower(1);
-                            sleep(1000);
+                            sleep(4000);
                             robot.servo.setPosition(.3);
                             sleep(2000);
                             robot.leftshooter.setPower(0);
                             robot.rightshooter.setPower(0);
 
-                        }
                     }else{
 
                         robot.servo.setPosition(.9);
-                    }
-                }
-                if (gamepad2.x){
-                    if (gamepad2.dpad_down){
-                        robot.leftshooter.setPower(.2);
-                        robot.rightshooter.setPower(-.2);
-
                     }
                 }
                 //if(AButtonPreviousState == false) {
@@ -179,4 +170,4 @@ import com.qualcomm.robotcore.util.Range;
         }
 
     }
-}
+

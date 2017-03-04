@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name="Dirver", group="Robot")
-//@Disabled
+@Disabled
 public class DriveForKids extends LinearOpMode {
 
     /* Declare OpMode members. */
