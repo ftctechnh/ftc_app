@@ -1,8 +1,4 @@
-package org.firstinspires.ftc.teamcode.FieldTracking;
-
-import android.graphics.Path;
-
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
+package org.firstinspires.ftc.teamcode.fieldtracking;
 
 /**
  * Created by ROUS on 2/27/2017.
