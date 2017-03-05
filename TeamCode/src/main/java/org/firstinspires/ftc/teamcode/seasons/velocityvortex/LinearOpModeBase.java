@@ -33,18 +33,18 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private static final double GYRO_ERROR_THRESHOLD = 1.0;
 
     private static final double P_GYRO_TURN_COEFF = 0.01;
-    private static final double P_GYRO_DRIVE_COEFF = 0.01; // TODO: replace dummy value
+    private static final double P_GYRO_DRIVE_COEFF = 0.01;
 
     protected static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI));
 
     private static final double LIGHT_SENSOR_PERFECT_VALUE = 2.5;
 
-    private static final double LIGHT_THRESHOLD = 0.5;
+    private static final double LIGHT_THRESHOLD = 1.0;
 
     private static final int RANGE_SENSOR_THRESHOLD = 2; // 2cm threshold
 
-    private static final int P_RANGE_DRIVE_COEFF = 0; // TODO: replace dummy value
+    private static final double P_RANGE_DRIVE_COEFF = 0; // TODO: replace dummy value
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -80,9 +80,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private ElapsedTime robotRuntime;
 
-    private I2cDeviceSynch colorSensor1Sync;
-    private I2cDeviceSynch colorSensor2Sync;
-
     protected void initializeHardware() {
         // initialize robotRuntime instance variable
         robotRuntime = new ElapsedTime();
@@ -113,15 +110,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         // disable LEDs for both color sensors
         colorSensor1.enableLed(false);
         colorSensor2.enableLed(false);
-
-        colorSensor1Sync = hardwareMap.i2cDeviceSynch.get("clr_i2c");
-        colorSensor2Sync = hardwareMap.i2cDeviceSynch.get("clr2_i2c");
-
-        colorSensor1Sync.setI2cAddress(colorSensor1.getI2cAddress());
-        colorSensor2Sync.setI2cAddress(colorSensor2.getI2cAddress());
-
-        colorSensor1Sync.engage();
-        colorSensor2Sync.engage();
 
         frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
         //leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
@@ -215,8 +203,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
                 // command register = 0x03
                 // 0x43 = command for black-level calibration
-                colorSensor1Sync.write8(0x03, 0x42);
-                colorSensor2Sync.write8(0x03, 0x42);
+//                colorSensor1Sync.write8(0x03, 0x42);
+//                colorSensor2Sync.write8(0x03, 0x42);
             }
 
             // dpad control to set the delay
@@ -298,18 +286,21 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             idle();
         }
 
+        robotRuntime.reset();
+
         // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
+        while(opModeIsActive() &&
+                (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
             // run without encoders again
             driveForward(0.2);
         }
         //stopRobot();
 
-        // pause for the beacon to change color
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 100) {
-            idle();
-        }
+//        // pause for the beacon to change color
+//        getRobotRuntime().reset();
+//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 100) {
+//            idle();
+//        }
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -323,7 +314,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             repositionBeacons();
 
             // second push
-            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
+            while(opModeIsActive() &&
+                    (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
                 // run without encoders again
                 driveForward(0.2);
             }
@@ -562,6 +554,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                     backLeftPower += proportionalSpeed;
                 }
             }
+
+            telemetry.addData("gyro steer", steer);
+            telemetry.update();
 
             // set the motor powers
             getFrontLeftDrive().setPower(Range.clip(frontLeftPower, -1, 1));
