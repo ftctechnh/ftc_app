@@ -22,14 +22,16 @@ public class ProgrammingRobotHardware {
 
     public static final double GYRO_ERROR_THRESHOLD = 5;
 
-    public static final double LIGHT_SENSOR_PERFECT_VALUE = 0.2; // random value for now
+    public static final double LIGHT_SENSOR_PERFECT_VALUE = 2.5;
 
     public static final double P_GYRO_TURN_COEFF = 0.008;
 
     public static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI);
 
-    public static final double P_LIGHT_FOLLOW_COEFF = 1.5;
+    public static final double P_LINE_STOP_COEFF = 1.5;
+
+    public static final double LIGHT_THRESHOLD = 0.02;
 
     private DcMotor frontLeft;
     private DcMotor frontRight;

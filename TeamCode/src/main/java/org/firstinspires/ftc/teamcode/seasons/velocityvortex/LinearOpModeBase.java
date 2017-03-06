@@ -19,6 +19,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /**
  * Created by ftc6347 on 10/16/16.
  */
@@ -31,13 +33,18 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private static final double GYRO_ERROR_THRESHOLD = 1.0;
 
     private static final double P_GYRO_TURN_COEFF = 0.01;
+    private static final double P_GYRO_DRIVE_COEFF = 0.01;
 
     protected static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI));
 
     private static final double LIGHT_SENSOR_PERFECT_VALUE = 2.5;
 
-    private static final double LIGHT_THRESHOLD = 0.5;
+    private static final double LIGHT_THRESHOLD = 1.0;
+
+    private static final int RANGE_SENSOR_THRESHOLD = 2; // 2cm threshold
+
+    private static final double P_RANGE_DRIVE_COEFF = 0; // TODO: replace dummy value
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -182,38 +189,68 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     protected void autonomousInitLoop() {
-        I2cDeviceSynch colorSensor1Sync =
-                new I2cDeviceSynchImpl((I2cDevice)colorSensor1, colorSensor1.getI2cAddress(), false);
-        I2cDeviceSynch colorSensor2Sync =
-                new I2cDeviceSynchImpl((I2cDevice)colorSensor1, colorSensor1.getI2cAddress(), false);
+        int autonomousDelay = 0;
 
-        colorSensor1Sync.engage();
-        colorSensor2Sync.engage();
-
-        while(opModeIsActive() && !isStopRequested()) {
+        while(!opModeIsActive() && !isStopRequested()) {
             if (gamepad1.a) {
                 telemetry.addData(">", "Calibrating Gyro");
                 telemetry.update();
 
                 gyroSensor.calibrate();
-
-                // make sure the gyro is calibrated before continuing
-                while (!isStopRequested() && gyroSensor.isCalibrating()) {
-                    idle();
-                }
-
-                telemetry.addData(">", "Gyro calibrated");
-                telemetry.update();
-
             } else if (gamepad1.b) {
-                telemetry.addData(">", "Performing black-level calibration...");
+                telemetry.addData(">", "Performing black-level calibration... ");
                 telemetry.update();
 
                 // command register = 0x03
                 // 0x43 = command for black-level calibration
-                colorSensor1Sync.write8(0x03, 0x42);
-                colorSensor2Sync.write8(0x03, 0x42);
+//                colorSensor1Sync.write8(0x03, 0x42);
+//                colorSensor2Sync.write8(0x03, 0x42);
             }
+
+            // dpad control to set the delay
+            if(gamepad1.dpad_up) {
+                autonomousDelay = 1;
+            } else if(gamepad1.dpad_down) {
+                autonomousDelay = 2;
+            } else if(gamepad1.dpad_left) {
+                autonomousDelay = 5;
+            } else if(gamepad1.dpad_right) {
+                autonomousDelay = 10;
+            }
+
+            if(gamepad1.left_trigger > 0) {
+                robotRuntime.reset();
+                while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
+                    idle();
+                }
+                autonomousDelay++;
+
+            } else if(gamepad1.right_trigger > 0) {
+                robotRuntime.reset();
+                while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
+                    idle();
+                }
+                autonomousDelay--;
+            }
+
+            // print the delay
+            telemetry.addData("Autonomous delay", autonomousDelay);
+
+            telemetry.addData("Gyro Z axis", gyroSensor.getIntegratedZValue());
+
+            // print color sensor values
+            telemetry.addData("Left color sensor", "red: %d, blue: %d",
+                    getColorSensor1().red(), getColorSensor1().blue());
+            telemetry.addData("Right color sensor", "red: %d, blue: %d",
+                    getColorSensor2().red(), getColorSensor2().blue());
+            telemetry.update();
+        }
+
+        // actual delay
+        while(opModeIsActive() && robotRuntime.seconds() < autonomousDelay) {
+            telemetry.addData(">", "Autonomous delay in progress... ");
+            telemetry.update();
+            idle();
         }
     }
 
@@ -249,18 +286,21 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             idle();
         }
 
+        robotRuntime.reset();
+
         // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
+        while(opModeIsActive() &&
+                (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
             // run without encoders again
             driveForward(0.2);
         }
         //stopRobot();
 
-        // pause for the beacon to change color
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 100) {
-            idle();
-        }
+//        // pause for the beacon to change color
+//        getRobotRuntime().reset();
+//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 100) {
+//            idle();
+//        }
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -274,7 +314,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             repositionBeacons();
 
             // second push
-            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
+            while(opModeIsActive() &&
+                    (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
                 // run without encoders again
                 driveForward(0.2);
             }
@@ -432,56 +473,100 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    protected void rangeSensorStrafe(double speed) {
+    protected void rangeGyroStrafe(double speed, double angle, double rangeDistance,
+                                   double frontInches, double backInches) {
+        double error;
+        double rangeError;
+        double steer;
+        double rangeSteer;
+
+        double proportionalSpeed;
+
+        // initialize motor powers to the initial speed
+        double frontRightPower;
+        double frontLeftPower;
+        double backRightPower;
+        double backLeftPower;
+
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        EncoderValues initialValues = new EncoderValues(
-                getFrontLeftDrive().getCurrentPosition(),
-                getFrontRightDrive().getCurrentPosition(),
-                getBackLeftDrive().getCurrentPosition(),
-                getBackRightDrive().getCurrentPosition());
+        int frontTarget = (int)(frontInches * COUNTS_PER_INCH);
+        int backTarget = (int)(backInches * COUNTS_PER_INCH);
 
-        telemetry.addData("initial encoder values", initialValues.toString());
-        telemetry.update();
+        // set the target position for each motor
+        getFrontLeftDrive().setTargetPosition(frontTarget);
+        getFrontRightDrive().setTargetPosition(frontTarget);
+
+        getBackRightDrive().setTargetPosition(-backTarget);
+        getBackLeftDrive().setTargetPosition(-backTarget);
 
         // set the power for the left drive motors
         getFrontLeftDrive().setPower(speed);
-        getBackLeftDrive().setPower(-speed);
+        getBackLeftDrive().setPower(speed);
 
         // set the power for the right drive motors
         getFrontRightDrive().setPower(speed);
-        getBackRightDrive().setPower(-speed);
+        getBackRightDrive().setPower(speed);
 
-        EncoderValues currentValues;
+        while(opModeIsActive() && areDriveMotorsBusy()) {
+            error = getGyroError(angle);
+            rangeError = rangeDistance - frontRange.cmUltrasonic();
 
-        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
+            steer = error * P_GYRO_DRIVE_COEFF;
+            rangeSteer = rangeError * P_RANGE_DRIVE_COEFF;
 
-            currentValues = new EncoderValues(
-                    getFrontLeftDrive().getCurrentPosition(),
-                    getFrontRightDrive().getCurrentPosition(),
-                    getBackLeftDrive().getCurrentPosition(),
-                    getBackRightDrive().getCurrentPosition());
+            // reset power variables every iteration of loop
+            frontRightPower = speed;
+            frontLeftPower = speed;
+            backRightPower = speed;
+            backLeftPower = speed;
 
-            telemetry.addData("are encoder values less?", currentValues.isLessThan(initialValues));
-            telemetry.addData("current encoder values", initialValues.toString());
-            telemetry.addData("Light",getOds3().getRawLightDetected());
-            telemetry.update();
-            if(getFrontRange().cmUltrasonic() < 5) {
-                driveBackward(Math.abs(speed));
-            } else if(getFrontRange().cmUltrasonic() > 30){
-                driveForward(Math.abs(speed));
-            } else {
-                driveRight(speed);
+            if(Math.abs(error) > GYRO_ERROR_THRESHOLD) {
+                // if robot is rotated counterclockwise from 0
+                if (error < 0) {
+                    proportionalSpeed = steer;
+
+                    // decrease power of back motors
+                    backRightPower += proportionalSpeed;
+                    backLeftPower += proportionalSpeed;
+
+                // else the robot is rotated clockwise from 0
+                } else {
+                    proportionalSpeed = -steer;
+
+                    // decrease power of front motors
+                    frontRightPower += proportionalSpeed;
+                    frontLeftPower += proportionalSpeed;
+                }
             }
 
-            // pivot while driving
-            gyroPivot(0.8, 0, false);
+            if(Math.abs(rangeError) > RANGE_SENSOR_THRESHOLD) {
+                proportionalSpeed = rangeSteer;
+
+                if(rangeError < 0) {
+                    // too far from wall
+                    frontLeftPower -= proportionalSpeed;
+                    backRightPower -= proportionalSpeed;
+                } else {
+                    // too close to wall
+                    frontRightPower += proportionalSpeed;
+                    backLeftPower += proportionalSpeed;
+                }
+            }
+
+            telemetry.addData("gyro steer", steer);
+            telemetry.update();
+
+            // set the motor powers
+            getFrontLeftDrive().setPower(Range.clip(frontLeftPower, -1, 1));
+            getFrontRightDrive().setPower(Range.clip(frontRightPower, -1, 1));
+            getBackLeftDrive().setPower(Range.clip(backLeftPower, -1 ,1));
+            getBackRightDrive().setPower(Range.clip(backRightPower, -1, 1));
 
             idle();
         }
-        telemetry.addData("Light",getOds3().getRawLightDetected());
-        telemetry.update();
+
         stopRobot();
 
         // set RUN_USING_ENCODER for each motor

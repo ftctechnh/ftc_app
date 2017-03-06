@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by ftc6347 on 12/30/16.
  */
-@Disabled
 @Autonomous(name = "Programming Robot Autonomous", group = "autonomous")
 public class ProgrammingRobotAutonomous extends LinearOpMode {
 
@@ -19,65 +19,85 @@ public class ProgrammingRobotAutonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new ProgrammingRobotHardware(hardwareMap, telemetry);
 
-        robot.getGyroSensor().calibrate();
+        waitForStart();
 
-        // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && robot.getGyroSensor().isCalibrating()) {
-            sleep(50);
-            telemetry.addData(">", "Calibrating Gyro");
-            telemetry.update();
+//        robot.setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        ElapsedTime test = new ElapsedTime();
+        while(opModeIsActive() && test.milliseconds() < 2000) {
             idle();
         }
 
-        telemetry.addData(">", "Gyro Calibrated");
-        telemetry.update();
+        robot.stopRobot();
 
-        while(!isStarted()) {
-            telemetry.addData(">", "Integrated Z value = %d", robot.getGyroSensor().getIntegratedZValue());
-            telemetry.update();
-            idle();
+        while(opModeIsActive() && !isStopRequested()) {
+            // drive left
+            robot.getFrontLeft().setPower(-0.5);
+            robot.getBackLeft().setPower(0.5);
+            robot.getFrontRight().setPower(-0.5);
+            robot.getFrontLeft().setPower(0.5);
         }
 
-        while(opModeIsActive()) {
-            telemetry.addData("light sensor", robot.getFrontLightSensor().getRawLightDetected());
-            telemetry.update();
-
-            proportionalLineFollow(0.1);
-
-        }
-
-
+//        stopOnLine(0.2);
     }
 
-    protected void proportionalLineFollow(double speed) {
+    private void stopOnLine(double speed) {
+        robot.setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double motorPower;
         double error = ProgrammingRobotHardware.LIGHT_SENSOR_PERFECT_VALUE
                 - robot.getFrontLightSensor().getRawLightDetected();
 
-        double correction =
-                Range.clip(error * ProgrammingRobotHardware.P_LIGHT_FOLLOW_COEFF, -1, 1);
+        while(opModeIsActive() && Math.abs(error) > ProgrammingRobotHardware.LIGHT_THRESHOLD) {
+            error = ProgrammingRobotHardware.LIGHT_SENSOR_PERFECT_VALUE
+                    - robot.getFrontLightSensor().getRawLightDetected();
 
-        double leftPower;
-        double rightPower;
+            if(error < 0) {
+                speed *= -1;
+            }
 
-        telemetry.addData("correction", correction);
+            // drive left
+            robot.getFrontLeft().setPower(-speed);
+            robot.getBackLeft().setPower(speed);
+            robot.getFrontRight().setPower(-speed);
+            robot.getFrontLeft().setPower(speed);
 
-        // if the ODS is on the middle of the line
-        if(error < 0) {
-            rightPower = speed - correction;
-            leftPower = speed;
-        } else {
-            leftPower = speed + correction;
-            rightPower = speed;
+            telemetry.addData("within range", error);
+            telemetry.update();
         }
+        robot.stopRobot();
 
-        // set power for left side
-        robot.getFrontLeft().setPower(leftPower);
-        robot.getBackLeft().setPower(leftPower);
-
-        // set power for right side
-        robot.getFrontRight().setPower(-rightPower);
-        robot.getBackRight().setPower(-rightPower);
     }
+
+//    protected void proportionalLineFollow(double speed) {
+//        double error = ProgrammingRobotHardware.LIGHT_SENSOR_PERFECT_VALUE
+//                - robot.getFrontLightSensor().getRawLightDetected();
+//
+////        double correction =
+////                Range.clip(error * ProgrammingRobotHardware.P_LIGHT_FOLLOW_COEFF, -1, 1);
+//
+//        double leftPower;
+//        double rightPower;
+//
+//        telemetry.addData("correction", correction);
+//
+//        // if the ODS is on the middle of the line
+//        if(error < 0) {
+//            rightPower = speed - correction;
+//            leftPower = speed;
+//        } else {
+//            leftPower = speed + correction;
+//            rightPower = speed;
+//        }
+//
+//        // set power for left side
+//        robot.getFrontLeft().setPower(leftPower);
+//        robot.getBackLeft().setPower(leftPower);
+//
+//        // set power for right side
+//        robot.getFrontRight().setPower(-rightPower);
+//        robot.getBackRight().setPower(-rightPower);
+//    }
 
     protected void gyroPivot(double speed, double angle) {
 
