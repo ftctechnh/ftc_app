@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.seasons.velocityvortex.testing;
+package org.firstinspires.ftc.teamcode.seasons.velocityvortex.utilities;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
  * https://github.com/trc492/Ftc2016FirstResQ/blob/master/FtcRobotController/src/main/java/ftclib/FtcMRI2cColorSensor.java
  * https://github.com/trc492/Ftc2017VelocityVortex/blob/master/Ftc3543Lib/src/main/java/ftclib/FtcMRI2cColorSensor.java
  */
-@TeleOp(name = "Calibrate Color Sensor", group = "testing")
+@TeleOp(name = "Calibrate Color Sensor", group = "utilities")
 public class CalibrateColorSensor extends OpMode {
 
 

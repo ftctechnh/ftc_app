@@ -1,19 +1,20 @@
-package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
+package org.firstinspires.ftc.teamcode.seasons.velocityvortex.utilities;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+
+import org.firstinspires.ftc.teamcode.seasons.velocityvortex.LinearOpModeBase;
 
 import java.text.DecimalFormat;
 
 /**
  * Created by aburger on 3/5/2017.
  */
-@TeleOp(name = "Sensor Testing", group = "testing")
+@TeleOp(name = "Sensor Testing", group = "utilities")
 public class SensorTest extends LinearOpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {

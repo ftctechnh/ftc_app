@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
+package org.firstinspires.ftc.teamcode.seasons.velocityvortex.utilities;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.teamcode.seasons.velocityvortex.LinearOpModeBase;
 
 /**
  * Created by ftc6347 on 2/3/17.
