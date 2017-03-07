@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms;
+package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -8,9 +8,10 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
-public abstract class _AutonomousBase extends _RobotBase
+public abstract class AutonomousBase extends RobotBase
 {
     //Only used during autonomous.
     protected GyroSensor gyroscope;
@@ -130,10 +131,10 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Used to turn to a specified heading, and returns the difference between the desired angle and the actual angle achieved.
-    enum TurnMode {
+    protected enum TurnMode {
         LEFT, RIGHT, BOTH
     }
-   //This battery factor, when updated, remains updated for all future turns so that the robot does not have to start changing it again.
+    //This battery factor, when updated, remains updated for all future turns so that the robot does not have to start changing it again.
     protected void turnToHeading (int desiredHeading, TurnMode mode, long maxTime) throws InterruptedException
     {
         if (gyroscope != null)

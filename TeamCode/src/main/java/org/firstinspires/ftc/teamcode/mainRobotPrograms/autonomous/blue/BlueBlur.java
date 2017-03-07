@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms;
+package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="Red Redemption", group = "Auto Group")
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutonomousBase;
 
-public class RedRedemption extends _AutonomousBase
+@Autonomous(name="Blue Blur", group = "Auto Group")
+
+public class BlueBlur extends AutonomousBase
 {
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException
@@ -28,7 +30,7 @@ public class RedRedemption extends _AutonomousBase
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall at an angle...");
-        turnToHeading(-70, TurnMode.BOTH, 4000);
+        turnToHeading(70, TurnMode.BOTH, 4000);
 
         //Drive to the wall and stop once a little ways away.
         startToDriveAt (0.7);
@@ -42,7 +44,7 @@ public class RedRedemption extends _AutonomousBase
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
-        turnToHeading(-180, TurnMode.BOTH, 5000);
+        turnToHeading(0, TurnMode.BOTH, 4000);
 
         //For each of the two beacons.
         for (int i = 0; i < 2; i++)
@@ -50,7 +52,7 @@ public class RedRedemption extends _AutonomousBase
             outputNewLineToDrivers ("Looking for beacon " + (i + 1));
 
             //Set movement speed.
-            startToDriveAt (-0.24);
+            startToDriveAt (0.24);
 
             //Drive until centered on the beacon.
             boolean aboutToSeeWhiteLine = false;
@@ -84,11 +86,11 @@ public class RedRedemption extends _AutonomousBase
                 {
                     //Power up the appropriate side to a massive degree for a very short period of time.
                     if (swerveCorrectionSign == -1)
-                        setLeftPower (movementPower * 4);
-                    else if (swerveCorrectionSign == 1)
                         setRightPower (movementPower * 4);
+                    else if (swerveCorrectionSign == 1)
+                        setLeftPower (movementPower * 4);
 
-                    gyroAdjustFactor += swerveCorrectionSign; //Make the gyro think that heading 1 is now heading 0 since apparently the last heading was off.
+                    gyroAdjustFactor -= swerveCorrectionSign; //Make the gyro think that heading 1 is now heading 0 since apparently the last heading was off.
 
                     //Don't allow the gyro to correct the heading for a very brief period of time.
                     long swerveStart = System.currentTimeMillis ();
@@ -124,7 +126,7 @@ public class RedRedemption extends _AutonomousBase
 
                 //The possible events that could occur upon either verification or first looking at the beacon.
                 //Different drives are attempted for each trial.
-                if (option1Red && option2Blue)
+                if (option1Blue && option2Red)
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
@@ -132,7 +134,7 @@ public class RedRedemption extends _AutonomousBase
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
-                else if (option1Blue && option2Red)
+                else if (option1Red && option2Blue)
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
@@ -140,7 +142,7 @@ public class RedRedemption extends _AutonomousBase
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
-                else if (option1Blue && option2Blue)
+                else if (option1Red && option2Red)
                 {
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
@@ -175,13 +177,13 @@ public class RedRedemption extends _AutonomousBase
 
             //Drive a bit forward from the white line to set up for the next step.
             if (i == 0)
-                driveForDistance (-0.3, 300);
+                driveForDistance (0.3, 300);
         }
 
         //Dash backward to the ramp afterward.
         outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
-        turnToHeading(-228, TurnMode.BOTH, 2200);
-        driveForDistance(1.0, 3000); //SPRINT TO THE CAP BALL TO PARK
+        turnToHeading(48, TurnMode.BOTH, 2200);
+        driveForDistance(-1.0, 3000); //SPRINT TO THE CAP BALL TO PARK
 
     }
 }

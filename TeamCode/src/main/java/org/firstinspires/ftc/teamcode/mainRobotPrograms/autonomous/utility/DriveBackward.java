@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms;
+package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.utility;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutonomousBase;
+
 @Autonomous(name="Drive Backward", group = "Utility Group")
 
-public class DriveBackward extends _AutonomousBase
+public class DriveBackward extends AutonomousBase
 {
     //Custom initialization
     @Override

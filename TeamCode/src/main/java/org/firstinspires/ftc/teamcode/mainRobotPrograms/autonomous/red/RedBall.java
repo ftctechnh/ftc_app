@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms;
+package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Blue Ball", group = "Auto Group")
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutonomousBase;
 
-public class BlueBall extends _AutonomousBase
+@Autonomous(name="Red Ball", group = "Auto Group")
+
+public class RedBall extends AutonomousBase
 {
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        sleep(15000);
-
         //Drive to the cap ball.
         outputNewLineToDrivers ("Driving to shooting position.");
         driveForDistance (0.3, 2000);
@@ -36,7 +36,7 @@ public class BlueBall extends _AutonomousBase
         outputNewLineToDrivers ("Drive to the ramp, stopping upon bttom color sensor reaches the blue region on the ramp.");
         startToDriveAt (0.25);
         long startDriveTime = System.currentTimeMillis (); //Max time at 6 seconds.
-        while (bottomColorSensor.blue () <= 2.5 && (System.currentTimeMillis () - startDriveTime) < 6000)
+        while (bottomColorSensor.red () <= 2.5 && (System.currentTimeMillis () - startDriveTime) < 6000)
             adjustMotorPowersBasedOnGyroSensor ();
         stopDriving ();
     }

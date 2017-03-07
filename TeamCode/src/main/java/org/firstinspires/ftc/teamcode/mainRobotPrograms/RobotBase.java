@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.BaseFunctions;
 
 import java.util.ArrayList;
 
-public abstract class _RobotBase extends BaseFunctions
+public abstract class RobotBase extends BaseFunctions
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors (they are lists because it helps when we add on new motors.

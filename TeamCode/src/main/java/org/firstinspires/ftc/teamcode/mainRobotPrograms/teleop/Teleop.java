@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms;
+package org.firstinspires.ftc.teamcode.mainRobotPrograms.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
+
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
 
-public class Teleop extends _RobotBase
+public class Teleop extends RobotBase
 {
     //All teleop controls are here.
     protected void driverStationSaysGO() throws InterruptedException
