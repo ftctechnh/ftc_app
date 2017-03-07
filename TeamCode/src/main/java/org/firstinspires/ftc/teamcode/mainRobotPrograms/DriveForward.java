@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name="Drive Forward", group = "Utility Group")
 
@@ -20,7 +19,7 @@ public class DriveForward extends _AutonomousBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        setMovementPower(0.8);
+        startToDriveAt (0.8);
 
         while (true)
             idle();
