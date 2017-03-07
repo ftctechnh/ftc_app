@@ -16,12 +16,13 @@ public class Teleop extends RobotBase
         //Normal mode variables
         double leftPower,
                 rightPower,
-                leftPusherPower,
-                rightPusherPower;
+                rightPusherPowerLeft,
+                rightPusherPowerRight;
         boolean backwards = false;
         double speedCoefficient = 1.0;
         double flywheelCoefficient = 0.4;
         boolean pressingFlywheelC = false;
+        boolean pressingFBPToggle = false;
         double currentCapBallHolderPos = 0;
         boolean capBallMode = false;
         boolean capBallMode2 = false;
@@ -61,12 +62,12 @@ public class Teleop extends RobotBase
                 capBallMode = false;
             }
 
-            if (gamepad1.right_bumper) {
-                speedCoefficient = 0.5;
-            }
-            else if (!capBallMode) {
-                speedCoefficient = 1.0;
-            }
+//            if (gamepad1.right_bumper) {
+//                speedCoefficient = 0.5;
+//            }
+//            else if (!capBallMode) {
+//                speedCoefficient = 1.0;
+//            }
 
             /************** Clamp **************/
             if (gamepad1.left_bumper || (gamepad2.left_bumper && capBallMode2))
@@ -79,6 +80,21 @@ public class Teleop extends RobotBase
             /************** Open Clamp **************/
             if (gamepad1.back || gamepad2.back) {
                 capBallHolder.setPosition(CBH_OPEN);
+            }
+
+            /************** Front Button Pusher **************/
+            if (gamepad1.right_trigger > 0.5 && !pressingFBPToggle) {
+                pressingFBPToggle = true;
+                if (frontButtonPusher.getPosition() == FBP_UP) {
+                    frontButtonPusher.setPosition(FBP_UP);
+                }
+                else {
+                    frontButtonPusher.setPosition(FBP_DOWN);
+                }
+            }
+
+            if (gamepad1.right_trigger < 0.5) {
+                pressingFBPToggle = false;
             }
 
             /**************************** CONTROLLER #2 ********************************/
@@ -131,11 +147,11 @@ public class Teleop extends RobotBase
             }
 
             //Used to adjust the power of the flywheels.
-            if (gamepad2.left_trigger > 0.5 && !pressingFlywheelC && !capBallMode) {
+            if (gamepad2.left_trigger > 0.5 && !pressingFlywheelC && !capBallMode2) {
                 flywheelCoefficient = Range.clip(flywheelCoefficient - 0.05, 0.2, 1.0);
                 pressingFlywheelC = true;
             }
-            else if (gamepad2.left_bumper && !pressingFlywheelC && !capBallMode) {
+            else if (gamepad2.left_bumper && !pressingFlywheelC && !capBallMode2) {
                 flywheelCoefficient = Range.clip(flywheelCoefficient + 0.05, 0.2, 1.0);
                 pressingFlywheelC = true;
             }
@@ -144,23 +160,15 @@ public class Teleop extends RobotBase
                 pressingFlywheelC = false;
             }
 
-            /************** Beacon Pushers **************/
-            leftPusherPower = gamepad2.right_stick_x;
-            leftPusherPower = Range.clip(leftPusherPower, -1, 1);
+            /************** Side Beacon Pushers **************/
+            rightPusherPowerLeft = gamepad2.left_stick_x;
+            rightPusherPowerRight = gamepad2.right_stick_x;
+            rightPusherPowerLeft = Range.clip(rightPusherPowerLeft, -1, 1);
+            rightPusherPowerRight = Range.clip(rightPusherPowerRight, -1, 1);
 
-            if (leftPusherPower > 0.5)
-                leftButtonPusher.setPosition(1.0);
-            else if (leftPusherPower < -0.5)
-                leftButtonPusher.setPosition(0.0);
-            else
-                leftButtonPusher.setPosition(0.5);
-
-            rightPusherPower = gamepad2.left_stick_x;
-            rightPusherPower = Range.clip(rightPusherPower, -1, 1);
-
-            if (rightPusherPower > 0.5)
+            if (rightPusherPowerLeft > 0.5 || rightPusherPowerRight > 0.5)
                 rightButtonPusher.setPosition(1.0);
-            else if (rightPusherPower < -0.5)
+            else if (rightPusherPowerLeft < -0.5 || rightPusherPowerRight < -0.5)
                 rightButtonPusher.setPosition(0.0);
             else
                 rightButtonPusher.setPosition(0.5);
@@ -187,8 +195,7 @@ public class Teleop extends RobotBase
 
     double scaleInput(double dVal)
     {
-        double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
-                0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
+        double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24, 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
 
         // get the corresponding index for the scaleInput array.
         int index = (int) (dVal * 16.0);

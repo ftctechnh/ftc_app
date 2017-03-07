@@ -17,9 +17,10 @@ public abstract class RobotBase extends BaseFunctions
     protected ArrayList <DcMotor> leftDriveMotors = new ArrayList <>(), rightDriveMotors = new ArrayList<>();
     //Other motors
     protected DcMotor harvester, flywheels, lift;
-    protected Servo leftButtonPusher, rightButtonPusher;
+    protected Servo rightButtonPusher, frontButtonPusher;
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
+    protected final double FBP_UP = 0.0, FBP_DOWN = 0.5;
 
     protected ModernRoboticsI2cRangeSensor sideRangeSensor;
 
@@ -43,10 +44,12 @@ public abstract class RobotBase extends BaseFunctions
         flywheels.setDirection(DcMotor.Direction.REVERSE);
 
         lift = initialize(DcMotor.class, "lift");
-        leftButtonPusher = initialize(Servo.class, "leftButtonPusher");
-        leftButtonPusher.setPosition(0.5);
+
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
         rightButtonPusher.setPosition(0.5);
+
+        frontButtonPusher = initialize(Servo.class, "frontButtonPusher");
+        frontButtonPusher.setPosition(FBP_UP);
 
         capBallHolder = initialize(Servo.class, "clamp");
         capBallHolder.setPosition(CBH_CLOSED);
