@@ -1,26 +1,34 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms;
+package org.firstinspires.ftc.teamcode.mainRobotPrograms.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
+
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
 
-public class Teleop extends _RobotBase
+public class Teleop extends RobotBase
 {
     //All teleop controls are here.
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Normal mode variables
-        double leftPower, rightPower, leftPusherPower, rightPusherPower;
+        double leftPower,
+                rightPower,
+                leftPusherPower,
+                rightPusherPower;
         boolean backwards = false;
         double speedCoefficient = 1.0;
         double flywheelCoefficient = 0.4;
         boolean pressingFlywheelC = false;
-        double currentClampPos = 0;
+        double currentCapBallHolderPos = 0;
+        boolean capBallMode = false;
+        boolean capBallMode2 = false;
+        double harvesterCoefficient = 1.0;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
-        while (opModeIsActive())
+        while (true)
         {
             /**************************** CONTROLLER #1 ********************************/
             /************** Direction Toggle **************/
@@ -42,30 +50,46 @@ public class Teleop extends _RobotBase
             setRightPower(scaleInput(rightPower) * speedCoefficient);
 
             /************** Cap Ball Drive Mode **************/
-            if (gamepad1.right_trigger > 0.5) {
+            if (gamepad1.x) {
                 speedCoefficient = 0.5;
-                backwards = true;
+//                backwards = true;
+                capBallMode = true;
             }
-            else if (gamepad1.right_bumper) {
+            else if (gamepad1.y) {
                 speedCoefficient = 1.0;
-                backwards = false;
+//                backwards = false;
+                capBallMode = false;
+            }
+
+            if (gamepad1.right_bumper) {
+                speedCoefficient = 0.5;
+            }
+            else if (!capBallMode) {
+                speedCoefficient = 1.0;
             }
 
             /************** Clamp **************/
-            if (gamepad1.left_bumper)
-                currentClampPos += 0.01;
-            else if (gamepad1.left_trigger > 0.5)
-                currentClampPos -= 0.01;
-            currentClampPos = Range.clip(currentClampPos, CBH_CLOSED, CBH_OPEN);
-            capBallHolder.setPosition(currentClampPos);
+            if (gamepad1.left_bumper || (gamepad2.left_bumper && capBallMode2))
+                currentCapBallHolderPos += 0.05;
+            else if (gamepad1.left_trigger > 0.5 || (gamepad2.left_trigger > 0.5 && capBallMode2))
+                currentCapBallHolderPos -= 0.01;
+            currentCapBallHolderPos = Range.clip(currentCapBallHolderPos, CBH_CLOSED, CBH_OPEN);
+            capBallHolder.setPosition(currentCapBallHolderPos);
 
             /************** Open Clamp **************/
-            if (gamepad1.back) {
+            if (gamepad1.back || gamepad2.back) {
                 capBallHolder.setPosition(CBH_OPEN);
             }
 
             /**************************** CONTROLLER #2 ********************************/
             /************** Cap Ball Lift **************/
+            if (gamepad2.x) {
+                capBallMode2 = true;
+            }
+            else if (gamepad2.y) {
+                capBallMode2 = false;
+            }
+
             if (gamepad2.right_bumper)
                 lift.setPower(1.0);
             else if (gamepad2.right_trigger > 0.5)
@@ -74,28 +98,45 @@ public class Teleop extends _RobotBase
                 lift.setPower(0.0);
 
             /************** Harvester **************/
-            if (gamepad2.b)
-                harvester.setPower(-1.0); // Reverse harvester
-            else if (gamepad2.a)
-                harvester.setPower(1.0); // Collect
-            else
+            if (gamepad2.b) {
+                harvester.setPower(harvesterCoefficient * 1.0); // Collect
+            }
+            else if (gamepad2.a && gamepad2.dpad_down) {
+                harvester.setPower(harvesterCoefficient * -1.0);
+                flywheels.setPower(-1.0);
+            }
+            else if (gamepad2.a) {
+                harvester.setPower(harvesterCoefficient * -1.0); // Reverse harvester
+            }
+            else {
                 harvester.setPower(0);
+            }
 
             /************** Flywheels **************/
-            if (gamepad2.dpad_up)
+            if (gamepad2.dpad_up) {
                 flywheels.setPower(flywheelCoefficient * 1.0); // Shoot
-            else if (gamepad2.dpad_down)
+                harvesterCoefficient = 1.0;
+            }
+            else if (gamepad2.b && gamepad2.dpad_down) {
+                harvester.setPower(harvesterCoefficient * -1.0);
+                flywheels.setPower(-1.0);
+            }
+            else if (gamepad2.dpad_down) {
                 flywheels.setPower(-0.6); // Reverse flywheels
-            else
+                harvesterCoefficient = 1.0;
+            }
+            else {
                 flywheels.setPower(0.0);
+                harvesterCoefficient = 1.0;
+            }
 
             //Used to adjust the power of the flywheels.
-            if (gamepad2.left_trigger > 0.5 && !pressingFlywheelC) {
-                flywheelCoefficient = Range.clip(flywheelCoefficient - 0.1, 0.2, 1.0);
+            if (gamepad2.left_trigger > 0.5 && !pressingFlywheelC && !capBallMode) {
+                flywheelCoefficient = Range.clip(flywheelCoefficient - 0.05, 0.2, 1.0);
                 pressingFlywheelC = true;
             }
-            else if (gamepad2.left_bumper && !pressingFlywheelC) {
-                flywheelCoefficient = Range.clip(flywheelCoefficient + 0.1, 0.2, 1.0);
+            else if (gamepad2.left_bumper && !pressingFlywheelC && !capBallMode) {
+                flywheelCoefficient = Range.clip(flywheelCoefficient + 0.05, 0.2, 1.0);
                 pressingFlywheelC = true;
             }
 
@@ -114,7 +155,6 @@ public class Teleop extends _RobotBase
             else
                 leftButtonPusher.setPosition(0.5);
 
-
             rightPusherPower = gamepad2.left_stick_x;
             rightPusherPower = Range.clip(rightPusherPower, -1, 1);
 
@@ -128,7 +168,9 @@ public class Teleop extends _RobotBase
             /************** Data Output **************/
             outputConstantDataToDrivers(new String[] {
                     "Fly wheel power = " + flywheelCoefficient,
-                    "Drive power = " + speedCoefficient
+                    "Drive power = " + speedCoefficient,
+                    "Cap ball mode = " + capBallMode,
+                    "Distance from the wall = " + sideRangeSensor.cmUltrasonic ()
             });
 
             idle();

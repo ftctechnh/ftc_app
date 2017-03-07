@@ -1,14 +1,36 @@
 package org.firstinspires.ftc.teamcode.tankbotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-//Add the teleop to the op mode register.
-@TeleOp(name="TankBot Teleop", group="Teleop Group")
+import org.firstinspires.ftc.teamcode.BaseFunctions;
 
-public class Teleop extends _RobotBase
+//Add the teleop to the op mode register.
+@TeleOp(name="TankBot Drive", group="TankBot Group")
+
+public class TankBotDriveAround extends BaseFunctions
 {
+    /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
+    //Drive motors (they are lists because it helps when we add on new motors.
+    protected DcMotor leftMotor, rightMotor;
+    protected Servo turret;
+
+    // Called on initialization (once)
+    protected void initializeHardware() throws InterruptedException
+    {
+        //Make sure that the robot components are found and initialized correctly.
+        //This all happens during init()
+        /*************************** DRIVING MOTORS ***************************/
+        leftMotor = initialize(DcMotor.class, "Left Motor");
+        rightMotor = initialize(DcMotor.class, "Right Motor");
+        rightMotor.setDirection (DcMotorSimple.Direction.REVERSE);
+
+        turret = initialize(Servo.class, "Turret");
+    }
+
     //All teleop controls are here.
     protected void driverStationSaysGO() throws InterruptedException
     {
@@ -16,6 +38,7 @@ public class Teleop extends _RobotBase
         double leftPower, rightPower;
         boolean backwards = false;
         double lastTimeBackTogglePressed = System.currentTimeMillis();
+        double currentTurretPosition = 0.5;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (opModeIsActive())
@@ -39,12 +62,6 @@ public class Teleop extends _RobotBase
             leftMotor.setPower(scaleInput(leftPower));
             rightMotor.setPower(scaleInput(rightPower));
 
-            /************** Data Output **************/
-            outputConstantDataToDrivers(new String[] {
-                    "Right power = " + rightPower,
-                    "Left power = " + leftPower
-            });
-
             //Toggle direction
             if (gamepad1.a && (System.currentTimeMillis() - lastTimeBackTogglePressed) > 1000)
             {
@@ -52,9 +69,27 @@ public class Teleop extends _RobotBase
                 lastTimeBackTogglePressed = System.currentTimeMillis();
             }
 
+            /************** Turret Position **************/
+            if (turret != null)
+            {
+                if (gamepad1.dpad_left)
+                    currentTurretPosition -= 0.005;
+                else if (gamepad1.dpad_right)
+                    currentTurretPosition += 0.005;
+
+                currentTurretPosition = Range.clip(currentTurretPosition, 0, 1);
+                turret.setPosition(currentTurretPosition);
+            }
+
+            /************** Data Output **************/
+            outputConstantDataToDrivers(new String[] {
+                    "Right power = " + rightPower,
+                    "Left power = " + leftPower
+            });
+            /******************** END OF LOOP ********************/
+
             idle();
 
-            /******************** END OF LOOP ********************/
         }
     }
 

@@ -1,29 +1,29 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms;
+package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.utility;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutonomousBase;
 
 @Autonomous(name="Drive Backward", group = "Utility Group")
 
-public class DriveBackward extends _AutonomousBase
+public class DriveBackward extends AutonomousBase
 {
     //Custom initialization
     @Override
     protected void driverStationSaysINITIALIZE()
     {
         //Set the motor powers.
-        setLeftPower(.3);
-        setRightPower(-.3);
+        setLeftPower(.6);
+        setRightPower(-.6);
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        setLeftPower(-.6);
-        setRightPower(-.6);
+        startToDriveAt (-.8);
 
-        while (opModeIsActive())
+        while (true)
             idle();
     }
 }
