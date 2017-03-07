@@ -18,8 +18,6 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // use encoders
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//        autonomousInitLoop();
-
         waitForStart();
 
         // set target position for initial diagonal drive motion
@@ -66,31 +64,9 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // claim the first beacon
         claimBeaconRed();
 
-        // reset again after pressing beacon
-        //gyroPivot(0.8, 0, true);
-
-        // launch the first particle
-//        launchParticle();
-
-        // open intake door
-//        getDoor3().setPosition(0.25);
-
-//        // run the intake
-//        getRobotRuntime().reset();
-//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
-//            getIntakeMotor().setPower(-1);
-//        }
-//        getIntakeMotor().setPower(0);
-//
-//        // launch the second particle
-//        launchParticle();
-
-        // strafe right to skip first line
-        encoderStrafe(0.5, 5, 5);
-
         // back up from wall
         //rangeSensorDrive(15, 0.2);
-        rangeGyroStrafe(0.5, 0, 6, 36, 36);
+        rangeGyroStrafe(0.5, 0, 15, 42, 42);
 
         // drive left to white line
         stopOnLine(0.05, false);
@@ -111,7 +87,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // gyro pivot for shooting
-        gyroPivot(0.8, -40, true);
+        gyroPivot(0.8, -42, true);
 
         // drive backward for shooting
         encoderDrive(0.5, -10, -10);
@@ -128,8 +104,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 52);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 52);
+        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
+        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
 
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);

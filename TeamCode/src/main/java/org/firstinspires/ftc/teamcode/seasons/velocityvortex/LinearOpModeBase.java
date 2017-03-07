@@ -44,7 +44,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private static final int RANGE_SENSOR_THRESHOLD = 2; // 2cm threshold
 
-    private static final double P_RANGE_DRIVE_COEFF = 0; // TODO: replace dummy value
+    private static final double P_RANGE_DRIVE_COEFF = 0.2;
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -296,12 +296,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
         //stopRobot();
 
-//        // pause for the beacon to change color
-//        getRobotRuntime().reset();
-//        while(opModeIsActive() && getRobotRuntime().milliseconds() < 100) {
-//            idle();
-//        }
-
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -383,18 +377,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
 
         // first push
-        while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
+        while(opModeIsActive() &&
+                (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 800)) {
             // run without encoders again
             driveForward(0.2);
         }
-
         //stopRobot();
-
-        // pause for the beacon to change color
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 100) {
-            idle();
-        }
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -408,7 +396,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             repositionBeacons();
 
             // second push
-            while(opModeIsActive() && getFrontRange().cmUltrasonic() >= 6) {
+            while(opModeIsActive() &&
+                    (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 800)) {
                 // run without encoders again
                 driveForward(0.2);
             }
@@ -527,35 +516,61 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                 if (error < 0) {
                     proportionalSpeed = steer;
 
-                    // decrease power of back motors
-                    backRightPower += proportionalSpeed;
-                    backLeftPower += proportionalSpeed;
+                    // if driving right
+                    if(frontInches > 0 && backInches > 0) {
+                        // decrease power of back motors
+                        frontRightPower += proportionalSpeed;
+                        frontLeftPower += proportionalSpeed;
+                    } else {
+                        backRightPower += proportionalSpeed;
+                        backLeftPower += proportionalSpeed;
+                    }
 
                 // else the robot is rotated clockwise from 0
                 } else {
                     proportionalSpeed = -steer;
 
-                    // decrease power of front motors
-                    frontRightPower += proportionalSpeed;
-                    frontLeftPower += proportionalSpeed;
+                    // if driving right
+                    if(frontInches > 0 && backInches > 0) {
+                        // decrease power of front motors
+                        frontLeftPower += proportionalSpeed;
+                        backRightPower += proportionalSpeed;
+                    } else {
+                        backRightPower += proportionalSpeed;
+                        frontLeftPower += proportionalSpeed;
+                    }
                 }
             }
 
             if(Math.abs(rangeError) > RANGE_SENSOR_THRESHOLD) {
                 proportionalSpeed = rangeSteer;
 
+                // too far from wall
                 if(rangeError < 0) {
-                    // too far from wall
-                    frontLeftPower -= proportionalSpeed;
-                    backRightPower -= proportionalSpeed;
+                    // if driving right
+                    if(frontInches > 0 && backInches > 0) {
+                        frontLeftPower -= proportionalSpeed;
+                        backRightPower -= proportionalSpeed;
+                    } else {
+                        frontRightPower -= proportionalSpeed;
+                        backLeftPower -= proportionalSpeed;
+                    }
+                // too close to wall
                 } else {
-                    // too close to wall
-                    frontRightPower += proportionalSpeed;
-                    backLeftPower += proportionalSpeed;
+                    // if driving right
+                    if(frontInches > 0 && backInches > 0) {
+                        frontRightPower += proportionalSpeed;
+                        backLeftPower += proportionalSpeed;
+                    } else {
+                        frontLeftPower += proportionalSpeed;
+                        backRightPower += proportionalSpeed;
+                    }
                 }
             }
 
             telemetry.addData("gyro steer", steer);
+            telemetry.addData("range steer", rangeSteer);
+            telemetry.addData("range sensor value", frontRange.cmUltrasonic());
             telemetry.update();
 
             // set the motor powers
