@@ -26,7 +26,9 @@ public class TeleOpMain extends OpMode {
     boolean lastLeftBumperState = false;
     boolean lastRightBumperState = false;
     boolean lastAButtonState = false;
+    boolean lastBButtonState = false;
     boolean isShooting = false;
+
     boolean isBacon = false;
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
@@ -36,6 +38,8 @@ public class TeleOpMain extends OpMode {
     double mMaxEncoderCount = 0;
     double mLastAccelX = 0;
     double mLastAccelY = 0;
+
+    double powerMult = 1.0;
 
     AutoLib.Sequence mShoot;
     AutoLib.Sequence mBeacon;
@@ -206,10 +210,10 @@ public class TeleOpMain extends OpMode {
             }
             else {
                 // joystick tank steering
-                robot.frontLeftMotor.setPower(-gamepad1.left_stick_y);
-                robot.frontRightMotor.setPower(-gamepad1.right_stick_y);
-                robot.backLeftMotor.setPower(-gamepad1.left_stick_y);
-                robot.backRightMotor.setPower(-gamepad1.right_stick_y);
+                robot.frontLeftMotor.setPower(-gamepad1.left_stick_y * powerMult);
+                robot.frontRightMotor.setPower(-gamepad1.right_stick_y * powerMult);
+                robot.backLeftMotor.setPower(-gamepad1.left_stick_y * powerMult);
+                robot.backRightMotor.setPower(-gamepad1.right_stick_y * powerMult);
             }
 
             // run lifter motor
@@ -239,20 +243,27 @@ public class TeleOpMain extends OpMode {
                 robot.ballServo.setPosition(0.0);
             }
 
-            // toggle button pushers
-            if(!lastLeftBumperState && gamepad1.left_bumper) {
-                leftPusherState *= -1.0;
+            //halfspeed
+            if(gamepad1.left_bumper || gamepad1.right_bumper){
+                powerMult = 0.5;
             }
-            if(!lastRightBumperState && gamepad1.right_bumper) {
+            else {
+                powerMult = 1.0;
+            }
+
+            // toggle button pushers
+            if(!lastBButtonState && gamepad1.b) {
+                leftPusherState *= -1.0;
                 rightPusherState *= -1.0;
             }
 
             robot.leftServo.setPosition(leftPusherState);
             robot.rightServo.setPosition(rightPusherState);
 
-            lastLeftBumperState = gamepad1.left_bumper;
-            lastRightBumperState = gamepad1.right_bumper;
+            lastBButtonState = gamepad1.b;
 
+            //lastLeftBumperState = gamepad1.left_bumper;
+            //lastRightBumperState = gamepad1.right_bumper;
 
             //toggle reversed steering
             if(!lastAButtonState && gamepad1.a) {
