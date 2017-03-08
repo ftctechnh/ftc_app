@@ -42,9 +42,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private static final double LIGHT_THRESHOLD = 1.0;
 
-    private static final int RANGE_SENSOR_THRESHOLD = 2; // 2cm threshold
+    private static final int RANGE_SENSOR_THRESHOLD = 1; // 1cm threshold
 
-    private static final double P_RANGE_DRIVE_COEFF = 0.2;
+    private static final double P_RANGE_DRIVE_COEFF = 0.4;
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -119,12 +119,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
         gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
-
-        // reverse all drive motors
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // reverse only one spool motor
         spoolMotor1.setDirection(DcMotor.Direction.REVERSE);
@@ -463,7 +457,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     protected void rangeGyroStrafe(double speed, double angle, double rangeDistance,
-                                   double frontInches, double backInches) {
+                                   double frontInches, double backInches, boolean enableGyro) {
         double error;
         double rangeError;
         double steer;
@@ -476,6 +470,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         double frontLeftPower;
         double backRightPower;
         double backLeftPower;
+
+        String state = "none";
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -511,7 +507,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             backRightPower = speed;
             backLeftPower = speed;
 
-            if(Math.abs(error) > GYRO_ERROR_THRESHOLD) {
+            if(enableGyro && Math.abs(error) > GYRO_ERROR_THRESHOLD) {
                 // if robot is rotated counterclockwise from 0
                 if (error < 0) {
                     proportionalSpeed = steer;
@@ -551,9 +547,17 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                     if(frontInches > 0 && backInches > 0) {
                         frontLeftPower -= proportionalSpeed;
                         backRightPower -= proportionalSpeed;
+
+                        state = "driving right, too far";
                     } else {
+                        // if driving left
                         frontRightPower -= proportionalSpeed;
                         backLeftPower -= proportionalSpeed;
+
+//                        frontLeftPower = 0;
+//                        backRightPower = 0;
+
+                        state = "driving left, too far: " + proportionalSpeed;
                     }
                 // too close to wall
                 } else {
@@ -561,9 +565,17 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                     if(frontInches > 0 && backInches > 0) {
                         frontRightPower += proportionalSpeed;
                         backLeftPower += proportionalSpeed;
+
+                        state = "driving right, too close";
                     } else {
+                        // if driving left
                         frontLeftPower += proportionalSpeed;
                         backRightPower += proportionalSpeed;
+
+//                        frontRightPower = 0;
+//                        backLeftPower = 0;
+
+                        state = "driving left, too close: " + proportionalSpeed;
                     }
                 }
             }
@@ -571,6 +583,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             telemetry.addData("gyro steer", steer);
             telemetry.addData("range steer", rangeSteer);
             telemetry.addData("range sensor value", frontRange.cmUltrasonic());
+            telemetry.addData("State", state);
+
+            telemetry.addData("front right", frontRightPower);
+            telemetry.addData("front left", frontLeftPower);
+            telemetry.addData("back right", backRightPower);
+            telemetry.addData("back left", backLeftPower);
             telemetry.update();
 
             // set the motor powers
@@ -578,8 +596,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             getFrontRightDrive().setPower(Range.clip(frontRightPower, -1, 1));
             getBackLeftDrive().setPower(Range.clip(backLeftPower, -1 ,1));
             getBackRightDrive().setPower(Range.clip(backRightPower, -1, 1));
-
-            idle();
         }
 
         stopRobot();
@@ -708,11 +724,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             proportionalSpeed = speed * steer;
 
-            getFrontLeftDrive().setPower(proportionalSpeed);
-            getFrontRightDrive().setPower(proportionalSpeed);
+            getFrontLeftDrive().setPower(-proportionalSpeed);
+            getFrontRightDrive().setPower(-proportionalSpeed);
 
-            getBackLeftDrive().setPower(proportionalSpeed);
-            getBackRightDrive().setPower(proportionalSpeed);
+            getBackLeftDrive().setPower(-proportionalSpeed);
+            getBackRightDrive().setPower(-proportionalSpeed);
         }
 
         telemetry.addData(">", "stop");

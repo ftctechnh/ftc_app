@@ -16,6 +16,6 @@ public class RangeGyroTest extends LinearOpModeBase {
 
         waitForStart();
 
-        rangeGyroStrafe(0.5, 0, 15, 120, 120);
+        rangeGyroStrafe(0.5, 0, 15, -5000, -5000, false);
     }
 }
