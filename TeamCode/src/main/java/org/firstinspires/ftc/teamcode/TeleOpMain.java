@@ -173,47 +173,63 @@ public class TeleOpMain extends OpMode {
 
             */
 
+
+            int heading = -1;
             // run drivetrain motors
             // dpad steering
             if(gamepad1.dpad_up && gamepad1.dpad_left) {
-
-                robot.setFrontPower(0.0);
-                robot.setBackPower(1.0);
+                heading = 45;
+                //robot.setFrontPower(0.0);
+                //robot.setBackPower(1.0);
             }
             else if(gamepad1.dpad_up && gamepad1.dpad_right) {
-                robot.setFrontPower(1.0);
-                robot.setBackPower(0.0);
+                heading = -45;
+                //robot.setFrontPower(1.0);
+                //robot.setBackPower(0.0);
             }
             else if(gamepad1.dpad_down && gamepad1.dpad_left) {
-                robot.setFrontPower(-1.0);
-                robot.setBackPower(0.0);
+                heading = 135;
+                //robot.setFrontPower(-1.0);
+                //robot.setBackPower(0.0);
             }
             else if(gamepad1.dpad_down && gamepad1.dpad_right) {
-                robot.setFrontPower(0.0);
-                robot.setBackPower(-1.0);
+                heading = -135;
+                //robot.setFrontPower(0.0);
+                //robot.setBackPower(-1.0);
             }
             else if(gamepad1.dpad_up) {
-                robot.setFrontPower(1.0);
-                robot.setBackPower(1.0);
+                heading = 0;
+                //robot.setFrontPower(1.0);
+                //robot.setBackPower(1.0);
             }
             else if(gamepad1.dpad_left) {
-                robot.setFrontPower(-1.0);
-                robot.setBackPower(1.0);
+                heading = 90;
+                //robot.setFrontPower(-1.0);
+                //robot.setBackPower(1.0);
             }
             else if(gamepad1.dpad_right) {
-                robot.setFrontPower(1.0);
-                robot.setBackPower(-1.0);
+                heading = -90;
+                //robot.setFrontPower(1.0);
+                //robot.setBackPower(-1.0);
             }
             else if(gamepad1.dpad_down) {
-                robot.setFrontPower(-1.0);
-                robot.setBackPower(-1.0);
+                heading = 180;
+                //robot.setFrontPower(-1.0);
+                //robot.setBackPower(-1.0);
             }
             else {
                 // joystick tank steering
-                robot.frontLeftMotor.setPower(-gamepad1.left_stick_y * powerMult);
-                robot.frontRightMotor.setPower(-gamepad1.right_stick_y * powerMult);
-                robot.backLeftMotor.setPower(-gamepad1.left_stick_y * powerMult);
-                robot.backRightMotor.setPower(-gamepad1.right_stick_y * powerMult);
+                robot.frontLeftMotor.setPower((-gamepad1.left_stick_y) * powerMult);
+                robot.frontRightMotor.setPower((-gamepad1.right_stick_y) * powerMult);
+                robot.backLeftMotor.setPower((-gamepad1.left_stick_y) * powerMult);
+                robot.backRightMotor.setPower((-gamepad1.right_stick_y) * powerMult);
+            }
+
+            if(heading != -1){
+                //if(!robot.isReversed()) heading = -heading;
+                AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(heading);
+                robot.setFrontPower(mp.Front());
+                robot.setBackPower(mp.Back());
             }
 
             // run lifter motor
@@ -280,6 +296,7 @@ public class TeleOpMain extends OpMode {
             lastAButtonState = gamepad1.a;
 
         //some fun telemetery
+        /*
         final double dt = getRuntime() - mLastTime;
         final double jerkX = (robot.navX.getWorldLinearAccelX() - mLastAccelX) / dt;
         final double jerkY = (robot.navX.getWorldLinearAccelY() - mLastAccelY) / dt;
@@ -294,6 +311,7 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("Y Axis Jerk", jerkY);
         telemetry.addData("Encode per second", vel);
         telemetry.addData("Max Encode per second", mMaxEncoderCount);
+        */
         //}
     }
 

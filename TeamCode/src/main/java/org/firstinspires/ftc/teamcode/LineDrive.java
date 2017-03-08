@@ -230,8 +230,8 @@ public class LineDrive extends OpenCVLib {
             }
         }));
 
-        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 30), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(1.0), false));
-        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 120), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(1.75), true));
+        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 30), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(0.5), false));
+        mCharge.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, -heading, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(modePointer, robot.distSensorLeft, 130), mPid, muPid, robot.getMotorArray(), 1.0f, new TimerFinish(2.25), true));
 
         mSequence.add(mCharge);
         // start out not-done
@@ -449,7 +449,7 @@ public class LineDrive extends OpenCVLib {
 
     }
 
-    static private class TimerFinish implements FinishSensor {
+    static public class TimerFinish implements FinishSensor {
         private AutoLib.Timer mTimer;
 
         TimerFinish(double seconds){
