@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex.utilities;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.seasons.velocityvortex.LinearOpModeBase;
 
 /**
@@ -16,6 +14,6 @@ public class RangeGyroTest extends LinearOpModeBase {
 
         waitForStart();
 
-        rangeGyroStrafe(0.5, 0, 15, -5000, -5000, false);
+        rangeGyroStrafe(1.0, 0, 15, -42, -42, true);
     }
 }
