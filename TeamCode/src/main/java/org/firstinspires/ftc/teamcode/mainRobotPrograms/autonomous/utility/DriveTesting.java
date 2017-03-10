@@ -12,9 +12,10 @@ public class DriveTesting extends AutonomousBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         int sign = 1;
+        //Keep driving back and forth.  Use this to determine if the robot can drive straight for long periods of time.
         while (opModeIsActive ())
         {
-            driveForDistance (sign * Math.random () * 0.7 + 0.3, 2000);
+            driveForDistance (sign * (Math.random () * 0.7 + 0.3), 2000);
             sign *= -1;
         }
     }

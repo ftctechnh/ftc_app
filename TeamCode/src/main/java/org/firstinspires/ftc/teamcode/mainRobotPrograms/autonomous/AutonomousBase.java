@@ -91,7 +91,7 @@ public abstract class AutonomousBase extends RobotBase
     {
         if (gyroscope != null)
         {
-            double driveCoefficient = 0.007, driveIntercept = 0.25;
+            double driveCoefficient = 0.006, driveIntercept = 0.22;
 
             //Desired heading is 0.
             double offFromHeading = getValidGyroHeading() - desiredHeading;
@@ -107,15 +107,15 @@ public abstract class AutonomousBase extends RobotBase
             setLeftPower(Range.clip(rightPower, -1, 1));
             setRightPower(Range.clip(leftPower, -1, 1));
 
-            outputConstantDataToDrivers(
-                    new String[] {
-                            "Desired heading = " + desiredHeading,
-                            "Off from heading = " + offFromHeading,
-                            "Right power = " + rightPower,
-                            "Left power = " + leftPower,
-                            "Motor power change factor = " + motorPowerChangeFactor
-                    }
-            );
+//            outputConstantDataToDrivers(
+//                    new String[] {
+//                            "Desired heading = " + desiredHeading,
+//                            "Off from heading = " + offFromHeading,
+//                            "Right power = " + rightPower,
+//                            "Left power = " + leftPower,
+//                            "Motor power change factor = " + motorPowerChangeFactor
+//                    }
+//            );
         }
         else
         {
@@ -139,7 +139,7 @@ public abstract class AutonomousBase extends RobotBase
     {
         if (gyroscope != null)
         {
-            double turnCoefficient = 0.004, turnIntercept = 0.22;
+            double turnCoefficient = 0.004, turnIntercept = 0.28;
 
             this.desiredHeading = desiredHeading;
 
@@ -160,7 +160,7 @@ public abstract class AutonomousBase extends RobotBase
                     //Don't start increasing power at the very start of the turn before the robot has had time to accelerate.
                     if (Math.abs(priorHeading - currentHeading) <= 2)
                     {
-                        turnIntercept += 0.03;
+                        turnIntercept += 0.07;
                     }
 
                     //Update other variables.
@@ -183,17 +183,17 @@ public abstract class AutonomousBase extends RobotBase
                     setRightPower(Range.clip(turnPower, -1, 1));
 
                 //Output required data.
-                outputConstantDataToDrivers(
-                        new String[]
-                                {
-                                        "Turning to heading " + this.desiredHeading,
-                                        "Current heading = " + currentHeading,
-                                        "Turn Power is " + turnPower,
-                                        "I have " + (maxTime - (System.currentTimeMillis() - startTime)) + "ms left.",
-                                        "Turn coefficient = " + turnCoefficient,
-                                        "Min turn speed = " + turnIntercept
-                                }
-                );
+//                outputConstantDataToDrivers(
+//                        new String[]
+//                                {
+//                                        "Turning to heading " + this.desiredHeading,
+//                                        "Current heading = " + currentHeading,
+//                                        "Turn Power is " + turnPower,
+//                                        "I have " + (maxTime - (System.currentTimeMillis() - startTime)) + "ms left.",
+//                                        "Turn coefficient = " + turnCoefficient,
+//                                        "Min turn speed = " + turnIntercept
+//                                }
+//                );
             }
 
             stopDriving();
@@ -333,15 +333,15 @@ public abstract class AutonomousBase extends RobotBase
             motorsBusy = Math.abs(leftDriveMotors.get(1).getCurrentPosition ()) < length && Math.abs(rightDriveMotors.get (1).getCurrentPosition ()) < length;
 
             //Give the drivers a bit of insight into which encoders are currently working (two out of four are currently operational).
-            outputConstantDataToDrivers(
-                    new String[] {
-                            "Driving at " + power + " for " + length,
-                            "Encoder val 1 = " + leftDriveMotors.get(0).getCurrentPosition (),
-                            "Encoder val 2 = " + leftDriveMotors.get(1).getCurrentPosition (),
-                            "Encoder val 3 = " + rightDriveMotors.get(0).getCurrentPosition (),
-                            "Encoder val 4 = " + rightDriveMotors.get(1).getCurrentPosition ()
-                    }
-            );
+//            outputConstantDataToDrivers(
+//                    new String[] {
+//                            "Driving at " + power + " for " + length,
+//                            "Encoder val 1 = " + leftDriveMotors.get(0).getCurrentPosition (),
+//                            "Encoder val 2 = " + leftDriveMotors.get(1).getCurrentPosition (),
+//                            "Encoder val 3 = " + rightDriveMotors.get(0).getCurrentPosition (),
+//                            "Encoder val 4 = " + rightDriveMotors.get(1).getCurrentPosition ()
+//                    }
+//            );
         }
 
         //End the drive upon reaching the target destination.
@@ -356,9 +356,11 @@ public abstract class AutonomousBase extends RobotBase
         {
             //Possible that this was a misreading.
             idle();
-            distanceFromWall = sideRangeSensor.cmUltrasonic (); //If it is 255 again it really is 255.
+            distanceFromWall = sideRangeSensor.cmUltrasonic ();
+            if (distanceFromWall >= 255) //It can't actually be 255.
+                distanceFromWall = 20;
         }
-        double extendLength = 90 * distanceFromWall;
+        double extendLength = 85 * distanceFromWall;
         extendLength = Range.clip(extendLength, 0, 3000);
         outputNewLineToDrivers ("Extending the button pusher for " + extendLength + " ms.");
 

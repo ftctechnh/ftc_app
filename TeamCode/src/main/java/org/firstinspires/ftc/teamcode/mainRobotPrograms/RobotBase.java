@@ -21,6 +21,7 @@ public abstract class RobotBase extends BaseFunctions
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
     protected final double FBP_UP = 0.0, FBP_DOWN = 0.5;
+    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.12; //Range -1 to 1.
 
     protected ModernRoboticsI2cRangeSensor sideRangeSensor;
 
@@ -40,6 +41,7 @@ public abstract class RobotBase extends BaseFunctions
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
         harvester = initialize(DcMotor.class, "harvester");
+
         flywheels = initialize(DcMotor.class, "flywheels");
         flywheels.setDirection(DcMotor.Direction.REVERSE);
 
@@ -64,12 +66,12 @@ public abstract class RobotBase extends BaseFunctions
     protected void setRightPower(double power)
     {
         for (DcMotor motor : rightDriveMotors)
-            motor.setPower(power);
+            motor.setPower(power * (1 - MOTOR_POWER_CORRECTION_FACTOR));
     }
 
     protected void setLeftPower(double power)
     {
         for (DcMotor motor : leftDriveMotors)
-            motor.setPower(power);
+            motor.setPower(power * (1 + MOTOR_POWER_CORRECTION_FACTOR));
     }
 }
