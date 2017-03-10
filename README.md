@@ -19,7 +19,7 @@ A number of different classes are used in this project in order to keep all aspe
   2. Autonomous Red/Blue - Place the appropriate unique code in each one of these classes.  Make sure that this code is UNIQUE and ACCURATE - each one will have to be optimized individually.  
   3. Teleop - No base class is required, except in extenuating circumstances where different scoring mechanisms are required for each side (see 2015-16 game).  This class should be jam-packed with comments and if statements, providing the drivers with an efficient tool to easily control the robot without dealing with random glitches in the controls.  The key here is COMMUNICATION, speak with the drivers about their ideal controls.  
 
-## Good coding practices (FOLLOW THESE DAMMIT) ##
+## Good coding practices ##
   1. Use camelCase.  If you do not know what this is, you should not be coding here.  
   2. Constants must be named in all caps, with underscores for the spaces (e.g. DRIVING_CONSTANT not drivingConstant)
   3. Try to keep method statements like this: void() (NEW LINE) {}.  Helps to define where a method starts and ends.  
@@ -27,7 +27,7 @@ A number of different classes are used in this project in order to keep all aspe
   5. COMMENTS, COMMENTS, COMMENTS!!!
 
 ## Acceptable Git Committing Practices ##
-  1. Commit/Push when necessary, and ONLY to the development branch.  When you feel that appropriate changes have been made to a branch and that the code is now stable, create a pull request and allow either Albert or myself to check the code before we accept the pull request.  
+  1. Commit/Push when necessary.  When you feel that appropriate changes have been made to a branch and that the code is now stable, create a pull request and allow either Albert or myself to check the code before we accept the pull request.  
   2. Make sure that the code is somewhat operational before pushing to the branch.  We all contribute to this repo and it is tough when someone breaks something while in the process of creating something larger.  
 
 ## Start of ftc_sdk documentation ##
