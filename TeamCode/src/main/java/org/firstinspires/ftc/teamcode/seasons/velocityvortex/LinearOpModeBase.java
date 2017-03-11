@@ -33,7 +33,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private static final double GYRO_ERROR_THRESHOLD = 1.0;
 
     private static final double P_GYRO_TURN_COEFF = 0.01;
-    private static final double P_GYRO_DRIVE_COEFF = 0.005;
+    private static final double P_GYRO_DRIVE_COEFF = 0.008;
 
     protected static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI));
@@ -42,7 +42,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private static final double LIGHT_THRESHOLD = 1.0;
 
-    private static final double P_RANGE_DRIVE_COEFF = 0.03;
+    private static final double P_RANGE_DRIVE_COEFF = 0.04;
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -468,7 +468,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         double backLeftPower;
 
         // speed is constant for now
-        final double speed = 0.5;
+        final double SPEED = 0.8;
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -483,13 +483,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         getBackRightDrive().setTargetPosition(-backTarget);
         getBackLeftDrive().setTargetPosition(-backTarget);
 
-        // set the power for the left drive motors
-        getFrontLeftDrive().setPower(speed);
-        getBackLeftDrive().setPower(speed);
+        // set the power initially for the left drive motors
+        getFrontLeftDrive().setPower(SPEED);
+        getBackLeftDrive().setPower(SPEED);
 
-        // set the power for the right drive motors
-        getFrontRightDrive().setPower(speed);
-        getBackRightDrive().setPower(speed);
+        // set the power initially for the right drive motors
+        getFrontRightDrive().setPower(SPEED);
+        getBackRightDrive().setPower(SPEED);
 
         while(opModeIsActive() && areDriveMotorsBusy()) {
             gyroDiffFromTarget = getGyroError(angle);
@@ -504,12 +504,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             }
 
             // adjust powers for front motors
-            frontLeftPower = speed + gyroSteer;
-            frontRightPower = speed + gyroSteer;
+            frontLeftPower = SPEED + gyroSteer;
+            frontRightPower = SPEED + gyroSteer;
 
             // adjust powers for back motors
-            backLeftPower = speed - gyroSteer;
-            backRightPower = speed - gyroSteer;
+            backLeftPower = SPEED - gyroSteer;
+            backRightPower = SPEED - gyroSteer;
 
             // too far from wall
             if (rangeDiffFromTarget < 0) {
@@ -536,10 +536,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             }
 
             // set the motor powers and clip them on a range of 0 to speed
-            getFrontLeftDrive().setPower(Range.clip(frontLeftPower, 0, speed));
-            getFrontRightDrive().setPower(Range.clip(frontRightPower, 0, speed));
-            getBackLeftDrive().setPower(Range.clip(backLeftPower, 0, speed));
-            getBackRightDrive().setPower(Range.clip(backRightPower, 0, speed));
+            getFrontLeftDrive().setPower(Range.clip(frontLeftPower, 0, SPEED));
+            getFrontRightDrive().setPower(Range.clip(frontRightPower, 0, SPEED));
+            getBackLeftDrive().setPower(Range.clip(backLeftPower, 0, SPEED));
+            getBackRightDrive().setPower(Range.clip(backRightPower, 0, SPEED));
 
             telemetry.addData("gyro steer", gyroSteer);
             telemetry.addData("range steer", rangeSteer);
