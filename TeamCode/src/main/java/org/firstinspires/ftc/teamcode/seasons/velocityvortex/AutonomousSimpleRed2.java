@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by ftc6347 on 10/30/16.
  */
 @Autonomous(name = "Simple 2 Red", group = "simple")
-public class AutonomousSimpleRed extends LinearOpModeBase {
+public class AutonomousSimpleRed2 extends LinearOpModeBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
