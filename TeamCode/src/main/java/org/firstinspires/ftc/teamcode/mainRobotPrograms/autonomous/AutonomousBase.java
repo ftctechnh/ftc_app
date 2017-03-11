@@ -301,36 +301,30 @@ public abstract class AutonomousBase extends RobotBase
 
         startToDriveAt (power);
 
-        boolean motorsBusy = true;
-        while (motorsBusy)
+        int previousDistance = 0;
+        long lastCheckTime = 0;
+        while (true)
         {
             //Adjust the motor powers based on the gyro even while driving with encoders.
             adjustMotorPowersBasedOnGyroSensor ();
 
-            //These couple statements check to see if all of the motors are currently running.  If one is not, then the whole robot stops.
-//            motorsBusy = true;
-//            for (DcMotor motor : leftDriveMotors)
-//            {
-//                if (Math.abs(motor.getCurrentPosition ()) >= length)
-//                {
-//                    motorsBusy = false;
-//                    break; //End the for loop if one has reached the end of its drive length.
-//                }
-//            }
-//            if (motorsBusy)
-//            {
-//                for (DcMotor motor : rightDriveMotors)
-//                {
-//                    if (Math.abs(motor.getCurrentPosition ()) >= length)
-//                    {
-//                        motorsBusy = false;
-//                        break;
-//                    }
-//                }
-//            }
-
             //Since only the last two work, we just look at those.
-            motorsBusy = Math.abs(leftDriveMotors.get(1).getCurrentPosition ()) < length && Math.abs(rightDriveMotors.get (1).getCurrentPosition ()) < length;
+            int leftDistance = Math.abs(leftDriveMotors.get(1).getCurrentPosition ()),
+                    rightDistance = Math.abs(rightDriveMotors.get (1).getCurrentPosition ()),
+                    greatestDistance;
+
+            if (leftDistance >= rightDistance)
+                greatestDistance = leftDistance;
+            else
+                greatestDistance = rightDistance;
+
+            if (length <= greatestDistance)
+                break;
+
+            if ((System.currentTimeMillis () - lastCheckTime) > 300 && previousDistance == greatestDistance)
+                movementPower += Math.signum (movementPower) * 0.02;
+
+            lastCheckTime = System.currentTimeMillis ();
 
             //Give the drivers a bit of insight into which encoders are currently working (two out of four are currently operational).
 //            outputConstantDataToDrivers(
@@ -360,15 +354,15 @@ public abstract class AutonomousBase extends RobotBase
             if (distanceFromWall >= 255) //It can't actually be 255.
                 distanceFromWall = 20;
         }
-        double extendLength = 85 * distanceFromWall;
+        double extendLength = 65 * distanceFromWall;
         extendLength = Range.clip(extendLength, 0, 3000);
         outputNewLineToDrivers ("Extending the button pusher for " + extendLength + " ms.");
 
         //Run the continuous rotation servo out to press, then back in.
-        rightButtonPusher.setPosition(.2);
+        rightButtonPusher.setPosition(0);
         sleep((long) (extendLength));
-        rightButtonPusher.setPosition(.8);
-        sleep((long) (extendLength - 100));
+        rightButtonPusher.setPosition(1);
+        sleep((long) (extendLength - 200));
         rightButtonPusher.setPosition(.5);
     }
 
