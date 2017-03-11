@@ -86,7 +86,7 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("Status", "Initialized");
 
         // hardware maps
-        robot.init(this, false);
+        robot.initTeleop(this, false);
         robot.setMaxSpeedAll(2500);
 
         robot.leftServo.setPosition(leftPusherState);
@@ -95,10 +95,10 @@ public class TeleOpMain extends OpMode {
         initShoot();
     }
 
-    @Override
-    public void init_loop(){
-        telemetry.addData("NavX Ready", robot.startNavX());
-    }
+    //@Override
+    //public void init_loop(){
+    //    telemetry.addData("NavX Ready", robot.startNavX());
+    //}
 
     @Override
     public void start() {

@@ -101,6 +101,16 @@ public class BotHardware
         init(opMode, debug, false);
     }
 
+    public void initTeleop(OpMode opMode, boolean debug){
+        try {
+            dim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
+        }
+        catch (Exception e){
+            opMode.telemetry.addData("Device interface module failed to load", "");
+        }
+        initMotors(opMode, debug);
+    }
+
 
     public void initMotors(OpMode opMode, boolean debug, boolean reversed){
         AutoLib.HardwareFactory hw;
