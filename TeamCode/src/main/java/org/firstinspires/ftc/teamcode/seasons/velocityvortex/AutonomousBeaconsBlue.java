@@ -18,7 +18,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         // use encoders
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        waitForStart();
+        autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
         getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 53);

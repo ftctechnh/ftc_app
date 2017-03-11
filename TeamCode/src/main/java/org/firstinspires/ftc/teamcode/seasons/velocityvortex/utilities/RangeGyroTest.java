@@ -12,7 +12,7 @@ public class RangeGyroTest extends LinearOpModeBase {
     public void runOpMode() throws InterruptedException {
         initializeHardware();
 
-        waitForStart();
+        autonomousInitLoop();
 
 //        rangeGyroStrafe(0, 15, -65, -65);
         rangeGyroStrafe(0, 15, 70, 70);

@@ -181,68 +181,56 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     protected void autonomousInitLoop() {
-        int autonomousDelay = 0;
+        int delay = 0;
 
         while(!opModeIsActive() && !isStopRequested()) {
-            if (gamepad1.a) {
-                telemetry.addData(">", "Calibrating Gyro");
-                telemetry.update();
-
-                gyroSensor.calibrate();
-            } else if (gamepad1.b) {
-                telemetry.addData(">", "Performing black-level calibration... ");
-                telemetry.update();
-
-                // command register = 0x03
-                // 0x43 = command for black-level calibration
-//                colorSensor1Sync.write8(0x03, 0x42);
-//                colorSensor2Sync.write8(0x03, 0x42);
-            }
-
             // dpad control to set the delay
             if(gamepad1.dpad_up) {
-                autonomousDelay = 1;
+                delay = 1;
             } else if(gamepad1.dpad_down) {
-                autonomousDelay = 2;
+                delay = 2;
             } else if(gamepad1.dpad_left) {
-                autonomousDelay = 5;
+                delay = 5;
             } else if(gamepad1.dpad_right) {
-                autonomousDelay = 10;
+                delay = 10;
             }
 
-            if(gamepad1.left_trigger > 0) {
-                robotRuntime.reset();
-                while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
-                    idle();
+            if(robotRuntime.milliseconds() > 250) {
+                // set the delay using the left and right triggers
+                if (gamepad1.right_trigger > 0) {
+                    delay++;
+                } else if (gamepad1.left_trigger > 0) {
+                    if(delay > 0) {
+                        delay--;
+                    }
                 }
-                autonomousDelay++;
 
-            } else if(gamepad1.right_trigger > 0) {
-                robotRuntime.reset();
-                while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
-                    idle();
+                // allow the gyro to be reset in initialization
+                if(gamepad1.a) {
+                    gyroSensor.resetZAxisIntegrator();
                 }
-                autonomousDelay--;
+
+                robotRuntime.reset();
             }
+
+            // print sensor values
+            telemetry.addData("gyro Z axis", gyroSensor.getIntegratedZValue());
+
+            telemetry.addData("color sensor 1", "red: %d, blue: %d",
+                    getColorSensor1().red(), getColorSensor1().blue());
+            telemetry.addData("color sensor 2", "red: %d, blue: %d",
+                    getColorSensor2().red(), getColorSensor2().blue());
 
             // print the delay
-            telemetry.addData("Autonomous delay", autonomousDelay);
+            telemetry.addData("delay", "%ds", delay);
 
-            telemetry.addData("Gyro Z axis", gyroSensor.getIntegratedZValue());
-
-            // print color sensor values
-            telemetry.addData("Left color sensor", "red: %d, blue: %d",
-                    getColorSensor1().red(), getColorSensor1().blue());
-            telemetry.addData("Right color sensor", "red: %d, blue: %d",
-                    getColorSensor2().red(), getColorSensor2().blue());
             telemetry.update();
         }
 
-        // actual delay
-        while(opModeIsActive() && robotRuntime.seconds() < autonomousDelay) {
-            telemetry.addData(">", "Autonomous delay in progress... ");
+        // actual delay loop
+        while(opModeIsActive() && robotRuntime.seconds() < delay) {
+            telemetry.addData("starting in", "%.2fs", delay - robotRuntime.seconds());
             telemetry.update();
-            idle();
         }
     }
 
