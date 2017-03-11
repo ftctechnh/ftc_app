@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 10/30/16.
  */
-@Autonomous(name = "Simple 1 Blue", group = "simple")
+@Autonomous(name = "Simple 2 Blue", group = "simple")
 public class AutonomousSimpleBlue extends LinearOpModeBase {
 
     @Override
@@ -21,9 +21,9 @@ public class AutonomousSimpleBlue extends LinearOpModeBase {
         autonomousInitLoop();
 
         // drive backward (since the robot is facing backward)
-        encoderDrive(0.5, -20, -20);
+        encoderDrive(0.25, -10, -10);
 
-        gyroPivot(0.8, 0, false);
+        gyroPivot(0.8, 45, true);
 
         // launch the first (loaded) particle
         launchParticle();
@@ -33,7 +33,7 @@ public class AutonomousSimpleBlue extends LinearOpModeBase {
 
         // run the intake
         getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 500) {
+        while(opModeIsActive() && getRobotRuntime().milliseconds() < 750) {
             getIntakeMotor().setPower(-1);
         }
         getIntakeMotor().setPower(0);
@@ -41,11 +41,31 @@ public class AutonomousSimpleBlue extends LinearOpModeBase {
         // launch the second particle
         launchParticle();
 
-        // drive to the center vortex assembly base
-        encoderDrive(0.5, -10, -10);
+        // set target position for initial diagonal drive motion
+        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 65);
+        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 65);
 
-        gyroPivot(0.8, -20, false);
+        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        encoderStrafe(0.5, 5, 5);
+        getFrontLeftDrive().setPower(0.5);
+        getBackRightDrive().setPower(0.5);
+
+        // wait for the drive motors to stop
+        while(opModeIsActive() &&
+                (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
+
+            telemetry.addData("Path",  "Running at %d :%d",
+                    getFrontLeftDrive().getCurrentPosition(),
+                    getBackRightDrive().getCurrentPosition());
+
+            telemetry.addData("front left target", getFrontLeftDrive().getTargetPosition());
+            telemetry.addData("back right target", getBackRightDrive().getTargetPosition());
+            telemetry.update();
+            idle();
+        }
+
+        // drive up ramp
+        encoderStrafe(0.5, -12, -12);
     }
 }

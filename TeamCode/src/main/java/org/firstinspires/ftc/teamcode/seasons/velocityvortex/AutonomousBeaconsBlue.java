@@ -107,7 +107,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
 
         // wait for the drive motors to stop
         while(opModeIsActive() &&
-                (getFrontLeftDrive().isBusy() || getBackRightDrive().isBusy())) {
+                (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
 
             telemetry.addData("Path",  "Running at %d :%d",
                     getFrontLeftDrive().getCurrentPosition(),
