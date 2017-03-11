@@ -95,7 +95,8 @@ public final class PushyLib {
                 //check to make sure the pushy worked
                 boolean done = false;
 
-                if(!mRed){
+                if(mMaxDriveLoop == 1) done = false;
+                else if(!mRed){
                     if(Math.abs(mLeftSensor.red() - mRightSensor.red()) < mColorThresh) done = true;
                 }
                 else{
