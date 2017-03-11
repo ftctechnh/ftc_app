@@ -65,8 +65,9 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // back up from wall
-        //rangeSensorDrive(15, 0.2);
-        rangeGyroStrafe(0, 15, 42, 42);
+        rangeSensorDrive(20, 0.2);
+
+        rangeGyroStrafe(0, 20, 43, 43);
 
         // drive left to white line
         stopOnLine(0.05, false);
@@ -87,7 +88,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // gyro pivot for shooting
-        gyroPivot(0.8, -42, true);
+        gyroPivot(0.8, 42, true);
 
         // drive backward for shooting
         encoderDrive(0.5, -10, -10);
@@ -96,7 +97,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         launchParticle();
 
         // pivot to eighty degrees
-        gyroPivot(0.8, 85, true);
+        gyroPivot(0.8, -85, true);
 
         // reset the encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

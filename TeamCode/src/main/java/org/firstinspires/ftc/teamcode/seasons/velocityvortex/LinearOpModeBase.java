@@ -455,6 +455,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         double backRightPower;
         double backLeftPower;
 
+        double currRangeValue;
+
+        double lastRangeValue = rangeDistance;
+
         // speed is constant for now
         final double SPEED = 0.8;
 
@@ -481,7 +485,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         while(opModeIsActive() && areDriveMotorsBusy()) {
             gyroDiffFromTarget = getGyroError(angle);
-            rangeDiffFromTarget = rangeDistance - frontRange.cmUltrasonic();
+
+            currRangeValue = frontRange.cmUltrasonic();
+
+            if(currRangeValue != 255) {
+                lastRangeValue = currRangeValue;
+            }
+
+            rangeDiffFromTarget = rangeDistance - lastRangeValue;
 
             gyroSteer = gyroDiffFromTarget * P_GYRO_DRIVE_COEFF;
             rangeSteer = Math.abs(rangeDiffFromTarget * P_RANGE_DRIVE_COEFF);
@@ -583,7 +594,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     private double getGyroError(double targetAngle) {
-         return targetAngle - gyroSensor.getIntegratedZValue();
+        // adding since getIntegratedZValue() returns a negative number
+         return targetAngle + gyroSensor.getIntegratedZValue();
     }
 
     protected void rangeSensorDrive(int distanceCm, double speed) {
@@ -667,11 +679,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             proportionalSpeed = speed * steer;
 
-            getFrontLeftDrive().setPower(-proportionalSpeed);
-            getFrontRightDrive().setPower(-proportionalSpeed);
+            getFrontLeftDrive().setPower(proportionalSpeed);
+            getFrontRightDrive().setPower(proportionalSpeed);
 
-            getBackLeftDrive().setPower(-proportionalSpeed);
-            getBackRightDrive().setPower(-proportionalSpeed);
+            getBackLeftDrive().setPower(proportionalSpeed);
+            getBackRightDrive().setPower(proportionalSpeed);
         }
 
         telemetry.addData(">", "stop");

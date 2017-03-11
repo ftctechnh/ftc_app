@@ -21,8 +21,8 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 53);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 53);
+        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
 
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -65,8 +65,9 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         claimBeaconBlue();
 
         // back up from wall
-        //rangeSensorDrive(15, 0.2);
-        rangeGyroStrafe(0, 15, -38, -38);
+        rangeSensorDrive(20, 0.2);
+
+        rangeGyroStrafe(0, 20, -38, -38);
 
         // drive left to white line
         stopOnLine(0.05, false);
@@ -78,7 +79,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         claimBeaconBlue();
 
         // gyro pivot for shooting
-        gyroPivot(0.8, 42, true);
+        gyroPivot(0.8, -42, true);
 
         // drive backward for shooting
         encoderDrive(0.5, -10, -10);
@@ -87,7 +88,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         launchParticle();
 
         // pivot to eighty degrees
-        gyroPivot(0.8, -85, true);
+        gyroPivot(0.8, 85, true);
 
         // reset the encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
