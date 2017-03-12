@@ -503,12 +503,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             }
 
             // adjust powers for front motors
-            frontLeftPower = SPEED + gyroSteer;
-            frontRightPower = SPEED + gyroSteer;
+            frontLeftPower = SPEED - gyroSteer;
+            frontRightPower = SPEED - gyroSteer;
 
             // adjust powers for back motors
-            backLeftPower = SPEED - gyroSteer;
-            backRightPower = SPEED - gyroSteer;
+            backLeftPower = SPEED + gyroSteer;
+            backRightPower = SPEED + gyroSteer;
 
             // too far from wall
             if (rangeDiffFromTarget < 0) {

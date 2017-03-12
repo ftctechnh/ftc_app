@@ -67,7 +67,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         // back up from wall
         rangeSensorDrive(20, 0.2);
 
-        rangeGyroStrafe(0, 20, -36, -36);
+        rangeGyroStrafe(0, 20, -35, -35);
 
         // drive left to white line
         stopOnLine(0.05, false);
