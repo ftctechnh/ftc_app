@@ -150,17 +150,32 @@ public abstract class AutonomousBase extends RobotBase
 
             int currentHeading = getValidGyroHeading();
             //Adjust as fully as possible but not beyond the time limit.
-            while(System.currentTimeMillis() - startTime < maxTime && currentHeading != this.desiredHeading)
+            while(System.currentTimeMillis() - startTime < maxTime)
             {
                 currentHeading = getValidGyroHeading();
+                if (currentHeading == this.desiredHeading)
+                {
+                    stopDriving ();
+                    sleep(500);
+                    currentHeading = getValidGyroHeading ();
+                    //Verify that it really was at the correct heading (like never happens ever)
+                    if (currentHeading == this.desiredHeading)
+                        break;
+                }
 
                 //Protection against stalling, increases power if no observed heading change in last fraction of a second.
                 if (System.currentTimeMillis() - lastCheckedTime >= 400 && (System.currentTimeMillis () - startTime) > 1000)
                 {
                     //Don't start increasing power at the very start of the turn before the robot has had time to accelerate.
-                    if (Math.abs(priorHeading - currentHeading) <= 2)
+                    if (Math.abs(priorHeading - currentHeading) <= 1)
                     {
-                        turnIntercept += 0.07;
+                        turnIntercept += 0.06;
+                        outputNewLineToDrivers ("Increased turn power");
+                    }
+                    else if (Math.abs(priorHeading - currentHeading) >= 8 && turnIntercept > .28)
+                    {
+                        turnIntercept -= 0.06;
+                        outputNewLineToDrivers ("Decreased turn power");
                     }
 
                     //Update other variables.
@@ -321,9 +336,13 @@ public abstract class AutonomousBase extends RobotBase
             if (length <= greatestDistance)
                 break;
 
-            if ((System.currentTimeMillis () - lastCheckTime) > 300 && previousDistance == greatestDistance)
+            if ((System.currentTimeMillis () - lastCheckTime) >= 100 && Math.abs(previousDistance - greatestDistance) < 10)
+            {
                 movementPower += Math.signum (movementPower) * 0.02;
+                outputNewLineToDrivers ("Increased encoder move power.");
+            }
 
+            previousDistance = greatestDistance;
             lastCheckTime = System.currentTimeMillis ();
 
             //Give the drivers a bit of insight into which encoders are currently working (two out of four are currently operational).

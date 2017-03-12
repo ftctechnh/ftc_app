@@ -21,7 +21,7 @@ public abstract class RobotBase extends BaseFunctions
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
     protected final double FBP_UP = 0.0, FBP_DOWN = 0.5;
-    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.12; //Range -1 to 1.
+    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.04; //Range -1 to 1.
 
     protected ModernRoboticsI2cRangeSensor sideRangeSensor;
 

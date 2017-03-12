@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.tankbotPrograms;
 
+import android.media.MediaPlayer;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,8 +17,9 @@ public class TankBotDriveAround extends BaseFunctions
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors (they are lists because it helps when we add on new motors.
-    protected DcMotor leftMotor, rightMotor;
-    protected Servo turret;
+    private DcMotor leftMotor, rightMotor;
+    private Servo turret;
+    private double motorCorrectionFactor = -0.1;
 
     // Called on initialization (once)
     protected void initializeHardware() throws InterruptedException
@@ -26,9 +29,19 @@ public class TankBotDriveAround extends BaseFunctions
         /*************************** DRIVING MOTORS ***************************/
         leftMotor = initialize(DcMotor.class, "Left Motor");
         rightMotor = initialize(DcMotor.class, "Right Motor");
-        rightMotor.setDirection (DcMotorSimple.Direction.REVERSE);
+        leftMotor.setDirection (DcMotorSimple.Direction.REVERSE);
 
         turret = initialize(Servo.class, "Turret");
+    }
+
+    private void setRightPower(double power)
+    {
+        rightMotor.setPower (power * (1 - motorCorrectionFactor));
+    }
+
+    private void setLeftPower(double power)
+    {
+        leftMotor.setPower (power * (1 + motorCorrectionFactor));
     }
 
     //All teleop controls are here.
@@ -37,7 +50,8 @@ public class TankBotDriveAround extends BaseFunctions
         //Normal mode variables
         double leftPower, rightPower;
         boolean backwards = false;
-        double lastTimeBackTogglePressed = System.currentTimeMillis();
+        long lastTimeBackTogglePressed = System.currentTimeMillis(),
+                lastTimeMusicTogglePressed = System.currentTimeMillis ();
         double currentTurretPosition = 0.5;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
@@ -47,11 +61,11 @@ public class TankBotDriveAround extends BaseFunctions
             /************** Direction Toggle **************/
             if (!backwards)
             { // Driving forward
-                leftPower = -gamepad1.left_stick_y;
-                rightPower = -gamepad1.right_stick_y;
+                leftPower = gamepad1.left_stick_y;
+                rightPower = gamepad1.right_stick_y;
             } else { // Driving backward
-                leftPower = gamepad1.right_stick_y;
-                rightPower = gamepad1.left_stick_y;
+                leftPower = -gamepad1.right_stick_y;
+                rightPower = -gamepad1.left_stick_y;
             }
 
             /************** Motor Speed Control **************/
@@ -59,22 +73,30 @@ public class TankBotDriveAround extends BaseFunctions
             leftPower = Range.clip(leftPower, -1, 1);
 
             // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-            leftMotor.setPower(scaleInput(leftPower));
-            rightMotor.setPower(scaleInput(rightPower));
+            setLeftPower (scaleInput(leftPower));
+            setLeftPower (scaleInput(rightPower));
 
             //Toggle direction
-            if (gamepad1.a && (System.currentTimeMillis() - lastTimeBackTogglePressed) > 1000)
+            if (gamepad1.a && (System.currentTimeMillis() - lastTimeBackTogglePressed) > 500)
             {
                 backwards = !backwards;
                 lastTimeBackTogglePressed = System.currentTimeMillis();
             }
 
+            if (gamepad1.y && (System.currentTimeMillis () - lastTimeMusicTogglePressed) > 500)
+            {
+                if (mediaPlayer != null)
+                    StopPlayingAudio ();
+                else
+                    PlayAudio (DownloadedSongs.IMPERIAL_MARCH);
+            }
+
             /************** Turret Position **************/
             if (turret != null)
             {
-                if (gamepad1.dpad_left)
+                if (gamepad1.right_trigger > 0.5)
                     currentTurretPosition -= 0.005;
-                else if (gamepad1.dpad_right)
+                else if (gamepad1.left_trigger > 0.5)
                     currentTurretPosition += 0.005;
 
                 currentTurretPosition = Range.clip(currentTurretPosition, 0, 1);
@@ -84,7 +106,7 @@ public class TankBotDriveAround extends BaseFunctions
             /************** Data Output **************/
             outputConstantDataToDrivers(new String[] {
                     "Right power = " + rightPower,
-                    "Left power = " + leftPower
+                    "Music playing = " + (mediaPlayer != null)
             });
             /******************** END OF LOOP ********************/
 
@@ -120,6 +142,63 @@ public class TankBotDriveAround extends BaseFunctions
         }
 
         return dScale;
+    }
+
+    /************ MEDIA PLAYER STUFF!!!!! ************/
+    protected enum DownloadedSongs
+    {
+        IMPERIAL_MARCH
+    }
+    private MediaPlayer mediaPlayer = null;
+    protected void PlayAudio(DownloadedSongs choice)
+    {
+        try
+        {
+            int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.imperialmarch;
+            switch (choice)
+            {
+                case IMPERIAL_MARCH:
+                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.imperialmarch;
+                    break;
+            }
+            mediaPlayer = MediaPlayer.create(hardwareMap.appContext, selectedSong);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+            {
+                public void onCompletion(MediaPlayer mediaPlayer1)
+                {
+                    mediaPlayer1.release();
+                }
+            });
+
+            outputNewLineToDrivers ("Playing " + choice.toString());
+
+            sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
+        }
+        catch (Exception e)
+        {
+            outputNewLineToDrivers ("Error while attempting to play music.");
+            return;
+        }
+    }
+
+    //Used to make the media player stop playing audio, and also to prevent excess memory allocation from being taken up.
+    protected void StopPlayingAudio()
+    {
+        if (mediaPlayer != null)
+        {
+            if (mediaPlayer.isPlaying())
+                mediaPlayer.stop(); //stop playing
+            mediaPlayer.release(); //prevent resource allocation
+            mediaPlayer = null; //nullify the reference.
+        }
+    }
+
+    protected void driverStationSaysSTOP()
+    {
+        StopPlayingAudio ();
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
     }
 
 }

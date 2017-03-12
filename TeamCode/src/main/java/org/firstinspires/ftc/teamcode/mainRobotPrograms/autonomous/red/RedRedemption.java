@@ -14,7 +14,7 @@ public class RedRedemption extends AutonomousBase
     {
         //Drive until we are just far enough from the cap ball to score reliably.
         outputNewLineToDrivers("Driving forward to the cap ball to score...");
-        startToDriveAt (0.5);
+        startToDriveAt (0.4);
         while(frontRangeSensor.cmUltrasonic() > 40)
             adjustMotorPowersBasedOnGyroSensor();
         stopDriving();
@@ -30,7 +30,7 @@ public class RedRedemption extends AutonomousBase
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall at an angle...");
-        turnToHeading(-70, TurnMode.BOTH, 3000);
+        turnToHeading(-73, TurnMode.BOTH, 3000);
 
         //Drive to the wall and stop once a little ways away.
         startToDriveAt (0.7);
@@ -38,7 +38,7 @@ public class RedRedemption extends AutonomousBase
         while (frontRangeSensor.cmUltrasonic () > 68)
             adjustMotorPowersBasedOnGyroSensor ();
         startToDriveAt (0.33);
-        while (frontRangeSensor.cmUltrasonic () > 27)
+        while (frontRangeSensor.cmUltrasonic () > 29)
             adjustMotorPowersBasedOnGyroSensor ();
         stopDriving ();
 
@@ -66,7 +66,7 @@ public class RedRedemption extends AutonomousBase
                 if (!aboutToSeeWhiteLine)
                 {
                     updateColorSensorStates ();
-                    if (option1Red || option1Blue)
+                    if (option2Red || option2Blue)
                     {
                         startToDriveAt (-0.30); //Not useful right now but may be at one point soon when we decide to change it.
                         aboutToSeeWhiteLine = true;
@@ -79,7 +79,7 @@ public class RedRedemption extends AutonomousBase
                     distanceFromWall = 16;
                 }
 
-                //Will be -1 if we need to swerve toward the wall and +1 if we need to swerve away from the wall.
+                //Will be 1 if we need to swerve toward the wall and -1 if we need to swerve away from the wall.
                 int swerveCorrectionSign = (int) (Math.signum (distanceFromWall - Range.clip(distanceFromWall, tooCloseThreshold, tooFarThreshold)));
 
                 if ((System.currentTimeMillis () - lastSwerveTime) > 1500 && swerveCorrectionSign != 0 && !aboutToSeeWhiteLine)
@@ -88,9 +88,9 @@ public class RedRedemption extends AutonomousBase
 
                     //Power up the appropriate side to a massive degree for a very short period of time.
                     if (swerveCorrectionSign == -1)
-                        setLeftPower (movementPower * 4);
+                        setRightPower (movementPower * 2.5);
                     else if (swerveCorrectionSign == 1)
-                        setRightPower (movementPower * 4);
+                        setLeftPower (movementPower * 2.5);
 
                     gyroAdjustFactor += swerveCorrectionSign; //Make the gyro think that heading 1 is now heading 0 since apparently the last heading was off.
 
@@ -101,7 +101,7 @@ public class RedRedemption extends AutonomousBase
                         if (bottomColorSensor.alpha () > 5)
                         {
                             stopDriving ();
-                            turnToHeading (-180, TurnMode.BOTH, 1000);
+                            turnToHeading (-180, TurnMode.BOTH, 2000); //The swerve sets us off course to a large degree.
                             break;
                         }
 
@@ -134,7 +134,7 @@ public class RedRedemption extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.30, 160 + 10 * failedAttempts);
+                    driveForDistance (0.30, 150 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -142,7 +142,7 @@ public class RedRedemption extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.30, 60 + 10 * failedAttempts);
+                    driveForDistance (-0.30, 90 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -151,16 +151,16 @@ public class RedRedemption extends AutonomousBase
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (-0.30, 60 + 10 * failedAttempts);
+                    driveForDistance (-0.30, 90 + 10 * failedAttempts);
                     pressButton();
-                    driveBackwardsToRecenter = true;
+                    driveBackwardsToRecenter = false;
                 }
                 else
                 {
                     failedAttempts = -1; //This will be incremented and returned to 0, fear not.
                     outputNewLineToDrivers("Run provided weird booleans!  Attempting reset!");
-                    driveForDistance (0.30, 150); //Do something to try and find the correct values, try and re-center self by some miracle.
-                    driveBackwardsToRecenter = true;
+                    driveForDistance (-0.30, 150); //Do something to try and find the correct values, try and re-center self by some miracle.
+                    driveBackwardsToRecenter = false;
                 }
 
                 //On occasion this does happen for some reason, in which all are false or something.  Sometimes they shift back to being valid, however.
