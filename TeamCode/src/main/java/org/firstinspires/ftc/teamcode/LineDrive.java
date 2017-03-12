@@ -396,7 +396,7 @@ public class LineDrive extends OpenCVLib {
             else dist = (mSensor.getUltrasonicLevel() + mSensor2.getUltrasonicLevel()) / 2.0;
 
             //cutoff ridiculous values
-            if (dist > 200 || dist < 5) return false;
+            if (mSensor.getUltrasonicLevel() > 200 || mSensor.getUltrasonicLevel() < 5 || mSensor2.getUltrasonicLevel() > 200 || mSensor2.getUltrasonicLevel() < 5) return false;
                 //now check if the robot is in range
             else return (dist < mDist) || mTime.done();
         }

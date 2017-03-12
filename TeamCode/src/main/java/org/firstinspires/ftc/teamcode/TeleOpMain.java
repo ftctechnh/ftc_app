@@ -177,6 +177,7 @@ public class TeleOpMain extends OpMode {
             int heading = -1;
             // run drivetrain motors
             // dpad steering
+        /*
             if(gamepad1.dpad_up && gamepad1.dpad_left) {
                 heading = 45;
                 //robot.setFrontPower(0.0);
@@ -197,7 +198,8 @@ public class TeleOpMain extends OpMode {
                 //robot.setFrontPower(0.0);
                 //robot.setBackPower(-1.0);
             }
-            else if(gamepad1.dpad_up) {
+            */
+            if(gamepad1.dpad_up) {
                 heading = 0;
                 //robot.setFrontPower(1.0);
                 //robot.setBackPower(1.0);
