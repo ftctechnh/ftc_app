@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by ftc6347 on 10/16/16.
  */
-@TeleOp(name = "Teleop", group = "tele-op")
+@TeleOp(name = "TELEOP", group = "tele-op")
 public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 1/9/17.
  */
-@Autonomous(name = "Beacons 1 Blue", group = "beacons")
+@Autonomous(name = "Beacons 1 BLUE", group = "1 beacons")
 public class AutonomousBeaconsBlue extends LinearOpModeBase {
 
     @Override
@@ -21,8 +21,8 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 58);
+        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 58);
 
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -67,7 +67,7 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         // back up from wall
         rangeSensorDrive(20, 0.2);
 
-        rangeGyroStrafe(0, 20, -38, -38);
+        rangeGyroStrafe(0, 20, -36, -36);
 
         // drive left to white line
         stopOnLine(0.05, false);

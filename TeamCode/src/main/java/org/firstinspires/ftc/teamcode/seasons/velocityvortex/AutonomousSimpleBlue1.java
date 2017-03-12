@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Created by ftc6347 on 3/11/17.
+ * Created by ftc6347 on 3/12/17.
  */
-@Autonomous(name = "Defensive 1 BLUE", group = "4 defensive")
-public class DefensiveBlue extends LinearOpModeBase {
+@Autonomous(name = "Simple 1 BLUE", group = "2 simple")
+public class AutonomousSimpleBlue1 extends LinearOpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
         initializeHardware();
@@ -45,8 +45,10 @@ public class DefensiveBlue extends LinearOpModeBase {
         launchParticle();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 65);
-        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 65);
+        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 58);
+        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 58);
+
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -72,8 +74,8 @@ public class DefensiveBlue extends LinearOpModeBase {
         gyroPivot(0.5, 45, true);
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 70);
-        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 70);
+        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -97,34 +99,34 @@ public class DefensiveBlue extends LinearOpModeBase {
             idle();
         }
 
-        gyroPivot(0.5, 180, true);
-
-        stopRobot();
+        gyroPivot(0.5, 5, true);
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 40);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 40);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 24);
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 24);
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        getFrontRightDrive().setPower(0.5);
-        getBackLeftDrive().setPower(0.5);
+        getFrontLeftDrive().setPower(0.5);
+        getBackRightDrive().setPower(0.5);
 
         // wait for the drive motors to stop
         while(opModeIsActive() &&
-                (getFrontRightDrive().isBusy() && getBackLeftDrive().isBusy())) {
+                (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
 
             telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontRightDrive().getCurrentPosition(),
-                    getBackLeftDrive().getCurrentPosition());
+                    getFrontLeftDrive().getCurrentPosition(),
+                    getBackRightDrive().getCurrentPosition());
 
-            telemetry.addData("front left target", getFrontRightDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackLeftDrive().getTargetPosition());
+            telemetry.addData("front left target", getFrontLeftDrive().getTargetPosition());
+            telemetry.addData("back right target", getBackRightDrive().getTargetPosition());
             telemetry.update();
             idle();
         }
+
+        encoderStrafe(0.5, 12, 12);
     }
 }

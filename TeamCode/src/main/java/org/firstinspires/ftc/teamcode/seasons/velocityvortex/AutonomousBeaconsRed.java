@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 1/9/17.
  */
-@Autonomous(name = "Beacons 1 Red", group = "beacons")
+@Autonomous(name = "Beacons 1 RED", group = "1 beacons")
 public class AutonomousBeaconsRed extends LinearOpModeBase {
 
     @Override

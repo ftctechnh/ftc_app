@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 10/30/16.
  */
-@Autonomous(name = "Simple 2 Red", group = "simple")
+@Autonomous(name = "Simple 2 RED", group = "3 simple")
 public class AutonomousSimpleRed2 extends LinearOpModeBase {
 
     @Override

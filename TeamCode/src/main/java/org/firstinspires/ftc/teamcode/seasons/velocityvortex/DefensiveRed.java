@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 3/11/17.
  */
-@Autonomous(name = "Defensive 1 Red", group = "defensive")
+@Autonomous(name = "Defensive 1 RED", group = "4 defensive")
 public class DefensiveRed extends LinearOpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
