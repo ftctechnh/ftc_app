@@ -129,19 +129,9 @@ public abstract class AutonomousBase extends RobotBase
         lastCheckTime = System.currentTimeMillis ();
         previousDistance = 0;
     }
-    protected int getDrivenDistance()
+    protected int getDistanceDriven ()
     {
-        //Since only the back two work, we only look at them.
-        int leftDistance = Math.abs(leftDriveMotors.get(1).getCurrentPosition ()),
-                rightDistance = Math.abs(rightDriveMotors.get (1).getCurrentPosition ()),
-                greatestDistance;
-
-        if (leftDistance >= rightDistance)
-            greatestDistance = leftDistance;
-        else
-            greatestDistance = rightDistance;
-
-        return greatestDistance;
+        return (int) ((leftDriveMotors.get(1).getCurrentPosition () + rightDriveMotors.get (1).getCurrentPosition ()) / 2.0);
     }
 
     /**** Range Sensor(s) ****/
@@ -152,6 +142,8 @@ public abstract class AutonomousBase extends RobotBase
         double lastValidDistance = 150;
         //Linear trend downwards as we approach the obstacle.
         double driveCoefficient = 0.004, driveIntercept = 0.30;
+        //Store this in case the increase() method changes the move power.
+        double initialMovementPower = movementPower;
 
         double distanceFromStop = lastValidDistance;
         while (distanceFromStop > 0)
@@ -167,7 +159,11 @@ public abstract class AutonomousBase extends RobotBase
             distanceFromStop = perceivedDistanceFromObstacle - stopDistance;
 
             //Calculate the new movement power based on this result.
-            movementPower = driveCoefficient * distanceFromStop + driveIntercept;
+            //The (movement power - initial movement power) expression incorporates encoder adjustments in the event that the bot is not moving.
+            movementPower = driveCoefficient * distanceFromStop + driveIntercept + (movementPower - initialMovementPower);
+
+            //Increase movement power if NECESSARY.
+            increaseMovementPowerIfMovingTooSlowly ();
 
             //Adjust the movement power based on the gyro sensor.
             adjustMotorPowersBasedOnGyroSensor ();
@@ -283,8 +279,8 @@ public abstract class AutonomousBase extends RobotBase
     private double previousDistance = 0;
     protected void increaseMovementPowerIfMovingTooSlowly () throws InterruptedException
     {
-        int drivenDistance = getDrivenDistance ();
-        if ((System.currentTimeMillis () - lastCheckTime) >= 100 && Math.abs(getDrivenDistance () - previousDistance) <= 10)
+        int drivenDistance = getDistanceDriven ();
+        if ((System.currentTimeMillis () - lastCheckTime) >= 100 && Math.abs(getDistanceDriven () - previousDistance) <= 10)
         {
             outputNewLineToDrivers ("Increasing encoder move power.");
 
@@ -417,17 +413,38 @@ public abstract class AutonomousBase extends RobotBase
     }
     protected void driveForDistance (double power, int length) throws InterruptedException
     {
-        initializeAndResetEncoders ();
+        int powerSign = (int) (Math.signum(power));
+        length = Math.abs(length); //Otherwise this will go haywire.
+        double initialDrivePosition = getDistanceDriven ();
+        double desiredPosition = initialDrivePosition + powerSign * length;
 
         setMovementPower (power);
 
-        while (true)
+        //TESTING
+        //If we are at position 100 and we want to go to position 10.
+        //length = 90, power = -0.3
+        //initialDrivePosition = 100, desiredPosition = 10
+        //while (10 * -1 >= 100 * -1) evaluates to false.  while (-10 >= -100) while (true)
+        //this works.
+
+        //If we are at position 100 and we want to go to position 150
+        //length = 50, power = 0.3
+        //initialDrivePosition = 100, desiredPosition = 150
+        //while (150 * 1 >= 100 * 1) while (true);
+
+        //If we are at position -100 and we want to go to -150:
+        //length = 50, power = -0.3
+        //initialDrivePosition = -100, desiredPosition = -150;
+        //while(150 >= 100)
+
+        //If we are at position -100 and we want to go to -50
+        //length = 50, power = 0.3
+        //initialDrivePosition = -100, desiredPosition = -50
+        //while (-50 >= -100) while (true)
+
+        while (desiredPosition * powerSign >= getDistanceDriven () * powerSign)
         {
-            int drivenDistance = getDrivenDistance ();
-
-            if (length <= drivenDistance) //Break if we made it to the desired location.
-                break;
-
+            //Increase power if moving very slowly.
             increaseMovementPowerIfMovingTooSlowly ();
 
             //Adjust the motor powers based on the gyro even while driving with encoders.

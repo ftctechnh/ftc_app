@@ -12,6 +12,8 @@ public class BlueBlur extends AutonomousBase
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException
     {
+        /******** STEP 1: SHOOT, DRIVE, TURN TO BE PARALLEL WITH WALL ********/
+
         //Drive until we are just far enough from the cap ball to score reliably.
         outputNewLineToDrivers("Driving forward to the cap ball to score...");
         driveUntilDistanceFromObstacle (40);
@@ -25,6 +27,7 @@ public class BlueBlur extends AutonomousBase
         turnToHeading(73, TurnMode.BOTH, 3000);
 
         //Drive to the wall and stop once a little ways away.
+        outputNewLineToDrivers ("Driving to the wall...");
         driveUntilDistanceFromObstacle (30);
 
         //Turn back to become parallel with the wall.
@@ -34,6 +37,8 @@ public class BlueBlur extends AutonomousBase
         //For each of the two beacons.
         for (int i = 0; i < 2; i++)
         {
+            /******** STEP 2: FIND AND CENTER SELF ON BEACON ********/
+
             outputNewLineToDrivers ("Looking for beacon " + (i + 1));
 
             //Set movement speed.
@@ -47,7 +52,7 @@ public class BlueBlur extends AutonomousBase
             int tooFarThreshold = 18, tooCloseThreshold = 5;
             while (bottomColorSensor.alpha() <= 5)
             {
-                //Slow down if we are really close to hitting the white line so that we definitely see it.
+                //Slow down if we are really close to hitting the white line so that we are more likely to see it (only happens once)
                 if (!aboutToSeeWhiteLine)
                 {
                     updateColorSensorStates ();
@@ -56,19 +61,19 @@ public class BlueBlur extends AutonomousBase
                         //Brake
                         stopDriving ();
                         sleep(250);
-                        setMovementPower (0.27); //Not useful right now but may be at one point soon when we decide to change it.
+                        setMovementPower (0.27);
                         aboutToSeeWhiteLine = true;
                         outputNewLineToDrivers ("Saw the start of the beacon, slowing down...");
                     }
                 }
 
+                //Get the right distance from the wall.
                 double distanceFromWall = sideRangeSensor.cmUltrasonic ();
                 if (distanceFromWall >= 255) //This is invalid, it can't be that far away.
                     distanceFromWall = 16;
 
                 //Will be 1 if we need to swerve toward the wall and -1 if we need to swerve away from the wall.
                 int swerveCorrectionSign = (int) (Math.signum (distanceFromWall - Range.clip(distanceFromWall, tooCloseThreshold, tooFarThreshold)));
-
                 if ((System.currentTimeMillis () - lastSwerveTime) > 1500 && swerveCorrectionSign != 0 && !aboutToSeeWhiteLine)
                 {
                     outputNewLineToDrivers ("SWERVE!  Current = " + System.currentTimeMillis () + " and last " + lastSwerveTime);
@@ -99,16 +104,26 @@ public class BlueBlur extends AutonomousBase
                     idle();
                 }
                 else
+                {
+                    //Increase power if not moving quickly enough.
+                    increaseMovementPowerIfMovingTooSlowly ();
+
                     //Adjust motors based on gyro to remain parallel to wall.
                     adjustMotorPowersBasedOnGyroSensor ();
+                }
             }
+            //Stop once centered on the beacon.
             stopDriving ();
+
+
+            /******** STEP 3: PRESS THE BEACON!!!!! ********/
 
             outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
 
             //While the beacon is not completely blue (this is the verification step).
             int failedAttempts = 0; //The robot tries different drive lengths for each trial.
-            updateColorSensorStates ();
+            updateColorSensorStates (); //Has to know the initial colors.
+            initializeAndResetEncoders (); //Does this twice in total to prevent time loss.
             while (! (option1Blue && option2Blue))
             {
                 outputNewLineToDrivers ("Beacon is not completely blue, attempting to press the correct color!");
@@ -170,6 +185,9 @@ public class BlueBlur extends AutonomousBase
             if (i == 0)
                 driveForDistance (0.36, 500);
         }
+
+
+        /******** STEP 4: PARK AND KNOCK OFF THE CAP BALL ********/
 
         //Dash backward to the ramp afterward.
         outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
