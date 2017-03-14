@@ -15,9 +15,6 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // reset drive encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // use encoders
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         autonomousInitLoop();
 
         // set target position for initial diagonal drive motion

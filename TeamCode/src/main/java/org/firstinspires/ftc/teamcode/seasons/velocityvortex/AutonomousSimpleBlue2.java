@@ -15,9 +15,6 @@ public class AutonomousSimpleBlue2 extends LinearOpModeBase {
         // reset drive encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // use encoders
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         autonomousInitLoop();
 
         // drive backward (since the robot is facing backward)
@@ -64,6 +61,9 @@ public class AutonomousSimpleBlue2 extends LinearOpModeBase {
             telemetry.update();
             idle();
         }
+
+        // align before driving up ramp
+        gyroPivot(0.5, 45, true);
 
         // drive up ramp
         encoderStrafe(0.5, -12, -12);

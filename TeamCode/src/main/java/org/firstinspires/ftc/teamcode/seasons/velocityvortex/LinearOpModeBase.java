@@ -238,7 +238,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive to 10cm from the wall
-        rangeSensorDrive(10, 0.1);
+        rangeSensorDrive(12, 0.1);
 
         // when the beacon is already claimed, moved on
         if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
@@ -287,6 +287,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
             repositionBeacons();
 
+            robotRuntime.reset();
             // second push
             while(opModeIsActive() &&
                     (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
@@ -328,7 +329,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive to 10cm from the wall
-        rangeSensorDrive(10, 0.1);
+        rangeSensorDrive(12, 0.1);
 
         // when the beacon is already claimed, moved on
         if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
@@ -356,6 +357,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             idle();
         }
 
+        robotRuntime.reset();
         // first push
         while(opModeIsActive() &&
                 (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 1500)) {
@@ -375,6 +377,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         if(colorSensor1.red() > 0 || colorSensor2.red() > 0) {
             repositionBeacons();
 
+            robotRuntime.reset();
             // second push
             while(opModeIsActive() &&
                     (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 1500)) {

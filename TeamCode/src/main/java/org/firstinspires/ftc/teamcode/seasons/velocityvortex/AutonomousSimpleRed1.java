@@ -11,15 +11,8 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
         initializeHardware();
-
-        autonomousInitLoop();
-
-        initializeHardware();
         // reset drive encoders
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // use encoders
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         autonomousInitLoop();
 
