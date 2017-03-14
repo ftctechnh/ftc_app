@@ -22,10 +22,9 @@ public class Teleop extends RobotBase
         double speedCoefficient = 1.0;
         double flywheelCoefficient = 0.4;
         boolean pressingFlywheelC = false;
-        boolean pressingFBPToggle = false;
+        boolean pressingFBPToggle = false, fbpUp = true;
         double currentCapBallHolderPos = 0;
-        boolean capBallMode = false;
-        boolean capBallMode2 = false;
+        boolean capBallMode = false, capBallMode2 = false;
         double harvesterCoefficient = 1.0;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
@@ -85,11 +84,13 @@ public class Teleop extends RobotBase
             /************** Front Button Pusher **************/
             if (gamepad1.right_trigger > 0.5 && !pressingFBPToggle) {
                 pressingFBPToggle = true;
-                if (frontButtonPusher.getPosition() == FBP_UP) {
-                    frontButtonPusher.setPosition(FBP_UP);
+                if (fbpUp) {
+                    frontButtonPusher.setPosition(FBP_DOWN);
+                    fbpUp = false;
                 }
                 else {
-                    frontButtonPusher.setPosition(FBP_DOWN);
+                    frontButtonPusher.setPosition(FBP_UP);
+                    fbpUp = true;
                 }
             }
 
@@ -178,7 +179,8 @@ public class Teleop extends RobotBase
                     "Fly wheel power = " + flywheelCoefficient,
                     "Drive power = " + speedCoefficient,
                     "Cap ball mode = " + capBallMode,
-                    "Distance from the wall = " + sideRangeSensor.cmUltrasonic ()
+                    "Distance from the wall = " + sideRangeSensor.cmUltrasonic (),
+                    "FBP_up = " + fbpUp
             });
 
             idle();

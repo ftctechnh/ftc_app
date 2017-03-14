@@ -20,8 +20,8 @@ public abstract class RobotBase extends BaseFunctions
     protected Servo rightButtonPusher, frontButtonPusher;
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
-    protected final double FBP_UP = 0.0, FBP_DOWN = 0.5;
-    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.04; //Range -1 to 1.
+    protected final double FBP_UP = 0.81, FBP_DOWN = FBP_UP - 0.5;
+    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.04; //Range -1 to 1.  Favors left side if positive and vice-versa.
 
     protected ModernRoboticsI2cRangeSensor sideRangeSensor;
 
