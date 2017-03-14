@@ -21,7 +21,7 @@ public class DriveBackward extends AutonomousBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        startToDriveAt (-.8);
+        setMovementPower (-.8);
 
         while (true)
             idle();

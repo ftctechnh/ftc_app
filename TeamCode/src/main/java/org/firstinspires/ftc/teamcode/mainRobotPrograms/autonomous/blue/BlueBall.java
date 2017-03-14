@@ -36,7 +36,7 @@ public class BlueBall extends AutonomousBase
 
         //Drive until we reach the appropriate position.
         outputNewLineToDrivers ("Drive to the ramp, stopping upon bttom color sensor reaches the blue region on the ramp.");
-        startToDriveAt (0.25);
+        setMovementPower (0.25);
         long startDriveTime = System.currentTimeMillis (); //Max time at 6 seconds.
         while (bottomColorSensor.blue () <= 2.5 && (System.currentTimeMillis () - startDriveTime) < 6000)
             adjustMotorPowersBasedOnGyroSensor ();
