@@ -21,6 +21,9 @@ public class AutonomousSimpleBlue1 extends LinearOpModeBase {
 
         gyroPivot(0.8, 45, true);
 
+        //drive backward to align before launch
+        encoderDrive(0.25, -6 , -6);
+
         // launch the first (loaded) particle
         launchParticle();
 
@@ -38,8 +41,8 @@ public class AutonomousSimpleBlue1 extends LinearOpModeBase {
         launchParticle();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 58);
-        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 58);
+        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 46);
+        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 46);
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -67,8 +70,8 @@ public class AutonomousSimpleBlue1 extends LinearOpModeBase {
         gyroPivot(0.5, 45, true);
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
-        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
+        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 

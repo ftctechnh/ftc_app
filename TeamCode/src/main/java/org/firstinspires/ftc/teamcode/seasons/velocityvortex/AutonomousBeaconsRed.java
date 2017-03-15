@@ -64,7 +64,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // back up from wall
         rangeSensorDrive(20, 0.2);
 
-        rangeGyroStrafe(0, 20, 43, 43);
+        rangeGyroStrafe(0, 20, 38, 38);
 
         // drive left to white line
         stopOnLine(0.05, false);
@@ -85,7 +85,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // gyro pivot for shooting
-        gyroPivot(0.8, 42, true);
+        gyroPivot(0.8, 46, true);
 
         // drive backward for shooting
         encoderDrive(0.5, -10, -10);

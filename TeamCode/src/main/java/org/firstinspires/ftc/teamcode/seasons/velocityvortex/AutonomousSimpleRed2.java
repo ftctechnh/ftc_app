@@ -19,9 +19,12 @@ public class AutonomousSimpleRed2 extends LinearOpModeBase {
         autonomousInitLoop();
 
         // drive backward (since the robot is facing backward)
-        encoderDrive(0.25, -10, -10);
+        encoderDrive(0.25, -14, -14);
 
-        gyroPivot(0.8, -43, true);
+        gyroPivot(0.8, -40, true);
+
+        //drive backward to align before launch
+        encoderDrive(0.25, -6 , -6);
 
         // launch the first (loaded) particle
         launchParticle();

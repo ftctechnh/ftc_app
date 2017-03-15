@@ -79,7 +79,10 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         gyroPivot(0.8, -40, true);
 
         // drive backward for shooting
-        encoderDrive(0.5, -10, -10);
+        encoderDrive(0.5, -12, -12);
+
+        // gyro pivot before shooting
+        gyroPivot(0.8, -40, true);
 
         // launch the particle
         launchParticle();

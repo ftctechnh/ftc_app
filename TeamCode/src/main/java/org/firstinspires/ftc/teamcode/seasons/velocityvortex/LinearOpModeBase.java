@@ -270,7 +270,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // first push
         while(opModeIsActive() &&
-                (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
+                (getFrontRange().cmUltrasonic() >= 7 && robotRuntime.milliseconds() < 400)) {
             // run without encoders again
             driveForward(0.2);
         }
@@ -360,7 +360,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         robotRuntime.reset();
         // first push
         while(opModeIsActive() &&
-                (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 1500)) {
+                (getFrontRange().cmUltrasonic() >= 7 && robotRuntime.milliseconds() < 600)) {
             // run without encoders again
             driveForward(0.2);
         }
@@ -380,7 +380,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             robotRuntime.reset();
             // second push
             while(opModeIsActive() &&
-                    (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 1500)) {
+                    (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
                 // run without encoders again
                 driveForward(0.2);
             }

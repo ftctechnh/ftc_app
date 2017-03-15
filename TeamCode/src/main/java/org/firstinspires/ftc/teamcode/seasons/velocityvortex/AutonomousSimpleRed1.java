@@ -19,7 +19,10 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
         // drive backward (since the robot is facing backward)
         encoderDrive(0.25, -14, -14);
 
-        gyroPivot(0.8, -45, true);
+        gyroPivot(0.8, -40, true);
+
+        //drive backward to align before launch
+        encoderDrive(0.25, -6 , -6);
 
         // launch the first (loaded) particle
         launchParticle();
@@ -38,8 +41,8 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
         launchParticle();
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 58);
-        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 58);
+        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 46);
+        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 46);
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -64,11 +67,11 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
         }
         stopRobot();
 
-        gyroPivot(0.5, -45, true);
+        gyroPivot(0.5, -40, true);
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 55);
-        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 55);
+        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
+        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
