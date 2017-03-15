@@ -51,7 +51,7 @@ public class Teleop extends RobotBase
 
             /************** Cap Ball Drive Mode **************/
             if (gamepad1.x) {
-                speedCoefficient = 0.5;
+                speedCoefficient = 0.7;
 //                backwards = true;
                 capBallMode = true;
             }
@@ -61,12 +61,17 @@ public class Teleop extends RobotBase
                 capBallMode = false;
             }
 
-//            if (gamepad1.right_bumper) {
-//                speedCoefficient = 0.5;
-//            }
-//            else if (!capBallMode) {
-//                speedCoefficient = 1.0;
-//            }
+            if (gamepad1.right_bumper) {
+                speedCoefficient = 0.7;
+                frontButtonPusher.setPosition(FBP_DOWN);
+            }
+            else if (!capBallMode) {
+                speedCoefficient = 1.0;
+                frontButtonPusher.setPosition(FBP_UP);
+            }
+            else {
+                frontButtonPusher.setPosition(FBP_UP);
+            }
 
             /************** Clamp **************/
             if (gamepad1.left_bumper || (gamepad2.left_bumper && capBallMode2))
@@ -82,17 +87,17 @@ public class Teleop extends RobotBase
             }
 
             /************** Front Button Pusher **************/
-            if (gamepad1.right_trigger > 0.5 && !pressingFBPToggle) {
-                pressingFBPToggle = true;
-                if (fbpUp) {
-                    frontButtonPusher.setPosition(FBP_DOWN);
-                    fbpUp = false;
-                }
-                else {
-                    frontButtonPusher.setPosition(FBP_UP);
-                    fbpUp = true;
-                }
-            }
+//            if (gamepad1.right_trigger > 0.5 && !pressingFBPToggle) {
+//                pressingFBPToggle = true;
+//                if (fbpUp) {
+//                    frontButtonPusher.setPosition(FBP_DOWN);
+//                    fbpUp = false;
+//                }
+//                else {
+//                    frontButtonPusher.setPosition(FBP_UP);
+//                    fbpUp = true;
+//                }
+//            }
 
             if (gamepad1.right_trigger < 0.5) {
                 pressingFBPToggle = false;
