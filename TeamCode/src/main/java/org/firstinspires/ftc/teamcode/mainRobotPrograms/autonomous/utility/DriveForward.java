@@ -21,7 +21,7 @@ public class DriveForward extends AutonomousBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        setMovementPower (0.8);
+        startDrivingAt (0.8);
 
         while (true)
             idle();

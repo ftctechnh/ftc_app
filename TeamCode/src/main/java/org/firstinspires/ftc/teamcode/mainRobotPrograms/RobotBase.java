@@ -20,8 +20,8 @@ public abstract class RobotBase extends BaseFunctions
     protected Servo rightButtonPusher, frontButtonPusher;
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
-    protected final double FBP_UP = 0.81, FBP_DOWN = FBP_UP - 0.5;
-    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.04; //Range -1 to 1.  Favors left side if positive and vice-versa.
+    protected final double FBP_UP = 0.84, FBP_DOWN = FBP_UP - 0.63;
+    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.09; //Range -1 to 1.  Favors left side if positive and vice-versa.
 
     protected ModernRoboticsI2cRangeSensor sideRangeSensor;
 
@@ -48,7 +48,7 @@ public abstract class RobotBase extends BaseFunctions
         lift = initialize(DcMotor.class, "lift");
 
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
-        rightButtonPusher.setPosition(0.5);
+        rightButtonPusher.setPosition(0.5); //The stop position for a continuous rotation servo.
 
         frontButtonPusher = initialize(Servo.class, "frontButtonPusher");
         frontButtonPusher.setPosition(FBP_UP);

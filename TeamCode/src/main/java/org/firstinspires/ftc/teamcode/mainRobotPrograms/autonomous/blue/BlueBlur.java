@@ -42,14 +42,13 @@ public class BlueBlur extends AutonomousBase
             outputNewLineToDrivers ("Looking for beacon " + (i + 1));
 
             //Set movement speed.
-            setMovementPower (0.36);
+            startDrivingAt (0.55);
 
             //Drive until centered on the beacon.
             boolean aboutToSeeWhiteLine = false;
             long lastSwerveTime = System.currentTimeMillis ();
 
             /***** SWERVE CORRECTION ******/
-            int tooFarThreshold = 18, tooCloseThreshold = 5;
             while (bottomColorSensor.alpha() <= 5)
             {
                 //Slow down if we are really close to hitting the white line so that we are more likely to see it (only happens once)
@@ -60,63 +59,19 @@ public class BlueBlur extends AutonomousBase
                     {
                         //Brake
                         stopDriving ();
-                        sleep(250);
-                        setMovementPower (0.27);
+                        sleep(100);
+                        startDrivingAt (0.30);
                         aboutToSeeWhiteLine = true;
-                        outputNewLineToDrivers ("Saw the start of the beacon, slowing down...");
                     }
                 }
 
-                //Get the right distance from the wall.
-                double distanceFromWall = sideRangeSensor.cmUltrasonic ();
-                if (distanceFromWall >= 255) //This is invalid, it can't be that far away.
-                    distanceFromWall = 16;
-
-                //Will be 1 if we need to swerve toward the wall and -1 if we need to swerve away from the wall.
-                int swerveCorrectionSign = (int) (Math.signum (distanceFromWall - Range.clip(distanceFromWall, tooCloseThreshold, tooFarThreshold)));
-                if ((System.currentTimeMillis () - lastSwerveTime) > 1500 && swerveCorrectionSign != 0 && !aboutToSeeWhiteLine)
-                {
-                    outputNewLineToDrivers ("SWERVE!  Current = " + System.currentTimeMillis () + " and last " + lastSwerveTime);
-
-                    //Power up the appropriate side to a massive degree for a very short period of time.
-                    if (swerveCorrectionSign == -1)
-                        setRightPower (movementPower * 2.5);
-                    else if (swerveCorrectionSign == 1)
-                        setLeftPower (movementPower * 2.5);
-
-                    gyroAdjustFactor -= swerveCorrectionSign; //Make the gyro think that heading 1 is now heading 0 since apparently the last heading was off.
-
-                    //Don't allow the gyro to correct the heading for a very brief period of time.
-                    long swerveStart = System.currentTimeMillis ();
-                    while (System.currentTimeMillis () - swerveStart < 220)
-                    {
-                        if (bottomColorSensor.alpha () > 5)
-                        {
-                            stopDriving ();
-                            turnToHeading (0, TurnMode.BOTH, 2000); //The swerve sets us off course to a large degree.
-                            break;
-                        }
-
-                        idle();
-                    }
-
-                    lastSwerveTime = System.currentTimeMillis (); //Swerves can't occur one after another right away.
-                    idle();
-                }
-                else
-                {
-                    //Increase power if not moving quickly enough.
-                    increaseMovementPowerIfMovingTooSlowly ();
-
-                    //Adjust motors based on gyro to remain parallel to wall.
-                    adjustMotorPowersBasedOnGyroSensor ();
-                }
+                applySensorAdjustmentsToMotors (true, true, true);
             }
             //Stop once centered on the beacon.
             stopDriving ();
 
 
-            /******** STEP 3: PRESS THE BEACON!!!!! ********/
+            /******** STEP 3: PRESS AND VERIFY THE BEACON!!!!! ********/
 
             outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
 
@@ -136,7 +91,7 @@ public class BlueBlur extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.27, 90 + 10 * failedAttempts);
+                    driveForDistance (0.30, 90 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -144,7 +99,7 @@ public class BlueBlur extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.27, 150 + 10 * failedAttempts);
+                    driveForDistance (-0.30, 150 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -153,23 +108,25 @@ public class BlueBlur extends AutonomousBase
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (0.27, 90 + 10 * failedAttempts);
+                    driveForDistance (0.30, 90 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
                 else
                 {
                     failedAttempts = -1; //This will be incremented and returned to 0, fear not.
-                    outputNewLineToDrivers("Run provided weird booleans!  Attempting reset!");
-                    driveForDistance (0.27, 150); //Do something to try and find the correct values, try and re-center self by some miracle.
+                    outputNewLineToDrivers("Can't see the beacon clearly, so double checking!");
+                    driveForDistance (0.33, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
                     driveBackwardsToRecenter = true;
                 }
 
                 //On occasion this does happen for some reason, in which all are false or something.  Sometimes they shift back to being valid, however.
                 //Set the movement power based on the direction we have to return to.
-                setMovementPower ((driveBackwardsToRecenter ? -1 : 1) * 0.30);
+                startDrivingAt ((driveBackwardsToRecenter ? -1 : 1) * 0.30);
+
                 while (bottomColorSensor.alpha() <= 5)
-                    adjustMotorPowersBasedOnGyroSensor();
+                    applySensorAdjustmentsToMotors (true, true, false);
+
                 stopDriving();
 
                 //Update the number of trials completed so that we know the new drive distance and such.
@@ -179,11 +136,11 @@ public class BlueBlur extends AutonomousBase
                 updateColorSensorStates ();
             }
 
-            outputNewLineToDrivers ("Success!  Beacon is completely blue.");
+            outputNewLineToDrivers ("Success!  The beacon is completely blue.");
 
             //Drive a bit forward from the white line to set up for the next step.
             if (i == 0)
-                driveForDistance (0.36, 500);
+                driveForDistance (0.55, 500);
         }
 
 
