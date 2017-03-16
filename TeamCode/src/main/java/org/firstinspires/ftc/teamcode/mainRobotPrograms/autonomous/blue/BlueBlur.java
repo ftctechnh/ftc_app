@@ -35,11 +35,11 @@ public class BlueBlur extends AutonomousBase
         turnToHeading(0, TurnMode.BOTH, 3000);
 
         //For each of the two beacons.
-        for (int i = 0; i < 2; i++)
+        for (int currentBeacon = 1; currentBeacon <= 2; currentBeacon++)
         {
             /******** STEP 2: FIND AND CENTER SELF ON BEACON ********/
 
-            outputNewLineToDrivers ("Looking for beacon " + (i + 1));
+            outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
 
             //Set movement speed.
             startDrivingAt (0.55);
@@ -114,7 +114,7 @@ public class BlueBlur extends AutonomousBase
                 {
                     failedAttempts = -1; //This will be incremented and returned to 0, fear not.
                     outputNewLineToDrivers("Can't see the beacon clearly, so double checking!");
-                    driveForDistance (0.33, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
+                    driveForDistance (0.35, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
                     driveBackwardsToRecenter = true;
                 }
 
@@ -136,9 +136,8 @@ public class BlueBlur extends AutonomousBase
 
             outputNewLineToDrivers ("Success!  The beacon is completely blue.");
 
-            //Drive a bit forward from the white line to set up for the next step.
-            if (i == 0)
-                driveForDistance (0.55, 500);
+            if (currentBeacon == 1)
+                driveForDistance (0.55, 500); //Drive a bit forward from the white line to set up for the next step.
         }
 
 

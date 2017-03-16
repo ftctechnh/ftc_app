@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutonomousBase;
 
-@Autonomous(name="Blue Blur", group = "Auto Group")
+@Autonomous(name="Red Redemption", group = "Auto Group")
 
 public class RedRedemption extends AutonomousBase
 {
@@ -28,18 +28,18 @@ public class RedRedemption extends AutonomousBase
 
         //Drive to the wall and stop once a little ways away.
         outputNewLineToDrivers ("Driving to the wall...");
-        driveUntilDistanceFromObstacle (30);
+        driveUntilDistanceFromObstacle (31);
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
         turnToHeading(-180, TurnMode.BOTH, 3000);
 
         //For each of the two beacons.
-        for (int i = 0; i < 2; i++)
+        for (int currentBeacon = 1; currentBeacon <= 2; currentBeacon++)
         {
             /******** STEP 2: FIND AND CENTER SELF ON BEACON ********/
 
-            outputNewLineToDrivers ("Looking for beacon " + (i + 1));
+            outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
 
             //Set movement speed.
             startDrivingAt (-0.55);
@@ -53,7 +53,7 @@ public class RedRedemption extends AutonomousBase
                 if (!aboutToSeeWhiteLine)
                 {
                     updateColorSensorStates ();
-                    if (option1Red || option1Blue)
+                    if (option2Red || option2Blue)
                     {
                         //Brake
                         stopDriving ();
@@ -71,29 +71,29 @@ public class RedRedemption extends AutonomousBase
 
             /******** STEP 3: PRESS AND VERIFY THE BEACON!!!!! ********/
 
-            outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Blue ? "blue" : "red") + " and option 2 is " + (option2Blue ? "blue" : "red"));
+            outputNewLineToDrivers ("Ahoy there!  Beacon spotted!  Option 1 is " + (option1Red ? "red" : "blue") + " and option 2 is " + (option2Red ? "red" : "blue"));
 
             //While the beacon is not completely blue (this is the verification step).
             int failedAttempts = 0; //The robot tries different drive lengths for each trial.
             updateColorSensorStates (); //Has to know the initial colors.
             initializeAndResetEncoders (); //Does this twice in total to prevent time loss.
-            while (! (option1Blue && option2Blue))
+            while (! (option1Red && option2Red))
             {
-                outputNewLineToDrivers ("Beacon is not completely blue, attempting to press the correct color!");
+                outputNewLineToDrivers ("Beacon is not completely red, attempting to press the correct color!");
 
                 boolean driveBackwardsToRecenter;
 
                 //The possible events that could occur upon either verification or first looking at the beacon.
                 //Different drives are attempted for each trial.
-                if (option1Blue && option2Red)
+                if (option1Red && option2Blue)
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.30, 150 + 10 * failedAttempts);
+                    driveForDistance (0.30, 160 + 10 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
-                else if (option1Red && option2Blue)
+                else if (option1Blue && option2Red)
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
@@ -101,7 +101,7 @@ public class RedRedemption extends AutonomousBase
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
-                else if (option1Red && option2Red)
+                else if (option1Blue && option2Blue)
                 {
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
@@ -114,7 +114,7 @@ public class RedRedemption extends AutonomousBase
                 {
                     failedAttempts = -1; //This will be incremented and returned to 0, fear not.
                     outputNewLineToDrivers("Can't see the beacon clearly, so double checking!");
-                    driveForDistance (0.33, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
+                    driveForDistance (0.35, 100); //Do something to try and find the correct values, try and re-center self by some miracle.
                     driveBackwardsToRecenter = true;
                 }
 
@@ -136,9 +136,8 @@ public class RedRedemption extends AutonomousBase
 
             outputNewLineToDrivers ("Success!  The beacon is completely blue.");
 
-            //Drive a bit forward from the white line to set up for the next step.
-            if (i == 0)
-                driveForDistance (-0.55, 500);
+            if (currentBeacon == 1)
+                driveForDistance (-0.55, 500); //Drive a bit forward from the white line to set up for the next step.
         }
 
 

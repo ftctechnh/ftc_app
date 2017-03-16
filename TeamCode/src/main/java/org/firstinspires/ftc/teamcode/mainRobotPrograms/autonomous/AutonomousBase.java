@@ -15,6 +15,19 @@ public abstract class AutonomousBase extends RobotBase
 {
     /******** SENSOR STUFF ********/
 
+    /**** Color Sensors (3) ****/
+    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor; //Must have different I2C addresses.
+    protected boolean option1Red, option2Red, option1Blue, option2Blue;
+    protected void updateColorSensorStates()
+    {
+        //Threshold is currently 2, but this could be changed.
+        option1Red = option1ColorSensor.red () >= 2;
+        option1Blue = option1ColorSensor.blue () >= 2;
+        option2Red = option2ColorSensor.red () >= 2;
+        option2Blue = option2ColorSensor.blue () >= 2;
+    }
+
+
     /**** Gyro ****/
     private GyroSensor gyroscope;
     private int desiredHeading = 0; //Massively important to maintaining stability through the drives.
@@ -24,7 +37,7 @@ public abstract class AutonomousBase extends RobotBase
     {
         sleep(400);
         gyroscope.resetZAxisIntegrator();
-        sleep(400); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
+        sleep(400);
     }
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This method makes sure that the value makes sense for calculations.
     private int gyroAdjustFactor; //Changed based on swerves.
@@ -48,13 +61,13 @@ public abstract class AutonomousBase extends RobotBase
         return heading;
     }
     //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per idle().
-    private double calculateGyroAdjustment (double movePower) throws InterruptedException
+    private double calculateGyroAdjustment () throws InterruptedException
     {
         //Desired heading varies.
-        double offFromHeading = desiredHeading - getValidGyroHeading();
+        int offFromHeading = desiredHeading - getValidGyroHeading();
 
         //Change motor powers based on offFromHeading.
-        return Math.signum(movePower) * Math.signum(offFromHeading) * (Math.abs(offFromHeading) * .006 + .22);
+        return Math.signum(offFromHeading) * (Math.abs(offFromHeading) * .006 + .22);
     }
 
     //Used to turn to a specified heading, and returns the difference between the desired angle and the actual angle achieved.
@@ -150,19 +163,6 @@ public abstract class AutonomousBase extends RobotBase
             setRightPower(.5 * directionCoefficient);
             sleep((long) Math.abs(desiredHeading));
         }
-    }
-
-
-    /**** Color Sensors (3) ****/
-    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor; //Must have different I2C addresses.
-    protected boolean option1Red, option2Red, option1Blue, option2Blue;
-    protected void updateColorSensorStates()
-    {
-        //Threshold is currently 2, but this could be changed.
-        option1Red = option1ColorSensor.red () >= 2;
-        option1Blue = option1ColorSensor.blue () >= 2;
-        option2Red = option2ColorSensor.red () >= 2;
-        option2Blue = option2ColorSensor.blue () >= 2;
     }
 
 
@@ -285,76 +285,24 @@ public abstract class AutonomousBase extends RobotBase
             movementPower = distanceFromStop * 0.0067 + 0.25;
 
             //Only use encoders.
-            applySensorAdjustmentsToMotors (true, false, false);
+            applySensorAdjustmentsToMotors (true, true, false);
         }
 
         stopDriving ();
     }
 
-    private double calculateSideRangeSensorAdjustment (double movePower) throws InterruptedException
+    private double calculateSideRangeSensorAdjustment () throws InterruptedException
     {
         double rangeSensorReading = sideRangeSensor.cmUltrasonic ();
-        if (rangeSensorReading >= 255)
+        if (rangeSensorReading >= 30)
             return 0;
-
-        //Ideal distance from the wall is about 13.
-        //Favors left if positive, right if negative
 
         //Desired range sensor values.
         double offFromDistance = 13 - sideRangeSensor.cmUltrasonic ();
 
         //Change motor powers based on offFromHeading.
-        return Math.signum(movePower) * Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .004 + .18);
+        return Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .004 + .18);
     }
-
-
-    /******** INITIALIZATION ********/
-    //Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
-    @Override
-    protected void driverStationSaysINITIALIZE() throws InterruptedException
-    {
-        //Initialize color sensors.
-        bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
-        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
-        bottomColorSensor.enableLed(true);
-        option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
-        option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
-        option1ColorSensor.enableLed(false);
-        option2ColorSensor = initialize(ColorSensor.class, "Option 2 Color Sensor");
-        option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
-        option2ColorSensor.enableLed(false);
-
-        //Initialize the range sensors for autonomous.
-        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
-        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
-        //The range sensors are odd and often return .269 with this method unless the robot is restarted.
-        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
-            outputNewLineToDrivers("Front range sensor misconfigured!");
-
-        //initialize gyroscope (will output whether it was found or not.
-        gyroscope = initialize(GyroSensor.class, "Gyroscope");
-        if (gyroscope != null)
-        {
-            //Start gyroscope calibration.
-            outputNewLineToDrivers("Gyroscope Calibrating...");
-            gyroscope.calibrate();
-
-            //Pause to prevent odd errors in which it says it's configured but is actually LYING.
-            sleep(1000);
-
-            while (gyroscope.isCalibrating())
-                sleep(50);
-
-            zeroHeading();
-
-            outputNewLineToDrivers("Gyroscope Calibration Complete!");
-        }
-    }
-
-
-    /******** CHILD CLASS INHERITANCE ********/
-    //All child classes should have special instructions.
-    protected abstract void driverStationSaysGO() throws InterruptedException;
 
 
     /******** MOVEMENT POWER CONTROL ********/
@@ -379,26 +327,29 @@ public abstract class AutonomousBase extends RobotBase
     private double driveSpeedIncrease = 0;
     protected void applySensorAdjustmentsToMotors (boolean gyroscope, boolean encoders, boolean sideRange) throws InterruptedException
     {
+        //Will be used multiple times.
+        int movementPowerSign = (int) (Math.signum(movementPower));
+
         //Calculate the required sensor adjustments based on the parameters.
         if (encoders)
             driveSpeedIncrease += calculateEncoderAdjustment ();
         else if (driveSpeedIncrease > 0)
             driveSpeedIncrease = 0;
 
-        double actualMovementPower = movementPower + Math.signum(movementPower) * driveSpeedIncrease;
+        double actualMovementPower = movementPower + movementPowerSign * driveSpeedIncrease;
 
         //For each result, positive favors left side and negative the right side.
         double gyroAdjustment = 0;
         if (gyroscope)
-            gyroAdjustment = calculateGyroAdjustment (actualMovementPower);
+            gyroAdjustment = calculateGyroAdjustment ();
 
         double rangeSensorAdjustment = 0;
         if (sideRange)
-            rangeSensorAdjustment = calculateSideRangeSensorAdjustment (actualMovementPower);
+            rangeSensorAdjustment = calculateSideRangeSensorAdjustment ();
 
-        double totalAdjustmentFactor = gyroAdjustment + rangeSensorAdjustment;
+        double totalAdjustmentFactor = movementPowerSign * (gyroAdjustment + rangeSensorAdjustment);
 
-        //Set resulting movement powers based on calculated values.
+        //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later.
         setRightPower (actualMovementPower * (1 - totalAdjustmentFactor));
         setLeftPower (actualMovementPower * (1 + totalAdjustmentFactor));
     }
@@ -479,4 +430,53 @@ public abstract class AutonomousBase extends RobotBase
         flywheels.setPower(0);
         harvester.setPower(0);
     }
+
+
+    /******** INITIALIZATION ********/
+    //Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
+    @Override
+    protected void driverStationSaysINITIALIZE() throws InterruptedException
+    {
+        //Initialize color sensors.
+        bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
+        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
+        bottomColorSensor.enableLed(true);
+        option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
+        option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
+        option1ColorSensor.enableLed(false);
+        option2ColorSensor = initialize(ColorSensor.class, "Option 2 Color Sensor");
+        option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
+        option2ColorSensor.enableLed(false);
+
+        //Initialize the range sensors for autonomous.
+        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
+        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
+        //The range sensors are odd and often return .269 with this method unless the robot is restarted.
+        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
+            outputNewLineToDrivers("Front range sensor misconfigured!");
+
+        //Initialize gyroscope.
+        gyroscope = initialize(GyroSensor.class, "Gyroscope");
+        if (gyroscope != null)
+        {
+            //Start gyroscope calibration.
+            outputNewLineToDrivers("Gyroscope Calibrating...");
+            gyroscope.calibrate();
+
+            //Pause to prevent odd errors in which it says it's configured but is actually LYING.
+            sleep(1000);
+
+            while (gyroscope.isCalibrating())
+                sleep(50);
+
+            zeroHeading();
+
+            outputNewLineToDrivers("Gyroscope Calibration Complete!");
+        }
+    }
+
+
+    /******** CHILD CLASS INHERITANCE ********/
+    //All child classes should have special instructions.
+    protected abstract void driverStationSaysGO() throws InterruptedException;
 }

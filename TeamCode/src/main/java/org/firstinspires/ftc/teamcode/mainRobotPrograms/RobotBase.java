@@ -4,6 +4,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.BaseFunctions;
@@ -66,12 +67,12 @@ public abstract class RobotBase extends BaseFunctions
     protected void setRightPower(double power)
     {
         for (DcMotor motor : rightDriveMotors)
-            motor.setPower(power * (1 - MOTOR_POWER_CORRECTION_FACTOR));
+            motor.setPower(Range.clip(power * (1 - MOTOR_POWER_CORRECTION_FACTOR), -1, 1));
     }
 
     protected void setLeftPower(double power)
     {
         for (DcMotor motor : leftDriveMotors)
-            motor.setPower(power * (1 + MOTOR_POWER_CORRECTION_FACTOR));
+            motor.setPower(Range.clip(power * (1 + MOTOR_POWER_CORRECTION_FACTOR), -1, 1));
     }
 }

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 
 public abstract class BallAutonomousBase extends AutonomousBase
