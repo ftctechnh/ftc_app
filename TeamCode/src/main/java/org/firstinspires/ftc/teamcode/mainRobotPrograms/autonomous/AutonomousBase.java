@@ -39,7 +39,7 @@ public abstract class AutonomousBase extends RobotBase
         gyroscope.resetZAxisIntegrator();
         sleep(400);
     }
-    //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This method makes sure that the value makes sense for calculations.
+    //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
     private int gyroAdjustFactor; //Changed based on swerves.
     protected int getValidGyroHeading()
     {
@@ -90,7 +90,7 @@ public abstract class AutonomousBase extends RobotBase
 
             int currentHeading = priorHeading;
             //Adjust as fully as possible but not beyond the time limit.
-            while(System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10)
+            while(opModeIsActive () && (System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10))
             {
                 //Verify that the heading that we thought was perfectly on point actually is on point.
                 currentHeading = getValidGyroHeading();
@@ -266,7 +266,7 @@ public abstract class AutonomousBase extends RobotBase
         //Required variables.
         double lastValidDistance = 150 - stopDistance;
         double minPower = 0.3;
-        double stopAndMoveAtMinPowerDist = 25;
+        double stopAndMoveAtMinPowerDist = 35;
 
         double distanceFromStop = lastValidDistance;
         while (distanceFromStop > stopAndMoveAtMinPowerDist)
@@ -413,7 +413,7 @@ public abstract class AutonomousBase extends RobotBase
 
         startDrivingAt (power);
 
-        while (desiredPosition * powerSign >= getEncoderPosition () * powerSign)
+        while (opModeIsActive () && (desiredPosition * powerSign >= getEncoderPosition () * powerSign))
             applySensorAdjustmentsToMotors (true, true, false);
 
         //End the drive upon reaching the target destination.

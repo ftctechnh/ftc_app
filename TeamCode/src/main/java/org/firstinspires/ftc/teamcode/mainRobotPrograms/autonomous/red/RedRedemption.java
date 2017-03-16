@@ -24,11 +24,11 @@ public class RedRedemption extends AutonomousBase
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall at an angle...");
-        turnToHeading(-71, TurnMode.BOTH, 3000);
+        turnToHeading(-73, TurnMode.BOTH, 3000);
 
         //Drive to the wall and stop once a little ways away.
         outputNewLineToDrivers ("Driving to the wall...");
-        driveUntilDistanceFromObstacle (31);
+        driveUntilDistanceFromObstacle (37);
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
@@ -89,7 +89,7 @@ public class RedRedemption extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.30, 160 + 10 * failedAttempts);
+                    driveForDistance (0.30, 160 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -97,7 +97,7 @@ public class RedRedemption extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.30, 60 + 10 * failedAttempts);
+                    driveForDistance (-0.30, 60 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -106,7 +106,7 @@ public class RedRedemption extends AutonomousBase
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (-0.30, 60 + 10 * failedAttempts);
+                    driveForDistance (-0.30, 60 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -136,8 +136,7 @@ public class RedRedemption extends AutonomousBase
 
             outputNewLineToDrivers ("Success!  The beacon is completely blue.");
 
-            if (currentBeacon == 1)
-                driveForDistance (-0.42, 500); //Drive a bit forward from the white line to set up for the next step.
+            driveForDistance (-0.42, 500); //Drive a bit forward from the white line to set up for the next step.
         }
 
 
@@ -145,7 +144,7 @@ public class RedRedemption extends AutonomousBase
 
         //Dash backward to the ramp afterward.
         outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
-        turnToHeading(-228, TurnMode.BOTH, 2000);
+        turnToHeading(-216, TurnMode.BOTH, 2000);
         driveForDistance(1.0, 3000); //SPRINT TO THE CAP BALL TO PARK
 
     }
