@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
 
-//For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
+//For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
 public abstract class AutonomousBase extends RobotBase
 {
     /******** SENSOR STUFF ********/

@@ -46,7 +46,7 @@ public class RedBall extends BallAutonomousBase
         startDrivingAt (0.6);
         long startDriveTime = System.currentTimeMillis (); //Max time at 6 seconds.
         while (bottomColorSensor.red () <= 2.5 && (System.currentTimeMillis () - startDriveTime) < 6000)
-            calculateGyroAdjustment ();
+            applySensorAdjustmentsToMotors (true, false, false);
         stopDriving ();
     }
 }
