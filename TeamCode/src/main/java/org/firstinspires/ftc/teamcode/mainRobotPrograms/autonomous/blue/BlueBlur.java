@@ -28,7 +28,7 @@ public class BlueBlur extends AutonomousBase
 
         //Drive to the wall and stop once a little ways away.
         outputNewLineToDrivers ("Driving to the wall...");
-        driveUntilDistanceFromObstacle (30);
+        driveUntilDistanceFromObstacle (35);
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
@@ -42,7 +42,7 @@ public class BlueBlur extends AutonomousBase
             outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
 
             //Set movement speed.
-            startDrivingAt (0.55);
+            startDrivingAt (0.42);
 
             //Drive until centered on the beacon.
             boolean aboutToSeeWhiteLine = false;
@@ -89,7 +89,7 @@ public class BlueBlur extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.30, 90 + 10 * failedAttempts);
+                    driveForDistance (0.30, 90 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -97,7 +97,7 @@ public class BlueBlur extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.30, 150 + 10 * failedAttempts);
+                    driveForDistance (-0.30, 150 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -106,7 +106,7 @@ public class BlueBlur extends AutonomousBase
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (0.30, 90 + 10 * failedAttempts);
+                    driveForDistance (0.30, 90 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -136,8 +136,7 @@ public class BlueBlur extends AutonomousBase
 
             outputNewLineToDrivers ("Success!  The beacon is completely blue.");
 
-            if (currentBeacon == 1)
-                driveForDistance (0.55, 500); //Drive a bit forward from the white line to set up for the next step.
+            driveForDistance (.42, 500); //Drive a bit forward from the white line to set up for the next step.
         }
 
 
@@ -145,7 +144,7 @@ public class BlueBlur extends AutonomousBase
 
         //Dash backward to the ramp afterward.
         outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
-        turnToHeading(48, TurnMode.BOTH, 2000);
+        turnToHeading(36, TurnMode.BOTH, 2000);
         driveForDistance(-1.0, 3000); //SPRINT TO THE CAP BALL TO PARK
 
     }

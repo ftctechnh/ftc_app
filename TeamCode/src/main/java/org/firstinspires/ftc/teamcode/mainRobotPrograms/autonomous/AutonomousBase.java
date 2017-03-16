@@ -264,10 +264,12 @@ public abstract class AutonomousBase extends RobotBase
     protected void driveUntilDistanceFromObstacle (double stopDistance) throws InterruptedException
     {
         //Required variables.
-        double lastValidDistance = 150;
+        double lastValidDistance = 150 - stopDistance;
+        double minPower = 0.3;
+        double stopAndMoveAtMinPowerDist = 25;
 
         double distanceFromStop = lastValidDistance;
-        while (distanceFromStop > 0)
+        while (distanceFromStop > stopAndMoveAtMinPowerDist)
         {
             //Scrub the input to get a valid result (255 is the default invalid value of the range sensors).
             double perceivedDistanceFromObstacle = frontRangeSensor.cmUltrasonic ();
@@ -282,12 +284,34 @@ public abstract class AutonomousBase extends RobotBase
             //Calculate the new movement power based on this result.
             //The (movement power - initial movement power) expression incorporates encoder adjustments in the event that the bot is not moving.
             //Linear trend downwards as we approach the obstacle.
-            movementPower = distanceFromStop * 0.0067 + 0.25;
+            movementPower = distanceFromStop * 0.0067 + minPower;
 
             //Only use encoders.
             applySensorAdjustmentsToMotors (true, true, false);
         }
 
+        sleep(100);
+        stopDriving ();
+
+        //Drive at min power the rest of the way.
+        startDrivingAt (minPower);
+
+        while (distanceFromStop > 0)
+        {
+            double perceivedDistanceFromObstacle = frontRangeSensor.cmUltrasonic ();
+            if (perceivedDistanceFromObstacle >= 255)
+                perceivedDistanceFromObstacle = lastValidDistance;
+            else
+                lastValidDistance = perceivedDistanceFromObstacle;
+
+            //Calculate the distance until stopping.
+            distanceFromStop = perceivedDistanceFromObstacle - stopDistance;
+
+            //Only use encoders.
+            applySensorAdjustmentsToMotors (true, true, false);
+        }
+
+        sleep(100);
         stopDriving ();
     }
 
@@ -301,7 +325,7 @@ public abstract class AutonomousBase extends RobotBase
         double offFromDistance = 13 - sideRangeSensor.cmUltrasonic ();
 
         //Change motor powers based on offFromHeading.
-        return Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .004 + .18);
+        return Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .006);
     }
 
 
@@ -423,10 +447,10 @@ public abstract class AutonomousBase extends RobotBase
 
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
-        flywheels.setPower(0.30);
+        flywheels.setPower(0.35);
         sleep(300);
         harvester.setPower(-1.0);
-        sleep(2500);
+        sleep(2200);
         flywheels.setPower(0);
         harvester.setPower(0);
     }
