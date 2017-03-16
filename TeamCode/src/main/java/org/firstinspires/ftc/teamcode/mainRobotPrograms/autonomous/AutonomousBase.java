@@ -14,19 +14,20 @@ import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
 public abstract class AutonomousBase extends RobotBase
 {
     /******** SENSOR STUFF ********/
+
     /**** Gyro ****/
-    protected GyroSensor gyroscope;
-    protected int desiredHeading = 0; //Massively important to maintaining stability through the drives.
+    private GyroSensor gyroscope;
+    private int desiredHeading = 0; //Massively important to maintaining stability through the drives.
 
     //Just resets the gyro.
-    protected void zeroHeading() throws InterruptedException
+    private void zeroHeading() throws InterruptedException
     {
         sleep(400);
         gyroscope.resetZAxisIntegrator();
         sleep(400); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
     }
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This method makes sure that the value makes sense for calculations.
-    protected int gyroAdjustFactor; //Changed based on swerves.
+    private int gyroAdjustFactor; //Changed based on swerves.
     protected int getValidGyroHeading()
     {
         //Get the heading.
@@ -47,7 +48,7 @@ public abstract class AutonomousBase extends RobotBase
         return heading;
     }
     //Method that adjusts the heading based on the gyro heading and logarithmic mathematics.  Called once per idle().
-    protected double calculateGyroAdjustment (double movePower) throws InterruptedException
+    private double calculateGyroAdjustment (double movePower) throws InterruptedException
     {
         //Desired heading varies.
         double offFromHeading = desiredHeading - getValidGyroHeading();
@@ -151,6 +152,7 @@ public abstract class AutonomousBase extends RobotBase
         }
     }
 
+
     /**** Color Sensors (3) ****/
     protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor; //Must have different I2C addresses.
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
@@ -162,6 +164,7 @@ public abstract class AutonomousBase extends RobotBase
         option2Red = option2ColorSensor.red () >= 2;
         option2Blue = option2ColorSensor.blue () >= 2;
     }
+
 
     /**** Encoders ****/
     //Since this method takes a half-second or so to complete, try to run it as little as possible.
@@ -233,14 +236,14 @@ public abstract class AutonomousBase extends RobotBase
         lastCheckTime = System.currentTimeMillis ();
         previousPosition = 0;
     }
-    protected int getEncoderPosition () throws InterruptedException
+    private int getEncoderPosition () throws InterruptedException
     {
         return (int) ((leftDriveMotors.get(1).getCurrentPosition () + rightDriveMotors.get (1).getCurrentPosition ()) / 2.0);
     }
 
     private long lastCheckTime = 0;
     private double previousPosition = 0;
-    protected double calculateEncoderAdjustment () throws InterruptedException
+    private double calculateEncoderAdjustment () throws InterruptedException
     {
         int drivenDistance = getEncoderPosition ();
 
@@ -262,8 +265,6 @@ public abstract class AutonomousBase extends RobotBase
     {
         //Required variables.
         double lastValidDistance = 150;
-        //Linear trend downwards as we approach the obstacle.
-        double driveCoefficient = 0.0067, driveIntercept = 0.25;
 
         double distanceFromStop = lastValidDistance;
         while (distanceFromStop > 0)
@@ -280,23 +281,17 @@ public abstract class AutonomousBase extends RobotBase
 
             //Calculate the new movement power based on this result.
             //The (movement power - initial movement power) expression incorporates encoder adjustments in the event that the bot is not moving.
-            movementPower = driveCoefficient * distanceFromStop + driveIntercept;
+            //Linear trend downwards as we approach the obstacle.
+            movementPower = distanceFromStop * 0.0067 + 0.25;
 
+            //Only use encoders.
             applySensorAdjustmentsToMotors (true, false, false);
-
-            outputConstantDataToDrivers (
-                    new String[]
-                            {
-                                    "Dist until stop: " + distanceFromStop,
-                                    "Movement power: " + movementPower
-                            }
-            );
         }
 
         stopDriving ();
     }
 
-    protected double calculateSideRangeSensorAdjustment (double movePower) throws InterruptedException
+    private double calculateSideRangeSensorAdjustment (double movePower) throws InterruptedException
     {
         double rangeSensorReading = sideRangeSensor.cmUltrasonic ();
         if (rangeSensorReading >= 255)
@@ -311,6 +306,7 @@ public abstract class AutonomousBase extends RobotBase
         //Change motor powers based on offFromHeading.
         return Math.signum(movePower) * Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .004 + .18);
     }
+
 
     /******** INITIALIZATION ********/
     //Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
@@ -363,7 +359,7 @@ public abstract class AutonomousBase extends RobotBase
 
     /******** MOVEMENT POWER CONTROL ********/
     //Used to set drive move power initially.
-    protected double movementPower = 0;
+    private double movementPower = 0;
     protected void startDrivingAt (double movementPower)
     {
         this.movementPower = movementPower;

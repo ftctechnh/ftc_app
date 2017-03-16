@@ -46,9 +46,7 @@ public class BlueBlur extends AutonomousBase
 
             //Drive until centered on the beacon.
             boolean aboutToSeeWhiteLine = false;
-            long lastSwerveTime = System.currentTimeMillis ();
 
-            /***** SWERVE CORRECTION ******/
             while (bottomColorSensor.alpha() <= 5)
             {
                 //Slow down if we are really close to hitting the white line so that we are more likely to see it (only happens once)
