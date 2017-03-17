@@ -42,7 +42,7 @@ public class BlueBlur extends AutonomousBase
             outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
 
             //Set movement speed.
-            startDrivingAt (0.42);
+            startDrivingAt (0.35);
 
             //Drive until centered on the beacon.
             boolean aboutToSeeWhiteLine = false;
@@ -57,7 +57,7 @@ public class BlueBlur extends AutonomousBase
                     {
                         //Brake
                         stopDriving ();
-                        sleep(100);
+                        sleep(150);
                         startDrivingAt (0.30);
                         aboutToSeeWhiteLine = true;
                     }

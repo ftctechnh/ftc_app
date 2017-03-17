@@ -42,7 +42,7 @@ public class RedRedemption extends AutonomousBase
             outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
 
             //Set movement speed.
-            startDrivingAt (-0.42);
+            startDrivingAt (-0.35);
 
             //Drive until centered on the beacon.
             boolean aboutToSeeWhiteLine = false;

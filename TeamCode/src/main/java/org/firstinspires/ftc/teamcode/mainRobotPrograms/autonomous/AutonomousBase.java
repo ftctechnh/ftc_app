@@ -139,6 +139,7 @@ public abstract class AutonomousBase extends RobotBase
                 if (mode != TurnMode.LEFT)
                     setRightPower(Range.clip(turnPower, -1, 1));
 
+                idle();
                 //Output required data.
 //                outputConstantDataToDrivers(
 //                        new String[]
@@ -322,10 +323,10 @@ public abstract class AutonomousBase extends RobotBase
             return 0;
 
         //Desired range sensor values.
-        double offFromDistance = 13 - sideRangeSensor.cmUltrasonic ();
+        double offFromDistance = rangeSensorReading - 15;
 
         //Change motor powers based on offFromHeading.
-        return Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .006);
+        return Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .015);
     }
 
 
@@ -376,6 +377,8 @@ public abstract class AutonomousBase extends RobotBase
         //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later.
         setRightPower (actualMovementPower * (1 - totalAdjustmentFactor));
         setLeftPower (actualMovementPower * (1 + totalAdjustmentFactor));
+
+        idle();
     }
 
 
@@ -413,7 +416,7 @@ public abstract class AutonomousBase extends RobotBase
 
         startDrivingAt (power);
 
-        while (opModeIsActive () && (desiredPosition * powerSign >= getEncoderPosition () * powerSign))
+        while (desiredPosition * powerSign >= getEncoderPosition () * powerSign)
             applySensorAdjustmentsToMotors (true, true, false);
 
         //End the drive upon reaching the target destination.
