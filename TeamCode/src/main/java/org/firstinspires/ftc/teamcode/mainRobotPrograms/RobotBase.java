@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,6 +26,7 @@ public abstract class RobotBase extends BaseFunctions
     protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.09; //Range -1 to 1.  Favors left side if positive and vice-versa.
 
     protected ModernRoboticsI2cRangeSensor sideRangeSensor;
+    protected ColorSensor option1ColorSensor, option2ColorSensor;
 
     // Called on initialization (once)
     protected void initializeHardware() throws InterruptedException
@@ -57,11 +59,23 @@ public abstract class RobotBase extends BaseFunctions
         capBallHolder = initialize(Servo.class, "clamp");
         capBallHolder.setPosition(CBH_CLOSED);
 
+        outputNewLineToDrivers ("Initializing Side Range Sensor...");
         sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
         sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
-
         if (sideRangeSensor.getDistance (DistanceUnit.CM) < 1)
-            outputNewLineToDrivers("Initializing Side Range Sensor...FAILED!");
+            appendToLastOutputtedLine ("FAILED!");
+        else
+            appendToLastOutputtedLine ("OK!");
+
+        //Init color sensors.
+        outputNewLineToDrivers ("Initializing Color Sensors...");
+        option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
+        option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
+        option1ColorSensor.enableLed(false);
+        option2ColorSensor = initialize(ColorSensor.class, "Option 2 Color Sensor");
+        option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
+        option2ColorSensor.enableLed(false);
+        appendToLastOutputtedLine ("OK!");
     }
 
     protected void setRightPower(double power)

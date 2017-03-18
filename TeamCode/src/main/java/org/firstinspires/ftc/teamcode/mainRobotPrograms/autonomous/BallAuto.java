@@ -33,7 +33,7 @@ public abstract class BallAuto extends AutoBase
             if (gamepad1.y || gamepad2.y)
                 getCapBall = false;
 
-            if (gamepad1.x || gamepad2.y)
+            if (gamepad1.x || gamepad2.x)
                 parkOnCenterVortex = true;
 
             outputConstantDataToDrivers (
@@ -58,7 +58,7 @@ public abstract class BallAuto extends AutoBase
 
         //Drive to the cap ball.
         outputNewLineToDrivers ("Driving to shooting position.");
-        driveUntilDistanceFromObstacle (40);
+        driveUntilDistanceFromObstacle (40, .27);
 
         //Shoot the balls into the center vortex.
         outputNewLineToDrivers("Shooting balls into center vortex...");

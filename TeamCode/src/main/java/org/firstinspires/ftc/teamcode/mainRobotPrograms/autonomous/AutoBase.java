@@ -18,15 +18,15 @@ public abstract class AutoBase extends RobotBase
     /******** SENSOR STUFF ********/
 
     /**** Color Sensors (3) ****/
-    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor; //Must have different I2C addresses.
+    protected ColorSensor bottomColorSensor; //Must have different I2C addresses.
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
     protected void updateColorSensorStates()
     {
         //Threshold is currently 2, but this could be changed.
-        option1Red = option1ColorSensor.red () >= 1;
         option1Blue = option1ColorSensor.blue () >= 2;
-        option2Red = option2ColorSensor.red () >= 1;
+        option1Red = option1ColorSensor.red () >= 1 && !option1Blue; //Since blue has an annoying tendency to see red and blue color values.
         option2Blue = option2ColorSensor.blue () >= 2;
+        option2Red = option2ColorSensor.red () >= 1 && !option2Blue;
     }
 
 
@@ -264,11 +264,10 @@ public abstract class AutoBase extends RobotBase
 
     /**** Range Sensor(s) ****/
     protected ModernRoboticsI2cRangeSensor frontRangeSensor;
-    protected void driveUntilDistanceFromObstacle (double stopDistance) throws InterruptedException
+    protected void driveUntilDistanceFromObstacle (double stopDistance, double minPower) throws InterruptedException
     {
         //Required variables.
         double lastValidDistance = 150 - stopDistance;
-        double minPower = 0.3;
         double stopAndMoveAtMinPowerDist = 42;
 
         double distanceFromStop = lastValidDistance;
@@ -380,7 +379,7 @@ public abstract class AutoBase extends RobotBase
         if (sideRange)
             rangeSensorAdjustment = calculateSideRangeSensorAdjustment ();
 
-        double totalAdjustmentFactor = movementPowerSign * (gyroAdjustment + rangeSensorAdjustment);
+        double totalAdjustmentFactor = movementPowerSign * gyroAdjustment + rangeSensorAdjustment;
 
         //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later.
         setRightPower (actualMovementPower * (1 - totalAdjustmentFactor));
@@ -453,19 +452,16 @@ public abstract class AutoBase extends RobotBase
         bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
         bottomColorSensor.enableLed(true);
-        option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
-        option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
-        option1ColorSensor.enableLed(false);
-        option2ColorSensor = initialize(ColorSensor.class, "Option 2 Color Sensor");
-        option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
-        option2ColorSensor.enableLed(false);
 
         //Initialize the range sensors for autonomous.
         frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
         frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
         //The range sensors are odd and often return .269 with this method unless the robot is restarted.
+        outputNewLineToDrivers ("Initializing Front Range Sensor...");
         if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
-            outputNewLineToDrivers("Initializing Front Range Sensor...FAILED!");
+            appendToLastOutputtedLine ("FAILED!");
+        else
+            appendToLastOutputtedLine ("OK!");
 
         //Initialize encoders.
         outputNewLineToDrivers ("Initializing Encoders...");

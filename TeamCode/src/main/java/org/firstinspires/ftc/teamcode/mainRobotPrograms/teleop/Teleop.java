@@ -185,7 +185,9 @@ public class Teleop extends RobotBase
                     "Drive power = " + speedCoefficient,
                     "Cap ball mode = " + capBallMode,
                     "Distance from the wall = " + sideRangeSensor.cmUltrasonic (),
-                    "FBP_up = " + fbpUp
+                    "FBP_up = " + fbpUp,
+                    "Op1 Color Sensor: r = " + option1ColorSensor.red () + " b = " + option1ColorSensor.blue (),
+                    "Op2 Color Sensor: r = " + option2ColorSensor.red () + " b = " + option2ColorSensor.blue ()
             });
 
             idle();

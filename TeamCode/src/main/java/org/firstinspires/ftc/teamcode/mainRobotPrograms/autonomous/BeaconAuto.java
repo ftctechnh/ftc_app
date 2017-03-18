@@ -15,7 +15,7 @@ public abstract class BeaconAuto extends AutoBase
 
         //Drive until we are just far enough from the cap ball to score reliably.
         outputNewLineToDrivers("Driving forward to the cap ball to score...");
-        driveUntilDistanceFromObstacle (38);
+        driveUntilDistanceFromObstacle (39, BEACON_DP);
 
         //Shoot the balls into the center vortex.
         outputNewLineToDrivers("Shooting balls into center vortex...");
@@ -23,11 +23,11 @@ public abstract class BeaconAuto extends AutoBase
 
         //Turn to face the wall directly.
         outputNewLineToDrivers("Turning to face wall at an angle...");
-        turnToHeading(71 * autonomousSign, TurnMode.BOTH, 3000);
+        turnToHeading(73 * autonomousSign, TurnMode.BOTH, 3000);
 
         //Drive to the wall and stop once a little ways away.
         outputNewLineToDrivers ("Driving to the wall...");
-        driveUntilDistanceFromObstacle (onBlueAlliance ? 34 : 37); //Based on the way the range sensor is angled.
+        driveUntilDistanceFromObstacle ((onBlueAlliance ? 31 : 36), BEACON_DP); //Based on the way the range sensor is angled.
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
@@ -60,7 +60,7 @@ public abstract class BeaconAuto extends AutoBase
                     }
                 }
 
-                adjustDirectionBasedOnColorSensors ();
+                //adjustDirectionBasedOnColorSensors ();
                 applySensorAdjustmentsToMotors (true, true, true);
             }
             //Stop once centered on the beacon.
@@ -90,15 +90,15 @@ public abstract class BeaconAuto extends AutoBase
                     //Use the option 1 button pusher.
                     driveForDistance (BEACON_DP * autonomousSign, (onBlueAlliance ? 90 : 60) + 20 * failedAttempts);
                     pressButton ();
-                    driveBackwardsToRecenter = true;
+                    driveBackwardsToRecenter = autonomousSign > 0;
                 }
                 else if (option1Red && option2Blue)
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-BEACON_DP * autonomousSign, (onBlueAlliance ? 150 : 160) + 20 * failedAttempts);
+                    driveForDistance (-BEACON_DP * autonomousSign, (onBlueAlliance ? 150 : 130) + 20 * failedAttempts);
                     pressButton ();
-                    driveBackwardsToRecenter = false;
+                    driveBackwardsToRecenter = autonomousSign < 0;
                 }
                 else if (option1Blue ? (option1Red && option2Red) : (option1Blue && option2Blue))
                 {
@@ -106,7 +106,7 @@ public abstract class BeaconAuto extends AutoBase
                     //Toggle beacon.
                     driveForDistance (BEACON_DP * autonomousSign, (onBlueAlliance ? 90 : 60) + 20 * failedAttempts);
                     pressButton ();
-                    driveBackwardsToRecenter = true;
+                    driveBackwardsToRecenter = autonomousSign > 0;
                 }
                 else
                 {
@@ -122,12 +122,12 @@ public abstract class BeaconAuto extends AutoBase
 
                 while (bottomColorSensor.alpha () <= 5)
                 {
-                    adjustDirectionBasedOnColorSensors ();
+                    //adjustDirectionBasedOnColorSensors ();
 
                     applySensorAdjustmentsToMotors (true, true, false);
                 }
 
-                hardBrake (250);
+                hardBrake (100);
 
                 //Update the number of trials completed so that we know the new drive distance and such.
                 failedAttempts++;
@@ -146,34 +146,34 @@ public abstract class BeaconAuto extends AutoBase
 
         //Dash backward to the ramp afterward.
         outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
-        turnToHeading(36 * autonomousSign + (onBlueAlliance ? 0 : 180), TurnMode.BOTH, 2000);
+        turnToHeading(36 * autonomousSign - (onBlueAlliance ? 0 : 180), TurnMode.BOTH, 2000);
         driveForDistance(-1.0 * autonomousSign, 3000); //SPRINT TO THE CAP BALL TO PARK
 
     }
 
-    private void adjustDirectionBasedOnColorSensors() throws InterruptedException
-    {
-        updateColorSensorStates ();
-
-        if (movementPower > 0)
-        {
-            if (!(option1Red || option1Blue) && (option2Red || option2Blue))
-            {
-                hardBrake (150);
-                startDrivingAt (-BEACON_DP);
-                outputNewLineToDrivers ("Drove past beacon, swapping direction!");
-            }
-        }
-        else if (movementPower < 0)
-        {
-            if ((option1Red || option1Blue) && !(option2Red || option2Blue))
-            {
-                hardBrake (150);
-                startDrivingAt (BEACON_DP);
-                outputNewLineToDrivers ("Drove past beacon, swapping direction!");
-            }
-        }
-    }
+//    private void adjustDirectionBasedOnColorSensors() throws InterruptedException
+//    {
+//        updateColorSensorStates ();
+//
+//        if (movementPower > 0)
+//        {
+//            if (!(option1Red || option1Blue) && (option2Red || option2Blue))
+//            {
+//                hardBrake (150);
+//                startDrivingAt (-BEACON_DP);
+//                outputNewLineToDrivers ("Drove past beacon, swapping direction!");
+//            }
+//        }
+//        else if (movementPower < 0)
+//        {
+//            if ((option1Red || option1Blue) && !(option2Red || option2Blue))
+//            {
+//                hardBrake (150);
+//                startDrivingAt (BEACON_DP);
+//                outputNewLineToDrivers ("Drove past beacon, swapping direction!");
+//            }
+//        }
+//    }
 
     private void pressButton() throws InterruptedException
     {
