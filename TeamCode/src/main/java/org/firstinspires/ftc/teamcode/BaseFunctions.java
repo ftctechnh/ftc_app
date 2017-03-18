@@ -58,7 +58,7 @@ public abstract class BaseFunctions extends LinearOpMode
     protected void driverStationSaysSTOP() {}
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
-    ArrayList<String> linesAccessible = new ArrayList<>();
+    private ArrayList<String> linesAccessible = new ArrayList<>();
     private int maxLines = 7;
     protected void outputNewLineToDrivers(String newLine)
     {
@@ -68,6 +68,20 @@ public abstract class BaseFunctions extends LinearOpMode
         if (linesAccessible.size() > maxLines)
             linesAccessible.remove(maxLines);
 
+        refreshConsole ();
+    }
+
+    protected void appendToLastOutputtedLine(String toAppend)
+    {
+        String result = linesAccessible.get (0) + toAppend;
+        linesAccessible.remove (0);
+        linesAccessible.add (0, result);
+
+        refreshConsole ();
+    }
+
+    private void refreshConsole()
+    {
         //Output every line in order.
         telemetry.update(); //Empty the output
         for (String s : linesAccessible)

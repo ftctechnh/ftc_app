@@ -11,8 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
-public abstract class AutonomousBase extends RobotBase
+public abstract class AutoBase extends RobotBase
 {
+    protected enum Alliance {BLUE, RED}
+
     /******** SENSOR STUFF ********/
 
     /**** Color Sensors (3) ****/
@@ -348,6 +350,12 @@ public abstract class AutonomousBase extends RobotBase
         setLeftPower(0);
         setRightPower(0);
     }
+    //Stops all drive motors and pauses for a moment
+    protected void hardBrake(long msDelay) throws InterruptedException
+    {
+        stopDriving ();
+        sleep(msDelay);
+    }
 
     private double driveSpeedIncrease = 0;
     protected void applySensorAdjustmentsToMotors (boolean gyroscope, boolean encoders, boolean sideRange) throws InterruptedException
@@ -425,29 +433,6 @@ public abstract class AutonomousBase extends RobotBase
 
 
     /******** CUSTOM ACTIONS ********/
-    protected void pressButton() throws InterruptedException
-    {
-        //Determine the length to push the pusher out based on the distance from the wall.
-        double distanceFromWall = sideRangeSensor.cmUltrasonic ();
-        if (distanceFromWall >= 255)
-        {
-            //Possible that this was a misreading.
-            idle();
-            distanceFromWall = sideRangeSensor.cmUltrasonic ();
-            if (distanceFromWall >= 255) //It can't actually be 255.
-                distanceFromWall = 20;
-        }
-        double extendLength = 67 * distanceFromWall;
-        outputNewLineToDrivers ("Extending the button pusher for " + extendLength + " ms.");
-
-        //Run the continuous rotation servo out to press, then back in.
-        rightButtonPusher.setPosition(0);
-        sleep((long) (extendLength));
-        rightButtonPusher.setPosition(1);
-        sleep((long) (extendLength - 200));
-        rightButtonPusher.setPosition(.5);
-    }
-
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
         flywheels.setPower(0.35);
@@ -481,6 +466,9 @@ public abstract class AutonomousBase extends RobotBase
         //The range sensors are odd and often return .269 with this method unless the robot is restarted.
         if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
             outputNewLineToDrivers("Front range sensor misconfigured!");
+
+        //Initialize encoders.
+        initializeAndResetEncoders ();
 
         //Initialize gyroscope.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");

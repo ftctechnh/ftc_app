@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.utility;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutonomousBase;
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutoBase;
 
 @Autonomous(name="Drive Testing", group = "Test Group")
 
-public class DriveTesting extends AutonomousBase
+public class DriveTesting extends AutoBase
 {
     //Called after runOpMode() has finished initializing by BaseFunctions.
     protected void driverStationSaysGO() throws InterruptedException

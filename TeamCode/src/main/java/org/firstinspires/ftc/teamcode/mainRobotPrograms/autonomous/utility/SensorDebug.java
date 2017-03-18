@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.utility;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutonomousBase;
+import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutoBase;
 
 @Autonomous(name = "Sensor Debug", group = "Utility Group")
 
-public class SensorDebug extends AutonomousBase
+public class SensorDebug extends AutoBase
 {
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
