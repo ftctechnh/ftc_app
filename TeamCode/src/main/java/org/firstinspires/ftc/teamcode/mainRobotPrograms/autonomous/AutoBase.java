@@ -334,7 +334,7 @@ public abstract class AutoBase extends RobotBase
 
     /******** MOVEMENT POWER CONTROL ********/
     //Used to set drive move power initially.
-    private double movementPower = 0;
+    protected double movementPower = 0;
     protected void startDrivingAt (double movementPower)
     {
         this.movementPower = movementPower;
@@ -435,7 +435,7 @@ public abstract class AutoBase extends RobotBase
     /******** CUSTOM ACTIONS ********/
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
-        flywheels.setPower(0.35);
+        flywheels.setPower(0.32);
         sleep(300);
         harvester.setPower(-1.0);
         sleep(2200);

@@ -43,9 +43,24 @@ public abstract class BeaconAuto extends AutoBase
             //Set movement speed.
             startDrivingAt (0.35 * autonomousSign);
 
-            while (bottomColorSensor.alpha() <= 5)
+            boolean aboutToSeeWhiteLine = false;
+            while (bottomColorSensor.alpha () <= 5)
             {
-                adjustMovementBasedOnColorSensors ();
+                updateColorSensorStates ();
+
+                //Adjust speed and such.
+                if (!aboutToSeeWhiteLine)
+                {
+                    if (onBlueAlliance ? (option1Red || option1Blue) : (option2Red || option2Blue))
+                    {
+                        outputNewLineToDrivers ("Slowing down for beacon.");
+                        hardBrake (100);
+                        startDrivingAt (BEACON_DP * autonomousSign);
+                        aboutToSeeWhiteLine = true;
+                    }
+                }
+
+                adjustDirectionBasedOnColorSensors ();
                 applySensorAdjustmentsToMotors (true, true, true);
             }
             //Stop once centered on the beacon.
@@ -107,7 +122,8 @@ public abstract class BeaconAuto extends AutoBase
 
                 while (bottomColorSensor.alpha () <= 5)
                 {
-                    adjustMovementBasedOnColorSensors ();
+                    adjustDirectionBasedOnColorSensors ();
+
                     applySensorAdjustmentsToMotors (true, true, false);
                 }
 
@@ -135,23 +151,27 @@ public abstract class BeaconAuto extends AutoBase
 
     }
 
-    private void adjustMovementBasedOnColorSensors() throws InterruptedException
+    private void adjustDirectionBasedOnColorSensors() throws InterruptedException
     {
         updateColorSensorStates ();
 
-        //Slow down if we are really close to hitting the white line so that we are more likely to see it (only happens once)
-        if ((option1Red || option1Blue) && !(option2Red || option2Blue))
+        if (movementPower > 0)
         {
-            //Brake
-            hardBrake (150);
-            startDrivingAt (BEACON_DP);
+            if (!(option1Red || option1Blue) && (option2Red || option2Blue))
+            {
+                hardBrake (150);
+                startDrivingAt (-BEACON_DP);
+                outputNewLineToDrivers ("Drove past beacon, swapping direction!");
+            }
         }
-
-        //Must have driven past the line if this happens.
-        if (!(option1Red || option1Blue) && (option2Red || option2Blue))
+        else if (movementPower < 0)
         {
-            hardBrake (150);
-            startDrivingAt (-BEACON_DP);
+            if ((option1Red || option1Blue) && !(option2Red || option2Blue))
+            {
+                hardBrake (150);
+                startDrivingAt (BEACON_DP);
+                outputNewLineToDrivers ("Drove past beacon, swapping direction!");
+            }
         }
     }
 
