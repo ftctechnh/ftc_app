@@ -17,12 +17,14 @@ public class BlueBall extends BallAutonomousBase
 
         //Shoot the balls into the center vortex.
         outputNewLineToDrivers("Shooting balls into center vortex...");
-        flywheels.setPower(0.35);
-        sleep(300);
-        harvester.setPower(-1.0);
-        sleep(2500);
-        flywheels.setPower(0);
-        harvester.setPower(0);
+        shootBallsIntoCenterVortex ();
+
+        if (parkOnCenterVortex)
+        {
+            outputNewLineToDrivers ("Parking on center vortex.");
+            driveForDistance (0.5, 1400);
+            return; //End prematurely
+        }
 
         if (getCapBall)
         {

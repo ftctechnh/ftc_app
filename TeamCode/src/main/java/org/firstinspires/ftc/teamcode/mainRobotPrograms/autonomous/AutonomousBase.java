@@ -21,9 +21,9 @@ public abstract class AutonomousBase extends RobotBase
     protected void updateColorSensorStates()
     {
         //Threshold is currently 2, but this could be changed.
-        option1Red = option1ColorSensor.red () >= 2;
+        option1Red = option1ColorSensor.red () >= 1;
         option1Blue = option1ColorSensor.blue () >= 2;
-        option2Red = option2ColorSensor.red () >= 2;
+        option2Red = option2ColorSensor.red () >= 1;
         option2Blue = option2ColorSensor.blue () >= 2;
     }
 
@@ -267,7 +267,7 @@ public abstract class AutonomousBase extends RobotBase
         //Required variables.
         double lastValidDistance = 150 - stopDistance;
         double minPower = 0.3;
-        double stopAndMoveAtMinPowerDist = 35;
+        double stopAndMoveAtMinPowerDist = 42;
 
         double distanceFromStop = lastValidDistance;
         while (distanceFromStop > stopAndMoveAtMinPowerDist)
@@ -319,14 +319,14 @@ public abstract class AutonomousBase extends RobotBase
     private double calculateSideRangeSensorAdjustment () throws InterruptedException
     {
         double rangeSensorReading = sideRangeSensor.cmUltrasonic ();
-        if (rangeSensorReading >= 30)
+        if (rangeSensorReading >= 50)
             return 0;
 
         //Desired range sensor values.
         double offFromDistance = rangeSensorReading - 15;
 
         //Change motor powers based on offFromHeading.
-        return Math.signum(offFromDistance) * (Math.abs(offFromDistance) * .015);
+        return Math.signum(offFromDistance) * (Math.abs(offFromDistance) * 0.03);
     }
 
 

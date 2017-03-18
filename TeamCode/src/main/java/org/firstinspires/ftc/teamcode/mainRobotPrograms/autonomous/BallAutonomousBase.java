@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 public abstract class BallAutonomousBase extends AutonomousBase
 {
     protected boolean getCapBall = true;
+    protected boolean parkOnCenterVortex = false;
 
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
@@ -32,13 +33,19 @@ public abstract class BallAutonomousBase extends AutonomousBase
             if (gamepad1.y || gamepad2.y)
                 getCapBall = false;
 
+            if (gamepad1.x || gamepad2.y)
+                parkOnCenterVortex = true;
+
             outputConstantDataToDrivers (
                     new String[]
                             {
-                                    "Delay is " + delay,
-                                    "Getting cap ball = " + getCapBall
+                                    "Delay (DPAD) is " + delay,
+                                    "Getting cap ball (Y) = " + getCapBall,
+                                    "Parking on CV (X) = " + parkOnCenterVortex
                             }
             );
+
+            idle();
         }
 
         sleep (delay);

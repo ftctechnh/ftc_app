@@ -16,7 +16,7 @@ public class RedRedemption extends AutonomousBase
 
         //Drive until we are just far enough from the cap ball to score reliably.
         outputNewLineToDrivers("Driving forward to the cap ball to score...");
-        driveUntilDistanceFromObstacle (40);
+        driveUntilDistanceFromObstacle (38);
 
         //Shoot the balls into the center vortex.
         outputNewLineToDrivers("Shooting balls into center vortex...");
@@ -28,7 +28,7 @@ public class RedRedemption extends AutonomousBase
 
         //Drive to the wall and stop once a little ways away.
         outputNewLineToDrivers ("Driving to the wall...");
-        driveUntilDistanceFromObstacle (37);
+        driveUntilDistanceFromObstacle (35);
 
         //Turn back to become parallel with the wall.
         outputNewLineToDrivers("Turning to become parallel to the wall...");
@@ -49,18 +49,23 @@ public class RedRedemption extends AutonomousBase
 
             while (bottomColorSensor.alpha() <= 5)
             {
+                updateColorSensorStates ();
+
                 //Slow down if we are really close to hitting the white line so that we are more likely to see it (only happens once)
-                if (!aboutToSeeWhiteLine)
+                if ((option1Red || option1Blue) && !(option2Red || option2Blue))
                 {
-                    updateColorSensorStates ();
-                    if (option2Red || option2Blue)
-                    {
-                        //Brake
-                        stopDriving ();
-                        sleep(100);
-                        startDrivingAt (-0.30);
-                        aboutToSeeWhiteLine = true;
-                    }
+                    //Brake
+                    stopDriving ();
+                    sleep(150);
+                    startDrivingAt (0.27);
+                }
+
+                //Must have driven past the line if this happens.
+                if (! (option1Red || option1Blue) && (option2Red || option2Blue))
+                {
+                    stopDriving ();
+                    sleep(150);
+                    startDrivingAt (-0.27);
                 }
 
                 applySensorAdjustmentsToMotors (true, true, true);
@@ -89,7 +94,7 @@ public class RedRedemption extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 1");
                     //Use the option 1 button pusher.
-                    driveForDistance (0.30, 160 + 20 * failedAttempts);
+                    driveForDistance (0.27, 160 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = true;
                 }
@@ -97,7 +102,7 @@ public class RedRedemption extends AutonomousBase
                 {
                     outputNewLineToDrivers ("Chose option 2");
                     //Use the option 2 button pusher.
-                    driveForDistance (-0.30, 60 + 20 * failedAttempts);
+                    driveForDistance (-0.27, 60 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -106,7 +111,7 @@ public class RedRedemption extends AutonomousBase
                     failedAttempts = 0;
                     outputNewLineToDrivers ("Neither option is blue, toggling beacon!");
                     //Toggle beacon.
-                    driveForDistance (-0.30, 60 + 20 * failedAttempts);
+                    driveForDistance (-0.27, 60 + 20 * failedAttempts);
                     pressButton();
                     driveBackwardsToRecenter = false;
                 }
@@ -120,15 +125,38 @@ public class RedRedemption extends AutonomousBase
 
                 //On occasion this does happen for some reason, in which all are false or something.  Sometimes they shift back to being valid, however.
                 //Set the movement power based on the direction we have to return to.
-                startDrivingAt ((driveBackwardsToRecenter ? -1 : 1) * 0.30);
+                startDrivingAt ((driveBackwardsToRecenter ? -1 : 1) * 0.27);
 
                 while (bottomColorSensor.alpha() <= 5)
+                {
+                    updateColorSensorStates ();
+
+                    //Slow down if we are really close to hitting the white line so that we are more likely to see it (only happens once)
+                    if ((option1Red || option1Blue) && !(option2Red || option2Blue))
+                    {
+                        //Brake
+                        stopDriving ();
+                        sleep(150);
+                        startDrivingAt (0.27);
+                    }
+
+                    //Must have driven past the line if this happens.
+                    if (! (option1Red || option1Blue) && (option2Red || option2Blue))
+                    {
+                        stopDriving ();
+                        sleep(150);
+                        startDrivingAt (-0.27);
+                    }
+
                     applySensorAdjustmentsToMotors (true, true, false);
+                }
 
                 stopDriving();
 
                 //Update the number of trials completed so that we know the new drive distance and such.
                 failedAttempts++;
+
+                sleep(150);
 
                 //Update beacon states to check loop condition.
                 updateColorSensorStates ();
