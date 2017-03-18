@@ -61,7 +61,7 @@ public abstract class RobotBase extends BaseFunctions
         sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
 
         if (sideRangeSensor.getDistance (DistanceUnit.CM) < 1)
-            outputNewLineToDrivers ("Side range sensor misconfigured!");
+            outputNewLineToDrivers("Initializing Side Range Sensor...FAILED!");
     }
 
     protected void setRightPower(double power)

@@ -465,17 +465,19 @@ public abstract class AutoBase extends RobotBase
         frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
         //The range sensors are odd and often return .269 with this method unless the robot is restarted.
         if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
-            outputNewLineToDrivers("Front range sensor misconfigured!");
+            outputNewLineToDrivers("Initializing Front Range Sensor...FAILED!");
 
         //Initialize encoders.
+        outputNewLineToDrivers ("Initializing Encoders...");
         initializeAndResetEncoders ();
+        appendToLastOutputtedLine ("OK!");
 
         //Initialize gyroscope.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");
         if (gyroscope != null)
         {
             //Start gyroscope calibration.
-            outputNewLineToDrivers("Gyroscope Calibrating...");
+            outputNewLineToDrivers("Initializing Gyroscope...");
             gyroscope.calibrate();
 
             //Pause to prevent odd errors in which it says it's configured but is actually LYING.
@@ -486,7 +488,7 @@ public abstract class AutoBase extends RobotBase
 
             zeroHeading();
 
-            outputNewLineToDrivers("Gyroscope Calibration Complete!");
+            appendToLastOutputtedLine ("OK!");
         }
     }
 
