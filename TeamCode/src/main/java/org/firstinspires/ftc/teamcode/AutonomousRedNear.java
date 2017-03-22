@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //<<<<<<< HEAD
 //<<<<<<< HEAD
 
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 
 //=======
 /*>>>>>>> dfbedde30115dd7e00d6e2695e8f485c459c3180

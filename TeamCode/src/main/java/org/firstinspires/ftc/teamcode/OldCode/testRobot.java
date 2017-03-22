@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode.OldCode;
 
 import android.graphics.Color;
 
@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 
 @TeleOp(name = "Test Robot")
+@Disabled
 
 
 public class testRobot extends OpMode {

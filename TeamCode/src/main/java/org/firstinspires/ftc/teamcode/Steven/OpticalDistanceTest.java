@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Steven;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,20 +9,20 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 /**
  * Created by Steven on 1/5/2017.
  */
-@TeleOp(name = "OpticalDistanceTest", group = "Pushbot")
+@Autonomous(name = "OpticalDistanceTest", group = "Pushbot")
 //@Disabled
 public class OpticalDistanceTest extends OpMode{
-    OpticalDistanceSensor ODS;
+   // OpticalDistanceSensor ODS;
     OpticalDistanceSensor ODS2;
-    double baseline1;
+    //double baseline1;
     double baseline2;
     @Override
     public void init() {
 
-        ODS = hardwareMap.opticalDistanceSensor.get("ODSFront");
+       // ODS = hardwareMap.opticalDistanceSensor.get("ODSFront");
         ODS2 = hardwareMap.opticalDistanceSensor.get("ODSBack");
 
-        baseline1 = ODS.getRawLightDetected();
+       // baseline1 = ODS.getRawLightDetected();
         baseline2 = ODS2.getRawLightDetected();
     }
 
@@ -33,9 +34,9 @@ public class OpticalDistanceTest extends OpMode{
     @Override
     public void loop(){
 
-        telemetry.addData("1 LightDetected", ODS.getLightDetected());
-        telemetry.addData("1 RawLightDetected",ODS.getRawLightDetected());
-        telemetry.addData("1 RawLightDetectedMax",ODS.getRawLightDetectedMax());
+       // telemetry.addData("1 LightDetected", ODS.getLightDetected());
+       // telemetry.addData("1 RawLightDetected",ODS.getRawLightDetected());
+      //  telemetry.addData("1 RawLightDetectedMax",ODS.getRawLightDetectedMax());
         telemetry.addData("2 LightDetected", ODS2.getLightDetected());
         telemetry.addData("2 RawLightDetected",ODS2.getRawLightDetected());
         telemetry.addData("2 RawLightDetectedMax",ODS2.getRawLightDetectedMax());
@@ -51,7 +52,7 @@ public class OpticalDistanceTest extends OpMode{
     }
 
     public boolean whiteLineDetected(){
-        if ((ODS.getRawLightDetected() > (baseline1*5))||(ODS2.getRawLightDetected()> baseline2*5)){
+        if ((ODS2.getRawLightDetected()> baseline2*3)){
             return true;
         }
         return false;

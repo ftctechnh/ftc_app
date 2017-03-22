@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 
 /**
  * Created by adityamavalankar on 1/13/17.

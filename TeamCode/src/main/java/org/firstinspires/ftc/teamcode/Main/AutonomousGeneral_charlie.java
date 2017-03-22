@@ -114,8 +114,8 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         idle();
         sleep(100);
 
-        front_right_motor.setDirection(DcMotor.Direction.REVERSE);
-        back_right_motor.setDirection(DcMotor.Direction.REVERSE);
+        front_left_motor.setDirection(DcMotor.Direction.REVERSE);
+        back_left_motor.setDirection(DcMotor.Direction.REVERSE);
         idle();
         sleep(100);
 
@@ -371,7 +371,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //idle();
+        idle();
         sleep(100);
     }
 
@@ -470,18 +470,19 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         if (bColorSensorLeft.red() > bColorSensorLeft.blue()) {
             currentColorBeaconLeft = "red";
 
-//            telemetry.addData("current color is red", bColorSensorLeft.red());
-//            telemetry.update();
+            /*telemetry.addData("current color is red", bColorSensorLeft.red());
+            telemetry.update();*/
         } else if (bColorSensorLeft.red() < bColorSensorLeft.blue()) {
             currentColorBeaconLeft = "blue";
 
-//            telemetry.addData("current color is blue", bColorSensorLeft.blue());
-//            telemetry.update();
+            /*telemetry.addData("current color is blue", bColorSensorLeft.blue());
+            telemetry.update();*/
 
         } else {
 
             currentColorBeaconLeft = "blank";
         }
+        //sleep(5000);
     }
 
     public void readNewColorRight() {
@@ -681,7 +682,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
     public void setMotorsModeToColorSensing()
     {
-        setMotorsToEnc(29, 29, 1);
+        setMotorsToEnc(29, 29, 0.5);
     }
     public void setMotorsModeToRangeSensing()
     {
@@ -777,6 +778,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
         idle();
         sleep(100);
 
@@ -840,7 +842,141 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
             stopMotors();
 
         }
+    public void encoderMecanumCrossDrive(double speed,
+                                    double leftInches, double rightInches,
+                                    double timeoutS, int direction) {
+        int newLeftTarget;
+        int newRightTarget;
+        double leftSpeed;
+        double rightSpeed;
 
+        // Ensure that the opmode is still active
+        //  if (opModeIsActive())
+
+        double time = runtime.seconds()+timeoutS;
+        back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        idle();
+        sleep(100);
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = (int)(1.* (back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm())));
+        newRightTarget = (int)(1.*(back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm())));
+
+        if(direction == 4) {
+
+            front_right_motor.setTargetPosition(newRightTarget);
+ //           back_right_motor.setTargetPosition(newRightTarget);
+            back_left_motor.setTargetPosition(newLeftTarget);
+  //          front_left_motor.setTargetPosition(newLeftTarget);
+
+            front_right_motor.setPower(Math.abs(speed));
+            back_right_motor.setPower(Math.abs(0));
+            back_left_motor.setPower(Math.abs(speed));
+            front_left_motor.setPower(Math.abs(0));
+            while (opModeIsActive() &&
+                    (runtime.seconds() < time) &&
+                    (front_right_motor.isBusy() && back_left_motor.isBusy())) {
+            }
+        }
+        else if (direction == 1){
+
+            //front_right_motor.setTargetPosition(newRightTarget);
+                       back_right_motor.setTargetPosition(newRightTarget);
+            //back_left_motor.setTargetPosition(newLeftTarget);
+                      front_left_motor.setTargetPosition(newLeftTarget);
+
+            front_right_motor.setPower(Math.abs(0));
+            back_right_motor.setPower(Math.abs(speed));
+            back_left_motor.setPower(Math.abs(0));
+            front_left_motor.setPower(Math.abs(speed));
+            while (opModeIsActive() &&
+                    (runtime.seconds() < time) &&
+                    (front_left_motor.isBusy() && back_right_motor.isBusy())) {
+            }
+        }
+        else if(direction == 2){
+
+            front_right_motor.setTargetPosition(-newRightTarget);
+            //           back_right_motor.setTargetPosition(newRightTarget);
+            back_left_motor.setTargetPosition(-newLeftTarget);
+            //          front_left_motor.setTargetPosition(newLeftTarget);
+
+            front_right_motor.setPower(Math.abs(speed));
+            back_right_motor.setPower(Math.abs(0));
+            back_left_motor.setPower(Math.abs(speed));
+            front_left_motor.setPower(Math.abs(0));
+            while (opModeIsActive() &&
+                    (runtime.seconds() < time) &&
+                    (back_left_motor.isBusy() && front_right_motor.isBusy())) {
+            }
+        }
+        else if(direction == 3) {
+
+            //front_right_motor.setTargetPosition(newRightTarget);
+            back_right_motor.setTargetPosition(-newRightTarget);
+            //back_left_motor.setTargetPosition(newLeftTarget);
+            front_left_motor.setTargetPosition(-newLeftTarget);
+
+            front_right_motor.setPower(Math.abs(0));
+            back_right_motor.setPower(Math.abs(speed));
+            back_left_motor.setPower(Math.abs(0));
+            front_left_motor.setPower(Math.abs(speed));
+            while (opModeIsActive() &&
+                    (runtime.seconds() < time) &&
+                    (front_left_motor.isBusy() && back_right_motor.isBusy())) {
+            }
+        }
+
+
+        //if(leftInches != -rightInches)
+                /*front_left_motor.setPower(Math.abs(leftSpeed)*Math.sin(degrees*Math.PI/180 + (Math.PI/4)));
+                front_right_motor.setPower(Math.abs(rightSpeed)*Math.cos(degrees*Math.PI/180 + (Math.PI/4)));
+                back_left_motor.setPower(Math.abs(leftSpeed)*Math.cos(degrees*Math.PI/180 + (Math.PI/4)));
+                back_right_motor.setPower(Math.abs(rightSpeed)*Math.sin(degrees*Math.PI/180 + (Math.PI/4)));*/
+
+        // keep looping while we are still active, and there is time left, and both motors are running.
+
+
+        // Stop all motion;
+        stopMotors();
+
+    }
+
+    public void crossDrive(int direction, double speed){
+        if(direction == 4) {
+
+            front_right_motor.setPower(Math.abs(speed));
+            back_right_motor.setPower(Math.abs(0));
+            back_left_motor.setPower(Math.abs(speed));
+            front_left_motor.setPower(Math.abs(0));
+        }
+        else if (direction == 1){
+
+            front_right_motor.setPower(Math.abs(0));
+            back_right_motor.setPower(Math.abs(speed));
+            back_left_motor.setPower(Math.abs(0));
+            front_left_motor.setPower(Math.abs(speed));
+        }
+        else if(direction == 2){
+
+            front_right_motor.setPower(-Math.abs(speed));
+            back_right_motor.setPower(Math.abs(0));
+            back_left_motor.setPower(-Math.abs(speed));
+            front_left_motor.setPower(Math.abs(0));
+        }
+        else if(direction == 3) {
+
+            front_right_motor.setPower(Math.abs(0));
+            back_right_motor.setPower(-Math.abs(speed));
+            back_left_motor.setPower(Math.abs(0));
+            front_left_motor.setPower(-Math.abs(speed));
+        }
+    }
     public void encoderDrive(double speed,
                                     double leftInches, double rightInches,
                                     double timeoutS) {

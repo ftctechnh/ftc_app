@@ -34,11 +34,12 @@ package org.firstinspires.ftc.teamcode.Eric;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -68,7 +69,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
  */
 
 @Autonomous(name="Pushbot: AutonomousRedNearLine", group="Pushbot")
-//@Disabled
+@Disabled
 
 public class AutonomousRedNearColorEric extends AutonomousGeneral {
 

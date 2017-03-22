@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**

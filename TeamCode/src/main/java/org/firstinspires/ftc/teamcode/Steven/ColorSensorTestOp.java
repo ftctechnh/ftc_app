@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Steven;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Steven on 11/27/2016.
  */
-@TeleOp(name = "#11183: Color Sensor Test", group = "Robot")
-@Disabled
+@Autonomous(name = "#11183: Color Sensor Test", group = "Robot")
+//@Disabled
 public class ColorSensorTestOp extends OpMode{
 
 
@@ -46,7 +47,7 @@ Declare global variables here
         public void init() {
 
         /* get a reference to our ColorSensor object */
-            colorSensor = hardwareMap.colorSensor.get("sensor_color");
+            colorSensor = hardwareMap.colorSensor.get("bColorSensorLeft");
 
             /* bLedOn represents the state of the LED.*/
              bLedOn = true;
@@ -70,7 +71,7 @@ Declare global variables here
         */
         @Override
         public void start(){
-
+            //colorSensor.enableLed(false);
         }
 
     /*
@@ -82,6 +83,7 @@ Declare global variables here
         public void loop() {
 
              ReadColorSensor();
+            colorSensor.enableLed(false);
 
 
         }

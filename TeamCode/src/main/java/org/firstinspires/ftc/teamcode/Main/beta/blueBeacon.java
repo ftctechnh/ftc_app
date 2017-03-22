@@ -1,28 +1,29 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode.Main.beta;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 
 
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "redBeacon1")
+@Autonomous(name = "blueBeacon")
 @Disabled
-public class redBeaconPress_autoServo extends AutonomousGeneral {
+public class blueBeacon extends AutonomousGeneral {
 
 
 
     //
     boolean second_beacon_press = false;
-    String currentTeam = "red";
+    String currentTeam = "blue";
     private ElapsedTime runtime = new ElapsedTime();
-    double[] timeprofile = new double[10];
+    double[] timeprofile = new double[30];
+    int profile_index =0;
     //String currentColor = "blank";
 
     @Override
@@ -32,70 +33,96 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
         initiate();
 
 
-
+        sleep(3000);
         waitForStart();
 
         second_beacon_press = false;
-
-        //newEncoderDrive(1,-2,0,0.1);
         runtime.reset();
-        timeprofile[0] = runtime.milliseconds();
-        newEncoderDriveShoot(1,135,125,1.5, 1, .1); // 150 = 5 feettime 2.5
-
-        //lineAlign();
-        //runtime.reset();
+        timeprofile[profile_index++] = runtime.milliseconds();
+        setMotorsModeToEncDrive();
+        stopMotors();
+        encoderDriveShootBlue(.7,-145,-130,3, -2, 1);
         servoBeaconPress();
-
         }
 
 
     public void moveToNextBeacon() {
         second_beacon_press = true;
       //  sleep(250);
-        newEncoderDrive(1, 15, 15, .5);
+        newEncoderDrive(0.7, 15, 15, .5);
         sleep(100);
         intake_motor.setPower(.8);
-        newEncoderDriveShoot(1, -40, 40
-                , 2, 1, 1.6);
-//        gyro_leftTurn(270, 1);
-//        shooting_motor.setPower(.8);
+
+        encoderDriveShootBlue(.6,-31,31,3, -20, 1); // 150 = 5 feettime 2.5
+
         sleep(100);
         shooting_motor.setPower(0);
         intake_motor.setPower(0);
         //sleep(450);
-//        newEncoderDrive(1, 105, 105, 1);
-//        servoBeaconPress();
+        setMotorsModeToEncDrive();
+        stopMotors();
+        encoderDrive(.7, -105, -105, 5);
+        servoBeaconPress();
 }
 
 
     public void lineAlign() {
 
+        double targetDistLine = back_left_motor.getCurrentPosition() - (int) (20 * getCountsPerCm());
         setMotorsModeToColorSensing();
-        straightDrive(1);
-        while (whiteLineDetectedFront() == false) {
-
-
-
-         //   rangeCorrection();
+        straightDrive(-0.7);
+        while (whiteLineDetectedFront() == false && back_left_motor.getCurrentPosition() > targetDistLine)
+        {
 
         }
+     //   timeprofile[profile_index++] = runtime.milliseconds();
         stopMotors();
 
-        encoderDrive(1, -3, -3, 1);
+        if(back_left_motor.getCurrentPosition() <= targetDistLine){//if you havent reached the white line yet, correct for that
+            encoderDrive(.7,-15,15,5);
+            encoderDrive(.7, 20,20,5);
+            encoderDrive(.7,15,-15,5);
 
-
-        setMotorsModeToColorSensing();
-
-
-        while (whiteLineDetectedBack() == false) {
-
-            newTurnRight(1);
+            lineAlign();
         }
+        else
+        {
 
-        front_right_motor.setPower(0);
-        front_left_motor.setPower(0);
-        back_right_motor.setPower(0);
-        back_left_motor.setPower(0);
+            //   timeprofile[profile_index++] = runtime.milliseconds();
+            if (second_beacon_press) {
+                // encoderDrive(.7, -5, -5, 1);
+            } else {
+                //encoderDrive(.7, -5, -5, 1);
+            }
+
+
+            setMotorsModeToColorSensing();
+            //   timeprofile[profile_index++] = runtime.milliseconds();
+
+            targetDistLine = back_left_motor.getCurrentPosition() + (int) (40 * getCountsPerCm());
+            newTurnRight(.7);
+            while (whiteLineDetectedBack() == false && back_left_motor.getCurrentPosition()<targetDistLine) {
+
+
+            }
+
+            //timeprofile[profile_index++] = runtime.milliseconds();
+            front_right_motor.setPower(0);
+            front_left_motor.setPower(0);
+            back_right_motor.setPower(0);
+            back_left_motor.setPower(0);
+            if(back_left_motor.getCurrentPosition()>= targetDistLine){
+                double walldist = rangeSensor.getDistance(DistanceUnit.CM);
+                newTurnLeft(.7);
+                while(whiteLineDetectedBack() == false && walldist>= rangeSensor.getDistance(DistanceUnit.CM)){
+                    //search for a minimum distance, which would be when the robot is perpendicular to the wall
+                }
+                front_right_motor.setPower(0);
+                front_left_motor.setPower(0);
+                back_right_motor.setPower(0);
+                back_left_motor.setPower(0);
+            }
+        }
 
 
     }
@@ -104,16 +131,16 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
         boolean left_detected = false;
         boolean beacon_press_success = false;
 
-        timeprofile[1] = runtime.milliseconds();
+        timeprofile[profile_index++] = runtime.milliseconds();
         lineAlign();
-        timeprofile[2] = runtime.milliseconds();
+        timeprofile[profile_index++] = runtime.milliseconds();
 
 
         while (rangeSensor.getDistance(DistanceUnit.CM) > 11) {
-            straightDrive(-1);
+            straightDrive(-0.7);
         }
         stopMotors();
-        timeprofile[3] = runtime.milliseconds();
+        timeprofile[profile_index++] = runtime.milliseconds();
 
 
         readNewColorLeft();
@@ -156,13 +183,19 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
 
         pressBeaconButton();
         //presses beacon!
-        timeprofile[4] = runtime.milliseconds();
+        timeprofile[profile_index++] = runtime.milliseconds();
         //telemetry.update();
         readNewColorRight();
         readNewColorLeft();
-        moveToNextBeacon();
-        timeprofile[5] = runtime.milliseconds();
-        for(int i = 0; i < 6; i++){
+        if (second_beacon_press)
+        {
+            parkCenterVortex();
+        }
+        else {
+            moveToNextBeacon();
+        }
+        timeprofile[profile_index++] = runtime.milliseconds();
+        for(int i = 0; i < profile_index; i++){
             telemetry.addData(""+i+": ", timeprofile[i]);
         }
         telemetry.update();
@@ -244,11 +277,14 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
     {
         if (second_beacon_press)
         {
-            newEncoderDrive(1, 22, -22, .5);
-            newEncoderDrive(1, 140, 140, 1);
+
+            encoderDrive(.7, -15, 15, 5);
+            setMotorsModeToEncDrive();
+            stopMotors();
+            encoderDrive(.8, 135, 145, 5);
             sleep(500);
-            newEncoderDrive(1, -10, -10, .2);
-            newEncoderDrive(1, 30, 30, .5);
+            encoderDrive(.7, -10, -10, 5);
+            encoderDrive(.7, 30, 30, 5);
         }
         else
         {
@@ -263,13 +299,13 @@ public class redBeaconPress_autoServo extends AutonomousGeneral {
 
     public void pressBeaconButton()
     {
-        double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)+10;
+        double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)+8;
 
-        encoderDrive(1, -distFromWall, -distFromWall, 1);
+        encoderDrive(.8, -distFromWall, -distFromWall, 1);
 //
-        sleep(500);
+        sleep(200);
 //
-        encoderDrive(1, distFromWall, distFromWall, 1);
+        encoderDrive(.8, distFromWall, distFromWall, 1);
 
 //        encoderDrive(.3, -distFromWall, -distFromWall, 1);
 //        sleep(500);

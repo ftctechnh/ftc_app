@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Aditya;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "charlie test")
-
+@Disabled
 //due to a problem in initialization, all the drive motors should be given opposite values of what they are supposed to be
 public class TestCharlie extends AutonomousGeneral_charlie {
 

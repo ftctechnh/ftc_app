@@ -1,17 +1,20 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode.OldCode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 
 
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "redBeacon")
-public class redBeacon extends AutonomousGeneral {
+@Autonomous(name = "redBeaconGyro")
+@Disabled
+public class redBeaconPressGyroServo extends AutonomousGeneral {
 
 
 
@@ -19,8 +22,6 @@ public class redBeacon extends AutonomousGeneral {
     boolean second_beacon_press = false;
     String currentTeam = "red";
     private ElapsedTime runtime = new ElapsedTime();
-    double[] timeprofile = new double[30];
-    int profile_index =0;
     //String currentColor = "blank";
 
     @Override
@@ -28,37 +29,50 @@ public class redBeacon extends AutonomousGeneral {
 
 
         initiate();
+        telemetry.addData(">", "Gyro Calibrating. Do Not move!");
+        telemetry.update();
+        gyro.calibrate();
 
 
-sleep(3000);
+        // make sure the gyro is calibrated.
+        while (gyro.isCalibrating())  {
+
+        }
+
+        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
+        telemetry.update();
+//        readNewColorLeft();
+//        readNewColorRight();
+
+
         waitForStart();
 
         second_beacon_press = false;
-        runtime.reset();
-        timeprofile[profile_index++] = runtime.milliseconds();
-        setMotorsModeToEncDrive();
-        stopMotors();
-        encoderDriveShootRed(.7,145,130,3, 2, 1);
-        servoBeaconPress();
+
+        //newEncoderDrive(1,-2,0,0.1);
+
+        newEncoderDriveShoot(1,135,125,2, 1, .1); // 150 = 5 feettime 2.5
+        lineAlign();
+        //servoBeaconPress();
+
         }
 
 
     public void moveToNextBeacon() {
         second_beacon_press = true;
       //  sleep(250);
-        newEncoderDrive(0.7, 15, 15, .5);
+        newEncoderDrive(1, 15, 15, .5);
         sleep(100);
         intake_motor.setPower(.8);
-
-        encoderDriveShootBlue(.6,-33,33,3, -20, 1); // 150 = 5 feettime 2.5
-
+        newEncoderDriveShoot(1, -50, 50
+                , 2, 1, 1.6);
+//        gyro_leftTurn(270, 1);
+//        shooting_motor.setPower(.8);
         sleep(100);
         shooting_motor.setPower(0);
         intake_motor.setPower(0);
         //sleep(450);
-        setMotorsModeToEncDrive();
-        stopMotors();
-        encoderDrive(.7, 105, 105, 5);
+        newEncoderDrive(1, 105, 105, 1);
         servoBeaconPress();
 }
 
@@ -66,7 +80,7 @@ sleep(3000);
     public void lineAlign() {
 
         setMotorsModeToColorSensing();
-        straightDrive(.7);
+        straightDrive(1);
         while (whiteLineDetectedFront() == false) {
 
 
@@ -74,37 +88,37 @@ sleep(3000);
          //   rangeCorrection();
 
         }
-     //   timeprofile[profile_index++] = runtime.milliseconds();
         stopMotors();
-     //   timeprofile[profile_index++] = runtime.milliseconds();
-        if (second_beacon_press)
-        {
-           // encoderDrive(.7, -5, -5, 1);
-        }
-                else
-        {
-            encoderDrive(.7, -5, -5, 1);
-        }
+        //sleep(3000);
+        //sleep(5000);
+      //  encoderDrive(.1, -1, -1, 2);
+     //   sleep(150);
+//        if (second_beacon_press == true)
+//        {
+//            newEncoderDrive(1, -19, -19, .75);
+//        }
+//        else
+//        {
+//            newEncoderDrive(1, -19, -19, .75);
+//        }
 
-    //    timeprofile[profile_index++] = runtime.milliseconds();
+     //   sleep(150);
 
-     //   encoderDrive(1, 30, -30, 3);
-
+        //setMotorsModeToColorSensing();
+        /*telemetry.addData("","Turning");
+        telemetry.update();*/
+        telemetry.addData("","Gyro Turning");
+        telemetry.update();
         setMotorsModeToColorSensing();
-     //   timeprofile[profile_index++] = runtime.milliseconds();
+        newGyro_Turn(180,0.7);
+        /*while (whiteLineDetectedBack() == false) {
 
+            newTurnRight(1);
+        }*/
+        stopMotors();
 
-        while (whiteLineDetectedBack() == false) {
-
-            newTurnRight(.7);
-        }
-
-        //timeprofile[profile_index++] = runtime.milliseconds();
-        front_right_motor.setPower(0);
-        front_left_motor.setPower(0);
-        back_right_motor.setPower(0);
-        back_left_motor.setPower(0);
-
+      //  encoderDrive(0.1, 5, 5, 4);
+     //   sleep(150);*/
 
     }
 
@@ -112,21 +126,21 @@ sleep(3000);
         boolean left_detected = false;
         boolean beacon_press_success = false;
 
-        timeprofile[profile_index++] = runtime.milliseconds();
         lineAlign();
-        timeprofile[profile_index++] = runtime.milliseconds();
-
-
+      //  sleep(250);
+       // allignRangeDistReverse(11);
+        setMotorsModeToRangeSensing();
         while (rangeSensor.getDistance(DistanceUnit.CM) > 11) {
-            straightDrive(-.7);
+            straightDrive(-1);
         }
         stopMotors();
-        timeprofile[profile_index++] = runtime.milliseconds();
-
+        //sleep(250);
 
         readNewColorLeft();
         readNewColorRight();
 
+
+       // sleep(2000);
 
         if(currentColorBeaconLeft.equals("blank")){
             printColorsSeen();
@@ -148,7 +162,7 @@ sleep(3000);
             }
             stopMotors();
         }
-        //aligns with beacon if out of range
+        //alligns with beacon if out of range
 
         if(currentColorBeaconLeft.equals(currentTeam)){
             beaconPresser.setPosition(0.0);
@@ -160,32 +174,19 @@ sleep(3000);
         }
         //allign servo!
 
-
+     //   sleep(300);
 
         pressBeaconButton();
         //presses beacon!
-        timeprofile[profile_index++] = runtime.milliseconds();
-        //telemetry.update();
+
         readNewColorRight();
         readNewColorLeft();
-        if (second_beacon_press)
-        {
-            parkCenterVortex();
-        }
-        else {
-            moveToNextBeacon();
-        }
-        timeprofile[profile_index++] = runtime.milliseconds();
-        for(int i = 0; i < profile_index; i++){
-            telemetry.addData(""+i+": ", timeprofile[i]);
-        }
-        telemetry.update();
-        sleep(30000);
+
         //presses beacon!
 
 
         // below evaluate beacon press result and move to next step if it is success and handle failures if failures are seen
-       /* if (left_detected == true)
+        if (left_detected == true)
         {
             if(currentColorBeaconRight.equals(currentTeam))
             {
@@ -245,27 +246,25 @@ sleep(3000);
             sleep(500);
 
             parkCenterVortex();
-        }*/
+
+        }
     }
 
     public void printColorsSeen(){
         telemetry.addData("left color", currentColorBeaconLeft);
         telemetry.addData("right color", currentColorBeaconRight);
-        //telemetry.update();
+        telemetry.update();
     }
 
     public void parkCenterVortex()
     {
         if (second_beacon_press)
         {
-
-            encoderDrive(.7, 15, -15, 5);
-            setMotorsModeToEncDrive();
-            stopMotors();
-            encoderDrive(.8, 145, 130, 5);
+            newEncoderDrive(1, 22, -22, .5);
+            newEncoderDrive(1, 140, 140, 1);
             sleep(500);
-            encoderDrive(.7, -10, -10, 5);
-            encoderDrive(.7, 30, 30, 5);
+            newEncoderDrive(1, -10, -10, .2);
+            newEncoderDrive(1, 30, 30, .5);
         }
         else
         {
@@ -280,13 +279,13 @@ sleep(3000);
 
     public void pressBeaconButton()
     {
-        double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)+8;
+        double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)+10;
 
-        encoderDrive(.8, -distFromWall, -distFromWall, 1);
+        newEncoderDrive(1, -distFromWall, -distFromWall, .4);
 //
-        sleep(200);
+        sleep(500);
 //
-        encoderDrive(.8, distFromWall, distFromWall, 1);
+        newEncoderDrive(1, distFromWall, distFromWall, 1);
 
 //        encoderDrive(.3, -distFromWall, -distFromWall, 1);
 //        sleep(500);

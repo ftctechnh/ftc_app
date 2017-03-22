@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode.Main.beta;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
 
 /**
  * Created by adityamavalankar on 1/5/17.
  */
 
 @Autonomous(name="Autonomous Far Start")
+@Disabled
 public class AutonomousFarStart extends AutonomousGeneral {
 
     //blue: tangent to blue line

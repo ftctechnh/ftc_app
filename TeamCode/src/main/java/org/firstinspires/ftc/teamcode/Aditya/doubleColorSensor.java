@@ -4,15 +4,14 @@ package org.firstinspires.ftc.teamcode.Aditya;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 
 
 /**
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "doubleColorSensor")
-//@Disabled
+@Disabled
 public class doubleColorSensor extends AutonomousGeneral {
 
 

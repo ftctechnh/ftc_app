@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.Aditya;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
 import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
 
 
@@ -14,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "charlie red auto")
+@Disabled
 
 //due to a problem in initialization, all the drive motors should be given opposite values of what they are supposed to be
 public class redAuto_charlie extends AutonomousGeneral_charlie {

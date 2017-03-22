@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral;
+import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 
 /**
  * Created by inspirationteam on 2/19/2017.
  */
 @Autonomous(name = "autonomous")
+@Disabled
 public class TestMode extends AutonomousGeneral {
 
     public void runOpMode(){

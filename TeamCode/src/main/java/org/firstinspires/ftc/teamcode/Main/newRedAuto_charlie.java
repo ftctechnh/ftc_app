@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Main;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,19 +12,18 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "blueBeaconCharlie")
-@Disabled
-public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
+@Autonomous(name = "redBeaconCharlie")
+public class newRedAuto_charlie extends AutonomousGeneral_charlie {
 
 
 
     //
     boolean second_beacon_press = false;
-    String currentTeam = "blue";
+    String currentTeam = "red";
     private ElapsedTime runtime = new ElapsedTime();
     public int gyro_corr_cnt =0;
     public int beacon_angle;
-    public double pathhighspeed = 0.9;
+    public double pathhighspeed = 0.8;
     public boolean ball_first = false;
     //String currentColor = "blank";
     int initialHeading =361;
@@ -40,11 +38,11 @@ public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
         setMotorsModeToEncDrive();
         stopMotors();
      //   sleep(1000);
-        gyro.calibrate();
+       /* gyro.calibrate();
         runtime.reset();
         while((gyro.isCalibrating()&&runtime.seconds()<5)){
             idle();
-        }
+        }*/
 
         initialHeading = gyro.getHeading();
         telemetry.addData("READY TO START", initialHeading);
@@ -57,78 +55,102 @@ public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
         runtime.reset();
         second_beacon_press = false;
 
-        minimizeError();
 
-        encoderMecanumCrossDrive(0.8,110,110,5,2);
-        /*if(ball_first) {
-            beacon_angle = 90;
-            minimizeError();
-            encoderMecanumDrive(pathhighspeed, -35, -35, 5, 0);
-            encoderShoot(0.8);
-            intake_motor.setPower(1);
-            sleep(1000);
-            intake_motor.setPower(0);
-            encoderShoot(0.8);
-
-
-            gyroCorrection(45);
-            setMotorsModeToEncDrive();
-            encoderMecanumDrive(pathhighspeed, -40, -40, 6, 0);
-
-            //encoderMecanumDrive(0.6,36,-36,5,0);
-            gyroCorrection(beacon_angle);
-
-
-            minimizeError();
-            setMotorsModeToEncDrive();
-            encoderMecanumDrive(pathhighspeed, -30, -30, 5, 0);
-
-
-        }
-        else {
-            beacon_angle=initialHeading;
-            minimizeError();
-            timeProfile[profileindex++] = runtime.milliseconds();//1046.66 ms
-            encoderMecanumDrive(pathhighspeed, 90, 90, 5, 1);
-            timeProfile[profileindex++] = runtime.milliseconds();//2937.66 ms
-
-
-            minimizeError();
-            setMotorsModeToEncDrive();
-            encoderMecanumDrive(pathhighspeed, -60, -60, 5, 0);
-            timeProfile[profileindex++] = runtime.milliseconds();//5367.55 ms
-        }*/
+       // minimizeError();
+        setMotorsModeToEncDrive();
+        stopMotors();
+        timeProfile[profileindex++] = runtime.milliseconds();
+        encoderMecanumCrossDrive(pathhighspeed,75,75,5,4);
+        encoderMecanumCrossDrive(pathhighspeed,115,115,5,3);
+        timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
+
         }
 
 
-    public void moveToNextBeacon() {
+    public void  moveToNextBeacon(){
         second_beacon_press = true;
+        encoderMecanumCrossDrive(pathhighspeed,40,40,5,4);
+        servoBeaconPress();
+       /* second_beacon_press = true;
       //  sleep(250);
         setMotorsModeToEncDrive();
-        encoderMecanumDrive(pathhighspeed, 12, 12, 5,0);
+        encoderMecanumCrossDrive(pathhighspeed, 90, 90, 5,4);
         sleep(100);
         setMotorsModeToEncDrive();
         idle();
-        encoderMecanumDrive(pathhighspeed, 95, 95, 5,1);
+        encoderMecanumCrossDrive(pathhighspeed, 70, 70, 5,3);
         idle();
+       // encoderMecanumCrossDrive(pathhighspeed,60,60,5,4);
         timeProfile[profileindex++] = runtime.milliseconds();//16241.67
-        servoBeaconPress();
+        servoBeaconPress();*/
 
 }
 
 
     public void lineAlign() {
-
+        if(second_beacon_press){
+            setMotorsToEnc(29, 29, 0.3);
+        }
+        else {
             setMotorsModeToColorSensing();
-
-            strafeRight(0.7);
-            while (whiteLineDetectedBack() == false) {
-
-                idle();
-
+        }
+        telemetry.addData("DISTANCEDISTANCE:", rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
+        if (rangeSensor.getDistance(DistanceUnit.CM) < 30) {
+            crossDrive(4, 0.8);
+        } else {
+            crossDrive(3, 0.8);
+        }
+        double lineAligntime = runtime.milliseconds()+2500;
+        boolean speedflag = false;
+        while (whiteLineDetectedBack() == false) {
+            if(runtime.milliseconds() > lineAligntime && !speedflag && second_beacon_press){
+                stopMotors();
+                setMotorsModeToColorSensing();
+                speedflag = true;
+                if (rangeSensor.getDistance(DistanceUnit.CM) < 30) {
+                    crossDrive(4, 0.7);
+                } else {
+                    crossDrive(3, 0.7);
+                }
             }
+            if (rangeSensor.getDistance(DistanceUnit.CM) < 25) {
+                crossDrive(4, 0.8);
+            } else if (rangeSensor.getDistance(DistanceUnit.CM) > 50) {
+                crossDrive(3, 0.8);
+            }
+
+
+        }
+
+        stopMotors();
+        timeProfile[profileindex++] = runtime.milliseconds();
+        moveTowardWall();
+        //gyroCorrection(0);
+         /*   setMotorsModeToColorSensing();
+
+        telemetry.addData("DISTANCEDISTANCE:",rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
+        if(rangeSensor.getDistance(DistanceUnit.CM)<30) {
+            crossDrive(4, 0.7);
+        }
+        else{
+            crossDrive(3, 0.7);
+        }
+        while (whiteLineDetectedBack() == false) {
+            if(rangeSensor.getDistance(DistanceUnit.CM)<25) {
+                crossDrive(4, 0.7);
+            }
+            else if(rangeSensor.getDistance(DistanceUnit.CM)>50){
+                crossDrive(3, 0.7);
+            }
+
+        }
             stopMotors();
+        timeProfile[profileindex++] = runtime.milliseconds();
+        moveTowardWall();
+        //gyroCorrection(0);*/
 
     }
 
@@ -136,22 +158,9 @@ public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
         boolean left_detected = false;
         boolean beacon_press_success = false;
 
-        if(initialHeading!=361) {
-            gyroCorrection(beacon_angle);
-        }
-        timeProfile[profileindex++] = runtime.milliseconds();//first time:6441.64 ms
-                                                             //second time: 17211.97
-        if(second_beacon_press) {
-            moveTowardWall();
-            timeProfile[profileindex++] = runtime.milliseconds();//first time: 8087.69 ms
-            //second time: 19274.79
-        }
         lineAlign();
         timeProfile[profileindex++] = runtime.milliseconds();//first time: 9447.32 ms
                                                              //second time: 19998.19
-        if(initialHeading!=361) {
-            gyroCorrection(beacon_angle);
-        }
 
 
 
@@ -161,10 +170,10 @@ public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
             left_detected = true;
             pressBeaconButton();
         }
-        else if(currentColorBeaconLeft.equals("red")){
+        else{
             left_detected = false;
-            setMotorsModeToRangeSensing();
-            encoderMecanumDrive(pathhighspeed,10,10,2,1);
+            setMotorsModeToEncDrive();
+            encoderMecanumCrossDrive(pathhighspeed,25,25,5,1);
             pressBeaconButton();
         }
         timeProfile[profileindex++] = runtime.milliseconds();//first time: 12991.84
@@ -186,16 +195,16 @@ public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
 
     public void moveTowardWall(){
         setMotorsModeToRangeSensing();
-        straightDrive(-pathhighspeed);
-        while (rangeSensor.getDistance(DistanceUnit.CM) > 25) {
+        straightDrive(-0.8);
+        while (rangeSensor.getDistance(DistanceUnit.CM) > 12) {
 
         }
         stopMotors();
         idle();
         setMotorsModeToRangeSensing();
 
-        straightDrive(pathhighspeed);
-        while (rangeSensor.getDistance(DistanceUnit.CM) < 25) {
+        straightDrive(0.8);
+        while (rangeSensor.getDistance(DistanceUnit.CM) < 5) {
 
         }
         stopMotors();
@@ -224,24 +233,22 @@ public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
                 encoderMecanumDrive(pathhighspeed, 30, 30, .2, 0);
             }
             else{
-                encoderMecanumDrive(0.5, 10, 10, 5, 0);
-                //encoderMecanumDrive(0.7,-15,-15,5,0);
-                //encoderMecanumDrive(0.7,56,-56,5,0);
 
-                gyroCorrection((beacon_angle + 135));
                 setMotorsModeToEncDrive();
-                encoderMecanumDrive(pathhighspeed, -50, -50, 5, 0);
+                encoderMecanumCrossDrive(pathhighspeed, 90, 90, 5, 1);
 
+                //gyroCorrection((beacon_angle + 135));
+                encoderMecanumDrive(pathhighspeed,-56,56,5,0);
                 encoderShoot(0.8);
                 intake_motor.setPower(1);
                 sleep(1000);
                 intake_motor.setPower(0);
                 encoderShoot(0.8);
 
-                encoderMecanumDrive(pathhighspeed,-40,-40,5,0);
+                encoderMecanumDrive(pathhighspeed,-50,-50,5,0);
                 encoderMecanumDrive(pathhighspeed, 10, 10, .2, 0);
                 encoderMecanumDrive(pathhighspeed, -30, -30, .2, 0);
-                timeProfile[profileindex++] = runtime.milliseconds();//32730.99
+                timeProfile[profileindex++] = runtime.milliseconds();//32730.99*/
             }
         }
         else
@@ -264,11 +271,11 @@ public class blueAuto_charlie_backup extends AutonomousGeneral_charlie {
         telemetry.addData("distance",distFromWall);
         telemetry.update();
 
-        encoderMecanumDrive(0.7, -distFromWall, -distFromWall, 5,0);
+        encoderMecanumDrive(0.6, -distFromWall, -distFromWall, 5,0);
 //
         sleep(500);
 //
-        encoderMecanumDrive(0.7, distFromWall, distFromWall, 5,0);
+        encoderMecanumDrive(0.6, distFromWall, distFromWall, 5,0);
 
 //        encoderDrive(.3, -distFromWall, -distFromWall, 1);
 //        sleep(500);

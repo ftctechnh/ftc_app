@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode.Main.beta;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name = "#11183: TeleOp Competition Beta Joystick 1.6.17", group = "Robot")
-
+@Disabled
 public class Jan6TeleOpCompetitionBetaJoystick extends OpMode {
 
 
