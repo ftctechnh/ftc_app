@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms.teleop;
+package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
+import org.firstinspires.ftc.teamcode.MainRobotBase;
+import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
+import org.firstinspires.ftc.teamcode.programflow.RunState;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
 
-public class Teleop extends RobotBase
+public class Teleop extends MainRobotBase
 {
     //All teleop controls are here.
     protected void driverStationSaysGO() throws InterruptedException
@@ -28,7 +30,7 @@ public class Teleop extends RobotBase
         double harvesterCoefficient = 1.0;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
-        while (true)
+        while (RunState.getState () != RunState.DriverSelectedState.STOP)
         {
             /**************************** CONTROLLER #1 ********************************/
             /************** Direction Toggle **************/
@@ -46,18 +48,16 @@ public class Teleop extends RobotBase
             leftPower = Range.clip(leftPower, -1, 1);
 
             // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-            setLeftPower(scaleInput(leftPower) * speedCoefficient);
-            setRightPower(scaleInput(rightPower) * speedCoefficient);
+            leftDrive.moveAtRPS (scaleInput(leftPower) * speedCoefficient);
+            rightDrive.moveAtRPS (scaleInput(rightPower) * speedCoefficient);
 
             /************** Cap Ball Drive Mode **************/
             if (gamepad1.x) {
                 speedCoefficient = 0.7;
-//                backwards = true;
                 capBallMode = true;
             }
             else if (gamepad1.y) {
                 speedCoefficient = 1.0;
-//                backwards = false;
                 capBallMode = false;
             }
 
@@ -86,23 +86,6 @@ public class Teleop extends RobotBase
                 capBallHolder.setPosition(CBH_OPEN);
             }
 
-            /************** Front Button Pusher **************/
-//            if (gamepad1.right_trigger > 0.5 && !pressingFBPToggle) {
-//                pressingFBPToggle = true;
-//                if (fbpUp) {
-//                    frontButtonPusher.setPosition(FBP_DOWN);
-//                    fbpUp = false;
-//                }
-//                else {
-//                    frontButtonPusher.setPosition(FBP_UP);
-//                    fbpUp = true;
-//                }
-//            }
-
-            if (gamepad1.right_trigger < 0.5) {
-                pressingFBPToggle = false;
-            }
-
             /**************************** CONTROLLER #2 ********************************/
             /************** Cap Ball Lift **************/
             if (gamepad2.x) {
@@ -113,42 +96,42 @@ public class Teleop extends RobotBase
             }
 
             if (gamepad2.right_bumper)
-                lift.setPower(1.0);
+                lift.moveAtRPS (1.0);
             else if (gamepad2.right_trigger > 0.5)
-                lift.setPower(-0.5);
+                lift.moveAtRPS (-0.5);
             else
-                lift.setPower(0.0);
+                lift.moveAtRPS (0.0);
 
             /************** Harvester **************/
             if (gamepad2.b) {
-                harvester.setPower(harvesterCoefficient * 1.0); // Collect
+                harvester.moveAtRPS(harvesterCoefficient * 1.0); // Collect
             }
             else if (gamepad2.a && gamepad2.dpad_down) {
-                harvester.setPower(harvesterCoefficient * -1.0);
-                flywheels.setPower(-1.0);
+                harvester.moveAtRPS(harvesterCoefficient * -1.0);
+                flywheels.moveAtRPS(-1.0);
             }
             else if (gamepad2.a) {
-                harvester.setPower(harvesterCoefficient * -1.0); // Reverse harvester
+                harvester.moveAtRPS(harvesterCoefficient * -1.0); // Reverse harvester
             }
             else {
-                harvester.setPower(0);
+                harvester.moveAtRPS(0);
             }
 
             /************** Flywheels **************/
             if (gamepad2.dpad_up) {
-                flywheels.setPower(flywheelCoefficient * 1.0); // Shoot
+                flywheels.moveAtRPS(flywheelCoefficient * 1.0); // Shoot
                 harvesterCoefficient = 1.0;
             }
             else if (gamepad2.b && gamepad2.dpad_down) {
-                harvester.setPower(harvesterCoefficient * -1.0);
-                flywheels.setPower(-1.0);
+                harvester.moveAtRPS(harvesterCoefficient * -1.0);
+                flywheels.moveAtRPS(-1.0);
             }
             else if (gamepad2.dpad_down) {
-                flywheels.setPower(-0.6); // Reverse flywheels
+                flywheels.moveAtRPS(-0.6); // Reverse flywheels
                 harvesterCoefficient = 1.0;
             }
             else {
-                flywheels.setPower(0.0);
+                flywheels.moveAtRPS(0.0);
                 harvesterCoefficient = 1.0;
             }
 
@@ -180,7 +163,7 @@ public class Teleop extends RobotBase
                 rightButtonPusher.setPosition(0.5);
 
             /************** Data Output **************/
-            outputConstantDataToDrivers(new String[] {
+            ConsoleManager.outputConstantDataToDrivers(new String[] {
                     "Fly wheel power = " + flywheelCoefficient,
                     "Drive power = " + speedCoefficient,
                     "Cap ball mode = " + capBallMode,

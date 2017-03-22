@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tankbotPrograms;
+package org.firstinspires.ftc.teamcode.tankbot;
 
 import android.media.MediaPlayer;
 
@@ -8,12 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.BaseFunctions;
+import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="TankBot Drive", group="TankBot Group")
 
-public class TankBotDriveAround extends BaseFunctions
+public class TankBotDriveAround extends ImprovedOpModeBase
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors (they are lists because it helps when we add on new motors.

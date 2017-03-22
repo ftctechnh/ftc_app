@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.utility;
+package org.firstinspires.ftc.teamcode.autonomous.utility;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 
 @Autonomous(name="Drive Backward", group = "Utility Group")
 

@@ -1,6 +1,9 @@
-package org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
 
 public abstract class BallAuto extends AutoBase
 {
@@ -36,7 +39,7 @@ public abstract class BallAuto extends AutoBase
             if (gamepad1.x || gamepad2.x)
                 parkOnCenterVortex = true;
 
-            outputConstantDataToDrivers (
+            ConsoleManager.outputConstantDataToDrivers (
                     new String[]
                             {
                                     "Delay (DPAD) is " + delay,
@@ -53,50 +56,48 @@ public abstract class BallAuto extends AutoBase
 
     protected void driverStationSaysGO() throws InterruptedException
     {
-        alliance = setAlliance ();
-
         boolean onBlueAlliance = (alliance == Alliance.BLUE);
         int autonomousSign = (onBlueAlliance ? 1 : -1);
 
         //Drive to the cap ball.
-        outputNewLineToDrivers ("Driving to shooting position.");
-        driveUntilDistanceFromObstacle (40, .27);
+        ConsoleManager.outputNewLineToDrivers ("Driving to shooting position.");
+        drive (SensorStopType.Ultrasonic, 40, PowerUnits.RevolutionsPerMinute, 1);
 
         //Shoot the balls into the center vortex.
-        outputNewLineToDrivers("Shooting balls into center vortex...");
+        ConsoleManager.outputNewLineToDrivers("Shooting balls into center vortex...");
         shootBallsIntoCenterVortex ();
 
         if (parkOnCenterVortex)
         {
-            outputNewLineToDrivers ("Parking on center vortex.");
-            driveForDistance (0.5, 1400);
+            ConsoleManager.outputNewLineToDrivers ("Parking on center vortex.");
+            drive(SensorStopType.Distance, 1400, PowerUnits.RevolutionsPerMinute, 2);
             return; //End prematurely
         }
 
         if (getCapBall)
         {
             //Drive the remainder of the distance.
-            outputNewLineToDrivers ("Knock the cap ball off of the pedestal.");
-            driveForDistance (0.5, 1800);
+            ConsoleManager.outputNewLineToDrivers ("Knock the cap ball off of the pedestal.");
+            drive(SensorStopType.Distance, 1800, PowerUnits.RevolutionsPerMinute, 3);
 
             //Turn to face the ramp from the position that we drove.
-            outputNewLineToDrivers ("Turning to the appropriate heading.");
+            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading.");
             turnToHeading (110 * autonomousSign, TurnMode.BOTH, 3000);
         }
         else
         {
             //Turn to face the ramp from the position that we drove.
-            outputNewLineToDrivers ("Turning to the appropriate heading.");
+            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading.");
             turnToHeading (70 * autonomousSign, TurnMode.BOTH, 3000);
         }
 
         //Drive until we reach the appropriate position.
-        outputNewLineToDrivers ("Drive to the ramp, stopping upon bottom color sensor reaches the blue region on the ramp.");
+        ConsoleManager.outputNewLineToDrivers ("Drive to the ramp, stopping upon bottom color sensor reaches the blue region on the ramp.");
         startDrivingAt (0.6);
 
         long startDriveTime = System.currentTimeMillis (); //Max time at 6 seconds.
         while (bottomColorSensor.red () <= 2.5 && (System.currentTimeMillis () - startDriveTime) < 6000)
-            applySensorAdjustmentsToMotors (true, false, false);
+            adjustMotorPowersBasedOnPIDAnd (gyroscope);
 
         stopDriving ();
     }
