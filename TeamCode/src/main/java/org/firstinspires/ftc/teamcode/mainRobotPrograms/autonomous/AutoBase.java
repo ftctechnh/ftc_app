@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.mainRobotPrograms.RobotBase;
 public abstract class AutoBase extends RobotBase
 {
     protected enum Alliance {BLUE, RED}
+    protected Alliance alliance;
+    protected abstract Alliance setAlliance();
 
     /******** SENSOR STUFF ********/
 
@@ -446,7 +448,7 @@ public abstract class AutoBase extends RobotBase
     /******** INITIALIZATION ********/
     //Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
     @Override
-    protected void driverStationSaysINITIALIZE() throws InterruptedException
+    protected void initializeOpModeSpecificHardware() throws InterruptedException
     {
         //Initialize color sensors.
         bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
@@ -486,6 +488,12 @@ public abstract class AutoBase extends RobotBase
 
             appendToLastOutputtedLine ("OK!");
         }
+    }
+
+    @Override
+    protected void driverStationSaysINITIALIZE() throws InterruptedException
+    {
+        alliance = setAlliance ();
     }
 
 

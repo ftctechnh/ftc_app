@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.BeaconAuto;
 
 public class BlueBlur extends BeaconAuto
 {
-    public void driverStationSaysGO() throws InterruptedException
+    public Alliance setAlliance()
     {
-        runBeaconAutonomous (Alliance.BLUE);
+        return Alliance.BLUE;
     }
 }

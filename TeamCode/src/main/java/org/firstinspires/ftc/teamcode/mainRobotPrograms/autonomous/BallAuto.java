@@ -51,8 +51,10 @@ public abstract class BallAuto extends AutoBase
         sleep (delay);
     }
 
-    protected void runBallAutonomous(Alliance alliance) throws InterruptedException
+    protected void driverStationSaysGO() throws InterruptedException
     {
+        alliance = setAlliance ();
+
         boolean onBlueAlliance = (alliance == Alliance.BLUE);
         int autonomousSign = (onBlueAlliance ? 1 : -1);
 

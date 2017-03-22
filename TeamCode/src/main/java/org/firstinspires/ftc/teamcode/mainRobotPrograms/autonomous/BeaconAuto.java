@@ -5,7 +5,7 @@ public abstract class BeaconAuto extends AutoBase
     private final double BEACON_DP = 0.27;
 
     //Called after runOpMode() has finished initializing by BaseFunctions.
-    protected void runBeaconAutonomous (Alliance alliance) throws InterruptedException
+    protected void driverStationSaysGO () throws InterruptedException
     {
         //Results in a coefficient of 1 if doing blue, and -1 for red.
         boolean onBlueAlliance = (alliance == Alliance.BLUE);

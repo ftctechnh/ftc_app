@@ -76,6 +76,12 @@ public abstract class RobotBase extends BaseFunctions
         option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
         option2ColorSensor.enableLed(false);
         appendToLastOutputtedLine ("OK!");
+
+        initializeOpModeSpecificHardware ();
+    }
+    //Optional overload.
+    protected void initializeOpModeSpecificHardware() throws InterruptedException
+    {
     }
 
     protected void setRightPower(double power)

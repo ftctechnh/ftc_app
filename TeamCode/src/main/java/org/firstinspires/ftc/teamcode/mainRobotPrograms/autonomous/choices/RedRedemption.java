@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.mainRobotPrograms.autonomous.BeaconAuto;
 
 public class RedRedemption extends BeaconAuto
 {
-    public void driverStationSaysGO() throws InterruptedException
+    protected Alliance setAlliance()
     {
-        runBeaconAutonomous (Alliance.RED);
+        return Alliance.RED;
     }
 }
