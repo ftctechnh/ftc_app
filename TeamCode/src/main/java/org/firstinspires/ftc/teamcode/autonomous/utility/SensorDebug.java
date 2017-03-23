@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.utility;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
 
 @Autonomous(name = "Sensor Debug", group = "Utility Group")
 
@@ -12,7 +13,7 @@ public class SensorDebug extends AutoBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         while (true) {
-            outputConstantDataToDrivers(
+            ConsoleManager.outputConstantDataToDrivers(
                     new String[]
                     {
                             "Option 1 Color Sensor",

@@ -14,8 +14,8 @@ public class DriveForward extends AutoBase
     protected void driverStationSaysINITIALIZE()
     {
         //Set the motor powers.
-        leftDrive.moveAtRPS (-.6);
-        rightDrive.moveAtRPS (.6);
+        leftDrive.setRPS (-.6);
+        rightDrive.setRPS (.6);
 
         while (RunState.getState () == RunState.DriverSelectedState.INIT)
         {
@@ -28,8 +28,8 @@ public class DriveForward extends AutoBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        leftDrive.moveAtRPS (.8);
-        rightDrive.moveAtRPS (.8);
+        leftDrive.setRPS (.8);
+        rightDrive.setRPS (.8);
 
         while (RunState.getState () == RunState.DriverSelectedState.RUNNING)
         {

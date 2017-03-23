@@ -53,6 +53,12 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             ConsoleManager.outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
             drive(SensorStopType.BottomColorAlpha, 5, PowerUnits.RevolutionsPerSecond, BEACON_DP);
 
+            //Extend the button pusher until the colors become distinctly visible.
+
+            //Press and retract as many times as possible.
+
+            //Retract almost completely and then drive to the next one.
+
 
             /******** STEP 3: PRESS AND VERIFY THE BEACON!!!!! ********/
 

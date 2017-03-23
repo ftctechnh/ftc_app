@@ -48,8 +48,8 @@ public class Teleop extends MainRobotBase
             leftPower = Range.clip(leftPower, -1, 1);
 
             // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-            leftDrive.moveAtRPS (scaleInput(leftPower) * speedCoefficient);
-            rightDrive.moveAtRPS (scaleInput(rightPower) * speedCoefficient);
+            leftDrive.setRPS (scaleInput(leftPower) * speedCoefficient);
+            rightDrive.setRPS (scaleInput(rightPower) * speedCoefficient);
 
             /************** Cap Ball Drive Mode **************/
             if (gamepad1.x) {
@@ -96,42 +96,42 @@ public class Teleop extends MainRobotBase
             }
 
             if (gamepad2.right_bumper)
-                lift.moveAtRPS (1.0);
+                lift.setRPS (1.0);
             else if (gamepad2.right_trigger > 0.5)
-                lift.moveAtRPS (-0.5);
+                lift.setRPS (-0.5);
             else
-                lift.moveAtRPS (0.0);
+                lift.setRPS (0.0);
 
             /************** Harvester **************/
             if (gamepad2.b) {
-                harvester.moveAtRPS(harvesterCoefficient * 1.0); // Collect
+                harvester.setRPS (harvesterCoefficient * 1.0); // Collect
             }
             else if (gamepad2.a && gamepad2.dpad_down) {
-                harvester.moveAtRPS(harvesterCoefficient * -1.0);
-                flywheels.moveAtRPS(-1.0);
+                harvester.setRPS (harvesterCoefficient * -1.0);
+                flywheels.setRPS (-1.0);
             }
             else if (gamepad2.a) {
-                harvester.moveAtRPS(harvesterCoefficient * -1.0); // Reverse harvester
+                harvester.setRPS (harvesterCoefficient * -1.0); // Reverse harvester
             }
             else {
-                harvester.moveAtRPS(0);
+                harvester.setRPS (0);
             }
 
             /************** Flywheels **************/
             if (gamepad2.dpad_up) {
-                flywheels.moveAtRPS(flywheelCoefficient * 1.0); // Shoot
+                flywheels.setRPS (flywheelCoefficient * 1.0); // Shoot
                 harvesterCoefficient = 1.0;
             }
             else if (gamepad2.b && gamepad2.dpad_down) {
-                harvester.moveAtRPS(harvesterCoefficient * -1.0);
-                flywheels.moveAtRPS(-1.0);
+                harvester.setRPS (harvesterCoefficient * -1.0);
+                flywheels.setRPS (-1.0);
             }
             else if (gamepad2.dpad_down) {
-                flywheels.moveAtRPS(-0.6); // Reverse flywheels
+                flywheels.setRPS (-0.6); // Reverse flywheels
                 harvesterCoefficient = 1.0;
             }
             else {
-                flywheels.moveAtRPS(0.0);
+                flywheels.setRPS (0.0);
                 harvesterCoefficient = 1.0;
             }
 

@@ -12,11 +12,13 @@ public class PIDTesting extends AutoBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        flywheels.moveAtRPS (1);
+        flywheels.setRPS (1);
 
         while (RunState.getState () == RunState.DriverSelectedState.RUNNING)
         {
             flywheels.updateMotorPowerWithPID ();
+
+            idle();
         }
     }
 }

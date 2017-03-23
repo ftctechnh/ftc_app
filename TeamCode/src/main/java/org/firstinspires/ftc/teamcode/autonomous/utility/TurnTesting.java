@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.utility;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
 
 @Autonomous(name="Turn Testing", group = "Test Group")
 
@@ -16,8 +17,8 @@ public class TurnTesting extends AutoBase
         while (opModeIsActive ())
         {
             turnToHeading (turnSign * (90 * ((turns + 1) % 4)), TurnMode.BOTH, 4000);
-            stopDriving ();
-            outputNewLineToDrivers ("Turn " + turns + " completed.");
+            hardBrake (0);
+            ConsoleManager.outputNewLineToDrivers ("Turn " + turns + " completed.");
             sleep(2000);
             turns++;
         }

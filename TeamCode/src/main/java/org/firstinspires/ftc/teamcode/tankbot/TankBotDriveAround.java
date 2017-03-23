@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
+import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="TankBot Drive", group="TankBot Group")
@@ -104,7 +105,7 @@ public class TankBotDriveAround extends ImprovedOpModeBase
             }
 
             /************** Data Output **************/
-            outputConstantDataToDrivers(new String[] {
+            ConsoleManager.outputConstantDataToDrivers(new String[] {
                     "Right power = " + rightPower,
                     "Music playing = " + (mediaPlayer != null)
             });
@@ -171,13 +172,13 @@ public class TankBotDriveAround extends ImprovedOpModeBase
                 }
             });
 
-            outputNewLineToDrivers ("Playing " + choice.toString());
+            ConsoleManager.outputNewLineToDrivers ("Playing " + choice.toString());
 
             sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
         }
         catch (Exception e)
         {
-            outputNewLineToDrivers ("Error while attempting to play music.");
+            ConsoleManager.outputNewLineToDrivers ("Error while attempting to play music.");
             return;
         }
     }
