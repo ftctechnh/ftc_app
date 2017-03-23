@@ -1,15 +1,24 @@
 package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
 import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
 
-public abstract class BeaconAuto extends AutoBase
+public abstract class BeaconAuto extends AutoBase implements OnAlliance
 {
-    private final double BEACON_DP = 0.27;
+    private final double BEACON_DP = 1;
+
+    @Override
+    protected void driverStationSaysINITIALIZE() throws InterruptedException
+    {
+        getAlliance ();
+    }
 
     //Called after runOpMode() has finished initializing by ImprovedOpModeBase.
     protected void driverStationSaysGO () throws InterruptedException
     {
+        Alliance alliance = getAlliance ();
+
         //Results in a coefficient of 1 if doing blue, and -1 for red.
         boolean onBlueAlliance = (alliance == Alliance.BLUE);
         int autonomousSign = (onBlueAlliance ? 1 : -1);
@@ -42,33 +51,7 @@ public abstract class BeaconAuto extends AutoBase
             /******** STEP 2: FIND AND CENTER SELF ON BEACON ********/
 
             ConsoleManager.outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
-
-            //Set movement speed.
-            startDrivingAt (0.35 * autonomousSign);
-
-            boolean aboutToSeeWhiteLine = false;
-            while (bottomColorSensor.alpha () <= 5)
-            {
-                updateColorSensorStates ();
-
-                //Adjust speed and such.
-                if (!aboutToSeeWhiteLine)
-                {
-                    if (onBlueAlliance ? (option1Red || option1Blue) : (option2Red || option2Blue))
-                    {
-                        ConsoleManager.outputNewLineToDrivers ("Slowing down for beacon.");
-                        hardBrake (100);
-                        startDrivingAt (BEACON_DP * autonomousSign);
-                        aboutToSeeWhiteLine = true;
-                    }
-                }
-
-                //adjustDirectionBasedOnColorSensors ();
-                adjustMotorPowersBasedOnPIDAnd (gyroscope, sideRangeSensor);
-            }
-
-            //Stop once centered on the beacon.
-            hardBrake (150);
+            drive(SensorStopType.BottomColorAlpha, 5, PowerUnits.RevolutionsPerSecond, BEACON_DP);
 
 
             /******** STEP 3: PRESS AND VERIFY THE BEACON!!!!! ********/
@@ -78,6 +61,7 @@ public abstract class BeaconAuto extends AutoBase
             //While the beacon is not completely blue (this is the verification step).
             int failedAttempts = 0; //The robot tries different drive lengths for each trial.
             updateColorSensorStates (); //Has to know the initial colors.
+
             leftDrive.resetEncoder (); //Does this twice in total to prevent time loss.
             rightDrive.resetEncoder ();
 
@@ -85,50 +69,40 @@ public abstract class BeaconAuto extends AutoBase
             {
                 ConsoleManager.outputNewLineToDrivers ("Beacon is not completely blue, attempting to press the correct color!");
 
-                boolean driveBackwardsToRecenter;
-
                 //The possible events that could occur upon either verification or first looking at the beacon.
                 //Different drives are attempted for each trial.
+                int driveSign = 1;
                 if (option1Blue && option2Red)
                 {
                     ConsoleManager.outputNewLineToDrivers ("Chose option 1");
-                    //Use the option 1 button pusher.
+                    driveSign = 1;
                     drive (SensorStopType.Distance, (onBlueAlliance ? 90 : 60) + 20 * failedAttempts, PowerUnits.RevolutionsPerSecond, BEACON_DP);
                     pressButton ();
-                    driveBackwardsToRecenter = autonomousSign > 0;
                 }
                 else if (option1Red && option2Blue)
                 {
                     ConsoleManager.outputNewLineToDrivers ("Chose option 2");
-                    //Use the option 2 button pusher.
+                    driveSign = -1;
                     drive (SensorStopType.Distance, (onBlueAlliance ? 150 : 130) + 20 * failedAttempts, PowerUnits.RevolutionsPerSecond, -BEACON_DP);
                     pressButton ();
-                    driveBackwardsToRecenter = autonomousSign < 0;
                 }
                 else if (option1Blue ? (option1Red && option2Red) : (option1Blue && option2Blue))
                 {
                     ConsoleManager.outputNewLineToDrivers ("Neither option is the correct color, toggling beacon!");
-                    //Toggle beacon.
+                    driveSign = -1;
                     drive (SensorStopType.Distance, (onBlueAlliance ? 90 : 60) + 20 * failedAttempts, PowerUnits.RevolutionsPerSecond, -BEACON_DP);
                     pressButton ();
-                    driveBackwardsToRecenter = autonomousSign > 0;
                 }
                 else
                 {
                     failedAttempts = -1; //This will be incremented and returned to 0, fear not.
                     ConsoleManager.outputNewLineToDrivers ("Can't see the beacon clearly, so double checking!");
+                    driveSign = 1;
                     drive (SensorStopType.Distance, 100 + 20 * failedAttempts, PowerUnits.RevolutionsPerSecond, .35);
-                    driveBackwardsToRecenter = true;
                 }
 
-                //On occasion this does happen for some reason, in which all are false or something.  Sometimes they shift back to being valid, however.
-                //Set the movement power based on the direction we have to return to.
-                startDrivingAt ((driveBackwardsToRecenter ? -1 : 1) * BEACON_DP);
-
-                while (bottomColorSensor.alpha () <= 5)
-                    adjustMotorPowersBasedOnPIDAnd (gyroscope);
-
-                hardBrake (100);
+                //Drive back to the original value.
+                drive(SensorStopType.BottomColorAlpha, 5, PowerUnits.RevolutionsPerSecond, Math.signum(autonomousSign * driveSign) * BEACON_DP);
 
                 //Update the number of trials completed so that we know the new drive distance and such.
                 failedAttempts++;

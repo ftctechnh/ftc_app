@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.utility;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.programflow.RunState;
 
 @Autonomous(name="Drive Forward", group = "Utility Group")
 
@@ -10,20 +11,30 @@ public class DriveForward extends AutoBase
 {
     //Custom initialization
     @Override
-    protected void driverStationSaysINITIALIZE() throws InterruptedException
+    protected void driverStationSaysINITIALIZE()
     {
         //Set the motor powers.
-        setLeftPower(-.6);
-        setRightPower(.6);
+        leftDrive.moveAtRPS (-.6);
+        rightDrive.moveAtRPS (.6);
+
+        while (RunState.getState () == RunState.DriverSelectedState.INIT)
+        {
+            leftDrive.updateMotorPowerWithPID ();
+            rightDrive.updateMotorPowerWithPID ();
+        }
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        startDrivingAt (0.8);
+        leftDrive.moveAtRPS (.8);
+        rightDrive.moveAtRPS (.8);
 
-        while (true)
-            idle();
+        while (RunState.getState () == RunState.DriverSelectedState.RUNNING)
+        {
+            leftDrive.updateMotorPowerWithPID ();
+            rightDrive.updateMotorPowerWithPID ();
+        }
     }
 }

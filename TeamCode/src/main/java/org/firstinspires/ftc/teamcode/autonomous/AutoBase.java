@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,10 +14,6 @@ import org.firstinspires.ftc.teamcode.programflow.RunState;
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
 public abstract class AutoBase extends MainRobotBase
 {
-    protected enum Alliance {BLUE, RED}
-    protected Alliance alliance;
-    protected abstract void setAlliance();
-
     /******** SENSOR STUFF ********/
 
     /**** Range Sensors ****/
@@ -104,78 +99,14 @@ public abstract class AutoBase extends MainRobotBase
             if (mode != TurnMode.LEFT)
                 rightDrive.moveAtRPS (Range.clip(turnPower, -1, 1));
 
-            updatePIDOnDrive ();
+            rightDrive.updateMotorPowerWithPID ();
+            leftDrive.updateMotorPowerWithPID ();
 
             idle();
         }
 
         hardBrake (100);
     }
-
-    /******** MOVEMENT POWER CONTROL ********/
-    //Used to set drive move power initially.
-    protected double movementPower = 0;
-    protected void startDrivingAt (double movementPower)
-    {
-        this.movementPower = movementPower;
-
-        leftDrive.moveAtRPS (movementPower);
-        rightDrive.moveAtRPS (movementPower);
-    }
-    //Stops all drive motors.
-    protected void stopDriving ()
-    {
-        leftDrive.moveAtRPS (0);
-        rightDrive.moveAtRPS (0);
-    }
-    //Stops all drive motors and pauses for a moment
-    protected void hardBrake(long msDelay) throws InterruptedException
-    {
-        stopDriving ();
-        sleep(msDelay);
-    }
-
-    protected void adjustMotorPowersBasedOnPIDAnd (HardwareDevice sensor1) throws InterruptedException
-    {
-        adjustMotorPowersBasedOnPIDAnd (sensor1, null);
-    }
-    protected void adjustMotorPowersBasedOnPIDAnd (HardwareDevice sensor1, HardwareDevice sensor2) throws InterruptedException
-    {
-        //For each result, positive favors left side and negative the right side.
-        double gyroAdjustment = 0;
-        if (sensor1 instanceof GyroSensor || sensor2 instanceof GyroSensor)
-        {
-            int offFromHeading = desiredHeading - getValidGyroHeading();
-
-            //Change motor powers based on offFromHeading.
-            gyroAdjustment = Math.signum(offFromHeading) * (Math.abs(offFromHeading) * .006 + .22);
-        }
-
-        double rangeSensorAdjustment = 0;
-        if (sensor1 instanceof ModernRoboticsI2cRangeSensor || sensor2 instanceof ModernRoboticsI2cRangeSensor)
-        {
-            double rangeSensorReading = sideRangeSensor.cmUltrasonic ();
-            if (rangeSensorReading >= 50)
-                rangeSensorReading = 15;
-
-            //Desired range sensor values.
-            double offFromDistance = rangeSensorReading - 15;
-
-            //Change motor powers based on offFromHeading.
-            rangeSensorAdjustment = offFromDistance * 0.03;
-        }
-
-        double totalAdjustmentFactor = Math.signum (movementPower) * gyroAdjustment + rangeSensorAdjustment;
-
-        //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later.
-        rightDrive.moveAtRPS (movementPower * (1 - totalAdjustmentFactor));
-        leftDrive.moveAtRPS (movementPower * (1 + totalAdjustmentFactor));
-
-        updatePIDOnDrive ();
-
-        idle();
-    }
-
 
     /******** DRIVING METHODS ********/
 
@@ -203,32 +134,73 @@ public abstract class AutoBase extends MainRobotBase
     }
     protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, SensorDriveAdjustment sensorAdjustmentType) throws InterruptedException
     {
+        leftDrive.moveAtRPS (powerMeasure);
+        rightDrive.moveAtRPS (powerMeasure);
+
+        //Allows us to know when we stop.
         boolean reachedFinalDest = false;
-        switch (sensorStopType)
-        {
-            case Distance:
-                int powerSign = (int) (Math.signum(powerMeasure));
-                reachedFinalDest = stopValue * powerSign >= ((leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0) * powerSign;
-                break;
 
-            case Ultrasonic:
-                reachedFinalDest = frontRangeSensor.cmUltrasonic () >= stopValue;
-                break;
-
-            case BottomColorAlpha:
-                reachedFinalDest = bottomColorSensor.alpha () >= stopValue;
-                break;
-        }
-
+        //Actual adjustment aspect of driving.
         while (!reachedFinalDest && RunState.getState () != RunState.DriverSelectedState.STOP)
         {
+            //For each result, positive favors left side and negative the right side.
+            int offFromHeading = desiredHeading - getValidGyroHeading();
+
+            //Change motor powers based on offFromHeading.
+            double gyroAdjustment = Math.signum(offFromHeading) * (Math.abs(offFromHeading) * .006 + .22);
+
+            double rangeSensorAdjustment = 0;
             if (sensorAdjustmentType == SensorDriveAdjustment.UseRangeSensor)
-                adjustMotorPowersBasedOnPIDAnd (gyroscope, sideRangeSensor);
-            else
-                adjustMotorPowersBasedOnPIDAnd (gyroscope);
+            {
+                double rangeSensorReading = sideRangeSensor.cmUltrasonic ();
+                if (rangeSensorReading >= 50)
+                    rangeSensorReading = 15;
+
+                //Desired range sensor values.
+                double offFromDistance = rangeSensorReading - 15;
+
+                //Change motor powers based on offFromHeading.
+                rangeSensorAdjustment = offFromDistance * 0.03;
+            }
+
+            double totalAdjustmentFactor = Math.signum (powerMeasure) * gyroAdjustment + rangeSensorAdjustment;
+
+            //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later.
+            rightDrive.moveAtRPS (powerMeasure * (1 - totalAdjustmentFactor));
+            leftDrive.moveAtRPS (powerMeasure * (1 + totalAdjustmentFactor));
+
+            rightDrive.updateMotorPowerWithPID ();
+            leftDrive.updateMotorPowerWithPID ();
+
+            //Say "reachedFinalDest" if we've reached the end of this drive.
+            switch (sensorStopType)
+            {
+                case Distance:
+                    int powerSign = (int) (Math.signum(powerMeasure));
+                    reachedFinalDest = stopValue * powerSign >= ((leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0) * powerSign;
+                    break;
+
+                case Ultrasonic:
+                    reachedFinalDest = frontRangeSensor.cmUltrasonic () >= stopValue;
+                    break;
+
+                case BottomColorAlpha:
+                    reachedFinalDest = bottomColorSensor.alpha () >= stopValue;
+                    break;
+            }
 
             idle();
         }
+
+        hardBrake (100);
+    }
+
+    //Stops all drive motors and pauses for a moment
+    protected void hardBrake(long msDelay) throws InterruptedException
+    {
+        leftDrive.moveAtRPS (0);
+        leftDrive.moveAtRPS (0);
+        sleep(msDelay);
     }
 
     /******** CUSTOM ACTIONS ********/
@@ -295,12 +267,6 @@ public abstract class AutoBase extends MainRobotBase
 
             ConsoleManager.appendToLastOutputtedLine ("OK!");
         }
-    }
-
-    @Override
-    protected void driverStationSaysINITIALIZE() throws InterruptedException
-    {
-        setAlliance ();
     }
 
 

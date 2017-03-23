@@ -69,6 +69,7 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         else
             ConsoleManager.appendToLastOutputtedLine ("OK!");
 
+        //Certain things are only applicable in autonomous or teleop.
         initializeOpModeSpecificHardware ();
     }
 
@@ -76,11 +77,5 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
     protected void initializeOpModeSpecificHardware() throws InterruptedException
     {
 
-    }
-
-    protected void updatePIDOnDrive()
-    {
-        leftDrive.updateMotorPowerWithPID ();
-        rightDrive.updateMotorPowerWithPID ();
     }
 }

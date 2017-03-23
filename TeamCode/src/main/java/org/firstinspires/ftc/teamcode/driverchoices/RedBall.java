@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.autonomous.maintypes.BallAuto;
 
 public class RedBall extends BallAuto
 {
-    public void setAlliance()
+    public Alliance getAlliance ()
     {
-        alliance = Alliance.BLUE;
+        return Alliance.BLUE;
     }
 }

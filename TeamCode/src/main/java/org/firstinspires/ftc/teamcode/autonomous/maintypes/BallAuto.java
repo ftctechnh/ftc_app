@@ -3,17 +3,16 @@ package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
 import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
 
-public abstract class BallAuto extends AutoBase
+public abstract class BallAuto extends AutoBase implements OnAlliance
 {
     private boolean getCapBall = true;
     private boolean parkOnCenterVortex = false;
 
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
-        super.driverStationSaysINITIALIZE ();
-
         long delay = 0;
         long lastDelayIncrementTime = 0;
 
@@ -56,6 +55,8 @@ public abstract class BallAuto extends AutoBase
 
     protected void driverStationSaysGO() throws InterruptedException
     {
+        Alliance alliance = getAlliance ();
+
         boolean onBlueAlliance = (alliance == Alliance.BLUE);
         int autonomousSign = (onBlueAlliance ? 1 : -1);
 
@@ -93,12 +94,6 @@ public abstract class BallAuto extends AutoBase
 
         //Drive until we reach the appropriate position.
         ConsoleManager.outputNewLineToDrivers ("Drive to the ramp, stopping upon bottom color sensor reaches the blue region on the ramp.");
-        startDrivingAt (0.6);
-
-        long startDriveTime = System.currentTimeMillis (); //Max time at 6 seconds.
-        while (bottomColorSensor.red () <= 2.5 && (System.currentTimeMillis () - startDriveTime) < 6000)
-            adjustMotorPowersBasedOnPIDAnd (gyroscope);
-
-        stopDriving ();
+        drive(SensorStopType.Distance, 1000, PowerUnits.RevolutionsPerMinute, 1);
     }
 }
