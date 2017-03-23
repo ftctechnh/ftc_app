@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.autonomous.maintypes.BallAuto;
 
 public class RedBall extends BallAuto
 {
-    public void driverStationSaysGO() throws InterruptedException
+    public void setAlliance()
     {
-        runBallAutonomous (Alliance.RED);
+        alliance = Alliance.BLUE;
     }
 }

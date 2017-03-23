@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.autonomous.maintypes.BeaconAuto;
 
 public class RedRedemption extends BeaconAuto
 {
-    protected Alliance setAlliance()
+    public void setAlliance()
     {
-        return Alliance.RED;
+        alliance = Alliance.BLUE;
     }
 }

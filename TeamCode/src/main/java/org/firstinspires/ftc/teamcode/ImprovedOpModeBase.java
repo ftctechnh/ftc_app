@@ -27,29 +27,21 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //Actual program thread
-        //Custom Initialization steps.
-        try
-        {
-            ConsoleManager.setMainTelemetry (telemetry);
-            RunState.setProgram (this);
+        //Preliminary stuff.
+        ConsoleManager.setMainTelemetry (telemetry);
+        RunState.setProgram (this);
 
-            //REQUIRED in MainRobotBase.
-            initializeHardware();
+        //REQUIRED in MainRobotBase.
+        initializeHardware();
 
-            //Initialize stuff.
-            driverStationSaysINITIALIZE();
+        //Initialize stuff.
+        driverStationSaysINITIALIZE();
 
-            //Wait for the start button to be pressed.
-            waitForStart();
+        //Wait for the start button to be pressed.
+        waitForStart();
 
-            driverStationSaysGO(); //This is where the child classes differ.
-        }
-        catch (InterruptedException e)
-        {
-            driverStationSaysSTOP();
-            Thread.currentThread().interrupt();
-        }
+        //This is where the child classes differ.
+        driverStationSaysGO();
     }
 
     //Required overload.

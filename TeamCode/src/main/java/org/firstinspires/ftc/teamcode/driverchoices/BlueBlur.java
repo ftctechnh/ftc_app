@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.autonomous.maintypes.BeaconAuto;
 
 public class BlueBlur extends BeaconAuto
 {
-    public Alliance setAlliance()
+    public void setAlliance()
     {
-        return Alliance.BLUE;
+        alliance = Alliance.BLUE;
     }
 }
