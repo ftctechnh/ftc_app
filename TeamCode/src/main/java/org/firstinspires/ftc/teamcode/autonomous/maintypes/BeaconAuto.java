@@ -54,8 +54,17 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             drive(SensorStopType.BottomColorAlpha, 5, PowerUnits.RevolutionsPerSecond, BEACON_DP);
 
             //Extend the button pusher until the colors become distinctly visible.
+            long extensionStartTime = System.currentTimeMillis ();
+            rightButtonPusher.setPosition (0); //Start button pusher extension.
+            while (!((option1Red && option2Blue) || (option1Blue && option2Red)))
+            {
+                updateColorSensorStates ();
+                idle();
+            }
+            rightButtonPusher.setPosition (.5); //Stop button pusher.
+            long timeTakenToSeeColors = System.currentTimeMillis () - extensionStartTime;
 
-            //Press and retract as many times as possible.
+            //Press and retract as many times as necessary.
 
             //Retract almost completely and then drive to the next one.
 

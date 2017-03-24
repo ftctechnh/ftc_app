@@ -50,7 +50,7 @@ public class PIDMotorController
 
         int currentEncoderPosition = encoderMotor.getCurrentPosition ();
 
-        int expectedTicksSinceUpdate = (int) (1120.0 * desiredRPS * (1000.0 / (currentTime - lastPIDUpdateTime)));
+        int expectedTicksSinceUpdate = (int) (1120.0 * desiredRPS * ((currentTime - lastPIDUpdateTime) / 1000.0));
         int actualTicksSinceUpdate = currentEncoderPosition - previousMotorPosition;
 
         //Sensitivity is the coefficient below.

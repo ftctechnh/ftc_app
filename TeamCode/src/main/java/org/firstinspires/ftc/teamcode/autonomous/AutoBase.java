@@ -18,6 +18,16 @@ public abstract class AutoBase extends MainRobotBase
 
     /**** Range Sensors ****/
     protected ModernRoboticsI2cRangeSensor frontRangeSensor;
+    protected double getRangeSensorReading(ModernRoboticsI2cRangeSensor rangeSensor)
+    {
+        double rangeSensorOutput = 255;
+        while (rangeSensorOutput >= 255 || rangeSensorOutput <= 0)
+        {
+            rangeSensorOutput = rangeSensor.cmUltrasonic ();
+            idle();
+        }
+        return rangeSensorOutput;
+    }
 
     /**** Color Sensors (3) ****/
     protected ColorSensor bottomColorSensor; //Must have different I2C addresses.
@@ -146,7 +156,9 @@ public abstract class AutoBase extends MainRobotBase
         //Actual adjustment aspect of driving.
         while (!reachedFinalDest && RunState.getState () != RunState.DriverSelectedState.STOP)
         {
-            if (System.currentTimeMillis () - lastUpdateTime > adjustRate)
+            long currentTime = System.currentTimeMillis();
+
+            if (currentTime - lastUpdateTime >= adjustRate)
             {
                 //Do this before setting new powers, since it will adjust erratically otherwise.
                 rightDrive.updateMotorPowerWithPID ();
@@ -162,17 +174,8 @@ public abstract class AutoBase extends MainRobotBase
                 /** RANGE SENSOR ADJUSTMENT **/
                 double rangeSensorAdjustment = 0;
                 if (sensorAdjustmentType == SensorDriveAdjustment.UseRangeSensor)
-                {
-                    double rangeSensorReading = sideRangeSensor.cmUltrasonic ();
-                    if (rangeSensorReading >= 50 || rangeSensorReading <= 0)
-                        rangeSensorReading = 15;
-
-                    //Desired range sensor values.
-                    double offFromDistance = rangeSensorReading - 15;
-
                     //Change motor powers based on offFromHeading.
-                    rangeSensorAdjustment = offFromDistance * 0.03;
-                }
+                    rangeSensorAdjustment = (getRangeSensorReading (sideRangeSensor) - 15) * 0.03;
 
 
                 //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later
@@ -195,6 +198,8 @@ public abstract class AutoBase extends MainRobotBase
                         reachedFinalDest = bottomColorSensor.alpha () >= stopValue;
                         break;
                 }
+
+                lastUpdateTime = currentTime;
             }
 
             idle();
