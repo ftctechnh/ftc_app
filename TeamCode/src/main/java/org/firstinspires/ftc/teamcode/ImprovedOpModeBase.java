@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
+import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
 import org.firstinspires.ftc.teamcode.programflow.RunState;
 
 public abstract class ImprovedOpModeBase extends LinearOpMode
@@ -30,6 +31,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         //Preliminary stuff.
         ConsoleManager.setMainTelemetry (telemetry);
         RunState.setProgram (this);
+        ProgramFlow.setProgram (this);
 
         //REQUIRED in MainRobotBase.
         initializeHardware();

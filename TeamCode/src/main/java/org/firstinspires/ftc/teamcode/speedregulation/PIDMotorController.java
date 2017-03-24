@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.speedregulation;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
 
 public class PIDMotorController
 {
@@ -17,18 +20,20 @@ public class PIDMotorController
         this.linkedMotor = linkedMotor;
     }
 
-    public void resetEncoder()
+    public void reset()
     {
         encoderMotor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
         encoderMotor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         encoderMotor.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        lastAdjustTime = 0;
     }
 
     /******* PID STUFF *********/
-    private double desiredRPS = 0;
+    public double desiredRPS = 0;
 
     //Initial conversion factor, will be changed a LOT through the course of the program.
-    private volatile double rpsConversionFactor = 1;
+    public double rpsConversionFactor = .25;
 
     public void setRPS (double givenRPS)
     {
@@ -42,24 +47,30 @@ public class PIDMotorController
      * at which the motor turns based on previous and current encoder positions.
      */
     //Stored for each run.
-    private long lastPIDUpdateTime = 0;
     private int previousMotorPosition;
+    private long lastAdjustTime = 0;
+    public double expectedTicksSinceUpdate, actualTicksSinceUpdate;
     public void updateMotorPowerWithPID ()
     {
-        long currentTime = System.currentTimeMillis ();
-
         int currentEncoderPosition = encoderMotor.getCurrentPosition ();
 
-        int expectedTicksSinceUpdate = (int) (1120.0 * desiredRPS * ((currentTime - lastPIDUpdateTime) / 1000.0));
-        int actualTicksSinceUpdate = currentEncoderPosition - previousMotorPosition;
+        if (lastAdjustTime != 0)
+        {
+            /**
+             * desired RPS (revolution/second) * 560 (ticks/revolution) * 30 / 1000 (seconds) * .5 gear ratio.
+             */
 
-        //Sensitivity is the coefficient below.
-        rpsConversionFactor += (expectedTicksSinceUpdate - actualTicksSinceUpdate) * 0.0001;
+            expectedTicksSinceUpdate = 1120.0 * .5 * desiredRPS * ((System.currentTimeMillis () - lastAdjustTime) / 1000.0);
+            actualTicksSinceUpdate = currentEncoderPosition - previousMotorPosition;
 
-        updateMotorPowers ();
+            //Sensitivity is the coefficient below.
+            rpsConversionFactor += Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * 0.0002), -.5, .5);
 
-        lastPIDUpdateTime = currentTime;
+            updateMotorPowers ();
+        }
+
         previousMotorPosition = currentEncoderPosition;
+        lastAdjustTime = System.currentTimeMillis ();
     }
 
     private void updateMotorPowers()

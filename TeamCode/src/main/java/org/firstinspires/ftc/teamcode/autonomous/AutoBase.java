@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
+import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
 import org.firstinspires.ftc.teamcode.programflow.RunState;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
@@ -17,7 +18,7 @@ public abstract class AutoBase extends MainRobotBase
     /******** SENSOR STUFF ********/
 
     /**** Range Sensors ****/
-    protected ModernRoboticsI2cRangeSensor frontRangeSensor;
+    protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
     protected double getRangeSensorReading(ModernRoboticsI2cRangeSensor rangeSensor)
     {
         double rangeSensorOutput = 255;
@@ -30,7 +31,7 @@ public abstract class AutoBase extends MainRobotBase
     }
 
     /**** Color Sensors (3) ****/
-    protected ColorSensor bottomColorSensor; //Must have different I2C addresses.
+    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor;
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
     protected void updateColorSensorStates()
     {
@@ -48,9 +49,9 @@ public abstract class AutoBase extends MainRobotBase
     //Just resets the gyro.
     private void zeroHeading() throws InterruptedException
     {
-        sleep(400);
+        ProgramFlow.pauseForMS(400);
         gyroscope.resetZAxisIntegrator();
-        sleep(400);
+        ProgramFlow.pauseForMS(400);
     }
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
     protected int getValidGyroHeading()
@@ -85,8 +86,7 @@ public abstract class AutoBase extends MainRobotBase
 
         int currentHeading = getValidGyroHeading();
         //Adjust as fully as possible but not beyond the time limit.
-        while(RunState.getState () != RunState.DriverSelectedState.STOP &&
-                (System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10))
+        while(!RunState.stopRequested () && (System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10))
         {
             //Verify that the heading that we thought was perfectly on point actually is on point.
             currentHeading = getValidGyroHeading();
@@ -109,6 +109,7 @@ public abstract class AutoBase extends MainRobotBase
             if (mode != TurnMode.LEFT)
                 rightDrive.setRPS (Range.clip(turnPower, -1, 1));
 
+            // CHANGE THIS
             rightDrive.updateMotorPowerWithPID ();
             leftDrive.updateMotorPowerWithPID ();
 
@@ -144,6 +145,9 @@ public abstract class AutoBase extends MainRobotBase
     }
     protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, SensorDriveAdjustment sensorAdjustmentType) throws InterruptedException
     {
+        leftDrive.reset ();
+        rightDrive.reset ();
+
         //Set initial power, and then modify it later.
         leftDrive.setRPS (powerMeasure);
         rightDrive.setRPS (powerMeasure);
@@ -151,58 +155,55 @@ public abstract class AutoBase extends MainRobotBase
         //Allows us to know when we stop.
         boolean reachedFinalDest = false;
 
-        long lastUpdateTime = 0, adjustRate = 50;
+        long adjustRate = 50;
 
         //Actual adjustment aspect of driving.
-        while (!reachedFinalDest && RunState.getState () != RunState.DriverSelectedState.STOP)
+        while (!reachedFinalDest && !RunState.stopRequested ())
         {
-            long currentTime = System.currentTimeMillis();
+            ProgramFlow.pauseForMS (adjustRate);
 
-            if (currentTime - lastUpdateTime >= adjustRate)
-            {
-                //Do this before setting new powers, since it will adjust erratically otherwise.
-                rightDrive.updateMotorPowerWithPID ();
-                leftDrive.updateMotorPowerWithPID ();
+            //Do this before setting new powers, since it will adjust erratically otherwise.
+            rightDrive.updateMotorPowerWithPID ();
+            leftDrive.updateMotorPowerWithPID ();
 
-                /** GYROSCOPE ADJUSTMENT **/
-                //For each result, positive favors left side and negative the right side.
-                int offFromHeading = desiredHeading - getValidGyroHeading ();
+            /** GYROSCOPE ADJUSTMENT **/
+            //For each result, positive favors left side and negative the right side.
+            int offFromHeading = desiredHeading - getValidGyroHeading ();
 
+            //Change motor powers based on offFromHeading.
+            double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * .006 + .22);
+
+            /** RANGE SENSOR ADJUSTMENT **/
+            double rangeSensorAdjustment = 0;
+            if (sensorAdjustmentType == SensorDriveAdjustment.UseRangeSensor)
                 //Change motor powers based on offFromHeading.
-                double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * .006 + .22);
+                rangeSensorAdjustment = (getRangeSensorReading (sideRangeSensor) - 15) * 0.03;
 
-                /** RANGE SENSOR ADJUSTMENT **/
-                double rangeSensorAdjustment = 0;
-                if (sensorAdjustmentType == SensorDriveAdjustment.UseRangeSensor)
-                    //Change motor powers based on offFromHeading.
-                    rangeSensorAdjustment = (getRangeSensorReading (sideRangeSensor) - 15) * 0.03;
+            //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later
+            double totalAdjustmentFactor = Math.signum (powerMeasure) * gyroAdjustment + rangeSensorAdjustment;
+            rightDrive.setRPS (powerMeasure * (1 - totalAdjustmentFactor));
+            leftDrive.setRPS (powerMeasure * (1 + totalAdjustmentFactor));
 
-
-                //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later
-                double totalAdjustmentFactor = Math.signum (powerMeasure) * gyroAdjustment + rangeSensorAdjustment;
-                rightDrive.setRPS (powerMeasure * (1 - totalAdjustmentFactor));
-                leftDrive.setRPS (powerMeasure * (1 + totalAdjustmentFactor));
-
-                switch (sensorStopType)
-                {
-                    case Distance:
-                        int powerSign = (int) (Math.signum (powerMeasure));
-                        reachedFinalDest = stopValue * powerSign >= ((leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0) * powerSign;
+            //Causes program termination.
+            switch (sensorStopType)
+            {
+                case Distance:
+                    //End early if this is pointless.
+                    if (stopValue == 0)
                         break;
 
-                    case Ultrasonic:
-                        reachedFinalDest = frontRangeSensor.cmUltrasonic () >= stopValue;
-                        break;
+                    int powerSign = (int) (Math.signum (powerMeasure));
+                    reachedFinalDest = stopValue * powerSign >= ((leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0) * powerSign;
+                    break;
 
-                    case BottomColorAlpha:
-                        reachedFinalDest = bottomColorSensor.alpha () >= stopValue;
-                        break;
-                }
+                case Ultrasonic:
+                    reachedFinalDest = frontRangeSensor.cmUltrasonic () >= stopValue;
+                    break;
 
-                lastUpdateTime = currentTime;
+                case BottomColorAlpha:
+                    reachedFinalDest = bottomColorSensor.alpha () >= stopValue;
+                    break;
             }
-
-            idle();
         }
 
         hardBrake (100);
@@ -213,16 +214,16 @@ public abstract class AutoBase extends MainRobotBase
     {
         leftDrive.setRPS (0);
         leftDrive.setRPS (0);
-        sleep(msDelay);
+        ProgramFlow.pauseForMS (msDelay);
     }
 
     /******** CUSTOM ACTIONS ********/
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
         flywheels.setRPS (0.32);
-        sleep(300);
+        ProgramFlow.pauseForMS(300);
         harvester.setRPS (-1.0);
-        sleep(2200);
+        ProgramFlow.pauseForMS(2200);
         flywheels.setRPS (0);
         harvester.setRPS (0);
     }
@@ -233,6 +234,28 @@ public abstract class AutoBase extends MainRobotBase
     @Override
     protected void initializeOpModeSpecificHardware() throws InterruptedException
     {
+        //The range sensors are especially odd to initialize, and will often require a robot restart.
+        ConsoleManager.outputNewLineToDrivers ("Initializing Front Range Sensor...");
+
+        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
+        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
+
+        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
+            ConsoleManager.appendToLastOutputtedLine ("FAILED!");
+        else
+            ConsoleManager.appendToLastOutputtedLine ("OK!");
+
+        ConsoleManager.outputNewLineToDrivers ("Initializing Side Range Sensor...");
+
+        sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
+        sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
+
+        if (sideRangeSensor.getDistance (DistanceUnit.CM) < 1.0)
+            ConsoleManager.appendToLastOutputtedLine ("FAILED!");
+        else
+            ConsoleManager.appendToLastOutputtedLine ("OK!");
+
+
         //Initialize color sensors.
         ConsoleManager.outputNewLineToDrivers ("Initializing Color Sensors...");
         option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
@@ -246,20 +269,11 @@ public abstract class AutoBase extends MainRobotBase
         bottomColorSensor.enableLed(true);
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
-        //Initialize the range sensors for autonomous.
-        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
-        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
-        //The range sensors are odd and often return .269 with this method unless the robot is restarted.
-        ConsoleManager.outputNewLineToDrivers ("Initializing Front Range Sensor...");
-        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
-            ConsoleManager.appendToLastOutputtedLine ("FAILED!");
-        else
-            ConsoleManager.appendToLastOutputtedLine ("OK!");
-
         //Initialize encoders.
         ConsoleManager.outputNewLineToDrivers ("Initializing Encoders...");
-        leftDrive.resetEncoder ();
-        rightDrive.resetEncoder ();
+        leftDrive.reset ();
+        rightDrive.reset ();
+        flywheels.reset ();
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize gyroscope.
@@ -271,11 +285,13 @@ public abstract class AutoBase extends MainRobotBase
             gyroscope.calibrate();
 
             //Pause to prevent odd errors in which it says it's configured but is actually LYING.
-            sleep(1000);
+            ProgramFlow.pauseForMS(1000);
 
+            //Wait for gyro to finish calibrating.
             while (gyroscope.isCalibrating())
-                sleep(50);
+                ProgramFlow.pauseForMS(50);
 
+            //Zero gyro heading.
             zeroHeading();
 
             ConsoleManager.appendToLastOutputtedLine ("OK!");

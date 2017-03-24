@@ -13,7 +13,7 @@ public class ConsoleManager
         mainTelemetry = someTelemetry;
     }
 
-    /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
+    /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES PROVIDE ***/
     private static ArrayList<String> currentConsoleDisplay = new ArrayList<>();
     private static int maxLines = 7;
     public static void outputNewLineToDrivers(String newLine)

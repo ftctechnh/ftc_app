@@ -32,4 +32,9 @@ public class RunState
             return DriverSelectedState.STOP;
         }
     }
+
+    public static boolean stopRequested()
+    {
+        return getState () == DriverSelectedState.STOP;
+    }
 }

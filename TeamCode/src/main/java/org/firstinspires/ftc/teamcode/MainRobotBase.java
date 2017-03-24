@@ -24,9 +24,6 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
     protected final double FBP_UP = 0.84, FBP_DOWN = FBP_UP - 0.63;
     protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.09; //Range -1 to 1.  Favors left side if positive and vice-versa.
 
-    protected ModernRoboticsI2cRangeSensor sideRangeSensor;
-    protected ColorSensor option1ColorSensor, option2ColorSensor;
-
     // Called on initialization (once)
     protected void initializeHardware() throws InterruptedException
     {
@@ -60,14 +57,6 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
 
         capBallHolder = initialize(Servo.class, "clamp");
         capBallHolder.setPosition(CBH_CLOSED);
-
-        ConsoleManager.outputNewLineToDrivers ("Initializing Side Range Sensor...");
-        sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
-        sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
-        if (sideRangeSensor.getDistance (DistanceUnit.CM) < 1)
-            ConsoleManager.appendToLastOutputtedLine ("FAILED!");
-        else
-            ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Certain things are only applicable in autonomous or teleop.
         initializeOpModeSpecificHardware ();

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.driverchoices;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -16,10 +16,8 @@ public class Teleop extends MainRobotBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Normal mode variables
-        double leftPower,
-                rightPower,
-                rightPusherPowerLeft,
-                rightPusherPowerRight;
+        double leftPower, rightPower,
+                rightPusherPowerLeft, rightPusherPowerRight;
         boolean backwards = false;
         double speedCoefficient = 1.0;
         double flywheelCoefficient = 0.4;
@@ -30,7 +28,7 @@ public class Teleop extends MainRobotBase
         double harvesterCoefficient = 1.0;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
-        while (RunState.getState () != RunState.DriverSelectedState.STOP)
+        while (!RunState.stopRequested ())
         {
             /**************************** CONTROLLER #1 ********************************/
             /************** Direction Toggle **************/
@@ -167,10 +165,7 @@ public class Teleop extends MainRobotBase
                     "Fly wheel power = " + flywheelCoefficient,
                     "Drive power = " + speedCoefficient,
                     "Cap ball mode = " + capBallMode,
-                    "Distance from the wall = " + sideRangeSensor.cmUltrasonic (),
-                    "FBP_up = " + fbpUp,
-                    "Op1 Color Sensor: r = " + option1ColorSensor.red () + " b = " + option1ColorSensor.blue (),
-                    "Op2 Color Sensor: r = " + option2ColorSensor.red () + " b = " + option2ColorSensor.blue ()
+                    "FBP_up = " + fbpUp
             });
 
             idle();

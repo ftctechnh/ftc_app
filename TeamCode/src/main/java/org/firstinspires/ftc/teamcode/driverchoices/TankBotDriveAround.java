@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.tankbot;
+package org.firstinspires.ftc.teamcode.driverchoices;
 
 import android.media.MediaPlayer;
 
@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
 import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
+import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="TankBot Drive", group="TankBot Group")
@@ -174,7 +175,7 @@ public class TankBotDriveAround extends ImprovedOpModeBase
 
             ConsoleManager.outputNewLineToDrivers ("Playing " + choice.toString());
 
-            sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
+            ProgramFlow.pauseForMS (1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
         }
         catch (Exception e)
         {

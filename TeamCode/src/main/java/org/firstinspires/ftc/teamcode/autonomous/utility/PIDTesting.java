@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.programflow.RunState;
 
-@Autonomous(name="Drive Backward", group = "Utility Group")
+@Autonomous(name="Flywheel PID Testing", group = "Utility Group")
 
 public class PIDTesting extends AutoBase
 {
@@ -14,7 +14,7 @@ public class PIDTesting extends AutoBase
     {
         flywheels.setRPS (1);
 
-        while (RunState.getState () == RunState.DriverSelectedState.RUNNING)
+        while (!RunState.stopRequested ())
         {
             flywheels.updateMotorPowerWithPID ();
 

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
 import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
+import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
 
 public abstract class BallAuto extends AutoBase implements OnAlliance
 {
@@ -50,14 +51,12 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
             idle();
         }
 
-        sleep (delay);
+        ProgramFlow.pauseForMS (delay);
     }
 
     protected void driverStationSaysGO() throws InterruptedException
     {
-        Alliance alliance = getAlliance ();
-
-        boolean onBlueAlliance = (alliance == Alliance.BLUE);
+        boolean onBlueAlliance = (getAlliance () == Alliance.BLUE);
         int autonomousSign = (onBlueAlliance ? 1 : -1);
 
         //Drive to the cap ball.
