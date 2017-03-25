@@ -8,9 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
-import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
-import org.firstinspires.ftc.teamcode.programflow.RunState;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
 public abstract class AutoBase extends MainRobotBase
@@ -19,7 +17,7 @@ public abstract class AutoBase extends MainRobotBase
 
     /**** Range Sensors ****/
     protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
-    protected double getRangeSensorReading(ModernRoboticsI2cRangeSensor rangeSensor)
+    protected double getRangeSensorReading(ModernRoboticsI2cRangeSensor rangeSensor) throws InterruptedException
     {
         double rangeSensorOutput = 255;
         while (rangeSensorOutput >= 255 || rangeSensorOutput <= 0)
@@ -49,9 +47,9 @@ public abstract class AutoBase extends MainRobotBase
     //Just resets the gyro.
     private void zeroHeading() throws InterruptedException
     {
-        ProgramFlow.pauseForMS(400);
+        sleep(400);
         gyroscope.resetZAxisIntegrator();
-        ProgramFlow.pauseForMS(400);
+        sleep(400);
     }
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
     protected int getValidGyroHeading()
@@ -86,7 +84,7 @@ public abstract class AutoBase extends MainRobotBase
 
         int currentHeading = getValidGyroHeading();
         //Adjust as fully as possible but not beyond the time limit.
-        while(!RunState.stopRequested () && (System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10))
+        while(System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10)
         {
             //Verify that the heading that we thought was perfectly on point actually is on point.
             currentHeading = getValidGyroHeading();
@@ -158,9 +156,9 @@ public abstract class AutoBase extends MainRobotBase
         long adjustRate = 50;
 
         //Actual adjustment aspect of driving.
-        while (!reachedFinalDest && !RunState.stopRequested ())
+        while (!reachedFinalDest)
         {
-            ProgramFlow.pauseForMS (adjustRate);
+            sleep (adjustRate);
 
             //Do this before setting new powers, since it will adjust erratically otherwise.
             rightDrive.updateMotorPowerWithPID ();
@@ -214,16 +212,16 @@ public abstract class AutoBase extends MainRobotBase
     {
         leftDrive.setRPS (0);
         leftDrive.setRPS (0);
-        ProgramFlow.pauseForMS (msDelay);
+        sleep (msDelay);
     }
 
     /******** CUSTOM ACTIONS ********/
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
         flywheels.setRPS (0.32);
-        ProgramFlow.pauseForMS(300);
+        sleep (300);
         harvester.setRPS (-1.0);
-        ProgramFlow.pauseForMS(2200);
+        sleep (2200);
         flywheels.setRPS (0);
         harvester.setRPS (0);
     }
@@ -285,11 +283,11 @@ public abstract class AutoBase extends MainRobotBase
             gyroscope.calibrate();
 
             //Pause to prevent odd errors in which it says it's configured but is actually LYING.
-            ProgramFlow.pauseForMS(1000);
+            sleep(1000);
 
             //Wait for gyro to finish calibrating.
             while (gyroscope.isCalibrating())
-                ProgramFlow.pauseForMS(50);
+                sleep(50);
 
             //Zero gyro heading.
             zeroHeading();

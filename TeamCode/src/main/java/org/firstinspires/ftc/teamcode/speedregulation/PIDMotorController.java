@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.speedregulation;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
-
 public class PIDMotorController
 {
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
@@ -22,11 +20,61 @@ public class PIDMotorController
 
     public void reset()
     {
-        encoderMotor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
-        encoderMotor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        encoderMotor.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        boolean doneSuccessfully = false;
+        long additionalTime = 0;
+        while (!doneSuccessfully)
+        {
+            try
+            {
+                encoderMotor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+                Thread.sleep(100 + additionalTime);
+                doneSuccessfully = true;
+            }
+            catch (Exception e)
+            {
+                if (e instanceof InterruptedException)
+                    return;
 
-        lastAdjustTime = 0;
+                additionalTime += 20;
+            }
+        }
+
+        doneSuccessfully = false;
+        additionalTime = 0;
+        while (!doneSuccessfully)
+        {
+            try
+            {
+                encoderMotor.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                Thread.sleep(100 + additionalTime);
+                doneSuccessfully = true;
+            }
+            catch (Exception e)
+            {
+                if (e instanceof InterruptedException)
+                    return;
+
+                additionalTime += 20;
+            }
+        }
+
+        doneSuccessfully = false;
+        while (!doneSuccessfully)
+        {
+            try
+            {
+                encoderMotor.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                Thread.sleep(100 + additionalTime);
+                doneSuccessfully = true;
+            }
+            catch (Exception e)
+            {
+                if (e instanceof InterruptedException)
+                    return;
+
+                additionalTime += 20;
+            }
+        }
     }
 
     /******* PID STUFF *********/

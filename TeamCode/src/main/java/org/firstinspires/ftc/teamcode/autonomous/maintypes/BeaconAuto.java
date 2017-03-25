@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
-import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
-import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 public abstract class BeaconAuto extends AutoBase implements OnAlliance
 {
@@ -111,9 +110,9 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
                 //Press the button.
                 rightButtonPusher.setPosition (0);
-                ProgramFlow.pauseForMS (timeForEachPress);
+                sleep (timeForEachPress);
                 rightButtonPusher.setPosition (1);
-                ProgramFlow.pauseForMS(timeForEachPress - 200);
+                sleep (timeForEachPress - 200);
 
                 //Drive back to the original position.
                 drive(SensorStopType.BottomColorAlpha, 5, PowerUnits.RevolutionsPerSecond, -1 * Math.signum(drivePower) * BEACON_DP);
@@ -130,7 +129,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             //Retract almost completely and then drive to the next one.
             ConsoleManager.outputNewLineToDrivers ("Retracting color sensing apparatus for the next beacon.");
             rightButtonPusher.setPosition (1);
-            ProgramFlow.pauseForMS (timeTakenToSeeColors);
+            sleep (timeTakenToSeeColors);
             rightButtonPusher.setPosition (.5);
 
             drive (SensorStopType.Distance, 500, PowerUnits.RevolutionsPerSecond, autonomousSign * (BEACON_DP + 1));

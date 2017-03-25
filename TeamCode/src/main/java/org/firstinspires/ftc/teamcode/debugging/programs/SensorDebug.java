@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.autonomous.utility;
+package org.firstinspires.ftc.teamcode.debugging.programs;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 @Autonomous(name = "Sensor Debug", group = "Utility Group")
 

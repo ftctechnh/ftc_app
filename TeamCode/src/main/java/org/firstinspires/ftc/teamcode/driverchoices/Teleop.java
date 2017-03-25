@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
-import org.firstinspires.ftc.teamcode.programflow.RunState;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
@@ -28,7 +27,7 @@ public class Teleop extends MainRobotBase
         double harvesterCoefficient = 1.0;
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
-        while (!RunState.stopRequested ())
+        while (true)
         {
             /**************************** CONTROLLER #1 ********************************/
             /************** Direction Toggle **************/

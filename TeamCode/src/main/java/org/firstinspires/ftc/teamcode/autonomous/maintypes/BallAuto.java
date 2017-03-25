@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
-import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
-import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 public abstract class BallAuto extends AutoBase implements OnAlliance
 {
@@ -51,7 +50,7 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
             idle();
         }
 
-        ProgramFlow.pauseForMS (delay);
+        sleep (delay);
     }
 
     protected void driverStationSaysGO() throws InterruptedException

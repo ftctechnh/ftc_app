@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.autonomous.utility;
+package org.firstinspires.ftc.teamcode.debugging.programs;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.programflow.RunState;
 
 @Autonomous(name="Flywheel PID Testing", group = "Utility Group")
 
@@ -14,7 +13,7 @@ public class PIDTesting extends AutoBase
     {
         flywheels.setRPS (1);
 
-        while (!RunState.stopRequested ())
+        while (true)
         {
             flywheels.updateMotorPowerWithPID ();
 

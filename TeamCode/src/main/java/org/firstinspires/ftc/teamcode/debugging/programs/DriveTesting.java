@@ -1,26 +1,24 @@
-package org.firstinspires.ftc.teamcode.autonomous.utility;
+package org.firstinspires.ftc.teamcode.debugging.programs;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.programflow.ConsoleManager;
-import org.firstinspires.ftc.teamcode.programflow.ProgramFlow;
-import org.firstinspires.ftc.teamcode.programflow.RunState;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 @Autonomous(name = "Driving - PID Debug", group = "Utility Group")
 
 public class DriveTesting extends AutoBase
 {
     @Override
-    protected void driverStationSaysINITIALIZE()
+    protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //Set the motor powers.
         leftDrive.setRPS (3);
         rightDrive.setRPS (3);
 
-        while (RunState.getState () == RunState.DriverSelectedState.INIT)
+        while (!isStarted ())
         {
-            ProgramFlow.pauseForMS (100);
+            sleep (100);
 
             leftDrive.updateMotorPowerWithPID ();
             rightDrive.updateMotorPowerWithPID ();
@@ -39,18 +37,15 @@ public class DriveTesting extends AutoBase
         leftDrive.setRPS (1);
         rightDrive.setRPS (1);
 
-        while (RunState.getState () == RunState.DriverSelectedState.RUNNING)
+        while (true)
         {
-            ProgramFlow.pauseForMS (100);
+            sleep (100);
 
             leftDrive.updateMotorPowerWithPID ();
             rightDrive.updateMotorPowerWithPID ();
 
             outputData ();
         }
-
-        leftDrive.reset ();
-        rightDrive.reset ();
     }
 
     private void outputData()
