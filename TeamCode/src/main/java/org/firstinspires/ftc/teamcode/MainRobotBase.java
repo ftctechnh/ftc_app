@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.speedregulation.PIDMotorController;
+import org.firstinspires.ftc.teamcode.enhancements.PIDMotorController;
 
 public abstract class MainRobotBase extends ImprovedOpModeBase
 {

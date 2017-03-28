@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.speedregulation;
+package org.firstinspires.ftc.teamcode.enhancements;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
@@ -128,7 +128,8 @@ public class PIDMotorController
             actualTicksSinceUpdate = currentEncoderPosition - previousMotorPosition;
 
             //Sensitivity is the coefficient below.
-            rpsConversionFactor += Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * 0.0002), -.5, .5);
+            //If expected = -50 and actual = -28 then diff = -22 but motor power needs to INCREASE.
+            rpsConversionFactor += Math.signum (desiredRPS) * Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * 0.0002), -.5, .5);
 
             updateMotorPowers ();
         }
@@ -150,6 +151,7 @@ public class PIDMotorController
     {
         double actualPower = Range.clip(power, -1, 1);
         encoderMotor.setPower(actualPower);
-        linkedMotor.setPower (actualPower);
+        if (linkedMotor != null)
+            linkedMotor.setPower (actualPower);
     }
 }

@@ -99,7 +99,7 @@ public abstract class AutoBase extends MainRobotBase
             //Turn at a speed proportional to the distance from the ideal heading.
             int thetaFromHeading = currentHeading - this.desiredHeading;
 
-            double turnPower = Math.signum(thetaFromHeading) * (Math.abs(thetaFromHeading) * 0.021 + 1);
+            double turnPower = Math.signum(thetaFromHeading) * (Math.abs(thetaFromHeading) * 0.05 + .2);
 
             //Set clipped powers.
             if (mode != TurnMode.RIGHT)
@@ -107,11 +107,9 @@ public abstract class AutoBase extends MainRobotBase
             if (mode != TurnMode.LEFT)
                 rightDrive.setRPS (Range.clip(turnPower, -1, 1));
 
-            // CHANGE THIS
+            sleep(50);
             rightDrive.updateMotorPowerWithPID ();
             leftDrive.updateMotorPowerWithPID ();
-
-            idle();
         }
 
         hardBrake (100);
@@ -156,7 +154,7 @@ public abstract class AutoBase extends MainRobotBase
         //Actual adjustment aspect of driving.
         while (!reachedFinalDest)
         {
-            sleep (100); //Adjustment rate.
+            sleep (50); //Adjustment rate.
 
             //Do this before setting new powers, since it will adjust erratically otherwise.
             rightDrive.updateMotorPowerWithPID ();
@@ -193,7 +191,9 @@ public abstract class AutoBase extends MainRobotBase
                     break;
 
                 case Ultrasonic:
-                    reachedFinalDest = frontRangeSensor.cmUltrasonic () <= stopValue;
+                    double reading = getRangeSensorReading (frontRangeSensor);
+                    reachedFinalDest = reading <= stopValue;
+                    //ConsoleManager.outputNewLineToDrivers ("Dist is " + reading);
                     break;
 
                 case BottomColorAlpha:

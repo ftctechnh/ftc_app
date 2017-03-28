@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
+import org.firstinspires.ftc.teamcode.enhancements.EZThread;
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 public abstract class ImprovedOpModeBase extends LinearOpMode
 {
-    //This took a LONG TIME TO WRITE
+    //Initializes any hardware device provided by some class.
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
     {
         try
@@ -26,20 +27,33 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //Preliminary stuff.
-        ConsoleManager.setMainTelemetry (telemetry);
+        try
+        {
+            //Preliminary stuff.
+            ConsoleManager.setMainTelemetry (telemetry);
+            EZThread.initializeThreadCreator (hardwareMap.appContext);
 
-        //REQUIRED in MainRobotBase.
-        initializeHardware();
+            //REQUIRED in MainRobotBase.
+            initializeHardware ();
 
-        //Initialize stuff.
-        driverStationSaysINITIALIZE();
+            //Initialize stuff.
+            driverStationSaysINITIALIZE ();
 
-        //Wait for the start button to be pressed.
-        waitForStart();
+            //Wait for the start button to be pressed.
+            waitForStart ();
 
-        //This is where the child classes differ.
-        driverStationSaysGO();
+            //This is where the child classes differ.
+            driverStationSaysGO ();
+        }
+        catch (InterruptedException e)
+        {
+            ConsoleManager.outputNewLineToDrivers ("Quitting app early.");
+        }
+        finally
+        {
+            EZThread.killAllThreads ();
+            driverStationSaysSTOP ();
+        }
     }
 
     //Required overload.
