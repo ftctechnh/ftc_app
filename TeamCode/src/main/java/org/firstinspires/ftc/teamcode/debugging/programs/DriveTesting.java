@@ -9,57 +9,31 @@ import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 public class DriveTesting extends AutoBase
 {
-    @Override
-    protected void driverStationSaysINITIALIZE() throws InterruptedException
+    //Called after runOpMode() has finished initializing.
+    protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
         leftDrive.setRPS (3);
         rightDrive.setRPS (3);
 
-        while (!isStarted ())
-        {
-            sleep (100);
-
-            leftDrive.updateMotorPowerWithPID ();
-            rightDrive.updateMotorPowerWithPID ();
-
-            outputData ();
-        }
-
-        leftDrive.reset ();
-        rightDrive.reset ();
-    }
-
-    //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO() throws InterruptedException
-    {
-        //Set the motor powers.
-        leftDrive.setRPS (1);
-        rightDrive.setRPS (1);
-
         while (true)
         {
-            sleep (100);
+            sleep (100); //100ms seems to be the ideal rate at which PID is updated.
 
             leftDrive.updateMotorPowerWithPID ();
             rightDrive.updateMotorPowerWithPID ();
 
-            outputData ();
+            ConsoleManager.outputConstantDataToDrivers (
+                    new String[]
+                            {
+                                    "L conversion " + leftDrive.getRPSConversionFactor (),
+                                    "R conversion " + rightDrive.getRPSConversionFactor (),
+                                    "L expected " + leftDrive.getExpectedTicksSinceUpdate (),
+                                    "L actual " + leftDrive.getActualTicksSinceUpdate (),
+                                    "R expected " + rightDrive.getExpectedTicksSinceUpdate (),
+                                    "R actual " + rightDrive.getActualTicksSinceUpdate ()
+                            }
+            );
         }
-    }
-
-    private void outputData()
-    {
-        ConsoleManager.outputConstantDataToDrivers (
-                new String[]
-                        {
-                                "L conversion " + leftDrive.rpsConversionFactor,
-                                "R conversion " + rightDrive.rpsConversionFactor,
-                                "L expected " + leftDrive.expectedTicksSinceUpdate,
-                                "L actual " + leftDrive.actualTicksSinceUpdate,
-                                "R expected " + rightDrive.expectedTicksSinceUpdate,
-                                "R actual " + rightDrive.actualTicksSinceUpdate
-                        }
-        );
     }
 }

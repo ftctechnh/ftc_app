@@ -11,10 +11,11 @@ public class ConsoleManager
     public static void setMainTelemetry(Telemetry someTelemetry)
     {
         mainTelemetry = someTelemetry;
+        currentConsoleDisplay = new ArrayList<> ();
     }
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES PROVIDE ***/
-    private static ArrayList<String> currentConsoleDisplay = new ArrayList<>();
+    private static ArrayList<String> currentConsoleDisplay;
     private static int maxLines = 7;
     public static void outputNewLineToDrivers(String newLine)
     {

@@ -23,7 +23,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
         //Shoot the balls into the center vortex.
         ConsoleManager.outputNewLineToDrivers("Shooting balls into center vortex...");
-        shootBallsIntoCenterVortex ();
+        //shootBallsIntoCenterVortex (); // PID HAS TO WORK FIRST: ENCODERS!!!
 
         //Turn to face the wall directly.
         ConsoleManager.outputNewLineToDrivers("Turning to face wall at an angle...");

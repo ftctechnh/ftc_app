@@ -99,7 +99,7 @@ public abstract class AutoBase extends MainRobotBase
             //Turn at a speed proportional to the distance from the ideal heading.
             int thetaFromHeading = currentHeading - this.desiredHeading;
 
-            double turnPower = Math.signum(thetaFromHeading) * (Math.abs(thetaFromHeading) * 0.0042 + 0.23);
+            double turnPower = Math.signum(thetaFromHeading) * (Math.abs(thetaFromHeading) * 0.021 + 1);
 
             //Set clipped powers.
             if (mode != TurnMode.RIGHT)
@@ -153,12 +153,10 @@ public abstract class AutoBase extends MainRobotBase
         //Allows us to know when we stop.
         boolean reachedFinalDest = false;
 
-        long adjustRate = 50;
-
         //Actual adjustment aspect of driving.
         while (!reachedFinalDest)
         {
-            sleep (adjustRate);
+            sleep (100); //Adjustment rate.
 
             //Do this before setting new powers, since it will adjust erratically otherwise.
             rightDrive.updateMotorPowerWithPID ();
@@ -169,13 +167,13 @@ public abstract class AutoBase extends MainRobotBase
             int offFromHeading = desiredHeading - getValidGyroHeading ();
 
             //Change motor powers based on offFromHeading.
-            double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * .006 + .22);
+            double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15 + 1);
 
             /** RANGE SENSOR ADJUSTMENT **/
             double rangeSensorAdjustment = 0;
             if (sensorAdjustmentType == SensorDriveAdjustment.UseRangeSensor)
                 //Change motor powers based on offFromHeading.
-                rangeSensorAdjustment = (getRangeSensorReading (sideRangeSensor) - 15) * 0.03;
+                rangeSensorAdjustment = (getRangeSensorReading (sideRangeSensor) - 15) * 0.15;
 
             //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later
             double totalAdjustmentFactor = Math.signum (powerMeasure) * gyroAdjustment + rangeSensorAdjustment;
@@ -195,7 +193,7 @@ public abstract class AutoBase extends MainRobotBase
                     break;
 
                 case Ultrasonic:
-                    reachedFinalDest = frontRangeSensor.cmUltrasonic () >= stopValue;
+                    reachedFinalDest = frontRangeSensor.cmUltrasonic () <= stopValue;
                     break;
 
                 case BottomColorAlpha:
@@ -211,16 +209,16 @@ public abstract class AutoBase extends MainRobotBase
     protected void hardBrake(long msDelay) throws InterruptedException
     {
         leftDrive.setRPS (0);
-        leftDrive.setRPS (0);
+        rightDrive.setRPS (0);
         sleep (msDelay);
     }
 
     /******** CUSTOM ACTIONS ********/
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
-        flywheels.setRPS (0.32);
+        flywheels.setRPS (3);
         sleep (300);
-        harvester.setRPS (-1.0);
+        harvester.setRPS (-5);
         sleep (2200);
         flywheels.setRPS (0);
         harvester.setRPS (0);
@@ -294,6 +292,8 @@ public abstract class AutoBase extends MainRobotBase
 
             ConsoleManager.appendToLastOutputtedLine ("OK!");
         }
+
+        ConsoleManager.outputNewLineToDrivers ("Initialization completed!");
     }
 
 

@@ -2,25 +2,26 @@ package org.firstinspires.ftc.teamcode.debugging.programs;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 
 @Autonomous(name="Drive Forward", group = "Utility Group")
 
-public class DriveForward extends AutoBase
+public class DriveForward extends MainRobotBase
 {
     @Override
     protected void driverStationSaysINITIALIZE()
     {
         //Set the motor powers.
-        leftDrive.setRPS (.3);
-        rightDrive.setRPS (-.3);
+        leftDrive.setDirectMotorPower (.5);
+        rightDrive.setDirectMotorPower (-.5);
     }
 
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        leftDrive.setRPS (.6);
-        rightDrive.setRPS (.6);
+        leftDrive.setDirectMotorPower (.8);
+        rightDrive.setDirectMotorPower (.8);
 
         while (true)
             idle();

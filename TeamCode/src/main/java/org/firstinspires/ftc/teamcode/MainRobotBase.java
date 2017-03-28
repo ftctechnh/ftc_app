@@ -17,31 +17,26 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
     protected final double FBP_UP = 0.84, FBP_DOWN = FBP_UP - 0.63;
-    protected final double MOTOR_POWER_CORRECTION_FACTOR = 0.09; //Range -1 to 1.  Favors left side if positive and vice-versa.
 
-    // Called on initialization (once)
     protected void initializeHardware() throws InterruptedException
     {
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
-        DcMotor frontRight = initialize(DcMotor.class, "frontRight"),
-                backRight = initialize(DcMotor.class, "backRight"),
-                frontLeft = initialize(DcMotor.class, "frontLeft"),
-                backLeft = initialize(DcMotor.class, "backLeft");
-        frontLeft.setDirection (DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection (DcMotorSimple.Direction.REVERSE);
+        //The back motors are the ones that have functional encoders, while the front ones don't currently work.
+        leftDrive = new PIDMotorController(initialize(DcMotor.class, "backLeft"), initialize(DcMotor.class, "frontLeft"), 0.20);
+        leftDrive.encoderMotor.setDirection (DcMotorSimple.Direction.REVERSE);
+        leftDrive.linkedMotor.setDirection (DcMotorSimple.Direction.REVERSE);
 
-        leftDrive = new PIDMotorController(backLeft, frontLeft);
-        rightDrive = new PIDMotorController (backRight, frontRight);
+        rightDrive = new PIDMotorController (initialize(DcMotor.class, "backRight"), initialize(DcMotor.class, "frontRight"), 0.18);
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
-        harvester = new PIDMotorController (initialize(DcMotor.class, "harvester"));
+        harvester = new PIDMotorController (initialize(DcMotor.class, "harvester"), 0.2);
 
-        flywheels = new PIDMotorController (initialize(DcMotor.class, "flywheels"));
+        flywheels = new PIDMotorController (initialize(DcMotor.class, "flywheels"), 0.2);
         flywheels.encoderMotor.setDirection (DcMotor.Direction.REVERSE);
 
-        lift = new PIDMotorController (initialize(DcMotor.class, "lift"));
+        lift = new PIDMotorController (initialize(DcMotor.class, "lift"), 0.2);
         lift.encoderMotor.setDirection (DcMotorSimple.Direction.REVERSE);
 
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
@@ -57,9 +52,5 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         initializeOpModeSpecificHardware ();
     }
 
-    //Optional overload.
-    protected void initializeOpModeSpecificHardware() throws InterruptedException
-    {
-
-    }
+    protected void initializeOpModeSpecificHardware() throws InterruptedException {}
 }

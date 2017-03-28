@@ -8,14 +8,16 @@ public class PIDMotorController
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final DcMotor encoderMotor, linkedMotor;
 
-    public PIDMotorController(DcMotor encoderMotor)
+    public PIDMotorController(DcMotor encoderMotor, double rpsConversionFactor)
     {
-        this (encoderMotor, null);
+        this (encoderMotor, null, rpsConversionFactor);
     }
-    public PIDMotorController(DcMotor encoderMotor, DcMotor linkedMotor)
+    public PIDMotorController(DcMotor encoderMotor, DcMotor linkedMotor, double rpsConversionFactor)
     {
         this.encoderMotor = encoderMotor;
         this.linkedMotor = linkedMotor;
+
+        this.rpsConversionFactor = rpsConversionFactor;
     }
 
     public void reset()
@@ -81,7 +83,11 @@ public class PIDMotorController
     public double desiredRPS = 0;
 
     //Initial conversion factor, will be changed a LOT through the course of the program.
-    public double rpsConversionFactor = .25;
+    private double rpsConversionFactor = .25;
+    public double getRPSConversionFactor() //Primarily for debugging.
+    {
+        return rpsConversionFactor;
+    }
 
     public void setRPS (double givenRPS)
     {
@@ -97,7 +103,17 @@ public class PIDMotorController
     //Stored for each run.
     private int previousMotorPosition;
     private long lastAdjustTime = 0;
-    public double expectedTicksSinceUpdate, actualTicksSinceUpdate;
+
+    private double expectedTicksSinceUpdate, actualTicksSinceUpdate;
+    public double getExpectedTicksSinceUpdate()
+    {
+        return expectedTicksSinceUpdate;
+    }
+    public double getActualTicksSinceUpdate()
+    {
+        return actualTicksSinceUpdate;
+    }
+
     public void updateMotorPowerWithPID ()
     {
         int currentEncoderPosition = encoderMotor.getCurrentPosition ();
@@ -124,8 +140,16 @@ public class PIDMotorController
     private void updateMotorPowers()
     {
         //Set the initial power which the PID will soon modify.
-        encoderMotor.setPower (desiredRPS * rpsConversionFactor);
+        double desiredPower = Range.clip(desiredRPS * rpsConversionFactor, -1, 1);
+        encoderMotor.setPower (desiredPower);
         if (linkedMotor != null)
-            linkedMotor.setPower (desiredRPS * rpsConversionFactor);
+            linkedMotor.setPower (desiredPower);
+    }
+
+    public void setDirectMotorPower(double power)
+    {
+        double actualPower = Range.clip(power, -1, 1);
+        encoderMotor.setPower(actualPower);
+        linkedMotor.setPower (actualPower);
     }
 }
