@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name = "#11183: TeleOp Competition Beta Joystick 1.6.17", group = "Robot")
-@Disabled
+
 public class Jan6TeleOpCompetitionBetaJoystick extends OpMode {
 
 

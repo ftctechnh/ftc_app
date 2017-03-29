@@ -25,7 +25,6 @@ public class newRedAuto_charlie extends AutonomousGeneral_charlie {
     public int beacon_angle;
     public double pathhighspeed = 0.8;
     public boolean ball_first = false;
-    //String currentColor = "blank";
     int initialHeading =361;
     public double[] timeProfile = new double[30];
     int profileindex = 0;
@@ -37,12 +36,6 @@ public class newRedAuto_charlie extends AutonomousGeneral_charlie {
         idle();
         setMotorsModeToEncDrive();
         stopMotors();
-     //   sleep(1000);
-       /* gyro.calibrate();
-        runtime.reset();
-        while((gyro.isCalibrating()&&runtime.seconds()<5)){
-            idle();
-        }*/
 
         initialHeading = gyro.getHeading();
         telemetry.addData("READY TO START", initialHeading);
@@ -59,10 +52,10 @@ public class newRedAuto_charlie extends AutonomousGeneral_charlie {
        // minimizeError();
         setMotorsModeToEncDrive();
         stopMotors();
-        timeProfile[profileindex++] = runtime.milliseconds();
+        //timeProfile[profileindex++] = runtime.milliseconds();
         encoderMecanumCrossDrive(pathhighspeed,75,75,5,4);
         encoderMecanumCrossDrive(pathhighspeed,115,115,5,3);
-        timeProfile[profileindex++] = runtime.milliseconds();
+        //timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
 
         }
@@ -87,6 +80,44 @@ public class newRedAuto_charlie extends AutonomousGeneral_charlie {
 
 }
 
+    public void servoBeaconPress(){
+        boolean left_detected = false;
+        boolean beacon_press_success = false;
+
+        lineAlign();
+        timeProfile[profileindex++] = runtime.milliseconds();//first time: 9447.32 ms
+        //second time: 19998.19
+
+
+
+        readNewColorLeft();// this is the right if you are standing in the same direction as the back of the robot
+
+        if(currentColorBeaconLeft.equals(currentTeam)){
+            left_detected = true;
+            pressBeaconButton();
+        }
+        else{
+            left_detected = false;
+            setMotorsModeToEncDrive();
+            encoderMecanumCrossDrive(pathhighspeed,25,25,5,1);
+            pressBeaconButton();
+        }
+        timeProfile[profileindex++] = runtime.milliseconds();//first time: 12991.84
+        //second time: 21028.24(didn't push)
+        //presses beacon!
+
+
+        if (second_beacon_press == false)
+        {
+            moveToNextBeacon();
+        }
+        else
+        {
+            setMotorsModeToRangeSensing();
+            parkCenterVortex();
+        }
+        // below evaluate beacon press result and move to next step if it is success and handle failures if failures are seen
+    }
 
     public void lineAlign() {
         if(second_beacon_press){
@@ -152,45 +183,6 @@ public class newRedAuto_charlie extends AutonomousGeneral_charlie {
         moveTowardWall();
         //gyroCorrection(0);*/
 
-    }
-
-    public void servoBeaconPress(){
-        boolean left_detected = false;
-        boolean beacon_press_success = false;
-
-        lineAlign();
-        timeProfile[profileindex++] = runtime.milliseconds();//first time: 9447.32 ms
-                                                             //second time: 19998.19
-
-
-
-        readNewColorLeft();// this is the right if you are standing in the same direction as the back of the robot
-
-        if(currentColorBeaconLeft.equals(currentTeam)){
-            left_detected = true;
-            pressBeaconButton();
-        }
-        else{
-            left_detected = false;
-            setMotorsModeToEncDrive();
-            encoderMecanumCrossDrive(pathhighspeed,25,25,5,1);
-            pressBeaconButton();
-        }
-        timeProfile[profileindex++] = runtime.milliseconds();//first time: 12991.84
-                                                             //second time: 21028.24(didn't push)
-        //presses beacon!
-
-
-        if (second_beacon_press == false)
-        {
-            moveToNextBeacon();
-        }
-        else
-        {
-            setMotorsModeToRangeSensing();
-            parkCenterVortex();
-        }
-        // below evaluate beacon press result and move to next step if it is success and handle failures if failures are seen
     }
 
     public void moveTowardWall(){
@@ -325,11 +317,6 @@ public class newRedAuto_charlie extends AutonomousGeneral_charlie {
                 }
             }
         }
-
-        /*gyro_corr_cnt++;
-        telemetry.addData("gyroCorrection done", gyro.getHeading());
-        telemetry.addData("gyroCorrection cnt",gyro_corr_cnt);
-        telemetry.update();*/
         stopMotors();
 
     }

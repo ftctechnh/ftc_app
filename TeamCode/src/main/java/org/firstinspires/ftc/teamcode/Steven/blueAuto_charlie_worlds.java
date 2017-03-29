@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Main;
+package org.firstinspires.ftc.teamcode.Steven;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -6,13 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
 
 
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "blueBeaconCharlie")
-public class blueAuto_charlie extends AutonomousGeneral_charlie {
+@Autonomous(name = "blueBeaconCharlieWorlds")
+public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
 
 
