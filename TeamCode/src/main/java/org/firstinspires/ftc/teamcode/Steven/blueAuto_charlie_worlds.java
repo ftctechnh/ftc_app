@@ -55,15 +55,17 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         runtime.reset();
         second_beacon_press = false;
 
+        lineAlign();
 
-       // minimizeError();
-        setMotorsModeToEncDrive();
-        stopMotors();
-        timeProfile[profileindex++] = runtime.milliseconds();
-        encoderMecanumCrossDrive(pathhighspeed,75,75,5,1);
-        encoderMecanumCrossDrive(pathhighspeed,115,115,5,2);
-        timeProfile[profileindex++] = runtime.milliseconds();
-        servoBeaconPress();
+
+//       // minimizeError();
+//        setMotorsModeToEncDrive();
+//        stopMotors();
+//        timeProfile[profileindex++] = runtime.milliseconds();
+//        encoderMecanumCrossDrive(pathhighspeed,75,75,5,1);
+//        encoderMecanumCrossDrive(pathhighspeed,115,115,5,2);
+//        timeProfile[profileindex++] = runtime.milliseconds();
+//        servoBeaconPress();
 
         }
     public void servoBeaconPress(){
