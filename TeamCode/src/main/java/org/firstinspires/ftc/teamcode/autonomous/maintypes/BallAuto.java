@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 public abstract class BallAuto extends AutoBase implements OnAlliance
 {

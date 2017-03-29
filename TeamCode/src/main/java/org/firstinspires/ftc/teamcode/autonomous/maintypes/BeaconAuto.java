@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 public abstract class BeaconAuto extends AutoBase implements OnAlliance
 {

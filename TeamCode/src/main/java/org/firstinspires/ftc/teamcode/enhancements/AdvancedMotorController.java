@@ -1,26 +1,64 @@
 package org.firstinspires.ftc.teamcode.enhancements;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-public class PIDMotorController
+public class AdvancedMotorController
 {
+    //TODO: Make thread-compliant
+
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final DcMotor encoderMotor, linkedMotor;
 
-    public PIDMotorController(DcMotor encoderMotor, double rpsConversionFactor)
+    public enum MotorType
     {
-        this (encoderMotor, null, rpsConversionFactor);
+        NeverRest40(1120), NeverRest20(1120), NeverRest3P7(46);
+
+        public final int encoderTicksPerRevolution;
+        MotorType(int encoderTicksPerRevolution)
+        {
+            this.encoderTicksPerRevolution = encoderTicksPerRevolution;
+        }
     }
-    public PIDMotorController(DcMotor encoderMotor, DcMotor linkedMotor, double rpsConversionFactor)
+    public enum GearRatio
+    {
+        Two_To_One(2), One_to_One(1), One_to_Two(0.5);
+
+        public final double ratio;
+
+        GearRatio (double ratio)
+        {
+            this.ratio = ratio;
+        }
+    }
+    public AdvancedMotorController (DcMotor encoderMotor, double initialRPSConversionFactor, GearRatio gearRatio, MotorType motorType)
+    {
+        this (encoderMotor, null, initialRPSConversionFactor, gearRatio, motorType);
+    }
+    public AdvancedMotorController (DcMotor encoderMotor, DcMotor linkedMotor, double initialRPSConversionFactor, GearRatio gearRatio, MotorType motorType)
     {
         this.encoderMotor = encoderMotor;
         this.linkedMotor = linkedMotor;
 
-        this.rpsConversionFactor = rpsConversionFactor;
+        this.rpsConversionFactor = initialRPSConversionFactor;
+
+        this.encoderTicksPerWheelRevolution = gearRatio.ratio * motorType.encoderTicksPerRevolution;
+
+        resetEncoder ();
+    }
+    //I'm purposefully avoiding putting all other parameters into other such methods, since it would prevent the final variables from being final.
+    public AdvancedMotorController setMotorDirection(DcMotorSimple.Direction direction)
+    {
+        encoderMotor.setDirection (direction);
+        if (linkedMotor != null)
+            linkedMotor.setDirection (direction);
+
+        return this;
     }
 
-    public void reset()
+    /***** ENCODER MANAGEMENT *****/
+    public void resetEncoder ()
     {
         boolean doneSuccessfully = false;
         long additionalTime = 0;
@@ -80,20 +118,13 @@ public class PIDMotorController
     }
 
     /******* PID STUFF *********/
-    public double desiredRPS = 0;
+    private double desiredRPS = 0;
 
     //Initial conversion factor, will be changed a LOT through the course of the program.
     private double rpsConversionFactor = .25;
     public double getRPSConversionFactor() //Primarily for debugging.
     {
         return rpsConversionFactor;
-    }
-
-    public void setRPS (double givenRPS)
-    {
-        //Will soon be modified by PID.
-        desiredRPS = givenRPS;
-        updateMotorPowers ();
     }
 
     /**
@@ -103,6 +134,21 @@ public class PIDMotorController
     //Stored for each run.
     private int previousMotorPosition;
     private long lastAdjustTime = 0;
+
+    //Calculated in the constructor.
+    private final double encoderTicksPerWheelRevolution;
+    private double expectedTicksPerSecond;
+
+    public void setRPS (double givenRPS)
+    {
+        //Will soon be modified by PID.
+        desiredRPS = givenRPS;
+        updateMotorPowers ();
+
+        updateLastPosition ();
+
+        expectedTicksPerSecond = encoderTicksPerWheelRevolution * desiredRPS;
+    }
 
     private double expectedTicksSinceUpdate, actualTicksSinceUpdate;
     public double getExpectedTicksSinceUpdate()
@@ -114,27 +160,55 @@ public class PIDMotorController
         return actualTicksSinceUpdate;
     }
 
+    private SimplisticThread pidUpdateThread = null;
+    public void enablePeriodicPIDUpdates()
+    {
+        enablePeriodicPIDUpdates (100);
+    }
+    public void enablePeriodicPIDUpdates(long refreshDelay)
+    {
+        pidUpdateThread = new SimplisticThread (100)
+        {
+            @Override
+            public void actionPerUpdate ()
+            {
+                updateMotorPowerWithPID ();
+            }
+        };
+    }
+    public void disablePIDUpdates()
+    {
+        if (pidUpdateThread != null)
+            pidUpdateThread.stop ();
+    }
+    public void resumePIDUpdates()
+    {
+        if (pidUpdateThread != null)
+            pidUpdateThread.resume ();
+    }
+
     public void updateMotorPowerWithPID ()
     {
         int currentEncoderPosition = encoderMotor.getCurrentPosition ();
 
         if (lastAdjustTime != 0)
         {
-            /**
-             * desired RPS (revolution/second) * 560 (ticks/revolution) * 30 / 1000 (seconds) * .5 gear ratio.
-             */
+            expectedTicksSinceUpdate = expectedTicksPerSecond * ((System.currentTimeMillis () - lastAdjustTime) / 1000.0);
 
-            expectedTicksSinceUpdate = 1120.0 * .5 * desiredRPS * ((System.currentTimeMillis () - lastAdjustTime) / 1000.0);
             actualTicksSinceUpdate = currentEncoderPosition - previousMotorPosition;
 
-            //Sensitivity is the coefficient below.
-            //If expected = -50 and actual = -28 then diff = -22 but motor power needs to INCREASE.
+            //Sensitivity is the coefficient below, and bounds are .5 and -.5 so that momentary errors don't result in crazy changes.
             rpsConversionFactor += Math.signum (desiredRPS) * Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * 0.0002), -.5, .5);
 
             updateMotorPowers ();
         }
 
-        previousMotorPosition = currentEncoderPosition;
+        updateLastPosition ();
+    }
+
+    private void updateLastPosition()
+    {
+        previousMotorPosition = encoderMotor.getCurrentPosition ();
         lastAdjustTime = System.currentTimeMillis ();
     }
 
@@ -147,6 +221,7 @@ public class PIDMotorController
             linkedMotor.setPower (desiredPower);
     }
 
+    //Used rarely but useful when required.
     public void setDirectMotorPower(double power)
     {
         double actualPower = Range.clip(power, -1, 1);

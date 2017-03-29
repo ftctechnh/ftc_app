@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
 public abstract class AutoBase extends MainRobotBase
@@ -107,9 +107,7 @@ public abstract class AutoBase extends MainRobotBase
             if (mode != TurnMode.LEFT)
                 rightDrive.setRPS (Range.clip(turnPower, -1, 1));
 
-            sleep(50);
-            rightDrive.updateMotorPowerWithPID ();
-            leftDrive.updateMotorPowerWithPID ();
+            idle();
         }
 
         hardBrake (100);
@@ -141,8 +139,8 @@ public abstract class AutoBase extends MainRobotBase
     }
     protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, SensorDriveAdjustment sensorAdjustmentType) throws InterruptedException
     {
-        leftDrive.reset ();
-        rightDrive.reset ();
+        leftDrive.resetEncoder ();
+        rightDrive.resetEncoder ();
 
         //Set initial power, and then modify it later.
         leftDrive.setRPS (powerMeasure);
@@ -154,12 +152,6 @@ public abstract class AutoBase extends MainRobotBase
         //Actual adjustment aspect of driving.
         while (!reachedFinalDest)
         {
-            sleep (50); //Adjustment rate.
-
-            //Do this before setting new powers, since it will adjust erratically otherwise.
-            rightDrive.updateMotorPowerWithPID ();
-            leftDrive.updateMotorPowerWithPID ();
-
             /** GYROSCOPE ADJUSTMENT **/
             //For each result, positive favors left side and negative the right side.
             int offFromHeading = desiredHeading - getValidGyroHeading ();
@@ -200,6 +192,8 @@ public abstract class AutoBase extends MainRobotBase
                     reachedFinalDest = bottomColorSensor.alpha () >= stopValue;
                     break;
             }
+
+            idle();
         }
 
         hardBrake (100);
@@ -267,9 +261,9 @@ public abstract class AutoBase extends MainRobotBase
 
         //Initialize encoders.
         ConsoleManager.outputNewLineToDrivers ("Initializing Encoders...");
-        leftDrive.reset ();
-        rightDrive.reset ();
-        flywheels.reset ();
+        leftDrive.resetEncoder ();
+        rightDrive.resetEncoder ();
+        flywheels.resetEncoder ();
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize gyroscope.
@@ -294,6 +288,12 @@ public abstract class AutoBase extends MainRobotBase
         }
 
         ConsoleManager.outputNewLineToDrivers ("Initialization completed!");
+
+        //Enable threading for PID updates.
+        leftDrive.enablePeriodicPIDUpdates ();
+        rightDrive.enablePeriodicPIDUpdates ();
+        flywheels.enablePeriodicPIDUpdates ();
+        harvester.enablePeriodicPIDUpdates ();
     }
 
 

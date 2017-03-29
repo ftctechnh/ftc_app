@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.debugging.programs;
+package org.firstinspires.ftc.teamcode.debugging;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 @Autonomous(name = "Driving - PID Debug", group = "Utility Group")
 
@@ -18,11 +18,6 @@ public class DriveTesting extends AutoBase
 
         while (true)
         {
-            sleep (100); //100ms seems to be the ideal rate at which PID is updated.
-
-            leftDrive.updateMotorPowerWithPID ();
-            rightDrive.updateMotorPowerWithPID ();
-
             ConsoleManager.outputConstantDataToDrivers (
                     new String[]
                             {
@@ -34,6 +29,7 @@ public class DriveTesting extends AutoBase
                                     "R actual " + rightDrive.getActualTicksSinceUpdate ()
                             }
             );
+            idle();
         }
     }
 }

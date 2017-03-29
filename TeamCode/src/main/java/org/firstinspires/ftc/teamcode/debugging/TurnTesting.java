@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.debugging.programs;
+package org.firstinspires.ftc.teamcode.debugging;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 @Autonomous(name="Turn Testing", group = "Test Group")
 

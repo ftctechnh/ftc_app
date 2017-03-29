@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-import org.firstinspires.ftc.teamcode.enhancements.EZThread;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.SimplisticThread;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 public abstract class ImprovedOpModeBase extends LinearOpMode
 {
@@ -31,7 +31,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         {
             //Preliminary stuff.
             ConsoleManager.setMainTelemetry (telemetry);
-            EZThread.initializeThreadCreator (hardwareMap.appContext);
+            SimplisticThread.initializeThreadCreator (hardwareMap.appContext);
 
             //REQUIRED in MainRobotBase.
             initializeHardware ();
@@ -51,7 +51,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         }
         finally
         {
-            EZThread.killAllThreads ();
+            SimplisticThread.killAllThreads ();
             driverStationSaysSTOP ();
         }
     }

@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.debugging.programs;
+package org.firstinspires.ftc.teamcode.debugging;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 @Autonomous(name = "Sensor Debug", group = "Utility Group")
 
@@ -19,19 +19,19 @@ public class SensorDebug extends AutoBase
                             "Option 1 Color Sensor",
                             "ARGB: " + option1ColorSensor.argb() + " Alpha: " + option1ColorSensor.alpha(),
                             "Blue: " + option1ColorSensor.blue() + " Red: " + option1ColorSensor.red(),
-                            "",
                             "Option 2 Color Sensor",
                             "ARGB: " + option2ColorSensor.argb() + " Alpha: " + option2ColorSensor.alpha(),
                             "Blue: " + option2ColorSensor.blue() + " Red: " + option2ColorSensor.red(),
-                            "",
                             "Bottom Color Sensor",
                             "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
                             "Blue: " + bottomColorSensor.blue() + " Red: " + bottomColorSensor.red(),
-                            "",
                             "Heading: " + getValidGyroHeading(),
-                            "",
                             "Front Range Sensor: " + frontRangeSensor.cmUltrasonic(),
-                            "Back Range Sensor: " + sideRangeSensor.cmUltrasonic()
+                            "Back Range Sensor: " + sideRangeSensor.cmUltrasonic(),
+                            "Harvester encoder: " + harvester.encoderMotor.getCurrentPosition (),
+                            "Flywheel encoder: " + flywheels.encoderMotor.getCurrentPosition (),
+                            "L motor encoder: " + leftDrive.encoderMotor.getCurrentPosition (),
+                            "R motor encoder: " + rightDrive.encoderMotor.getCurrentPosition ()
                     }
             );
             idle();

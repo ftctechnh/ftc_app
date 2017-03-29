@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.debugging;
+package org.firstinspires.ftc.teamcode.enhancements;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -16,7 +16,7 @@ public class ConsoleManager
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES PROVIDE ***/
     private static ArrayList<String> currentConsoleDisplay;
-    private static int maxLines = 7;
+    private static int maxLines = 10;
     public static void outputNewLineToDrivers(String newLine)
     {
         //Add new line at beginning of the lines.

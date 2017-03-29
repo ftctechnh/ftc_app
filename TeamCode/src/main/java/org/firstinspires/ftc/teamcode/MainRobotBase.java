@@ -4,15 +4,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.enhancements.PIDMotorController;
+import org.firstinspires.ftc.teamcode.enhancements.AdvancedMotorController;
 
 public abstract class MainRobotBase extends ImprovedOpModeBase
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors (they are lists because it helps when we add on new motors.
-    protected PIDMotorController leftDrive, rightDrive;
+    protected AdvancedMotorController leftDrive, rightDrive;
     //Other motors
-    protected PIDMotorController harvester, flywheels, lift;
+    protected AdvancedMotorController harvester, flywheels;
+    protected DcMotor lift;
     protected Servo rightButtonPusher, frontButtonPusher;
     protected Servo capBallHolder;
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
@@ -24,20 +25,40 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
-        leftDrive = new PIDMotorController(initialize(DcMotor.class, "backLeft"), initialize(DcMotor.class, "frontLeft"), 0.20);
+        leftDrive = new AdvancedMotorController (
+                initialize(DcMotor.class, "backLeft"), initialize(DcMotor.class, "frontLeft"),
+                0.40,
+                AdvancedMotorController.GearRatio.Two_To_One,
+                AdvancedMotorController.MotorType.NeverRest40
+        ).setMotorDirection (DcMotorSimple.Direction.REVERSE);
+
         leftDrive.encoderMotor.setDirection (DcMotorSimple.Direction.REVERSE);
         leftDrive.linkedMotor.setDirection (DcMotorSimple.Direction.REVERSE);
 
-        rightDrive = new PIDMotorController (initialize(DcMotor.class, "backRight"), initialize(DcMotor.class, "frontRight"), 0.18);
+        rightDrive = new AdvancedMotorController (
+                initialize(DcMotor.class, "backRight"), initialize(DcMotor.class, "frontRight"),
+                0.36,
+                AdvancedMotorController.GearRatio.Two_To_One,
+                AdvancedMotorController.MotorType.NeverRest40
+        );
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
-        harvester = new PIDMotorController (initialize(DcMotor.class, "harvester"), 0.2);
+        harvester = new AdvancedMotorController (
+                initialize(DcMotor.class, "harvester"),
+                0.40,
+                AdvancedMotorController.GearRatio.Two_To_One,
+                AdvancedMotorController.MotorType.NeverRest40
+        ).setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
-        flywheels = new PIDMotorController (initialize(DcMotor.class, "flywheels"), 0.2);
+        flywheels = new AdvancedMotorController (initialize(DcMotor.class, "flywheels"),
+                0.2,
+                AdvancedMotorController.GearRatio.One_to_One,
+                AdvancedMotorController.MotorType.NeverRest3P7
+        );
         flywheels.encoderMotor.setDirection (DcMotor.Direction.REVERSE);
 
-        lift = new PIDMotorController (initialize(DcMotor.class, "lift"), 0.2);
-        lift.encoderMotor.setDirection (DcMotorSimple.Direction.REVERSE);
+        lift = initialize(DcMotor.class, "lift");
+        lift.setDirection (DcMotorSimple.Direction.REVERSE);
 
         rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
         rightButtonPusher.setPosition(0.5); //The stop position for a continuous rotation servo.

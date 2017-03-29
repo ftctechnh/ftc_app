@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
@@ -93,11 +93,11 @@ public class Teleop extends MainRobotBase
             }
 
             if (gamepad2.right_bumper)
-                lift.setRPS (1.0);
+                lift.setPower (1.0);
             else if (gamepad2.right_trigger > 0.5)
-                lift.setRPS (-0.5);
+                lift.setPower (-0.5);
             else
-                lift.setRPS (0.0);
+                lift.setPower (0.0);
 
             /************** Harvester **************/
             if (gamepad2.b) {

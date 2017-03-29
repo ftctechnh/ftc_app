@@ -11,15 +11,15 @@ import java.util.ArrayList;
  * Took Mak a while to finish this code so be nice to it pweese
  */
 
-public abstract class EZThread
+public abstract class SimplisticThread
 {
     //Required so that we can stop all tasks (otherwise are conserved through the program).
-    private static ArrayList<EZThread> activeThreads = new ArrayList<> ();
+    private static ArrayList<SimplisticThread> activeThreads = new ArrayList<> ();
     public static void killAllThreads()
     {
         //Kill all currently running threads.
         if (activeThreads.size () >= 0)
-            for (EZThread thread : activeThreads)
+            for (SimplisticThread thread : activeThreads)
                 thread.stop ();
     }
 
@@ -40,7 +40,7 @@ public abstract class EZThread
         }
     };
 
-    public EZThread (long delay)
+    public SimplisticThread (long delay)
     {
         activeThreads.add (this);
 
