@@ -13,8 +13,8 @@ public class ShootingDebugging extends AutoBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Set the motor powers.
-        flywheels.setRPS (.5);
-        harvester.setRPS (-4);
+        flywheels.setRPS (19);
+        harvester.setRPS (5);
 
         while (true)
         {

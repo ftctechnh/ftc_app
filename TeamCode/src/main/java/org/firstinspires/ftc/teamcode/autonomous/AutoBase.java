@@ -17,7 +17,7 @@ public abstract class AutoBase extends MainRobotBase
 
     /**** Range Sensors ****/
     protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
-    protected double getRangeSensorReading(ModernRoboticsI2cRangeSensor rangeSensor) throws InterruptedException
+    protected double getRangeSensorReading (ModernRoboticsI2cRangeSensor rangeSensor) throws InterruptedException
     {
         double rangeSensorOutput = 255;
         while (rangeSensorOutput >= 255 || rangeSensorOutput <= 0)

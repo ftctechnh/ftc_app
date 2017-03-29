@@ -19,8 +19,13 @@ public abstract class SimplisticThread
     {
         //Kill all currently running threads.
         if (activeThreads.size () >= 0)
+        {
             for (SimplisticThread thread : activeThreads)
+            {
+                activeThreads.remove (thread);
                 thread.stop ();
+            }
+        }
     }
 
     private static Context appContext;
@@ -57,7 +62,7 @@ public abstract class SimplisticThread
 
     public void stop ()
     {
-        mainHandler.removeCallbacks(mainRunnable);
+        mainHandler.removeCallbacks (mainRunnable);
     }
 
     public abstract void actionPerUpdate();

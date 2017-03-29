@@ -13,7 +13,7 @@ public class AdvancedMotorController
 
     public enum MotorType
     {
-        NeverRest40(1120), NeverRest20(1120), NeverRest3P7(46);
+        NeverRest40(1120), NeverRest20(1120), NeverRest3P7(45);
 
         public final int encoderTicksPerRevolution;
         MotorType(int encoderTicksPerRevolution)
@@ -163,11 +163,11 @@ public class AdvancedMotorController
     private SimplisticThread pidUpdateThread = null;
     public void enablePeriodicPIDUpdates()
     {
-        enablePeriodicPIDUpdates (100);
+        enablePeriodicPIDUpdates (50);
     }
     public void enablePeriodicPIDUpdates(long refreshDelay)
     {
-        pidUpdateThread = new SimplisticThread (100)
+        pidUpdateThread = new SimplisticThread (refreshDelay)
         {
             @Override
             public void actionPerUpdate ()
@@ -189,13 +189,11 @@ public class AdvancedMotorController
 
     public void updateMotorPowerWithPID ()
     {
-        int currentEncoderPosition = encoderMotor.getCurrentPosition ();
-
         if (lastAdjustTime != 0)
         {
             expectedTicksSinceUpdate = expectedTicksPerSecond * ((System.currentTimeMillis () - lastAdjustTime) / 1000.0);
 
-            actualTicksSinceUpdate = currentEncoderPosition - previousMotorPosition;
+            actualTicksSinceUpdate = encoderMotor.getCurrentPosition () - previousMotorPosition;
 
             //Sensitivity is the coefficient below, and bounds are .5 and -.5 so that momentary errors don't result in crazy changes.
             rpsConversionFactor += Math.signum (desiredRPS) * Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * 0.0002), -.5, .5);

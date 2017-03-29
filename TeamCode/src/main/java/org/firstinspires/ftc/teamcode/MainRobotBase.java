@@ -19,24 +19,21 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
     protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
     protected final double FBP_UP = 0.84, FBP_DOWN = FBP_UP - 0.63;
 
-    protected void initializeHardware() throws InterruptedException
+    protected void initializeHardware () throws InterruptedException
     {
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
         leftDrive = new AdvancedMotorController (
-                initialize(DcMotor.class, "backLeft"), initialize(DcMotor.class, "frontLeft"),
+                initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft"),
                 0.40,
                 AdvancedMotorController.GearRatio.Two_To_One,
                 AdvancedMotorController.MotorType.NeverRest40
         ).setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
-        leftDrive.encoderMotor.setDirection (DcMotorSimple.Direction.REVERSE);
-        leftDrive.linkedMotor.setDirection (DcMotorSimple.Direction.REVERSE);
-
         rightDrive = new AdvancedMotorController (
-                initialize(DcMotor.class, "backRight"), initialize(DcMotor.class, "frontRight"),
+                initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight"),
                 0.36,
                 AdvancedMotorController.GearRatio.Two_To_One,
                 AdvancedMotorController.MotorType.NeverRest40
@@ -44,34 +41,45 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
         harvester = new AdvancedMotorController (
-                initialize(DcMotor.class, "harvester"),
+                initialize (DcMotor.class, "harvester"),
                 0.40,
                 AdvancedMotorController.GearRatio.Two_To_One,
                 AdvancedMotorController.MotorType.NeverRest40
         ).setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
-        flywheels = new AdvancedMotorController (initialize(DcMotor.class, "flywheels"),
-                0.2,
+        flywheels = new AdvancedMotorController (
+                initialize (DcMotor.class, "flywheels"),
+                0.02,
                 AdvancedMotorController.GearRatio.One_to_One,
                 AdvancedMotorController.MotorType.NeverRest3P7
-        );
-        flywheels.encoderMotor.setDirection (DcMotor.Direction.REVERSE);
+        ).setMotorDirection (DcMotor.Direction.REVERSE);
 
-        lift = initialize(DcMotor.class, "lift");
+        lift = initialize (DcMotor.class, "lift");
         lift.setDirection (DcMotorSimple.Direction.REVERSE);
 
-        rightButtonPusher = initialize(Servo.class, "rightButtonPusher");
-        rightButtonPusher.setPosition(0.5); //The stop position for a continuous rotation servo.
+        rightButtonPusher = initialize (Servo.class, "rightButtonPusher");
+        rightButtonPusher.setPosition (0.5); //The stop position for a continuous rotation servo.
 
-        frontButtonPusher = initialize(Servo.class, "frontButtonPusher");
-        frontButtonPusher.setPosition(FBP_UP);
+        frontButtonPusher = initialize (Servo.class, "frontButtonPusher");
+        frontButtonPusher.setPosition (FBP_UP);
 
-        capBallHolder = initialize(Servo.class, "clamp");
-        capBallHolder.setPosition(CBH_CLOSED);
+        capBallHolder = initialize (Servo.class, "clamp");
+        capBallHolder.setPosition (CBH_CLOSED);
 
         //Certain things are only applicable in autonomous or teleop.
         initializeOpModeSpecificHardware ();
     }
 
-    protected void initializeOpModeSpecificHardware() throws InterruptedException {}
+    protected void initializeOpModeSpecificHardware () throws InterruptedException
+    {
+    }
+
+    protected void driverStationSaysSTOP ()
+    {
+        leftDrive.setRPS (0);
+        rightDrive.setRPS (0);
+        harvester.setRPS (0);
+        flywheels.setRPS (0);
+        rightButtonPusher.setPosition (0.5);
+    }
 }

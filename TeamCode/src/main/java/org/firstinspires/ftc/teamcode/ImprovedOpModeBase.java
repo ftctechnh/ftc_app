@@ -9,59 +9,70 @@ import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 public abstract class ImprovedOpModeBase extends LinearOpMode
 {
     //Initializes any hardware device provided by some class.
-    protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
+    protected <T extends HardwareDevice> T initialize (Class<T> hardwareDevice, String name)
     {
         try
         {
             //Returns the last subclass (if this were a DcMotor it would pass back a Dc Motor.
-            return hardwareDevice.cast(hardwareMap.get(name));
-        }
-        catch (Exception e)
+            return hardwareDevice.cast (hardwareMap.get (name));
+        } catch (Exception e)
         {
-            ConsoleManager.outputNewLineToDrivers("Could not find " + name + " in hardware map.");
+            ConsoleManager.outputNewLineToDrivers ("Could not find " + name + " in hardware map.");
             return null;
         }
     }
 
     // Called on initialization (once)
     @Override
-    public void runOpMode() throws InterruptedException
+    public void runOpMode () throws InterruptedException
     {
-        try
+        //Preliminary stuff.
+        ConsoleManager.setMainTelemetry (telemetry);
+        SimplisticThread.initializeThreadCreator (hardwareMap.appContext);
+
+        //Create the look for stop thread.
+        new SimplisticThread (10)
         {
-            //Preliminary stuff.
-            ConsoleManager.setMainTelemetry (telemetry);
-            SimplisticThread.initializeThreadCreator (hardwareMap.appContext);
+            @Override
+            public void actionPerUpdate ()
+            {
+                if (isStopRequested () || Thread.interrupted ())
+                    stopApplication ();
+            }
+        };
 
-            //REQUIRED in MainRobotBase.
-            initializeHardware ();
+        //REQUIRED in MainRobotBase.
+        initializeHardware ();
 
-            //Initialize stuff.
-            driverStationSaysINITIALIZE ();
+        //Initialize stuff.
+        driverStationSaysINITIALIZE ();
 
-            //Wait for the start button to be pressed.
-            waitForStart ();
+        //Wait for the start button to be pressed.
+        waitForStart ();
 
-            //This is where the child classes differ.
-            driverStationSaysGO ();
-        }
-        catch (InterruptedException e)
-        {
-            ConsoleManager.outputNewLineToDrivers ("Quitting app early.");
-        }
-        finally
-        {
-            SimplisticThread.killAllThreads ();
-            driverStationSaysSTOP ();
-        }
+        //This is where the child classes differ.
+        driverStationSaysGO ();
+    }
+
+    protected void stopApplication ()
+    {
+        SimplisticThread.killAllThreads ();
+        driverStationSaysSTOP ();
     }
 
     //Required overload.
-    protected abstract void initializeHardware() throws InterruptedException;
+    protected abstract void initializeHardware () throws InterruptedException;
+
     //Optional overload.
-    protected void driverStationSaysINITIALIZE() throws InterruptedException {}
+    protected void driverStationSaysINITIALIZE () throws InterruptedException
+    {
+    }
+
     //Has to be implemented.
-    protected abstract void driverStationSaysGO() throws InterruptedException;
+    protected abstract void driverStationSaysGO () throws InterruptedException;
+
     //Optional overload.
-    protected void driverStationSaysSTOP() {}
+    protected void driverStationSaysSTOP ()
+    {
+    }
 }
