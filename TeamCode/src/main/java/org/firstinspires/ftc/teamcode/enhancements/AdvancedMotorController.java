@@ -184,7 +184,7 @@ public class AdvancedMotorController
     public void resumePIDUpdates()
     {
         if (pidUpdateThread != null)
-            pidUpdateThread.resume ();
+            pidUpdateThread.start ();
     }
 
     public void updateMotorPowerWithPID ()

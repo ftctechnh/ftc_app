@@ -45,8 +45,8 @@ public class Teleop extends MainRobotBase
             leftPower = Range.clip(leftPower, -1, 1);
 
             // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-            leftDrive.setRPS (scaleInput(leftPower) * speedCoefficient);
-            rightDrive.setRPS (scaleInput(rightPower) * speedCoefficient);
+            leftDrive.setDirectMotorPower (scaleInput(leftPower) * speedCoefficient);
+            rightDrive.setDirectMotorPower (scaleInput(rightPower) * speedCoefficient);
 
             /************** Cap Ball Drive Mode **************/
             if (gamepad1.x) {

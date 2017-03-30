@@ -29,7 +29,7 @@ public abstract class AutoBase extends MainRobotBase
     }
 
     /**** Color Sensors (3) ****/
-    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor;
+    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
     protected void updateColorSensorStates()
     {
@@ -257,6 +257,8 @@ public abstract class AutoBase extends MainRobotBase
         bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
         bottomColorSensor.enableLed(true);
+        particleColorSensor = initialize(ColorSensor.class, "particleColorSensor");
+        particleColorSensor.enableLed (false);
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize encoders.

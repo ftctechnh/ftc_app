@@ -14,56 +14,72 @@ import java.util.ArrayList;
 public abstract class SimplisticThread
 {
     //Required so that we can stop all tasks (otherwise are conserved through the program).
-    private static ArrayList<SimplisticThread> activeThreads = new ArrayList<> ();
+    private static ArrayList<SimplisticThread> activeThreads = null;
     public static void killAllThreads()
     {
         //Kill all currently running threads.
         if (activeThreads.size () >= 0)
-        {
             for (SimplisticThread thread : activeThreads)
-            {
-                activeThreads.remove (thread);
                 thread.stop ();
-            }
-        }
+
+        activeThreads = null;
     }
 
-    private static Context appContext;
+    private static Handler threadHandler;
     public static void initializeThreadCreator (Context providedContext)
     {
-        appContext = providedContext;
+        if (threadHandler == null)
+            threadHandler = new Handler (providedContext.getMainLooper ());
     }
 
-    private long delay;
-    protected Handler mainHandler;
-    Runnable mainRunnable = new Runnable()
-    {
-        public void run()
-        {
-            actionPerUpdate ();
-            mainHandler.postDelayed(mainRunnable, delay);
-        }
-    };
-
+    /**
+     * Although ugly, running is a failsafe for when the thread is being posted and stopped at the same time, and also is
+     * useful for debugging and determining whether certain threads are active.
+     */
+    private boolean running = false;
     public SimplisticThread (long delay)
     {
+        if (activeThreads == null)
+            activeThreads = new ArrayList<> ();
+
         activeThreads.add (this);
 
         this.delay = delay;
-        mainHandler = new Handler (appContext.getMainLooper ());
 
-        resume ();
+        start ();
     }
 
-    public void resume ()
+    private long delay;
+    private Runnable mainRunnable = new Runnable()
     {
-        mainHandler.postDelayed(mainRunnable, 10);
+        @Override
+        public void run()
+        {
+            if (running)
+            {
+                actionPerUpdate ();
+                threadHandler.postDelayed (mainRunnable, delay);
+            }
+        }
+    };
+
+    public boolean isRunning()
+    {
+        return running;
+    }
+
+    public void start ()
+    {
+        running = true;
+        threadHandler.post(mainRunnable);
     }
 
     public void stop ()
     {
-        mainHandler.removeCallbacks (mainRunnable);
+        running = false;
+        threadHandler.removeCallbacks (mainRunnable);
     }
 
+    //Manually overridden.
     public abstract void actionPerUpdate();
 }

@@ -26,38 +26,33 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
     @Override
     public void runOpMode () throws InterruptedException
     {
-        //Preliminary stuff.
-        ConsoleManager.setMainTelemetry (telemetry);
-        SimplisticThread.initializeThreadCreator (hardwareMap.appContext);
-
-        //Create the look for stop thread.
-        new SimplisticThread (10)
+        try
         {
-            @Override
-            public void actionPerUpdate ()
-            {
-                if (isStopRequested () || Thread.interrupted ())
-                    stopApplication ();
-            }
-        };
+            //Preliminary stuff.
+            ConsoleManager.setMainTelemetry (telemetry);
+            SimplisticThread.initializeThreadCreator (hardwareMap.appContext);
 
-        //REQUIRED in MainRobotBase.
-        initializeHardware ();
+            //REQUIRED in MainRobotBase.
+            initializeHardware ();
 
-        //Initialize stuff.
-        driverStationSaysINITIALIZE ();
+            //Initialize stuff.
+            driverStationSaysINITIALIZE ();
 
-        //Wait for the start button to be pressed.
-        waitForStart ();
+            //Wait for the start button to be pressed.
+            waitForStart ();
 
-        //This is where the child classes differ.
-        driverStationSaysGO ();
-    }
-
-    protected void stopApplication ()
-    {
-        SimplisticThread.killAllThreads ();
-        driverStationSaysSTOP ();
+            //This is where the child classes differ.
+            driverStationSaysGO ();
+        }
+        catch (Exception e)
+        {
+            ConsoleManager.outputNewLineToDrivers ("Ended fast.");
+        }
+        finally
+        {
+            SimplisticThread.killAllThreads ();
+            driverStationSaysSTOP ();
+        }
     }
 
     //Required overload.
