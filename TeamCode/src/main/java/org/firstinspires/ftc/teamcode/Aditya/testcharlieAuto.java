@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Steven;
+package org.firstinspires.ftc.teamcode.Aditya;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "blueBeaconCharlieWorlds")
-public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
+@Autonomous(name = "CharlieTest")
+public class testcharlieAuto extends AutonomousGeneral_charlie {
 
 
 
@@ -37,22 +37,8 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         idle();
         setMotorsModeToEncDrive();
         stopMotors();
-     //   sleep(1000);
-        /*gyro.calibrate();
-        runtime.reset();
-        while((gyro.isCalibrating()&&runtime.seconds()<5)){
-            idle();
-        }*/
-
-        initialHeading = gyro.getHeading();
-        telemetry.addData("READY TO START", initialHeading);
-        telemetry.addData("gyro cal finished in ms", runtime.milliseconds());
-
-        telemetry.update();
-
 
         waitForStart();
-        runtime.reset();
         second_beacon_press = false;
 
 
@@ -61,12 +47,25 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
        // minimizeError();
         setMotorsModeToEncDrive();
         stopMotors();
-        timeProfile[profileindex++] = runtime.milliseconds();
-        //encoderMecanumCrossDrive(pathhighspeed,65,65,5,1);
-        encoderMecanumCrossDrive(pathhighspeed,141,141,5,2);
-        encoderMecanumDrive(0.5,0,0,0,0);
-        timeProfile[profileindex++] = runtime.milliseconds();
-        servoBeaconPress();
+
+        lineAlign();
+        moveTowardWall();
+
+
+        boolean left_detected;
+        readNewColorLeft();// this is the right if you are standing in the same direction as the back of the robot
+
+        if(currentColorBeaconLeft.equals(currentTeam)){
+            left_detected = true;
+            pressBeaconButton();
+        }
+        else{
+            left_detected = false;
+            setMotorsModeToEncDrive();
+            encoderMecanumCrossDrive(0.5,18,18,2,1);
+            //setMotorsModeToRangeSensing();
+            pressBeaconButton();
+        }
 
         }
     public void servoBeaconPress(){
