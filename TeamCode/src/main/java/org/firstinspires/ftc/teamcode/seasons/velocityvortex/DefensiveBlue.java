@@ -17,7 +17,7 @@ public class DefensiveBlue extends LinearOpModeBase {
         autonomousInitLoop();
 
         // drive backward (since the robot is facing backward)
-        encoderDrive(0.25, -14, -14);
+        encoderDrive(0.25, 14, RobotDirection.BACKWARD);
 
         gyroPivot(0.8, 45, true);
 

@@ -63,7 +63,7 @@ public class OldAutonomousBeaconsRed extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive right past white line
-        encoderStrafe(0.5, 4, 4);
+        encoderDrive(0.5, 4, RobotDirection.RIGHT);
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
@@ -80,10 +80,10 @@ public class OldAutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // strafe to the right to second beacon
-        encoderStrafe(0.5, 24, 24);
+        encoderDrive(0.5, 24, RobotDirection.RIGHT);
 
         // line up against wall
-        encoderDrive(0.6, 6, 6);
+        encoderDrive(0.6, 6, RobotDirection.RIGHT);
 
         while(opModeIsActive() && getFrontRange().cmUltrasonic() < 12) {
             driveBackward(0.2);
@@ -116,10 +116,10 @@ public class OldAutonomousBeaconsRed extends LinearOpModeBase {
         claimBeaconRed();
 
         // turn left for launching
-        encoderDrive(0.5, -8.5, 8.5);
+        gyroPivot(0.8, 80, true);
 
         // drive backward for launching
-        encoderDrive(0.5, -16, -16);
+        encoderDrive(0.5, 16, RobotDirection.BACKWARD);
 
         // launch the first (loaded) particle
         launchParticle();

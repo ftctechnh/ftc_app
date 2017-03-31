@@ -96,7 +96,7 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         launchParticle();
 
         // strafe right
-        encoderStrafe(0.5, 24, 24);
+        encoderDrive(0.5, 24, RobotDirection.RIGHT);
 
         // back up from wall
         rangeSensorDrive(15, 0.2);
@@ -105,7 +105,7 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         gyroPivot(0.8, 0, false);
 
         // strafe past the second beacon
-        encoderStrafe(0.4, 20, 20);
+        encoderDrive(0.4, 20, RobotDirection.RIGHT);
 
         // reset again after pressing beacon
         gyroPivot(0.8, 0, false);
@@ -157,6 +157,6 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         gyroPivot(0.8, 0, false);
 
         // drive back a foot
-        encoderStrafe(1.0, -12, -12);
+        encoderDrive(1.0, 12, RobotDirection.BACKWARD);
     }
 }

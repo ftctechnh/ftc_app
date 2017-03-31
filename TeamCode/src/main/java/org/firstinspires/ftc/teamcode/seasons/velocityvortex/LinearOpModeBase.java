@@ -7,19 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.I2cController;
-import com.qualcomm.robotcore.hardware.I2cDevice;
-import com.qualcomm.robotcore.hardware.I2cDeviceImpl;
-import com.qualcomm.robotcore.hardware.I2cDeviceReader;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * Created by ftc6347 on 10/16/16.
@@ -61,9 +53,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private Servo latch4;
     private Servo pusher5;
 
-    private LightSensor frontLightSensor;
-    private LightSensor backLightSensor;
-
     private ModernRoboticsI2cColorSensor colorSensor1;
     private ModernRoboticsI2cColorSensor colorSensor2;
 
@@ -78,6 +67,26 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private ElapsedTime robotRuntime;
 
+    /**
+     * An enumeration type that represents the directions the robot is able to drive in.
+     *
+     * @see #encoderDrive(double, int, RobotDirection)
+     * @see #rangeGyroStrafe(double, double, int, RobotDirection)
+     */
+    public enum RobotDirection {
+        FORWARD, BACKWARD, LEFT, RIGHT
+    }
+
+    /**
+     * Initialize robot hardware. In addition, this method is responsible for the following:
+     *
+     * <ul>
+     * <li>Sets the I2c addresses of two color sensors</li>
+     * <li>Resets the Z axis of the gyro sensor</li>
+     * <li>Sets the correct directions for the spool motors</li>
+     * <li>Stops all motors</li>
+     * </ul>
+     */
     protected void initializeHardware() {
         // initialize robotRuntime instance variable
         robotRuntime = new ElapsedTime();
@@ -137,19 +146,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         intakeMotor.setPower(0);
         stopRobot();
 
-//        telemetry.addData(">", "Calibrating Gyro");
-//        telemetry.update();
-//
-//        gyroSensor.calibrate();
-//
-//        // make sure the gyro is calibrated before continuing
-//        while (!isStopRequested() && gyroSensor.isCalibrating()) {
-//            idle();
-//        }
-//
-//        telemetry.addData(">", "Gyro calibrated");
-//        telemetry.update();
-
         // reset gyro heading
         gyroSensor.resetZAxisIntegrator();
 
@@ -157,7 +153,15 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.update();
     }
 
-    protected void stopOnLine(double speed, boolean driveRight) {
+    /**
+     * This method uses the ODS (optical distance sensor) on the bottom of the robot
+     * to drive to the white line leading to one of the beacons.
+     *
+     * @param speed the speed at which the robot will drive
+     * @param direction the direction the robot drives in;
+     *                  only LEFT or RIGHT are acceptable arguments
+     */
+    protected void stopOnLine(double speed, RobotDirection direction) {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -168,7 +172,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             error = LIGHT_SENSOR_PERFECT_VALUE - getOds3().getRawLightDetected();
 
             // strafe
-            if(driveRight) {
+            if(direction == RobotDirection.RIGHT) {
                 driveRight(speed);
             } else {
                 driveLeft(speed);
@@ -180,6 +184,16 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         stopRobot();
     }
 
+    /**
+     * The autonomous initialization loop. This method provides the following functionality:
+     *
+     * <ul>
+     * <li>Set a predefined delay using the dpad on the first gamepad</li>
+     * <li>Increment/decrement the delay using the left and right triggers on the first gamepad</li>
+     * <li>Automatically reset the gyro integrated Z axis if it changes every 250 milliseconds</li>
+     * <li>Reset the gyro integrated Z axis manually using the A button on the first gamepad</li>
+     * </ul>
+     */
     protected void autonomousInitLoop() {
         int delay = 0;
 
@@ -239,6 +253,18 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
     }
 
+    /**
+     * Claim a beacon to be red. This algorithm uses the following procedure to claim a beacon:
+     *
+     * <ul>
+     * <li>Drive to 10cm from the wall in front of the beacon</li>
+     * <li>Return if the beacon is already claimed for our alliance</li>
+     * <li>Raise the appropriate button pusher servo motor using the color sensors to detect
+     * the configuration of the beacon</li>
+     * <li>Drive to 5cm from the wall to push the beacon button or timeout at 600ms</li>
+     * <li>Check if the beacon has been claimed appropriately and re-push as necessary</li>
+     * </ul>
+     */
     protected void claimBeaconRed() {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -322,7 +348,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         rangeSensorDrive(12, 0.1);
 
         // drive right past line
-        encoderStrafe(0.1, 4, 4);
+        encoderDrive(0.1, 4, RobotDirection.RIGHT);
 
         // look for the white line leading to the second beacon
         while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
@@ -336,6 +362,18 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         rangeSensorDrive(10, 0.1);
     }
 
+    /**
+     * Claim a beacon to be blue. This algorithm uses the following procedure to claim a beacon:
+     *
+     * <ul>
+     * <li>Drive to 10cm from the wall in front of the beacon</li>
+     * <li>Return if the beacon is already claimed for our alliance</li>
+     * <li>Raise the appropriate button pusher servo motor using the color sensors to detect
+     * the configuration of the beacon</li>
+     * <li>Drive to 5cm from the wall to push the beacon button or timeout at 600ms</li>
+     * <li>Check if the beacon has been claimed appropriately and re-push as necessary</li>
+     * </ul>
+     */
     protected void claimBeaconBlue() {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -428,18 +466,47 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         launcherMotor.setPower(0);
     }
 
-    protected void encoderDrive(double speed, double leftInches, double rightInches) {
+    /**
+     * Drive the robot using encoders a specific distance in inches.
+     *
+     * @param speed the speed the robot  to drive at, within a range of -1 to 1
+     * @param distance the distance to drive in inches
+     * @param direction the direction to drive
+     * @see RobotDirection for the available directions
+     */
+    protected void encoderDrive(double speed, int distance, RobotDirection direction) {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        int leftTarget = (int)(leftInches * COUNTS_PER_INCH);
-        int rightTarget = (int)(rightInches * COUNTS_PER_INCH);
+        int target = distance * COUNTS_PER_INCH;
 
         // set the target position for each motor
-        getFrontLeftDrive().setTargetPosition(leftTarget);
-        getFrontRightDrive().setTargetPosition(-rightTarget);
-        getBackRightDrive().setTargetPosition(-rightTarget);
-        getBackLeftDrive().setTargetPosition(leftTarget);
+        switch(direction) {
+            case FORWARD:
+                getFrontLeftDrive().setTargetPosition(target);
+                getFrontRightDrive().setTargetPosition(-target);
+                getBackRightDrive().setTargetPosition(-target);
+                getBackLeftDrive().setTargetPosition(target);
+                break;
+            case BACKWARD:
+                getFrontLeftDrive().setTargetPosition(-target);
+                getFrontRightDrive().setTargetPosition(target);
+                getBackRightDrive().setTargetPosition(target);
+                getBackLeftDrive().setTargetPosition(-target);
+                break;
+            case LEFT:
+                getFrontLeftDrive().setTargetPosition(-target);
+                getFrontRightDrive().setTargetPosition(-target);
+                getBackRightDrive().setTargetPosition(target);
+                getBackLeftDrive().setTargetPosition(target);
+                break;
+            case RIGHT:
+                getFrontLeftDrive().setTargetPosition(target);
+                getFrontRightDrive().setTargetPosition(target);
+                getBackRightDrive().setTargetPosition(-target);
+                getBackLeftDrive().setTargetPosition(-target);
+                break;
+        }
 
         // set RUN_TO_POSITION for each motor
         setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -462,8 +529,18 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    /**
+     * Drives along a wall at a set distance with proportional correction using encoders,
+     * the range sensor, and the gyro sensor.
+     *
+     * @throws IllegalArgumentException if FORWARD or BACKWARD directions are passed
+     * @param angle the angle that the gyro sensor should maintain while driving
+     * @param rangeDistance the distance the robot should stay at using the range sensor
+     * @param distance the distance to drive using the encoders
+     * @param direction the direction to drive (only LEFT or RIGHT are valid options)
+     */
     protected void rangeGyroStrafe(double angle, double rangeDistance,
-                                   double frontInches, double backInches) {
+                                   int distance, RobotDirection direction) {
         double gyroSteer;
         double rangeSteer;
 
@@ -485,15 +562,26 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        int frontTarget = (int)(frontInches * COUNTS_PER_INCH);
-        int backTarget = (int)(backInches * COUNTS_PER_INCH);
+        int target = distance * COUNTS_PER_INCH;
 
         // set the target position for each motor
-        getFrontLeftDrive().setTargetPosition(frontTarget);
-        getFrontRightDrive().setTargetPosition(frontTarget);
-
-        getBackRightDrive().setTargetPosition(-backTarget);
-        getBackLeftDrive().setTargetPosition(-backTarget);
+        switch(direction) {
+            case LEFT:
+                getFrontLeftDrive().setTargetPosition(-target);
+                getFrontRightDrive().setTargetPosition(-target);
+                getBackRightDrive().setTargetPosition(target);
+                getBackLeftDrive().setTargetPosition(target);
+                break;
+            case RIGHT:
+                getFrontLeftDrive().setTargetPosition(target);
+                getFrontRightDrive().setTargetPosition(target);
+                getBackRightDrive().setTargetPosition(-target);
+                getBackLeftDrive().setTargetPosition(-target);
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Only LEFT or RIGHT are valid directions for rangeGyroStrafe()");
+        }
 
         // set the power initially for the left drive motors
         getFrontLeftDrive().setPower(SPEED);
@@ -518,7 +606,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             rangeSteer = Math.abs(rangeDiffFromTarget * P_RANGE_DRIVE_COEFF);
 
             // if driving right
-            if(frontInches > 0 && backInches > 0) {
+            if(direction == RobotDirection.RIGHT) {
                 gyroSteer *= -1;
             }
 
@@ -533,7 +621,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             // too far from wall
             if (rangeDiffFromTarget < 0) {
                 // if driving right
-                if (frontInches > 0 && backInches > 0) {
+                if (direction == RobotDirection.RIGHT) {
                     frontRightPower -= rangeSteer;
                     backLeftPower -= rangeSteer;
                 } else {
@@ -544,7 +632,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             // too close to wall
             } else {
                 // if driving right
-                if (frontInches > 0 && backInches > 0) {
+                if (direction == RobotDirection.RIGHT) {
                     frontLeftPower -= rangeSteer;
                     backRightPower -= rangeSteer;
                 } else {
@@ -578,45 +666,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    protected void encoderStrafe(double speed, double frontInches, double backInches) {
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        int frontTarget = (int)(frontInches * COUNTS_PER_INCH);
-        int backTarget = (int)(backInches * COUNTS_PER_INCH);
-
-        // set the target position for each motor
-        getFrontLeftDrive().setTargetPosition(frontTarget);
-        getFrontRightDrive().setTargetPosition(frontTarget);
-
-        getBackRightDrive().setTargetPosition(-backTarget);
-        getBackLeftDrive().setTargetPosition(-backTarget);
-
-        // set RUN_TO_POSITION for each motor
-        // setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // set the power for the left drive motors
-        getFrontLeftDrive().setPower(speed);
-        getBackLeftDrive().setPower(speed);
-
-        // set the power for the right drive motors
-        getFrontRightDrive().setPower(speed);
-        getBackRightDrive().setPower(speed);
-
-        while(opModeIsActive() && areDriveMotorsBusy()) {
-            idle();
-        }
-
-        stopRobot();
-
-        // set RUN_USING_ENCODER for each motor
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
     private double getGyroError(double targetAngle) {
         // adding since getIntegratedZValue() returns a negative number
          return targetAngle + gyroSensor.getIntegratedZValue();
     }
+
 
     protected void rangeSensorDrive(int distanceCm, double speed) {
         if(getFrontRange().cmUltrasonic() > distanceCm) {
