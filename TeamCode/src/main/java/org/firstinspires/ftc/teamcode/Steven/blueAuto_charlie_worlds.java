@@ -62,7 +62,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         setMotorsModeToEncDrive();
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
-        encoderMecanumCrossDrive(pathhighspeed,65,65,5,1);
+        //encoderMecanumCrossDrive(pathhighspeed,65,65,5,1);
         encoderMecanumCrossDrive(pathhighspeed,115,115,5,2);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
