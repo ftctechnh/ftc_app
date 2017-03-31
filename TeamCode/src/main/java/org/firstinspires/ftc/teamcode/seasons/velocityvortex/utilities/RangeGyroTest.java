@@ -18,6 +18,8 @@ public class RangeGyroTest extends LinearOpModeBase {
         autonomousInitLoop();
 
 //        rangeGyroStrafe(0, 15, -65, -65);
-        rangeGyroStrafe(0, 15, 70, 70);
+//        rangeGyroStrafe(0, 20, 38, 38);
+
+        gyroPivot(0.5, 90, true);
     }
 }

@@ -18,12 +18,12 @@ public class AutonomousSimpleBlue2 extends LinearOpModeBase {
         autonomousInitLoop();
 
         // drive backward (since the robot is facing backward)
-//        encoderDrive(0.25, -14, -14);
+        encoderDrive(0.25, -14, -14);
 
         gyroPivot(0.8, 45, true);
 
         //drive backward to align before launch
-        encoderDrive(0.25, -6 , -6);
+        encoderDrive(0.25, -3, -3);
 
         // launch the first (loaded) particle
         launchParticle();
@@ -42,8 +42,8 @@ public class AutonomousSimpleBlue2 extends LinearOpModeBase {
         launchParticle();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 67);
-        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 67);
+        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 71);
+        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 71);
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -69,6 +69,6 @@ public class AutonomousSimpleBlue2 extends LinearOpModeBase {
         gyroPivot(0.5, 45, true);
 
         // drive up ramp
-        encoderStrafe(0.5, -12, -12);
+        encoderStrafe(0.5, -20, -20);
     }
 }

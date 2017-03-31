@@ -210,6 +210,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                     gyroSensor.resetZAxisIntegrator();
                 }
 
+                // automatically reset gyro Z axis
+                if(Math.abs(gyroSensor.getIntegratedZValue()) > 0) {
+                    gyroSensor.resetZAxisIntegrator();
+                }
+
                 robotRuntime.reset();
             }
 
@@ -270,7 +275,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // first push
         while(opModeIsActive() &&
-                (getFrontRange().cmUltrasonic() >= 7 && robotRuntime.milliseconds() < 400)) {
+                (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
             // run without encoders again
             driveForward(0.2);
         }
@@ -282,6 +287,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
+
+        // wait for the beacon to be claimed
+        robotRuntime.reset();
+        while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
+            idle();
+        }
 
         // check if both color sensors do not detect red
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
@@ -372,6 +383,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
+
+        // wait for the beacon to be claimed
+        robotRuntime.reset();
+        while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
+            idle();
+        }
 
         // check if both color sensors do not detect blue
         if(colorSensor1.red() > 0 || colorSensor2.red() > 0) {
