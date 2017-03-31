@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.Aditya;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -29,9 +32,13 @@ public class testcharlieAuto extends AutonomousGeneral_charlie {
     int initialHeading =361;
     public double[] timeProfile = new double[30];
     int profileindex = 0;
+    public Servo autoBeaconPresser;
 
+    public double servoLeftPos = 0.0;
+    public double servoRightPos = 0.0;
     @Override
     public void runOpMode() {
+
 
         initiate();
         idle();
@@ -337,6 +344,61 @@ public class testcharlieAuto extends AutonomousGeneral_charlie {
         //stopMotors();
     }
 
+
+    public void twoColorSensorRead(){
+        readNewColorLeft();
+        readNewColorRight();
+
+        if (currentColorBeaconLeft.equals("blank")  || currentColorBeaconRight.equals("blank")){
+
+            if (currentColorBeaconLeft.equals("blank")){
+                while (currentColorBeaconLeft.equals("blank")){
+                    turnRight(0.3);
+                    readNewColorLeft();
+
+                    telemetry.addData("error","checking!");
+                    telemetry.update();
+                }
+            }
+
+            if (currentColorBeaconRight.equals("blank")){
+                while (currentColorBeaconRight.equals("blank")){
+                    turnLeft(0.3);
+                    readNewColorRight();
+
+                    telemetry.addData("error","checking!");
+                    telemetry.update();
+                }
+            }
+        }
+        readNewColorRight();
+        readNewColorLeft();
+
+        if(currentColorBeaconLeft.equals(currentTeam) && currentColorBeaconRight.equals(currentTeam)){
+            //move to next beacon function steven
+            telemetry.addData("correct","press already!");
+            telemetry.update();
+        }
+
+        if (currentColorBeaconLeft.equals(currentTeam)){
+            autoBeaconPresser.setPosition(servoLeftPos);
+
+            telemetry.addData("left color", currentColorBeaconLeft);
+            telemetry.addData("right color", currentColorBeaconLeft);
+            telemetry.addData("current team", currentTeam);
+            telemetry.update();
+        }
+
+        if (currentColorBeaconRight.equals(currentTeam)){
+            autoBeaconPresser.setPosition(servoRightPos);
+
+            telemetry.addData("left color", currentColorBeaconLeft);
+            telemetry.addData("right color", currentColorBeaconLeft);
+            telemetry.addData("current team", currentTeam);
+            telemetry.update();
+        }
+
+    }
 
 
 }
