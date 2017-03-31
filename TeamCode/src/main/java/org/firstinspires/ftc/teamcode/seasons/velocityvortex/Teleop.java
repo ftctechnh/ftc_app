@@ -75,6 +75,15 @@ public class Teleop extends LinearOpModeBase {
             handleCapBallMechanism();
             handleTelemetry();
 
+            // control for button pusher servo motors
+            if(gamepad1.right_bumper) {
+                getBeaconsServo1().setPosition(0.3);
+                getBeaconsServo2().setPosition(0.7);
+            } else if(gamepad1.left_bumper) {
+                getBeaconsServo1().setPosition(1.0);
+                getBeaconsServo2().setPosition(0.0);
+            }
+
             idle();
         }
     }

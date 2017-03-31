@@ -22,7 +22,7 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
         gyroPivot(0.8, -40, true);
 
         //drive backward to align before launch
-        encoderDrive(0.25, -6 , -6);
+        encoderDrive(0.25, -3, -3);
 
         // launch the first (loaded) particle
         launchParticle();
@@ -41,8 +41,8 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
         launchParticle();
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 46);
-        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 46);
+        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
+        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
 
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -123,6 +123,6 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
             idle();
         }
 
-        encoderStrafe(0.5, -12, -12);
+        encoderStrafe(0.5, -20, -20);
     }
 }
