@@ -64,7 +64,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         timeProfile[profileindex++] = runtime.milliseconds();
         //encoderMecanumCrossDrive(pathhighspeed,65,65,5,1);
         encoderMecanumCrossDrive(pathhighspeed,141,141,5,2);
-        encoderMecanumDrive(0.5,0,0,0,0);
+        encoderMecanumDrive(0.5,8,8,5,);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
 
@@ -85,6 +85,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         if(currentColorBeaconLeft.equals(currentTeam)){
             left_detected = true;
             pressBeaconButton();
+
         }
         else{
             left_detected = false;
@@ -93,9 +94,9 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
             //setMotorsModeToRangeSensing();
             pressBeaconButton();
         }
+        //add a line to move servo back to initial position
         timeProfile[profileindex++] = runtime.milliseconds();//first time: 12991.84
-        //second time: 21028.24(didn't push)
-        //presses beacon!
+
 
 
         if (second_beacon_press == false)
@@ -115,23 +116,11 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         second_beacon_press = true;
         setMotorsModeToEncDrive();;
         encoderMecanumCrossDrive(pathhighspeed,78.74,78.74,5,1);
-        sleep(2000);
+        //sleep(2000);
         encoderMecanumCrossDrive(pathhighspeed,25.4,25.4,5,2);
-        sleep(2000);
+        //sleep(2000);
+        //if use strafing, add error correction so that it stays within a certain distance of the wall
         lineAlign();
-        //servoBeaconPress();
-        /*second_beacon_press = true;
-      //  sleep(250);
-        setMotorsModeToEncDrive();
-        encoderMecanumCrossDrive(pathhighspeed, 90, 90, 5,1);
-        sleep(100);
-        setMotorsModeToEncDrive();
-        idle();
-        encoderMecanumCrossDrive(pathhighspeed, 60, 60, 5,2);
-        idle();
-        // encoderMecanumCrossDrive(pathhighspeed,60,60,5,1);
-        timeProfile[profileindex++] = runtime.milliseconds();//16241.67
-        servoBeaconPress();*/
 
 }
 
