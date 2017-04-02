@@ -450,6 +450,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         beaconsServo2.setPosition(0);
     }
 
+    /**
+     * Launch a particle loaded in the launcher chamber using
+     * the launcher ODS (optical distance sensor).
+     */
     protected synchronized void launchParticle() {
         robotRuntime.reset();
 
@@ -530,14 +534,15 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     /**
-     * Drives along a wall at a set distance with proportional correction using encoders,
-     * the range sensor, and the gyro sensor.
+     * Drives along a wall at a set distance with proportional correction
+     * using encoders the range sensor, and the gyro sensor.
      *
-     * @throws IllegalArgumentException if FORWARD or BACKWARD directions are passed
+     * @throws IllegalArgumentException if forward or backward directions are used
+     *
      * @param angle the angle that the gyro sensor should maintain while driving
      * @param rangeDistance the distance the robot should stay at using the range sensor
      * @param distance the distance to drive using the encoders
-     * @param direction the direction to drive (only LEFT or RIGHT are valid options)
+     * @param direction the direction to drive (only left or right are valid options)
      */
     protected void rangeGyroStrafe(double angle, double rangeDistance,
                                    int distance, RobotDirection direction) {
@@ -667,11 +672,17 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     }
 
     private double getGyroError(double targetAngle) {
-        // adding since getIntegratedZValue() returns a negative number
+         // adding since getIntegratedZValue() returns a negative number
          return targetAngle + gyroSensor.getIntegratedZValue();
     }
 
-
+    /**
+     * Drive a to a specific distance from the wall.
+     * The robot will drive backward or forward accordingly.
+     *
+     * @param distanceCm the distance the robot should drive to
+     * @param speed the drive speed
+     */
     protected void rangeSensorDrive(int distanceCm, double speed) {
         if(getFrontRange().cmUltrasonic() > distanceCm) {
             while (opModeIsActive() && getFrontRange().cmUltrasonic() > distanceCm) {
@@ -685,6 +696,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         stopRobot();
     }
 
+    /**
+     * Set the power of drive motors to drive right
+     *
+     * @param power the speed to drive at
+     */
     protected void driveRight(double power) {
         frontLeftDrive.setPower(power);
         backLeftDrive.setPower(-power);
@@ -692,6 +708,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(-power);
     }
 
+    /**
+     * Set the power of drive motors to drive left
+     *
+     * @param power the speed to drive at
+     */
     protected void driveLeft(double power) {
         frontLeftDrive.setPower(-power);
         backLeftDrive.setPower(power);
@@ -699,6 +720,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(power);
     }
 
+    /**
+     * Set the power of drive motors to drive forward
+     *
+     * @param power the speed to drive at
+     */
     protected void driveForward(double power) {
         frontLeftDrive.setPower(power);
         backLeftDrive.setPower(power);
@@ -706,6 +732,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(-power);
     }
 
+    /**
+     * Set the power of drive motors to drive backward
+     *
+     * @param power the speed to drive at
+     */
     protected void driveBackward(double power) {
         frontLeftDrive.setPower(-power);
         backLeftDrive.setPower(-power);
@@ -713,6 +744,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(power);
     }
 
+    /**
+     * Stop all drive motors; that is, set the power of each drive motor to zero.
+     */
     protected void stopRobot() {
         frontLeftDrive.setPower(0);
         frontRightDrive.setPower(0);
@@ -720,6 +754,15 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive.setPower(0);
     }
 
+    /**
+     * Pivot the robot to the specified degree angle using the gyro sensor.
+     *
+     * @param speed the speed of the drive motors while pivoting
+     * @param angle the degree angle to pivot to; a negative value is
+     *              counter clockwise and a positive value is clockwise
+     * @param absolute whether or not the angle should be relative to where the
+     *                 gyro sensor last calibrated or the robot's current rotational position
+     */
     protected void gyroPivot(double speed, double angle, boolean absolute) {
         double steer;
         double proportionalSpeed;
@@ -770,6 +813,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    /**
+     * Set the <code>RunMode</code> of the drive motors.
+     *
+     * @param runMode the run mode that the drive motors will be set to
+     * @see DcMotor.RunMode
+     */
     protected void setDriveMotorsMode(DcMotor.RunMode runMode) {
         backLeftDrive.setMode(runMode);
         backRightDrive.setMode(runMode);
@@ -777,6 +826,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         frontRightDrive.setMode(runMode);
     }
 
+    /**
+     * Return whether all drive motors are busy.
+     * <p>
+     * This will not return <code>true</code> if <em>any</em> of the drive motors are busy.
+     *
+     * @return a boolean corresponding to whether all drive motors are busy
+     * @see DcMotor#isBusy()
+     */
     protected boolean areDriveMotorsBusy() {
         return frontLeftDrive.isBusy() && frontRightDrive.isBusy()
                 && backLeftDrive.isBusy() && backRightDrive.isBusy();
@@ -828,14 +885,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         return pusher5;
     }
 
-    protected LightSensor getFrontLightSensor() {
-        return frontLightSensor;
-    }
-
-    protected LightSensor getBackLightSensor() {
-        return backLightSensor;
-    }
-
     protected ColorSensor getColorSensor1() {
         return colorSensor1;
     }
@@ -857,7 +906,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     protected OpticalDistanceSensor getDiskOds() { return diskOds; }
 
     /**
-    ODS on the bottom
+     * ODS on the bottom
      */
     protected OpticalDistanceSensor getOds3() {
         return ods3;
