@@ -169,10 +169,10 @@ public class AdvancedMotorController
         return actualTicksSinceUpdate;
     }
 
-    private SimplisticAsyncTask pidUpdateThread = null;
+    private EasyAsyncTask pidUpdateThread = null;
     public void enablePeriodicPIDUpdates ()
     {
-        pidUpdateThread = new SimplisticAsyncTask ()
+        pidUpdateThread = new EasyAsyncTask ()
         {
             @Override
             protected String taskToAccomplish () throws InterruptedException

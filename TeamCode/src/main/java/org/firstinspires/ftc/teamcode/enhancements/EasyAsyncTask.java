@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.enhancements;
 
 import android.os.AsyncTask;
 
-public abstract class SimplisticAsyncTask extends AsyncTask<String, Void, String>
+public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
 {
     /***** OBJECT SPECIFIC STUFF *****/
 
-    public SimplisticAsyncTask()
+    public EasyAsyncTask ()
     {
         this.execute ("");
     }

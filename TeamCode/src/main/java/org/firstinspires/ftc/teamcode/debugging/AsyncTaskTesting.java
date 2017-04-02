@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
-import org.firstinspires.ftc.teamcode.enhancements.SimplisticAsyncTask;
+import org.firstinspires.ftc.teamcode.enhancements.EasyAsyncTask;
 
 @Autonomous(name = "AsyncTask Debugging", group = "Utility Group")
 
@@ -19,7 +19,7 @@ public class AsyncTaskTesting extends ImprovedOpModeBase
 
     public void driverStationSaysGO() throws InterruptedException
     {
-        new SimplisticAsyncTask ()
+        new EasyAsyncTask ()
         {
             @Override
             public String taskToAccomplish () throws InterruptedException
