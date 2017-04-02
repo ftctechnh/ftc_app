@@ -48,8 +48,11 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.provider.Contacts;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -149,10 +152,15 @@ public class FtcRobotControllerActivity extends Activity {
 
   //user code
   protected static Context lastContext;
+  protected static Handler UIThread;
   protected static View cameraView;
 
   public static Context getAppContext(){
     return lastContext;
+  }
+
+  public static Handler getUIHandler() {
+    return UIThread;
   }
 
   public static View getCameraView(){
@@ -287,8 +295,9 @@ public class FtcRobotControllerActivity extends Activity {
     //user code
     lastContext = context;
     cameraView = findViewById(R.id.image_manipulations_activity_surface_view);
-    //View thing = findViewById(R.id.image_manipulations_activity_surface_view);
-    //thing.setAlpha(0.0f);
+    UIThread = getWindow().getDecorView().getHandler();
+    View thing = findViewById(R.id.image_manipulations_activity_surface_view);
+    thing.setAlpha(0.0f);
     //end user code
 
     bindToService();

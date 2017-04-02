@@ -159,13 +159,13 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     }
 
                     //user <code></code>
-                    params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    //params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
 
                     List<String> ray = params.getSupportedFocusModes();
                     Log.v("CameraInit", "Focus Modes: ");
                     for(int i = 0; i < ray.size(); i++) Log.v("CameraInit", ray.get(i));
 
-                    params.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
+                    //params.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
 
                     int min = params.getMinExposureCompensation();
                     int max = params.getMaxExposureCompensation();
@@ -174,7 +174,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     Log.v("CameraInit", "Exposure Min: " + min + " Max: " + max + " Inc: " + inc);
 
                     //params.setExposureCompensation(-12);
-                    params.setAutoExposureLock(true);
+                    //params.setAutoExposureLock(true);
                     //end user code
 
                     mCamera.setParameters(params);
