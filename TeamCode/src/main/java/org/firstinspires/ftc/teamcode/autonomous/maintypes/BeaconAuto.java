@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 
 public abstract class BeaconAuto extends AutoBase implements OnAlliance
 {
@@ -23,7 +24,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
         //Shoot the balls into the center vortex.
         ConsoleManager.outputNewLineToDrivers("Shooting balls into center vortex...");
-        //shootBallsIntoCenterVortex (); // PID HAS TO WORK FIRST: ENCODERS!!!
+        shootBallsIntoCenterVortex (); // PID HAS TO WORK FIRST: ENCODERS!!!
 
         //Turn to face the wall directly.
         ConsoleManager.outputNewLineToDrivers("Turning to face wall at an angle...");
@@ -110,9 +111,9 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
                 //Press the button.
                 rightButtonPusher.setPosition (0);
-                sleep (timeForEachPress);
+                ProgramFlow.pauseForMS (timeForEachPress);
                 rightButtonPusher.setPosition (1);
-                sleep (timeForEachPress - 200);
+                ProgramFlow.pauseForMS (timeForEachPress - 200);
 
                 //Drive back to the original position.
                 drive(SensorStopType.BottomColorAlpha, 5, PowerUnits.RevolutionsPerSecond, -1 * Math.signum(drivePower) * BEACON_DP);

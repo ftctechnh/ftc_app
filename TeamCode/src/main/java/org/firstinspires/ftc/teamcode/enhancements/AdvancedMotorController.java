@@ -6,10 +6,12 @@ import com.qualcomm.robotcore.util.Range;
 
 public class AdvancedMotorController
 {
-    //TODO: Make thread-compliant
-
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final DcMotor encoderMotor, linkedMotor;
+
+    //Calculated in the constructor.
+    private final double encoderTicksPerWheelRevolution;
+    private double sensitivity = .00002, sensitivityBound = .5;
 
     public enum MotorType
     {
@@ -54,6 +56,16 @@ public class AdvancedMotorController
         if (linkedMotor != null)
             linkedMotor.setDirection (direction);
 
+        return this;
+    }
+    public AdvancedMotorController setAdjustmentSensitivity(double sensitivity)
+    {
+        this.sensitivity = sensitivity;
+        return this;
+    }
+    public AdvancedMotorController setAdjustmentSensitivityBounds(double sensitivityBound)
+    {
+        this.sensitivityBound = sensitivityBound;
         return this;
     }
 
@@ -135,56 +147,43 @@ public class AdvancedMotorController
     private int previousMotorPosition;
     private long lastAdjustTime = 0;
 
-    //Calculated in the constructor.
-    private final double encoderTicksPerWheelRevolution;
     private double expectedTicksPerSecond;
-
     public void setRPS (double givenRPS)
     {
         //Will soon be modified by PID.
         desiredRPS = givenRPS;
         updateMotorPowers ();
 
-        updateLastPosition ();
+        recordLastState ();
 
         expectedTicksPerSecond = encoderTicksPerWheelRevolution * desiredRPS;
     }
 
     private double expectedTicksSinceUpdate, actualTicksSinceUpdate;
-    public double getExpectedTicksSinceUpdate()
+    public double getExpectedTicksSinceUpdate ()
     {
         return expectedTicksSinceUpdate;
     }
-    public double getActualTicksSinceUpdate()
+    public double getActualTicksSinceUpdate ()
     {
         return actualTicksSinceUpdate;
     }
 
-    private SimplisticThread pidUpdateThread = null;
-    public void enablePeriodicPIDUpdates()
+    private SimplisticAsyncTask pidUpdateThread = null;
+    public void enablePeriodicPIDUpdates ()
     {
-        enablePeriodicPIDUpdates (50);
-    }
-    public void enablePeriodicPIDUpdates(long refreshDelay)
-    {
-        pidUpdateThread = new SimplisticThread (refreshDelay)
+        pidUpdateThread = new SimplisticAsyncTask ()
         {
             @Override
-            public void actionPerUpdate ()
+            protected String taskToAccomplish () throws InterruptedException
             {
-                updateMotorPowerWithPID ();
+                while (true)
+                {
+                    updateMotorPowerWithPID ();
+                    ProgramFlow.pauseForMS (50);
+                }
             }
         };
-    }
-    public void disablePIDUpdates()
-    {
-        if (pidUpdateThread != null)
-            pidUpdateThread.stop ();
-    }
-    public void resumePIDUpdates()
-    {
-        if (pidUpdateThread != null)
-            pidUpdateThread.start ();
     }
 
     public void updateMotorPowerWithPID ()
@@ -196,21 +195,21 @@ public class AdvancedMotorController
             actualTicksSinceUpdate = encoderMotor.getCurrentPosition () - previousMotorPosition;
 
             //Sensitivity is the coefficient below, and bounds are .5 and -.5 so that momentary errors don't result in crazy changes.
-            rpsConversionFactor += Math.signum (desiredRPS) * Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * 0.0002), -.5, .5);
+            rpsConversionFactor += Math.signum (desiredRPS) * Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * sensitivity), -sensitivityBound, sensitivityBound);
 
             updateMotorPowers ();
         }
 
-        updateLastPosition ();
+        recordLastState ();
     }
 
-    private void updateLastPosition()
+    private void recordLastState ()
     {
         previousMotorPosition = encoderMotor.getCurrentPosition ();
         lastAdjustTime = System.currentTimeMillis ();
     }
 
-    private void updateMotorPowers()
+    private void updateMotorPowers ()
     {
         //Set the initial power which the PID will soon modify.
         double desiredPower = Range.clip(desiredRPS * rpsConversionFactor, -1, 1);
@@ -220,7 +219,7 @@ public class AdvancedMotorController
     }
 
     //Used rarely but useful when required.
-    public void setDirectMotorPower(double power)
+    public void setDirectMotorPower (double power)
     {
         double actualPower = Range.clip(power, -1, 1);
         encoderMotor.setPower(actualPower);

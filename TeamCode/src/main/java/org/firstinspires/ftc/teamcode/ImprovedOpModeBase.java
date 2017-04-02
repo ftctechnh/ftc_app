@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-import org.firstinspires.ftc.teamcode.enhancements.SimplisticThread;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
 
 public abstract class ImprovedOpModeBase extends LinearOpMode
@@ -22,15 +22,19 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         }
     }
 
-    // Called on initialization (once)
+    /**
+     * This method inherits from
+     *
+     * @throws InterruptedException
+     */
     @Override
     public void runOpMode () throws InterruptedException
     {
         try
         {
             //Preliminary stuff.
+            ProgramFlow.initializeWithOpMode (this);
             ConsoleManager.setMainTelemetry (telemetry);
-            SimplisticThread.initializeThreadCreator (hardwareMap.appContext);
 
             //REQUIRED in MainRobotBase.
             initializeHardware ();
@@ -46,11 +50,10 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         }
         catch (Exception e)
         {
-            ConsoleManager.outputNewLineToDrivers ("Ended fast.");
+            ConsoleManager.outputNewLineToDrivers ("Ended early.");
         }
         finally
         {
-            SimplisticThread.killAllThreads ();
             driverStationSaysSTOP ();
         }
     }
@@ -59,15 +62,11 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
     protected abstract void initializeHardware () throws InterruptedException;
 
     //Optional overload.
-    protected void driverStationSaysINITIALIZE () throws InterruptedException
-    {
-    }
+    protected void driverStationSaysINITIALIZE () throws InterruptedException {}
 
     //Has to be implemented.
     protected abstract void driverStationSaysGO () throws InterruptedException;
 
     //Optional overload.
-    protected void driverStationSaysSTOP ()
-    {
-    }
+    protected void driverStationSaysSTOP () {}
 }

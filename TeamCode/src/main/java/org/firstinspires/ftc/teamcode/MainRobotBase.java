@@ -30,7 +30,8 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
                 0.40,
                 AdvancedMotorController.GearRatio.Two_To_One,
                 AdvancedMotorController.MotorType.NeverRest40
-        ).setMotorDirection (DcMotorSimple.Direction.REVERSE);
+        ).
+                setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
         rightDrive = new AdvancedMotorController (
                 initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight"),
@@ -45,14 +46,18 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
                 0.40,
                 AdvancedMotorController.GearRatio.Two_To_One,
                 AdvancedMotorController.MotorType.NeverRest40
-        ).setMotorDirection (DcMotorSimple.Direction.REVERSE);
+        ).
+                setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
         flywheels = new AdvancedMotorController (
                 initialize (DcMotor.class, "flywheels"),
                 0.02,
                 AdvancedMotorController.GearRatio.One_to_One,
                 AdvancedMotorController.MotorType.NeverRest3P7
-        ).setMotorDirection (DcMotor.Direction.REVERSE);
+        ).
+                setMotorDirection (DcMotor.Direction.REVERSE).
+                setAdjustmentSensitivity (.00001).
+                setAdjustmentSensitivityBounds (0.3);
 
         lift = initialize (DcMotor.class, "lift");
         lift.setDirection (DcMotorSimple.Direction.REVERSE);
@@ -66,20 +71,16 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         capBallHolder = initialize (Servo.class, "clamp");
         capBallHolder.setPosition (CBH_CLOSED);
 
+        //Flywheels and harvester encoders.
+        flywheels.resetEncoder ();
+        harvester.resetEncoder ();
+        flywheels.enablePeriodicPIDUpdates ();
+        harvester.enablePeriodicPIDUpdates ();
+
         //Certain things are only applicable in autonomous or teleop.
         initializeOpModeSpecificHardware ();
     }
 
-    protected void initializeOpModeSpecificHardware () throws InterruptedException
-    {
-    }
-
-    protected void driverStationSaysSTOP ()
-    {
-        leftDrive.setRPS (0);
-        rightDrive.setRPS (0);
-        harvester.setRPS (0);
-        flywheels.setRPS (0);
-        rightButtonPusher.setPosition (0.5);
-    }
+    //Optional overload.
+    protected void initializeOpModeSpecificHardware () throws InterruptedException {}
 }

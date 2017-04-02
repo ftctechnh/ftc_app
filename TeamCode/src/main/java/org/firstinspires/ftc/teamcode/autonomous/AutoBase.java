@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
 public abstract class AutoBase extends MainRobotBase
@@ -47,9 +48,9 @@ public abstract class AutoBase extends MainRobotBase
     //Just resets the gyro.
     private void zeroHeading() throws InterruptedException
     {
-        sleep(400);
+        ProgramFlow.pauseForMS (400);
         gyroscope.resetZAxisIntegrator();
-        sleep(400);
+        ProgramFlow.pauseForMS (400);
     }
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
     protected int getValidGyroHeading()
@@ -204,16 +205,16 @@ public abstract class AutoBase extends MainRobotBase
     {
         leftDrive.setRPS (0);
         rightDrive.setRPS (0);
-        sleep (msDelay);
+        ProgramFlow.pauseForMS (msDelay);
     }
 
     /******** CUSTOM ACTIONS ********/
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
         flywheels.setRPS (3);
-        sleep (300);
+        ProgramFlow.pauseForMS (300);
         harvester.setRPS (-5);
-        sleep (2200);
+        ProgramFlow.pauseForMS (2200);
         flywheels.setRPS (0);
         harvester.setRPS (0);
     }
@@ -265,7 +266,6 @@ public abstract class AutoBase extends MainRobotBase
         ConsoleManager.outputNewLineToDrivers ("Initializing Encoders...");
         leftDrive.resetEncoder ();
         rightDrive.resetEncoder ();
-        flywheels.resetEncoder ();
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize gyroscope.
@@ -277,16 +277,18 @@ public abstract class AutoBase extends MainRobotBase
             gyroscope.calibrate();
 
             //Pause to prevent odd errors in which it says it's configured but is actually LYING.
-            sleep(1000);
+            ProgramFlow.pauseForMS (1000);
 
             //Wait for gyro to finish calibrating.
             while (gyroscope.isCalibrating())
-                sleep(50);
+                ProgramFlow.pauseForMS (50);
 
             //Zero gyro heading.
             zeroHeading();
 
             ConsoleManager.appendToLastOutputtedLine ("OK!");
+
+            idle();
         }
 
         ConsoleManager.outputNewLineToDrivers ("Initialization completed!");
@@ -294,8 +296,6 @@ public abstract class AutoBase extends MainRobotBase
         //Enable threading for PID updates.
         leftDrive.enablePeriodicPIDUpdates ();
         rightDrive.enablePeriodicPIDUpdates ();
-        flywheels.enablePeriodicPIDUpdates ();
-        harvester.enablePeriodicPIDUpdates ();
     }
 
 

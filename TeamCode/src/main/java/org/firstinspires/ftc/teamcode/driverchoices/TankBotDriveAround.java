@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="TankBot Drive", group="TankBot Group")
@@ -75,7 +76,7 @@ public class TankBotDriveAround extends ImprovedOpModeBase
 
             // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
             setLeftPower (scaleInput(leftPower));
-            setLeftPower (scaleInput(rightPower));
+            setRightPower (scaleInput(rightPower));
 
             //Toggle direction
             if (gamepad1.a && (System.currentTimeMillis() - lastTimeBackTogglePressed) > 500)
@@ -174,7 +175,7 @@ public class TankBotDriveAround extends ImprovedOpModeBase
 
             ConsoleManager.outputNewLineToDrivers ("Playing " + choice.toString());
 
-            sleep (1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
+            ProgramFlow.pauseForMS (1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
         }
         catch (Exception e)
         {

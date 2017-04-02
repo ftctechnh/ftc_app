@@ -10,6 +10,6 @@ public class RedRedemption extends BeaconAuto
 {
     public Alliance getAlliance ()
     {
-        return Alliance.BLUE;
+        return Alliance.RED;
     }
 }
