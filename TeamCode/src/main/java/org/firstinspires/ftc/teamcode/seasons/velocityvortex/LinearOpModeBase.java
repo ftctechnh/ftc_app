@@ -60,6 +60,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private ModernRoboticsI2cRangeSensor leftRange;
 
     private OpticalDistanceSensor launcherOds;
+    private OpticalDistanceSensor launcherChamberOds;
     private OpticalDistanceSensor diskOds;
     private OpticalDistanceSensor ods3;
 
@@ -122,6 +123,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         //leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
+        launcherChamberOds = hardwareMap.opticalDistanceSensor.get("lcOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
         ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
@@ -910,6 +912,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
      */
     protected OpticalDistanceSensor getOds3() {
         return ods3;
+    }
+
+    protected OpticalDistanceSensor getLauncherChamberOds() {
+        return launcherChamberOds;
     }
 
     protected ModernRoboticsI2cGyro getGyroSensor() {

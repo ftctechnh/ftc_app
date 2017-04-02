@@ -11,13 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
+    private static final double LAUNCHER_CHAMBER_ODS_THRESHOLD = 0.2;
 
     private float frontLeftPower;
     private float frontRightPower;
     private float backLeftPower;
     private float backRightPower;
 
-    private volatile boolean yButtonPressed = false;
     private boolean driveReversed = false;
 
     @Override
@@ -74,6 +74,7 @@ public class Teleop extends LinearOpModeBase {
             handleIntake();
             handleCapBallMechanism();
             handleTelemetry();
+            handleAutoLaunch();
 
             // control for button pusher servo motors
             if(gamepad1.right_bumper) {
@@ -85,6 +86,23 @@ public class Teleop extends LinearOpModeBase {
             }
 
             idle();
+        }
+    }
+
+    private void handleAutoLaunch() {
+        if(gamepad2.left_bumper) {
+            // if a particle is detected, launch the particle
+            if(getLauncherChamberOds().getRawLightDetected() >= LAUNCHER_CHAMBER_ODS_THRESHOLD) {
+                getRobotRuntime().reset();
+                while(opModeIsActive() && getRobotRuntime().milliseconds() < 100d) {
+                    getIntakeMotor().setPower(1.0);
+                }
+
+                launchParticle();
+            } else {
+                // otherwise, run the intake
+                getIntakeMotor().setPower(-1.0);
+            }
         }
     }
 
@@ -136,7 +154,9 @@ public class Teleop extends LinearOpModeBase {
             getIntakeMotor().setPower(gamepad2.right_stick_y);
         }
         else {
-            getIntakeMotor().setPower(0);
+            if(!gamepad2.left_bumper)
+                getIntakeMotor().setPower(0);
+
             getDoor3().setPosition(0.25);
         }
     }
@@ -153,6 +173,8 @@ public class Teleop extends LinearOpModeBase {
 
         telemetry.addData("color sensor red2", getColorSensor2().red());
         telemetry.addData("color sensor blue2", getColorSensor2().blue());
+
+        telemetry.addData("launcher chamber ods", getLauncherChamberOds().getRawLightDetected());
 
         telemetry.update();
     }
