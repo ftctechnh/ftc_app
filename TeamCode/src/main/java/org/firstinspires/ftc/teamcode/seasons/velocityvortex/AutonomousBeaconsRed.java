@@ -53,7 +53,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive left to white line
-        stopOnLine(0.05, false);
+        stopOnLine(0.05, RobotDirection.LEFT);
 
         // reset again before pressing beacon
         gyroPivot(0.8, 0, true);
@@ -67,7 +67,7 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         rangeGyroStrafe(0, 20, 41, RobotDirection.RIGHT);
 
         // drive left to white line
-        stopOnLine(0.05, false);
+        stopOnLine(0.05, RobotDirection.LEFT);
 
         // gyro pivot
         //gyroPivot(0.8, 0, false);
