@@ -10,19 +10,41 @@ public class AdvancedMotorController
     public final DcMotor encoderMotor, linkedMotor;
 
     //Calculated in the constructor.
-    private final double encoderTicksPerWheelRevolution;
-    private double sensitivity = .00002, sensitivityBound = .5;
 
-    public enum MotorType
+    private double encoderTicksPerWheelRevolution;
+    private void recalculateEncoderTicksPerWheelRevolution()
     {
-        NeverRest40(1120), NeverRest20(1120), NeverRest3P7(45);
-
-        public final int encoderTicksPerRevolution;
-        MotorType(int encoderTicksPerRevolution)
-        {
-            this.encoderTicksPerRevolution = encoderTicksPerRevolution;
-        }
+        encoderTicksPerWheelRevolution = gearRatio.ratio * motorType.encoderTicksPerRevolution;
     }
+
+    //Initialization steps
+    public AdvancedMotorController (DcMotor encoderMotor)
+    {
+        this (encoderMotor, null);
+    }
+    public AdvancedMotorController (DcMotor encoderMotor, DcMotor linkedMotor)
+    {
+        this.encoderMotor = encoderMotor;
+        this.linkedMotor = linkedMotor;
+
+        this.encoderTicksPerWheelRevolution = gearRatio.ratio * motorType.encoderTicksPerRevolution;
+
+        resetEncoder ();
+    }
+
+    //Initial conversion factor, will be changed a LOT through the course of the program.
+    private double rpsConversionFactor = .25;
+    public double getRPSConversionFactor() //Primarily for debugging.
+    {
+        return rpsConversionFactor;
+    }
+    public AdvancedMotorController setRPSConversionFactor(double rpsConversionFactor)
+    {
+        this.rpsConversionFactor = rpsConversionFactor;
+        return this;
+    }
+
+    //Gear ratio
     public enum GearRatio
     {
         Two_To_One(2), One_to_One(1), One_to_Two(0.5);
@@ -34,22 +56,33 @@ public class AdvancedMotorController
             this.ratio = ratio;
         }
     }
-    public AdvancedMotorController (DcMotor encoderMotor, double initialRPSConversionFactor, GearRatio gearRatio, MotorType motorType)
+    private GearRatio gearRatio = GearRatio.One_to_One;
+    public AdvancedMotorController setGearRatio(GearRatio gearRatio)
     {
-        this (encoderMotor, null, initialRPSConversionFactor, gearRatio, motorType);
+        this.gearRatio = gearRatio;
+        recalculateEncoderTicksPerWheelRevolution ();
+        return this;
     }
-    public AdvancedMotorController (DcMotor encoderMotor, DcMotor linkedMotor, double initialRPSConversionFactor, GearRatio gearRatio, MotorType motorType)
+
+    //Motor type
+    public enum MotorType
     {
-        this.encoderMotor = encoderMotor;
-        this.linkedMotor = linkedMotor;
+        NeverRest40(1120), NeverRest20(1120), NeverRest3P7(45);
 
-        this.rpsConversionFactor = initialRPSConversionFactor;
-
-        this.encoderTicksPerWheelRevolution = gearRatio.ratio * motorType.encoderTicksPerRevolution;
-
-        resetEncoder ();
+        public final int encoderTicksPerRevolution;
+        MotorType(int encoderTicksPerRevolution)
+        {
+            this.encoderTicksPerRevolution = encoderTicksPerRevolution;
+        }
     }
-    //I'm purposefully avoiding putting all other parameters into other such methods, since it would prevent the final variables from being final.
+    private MotorType motorType = MotorType.NeverRest40;
+    public AdvancedMotorController setMotorType(MotorType motorType)
+    {
+        this.motorType = motorType;
+        recalculateEncoderTicksPerWheelRevolution ();
+        return this;
+    }
+
     public AdvancedMotorController setMotorDirection(DcMotorSimple.Direction direction)
     {
         encoderMotor.setDirection (direction);
@@ -58,14 +91,28 @@ public class AdvancedMotorController
 
         return this;
     }
+
+    //Adjustment sensitivity.
+    private double sensitivity = .00002;
     public AdvancedMotorController setAdjustmentSensitivity(double sensitivity)
     {
         this.sensitivity = sensitivity;
         return this;
     }
+
+    //Bounds for adjustment
+    private double sensitivityBound = .5;
     public AdvancedMotorController setAdjustmentSensitivityBounds(double sensitivityBound)
     {
         this.sensitivityBound = sensitivityBound;
+        return this;
+    }
+
+    //Refresh rate.
+    private long refreshRate = 50;
+    public AdvancedMotorController setRefreshRate(long refreshRate)
+    {
+        this.refreshRate = refreshRate;
         return this;
     }
 
@@ -132,13 +179,6 @@ public class AdvancedMotorController
     /******* PID STUFF *********/
     private double desiredRPS = 0;
 
-    //Initial conversion factor, will be changed a LOT through the course of the program.
-    private double rpsConversionFactor = .25;
-    public double getRPSConversionFactor() //Primarily for debugging.
-    {
-        return rpsConversionFactor;
-    }
-
     /**
      * VERY Simplistic PID control which decreases or increases the rpsConversionFactor variable, thus changing the speed
      * at which the motor turns based on previous and current encoder positions.
@@ -169,21 +209,28 @@ public class AdvancedMotorController
         return actualTicksSinceUpdate;
     }
 
-    private EasyAsyncTask pidUpdateThread = null;
+    private boolean pidUpdatesEnabled = false;
     public void enablePeriodicPIDUpdates ()
     {
-        pidUpdateThread = new EasyAsyncTask ()
+        pidUpdatesEnabled = true;
+        new EasyAsyncTask ()
         {
             @Override
             protected String taskToAccomplish () throws InterruptedException
             {
-                while (true)
+                while (pidUpdatesEnabled)
                 {
                     updateMotorPowerWithPID ();
-                    ProgramFlow.pauseForMS (50);
+                    ProgramFlow.pauseForMS (refreshRate);
                 }
+
+                return "Success!";
             }
         };
+    }
+    public void disablePeriodicPIDUpdates()
+    {
+        pidUpdatesEnabled = false;
     }
 
     public void updateMotorPowerWithPID ()

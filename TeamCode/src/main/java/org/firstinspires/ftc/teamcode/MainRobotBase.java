@@ -25,36 +25,25 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
-        leftDrive = new AdvancedMotorController (
-                initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft"),
-                0.40,
-                AdvancedMotorController.GearRatio.Two_To_One,
-                AdvancedMotorController.MotorType.NeverRest40
-        ).
+        leftDrive = new AdvancedMotorController (initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
+                setRPSConversionFactor (0.40).
+                setGearRatio (AdvancedMotorController.GearRatio.Two_To_One).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
-        rightDrive = new AdvancedMotorController (
-                initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight"),
-                0.36,
-                AdvancedMotorController.GearRatio.Two_To_One,
-                AdvancedMotorController.MotorType.NeverRest40
-        );
+        rightDrive = new AdvancedMotorController (initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight")).
+                setRPSConversionFactor (0.36).
+                setGearRatio (AdvancedMotorController.GearRatio.Two_To_One).
+                setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
-        harvester = new AdvancedMotorController (
-                initialize (DcMotor.class, "harvester"),
-                0.40,
-                AdvancedMotorController.GearRatio.Two_To_One,
-                AdvancedMotorController.MotorType.NeverRest40
-        ).
+        harvester = new AdvancedMotorController (initialize (DcMotor.class, "harvester")).
+                setRPSConversionFactor (0.40).
+                setGearRatio (AdvancedMotorController.GearRatio.Two_To_One).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
-        flywheels = new AdvancedMotorController (
-                initialize (DcMotor.class, "flywheels"),
-                0.02,
-                AdvancedMotorController.GearRatio.One_to_One,
-                AdvancedMotorController.MotorType.NeverRest3P7
-        ).
+        flywheels = new AdvancedMotorController (initialize (DcMotor.class, "flywheels")).
+                setRPSConversionFactor (0.02).
+                setMotorType (AdvancedMotorController.MotorType.NeverRest3P7).
                 setMotorDirection (DcMotor.Direction.REVERSE).
                 setAdjustmentSensitivity (.00001).
                 setAdjustmentSensitivityBounds (0.3);
