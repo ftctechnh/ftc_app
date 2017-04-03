@@ -60,6 +60,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
@@ -151,19 +152,19 @@ public class FtcRobotControllerActivity extends Activity {
 
   //user code
   protected static Context lastContext;
-  protected static Handler UIThread;
   protected static View cameraView;
+  protected static RelativeLayout graphLayout;
 
   public static Context getAppContext(){
     return lastContext;
   }
 
-  public static Handler getUIHandler() {
-    return UIThread;
-  }
-
   public static View getCameraView(){
     return cameraView;
+  }
+
+  public static RelativeLayout getGraphLayout() {
+    return graphLayout;
   }
   //end user code
 
@@ -290,9 +291,8 @@ public class FtcRobotControllerActivity extends Activity {
     //user code
     lastContext = context;
     cameraView = findViewById(R.id.image_manipulations_activity_surface_view);
-    UIThread = getWindow().getDecorView().getHandler();
-    View thing = findViewById(R.id.image_manipulations_activity_surface_view);
-    thing.setAlpha(0.0f);
+    graphLayout = (RelativeLayout) findViewById(R.id.CheapCamera);
+    cameraView.setAlpha(0.0f);
     //end user code
 
     bindToService();

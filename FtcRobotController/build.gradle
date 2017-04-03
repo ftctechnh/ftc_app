@@ -26,4 +26,5 @@ apply from: 'build.release.gradle'
 
 dependencies {
     compile project(':openCVLibrary310dev')
+    compile project(':MPChartLib')
 }
