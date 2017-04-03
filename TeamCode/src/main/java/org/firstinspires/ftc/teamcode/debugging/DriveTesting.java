@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 
 @Autonomous(name = "Driving - PID Debug", group = "Utility Group")
 
@@ -29,7 +30,7 @@ public class DriveTesting extends AutoBase
                                     "R actual " + rightDrive.getActualTicksSinceUpdate ()
                             }
             );
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
         }
     }
 }

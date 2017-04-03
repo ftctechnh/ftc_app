@@ -24,7 +24,7 @@ public abstract class AutoBase extends MainRobotBase
         while (rangeSensorOutput >= 255 || rangeSensorOutput <= 0)
         {
             rangeSensorOutput = rangeSensor.cmUltrasonic ();
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
         }
         return rangeSensorOutput;
     }
@@ -108,7 +108,7 @@ public abstract class AutoBase extends MainRobotBase
             if (mode != TurnMode.LEFT)
                 rightDrive.setRPS (Range.clip(turnPower, -1, 1));
 
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
         }
 
         hardBrake (100);
@@ -194,7 +194,7 @@ public abstract class AutoBase extends MainRobotBase
                     break;
             }
 
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
         }
 
         hardBrake (100);
@@ -288,7 +288,7 @@ public abstract class AutoBase extends MainRobotBase
 
             ConsoleManager.appendToLastOutputtedLine ("OK!");
 
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
         }
 
         ConsoleManager.outputNewLineToDrivers ("Initialization completed!");

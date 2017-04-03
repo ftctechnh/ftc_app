@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
@@ -29,7 +30,6 @@ public class Teleop extends MainRobotBase
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (true)
         {
-            idle();
             /**************************** CONTROLLER #1 ********************************/
             /************** Direction Toggle **************/
             if (!backwards)
@@ -158,7 +158,7 @@ public class Teleop extends MainRobotBase
                     "FBP_up = " + fbpUp
             });
 
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
 
             /******************** END OF LOOP ********************/
         }

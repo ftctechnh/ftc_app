@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 
 @Autonomous(name = "Sensor Debug", group = "Utility Group")
 
@@ -37,7 +38,7 @@ public class SensorDebug extends AutoBase
                             "R motor encoder: " + rightDrive.encoderMotor.getCurrentPosition ()
                     }
             );
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
         }
     }
 }

@@ -9,8 +9,7 @@ public class AdvancedMotorController
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final DcMotor encoderMotor, linkedMotor;
 
-    //Calculated in the constructor.
-
+    //This calculated value is important for PID adjustments.
     private double encoderTicksPerWheelRevolution;
     private void recalculateEncoderTicksPerWheelRevolution()
     {

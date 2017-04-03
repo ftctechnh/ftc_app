@@ -33,6 +33,6 @@ public class AsyncTaskTesting extends ImprovedOpModeBase
         };
 
         while (true)
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
     }
 }

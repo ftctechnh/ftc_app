@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
+import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
 
 @Autonomous(name="Drive Backward", group = "Utility Group")
 
@@ -26,6 +27,6 @@ public class DriveBackward extends MainRobotBase
         rightDrive.setDirectMotorPower (-.8);
 
         while (true)
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
     }
 }

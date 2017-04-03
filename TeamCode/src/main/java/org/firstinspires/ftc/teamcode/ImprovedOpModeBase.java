@@ -22,11 +22,6 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         }
     }
 
-    /**
-     * This method inherits from
-     *
-     * @throws InterruptedException
-     */
     @Override
     public void runOpMode () throws InterruptedException
     {

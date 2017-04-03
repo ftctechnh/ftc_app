@@ -22,7 +22,6 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
     protected void initializeHardware () throws InterruptedException
     {
         //Make sure that the robot components are found and initialized correctly.
-        //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
         leftDrive = new AdvancedMotorController (initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
@@ -42,7 +41,7 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
         flywheels = new AdvancedMotorController (initialize (DcMotor.class, "flywheels")).
-                setRPSConversionFactor (0.02).
+                setRPSConversionFactor (0.02). //Very little resistance on the flywheels.
                 setMotorType (AdvancedMotorController.MotorType.NeverRest3P7).
                 setMotorDirection (DcMotor.Direction.REVERSE).
                 setAdjustmentSensitivity (.00001).

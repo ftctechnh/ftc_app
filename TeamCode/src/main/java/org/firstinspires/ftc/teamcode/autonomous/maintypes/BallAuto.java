@@ -48,7 +48,7 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
                             }
             );
 
-            idle();
+            ProgramFlow.pauseForSingleFrame ();
         }
 
         ProgramFlow.pauseForMS (delay);

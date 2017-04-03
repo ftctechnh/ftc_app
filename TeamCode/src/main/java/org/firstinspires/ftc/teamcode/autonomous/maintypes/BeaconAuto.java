@@ -55,7 +55,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             do
             {
                 updateColorSensorStates ();
-                idle();
+                ProgramFlow.pauseForSingleFrame ();
             } while (!((option1Red && option2Blue) || (option1Blue && option2Red)));
 
             rightButtonPusher.setPosition (.5); //Stop button pusher.
