@@ -15,9 +15,10 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         {
             //Returns the last subclass (if this were a DcMotor it would pass back a Dc Motor.
             return hardwareDevice.cast (hardwareMap.get (name));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            ConsoleManager.outputNewLineToDrivers ("Could not find " + name + " in hardware map.");
+            ConsoleManager.outputNewLineToDrivers ("Could not find " + name + " in the config file.");
             return null;
         }
     }
