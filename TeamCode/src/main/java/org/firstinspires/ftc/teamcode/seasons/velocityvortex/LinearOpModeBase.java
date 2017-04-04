@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -52,6 +53,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private Servo door3;
     private Servo latch4;
     private Servo pusher5;
+    private Servo touchSensorServo;
 
     private ModernRoboticsI2cColorSensor colorSensor1;
     private ModernRoboticsI2cColorSensor colorSensor2;
@@ -66,6 +68,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private ModernRoboticsI2cGyro gyroSensor;
 
+    private TouchSensor touchSensor;
+
     private ElapsedTime robotRuntime;
 
     /**
@@ -75,7 +79,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
      * @see #rangeGyroStrafe(double, double, int, RobotDirection)
      */
     public enum RobotDirection {
-        FORWARD, BACKWARD, LEFT, RIGHT
+        FORWARD, BACKWARD, LEFT, RIGHT, NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST
     }
 
     /**
@@ -108,6 +112,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         door3 = hardwareMap.servo.get("d3");  // Closed = 0.55, Open = 0.25
         latch4 = hardwareMap.servo.get("l4"); // Up = 0.5
         pusher5 = hardwareMap.servo.get("p5"); // Up = 0.0, Down = 0.7
+//        touchSensorServo = hardwareMap.servo.get("l6");
 
         colorSensor1 = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "clr");
         colorSensor1.setI2cAddress(I2cAddr.create8bit(0x3C));
@@ -128,6 +133,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
         gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
+
+//        touchSensor = hardwareMap.touchSensor.get("ts");
 
         // reverse only one spool motor
         spoolMotor1.setDirection(DcMotor.Direction.REVERSE);
@@ -268,13 +275,21 @@ public abstract class LinearOpModeBase extends LinearOpMode {
      * </ul>
      */
     protected void claimBeaconRed() {
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // drive to 10cm from the wall
-        rangeSensorDrive(12, 0.1);
+        // TODO: lower the touch sensor servo
 
-        // when the beacon is already claimed, moved on
+        // drive forward while touch sensor is not pressed
+        while(opModeIsActive() && !getTouchSensor().isPressed()) {
+            driveForward(0.2);
+        }
+        stopRobot();
+
+        // when the beacon is already claimed, move on
         if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
+            // drive to 20cm from wall
+            rangeSensorDrive(20, 0.1);
             return;
         }
 
@@ -282,6 +297,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
 
+        // move the button pusher servos
         if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
             beaconsServo1.setPosition(0.3);
         } else if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
@@ -291,55 +307,29 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             telemetry.update();
         }
 
-        stopRobot();
-
-        // wait for the servo to raise
-        robotRuntime.reset();
-        while(robotRuntime.milliseconds() < 400) {
-            idle();
-        }
-
-        robotRuntime.reset();
-
-        // first push
-        while(opModeIsActive() &&
-                (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
-            // run without encoders again
-            driveForward(0.2);
-        }
-        //stopRobot();
-
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
-        telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
-        telemetry.update();
-
-        // wait for the beacon to be claimed
-        robotRuntime.reset();
-        while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
-            idle();
-        }
-
         // check if both color sensors do not detect red
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
             repositionBeacons();
 
-            robotRuntime.reset();
-            // second push
-            while(opModeIsActive() &&
-                    (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
-                // run without encoders again
-                driveForward(0.2);
+            // move the button pusher servos
+            if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
+                beaconsServo1.setPosition(0.3);
+            } else if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
+                beaconsServo2.setPosition(0.75);
+            } else {
+                telemetry.addData(">", "beacon not detected!");
+                telemetry.update();
             }
-            stopRobot();
+
+            // put the button pusher servos down
+            beaconsServo1.setPosition(1);
+            beaconsServo2.setPosition(0);
         }
 
         // drive backward to 15 cm
         rangeSensorDrive(15, 0.1);
 
-        // lower button pushers
+        // put the button pusher servos back
         beaconsServo1.setPosition(1);
         beaconsServo2.setPosition(0);
     }
@@ -377,13 +367,21 @@ public abstract class LinearOpModeBase extends LinearOpMode {
      * </ul>
      */
     protected void claimBeaconBlue() {
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // drive to 10cm from the wall
-        rangeSensorDrive(12, 0.1);
+        // TODO: lower the touch sensor servo
 
-        // when the beacon is already claimed, moved on
+        // drive forward while touch sensor is not pressed
+        while(opModeIsActive() && !getTouchSensor().isPressed()) {
+            driveForward(0.2);
+        }
+        stopRobot();
+
+        // when the beacon is already claimed, move on
         if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
+            // drive to 20cm from wall
+            rangeSensorDrive(20, 0.1);
             return;
         }
 
@@ -391,63 +389,39 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
         telemetry.update();
 
+        // move the button pusher servos
         if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
             beaconsServo1.setPosition(0.3);
         } else if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
             beaconsServo2.setPosition(0.75);
         } else {
-            telemetry.addData(">", "beacon not detected");
+            telemetry.addData(">", "beacon not detected!");
             telemetry.update();
         }
 
-        stopRobot();
-
-        // wait for the servo to raise
-        robotRuntime.reset();
-        while(robotRuntime.milliseconds() < 400) {
-            idle();
-        }
-
-        robotRuntime.reset();
-        // first push
-        while(opModeIsActive() &&
-                (getFrontRange().cmUltrasonic() >= 7 && robotRuntime.milliseconds() < 600)) {
-            // run without encoders again
-            driveForward(0.2);
-        }
-        //stopRobot();
-
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("color sensor 1", "red: %d, blue: %d", colorSensor1.red(), colorSensor1.blue());
-        telemetry.addData("color sensor 2", "red: %d, blue: %d", colorSensor2.red(), colorSensor2.blue());
-        telemetry.update();
-
-        // wait for the beacon to be claimed
-        robotRuntime.reset();
-        while(opModeIsActive() && robotRuntime.milliseconds() < 500) {
-            idle();
-        }
-
-        // check if both color sensors do not detect blue
-        if(colorSensor1.red() > 0 || colorSensor2.red() > 0) {
+        // check if both color sensors do not detect red
+        if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
             repositionBeacons();
 
-            robotRuntime.reset();
-            // second push
-            while(opModeIsActive() &&
-                    (getFrontRange().cmUltrasonic() >= 6 && robotRuntime.milliseconds() < 600)) {
-                // run without encoders again
-                driveForward(0.2);
+            // move the button pusher servos
+            if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
+                beaconsServo1.setPosition(0.3);
+            } else if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
+                beaconsServo2.setPosition(0.75);
+            } else {
+                telemetry.addData(">", "beacon not detected!");
+                telemetry.update();
             }
-            stopRobot();
+
+            // put the button pusher servos down
+            beaconsServo1.setPosition(1);
+            beaconsServo2.setPosition(0);
         }
 
         // drive backward to 15 cm
         rangeSensorDrive(15, 0.1);
 
-        // lower button pushers
+        // put the button pusher servos back
         beaconsServo1.setPosition(1);
         beaconsServo2.setPosition(0);
     }
@@ -512,6 +486,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                 getBackRightDrive().setTargetPosition(-target);
                 getBackLeftDrive().setTargetPosition(-target);
                 break;
+            default:
+                throw new IllegalArgumentException(
+                        "Only forward, backward, left, or right are valid directions");
         }
 
         // set RUN_TO_POSITION for each motor
@@ -529,6 +506,61 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             idle();
         }
 
+        stopRobot();
+
+        // set RUN_WITHOUT_ENCODER for each motor
+        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    protected void encoderDriveDiagonal(double speed, int distance, RobotDirection direction) {
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        int target = distance * COUNTS_PER_INCH;
+
+        DcMotor driveMotor1;
+        DcMotor driveMotor2;
+
+        switch(direction) {
+            case NORTH_EAST:
+                driveMotor1 = getFrontLeftDrive();
+                driveMotor2 = getBackRightDrive();
+                driveMotor1.setTargetPosition(-target);
+                driveMotor2.setTargetPosition(target);
+                break;
+            case NORTH_WEST:
+                driveMotor1 = getFrontRightDrive();
+                driveMotor2 = getBackLeftDrive();
+                driveMotor1.setTargetPosition(-target);
+                driveMotor2.setTargetPosition(target);
+                break;
+            case SOUTH_EAST:
+                driveMotor1 = getFrontRightDrive();
+                driveMotor2 = getBackLeftDrive();
+                driveMotor1.setTargetPosition(target);
+                driveMotor2.setTargetPosition(-target);
+                break;
+            case SOUTH_WEST:
+                driveMotor1 = getFrontLeftDrive();
+                driveMotor2 = getBackRightDrive();
+                driveMotor1.setTargetPosition(target);
+                driveMotor2.setTargetPosition(-target);
+                break;
+            default:
+                throw new IllegalArgumentException(
+                "Only north east, north west, south east, or south west are valid directions");
+        }
+
+        // set motor powers
+        driveMotor1.setPower(speed);
+        driveMotor2.setPower(speed);
+
+        while(opModeIsActive() &&
+                (driveMotor1.isBusy() && driveMotor2.isBusy())) {
+            telemetry.addData("Path",  "Running at %d :%d",
+                    driveMotor1.getCurrentPosition(),
+                    driveMotor2.getCurrentPosition());
+        }
         stopRobot();
 
         // set RUN_WITHOUT_ENCODER for each motor
@@ -877,6 +909,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected Servo getBeaconsServo2() { return beaconsServo2; }
 
+    protected Servo getTouchSensorServo() {
+        return touchSensorServo;
+    }
+
     protected Servo getDoor3() { return door3; }
 
     protected Servo getLatch4() {
@@ -920,6 +956,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected ModernRoboticsI2cGyro getGyroSensor() {
         return gyroSensor;
+    }
+
+    protected TouchSensor getTouchSensor() {
+        return touchSensor;
     }
 
     protected ElapsedTime getRobotRuntime() {

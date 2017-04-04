@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
-    private static final double LAUNCHER_CHAMBER_ODS_THRESHOLD = 0.2;
+    private static final double LAUNCHER_CHAMBER_ODS_THRESHOLD = 2.3;
 
     private float frontLeftPower;
     private float frontRightPower;
@@ -36,6 +36,15 @@ public class Teleop extends LinearOpModeBase {
                 while(opModeIsActive()) {
                     if(gamepad2.y) {
                         launchParticle();
+                    } else if(gamepad2.a) {
+                        if(getLauncherChamberOds().getRawLightDetected()
+                                >= LAUNCHER_CHAMBER_ODS_THRESHOLD) {
+                            getIntakeMotor().setPower(0);
+                            launchParticle();
+                        } else {
+                            // otherwise, run the intake
+                            getIntakeMotor().setPower(-1.0);
+                        }
                     }
                 }
             }
@@ -74,7 +83,6 @@ public class Teleop extends LinearOpModeBase {
             handleIntake();
             handleCapBallMechanism();
             handleTelemetry();
-            handleAutoLaunch();
 
             // control for button pusher servo motors
             if(gamepad1.right_bumper) {
@@ -86,23 +94,6 @@ public class Teleop extends LinearOpModeBase {
             }
 
             idle();
-        }
-    }
-
-    private void handleAutoLaunch() {
-        if(gamepad2.left_bumper) {
-            // if a particle is detected, launch the particle
-            if(getLauncherChamberOds().getRawLightDetected() >= LAUNCHER_CHAMBER_ODS_THRESHOLD) {
-                getRobotRuntime().reset();
-                while(opModeIsActive() && getRobotRuntime().milliseconds() < 100d) {
-                    getIntakeMotor().setPower(1.0);
-                }
-
-                launchParticle();
-            } else {
-                // otherwise, run the intake
-                getIntakeMotor().setPower(-1.0);
-            }
         }
     }
 
@@ -154,7 +145,7 @@ public class Teleop extends LinearOpModeBase {
             getIntakeMotor().setPower(gamepad2.right_stick_y);
         }
         else {
-            if(!gamepad2.left_bumper)
+            if(!gamepad2.a)
                 getIntakeMotor().setPower(0);
 
             getDoor3().setPosition(0.25);
@@ -175,6 +166,8 @@ public class Teleop extends LinearOpModeBase {
         telemetry.addData("color sensor blue2", getColorSensor2().blue());
 
         telemetry.addData("launcher chamber ods", getLauncherChamberOds().getRawLightDetected());
+
+//        telemetry.addData("Touch sensor pressed", getTouchSensor().isPressed());
 
         telemetry.update();
     }
