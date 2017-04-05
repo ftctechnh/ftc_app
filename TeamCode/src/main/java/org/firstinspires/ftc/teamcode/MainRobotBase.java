@@ -26,18 +26,14 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
         leftDrive = new AdvancedMotorController (initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
                 setRPSConversionFactor (0.40).
-                setGearRatio (AdvancedMotorController.GearRatio.Two_To_One).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
         rightDrive = new AdvancedMotorController (initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight")).
-                setRPSConversionFactor (0.36).
-                setGearRatio (AdvancedMotorController.GearRatio.Two_To_One).
-                setMotorDirection (DcMotorSimple.Direction.REVERSE);
+                setRPSConversionFactor (0.36);
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
         harvester = new AdvancedMotorController (initialize (DcMotor.class, "harvester")).
                 setRPSConversionFactor (0.40).
-                setGearRatio (AdvancedMotorController.GearRatio.Two_To_One).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
 
         flywheels = new AdvancedMotorController (initialize (DcMotor.class, "flywheels")).

@@ -9,13 +9,6 @@ public class AdvancedMotorController
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final DcMotor encoderMotor, linkedMotor;
 
-    //This calculated value is important for PID adjustments.
-    private double encoderTicksPerWheelRevolution;
-    private void recalculateEncoderTicksPerWheelRevolution()
-    {
-        encoderTicksPerWheelRevolution = gearRatio.ratio * motorType.encoderTicksPerRevolution;
-    }
-
     //Initialization steps
     public AdvancedMotorController (DcMotor encoderMotor)
     {
@@ -25,8 +18,6 @@ public class AdvancedMotorController
     {
         this.encoderMotor = encoderMotor;
         this.linkedMotor = linkedMotor;
-
-        this.encoderTicksPerWheelRevolution = gearRatio.ratio * motorType.encoderTicksPerRevolution;
 
         resetEncoder ();
     }
@@ -40,26 +31,6 @@ public class AdvancedMotorController
     public AdvancedMotorController setRPSConversionFactor(double rpsConversionFactor)
     {
         this.rpsConversionFactor = rpsConversionFactor;
-        return this;
-    }
-
-    //Gear ratio
-    public enum GearRatio
-    {
-        Two_To_One(2), One_to_One(1), One_to_Two(0.5);
-
-        public final double ratio;
-
-        GearRatio (double ratio)
-        {
-            this.ratio = ratio;
-        }
-    }
-    private GearRatio gearRatio = GearRatio.One_to_One;
-    public AdvancedMotorController setGearRatio(GearRatio gearRatio)
-    {
-        this.gearRatio = gearRatio;
-        recalculateEncoderTicksPerWheelRevolution ();
         return this;
     }
 
@@ -78,7 +49,6 @@ public class AdvancedMotorController
     public AdvancedMotorController setMotorType(MotorType motorType)
     {
         this.motorType = motorType;
-        recalculateEncoderTicksPerWheelRevolution ();
         return this;
     }
 
@@ -195,7 +165,7 @@ public class AdvancedMotorController
 
         recordLastState ();
 
-        expectedTicksPerSecond = encoderTicksPerWheelRevolution * desiredRPS;
+        expectedTicksPerSecond = motorType.encoderTicksPerRevolution * desiredRPS;
     }
 
     private double expectedTicksSinceUpdate, actualTicksSinceUpdate;
@@ -219,8 +189,10 @@ public class AdvancedMotorController
             {
                 while (pidUpdatesEnabled)
                 {
-                    updateMotorPowerWithPID ();
-                    ProgramFlow.pauseForMS (refreshRate);
+                    if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
+                        updateMotorPowerWithPID ();
+
+                    ProgramFlow.pauseForSingleFrame ();
                 }
 
                 return "Success!";

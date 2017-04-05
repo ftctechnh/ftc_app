@@ -140,10 +140,11 @@ public abstract class AutoBase extends MainRobotBase
     }
     protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, SensorDriveAdjustment sensorAdjustmentType) throws InterruptedException
     {
+        //Reset both drive motors.
         leftDrive.resetEncoder ();
         rightDrive.resetEncoder ();
 
-        //Set initial power, and then modify it later.
+        //Set initial drive power.
         leftDrive.setRPS (powerMeasure);
         rightDrive.setRPS (powerMeasure);
 
@@ -158,7 +159,7 @@ public abstract class AutoBase extends MainRobotBase
             int offFromHeading = desiredHeading - getValidGyroHeading ();
 
             //Change motor powers based on offFromHeading.
-            double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15 + 1);
+            double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15);
 
             /** RANGE SENSOR ADJUSTMENT **/
             double rangeSensorAdjustment = 0;
@@ -184,9 +185,7 @@ public abstract class AutoBase extends MainRobotBase
                     break;
 
                 case Ultrasonic:
-                    double reading = getRangeSensorReading (frontRangeSensor);
-                    reachedFinalDest = reading <= stopValue;
-                    //ConsoleManager.outputNewLineToDrivers ("Dist is " + reading);
+                    reachedFinalDest = getRangeSensorReading (frontRangeSensor) <= stopValue;
                     break;
 
                 case BottomColorAlpha:
