@@ -2,16 +2,16 @@ package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
-import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
-import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
 
 public abstract class BeaconAuto extends AutoBase implements OnAlliance
 {
-    private final double BEACON_DP = .5;
-
     //Called after runOpMode() has finished initializing by ImprovedOpModeBase.
     protected void driverStationSaysGO () throws InterruptedException
     {
+        final double BEACON_DP = 1.5;
+
         //Results in a coefficient of 1 if doing blue, and -1 for red.
         boolean onBlueAlliance = (getAlliance () == Alliance.BLUE);
         int autonomousSign = (onBlueAlliance ? 1 : -1);
@@ -62,7 +62,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             long timeTakenToSeeColors = System.currentTimeMillis () - extensionStartTime;
 
             //Press and retract as many times as necessary.
-            long timeForEachPress = (long) (getRangeSensorReading (sideRangeSensor) * 67) - timeTakenToSeeColors;
+            long timeForEachPress = (long) (sideRangeSensor.getVALIDDistCM () * 67) - timeTakenToSeeColors;
 
 
             /******** STEP 3: PRESS AND VERIFY THE BEACON!!!!! ********/

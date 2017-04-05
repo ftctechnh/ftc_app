@@ -1,8 +1,11 @@
-package org.firstinspires.ftc.teamcode.enhancements;
+package org.firstinspires.ftc.teamcode.smarthardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.threading.EasyAsyncTask;
+import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
 
 public class AdvancedMotorController
 {

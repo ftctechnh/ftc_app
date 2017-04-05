@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
-import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
+import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 public abstract class ImprovedOpModeBase extends LinearOpMode
 {

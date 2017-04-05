@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
-import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
-import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
-import org.firstinspires.ftc.teamcode.enhancements.EasyAsyncTask;
+import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threading.EasyAsyncTask;
 
 @Autonomous(name = "AsyncTask Debugging", group = "Utility Group")
 

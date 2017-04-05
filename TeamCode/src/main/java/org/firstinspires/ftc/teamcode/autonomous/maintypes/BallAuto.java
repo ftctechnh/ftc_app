@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
-import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
-import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
 
 public abstract class BallAuto extends AutoBase implements OnAlliance
 {
@@ -44,7 +44,7 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
                             {
                                     "Delay (DPAD) is " + delay,
                                     "Getting cap ball (Y) = " + getCapBall,
-                                    "Parking on CV (X) = " + parkOnCenterVortex
+                                    "Parking on Center Vortex (X) = " + parkOnCenterVortex
                             }
             );
 

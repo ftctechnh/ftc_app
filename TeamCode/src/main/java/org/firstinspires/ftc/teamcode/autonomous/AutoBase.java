@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.enhancements.ConsoleManager;
-import org.firstinspires.ftc.teamcode.enhancements.ProgramFlow;
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.smarthardware.SmartColorSensor;
+import org.firstinspires.ftc.teamcode.smarthardware.SmartGyroSensor;
+import org.firstinspires.ftc.teamcode.smarthardware.SmartRangeSensor;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
 public abstract class AutoBase extends MainRobotBase
@@ -17,59 +18,23 @@ public abstract class AutoBase extends MainRobotBase
     /******** SENSOR STUFF ********/
 
     /**** Range Sensors ****/
-    protected ModernRoboticsI2cRangeSensor frontRangeSensor, sideRangeSensor;
-    protected double getRangeSensorReading (ModernRoboticsI2cRangeSensor rangeSensor) throws InterruptedException
-    {
-        double rangeSensorOutput = 255;
-        while (rangeSensorOutput >= 255 || rangeSensorOutput <= 0)
-        {
-            rangeSensorOutput = rangeSensor.cmUltrasonic ();
-            ProgramFlow.pauseForSingleFrame ();
-        }
-        return rangeSensorOutput;
-    }
+    protected SmartRangeSensor frontRangeSensor, sideRangeSensor;
 
     /**** Color Sensors (3) ****/
-    protected ColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
+    protected SmartColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
     protected void updateColorSensorStates()
     {
         //Threshold is currently 2, but this could be changed.
-        option1Blue = option1ColorSensor.blue () >= 2;
-        option1Red = option1ColorSensor.red () >= 1 && !option1Blue; //Since blue has an annoying tendency to see red and blue color values.
-        option2Blue = option2ColorSensor.blue () >= 2;
-        option2Red = option2ColorSensor.red () >= 1 && !option2Blue;
+        option1Blue = option1ColorSensor.colorSensor.blue () >= 2;
+        option1Red = option1ColorSensor.colorSensor.red () >= 1 && !option1Blue; //Since blue has an annoying tendency to see red and blue color values.
+        option2Blue = option2ColorSensor.colorSensor.blue () >= 2;
+        option2Red = option2ColorSensor.colorSensor.red () >= 1 && !option2Blue;
     }
 
     /**** Gyro ****/
-    protected GyroSensor gyroscope;
+    protected SmartGyroSensor gyroscope;
     private int desiredHeading = 0; //Massively important to maintaining stability through the drives.
-
-    //Just resets the gyro.
-    private void zeroHeading() throws InterruptedException
-    {
-        ProgramFlow.pauseForMS (400);
-        gyroscope.resetZAxisIntegrator();
-        ProgramFlow.pauseForMS (400);
-    }
-    //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
-    protected int getValidGyroHeading()
-    {
-        //Get the heading.
-        int heading = gyroscope.getHeading ();
-
-        //Determine the actual heading on a logical basis (which makes sense with the calculations).
-        if (heading > 180 && heading < 360)
-            heading -= 360;
-
-        //What this does is enable the 180 degree turn to be effectively made without resulting in erratic movement.
-        if (desiredHeading > 160 && heading < 0)
-            heading += 360;
-        else if (desiredHeading < -160 && heading > 0)
-            heading -= 360;
-
-        return heading;
-    }
 
     //Used to turn to a specified heading, and returns the difference between the desired angle and the actual angle achieved.
     protected enum TurnMode {
@@ -83,16 +48,16 @@ public abstract class AutoBase extends MainRobotBase
         //Get the startTime so that we know when to end.
         long startTime = System.currentTimeMillis();
 
-        int currentHeading = getValidGyroHeading();
+        int currentHeading = gyroscope.getValidGyroHeading(desiredHeading);
         //Adjust as fully as possible but not beyond the time limit.
         while(System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10)
         {
             //Verify that the heading that we thought was perfectly on point actually is on point.
-            currentHeading = getValidGyroHeading();
+            currentHeading = gyroscope.getValidGyroHeading(desiredHeading);
             if (currentHeading == this.desiredHeading)
             {
                 hardBrake (200);
-                currentHeading = getValidGyroHeading ();
+                currentHeading = gyroscope.getValidGyroHeading (desiredHeading);
                 if (currentHeading == this.desiredHeading)
                     break;
             }
@@ -114,8 +79,7 @@ public abstract class AutoBase extends MainRobotBase
         hardBrake (100);
     }
 
-    /******** DRIVING METHODS ********/
-
+    /******** DRIVING METHOD ********/
     protected enum PowerUnits
     {
         RevolutionsPerSecond(1), RevolutionsPerMinute(60);
@@ -156,7 +120,7 @@ public abstract class AutoBase extends MainRobotBase
         {
             /** GYROSCOPE ADJUSTMENT **/
             //For each result, positive favors left side and negative the right side.
-            int offFromHeading = desiredHeading - getValidGyroHeading ();
+            int offFromHeading = desiredHeading - gyroscope.getValidGyroHeading (desiredHeading);
 
             //Change motor powers based on offFromHeading.
             double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15);
@@ -165,7 +129,7 @@ public abstract class AutoBase extends MainRobotBase
             double rangeSensorAdjustment = 0;
             if (sensorAdjustmentType == SensorDriveAdjustment.UseRangeSensor)
                 //Change motor powers based on offFromHeading.
-                rangeSensorAdjustment = (getRangeSensorReading (sideRangeSensor) - 15) * 0.15;
+                rangeSensorAdjustment = (sideRangeSensor.getVALIDDistCM () - 15) * 0.15;
 
             //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later
             double totalAdjustmentFactor = Math.signum (powerMeasure) * gyroAdjustment + rangeSensorAdjustment;
@@ -185,11 +149,11 @@ public abstract class AutoBase extends MainRobotBase
                     break;
 
                 case Ultrasonic:
-                    reachedFinalDest = getRangeSensorReading (frontRangeSensor) <= stopValue;
+                    reachedFinalDest = frontRangeSensor.getVALIDDistCM () <= stopValue;
                     break;
 
                 case BottomColorAlpha:
-                    reachedFinalDest = bottomColorSensor.alpha () >= stopValue;
+                    reachedFinalDest = bottomColorSensor.colorSensor.alpha () >= stopValue;
                     break;
             }
 
@@ -199,7 +163,7 @@ public abstract class AutoBase extends MainRobotBase
         hardBrake (100);
     }
 
-    //Stops all drive motors and pauses for a moment
+    //Stops all drive motors and pauses for a moment.
     protected void hardBrake(long msDelay) throws InterruptedException
     {
         leftDrive.setRPS (0);
@@ -224,71 +188,35 @@ public abstract class AutoBase extends MainRobotBase
     @Override
     protected void initializeOpModeSpecificHardware() throws InterruptedException
     {
-        //The range sensors are especially odd to initialize, and will often require a robot restart.
-        ConsoleManager.outputNewLineToDrivers ("Initializing Front Range Sensor...");
+        //The range sensors are especially odd to initialize, and will often require a robot power cycle.
+        ConsoleManager.outputNewLineToDrivers ("Validating Front Range Sensor...");
+        frontRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor"), 0x90);
+        ConsoleManager.appendToLastOutputtedLine (frontRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
 
-        frontRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor");
-        frontRangeSensor.setI2cAddress(I2cAddr.create8bit(0x90));
-
-        if (frontRangeSensor.getDistance(DistanceUnit.CM) < 1.0)
-            ConsoleManager.appendToLastOutputtedLine ("FAILED!");
-        else
-            ConsoleManager.appendToLastOutputtedLine ("OK!");
-
-        ConsoleManager.outputNewLineToDrivers ("Initializing Side Range Sensor...");
-
-        sideRangeSensor = initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor");
-        sideRangeSensor.setI2cAddress(I2cAddr.create8bit(0x10));
-
-        if (sideRangeSensor.getDistance (DistanceUnit.CM) < 1.0)
-            ConsoleManager.appendToLastOutputtedLine ("FAILED!");
-        else
-            ConsoleManager.appendToLastOutputtedLine ("OK!");
+        ConsoleManager.outputNewLineToDrivers ("Validating Side Range Sensor...");
+        //TODO: Change name of sideRangeSensor in config from "Back Range Sensor"
+        sideRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor"), 0x10);
+        ConsoleManager.appendToLastOutputtedLine (sideRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
 
 
         //Initialize color sensors.
-        ConsoleManager.outputNewLineToDrivers ("Initializing Color Sensors...");
-        option1ColorSensor = initialize(ColorSensor.class, "Option 1 Color Sensor");
-        option1ColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
-        option1ColorSensor.enableLed(false);
-        option2ColorSensor = initialize(ColorSensor.class, "Option 2 Color Sensor");
-        option2ColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
-        option2ColorSensor.enableLed(false);
-        bottomColorSensor = initialize(ColorSensor.class, "Bottom Color Sensor");
-        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
-        bottomColorSensor.enableLed(true);
-        particleColorSensor = initialize(ColorSensor.class, "particleColorSensor");
-        particleColorSensor.enableLed (false);
+        ConsoleManager.outputNewLineToDrivers ("Fetching Color Sensors...");
+        option1ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 1 Color Sensor"), 0x4c, false);
+        option2ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 2 Color Sensor"), 0x5c, false);
+        bottomColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Bottom Color Sensor"), 0x3c, true);
+        particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x4c, false);
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize encoders.
-        ConsoleManager.outputNewLineToDrivers ("Initializing Encoders...");
+        ConsoleManager.outputNewLineToDrivers ("Resetting Drive Encoders...");
         leftDrive.resetEncoder ();
         rightDrive.resetEncoder ();
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize gyroscope.
-        gyroscope = initialize(GyroSensor.class, "Gyroscope");
-        if (gyroscope != null)
-        {
-            //Start gyroscope calibration.
-            ConsoleManager.outputNewLineToDrivers("Initializing Gyroscope...");
-            gyroscope.calibrate();
-
-            //Pause to prevent odd errors in which it says it's configured but is actually LYING.
-            ProgramFlow.pauseForMS (1000);
-
-            //Wait for gyro to finish calibrating.
-            while (gyroscope.isCalibrating())
-                ProgramFlow.pauseForMS (50);
-
-            //Zero gyro heading.
-            zeroHeading();
-
-            ConsoleManager.appendToLastOutputtedLine ("OK!");
-
-            ProgramFlow.pauseForSingleFrame ();
-        }
+        ConsoleManager.outputNewLineToDrivers("Calibrating Gyroscope...");
+        gyroscope = new SmartGyroSensor (initialize(GyroSensor.class, "Gyroscope")); //Calibrates immediately.
+        ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         ConsoleManager.outputNewLineToDrivers ("Initialization completed!");
 

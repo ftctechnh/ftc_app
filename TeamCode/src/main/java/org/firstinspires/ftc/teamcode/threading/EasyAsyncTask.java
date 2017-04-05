@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.enhancements;
+package org.firstinspires.ftc.teamcode.threading;
 
 import android.os.AsyncTask;
+
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
 public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
 {
