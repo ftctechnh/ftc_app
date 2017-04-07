@@ -23,7 +23,6 @@ public class Teleop extends MainRobotBase
         double flywheelCoefficient = 0.4;
         boolean pressingFlywheelC = false;
         boolean fbpUp = true;
-        double currentCapBallHolderPos = 0;
         boolean capBallMode = false, capBallMode2 = false;
         double flywheelMaxRPS = 35, harvesterMaxRPS = 5;
 
@@ -61,27 +60,25 @@ public class Teleop extends MainRobotBase
 
             if (gamepad1.right_bumper) {
                 speedCoefficient = 0.7;
-                frontButtonPusher.setPosition(FBP_DOWN);
+                frontButtonPusher.setToLowerLim ();
             }
             else if (!capBallMode) {
                 speedCoefficient = 1.0;
-                frontButtonPusher.setPosition(FBP_UP);
+                frontButtonPusher.setToUpperLim ();
             }
             else {
-                frontButtonPusher.setPosition(FBP_UP);
+                frontButtonPusher.setToUpperLim ();
             }
 
             /************** Clamp **************/
             if (gamepad1.left_bumper || (gamepad2.left_bumper && capBallMode2))
-                currentCapBallHolderPos += 0.05;
+                capBallHolder.setServoPosition (capBallHolder.getServoPosition () + 0.05);
             else if (gamepad1.left_trigger > 0.5 || (gamepad2.left_trigger > 0.5 && capBallMode2))
-                currentCapBallHolderPos -= 0.01;
-            currentCapBallHolderPos = Range.clip(currentCapBallHolderPos, CBH_CLOSED, CBH_OPEN);
-            capBallHolder.setPosition(currentCapBallHolderPos);
+                capBallHolder.setServoPosition (capBallHolder.getServoPosition () - 0.01);
 
             /************** Open Clamp **************/
             if (gamepad1.back || gamepad2.back) {
-                capBallHolder.setPosition(CBH_OPEN);
+                capBallHolder.setToUpperLim ();
             }
 
             /**************************** CONTROLLER #2 ********************************/
@@ -137,17 +134,15 @@ public class Teleop extends MainRobotBase
             }
 
             /************** Side Beacon Pushers **************/
-            rightPusherPowerLeft = gamepad2.left_stick_x;
-            rightPusherPowerRight = gamepad2.right_stick_x;
-            rightPusherPowerLeft = Range.clip(rightPusherPowerLeft, -1, 1);
-            rightPusherPowerRight = Range.clip(rightPusherPowerRight, -1, 1);
+            rightPusherPowerLeft = Range.clip(gamepad2.left_stick_x, -1, 1);
+            rightPusherPowerRight = Range.clip(gamepad2.right_stick_x, -1, 1);
 
             if (rightPusherPowerLeft > 0.5 || rightPusherPowerRight > 0.5)
-                rightButtonPusher.setPosition(1.0);
+                rightButtonPusher.setToUpperLim ();
             else if (rightPusherPowerLeft < -0.5 || rightPusherPowerRight < -0.5)
-                rightButtonPusher.setPosition(0.0);
+                rightButtonPusher.setToLowerLim ();
             else
-                rightButtonPusher.setPosition(0.5);
+                rightButtonPusher.setServoPosition (0.5);
 
             /************** Data Output **************/
             ConsoleManager.outputConstantDataToDrivers(new String[] {

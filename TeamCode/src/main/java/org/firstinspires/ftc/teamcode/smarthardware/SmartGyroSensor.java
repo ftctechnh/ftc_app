@@ -8,10 +8,13 @@ public class SmartGyroSensor
 {
     public final GyroSensor gyroSensor;
 
-    public SmartGyroSensor(GyroSensor gyroSensor) throws InterruptedException
+    public SmartGyroSensor(GyroSensor gyroSensor)
     {
         this.gyroSensor = gyroSensor;
+    }
 
+    public void calibrate() throws InterruptedException
+    {
         //Start gyroscope calibration.
         this.gyroSensor.calibrate();
 
