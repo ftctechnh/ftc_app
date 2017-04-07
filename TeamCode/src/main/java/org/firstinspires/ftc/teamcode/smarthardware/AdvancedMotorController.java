@@ -12,6 +12,8 @@ public class AdvancedMotorController
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final DcMotor encoderMotor, linkedMotor;
 
+    private final EasyAsyncTask pidUpdateTask;
+
     //Initialization steps
     public AdvancedMotorController (DcMotor encoderMotor)
     {
@@ -23,6 +25,21 @@ public class AdvancedMotorController
         this.linkedMotor = linkedMotor;
 
         resetEncoder ();
+
+        pidUpdateTask = new EasyAsyncTask ()
+        {
+            @Override
+            protected void taskToAccomplish () throws InterruptedException
+            {
+                while (true)
+                {
+                    if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
+                        updateMotorPowerWithPID ();
+
+                    ProgramFlow.pauseForMS (30);
+                }
+            }
+        };
     }
 
     //Initial conversion factor, will be changed a LOT through the course of the program.
@@ -151,10 +168,6 @@ public class AdvancedMotorController
     /******* PID STUFF *********/
     private double desiredRPS = 0;
 
-    /**
-     * VERY Simplistic PID control which decreases or increases the rpsConversionFactor variable, thus changing the speed
-     * at which the motor turns based on previous and current encoder positions.
-     */
     //Stored for each run.
     private int previousMotorPosition;
     private long lastAdjustTime = 0;
@@ -181,30 +194,13 @@ public class AdvancedMotorController
         return actualTicksSinceUpdate;
     }
 
-    private boolean pidUpdatesEnabled = false;
-    public void enablePeriodicPIDUpdates ()
+    public void enablePIDUpdateTask()
     {
-        pidUpdatesEnabled = true;
-        new EasyAsyncTask ()
-        {
-            @Override
-            protected String taskToAccomplish () throws InterruptedException
-            {
-                while (pidUpdatesEnabled)
-                {
-                    if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
-                        updateMotorPowerWithPID ();
-
-                    ProgramFlow.pauseForSingleFrame ();
-                }
-
-                return "Success!";
-            }
-        };
+        pidUpdateTask.run ();
     }
     public void disablePeriodicPIDUpdates()
     {
-        pidUpdatesEnabled = false;
+        pidUpdateTask.stop ();
     }
 
     public void updateMotorPowerWithPID ()

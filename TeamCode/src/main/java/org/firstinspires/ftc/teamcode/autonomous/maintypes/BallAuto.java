@@ -60,7 +60,7 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
         int autonomousSign = (onBlueAlliance ? 1 : -1);
 
         //Drive to the cap ball.
-        ConsoleManager.outputNewLineToDrivers ("Driving to shooting position.");
+        ConsoleManager.outputNewLineToDrivers ("Driving to shooting position...");
         drive (SensorStopType.Ultrasonic, 40, PowerUnits.RevolutionsPerMinute, 1);
 
         //Shoot the balls into the center vortex.
@@ -69,7 +69,7 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
 
         if (parkOnCenterVortex)
         {
-            ConsoleManager.outputNewLineToDrivers ("Parking on center vortex.");
+            ConsoleManager.outputNewLineToDrivers ("Parking on center vortex...");
             drive(SensorStopType.Distance, 1400, PowerUnits.RevolutionsPerMinute, 2);
             return; //End prematurely
         }
@@ -77,22 +77,22 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
         if (getCapBall)
         {
             //Drive the remainder of the distance.
-            ConsoleManager.outputNewLineToDrivers ("Knock the cap ball off of the pedestal.");
+            ConsoleManager.outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
             drive(SensorStopType.Distance, 1800, PowerUnits.RevolutionsPerMinute, 3);
 
             //Turn to face the ramp from the position that we drove.
-            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading.");
+            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading...");
             turnToHeading (110 * autonomousSign, TurnMode.BOTH, 3000);
         }
         else
         {
             //Turn to face the ramp from the position that we drove.
-            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading.");
+            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading...");
             turnToHeading (70 * autonomousSign, TurnMode.BOTH, 3000);
         }
 
         //Drive until we reach the appropriate position.
-        ConsoleManager.outputNewLineToDrivers ("Drive to the ramp, stopping upon bottom color sensor reaches the blue region on the ramp.");
+        ConsoleManager.outputNewLineToDrivers ("Driving to the ramp...");
         drive(SensorStopType.Distance, 1000, PowerUnits.RevolutionsPerMinute, 1);
     }
 }

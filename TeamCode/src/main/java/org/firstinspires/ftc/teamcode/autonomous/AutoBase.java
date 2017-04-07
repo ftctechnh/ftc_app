@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
+import org.firstinspires.ftc.teamcode.threading.EasyAsyncTask;
 import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
 import org.firstinspires.ftc.teamcode.smarthardware.SmartColorSensor;
 import org.firstinspires.ftc.teamcode.smarthardware.SmartGyroSensor;
@@ -26,10 +27,10 @@ public abstract class AutoBase extends MainRobotBase
     protected void updateColorSensorStates()
     {
         //Threshold is currently 2, but this could be changed.
-        option1Blue = option1ColorSensor.colorSensor.blue () >= 2;
-        option1Red = option1ColorSensor.colorSensor.red () >= 1 && !option1Blue; //Since blue has an annoying tendency to see red and blue color values.
-        option2Blue = option2ColorSensor.colorSensor.blue () >= 2;
-        option2Red = option2ColorSensor.colorSensor.red () >= 1 && !option2Blue;
+        option1Blue = option1ColorSensor.sensor.blue () >= 2;
+        option1Red = option1ColorSensor.sensor.red () >= 1 && !option1Blue; //Since blue has an annoying tendency to see red and blue color values.
+        option2Blue = option2ColorSensor.sensor.blue () >= 2;
+        option2Red = option2ColorSensor.sensor.red () >= 1 && !option2Blue;
     }
 
     /**** Gyro ****/
@@ -94,23 +95,89 @@ public abstract class AutoBase extends MainRobotBase
     {
         Distance, Ultrasonic, BottomColorAlpha
     }
-    protected enum SensorDriveAdjustment
+
+    //Create both tasks.
+    private final EasyAsyncTask
+            gyroAdjustmentTask = new EasyAsyncTask ()
     {
-        UseRangeSensor, DontUseRangeSensor
-    }
-    protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double measure) throws InterruptedException
+        @Override
+        protected void taskToAccomplish () throws InterruptedException
+        {
+            while (true)
+            {
+                int offFromHeading = desiredHeading - gyroscope.getValidGyroHeading (desiredHeading);
+                output = Math.signum (offFromHeading) * (Math.abs (desiredHeading) * 0.15);
+
+                ProgramFlow.pauseForMS (30);
+            }
+        }
+
+        @Override
+        protected void taskOnCompletion ()
+        {
+            output = 0;
+        }
+    },
+            rangeSensorAdjustmentTask = new EasyAsyncTask ()
     {
-        drive(sensorStopType, stopValue, powerUnit, measure, SensorDriveAdjustment.DontUseRangeSensor);
-    }
-    protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, SensorDriveAdjustment sensorAdjustmentType) throws InterruptedException
+        @Override
+        protected void taskToAccomplish () throws InterruptedException
+        {
+            while (true)
+            {
+                double offFromDist = 13 - sideRangeSensor.getVALIDDistCM (); //Potentially takes a while to actually return a value.
+                output = Math.signum (offFromDist) * (Math.abs (offFromDist) * 0.15);
+
+                ProgramFlow.pauseForMS (30);
+            }
+        }
+
+        @Override
+        protected void taskOnCompletion ()
+        {
+            output = 0;
+        }
+    };
+
+    //Creates a driving thread and then waits for the stop signal from the sensors.
+    protected void drive(final SensorStopType sensorStopType, final double stopValue, final PowerUnits powerUnit, final double powerMeasure) throws InterruptedException
     {
-        //Reset both drive motors.
+        //Run the task.//Set up both motors.
         leftDrive.resetEncoder ();
         rightDrive.resetEncoder ();
 
-        //Set initial drive power.
-        leftDrive.setRPS (powerMeasure);
-        rightDrive.setRPS (powerMeasure);
+        leftDrive.enablePIDUpdateTask ();
+        rightDrive.enablePIDUpdateTask ();
+
+        //Create the AsyncTask which will handle driving, with the other things encapsulated within it.
+        EasyAsyncTask createdDriveTask = new EasyAsyncTask ()
+        {
+            @Override
+            protected void taskToAccomplish () throws InterruptedException
+            {
+                //Start both adjustment tasks.
+                gyroAdjustmentTask.run ();
+                rangeSensorAdjustmentTask.run ();
+
+                //Start to drive, adjusting based on the tasks above.
+                while (true)
+                {
+                    double adjustmentFactor = Math.signum (powerMeasure) * (Double) (gyroAdjustmentTask.output) + (Double) (rangeSensorAdjustmentTask.output);
+                    leftDrive.setRPS (powerMeasure * (1 + adjustmentFactor));
+                    rightDrive.setRPS (powerMeasure * (1 - adjustmentFactor));
+
+                    ProgramFlow.pauseForMS (20);
+                }
+            }
+
+            @Override
+            protected void taskOnCompletion ()
+            {
+                gyroAdjustmentTask.stop();
+                rangeSensorAdjustmentTask.stop ();
+            }
+        };
+        createdDriveTask.run();
 
         //Allows us to know when we stop.
         boolean reachedFinalDest = false;
@@ -118,24 +185,6 @@ public abstract class AutoBase extends MainRobotBase
         //Actual adjustment aspect of driving.
         while (!reachedFinalDest)
         {
-            /** GYROSCOPE ADJUSTMENT **/
-            //For each result, positive favors left side and negative the right side.
-            int offFromHeading = desiredHeading - gyroscope.getValidGyroHeading (desiredHeading);
-
-            //Change motor powers based on offFromHeading.
-            double gyroAdjustment = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15);
-
-            /** RANGE SENSOR ADJUSTMENT **/
-            double rangeSensorAdjustment = 0;
-            if (sensorAdjustmentType == SensorDriveAdjustment.UseRangeSensor)
-                //Change motor powers based on offFromHeading.
-                rangeSensorAdjustment = (sideRangeSensor.getVALIDDistCM () - 15) * 0.15;
-
-            //Set resulting movement powers based on calculated values.  Can be over one since this is fixed later
-            double totalAdjustmentFactor = Math.signum (powerMeasure) * gyroAdjustment + rangeSensorAdjustment;
-            rightDrive.setRPS (powerMeasure * (1 - totalAdjustmentFactor));
-            leftDrive.setRPS (powerMeasure * (1 + totalAdjustmentFactor));
-
             //Causes program termination.
             switch (sensorStopType)
             {
@@ -153,12 +202,14 @@ public abstract class AutoBase extends MainRobotBase
                     break;
 
                 case BottomColorAlpha:
-                    reachedFinalDest = bottomColorSensor.colorSensor.alpha () >= stopValue;
+                    reachedFinalDest = bottomColorSensor.sensor.alpha () >= stopValue;
                     break;
             }
 
             ProgramFlow.pauseForSingleFrame ();
         }
+
+        createdDriveTask.stop ();
 
         hardBrake (100);
     }
@@ -202,9 +253,9 @@ public abstract class AutoBase extends MainRobotBase
         //Initialize color sensors.
         ConsoleManager.outputNewLineToDrivers ("Fetching Color Sensors...");
         option1ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 1 Color Sensor"), 0x4c, false);
-        option2ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 2 Color Sensor"), 0x5c, false);
+        option2ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 2 Color Sensor"), 0x5c, true);
         bottomColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Bottom Color Sensor"), 0x3c, true);
-        particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x4c, false);
+        //particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x4c, false);
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize encoders.
@@ -219,10 +270,6 @@ public abstract class AutoBase extends MainRobotBase
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         ConsoleManager.outputNewLineToDrivers ("Initialization completed!");
-
-        //Enable threading for PID updates.
-        leftDrive.enablePeriodicPIDUpdates ();
-        rightDrive.enablePeriodicPIDUpdates ();
     }
 
 

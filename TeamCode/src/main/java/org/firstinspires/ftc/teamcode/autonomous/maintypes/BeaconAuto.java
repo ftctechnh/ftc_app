@@ -20,7 +20,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
         //Drive until we are just far enough from the cap ball to score reliably.
         ConsoleManager.outputNewLineToDrivers("Driving forward to the cap ball to score...");
-        drive(SensorStopType.Ultrasonic, 39, PowerUnits.RevolutionsPerSecond, 2);
+        drive(SensorStopType.Ultrasonic, 39, PowerUnits.RevolutionsPerSecond, 1);
 
         //Shoot the balls into the center vortex.
         ConsoleManager.outputNewLineToDrivers("Shooting balls into center vortex...");

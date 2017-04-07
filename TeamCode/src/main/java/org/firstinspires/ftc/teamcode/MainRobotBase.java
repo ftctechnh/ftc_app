@@ -26,10 +26,14 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
         leftDrive = new AdvancedMotorController (initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
                 setRPSConversionFactor (0.40).
-                setMotorDirection (DcMotorSimple.Direction.REVERSE);
+                setMotorDirection (DcMotorSimple.Direction.REVERSE).
+                setAdjustmentSensitivity (.00001).
+                setAdjustmentSensitivityBounds (0.3);
 
         rightDrive = new AdvancedMotorController (initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight")).
-                setRPSConversionFactor (0.36);
+                setRPSConversionFactor (0.36).
+                setAdjustmentSensitivity (.00001).
+                setAdjustmentSensitivityBounds (0.3);;
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
         harvester = new AdvancedMotorController (initialize (DcMotor.class, "harvester")).
@@ -58,8 +62,8 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         //Flywheels and harvester encoders.
         flywheels.resetEncoder ();
         harvester.resetEncoder ();
-        flywheels.enablePeriodicPIDUpdates ();
-        harvester.enablePeriodicPIDUpdates ();
+        flywheels.enablePIDUpdateTask ();
+        harvester.enablePIDUpdateTask ();
 
         //Certain things are only applicable in autonomous or teleop.
         initializeOpModeSpecificHardware ();

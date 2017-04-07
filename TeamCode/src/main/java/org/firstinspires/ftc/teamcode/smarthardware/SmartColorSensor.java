@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 
 public class SmartColorSensor
 {
-    public final ColorSensor colorSensor;
+    public final ColorSensor sensor;
 
     public SmartColorSensor(ColorSensor colorSensor, int i2cAddress, boolean enableLED)
     {
-        this.colorSensor = colorSensor;
+        this.sensor = colorSensor;
 
-        colorSensor.setI2cAddress (I2cAddr.create8bit (i2cAddress));
+        sensor.setI2cAddress (I2cAddr.create8bit (i2cAddress));
 
-        colorSensor.enableLed (enableLED);
+        sensor.enableLed (enableLED);
     }
 }
