@@ -21,11 +21,13 @@ public class AsyncTaskTesting extends ImprovedOpModeBase
         new EasyAsyncTask ()
         {
             @Override
-            public void taskToAccomplish () throws InterruptedException
+            public String taskToAccomplish () throws InterruptedException
             {
                 ConsoleManager.outputNewLineToDrivers ("Starting AsyncTask");
                 ProgramFlow.pauseForMS (3000);
                 ConsoleManager.outputNewLineToDrivers ("Ended AsyncTask");
+
+                return "Success!";
             }
         };
 

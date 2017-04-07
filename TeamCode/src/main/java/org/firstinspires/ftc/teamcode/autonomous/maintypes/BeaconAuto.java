@@ -10,7 +10,6 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
     //Called after runOpMode() has finished initializing by ImprovedOpModeBase.
     protected void driverStationSaysGO () throws InterruptedException
     {
-        //The ideal distance @ which to drive.
         final double BEACON_DP = 1.5;
 
         //Results in a coefficient of 1 if doing blue, and -1 for red.
