@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public class ConsoleManager
 {
     private static Telemetry mainTelemetry;
-
     public static void setMainTelemetry(Telemetry someTelemetry)
     {
         mainTelemetry = someTelemetry;
@@ -16,7 +15,8 @@ public class ConsoleManager
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES PROVIDE ***/
     private static ArrayList<String> currentConsoleDisplay;
-    private static int maxLines = 10;
+    private static int maxLines = 13;
+
     public static void outputNewLineToDrivers(String newLine)
     {
         //Add new line at beginning of the lines.

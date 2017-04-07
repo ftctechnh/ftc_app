@@ -142,6 +142,10 @@ public abstract class AutoBase extends MainRobotBase
     //Creates a driving thread and then waits for the stop signal from the sensors.
     protected void drive(final SensorStopType sensorStopType, final double stopValue, final PowerUnits powerUnit, final double powerMeasure) throws InterruptedException
     {
+        drive(sensorStopType, stopValue, powerUnit, powerMeasure, false);
+    }
+    protected void drive(final SensorStopType sensorStopType, final double stopValue, final PowerUnits powerUnit, final double powerMeasure, final boolean useRangeSensorAdjustment) throws InterruptedException
+    {
         //Run the task.//Set up both motors.
         leftDrive.resetEncoder ();
         rightDrive.resetEncoder ();
@@ -154,7 +158,8 @@ public abstract class AutoBase extends MainRobotBase
             {
                 //Start both adjustment tasks.
                 gyroAdjustmentTask.run ();
-                rangeSensorAdjustmentTask.run ();
+                if (useRangeSensorAdjustment)
+                    rangeSensorAdjustmentTask.run ();
 
                 //Start to drive, adjusting based on the tasks above.
                 while (true)
@@ -171,7 +176,8 @@ public abstract class AutoBase extends MainRobotBase
             protected void taskOnCompletion ()
             {
                 gyroAdjustmentTask.stop();
-                rangeSensorAdjustmentTask.stop ();
+                if (useRangeSensorAdjustment)
+                    rangeSensorAdjustmentTask.stop ();
             }
         };
         createdDriveTask.run();
@@ -191,7 +197,7 @@ public abstract class AutoBase extends MainRobotBase
                         break;
 
                     int powerSign = (int) (Math.signum (powerMeasure));
-                    reachedFinalDest = stopValue * powerSign >= ((leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0) * powerSign;
+                    reachedFinalDest = stopValue * powerSign <= ((leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0) * powerSign;
                     break;
 
                 case Ultrasonic:
