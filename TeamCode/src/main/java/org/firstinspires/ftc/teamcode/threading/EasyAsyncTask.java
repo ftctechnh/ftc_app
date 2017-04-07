@@ -50,7 +50,7 @@ public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
     }
 
     //Can't just create a variable that is not final in an anonymous class, so it has to be declared here.
-    public Object output;
+    public Object output = 0;
 
     //Each method is handled in an anonymous class.
     protected abstract void taskToAccomplish() throws InterruptedException;
