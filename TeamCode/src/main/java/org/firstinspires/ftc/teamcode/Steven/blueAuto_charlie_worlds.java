@@ -63,8 +63,8 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
         //encoderMecanumCrossDrive(pathhighspeed,65,65,5,1);
-        encoderMecanumCrossDrive(pathhighspeed,141,141,5,2);
-        encoderMecanumDrive(0.5,8,8,5,);
+        encoderMecanumCrossDrive(1,141,141,5,2);
+        encoderMecanumDrive(1,20,20,5,1);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
 
@@ -73,26 +73,26 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         boolean left_detected = false;
         boolean beacon_press_success = false;
 
-        lineAlign();
+        lineAlignStrafe();
         timeProfile[profileindex++] = runtime.milliseconds();//first time: 9447.32 ms
         //second time: 19998.19
-        sleep(2000);
-        moveTowardWall();
+        //sleep(2000);
+        //moveTowardWall();
 
 
         readNewColorLeft();// this is the right if you are standing in the same direction as the back of the robot
 
         if(currentColorBeaconLeft.equals(currentTeam)){
             left_detected = true;
-            pressBeaconButton();
+            //pressBeaconButton();
 
         }
         else{
             left_detected = false;
             setMotorsModeToEncDrive();
-            encoderMecanumCrossDrive(0.5,18,18,2,1);
+           // encoderMecanumCrossDrive(0.5,18,18,2,1);
             //setMotorsModeToRangeSensing();
-            pressBeaconButton();
+            //pressBeaconButton();
         }
         //add a line to move servo back to initial position
         timeProfile[profileindex++] = runtime.milliseconds();//first time: 12991.84
@@ -104,26 +104,47 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
             moveToNextBeacon();
         }
-        /*else
+        else
         {
             setMotorsModeToRangeSensing();
             parkCenterVortex();
-        }*/
+        }
         // below evaluate beacon press result and move to next step if it is success and handle failures if failures are seen
     }
 
     public void  moveToNextBeacon(){
         second_beacon_press = true;
         setMotorsModeToEncDrive();;
-        encoderMecanumCrossDrive(pathhighspeed,78.74,78.74,5,1);
+        encoderMecanumDrive(1,100,100,5,1);
+       // encoderMecanumCrossDrive(pathhighspeed,78.74,78.74,5,1);
         //sleep(2000);
-        encoderMecanumCrossDrive(pathhighspeed,25.4,25.4,5,2);
+       // encoderMecanumCrossDrive(pathhighspeed,25.4,25.4,5,2);
         //sleep(2000);
         //if use strafing, add error correction so that it stays within a certain distance of the wall
-        lineAlign();
+        lineAlignStrafe();
 
 }
 
+    public void lineAlignStrafe() {
+        moveTowardWall();
+        if(second_beacon_press){
+            setMotorsToEnc(29, 29, 0.3);
+        }
+        else {
+            setMotorsModeToColorSensing();
+        }
+        strafeRight(0.6);
+        while(whiteLineDetectedBack() == false){
+
+
+        }
+        stopMotors();
+
+        stopMotors();
+        timeProfile[profileindex++] = runtime.milliseconds();
+
+
+    }
 
     public void lineAlign() {
 
@@ -174,7 +195,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     public void moveTowardWall(){
         setMotorsModeToRangeSensing();
         straightDrive(-0.8);
-        while (rangeSensor.getDistance(DistanceUnit.CM) > 12) {
+        while (rangeSensor.getDistance(DistanceUnit.CM) > 20) {
 
         }
         stopMotors();
@@ -182,7 +203,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         setMotorsModeToRangeSensing();
 
         straightDrive(0.8);
-        while (rangeSensor.getDistance(DistanceUnit.CM) < 10) {
+        while (rangeSensor.getDistance(DistanceUnit.CM) < 15) {
 
         }
         stopMotors();
@@ -234,7 +255,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
         }
         for(int i = 0; i < profileindex; i++){
-            telemetry.addData(""+i,timeProfile[i]);
+            //telemetry.addData(""+i,timeProfile[i]);
         }
         telemetry.update();
         sleep(30000);

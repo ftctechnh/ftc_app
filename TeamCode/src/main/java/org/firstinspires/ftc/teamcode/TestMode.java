@@ -19,6 +19,7 @@ public class TestMode extends AutonomousGeneral_charlie
         waitForStart();
         sleep(1000);
         encoderMecanumDrive(0.8,50,50,10,1);
+        sleep(1000);
         encoderMecanumDrive(0.8,50,50,10,-1);
 //        initiate();
 //        waitForStart();
