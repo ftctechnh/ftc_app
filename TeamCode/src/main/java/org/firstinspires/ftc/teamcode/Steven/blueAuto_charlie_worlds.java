@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Steven;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -30,6 +31,10 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     public double[] timeProfile = new double[30];
     int profileindex = 0;
 
+    double servoLeftPos = 0;
+    double servoRightPos = 1;
+    double initialPos = 0.5;
+
     @Override
     public void runOpMode() {
 
@@ -49,24 +54,27 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         telemetry.addData("gyro cal finished in ms", runtime.milliseconds());
 
         telemetry.update();
-
+        autoBeaconPresser.setPosition(initialPos);
 
         waitForStart();
         runtime.reset();
         second_beacon_press = false;
+        bColorSensorLeft.enableLed(true);
+        bColorSensorLeft.enableLed(false);
 
+        ColorSensorRead();
 
 
 
        // minimizeError();
-        setMotorsModeToEncDrive();
+       /* setMotorsModeToEncDrive();
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
         //encoderMecanumCrossDrive(pathhighspeed,65,65,5,1);
         encoderMecanumCrossDrive(1,141,141,5,2);
         encoderMecanumDrive(1,20,20,5,1);
         timeProfile[profileindex++] = runtime.milliseconds();
-        servoBeaconPress();
+        servoBeaconPress();*/
 
         }
     public void servoBeaconPress(){
@@ -80,9 +88,13 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         //moveTowardWall();
 
 
-        readNewColorLeft();// this is the right if you are standing in the same direction as the back of the robot
+        //readNewColorLeft();// this is the right if you are standing in the same direction as the back of the robot
 
-        if(currentColorBeaconLeft.equals(currentTeam)){
+        ColorSensorRead();//sets servo to correct position
+        pressBeaconButton();
+        autoBeaconPresser.setPosition(initialPos);
+
+        /*if(currentColorBeaconLeft.equals(currentTeam)){
             left_detected = true;
             //pressBeaconButton();
 
@@ -93,7 +105,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
            // encoderMecanumCrossDrive(0.5,18,18,2,1);
             //setMotorsModeToRangeSensing();
             //pressBeaconButton();
-        }
+        }*/
         //add a line to move servo back to initial position
         timeProfile[profileindex++] = runtime.milliseconds();//first time: 12991.84
 
@@ -124,6 +136,68 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         lineAlignStrafe();
 
 }
+    public void ColorSensorRead(){
+        readNewColorLeft();
+        //readNewColorRight();
+
+        telemetry.addData("","READ DATA");
+        telemetry.update();
+        /*if (currentColorBeaconLeft.equals("blank")  || currentColorBeaconRight.equals("blank")){
+
+            if (currentColorBeaconLeft.equals("blank")){
+                while (currentColorBeaconLeft.equals("blank")){
+                    turnRight(0.3);
+                    readNewColorLeft();
+
+                    telemetry.addData("error","checking!");
+                    telemetry.update();
+                }
+            }
+
+            if (currentColorBeaconRight.equals("blank")){
+                while (currentColorBeaconRight.equals("blank")){
+                    turnLeft(0.3);
+                    readNewColorRight();
+
+                    telemetry.addData("error","checking!");
+                    telemetry.update();
+                }
+            }
+        }*/
+        //readNewColorRight();
+        //readNewColorLeft();
+
+      /*  if(currentColorBeaconLeft.equals(currentTeam) && currentColorBeaconRight.equals(currentTeam)){
+            //move to next beacon function steven
+            telemetry.addData("correct","press already!");
+            telemetry.update();
+        }*/
+
+       /* if (currentColorBeaconLeft.equals(currentTeam)){
+            autoBeaconPresser.setPosition(servoLeftPos);
+
+            telemetry.addData("left color", currentColorBeaconLeft);
+            telemetry.addData("right color", currentColorBeaconLeft);
+            telemetry.addData("current team", currentTeam);
+            telemetry.update();
+        }*/
+
+        if (currentColorBeaconLeft.equals(currentTeam)){
+            autoBeaconPresser.setPosition(servoLeftPos);
+
+            //telemetry.addData("left color", currentColorBeaconLeft);
+            telemetry.addData("left color", currentColorBeaconLeft);
+            telemetry.addData("current team", currentTeam);
+            telemetry.update();
+        }
+        else if(currentColorBeaconLeft.equals("red")){
+            autoBeaconPresser.setPosition(servoRightPos);
+            telemetry.addData("left color", currentColorBeaconLeft);
+            telemetry.update();
+        }
+        sleep(50000);
+
+    }
 
     public void lineAlignStrafe() {
         moveTowardWall();
@@ -133,7 +207,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         else {
             setMotorsModeToColorSensing();
         }
-        strafeRight(0.6);
+        strafeRight(0.5);
         while(whiteLineDetectedBack() == false){
 
 

@@ -33,6 +33,8 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
     public String currentColorBeaconRight = "blank";
     public String currentColor = "blank";
 
+    public Servo autoBeaconPresser;
+
     public OpticalDistanceSensor ODSBack;
     public double baseline2;
 
@@ -48,7 +50,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
     public DcMotor intake_motor;
     public static ElapsedTime runtime = new ElapsedTime();
     public boolean operation_beacon_press = true;
-    public boolean initbColorSensorRight = false;
+    public boolean initbColorSensorRight = true;
 
     public void initiate() {
         COUNTS_PER_MOTOR_REV = 1440;
@@ -82,6 +84,8 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         //baseline1 = ODSFront.getRawLightDetected();
         baseline2 = ODSBack.getRawLightDetected();
         idle();
+
+        autoBeaconPresser = hardwareMap.servo.get("ServoPress");
 
 
         //Initiate sensors:
@@ -487,6 +491,8 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
     public void readNewColorRight() {
 
+        telemetry.addData("","Reading Right Color");
+        telemetry.update();
         currentColorBeaconRight = "blank";
 
         if (bColorSensorRight.red() > bColorSensorRight.blue()) {

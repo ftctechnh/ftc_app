@@ -17,15 +17,19 @@ public class LinearServoTest extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     Servo linearservo;
     public void init() {
-        linearservo = hardwareMap.servo.get("linearServo");
-        linearservo.setPosition(0);
+        linearservo = hardwareMap.servo.get("ServoPress");
+        linearservo.setPosition(-0.5);
         telemetry.addData("","READY TO START");
+        telemetry.addData("",linearservo.getPosition());
+        telemetry.update();
     }
 
     @Override
     public void start(){
        // runtime.reset();
-        linearservo.setPosition(0);
+        linearservo.setPosition(1);
+        telemetry.addData("",linearservo.getPosition());
+        telemetry.update();
       //  telemetry.addData("Time",runtime.milliseconds());
        // telemetry.update();
        // runtime.reset();
