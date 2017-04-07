@@ -19,16 +19,10 @@ public abstract class AutoBase extends MainRobotBase
     /******** SENSOR STUFF ********/
 
     /**** Range Sensors ****/
-    protected final SmartRangeSensor
-            frontRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor"), 0x90),
-            sideRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor"), 0x10);
+    protected SmartRangeSensor frontRangeSensor, sideRangeSensor;
 
     /**** Color Sensors (3) ****/
-    protected final SmartColorSensor
-            option1ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 1 Color Sensor"), 0x4c, false),
-            option2ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 2 Color Sensor"), 0x5c, false),
-            bottomColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Bottom Color Sensor"), 0x3c, true),
-            particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x4c, false);
+    protected SmartColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
     protected void updateColorSensorStates()
     {
@@ -40,7 +34,7 @@ public abstract class AutoBase extends MainRobotBase
     }
 
     /**** Gyro ****/
-    protected SmartGyroSensor gyroscope = new SmartGyroSensor (initialize(GyroSensor.class, "Gyroscope"));
+    protected SmartGyroSensor gyroscope;
     private int desiredHeading = 0; //Massively important to maintaining stability through the drives.
 
     //Used to turn to a specified heading, and returns the difference between the desired angle and the actual angle achieved.
@@ -146,14 +140,11 @@ public abstract class AutoBase extends MainRobotBase
     };
 
     //Creates a driving thread and then waits for the stop signal from the sensors.
-    protected void drive(final SensorStopType sensorStopType, final double stopValue, final PowerUnits powerUnit, final double powerMeasure, final boolean useRangeSensor) throws InterruptedException
+    protected void drive(final SensorStopType sensorStopType, final double stopValue, final PowerUnits powerUnit, final double powerMeasure) throws InterruptedException
     {
-        //Set up both motors.
+        //Run the task.//Set up both motors.
         leftDrive.resetEncoder ();
         rightDrive.resetEncoder ();
-
-        leftDrive.enablePIDUpdateTask ();
-        rightDrive.enablePIDUpdateTask ();
 
         //Create the AsyncTask which will handle driving, with the other things encapsulated within it.
         EasyAsyncTask createdDriveTask = new EasyAsyncTask ()
@@ -163,8 +154,7 @@ public abstract class AutoBase extends MainRobotBase
             {
                 //Start both adjustment tasks.
                 gyroAdjustmentTask.run ();
-                if (useRangeSensor)
-                    rangeSensorAdjustmentTask.run ();
+                rangeSensorAdjustmentTask.run ();
 
                 //Start to drive, adjusting based on the tasks above.
                 while (true)
@@ -181,8 +171,7 @@ public abstract class AutoBase extends MainRobotBase
             protected void taskOnCompletion ()
             {
                 gyroAdjustmentTask.stop();
-                if (useRangeSensor)
-                    rangeSensorAdjustmentTask.stop ();
+                rangeSensorAdjustmentTask.stop ();
             }
         };
         createdDriveTask.run();
@@ -248,13 +237,38 @@ public abstract class AutoBase extends MainRobotBase
     protected void initializeOpModeSpecificHardware() throws InterruptedException
     {
         //The range sensors are especially odd to initialize, and will often require a robot power cycle.
-        ConsoleManager.outputNewLineToDrivers (frontRangeSensor.returningValidOutput () ? "Front Range looks good!" : "Front Range needs a power cycle!");
-        ConsoleManager.outputNewLineToDrivers (sideRangeSensor.returningValidOutput () ? "Side Range looks good!" : "Side Range needs a power cycle!");
+        ConsoleManager.outputNewLineToDrivers ("Validating Front Range Sensor...");
+        frontRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor"), 0x90);
+        ConsoleManager.appendToLastOutputtedLine (frontRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
+
+        ConsoleManager.outputNewLineToDrivers ("Validating Side Range Sensor...");
+        //TODO: Change name of sideRangeSensor in config from "Back Range Sensor"
+        sideRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor"), 0x10);
+        ConsoleManager.appendToLastOutputtedLine (sideRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
+
+
+        //Initialize color sensors.
+        ConsoleManager.outputNewLineToDrivers ("Fetching Color Sensors...");
+        option1ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 1 Color Sensor"), 0x4c, false);
+        option2ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 2 Color Sensor"), 0x5c, true);
+        bottomColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Bottom Color Sensor"), 0x3c, true);
+        //particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x4c, false);
+        ConsoleManager.appendToLastOutputtedLine ("OK!");
+
+        //Initialize encoders.
+        ConsoleManager.outputNewLineToDrivers ("Resetting and Enabling Drive Encoders...");
+        leftDrive.resetEncoder ();
+        rightDrive.resetEncoder ();
+        leftDrive.enablePIDUpdateTask ();
+        rightDrive.enablePIDUpdateTask ();
+        ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize gyroscope.
         ConsoleManager.outputNewLineToDrivers("Calibrating Gyroscope...");
-        gyroscope.calibrate ();
+        gyroscope = new SmartGyroSensor (initialize(GyroSensor.class, "Gyroscope")); //Calibrates immediately.
         ConsoleManager.appendToLastOutputtedLine ("OK!");
+
+        ConsoleManager.outputNewLineToDrivers ("Initialization completed!");
     }
 
 

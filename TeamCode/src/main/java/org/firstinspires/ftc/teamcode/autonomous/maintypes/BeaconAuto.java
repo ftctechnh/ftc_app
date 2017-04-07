@@ -51,7 +51,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             //Extend the button pusher until the colors become distinctly visible.
             ConsoleManager.outputNewLineToDrivers ("Extending color sensing apparatus to see the beacon colors.");
             long extensionStartTime = System.currentTimeMillis ();
-            rightButtonPusher.setPosition (0); //Start button pusher extension.
+            rightButtonPusher.setServoPosition (0); //Start button pusher extension.
 
             do
             {
@@ -59,7 +59,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
                 ProgramFlow.pauseForSingleFrame ();
             } while (!((option1Red && option2Blue) || (option1Blue && option2Red)));
 
-            rightButtonPusher.setPosition (.5); //Stop button pusher.
+            rightButtonPusher.setServoPosition (.5); //Stop button pusher.
             long timeTakenToSeeColors = System.currentTimeMillis () - extensionStartTime;
 
             //Press and retract as many times as necessary.
@@ -111,9 +111,9 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
                 drive(SensorStopType.Distance, driveDistance, PowerUnits.RevolutionsPerSecond, drivePower);
 
                 //Press the button.
-                rightButtonPusher.setPosition (0);
+                rightButtonPusher.setServoPosition (0);
                 ProgramFlow.pauseForMS (timeForEachPress);
-                rightButtonPusher.setPosition (1);
+                rightButtonPusher.setServoPosition (1);
                 ProgramFlow.pauseForMS (timeForEachPress - 200);
 
                 //Drive back to the original position.
@@ -130,9 +130,9 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
             //Retract almost completely and then drive to the next one.
             ConsoleManager.outputNewLineToDrivers ("Retracting color sensing apparatus for the next beacon.");
-            rightButtonPusher.setPosition (1);
+            rightButtonPusher.setServoPosition (1);
             sleep (timeTakenToSeeColors);
-            rightButtonPusher.setPosition (.5);
+            rightButtonPusher.setServoPosition (.5);
 
             drive (SensorStopType.Distance, 500, PowerUnits.RevolutionsPerSecond, autonomousSign * (BEACON_DP + 1));
         }
