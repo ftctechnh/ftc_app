@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
-    private static final double LAUNCHER_CHAMBER_ODS_THRESHOLD = 2.3;
+    private static final double LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD = 5;
 
     private float frontLeftPower;
     private float frontRightPower;
@@ -37,8 +37,8 @@ public class Teleop extends LinearOpModeBase {
                     if(gamepad2.y) {
                         launchParticle();
                     } else if(gamepad2.a) {
-                        if(getLauncherChamberOds().getRawLightDetected()
-                                >= LAUNCHER_CHAMBER_ODS_THRESHOLD) {
+                        if(getLauncherChamberColorSensor().alpha()
+                                >= LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
                             getIntakeMotor().setPower(0);
                             launchParticle();
                         } else {
@@ -165,7 +165,7 @@ public class Teleop extends LinearOpModeBase {
         telemetry.addData("color sensor red2", getColorSensor2().red());
         telemetry.addData("color sensor blue2", getColorSensor2().blue());
 
-        telemetry.addData("launcher chamber ods", getLauncherChamberOds().getRawLightDetected());
+        telemetry.addData("launcher chamber cs", getLauncherChamberColorSensor().alpha());
 
 //        telemetry.addData("Touch sensor pressed", getTouchSensor().isPressed());
 

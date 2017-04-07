@@ -62,7 +62,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private ModernRoboticsI2cRangeSensor leftRange;
 
     private OpticalDistanceSensor launcherOds;
-    private OpticalDistanceSensor launcherChamberOds;
+    private ColorSensor launcherChamberColorSensor;
     private OpticalDistanceSensor diskOds;
     private OpticalDistanceSensor ods3;
 
@@ -112,7 +112,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         door3 = hardwareMap.servo.get("d3");  // Closed = 0.55, Open = 0.25
         latch4 = hardwareMap.servo.get("l4"); // Up = 0.5
         pusher5 = hardwareMap.servo.get("p5"); // Up = 0.0, Down = 0.7
-//        touchSensorServo = hardwareMap.servo.get("l6");
+        touchSensorServo = hardwareMap.servo.get("l6");
 
         colorSensor1 = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "clr");
         colorSensor1.setI2cAddress(I2cAddr.create8bit(0x3C));
@@ -125,16 +125,18 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         colorSensor2.enableLed(false);
 
         frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
-        //leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
+//        leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
-        launcherChamberOds = hardwareMap.opticalDistanceSensor.get("lcOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
         ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
+        launcherChamberColorSensor = hardwareMap.colorSensor.get("lcCs");
+        launcherChamberColorSensor.enableLed(true); // enable LED to detect reflected light
+
         gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
 
-//        touchSensor = hardwareMap.touchSensor.get("ts");
+        touchSensor = hardwareMap.touchSensor.get("ts");
 
         // reverse only one spool motor
         spoolMotor1.setDirection(DcMotor.Direction.REVERSE);
@@ -950,8 +952,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         return ods3;
     }
 
-    protected OpticalDistanceSensor getLauncherChamberOds() {
-        return launcherChamberOds;
+    protected ColorSensor getLauncherChamberColorSensor() {
+        return launcherChamberColorSensor;
     }
 
     protected ModernRoboticsI2cGyro getGyroSensor() {
