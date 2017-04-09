@@ -42,12 +42,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         idle();
         setMotorsModeToEncDrive();
         stopMotors();
-     //   sleep(1000);
-        /*gyro.calibrate();
-        runtime.reset();
-        while((gyro.isCalibrating()&&runtime.seconds()<5)){
-            idle();
-        }*/
+
 
         initialHeading = gyro.getHeading();
         telemetry.addData("READY TO START", initialHeading);
@@ -62,19 +57,15 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         bColorSensorLeft.enableLed(true);
         bColorSensorLeft.enableLed(false);
 
-        ColorSensorRead();
 
-
-
-       // minimizeError();
-       /* setMotorsModeToEncDrive();
+        setMotorsModeToEncDrive();
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
-        //encoderMecanumCrossDrive(pathhighspeed,65,65,5,1);
+
         encoderMecanumCrossDrive(1,141,141,5,2);
         encoderMecanumDrive(1,20,20,5,1);
         timeProfile[profileindex++] = runtime.milliseconds();
-        servoBeaconPress();*/
+        servoBeaconPress();
 
         }
     public void servoBeaconPress(){
@@ -82,33 +73,10 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         boolean beacon_press_success = false;
 
         lineAlignStrafe();
-        timeProfile[profileindex++] = runtime.milliseconds();//first time: 9447.32 ms
-        //second time: 19998.19
-        //sleep(2000);
-        //moveTowardWall();
-
-
-        //readNewColorLeft();// this is the right if you are standing in the same direction as the back of the robot
 
         ColorSensorRead();//sets servo to correct position
         pressBeaconButton();
         autoBeaconPresser.setPosition(initialPos);
-
-        /*if(currentColorBeaconLeft.equals(currentTeam)){
-            left_detected = true;
-            //pressBeaconButton();
-
-        }
-        else{
-            left_detected = false;
-            setMotorsModeToEncDrive();
-           // encoderMecanumCrossDrive(0.5,18,18,2,1);
-            //setMotorsModeToRangeSensing();
-            //pressBeaconButton();
-        }*/
-        //add a line to move servo back to initial position
-        timeProfile[profileindex++] = runtime.milliseconds();//first time: 12991.84
-
 
 
         if (second_beacon_press == false)
@@ -128,10 +96,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         second_beacon_press = true;
         setMotorsModeToEncDrive();;
         encoderMecanumDrive(1,100,100,5,1);
-       // encoderMecanumCrossDrive(pathhighspeed,78.74,78.74,5,1);
-        //sleep(2000);
-       // encoderMecanumCrossDrive(pathhighspeed,25.4,25.4,5,2);
-        //sleep(2000);
+
         //if use strafing, add error correction so that it stays within a certain distance of the wall
         lineAlignStrafe();
 
@@ -142,45 +107,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
         telemetry.addData("","READ DATA");
         telemetry.update();
-        /*if (currentColorBeaconLeft.equals("blank")  || currentColorBeaconRight.equals("blank")){
 
-            if (currentColorBeaconLeft.equals("blank")){
-                while (currentColorBeaconLeft.equals("blank")){
-                    turnRight(0.3);
-                    readNewColorLeft();
-
-                    telemetry.addData("error","checking!");
-                    telemetry.update();
-                }
-            }
-
-            if (currentColorBeaconRight.equals("blank")){
-                while (currentColorBeaconRight.equals("blank")){
-                    turnLeft(0.3);
-                    readNewColorRight();
-
-                    telemetry.addData("error","checking!");
-                    telemetry.update();
-                }
-            }
-        }*/
-        //readNewColorRight();
-        //readNewColorLeft();
-
-      /*  if(currentColorBeaconLeft.equals(currentTeam) && currentColorBeaconRight.equals(currentTeam)){
-            //move to next beacon function steven
-            telemetry.addData("correct","press already!");
-            telemetry.update();
-        }*/
-
-       /* if (currentColorBeaconLeft.equals(currentTeam)){
-            autoBeaconPresser.setPosition(servoLeftPos);
-
-            telemetry.addData("left color", currentColorBeaconLeft);
-            telemetry.addData("right color", currentColorBeaconLeft);
-            telemetry.addData("current team", currentTeam);
-            telemetry.update();
-        }*/
 
         if (currentColorBeaconLeft.equals(currentTeam)){
             autoBeaconPresser.setPosition(servoLeftPos);
@@ -259,8 +186,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
-        //moveTowardWall();
-        //gyroCorrection(0);
+       
 
     }
 
