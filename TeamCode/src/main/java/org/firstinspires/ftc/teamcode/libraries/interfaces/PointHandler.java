@@ -5,4 +5,5 @@ package org.firstinspires.ftc.teamcode.libraries.interfaces;
  */
 
 public interface PointHandler {
+    public float[] getPoints();
 }
