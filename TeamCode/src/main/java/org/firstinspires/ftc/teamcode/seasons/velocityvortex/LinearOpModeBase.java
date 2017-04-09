@@ -112,7 +112,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         door3 = hardwareMap.servo.get("d3");  // Closed = 0.55, Open = 0.25
         latch4 = hardwareMap.servo.get("l4"); // Up = 0.5
         pusher5 = hardwareMap.servo.get("p5"); // Up = 0.0, Down = 0.7
-        touchSensorServo = hardwareMap.servo.get("l6");
+        touchSensorServo = hardwareMap.servo.get("l6"); // Up = 0.7, Down = 0.14
 
         colorSensor1 = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "clr");
         colorSensor1.setI2cAddress(I2cAddr.create8bit(0x3C));
@@ -132,7 +132,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
         launcherChamberColorSensor = hardwareMap.colorSensor.get("lcCs");
-        launcherChamberColorSensor.enableLed(true); // enable LED to detect reflected light
+        launcherChamberColorSensor.setI2cAddress(I2cAddr.create8bit(0x40));
+
+        // disable LED first due to bug
+        launcherChamberColorSensor.enableLed(false);
+        launcherChamberColorSensor.enableLed(true);
 
         gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
 
@@ -145,12 +149,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         robotRuntime.reset();
 
         // put the button pusher servos down
-        beaconsServo1.setPosition(1);
-        beaconsServo2.setPosition(0);
+        beaconsServo1.setPosition(0);
+        beaconsServo2.setPosition(1);
 
         door3.setPosition(0.53);
         latch4.setPosition(0.5);
         pusher5.setPosition(0);
+        touchSensorServo.setPosition(0.7);
 
         // stop all motors
         launcherMotor.setPower(0);
@@ -264,6 +269,26 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
     }
 
+    private void touchSensorDrive() {
+        // lower the touch sensor servo
+        touchSensorServo.setPosition(0.14);
+
+        // drive forward while touch sensor is not pressed
+        while(opModeIsActive() && !getTouchSensor().isPressed()) {
+            driveForward(0.1);
+        }
+        stopRobot();
+
+        // raise the servo back up
+        touchSensorServo.setPosition(0.7);
+
+        // drive back from beacon four inches
+        encoderDrive(0.2, 1, RobotDirection.BACKWARD);
+
+        // be square with wall
+        gyroPivot(0.8, 0, true);
+    }
+
     /**
      * Claim a beacon to be red. This algorithm uses the following procedure to claim a beacon:
      *
@@ -280,13 +305,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // TODO: lower the touch sensor servo
-
-        // drive forward while touch sensor is not pressed
-        while(opModeIsActive() && !getTouchSensor().isPressed()) {
-            driveForward(0.2);
-        }
-        stopRobot();
+        touchSensorDrive();
 
         // when the beacon is already claimed, move on
         if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
@@ -301,13 +320,23 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // move the button pusher servos
         if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
-            beaconsServo1.setPosition(0.3);
+            beaconsServo1.setPosition(0.6);
         } else if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
-            beaconsServo2.setPosition(0.75);
+            beaconsServo2.setPosition(0.4);
         } else {
             telemetry.addData(">", "beacon not detected!");
             telemetry.update();
         }
+
+        // wait for button pusher servo
+        robotRuntime.reset();
+        while(opModeIsActive() && robotRuntime.milliseconds() < 600) {
+            idle();
+        }
+
+        // put the button pusher servos down
+        beaconsServo1.setPosition(0);
+        beaconsServo2.setPosition(1);
 
         // check if both color sensors do not detect red
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
@@ -315,42 +344,39 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             // move the button pusher servos
             if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
-                beaconsServo1.setPosition(0.3);
+                beaconsServo1.setPosition(0.6);
             } else if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
-                beaconsServo2.setPosition(0.75);
+                beaconsServo2.setPosition(0.4);
             } else {
                 telemetry.addData(">", "beacon not detected!");
                 telemetry.update();
             }
 
-            // put the button pusher servos down
-            beaconsServo1.setPosition(1);
-            beaconsServo2.setPosition(0);
+            // wait for button pusher servo
+            robotRuntime.reset();
+            while(opModeIsActive() && robotRuntime.milliseconds() < 600) {
+                idle();
+            }
         }
 
-        // drive backward to 15 cm
-        rangeSensorDrive(15, 0.1);
-
         // put the button pusher servos back
-        beaconsServo1.setPosition(1);
-        beaconsServo2.setPosition(0);
+        beaconsServo1.setPosition(0);
+        beaconsServo2.setPosition(1);
+
+        // drive backward to 15cm
+        rangeSensorDrive(15, 0.3);
     }
 
     private void repositionBeacons() {
         gyroPivot(0.8, 0, false);
 
-        rangeSensorDrive(12, 0.1);
+        rangeSensorDrive(12, 0.2);
 
         // drive right past line
         encoderDrive(0.1, 4, RobotDirection.RIGHT);
 
-        // look for the white line leading to the second beacon
-        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
-            driveLeft(0.1);
-            telemetry.addData("ods3", getOds3().getRawLightDetected());
-            telemetry.update();
-        }
-        stopRobot();
+        // drive left to white line
+        stopOnLine(0.05, RobotDirection.LEFT);
 
         // drive to 10cm from the wall
         rangeSensorDrive(10, 0.1);
@@ -372,13 +398,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // TODO: lower the touch sensor servo
-
-        // drive forward while touch sensor is not pressed
-        while(opModeIsActive() && !getTouchSensor().isPressed()) {
-            driveForward(0.2);
-        }
-        stopRobot();
+        touchSensorDrive();
 
         // when the beacon is already claimed, move on
         if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
@@ -393,13 +413,17 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // move the button pusher servos
         if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
-            beaconsServo1.setPosition(0.3);
+            beaconsServo1.setPosition(0.6);
         } else if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
-            beaconsServo2.setPosition(0.75);
+            beaconsServo2.setPosition(0.4);
         } else {
             telemetry.addData(">", "beacon not detected!");
             telemetry.update();
         }
+
+        // put the button pusher servos down
+        beaconsServo1.setPosition(0);
+        beaconsServo2.setPosition(1);
 
         // check if both color sensors do not detect red
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
@@ -407,25 +431,21 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             // move the button pusher servos
             if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
-                beaconsServo1.setPosition(0.3);
+                beaconsServo1.setPosition(0.6);
             } else if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
-                beaconsServo2.setPosition(0.75);
+                beaconsServo2.setPosition(0.4);
             } else {
                 telemetry.addData(">", "beacon not detected!");
                 telemetry.update();
             }
-
-            // put the button pusher servos down
-            beaconsServo1.setPosition(1);
-            beaconsServo2.setPosition(0);
         }
+
+        // put the button pusher servos back
+        beaconsServo1.setPosition(0);
+        beaconsServo2.setPosition(1);
 
         // drive backward to 15 cm
         rangeSensorDrive(15, 0.1);
-
-        // put the button pusher servos back
-        beaconsServo1.setPosition(1);
-        beaconsServo2.setPosition(0);
     }
 
     /**

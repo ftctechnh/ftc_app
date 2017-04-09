@@ -18,8 +18,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 64);
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 64);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 68);
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 68);
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -36,8 +36,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
                 (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
 
             // run the other motors to drive at a steeper angle
-            getFrontRightDrive().setPower(0.15);
-            getBackLeftDrive().setPower(-0.15);
+            getFrontRightDrive().setPower(0.12);
+            getBackLeftDrive().setPower(-0.12);
 
             telemetry.addData("Path",  "Running at %d :%d",
                     getFrontLeftDrive().getCurrentPosition(),

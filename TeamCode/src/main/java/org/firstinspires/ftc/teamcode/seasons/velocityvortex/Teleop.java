@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
-    private static final double LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD = 5;
+    private static final double LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD = 12;
 
     private float frontLeftPower;
     private float frontRightPower;
@@ -38,7 +38,7 @@ public class Teleop extends LinearOpModeBase {
                         launchParticle();
                     } else if(gamepad2.a) {
                         if(getLauncherChamberColorSensor().alpha()
-                                >= LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
+                                > LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
                             getIntakeMotor().setPower(0);
                             launchParticle();
                         } else {
@@ -86,11 +86,13 @@ public class Teleop extends LinearOpModeBase {
 
             // control for button pusher servo motors
             if(gamepad1.right_bumper) {
-                getBeaconsServo1().setPosition(0.3);
-                getBeaconsServo2().setPosition(0.7);
+                // move beacons servos out
+                getBeaconsServo1().setPosition(0.6);
+                getBeaconsServo2().setPosition(0.4);
             } else if(gamepad1.left_bumper) {
-                getBeaconsServo1().setPosition(1.0);
-                getBeaconsServo2().setPosition(0.0);
+                // move beacons servos in
+                getBeaconsServo1().setPosition(0);
+                getBeaconsServo2().setPosition(1);
             }
 
             idle();
@@ -138,7 +140,7 @@ public class Teleop extends LinearOpModeBase {
     private void handleIntake() {
         if (gamepad2.b){
             getDoor3().setPosition(0.25);
-            getIntakeMotor().setPower(-0.5);
+            getIntakeMotor().setPower(-1.0);
         }
         else if(gamepad2.right_stick_y >= 0.2 || gamepad2.right_stick_y <= -0.2 ){
             getDoor3().setPosition(0.55);
