@@ -275,7 +275,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // drive forward while touch sensor is not pressed
         while(opModeIsActive() && !getTouchSensor().isPressed()) {
-            driveForward(0.1);
+            driveForward(0.15);
         }
         stopRobot();
 
@@ -306,6 +306,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         touchSensorDrive();
+
+        // drive left to white line
+        stopOnLine(0.1, RobotDirection.LEFT);
+
+        // reset again before pressing beacon
+        gyroPivot(0.8, 0, true);
 
         // when the beacon is already claimed, move on
         if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
@@ -362,24 +368,23 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         // put the button pusher servos back
         beaconsServo1.setPosition(0);
         beaconsServo2.setPosition(1);
-
-        // drive backward to 15cm
-        rangeSensorDrive(15, 0.3);
     }
 
     private void repositionBeacons() {
-        gyroPivot(0.8, 0, false);
+        rangeSensorDrive(10, 0.2);
 
-        rangeSensorDrive(12, 0.2);
-
-        // drive right past line
         encoderDrive(0.1, 4, RobotDirection.RIGHT);
 
-        // drive left to white line
-        stopOnLine(0.05, RobotDirection.LEFT);
+        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // drive to 10cm from the wall
-        rangeSensorDrive(10, 0.1);
+        touchSensorDrive();
+
+        // drive left to white line
+        stopOnLine(0.1, RobotDirection.LEFT);
+
+        // reset again before pressing beacon
+        gyroPivot(0.8, 0, true);
     }
 
     /**
