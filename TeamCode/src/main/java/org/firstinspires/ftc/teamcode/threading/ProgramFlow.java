@@ -21,12 +21,12 @@ public class ProgramFlow
 
     public static void pauseForSingleFrame() throws InterruptedException
     {
-        // Abort the OpMode if we've been asked to stop
+        // Abort the OpMode if we've been asked to stopEasyTask
         if (mainLinOpMode.isStopRequested())
             throw new InterruptedException();
 
         //Copied from idle() in LinearOpMode.
-        // Otherwise, yield back our thread scheduling quantum and give other threads at our priority level a chance to run
+        // Otherwise, yield back our thread scheduling quantum and give other threads at our priority level a chance to startEasyTask
         Thread.yield();
     }
 }

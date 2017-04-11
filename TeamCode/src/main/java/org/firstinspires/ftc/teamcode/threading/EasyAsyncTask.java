@@ -36,17 +36,19 @@ public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
     /******** CUSTOM WRITTEN ********/
 
     //Runs and stops the program.
-    public void run()
+    public void startEasyTask ()
     {
         if (getStatus () != Status.RUNNING)
-            this.execute ("");
+            this.executeOnExecutor (AsyncTask.THREAD_POOL_EXECUTOR, "");
     }
-    public void stop()
+    public void stopEasyTask ()
     {
-        taskOnCompletion ();
-
         if (getStatus () != Status.FINISHED)
+        {
+            taskOnCompletion ();
+
             this.cancel (true);
+        }
     }
 
     //Can't just create a variable that is not final in an anonymous class, so it has to be declared here.

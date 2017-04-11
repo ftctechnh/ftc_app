@@ -31,7 +31,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
         ConsoleManager.outputNewLineToDrivers("Turning to face wall at an angle...");
         turnToHeading(73 * autonomousSign, TurnMode.BOTH, 3000);
 
-        //Drive to the wall and stop once a little ways away.
+        //Drive to the wall and stopEasyTask once a little ways away.
         ConsoleManager.outputNewLineToDrivers ("Driving to the wall...");
         drive (SensorStopType.Ultrasonic, (onBlueAlliance ? 31 : 36), PowerUnits.RevolutionsPerSecond, 1);
 

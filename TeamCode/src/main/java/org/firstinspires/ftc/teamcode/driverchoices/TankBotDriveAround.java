@@ -74,7 +74,7 @@ public class TankBotDriveAround extends ImprovedOpModeBase
             rightPower = Range.clip(rightPower, -1, 1);
             leftPower = Range.clip(leftPower, -1, 1);
 
-            // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
+            // Write the values to the motors.  Scale the robot in order to startEasyTask the robot more effectively at slower speeds.
             setLeftPower (scaleInput(leftPower));
             setRightPower (scaleInput(rightPower));
 
@@ -184,13 +184,13 @@ public class TankBotDriveAround extends ImprovedOpModeBase
         }
     }
 
-    //Used to make the media player stop playing audio, and also to prevent excess memory allocation from being taken up.
+    //Used to make the media player stopEasyTask playing audio, and also to prevent excess memory allocation from being taken up.
     protected void StopPlayingAudio()
     {
         if (mediaPlayer != null)
         {
             if (mediaPlayer.isPlaying())
-                mediaPlayer.stop(); //stop playing
+                mediaPlayer.stop(); //stopEasyTask playing
             mediaPlayer.release(); //prevent resource allocation
             mediaPlayer = null; //nullify the reference.
         }

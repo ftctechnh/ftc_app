@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 import org.firstinspires.ftc.teamcode.threading.EasyAsyncTask;
 import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
 
@@ -11,8 +12,6 @@ public class AdvancedMotorController
 {
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final DcMotor encoderMotor, linkedMotor;
-
-    private final EasyAsyncTask pidUpdateTask;
 
     //Initialization steps
     public AdvancedMotorController (DcMotor encoderMotor)
@@ -25,21 +24,6 @@ public class AdvancedMotorController
         this.linkedMotor = linkedMotor;
 
         resetEncoder ();
-
-        pidUpdateTask = new EasyAsyncTask ()
-        {
-            @Override
-            protected void taskToAccomplish () throws InterruptedException
-            {
-                while (true)
-                {
-                    if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
-                        updateMotorPowerWithPID ();
-
-                    ProgramFlow.pauseForMS (30);
-                }
-            }
-        };
     }
 
     //Initial conversion factor, will be changed a LOT through the course of the program.
@@ -165,10 +149,35 @@ public class AdvancedMotorController
         }
     }
 
+    /******* THREADING *********/
+    private final EasyAsyncTask pidUpdateTask = new EasyAsyncTask ()
+    {
+        @Override
+        protected void taskToAccomplish () throws InterruptedException
+        {
+            while (true)
+            {
+                if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
+                    updateMotorPowerWithPID ();
+
+                ProgramFlow.pauseForMS (30);
+            }
+        }
+    };
+
+    public void enablePIDUpdateTask()
+    {
+        pidUpdateTask.startEasyTask ();
+    }
+    public void disablePeriodicPIDUpdates()
+    {
+        pidUpdateTask.stopEasyTask ();
+    }
+
     /******* PID STUFF *********/
     private double desiredRPS = 0;
 
-    //Stored for each run.
+    //Stored for each startEasyTask.
     private int previousMotorPosition;
     private long lastAdjustTime = 0;
 
@@ -194,16 +203,7 @@ public class AdvancedMotorController
         return actualTicksSinceUpdate;
     }
 
-    public void enablePIDUpdateTask()
-    {
-        pidUpdateTask.run ();
-    }
-    public void disablePeriodicPIDUpdates()
-    {
-        pidUpdateTask.stop ();
-    }
-
-    public void updateMotorPowerWithPID ()
+    private void updateMotorPowerWithPID ()
     {
         if (lastAdjustTime != 0)
         {

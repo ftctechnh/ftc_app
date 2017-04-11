@@ -125,8 +125,14 @@ public abstract class AutoBase extends MainRobotBase
         {
             while (true)
             {
-                double offFromDist = 13 - sideRangeSensor.getVALIDDistCM (); //Potentially takes a while to actually return a value.
-                output = Math.signum (offFromDist) * (Math.abs (offFromDist) * 0.15);
+                double observedDistance = sideRangeSensor.getVALIDDistCM ();
+                if (observedDistance >= 255)
+                    output = 0;
+                else
+                {
+                    double offFromDist = 13 - sideRangeSensor.getVALIDDistCM (); //Potentially takes a while to actually return a value.
+                    output = Math.signum (offFromDist) * (Math.abs (offFromDist) * 0.15);
+                }
 
                 ProgramFlow.pauseForMS (30);
             }
@@ -139,7 +145,7 @@ public abstract class AutoBase extends MainRobotBase
         }
     };
 
-    //Creates a driving thread and then waits for the stop signal from the sensors.
+    //Creates a driving thread and then waits for the stopEasyTask signal from the sensors.
     protected void drive(final SensorStopType sensorStopType, final double stopValue, final PowerUnits powerUnit, final double powerMeasure) throws InterruptedException
     {
         drive(sensorStopType, stopValue, powerUnit, powerMeasure, false);
@@ -156,33 +162,47 @@ public abstract class AutoBase extends MainRobotBase
             @Override
             protected void taskToAccomplish () throws InterruptedException
             {
-                //Start both adjustment tasks.
-                gyroAdjustmentTask.run ();
-                if (useRangeSensorAdjustment)
-                    rangeSensorAdjustmentTask.run ();
+                //Start PID task.
 
-                //Start to drive, adjusting based on the tasks above.
-                while (true)
-                {
-                    double adjustmentFactor = Math.signum (powerMeasure) * (Double) (gyroAdjustmentTask.output) + (Double) (rangeSensorAdjustmentTask.output);
-                    leftDrive.setRPS (powerMeasure * (1 + adjustmentFactor));
-                    rightDrive.setRPS (powerMeasure * (1 - adjustmentFactor));
+                ConsoleManager.outputNewLineToDrivers ("Started driving task!");
+                ProgramFlow.pauseForMS (3000);
 
-                    ProgramFlow.pauseForMS (20);
-                }
+//                ConsoleManager.outputNewLineToDrivers ("Starting PID task...");
+//                leftDrive.enablePIDUpdateTask ();
+//                rightDrive.enablePIDUpdateTask ();
+//
+//                //Start both adjustment tasks.
+//                ConsoleManager.outputNewLineToDrivers ("Starting gyro task...");
+//                gyroAdjustmentTask.startEasyTask ();
+//                if (useRangeSensorAdjustment)
+//                    rangeSensorAdjustmentTask.startEasyTask ();
+//
+//                //Start to drive, adjusting based on the tasks above.
+//                ConsoleManager.outputNewLineToDrivers ("Running drive task...");
+//                while (true)
+//                {
+//                    double adjustmentFactor = Math.signum (powerMeasure) * (Double) (gyroAdjustmentTask.output) + (Double) (rangeSensorAdjustmentTask.output);
+//                    leftDrive.setRPS (powerMeasure * (1 + adjustmentFactor));
+//                    rightDrive.setRPS (powerMeasure * (1 - adjustmentFactor));
+//
+//                    ProgramFlow.pauseForMS (20);
+//                }
             }
 
             @Override
             protected void taskOnCompletion ()
             {
-                gyroAdjustmentTask.stop();
-                if (useRangeSensorAdjustment)
-                    rangeSensorAdjustmentTask.stop ();
+//                leftDrive.disablePeriodicPIDUpdates ();
+//                rightDrive.disablePeriodicPIDUpdates ();
+//
+//                gyroAdjustmentTask.stopEasyTask ();
+//                if (useRangeSensorAdjustment)
+//                    rangeSensorAdjustmentTask.stopEasyTask ();
             }
         };
-        createdDriveTask.run();
+        createdDriveTask.startEasyTask ();
 
-        //Allows us to know when we stop.
+        //Allows us to know when we stopEasyTask.
         boolean reachedFinalDest = false;
 
         //Actual adjustment aspect of driving.
@@ -212,7 +232,7 @@ public abstract class AutoBase extends MainRobotBase
             ProgramFlow.pauseForSingleFrame ();
         }
 
-        createdDriveTask.stop ();
+        createdDriveTask.stopEasyTask ();
 
         hardBrake (100);
     }
@@ -248,25 +268,16 @@ public abstract class AutoBase extends MainRobotBase
         ConsoleManager.appendToLastOutputtedLine (frontRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
 
         ConsoleManager.outputNewLineToDrivers ("Validating Side Range Sensor...");
-        //TODO: Change name of sideRangeSensor in config from "Back Range Sensor"
         sideRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor"), 0x10);
         ConsoleManager.appendToLastOutputtedLine (sideRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
 
 
         //Initialize color sensors.
         ConsoleManager.outputNewLineToDrivers ("Fetching Color Sensors...");
-        option1ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 1 Color Sensor"), 0x4c, false);
+        option1ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 1 Color Sensor"), 0x4c, true);
         option2ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 2 Color Sensor"), 0x5c, true);
         bottomColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Bottom Color Sensor"), 0x3c, true);
-        //particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x4c, false);
-        ConsoleManager.appendToLastOutputtedLine ("OK!");
-
-        //Initialize encoders.
-        ConsoleManager.outputNewLineToDrivers ("Resetting and Enabling Drive Encoders...");
-        leftDrive.resetEncoder ();
-        rightDrive.resetEncoder ();
-        leftDrive.enablePIDUpdateTask ();
-        rightDrive.enablePIDUpdateTask ();
+        particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x6c, false);
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         //Initialize gyroscope.

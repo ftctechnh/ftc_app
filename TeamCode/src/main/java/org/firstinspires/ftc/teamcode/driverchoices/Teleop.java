@@ -44,7 +44,7 @@ public class Teleop extends MainRobotBase
             rightPower = Range.clip(rightPower, -1, 1);
             leftPower = Range.clip(leftPower, -1, 1);
 
-            // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
+            // Write the values to the motors.  Scale the robot in order to startEasyTask the robot more effectively at slower speeds.
             leftDrive.setDirectMotorPower (scaleInput(leftPower) * speedCoefficient);
             rightDrive.setDirectMotorPower (scaleInput(rightPower) * speedCoefficient);
 
@@ -165,7 +165,7 @@ public class Teleop extends MainRobotBase
      * the robot more precisely at slower speeds.
      */
 
-    double scaleInput(double dVal)
+    private double scaleInput(double dVal)
     {
         double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24, 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
 

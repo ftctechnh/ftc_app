@@ -17,14 +17,12 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
     protected AdvancedMotorController harvester, flywheels;
     protected DcMotor lift;
     protected SmartServo rightButtonPusher, frontButtonPusher, capBallHolder;
-    protected final double CBH_CLOSED = 0.02, CBH_OPEN = 1.0;
-    protected final double FBP_UP = 0.84, FBP_DOWN = FBP_UP - 0.63;
 
     protected void initializeHardware () throws InterruptedException
     {
-        ConsoleManager.outputNewLineToDrivers ("Setting up drive motors...");
         //Make sure that the robot components are found and initialized correctly.
         /*************************** DRIVING MOTORS ***************************/
+        ConsoleManager.outputNewLineToDrivers ("Setting up drive motors...");
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
         leftDrive = new AdvancedMotorController (initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
                 setRPSConversionFactor (0.40).
