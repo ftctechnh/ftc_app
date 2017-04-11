@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode.Steven;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
@@ -14,14 +13,15 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "blueBeaconCharlieWorlds")
-public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
+@Autonomous(name = "redBeaconCharlieWorlds")
+@Disabled
+public class redAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
 
 
     //
     boolean second_beacon_press = false;
-    String currentTeam = "blue";
+    String currentTeam = "red";
     private ElapsedTime runtime = new ElapsedTime();
     public int gyro_corr_cnt =0;
     public int beacon_angle;
@@ -44,25 +44,27 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         setMotorsModeToEncDrive();
         stopMotors();
 
-        autoBeaconPresser.setPosition(initialPos);
 
-        telemetry.addData("READY TO START", "");
+        initialHeading = gyro.getHeading();
+        telemetry.addData("READY TO START", initialHeading);
         telemetry.addData("gyro cal finished in ms", runtime.milliseconds());
 
         telemetry.update();
-
+        autoBeaconPresser.setPosition(initialPos);
 
         waitForStart();
         runtime.reset();
         second_beacon_press = false;
+        bColorSensorLeft.enableLed(true);
+        bColorSensorLeft.enableLed(false);
 
 
         setMotorsModeToEncDrive();
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
 
-        encoderMecanumCrossDrive(1,141,141,5,2);
-        encoderMecanumDrive(1,20,20,5,1);
+        encoderMecanumCrossDrive(1,141,141,5,3);
+        encoderMecanumDrive(1,20,20,5,-1);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
 
@@ -97,7 +99,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         encoderMecanumDrive(1,100,100,5,1);
 
         //if use strafing, add error correction so that it stays within a certain distance of the wall
-        lineAlignStrafe();
+        servoBeaconPress();
 
 }
     public void ColorSensorRead(){
@@ -116,7 +118,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
             telemetry.addData("current team", currentTeam);
             telemetry.update();
         }
-        else if(currentColorBeaconLeft.equals("red")){
+        else if(currentColorBeaconLeft.equals("blue")){
             autoBeaconPresser.setPosition(servoRightPos);
             telemetry.addData("left color", currentColorBeaconLeft);
             telemetry.update();
@@ -133,7 +135,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         else {
             setMotorsModeToColorSensing();
         }
-        strafeRight(0.5);
+        strafeLeft(0.5);
         while(whiteLineDetectedBack() == false){
 
 
@@ -222,7 +224,15 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         timeProfile[profileindex++] = runtime.milliseconds();//21406.18
         if (second_beacon_press)
         {
-           {
+            if(ball_first) {
+
+                gyroCorrection((beacon_angle + 45));
+                encoderMecanumDrive(pathhighspeed, 130, 130, 5, 0);
+                sleep(500);
+                encoderMecanumDrive(pathhighspeed, -10, -10, .2, 0);
+                encoderMecanumDrive(pathhighspeed, 30, 30, .2, 0);
+            }
+            else{
 
                 setMotorsModeToEncDrive();
                 encoderMecanumCrossDrive(pathhighspeed, 90, 90, 5, 4);
@@ -267,7 +277,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 //
         encoderMecanumDrive(0.6, distFromWall, distFromWall, 5,0);
         //setMotorsModeToRangeSensing();
-       // moveTowardWall();
+        moveTowardWall();
 
 //        encoderDrive(.3, -distFromWall, -distFromWall, 1);
 //        sleep(500);
