@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
 {
     /***** OBJECT SPECIFIC STUFF *****/
-    //OH MY GOD YOU CAN JUST DO String a, String b, String c, etc. rather than String[]?????  HOW DID I NOT KNOW THIS
     @Override
     protected String doInBackground (String... params)
     {
@@ -34,8 +33,6 @@ public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
     protected void onProgressUpdate(Void... values) {}
 
     /******** CUSTOM WRITTEN ********/
-
-    //Runs and stops the program.
     public void startEasyTask ()
     {
         if (getStatus () != Status.RUNNING)

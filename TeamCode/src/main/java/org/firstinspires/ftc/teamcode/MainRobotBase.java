@@ -42,7 +42,7 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
                 setRPSConversionFactor (0.40).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
         harvester.resetEncoder ();
-        harvester.enablePIDUpdateTask ();
+        harvester.pidUpdateTask.startEasyTask ();
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         ConsoleManager.outputNewLineToDrivers ("Setting up flywheels...");
@@ -53,11 +53,13 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
                 setAdjustmentSensitivity (.00001).
                 setAdjustmentSensitivityBounds (0.3);
         flywheels.resetEncoder ();
-        flywheels.enablePIDUpdateTask ();
+        flywheels.pidUpdateTask.startEasyTask ();
         ConsoleManager.appendToLastOutputtedLine ("OK!");
 
+        ConsoleManager.outputNewLineToDrivers ("Setting up lift...");
         lift = initialize (DcMotor.class, "lift");
         lift.setDirection (DcMotorSimple.Direction.REVERSE);
+        ConsoleManager.appendToLastOutputtedLine ("OK!");
 
         ConsoleManager.outputNewLineToDrivers ("Setting up servos...");
         rightButtonPusher = new SmartServo (initialize (Servo.class, "rightButtonPusher"), 0.5);

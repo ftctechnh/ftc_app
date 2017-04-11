@@ -6,23 +6,22 @@ import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
 
 public class SmartGyroSensor
 {
-    public final GyroSensor gyroSensor;
+    public final GyroSensor sensor;
 
-    public SmartGyroSensor(GyroSensor gyroSensor)
+    public SmartGyroSensor(GyroSensor gyroSensor) throws InterruptedException
     {
-        this.gyroSensor = gyroSensor;
+        this.sensor = gyroSensor;
+
+        calibrate ();
     }
 
     public void calibrate() throws InterruptedException
     {
-        //Start gyroscope calibration.
-        this.gyroSensor.calibrate();
-
         //Pause to prevent odd errors in which it says it's configured but is actually LYING.
         ProgramFlow.pauseForMS (1000);
 
         //Wait for gyro to finish calibrating.
-        while (gyroSensor.isCalibrating())
+        while (sensor.isCalibrating())
             ProgramFlow.pauseForMS (50);
 
         //Zero gyro heading.
@@ -33,7 +32,7 @@ public class SmartGyroSensor
     public void zeroHeading() throws InterruptedException
     {
         ProgramFlow.pauseForMS (400);
-        gyroSensor.resetZAxisIntegrator();
+        sensor.resetZAxisIntegrator();
         ProgramFlow.pauseForMS (400);
     }
 
@@ -41,7 +40,7 @@ public class SmartGyroSensor
     public int getValidGyroHeading(int desiredHeading)
     {
         //Get the heading.
-        int heading = gyroSensor.getHeading ();
+        int heading = sensor.getHeading ();
 
         //Determine the actual heading on a logical basis (which makes sense with the calculations).
         if (heading > 180 && heading < 360)

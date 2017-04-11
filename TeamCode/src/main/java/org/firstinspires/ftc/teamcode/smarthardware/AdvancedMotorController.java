@@ -150,7 +150,7 @@ public class AdvancedMotorController
     }
 
     /******* THREADING *********/
-    private final EasyAsyncTask pidUpdateTask = new EasyAsyncTask ()
+    public final EasyAsyncTask pidUpdateTask = new EasyAsyncTask ()
     {
         @Override
         protected void taskToAccomplish () throws InterruptedException
@@ -164,15 +164,6 @@ public class AdvancedMotorController
             }
         }
     };
-
-    public void enablePIDUpdateTask()
-    {
-        pidUpdateTask.startEasyTask ();
-    }
-    public void disablePeriodicPIDUpdates()
-    {
-        pidUpdateTask.stopEasyTask ();
-    }
 
     /******* PID STUFF *********/
     private double desiredRPS = 0;

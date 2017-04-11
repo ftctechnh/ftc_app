@@ -152,10 +152,6 @@ public abstract class AutoBase extends MainRobotBase
     }
     protected void drive(final SensorStopType sensorStopType, final double stopValue, final PowerUnits powerUnit, final double powerMeasure, final boolean useRangeSensorAdjustment) throws InterruptedException
     {
-        //Run the task.//Set up both motors.
-        leftDrive.resetEncoder ();
-        rightDrive.resetEncoder ();
-
         //Create the AsyncTask which will handle driving, with the other things encapsulated within it.
         EasyAsyncTask createdDriveTask = new EasyAsyncTask ()
         {
@@ -163,41 +159,40 @@ public abstract class AutoBase extends MainRobotBase
             protected void taskToAccomplish () throws InterruptedException
             {
                 //Start PID task.
-
                 ConsoleManager.outputNewLineToDrivers ("Started driving task!");
-                ProgramFlow.pauseForMS (3000);
 
-//                ConsoleManager.outputNewLineToDrivers ("Starting PID task...");
-//                leftDrive.enablePIDUpdateTask ();
-//                rightDrive.enablePIDUpdateTask ();
-//
-//                //Start both adjustment tasks.
-//                ConsoleManager.outputNewLineToDrivers ("Starting gyro task...");
-//                gyroAdjustmentTask.startEasyTask ();
-//                if (useRangeSensorAdjustment)
-//                    rangeSensorAdjustmentTask.startEasyTask ();
-//
-//                //Start to drive, adjusting based on the tasks above.
-//                ConsoleManager.outputNewLineToDrivers ("Running drive task...");
-//                while (true)
-//                {
-//                    double adjustmentFactor = Math.signum (powerMeasure) * (Double) (gyroAdjustmentTask.output) + (Double) (rangeSensorAdjustmentTask.output);
-//                    leftDrive.setRPS (powerMeasure * (1 + adjustmentFactor));
-//                    rightDrive.setRPS (powerMeasure * (1 - adjustmentFactor));
-//
-//                    ProgramFlow.pauseForMS (20);
-//                }
+                //Run the task.//Set up both motors.
+                leftDrive.resetEncoder ();
+                rightDrive.resetEncoder ();
+
+                leftDrive.pidUpdateTask.startEasyTask ();
+                rightDrive.pidUpdateTask.startEasyTask ();
+
+                //Start both adjustment tasks.
+                gyroAdjustmentTask.startEasyTask ();
+                if (useRangeSensorAdjustment)
+                    rangeSensorAdjustmentTask.startEasyTask ();
+
+                //Start to drive, adjusting based on the tasks above.
+                while (true)
+                {
+                    double adjustmentFactor = Math.signum (powerMeasure) * (Double) (gyroAdjustmentTask.output) + (Double) (rangeSensorAdjustmentTask.output);
+                    leftDrive.setRPS (powerMeasure * (1 + adjustmentFactor));
+                    rightDrive.setRPS (powerMeasure * (1 - adjustmentFactor));
+
+                    ProgramFlow.pauseForMS (20);
+                }
             }
 
             @Override
             protected void taskOnCompletion ()
             {
-//                leftDrive.disablePeriodicPIDUpdates ();
-//                rightDrive.disablePeriodicPIDUpdates ();
-//
-//                gyroAdjustmentTask.stopEasyTask ();
-//                if (useRangeSensorAdjustment)
-//                    rangeSensorAdjustmentTask.stopEasyTask ();
+                leftDrive.pidUpdateTask.startEasyTask ();
+                rightDrive.pidUpdateTask.startEasyTask ();
+
+                gyroAdjustmentTask.stopEasyTask ();
+                if (useRangeSensorAdjustment)
+                    rangeSensorAdjustmentTask.stopEasyTask ();
             }
         };
         createdDriveTask.startEasyTask ();
