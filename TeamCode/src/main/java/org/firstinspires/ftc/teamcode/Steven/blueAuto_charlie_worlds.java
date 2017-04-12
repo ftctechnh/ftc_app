@@ -76,12 +76,12 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         ColorSensorRead();//sets servo to correct position
         pressBeaconButton();
         autoBeaconPresser.setPosition(initialPos);
-
-
         if (second_beacon_press == false)
         {
 
-            moveToNextBeacon();
+            moveToNextBeacon(
+
+);
         }
         else
         {
@@ -97,7 +97,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         encoderMecanumDrive(1,100,100,5,1);
 
         //if use strafing, add error correction so that it stays within a certain distance of the wall
-        lineAlignStrafe();
+        servoBeaconPress();
 
 }
     public void ColorSensorRead(){
