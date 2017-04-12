@@ -18,7 +18,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         }
         catch (Exception e)
         {
-            ConsoleManager.outputNewLineToDrivers ("Could not find " + name + " in the config file.");
+            ConsoleManager.outputNewSequentialLine ("Could not find " + name + " in the config file.");
             return null;
         }
     }
@@ -30,7 +30,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         {
             //Preliminary stuff.
             ProgramFlow.initializeWithOpMode (this);
-            ConsoleManager.setMainTelemetry (telemetry);
+            ConsoleManager.initializeWith (telemetry);
 
             //REQUIRED in MainRobotBase.
             initializeHardware ();
@@ -46,7 +46,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
         }
         catch (Exception e)
         {
-            ConsoleManager.outputNewLineToDrivers ("Ended early.");
+            ConsoleManager.outputNewSequentialLine ("Ended early.");
         }
         finally
         {

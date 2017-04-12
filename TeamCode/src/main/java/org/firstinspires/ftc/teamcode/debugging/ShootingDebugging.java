@@ -18,17 +18,17 @@ public class ShootingDebugging extends AutoBase
 
         while (true)
         {
-            ConsoleManager.outputConstantDataToDrivers (
-                    new String[]
-                            {
-                                    "F conversion " + flywheels.getRPSConversionFactor (),
-                                    "H conversion " + harvester.getRPSConversionFactor (),
-                                    "F expected " + flywheels.getExpectedTicksSinceUpdate (),
-                                    "F actual " + flywheels.getActualTicksSinceUpdate (),
-                                    "H expected " + harvester.getExpectedTicksSinceUpdate (),
-                                    "H actual " + harvester.getActualTicksSinceUpdate ()
-                            }
+            ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Shooting Debugger");
+
+            processConsole.updateWith (
+                    "F conversion " + flywheels.getRPSConversionFactor (),
+                    "H conversion " + harvester.getRPSConversionFactor (),
+                    "F expected " + flywheels.getExpectedTicksSinceUpdate (),
+                    "F actual " + flywheels.getActualTicksSinceUpdate (),
+                    "H expected " + harvester.getExpectedTicksSinceUpdate (),
+                    "H actual " + harvester.getActualTicksSinceUpdate ()
             );
+
             ProgramFlow.pauseForSingleFrame ();
         }
     }

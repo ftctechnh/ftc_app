@@ -56,6 +56,8 @@ public class TankBotDriveAround extends ImprovedOpModeBase
                 lastTimeMusicTogglePressed = System.currentTimeMillis ();
         double currentTurretPosition = 0.5;
 
+        ConsoleManager.ProcessConsole processConsole = ConsoleManager.getPrivateConsole ("Tank Bot Output");
+
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (opModeIsActive())
         {
@@ -105,11 +107,8 @@ public class TankBotDriveAround extends ImprovedOpModeBase
                 turret.setPosition(currentTurretPosition);
             }
 
-            /************** Data Output **************/
-            ConsoleManager.outputConstantDataToDrivers(new String[] {
-                    "Right power = " + rightPower,
-                    "Music playing = " + (mediaPlayer != null)
-            });
+            processConsole.updateWith ("Right power = " + rightPower, "Music playing = " + (mediaPlayer != null));
+
             /******************** END OF LOOP ********************/
 
             idle();
@@ -173,13 +172,13 @@ public class TankBotDriveAround extends ImprovedOpModeBase
                 }
             });
 
-            ConsoleManager.outputNewLineToDrivers ("Playing " + choice.toString());
+            ConsoleManager.outputNewSequentialLine ("Playing " + choice.toString());
 
             ProgramFlow.pauseForMS (1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
         }
         catch (Exception e)
         {
-            ConsoleManager.outputNewLineToDrivers ("Error while attempting to play music.");
+            ConsoleManager.outputNewSequentialLine ("Error while attempting to play music.");
             return;
         }
     }

@@ -22,7 +22,7 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
     {
         //Make sure that the robot components are found and initialized correctly.
         /*************************** DRIVING MOTORS ***************************/
-        ConsoleManager.outputNewLineToDrivers ("Setting up drive motors...");
+        ConsoleManager.outputNewSequentialLine ("Setting up drive motors...");
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
         leftDrive = new AdvancedMotorController (initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
                 setRPSConversionFactor (0.40).
@@ -34,18 +34,17 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
                 setRPSConversionFactor (0.36).
                 setAdjustmentSensitivity (.00001).
                 setAdjustmentSensitivityBounds (0.3);;
-        ConsoleManager.appendToLastOutputtedLine ("OK!");
+        ConsoleManager.appendToLastSequentialLine ("OK!");
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
-        ConsoleManager.outputNewLineToDrivers ("Setting up harvester...");
+        ConsoleManager.outputNewSequentialLine ("Setting up harvester...");
         harvester = new AdvancedMotorController (initialize (DcMotor.class, "harvester")).
                 setRPSConversionFactor (0.40).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
         harvester.resetEncoder ();
-        harvester.pidUpdateTask.startEasyTask ();
-        ConsoleManager.appendToLastOutputtedLine ("OK!");
+        ConsoleManager.appendToLastSequentialLine ("OK!");
 
-        ConsoleManager.outputNewLineToDrivers ("Setting up flywheels...");
+        ConsoleManager.outputNewSequentialLine ("Setting up flywheels...");
         flywheels = new AdvancedMotorController (initialize (DcMotor.class, "flywheels")).
                 setRPSConversionFactor (0.02). //Very little resistance on the flywheels.
                 setMotorType (AdvancedMotorController.MotorType.NeverRest3P7).
@@ -53,19 +52,18 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
                 setAdjustmentSensitivity (.00001).
                 setAdjustmentSensitivityBounds (0.3);
         flywheels.resetEncoder ();
-        flywheels.pidUpdateTask.startEasyTask ();
-        ConsoleManager.appendToLastOutputtedLine ("OK!");
+        ConsoleManager.appendToLastSequentialLine ("OK!");
 
-        ConsoleManager.outputNewLineToDrivers ("Setting up lift...");
+        ConsoleManager.outputNewSequentialLine ("Setting up lift...");
         lift = initialize (DcMotor.class, "lift");
         lift.setDirection (DcMotorSimple.Direction.REVERSE);
-        ConsoleManager.appendToLastOutputtedLine ("OK!");
+        ConsoleManager.appendToLastSequentialLine ("OK!");
 
-        ConsoleManager.outputNewLineToDrivers ("Setting up servos...");
+        ConsoleManager.outputNewSequentialLine ("Setting up servos...");
         rightButtonPusher = new SmartServo (initialize (Servo.class, "rightButtonPusher"), 0.5);
         frontButtonPusher = new SmartServo (initialize (Servo.class, "frontButtonPusher"), .21, .84, .84);
         capBallHolder = new SmartServo (initialize (Servo.class, "clamp"), .02, .02, 1.0);
-        ConsoleManager.appendToLastOutputtedLine ("OK!");
+        ConsoleManager.appendToLastSequentialLine ("OK!");
 
         //Certain things are only applicable in autonomous or teleop.
         initializeOpModeSpecificHardware ();

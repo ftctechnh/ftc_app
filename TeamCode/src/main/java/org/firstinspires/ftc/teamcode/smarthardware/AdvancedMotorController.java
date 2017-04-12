@@ -150,7 +150,7 @@ public class AdvancedMotorController
     }
 
     /******* THREADING *********/
-    public final EasyAsyncTask pidUpdateTask = new EasyAsyncTask ()
+    public final EasyAsyncTask pidUpdateTask = new EasyAsyncTask ("PID")
     {
         @Override
         protected void taskToAccomplish () throws InterruptedException

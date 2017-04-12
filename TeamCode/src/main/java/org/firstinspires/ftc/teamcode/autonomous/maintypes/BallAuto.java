@@ -17,6 +17,8 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
         long delay = 0;
         long lastDelayIncrementTime = 0;
 
+        ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Selected Options");
+
         //Get input stuff for delay, etc.
         while (!opModeIsActive ()) //While start not pressed
         {
@@ -39,17 +41,16 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
             if (gamepad1.x || gamepad2.x)
                 parkOnCenterVortex = true;
 
-            ConsoleManager.outputConstantDataToDrivers (
-                    new String[]
-                            {
-                                    "Delay (DPAD) is " + delay,
-                                    "Getting cap ball (Y) = " + getCapBall,
-                                    "Parking on Center Vortex (X) = " + parkOnCenterVortex
-                            }
+            processConsole.updateWith (
+                    "Delay (DPAD) is " + delay,
+                    "Getting cap ball (Y) = " + getCapBall,
+                    "Parking on Center Vortex (X) = " + parkOnCenterVortex
             );
 
             ProgramFlow.pauseForSingleFrame ();
         }
+
+        processConsole.destroy ();
 
         ProgramFlow.pauseForMS (delay);
     }
@@ -60,16 +61,16 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
         int autonomousSign = (onBlueAlliance ? 1 : -1);
 
         //Drive to the cap ball.
-        ConsoleManager.outputNewLineToDrivers ("Driving to shooting position...");
+        ConsoleManager.outputNewSequentialLine ("Driving to shooting position...");
         drive (SensorStopType.Ultrasonic, 40, PowerUnits.RevolutionsPerMinute, 1);
 
         //Shoot the balls into the center vortex.
-        ConsoleManager.outputNewLineToDrivers("Shooting balls into center vortex...");
+        ConsoleManager.outputNewSequentialLine("Shooting balls into center vortex...");
         shootBallsIntoCenterVortex ();
 
         if (parkOnCenterVortex)
         {
-            ConsoleManager.outputNewLineToDrivers ("Parking on center vortex...");
+            ConsoleManager.outputNewSequentialLine ("Parking on center vortex...");
             drive(SensorStopType.Distance, 1400, PowerUnits.RevolutionsPerMinute, 2);
             return; //End prematurely
         }
@@ -77,22 +78,22 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
         if (getCapBall)
         {
             //Drive the remainder of the distance.
-            ConsoleManager.outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
+            ConsoleManager.outputNewSequentialLine ("Knocking the cap ball off of the pedestal...");
             drive(SensorStopType.Distance, 1800, PowerUnits.RevolutionsPerMinute, 3);
 
             //Turn to face the ramp from the position that we drove.
-            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading...");
+            ConsoleManager.outputNewSequentialLine ("Turning to the appropriate heading...");
             turnToHeading (110 * autonomousSign, TurnMode.BOTH, 3000);
         }
         else
         {
             //Turn to face the ramp from the position that we drove.
-            ConsoleManager.outputNewLineToDrivers ("Turning to the appropriate heading...");
+            ConsoleManager.outputNewSequentialLine ("Turning to the appropriate heading...");
             turnToHeading (70 * autonomousSign, TurnMode.BOTH, 3000);
         }
 
         //Drive until we reach the appropriate position.
-        ConsoleManager.outputNewLineToDrivers ("Driving to the ramp...");
+        ConsoleManager.outputNewSequentialLine ("Driving to the ramp...");
         drive(SensorStopType.Distance, 1000, PowerUnits.RevolutionsPerMinute, 1);
     }
 }

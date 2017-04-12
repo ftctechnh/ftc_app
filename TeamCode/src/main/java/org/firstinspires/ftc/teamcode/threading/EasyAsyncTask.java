@@ -4,11 +4,19 @@ import android.os.AsyncTask;
 
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 
-public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
+public abstract class EasyAsyncTask extends AsyncTask<Void, Void, Void>
 {
+    private String name;
+    public EasyAsyncTask(String name)
+    {
+        super();
+
+        this.name = name;
+    }
+
     /***** OBJECT SPECIFIC STUFF *****/
     @Override
-    protected String doInBackground (String... params)
+    protected Void doInBackground (Void... params)
     {
         try
         {
@@ -16,37 +24,46 @@ public abstract class EasyAsyncTask extends AsyncTask<String, Void, String>
         }
         catch (InterruptedException e)
         {
-            taskOnCompletion ();
-            return "Ended early!";
+            stopEasyTask ();
         }
 
-        return "Success!";
+        return null;
     }
 
-    @Override
-    protected void onPostExecute(String result) {}
-
-    @Override
-    protected void onPreExecute() {}
-
-    @Override
-    protected void onProgressUpdate(Void... values) {}
-
     /******** CUSTOM WRITTEN ********/
-    public void startEasyTask ()
+    public void startEasyTask () throws InterruptedException
     {
-        if (getStatus () != Status.RUNNING)
-            this.executeOnExecutor (AsyncTask.THREAD_POOL_EXECUTOR, "");
+        try
+        {
+            if (getStatus () != Status.RUNNING)
+            {
+                this.executeOnExecutor (AsyncTask.THREAD_POOL_EXECUTOR);
+                ConsoleManager.outputNewSequentialLine ("Started " + name + " AsyncTask!");
+            }
+        }
+        catch (Exception e)
+        {
+            ConsoleManager.outputNewSequentialLine ("Error while attempting to start " + name + " AsyncTask!  Trying again...");
+            ProgramFlow.pauseForMS (200);
+            startEasyTask ();
+        }
     }
     public void stopEasyTask ()
     {
-        if (getStatus () != Status.FINISHED)
+        try
         {
-            output = 0;
+            if (getStatus () != Status.FINISHED)
+            {
+                output = 0;
+                taskOnCompletion ();
+                this.cancel (true);
 
-            taskOnCompletion ();
-
-            this.cancel (true);
+                ConsoleManager.outputNewSequentialLine ("Stopped " + name + " AsyncTask!");
+            }
+        }
+        catch (Exception e)
+        {
+            ConsoleManager.outputNewSequentialLine ("Error while attempting to stop " + name + " AsyncTask!  Trying again...");
         }
     }
 

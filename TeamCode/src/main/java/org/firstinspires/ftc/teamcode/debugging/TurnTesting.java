@@ -18,7 +18,7 @@ public class TurnTesting extends AutoBase
         {
             turnToHeading (turnSign * (90 * ((turns + 1) % 4)), TurnMode.BOTH, 4000);
             hardBrake (0);
-            ConsoleManager.outputNewLineToDrivers ("Turn " + turns + " completed.");
+            ConsoleManager.outputNewSequentialLine ("Turn " + turns + " completed.");
             ProgramFlow.pauseForMS (2000);
             turns++;
         }

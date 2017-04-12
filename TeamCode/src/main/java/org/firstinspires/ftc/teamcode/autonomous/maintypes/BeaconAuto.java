@@ -20,23 +20,23 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
         /******** STEP 1: SHOOT, DRIVE, TURN TO BE PARALLEL WITH WALL ********/
 
         //Drive until we are just far enough from the cap ball to score reliably.
-        ConsoleManager.outputNewLineToDrivers("Driving forward to the cap ball to score...");
+        ConsoleManager.outputNewSequentialLine("Driving forward to the cap ball to score...");
         drive(SensorStopType.Ultrasonic, 39, PowerUnits.RevolutionsPerSecond, 1);
 
         //Shoot the balls into the center vortex.
-        ConsoleManager.outputNewLineToDrivers("Shooting balls into center vortex...");
+        ConsoleManager.outputNewSequentialLine("Shooting balls into center vortex...");
         shootBallsIntoCenterVortex ();
 
         //Turn to face the wall directly.
-        ConsoleManager.outputNewLineToDrivers("Turning to face wall at an angle...");
+        ConsoleManager.outputNewSequentialLine("Turning to face wall at an angle...");
         turnToHeading(73 * autonomousSign, TurnMode.BOTH, 3000);
 
         //Drive to the wall and stopEasyTask once a little ways away.
-        ConsoleManager.outputNewLineToDrivers ("Driving to the wall...");
+        ConsoleManager.outputNewSequentialLine ("Driving to the wall...");
         drive (SensorStopType.Ultrasonic, (onBlueAlliance ? 31 : 36), PowerUnits.RevolutionsPerSecond, 1);
 
         //Turn back to become parallel with the wall.
-        ConsoleManager.outputNewLineToDrivers("Turning to become parallel to the wall...");
+        ConsoleManager.outputNewSequentialLine("Turning to become parallel to the wall...");
         turnToHeading(onBlueAlliance ? 0 : -180, TurnMode.BOTH, 3000);
 
         //For each of the two beacons.
@@ -45,11 +45,11 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             /******** STEP 2: FIND AND CENTER SELF ON BEACON ********/
 
             //Drive up to the line.
-            ConsoleManager.outputNewLineToDrivers ("Looking for beacon " + currentBeacon);
+            ConsoleManager.outputNewSequentialLine ("Looking for beacon " + currentBeacon);
             drive(SensorStopType.BottomColorAlpha, 5, PowerUnits.RevolutionsPerSecond, BEACON_DP);
 
             //Extend the button pusher until the colors become distinctly visible.
-            ConsoleManager.outputNewLineToDrivers ("Extending color sensing apparatus to see the beacon colors.");
+            ConsoleManager.outputNewSequentialLine ("Extending color sensing apparatus to see the beacon colors.");
             long extensionStartTime = System.currentTimeMillis ();
             rightButtonPusher.setServoPosition (0); //Start button pusher extension.
 
@@ -68,7 +68,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
             /******** STEP 3: PRESS AND VERIFY THE BEACON!!!!! ********/
 
-            ConsoleManager.outputNewLineToDrivers ("Beacon spotted!  Initiating pressing steps...");
+            ConsoleManager.outputNewSequentialLine ("Beacon spotted!  Initiating pressing steps...");
 
             //While the beacon is not completely blue (this is the verification step).
             int failedAttempts = 0; //The robot tries different drive lengths for each trial.
@@ -76,33 +76,33 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
             while (onBlueAlliance ? (!(option1Blue && option2Blue)) : (!(option1Red && option2Red)))
             {
-                ConsoleManager.outputNewLineToDrivers ("Beacon is not colored correctly, attempting to press the correct color!");
+                ConsoleManager.outputNewSequentialLine ("Beacon is not colored correctly, attempting to press the correct color!");
 
                 //The possible events that could occur upon either verification or first looking at the beacon, Different drives are attempted for each trial.
                 int driveDistance;
                 double drivePower;
                 if (option1Blue && option2Red)
                 {
-                    ConsoleManager.outputNewLineToDrivers ("Chose option 1");
+                    ConsoleManager.outputNewSequentialLine ("Chose option 1");
                     driveDistance = (onBlueAlliance ? 90 : 60) + 20 * failedAttempts;
                     drivePower = BEACON_DP;
                 }
                 else if (option1Red && option2Blue)
                 {
-                    ConsoleManager.outputNewLineToDrivers ("Chose option 2");
+                    ConsoleManager.outputNewSequentialLine ("Chose option 2");
                     driveDistance = (onBlueAlliance ? 150 : 130) + 20 * failedAttempts;
                     drivePower = -BEACON_DP;
                 }
                 else if (option1Blue ? (option1Red && option2Red) : (option1Blue && option2Blue))
                 {
-                    ConsoleManager.outputNewLineToDrivers ("Neither option is the correct color, toggling beacon!");
+                    ConsoleManager.outputNewSequentialLine ("Neither option is the correct color, toggling beacon!");
                     driveDistance = (onBlueAlliance ? 90 : 60) + 20 * failedAttempts;
                     drivePower = -BEACON_DP;
                 }
                 else
                 {
                     failedAttempts = -1; //This will be incremented and returned to 0, fear not.
-                    ConsoleManager.outputNewLineToDrivers ("Can't see the beacon clearly, so extending to see it.");
+                    ConsoleManager.outputNewSequentialLine ("Can't see the beacon clearly, so extending to see it.");
                     driveDistance = 100;
                     drivePower = BEACON_DP + .1;
                 }
@@ -126,12 +126,12 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
                 updateColorSensorStates ();
             }
 
-            ConsoleManager.outputNewLineToDrivers ("Success!  The beacon is completely blue.");
+            ConsoleManager.outputNewSequentialLine ("Success!  The beacon is completely blue.");
 
             //Retract almost completely and then drive to the next one.
-            ConsoleManager.outputNewLineToDrivers ("Retracting color sensing apparatus for the next beacon.");
+            ConsoleManager.outputNewSequentialLine ("Retracting color sensing apparatus for the next beacon.");
             rightButtonPusher.setServoPosition (1);
-            sleep (timeTakenToSeeColors);
+            ProgramFlow.pauseForMS (timeTakenToSeeColors);
             rightButtonPusher.setServoPosition (.5);
 
             drive (SensorStopType.Distance, 500, PowerUnits.RevolutionsPerSecond, autonomousSign * (BEACON_DP + 1));
@@ -141,7 +141,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
         /******** STEP 4: PARK AND KNOCK OFF THE CAP BALL ********/
 
         //Dash backward to the ramp afterward.
-        ConsoleManager.outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
+        ConsoleManager.outputNewSequentialLine ("Knocking the cap ball off of the pedestal...");
         turnToHeading(onBlueAlliance ? 36 : -216, TurnMode.BOTH, 2000);
         drive (SensorStopType.Distance, 3000, PowerUnits.RevolutionsPerSecond, -BEACON_DP);
     }

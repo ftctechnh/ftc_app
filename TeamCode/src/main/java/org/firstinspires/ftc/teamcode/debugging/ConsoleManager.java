@@ -3,55 +3,94 @@ package org.firstinspires.ftc.teamcode.debugging;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ConsoleManager
 {
     private static Telemetry mainTelemetry;
-    public static void setMainTelemetry(Telemetry someTelemetry)
+    public static void initializeWith (Telemetry someTelemetry)
     {
         mainTelemetry = someTelemetry;
-        currentConsoleDisplay = new ArrayList<> ();
+        sequentialConsoleData = new ArrayList<> ();
+        privateProcessConsoles = new ArrayList<> ();
     }
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES PROVIDE ***/
-    private static ArrayList<String> currentConsoleDisplay;
-    private static int maxLines = 13;
-
-    public static void outputNewLineToDrivers(String newLine)
+    private static ArrayList<String> sequentialConsoleData; //Lines being added and removed.
+    private static int maxSequentialLines = 13;
+    public static void outputNewSequentialLine(String newLine)
     {
         //Add new line at beginning of the lines.
-        currentConsoleDisplay.add(0, newLine);
+        sequentialConsoleData.add(0, newLine);
         //If there is more than 5 lines there, remove one.
-        if (currentConsoleDisplay.size() > maxLines)
-            currentConsoleDisplay.remove(maxLines);
+        if (sequentialConsoleData.size() > maxSequentialLines)
+            sequentialConsoleData.remove(maxSequentialLines);
 
-        refreshConsole ();
+        rebuildConsole ();
+    }
+    public static void appendToLastSequentialLine(String toAppend)
+    {
+        String result = sequentialConsoleData.get (0) + toAppend;
+        sequentialConsoleData.remove (0);
+        sequentialConsoleData.add (0, result);
+
+        rebuildConsole ();
     }
 
-    public static void appendToLastOutputtedLine(String toAppend)
+    //Private process data.
+    private static ArrayList <ProcessConsole> privateProcessConsoles;
+    public static class ProcessConsole
     {
-        String result = currentConsoleDisplay.get (0) + toAppend;
-        currentConsoleDisplay.remove (0);
-        currentConsoleDisplay.add (0, result);
+        public final String processName;
+        public String[] processData;
 
-        refreshConsole ();
+        public ProcessConsole(String processName)
+        {
+            this.processName = processName;
+        }
+
+        public void updateWith(String... processData)
+        {
+            this.processData = processData;
+            rebuildConsole ();
+        }
+
+        public void destroy()
+        {
+            privateProcessConsoles.remove(this);
+        }
     }
-
-    //Allows for more robust output of actual data instead of line by line without wrapping.  Used for driving and turning.
-    public static void outputConstantDataToDrivers(String[] data)
+    public static ProcessConsole getPrivateConsole(String processName)
     {
-        mainTelemetry.update();
-        for (String s : data)
-            mainTelemetry.addLine(s);
-        mainTelemetry.update();
+        ProcessConsole newProcessConsole = new ProcessConsole (processName);
+        privateProcessConsoles.add(newProcessConsole);
+        return newProcessConsole;
     }
-
-    private static void refreshConsole()
+    public static void rebuildConsole()
     {
-        //Output every line in order.
-        mainTelemetry.update(); //Empty the output
-        for (String s : currentConsoleDisplay)
-            mainTelemetry.addLine(s); //add all lines
-        mainTelemetry.update(); //updateMotorPowerWithPID the output with the added lines.
+        //Clear all lines.
+        mainTelemetry.update ();
+
+        //Add all private console data.
+        for (ProcessConsole pConsole : privateProcessConsoles)
+        {
+            mainTelemetry.addLine ("----- " + pConsole.processName + " -----");
+
+            for (String line : pConsole.processData)
+                mainTelemetry.addLine (line);
+
+            mainTelemetry.addLine ("");
+        }
+
+        mainTelemetry.addLine ("----- Sequential Data -----");
+        for (String line : sequentialConsoleData)
+        {
+            mainTelemetry.addLine (line);
+        }
+
+        //Refresh the console with this new data.
+        mainTelemetry.update ();
     }
 }
