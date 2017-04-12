@@ -142,7 +142,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
 
         //Dash backward to the ramp afterward.
         ConsoleManager.outputNewLineToDrivers ("Knocking the cap ball off of the pedestal...");
-        turnToHeading(36 * autonomousSign - (onBlueAlliance ? 0 : 180), TurnMode.BOTH, 2000);
+        turnToHeading(onBlueAlliance ? 36 : -216, TurnMode.BOTH, 2000);
         drive (SensorStopType.Distance, 3000, PowerUnits.RevolutionsPerSecond, -BEACON_DP);
     }
 }

@@ -12,10 +12,10 @@ public class SmartGyroSensor
     {
         this.sensor = gyroSensor;
 
-        calibrate ();
+        calibrate (true);
     }
 
-    public void calibrate() throws InterruptedException
+    public void calibrate(boolean zeroHeading) throws InterruptedException
     {
         //Pause to prevent odd errors in which it says it's configured but is actually LYING.
         ProgramFlow.pauseForMS (1000);
@@ -25,7 +25,8 @@ public class SmartGyroSensor
             ProgramFlow.pauseForMS (50);
 
         //Zero gyro heading.
-        zeroHeading();
+        if (zeroHeading)
+            zeroHeading();
     }
 
     //Just resets the gyro.
