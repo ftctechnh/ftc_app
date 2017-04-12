@@ -269,7 +269,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
     }
 
-    private void touchSensorDrive() {
+    protected void touchSensorDrive() {
         // lower the touch sensor servo
         touchSensorServo.setPosition(0.14);
 
@@ -282,7 +282,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         // raise the servo back up
         touchSensorServo.setPosition(0.7);
 
-        // drive back from beacon four inches
+        // drive back from beacon
         encoderDrive(0.2, 1, RobotDirection.BACKWARD);
 
         // be square with wall
@@ -305,18 +305,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        touchSensorDrive();
-
-        // drive left to white line
-        stopOnLine(0.1, RobotDirection.LEFT);
-
         // reset again before pressing beacon
         gyroPivot(0.8, 0, true);
 
         // when the beacon is already claimed, move on
         if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
-            // drive to 20cm from wall
-            rangeSensorDrive(20, 0.1);
+            // drive to 15cm from wall
+            rangeSensorDrive(15, 0.1);
             return;
         }
 
@@ -403,12 +398,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        touchSensorDrive();
+        // reset again before pressing beacon
+        gyroPivot(0.8, 0, true);
 
         // when the beacon is already claimed, move on
         if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
-            // drive to 20cm from wall
-            rangeSensorDrive(20, 0.1);
+            // drive to 15cm from wall
+            rangeSensorDrive(15, 0.1);
             return;
         }
 
@@ -424,6 +420,12 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         } else {
             telemetry.addData(">", "beacon not detected!");
             telemetry.update();
+        }
+
+        // wait for button pusher servo
+        robotRuntime.reset();
+        while(opModeIsActive() && robotRuntime.milliseconds() < 600) {
+            idle();
         }
 
         // put the button pusher servos down
@@ -443,14 +445,17 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                 telemetry.addData(">", "beacon not detected!");
                 telemetry.update();
             }
+
+            // wait for button pusher servo
+            robotRuntime.reset();
+            while(opModeIsActive() && robotRuntime.milliseconds() < 600) {
+                idle();
+            }
         }
 
         // put the button pusher servos back
         beaconsServo1.setPosition(0);
         beaconsServo2.setPosition(1);
-
-        // drive backward to 15 cm
-        rangeSensorDrive(15, 0.1);
     }
 
     /**
@@ -594,6 +599,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    private boolean isBeaconDetected() {
+        return  (colorSensor2.red() > 0 || colorSensor2.blue() > 0);
+    }
+
     /**
      * Drives along a wall at a set distance with proportional correction
      * using encoders the range sensor, and the gyro sensor.
@@ -662,6 +671,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             currRangeValue = frontRange.cmUltrasonic();
 
+            // use last read value that is not 255
             if(currRangeValue != 255) {
                 lastRangeValue = currRangeValue;
             }

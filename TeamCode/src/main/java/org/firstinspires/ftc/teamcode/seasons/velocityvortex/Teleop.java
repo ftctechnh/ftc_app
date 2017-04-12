@@ -169,7 +169,7 @@ public class Teleop extends LinearOpModeBase {
 
         telemetry.addData("launcher chamber cs", getLauncherChamberColorSensor().alpha());
 
-//        telemetry.addData("Touch sensor pressed", getTouchSensor().isPressed());
+        telemetry.addData("Touch sensor pressed", getTouchSensor().isPressed());
 
         telemetry.update();
     }

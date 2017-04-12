@@ -52,28 +52,29 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // drive left to white line
+        stopOnLine(0.1, RobotDirection.LEFT);
+
+        gyroPivot(0.8, 0, true);
+
+        touchSensorDrive();
+
         // claim the first beacon
         claimBeaconRed();
 
         // back up from wall
         rangeSensorDrive(15, 0.2);
 
-        rangeGyroStrafe(0, 20, 41, RobotDirection.RIGHT);
+        rangeGyroStrafe(0, 15, 35, RobotDirection.RIGHT);
 
-        // drive left to white line
-//        stopOnLine(0.05, RobotDirection.LEFT);
+        rangeSensorDrive(10, 0.2);
 
-        // gyro pivot
-        //gyroPivot(0.8, 0, false);
+        // drive right to white line
+        stopOnLine(0.1, RobotDirection.RIGHT);
 
-        // strafe past the second beacon line
-        //encoderStrafe(0.4, 16, 16);
-
-        // look for the white line leading to the second beacon
-        //stopOnLine(0.05, false);
-
-        // reset before pressing beacon
         gyroPivot(0.8, 0, true);
+
+        touchSensorDrive();
 
         // claim the second beacon
         claimBeaconRed();
@@ -121,9 +122,6 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
             telemetry.update();
             idle();
         }
-
-        // pivot to eighty again
-        //gyroPivot(0.8, 80);
 
         // drive left a foot
         encoderDrive(1.0, 12, RobotDirection.LEFT);
