@@ -7,11 +7,14 @@ import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
 public abstract class EasyAsyncTask extends AsyncTask<Void, Void, Void>
 {
     private String name;
-    public EasyAsyncTask(String name)
+    protected Object[] properties;
+    public EasyAsyncTask(String name, Object... properties)
     {
         super();
 
         this.name = name;
+
+        this.properties = properties;
     }
 
     /***** OBJECT SPECIFIC STUFF *****/
@@ -54,7 +57,6 @@ public abstract class EasyAsyncTask extends AsyncTask<Void, Void, Void>
         {
             if (getStatus () != Status.FINISHED)
             {
-                output = 0;
                 taskOnCompletion ();
                 this.cancel (true);
 
@@ -67,8 +69,14 @@ public abstract class EasyAsyncTask extends AsyncTask<Void, Void, Void>
         }
     }
 
-    //Can't just create a variable that is not final in an anonymous class, so it has to be declared here.
-    public double output = 0;
+    public void setProperties(Object... properties)
+    {
+        this.properties = properties;
+    }
+    public Object[] getProperties ()
+    {
+        return properties;
+    }
 
     //Each method is handled in an anonymous class.
     protected abstract void taskToAccomplish() throws InterruptedException;

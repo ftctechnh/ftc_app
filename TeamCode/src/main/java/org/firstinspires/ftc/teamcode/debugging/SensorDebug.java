@@ -14,7 +14,8 @@ public class SensorDebug extends AutoBase
     {
         ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Sensor Debugging");
 
-        while (true) {
+        while (true)
+        {
             processConsole.updateWith (
                     "Option 1 Color Sensor",
                     "ARGB: " + option1ColorSensor.sensor.argb() + " Alpha: " + option1ColorSensor.sensor.alpha(),

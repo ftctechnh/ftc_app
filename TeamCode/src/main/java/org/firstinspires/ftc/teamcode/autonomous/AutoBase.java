@@ -21,6 +21,44 @@ public abstract class AutoBase extends MainRobotBase
     /**** Range Sensors ****/
     protected SmartRangeSensor frontRangeSensor, sideRangeSensor;
 
+    private final EasyAsyncTask rangeSensorAdjustmentTask = new EasyAsyncTask ("Side Range Drive Adjustments", 0.0)
+    {
+        private ConsoleManager.ProcessConsole processConsole;
+
+        @Override
+        protected void taskToAccomplish () throws InterruptedException
+        {
+            //Create a new process console for the range sensor output.
+            processConsole = new ConsoleManager.ProcessConsole ("Range Sensor Adjustment");
+
+            while (true)
+            {
+                double observedDistance = sideRangeSensor.getVALIDDistCM ();
+                if (observedDistance >= 255)
+                    properties[0] = 0;
+                else
+                {
+                    double offFromDist = 13 - sideRangeSensor.getVALIDDistCM (); //Potentially takes a while to actually return a value.
+                    properties[0] = Math.signum (offFromDist) * (Math.abs (offFromDist) * 0.15);
+                }
+
+                processConsole.updateWith (
+                        "Front range sensor dist = " + observedDistance,
+                        "Suggested adjustment = " + Double.valueOf (properties[0].toString ())
+                );
+
+                ProgramFlow.pauseForMS (30);
+            }
+        }
+
+        @Override
+        protected void taskOnCompletion ()
+        {
+            processConsole.destroy ();
+            properties[0] = 0;
+        }
+    };
+
     /**** Color Sensors (3) ****/
     protected SmartColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
@@ -36,6 +74,197 @@ public abstract class AutoBase extends MainRobotBase
     /**** Gyro ****/
     protected SmartGyroSensor gyroscope;
     private int desiredHeading = 0; //Massively important to maintaining stability through the drives.
+
+    private final EasyAsyncTask gyroAdjustmentTask = new EasyAsyncTask ("Gyro Drive Adjustments", 0.0)
+    {
+        private ConsoleManager.ProcessConsole processConsole;
+
+        @Override
+        protected void taskToAccomplish () throws InterruptedException
+        {
+            processConsole = new ConsoleManager.ProcessConsole ("Gyro Adjusting");
+
+            while (true)
+            {
+                int offFromHeading = desiredHeading - gyroscope.getValidGyroHeading (desiredHeading);
+                properties[0] = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15);
+
+                processConsole.updateWith (
+                        "Gyro off from heading = " + offFromHeading,
+                        "Suggested adjustment = " + Double.valueOf (properties[0].toString ())
+                );
+
+                ProgramFlow.pauseForMS (30);
+            }
+        }
+
+        @Override
+        protected void taskOnCompletion ()
+        {
+            processConsole.destroy ();
+            properties[0] = 0;
+        }
+    };
+
+    /******** Robot Driving ********/
+    protected enum PowerUnits
+    {
+        RevolutionsPerSecond(1), RevolutionsPerMinute(1.0/60);
+
+        public final double conversionFactor;
+        PowerUnits(double conversionFactor)
+        {
+            this.conversionFactor = conversionFactor;
+        }
+    }
+    protected enum SensorStopType
+    {
+        Distance, Ultrasonic, BottomColorAlpha
+    }
+
+    //Creates a driving thread and then waits for the stopEasyTask signal from the sensors.
+    private final EasyAsyncTask intelligentDriveTask = new EasyAsyncTask ("Intelligent Driving")
+    {
+        private ConsoleManager.ProcessConsole processConsole;
+
+        private boolean rangeSensorAdjustmentEnabled = false;
+
+        @Override
+        protected void taskToAccomplish () throws InterruptedException
+        {
+            double driveRPS = Double.valueOf (properties[0].toString ());
+            rangeSensorAdjustmentEnabled = (Boolean) (properties[1]);
+
+            //Reset encoders and start to run PID task
+            leftDrive.resetEncoder ();
+            rightDrive.resetEncoder ();
+            leftDrive.pidUpdateTask.startEasyTask ();
+            rightDrive.pidUpdateTask.startEasyTask ();
+
+            //Start both adjustment tasks.
+            gyroAdjustmentTask.startEasyTask ();
+            if (rangeSensorAdjustmentEnabled)
+                rangeSensorAdjustmentTask.startEasyTask ();
+
+            processConsole = ConsoleManager.getPrivateConsole ("Int. Drive Task");
+
+            //Start to drive, adjusting based on the tasks above.
+            double gyroAdjustmentFactor, rangeSensorAdjustmentFactor = 0.0, adjustmentFactor, leftPower, rightPower;
+            while (true)
+            {
+                gyroAdjustmentFactor = Math.signum (driveRPS) * Double.valueOf (gyroAdjustmentTask.getProperties ()[0].toString ());
+                if (rangeSensorAdjustmentEnabled)
+                    rangeSensorAdjustmentFactor = Double.valueOf (rangeSensorAdjustmentTask.getProperties ()[0].toString ());
+                adjustmentFactor = gyroAdjustmentFactor + rangeSensorAdjustmentFactor;
+
+                leftPower = driveRPS * (1 + adjustmentFactor);
+                rightPower = driveRPS * (1 - adjustmentFactor);
+                leftDrive.setRPS (leftPower);
+                rightDrive.setRPS (rightPower);
+
+                processConsole.updateWith (
+                        "Total adjustment factor = " + adjustmentFactor,
+                        "Left power = " + leftPower,
+                        "Right power = " + rightPower,
+                        "Left Drive PID conversion = " + leftDrive.getRPSConversionFactor (),
+                        "Right Drive PID conversion = " + rightDrive.getRPSConversionFactor ()
+                );
+
+                ProgramFlow.pauseForMS (20);
+            }
+        }
+
+        @Override
+        protected void taskOnCompletion ()
+        {
+            ConsoleManager.outputNewSequentialLine ("Ended drive task.");
+            processConsole.destroy ();
+
+            //Stop PID tasks
+            leftDrive.pidUpdateTask.stopEasyTask ();
+            rightDrive.pidUpdateTask.stopEasyTask ();
+
+            //Stop both sensor adjustment things.
+            gyroAdjustmentTask.stopEasyTask ();
+            if (rangeSensorAdjustmentEnabled)
+                rangeSensorAdjustmentTask.stopEasyTask ();
+        }
+    };
+    protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure) throws InterruptedException
+    {
+        drive(sensorStopType, stopValue, powerUnit, powerMeasure, false);
+    }
+    protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, boolean useRangeSensorAdjustment) throws InterruptedException
+    {
+        //Create a new output console entirely for this process.
+        ConsoleManager.ProcessConsole driveTerminationConsole = new ConsoleManager.ProcessConsole ("Drive Terminator");
+
+        //Create the AsyncTask which will handle driving, with the other things encapsulated within it.
+        intelligentDriveTask.setProperties (powerMeasure * powerUnit.conversionFactor, useRangeSensorAdjustment);
+
+        //Start the actual task.
+        intelligentDriveTask.startEasyTask ();
+
+        //Allows us to know when we stopEasyTask.
+        boolean reachedFinalDest = false;
+
+        //Actual adjustment aspect of driving.
+        while (!reachedFinalDest)
+        {
+            //Causes program termination.
+            switch (sensorStopType)
+            {
+                case Distance:
+                    //End early if this is pointless.
+                    if (stopValue == 0)
+                        break;
+
+                    int powerSign = (int) (Math.signum (powerMeasure));
+                    double currentDistance = (leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0;
+                    reachedFinalDest = stopValue * powerSign <= currentDistance * powerSign;
+
+                    driveTerminationConsole.updateWith (
+                            "Current encoder position = " + currentDistance,
+                            "Stopping at position = " + stopValue
+                    );
+
+                    break;
+
+                case Ultrasonic:
+                    double currentRangeVal = frontRangeSensor.getVALIDDistCM ();
+                    reachedFinalDest = currentRangeVal <= stopValue;
+
+                    driveTerminationConsole.updateWith (
+                            "Current range sensor val = " + currentRangeVal,
+                            "Stopping at range = " + stopValue
+                    );
+
+                    break;
+
+                case BottomColorAlpha:
+                    int currentBottomAlpha = bottomColorSensor.sensor.alpha ();
+                    reachedFinalDest = currentBottomAlpha >= stopValue;
+
+                    driveTerminationConsole.updateWith (
+                            "Current bottom alpha = " + currentBottomAlpha,
+                            "Stopping at alpha >= " + stopValue
+                    );
+
+                    break;
+            }
+
+            ProgramFlow.pauseForSingleFrame ();
+        }
+
+        //Private console no longer required.
+        driveTerminationConsole.destroy ();
+
+        //Now that the main thread has realized that we have reached the final destination, stop the driving thread.
+        intelligentDriveTask.stopEasyTask ();
+
+        //Brake for 100 ms in order to make sure we have completely stopped.
+        hardBrake (100);
+    }
 
     //Used to turn to a specified heading, and returns the difference between the desired angle and the actual angle achieved.
     protected enum TurnMode {
@@ -104,226 +333,6 @@ public abstract class AutoBase extends MainRobotBase
         //Remove the console being used to output to the drivers.
         turnConsole.destroy ();
 
-        hardBrake (100);
-    }
-
-    /******** DRIVING METHOD ********/
-    protected enum PowerUnits
-    {
-        RevolutionsPerSecond(1), RevolutionsPerMinute(1.0/60);
-
-        public final double conversionFactor;
-        PowerUnits(double conversionFactor)
-        {
-            this.conversionFactor = conversionFactor;
-        }
-    }
-    protected enum SensorStopType
-    {
-        Distance, Ultrasonic, BottomColorAlpha
-    }
-
-    //Create both tasks.
-    private double driveRPS;
-    private boolean useRangeSensor;
-    private final EasyAsyncTask
-            gyroAdjustmentTask = new EasyAsyncTask ("Gyroscope Suggested Adjustments")
-    {
-        private ConsoleManager.ProcessConsole processConsole;
-
-        @Override
-        protected void taskToAccomplish () throws InterruptedException
-        {
-            while (true)
-            {
-                int offFromHeading = desiredHeading - gyroscope.getValidGyroHeading (desiredHeading);
-                output = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15);
-
-                processConsole.updateWith (
-                        "Gyro off from heading = " + offFromHeading,
-                        "Suggested adjustment = " + output
-                );
-
-                ProgramFlow.pauseForMS (30);
-            }
-        }
-
-        @Override
-        protected void taskOnCompletion ()
-        {
-            processConsole.destroy ();
-
-            output = 0;
-        }
-    },
-            rangeSensorAdjustmentTask = new EasyAsyncTask ("Range Sensor Suggested Adjustments")
-    {
-        private ConsoleManager.ProcessConsole processConsole;
-
-        @Override
-        protected void taskToAccomplish () throws InterruptedException
-        {
-            //Create a new process console for the range sensor output.
-            processConsole = new ConsoleManager.ProcessConsole ("Range Sensor Adjustment");
-
-            while (true)
-            {
-                double observedDistance = sideRangeSensor.getVALIDDistCM ();
-                if (observedDistance >= 255)
-                    output = 0;
-                else
-                {
-                    double offFromDist = 13 - sideRangeSensor.getVALIDDistCM (); //Potentially takes a while to actually return a value.
-                    output = Math.signum (offFromDist) * (Math.abs (offFromDist) * 0.15);
-                }
-
-                processConsole.updateWith (
-                        "Front range sensor dist = " + observedDistance,
-                        "Suggested adjustment = " + output
-                );
-
-                ProgramFlow.pauseForMS (30);
-            }
-        }
-
-        @Override
-        protected void taskOnCompletion ()
-        {
-            processConsole.destroy ();
-            output = 0;
-        }
-    },
-            intelligentDriveTask = new EasyAsyncTask ("Intelligent Driving")
-    {
-        private ConsoleManager.ProcessConsole processConsole;
-
-        @Override
-        protected void taskToAccomplish () throws InterruptedException
-        {
-            //Reset encoders and start to run PID task
-            leftDrive.resetEncoder ();
-            rightDrive.resetEncoder ();
-            leftDrive.pidUpdateTask.startEasyTask ();
-            rightDrive.pidUpdateTask.startEasyTask ();
-
-            //Start both adjustment tasks.
-            gyroAdjustmentTask.startEasyTask ();
-            if (useRangeSensor)
-                rangeSensorAdjustmentTask.startEasyTask ();
-
-            processConsole = ConsoleManager.getPrivateConsole ("Int. Drive Task");
-
-            //Start to drive, adjusting based on the tasks above.
-            double gyroAdjustmentFactor, rangeSensorAdjustmentFactor;
-            while (true)
-            {
-                double adjustmentFactor = Math.signum (driveRPS) * gyroAdjustmentTask.output + rangeSensorAdjustmentTask.output;
-
-                processConsole.updateWith (
-                        "Total adjustment factor = " + adjustmentFactor,
-                        "Left Drive PID conversion = " + leftDrive.getRPSConversionFactor (),
-                        "Right Drive PID conversion = " + rightDrive.getRPSConversionFactor ()
-                );
-
-                leftDrive.setRPS (driveRPS * (1 + adjustmentFactor));
-                rightDrive.setRPS (driveRPS * (1 - adjustmentFactor));
-
-                ProgramFlow.pauseForMS (20);
-            }
-        }
-
-        @Override
-        protected void taskOnCompletion ()
-        {
-            ConsoleManager.outputNewSequentialLine ("Ended drive task.");
-            processConsole.destroy ();
-
-            //Stop PID tasks
-            leftDrive.pidUpdateTask.stopEasyTask ();
-            rightDrive.pidUpdateTask.stopEasyTask ();
-
-            //Stop both sensor adjustment things.
-            gyroAdjustmentTask.stopEasyTask ();
-            if (useRangeSensor)
-                rangeSensorAdjustmentTask.stopEasyTask ();
-        }
-    };
-
-    //Creates a driving thread and then waits for the stopEasyTask signal from the sensors.
-    protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure) throws InterruptedException
-    {
-        drive(sensorStopType, stopValue, powerUnit, powerMeasure, false);
-    }
-    protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, boolean useRangeSensorAdjustment) throws InterruptedException
-    {
-        //Create a new output console entirely for this process.
-        ConsoleManager.ProcessConsole driveConsole = new ConsoleManager.ProcessConsole ("Drive Terminator");
-
-        //Create the AsyncTask which will handle driving, with the other things encapsulated within it.
-        driveRPS = powerMeasure * powerUnit.conversionFactor;
-        useRangeSensor = useRangeSensorAdjustment;
-
-        //Start the actual task.
-        intelligentDriveTask.startEasyTask ();
-
-        //Allows us to know when we stopEasyTask.
-        boolean reachedFinalDest = false;
-
-        //Actual adjustment aspect of driving.
-        while (!reachedFinalDest)
-        {
-            //Causes program termination.
-            switch (sensorStopType)
-            {
-                case Distance:
-                    //End early if this is pointless.
-                    if (stopValue == 0)
-                        break;
-
-                    int powerSign = (int) (Math.signum (powerMeasure));
-                    double currentDistance = (leftDrive.encoderMotor.getCurrentPosition () + rightDrive.encoderMotor.getCurrentPosition ()) / 2.0;
-                    reachedFinalDest = stopValue * powerSign <= currentDistance * powerSign;
-
-                    driveConsole.updateWith (
-                            "Current encoder position = " + currentDistance,
-                            "Stopping at position = " + stopValue
-                    );
-
-                    break;
-
-                case Ultrasonic:
-                    double currentRangeVal = frontRangeSensor.getVALIDDistCM ();
-                    reachedFinalDest = currentRangeVal <= stopValue;
-
-                    driveConsole.updateWith (
-                            "Current range sensor val = " + currentRangeVal,
-                            "Ending at range = " + stopValue
-                    );
-
-                    break;
-
-                case BottomColorAlpha:
-                    int currentBottomAlpha = bottomColorSensor.sensor.alpha ();
-                    reachedFinalDest = currentBottomAlpha >= stopValue;
-
-                    driveConsole.updateWith (
-                            "Current bottom alpha = " + currentBottomAlpha,
-                            "Stopping at alpha >= " + stopValue
-                    );
-
-                    break;
-            }
-
-            ProgramFlow.pauseForSingleFrame ();
-        }
-
-        //Private console no longer required.
-        driveConsole.destroy ();
-
-        //Now that the main thread has realized that we have reached the final destination, stop the driving thread.
-        intelligentDriveTask.stopEasyTask ();
-
-        //Brake for 100 ms in order to make sure we have completely stopped.
         hardBrake (100);
     }
 
