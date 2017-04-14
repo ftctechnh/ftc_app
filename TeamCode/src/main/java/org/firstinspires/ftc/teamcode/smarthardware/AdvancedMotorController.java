@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.smarthardware;
 
+import android.os.AsyncTask;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threading.EasyAsyncTask;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 public class AdvancedMotorController
 {
@@ -150,20 +151,46 @@ public class AdvancedMotorController
     }
 
     /******* THREADING *********/
-    public final EasyAsyncTask pidUpdateTask = new EasyAsyncTask ("PID")
+    private final class PIDTask extends AsyncTask<Void, Void, Void>
     {
         @Override
-        protected void taskToAccomplish () throws InterruptedException
+        protected Void doInBackground (Void... params)
         {
-            while (true)
+            try
             {
-                if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
-                    updateMotorPowerWithPID ();
+                while (true)
+                {
+                    if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
+                        updateMotorPowerWithPID ();
 
-                ProgramFlow.pauseForMS (30);
+                    ProgramFlow.pauseForMS (30);
+                }
             }
+            catch (InterruptedException e)
+            {
+                ConsoleManager.outputNewSequentialLine ("Stop requested for PID task!");
+            }
+
+            return null;
         }
-    };
+    }
+    private PIDTask pidInstance;
+    public void startPIDTask()
+    {
+        if (pidInstance == null)
+        {
+            pidInstance = new PIDTask ();
+            pidInstance.executeOnExecutor (AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+    public void stopPIDTask()
+    {
+        if (pidInstance != null)
+        {
+            pidInstance.cancel (true);
+            pidInstance = null;
+        }
+    }
 
     /******* PID STUFF *********/
     private double desiredRPS = 0;

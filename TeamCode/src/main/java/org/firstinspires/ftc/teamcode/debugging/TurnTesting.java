@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 @Autonomous(name="Turn Testing", group = "Test Group")
 

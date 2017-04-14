@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.threading;
+package org.firstinspires.ftc.teamcode.threads;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 

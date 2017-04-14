@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 @Autonomous(name = "Shooting - PID Debug", group = "Utility Group")
 
@@ -14,7 +14,9 @@ public class ShootingDebugging extends AutoBase
     {
         //Set the motor powers.
         flywheels.setRPS (19);
+        flywheels.startPIDTask ();
         harvester.setRPS (5);
+        harvester.startPIDTask ();
 
         while (true)
         {

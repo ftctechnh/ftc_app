@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
@@ -25,6 +25,8 @@ public class Teleop extends MainRobotBase
         boolean fbpUp = true;
         boolean capBallMode = false, capBallMode2 = false;
         double flywheelMaxRPS = 35, harvesterMaxRPS = 5;
+
+        ConsoleManager.ProcessConsole teleopConsole = new ConsoleManager.ProcessConsole ("Teleop");
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (true)
@@ -145,13 +147,13 @@ public class Teleop extends MainRobotBase
                 rightButtonPusher.setServoPosition (0.5);
 
             /************** Data Output **************/
-            ConsoleManager.outputConstantDataToDrivers(new String[] {
+            teleopConsole.updateWith (
                     "Fly wheel power = " + flywheelCoefficient,
                     "Conversion " + flywheels.getRPSConversionFactor (),
                     "Drive power = " + speedCoefficient,
                     "Cap ball mode = " + capBallMode,
                     "FBP_up = " + fbpUp
-            });
+            );
 
             ProgramFlow.pauseForSingleFrame ();
 

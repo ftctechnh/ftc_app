@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
 import org.firstinspires.ftc.teamcode.autonomous.OnAlliance;
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 public abstract class BeaconAuto extends AutoBase implements OnAlliance
 {
@@ -63,7 +63,7 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             long timeTakenToSeeColors = System.currentTimeMillis () - extensionStartTime;
 
             //Press and retract as many times as necessary.
-            long timeForEachPress = (long) (sideRangeSensor.getVALIDDistCM () * 67) - timeTakenToSeeColors;
+            long timeForEachPress = (long) (sideRangeSensor.ultrasonicDistCM () * 67) - timeTakenToSeeColors;
 
 
             /******** STEP 3: PRESS AND VERIFY THE BEACON!!!!! ********/

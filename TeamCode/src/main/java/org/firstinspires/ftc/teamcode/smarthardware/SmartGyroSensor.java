@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.smarthardware;
 
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 public class SmartGyroSensor
 {
@@ -38,7 +38,7 @@ public class SmartGyroSensor
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
-    public int getValidGyroHeading(int desiredHeading)
+    public int getValidGyroHeading()
     {
         //Get the heading.
         int heading = sensor.getHeading ();
@@ -54,5 +54,18 @@ public class SmartGyroSensor
             heading -= 360;
 
         return heading;
+    }
+
+    //The desired heading of the gyro.
+    private int desiredHeading = 0;
+    public void setDesiredHeading(int desiredHeading)
+    {
+        this.desiredHeading = desiredHeading;
+    }
+    public int getDesiredHeading() { return desiredHeading; }
+
+    public int getOffFromHeading()
+    {
+        return desiredHeading - getValidGyroHeading ();
     }
 }

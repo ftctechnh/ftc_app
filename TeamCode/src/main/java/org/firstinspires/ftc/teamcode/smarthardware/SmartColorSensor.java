@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.smarthardware;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 public class SmartColorSensor
 {

@@ -16,13 +16,16 @@ public class SmartRangeSensor
         rangeSensor.setI2cAddress (I2cAddr.create8bit (i2cAddress));
     }
 
-    public double getVALIDDistCM () throws InterruptedException
-    {
-        return sensor.cmUltrasonic ();
-    }
-
     public boolean returningValidOutput()
     {
         return !(sensor.getDistance (DistanceUnit.CM) < 1.0);
+    }
+    public double ultrasonicDistCM ()
+    {
+        return sensor.cmUltrasonic ();
+    }
+    public double getDistOffFromIdealWallDist()
+    {
+        return ultrasonicDistCM () - 15;
     }
 }

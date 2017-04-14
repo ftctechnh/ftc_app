@@ -43,54 +43,64 @@ public class ConsoleManager
     private static ArrayList <ProcessConsole> privateProcessConsoles;
     public static class ProcessConsole
     {
-        public final String processName;
-        public String[] processData;
+        private final String processName;
+        private String[] processData;
 
         public ProcessConsole(String processName)
         {
             this.processName = processName;
+            processData = new String[0];
+
+            privateProcessConsoles.add (this);
         }
 
         public void updateWith(String... processData)
         {
-            this.processData = processData;
-            rebuildConsole ();
+            try
+            {
+                this.processData = processData;
+                rebuildConsole ();
+            }
+            catch (Exception e)
+            {
+                ConsoleManager.outputNewSequentialLine ("Error while attempting to update process " + processName);
+            }
         }
 
         public void destroy()
         {
             privateProcessConsoles.remove(this);
         }
+        public void revive() { privateProcessConsoles.add(this); }
     }
-    public static ProcessConsole getPrivateConsole(String processName)
-    {
-        ProcessConsole newProcessConsole = new ProcessConsole (processName);
-        privateProcessConsoles.add(newProcessConsole);
-        return newProcessConsole;
-    }
+
     public static void rebuildConsole()
     {
-        //Clear all lines.
-        mainTelemetry.update ();
-
-        //Add all private console data.
-        for (ProcessConsole pConsole : privateProcessConsoles)
+        if (mainTelemetry != null)
         {
-            mainTelemetry.addLine ("----- " + pConsole.processName + " -----");
+            //Clear all lines.
+            mainTelemetry.update ();
 
-            for (String line : pConsole.processData)
+            //Add all private console data.
+            for (ProcessConsole pConsole : privateProcessConsoles)
+            {
+                mainTelemetry.addLine ("----- " + pConsole.processName + " -----");
+
+                for (String line : pConsole.processData)
+                    mainTelemetry.addLine (line);
+
+                mainTelemetry.addLine ("");
+            }
+
+            mainTelemetry.addLine ("----- Sequential Data -----");
+            for (String line : sequentialConsoleData)
+            {
                 mainTelemetry.addLine (line);
+            }
 
-            mainTelemetry.addLine ("");
+            //Refresh the console with this new data.
+            mainTelemetry.update ();
         }
-
-        mainTelemetry.addLine ("----- Sequential Data -----");
-        for (String line : sequentialConsoleData)
-        {
-            mainTelemetry.addLine (line);
-        }
-
-        //Refresh the console with this new data.
-        mainTelemetry.update ();
+        //Otherwise it just gets queued in the ArrayList.
     }
 }

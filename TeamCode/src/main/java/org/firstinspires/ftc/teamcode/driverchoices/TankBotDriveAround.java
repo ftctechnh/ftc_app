@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="TankBot Drive", group="TankBot Group")
@@ -56,7 +56,7 @@ public class TankBotDriveAround extends ImprovedOpModeBase
                 lastTimeMusicTogglePressed = System.currentTimeMillis ();
         double currentTurretPosition = 0.5;
 
-        ConsoleManager.ProcessConsole processConsole = ConsoleManager.getPrivateConsole ("Tank Bot Output");
+        ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Tank Bot Output");
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (opModeIsActive())

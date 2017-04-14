@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 @Autonomous(name = "Sensor Debug", group = "Utility Group")
 
@@ -13,6 +13,7 @@ public class SensorDebug extends AutoBase
     protected void driverStationSaysGO() throws InterruptedException
     {
         ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Sensor Debugging");
+        ConsoleManager.outputNewSequentialLine ("created sensor debugging console");
 
         while (true)
         {
@@ -29,9 +30,9 @@ public class SensorDebug extends AutoBase
                     "Particle Color Sensor",
                     "ARGB: " + particleColorSensor.sensor.argb() + " Alpha: " + particleColorSensor.sensor.alpha(),
                     "Blue: " + particleColorSensor.sensor.blue() + " Red: " + particleColorSensor.sensor.red(),
-                    "Heading: " + gyroscope.getValidGyroHeading(0),
-                    "Front Range Sensor: " + frontRangeSensor.getVALIDDistCM (),
-                    "Back Range Sensor: " + sideRangeSensor.getVALIDDistCM (),
+                    "Heading: " + gyroscope.getValidGyroHeading(),
+                    "Front Range Sensor: " + frontRangeSensor.ultrasonicDistCM (),
+                    "Back Range Sensor: " + sideRangeSensor.ultrasonicDistCM (),
                     "Harvester encoder: " + harvester.encoderMotor.getCurrentPosition (),
                     "Flywheel encoder: " + flywheels.encoderMotor.getCurrentPosition (),
                     "L motor encoder: " + leftDrive.encoderMotor.getCurrentPosition (),

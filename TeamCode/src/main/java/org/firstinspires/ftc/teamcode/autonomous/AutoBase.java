@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import android.os.AsyncTask;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -7,8 +9,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
 import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threading.EasyAsyncTask;
-import org.firstinspires.ftc.teamcode.threading.ProgramFlow;
+import org.firstinspires.ftc.teamcode.smarthardware.AdvancedMotorController;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 import org.firstinspires.ftc.teamcode.smarthardware.SmartColorSensor;
 import org.firstinspires.ftc.teamcode.smarthardware.SmartGyroSensor;
 import org.firstinspires.ftc.teamcode.smarthardware.SmartRangeSensor;
@@ -20,44 +22,6 @@ public abstract class AutoBase extends MainRobotBase
 
     /**** Range Sensors ****/
     protected SmartRangeSensor frontRangeSensor, sideRangeSensor;
-
-    private final EasyAsyncTask rangeSensorAdjustmentTask = new EasyAsyncTask ("Side Range Drive Adjustments", 0.0)
-    {
-        private ConsoleManager.ProcessConsole processConsole;
-
-        @Override
-        protected void taskToAccomplish () throws InterruptedException
-        {
-            //Create a new process console for the range sensor output.
-            processConsole = new ConsoleManager.ProcessConsole ("Range Sensor Adjustment");
-
-            while (true)
-            {
-                double observedDistance = sideRangeSensor.getVALIDDistCM ();
-                if (observedDistance >= 255)
-                    properties[0] = 0;
-                else
-                {
-                    double offFromDist = 13 - sideRangeSensor.getVALIDDistCM (); //Potentially takes a while to actually return a value.
-                    properties[0] = Math.signum (offFromDist) * (Math.abs (offFromDist) * 0.15);
-                }
-
-                processConsole.updateWith (
-                        "Front range sensor dist = " + observedDistance,
-                        "Suggested adjustment = " + Double.valueOf (properties[0].toString ())
-                );
-
-                ProgramFlow.pauseForMS (30);
-            }
-        }
-
-        @Override
-        protected void taskOnCompletion ()
-        {
-            processConsole.destroy ();
-            properties[0] = 0;
-        }
-    };
 
     /**** Color Sensors (3) ****/
     protected SmartColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
@@ -73,38 +37,6 @@ public abstract class AutoBase extends MainRobotBase
 
     /**** Gyro ****/
     protected SmartGyroSensor gyroscope;
-    private int desiredHeading = 0; //Massively important to maintaining stability through the drives.
-
-    private final EasyAsyncTask gyroAdjustmentTask = new EasyAsyncTask ("Gyro Drive Adjustments", 0.0)
-    {
-        private ConsoleManager.ProcessConsole processConsole;
-
-        @Override
-        protected void taskToAccomplish () throws InterruptedException
-        {
-            processConsole = new ConsoleManager.ProcessConsole ("Gyro Adjusting");
-
-            while (true)
-            {
-                int offFromHeading = desiredHeading - gyroscope.getValidGyroHeading (desiredHeading);
-                properties[0] = Math.signum (offFromHeading) * (Math.abs (offFromHeading) * 0.15);
-
-                processConsole.updateWith (
-                        "Gyro off from heading = " + offFromHeading,
-                        "Suggested adjustment = " + Double.valueOf (properties[0].toString ())
-                );
-
-                ProgramFlow.pauseForMS (30);
-            }
-        }
-
-        @Override
-        protected void taskOnCompletion ()
-        {
-            processConsole.destroy ();
-            properties[0] = 0;
-        }
-    };
 
     /******** Robot Driving ********/
     protected enum PowerUnits
@@ -122,74 +54,67 @@ public abstract class AutoBase extends MainRobotBase
         Distance, Ultrasonic, BottomColorAlpha
     }
 
-    //Creates a driving thread and then waits for the stopEasyTask signal from the sensors.
-    private final EasyAsyncTask intelligentDriveTask = new EasyAsyncTask ("Intelligent Driving")
+    //A new instance is instantiated upon starting a new drive.
+    private final class SelfAdjustingDriveTask extends AsyncTask<Void, Void, Void>
     {
-        private ConsoleManager.ProcessConsole processConsole;
+        private final double power;
+        private final boolean useRangeSensor;
+        private final ConsoleManager.ProcessConsole selfAdjustingDriveConsole;
 
-        private boolean rangeSensorAdjustmentEnabled = false;
+        public SelfAdjustingDriveTask(double power)
+        {
+            this(power, false);
+        }
+        public SelfAdjustingDriveTask(double power, boolean useRangeSensor)
+        {
+            selfAdjustingDriveConsole = new ConsoleManager.ProcessConsole ("Self Adjusting Drive");
+
+            this.power = power;
+            this.useRangeSensor = useRangeSensor;
+        }
 
         @Override
-        protected void taskToAccomplish () throws InterruptedException
+        protected Void doInBackground(Void... params)
         {
-            double driveRPS = Double.valueOf (properties[0].toString ());
-            rangeSensorAdjustmentEnabled = (Boolean) (properties[1]);
-
-            //Reset encoders and start to run PID task
-            leftDrive.resetEncoder ();
-            rightDrive.resetEncoder ();
-            leftDrive.pidUpdateTask.startEasyTask ();
-            rightDrive.pidUpdateTask.startEasyTask ();
-
-            //Start both adjustment tasks.
-            gyroAdjustmentTask.startEasyTask ();
-            if (rangeSensorAdjustmentEnabled)
-                rangeSensorAdjustmentTask.startEasyTask ();
-
-            processConsole = ConsoleManager.getPrivateConsole ("Int. Drive Task");
-
-            //Start to drive, adjusting based on the tasks above.
-            double gyroAdjustmentFactor, rangeSensorAdjustmentFactor = 0.0, adjustmentFactor, leftPower, rightPower;
-            while (true)
+            try
             {
-                gyroAdjustmentFactor = Math.signum (driveRPS) * Double.valueOf (gyroAdjustmentTask.getProperties ()[0].toString ());
-                if (rangeSensorAdjustmentEnabled)
-                    rangeSensorAdjustmentFactor = Double.valueOf (rangeSensorAdjustmentTask.getProperties ()[0].toString ());
-                adjustmentFactor = gyroAdjustmentFactor + rangeSensorAdjustmentFactor;
+                while (true)
+                {
+                    double gyroAdjustment = gyroscope.getOffFromHeading () * 0.15 * Math.signum(power);
+                    double rangeAdjustment = useRangeSensor ? sideRangeSensor.getDistOffFromIdealWallDist () * 0.15 : 0;
 
-                leftPower = driveRPS * (1 + adjustmentFactor);
-                rightPower = driveRPS * (1 - adjustmentFactor);
-                leftDrive.setRPS (leftPower);
-                rightDrive.setRPS (rightPower);
+                    double totalAdjustment = gyroAdjustment + rangeAdjustment;
 
-                processConsole.updateWith (
-                        "Total adjustment factor = " + adjustmentFactor,
-                        "Left power = " + leftPower,
-                        "Right power = " + rightPower,
-                        "Left Drive PID conversion = " + leftDrive.getRPSConversionFactor (),
-                        "Right Drive PID conversion = " + rightDrive.getRPSConversionFactor ()
-                );
+                    double leftPower = power * (1 + totalAdjustment), rightPower = power * (1 - totalAdjustment);
 
-                ProgramFlow.pauseForMS (20);
+                    selfAdjustingDriveConsole.updateWith (
+                            "Gyro adjustment = " + gyroAdjustment,
+                            "Range adjustment = " + rangeAdjustment,
+                            "Left power = " + leftPower,
+                            "Right power = " + rightPower
+                    );
+
+                    ProgramFlow.pauseForMS (50);
+                }
             }
+            catch (InterruptedException e) //When the robot has reached its destination.
+            {
+                ConsoleManager.outputNewSequentialLine ("Stop requested: Stopping Intelligent Drive Task!");
+                cancel (true);
+            }
+
+            return null;
         }
 
+        //Either cancelled here or by the main thread.
         @Override
-        protected void taskOnCompletion ()
+        protected void onCancelled ()
         {
-            ConsoleManager.outputNewSequentialLine ("Ended drive task.");
-            processConsole.destroy ();
-
-            //Stop PID tasks
-            leftDrive.pidUpdateTask.stopEasyTask ();
-            rightDrive.pidUpdateTask.stopEasyTask ();
-
-            //Stop both sensor adjustment things.
-            gyroAdjustmentTask.stopEasyTask ();
-            if (rangeSensorAdjustmentEnabled)
-                rangeSensorAdjustmentTask.stopEasyTask ();
+            selfAdjustingDriveConsole.destroy ();
         }
-    };
+    }
+
+    //This method is the task which looks for the termination and returns to the original task once complete.
     protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure) throws InterruptedException
     {
         drive(sensorStopType, stopValue, powerUnit, powerMeasure, false);
@@ -199,11 +124,9 @@ public abstract class AutoBase extends MainRobotBase
         //Create a new output console entirely for this process.
         ConsoleManager.ProcessConsole driveTerminationConsole = new ConsoleManager.ProcessConsole ("Drive Terminator");
 
-        //Create the AsyncTask which will handle driving, with the other things encapsulated within it.
-        intelligentDriveTask.setProperties (powerMeasure * powerUnit.conversionFactor, useRangeSensorAdjustment);
-
-        //Start the actual task.
-        intelligentDriveTask.startEasyTask ();
+        //Create the drive task.
+        SelfAdjustingDriveTask driveTask = new SelfAdjustingDriveTask (powerMeasure * powerUnit.conversionFactor, useRangeSensorAdjustment);
+        driveTask.executeOnExecutor (AsyncTask.THREAD_POOL_EXECUTOR);
 
         //Allows us to know when we stopEasyTask.
         boolean reachedFinalDest = false;
@@ -231,7 +154,7 @@ public abstract class AutoBase extends MainRobotBase
                     break;
 
                 case Ultrasonic:
-                    double currentRangeVal = frontRangeSensor.getVALIDDistCM ();
+                    double currentRangeVal = frontRangeSensor.ultrasonicDistCM ();
                     reachedFinalDest = currentRangeVal <= stopValue;
 
                     driveTerminationConsole.updateWith (
@@ -256,11 +179,11 @@ public abstract class AutoBase extends MainRobotBase
             ProgramFlow.pauseForSingleFrame ();
         }
 
+        //End the drive task
+        driveTask.cancel (true);
+
         //Private console no longer required.
         driveTerminationConsole.destroy ();
-
-        //Now that the main thread has realized that we have reached the final destination, stop the driving thread.
-        intelligentDriveTask.stopEasyTask ();
 
         //Brake for 100 ms in order to make sure we have completely stopped.
         hardBrake (100);
@@ -276,39 +199,35 @@ public abstract class AutoBase extends MainRobotBase
         //Create a console to which output will be displayed.
         ConsoleManager.ProcessConsole turnConsole = new ConsoleManager.ProcessConsole ("Turning");
 
-        //Start the PID control for the drive motors.
-        leftDrive.pidUpdateTask.startEasyTask ();
-        rightDrive.pidUpdateTask.startEasyTask ();
+        //Set gyro desiredHeading.
+        gyroscope.setDesiredHeading (desiredHeading);
 
-        this.desiredHeading = desiredHeading;
+        //Start the PID control for the drive motors.
+        leftDrive.startPIDTask ();
+        rightDrive.startPIDTask ();
 
         //Get the startTime so that we know when to end.
         long startTime = System.currentTimeMillis();
 
-        //Get the initial current heading to make sure that we aren't already at it.
-        int currentHeading = gyroscope.getValidGyroHeading(desiredHeading);
-
         //Adjust as fully as possible but not beyond the time limit.
-        while (System.currentTimeMillis() - startTime < maxTime || Math.abs(currentHeading - desiredHeading) >= 10)
+        double offFromHeading;
+        do
         {
+            offFromHeading = gyroscope.getOffFromHeading ();
+
             //Verify that the heading that we thought was perfectly on point actually is on point.
-            currentHeading = gyroscope.getValidGyroHeading(desiredHeading);
-            if (currentHeading == this.desiredHeading)
+            if (offFromHeading == 0)
             {
                 //Brake for a moment
                 hardBrake (200);
 
                 //Verify the heading and break if it has been reached.
-                currentHeading = gyroscope.getValidGyroHeading (desiredHeading);
-                if (currentHeading == this.desiredHeading)
+                if (gyroscope.getOffFromHeading () == 0)
                     break;
             }
 
-            //Turn at a speed proportional to the distance from the ideal heading.
-            int thetaFromHeading = currentHeading - this.desiredHeading;
-
             //Calculate turning speed.
-            double turnPower = Math.signum(thetaFromHeading) * (Math.abs(thetaFromHeading) * 0.05 + .2);
+            double turnPower = Math.signum(offFromHeading) * (Math.abs(offFromHeading) * 0.05 + .2);
 
             //Set clipped powers.
             if (mode != TurnMode.RIGHT)
@@ -318,21 +237,23 @@ public abstract class AutoBase extends MainRobotBase
 
             turnConsole.updateWith (
                     "Turning to " + desiredHeading + " degrees",
-                    "Current heading is " + currentHeading,
+                    "Current heading is " + gyroscope.getValidGyroHeading (),
                     "Turn power is " + turnPower,
                     "Stopping if possible in " + (maxTime - (System.currentTimeMillis () - startTime) + "ms")
             );
 
             ProgramFlow.pauseForSingleFrame ();
         }
+        while (System.currentTimeMillis() - startTime < maxTime || Math.abs(gyroscope.getOffFromHeading ()) >= 10);
 
         //Disable PID on the drive again.
-        leftDrive.pidUpdateTask.stopEasyTask ();
-        rightDrive.pidUpdateTask.stopEasyTask ();
+        leftDrive.stopPIDTask ();
+        rightDrive.stopPIDTask ();
 
         //Remove the console being used to output to the drivers.
         turnConsole.destroy ();
 
+        //Brake to become fully stationary.
         hardBrake (100);
     }
 
@@ -348,8 +269,8 @@ public abstract class AutoBase extends MainRobotBase
     /******** CUSTOM ACTIONS ********/
     protected void shootBallsIntoCenterVortex () throws InterruptedException
     {
-        flywheels.pidUpdateTask.startEasyTask ();
-        harvester.pidUpdateTask.startEasyTask ();
+        flywheels.startPIDTask ();
+        harvester.startPIDTask ();
 
         flywheels.setRPS (19);
         ProgramFlow.pauseForMS (300);
@@ -358,10 +279,9 @@ public abstract class AutoBase extends MainRobotBase
         flywheels.setRPS (0);
         harvester.setRPS (0);
 
-        flywheels.pidUpdateTask.stopEasyTask ();
-        harvester.pidUpdateTask.stopEasyTask ();
+        flywheels.stopPIDTask ();
+        harvester.stopPIDTask ();
     }
-
 
     /******** INITIALIZATION ********/
     //Initialize everything required in autonomous that isn't initialized in MainRobotBase (sensors)
@@ -376,7 +296,6 @@ public abstract class AutoBase extends MainRobotBase
         ConsoleManager.outputNewSequentialLine ("Validating Side Range Sensor...");
         sideRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor"), 0x10);
         ConsoleManager.appendToLastSequentialLine (sideRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
-
 
         //Initialize color sensors.
         ConsoleManager.outputNewSequentialLine ("Fetching Color Sensors...");
