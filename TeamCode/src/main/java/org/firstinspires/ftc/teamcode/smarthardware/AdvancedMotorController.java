@@ -12,15 +12,18 @@ import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 public class AdvancedMotorController
 {
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
+    public final String name;
     public final DcMotor encoderMotor, linkedMotor;
 
     //Initialization steps
-    public AdvancedMotorController (DcMotor encoderMotor)
+    public AdvancedMotorController (String name, DcMotor encoderMotor)
     {
-        this (encoderMotor, null);
+        this (name, encoderMotor, null);
     }
-    public AdvancedMotorController (DcMotor encoderMotor, DcMotor linkedMotor)
+    public AdvancedMotorController (String name, DcMotor encoderMotor, DcMotor linkedMotor)
     {
+        this.name = name;
+
         this.encoderMotor = encoderMotor;
         this.linkedMotor = linkedMotor;
 
@@ -153,6 +156,13 @@ public class AdvancedMotorController
     /******* THREADING *********/
     private final class PIDTask extends AsyncTask<Void, Void, Void>
     {
+        private final ConsoleManager.ProcessConsole pidConsole;
+
+        public PIDTask()
+        {
+            pidConsole = new ConsoleManager.ProcessConsole (name + " PID Console");
+        }
+
         @Override
         protected Void doInBackground (Void... params)
         {
@@ -161,7 +171,15 @@ public class AdvancedMotorController
                 while (true)
                 {
                     if (System.currentTimeMillis () - lastAdjustTime >= refreshRate)
+                    {
                         updateMotorPowerWithPID ();
+
+                        pidConsole.updateWith (
+                                "Current RPS conversion = " + rpsConversionFactor,
+                                "Expected = " + getExpectedTicksSinceUpdate (),
+                                "Actual = " + getActualTicksSinceUpdate ()
+                        );
+                    }
 
                     ProgramFlow.pauseForMS (30);
                 }
@@ -169,9 +187,16 @@ public class AdvancedMotorController
             catch (InterruptedException e)
             {
                 ConsoleManager.outputNewSequentialLine ("Stop requested for PID task!");
+                cancel(true);
             }
 
             return null;
+        }
+
+        @Override
+        protected void onCancelled ()
+        {
+            pidConsole.destroy ();
         }
     }
     private PIDTask pidInstance;
@@ -227,7 +252,7 @@ public class AdvancedMotorController
         {
             expectedTicksSinceUpdate = expectedTicksPerSecond * ((System.currentTimeMillis () - lastAdjustTime) / 1000.0);
 
-            actualTicksSinceUpdate = encoderMotor.getCurrentPosition () - previousMotorPosition;
+            actualTicksSinceUpdate = Math.random() * 50 /*encoderMotor.getCurrentPosition ()*/ - previousMotorPosition;
 
             //Sensitivity is the coefficient below, and bounds are .5 and -.5 so that momentary errors don't result in crazy changes.
             rpsConversionFactor += Math.signum (desiredRPS) * Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * sensitivity), -sensitivityBound, sensitivityBound);

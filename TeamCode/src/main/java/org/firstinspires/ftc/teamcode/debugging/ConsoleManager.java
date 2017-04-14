@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.debugging;
 
+import android.os.AsyncTask;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -15,6 +18,8 @@ public class ConsoleManager
         mainTelemetry = someTelemetry;
         sequentialConsoleData = new ArrayList<> ();
         privateProcessConsoles = new ArrayList<> ();
+
+        startConsoleUpdater ();
     }
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES PROVIDE ***/
@@ -27,16 +32,12 @@ public class ConsoleManager
         //If there is more than 5 lines there, remove one.
         if (sequentialConsoleData.size() > maxSequentialLines)
             sequentialConsoleData.remove(maxSequentialLines);
-
-        rebuildConsole ();
     }
     public static void appendToLastSequentialLine(String toAppend)
     {
         String result = sequentialConsoleData.get (0) + toAppend;
         sequentialConsoleData.remove (0);
         sequentialConsoleData.add (0, result);
-
-        rebuildConsole ();
     }
 
     //Private process data.
@@ -56,15 +57,7 @@ public class ConsoleManager
 
         public void updateWith(String... processData)
         {
-            try
-            {
-                this.processData = processData;
-                rebuildConsole ();
-            }
-            catch (Exception e)
-            {
-                ConsoleManager.outputNewSequentialLine ("Error while attempting to update process " + processName);
-            }
+            this.processData = processData;
         }
 
         public void destroy()
@@ -72,6 +65,53 @@ public class ConsoleManager
             privateProcessConsoles.remove(this);
         }
         public void revive() { privateProcessConsoles.add(this); }
+    }
+
+    //The console automatically updates itself, so that rebuild() isn't called every 10 ms.
+    private static class ConsoleUpdater extends AsyncTask <Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground (Void... params)
+        {
+            consoleUpdaterInstance = this;
+
+            try
+            {
+                while (true)
+                {
+                    rebuildConsole ();
+                    ProgramFlow.pauseForMS (50);
+                }
+            }
+            catch (InterruptedException e)
+            {
+                outputNewSequentialLine ("Got end of program: ending console updates!");
+                cancel (true);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onCancelled ()
+        {
+            consoleUpdaterInstance = null;
+        }
+    }
+    private static ConsoleUpdater consoleUpdaterInstance;
+    public static void startConsoleUpdater()
+    {
+        if (consoleUpdaterInstance == null)
+        {
+            new ConsoleUpdater ().executeOnExecutor (AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+    public static void stopConsoleUpdater()
+    {
+        if (consoleUpdaterInstance != null)
+        {
+            consoleUpdaterInstance.cancel (true);
+        }
     }
 
     public static void rebuildConsole()
