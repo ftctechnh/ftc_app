@@ -24,13 +24,13 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
         /*************************** DRIVING MOTORS ***************************/
         ConsoleManager.outputNewSequentialLine ("Setting up drive motors...");
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
-        leftDrive = new AdvancedMotorController (initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
+        leftDrive = new AdvancedMotorController ("Left Drive", initialize (DcMotor.class, "backLeft"), initialize (DcMotor.class, "frontLeft")).
                 setRPSConversionFactor (0.40).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE).
                 setAdjustmentSensitivity (.00001).
                 setAdjustmentSensitivityBounds (0.3);
 
-        rightDrive = new AdvancedMotorController (initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight")).
+        rightDrive = new AdvancedMotorController ("Right Drive", initialize (DcMotor.class, "backRight"), initialize (DcMotor.class, "frontRight")).
                 setRPSConversionFactor (0.36).
                 setAdjustmentSensitivity (.00001).
                 setAdjustmentSensitivityBounds (0.3);;
@@ -38,14 +38,14 @@ public abstract class MainRobotBase extends ImprovedOpModeBase
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
         ConsoleManager.outputNewSequentialLine ("Setting up harvester...");
-        harvester = new AdvancedMotorController (initialize (DcMotor.class, "harvester")).
+        harvester = new AdvancedMotorController ("Harvester", initialize (DcMotor.class, "harvester")).
                 setRPSConversionFactor (0.40).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
         harvester.resetEncoder ();
         ConsoleManager.appendToLastSequentialLine ("OK!");
 
         ConsoleManager.outputNewSequentialLine ("Setting up flywheels...");
-        flywheels = new AdvancedMotorController (initialize (DcMotor.class, "flywheels")).
+        flywheels = new AdvancedMotorController ("Flywheels", initialize (DcMotor.class, "flywheels")).
                 setRPSConversionFactor (0.02). //Very little resistance on the flywheels.
                 setMotorType (AdvancedMotorController.MotorType.NeverRest3P7).
                 setMotorDirection (DcMotor.Direction.REVERSE).

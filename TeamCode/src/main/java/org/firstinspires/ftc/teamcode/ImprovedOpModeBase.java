@@ -16,10 +16,9 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
             //Returns the last subclass (if this were a DcMotor it would pass back a Dc Motor.
             return hardwareDevice.cast (hardwareMap.get (name));
         }
-        catch (Exception e)
+        catch (Exception e) //There might be other exceptions that this throws, not entirely sure about which so I am general here.
         {
-            ConsoleManager.outputNewSequentialLine ("Could not find " + name + " in the config file.");
-            return null;
+            throw new NullPointerException ("Couldn't find " + name + " in the configuration file!");
         }
     }
 
@@ -44,11 +43,22 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
             //This is where the child classes differ.
             driverStationSaysGO ();
         }
-        catch (Exception e)
+        catch (InterruptedException e) {} //If this is caught, then the user requested program stop.
+        catch (Exception e) //If this is caught, it wasn't an InterruptedException and wasn't requested, so the user is notified.
         {
-            ConsoleManager.outputNewSequentialLine ("Ended early.");
+            ConsoleManager.outputNewSequentialLine ("UH OH!  An error was just thrown!");
+            ConsoleManager.outputNewSequentialLine (e.getMessage ());
+            ConsoleManager.outputNewSequentialLine ("Will end upon tapping stop...");
+
+            //Wait indefinitely.
+            try
+            {
+                while (true)
+                    ProgramFlow.pauseForSingleFrame ();
+            }
+            catch (InterruptedException e2) {} //The user has read the message and stops the program.
         }
-        finally
+        finally //Occurs after all possible endings.
         {
             driverStationSaysSTOP ();
         }
