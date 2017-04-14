@@ -50,7 +50,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
             ConsoleManager.outputNewSequentialLine (e.getMessage ());
             ConsoleManager.outputNewSequentialLine ("Will end upon tapping stop...");
 
-            //Wait indefinitely.
+            //Wait until stop is requested.
             try
             {
                 while (true)
@@ -70,7 +70,7 @@ public abstract class ImprovedOpModeBase extends LinearOpMode
     //Optional overload.
     protected void driverStationSaysINITIALIZE () throws InterruptedException {}
 
-    //Has to be implemented.
+    //Required overload.
     protected abstract void driverStationSaysGO () throws InterruptedException;
 
     //Optional overload.
