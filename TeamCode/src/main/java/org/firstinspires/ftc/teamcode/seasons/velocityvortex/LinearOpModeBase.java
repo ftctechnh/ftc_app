@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -61,10 +60,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     private ModernRoboticsI2cRangeSensor frontRange;
     private ModernRoboticsI2cRangeSensor leftRange;
 
-    private OpticalDistanceSensor launcherOds;
     private ColorSensor launcherChamberColorSensor;
     private OpticalDistanceSensor diskOds;
-    private OpticalDistanceSensor ods3;
+    private OpticalDistanceSensor leftOds;
+    private OpticalDistanceSensor rightOds;
 
     private ModernRoboticsI2cGyro gyroSensor;
 
@@ -75,7 +74,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
     /**
      * An enumeration type that represents the directions the robot is able to drive in.
      *
-     * @see #encoderDrive(double, int, RobotDirection)
+     * @see #encoderDrive(double, double, RobotDirection)
      * @see #rangeGyroStrafe(double, double, int, RobotDirection)
      */
     public enum RobotDirection {
@@ -127,9 +126,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
 //        leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
-        launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
-        ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
+        leftOds = hardwareMap.opticalDistanceSensor.get("lOds");
+        rightOds = hardwareMap.opticalDistanceSensor.get("rOds");
 
         launcherChamberColorSensor = hardwareMap.colorSensor.get("lcCs");
         launcherChamberColorSensor.setI2cAddress(I2cAddr.create8bit(0x40));
@@ -181,11 +180,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        double error = LIGHT_SENSOR_PERFECT_VALUE - getOds3().getRawLightDetected();
+        OpticalDistanceSensor ods = (direction == RobotDirection.LEFT ? leftOds : rightOds);
+
+        double error = LIGHT_SENSOR_PERFECT_VALUE - ods.getRawLightDetected();
 
         while(opModeIsActive() && Math.abs(error) > LIGHT_THRESHOLD) {
 
-            error = LIGHT_SENSOR_PERFECT_VALUE - getOds3().getRawLightDetected();
+            error = LIGHT_SENSOR_PERFECT_VALUE - ods.getRawLightDetected();
 
             // strafe
             if(direction == RobotDirection.RIGHT) {
@@ -343,6 +344,13 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
             repositionBeacons();
 
+            // when the beacon is already claimed, move on
+            if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
+                // drive to 15cm from wall
+                rangeSensorDrive(15, 0.1);
+                return;
+            }
+
             // move the button pusher servos
             if(colorSensor1.red() > 0 || colorSensor2.blue() > 0) {
                 beaconsServo1.setPosition(0.6);
@@ -432,9 +440,16 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         beaconsServo1.setPosition(0);
         beaconsServo2.setPosition(1);
 
-        // check if both color sensors do not detect red
-        if(colorSensor1.blue() > 0 || colorSensor2.blue() > 0) {
+        // check if both color sensors do not detect blue
+        if(colorSensor1.red() > 0 || colorSensor2.red() > 0) {
             repositionBeacons();
+
+            // when the beacon is already claimed, move on
+            if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
+                // drive to 15cm from wall
+                rangeSensorDrive(15, 0.1);
+                return;
+            }
 
             // move the button pusher servos
             if(colorSensor1.blue() > 0 || colorSensor2.red() > 0) {
@@ -486,11 +501,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
      * @param direction the direction to drive
      * @see RobotDirection for the available directions
      */
-    protected void encoderDrive(double speed, int distance, RobotDirection direction) {
+    protected void encoderDrive(double speed, double distance, RobotDirection direction) {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        int target = distance * COUNTS_PER_INCH;
+        int target = (int)(distance * COUNTS_PER_INCH);
 
         // set the target position for each motor
         switch(direction) {
@@ -597,10 +612,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // set RUN_WITHOUT_ENCODER for each motor
         setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    private boolean isBeaconDetected() {
-        return  (colorSensor2.red() > 0 || colorSensor2.blue() > 0);
     }
 
     /**
@@ -976,15 +987,14 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         return leftRange;
     }
 
-    protected OpticalDistanceSensor getLauncherOds() { return launcherOds; }
-
     protected OpticalDistanceSensor getDiskOds() { return diskOds; }
 
-    /**
-     * ODS on the bottom
-     */
-    protected OpticalDistanceSensor getOds3() {
-        return ods3;
+    protected OpticalDistanceSensor getLeftOds() {
+        return leftOds;
+    }
+
+    protected OpticalDistanceSensor getRightOds() {
+        return rightOds;
     }
 
     protected ColorSensor getLauncherChamberColorSensor() {

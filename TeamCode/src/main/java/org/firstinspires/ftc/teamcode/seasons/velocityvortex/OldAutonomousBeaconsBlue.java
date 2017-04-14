@@ -62,10 +62,10 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // drive left to white line
-        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
+        while(opModeIsActive() && getLeftOds().getRawLightDetected() < 1.5) {
             driveLeft(0.1);
 
-            telemetry.addData("ods3", getOds3().getRawLightDetected());
+            telemetry.addData("ods3", getLeftOds().getRawLightDetected());
             telemetry.update();
         }
         stopRobot();
@@ -111,9 +111,9 @@ public class OldAutonomousBeaconsBlue extends LinearOpModeBase {
         gyroPivot(0.8, 0, false);
 
         // look for the white line leading to the second beacon
-        while(opModeIsActive() && getOds3().getRawLightDetected() < 1.5) {
+        while(opModeIsActive() && getLeftOds().getRawLightDetected() < 1.5) {
             driveLeft(0.2);
-            telemetry.addData("ods3", getOds3().getRawLightDetected());
+            telemetry.addData("ods3", getLeftOds().getRawLightDetected());
             telemetry.update();
         }
         stopRobot();

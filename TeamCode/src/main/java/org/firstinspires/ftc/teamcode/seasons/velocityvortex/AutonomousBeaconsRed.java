@@ -18,8 +18,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 68);
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 68);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 62); // 68
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 62); // 68
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -52,29 +52,29 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        touchSensorDrive();
+
         // drive left to white line
-        stopOnLine(0.1, RobotDirection.LEFT);
+        stopOnLine(0.1, RobotDirection.RIGHT);
 
         gyroPivot(0.8, 0, true);
-
-        touchSensorDrive();
 
         // claim the first beacon
         claimBeaconRed();
 
         // back up from wall
-        rangeSensorDrive(15, 0.2);
+        rangeSensorDrive(20, 0.2);
 
-        rangeGyroStrafe(0, 15, 35, RobotDirection.RIGHT);
+        rangeGyroStrafe(0, 20, 35, RobotDirection.RIGHT);
 
-        rangeSensorDrive(10, 0.2);
+//        rangeSensorDrive(10, 0.2);
+
+        touchSensorDrive();
 
         // drive right to white line
         stopOnLine(0.1, RobotDirection.RIGHT);
 
         gyroPivot(0.8, 0, true);
-
-        touchSensorDrive();
 
         // claim the second beacon
         claimBeaconRed();
