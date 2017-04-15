@@ -71,8 +71,8 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
         // Connect to motor (Assume standard left wheel)
         // Change the text in quotes to match any motor name on your robot.
-        shooting_motor = hardwareMap.dcMotor.get("ballShooterMotor");
-        intake_motor = hardwareMap.dcMotor.get("ballCollectorMotor");
+        //shooting_motor = hardwareMap.dcMotor.get("ballShooterMotor");
+        //intake_motor = hardwareMap.dcMotor.get("ballCollectorMotor");
         idle();
 
        // gyro = hardwareMap.gyroSensor.get("gyro");
@@ -319,7 +319,10 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         encoderDrive(0.5, distFromWall+2, distFromWall+2, 5);
     }
     public void straightDrive(double power) {
-
+        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setPower(power);
         front_left_motor.setPower(power);
         back_right_motor.setPower(power);
@@ -367,13 +370,19 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
     public void stopMotors() {
         front_right_motor.setPower(0);
+        idle();
         front_left_motor.setPower(0);
+        idle();
         back_right_motor.setPower(0);
+        idle();
         back_left_motor.setPower(0);
         sleep(100);
         back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        idle();
         front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        idle();
         back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        idle();
         front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
         sleep(100);
@@ -695,7 +704,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         setMotorsToEnc(29, 29, 1);
     }
     public void setMotorsModeToGyroSensing()  { setMotorsToEnc(29, 29, 2); }
-    public void setMotorsModeToEncDrive()   { setMotorsToEnc(50, 50, .5);  }
+    public void setMotorsModeToEncDrive()   { setMotorsToEnc(50, 50, 0.5);  }
 
     public void encoderDriveShootRed(double speed,
                                      double leftInches, double rightInches,
@@ -770,8 +779,10 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
     public void encoderMecanumDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS, int direction) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftFrontTarget;
+        int newRightFrontTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
         double leftSpeed;
         double rightSpeed;
 
@@ -779,38 +790,55 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
       //  if (opModeIsActive())
 
             double time = runtime.seconds()+timeoutS;
-            back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            /*back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
+            front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);*/
+        back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         idle();
+        back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        idle();
+        front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        idle();
+        front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        idle();
+
         sleep(100);
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
-            newRightTarget = back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm());
+         newLeftFrontTarget = front_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
+        newRightFrontTarget = front_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm());
+        newLeftBackTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
+        newRightBackTarget = back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm());
 
         if(direction == 0) {
-            back_left_motor.setTargetPosition(newLeftTarget);
-            back_right_motor.setTargetPosition(newRightTarget);
-            front_left_motor.setTargetPosition(newLeftTarget);
-            front_right_motor.setTargetPosition(newRightTarget);
+            back_left_motor.setTargetPosition(newLeftBackTarget);
+            idle();
+            back_right_motor.setTargetPosition(newRightBackTarget);
+            idle();
+            front_left_motor.setTargetPosition(newLeftFrontTarget);
+            idle();
+            front_right_motor.setTargetPosition(newRightFrontTarget);
         }
         else if (direction == 1){//right
-            back_left_motor.setTargetPosition(-newLeftTarget);
-            back_right_motor.setTargetPosition(newRightTarget);
-            front_left_motor.setTargetPosition(newLeftTarget);
-            front_right_motor.setTargetPosition(-newRightTarget);
+            back_left_motor.setTargetPosition(-newLeftBackTarget);
+            idle();
+            back_right_motor.setTargetPosition(newRightBackTarget);
+            idle();
+            front_left_motor.setTargetPosition(newLeftFrontTarget);
+            idle();
+            front_right_motor.setTargetPosition(-newRightFrontTarget);
         }
         else if(direction == -1){//left
-            back_left_motor.setTargetPosition(newLeftTarget);
-            back_right_motor.setTargetPosition(-newRightTarget);
-            front_left_motor.setTargetPosition(-newLeftTarget);
-            front_right_motor.setTargetPosition(newRightTarget);
+            back_left_motor.setTargetPosition(newLeftBackTarget);
+            idle();
+            back_right_motor.setTargetPosition(-newRightBackTarget);
+            idle();
+            front_left_motor.setTargetPosition(-newLeftFrontTarget);
+            idle();
+            front_right_motor.setTargetPosition(newRightFrontTarget);
         }
-
+        idle();
 
             // reset the timeout time and start motion.
             if (Math.abs(leftInches) > Math.abs(rightInches)) {
@@ -826,10 +854,14 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
                 front_right_motor.setPower(Math.abs(rightSpeed)*Math.cos(degrees*Math.PI/180 + (Math.PI/4)));
                 back_left_motor.setPower(Math.abs(leftSpeed)*Math.cos(degrees*Math.PI/180 + (Math.PI/4)));
                 back_right_motor.setPower(Math.abs(rightSpeed)*Math.sin(degrees*Math.PI/180 + (Math.PI/4)));*/
+        back_left_motor.setPower(Math.abs(leftSpeed));
+        idle();
+        back_right_motor.setPower(Math.abs(rightSpeed));
+        idle();
                 front_left_motor.setPower(Math.abs(leftSpeed));
+        idle();
                 front_right_motor.setPower(Math.abs(rightSpeed));
-                back_left_motor.setPower(Math.abs(leftSpeed));
-                back_right_motor.setPower(Math.abs(rightSpeed));
+        idle();
 
 
 
@@ -841,18 +873,23 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (back_left_motor.isBusy() && back_right_motor.isBusy())) {
+                    (back_left_motor.isBusy() || back_right_motor.isBusy()||
+                            front_left_motor.isBusy() || front_right_motor.isBusy())) {
+                idle();
             }
-
+idle();
             // Stop all motion;
             stopMotors();
 
         }
+
     public void encoderMecanumCrossDrive(double speed,
                                     double leftInches, double rightInches,
                                     double timeoutS, int direction) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftFrontTarget;
+        int newRightFrontTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
         double leftSpeed;
         double rightSpeed;
 
@@ -861,8 +898,11 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
         double time = runtime.seconds()+timeoutS;
         back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        idle();
         back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        idle();
         front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        idle();
         front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
@@ -870,75 +910,98 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         sleep(100);
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = (int)(1.* (back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm())));
-        newRightTarget = (int)(1.*(back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm())));
+        newLeftFrontTarget = (int)(1.* (front_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm())));
+        newRightFrontTarget = (int)(1.*(front_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm())));
+        newLeftBackTarget = (int)(1.* (back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm())));
+        newRightBackTarget = (int)(1.*(back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm())));
 
         if(direction == 4) {
 
-            front_right_motor.setTargetPosition(newRightTarget);
+            front_right_motor.setTargetPosition(newRightFrontTarget);
  //           back_right_motor.setTargetPosition(newRightTarget);
-            back_left_motor.setTargetPosition(newLeftTarget);
+            idle();
+            back_left_motor.setTargetPosition(newLeftBackTarget);
   //          front_left_motor.setTargetPosition(newLeftTarget);
-
+            idle();
             front_right_motor.setPower(Math.abs(speed));
+            idle();
             back_right_motor.setPower(Math.abs(0));
+            idle();
             back_left_motor.setPower(Math.abs(speed));
+            idle();
             front_left_motor.setPower(Math.abs(0));
+            idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (front_right_motor.isBusy() && back_left_motor.isBusy())) {
+                    (front_right_motor.isBusy() || back_left_motor.isBusy())) {
+                idle();
             }
         }
         else if (direction == 1){
 
             //front_right_motor.setTargetPosition(newRightTarget);
-                       back_right_motor.setTargetPosition(newRightTarget);
+                       back_right_motor.setTargetPosition(newRightBackTarget);
+            idle();
             //back_left_motor.setTargetPosition(newLeftTarget);
-                      front_left_motor.setTargetPosition(newLeftTarget);
-
+                      front_left_motor.setTargetPosition(newLeftFrontTarget);
+            idle();
             front_right_motor.setPower(Math.abs(0));
+            idle();
             back_right_motor.setPower(Math.abs(speed));
+            idle();
             back_left_motor.setPower(Math.abs(0));
+            idle();
             front_left_motor.setPower(Math.abs(speed));
+            idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (front_left_motor.isBusy() && back_right_motor.isBusy())) {
+                    (front_left_motor.isBusy() || back_right_motor.isBusy())) { idle();
             }
         }
         else if(direction == 2){
 
-            front_right_motor.setTargetPosition(-newRightTarget);
+            front_right_motor.setTargetPosition(-newRightFrontTarget);
             //           back_right_motor.setTargetPosition(newRightTarget);
-            back_left_motor.setTargetPosition(-newLeftTarget);
+            idle();
+            back_left_motor.setTargetPosition(-newLeftBackTarget);
             //          front_left_motor.setTargetPosition(newLeftTarget);
-
+            idle();
             front_right_motor.setPower(Math.abs(speed));
+            idle();
             back_right_motor.setPower(Math.abs(0));
+            idle();
             back_left_motor.setPower(Math.abs(speed));
+            idle();
             front_left_motor.setPower(Math.abs(0));
+            idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (back_left_motor.isBusy() && front_right_motor.isBusy())) {
+                    (back_left_motor.isBusy() || front_right_motor.isBusy())) { idle();
             }
         }
         else if(direction == 3) {
 
             //front_right_motor.setTargetPosition(newRightTarget);
-            back_right_motor.setTargetPosition(-newRightTarget);
+            back_right_motor.setTargetPosition(-newRightBackTarget);
+            idle();
             //back_left_motor.setTargetPosition(newLeftTarget);
-            front_left_motor.setTargetPosition(-newLeftTarget);
-
+            front_left_motor.setTargetPosition(-newLeftFrontTarget);
+            idle();
             front_right_motor.setPower(Math.abs(0));
+            idle();
             back_right_motor.setPower(Math.abs(speed));
+            idle();
             back_left_motor.setPower(Math.abs(0));
+            idle();
             front_left_motor.setPower(Math.abs(speed));
+            idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (front_left_motor.isBusy() && back_right_motor.isBusy())) {
+                    (front_left_motor.isBusy() || back_right_motor.isBusy())) { idle();
             }
         }
 
-
+idle();
         //if(leftInches != -rightInches)
                 /*front_left_motor.setPower(Math.abs(leftSpeed)*Math.sin(degrees*Math.PI/180 + (Math.PI/4)));
                 front_right_motor.setPower(Math.abs(rightSpeed)*Math.cos(degrees*Math.PI/180 + (Math.PI/4)));

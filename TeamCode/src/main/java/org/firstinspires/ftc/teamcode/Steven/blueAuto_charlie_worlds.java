@@ -79,9 +79,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         if (second_beacon_press == false)
         {
 
-            moveToNextBeacon(
-
-);
+            moveToNextBeacon();
         }
         else
         {

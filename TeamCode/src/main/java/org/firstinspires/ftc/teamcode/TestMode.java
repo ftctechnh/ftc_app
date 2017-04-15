@@ -16,24 +16,43 @@ public class TestMode extends AutonomousGeneral_charlie
 
     public void runOpMode(){
         initiate();
+        setMotorsModeToEncDrive();
         waitForStart();
+
+       /* sleep(1000);
+        strafeLeft(0.8);
         sleep(1000);
-        encoderMecanumDrive(0.8,50,50,10,1);
+        strafeRight(0.8);
         sleep(1000);
-        encoderMecanumDrive(0.8,50,50,10,-1);
-//        initiate();
-//        waitForStart();
-//        setMotorsModeToEncDrive();
-//        stopMotors();
-//        encoderDrive(.7,100,100,3);
-//        sleep(5000);
-//        Turn360Right();
-//        sleep(5000);
-//        Turn360Left();
-//        sleep(5000);
-//        setMotorsModeToEncDrive();
-//        stopMotors();
-//        encoderDrive(.7,-100,-100,3);
+        straightDrive(0.8);
+        sleep(1000);
+        straightDrive(-0.8);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.8,50,50,10,1);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.8,50,50,10,2);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.8,50,50,10,3);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.8,50,50,10,4);*/
+
+        sleep(1000);
+        encoderMecanumDrive(0.6,50,50,10,1);
+        sleep(1000);
+        encoderMecanumDrive(0.6,50,50,10,-1);
+        sleep(1000);
+        encoderMecanumDrive(0.6,50,50,10,0);
+        sleep(1000);
+        encoderMecanumDrive(0.6,-50,-50,10,0);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.6,50,50,10,1);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.6,50,50,10,2);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.6,50,50,10,3);
+        sleep(1000);
+        encoderMecanumCrossDrive(0.6,50,50,10,4);
+
 
 
     }
