@@ -319,10 +319,10 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         encoderDrive(0.5, distFromWall+2, distFromWall+2, 5);
     }
     public void straightDrive(double power) {
-        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        /*front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
         back_left_motor.setPower(power);
         front_left_motor.setPower(power);
         back_right_motor.setPower(power);

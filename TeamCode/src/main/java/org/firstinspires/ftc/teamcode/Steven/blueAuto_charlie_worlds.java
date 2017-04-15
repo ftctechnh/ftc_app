@@ -47,8 +47,6 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         autoBeaconPresser.setPosition(initialPos);
 
         telemetry.addData("READY TO START", "");
-        telemetry.addData("gyro cal finished in ms", runtime.milliseconds());
-
         telemetry.update();
 
 
@@ -61,7 +59,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
 
-        encoderMecanumCrossDrive(1,141,141,5,2);
+        encoderMecanumCrossDrive(1,150,150,5,2);
         encoderMecanumDrive(1,20,20,5,1);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
@@ -190,8 +188,8 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
 
     public void moveTowardWall(){
-        setMotorsModeToRangeSensing();
-        straightDrive(-0.8);
+        setMotorsModeToGyroSensing();
+        straightDrive(-0.5);
         while (rangeSensor.getDistance(DistanceUnit.CM) > 20) {
 
         }
@@ -199,8 +197,8 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         idle();
         setMotorsModeToRangeSensing();
 
-        straightDrive(0.8);
-        while (rangeSensor.getDistance(DistanceUnit.CM) < 15) {
+        straightDrive(0.5);
+        while (rangeSensor.getDistance(DistanceUnit.CM) < 10) {
 
         }
         stopMotors();
