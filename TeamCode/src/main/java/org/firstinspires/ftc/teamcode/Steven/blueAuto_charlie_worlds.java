@@ -70,9 +70,9 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         boolean beacon_press_success = false;
 
         lineAlignStrafe();
-
+        moveTowardWall();
         ColorSensorRead();//sets servo to correct position
-        pressBeaconButton();
+       pressBeaconButton();
         autoBeaconPresser.setPosition(initialPos);
         if (second_beacon_press == false)
         {
@@ -98,6 +98,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 }
     public void ColorSensorRead(){
         readNewColorLeft();
+        sleep(1000);
         //readNewColorRight();
 
         telemetry.addData("","READ DATA");
@@ -122,14 +123,14 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     }
 
     public void lineAlignStrafe() {
-        moveTowardWall();
+        //moveTowardWall();
         if(second_beacon_press){
             setMotorsToEnc(29, 29, 0.3);
         }
         else {
             setMotorsModeToColorSensing();
         }
-        strafeRight(0.5);
+        strafeRight(0.3);
         while(whiteLineDetectedBack() == false){
 
 
@@ -189,20 +190,25 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
     public void moveTowardWall(){
         setMotorsModeToGyroSensing();
-        straightDrive(-0.5);
-        while (rangeSensor.getDistance(DistanceUnit.CM) > 20) {
+        straightDrive(-0.8);
+        telemetry.addData("Distance", rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
+        sleep(1000);
+        while (rangeSensor.getDistance(DistanceUnit.CM) > 12) {
 
         }
         stopMotors();
         idle();
-        setMotorsModeToRangeSensing();
+        setMotorsModeToGyroSensing();
 
-        straightDrive(0.5);
+        straightDrive(0.8);
         while (rangeSensor.getDistance(DistanceUnit.CM) < 10) {
 
         }
         stopMotors();
         idle();
+        telemetry.addData("Distance",rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
     }
 
     public void printColorsSeen(){
@@ -254,6 +260,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         setMotorsModeToEncDrive();
         stopMotors();
         double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)+4;
+       // telemetry.addData("",distFromWall);
         telemetry.addData("distance",distFromWall);
         telemetry.update();
 
