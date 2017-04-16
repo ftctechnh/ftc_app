@@ -44,7 +44,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         setMotorsModeToEncDrive();
         stopMotors();
 
-        autoBeaconPresser.setPosition(initialPos);
+
 
         telemetry.addData("READY TO START", "");
         telemetry.update();
@@ -52,6 +52,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
         waitForStart();
         runtime.reset();
+        autoBeaconPresser.setPosition(initialPos);
         second_beacon_press = false;
 
 
@@ -60,7 +61,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         timeProfile[profileindex++] = runtime.milliseconds();
 
         encoderMecanumCrossDrive(1,175,175,5,2);
-        encoderMecanumDrive(1,17,17,5,1);
+     //   encoderMecanumDrive(1,20,20,5,1);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
 
@@ -69,7 +70,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         boolean left_detected = false;
         boolean beacon_press_success = false;
 
-        lineAlignStrafe();
+        lineAlign();
         moveTowardWall();
         ColorSensorRead();//sets servo to correct position
        pressBeaconButton();
@@ -89,8 +90,12 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     public void  moveToNextBeacon(){
         second_beacon_press = true;
         setMotorsModeToEncDrive();;
-        encoderMecanumDrive(1,90,90,5,1);
-
+        encoderMecanumDrive(1,95,95,5,1);
+        if (rangeSensor.getDistance(DistanceUnit.CM) < 15) {
+            encoderMecanumDrive(1,15,15,2,0);
+        } else if (rangeSensor.getDistance(DistanceUnit.CM) > 40) {
+            encoderMecanumDrive(1,-15,-15,2,0);
+        }
         //if use strafing, add error correction so that it stays within a certain distance of the wall
         servoBeaconPress();
 
@@ -124,7 +129,8 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     public void lineAlignStrafe() {
         //moveTowardWall();
         if(second_beacon_press){
-            setMotorsToEnc(29, 29, 0.3);
+            //setMotorsToEnc(29, 29, 0.3);
+            setMotorsModeToColorSensing();
         }
         else {
             setMotorsModeToColorSensing();
@@ -145,14 +151,15 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     public void lineAlign() {
 
         if(second_beacon_press){
-            setMotorsToEnc(29, 29, 0.3);
+          //  setMotorsToEnc(29, 29, 0.3);
+            setMotorsModeToColorSensing();
         }
         else {
             setMotorsModeToColorSensing();
         }
             telemetry.addData("DISTANCEDISTANCE:", rangeSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
-            if (rangeSensor.getDistance(DistanceUnit.CM) < 30) {
+            if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
                 crossDrive(1, 0.7);
             } else {
                 crossDrive(2, 0.7);
@@ -164,15 +171,15 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
                     stopMotors();
                     setMotorsModeToColorSensing();
                     speedflag = true;
-                    if (rangeSensor.getDistance(DistanceUnit.CM) < 30) {
+                    if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
                         crossDrive(1, 0.7);
                     } else {
                         crossDrive(2, 0.7);
                     }
                 }
-                if (rangeSensor.getDistance(DistanceUnit.CM) < 25) {
+                if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
                     crossDrive(1, 0.7);
-                } else if (rangeSensor.getDistance(DistanceUnit.CM) > 50) {
+                } else if (rangeSensor.getDistance(DistanceUnit.CM) > 40) {
                     crossDrive(2, 0.7);
                 }
 
@@ -193,11 +200,11 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
        /* telemetry.addData("Distance", rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.update();*/
         //sleep(1000);
-        while (rangeSensor.getDistance(DistanceUnit.CM) > 12) {
+        while (rangeSensor.getDistance(DistanceUnit.CM) > 15) {
 
         }
         stopMotors();
-        idle();
+  //      idle();
      //   sleep(500);
         if(rangeSensor.getDistance(DistanceUnit.CM)<6) {
             setMotorsModeToRangeSensing();
@@ -209,8 +216,8 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
             stopMotors();
             idle();
         }
-        telemetry.addData("Distance",rangeSensor.getDistance(DistanceUnit.CM));
-        telemetry.update();
+//        telemetry.addData("Distance",rangeSensor.getDistance(DistanceUnit.CM));
+//        telemetry.update();
     }
 
     public void printColorsSeen(){
@@ -229,15 +236,15 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
            {
 
                 setMotorsModeToEncDrive();
-                encoderMecanumCrossDrive(pathhighspeed, 90, 90, 5, 4);
+                encoderMecanumCrossDrive(pathhighspeed, 100, 100, 5, 4);
 
-                encoderMecanumDrive(pathhighspeed,58,-58,5,0);
+                encoderMecanumDrive(pathhighspeed,55,-55,5,0);
              //   gyroCorrection((beacon_angle + 135));
-                encoderShoot(1);
-                intake_motor.setPower(1);
-                sleep(1400);
+                encoderShoot(.8);
+                intake_motor.setPower(.8);
+                sleep(800);
                 intake_motor.setPower(0);
-                encoderShoot(1);
+                encoderShoot(.8);
 
                 encoderMecanumDrive(pathhighspeed,-50,-50,5,0);
                 encoderMecanumDrive(pathhighspeed, 10, 10, .2, 0);

@@ -376,7 +376,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         back_right_motor.setPower(0);
         //idle();
         back_left_motor.setPower(0);
-        sleep(100);
+        //sleep(100);
         back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //idle();
         front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -385,7 +385,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
        // idle();
         front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        // idle();
-        sleep(100);
+       // sleep(100);
     }
 
     // drive shooting motor for the given time in msec
@@ -425,18 +425,18 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
     public void encoderShoot(double speed) {
         shooting_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooting_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooting_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+     //   shooting_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooting_motor.setTargetPosition((int) (shooting_motor.getCurrentPosition() + (1478 * getDriveGearReduction())));
-        telemetry.addData("", "Shooting...");
-        telemetry.update();
-        shooting_motor.setPower(1);
+        shooting_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        telemetry.addData("", "Shooting...");
+//        telemetry.update();
+        shooting_motor.setPower(speed);
         while (shooting_motor.isBusy()) {
 
         }
         shooting_motor.setPower(0);
-        telemetry.addData("", "Done Shooting");
-        telemetry.update();
+//        telemetry.addData("", "Done Shooting");
+//        telemetry.update();
         shooting_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
@@ -697,7 +697,7 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
     public void setMotorsModeToColorSensing()
     {
-        setMotorsToEnc(29, 29, 0.5);
+        setMotorsToEnc(29, 29, 0.7);
     }
     public void setMotorsModeToRangeSensing()
     {
@@ -856,11 +856,11 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         //idle();
         front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //idle();
-        telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
-        telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
-        telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
-        telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
-        telemetry.update();
+//        telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
+//        telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
+//        telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
+//        telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
+//        telemetry.update();
           //  runtime.reset();
             //if(leftInches != -rightInches)
                 /*front_left_motor.setPower(Math.abs(leftSpeed)*Math.sin(degrees*Math.PI/180 + (Math.PI/4)));
@@ -943,11 +943,11 @@ idle();
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //idle();
             front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
-            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
-            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
-            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
-            telemetry.update();
+//            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
+//            telemetry.update();
           //  idle();
             front_right_motor.setPower(Math.abs(speed));
             //idle();
@@ -986,11 +986,11 @@ idle();
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
           //  idle();
             front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
-            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
-            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
-            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
-            telemetry.update();
+//            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
+//            telemetry.update();
             front_right_motor.setPower(Math.abs(0));
             //idle();
             back_right_motor.setPower(Math.abs(speed));
@@ -1028,11 +1028,11 @@ idle();
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //idle();
             front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
-            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
-            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
-            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
-            telemetry.update();
+//            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
+//            telemetry.update();
             front_right_motor.setPower(Math.abs(speed));
            // idle();
             back_right_motor.setPower(Math.abs(0));
@@ -1070,11 +1070,11 @@ idle();
             front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
            // idle();
             front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
-            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
-            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
-            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
-            telemetry.update();
+//            telemetry.addData("current:" + back_left_motor.getCurrentPosition(),back_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + back_right_motor.getCurrentPosition(),back_right_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_left_motor.getCurrentPosition(),front_left_motor.getTargetPosition());
+//            telemetry.addData("current:" + front_right_motor.getCurrentPosition(),front_right_motor.getTargetPosition());
+//            telemetry.update();
             front_right_motor.setPower(Math.abs(0));
           //  idle();
             back_right_motor.setPower(Math.abs(speed));
