@@ -370,21 +370,21 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
 
     public void stopMotors() {
         front_right_motor.setPower(0);
-        idle();
+        //idle();
         front_left_motor.setPower(0);
-        idle();
+        //idle();
         back_right_motor.setPower(0);
-        idle();
+        //idle();
         back_left_motor.setPower(0);
         sleep(100);
         back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
+        //idle();
         front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
+        //idle();
         back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
+       // idle();
         front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
+       // idle();
         sleep(100);
     }
 

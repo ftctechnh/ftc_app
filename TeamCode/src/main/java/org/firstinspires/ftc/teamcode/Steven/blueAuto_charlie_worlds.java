@@ -57,7 +57,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
         setMotorsModeToEncDrive();
         stopMotors();
-.        timeProfile[profileindex++] = runtime.milliseconds();
+        timeProfile[profileindex++] = runtime.milliseconds();
 
         encoderMecanumCrossDrive(1,175,175,5,2);
         encoderMecanumDrive(1,17,17,5,1);
@@ -136,7 +136,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         }
         stopMotors();
 
-        stopMotors();
+      //  stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
 
 
@@ -198,7 +198,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         }
         stopMotors();
         idle();
-        sleep(500);
+     //   sleep(500);
         if(rangeSensor.getDistance(DistanceUnit.CM)<6) {
             setMotorsModeToRangeSensing();
 
@@ -263,12 +263,12 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         stopMotors();
         double distFromWall = rangeSensor.getDistance(DistanceUnit.CM)+4;
        // telemetry.addData("",distFromWall);
-        telemetry.addData("distance",distFromWall);
-        telemetry.update();
+      /*  telemetry.addData("distance",distFromWall);
+        telemetry.update();*/
 
         encoderMecanumDrive(0.6, -distFromWall, -distFromWall, 5,0);
 //
-        sleep(500);
+        sleep(100);
 //
         encoderMecanumDrive(0.6, distFromWall, distFromWall, 5,0);
         //setMotorsModeToRangeSensing();
