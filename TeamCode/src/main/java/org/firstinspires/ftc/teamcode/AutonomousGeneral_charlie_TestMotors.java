@@ -271,7 +271,7 @@ public class AutonomousGeneral_charlie_TestMotors extends LinearOpMode {
         double rightSpeed = 0;
 
 
-        sleep(500)
+        sleep(500);
         // Ensure that the opmode is still active
       //  if (opModeIsActive())
 

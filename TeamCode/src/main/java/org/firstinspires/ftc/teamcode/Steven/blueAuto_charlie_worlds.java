@@ -59,8 +59,8 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         stopMotors();
         timeProfile[profileindex++] = runtime.milliseconds();
 
-        encoderMecanumCrossDrive(1,150,150,5,2);
-        encoderMecanumDrive(1,20,20,5,1);
+        encoderMecanumCrossDrive(1,175,175,5,2);
+        encoderMecanumDrive(1,12,12,5,1);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
 
@@ -76,7 +76,6 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         autoBeaconPresser.setPosition(initialPos);
         if (second_beacon_press == false)
         {
-
             moveToNextBeacon();
         }
         else
@@ -90,7 +89,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     public void  moveToNextBeacon(){
         second_beacon_press = true;
         setMotorsModeToEncDrive();;
-        encoderMecanumDrive(1,100,100,5,1);
+        encoderMecanumDrive(1,90,90,5,1);
 
         //if use strafing, add error correction so that it stays within a certain distance of the wall
         servoBeaconPress();
@@ -130,9 +129,9 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         else {
             setMotorsModeToColorSensing();
         }
-        strafeRight(0.3);
+        strafeRight(0.5);
         while(whiteLineDetectedBack() == false){
-
+            telemetry.addData("left wheel back enc", back_left_motor.getCurrentPosition());
 
         }
         stopMotors();
@@ -189,7 +188,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
 
     public void moveTowardWall(){
-        setMotorsModeToGyroSensing();
+        setMotorsModeToRangeSensing();
         straightDrive(-0.8);
         telemetry.addData("Distance", rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
@@ -199,7 +198,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         }
         stopMotors();
         idle();
-        setMotorsModeToGyroSensing();
+        setMotorsModeToRangeSensing();
 
         straightDrive(0.8);
         while (rangeSensor.getDistance(DistanceUnit.CM) < 10) {
@@ -229,13 +228,13 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
                 setMotorsModeToEncDrive();
                 encoderMecanumCrossDrive(pathhighspeed, 90, 90, 5, 4);
 
-                encoderMecanumDrive(pathhighspeed,56,-56,5,0);
+                encoderMecanumDrive(pathhighspeed,58,-58,5,0);
              //   gyroCorrection((beacon_angle + 135));
-                encoderShoot(0.8);
+                encoderShoot(1);
                 intake_motor.setPower(1);
                 sleep(1400);
                 intake_motor.setPower(0);
-                encoderShoot(0.8);
+                encoderShoot(1);
 
                 encoderMecanumDrive(pathhighspeed,-50,-50,5,0);
                 encoderMecanumDrive(pathhighspeed, 10, 10, .2, 0);

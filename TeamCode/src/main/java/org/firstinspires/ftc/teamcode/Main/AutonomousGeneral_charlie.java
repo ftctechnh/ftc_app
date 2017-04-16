@@ -889,6 +889,14 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
                     (runtime.seconds() < time) &&
                     (back_left_motor.isBusy() && back_right_motor.isBusy()&&
                             front_left_motor.isBusy() && front_right_motor.isBusy())) {
+                back_left_motor.setPower(Math.abs(leftSpeed));
+                //idle();
+                back_right_motor.setPower(Math.abs(rightSpeed));
+                //idle();
+                front_left_motor.setPower(Math.abs(leftSpeed));
+                //idle();
+                front_right_motor.setPower(Math.abs(rightSpeed));
+                //idle();
                 idle();
             }
 idle();
@@ -952,6 +960,14 @@ idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
                     (front_right_motor.isBusy() && back_left_motor.isBusy())) {
+                front_right_motor.setPower(Math.abs(speed));
+                //idle();
+                back_right_motor.setPower(Math.abs(0));
+                //  idle();
+                back_left_motor.setPower(Math.abs(speed));
+                // idle();
+                front_left_motor.setPower(Math.abs(0));
+                // idle();
                 idle();
             }
         }
@@ -985,7 +1001,16 @@ idle();
            // idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (front_left_motor.isBusy() && back_right_motor.isBusy())) { idle();
+                    (front_left_motor.isBusy() && back_right_motor.isBusy())) {
+                front_right_motor.setPower(Math.abs(0));
+                //idle();
+                back_right_motor.setPower(Math.abs(speed));
+                // idle();
+                back_left_motor.setPower(Math.abs(0));
+                // idle();
+                front_left_motor.setPower(Math.abs(speed));
+                // idle();
+                idle();
             }
         }
         else if(direction == 2){
@@ -1018,7 +1043,16 @@ idle();
           //  idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (back_left_motor.isBusy() && front_right_motor.isBusy())) { idle();
+                    (back_left_motor.isBusy() && front_right_motor.isBusy())) {
+                front_right_motor.setPower(Math.abs(speed));
+                // idle();
+                back_right_motor.setPower(Math.abs(0));
+                //  idle();
+                back_left_motor.setPower(Math.abs(speed));
+                //  idle();
+                front_left_motor.setPower(Math.abs(0));
+                //  idle();
+                idle();
             }
         }
         else if(direction == 3) {
@@ -1051,7 +1085,16 @@ idle();
           //  idle();
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
-                    (front_left_motor.isBusy() && back_right_motor.isBusy())) { idle();
+                    (front_left_motor.isBusy() && back_right_motor.isBusy())) {
+                front_right_motor.setPower(Math.abs(0));
+                //  idle();
+                back_right_motor.setPower(Math.abs(speed));
+                //  idle();
+                back_left_motor.setPower(Math.abs(0));
+                //  idle();
+                front_left_motor.setPower(Math.abs(speed));
+                //  idle();
+                idle();
             }
         }
 
