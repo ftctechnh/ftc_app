@@ -57,10 +57,10 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
         setMotorsModeToEncDrive();
         stopMotors();
-        timeProfile[profileindex++] = runtime.milliseconds();
+.        timeProfile[profileindex++] = runtime.milliseconds();
 
         encoderMecanumCrossDrive(1,175,175,5,2);
-        encoderMecanumDrive(1,12,12,5,1);
+        encoderMecanumDrive(1,17,17,5,1);
         timeProfile[profileindex++] = runtime.milliseconds();
         servoBeaconPress();
 
@@ -97,25 +97,25 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 }
     public void ColorSensorRead(){
         readNewColorLeft();
-        sleep(1000);
+        //sleep(1000);
         //readNewColorRight();
 
-        telemetry.addData("","READ DATA");
-        telemetry.update();
+        /*telemetry.addData("","READ DATA");
+        telemetry.update();*/
 
 
         if (currentColorBeaconLeft.equals(currentTeam)){
             autoBeaconPresser.setPosition(servoLeftPos);
 
             //telemetry.addData("left color", currentColorBeaconLeft);
-            telemetry.addData("left color", currentColorBeaconLeft);
+            /*telemetry.addData("left color", currentColorBeaconLeft);
             telemetry.addData("current team", currentTeam);
-            telemetry.update();
+            telemetry.update();*/
         }
         else if(currentColorBeaconLeft.equals("red")){
             autoBeaconPresser.setPosition(servoRightPos);
-            telemetry.addData("left color", currentColorBeaconLeft);
-            telemetry.update();
+            /*telemetry.addData("left color", currentColorBeaconLeft);
+            telemetry.update();*/
         }
         //sleep(50000);
 
@@ -129,7 +129,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         else {
             setMotorsModeToColorSensing();
         }
-        strafeRight(0.5);
+        strafeRight(0.3);
         while(whiteLineDetectedBack() == false){
             telemetry.addData("left wheel back enc", back_left_motor.getCurrentPosition());
 
@@ -190,22 +190,25 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
     public void moveTowardWall(){
         setMotorsModeToRangeSensing();
         straightDrive(-0.8);
-        telemetry.addData("Distance", rangeSensor.getDistance(DistanceUnit.CM));
-        telemetry.update();
-        sleep(1000);
+       /* telemetry.addData("Distance", rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();*/
+        //sleep(1000);
         while (rangeSensor.getDistance(DistanceUnit.CM) > 12) {
 
         }
         stopMotors();
         idle();
-        setMotorsModeToRangeSensing();
+        sleep(500);
+        if(rangeSensor.getDistance(DistanceUnit.CM)<6) {
+            setMotorsModeToRangeSensing();
 
-        straightDrive(0.8);
-        while (rangeSensor.getDistance(DistanceUnit.CM) < 10) {
+            straightDrive(0.8);
+            while (rangeSensor.getDistance(DistanceUnit.CM) < 8) {
 
+            }
+            stopMotors();
+            idle();
         }
-        stopMotors();
-        idle();
         telemetry.addData("Distance",rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
     }
