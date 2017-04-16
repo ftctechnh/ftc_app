@@ -267,9 +267,11 @@ public class AutonomousGeneral_charlie_TestMotors extends LinearOpMode {
         int newRightFrontTarget;
         int newLeftBackTarget;
         int newRightBackTarget;
-        double leftSpeed;
-        double rightSpeed;
+        double leftSpeed = 0;
+        double rightSpeed = 0;
 
+
+        sleep(500)
         // Ensure that the opmode is still active
       //  if (opModeIsActive())
 
@@ -349,16 +351,17 @@ public class AutonomousGeneral_charlie_TestMotors extends LinearOpMode {
 
 
 
-
-
-
-
-
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
                     (runtime.seconds() < time) &&
                     (back_left_motor.isBusy() && back_right_motor.isBusy()&&
                             front_left_motor.isBusy() && front_right_motor.isBusy())) {
+
+                back_left_motor.setPower(Math.abs(leftSpeed));
+                back_right_motor.setPower(Math.abs(rightSpeed));
+                front_left_motor.setPower(Math.abs(leftSpeed));
+                front_right_motor.setPower(Math.abs(rightSpeed));
+
                 idle();
             }
 idle();
