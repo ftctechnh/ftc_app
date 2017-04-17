@@ -36,6 +36,8 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
     public Servo autoBeaconPresser;
 
     public OpticalDistanceSensor ODSBack;
+    public OpticalDistanceSensor ODSFront;
+    public double baseline1;
     public double baseline2;
 
     //String currentColor = "other";
@@ -80,9 +82,12 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         ODSBack = hardwareMap.opticalDistanceSensor.get("ODSBack");
         idle();
 
-
+        ODSFront = hardwareMap.opticalDistanceSensor.get("ODSFront");
+        idle();
         //baseline1 = ODSFront.getRawLightDetected();
         baseline2 = ODSBack.getRawLightDetected();
+        idle();
+        baseline1 = ODSFront.getRawLightDetected();
         idle();
 
         autoBeaconPresser = hardwareMap.servo.get("ServoPress");
@@ -521,14 +526,14 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         }
     }
 
-//    public boolean whiteLineDetectedFront() {
-//        if ((ODSFront.getRawLightDetected() > (baseline1 * 3))) {
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
+    public boolean whiteLineDetectedFront() {
+        if ((ODSFront.getRawLightDetected() > (baseline1 * 3))) {
+
+            return true;
+        }
+
+        return false;
+    }
 
     public boolean whiteLineDetectedBack() {
         if ((ODSBack.getRawLightDetected() > (baseline2 * 3))) {

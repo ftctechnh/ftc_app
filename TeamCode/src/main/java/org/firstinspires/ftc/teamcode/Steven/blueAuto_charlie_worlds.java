@@ -70,7 +70,7 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
         boolean left_detected = false;
         boolean beacon_press_success = false;
 
-        lineAlign();
+        doubleLineAlign();
         moveTowardWall();
         ColorSensorRead();//sets servo to correct position
        pressBeaconButton();
@@ -194,6 +194,104 @@ public class blueAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
 
 
+    public void doubleLineAlign(){
+        if(second_beacon_press){
+            //  setMotorsToEnc(29, 29, 0.3);
+            setMotorsModeToColorSensing();
+        }
+        else {
+            setMotorsModeToColorSensing();
+        }
+        telemetry.addData("DISTANCEDISTANCE:", rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
+        if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
+            crossDrive(1, 0.7);
+        } else {
+            crossDrive(2, 0.7);
+        }
+        double lineAligntime = runtime.milliseconds()+2500;
+        boolean speedflag = false;
+        while (whiteLineDetectedBack() == false && whiteLineDetectedFront() == false) {
+            if(runtime.milliseconds() > lineAligntime && !speedflag){
+                stopMotors();
+                setMotorsModeToColorSensing();
+                speedflag = true;
+                if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
+                    crossDrive(1, 0.7);
+                } else {
+                    crossDrive(2, 0.7);
+                }
+            }
+            if (rangeSensor.getDistance(DistanceUnit.CM) < 20) {
+                crossDrive(1, 0.7);
+            } else if (rangeSensor.getDistance(DistanceUnit.CM) > 40) {
+                crossDrive(2, 0.7);
+            }
+
+
+        }
+
+        stopMotors();
+     //   timeProfile[profileindex++] = runtime.milliseconds();
+
+        {
+            boolean back_detect_first = false;
+            boolean front_detect_first = false;
+            if ((whiteLineDetectedBack() == true)) {
+                if((rangeSensor.getDistance(DistanceUnit.CM) > 27)) {
+                    encoderMecanumDrive(0.5, -8, -8, 2, 0);
+                    back_detect_first = true;
+                }
+                else if(rangeSensor.getDistance(DistanceUnit.CM) > 15){
+                    encoderMecanumDrive(0.5, -4, -4, 2, 0);
+                    back_detect_first = true;
+                }
+                // sleep(250);
+
+
+
+
+
+            }
+
+            if ((whiteLineDetectedFront() == true) ){
+                if((rangeSensor.getDistance(DistanceUnit.CM) > 27)) {
+                    encoderMecanumDrive(0.5, -8, -8, 2, 0);
+                    front_detect_first = true;
+                }
+                else if (rangeSensor.getDistance(DistanceUnit.CM) > 15){
+                    encoderMecanumDrive(0.5, -4, -4, 2, 0);
+                    front_detect_first = true;
+                }
+
+
+                //  sleep(250);
+
+
+            }
+
+            if ((front_detect_first || back_detect_first )&&(rangeSensor.getDistance(DistanceUnit.CM)>10)) {
+                stopMotors();
+                back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                //timeProfile[profileindex++] = runtime.milliseconds();
+
+                while (whiteLineDetectedBack() == false) {
+                    if (back_detect_first) {
+                        turnRight(0.3);
+                    }
+                    if (front_detect_first) {
+
+                        turnLeft(0.3);
+                    }
+                }
+
+                stopMotors();
+            }
+        }
+    }
     public void moveTowardWall(){
         setMotorsModeToRangeSensing();
         straightDrive(-0.8);
