@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -29,7 +30,12 @@ public class charlieTeleOp extends OpMode {
     Servo lift_servo;
     DcMotor lift_motor;
 
+    public Servo autoBeaconPresser;
+    int servoCount = 0;
     double shooterGearRatio = 2.333;
+    public String currentColorBeaconLeft = "blank";
+    double servoLeftPos = 0;
+    double servoRightPos = 1;
 //asdfasdf
 
 /*
@@ -39,7 +45,7 @@ public class charlieTeleOp extends OpMode {
 */
 
 
-   // ColorSensor colorSensor;    // Hardware Device Object
+    ColorSensor bColorSensorLeft;    // Hardware Device Object
 
 
 
@@ -99,6 +105,10 @@ Declare global variables here
         leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+       autoBeaconPresser = hardwareMap.servo.get("ServoPress");
+        bColorSensorLeft = hardwareMap.colorSensor.get("bColorSensorLeft");
     }
 /*
 ---------------------------------------------------------------------------------------------
@@ -133,6 +143,10 @@ Declare global variables here
         BallShooter();
         //shoot();
         //CapBallLift();
+        moveServo();
+        moveColorServo();
+
+
 
     }
 
@@ -190,6 +204,62 @@ Declare global variables here
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
         }
+    }
+
+    public void moveServo(){
+
+        servoCount++;
+        if(gamepad2.right_bumper){
+            if(servoCount%2 == 0) {
+                autoBeaconPresser.setPosition(0);
+            }
+            else{
+                autoBeaconPresser.setPosition(1);
+            }
+        }
+    }
+    public void moveColorServo(){
+        String currentTeam = "";
+        if(gamepad2.x){
+            currentTeam = "blue";
+        }
+        else if(gamepad2.b){
+            currentTeam = "red";
+        }
+        if(gamepad2.left_bumper) {
+            readNewColorLeft();
+
+            if (currentColorBeaconLeft.equals(currentTeam)) {
+                autoBeaconPresser.setPosition(servoLeftPos);
+
+            } else {
+                autoBeaconPresser.setPosition(servoRightPos);
+
+            }
+        }
+
+
+    }
+    private void readNewColorLeft() {
+
+        currentColorBeaconLeft = "blank";
+
+        if (bColorSensorLeft.red() > bColorSensorLeft.blue()) {
+            currentColorBeaconLeft = "red";
+
+            /*telemetry.addData("current color is red", bColorSensorLeft.red());
+            telemetry.update();*/
+        } else if (bColorSensorLeft.red() < bColorSensorLeft.blue()) {
+            currentColorBeaconLeft = "blue";
+
+            /*telemetry.addData("current color is blue", bColorSensorLeft.blue());
+            telemetry.update();*/
+
+        } else {
+
+            currentColorBeaconLeft = "blank";
+        }
+        //sleep(5000);
     }
 
     public void FourWheelDrive(){
