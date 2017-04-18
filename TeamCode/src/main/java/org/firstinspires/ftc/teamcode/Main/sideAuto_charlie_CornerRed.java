@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "side auto charles corner park")
-public class sideAuto_charlie_Corner extends AutonomousGeneral_charlie {
+@Autonomous(name = "Red sideAuto charles corner ")
+public class sideAuto_charlie_CornerRed extends AutonomousGeneral_charlie {
 
 
     //
@@ -55,6 +55,9 @@ public class sideAuto_charlie_Corner extends AutonomousGeneral_charlie {
         encoderShoot(0.5);
         sleep(250);
 
+        encoderMecanumDrive(0.3,-38.1,-38.1,5,0);
+        encoderMecanumDrive(0.55,-34,34,5,0);
+        encoderMecanumDrive(0.7,-152,-152,10,0);
        /* encoderMecanumDrive(0.75, 5, 5, 1, 2);
         readNewColorLeft();
         if (currentColorBeaconLeft.equals(currentTeam)){
