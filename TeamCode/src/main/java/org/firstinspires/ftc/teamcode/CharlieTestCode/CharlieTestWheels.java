@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.CharlieTestCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
  * Created by inspirationteam on 2/19/2017.
  */
 @Autonomous(name = "autonomous")
-///@Disabled
-public class TestMode extends AutonomousGeneral_charlie
+@Disabled
+public class CharlieTestWheels extends AutonomousGeneral_charlie
 {
 
     public void runOpMode(){
