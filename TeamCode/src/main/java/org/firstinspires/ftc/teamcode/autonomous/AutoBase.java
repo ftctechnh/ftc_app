@@ -2,18 +2,13 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import android.os.AsyncTask;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.smarthardware.AdvancedMotorController;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
-import org.firstinspires.ftc.teamcode.smarthardware.SmartColorSensor;
-import org.firstinspires.ftc.teamcode.smarthardware.SmartGyroSensor;
-import org.firstinspires.ftc.teamcode.smarthardware.SmartRangeSensor;
+import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.threads.NiFTAsyncTask;
+import org.firstinspires.ftc.teamcode.hardware.*;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilizes inheritance and polymorphism.
 public abstract class AutoBase extends MainRobotBase
@@ -21,10 +16,10 @@ public abstract class AutoBase extends MainRobotBase
     /******** SENSOR STUFF ********/
 
     /**** Range Sensors ****/
-    protected SmartRangeSensor frontRangeSensor, sideRangeSensor;
+    protected NiFTRangeSensor frontRangeSensor, sideRangeSensor;
 
     /**** Color Sensors (3) ****/
-    protected SmartColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
+    protected NiFTColorSensor option1ColorSensor, option2ColorSensor, bottomColorSensor, particleColorSensor;
     protected boolean option1Red, option2Red, option1Blue, option2Blue;
     protected void updateColorSensorStates()
     {
@@ -36,7 +31,7 @@ public abstract class AutoBase extends MainRobotBase
     }
 
     /**** Gyro ****/
-    protected SmartGyroSensor gyroscope;
+    protected NiFTGyroSensor gyroscope;
 
     /******** Robot Driving ********/
     protected enum PowerUnits
@@ -59,7 +54,7 @@ public abstract class AutoBase extends MainRobotBase
     {
         private final double power;
         private final boolean useRangeSensor;
-        private final ConsoleManager.ProcessConsole selfAdjustingDriveConsole;
+        private final NiFTConsole.ProcessConsole selfAdjustingDriveConsole;
 
         public SelfAdjustingDriveTask(double power)
         {
@@ -67,7 +62,7 @@ public abstract class AutoBase extends MainRobotBase
         }
         public SelfAdjustingDriveTask(double power, boolean useRangeSensor)
         {
-            selfAdjustingDriveConsole = new ConsoleManager.ProcessConsole ("Self Adjusting Drive");
+            selfAdjustingDriveConsole = new NiFTConsole.ProcessConsole ("Self Adjusting Drive");
 
             this.power = power;
             this.useRangeSensor = useRangeSensor;
@@ -94,12 +89,12 @@ public abstract class AutoBase extends MainRobotBase
                             "Right power = " + rightPower
                     );
 
-                    ProgramFlow.pauseForMS (50);
+                    NiFTFlow.pauseForMS (50);
                 }
             }
             catch (InterruptedException e) //When the robot has reached its destination.
             {
-                ConsoleManager.outputNewSequentialLine ("Stop requested: Stopping Intelligent Drive Task!");
+                NiFTConsole.outputNewSequentialLine ("Stop requested: Stopping Intelligent Drive Task!");
                 cancel (true);
             }
 
@@ -122,7 +117,7 @@ public abstract class AutoBase extends MainRobotBase
     protected void drive(SensorStopType sensorStopType, double stopValue, PowerUnits powerUnit, double powerMeasure, boolean useRangeSensorAdjustment) throws InterruptedException
     {
         //Create a new output console entirely for this process.
-        ConsoleManager.ProcessConsole driveTerminationConsole = new ConsoleManager.ProcessConsole ("Drive Terminator");
+        NiFTConsole.ProcessConsole driveTerminationConsole = new NiFTConsole.ProcessConsole ("Drive Terminator");
 
         //Create the drive task.
         SelfAdjustingDriveTask driveTask = new SelfAdjustingDriveTask (powerMeasure * powerUnit.conversionFactor, useRangeSensorAdjustment);
@@ -176,7 +171,7 @@ public abstract class AutoBase extends MainRobotBase
                     break;
             }
 
-            ProgramFlow.pauseForSingleFrame ();
+            NiFTFlow.pauseForSingleFrame ();
         }
 
         //End the drive task
@@ -197,7 +192,7 @@ public abstract class AutoBase extends MainRobotBase
     protected void turnToHeading (int desiredHeading, TurnMode mode, long maxTime) throws InterruptedException
     {
         //Create a console to which output will be displayed.
-        ConsoleManager.ProcessConsole turnConsole = new ConsoleManager.ProcessConsole ("Turning");
+        NiFTConsole.ProcessConsole turnConsole = new NiFTConsole.ProcessConsole ("Turning");
 
         //Set gyro desiredHeading.
         gyroscope.setDesiredHeading (desiredHeading);
@@ -242,7 +237,7 @@ public abstract class AutoBase extends MainRobotBase
                     "Stopping if possible in " + (maxTime - (System.currentTimeMillis () - startTime) + "ms")
             );
 
-            ProgramFlow.pauseForSingleFrame ();
+            NiFTFlow.pauseForSingleFrame ();
         }
         while (System.currentTimeMillis() - startTime < maxTime || Math.abs(gyroscope.getOffFromHeading ()) >= 10);
 
@@ -263,7 +258,7 @@ public abstract class AutoBase extends MainRobotBase
         leftDrive.setRPS (0);
         rightDrive.setRPS (0);
 
-        ProgramFlow.pauseForMS (msDelay);
+        NiFTFlow.pauseForMS (msDelay);
     }
 
     /******** CUSTOM ACTIONS ********/
@@ -273,9 +268,9 @@ public abstract class AutoBase extends MainRobotBase
         harvester.startPIDTask ();
 
         flywheels.setRPS (19);
-        ProgramFlow.pauseForMS (300);
+        NiFTFlow.pauseForMS (300);
         harvester.setRPS (5);
-        ProgramFlow.pauseForMS (2200);
+        NiFTFlow.pauseForMS (2200);
         flywheels.setRPS (0);
         harvester.setRPS (0);
 
@@ -289,28 +284,28 @@ public abstract class AutoBase extends MainRobotBase
     protected void initializeOpModeSpecificHardware() throws InterruptedException
     {
         //The range sensors are especially odd to initialize, and will often require a robot power cycle.
-        ConsoleManager.outputNewSequentialLine ("Validating Front Range Sensor...");
-        frontRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Front Range Sensor"), 0x90);
-        ConsoleManager.appendToLastSequentialLine (frontRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
+        NiFTConsole.outputNewSequentialLine ("Validating Front Range Sensor...");
+        frontRangeSensor = new NiFTRangeSensor ("Front Range Sensor", 0x90);
+        NiFTConsole.appendToLastSequentialLine (frontRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
 
-        ConsoleManager.outputNewSequentialLine ("Validating Side Range Sensor...");
-        sideRangeSensor = new SmartRangeSensor (initialize(ModernRoboticsI2cRangeSensor.class, "Back Range Sensor"), 0x10);
-        ConsoleManager.appendToLastSequentialLine (sideRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
+        NiFTConsole.outputNewSequentialLine ("Validating Side Range Sensor...");
+        sideRangeSensor = new NiFTRangeSensor ("Back Range Sensor", 0x10);
+        NiFTConsole.appendToLastSequentialLine (sideRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");
 
         //Initialize color sensors.
-        ConsoleManager.outputNewSequentialLine ("Fetching Color Sensors...");
-        option1ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 1 Color Sensor"), 0x4c, false);
-        option2ColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Option 2 Color Sensor"), 0x5c, false);
-        bottomColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "Bottom Color Sensor"), 0x3c, true);
-        particleColorSensor = new SmartColorSensor (initialize(ColorSensor.class, "particleColorSensor"), 0x6c, true);
-        ConsoleManager.appendToLastSequentialLine ("OK!");
+        NiFTConsole.outputNewSequentialLine ("Fetching Color Sensors...");
+        option1ColorSensor = new NiFTColorSensor ("Option 1 Color Sensor", 0x4c, false);
+        option2ColorSensor = new NiFTColorSensor ("Option 2 Color Sensor", 0x5c, false);
+        bottomColorSensor = new NiFTColorSensor ("Bottom Color Sensor", 0x3c, true);
+        particleColorSensor = new NiFTColorSensor ("particleColorSensor", 0x6c, true);
+        NiFTConsole.appendToLastSequentialLine ("OK!");
 
         //Initialize gyroscope.
-        ConsoleManager.outputNewSequentialLine("Calibrating Gyroscope...");
-        gyroscope = new SmartGyroSensor (initialize(GyroSensor.class, "Gyroscope")); //Calibrates immediately.
-        ConsoleManager.appendToLastSequentialLine ("OK!");
+        NiFTConsole.outputNewSequentialLine("Calibrating Gyroscope...");
+        gyroscope = new NiFTGyroSensor ("Gyroscope"); //Calibrates immediately.
+        NiFTConsole.appendToLastSequentialLine ("OK!");
 
-        ConsoleManager.outputNewSequentialLine ("Initialization completed!");
+        NiFTConsole.outputNewSequentialLine ("Initialization completed!");
     }
 
 

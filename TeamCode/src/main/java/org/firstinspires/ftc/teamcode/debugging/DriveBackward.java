@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 @Autonomous(name="Drive Backward", group = "Utility Group")
 
@@ -26,6 +26,6 @@ public class DriveBackward extends MainRobotBase
         rightDrive.setDirectMotorPower (-.8);
 
         while (true)
-            ProgramFlow.pauseForSingleFrame ();
+            NiFTFlow.pauseForSingleFrame ();
     }
 }

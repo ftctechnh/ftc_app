@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.threads;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public class ProgramFlow
+public class NiFTFlow
 {
     //TODO: Now that this is the standard for stopping the program, perhaps it would be worthwhile to update the program's SDK.
 

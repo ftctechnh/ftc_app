@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 @Autonomous(name = "Sensor Debug", group = "Utility Group")
 
@@ -12,8 +13,8 @@ public class SensorDebug extends AutoBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Sensor Debugging");
-        ConsoleManager.outputNewSequentialLine ("created sensor debugging console");
+        NiFTConsole.ProcessConsole processConsole = new NiFTConsole.ProcessConsole ("Sensor Debugging");
+        NiFTConsole.outputNewSequentialLine ("created sensor debugging console");
 
         while (true)
         {
@@ -39,7 +40,7 @@ public class SensorDebug extends AutoBase
                     "R motor encoder: " + rightDrive.encoderMotor.getCurrentPosition ()
             );
 
-            ProgramFlow.pauseForSingleFrame ();
+            NiFTFlow.pauseForSingleFrame ();
         }
     }
 }

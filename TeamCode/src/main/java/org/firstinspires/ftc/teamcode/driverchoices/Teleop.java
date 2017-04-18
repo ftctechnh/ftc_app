@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.MainRobotBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="Teleop", group="Teleop Group")
@@ -26,7 +26,7 @@ public class Teleop extends MainRobotBase
         boolean capBallMode = false, capBallMode2 = false;
         double flywheelMaxRPS = 35, harvesterMaxRPS = 5;
 
-        ConsoleManager.ProcessConsole teleopConsole = new ConsoleManager.ProcessConsole ("Teleop");
+        NiFTConsole.ProcessConsole teleopConsole = new NiFTConsole.ProcessConsole ("Teleop");
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (true)
@@ -155,7 +155,7 @@ public class Teleop extends MainRobotBase
                     "FBP_up = " + fbpUp
             );
 
-            ProgramFlow.pauseForSingleFrame ();
+            NiFTFlow.pauseForSingleFrame ();
 
             /******************** END OF LOOP ********************/
         }

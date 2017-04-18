@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 @Autonomous(name="Turn Testing", group = "Test Group")
 
@@ -18,8 +19,8 @@ public class TurnTesting extends AutoBase
         {
             turnToHeading (turnSign * (90 * ((turns + 1) % 4)), TurnMode.BOTH, 4000);
             hardBrake (0);
-            ConsoleManager.outputNewSequentialLine ("Turn " + turns + " completed.");
-            ProgramFlow.pauseForMS (2000);
+            NiFTConsole.outputNewSequentialLine ("Turn " + turns + " completed.");
+            NiFTFlow.pauseForMS (2000);
             turns++;
         }
     }

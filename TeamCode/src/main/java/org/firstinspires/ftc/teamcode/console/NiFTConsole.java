@@ -1,16 +1,13 @@
-package org.firstinspires.ftc.teamcode.debugging;
+package org.firstinspires.ftc.teamcode.console;
 
 import android.os.AsyncTask;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
-public class ConsoleManager
+public class NiFTConsole
 {
     private static Telemetry mainTelemetry;
     public static void initializeWith (Telemetry someTelemetry)
@@ -80,7 +77,7 @@ public class ConsoleManager
                 while (true)
                 {
                     rebuildConsole ();
-                    ProgramFlow.pauseForMS (50);
+                    NiFTFlow.pauseForMS (50);
                 }
             }
             catch (InterruptedException e)

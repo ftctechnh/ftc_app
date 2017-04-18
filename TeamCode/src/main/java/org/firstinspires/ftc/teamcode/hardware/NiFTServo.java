@@ -1,20 +1,20 @@
-package org.firstinspires.ftc.teamcode.smarthardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-public class SmartServo
+public class NiFTServo
 {
     public final Servo servo;
     private double position, upperLimit, lowerLimit;
 
-    public SmartServo(Servo servo, double initialPosition)
+    public NiFTServo (String servoName, double initialPosition)
     {
-        this(servo, 0, initialPosition, 1);
+        this(servoName, 0, initialPosition, 1);
     }
-    public SmartServo(Servo servo, double lowerLimit, double initialPosition, double upperLimit)
+    public NiFTServo (String servoName, double lowerLimit, double initialPosition, double upperLimit)
     {
-        this.servo = servo;
+        this.servo = NiFTInitializer.initialize (Servo.class, servoName);
         this.lowerLimit = Range.clip(lowerLimit, 0, 1);
         this.upperLimit = Range.clip(upperLimit, 0, 1);
         this.position = Range.clip(initialPosition, lowerLimit, upperLimit);

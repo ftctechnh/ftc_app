@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.smarthardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public class SmartRangeSensor
+public class NiFTRangeSensor
 {
     public final ModernRoboticsI2cRangeSensor sensor;
-
-    public SmartRangeSensor(ModernRoboticsI2cRangeSensor rangeSensor, int i2cAddress)
+    public NiFTRangeSensor (String servoName, int i2cAddress)
     {
-        this.sensor = rangeSensor;
+        sensor = NiFTInitializer.initialize (ModernRoboticsI2cRangeSensor.class, servoName);
 
-        rangeSensor.setI2cAddress (I2cAddr.create8bit (i2cAddress));
+        sensor.setI2cAddress (I2cAddr.create8bit (i2cAddress));
     }
 
     public boolean returningValidOutput()

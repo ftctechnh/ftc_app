@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.debugging;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 @Autonomous(name = "Shooting - PID Debug", group = "Utility Group")
 
@@ -20,7 +21,7 @@ public class ShootingDebugging extends AutoBase
 
         while (true)
         {
-            ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Shooting Debugger");
+            NiFTConsole.ProcessConsole processConsole = new NiFTConsole.ProcessConsole ("Shooting Debugger");
 
             processConsole.updateWith (
                     "F conversion " + flywheels.getRPSConversionFactor (),
@@ -31,7 +32,7 @@ public class ShootingDebugging extends AutoBase
                     "H actual " + harvester.getActualTicksSinceUpdate ()
             );
 
-            ProgramFlow.pauseForSingleFrame ();
+            NiFTFlow.pauseForSingleFrame ();
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.smarthardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import android.os.AsyncTask;
 
@@ -6,26 +6,30 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
-public class AdvancedMotorController
+//My own take on PID, not great but it works
+public class NiFTMotorController
 {
     //Only certain motors have encoders on them, so the linkedMotor object is implemented.
     public final String name;
     public final DcMotor encoderMotor, linkedMotor;
 
     //Initialization steps
-    public AdvancedMotorController (String name, DcMotor encoderMotor)
+    public NiFTMotorController (String name, String encoderMotorName)
     {
-        this (name, encoderMotor, null);
+        this (name, encoderMotorName, null);
     }
-    public AdvancedMotorController (String name, DcMotor encoderMotor, DcMotor linkedMotor)
+    public NiFTMotorController (String name, String encoderMotorName, String linkedMotorName)
     {
         this.name = name;
 
-        this.encoderMotor = encoderMotor;
-        this.linkedMotor = linkedMotor;
+        this.encoderMotor = NiFTInitializer.initialize (DcMotor.class, encoderMotorName);
+        if (linkedMotorName != null)
+            this.linkedMotor = NiFTInitializer.initialize (DcMotor.class, linkedMotorName);
+        else
+            this.linkedMotor = null;
 
         resetEncoder ();
     }
@@ -36,7 +40,7 @@ public class AdvancedMotorController
     {
         return rpsConversionFactor;
     }
-    public AdvancedMotorController setRPSConversionFactor(double rpsConversionFactor)
+    public NiFTMotorController setRPSConversionFactor(double rpsConversionFactor)
     {
         this.rpsConversionFactor = rpsConversionFactor;
         return this;
@@ -54,13 +58,13 @@ public class AdvancedMotorController
         }
     }
     private MotorType motorType = MotorType.NeverRest40;
-    public AdvancedMotorController setMotorType(MotorType motorType)
+    public NiFTMotorController setMotorType(MotorType motorType)
     {
         this.motorType = motorType;
         return this;
     }
 
-    public AdvancedMotorController setMotorDirection(DcMotorSimple.Direction direction)
+    public NiFTMotorController setMotorDirection(DcMotorSimple.Direction direction)
     {
         encoderMotor.setDirection (direction);
         if (linkedMotor != null)
@@ -71,7 +75,7 @@ public class AdvancedMotorController
 
     //Adjustment sensitivity.
     private double sensitivity = .00002;
-    public AdvancedMotorController setAdjustmentSensitivity(double sensitivity)
+    public NiFTMotorController setAdjustmentSensitivity(double sensitivity)
     {
         this.sensitivity = sensitivity;
         return this;
@@ -79,7 +83,7 @@ public class AdvancedMotorController
 
     //Bounds for adjustment
     private double sensitivityBound = .5;
-    public AdvancedMotorController setAdjustmentSensitivityBounds(double sensitivityBound)
+    public NiFTMotorController setAdjustmentSensitivityBounds(double sensitivityBound)
     {
         this.sensitivityBound = sensitivityBound;
         return this;
@@ -87,7 +91,7 @@ public class AdvancedMotorController
 
     //Refresh rate.
     private long refreshRate = 50;
-    public AdvancedMotorController setRefreshRate(long refreshRate)
+    public NiFTMotorController setRefreshRate(long refreshRate)
     {
         this.refreshRate = refreshRate;
         return this;
@@ -156,11 +160,11 @@ public class AdvancedMotorController
     /******* THREADING *********/
     private final class PIDTask extends AsyncTask<Void, Void, Void>
     {
-        private final ConsoleManager.ProcessConsole pidConsole;
+        private final NiFTConsole.ProcessConsole pidConsole;
 
         public PIDTask()
         {
-            pidConsole = new ConsoleManager.ProcessConsole (name + " PID Console");
+            pidConsole = new NiFTConsole.ProcessConsole (name + " PID Console");
         }
 
         @Override
@@ -181,12 +185,12 @@ public class AdvancedMotorController
                         );
                     }
 
-                    ProgramFlow.pauseForMS (30);
+                    NiFTFlow.pauseForMS (30);
                 }
             }
             catch (InterruptedException e)
             {
-                ConsoleManager.outputNewSequentialLine ("Stop requested for PID task!");
+                NiFTConsole.outputNewSequentialLine ("Stop requested for PID task!");
                 cancel(true);
             }
 
@@ -252,7 +256,7 @@ public class AdvancedMotorController
         {
             expectedTicksSinceUpdate = expectedTicksPerSecond * ((System.currentTimeMillis () - lastAdjustTime) / 1000.0);
 
-            actualTicksSinceUpdate = Math.random() * 50 /*encoderMotor.getCurrentPosition ()*/ - previousMotorPosition;
+            actualTicksSinceUpdate = Math.random() * encoderMotor.getCurrentPosition () - previousMotorPosition;
 
             //Sensitivity is the coefficient below, and bounds are .5 and -.5 so that momentary errors don't result in crazy changes.
             rpsConversionFactor += Math.signum (desiredRPS) * Range.clip (((expectedTicksSinceUpdate - actualTicksSinceUpdate) * sensitivity), -sensitivityBound, sensitivityBound);

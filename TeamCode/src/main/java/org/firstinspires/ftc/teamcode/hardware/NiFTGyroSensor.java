@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.smarthardware;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
-public class SmartGyroSensor
+public class NiFTGyroSensor
 {
     public final GyroSensor sensor;
 
-    public SmartGyroSensor(GyroSensor gyroSensor) throws InterruptedException
+    public NiFTGyroSensor (String gyroSensorName) throws InterruptedException
     {
-        this.sensor = gyroSensor;
+        this.sensor = NiFTInitializer.initialize (GyroSensor.class, gyroSensorName);
 
         calibrate (true);
     }
@@ -18,11 +18,11 @@ public class SmartGyroSensor
     public void calibrate(boolean zeroHeading) throws InterruptedException
     {
         //Pause to prevent odd errors in which it says it's configured but is actually LYING.
-        ProgramFlow.pauseForMS (1000);
+        NiFTFlow.pauseForMS (1000);
 
         //Wait for gyro to finish calibrating.
         while (sensor.isCalibrating())
-            ProgramFlow.pauseForMS (50);
+            NiFTFlow.pauseForMS (50);
 
         //Zero gyro heading.
         if (zeroHeading)
@@ -32,9 +32,9 @@ public class SmartGyroSensor
     //Just resets the gyro.
     public void zeroHeading() throws InterruptedException
     {
-        ProgramFlow.pauseForMS (400);
+        NiFTFlow.pauseForMS (400);
         sensor.resetZAxisIntegrator();
-        ProgramFlow.pauseForMS (400);
+        NiFTFlow.pauseForMS (400);
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.

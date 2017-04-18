@@ -8,14 +8,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.ImprovedOpModeBase;
-import org.firstinspires.ftc.teamcode.debugging.ConsoleManager;
-import org.firstinspires.ftc.teamcode.threads.ProgramFlow;
+import org.firstinspires.ftc.teamcode.NiFTBase;
+import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.hardware.NiFTInitializer;
+import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
 //Add the teleop to the op mode register.
 @TeleOp(name="TankBot Drive", group="TankBot Group")
 
-public class TankBotDriveAround extends ImprovedOpModeBase
+public class TankBotDriveAround extends NiFTBase
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors (they are lists because it helps when we add on new motors.
@@ -29,11 +30,11 @@ public class TankBotDriveAround extends ImprovedOpModeBase
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
-        leftMotor = initialize(DcMotor.class, "Left Motor");
-        rightMotor = initialize(DcMotor.class, "Right Motor");
+        leftMotor = NiFTInitializer.initialize(DcMotor.class, "Left Motor");
+        rightMotor = NiFTInitializer.initialize(DcMotor.class, "Right Motor");
         leftMotor.setDirection (DcMotorSimple.Direction.REVERSE);
 
-        turret = initialize(Servo.class, "Turret");
+        turret = NiFTInitializer.initialize(Servo.class, "Turret");
     }
 
     private void setRightPower(double power)
@@ -56,7 +57,7 @@ public class TankBotDriveAround extends ImprovedOpModeBase
                 lastTimeMusicTogglePressed = System.currentTimeMillis ();
         double currentTurretPosition = 0.5;
 
-        ConsoleManager.ProcessConsole processConsole = new ConsoleManager.ProcessConsole ("Tank Bot Output");
+        NiFTConsole.ProcessConsole processConsole = new NiFTConsole.ProcessConsole ("Tank Bot Output");
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop())
         while (opModeIsActive())
@@ -172,13 +173,13 @@ public class TankBotDriveAround extends ImprovedOpModeBase
                 }
             });
 
-            ConsoleManager.outputNewSequentialLine ("Playing " + choice.toString());
+            NiFTConsole.outputNewSequentialLine ("Playing " + choice.toString());
 
-            ProgramFlow.pauseForMS (1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
+            NiFTFlow.pauseForMS (1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
         }
         catch (Exception e)
         {
-            ConsoleManager.outputNewSequentialLine ("Error while attempting to play music.");
+            NiFTConsole.outputNewSequentialLine ("Error while attempting to play music.");
             return;
         }
     }
