@@ -56,7 +56,7 @@ public class sideAuto_charlie_CornerBlue extends AutonomousGeneral_charlie {
         sleep(250);
 
         encoderMecanumDrive(0.3,-38.1,-38.1,5,0);
-        encoderMecanumDrive(0.55,34,-34 `,5,0);
+        encoderMecanumDrive(0.55,34,-34,5,0);
         encoderMecanumDrive(0.7,-152,-152,10,0);
        /* encoderMecanumDrive(0.75, 5, 5, 1, 2);
         readNewColorLeft();
