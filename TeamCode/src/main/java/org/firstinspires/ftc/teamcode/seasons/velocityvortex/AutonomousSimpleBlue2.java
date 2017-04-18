@@ -25,21 +25,10 @@ public class AutonomousSimpleBlue2 extends LinearOpModeBase {
         //drive backward to align before launch
         encoderDrive(0.25, 3, RobotDirection.BACKWARD);
 
-        // launch the first (loaded) particle
-        launchParticle();
-
         // open intake door
         getDoor3().setPosition(0.25);
 
-        // run the intake
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 750) {
-            getIntakeMotor().setPower(-1);
-        }
-        getIntakeMotor().setPower(0);
-
-        // launch the second particle
-        launchParticle();
+        autoLaunchParticle(2);
 
         // set target position for initial diagonal drive motion
         getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 71);

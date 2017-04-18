@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
  * Created by ftc6347 on 10/16/16.
@@ -11,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Teleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
-    private static final double LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD = 12;
 
     private float frontLeftPower;
     private float frontRightPower;
@@ -157,8 +155,7 @@ public class Teleop extends LinearOpModeBase {
     private void handleTelemetry() {
 
         telemetry.addData("ods2: ", getDiskOds().getRawLightDetected());
-        telemetry.addData("ods3", getOds3().getRawLightDetected());
-        telemetry.addData("launcher ods", getLauncherOds().getLightDetected());
+        telemetry.addData("ods3", getLeftOds().getRawLightDetected());
         telemetry.addData("front range", getFrontRange().cmUltrasonic());
 
         telemetry.addData("color sensor red", getColorSensor1().red());
@@ -170,6 +167,9 @@ public class Teleop extends LinearOpModeBase {
         telemetry.addData("launcher chamber cs", getLauncherChamberColorSensor().alpha());
 
         telemetry.addData("Touch sensor pressed", getTouchSensor().isPressed());
+
+        telemetry.addData("left ods", getLeftOds().getRawLightDetected());
+        telemetry.addData("right ods", getRightOds().getRawLightDetected());
 
         telemetry.update();
     }

@@ -26,8 +26,8 @@ public class MotorTest extends LinearOpModeBase {
             telemetry.addData("clr", reading(getColorSensor1()));
             telemetry.addData("clr2", reading(getColorSensor2()));
             telemetry.addData("gyro:", reading(getGyroSensor()));
-            getOds3().enableLed(true);
-            telemetry.addData("ods:", reading(getOds3()));
+            getLeftOds().enableLed(true);
+            telemetry.addData("ods:", reading(getLeftOds()));
             telemetry.addData("range", reading(getFrontRange()));
             telemetry.addData("blm:" , reading(getBackLeftDrive()));
             telemetry.addData("brm:" , reading(getBackRightDrive()));

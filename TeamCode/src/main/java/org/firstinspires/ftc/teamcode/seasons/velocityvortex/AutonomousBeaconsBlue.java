@@ -52,10 +52,10 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
 
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        touchSensorDrive();
+        // reset before driving forward with touch sensor
+        gyroPivot(0.8, 0, true);
 
-        // back up from the wall to prevent bumping beacon
-        encoderDrive(0.2, 0.5, RobotDirection.BACKWARD);
+        touchSensorDrive();
 
         // drive left to white line
         stopOnLine(0.1, RobotDirection.LEFT);
@@ -72,6 +72,9 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         rangeGyroStrafe(0, 20, 35, RobotDirection.LEFT);
 
 //        rangeSensorDrive(15, 0.2);
+
+        // reset before driving forward with touch sensor
+        gyroPivot(0.8, 0, true);
 
         touchSensorDrive();
 
@@ -105,8 +108,8 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // set target position for initial diagonal drive motion
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 42);
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 42);
 
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);

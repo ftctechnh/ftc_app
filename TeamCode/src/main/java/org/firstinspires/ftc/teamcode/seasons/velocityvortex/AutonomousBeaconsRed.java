@@ -18,8 +18,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 62); // 68
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 62); // 68
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 61); // 68
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 61); // 68
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -52,6 +52,9 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
 
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // reset before driving forward with touch sensor
+        gyroPivot(0.8, 0, true);
+
         touchSensorDrive();
 
         // drive left to white line
@@ -68,6 +71,9 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         rangeGyroStrafe(0, 20, 35, RobotDirection.RIGHT);
 
 //        rangeSensorDrive(10, 0.2);
+
+        // reset before driving forward with touch sensor
+        gyroPivot(0.8, 0, true);
 
         touchSensorDrive();
 
@@ -100,8 +106,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
+        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 42);
+        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 42);
 
         getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);

@@ -30,15 +30,7 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
         // open intake door
         getDoor3().setPosition(0.25);
 
-        // run the intake
-        getRobotRuntime().reset();
-        while(opModeIsActive() && getRobotRuntime().milliseconds() < 750) {
-            getIntakeMotor().setPower(-1);
-        }
-        getIntakeMotor().setPower(0);
-
-        // launch the second particle
-        launchParticle();
+        autoLaunchParticle(2);
 
         // set target position for initial diagonal drive motion
         getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);

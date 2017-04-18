@@ -36,6 +36,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private static final double P_RANGE_DRIVE_COEFF = 0.04;
 
+    protected static final double LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD = 12;
+
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
     private DcMotor backLeftDrive;
@@ -276,7 +278,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // drive forward while touch sensor is not pressed
         while(opModeIsActive() && !getTouchSensor().isPressed()) {
-            driveForward(0.15);
+            driveForward(0.1);
         }
         stopRobot();
 
@@ -311,8 +313,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // when the beacon is already claimed, move on
         if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
-            // drive to 15cm from wall
-            rangeSensorDrive(15, 0.1);
             return;
         }
 
@@ -346,8 +346,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             // when the beacon is already claimed, move on
             if(colorSensor1.red() > 0 && colorSensor2.red() > 0) {
-                // drive to 15cm from wall
-                rangeSensorDrive(15, 0.1);
                 return;
             }
 
@@ -411,8 +409,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
         // when the beacon is already claimed, move on
         if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
-            // drive to 15cm from wall
-            rangeSensorDrive(15, 0.1);
             return;
         }
 
@@ -446,8 +442,6 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
             // when the beacon is already claimed, move on
             if(colorSensor1.blue() > 0 && colorSensor2.blue() > 0) {
-                // drive to 15cm from wall
-                rangeSensorDrive(15, 0.1);
                 return;
             }
 
@@ -491,6 +485,25 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         }
 
         launcherMotor.setPower(0);
+    }
+
+    protected void autoLaunchParticle(int numParticles) {
+
+        int particlesLaunched = 0;
+
+        while(opModeIsActive() && particlesLaunched < numParticles) {
+            if (getLauncherChamberColorSensor().alpha()
+                    > LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
+                getIntakeMotor().setPower(0);
+                launchParticle();
+
+                particlesLaunched++;
+            } else {
+                // otherwise, run the intake
+                getIntakeMotor().setPower(-1.0);
+            }
+        }
+        getIntakeMotor().setPower(0);
     }
 
     /**
