@@ -96,40 +96,16 @@ public class AutonomousBeaconsBlue extends LinearOpModeBase {
         // drive backward for shooting
         encoderDrive(0.5, 10, RobotDirection.BACKWARD);
 
+        // open intake door
+        getDoor3().setPosition(0.25);
+
         // launch the particle
-        launchParticle();
+        autoLaunchParticle();
 
         // pivot to eighty degrees
         gyroPivot(0.8, 85, true);
 
-        // reset the encoders
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // set target position for initial diagonal drive motion
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 42);
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 42);
-
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        getBackRightDrive().setPower(0.5);
-        getFrontLeftDrive().setPower(0.5);
-
-        // wait for the drive motors to stop
-        while(opModeIsActive() &&
-                (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
-
-            telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontLeftDrive().getCurrentPosition(),
-                    getBackRightDrive().getCurrentPosition());
-
-            telemetry.addData("front left target", getFrontLeftDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackRightDrive().getTargetPosition());
-            telemetry.update();
-            idle();
-        }
+        encoderDriveDiagonal(0.5, 42, RobotDirection.NORTH_EAST);
 
         // drive right a foot
         encoderDrive(1.0, 12, RobotDirection.RIGHT);

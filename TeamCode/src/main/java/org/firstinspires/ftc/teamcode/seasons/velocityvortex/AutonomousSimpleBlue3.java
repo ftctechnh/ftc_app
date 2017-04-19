@@ -27,13 +27,12 @@ public class AutonomousSimpleBlue3 extends LinearOpModeBase {
         // open intake door
         getDoor3().setPosition(0.25);
 
-        autoLaunchParticle(2);
+        autoLaunchParticle();
 
         // pivot to drive onto center vortex base
-        gyroPivot(0.5, -135, true);
+        gyroPivot(0.5, -90, true);
 
-        encoderDrive(0.5, 48, RobotDirection.FORWARD);
-
+        encoderDriveDiagonal(0.5, 30, RobotDirection.NORTH_WEST);
         encoderDrive(0.5, 12, RobotDirection.LEFT);
     }
 }

@@ -73,6 +73,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private ElapsedTime robotRuntime;
 
+    private int numAutoParticlesToLaunch = 2;
+
     /**
      * An enumeration type that represents the directions the robot is able to drive in.
      *
@@ -248,6 +250,15 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                     gyroSensor.resetZAxisIntegrator();
                 }
 
+                // toggle between particles to launch
+                if(gamepad1.x) {
+                    if (numAutoParticlesToLaunch == 2) {
+                        numAutoParticlesToLaunch = 1;
+                    } else {
+                        numAutoParticlesToLaunch = 2;
+                    }
+                }
+
                 robotRuntime.reset();
             }
 
@@ -258,6 +269,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
                     getColorSensor1().red(), getColorSensor1().blue());
             telemetry.addData("color sensor 2", "red: %d, blue: %d",
                     getColorSensor2().red(), getColorSensor2().blue());
+            telemetry.addData("number of particles to launch",
+                    numAutoParticlesToLaunch);
 
             // print the delay
             telemetry.addData("delay", "%ds", delay);
@@ -487,11 +500,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         launcherMotor.setPower(0);
     }
 
-    protected void autoLaunchParticle(int numParticles) {
+    protected void autoLaunchParticle() {
 
         int particlesLaunched = 0;
 
-        while(opModeIsActive() && particlesLaunched < numParticles) {
+        while(opModeIsActive() && particlesLaunched < numAutoParticlesToLaunch) {
             if (getLauncherChamberColorSensor().alpha()
                     > LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
                 getIntakeMotor().setPower(0);
@@ -574,7 +587,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     protected void encoderDriveDiagonal(double speed, int distance, RobotDirection direction) {
         setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         int target = distance * COUNTS_PER_INCH;
 
@@ -585,8 +598,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             case NORTH_EAST:
                 driveMotor1 = getFrontLeftDrive();
                 driveMotor2 = getBackRightDrive();
-                driveMotor1.setTargetPosition(-target);
-                driveMotor2.setTargetPosition(target);
+                driveMotor1.setTargetPosition(target);
+                driveMotor2.setTargetPosition(-target);
                 break;
             case NORTH_WEST:
                 driveMotor1 = getFrontRightDrive();
@@ -603,8 +616,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
             case SOUTH_WEST:
                 driveMotor1 = getFrontLeftDrive();
                 driveMotor2 = getBackRightDrive();
-                driveMotor1.setTargetPosition(target);
-                driveMotor2.setTargetPosition(-target);
+                driveMotor1.setTargetPosition(-target);
+                driveMotor2.setTargetPosition(target);
                 break;
             default:
                 throw new IllegalArgumentException(
@@ -624,7 +637,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         stopRobot();
 
         // set RUN_WITHOUT_ENCODER for each motor
-        setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setDriveMotorsMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**

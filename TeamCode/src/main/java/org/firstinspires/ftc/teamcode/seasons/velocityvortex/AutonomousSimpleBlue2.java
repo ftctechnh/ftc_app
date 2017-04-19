@@ -28,31 +28,9 @@ public class AutonomousSimpleBlue2 extends LinearOpModeBase {
         // open intake door
         getDoor3().setPosition(0.25);
 
-        autoLaunchParticle(2);
+        autoLaunchParticle();
 
-        // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 71);
-        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 71);
-
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        getFrontLeftDrive().setPower(0.5);
-        getBackRightDrive().setPower(0.5);
-
-        // wait for the drive motors to stop
-        while(opModeIsActive() &&
-                (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
-
-            telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontLeftDrive().getCurrentPosition(),
-                    getBackRightDrive().getCurrentPosition());
-
-            telemetry.addData("front left target", getFrontLeftDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackRightDrive().getTargetPosition());
-            telemetry.update();
-            idle();
-        }
+        encoderDriveDiagonal(0.5, 69, RobotDirection.SOUTH_WEST);
 
         // align before driving up ramp
         gyroPivot(0.5, 45, true);

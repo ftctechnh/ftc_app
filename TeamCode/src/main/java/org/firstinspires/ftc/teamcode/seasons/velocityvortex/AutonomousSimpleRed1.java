@@ -24,96 +24,20 @@ public class AutonomousSimpleRed1 extends LinearOpModeBase {
         //drive backward to align before launch
         encoderDrive(0.25, 3, RobotDirection.BACKWARD);
 
-        // launch the first (loaded) particle
-        launchParticle();
-
         // open intake door
         getDoor3().setPosition(0.25);
 
-        autoLaunchParticle(2);
+        autoLaunchParticle();
 
-        // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
-        getBackLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
-
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        getFrontRightDrive().setPower(0.5);
-        getBackLeftDrive().setPower(0.5);
-
-        // wait for the drive motors to stop
-        while(opModeIsActive() &&
-                (getFrontRightDrive().isBusy() && getBackLeftDrive().isBusy())) {
-
-            telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontRightDrive().getCurrentPosition(),
-                    getBackLeftDrive().getCurrentPosition());
-
-            telemetry.addData("front left target", getFrontRightDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackLeftDrive().getTargetPosition());
-            telemetry.update();
-            idle();
-        }
-        stopRobot();
+        encoderDriveDiagonal(0.5, 58, RobotDirection.SOUTH_EAST);
 
         gyroPivot(0.5, -40, true);
 
-        // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 50);
-        getBackRightDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 50);
-
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        getFrontLeftDrive().setPower(0.5);
-        getBackRightDrive().setPower(0.5);
-
-        // wait for the drive motors to stop
-        while(opModeIsActive() &&
-                (getFrontLeftDrive().isBusy() && getBackRightDrive().isBusy())) {
-
-            telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontLeftDrive().getCurrentPosition(),
-                    getBackRightDrive().getCurrentPosition());
-
-            telemetry.addData("front left target", getFrontLeftDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackRightDrive().getTargetPosition());
-            telemetry.update();
-            idle();
-        }
+        encoderDriveDiagonal(0.5, 55, RobotDirection.SOUTH_WEST);
 
         gyroPivot(0.5, -5, true);
 
-        // set target position for initial diagonal drive motion
-        getFrontRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 24);
-        getBackLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 24);
-
-        setDriveMotorsMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        getFrontRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getBackLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        getFrontRightDrive().setPower(0.5);
-        getBackLeftDrive().setPower(0.5);
-
-        // wait for the drive motors to stop
-        while(opModeIsActive() &&
-                (getFrontRightDrive().isBusy() && getBackLeftDrive().isBusy())) {
-
-            telemetry.addData("Path",  "Running at %d :%d",
-                    getFrontRightDrive().getCurrentPosition(),
-                    getBackLeftDrive().getCurrentPosition());
-
-            telemetry.addData("front left target", getFrontRightDrive().getTargetPosition());
-            telemetry.addData("back right target", getBackLeftDrive().getTargetPosition());
-            telemetry.update();
-            idle();
-        }
+        encoderDriveDiagonal(0.5, 24, RobotDirection.NORTH_WEST);
 
         encoderDrive(0.5, 20, RobotDirection.LEFT);
     }
