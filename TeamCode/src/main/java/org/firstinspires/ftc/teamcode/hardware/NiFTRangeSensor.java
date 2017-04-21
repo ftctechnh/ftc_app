@@ -19,12 +19,32 @@ public class NiFTRangeSensor
     {
         return !(sensor.getDistance (DistanceUnit.CM) < 1.0);
     }
-    public double ultrasonicDistCM ()
+
+    //Since sometimes the range sensor will return 255 at longer distances, this code obtains a more realistic value.
+    public double validDistCM(double defaultVal)
     {
-        return sensor.cmUltrasonic ();
+        return validDistCM (defaultVal, 0);
     }
-    public double getDistOffFromIdealWallDist()
+    public double validDistCM(double defaultVal, long maxTimePermitted)
     {
-        return ultrasonicDistCM () - 15;
+        double ultrasonicDist = sensor.cmUltrasonic ();
+
+        if (ultrasonicDist >= 255 || ultrasonicDist <= 0)
+        {
+            if (maxTimePermitted > 0)
+            {
+                long startTime = System.currentTimeMillis ();
+                while (System.currentTimeMillis () - startTime <= maxTimePermitted)
+                {
+                    ultrasonicDist = sensor.cmUltrasonic ();
+                    if (!(ultrasonicDist >= 255 || ultrasonicDist <= 0))
+                        break;
+                }
+            }
+            else
+                return defaultVal;
+        }
+
+        return ultrasonicDist;
     }
 }

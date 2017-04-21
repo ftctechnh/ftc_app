@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.console.NiFTConsole;
+import org.firstinspires.ftc.teamcode.hardware.NiFTInitializer;
 import org.firstinspires.ftc.teamcode.music.NiFTMusic;
 import org.firstinspires.ftc.teamcode.threads.NiFTFlow;
 
@@ -17,6 +18,7 @@ public abstract class NiFTBase extends LinearOpMode
             NiFTFlow.initializeWithOpMode (this);
             NiFTConsole.initializeWith (telemetry);
             NiFTMusic.initializeWith (hardwareMap.appContext);
+            NiFTInitializer.setHardwareMap (hardwareMap);
 
             //REQUIRED in child classes.
             initializeHardware ();

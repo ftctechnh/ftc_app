@@ -23,6 +23,7 @@ public abstract class MainRobotBase extends NiFTBase
         //Make sure that the robot components are found and initialized correctly.
         /*************************** DRIVING MOTORS ***************************/
         NiFTConsole.outputNewSequentialLine ("Setting up drive motors...");
+
         //The back motors are the ones that have functional encoders, while the front ones don't currently work.
         leftDrive = new NiFTMotorController ("Left Drive", "backLeft", "frontLeft").
                 setRPSConversionFactor (0.40).
@@ -33,7 +34,8 @@ public abstract class MainRobotBase extends NiFTBase
         rightDrive = new NiFTMotorController ("Right Drive", "backRight", "frontRight").
                 setRPSConversionFactor (0.36).
                 setAdjustmentSensitivity (.00001).
-                setAdjustmentSensitivityBounds (0.3);;
+                setAdjustmentSensitivityBounds (0.3);
+
         NiFTConsole.appendToLastSequentialLine ("OK!");
 
         /*************************** OTHER MOTORS AND SERVOS ***************************/
@@ -41,7 +43,6 @@ public abstract class MainRobotBase extends NiFTBase
         harvester = new NiFTMotorController ("Harvester", "harvester").
                 setRPSConversionFactor (0.40).
                 setMotorDirection (DcMotorSimple.Direction.REVERSE);
-        harvester.resetEncoder ();
         NiFTConsole.appendToLastSequentialLine ("OK!");
 
         NiFTConsole.outputNewSequentialLine ("Setting up flywheels...");
@@ -51,7 +52,6 @@ public abstract class MainRobotBase extends NiFTBase
                 setMotorDirection (DcMotor.Direction.REVERSE).
                 setAdjustmentSensitivity (.00001).
                 setAdjustmentSensitivityBounds (0.3);
-        flywheels.resetEncoder ();
         NiFTConsole.appendToLastSequentialLine ("OK!");
 
         NiFTConsole.outputNewSequentialLine ("Setting up lift...");

@@ -34,10 +34,10 @@ public class SensorDebug extends AutoBase
                     "Heading: " + gyroscope.getValidGyroHeading(),
                     "Front Range Sensor: " + frontRangeSensor.ultrasonicDistCM (),
                     "Back Range Sensor: " + sideRangeSensor.ultrasonicDistCM (),
-                    "Harvester encoder: " + harvester.encoderMotor.getCurrentPosition (),
-                    "Flywheel encoder: " + flywheels.encoderMotor.getCurrentPosition (),
-                    "L motor encoder: " + leftDrive.encoderMotor.getCurrentPosition (),
-                    "R motor encoder: " + rightDrive.encoderMotor.getCurrentPosition ()
+                    "Harvester encoder: " + harvester.ENCODER_MOTOR.getCurrentPosition (),
+                    "Flywheel encoder: " + flywheels.ENCODER_MOTOR.getCurrentPosition (),
+                    "L motor encoder: " + leftDrive.ENCODER_MOTOR.getCurrentPosition (),
+                    "R motor encoder: " + rightDrive.ENCODER_MOTOR.getCurrentPosition ()
             );
 
             NiFTFlow.pauseForSingleFrame ();

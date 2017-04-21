@@ -19,9 +19,10 @@ public class ShootingDebugging extends AutoBase
         harvester.setRPS (5);
         harvester.startPIDTask ();
 
+        NiFTConsole.ProcessConsole processConsole = new NiFTConsole.ProcessConsole ("Shooting Debugger");
+
         while (true)
         {
-            NiFTConsole.ProcessConsole processConsole = new NiFTConsole.ProcessConsole ("Shooting Debugger");
 
             processConsole.updateWith (
                     "F conversion " + flywheels.getRPSConversionFactor (),
