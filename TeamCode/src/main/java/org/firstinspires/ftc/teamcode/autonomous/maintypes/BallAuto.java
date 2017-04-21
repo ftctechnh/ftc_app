@@ -57,6 +57,10 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
 
     protected void driverStationSaysGO() throws InterruptedException
     {
+        //Start PID on flywheels.
+        flywheels.startPIDTask ();
+        flywheels.setRPS (18.2);
+
         boolean onBlueAlliance = (getAlliance () == Alliance.BLUE);
         int autonomousSign = (onBlueAlliance ? 1 : -1);
 
@@ -66,7 +70,11 @@ public abstract class BallAuto extends AutoBase implements OnAlliance
 
         //Shoot the balls into the center vortex.
         NiFTConsole.outputNewSequentialLine("Shooting balls into center vortex...");
-        shootBallsIntoCenterVortex ();
+        harvester.setDirectMotorPower (1);
+        NiFTFlow.pauseForMS (2200);
+        harvester.setDirectMotorPower (0);
+        flywheels.setRPS (0);
+        flywheels.stopPIDTask ();
 
         if (parkOnCenterVortex)
         {

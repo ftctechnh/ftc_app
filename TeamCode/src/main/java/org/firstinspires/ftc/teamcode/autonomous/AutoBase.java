@@ -33,6 +33,11 @@ public abstract class AutoBase extends MainRobotBase
     protected NiFTGyroSensor gyroscope;
 
     /******** Robot Driving ********/
+    private int getRobotEncoderPosition ()
+    {
+        return (int) ((leftDrive.ENCODER_MOTOR.getCurrentPosition () + rightDrive.ENCODER_MOTOR.getCurrentPosition ()) / 2.0);
+    }
+
     protected enum PowerUnits
     {
         RevolutionsPerSecond (1), RevolutionsPerMinute (1.0 / 60);
@@ -71,7 +76,7 @@ public abstract class AutoBase extends MainRobotBase
             while (true)
             {
                 double gyroAdjustment = gyroscope.getOffFromHeading () * 0.15 * Math.signum (rps);
-                double rangeAdjustment = useRangeSensor ? sideRangeSensor.getDistOffFromIdealWallDist () * 0.15 : 0;
+                double rangeAdjustment = useRangeSensor ? (15 - sideRangeSensor.validDistCM (15)) * 0.15 : 0;
 
                 double totalAdjustment = gyroAdjustment + rangeAdjustment;
 
@@ -106,6 +111,10 @@ public abstract class AutoBase extends MainRobotBase
         SelfAdjustingDriveTask driveTask = new SelfAdjustingDriveTask (powerMeasure * powerUnit.conversionFactor, useRangeSensorAdjustment);
         driveTask.run();
 
+        //Calculate values which will be used later but only need one calculation.
+        int powerSign = (int) (Math.signum (powerMeasure));
+        int desiredEncoderStopPosition = sensorStopType == SensorStopType.Distance ? getRobotEncoderPosition () + (int)(stopValue) * powerSign : 0;
+
         //Allows us to know when we stopEasyTask.
         boolean reachedFinalDest = false;
 
@@ -120,9 +129,8 @@ public abstract class AutoBase extends MainRobotBase
                     if (stopValue == 0)
                         break;
 
-                    int powerSign = (int) (Math.signum (powerMeasure));
-                    double currentDistance = (leftDrive.ENCODER_MOTOR.getCurrentPosition () + rightDrive.ENCODER_MOTOR.getCurrentPosition ()) / 2.0;
-                    reachedFinalDest = stopValue * powerSign <= currentDistance * powerSign;
+                    int currentDistance = getRobotEncoderPosition ();
+                    reachedFinalDest = desiredEncoderStopPosition * powerSign <= currentDistance * powerSign;
 
                     driveTerminationConsole.updateWith (
                             "Current encoder position = " + currentDistance,
@@ -132,7 +140,7 @@ public abstract class AutoBase extends MainRobotBase
                     break;
 
                 case Ultrasonic:
-                    double currentRangeVal = frontRangeSensor.ultrasonicDistCM ();
+                    double currentRangeVal = frontRangeSensor.validDistCM (255, 300);
                     reachedFinalDest = currentRangeVal <= stopValue;
 
                     driveTerminationConsole.updateWith (
