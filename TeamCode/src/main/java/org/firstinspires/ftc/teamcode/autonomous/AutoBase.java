@@ -55,32 +55,35 @@ public abstract class AutoBase extends MainRobotBase
     //A new instance is instantiated upon starting a new drive.
     protected final class SelfAdjustingDriveTask extends NiFTAsyncTask
     {
-        private final double rps;
+        private final double RPS;
         private final boolean useRangeSensor;
         //Possible constructors.
-        public SelfAdjustingDriveTask (double rps)
+        public SelfAdjustingDriveTask (double RPS)
         {
-            this (rps, false);
+            this (RPS, false);
         }
-        public SelfAdjustingDriveTask (double rps, boolean useRangeSensor)
+        public SelfAdjustingDriveTask (double RPS, boolean useRangeSensor)
         {
             super("Self Adjusting Drive");
 
-            this.rps = rps;
+            this.RPS = RPS;
             this.useRangeSensor = useRangeSensor;
         }
 
         @Override
         protected void onBeginTask () throws InterruptedException
         {
+            leftDrive.startPIDTask ();
+            rightDrive.startPIDTask ();
+
             while (true)
             {
-                double gyroAdjustment = gyroscope.getOffFromHeading () * 0.15 * Math.signum (rps);
+                double gyroAdjustment = gyroscope.getOffFromHeading () * 0.15 * Math.signum (RPS);
                 double rangeAdjustment = useRangeSensor ? (15 - sideRangeSensor.validDistCM (15)) * 0.15 : 0;
 
                 double totalAdjustment = gyroAdjustment + rangeAdjustment;
 
-                double leftPower = rps * (1 + totalAdjustment), rightPower = rps * (1 - totalAdjustment);
+                double leftPower = RPS * (1 + totalAdjustment), rightPower = RPS * (1 - totalAdjustment);
 
                 leftDrive.setRPS (leftPower);
                 rightDrive.setRPS (rightPower);
@@ -88,12 +91,21 @@ public abstract class AutoBase extends MainRobotBase
                 processConsole.updateWith (
                         "Gyro adjustment = " + gyroAdjustment,
                         "Range adjustment = " + rangeAdjustment,
-                        "Left rps = " + leftPower,
-                        "Right rps = " + rightPower
+                        "Left RPS = " + leftPower,
+                        "Right RPS = " + rightPower
                 );
 
                 NiFTFlow.pauseForMS (50);
             }
+        }
+
+        @Override
+        protected void onQuitTask()
+        {
+            leftDrive.stopPIDTask ();
+            rightDrive.stopPIDTask ();
+            leftDrive.setRPS(0);
+            rightDrive.setRPS(0);
         }
     }
 
@@ -223,7 +235,7 @@ public abstract class AutoBase extends MainRobotBase
             turnConsole.updateWith (
                     "Turning to " + desiredHeading + " degrees",
                     "Current heading is " + gyroscope.getValidGyroHeading (),
-                    "Turn rps is " + turnPower,
+                    "Turn RPS is " + turnPower,
                     "Stopping if possible in " + (maxTime - (System.currentTimeMillis () - startTime) + "ms")
             );
 
@@ -256,7 +268,7 @@ public abstract class AutoBase extends MainRobotBase
     @Override
     protected void initializeOpModeSpecificHardware () throws InterruptedException
     {
-        //The range sensors are especially odd to initialize, and will often require a robot rps cycle.
+        //The range sensors are especially odd to initialize, and will often require a robot RPS cycle.
         NiFTConsole.outputNewSequentialLine ("Validating Front Range Sensor...");
         frontRangeSensor = new NiFTRangeSensor ("Front Range Sensor", 0x90);
         NiFTConsole.appendToLastSequentialLine (frontRangeSensor.returningValidOutput () ? "OK!" : "FAILED!");

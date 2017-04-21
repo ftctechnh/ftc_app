@@ -188,11 +188,14 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
                 //Drive to the values set forth previously by the if statement above and attempt to press the button.
                 drive(SensorStopType.Distance, driveDistance, PowerUnits.RevolutionsPerSecond, drivePower);
 
-                //Press the button.
-                rightButtonPusher.setToUpperLim ();
-                NiFTFlow.pauseForMS (gapBetweenWallAndSensorApparatus * 67);
-                rightButtonPusher.setServoPosition (1);
-                NiFTFlow.pauseForMS (gapBetweenWallAndSensorApparatus * 67 - 300);
+                if (failedAttempts != -1)
+                {
+                    //Press the button.
+                    rightButtonPusher.setToUpperLim ();
+                    NiFTFlow.pauseForMS (gapBetweenWallAndSensorApparatus * 67);
+                    rightButtonPusher.setServoPosition (1);
+                    NiFTFlow.pauseForMS (gapBetweenWallAndSensorApparatus * 67 - 300);
+                }
 
                 //Drive back to the original position.
                 drivingTask = new SelfAdjustingDriveTask (BEACON_RPS, true);
