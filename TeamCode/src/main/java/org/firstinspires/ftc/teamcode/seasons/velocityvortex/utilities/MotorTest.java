@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.velocityvortex.utilities;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,7 @@ import java.text.DecimalFormat;
 /**
  * Created by aburger on 3/5/2017.
  */
+@Disabled
 @TeleOp(name = "Motor Testing", group = "utilities")
 public class MotorTest extends LinearOpModeBase {
     @Override

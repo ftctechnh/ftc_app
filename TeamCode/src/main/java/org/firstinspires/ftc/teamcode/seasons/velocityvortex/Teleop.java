@@ -38,7 +38,22 @@ public class Teleop extends LinearOpModeBase {
                         if(getLauncherChamberColorSensor().alpha()
                                 > LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
                             getIntakeMotor().setPower(0);
-                            launchParticle();
+
+                            // run launcher motor for an entire rotation
+                            getRobotRuntime().reset();
+                            while(opModeIsActive() && getRobotRuntime().milliseconds() < 900) {
+                                getLauncherMotor().setPower(1.0);
+                            }
+                            getLauncherMotor().setPower(0);
+
+                            // run the intake before finding the black line
+                            getIntakeMotor().setPower(-1.0);
+
+                            // look for the black line
+                            while(opModeIsActive() && getDiskOds().getRawLightDetected() > 1) {
+                                getLauncherMotor().setPower(0.3);
+                            }
+                            getLauncherMotor().setPower(0);
                         } else {
                             // otherwise, run the intake
                             getIntakeMotor().setPower(-1.0);

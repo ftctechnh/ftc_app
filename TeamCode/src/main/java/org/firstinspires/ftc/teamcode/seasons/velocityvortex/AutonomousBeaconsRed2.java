@@ -4,11 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Created by ftc6347 on 1/9/17.
+ * Created by ftc6347 on 4/21/17.
  */
-@Autonomous(name = "Beacons 1 RED", group = "1 beacons")
-public class AutonomousBeaconsRed extends LinearOpModeBase {
-
+@Autonomous(name = "Beacons 2 RED", group = "2 beacons")
+public class AutonomousBeaconsRed2 extends LinearOpModeBase {
     @Override
     public void runOpMode() throws InterruptedException {
         initializeHardware();
@@ -18,8 +17,8 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         autonomousInitLoop();
 
         // set target position for initial diagonal drive motion
-        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 60); // 68
-        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 60); // 68
+        getFrontLeftDrive().setTargetPosition(LinearOpModeBase.COUNTS_PER_INCH * 61); // 68
+        getBackRightDrive().setTargetPosition(-LinearOpModeBase.COUNTS_PER_INCH * 61); // 68
 
         getFrontLeftDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         getBackRightDrive().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -100,12 +99,15 @@ public class AutonomousBeaconsRed extends LinearOpModeBase {
         // launch the particle
         autoLaunchParticle();
 
-        // pivot to eighty degrees
-        gyroPivot(0.8, -85, true);
+        gyroPivot(0.8, 0, true);
 
-        encoderDriveDiagonal(0.5, 42, RobotDirection.NORTH_WEST);
+        // wall-follow over to the corner vortex
+        rangeGyroStrafe(0, 40, 45, RobotDirection.LEFT);
 
-        // drive left a foot
-        encoderDrive(1.0, 12, RobotDirection.LEFT);
+        // gyro pivot to face the corner vortex
+        gyroPivot(0.8, -45, true);
+
+        // drive onto corner vortex
+        encoderDrive(0.5, 18, RobotDirection.FORWARD);
     }
 }

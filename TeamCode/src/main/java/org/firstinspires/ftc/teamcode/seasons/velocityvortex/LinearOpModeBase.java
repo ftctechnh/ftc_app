@@ -105,6 +105,9 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         backRightDrive = hardwareMap.dcMotor.get("br");
 
         launcherMotor = hardwareMap.dcMotor.get("launcher");
+        // keep launcher motor speed consistent
+        launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         intakeMotor = hardwareMap.dcMotor.get("intake");
 
         spoolMotor1 = hardwareMap.dcMotor.get("s1");
