@@ -1,3 +1,7 @@
+/**
+ * This code enables hardware initialization to be done outside of the op mode with a more generic format.
+ */
+
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;

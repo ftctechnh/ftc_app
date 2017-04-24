@@ -1,3 +1,7 @@
+/**
+ * This code is used during the robot's teleop period.
+ */
+
 package org.firstinspires.ftc.teamcode.driverchoices;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,7 +28,7 @@ public class Teleop extends MainRobotBase
         boolean pressingFlywheelC = false;
         boolean fbpUp = true;
         boolean capBallMode = false, capBallMode2 = false;
-        double flywheelMaxRPS = 35, harvesterMaxRPS = 5;
+        final double flywheelMaxRPS = 35, harvesterMaxRPS = 5;
 
         NiFTConsole.ProcessConsole teleopConsole = new NiFTConsole.ProcessConsole ("Teleop");
 

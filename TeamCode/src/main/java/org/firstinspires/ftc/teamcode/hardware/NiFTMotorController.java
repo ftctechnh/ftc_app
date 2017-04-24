@@ -1,3 +1,7 @@
+/**
+ * This class controls the advanced functionality we require while using makeshift PID.
+ */
+
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;

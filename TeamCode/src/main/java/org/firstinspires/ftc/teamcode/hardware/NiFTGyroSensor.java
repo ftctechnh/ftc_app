@@ -1,3 +1,7 @@
+/**
+ * Encapsulates the gyro and includes easier access to main gyro features.
+ */
+
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.GyroSensor;

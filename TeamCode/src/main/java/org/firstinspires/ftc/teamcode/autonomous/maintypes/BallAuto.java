@@ -1,3 +1,7 @@
+/**
+ * Ball auto is the backup auto we run when our team has a better beacon auto.
+ */
+
 package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 
 import com.qualcomm.robotcore.util.Range;

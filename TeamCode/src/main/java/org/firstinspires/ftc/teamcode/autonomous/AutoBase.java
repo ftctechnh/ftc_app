@@ -1,3 +1,7 @@
+/**
+ * Initializes autonomous-specific hardware, with just sensors.  Also includes driving methods.
+ */
+
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.util.Range;

@@ -1,3 +1,7 @@
+/**
+ * This base class contains the robot initialization steps for hardware used in both autonomous and teleop.
+ */
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;

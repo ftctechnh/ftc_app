@@ -1,3 +1,7 @@
+/**
+ * This code is used to debug the sensors (to see if they are operational).
+ */
+
 package org.firstinspires.ftc.teamcode.debugging;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

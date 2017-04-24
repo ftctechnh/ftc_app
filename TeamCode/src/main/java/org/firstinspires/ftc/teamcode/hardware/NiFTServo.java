@@ -1,3 +1,7 @@
+/**
+ * This code enables the servo to be set to a max and min position, which is super helpful since you would otherwise be required to create a bunch of different variables to hold those values.
+ */
+
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.Servo;

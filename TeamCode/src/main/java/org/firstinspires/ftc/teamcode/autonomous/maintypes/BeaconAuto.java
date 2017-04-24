@@ -1,3 +1,13 @@
+/**
+ * This class is the base class for red and blue beacon autonomouses.
+ *
+ * Since this class implements the OnAlliance interface, it can be guaranteed that we determine which alliance we are running on (as selected on the driver station), which then executes the correct code accordingly.
+ *
+ * The many ternary operators within the code indicate the different steps that the code would take depending on the alliance in question.
+ *
+ * Threads enable adjusting drives and such without the need for constantly calling a single method.  Crash prone though.
+ */
+
 package org.firstinspires.ftc.teamcode.autonomous.maintypes;
 
 import org.firstinspires.ftc.teamcode.autonomous.AutoBase;
@@ -119,14 +129,14 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
         NiFTConsole.outputNewSequentialLine("Turning to become parallel to the wall...");
         turnToHeading(onBlueAlliance ? 0 : -180, TurnMode.BOTH, 3000);
 
-        //Extend pusher so that we are right up next to the wall.
+        //Extend pusher so that we are very close to the colors themselves.
         NiFTConsole.outputNewSequentialLine ("Extending to become parallel to the wall.");
         double distFromWall = sideRangeSensor.validDistCM (20, 2000); //Make sure valid.
         int gapBetweenWallAndSensorApparatus = 12;
         long extensionTime = (long) ((distFromWall - gapBetweenWallAndSensorApparatus) * 67);
         rightButtonPusher.setToUpperLim ();
         NiFTFlow.pauseForMS (extensionTime);
-        rightButtonPusher.setServoPosition (0.5);
+        rightButtonPusher.setServoPosition (0.5); //Stop vex motor.
 
         //For each of the two beacons.
         for (int currentBeacon = 1; currentBeacon <= 2; currentBeacon++)
@@ -137,9 +147,8 @@ public abstract class BeaconAuto extends AutoBase implements OnAlliance
             NiFTConsole.outputNewSequentialLine ("Looking for beacon " + currentBeacon);
             SelfAdjustingDriveTask drivingTask = new SelfAdjustingDriveTask (BEACON_RPS, true);
             drivingTask.run();
-            while (bottomColorSensor.sensor.alpha () <= 4 || !((option1Red && option2Blue) || (option2Red && option1Blue)))
+            while (bottomColorSensor.sensor.alpha () <= 4)
             {
-                updateColorSensorStates ();
                 NiFTFlow.pauseForSingleFrame ();
             }
             drivingTask.stop();

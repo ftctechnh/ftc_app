@@ -1,3 +1,7 @@
+/**
+ * An enhancement on the original color sensor which enables quick i2c address setting and led enabling in the constructor (not much else for now)
+ */
+
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;

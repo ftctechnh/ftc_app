@@ -1,3 +1,7 @@
+/**
+ * This console supports private process consoles and sequential data, which is super important for programmers to observe (believe me i know)
+ */
+
 package org.firstinspires.ftc.teamcode.console;
 
 import android.os.AsyncTask;

@@ -1,3 +1,7 @@
+/**
+ * This code encapsulates the range sensor and enables the user to guarantee that the value returned is valid and not just a sensor blip (often misfires and gets 255 when the dist is less)
+ */
+
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
