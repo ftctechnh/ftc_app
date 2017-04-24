@@ -78,6 +78,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
+        updateTelemetry(telemetry);
     }
 
     /*
@@ -131,6 +132,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        updateTelemetry(telemetry);
     }
 
     /*

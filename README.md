@@ -1,4 +1,38 @@
-# ftc_app
+# RoboNatick 3737 Programs for Velocity Vortex (2016-17) #
+## Description ##
+This GitHub repository is used (and will be used) entirely for the upcoming 2016-17 FTC Robotics challenge, for team 3737 (RoboNatick).  All code is located in src/main, and all demo code in a nested package within the main package.  By following the coding guidelines below, this process should be streamlined.  
+
+## Installation Instructions ##
+  1. Download and open Android Studio from developer.android.com.  This application and the combined SDK cannot be fully installed without administrator access, so you will either have to bring your personal laptop to robotics, use the team laptop, only work off of your home PC, or use some sketchy backdoor technique to gain access to admin permissions.  
+  2. With the installer open, begin to follow the appropriate prompts (you should avoid installing the virtual device, it will not be necessary).  Once complete, allow the installer as much time as it needs to proceed with the installation.  
+  3. While the install is proceeding, download either Atlassian SourceTree @ sourcetreeapp.com (my preferred client, a bit more advanced), or GitHub Desktop @ desktop.github.com (simple but effective).  Open your chosen application and follow the install instructions.  If the install is simply an extraction, drag the application to the /Applications folder.  
+  4. Either ask myself or Albert for permission to contribute to the repository (it helps if you bring muffins).  Star the repository and return to your preferred Git client.  
+  5. Clone the repository.  You will have to add your remote account to either client in order to clone.  
+  6. Checkout (switch) to the development branch.  
+  7. Open Android Studio (which should be done at this point, but keep waiting if it is not).  Click "Import Project", and navigate to the directory of the project, then click OK.  
+  8. Wait for Android Studio to compile the project.  There will be a bunch of dependencies that will pop up as a result of the Gradle defined dependencies, just allow each one and the install should proceed pretty easily.  
+  9. At last, we are ... PSYCH!  Delete all of the install files in your Downloads and eject the appropriate disk images (the way that OS X installs these applications).  
+
+## Main Components ##
+A number of different classes are used in this project in order to keep all aspects of the project organized and running efficiently.  
+  1. AutonomousBase - Used as a configuration and timing base for the AutonomousBlue (when the robot starts on the blue side of the field), and AutonomousRed (likewise, but with the red side).  Place all code which can and should be used for both the Blue and Red classes HERE, not copying and pasting into each one individually, which cripples any updates that may be made later on.  Make sure to keep all classes at a protected security level so that all child classes can access them (especially DC motors, servos, and sensors).  AutonomousBase should also have a Drive() method which allows either child class to drive with accuracy without changing its own code.  
+  2. Autonomous Red/Blue - Place the appropriate unique code in each one of these classes.  Make sure that this code is UNIQUE and ACCURATE - each one will have to be optimized individually.  
+  3. Teleop - No base class is required, except in extenuating circumstances where different scoring mechanisms are required for each side (see 2015-16 game).  This class should be jam-packed with comments and if statements, providing the drivers with an efficient tool to easily control the robot without dealing with random glitches in the controls.  The key here is COMMUNICATION, speak with the drivers about their ideal controls.  
+
+## Good coding practices ##
+  1. Use camelCase.  If you do not know what this is, you should not be coding here.  
+  2. Constants must be named in all caps, with underscores for the spaces (e.g. DRIVING_CONSTANT not drivingConstant)
+  3. Try to keep method statements like this: void() (NEW LINE) {}.  Helps to define where a method starts and ends.  
+  4. Declare multiple variables of the same type with commas.  Helps conserve space.  
+  5. COMMENTS, COMMENTS, COMMENTS!!!
+
+## Acceptable Git Committing Practices ##
+  1. Commit/Push when necessary.  When you feel that appropriate changes have been made to a branch and that the code is now stable, create a pull request and allow either Albert or myself to check the code before we accept the pull request.  
+  2. Make sure that the code is somewhat operational before pushing to the branch.  We all contribute to this repo and it is tough when someone breaks something while in the process of creating something larger.  
+
+## Start of ftc_sdk documentation ##
+
+### ftc_app ###
 FTC Android Studio project to create FTC Robot Controller app.
 
 This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
@@ -8,11 +42,7 @@ The FTC Driver Station app is available through Google Play.
 To use this SDK, download/clone the entire project to your local computer.
 Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
 
-The Javadoc reference documentation for the FTC SDK is now available online.  Visit the following URL to view the FTC SDK documentation as a live website:
-
-http://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
-
-Documentation for the FTC SDK is also included with this repository.  There is a subfolder called "doc" which contains several subfolders:
+Documentation for the FTC SDK are included with this repository.  There is a subfolder called "doc" which contains several subfolders:
 
  * The folder "apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
  * The folder "javadoc" contains the JavaDoc user documentation for the FTC SDK.
@@ -21,72 +51,6 @@ Documentation for the FTC SDK is also included with this repository.  There is a
 For technical questions regarding the SDK, please visit the FTC Technology forum:
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
-
-
-**************************************************************************************
-
-Version 2.4 (released on 16.11.13)
-  * Fix to avoid crashing for nonexistent resources.
-  * Blocks Programming mode changes:
-     - Added blocks to support OpenGLMatrix, MatrixF, and VectorF.
-     - Added blocks to support AngleUnit, AxesOrder, AxesReference, CameraDirection, CameraMonitorFeedback, DistanceUnit, and TempUnit.
-     - Added blocks to support Acceleration.
-     - Added blocks to support LinearOpMode.getRuntime.
-     - Added blocks to support MagneticFlux and Position.
-     - Fixed typos.
-     - Made blocks for ElapsedTime more consistent with other objects.
-     - Added blocks to support Quaternion, Velocity, Orientation, AngularVelocity.
-     - Added blocks to support VuforiaTrackables, VuforiaTrackable, VuforiaLocalizer, VuforiaTrackableDefaultListener.
-     - Fixed a few blocks.
-     - Added type checking to new blocks.
-     - Updated to latest blockly.
-     - Added default variable blocks to navigation and matrix blocks.
-     - Fixed toolbox entry for openGLMatrix_rotation_withAxesArgs.
-     - When user downloads Blocks-generated op mode, only the .blk file is downloaded.
-     - When user uploads Blocks-generated op mode (.blk file), Javascript code is auto generated.
-     - Added DbgLog support.
-     - Added logging when a blocks file is read/written.
-     - Fixed bug to properly render blocks even if missing devices from configuration file.
-     - Added support for additional characters (not just alphanumeric) for the block file names (for download and upload).
-     - Added support for OpMode flavor (“Autonomous” or “TeleOp”) and group.
-  * Changes to Samples to prevent tutorial issues.
-  * Incorporated suggested changes from public pull 216 (“Replace .. paths”).
-  * Remove Servo Glitches when robot stopped.
-  * if user hits “Cancels” when editing a configuration file, clears the unsaved changes and reverts to original unmodified configuration.
-  * Added log info to help diagnose why the Robot Controller app was terminated (for example, by watch dog function).
-  * Added ability to transfer log from the controller.
-  * Fixed inconsistency for AngularVelocity
-  * Limit unbounded growth of data for telemetry.  If user does not call telemetry.update() for LinearOpMode in a timely manner, data added for telemetry might get lost if size limit is exceeded.
-
-**************************************************************************************
-
-Version 2.35 (released on 16.10.06)
-  * Blockly programming mode - Removed unnecesary idle() call from blocks for new project.
-
-**************************************************************************************
-
-Version 2.30 (released on 16.10.05)
-  * Blockly programming mode:
-     - Mechanism added to save Blockly op modes from Programming Mode Server onto local device
-     - To avoid clutter, blocks are displayed in categorized folders
-     - Added support for DigitalChannel
-     - Added support for ModernRoboticsI2cCompassSensor
-     - Added support for ModernRoboticsI2cRangeSensor
-     - Added support for VoltageSensor
-     - Added support for AnalogInput
-     - Added support for AnalogOutput
-     - Fix for CompassSensor setMode block
-  * Vuforia
-     - Fix deadlock / make camera data available while Vuforia is running.
-     - Update to Vuforia 6.0.117 (recommended by Vuforia and Google to close security loophole). 
-  * Fix for autonomous 30 second timer bug (where timer was in effect, even though it appeared to have timed out).
-  * opModeIsActive changes to allow cleanup after op mode is stopped (with enforced 2 second safety timeout).
-  * Fix to avoid reading i2c twice.
-  * Updated sample Op Modes.
-  * Improved logging and fixed intermittent freezing.
-  * Added digital I/O sample.
-  * Cleaned up device names in sample op modes to be consistent with Pushbot guide.
-  * Fix to allow use of IrSeekerSensorV3.
 
 **************************************************************************************
 

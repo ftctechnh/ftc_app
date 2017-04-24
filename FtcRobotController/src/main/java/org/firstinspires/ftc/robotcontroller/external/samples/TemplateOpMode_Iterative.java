@@ -63,8 +63,9 @@ public class TemplateOpMode_Iterative extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
+
+    // private DcMotor leftMotor = null;
+    // private DcMotor rightMotor = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -77,8 +78,8 @@ public class TemplateOpMode_Iterative extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        // leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        // rightMotor = hardwareMap.dcMotor.get("right_drive");
+        // leftMotor  = hardwareMap.dcMotor.get("left motor");
+        // rightMotor = hardwareMap.dcMotor.get("right motor");
 
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
