@@ -11,6 +11,11 @@ android:
                 - sys-img-armeabi-v7a-android-21
                 - extra-android-m2repository
 
+        licenses:
+                - 'android-sdk-preview-license-.+'
+                - 'android-sdk-license-.+'
+                - 'google-gdk-license-.+'
+
 before_script:
         #create and start emulator
         - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
