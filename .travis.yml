@@ -7,9 +7,11 @@ android:
                 - platform-tools
                 - tools
                 - build-tools-21.1.2
-                - android-21
+                - build-tools-23.0.3
                 - android-19
+                - android-21
                 - android-23
+                - android-25
                 #- sys-img-armeabi-v7a-android-21
                 #- extra-android-m2repository
 
