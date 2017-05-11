@@ -41,51 +41,56 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               android:orientation="vertical">
 
   <!-- black bar on top -->
-  <RelativeLayout
-    android:id="@+id/top_bar"
-    android:layout_width="fill_parent"
-    android:layout_height="80dp"
-    android:background="@color/black">
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:background="#333333">
 
-    <ImageView
-      android:id="@+id/robotIcon"
-      android:src="@drawable/icon_robotcontroller"
-      android:layout_width="wrap_content"
-      android:layout_height="fill_parent"
-      android:adjustViewBounds="true"
-      android:layout_margin="1dp"/>
+        <ImageView
+            android:id="@+id/robotIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:src="@drawable/icon"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp" />
+        <TextView
+            android:layout_marginTop="11dp"
+            android:id="@+id/textDeviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#4daddd"
+            android:textStyle="bold"
+            android:layout_alignTop="@+id/menu_buttons"
+            android:layout_toEndOf="@+id/robotIcon" />
 
-    <TextView
-      android:id="@+id/textDeviceName"
-      android:layout_toEndOf="@id/robotIcon"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textColor="@color/white"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-      android:padding="8dp"
-      android:textStyle="bold"/>
+        <ImageButton
+            android:id="@+id/menu_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:adjustViewBounds="true"
+            android:background="#333333"
+            android:padding="15dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_menu" />
 
-    <ImageButton
-      android:id="@+id/menu_buttons"
-      android:scaleType="fitXY"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:src="@drawable/icon_menu"
-      android:background="@color/black"
-      android:padding="15dp"
-      android:adjustViewBounds="true"
-      android:layout_alignParentEnd="true"
-      android:layout_centerInParent="true"
-      android:layout_centerHorizontal="true"
-      android:layout_margin="10dp"/>
+    </RelativeLayout>
+    <!-- end of black bar -->
 
-  </RelativeLayout>
-  <!-- end of black bar -->
+    <include
+        android:id="@+id/included_header"
+        layout="@layout/header" />
 
-  <include layout="@layout/header"
-           android:id="@+id/included_header"/>
-
-  <RelativeLayout
+    <RelativeLayout
     android:id="@+id/RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -93,13 +98,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" >
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"    >
 
     <TextView
       android:id="@+id/textNetworkConnectionStatus"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:visibility="invisible"
+        android:textColor="#00aaFF"
       android:text="" />
 
     <TextView
@@ -108,6 +115,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_height="wrap_content"
       android:layout_below="@+id/textNetworkConnectionStatus"
       android:visibility="invisible"
+        android:textColor="#74d267"
       android:text="" />
 
     <TextView
@@ -116,6 +124,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_height="wrap_content"
       android:layout_below="@+id/textRobotStatus"
       android:visibility="invisible"
+      android:textColor="#d0ff50"
       android:text="" />
 
     <FrameLayout
@@ -142,9 +151,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:layout_height="wrap_content"
             android:text=""
             android:visibility="invisible"
-            android:textColor="#990000"
+            android:textColor="#ff4400"
             android:textStyle="bold"/>
-
     </FrameLayout>
 
     <TextView
@@ -153,6 +161,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_height="wrap_content"
       android:layout_above="@+id/textGamepad2"
       android:visibility="invisible"
+        android:textColor="#3a7cff"
       android:text="" />
 
     <TextView
@@ -161,6 +170,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:visibility="invisible"
+        android:textColor="#894faf"
       android:text="" />
 
     <TextView
