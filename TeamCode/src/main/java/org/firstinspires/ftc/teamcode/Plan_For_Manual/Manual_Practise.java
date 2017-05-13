@@ -13,7 +13,7 @@ public final class Manual_Practise extends Core_Traditional_Platform {
         initRobot(Enum_Libs.TeamColor.Red, Enum_Libs.OpMode.Manual);
         while (opModeIsActive()) {
             //  举大球电机 功率[ -0.2，0.8 ]
-            liftBall(0.20,0.60);
+            liftBall(-0.20,0.60);
             //  机器主要运动 功率[ -0.5,0.8 ]
             controlByJoystick(0.80, -0.50);
             manualClickLight();

@@ -6,6 +6,6 @@ public final class Manual_Omnidirectional_Platform extends Core_Omnidirectional_
 
     @Override
     public void runOpMode(){
-
+        
     }
 }

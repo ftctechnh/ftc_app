@@ -5,6 +5,5 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.HardWareMaps.Hardware_Omnidirectional_Platform;
 
 public abstract class Core_Omnidirectional_Platform_Exp extends LinearOpMode {
-    Hardware_Omnidirectional_Platform robot = new Hardware_Omnidirectional_Platform();
-
+    public Hardware_Omnidirectional_Platform robot = new Hardware_Omnidirectional_Platform();
 }
