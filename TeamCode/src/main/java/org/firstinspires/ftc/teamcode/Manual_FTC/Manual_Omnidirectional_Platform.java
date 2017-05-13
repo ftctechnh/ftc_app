@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Plan_For_Manual;
+package org.firstinspires.ftc.teamcode.Manual_FTC;
 
 import org.firstinspires.ftc.teamcode.Libs.Core_Omnidirectional_Platform_Exp;
 

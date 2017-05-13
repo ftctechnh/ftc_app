@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Plan_For_FTC;
+package org.firstinspires.ftc.teamcode.Auto_FTC;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
