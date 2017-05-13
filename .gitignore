@@ -27,4 +27,7 @@ build/
 *ASUS_PC_01*
 
 *.properties
+<<<<<<< HEAD
 TeamCode/build.gradle
+=======
+>>>>>>> origin/Exp-May-2017
