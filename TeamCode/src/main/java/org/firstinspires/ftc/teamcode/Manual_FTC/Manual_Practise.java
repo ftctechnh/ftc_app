@@ -15,10 +15,10 @@ public final class Manual_Practise extends Core_Traditional_Platform {
             //  举大球电机 功率[ -0.2，0.8 ]
             liftBall(-0.20,0.60);
             //  机器主要运动 功率[ -0.5,0.8 ]
-            controlByJoystick(0.80, -0.50);
+            controlByJoystick(-0.50,0.80);
             manualClickLight();
-            manualShootBall(0.80,0.30);
-            collectBall(1.00,0.40);
+            manualShootBall(0.80,-0.30);
+            collectBall(1.00,-0.40);
             ballClawRelease();
             //  检测一次有效性即可，此处将使有效性检测跳过
             setChecked();

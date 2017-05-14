@@ -386,7 +386,7 @@ public abstract class Core_Traditional_Platform extends LinearOpMode {
     protected void controlByJoystick(double MinPower,double MaxPower){
         double LeftPower,RightPower;
         if(!OpModeIsChecked) {
-            //  检测最大功率是否小于最小功率，抛出运行时异常
+            //  检测最大功率是否小于最小功率
             if (MaxPower < MinPower) {
                 throw new IllegalArgumentException("MaxPower less than MinPower " +
                         "In method controlByJoystick");

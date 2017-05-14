@@ -29,6 +29,9 @@ public class Hardware_Omnidirectional_Platform {
         Base_FR.setPower(0.00);
         Base_FL.setPower(0.00);
 
+        Base_BR.setDirection(DcMotor.Direction.REVERSE);
+        Base_FR.setDirection(DcMotor.Direction.REVERSE);
+
         LightClick_A.setPosition(0.00);
         LightClick_B.setPosition(0.00);
     }
