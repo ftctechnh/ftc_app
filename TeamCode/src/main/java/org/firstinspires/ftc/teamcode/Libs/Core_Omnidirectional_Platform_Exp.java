@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.HardWareMaps.Hardware_Omnidirectional_Plat
 public abstract class Core_Omnidirectional_Platform_Exp extends LinearOpMode {
     public Hardware_Omnidirectional_Platform robot = new Hardware_Omnidirectional_Platform();
 
-    public void keyToDirection(){
+    protected void keyToDirection(){
         if(gamepad1.dpad_up){
             setBasePower(1.00,1.00,1.00,1.00);
         }else if(gamepad1.dpad_down){

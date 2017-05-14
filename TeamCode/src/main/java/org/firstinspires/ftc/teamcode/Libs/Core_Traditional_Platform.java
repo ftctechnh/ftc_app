@@ -75,6 +75,7 @@ public abstract class Core_Traditional_Platform extends LinearOpMode {
         telemetry.addLine("Robot Init  is  OK!");
         telemetry.addLine("Good Luck in games!");
         telemetry.addLine("-------------------");
+        telemetry.addLine(returnWhatToDo());
         telemetry.update();
         runtime.reset();
         //  按下启动开始
@@ -115,6 +116,8 @@ public abstract class Core_Traditional_Platform extends LinearOpMode {
             return 0.00;
         }
     }
+
+    public abstract String returnWhatToDo();
     // --------------------------------------自动阶段-----------------------------------------------
     /**
      *  机器运行一定距离
