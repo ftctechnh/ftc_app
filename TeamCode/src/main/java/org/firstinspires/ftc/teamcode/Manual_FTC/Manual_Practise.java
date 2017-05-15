@@ -25,4 +25,8 @@ public final class Manual_Practise extends Core_Traditional_Platform {
         }
         runtime.reset();
     }
+    @Override
+   public String returnWhatToDo(){
+        return "手动练习";
+    }
 }
