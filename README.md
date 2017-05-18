@@ -6,6 +6,15 @@ The FTC Robot Controller app is designed to work in conjunction with the FTC Dri
 The FTC Driver Station app is available through Google Play.
 
 To use this SDK, download/clone the entire project to your local computer.
+
+*** Important note regarding the repository size ***:  this repository is large and it can take a long time and a lot of space to clone the entire repository. If you would like to save time and space, there are some options that you can choose to download only the most current version of the Android project folder.
+
+If you are a git user, you can use the --depth command line argument to only clone the most current version of the repository:
+
+  git clone --depth=1 https://github.com/ftctechnh/ftc_app.git
+
+Or, if you prefer, you can use the "Download Zip" button available through the main repository page.  You can also download the project folder (as a .zip or .tar.gz archive file) from the Downloads subsection of the Releases page for this repository.
+
 Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
 
 The Javadoc reference documentation for the FTC SDK is now available online.  Visit the following URL to view the FTC SDK documentation as a live website:
@@ -22,6 +31,142 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
 
+**************************************************************************************
+
+Version 3.10 (built on 17.05.09)
+
+This version of the software provides support for the REV Robotics Expansion Hub.  This version also includes improvements in the USB communication layer in an effort to enhance system resiliency.  If you were using a 2.x version of the software previously, updating to version 3.1 requires that you also update your Driver Station software in addition to updating the Robot Controller software.
+
+Also note that in version 3.10 software, the setMaxSpeed and getMaxSpeed methods are no longer available (not deprecated, they have been removed from the SDK). Also note that the the new 3.x software incorporates motor profiles that a user can select as he/she configures the robot.
+
+Changes include:
+ * Blocks changes
+    - Added VuforiaTrackableDefaultListener.getPose and Vuforia.trackPose blocks.
+    - Added optimized blocks support for Vuforia extended tracking.
+    - Added atan2 block to the math category.
+    - Added useCompetitionFieldTargetLocations parameter to Vuforia.initialize block.  If set to false, the target locations are placed at (0,0,0) with target orientation as specified in https://github.com/gearsincorg/FTCVuforiaDemo/blob/master/Robot_Navigation.java tutorial op mode.
+ * Incorporates additional improvements to USB comm layer to improve system resiliency (to recover from a greater number of communication disruptions).
+
+**************************************************************************************
+
+Additional Notes Regarding Version 3.00 (built on 17.04.13)
+
+In addition to the release changes listed below (see section labeled "Version 3.00 (built on 17.04.013)"), version 3.00 has the following important changes:
+
+1. Version 3.00 software uses a new version of the FTC Robocol (robot protocol).  If you upgrade to v3.0 on the Robot Controller and/or Android Studio side, you must also upgrade the Driver Station software to match the new Robocol.
+2. Version 3.00 software removes the setMaxSpeed and getMaxSpeed methods from the DcMotor class.  If you have an op mode that formerly used these methods, you will need to remove the references/calls to these methods.  Instead, v3.0 provides the max speed information through the use of motor profiles that are selected by the user during robot configuration.
+3. Version 3.00 software currently does not have a mechanism to disable extra i2c sensors.  We hope to re-introduce this function with a release in the near future.
+
+**************************************************************************************
+
+Version 3.00 (built on 17.04.13)
+
+*** Use this version of the software at YOUR OWN RISK!!! ***
+
+This software is being released as an "alpha" version.  Use this version at your own risk!
+
+This pre-release software contains SIGNIFICANT changes, including changes to the Wi-Fi Direct pairing mechanism, rewrites of the I2C sensor classes, changes to the USB/FTDI layer, and the introduction of support for the REV Robotics Expansion Hub and the REV Robotics color-range-light sensor.  These changes were implemented to improve the reliability and resiliency of the FTC control system.
+
+Please note, however, that version 3.00 is considered "alpha" code.  This code is being released so that the FIRST community will have an opportunity to test the new REV Expansion Hub electronics module when it becomes available in May.  The developers do not recommend using this code for critical applications (i.e., competition use).
+
+*** Use this version of the software at YOUR OWN RISK!!! ***
+
+Changes include:
+ * Major rework of sensor-related infrastructure.  Includes rewriting sensor classes to implement synchronous I2C communication.
+ * Fix to reset Autonomous timer back to 30 seconds.
+ * Implementation of specific motor profiles for approved 12V motors (includes Tetrix, AndyMark, Matrix and REV models).
+ * Modest improvements to enhance Wi-Fi P2P pairing.
+ * Fixes telemetry log addition race.
+ * Publishes all the sources (not just a select few).
+ * Includes Block programming improvements
+    - Addition of optimized Vuforia blocks.
+    - Auto scrollbar to projects and sounds pages.
+    - Fixed blocks paste bug.
+    - Blocks execute after while-opModeIsActive loop (to allow for cleanup before exiting op mode).
+    - Added gyro integratedZValue block.
+    - Fixes bug with projects page for Firefox browser.
+    - Added IsSpeaking block to AndroidTextToSpeech.  
+ * Implements support for the REV Robotics Expansion Hub
+    - Implements support for integral REV IMU (physically installed on I2C bus 0, uses same Bosch BNO055 9 axis absolute orientation sensor as Adafruit 9DOF abs orientation sensor).
+    - Implements support for REV color/range/light sensor.
+    - Provides support to update Expansion Hub firmware through FTC SDK.
+    - Detects REV firmware version and records in log file.
+    - Includes support for REV Control Hub (note that the REV Control Hub is not yet approved for FTC use).
+    - Implements FTC Blocks programming support for REV Expansion Hub and sensor hardware.
+    - Detects and alerts when I2C device disconnect.
+    
+**************************************************************************************
+
+Version 2.62 (built on 17.01.07)
+  * Added null pointer check before calling modeToByte() in finishModeSwitchIfNecessary method for ModernRoboticsUsbDcMotorController class.
+  * Changes to enhance Modern Robotics USB protocol robustness.
+
+**************************************************************************************
+
+Version 2.61 (released on 16.12.19)
+  * Blocks Programming mode changes:
+     - Fix to correct issue when an exception was thrown because an OpticalDistanceSensor object appears twice in the hardware map (the second time as a LightSensor).
+
+**************************************************************************************
+
+Version 2.6 (released on 16.12.16)
+  * Fixes for Gyro class:
+     - Improve (decrease) sensor refresh latency.
+     - fix isCalibrating issues.
+  * Blocks Programming mode changes:
+     - Blocks now ignores a device in the configuration xml if the name is empty. Other devices work in configuration work fine.
+     
+**************************************************************************************
+
+Version 2.5 (internal release on released on 16.12.13)
+  * Blocks Programming mode changes:
+     - Added blocks support for AdafruitBNO055IMU.
+     - Added Download Op Mode button to FtcBocks.html.
+     - Added support for copying blocks in one OpMode and pasting them in an other OpMode. The clipboard content is stored on the phone, so the programming mode server must be running.
+     - Modified Utilities section of the toolbox.
+     - In Programming Mode, display information about the active connections.
+     - Fixed paste location when workspace has been scrolled.
+     - Added blocks support for the android Accelerometer.
+     - Fixed issue where Blocks Upload Op Mode truncated name at first dot.
+     - Added blocks support for Android SoundPool.
+     - Added type safety to blocks for Acceleration.
+     - Added type safety to blocks for AdafruitBNO055IMU.Parameters.
+     - Added type safety to blocks for AnalogInput.
+     - Added type safety to blocks for AngularVelocity.
+     - Added type safety to blocks for Color.
+     - Added type safety to blocks for ColorSensor.
+     - Added type safety to blocks for CompassSensor.
+     - Added type safety to blocks for CRServo.
+     - Added type safety to blocks for DigitalChannel.
+     - Added type safety to blocks for ElapsedTime.
+     - Added type safety to blocks for Gamepad.
+     - Added type safety to blocks for GyroSensor.
+     - Added type safety to blocks for IrSeekerSensor.
+     - Added type safety to blocks for LED.
+     - Added type safety to blocks for LightSensor.
+     - Added type safety to blocks for LinearOpMode.
+     - Added type safety to blocks for MagneticFlux.
+     - Added type safety to blocks for MatrixF.     
+     - Added type safety to blocks for MrI2cCompassSensor.
+     - Added type safety to blocks for MrI2cRangeSensor.
+     - Added type safety to blocks for OpticalDistanceSensor.
+     - Added type safety to blocks for Orientation.
+     - Added type safety to blocks for Position.
+     - Added type safety to blocks for Quaternion.
+     - Added type safety to blocks for Servo.
+     - Added type safety to blocks for ServoController.
+     - Added type safety to blocks for Telemetry.
+     - Added type safety to blocks for Temperature.
+     - Added type safety to blocks for TouchSensor.
+     - Added type safety to blocks for UltrasonicSensor.
+     - Added type safety to blocks for VectorF.
+     - Added type safety to blocks for Velocity.
+     - Added type safety to blocks for VoltageSensor.
+     - Added type safety to blocks for VuforiaLocalizer.Parameters.
+     - Added type safety to blocks for VuforiaTrackable.
+     - Added type safety to blocks for VuforiaTrackables.
+     - Added type safety to blocks for enums in AdafruitBNO055IMU.Parameters.
+     - Added type safety to blocks for AndroidAccelerometer, AndroidGyroscope, AndroidOrientation, and AndroidTextToSpeech.
 
 **************************************************************************************
 
