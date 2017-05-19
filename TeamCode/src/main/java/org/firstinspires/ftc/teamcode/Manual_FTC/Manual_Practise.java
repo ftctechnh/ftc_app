@@ -20,6 +20,7 @@ public final class Manual_Practise extends Core_Traditional_Platform {
             manualShootBall(0.80,-0.30);
             collectBall(1.00,-0.40);
             ballClawRelease();
+            stopAllDevice();
             //  检测一次有效性即可，此处将使有效性检测跳过
             setChecked();
         }

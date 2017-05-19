@@ -544,6 +544,12 @@ public abstract class Core_Traditional_Platform extends LinearOpMode {
         }
     }
 
+    protected void stopAllDevice(){
+        robot.CollectBall.setPower(0.00);
+        robot.LiftBall.setPower(0.00);
+        robot.ThrowBall.setPower(0.00);
+    }
+
     /**
      * 手动阶段禁用编码器
      */
