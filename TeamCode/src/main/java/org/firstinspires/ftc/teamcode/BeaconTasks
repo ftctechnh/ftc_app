@@ -1,0 +1,625 @@
+/*
+Copyright (c) 2016 Robert Atkinson
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted (subject to the limitations in the disclaimer below) provided that
+the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+Neither the name of Robert Atkinson nor the names of his contributors may be used to
+endorse or promote products derived from this software without specific prior
+written permission.
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+package org.firstinspires.ftc.teamcode.xavier;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.libraries.HardwarePushbot;
+
+
+/**
+ * This file illustrates the concept of driving a path based on encoder counts.
+ * It uses the common Pushbot hardware class to define the drive on the robot.
+ * The code is structured as a LinearOpMode
+ *
+ * The code REQUIRES that you DO have encoders on the wheels,
+ *   otherwise you would use: PushbotAutoDriveByTime;
+ *
+ *  This code ALSO requires that the drive Motors have been configured such that a positive
+ *  power command moves them forwards, and causes the encoders to count UP.
+ *
+ *   The desired path in this example is:
+ *   - Drive forward for 48 inches
+ *   - Spin right for 12 Inches
+ *   - Drive Backwards for 24 inches
+ *   - Stop and close the claw.
+ *
+ *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
+ *  that performs the actual movement.
+ *  This methods assumes that each movement is relative to the last stopping place.
+ *  There are other ways to perform encoder based moves, but this method is probably the simplest.
+ *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ *
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ */
+//@Autonomous(name="Tasks", group="Pushbot")
+//@Disabled
+public class BeaconTasks1 extends LinearOpMode {
+//public class BeaconTasks extends LinearOpMode {  changed from LinearOpMode to OpMode on 11/26 at 7:30pm
+
+    // alliance color is either "red" or "blue" set in the calling OpMode
+    protected String allianceColor;
+
+
+    /* Declare OpMode members. */
+    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    // used in drive by time
+    private ElapsedTime     runtime = new ElapsedTime();
+    // declare light sensor and color sensors
+    LightSensor lightSensor;  // Hardware Device Object
+    ColorSensor colorSensorLeft;  // Hardware Device Object, left color sensor
+    ColorSensor colorSensorRight;  // Hardware Device Object, right color sensor
+
+    // used in drive by encoders
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.4;
+    static final double     TURN_SPEED              = 0.3;
+
+    // used for servos
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+
+    // Define class members
+    Servo servoLeft;
+    Servo servoRight;
+    double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    boolean rampUp = true;
+
+    // Want to create init(), but cannot create without error
+    //@Override
+    //public void init() {
+    //    telemetry.addData("Status", "Initialized");
+   // want to initialize servos in here
+    // }
+
+
+
+    //@Override
+    public void moveToBeacon(String allianceColor) {
+    // sets alliance color to either "blue" or "red"
+    this.allianceColor=allianceColor;
+
+    }
+
+    // what is run when blueBeacon or redBeacon is run
+    public void runOpMode(){
+
+       // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Just before HW Init");    //
+        telemetry.update();
+
+        sleep (3000);
+
+     /*
+         * Initialize the drive system variables.
+         * The init() method of the hardware class does all the work here
+         */
+        robot.init(hardwareMap);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Just after HW Init");    //
+        telemetry.update();
+
+        sleep(3000);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update();
+
+        // runs driveToBeacon method
+        driveToBeacon();
+        // runs pushBeacon method
+        pushBeacon();
+        // runs toSecondBeacon method
+        toSecondBeacon();
+        // runs pushBeacon method
+        pushBeacon();
+    }
+
+    // driveToBeacon method
+    protected void driveToBeacon(){
+
+        // reset encoders
+        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        idle();
+
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0",  "Starting at %7d :%7d",
+                          robot.leftMotor.getCurrentPosition(),
+                          robot.rightMotor.getCurrentPosition());
+        telemetry.update();
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        encoderDrive(DRIVE_SPEED,  20,  20, 5.0);  // S1: foreward 24 Inches with 5 Sec timeout
+        sleep(50); //optional wait between steps
+
+        // sets the number of inches to turn on the first turn
+        double turn1distance = 9;
+        // if alliance color is blue, turn right
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, turn1distance, -turn1distance, 4.0);  // S2: Turn Right 13 Inches with 4 Sec timeout
+        }else{ //else alliance color is red, trun left
+            encoderDrive(TURN_SPEED, -turn1distance, turn1distance, 4.0);  // S2: Turn Left 13 Inches with 4 Sec timeout
+        }
+
+        sleep(50); // optional wait between steps
+
+        //******************start of light sensor section
+        // get a reference to our Light Sensor object.
+        lightSensor = hardwareMap.lightSensor.get("sensor_light");
+
+        // turn LED on
+        lightSensor.enableLed(true);
+
+        sleep(50); // pause after turning LED on
+
+        // go forward while dark color is being detected
+        // light colors have higher values than dark colors
+        while ((lightSensor.getLightDetected()) < 0.35 && opModeIsActive()){
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+        }
+        // turn motors off when white is detected
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+
+        // turn LED off when white is detected
+        lightSensor.enableLed(false);
+        //**************************end of light sensor section
+
+        //run light sensor section or this line
+        //encoderDrive(DRIVE_SPEED, 80, 80, 4.0);  // S3: foreward 40 Inches with 4 Sec timeout
+
+        sleep(50); // optional wait between steps
+
+        // sets number of inches to turn on second turn
+        double turn2distance = 7;
+        // if alliance color is blue, turn right
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, turn2distance, -turn2distance, 4.0);  // S2: Turn Right 11 Inches with 4 Sec timeout
+        }else{ //if alliance color is red, turn left
+            encoderDrive(TURN_SPEED, -6, 6, 4.0);  // S2: Turn Left 11 Inches with 4 Sec timeout
+        }
+
+        // Drive forward for 2 seconds so the robot runs in to the wall right in front of the beacon
+        robot.leftMotor.setPower(DRIVE_SPEED);
+        robot.rightMotor.setPower(DRIVE_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        //turn motors off after 1 second
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+
+        sleep(50);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+        // end driveToBeacon
+    }
+
+    /*
+     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Encoders are not reset as the move is based on the current position.
+     *  Move will stop if any of three conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Move runs out of time
+     *  3) Driver stops the opmode running.
+     */
+
+    // drive by encoder function
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches,
+                             double timeoutS) {
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = robot.leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            robot.leftMotor.setTargetPosition(newLeftTarget);
+            robot.rightMotor.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.leftMotor.setPower(Math.abs(speed));
+            robot.rightMotor.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                   (runtime.seconds() < timeoutS) &&
+                   (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path2",  "Running at %7d :%7d",
+                                            robot.leftMotor.getCurrentPosition(),
+                                            robot.rightMotor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            sleep(25);
+
+            // end encoderDrive
+        }
+    }
+
+    // method to push beacon, starting touching the wall in front of the beacon
+    protected void pushBeacon(){
+
+        // hsvValues is an array that will hold the hue, saturation, and value information for the color sensor
+        float hsvValuesLeft[] = {0F, 0F, 0F};
+        float hsvValuesRight[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array for the color sensor
+        final float valuesLeft[] = hsvValuesLeft;
+        final float valuesRight[] = hsvValuesRight;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the left RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
+
+        // bLedOn represents the state of the LED.
+        boolean bLedOn = false;// LED should be off, in passive mode
+
+        // get a reference to our ColorSensor object.
+        colorSensorLeft = hardwareMap.colorSensor.get("sensor_color_left");
+        //colorSensorRight = hardwareMap.colorSensor.get("sensor_color_right");
+
+
+        // does not turn LEDs on, color sensor should be in passive mode
+        colorSensorLeft.enableLed(bLedOn);
+        //colorSensorRight.enableLed(bLedOn);
+
+        // wait for the start button to be pressed.
+        //waitForStart();
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV(colorSensorLeft.red(), colorSensorLeft.green(), colorSensorLeft.blue(), hsvValuesLeft);
+        //Color.RGBToHSV(colorSensorRight.red(), colorSensorRight.green(), colorSensorRight.blue(), hsvValuesRight);
+
+        // send the info back to driver station using telemetry function.
+        telemetry.addData("LED", bLedOn ? "On" : "Off");
+        telemetry.addData("Clear", colorSensorLeft.alpha());
+        telemetry.addData("Red  ", colorSensorLeft.red());
+        telemetry.addData("Green", colorSensorLeft.green());
+        telemetry.addData("Blue ", colorSensorLeft.blue());
+        telemetry.addData("Hue", hsvValuesLeft[0]);
+
+        telemetry.addData("LED", bLedOn ? "On" : "Off");
+        /*telemetry.addData("Clear", colorSensorRight.alpha());
+        telemetry.addData("Red  ", colorSensorRight.red());
+        telemetry.addData("Green", colorSensorRight.green());
+        telemetry.addData("Blue ", colorSensorRight.blue());
+        telemetry.addData("Hue", hsvValuesRight[0]);
+        */
+        // change the background color to match the color detected by the left RGB sensor.
+        // pass a reference to the hue, saturation, and value array as an argument
+        // to the HSVToColor method.
+        relativeLayout.post(new Runnable() {
+            public void run() {
+                relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, valuesLeft));
+            }
+        });
+
+        telemetry.update();
+
+        // declare variables for left and right beacon colors
+        String leftBeaconColor;
+        String rightBeaconColor;
+        // if left beacon red is greater than blue, set to red, if not, set to blue
+        if (colorSensorLeft.red() > colorSensorLeft.blue()) {
+            leftBeaconColor = "red";
+        } else {
+            leftBeaconColor = "blue";
+        }
+        // if right beacon red is greater than blue, set to red, if not, set to blue
+        /*if (colorSensorRight.red() > colorSensorRight.blue()) {
+            rightBeaconColor = "red";
+        } else {
+            rightBeaconColor = "blue";
+        }*/
+
+        //leftBeaconColor="red";
+
+        // Connect to servo (Assume PushBot Left Hand)
+        // Change the text in quotes to match any servo name on your robot.
+        servoLeft = hardwareMap.servo.get("left_hand");
+        servoRight = hardwareMap.servo.get("right_hand");
+
+
+        //if left side of beacon matches alliance color, either red or blue
+        if (allianceColor==leftBeaconColor) {
+            // push left side of beacon
+            // back up for 10 inches
+            encoderDrive(DRIVE_SPEED, -4, -4, 5.0);  // S1: backward 10 Inches with 5 Sec timeout
+            // pause
+            sleep(50);
+            // move left servo to straight out position
+            servoLeft.setPosition(0.87);//Was 0.85
+            // pause
+            sleep(50);
+            // Drive forward for 1 second so the robot pushes the beacon
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            //turn motors off after 1 second
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
+        } else { // right side of beacon matches alliance color
+            //push right side of beacon
+            // back up for 10 inches
+            encoderDrive(DRIVE_SPEED, -4, -4, 5.0);  // S1: backward 10 Inches with 5 Sec timeout
+            // pause
+            sleep(50);
+            // move right servo
+            servoRight.setPosition(0.03);//was .07
+            // pause
+            sleep(50);
+            // Drive forward for 1 second so the robot runs in to the wall right in front of the beacon
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            //turn motors off after 1 second
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
+        }
+        sleep(50);
+
+
+
+        // back up
+        encoderDrive(DRIVE_SPEED, -10, -10, 5.0);
+        // put servos down
+        servoLeft.setPosition(0.5);
+        servoRight.setPosition(0.45);
+
+
+        /*
+        // sets the number of inches to turn on the third turn
+        double turn3distance = 18;
+        // if alliance color is blue, turn right
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, -turn3distance, turn3distance, 4.0);  // S2: Turn Left 13 Inches with 4 Sec timeout
+        }else{ //else alliance color is red, turn left
+            encoderDrive(TURN_SPEED, turn3distance, -turn3distance, 4.0);  // S2: Turn Right 13 Inches with 4 Sec timeout
+        }
+
+        /*//******************start of light sensor section
+        // get a reference to our Light Sensor object.
+        lightSensor = hardwareMap.lightSensor.get("sensor_light");
+
+        // turn LED on
+        lightSensor.enableLed(true);
+
+        sleep(1000); // pause after turning LED on
+
+        // go forward while dark color is being detected
+        // light colors have higher values than dark colors
+        while ((lightSensor.getLightDetected()) < 0.35){
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+        }
+        // turn motors off when white is detected
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+
+        // turn LED off when white is detected
+        lightSensor.enableLed(false);
+        /*//**************************end of light sensor section
+
+        // sets the number of inches to turn on the first turn
+        double turn4distance = 18;
+        // if alliance color is blue, turn right
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, turn4distance, -turn4distance, 4.0);  // S2: Turn Right 13 Inches with 4 Sec timeout
+        }else{ //else alliance color is red, trun left
+            encoderDrive(TURN_SPEED, -turn4distance, turn4distance, 4.0);  // S2: Turn Left 13 Inches with 4 Sec timeout
+        }*/
+
+        //if left side of beacon matches alliance color, either red or blue
+        /*if (allianceColor==leftBeaconColor) {
+            // push left side of beacon
+            // back up for 10 inches
+            encoderDrive(DRIVE_SPEED, -10, -10, 5.0);  // S1: backward 10 Inches with 5 Sec timeout
+            // pause
+            sleep(500);
+            // move left servo to straight out position
+            servoLeft.setPosition(0.9);//Was 0.85
+            // pause
+            sleep(2000);
+            // Drive forward for 1 second so the robot pushes the beacon
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            //turn motors off after 1 second
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
+        } else { // right side of beacon matches alliance color
+            //push right side of beacon
+            // back up for 10 inches
+            encoderDrive(DRIVE_SPEED, -10, -10, 5.0);  // S1: backward 10 Inches with 5 Sec timeout
+            // pause
+            sleep(500);
+            // move right servo
+            servoRight.setPosition(0.04);//was .07
+            // pause
+            sleep(2000);
+            // Drive forward for 1 second so the robot runs in to the wall right in front of the beacon
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            //turn motors off after 1 second
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
+            // end pushBeacon
+        }*/
+    }
+
+    // method to drive to the second beacon
+    protected void toSecondBeacon(){
+
+        // back up
+        encoderDrive(TURN_SPEED, -24, -24, 5.0);
+
+        // sets the number of inches to turn on the third turn
+        double turn3distance = 12;
+        // if alliance color is blue, turn left
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, -turn3distance, turn3distance, 4.0);
+        }else{ //else alliance color is red, turn right
+            encoderDrive(TURN_SPEED, turn3distance, -turn3distance, 4.0);
+        }
+
+        sleep(50); // optional wait between steps
+
+        encoderDrive(DRIVE_SPEED, 10, 10, 4.0);
+
+        //******************start of light sensor section
+        // get a reference to our Light Sensor object.
+        lightSensor = hardwareMap.lightSensor.get("sensor_light");
+
+        // turn LED on
+        lightSensor.enableLed(true);
+
+        sleep(50); // pause after turning LED on
+
+        // go forward while dark color is being detected
+        // light colors have higher values than dark colors
+        while ((lightSensor.getLightDetected()) < 0.35 && opModeIsActive()){
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+        }
+        // turn motors off when white is detected
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+
+        // turn LED off when white is detected
+        lightSensor.enableLed(false);
+        //**************************end of light sensor section
+
+        //run light sensor section or this line
+        //encoderDrive(DRIVE_SPEED, 80, 80, 4.0);  // S3: foreward 40 Inches with 4 Sec timeout
+
+        sleep(50); // optional wait between steps
+
+        // sets number of inches to turn on fourth turn
+        double turn4distance = 12.5; // was 12
+        // if alliance color is blue, turn right
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, turn4distance, -turn4distance, 4.0);  // S2: Turn Right 11 Inches with 4 Sec timeout
+        }else{ //if alliance color is red, turn left
+            encoderDrive(TURN_SPEED, -12, 12, 4.0);  // S2: Turn Left 11 Inches with 4 Sec timeout
+        }
+
+        // Drive forward for 1.5 seconds so the robot runs in to the wall right in front of the beacon
+        robot.leftMotor.setPower(DRIVE_SPEED);
+        robot.rightMotor.setPower(DRIVE_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        //turn motors off after 1 second
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+
+        // end toSecondBeacon
+
+    }
+}
+
