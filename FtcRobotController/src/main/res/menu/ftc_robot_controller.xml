@@ -51,11 +51,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     android:title="@string/restart_robot_menu_item"/>
 
   <item
-    android:id="@+id/action_configure_robot"
-    android:orderInCategory="101"
-    android:showAsAction="never"
-    android:title="@string/configure_robot_menu_item"/>
-
+      android:id="@+id/action_configure_robot"
+      android:orderInCategory="101"
+      android:title="@string/configure_robot_menu_item" />
   <item
     android:id="@+id/action_programming_mode"
     android:orderInCategory="103"

@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <resources>
   <color name="light_red_background">#790E15</color>
   <color name="dark_red_background">#3F0206</color>
-  <color name="medium_red_background">#4e0106</color>
+  <color name="medium_red_background">#ffff1d3f</color>
   <color name="very_bright_red">#bf0510</color>
   <color name="bright_red">#A6040E</color>
   <color name="bright_red_text">#ff0a19</color>
