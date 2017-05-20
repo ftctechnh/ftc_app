@@ -94,7 +94,6 @@ public abstract class Core_Base_Platform extends LinearOpMode {
         robot.Base_L.setPower(Power);
     }
 
-
     // --------------------------------------自动阶段-----------------------------------------------
 
     /**
@@ -269,4 +268,5 @@ public abstract class Core_Base_Platform extends LinearOpMode {
             throw new IllegalArgumentException("Can't set Straight in Turning run");
         }
     }
+
 }

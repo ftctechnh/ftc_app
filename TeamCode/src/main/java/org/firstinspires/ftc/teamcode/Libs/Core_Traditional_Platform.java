@@ -75,7 +75,7 @@ public abstract class Core_Traditional_Platform extends LinearOpMode {
         telemetry.addLine("Robot Init  is  OK!");
         telemetry.addLine("Good Luck in games!");
         telemetry.addLine("-------------------");
-        telemetry.addLine(returnWhatToDo());
+        telemetry.addLine(opModeFunction());
         telemetry.update();
         runtime.reset();
         //  按下启动开始
@@ -117,7 +117,7 @@ public abstract class Core_Traditional_Platform extends LinearOpMode {
         }
     }
 
-    public abstract String returnWhatToDo();
+    public abstract String opModeFunction();
     // --------------------------------------自动阶段-----------------------------------------------
     /**
      *  机器运行一定距离
@@ -542,6 +542,31 @@ public abstract class Core_Traditional_Platform extends LinearOpMode {
         }else {
             return Power;
         }
+    }
+
+    protected boolean isAnyKeyDown(){
+        return gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_up || gamepad1.dpad_right ||
+                gamepad1.a || gamepad1.b || gamepad1.x || gamepad1.y ||
+                gamepad1.left_bumper || gamepad1.right_bumper ||
+                gamepad1.left_stick_button || gamepad1.right_stick_button ||
+                gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_right ||
+                gamepad2.a || gamepad2.b || gamepad2.x || gamepad2.y ||
+                gamepad2.left_bumper || gamepad2.right_bumper ||
+                gamepad2.left_stick_button || gamepad2.right_stick_button;
+    }
+
+    protected boolean isAnyKeyDownOnPadA(){
+        return gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_up || gamepad1.dpad_right ||
+                gamepad1.a || gamepad1.b || gamepad1.x || gamepad1.y ||
+                gamepad1.left_bumper || gamepad1.right_bumper ||
+                gamepad1.left_stick_button || gamepad1.right_stick_button;
+    }
+
+    protected boolean isAnyKeyDownOnPadB(){
+        return gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_right ||
+                gamepad2.a || gamepad2.b || gamepad2.x || gamepad2.y ||
+                gamepad2.left_bumper || gamepad2.right_bumper ||
+                gamepad2.left_stick_button || gamepad2.right_stick_button;
     }
 
     protected void stopAllDevice(){

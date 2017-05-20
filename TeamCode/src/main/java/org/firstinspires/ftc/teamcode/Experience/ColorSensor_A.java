@@ -3,16 +3,28 @@ package org.firstinspires.ftc.teamcode.Experience;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 
 @Autonomous(name = "Color",group = "Exp")
 public class ColorSensor_A extends LinearOpMode {
 
-    private ColorSensor colorSensor_A = null;
-    private ColorSensor colorSensor_B = null;
+    // TCS34725 A 的新地址
+    private final static I2cAddr CSA_NewAddress = I2cAddr.create7bit(0x52);
+    // TCS34725 B 的新地址
+    private final static I2cAddr CSB_NewAddress = I2cAddr.create7bit(0x54);
+
+    // 定义传感器
+    private final ColorSensor colorSensor_A = hardwareMap.colorSensor.get("C1");
+    private final ColorSensor colorSensor_B = hardwareMap.colorSensor.get("C2");
+
     @Override
     public void runOpMode(){
-        colorSensor_A = hardwareMap.colorSensor.get("C1");
-        colorSensor_B = hardwareMap.colorSensor.get("C2");
+        /*
+        由于6个IIC的端口是在同一根总线上，如果不更新地址，读取到的IIC数据是不能确定哪一个返回值的
+        通常是IIC - 0 (最近，返回ACK收取早）
+         */
+        colorSensor_A.setI2cAddress(CSA_NewAddress);
+        colorSensor_B.setI2cAddress(CSB_NewAddress);
         waitForStart();
         boolean isA = true;
         while (opModeIsActive()) {

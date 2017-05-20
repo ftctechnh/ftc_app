@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.Libs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.HardWareMaps.Hardware_Omnidirectional_Platform;
+import org.firstinspires.ftc.teamcode.HardWareMaps.Hardware_Omnidirectional_Platform_Exp;
 
 /**
  * 全向平台探索实验用
  */
 public abstract class Core_Omnidirectional_Platform_Exp extends LinearOpMode {
-    public Hardware_Omnidirectional_Platform robot = new Hardware_Omnidirectional_Platform();
+    public Hardware_Omnidirectional_Platform_Exp robot = new Hardware_Omnidirectional_Platform_Exp();
 
     private double ForwardPower = 0.25;
     private double ReversePower = - ForwardPower;

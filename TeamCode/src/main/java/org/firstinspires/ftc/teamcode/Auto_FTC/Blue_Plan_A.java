@@ -20,7 +20,7 @@ public final class Blue_Plan_A extends Core_Traditional_Platform {
         clickLight(Enum_Libs.LightColor.Blue);
     }
 
-    public String returnWhatToDo(){
+    public String opModeFunction(){
         return "转向按灯\n"+"预计30分";
     }
 }
