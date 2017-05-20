@@ -1,19 +1,65 @@
 package org.firstinspires.ftc.teamcode.Libs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.HardWareMaps.Hardware_Omnidirectional_Platform_Exp;
+import org.firstinspires.ftc.teamcode.HardWareMaps.Hardware_Omnidirectional_Platform;
 
 public abstract class Core_Omnidirectional_Platform extends LinearOpMode {
 
-    public Hardware_Omnidirectional_Platform_Exp robot = new Hardware_Omnidirectional_Platform_Exp();
+    protected Hardware_Omnidirectional_Platform robot = new Hardware_Omnidirectional_Platform();
+    protected ElapsedTime runtime = new ElapsedTime();
 
+    private boolean []isOutput = {false,false,false,false,false,false,false,false};
+    private boolean []currentState = {false,false,false,false,false,false,false,false};
     // ------------------------------------通用-----------------------------------------------
-    public void initRobot(){
+    public void initRobot(Enum_Libs.TeamColor teamColor,Enum_Libs.OpMode opMode){
+        robot.init(hardwareMap);
+        telemetry.addLine(goal());
+        displayTeamColor(teamColor);
+        initPins();
+        if(opMode == Enum_Libs.OpMode.Autonomous){
 
+        }else if(opMode == Enum_Libs.OpMode.Manual){
+
+        }
+        telemetry.update();
     }
 
-    public abstract String goal();
+    protected abstract String goal();
+
+    private void initPins(){
+        int index = 0;
+        do{
+            if(isOutput[index]){
+                robot.InterfaceModule.setDigitalChannelMode(index, DigitalChannel.Mode.OUTPUT);
+            }else {
+                robot.InterfaceModule.setDigitalChannelMode(index, DigitalChannel.Mode.INPUT);
+            }
+        }while (index++ < 7);
+    }
+
+    private void setPinState(int Channel,boolean State){
+        currentState[Channel] = State;
+        robot.InterfaceModule.setDigitalChannelState(Channel,currentState[Channel]);
+    }
+
+    private void displayTeamColor(Enum_Libs.TeamColor teamColor){
+        switch (teamColor){
+            case Blue:
+                robot.InterfaceModule.setLED(0,false);
+                robot.InterfaceModule.setLED(1,true);
+                break;
+            case Red:
+                robot.InterfaceModule.setLED(0,true);
+                robot.InterfaceModule.setLED(1,false);
+                break;
+            default:
+                robot.InterfaceModule.setLED(0,false);
+                robot.InterfaceModule.setLED(1,false);
+        }
+    }
 
     protected boolean isAnyKeyDown(){
         return gamepad1.dpad_down || gamepad1.dpad_left || gamepad1.dpad_up || gamepad1.dpad_right ||
@@ -39,4 +85,9 @@ public abstract class Core_Omnidirectional_Platform extends LinearOpMode {
                 gamepad2.left_bumper || gamepad2.right_bumper ||
                 gamepad2.left_stick_button || gamepad2.right_stick_button;
     }
+    // ----------------------------------自动阶段--------------------------------------------------
+
+    // ----------------------------------手动阶段--------------------------------------------------
+
+    //---------------------------------------------------------------------------------------------
 }
