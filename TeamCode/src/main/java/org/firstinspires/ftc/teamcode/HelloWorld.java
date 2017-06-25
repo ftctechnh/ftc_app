@@ -7,3 +7,5 @@ package org.firstinspires.ftc.teamcode;
 public class HelloWorld {
 }
 //ignore all of this, it is just a test
+//TODO start working on learning code
+//See above for how to create a to-do 
