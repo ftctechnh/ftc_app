@@ -6,10 +6,13 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +36,8 @@ public class NullbotHardware {
     public ModernRoboticsI2cColorSensor leftLineColor;
     public ModernRoboticsI2cColorSensor rightLineColor;
 
+    // Telemetry
+    public Telemetry tel;
 
     // Utility mechanisms
     public DcMotor[] motorArr;
@@ -40,7 +45,16 @@ public class NullbotHardware {
     public int hz = 25;
     public int secondsToTrack = 60;
     public int logPosition = 0;
-    public boolean teleoperated;
+    double initialCompassHeading;
+    double gyroError;
+    int msMagFieldKill = 3000; // Robot must stay still for half a second before it is assumed the
+                              // motors are not generating any magnetic field
+
+    double absurdValueFiltering = (Math.PI * 2) / 180; // Any attempt to alter the gyroscope's error
+                            // by more than this threshold will be denied
+
+    int msSinceMoved;
+    int inducedGyroError;
 
     // Local vars
     HardwareMap hwMap = null;
@@ -58,9 +72,11 @@ public class NullbotHardware {
         leftLineColor = hwMap.get(ModernRoboticsI2cColorSensor.class, "leftLineColor");
         rightLineColor = hwMap.get(ModernRoboticsI2cColorSensor.class, "rightLineColor");
 
+        compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
 
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // MotorArr utility setup
         motorArr = new DcMotor[4];
@@ -69,10 +85,12 @@ public class NullbotHardware {
         motorArr[1] = frontRight;
         motorArr[2] = backLeft;
         motorArr[3] = backRight;
+        inducedGyroError = 0;
     }
 
     public void init(HardwareMap ahwMap, LinearOpMode oM, boolean teleoperated) {
         hwMap = ahwMap;
+        tel = oM.telemetry;
         init();
         calibrate(oM);
         if (teleoperated) {
@@ -84,7 +102,7 @@ public class NullbotHardware {
         // Calibration
         ElapsedTime calibrationTimer = new ElapsedTime();
 
-        m.telemetry.log().add("Gyro Calibrating. Do Not Move!");
+        tel.log().add("Gyro Calibrating. Do Not Move!");
         gyro.calibrate();
         for (DcMotor motor : motorArr) {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -92,13 +110,18 @@ public class NullbotHardware {
 
         calibrationTimer.reset();
         while (!m.isStopRequested() && gyro.isCalibrating()) {
-            m.telemetry.addData("Calibrating", "%s", Math.round(calibrationTimer.seconds()) % 2 == 0 ? "|.." : "..|");
-            m.telemetry.update();
+            tel.addData("Calibrating", "%s", Math.round(calibrationTimer.seconds()) % 2 == 0 ? "|.." : "..|");
+            tel.update();
             sleep(50);
         }
-        m.telemetry.log().add("Gyro calibration complete");
+        tel.log().add("Gyro calibration complete");
+        initialCompassHeading = Math.toRadians(compass.getDirection());
+        gyroError = 0;
+        msSinceMoved = 0;
+        tel.log().add("Compass heading locked");
+        tel.update();
         for (DcMotor motor : motorArr) {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
 
@@ -135,7 +158,33 @@ public class NullbotHardware {
     }
 
     public void waitForTick(long periodMs) {
+        boolean moving = false;
+        for (DcMotor m : motorArr) {
+            if (m.getPower() != 0) {
+                moving = true;
+                break;
+            }
+        }
+        if (moving) {
+            msSinceMoved = 0;
+        } else {
+            msSinceMoved += (1000 / hz);
+        }
+
+        double newGyroError = getGyroHeading() - getCompassHeading();
+        if (msSinceMoved > msMagFieldKill) {
+            if (Math.abs(gyroError - newGyroError) < absurdValueFiltering) {
+                gyroError = newGyroError;
+            } // Otherwise, value is considered absurd and is thrown out
+        }
+
         long remaining = periodMs - (long) period.milliseconds();
+
+        tel.addLine()
+                .addData("==== Gyro error difference", Math.abs(gyroError - newGyroError));
+        tel.addLine()
+                .addData("==== Error update limit", absurdValueFiltering);
+        tel.update(); // Send telemetry data to driver station
 
         // Sleep for the remaining portion of the regular cycle period.
         if (remaining > 0) {
@@ -150,6 +199,8 @@ public class NullbotHardware {
         period.reset();
     }
     public void writeLogFile() {
+        tel.log().add("Gyro calibration complete");
+        tel.update();
         final File path =
                 Environment.getExternalStoragePublicDirectory
                         (
@@ -181,11 +232,23 @@ public class NullbotHardware {
         }
 
     }
-    public double getGyroHeading() {
+    public double normAngle(double a) {
+        // Takes in an angle in radians, outputs it as an angle between 0 and tau
+        a = a % (Math.PI * 2);
+
+        if (a < 0) {
+            a += Math.PI * 2;
+        }
+        return a;
+    }
+    public double getGyroHeadingRaw() {
         return Math.toRadians(gyro.getHeading());
     }
     public double getCompassHeading() {
-        return Math.toRadians(compass.getDirection());
+        return normAngle(Math.toRadians(compass.getDirection()) - initialCompassHeading);
+    }
+    public double getGyroHeading() {
+        return getGyroHeadingRaw() - gyroError;
     }
 }
 
