@@ -62,9 +62,11 @@ public class NullbotReplayMotorPowers extends LinearOpMode {
         try {
             loadFile(f);
         } catch (JSONException e) {
-            return;
+            telemetry.log().add("JSON failed to be parsed");
+            sleep(5000);
         } catch (IOException e) {
-            return;
+            telemetry.log().add("File failed to be read");
+            sleep(5000);
         }
         waitForStart();
 
@@ -78,7 +80,8 @@ public class NullbotReplayMotorPowers extends LinearOpMode {
                 index++;
                 robot.waitForTick(1000 / robot.hz);
             } catch (JSONException e) {
-                return;
+                telemetry.log().add("JSON failed to be parsed");
+                sleep(5000);
             }
         }
     }
