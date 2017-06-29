@@ -74,8 +74,10 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             // Telemetry
 
             telemetry.addLine()
-                    .addData("Gyro", heading)
-                    .addData("Unrelative direction", getDesiredDirection())
+                    .addData("Gyro", heading);
+            telemetry.addLine()
+                    .addData("Unrelative direction", getDesiredDirection());
+            telemetry.addLine()
                     .addData("Relative direction", robotPerpDriveDir);
             telemetry.update();
 
