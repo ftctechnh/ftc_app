@@ -34,7 +34,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
@@ -45,11 +44,12 @@ public class NullbotTeleopRelative extends LinearOpMode {
     /* Declare OpMode members. */
     NullbotHardware robot = new NullbotHardware();
 
-    final double secondsPerRotation = 2;
     final double turnVolatility = 4; // Higher number makes turning more jerklike, but faster
-    final boolean adjustDirectionWhileMoving = true;
 
-    final double headingAdjustmentRate = (2*Math.PI) / (2*robot.hz);
+    final double headingAdjustmentRate = (2*Math.PI) / (2*robot.hz); // How fast the controller makes the robot turn
+    final double moveMotorThreshold = 0.15;
+    final double triggerThreshold = 0.15;
+    final double minSlowModePower = 0.3;
     double initialHeading;
     double desiredHeading;
     double difference;
@@ -57,6 +57,8 @@ public class NullbotTeleopRelative extends LinearOpMode {
 
     boolean wasLeftBumperPressed;
     boolean wasRightBumperPressed;
+    boolean wasAPressed;
+    boolean wasBPressed;
 
     @Override
     public void runOpMode() {
@@ -64,83 +66,87 @@ public class NullbotTeleopRelative extends LinearOpMode {
 
         waitForStart();
 
-        initialHeading = Math.toRadians(robot.gyro.getHeading());
+        initialHeading = robot.getGyroHeading();
         desiredHeading = initialHeading;
 
         wasLeftBumperPressed = false;
         wasRightBumperPressed = false;
-
+        wasAPressed = false;
+        wasBPressed = false;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            if (!wasAPressed && gamepad1.a) {robot.inducedGyroError += Math.PI/180;}
+            if (!wasBPressed && gamepad1.b) {desiredHeading -=Math.PI/180;}
+
+            wasAPressed = gamepad1.a;
+            wasBPressed = gamepad1.b;
+
             double[] motorPowers = getDesiredDirection();
 
+            adjustDesiredHeading();
+
+            if (gamepad1.left_trigger > triggerThreshold) {// Left trigger activates slow mode
+                double factor = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
+                for (int i = 0; i < motorPowers.length; i++) {
+                    motorPowers[i] = motorPowers[i] * factor;
+                }
+            }
+
             // Auto turning code
-            double heading = Math.toRadians(robot.gyro.getHeading());
+            double heading = robot.getGyroHeading();
             difference = getAngleDifference(desiredHeading, heading);
-            boolean autoAdjust = (Math.abs(difference) > Math.PI/90);
+            //boolean autoAdjust = (Math.abs(difference) > Math.PI/90);
             turnSpeed = difference / (Math.PI / turnVolatility);
-            turnSpeed = -constrain(turnSpeed); // Clamp it
+            turnSpeed = clamp(turnSpeed); // Clamp it
             // If we're turning the wrong way, multiply this by -1
 
-            // Whether or not the user wants the robot to turn
-            boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
-
-            if (turnRelevant) { // Fine tune turning based on right stick
-                desiredHeading -= gamepad1.right_stick_x*headingAdjustmentRate;
-            }
-
-            // Turn 45 degrees based on right and left buttons
-            if (!wasLeftBumperPressed && gamepad1.left_bumper) {desiredHeading += Math.PI/4;}
-            if (!wasRightBumperPressed && gamepad1.right_bumper) {desiredHeading -= Math.PI/4;}
+            robot.frontLeft.setPower(chop(clamp(motorPowers[0] + turnSpeed)));
+            robot.backLeft.setPower(chop(clamp(motorPowers[1] + turnSpeed)));
+            robot.frontRight.setPower(chop(clamp(motorPowers[2] - turnSpeed)));
+            robot.backRight.setPower(chop(clamp(motorPowers[3] - turnSpeed)));
 
             telemetry.addLine()
-                    .addData("==== Current direction", heading)
-                    .addData("==== Desired direction", desiredHeading)
-                    .addData("==== Difference", difference)
-                    .addData("==== Turnspeed", turnSpeed)
-                    .addData("==== Auto adjust?", autoAdjust)
-                    .addData("==== Lock left", !wasLeftBumperPressed && gamepad1.left_bumper)
-                    .addData("==== Lock right", !wasRightBumperPressed && gamepad1.right_bumper);
-
-            telemetry.update();
-            // Normalize desired heading between 0 and tau radians
-            if (desiredHeading < 0) {desiredHeading += Math.PI * 2;}
-            if (desiredHeading > Math.PI * 2) {desiredHeading -= Math.PI * 2;}
-
-            // Store bumper positions for next run through loop
-            wasLeftBumperPressed = gamepad1.left_bumper;
-            wasRightBumperPressed = gamepad1.right_bumper;
-
-            if (motorPowers == null) { // We're only going to turn
-
-                if (autoAdjust) {
-                    robot.frontLeft.setPower(turnSpeed);
-                    robot.backLeft.setPower(turnSpeed);
-                    robot.frontRight.setPower(turnSpeed*-1);
-                    robot.backRight.setPower(turnSpeed*-1);
-                } else {
-                    for (DcMotor m : robot.motorArr) {
-                        m.setPower(0);
-                    }
-                }
-            } else { // Otherwise, if we're moving
-                for (int i = 0; i < robot.motorArr.length; i++) {
-                    if (adjustDirectionWhileMoving && autoAdjust) {
-                        if (i % 2 == 1) { // If it's a left motor
-                            robot.motorArr[i].setPower(clamp(motorPowers[i] + turnSpeed));
-                        } else { // If this is a right motor
-                            robot.motorArr[i].setPower(clamp(motorPowers[i] - turnSpeed));
-                        }
-                    } else {
-                        robot.motorArr[i].setPower(motorPowers[i]);
-                    }
-                }
-            }
+                    .addData("==== Raw gyro direction", robot.getGyroHeadingRaw());
+            telemetry.addLine()
+                    .addData("==== Raw compass direction", robot.getCompassHeading());
+            telemetry.addLine()
+                    .addData("==== Gyro error", robot.gyroError);
+            telemetry.addLine()
+                    .addData("==== Error adjusted gyro direction", robot.getGyroHeading());
+            telemetry.addLine()
+                    .addData("==== Initial compass heading", robot.initialCompassHeading);
             // Run above code at 25hz
             robot.writeLogTick(gamepad1);
             robot.waitForTick(1000 / robot.hz);
         }
 
+    }
+    private double chop(double d) { // Cutoff all signals being sent to the motor below a threshold
+        if (Math.abs(d) < moveMotorThreshold) {
+            return 0;
+        } else {
+            return d;
+        }
+    }
+    private void adjustDesiredHeading() {
+        // Whether or not the user wants the robot to turn
+        boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
+
+        if (turnRelevant) { // Fine tune turning based on right stick
+            desiredHeading -= gamepad1.right_stick_x*headingAdjustmentRate;
+        }
+
+        // Turn 45 degrees based on right and left buttons
+        if (!wasLeftBumperPressed && gamepad1.left_bumper) {desiredHeading += Math.PI/4;}
+        if (!wasRightBumperPressed && gamepad1.right_bumper) {desiredHeading -= Math.PI/4;}
+
+        // Normalize desired heading between 0 and tau radians
+        if (desiredHeading < 0) {desiredHeading += Math.PI * 2;}
+        if (desiredHeading > Math.PI * 2) {desiredHeading -= Math.PI * 2;}
+
+        // Store bumper positions for next run through loop
+        wasLeftBumperPressed = gamepad1.left_bumper;
+        wasRightBumperPressed = gamepad1.right_bumper;
     }
     public double getAngleDifference(double d1, double d2) {
         double diff = d2 - d1;
@@ -159,67 +165,47 @@ public class NullbotTeleopRelative extends LinearOpMode {
     public double c(int frac) { // Take in a numerator of a fraction, and return Pi*num/12
         return Math.PI*((double) frac)/6.0;
     }
-    public double constrain(double d) {
-        return Math.max(-1, Math.min(1, d));
-    }
     public double getDist(Gamepad g) {
         return Math.sqrt(g.left_stick_x*g.left_stick_x + g.left_stick_y*g.left_stick_y);
     }
-    public double[] invert(double[] dirs) {
-        for (int i = 0; i < dirs.length; i++) {
-            dirs[i] *= -1;
-        }
-        return dirs;
-    }
+
     public double[] getDesiredDirection() {
-        double theta = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+        double theta = robot.normAngle(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI);
         if (getDist(gamepad1) < 0.5) {
-            if (gamepad1.dpad_left && !gamepad1.dpad_up && !gamepad1.dpad_down) {
-                // Right
-                return new double[]{1, -1, -1, 1};
-            } else if (gamepad1.dpad_right && !gamepad1.dpad_down) {
-                // Right-down
-                return new double[]{0, -1, -1, 0};
-            } else if (gamepad1.dpad_up && !gamepad1.dpad_left && !gamepad1.dpad_right) {
-                // Down
-                return new double[]{-1, -1, -1, -1};
-            } else if (gamepad1.dpad_left && gamepad1.dpad_down) {
-                // Left-down
-                return new double[]{-1, 0, 0, -1};
-            } else if (gamepad1.dpad_right && !gamepad1.dpad_up && !gamepad1.dpad_down) {
-                // Left
-                return new double[]{-1, 1, 1, -1};
-            } else if (gamepad1.dpad_left && gamepad1.dpad_up) {
-                // Left-up
-                return new double[]{0, 1, 1, 0};
-            } else if (gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right) {
+            if (gamepad1.dpad_up && !gamepad1.dpad_left && !gamepad1.dpad_right) {
                 // Up
                 return new double[]{1, 1, 1, 1};
+            } else if (gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right) {
+                // Down
+                return new double[]{-1, -1, -1, -1};
+            } else if (gamepad1.dpad_right && !gamepad1.dpad_up && !gamepad1.dpad_down) {
+                // Right
+                return new double[]{1, -1, -1, 1};
+            } else if (gamepad1.dpad_left && !gamepad1.dpad_up && !gamepad1.dpad_down) {
+                // Left
+                return new double[]{-1, 1, 1, -1};
             } else if (gamepad1.dpad_up && gamepad1.dpad_right) {
                 // Up-right
                 return new double[]{1, 0, 0, 1};
+            } else if (gamepad1.dpad_up && gamepad1.dpad_left) {
+                // Up-left
+                return new double[]{0, 1, 1, 0};
+            } else if (gamepad1.dpad_down && gamepad1.dpad_left) {
+                // Down-left
+                return new double[]{-1, 0, 0, -1};
+            } else if (gamepad1.dpad_down && gamepad1.dpad_right) {
+                // Down-right
+                return new double[]{0, -1, -1, 0};
             } else {
-                return null;
+                return new double[]{0, 0, 0, 0};
             }
         }
 
-        if (c(-6) <= theta && theta < c(-5)) {
-            // Right
-            return new double[]{1, -1, -1, 1};
-        } else if (c(-5) <= theta && theta < c(-4)) {
-            // Right-down
-            return new double[]{0, -1, -1, 0};
-        } else if (c(-4) <= theta && theta < c(-2)) {
-            // Down
-            return new double[]{-1, -1, -1, -1};
-        } else if (c(-2) <= theta && theta < c(-1)) {
-            // Left-down
-            return new double[]{-1, 0, 0, -1};
-        } else if (c(-1) <= theta && theta < c(1)) {
+        if (c(0) <= theta && theta < c(1)) {
             // Left
             return new double[]{-1, 1, 1, -1};
         } else if (c(1) <= theta && theta < c(2)) {
-            // Left-up
+            // Up-left
             return new double[]{0, 1, 1, 0};
         } else if (c(2) <= theta && theta < c(4)) {
             // Up
@@ -227,9 +213,21 @@ public class NullbotTeleopRelative extends LinearOpMode {
         } else if (c(4) <= theta && theta < c(5)) {
             // Up-right
             return new double[]{1, 0, 0, 1};
-        } else {
-            // Right also
+        } else if (c(5) <= theta && theta < c(7)) {
+            // Right
             return new double[]{1, -1, -1, 1};
+        } else if (c(7) <= theta && theta < c(8)) {
+            // Down-right
+            return new double[]{0, -1, -1, 0};
+        } else if (c(8) <= theta && theta < c(10)) {
+            // Down
+            return new double[]{-1, -1, -1, -1};
+        } else if (c(10) <= theta && theta < c(11)) {
+            // Down-left
+            return new double[]{-1, 0, 0, -1};
+        } else {
+            // Left also
+            return new double[]{-1, 1, 1, -1};
         }
     }
 }
