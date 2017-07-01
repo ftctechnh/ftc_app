@@ -34,23 +34,32 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
-import java.io.FileWriter;
+import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
+
 
 @TeleOp(name="Nullbot: Teleop Nonrelative", group="Nullbot")
 public class NullbotTeleopNonrelative extends LinearOpMode {
 
-    /* Declare OpMode members. */
     NullbotHardware robot = new NullbotHardware();
 
-    public double controlThreshold = 0.2;
-    public double maxMotorOutput = 0.0;
+    final double turnVolatility = 4; // Higher number makes turning more jerklike, but faster
 
-    final double eighthTurn = Math.PI / 4.0;
+    final double moveMotorThreshold = 0.10;
+    final double triggerThreshold = 0.10;
+    final double minSlowModePower = 0.3;
+    double initialHeading;
+    double desiredHeading;
+    double difference;
+    double turnSpeed;
+    double desiredMax;
+    double heading;
 
-    ElapsedTime calibrationTimer = new ElapsedTime();
-    FileWriter w;
+
+    boolean wasLeftBumperPressed;
+    boolean wasRightBumperPressed;
+    boolean scale;
 
     @Override
     public void runOpMode() {
@@ -58,100 +67,163 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
         waitForStart();
 
+        initialHeading = robot.getGyroHeading();
+        desiredHeading = initialHeading;
+
+        wasLeftBumperPressed = false;
+        wasRightBumperPressed = false;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double heading = Math.toRadians(robot.gyro.getHeading());
-            double robotPerpDriveDir = getDesiredDirection() - heading;
-            double m = gamepad1.left_trigger*2;
+            scale = true;
+            // Calculate speed reduction
+            desiredMax = 1;
 
-            double turnSpeed = Math.min(1.0, Math.max(-1.0, gamepad1.right_stick_x * -1));
+            if (gamepad1.left_trigger > triggerThreshold) {// Left trigger activates slow mode
+                desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
 
-            robot.frontLeft.setPower(clampRange(m * Math.sin(robotPerpDriveDir + eighthTurn) + turnSpeed));
-            robot.backLeft.setPower(clampRange(m * Math.cos(robotPerpDriveDir + eighthTurn) + turnSpeed));
-            robot.frontRight.setPower(clampRange(m * Math.cos(robotPerpDriveDir + eighthTurn) - turnSpeed));
-            robot.backRight.setPower(clampRange(m * Math.sin(robotPerpDriveDir + eighthTurn) - turnSpeed));
+            }
 
-            // Telemetry
+            adjustDesiredHeading();
+
+            boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
+            // Auto turning code
+            heading = robot.getGyroHeading();
+            difference = getAngleDifference(desiredHeading, heading);
+
+            if (!turnRelevant) {
+                //boolean autoAdjust = (Math.abs(difference) > Math.PI/90);
+                turnSpeed = difference / (Math.PI / turnVolatility);
+                turnSpeed = clamp(turnSpeed); // Clamp it
+                // If we're turning the wrong way, multiply this by -1
+            } else {
+                turnSpeed = gamepad1.right_stick_x;
+                desiredHeading = heading;
+            }
+
+            double[] unscaledMotorPowers = getDesiredDirection();
+            // Add turning and scaling to powers
+
+            for (int i = 0; i < unscaledMotorPowers.length; i++) {
+                unscaledMotorPowers[i] *= desiredMax;
+                if (i % 2 == 0) {
+                    unscaledMotorPowers[i] += turnSpeed;
+                } else {
+                    unscaledMotorPowers[i] -= turnSpeed;
+                }
+            }
+
+            if (scale) {
+                // Now, let's scale those powers
+                double greatest = 0;
+                for (double d : unscaledMotorPowers) {
+                    greatest = Math.max(greatest, Math.abs(d));
+                }
+                for (int i = 0; i < unscaledMotorPowers.length; i++) {
+                    unscaledMotorPowers[i] = unscaledMotorPowers[i] / greatest;
+                }
+            }
+            for (int i = 0; i < unscaledMotorPowers.length; i++) {
+                // Clamp here is necessary, as it protects us from minor math rounding errors
+                // For example, scaling can result in a value being turned from sqrt(2)/2 to 1.0001,
+                // which would crash our software if we didn't clamp it
+                robot.motorArr[i].setPower(chop(clamp(unscaledMotorPowers[i])));
+            }
 
             telemetry.addLine()
-                    .addData("Gyro", heading);
+                    .addData("TurnSpeed", turnSpeed);
             telemetry.addLine()
-                    .addData("Unrelative direction", getDesiredDirection());
+                    .addData("Raw gyro direction", robot.getGyroHeadingRaw());
             telemetry.addLine()
-                    .addData("Relative direction", robotPerpDriveDir);
-            telemetry.update();
+                    .addData("Raw compass direction", robot.getCompassHeading());
+            telemetry.addLine()
+                    .addData("Gyro error", robot.gyroError);
+            telemetry.addLine()
+                    .addData("EAG direction", robot.getGyroHeading());
+            telemetry.addLine()
+                    .addData("Initial compass heading", robot.initialCompassHeading);
+            telemetry.update(); // Send telemetry data to driver station
 
             // Run above code at 25hz
             robot.writeLogTick(gamepad1);
             robot.waitForTick(1000 / robot.hz);
         }
+
+    }
+    private double chop(double d) { // Cutoff all signals being sent to the motor below a threshold
+        if (Math.abs(d) < moveMotorThreshold) {
+            return 0;
+        } else {
+            return d;
+        }
+    }
+    private void adjustDesiredHeading() {
+        // Turn 45 degrees based on right and left buttons
+        if (!wasLeftBumperPressed && gamepad1.left_bumper) {desiredHeading += Math.PI/4;}
+        if (!wasRightBumperPressed && gamepad1.right_bumper) {desiredHeading -= Math.PI/4;}
+
+        // Normalize desired heading between 0 and tau radians
+        if (desiredHeading < 0) {desiredHeading += Math.PI * 2;}
+        if (desiredHeading > Math.PI * 2) {desiredHeading -= Math.PI * 2;}
+
+        // Store bumper positions for next run through loop
+        wasLeftBumperPressed = gamepad1.left_bumper;
+        wasRightBumperPressed = gamepad1.right_bumper;
+    }
+    public double getAngleDifference(double d1, double d2) {
+        double diff = d2 - d1;
+        if (d1 > Math.PI) {d1 -= 2 * Math.PI;}
+        if (d2 > Math.PI) {d2 -= 2 * Math.PI;}
+
+        double diff2 = d2 - d1;
+
+        if (Math.abs(diff) < Math.abs(diff2)) {
+            return diff;
+        } else {
+            return diff2;
+        }
     }
 
-    /*public double lockToVals(double d) {
-        // Binary search could be used here to increase speed
-        double closestVal = 0.0;
-        double closestDiff = 20.0;
-        for (double v : lockTauFracs) {
-            if (Math.abs(v * Math.PI * 2 - d) <= Math.abs(v * Math.PI * 2 - closestDiff)) {
-                closestVal = v * Math.PI * 2;
-                closestDiff = Math.abs(v * Math.PI * 2 - d);
-            }
-        }
+    public double getDist(Gamepad g) {
+        return Math.sqrt(g.left_stick_x*g.left_stick_x + g.left_stick_y*g.left_stick_y);
+    }
 
-        return closestVal;
-    }*/
-
-    public double getDesiredDirection() {
-        // The below if statement is pretty gross, but it's the best way to do things
-        if (gamepad1.dpad_left) {
+    public double[] getDesiredDirection() {
+        double controllerAngle;
+        if (gamepad1.dpad_right) {
             if (gamepad1.dpad_up) {
-                return Math.PI/4;
+                controllerAngle = Math.PI/4;
             } else if (gamepad1.dpad_down) {
-                return 3*Math.PI/4;
+                controllerAngle = 3*Math.PI/4;
             } else {
-                return Math.PI/2;
+                controllerAngle = Math.PI/2;
             }
-        } else if (gamepad1.dpad_right) {
+        } else if (gamepad1.dpad_left) {
             if (gamepad1.dpad_up) {
-                return 7*Math.PI/4;
+                controllerAngle = 7*Math.PI/4;
             } else if (gamepad1.dpad_down) {
-                return 5*Math.PI/4;
+                controllerAngle = 5*Math.PI/4;
             } else {
-                return 3*Math.PI/2;
+                controllerAngle = 3*Math.PI/2;
             }
         } else if (gamepad1.dpad_up) {
-            return 0.0;
+            controllerAngle = 0.0;
         } else if (gamepad1.dpad_down) {
-            return Math.PI;
+            controllerAngle = Math.PI;
+        } else {
+            // If we're not moving, don't scale the values
+            scale = false;
+            return new double[]{0, 0, 0, 0};
         }
-        return 0.0;
-    }
 
-    public double constrainAngle(double o) {
-        o = Math.PI * 2 * Math.floor((o + Math.PI) / (Math.PI*2));
-        if (o < 0) {
-            o += Math.PI*2;
-        }
-        return o;
-    }
-
-    public double sqr(double v) {
-        return v*v;
-    }
-
-    public double rEV (double v) { // Remove extraneous values
-        if (v < controlThreshold) {
-            v = 0;
-        } else if (v >= 1) {
-            v = 1;
-        }
-        return v;
-    }
-    public double clampRange(double v) {
-        if (Math.abs(v) > 1) {
-            maxMotorOutput = Math.max(maxMotorOutput, Math.abs(v));
-            return v / maxMotorOutput;
-        }
-        return v;
+        // When calculating the robot's angle, we don't have to take into account the initial heading,
+        // because it is always 0 (we'll always calibrate the gyro)
+        double robotAngle = robot.normAngle(controllerAngle + heading);
+        double[] unscaledPowers = new double[4];
+        unscaledPowers[0] = Math.sin(robotAngle + Math.PI/4);
+        unscaledPowers[1] = Math.cos(robotAngle + Math.PI/4);
+        unscaledPowers[2] = unscaledPowers[1];
+        unscaledPowers[3] = unscaledPowers[0];
+        return unscaledPowers;
     }
 }
