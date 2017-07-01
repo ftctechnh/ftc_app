@@ -180,12 +180,6 @@ public class NullbotHardware {
 
         long remaining = periodMs - (long) period.milliseconds();
 
-        tel.addLine()
-                .addData("==== Gyro error difference", Math.abs(gyroError - newGyroError));
-        tel.addLine()
-                .addData("==== Error update limit", absurdValueFiltering);
-        tel.update(); // Send telemetry data to driver station
-
         // Sleep for the remaining portion of the regular cycle period.
         if (remaining > 0) {
             try {
