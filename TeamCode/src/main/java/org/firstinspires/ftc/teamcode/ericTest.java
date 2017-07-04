@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by Eric D'Urso on 7/3/2017.
  */
-@TeleOp (name = "Eric's Test Of Awesomeness")
+@TeleOp (name = "Eric Test")
 public class ericTest extends LinearOpMode
 {
     private DcMotor motorLeft;
