@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import static com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor.Register;
 import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
 
 @TeleOp(name="Nullbot: Teleop Relative", group="Nullbot")
@@ -68,15 +69,19 @@ public class NullbotTeleopRelative extends LinearOpMode {
             robot.backRight.setPower(chop(clamp(motorPowers[3] - turnSpeed)));
 
             telemetry.addLine()
-                    .addData("==== Raw gyro direction", robot.getGyroHeadingRaw());
+                    .addData("Raw gyro direction", robot.getGyroHeadingRaw());
             telemetry.addLine()
-                    .addData("==== Raw compass direction", robot.getCompassHeading());
+                    .addData("Raw compass direction", robot.getCompassHeading());
             telemetry.addLine()
-                    .addData("==== Gyro error", robot.gyroError);
+                    .addData("Gyro error", robot.gyroError);
             telemetry.addLine()
-                    .addData("==== Error adjusted gyro direction", robot.getGyroHeading());
+                    .addData("Error adjusted gyro direction", robot.getGyroHeading());
             telemetry.addLine()
-                    .addData("==== Initial compass heading", robot.initialCompassHeading);
+                    .addData("Initial compass heading", robot.initialCompassHeading);
+            telemetry.addLine()
+                    .addData("Left LED sees value ", robot.leftLineColor.read8(Register.COLOR_NUMBER));
+            telemetry.addLine()
+                    .addData("Right LED sees value ", robot.rightLineColor.read8(Register.COLOR_NUMBER));
             telemetry.update(); // Send telemetry data to driver station
             // Run above code at 25hz
             robot.writeLogTick(gamepad1);
