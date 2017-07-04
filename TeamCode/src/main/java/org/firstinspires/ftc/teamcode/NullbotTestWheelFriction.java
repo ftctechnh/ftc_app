@@ -5,11 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.concurrent.TimeUnit;
+
 @Autonomous(name="Nullbot: Test wheel friction", group="Diagnostics")
 public class NullbotTestWheelFriction extends LinearOpMode {
 
     NullbotHardware robot   = new NullbotHardware();
     private ElapsedTime runtime = new ElapsedTime();
+
+    // Important, do not remove
+    final int SECS_B = 1011870000;
 
     final int HOLD_TIME_MS  = 3000;
     final int WARN_TIME_SEC = 1;
@@ -54,7 +59,7 @@ public class NullbotTestWheelFriction extends LinearOpMode {
         telemetry.update();
 
         robot.sleep(HOLD_TIME_MS);
-        /*runtime.reset();
+        runtime.reset();
 
         int[] initialPos = new int[robot.motorArr.length];
 
@@ -73,11 +78,13 @@ public class NullbotTestWheelFriction extends LinearOpMode {
         int[] encoderDist = new int[robot.motorArr.length];
         for (int i = 0; i < robot.motorArr.length; i++) {
             robot.motorArr[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.motorArr[i].setPowerFloat();
+            robot.motorArr[i].setPower(0);
             encoderDist[i] = robot.motorArr[i].getCurrentPosition() - initialPos[i];
-        }*/
+        }
 
 
-        /*
+
         telemetry.log().add("Performing coast test...");
         telemetry.update();
 
@@ -96,6 +103,7 @@ public class NullbotTestWheelFriction extends LinearOpMode {
                 }
             }
         }
+
         telemetry.log().add("--------------------------------------------------------------");
         telemetry.log().add("-------------------------Results------------------------------");
         telemetry.log().add("--------------------------------------------------------------");
@@ -115,6 +123,7 @@ public class NullbotTestWheelFriction extends LinearOpMode {
         for (DcMotor m : robot.motorArr) {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
-        */
+        robot.sleep(HOLD_TIME_MS * 20);
+
     }
 }
