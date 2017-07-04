@@ -5,6 +5,7 @@ import android.os.Environment;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,6 +22,9 @@ import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.util.Date;
 
+import static com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor.*;
+import static com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor.Register.COMMAND;
+
 // This is NOT an opmode
 
 public class NullbotHardware {
@@ -35,6 +39,7 @@ public class NullbotHardware {
     public ModernRoboticsI2cCompassSensor compass;
     public ModernRoboticsI2cColorSensor leftLineColor;
     public ModernRoboticsI2cColorSensor rightLineColor;
+    public ModernRoboticsUsbDeviceInterfaceModule deviceInterface;
 
     // Telemetry
     public Telemetry tel;
@@ -71,6 +76,10 @@ public class NullbotHardware {
         compass = hwMap.get(ModernRoboticsI2cCompassSensor.class, "acc");
         leftLineColor = hwMap.get(ModernRoboticsI2cColorSensor.class, "leftLineColor");
         rightLineColor = hwMap.get(ModernRoboticsI2cColorSensor.class, "rightLineColor");
+        deviceInterface = hwMap.get(ModernRoboticsUsbDeviceInterfaceModule.class, "deviceInterface");
+
+        leftLineColor.writeCommand(Command.ACTIVE_LED);
+        rightLineColor.writeCommand(Command.ACTIVE_LED);
 
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
 
