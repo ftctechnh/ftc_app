@@ -13,7 +13,7 @@ public class NullbotTeleopRelative extends LinearOpMode {
     /* Declare OpMode members. */
     NullbotHardware robot = new NullbotHardware();
 
-    final double turnVolatility = 4; // Higher number makes turning more jerklike, but faster
+    final double turnVolatility = 2; // Higher number makes turning more jerklike, but faster
 
     final double headingAdjustmentRate = (2*Math.PI) / (2*robot.hz); // How fast the controller makes the robot turn
     final double moveMotorThreshold = 0.10;
@@ -169,33 +169,44 @@ public class NullbotTeleopRelative extends LinearOpMode {
             }
         }
 
-        if (c(0) <= theta && theta < c(1)) {
-            // Left
-            return new double[]{-1, 1, 1, -1};
-        } else if (c(1) <= theta && theta < c(2)) {
-            // Up-left
-            return new double[]{0, 1, 1, 0};
-        } else if (c(2) <= theta && theta < c(4)) {
-            // Up
-            return new double[]{1, 1, 1, 1};
-        } else if (c(4) <= theta && theta < c(5)) {
-            // Up-right
-            return new double[]{1, 0, 0, 1};
-        } else if (c(5) <= theta && theta < c(7)) {
-            // Right
-            return new double[]{1, -1, -1, 1};
-        } else if (c(7) <= theta && theta < c(8)) {
-            // Down-right
-            return new double[]{0, -1, -1, 0};
-        } else if (c(8) <= theta && theta < c(10)) {
-            // Down
-            return new double[]{-1, -1, -1, -1};
-        } else if (c(10) <= theta && theta < c(11)) {
-            // Down-left
-            return new double[]{-1, 0, 0, -1};
+        if (gamepad1.right_trigger < triggerThreshold) {
+            if (c(0) <= theta && theta < c(1)) {
+                // Left
+                return new double[]{-1, 1, 1, -1};
+            } else if (c(1) <= theta && theta < c(2)) {
+                // Up-left
+                return new double[]{0, 1, 1, 0};
+            } else if (c(2) <= theta && theta < c(4)) {
+                // Up
+                return new double[]{1, 1, 1, 1};
+            } else if (c(4) <= theta && theta < c(5)) {
+                // Up-right
+                return new double[]{1, 0, 0, 1};
+            } else if (c(5) <= theta && theta < c(7)) {
+                // Right
+                return new double[]{1, -1, -1, 1};
+            } else if (c(7) <= theta && theta < c(8)) {
+                // Down-right
+                return new double[]{0, -1, -1, 0};
+            } else if (c(8) <= theta && theta < c(10)) {
+                // Down
+                return new double[]{-1, -1, -1, -1};
+            } else if (c(10) <= theta && theta < c(11)) {
+                // Down-left
+                return new double[]{-1, 0, 0, -1};
+            } else {
+                // Left also
+                return new double[]{-1, 1, 1, -1};
+            }
         } else {
-            // Left also
-            return new double[]{-1, 1, 1, -1};
+            // We know that the joystick position is relevant
+            double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+            return new double[]{
+                    Math.sin(angle + Math.PI/4),
+                    Math.cos(angle + Math.PI/4),
+                    Math.cos(angle + Math.PI/4),
+                    Math.sin(angle + Math.PI/4),
+            };
         }
     }
 }
