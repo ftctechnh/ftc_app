@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  * Created by Eric D'Urso on 6/24/2017.
  */
 
-public class Practice {
+public class referencesAndTodos {
 }
 //ignore all of this, it is just a test
 //TODO start working on learning code

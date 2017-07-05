@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by Eric D'Urso on 7/3/2017.
  */
-@TeleOp (name = "Eric Test")
-public class ericTest extends LinearOpMode
+@TeleOp (name = "TeleOpDemo", group = "DemoBot")
+public class robotexDemoBotTeleOp extends LinearOpMode
 {
     private DcMotor motorLeft;
     private DcMotor motorRight;
