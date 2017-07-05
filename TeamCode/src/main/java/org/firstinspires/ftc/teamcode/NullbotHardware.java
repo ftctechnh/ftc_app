@@ -22,8 +22,7 @@ import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.util.Date;
 
-import static com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor.*;
-import static com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor.Register.COMMAND;
+import static com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor.Command;
 
 // This is NOT an opmode
 
@@ -134,10 +133,41 @@ public class NullbotHardware {
         }
     }
 
+    public void enableMotorEncoders() {
+        for (DcMotor m : motorArr) {
+            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+    public void setMotorSpeeds(double[] speeds) {
+        boolean[] resetMotors = new boolean[motorArr.length];
+
+        for (int i = 0; i < motorArr.length; i++) {
+            double finalPower = clamp(speeds[i]);
+
+            if (Math.abs(finalPower) + 0.1 < Math.abs(motorArr[i].getPower())) {
+                resetMotors[i] = true;
+            } else {
+                resetMotors[i] = false;
+            }
+            motorArr[i].setPower(finalPower);
+        }
+
+        for (int i = 0; i < motorArr.length; i++) {
+            if (resetMotors[i]) {
+                motorArr[i].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+        }
+        sleep(1);
+        for (int i = 0; i < motorArr.length; i++) {
+            if (resetMotors[i]) {
+                motorArr[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+        }
+    }
     /**
      * Clamps inputted value between -1.0 and 1.0, for use with DcMotor.setPower
      *
-     * @param value The value to be clamped
+     * @param val   The value to be clamped
      * @return      The clamped value as a double between -1.0 and 1.0
      * @see          DcMotor
      */

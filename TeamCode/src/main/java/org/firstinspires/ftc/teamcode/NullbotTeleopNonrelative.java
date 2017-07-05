@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
@@ -44,11 +45,11 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();
 
-    final double turnVolatility = 4; // Higher number makes turning more jerklike, but faster
+    final double turnVolatility = 2; // Higher number makes turning more jerklike, but faster
 
-    final double moveMotorThreshold = 0.10;
+    final double moveMotorThreshold = 0;
     final double triggerThreshold = 0.10;
-    final double minSlowModePower = 0.3;
+    final double minSlowModePower = 0.15;
     double initialHeading;
     double desiredHeading;
     double difference;
@@ -72,6 +73,10 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
         wasLeftBumperPressed = false;
         wasRightBumperPressed = false;
+
+        for (DcMotor m : robot.motorArr) {
+            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -120,15 +125,11 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
                     greatest = Math.max(greatest, Math.abs(d));
                 }
                 for (int i = 0; i < unscaledMotorPowers.length; i++) {
-                    unscaledMotorPowers[i] = unscaledMotorPowers[i] / greatest;
+                    unscaledMotorPowers[i] = chop(unscaledMotorPowers[i] / greatest);
                 }
             }
-            for (int i = 0; i < unscaledMotorPowers.length; i++) {
-                // Clamp here is necessary, as it protects us from minor math rounding errors
-                // For example, scaling can result in a value being turned from sqrt(2)/2 to 1.0001,
-                // which would crash our software if we didn't clamp it
-                robot.motorArr[i].setPower(chop(clamp(unscaledMotorPowers[i])));
-            }
+
+            robot.setMotorSpeeds(unscaledMotorPowers);
 
             telemetry.addLine()
                     .addData("TurnSpeed", turnSpeed);
@@ -210,6 +211,8 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             controllerAngle = 0.0;
         } else if (gamepad1.dpad_down) {
             controllerAngle = Math.PI;
+        } else if (getDist(gamepad1) > triggerThreshold) {
+            controllerAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
         } else {
             // If we're not moving, don't scale the values
             scale = false;
