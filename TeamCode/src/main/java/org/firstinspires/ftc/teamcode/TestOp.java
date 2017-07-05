@@ -13,7 +13,7 @@ public class TestOp extends OpMode {
     // Hardware map initialization.
     TileRunner hardware = new TileRunner();
 
-    // Speed modifer variables
+    // Speed modifier variables
     double driverSpeedMod               = NORMAL;
     double utilitySpeedMod              = NORMAL;
 
