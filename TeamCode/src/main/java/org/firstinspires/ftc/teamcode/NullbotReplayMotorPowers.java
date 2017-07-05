@@ -19,7 +19,7 @@ import java.io.IOException;
 public class NullbotReplayMotorPowers extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();
-    String f = "Nullbot-log-Oct 3, 2015 2:43:47 AM.txt";
+    String f = "auto.txt";
     JSONArray commands;
     int index = 0;
 
@@ -57,7 +57,7 @@ public class NullbotReplayMotorPowers extends LinearOpMode {
         final File path =
                 Environment.getExternalStoragePublicDirectory
                         (
-                                Environment.DIRECTORY_DOCUMENTS + "/NullbotLogs/"
+                                Environment.DIRECTORY_DOCUMENTS + "/NullbotLogs/" + filename
                         );
         String text = new BufferedReader(new FileReader(path)).readLine();
         commands = new JSONArray(text);
