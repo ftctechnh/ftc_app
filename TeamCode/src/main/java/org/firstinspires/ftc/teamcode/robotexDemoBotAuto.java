@@ -8,6 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
 public class robotexDemoBotAuto  {
-    
+
 }
 //Try to write autonomous code for DemoBot Config here pls
