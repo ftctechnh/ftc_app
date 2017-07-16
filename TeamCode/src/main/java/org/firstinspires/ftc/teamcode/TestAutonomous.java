@@ -26,6 +26,7 @@ public class TestAutonomous extends LinearOpMode {
 
         while(opModeIsActive()) {
             telemetry.addLine("In end loop.");
+            telemetry.addLine("PaulWuzHere");
             telemetry.update();
         }
     }
