@@ -19,13 +19,19 @@ public class powerpuff_baisic extends LinearOpMode{
     @Override
     public void runOpMode(){
 
-        DcMotor leftbackMotor
-                DcMotor rightbackMotor
-                        DcMotor leftfrontmotor
-                                DcMotor rightfrontmotor
+        DcMotor leftbackMotor;
+        DcMotor rightbackMotor;
+        DcMotor leftfrontmotor;
+        DcMotor rightfrontmotor;
+
+        rightbackMotor = hardwareMap.dcMotor.get("rightbackMotor");
+        leftbackMotor = hardwareMap.dcMotor.get("leftbackmotor");
+        rightfrontmotor= hardwareMap.dcMotor.get("rightfrontmotor");
+        leftfrontmotor= hardwareMap.dcMotor.get("leftfrontmotor");
+
         waitForStart();
-leftfrontmotor.setPower(0.2);
-leftbackMotor.setPower(0.2);
+        leftfrontmotor.setPower(0.2);
+        leftbackMotor.setPower(0.2);
         rightbackMotor.setPower(-0.2);
         rightfrontmotor.setPower(-0.2);
         sleep(10000000);
