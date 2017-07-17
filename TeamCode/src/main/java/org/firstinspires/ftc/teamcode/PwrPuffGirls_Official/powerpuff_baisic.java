@@ -1,8 +1,33 @@
 package org.firstinspires.ftc.teamcode.PwrPuffGirls_Official;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
 /**
  * Created by mabel on 7/16/2017.
  */
 
-public class powerpuff_baisic {
+@Autonomous(name = "powerpuffgirlsdrive")
+public class powerpuff_baisic extends LinearOpMode{
+
+    @Override
+    public void runOpMode(){
+
+        DcMotor leftbackMotor
+                DcMotor rightbackMotor
+                        DcMotor leftfrontmotor
+                                DcMotor rightfrontmotor
+        waitForStart();
+leftfrontmotor.setPower(0.2);
+leftbackMotor.setPower(0.2);
+        rightbackMotor.setPower(-0.2);
+        rightfrontmotor.setPower(-0.2);
+        sleep(10000000);
+    }
 }
