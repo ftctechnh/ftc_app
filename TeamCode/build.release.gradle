@@ -5,4 +5,6 @@ dependencies {
     compile (name: 'FtcCommon-release', ext: 'aar')
     compile (name:'Analytics-release', ext:'aar')
     compile (name:'WirelessP2p-release', ext:'aar')
+    compile project(':ftc-visionlib')
+    compile project(':opencv-java')
 }
