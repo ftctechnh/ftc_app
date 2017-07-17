@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -29,11 +30,15 @@ public class powerpuff_baisic extends LinearOpMode{
         rightfrontmotor= hardwareMap.dcMotor.get("rightfrontmotor");
         leftfrontmotor= hardwareMap.dcMotor.get("leftfrontmotor");
 
+        rightbackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightfrontmotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         waitForStart();
         leftfrontmotor.setPower(0.2);
         leftbackMotor.setPower(0.2);
-        rightbackMotor.setPower(-0.2);
-        rightfrontmotor.setPower(-0.2);
-        sleep(10000000);
+        rightbackMotor.setPower(0.2);
+        rightfrontmotor.setPower(0.2);
+        sleep(10000);
+        leftbackMotor.setPower(0);
     }
 }
