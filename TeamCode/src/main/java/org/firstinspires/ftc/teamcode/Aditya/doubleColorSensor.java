@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
 @Disabled
 public class doubleColorSensor extends AutonomousGeneral {
 
+    //aditya is human
 
 
 //    boolean second_beacon_press = false;
