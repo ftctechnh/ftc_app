@@ -16,14 +16,27 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by adityamavalankar on 7/16/17.
+ * Created by Rohan Bosworth and Pahel Srivastava on 7/16/17.
  */
 @Autonomous(name = "basicMove_teamAvocado")
 public class basicMove_teamAvocado extends LinearOpMode{
 
+    public double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
+    public double DRIVE_GEAR_REDUCTION;     // 56/24
+    public double WHEEL_PERIMETER_CM;     // For figuring circumference
+    public double COUNTS_PER_CM;
+
     DcMotor rightMotor;
     DcMotor leftMotor;
+
     public void runOpMode(){
+
+        COUNTS_PER_MOTOR_REV = 1440;
+        DRIVE_GEAR_REDUCTION = 1.5;
+        WHEEL_PERIMETER_CM = 9.1* Math.PI;
+        COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
+                (WHEEL_PERIMETER_CM * DRIVE_GEAR_REDUCTION);
+
 
         leftMotor= hardwareMap.dcMotor.get("leftMotor");
         rightMotor=  hardwareMap.dcMotor.get("rightMotor");
@@ -32,30 +45,58 @@ public class basicMove_teamAvocado extends LinearOpMode{
 
         waitForStart();
 
-        rightMotor.setPower(0.2);
-        leftMotor.setPower(0.2);
-        sleep(1000);
-        rightMotor.setPower(0);
-        leftMotor.setPower(0.2);
-        sleep(500);
-        rightMotor.setPower(0.2);
-        leftMotor.setPower(0.2);
-        sleep(1000);
-        rightMotor.setPower(0);
-        leftMotor.setPower(0.2);
-        sleep(500);
-        rightMotor.setPower(0.2);
-        leftMotor.setPower(0.2);
-        sleep(1000);
-        rightMotor.setPower(0);
-        leftMotor.setPower(0.2);
-        sleep(500);
-        rightMotor.setPower(0.2);
-        leftMotor.setPower(0.2);
-        sleep(1000);
+        encoderDrive(0.5, 100, 100);
+
 
 
 
     }
 
+    public void encoderDrive(double speed,
+                             double leftCM, double rightCM) {
+        int newLeftTarget;
+        int newRightTarget;
+        double leftSpeed;
+        double rightSpeed;
+
+        // Ensure that the opmode is still active
+        //  if (opModeIsActive())
+
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftCM * COUNTS_PER_CM);
+        newRightTarget = rightMotor.getCurrentPosition() + (int) (rightCM * COUNTS_PER_CM);
+        rightMotor.setTargetPosition(newRightTarget);
+        leftMotor.setTargetPosition(newLeftTarget);
+
+
+        // reset the timeout time and start motion.
+        if (Math.abs(leftCM) > Math.abs(rightCM)) {
+            leftSpeed = speed;
+            rightSpeed = (speed * rightCM) / leftCM;
+        } else {
+            rightSpeed = speed;
+            leftSpeed = (speed * leftCM) / rightCM;
+        }
+        //  runtime.reset();
+        //if(leftInches != -rightInches)
+        leftMotor.setPower(Math.abs(leftSpeed));
+        rightMotor.setPower(Math.abs(rightSpeed));
+
+
+
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        while (opModeIsActive() &&
+                ((leftMotor.isBusy() && rightMotor.isBusy()))) {
+        }
+
+        // Stop all motion;
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
+    }`
 }
+
+
+

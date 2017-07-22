@@ -1147,10 +1147,9 @@ idle();
             back_left_motor.setPower(Math.abs(0));
             front_left_motor.setPower(-Math.abs(speed));
         }
-    }
-    public void encoderDrive(double speed,
-                                    double leftInches, double rightInches,
-                                    double timeoutS) {
+    }public void encoderDrive(double speed,
+                              double leftInches, double rightInches,
+                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
         double leftSpeed;
@@ -1184,10 +1183,10 @@ idle();
         }
         //  runtime.reset();
         //if(leftInches != -rightInches)
-            front_left_motor.setPower(Math.abs(leftSpeed));
-            front_right_motor.setPower(Math.abs(rightSpeed));
-            back_left_motor.setPower(Math.abs(leftSpeed));
-            back_right_motor.setPower(Math.abs(rightSpeed));
+        front_left_motor.setPower(Math.abs(leftSpeed));
+        front_right_motor.setPower(Math.abs(rightSpeed));
+        back_left_motor.setPower(Math.abs(leftSpeed));
+        back_right_motor.setPower(Math.abs(rightSpeed));
 
 
 
@@ -1203,6 +1202,7 @@ idle();
         front_left_motor.setPower(0);
         front_right_motor.setPower(0);
     }
+
 
     public void encoderDriveShootBlue(double speed,
                                       double leftInches, double rightInches,
