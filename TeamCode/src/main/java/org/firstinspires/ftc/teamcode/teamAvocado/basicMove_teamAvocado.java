@@ -95,7 +95,7 @@ public class basicMove_teamAvocado extends LinearOpMode{
         // Stop all motion;
         rightMotor.setPower(0);
         leftMotor.setPower(0);
-    }`
+    }
 }
 
 
