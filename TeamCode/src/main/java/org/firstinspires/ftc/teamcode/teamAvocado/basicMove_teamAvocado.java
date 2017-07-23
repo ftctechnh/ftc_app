@@ -68,9 +68,9 @@ public class basicMove_teamAvocado extends LinearOpMode{
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftCM * COUNTS_PER_CM);
         newRightTarget = rightMotor.getCurrentPosition() + (int) (rightCM * COUNTS_PER_CM);
-        rightMotor.setTargetPosition(newRightTarget);
-        leftMotor.setTargetPosition(newLeftTarget);
 
+        leftMotor.setTargetPosition(newLeftTarget);
+        rightMotor.setTargetPosition(newRightTarget);
 
         // reset the timeout time and start motion.
         if (Math.abs(leftCM) > Math.abs(rightCM)) {
