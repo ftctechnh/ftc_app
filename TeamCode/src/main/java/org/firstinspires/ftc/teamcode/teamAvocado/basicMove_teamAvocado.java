@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by Rohan Bosworth and Pahel Srivastava on 7/16/17.
+ * Created by Rohan Bosworth on 7/16/17.
  */
 @Autonomous(name = "basicMove_teamAvocado")
 public class basicMove_teamAvocado extends LinearOpMode{
@@ -31,11 +31,11 @@ public class basicMove_teamAvocado extends LinearOpMode{
 
     public void runOpMode(){
 
-        COUNTS_PER_MOTOR_REV = 1440;
-        DRIVE_GEAR_REDUCTION = 1.5;
-        WHEEL_PERIMETER_CM = 9.1* Math.PI;
-        COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
-                (WHEEL_PERIMETER_CM * DRIVE_GEAR_REDUCTION);
+        double encoder_ticks_per_rotation;
+        double gear_ratio;
+        double wheel_circumference;
+        double encoder_ticks_per_cm;
+
 
 
         leftMotor= hardwareMap.dcMotor.get("leftMotor");
@@ -44,8 +44,29 @@ public class basicMove_teamAvocado extends LinearOpMode{
 
 
         waitForStart();
+        encoder_ticks_per_rotation = 1440;
+        gear_ratio = 1.5;
+        wheel_circumference = 9.1* Math.PI;
+        encoder_ticks_per_cm = (encoder_ticks_per_rotation) / (wheel_circumference * gear_ratio);
 
-        /* Move FWD 100cm*/
+    public void encoderDrive(double speed, double leftCM, double rightCM){
+        int newLeftTarget; //target for left motor encoders
+        int newRightTarget; //target for right motor encoders
+        double leftSpeed;
+        double rightSpeed;
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if(Math.abs(leftCM) > Math.abs(rightCM)){
+            leftSpeed = speed; rightSpeed = (speed * rightCM) / leftCM	}
+        else if (Math.abs(rightCM) > Math.abs(leftCM)) {
+            rightSpeed = speed; leftSpeed = (speed * leftCM) / rightCM		}
+        else {
+            leftSpeed = speed; rightSpeed = speed;
+        }
+
+    }
+
+    /* Move FWD 100cm*/
         encoderDrive(0.5, 100, 100);
 
         /*Code to turn Right*/
@@ -71,8 +92,7 @@ public class basicMove_teamAvocado extends LinearOpMode{
 
     }
 
-    public void encoderDrive(double speed,
-                             double leftCM, double rightCM) {
+    public void encoderDrive(double speed, double leftCM, double rightCM) {
         int newLeftTarget;
         int newRightTarget;
         double leftSpeed;
@@ -83,7 +103,8 @@ public class basicMove_teamAvocado extends LinearOpMode{
 
         leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftCM * COUNTS_PER_CM);
         newRightTarget = rightMotor.getCurrentPosition() + (int) (rightCM * COUNTS_PER_CM);
@@ -95,15 +116,26 @@ public class basicMove_teamAvocado extends LinearOpMode{
         if (Math.abs(leftCM) > Math.abs(rightCM)) {
             leftSpeed = speed;
             rightSpeed = (speed * rightCM) / leftCM;
-        } else {
+        } else if {
             rightSpeed = speed;
             leftSpeed = (speed * leftCM) / rightCM;
         }
+        else{
+            leftSpeed = speed;
+            rightSpeed = speed;
+        }
+        leftMotor.setPower(Math.abs(leftSpeed));
+        rightMotor.setPower(Math.abs(rightSpeed));
+        while (opModeIsActive() && ((leftMotor.isBusy() && rightMotor.isBusy()))) {
+        }
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
+
+
         //  runtime.reset();
         //if(leftInches != -rightInches)
         leftMotor.setPower(Math.abs(leftSpeed));
         rightMotor.setPower(Math.abs(rightSpeed));
-
 
 
         // keep looping while we are still active, and there is time left, and both motors are running.
@@ -114,14 +146,10 @@ public class basicMove_teamAvocado extends LinearOpMode{
         // Stop all motion;
         rightMotor.setPower(0);
         leftMotor.setPower(0);
+
+        encoder_drive(0.5, 100, 100)
+
+
+
     }
-    /* Need to test if it really turns the motor right */
-    public void turn_right(double motor_power)
-    {
-        leftMotor.setPower(motor_power);
-        rightMotor.setPower(motor_power * (-1));
     }
-}
-
-
-
