@@ -45,10 +45,29 @@ public class basicMove_teamAvocado extends LinearOpMode{
 
         waitForStart();
 
+        /* Move FWD 100cm*/
         encoderDrive(0.5, 100, 100);
 
+        /*Code to turn Right*/
+        turn_right(0.2);
 
+        /* Move FWD 100cm*/
+        encoderDrive(0.5, 100, 100);
 
+        /*Code to turn Right*/
+        turn_right(0.2);
+
+        /* Move FWD 100cm*/
+        encoderDrive(0.5, 100, 100);
+
+        /*Code to turn Right*/
+        turn_right(0.2);
+
+        /* Move FWD 100cm*/
+        encoderDrive(0.5, 100, 100);
+
+        /*Just turn Right*/
+        turn_right(0.2);
 
     }
 
@@ -95,6 +114,12 @@ public class basicMove_teamAvocado extends LinearOpMode{
         // Stop all motion;
         rightMotor.setPower(0);
         leftMotor.setPower(0);
+    }
+    /* Need to test if it really turns the motor right */
+    public void turn_right(double motor_power)
+    {
+        leftMotor.setPower(motor_power);
+        rightMotor.setPower(motor_power * (-1));
     }
 }
 
