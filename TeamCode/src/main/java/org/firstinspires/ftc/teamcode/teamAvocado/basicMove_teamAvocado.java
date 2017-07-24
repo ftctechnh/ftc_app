@@ -29,7 +29,7 @@ public class basicMove_teamAvocado extends LinearOpMode{
     DcMotor rightMotor;
     DcMotor leftMotor;
 
-    public void runOpMode(){
+    public void runOpMode() {
 
         double encoder_ticks_per_rotation;
         double gear_ratio;
@@ -37,59 +37,41 @@ public class basicMove_teamAvocado extends LinearOpMode{
         double encoder_ticks_per_cm;
 
 
-
-        leftMotor= hardwareMap.dcMotor.get("leftMotor");
-        rightMotor=  hardwareMap.dcMotor.get("rightMotor");
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
         waitForStart();
         encoder_ticks_per_rotation = 1440;
         gear_ratio = 1.5;
-        wheel_circumference = 9.1* Math.PI;
+        wheel_circumference = 9.1 * Math.PI;
         encoder_ticks_per_cm = (encoder_ticks_per_rotation) / (wheel_circumference * gear_ratio);
-
-    public void encoderDrive(double speed, double leftCM, double rightCM){
-        int newLeftTarget; //target for left motor encoders
-        int newRightTarget; //target for right motor encoders
-        double leftSpeed;
-        double rightSpeed;
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if(Math.abs(leftCM) > Math.abs(rightCM)){
-            leftSpeed = speed; rightSpeed = (speed * rightCM) / leftCM	}
-        else if (Math.abs(rightCM) > Math.abs(leftCM)) {
-            rightSpeed = speed; leftSpeed = (speed * leftCM) / rightCM		}
-        else {
-            leftSpeed = speed; rightSpeed = speed;
-        }
-
-    }
 
     /* Move FWD 100cm*/
         encoderDrive(0.5, 100, 100);
 
-        /*Code to turn Right*/
-        turn_right(0.2);
 
-        /* Move FWD 100cm*/
-        encoderDrive(0.5, 100, 100);
-
-        /*Code to turn Right*/
-        turn_right(0.2);
-
-        /* Move FWD 100cm*/
-        encoderDrive(0.5, 100, 100);
-
-        /*Code to turn Right*/
-        turn_right(0.2);
-
-        /* Move FWD 100cm*/
-        encoderDrive(0.5, 100, 100);
-
-        /*Just turn Right*/
-        turn_right(0.2);
-
+//    /*Code to turn Right*/
+//    turn_right(0.2);
+//
+//    /* Move FWD 100cm*/
+//    encoderDrive(0.5,100,100);
+//
+//    /*Code to turn Right*/
+//    turn_right(0.2);
+//
+//    /* Move FWD 100cm*/
+//    encoderDrive(0.5,100,100);
+//
+//    /*Code to turn Right*/
+//    turn_right(0.2);
+//
+//    /* Move FWD 100cm*/
+//    encoderDrive(0.5,100,100);
+//
+//    /*Just turn Right*/
+//    turn_right(0.2);
     }
 
     public void encoderDrive(double speed, double leftCM, double rightCM) {
@@ -116,7 +98,7 @@ public class basicMove_teamAvocado extends LinearOpMode{
         if (Math.abs(leftCM) > Math.abs(rightCM)) {
             leftSpeed = speed;
             rightSpeed = (speed * rightCM) / leftCM;
-        } else if {
+        } else if(Math.abs(rightCM) > Math.abs(leftCM)) {
             rightSpeed = speed;
             leftSpeed = (speed * leftCM) / rightCM;
         }
@@ -147,9 +129,6 @@ public class basicMove_teamAvocado extends LinearOpMode{
         rightMotor.setPower(0);
         leftMotor.setPower(0);
 
-        encoder_drive(0.5, 100, 100)
-
-
 
     }
-    }
+}
