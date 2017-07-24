@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @Autonomous(name = "powerpuffgirlsdrive")
-public class powerpuff_baisic extends LinearOpMode{
+public class powerpuff_baisic extends LinearOpMode {
 
     public double encoder_ticks_per_rotation;
     public double gear_ratio;
@@ -32,7 +32,7 @@ public class powerpuff_baisic extends LinearOpMode{
 
         encoder_ticks_per_rotation = 1440;
         gear_ratio = 1;
-        wheel_circumference = 10* Math.PI;
+        wheel_circumference = 10 * Math.PI;
         encoder_ticks_per_cm = (encoder_ticks_per_rotation) /
                 (wheel_circumference * gear_ratio);
 
@@ -46,6 +46,7 @@ public class powerpuff_baisic extends LinearOpMode{
         rightfrontmotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
+    }
 
     public void encoderDrive(double speed,
                              double leftCM, double rightCM) {
@@ -83,15 +84,13 @@ public class powerpuff_baisic extends LinearOpMode{
         leftfrontmotor.setPower(Math.abs(leftSpeed));
        rightfrontmotor.setPower(Math.abs(rightSpeed));
 
-        while (opModeIsActive() &&
-                ((leftbackMotor.isBusy() && rightbackMotor.isBusy())))
-                ((leftfrontmotor.isBusy() && rightfrontmotor.isBusy()))){
-        }
+        while (opModeIsActive() && (leftfrontmotor.isBusy() && rightbackMotor.isBusy() && leftbackMotor.isBusy() && rightfrontmotor.isBusy())){
 
         rightbackMotor.setPower(0);
-       rightfrontmotor.setPower(0);
+        rightfrontmotor.setPower(0);
         leftbackMotor.setPower(0);
         leftfrontmotor.setPower(0);
+            }
     }
 }
 
