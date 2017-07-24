@@ -35,47 +35,10 @@ public class powerpuff_baisic extends LinearOpMode{
         rightfrontmotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
-//forward
+
         leftfrontmotor.setPower(0.2);
         leftbackMotor.setPower(0.2);
         rightbackMotor.setPower(0.2);
         rightfrontmotor.setPower(0.2);
         sleep(10000);
-//turn
-        leftfrontmotor.setPower(-0.2);
-        leftbackMotor.setPower(-0.2);
-        rightbackMotor.setPower(0.2);
-        rightfrontmotor.setPower(0.2);
-        sleep(5000);
-//forward
-        leftfrontmotor.setPower(0.2);
-        leftbackMotor.setPower(0.2);
-        rightbackMotor.setPower(0.2);
-        rightfrontmotor.setPower(0.2);
-        sleep(10000);
- //turn
-        leftfrontmotor.setPower(-0.2);
-        leftbackMotor.setPower(-0.2);
-        rightbackMotor.setPower(0.2);
-        rightfrontmotor.setPower(0.2);
-        sleep(5000);
-//forward
-        leftfrontmotor.setPower(0.2);
-        leftbackMotor.setPower(0.2);
-        rightbackMotor.setPower(0.2);
-        rightfrontmotor.setPower(0.2);
-        sleep(10000);
- //turn
-        leftfrontmotor.setPower(-0.2);
-        leftbackMotor.setPower(-0.2);
-        rightbackMotor.setPower(0.2);
-        rightfrontmotor.setPower(0.2);
-        sleep(5000);
- //forward
-        leftfrontmotor.setPower(0.2);
-        leftbackMotor.setPower(0.2);
-        rightbackMotor.setPower(0.2);
-        rightfrontmotor.setPower(0.2);
-        sleep(10000);
-    }
 }
