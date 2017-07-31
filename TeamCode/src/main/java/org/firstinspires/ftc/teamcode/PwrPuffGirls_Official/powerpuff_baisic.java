@@ -46,6 +46,9 @@ public class powerpuff_baisic extends LinearOpMode {
         rightfrontmotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
+
+        encoderDrive(0.5, 200, 200);
+
     }
 
     public void encoderDrive(double speed,
