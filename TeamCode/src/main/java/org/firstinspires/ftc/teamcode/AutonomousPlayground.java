@@ -36,7 +36,6 @@ public class AutonomousPlayground extends LinearOpMode {
             thing += 1;
         }
 
-
     }
 
     public void initDCMotors() {
