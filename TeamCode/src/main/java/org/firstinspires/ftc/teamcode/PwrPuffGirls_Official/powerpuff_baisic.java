@@ -48,7 +48,8 @@ public class powerpuff_baisic extends LinearOpMode {
         waitForStart();
 
         encoderDrive(0.5, 200, 200);
-        enc
+        encoderDrive(0.5, -200, -200);
+
 
     }
 
