@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Main;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "side auto charles no cap")
+@Disabled
 public class sideAuto_charlie_nocap extends AutonomousGeneral_charlie {
 
 

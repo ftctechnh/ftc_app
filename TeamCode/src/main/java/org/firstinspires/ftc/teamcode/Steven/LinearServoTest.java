@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Steven;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Created by Steven on 3/21/2017.
  */
 @TeleOp(name = "linearservotest", group = "")
+@Disabled
 public class LinearServoTest extends OpMode {
 
     ElapsedTime runtime = new ElapsedTime();
