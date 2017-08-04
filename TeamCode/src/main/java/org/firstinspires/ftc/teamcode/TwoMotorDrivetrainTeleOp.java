@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,6 +23,7 @@ public class TwoMotorDrivetrainTeleOp extends LinearOpMode {
     private DcMotor motorRight;
 
     private Servo servoMotor;
+    private ColorSensor sensor;
 
     private Double servoMaxPos = 0.8;
     private Double servoMinPos = 0.2;
@@ -27,14 +31,12 @@ public class TwoMotorDrivetrainTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        //Do stuff to initialize robot
+        //Do stuff
 
         motorLeft = hardwareMap.dcMotor.get("motorLeft");
         motorRight = hardwareMap.dcMotor.get("motorRight");
 
         motorRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        servoMotor = hardwareMap.servo.get("servo");
 
         waitForStart();
 
@@ -46,11 +48,11 @@ public class TwoMotorDrivetrainTeleOp extends LinearOpMode {
 
             motorRight.setPower(-gamepad1.right_stick_y);
 
-            if (gamepad2.a) {
-                servoMotor.setPosition(servoMaxPos);
-            } else if (gamepad2.b) {
-                servoMotor.setPosition(servoMinPos);
-            }
+            telemetry.addData("Left Motor Power", motorLeft.getPower());
+            telemetry.addData("Right Motor Power", motorRight.getPower());
+
+
+
 
             idle(); //Allows computer to rest for a moment
 
