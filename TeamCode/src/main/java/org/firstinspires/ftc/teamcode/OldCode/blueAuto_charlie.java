@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OldCode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,7 +13,8 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
 /**
  * Created by adityamavalankar on 1/13/17.
  */
-@Autonomous(name = "blueBeaconCharlie")
+//@Autonomous(name = "blueBeaconCharlie")
+@Disabled
 public class blueAuto_charlie extends AutonomousGeneral_charlie {
 
 
