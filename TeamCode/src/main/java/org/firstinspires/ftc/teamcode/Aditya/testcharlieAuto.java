@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Aditya;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "CharlieTest")
+@Disabled
 public class testcharlieAuto extends AutonomousGeneral_charlie {
 
 

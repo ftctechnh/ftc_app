@@ -1,22 +1,17 @@
 package org.firstinspires.ftc.teamcode.PwrPuffGirls_Official;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by mabel on 7/16/2017.
+ * Created by mabel on 8/3/2017.
  */
 
-@Autonomous(name = "powerpuffgirlsdrive")
-public class powerpuff_baisic extends LinearOpMode {
+
+@Autonomous(name = "powerpuffgirlssquare")
+public class PowerPuffSquare extends LinearOpMode {
 
     public double encoder_ticks_per_rotation;
     public double gear_ratio;
@@ -47,8 +42,9 @@ public class powerpuff_baisic extends LinearOpMode {
 
         waitForStart();
 
-        encoderDrive(0.5, 200, 200);
-        encoderDrive(0.5, -200, -200);
+        encoderDrive(0.5, 100, 100);
+        encoderDrive(0.5, -30, 30);
+        encoderDrive(0.5, 100, 100);
 
 
     }
@@ -63,7 +59,7 @@ public class powerpuff_baisic extends LinearOpMode {
 
         rightbackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightfrontmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-       leftbackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftbackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftfrontmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         newLeftTarget = leftbackMotor.getCurrentPosition() + (int) (leftCM * encoder_ticks_per_cm);
@@ -73,7 +69,7 @@ public class powerpuff_baisic extends LinearOpMode {
 
         rightfrontmotor.setTargetPosition(newRightTarget);
         leftfrontmotor.setTargetPosition(newLeftTarget);
-       rightbackMotor.setTargetPosition(newRightTarget);
+        rightbackMotor.setTargetPosition(newRightTarget);
         leftbackMotor.setTargetPosition(newLeftTarget);
 
         if (Math.abs(leftCM) > Math.abs(rightCM)) {
@@ -87,15 +83,15 @@ public class powerpuff_baisic extends LinearOpMode {
         leftbackMotor.setPower(Math.abs(leftSpeed));
         rightbackMotor.setPower(Math.abs(rightSpeed));
         leftfrontmotor.setPower(Math.abs(leftSpeed));
-       rightfrontmotor.setPower(Math.abs(rightSpeed));
+        rightfrontmotor.setPower(Math.abs(rightSpeed));
 
         while (opModeIsActive() && (leftfrontmotor.isBusy() && rightbackMotor.isBusy() && leftbackMotor.isBusy() && rightfrontmotor.isBusy())){
 
-        rightbackMotor.setPower(0);
-        rightfrontmotor.setPower(0);
-        leftbackMotor.setPower(0);
-        leftfrontmotor.setPower(0);
-            }
+            rightbackMotor.setPower(0);
+            rightfrontmotor.setPower(0);
+            leftbackMotor.setPower(0);
+            leftfrontmotor.setPower(0);
+        }
     }
 }
 

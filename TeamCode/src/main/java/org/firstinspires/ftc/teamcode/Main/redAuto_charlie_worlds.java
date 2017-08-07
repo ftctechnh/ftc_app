@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Main;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,6 +14,8 @@ import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_charlie;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "redBeaconCharlieWorlds")
+@Disabled
+
 public class redAuto_charlie_worlds extends AutonomousGeneral_charlie {
 
 
@@ -401,7 +404,9 @@ public class redAuto_charlie_worlds extends AutonomousGeneral_charlie {
     }
 
 
-
+    public double getInitialPos() {
+        return initialPos;
+    }
 }
 //-------------------------------------------------------------------//
 
