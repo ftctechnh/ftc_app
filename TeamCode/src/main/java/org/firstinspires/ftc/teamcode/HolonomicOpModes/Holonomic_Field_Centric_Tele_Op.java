@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.HolonomicOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -28,7 +29,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
                          trigonometry. Also pivoting could be added in if found to be useful, but
                          I have not yet thought of a practical use for it.
  */
-
+@Disabled
 @TeleOp(name = "Holonomic Field-Centric Tele-Op", group = "holonomic")
 public class Holonomic_Field_Centric_Tele_Op extends OpMode {
 

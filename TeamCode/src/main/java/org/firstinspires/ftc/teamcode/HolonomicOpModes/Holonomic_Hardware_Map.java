@@ -23,7 +23,7 @@ public class Holonomic_Hardware_Map {
     public DcMotor fleft, fright, bleft, bright;
     public BNO055IMU gyro;
     public float heading;
-    public float dp = .3f; //Drive Power (range = 0-1)
+    public float dp = .1f; //Drive Power (range = 0-1)
     private HardwareMap hwMap;
     private Telemetry telemetry;
 
@@ -37,8 +37,8 @@ public class Holonomic_Hardware_Map {
         fright = hwMap.dcMotor.get("fright");
         bleft = hwMap.dcMotor.get("bleft");
         bright = hwMap.dcMotor.get("bright");
-        fleft.setDirection(DcMotor.Direction.REVERSE);
-        bleft.setDirection(DcMotor.Direction.REVERSE);
+        fright.setDirection(DcMotor.Direction.REVERSE);
+        bright.setDirection(DcMotor.Direction.REVERSE);
 
         //Setting up gyro sensor if necessary
         if(usesGyro) {
