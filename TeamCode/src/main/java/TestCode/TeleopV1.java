@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package TestCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by jakemueller on 8/10/17.
  */
-@TeleOp(name = "teleOp One", group = "Test")
+@TeleOp(name = "teleOp One", group = "TestCode")
 public class TeleopV1 extends LinearOpMode
 {
     private DcMotor motorLeft;
@@ -21,9 +21,6 @@ public class TeleopV1 extends LinearOpMode
         motorRight = hardwareMap.dcMotor.get("RightDrive");
 
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-
-
 
         waitForStart();
 
