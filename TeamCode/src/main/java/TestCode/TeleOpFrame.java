@@ -26,7 +26,7 @@ public class TeleOpFrame extends LinearOpMode {
 
         while(opModeIsActive())
         {
-            // Put anything you want to happen in OpMode here
+            // Put anything you want to happen in OpMode here. make sure to copy and paste to a new code.
         }
     }
 }
