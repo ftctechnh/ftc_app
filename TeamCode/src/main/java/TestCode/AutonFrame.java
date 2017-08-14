@@ -21,7 +21,7 @@ public class AutonFrame extends LinearOpMode {
         motorLeft = hardwareMap.dcMotor.get("LeftDrive");
         motorRight = hardwareMap.dcMotor.get("RightDrive");
 
-        //insert any autonomous code here
+        //insert any autonomous code here. make sure to copy and paste into new code do not edit this code
 
     }
 }
