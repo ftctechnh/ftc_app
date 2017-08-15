@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.seasons.velocityvortex.LinearOpModeBase;
@@ -28,7 +29,7 @@ import java.util.ListIterator;
 /**
  * Created by aburger on 3/5/2017.
  */
-@Disabled
+
 @TeleOp(name = "Zoidberg3Test", group = "utilities")
 public class Zoidberg3Test extends LinearOpMode {
     public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
@@ -56,43 +57,90 @@ public class Zoidberg3Test extends LinearOpMode {
     private OpticalDistanceSensor diskOds;
     private OpticalDistanceSensor lOds;
     private OpticalDistanceSensor rOds;
-    private ArrayList<HardwareDevice> hardware;
+    private ArrayList<HardwareDevice> hardware = new ArrayList<HardwareDevice>();
+    private HardwareDevice device = null;
+    private ElapsedTime fromstart = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
         initializeHardware();
-
+        telemetry.addData("ArraySize",hardware.size());
         ListIterator<HardwareDevice> iterator = hardware.listIterator();
+        telemetry.update();
 
+        waitForStart();
+
+        ElapsedTime timer = new ElapsedTime();
         while (this.opModeIsActive()) {
 
-            HardwareDevice device = null;
-            if (device != null){
-                telemetry.addData("|",getDeviceInfo(iterator,device));
-                telemetry.update();
-            }
-            if (gamepad1.left_bumper ) {
-                if (iterator.hasPrevious()){
-                    device = iterator.previous();
-                }
-            }
-            if (gamepad1.right_bumper ) {
+//            telemetry.addData("Timer",timer.seconds());
+
+            if(gamepad1.right_bumper && timer.milliseconds() > 500) {
+                telemetry.addData("right_bumper", "pressed at " + fromstart.seconds());
                 if (iterator.hasNext()){
                     device = iterator.next();
+                    telemetry.addData("device", String.format("[ previous index = %d, name = %s ]",
+                            iterator.previousIndex(), device.getDeviceName()));
+                } else {
+                    telemetry.addData("array", "does not have next");
                 }
+                telemetry.update();
+                timer.reset();
             }
 
-            runMotor(gamepad1.x, fl);
-            runMotor(gamepad1.y, fr);
-            runMotor(gamepad1.a, bl);
-            runMotor(gamepad1.b, br);
+
+            if(gamepad1.left_bumper && timer.milliseconds() > 500) {
+                telemetry.addData("left_bumper", "pressed at " + fromstart.seconds());
+                if (iterator.hasPrevious()){
+                    device = iterator.previous();
+                    telemetry.addData("device", String.format("[ next index = %d, name = %s ]",
+                            iterator.nextIndex(), device.getDeviceName()));
+                } else {
+                    telemetry.addData("array", "does not have previous");
+                }
+                telemetry.update();
+                timer.reset();
+            }
+
+            if (device != null && timer.milliseconds() > 2000){
+                telemetry.addData(">",getDeviceInfo(iterator,device));
+                telemetry.update();
+            }
+//
+//            if (gamepad1.dpad_down && timer.milliseconds() > 500) {
+//                telemetry.addData("Dpad", "Down");
+//                if (iterator.hasPrevious()){
+//                    telemetry.addData("array", "has prev");
+//                    device = iterator.previous();
+//                }
+//                timer.reset();
+//                telemetry.update();
+//
+//            }
+//
+//            if(gamepad1.dpad_up && timer.milliseconds() > 500) {
+//                telemetry.addData("Dpad", "Up");
+//                if (iterator.hasNext()) {
+//                    telemetry.addData("array", "has next");
+//                    device = iterator.next();
+//                }
+//                timer.reset();
+//                telemetry.update();
+//
+//            }
+//
+//
+//            runMotor(gamepad1.x, fl);
+//            runMotor(gamepad1.y, fr);
+//            runMotor(gamepad1.a, bl);
+//            runMotor(gamepad1.b, br);
 
 
         }
     }
 
-    private String getDeviceInfo(ListIterator<HardwareDevice> iterator, HardwareDevice device) {
-        return "["+iterator.nextIndex() + "]" + device.getDeviceName() + "=" + reading(device);
+    private String getDeviceInfo(Iterator<HardwareDevice> iterator, HardwareDevice device) {
+        return "["+ "]" + device.getDeviceName() + "=" + reading(device);
     }
 
     private String reading(HardwareDevice device) {
@@ -114,7 +162,7 @@ public class Zoidberg3Test extends LinearOpMode {
     }
 
     private void initializeHardware() {
-        ServoController ServoController1 = hardwareMap.get(ServoController.class, "Servo Controller 1");
+        //ServoController ServoController1 = hardwareMap.get(ServoController.class, "Servo Controller 1");
         b1 = hardwareMap.get(Servo.class, "b1");
         r2 = hardwareMap.get(Servo.class, "r2");
         d3 = hardwareMap.get(Servo.class, "d3");
@@ -131,7 +179,7 @@ public class Zoidberg3Test extends LinearOpMode {
         bl = hardwareMap.get(DcMotor.class, "bl");
         br = hardwareMap.get(DcMotor.class, "br");
 
-        deviceInterfaceModule1 = hardwareMap.get(DeviceInterfaceModule.class, "Device Interface Module 1");
+        //deviceInterfaceModule1 = hardwareMap.get(DeviceInterfaceModule.class, "Device Interface Module 1");
         clr = hardwareMap.get(ColorSensor.class, "clr");
         hardware.add(clr);
         clr2 = hardwareMap.get(ColorSensor.class, "clr2");
