@@ -6,6 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -151,6 +152,10 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         // reverse only one spool motor
         spoolMotor1.setDirection(DcMotor.Direction.REVERSE);
         spoolMotor2.setDirection(DcMotor.Direction.FORWARD);
+
+        // set motor directions to forward after updating SDK
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        launcherMotor.setDirection(DcMotor.Direction.REVERSE);
 
         robotRuntime.reset();
 
