@@ -25,6 +25,14 @@ public class Garbage_Tank_Tele_Op extends OpMode {
         //Drives robot based on joysicks in a tank drive fashion
         robot.drive(- gamepad1.left_stick_y * robot.dp, - gamepad1.right_stick_y * robot.dp);
 
+        if(gamepad1.a)
+        {
+            robot.fleckerino.setPower(robot.shootPower);
+        }
+        else
+        {
+            robot.fleckerino.setPower(0);
+        }
         //Telemetry
         telemetry.addData("Left Joystick:", gamepad1.left_stick_y);
         telemetry.addData("Right Joystick:", gamepad1.right_stick_y);

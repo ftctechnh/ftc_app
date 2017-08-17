@@ -25,6 +25,15 @@ public class Garbage_Arcade_Tele_Op extends OpMode {
         //Drives robot based on joysicks in a tank drive fashion
         robot.drive((- gamepad1.right_stick_y + gamepad1.right_stick_x) * robot.dp, (- gamepad1.right_stick_y - gamepad1.right_stick_x) * robot.dp);
 
+        if(gamepad1.a)
+        {
+            robot.fleckerino.setPower(robot.shootPower);
+        }
+        else
+        {
+            robot.fleckerino.setPower(0);
+        }
+
         //Telemetry
         telemetry.addData("Joystick X Axis:", gamepad1.right_stick_x);
         telemetry.addData("Joystick Y Axis:", gamepad1.right_stick_y);

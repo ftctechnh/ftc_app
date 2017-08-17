@@ -15,8 +15,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Garbage_Hardware_Map {
 
     //Declaring variables
-    public DcMotor fleft, fright, bleft, bright;
+    public DcMotor fleft, fright, bleft, bright, fleckerino;
     public float dp = .3f; //Drive Power (range = 0-1)
+    public float shootPower = .4f;
     private HardwareMap hwMap;
     private Telemetry telemetry;
 
@@ -34,6 +35,7 @@ public class Garbage_Hardware_Map {
         fright = hwMap.dcMotor.get("fright");
         bleft = hwMap.dcMotor.get("bleft");
         bright = hwMap.dcMotor.get("bright");
+        fleckerino = hwMap.dcMotor.get("fleckerino");
         fright.setDirection(DcMotor.Direction.REVERSE);
         bright.setDirection(DcMotor.Direction.REVERSE);
 
@@ -56,4 +58,5 @@ public class Garbage_Hardware_Map {
         else
             return value;
     }
+
 }
