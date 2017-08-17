@@ -30,7 +30,7 @@ public class Garbage_Arcade_Tele_Op extends OpMode {
                 - gamepad1.right_stick_y - gamepad1.right_stick_x
         );
 
-        //Telemetry
+        //Telemetry stuff
         telemetry.addData("Joystick X Axis:", gamepad1.right_stick_x);
         telemetry.addData("Joystick Y Axis:", gamepad1.right_stick_y);
         telemetry.addData("Drive Power:", robot.dp);
