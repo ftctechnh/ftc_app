@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Garbage Tank Tele-Op", group = "garbage")
 public class Garbage_Tank_Tele_Op extends OpMode {
 
-    GarbageRobotHardwareMap robot;
+    Garbage_Hardware_Map robot;
 
     @Override
     public void init (){
         //Sets up the robot with this program
-        robot = new GarbageRobotHardwareMap(hardwareMap, telemetry);
+        robot = new Garbage_Hardware_Map(hardwareMap, telemetry);
     }
 
     @Override

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
              functions to reduce redundancies in other programs.
  */
 
-public class GarbageRobotHardwareMap {
+public class Garbage_Hardware_Map {
 
     //Declaring variables
     public DcMotor fleft, fright, bleft, bright;
@@ -21,7 +21,7 @@ public class GarbageRobotHardwareMap {
     private Telemetry telemetry;
 
     //Constructor; Put program's hardwaremap first, then telemetry,  then put true if gyro will be used or false if it won't
-    public GarbageRobotHardwareMap(HardwareMap hwmap, Telemetry telem){
+    public Garbage_Hardware_Map(HardwareMap hwmap, Telemetry telem){
 
         telemetry.update();
         telemetry.addData("Ready to go", false);

@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Garbage Arcade Tele-Op", group = "garbage")
 public class Garbage_Arcade_Tele_Op extends OpMode {
 
-    GarbageRobotHardwareMap robot;
+    Garbage_Hardware_Map robot;
 
     @Override
     public void init (){
         //Sets up the robot with this program
-        robot = new GarbageRobotHardwareMap(hardwareMap, telemetry);
+        robot = new Garbage_Hardware_Map(hardwareMap, telemetry);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Garbage_Arcade_Tele_Op extends OpMode {
                 - gamepad1.right_stick_y - gamepad1.right_stick_x
         );
 
-        //Telemetry stuff
+        //Telemetry
         telemetry.addData("Joystick X Axis:", gamepad1.right_stick_x);
         telemetry.addData("Joystick Y Axis:", gamepad1.right_stick_y);
         telemetry.addData("Drive Power:", robot.dp);
