@@ -23,12 +23,7 @@ public class Garbage_Tank_Tele_Op extends OpMode {
             robot.dp = 0.3f;
 
         //Drives robot based on joysicks in a tank drive fashion
-        robot.drive(
-                - gamepad1.left_stick_y,
-                - gamepad1.right_stick_y,
-                - gamepad1.left_stick_y,
-                - gamepad1.right_stick_y
-        );
+        robot.drive(- gamepad1.left_stick_y * robot.dp, - gamepad1.right_stick_y * robot.dp);
 
         //Telemetry
         telemetry.addData("Left Joystick:", gamepad1.left_stick_y);

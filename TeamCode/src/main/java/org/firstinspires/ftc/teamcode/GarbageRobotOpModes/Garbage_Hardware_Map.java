@@ -43,11 +43,11 @@ public class Garbage_Hardware_Map {
         //telemetry.update(); //This line is giving us issues, so we may just have to cut the telemetry during init
     }
 
-    public void drive(float fl, float fr, float bl, float br) {
-        fleft.setPower(ClipValue(fl));
-        fright.setPower(ClipValue(fr));
-        bleft.setPower(ClipValue(bl));
-        bright.setPower(ClipValue(br));
+    public void drive(float left, float right) {
+        fleft.setPower(ClipValue(left));
+        fright.setPower(ClipValue(right));
+        bleft.setPower(ClipValue(left));
+        bright.setPower(ClipValue(right));
     }
 
     float ClipValue(float value) {
