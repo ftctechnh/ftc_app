@@ -55,7 +55,7 @@ public class Holonomic_Robot_Centric_Tele_Op extends OpMode {
         if(gamepad1.right_bumper && gamepad1.left_bumper)
             robot.dp = 1f;
         else
-            robot.dp = 0.3f;
+            robot.dp = 0.2f;
 
         //Arcade drive with right joystick, turn with triggers(clockwise-right, counterclockwise-left)
         robot.drive(
