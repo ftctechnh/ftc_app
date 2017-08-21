@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Main;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name = "charlie tele op test thingy")
-
+@Disabled
 public class charlieTeleOp extends OpMode {
 
 
