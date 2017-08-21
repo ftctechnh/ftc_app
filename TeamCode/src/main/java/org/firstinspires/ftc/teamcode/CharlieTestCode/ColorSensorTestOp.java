@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Steven on 11/27/2016.
  */
 @Autonomous(name = "#11183: Color Sensor Test", group = "Robot")
-@Disabled
+//@Disabled
 public class ColorSensorTestOp extends OpMode{
 
 

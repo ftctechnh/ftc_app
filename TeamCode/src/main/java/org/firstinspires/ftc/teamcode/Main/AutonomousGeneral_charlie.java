@@ -389,8 +389,8 @@ public class AutonomousGeneral_charlie extends LinearOpMode {
         back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        // idle();
         front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // idle();
-       // sleep(100);
+        idle();
+        sleep(100);
     }
 
     // drive shooting motor for the given time in msec

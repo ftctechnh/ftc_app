@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
  * Created by Steven on 1/5/2017.
  */
 @Autonomous(name = "OpticalDistanceTest", group = "Pushbot")
-@Disabled
+//@Disabled
 public class OpticalDistanceTest extends OpMode{
    // OpticalDistanceSensor ODS;
     OpticalDistanceSensor ODS2;
