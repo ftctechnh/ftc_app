@@ -10,7 +10,7 @@ public class Garbage_Tank_Tele_Op extends OpMode {
 
     @Override
     public void init (){
-        //Sets up the robot with this program
+
         robot = new Garbage_Hardware_Map(hardwareMap, telemetry);
     }
 
@@ -38,6 +38,5 @@ public class Garbage_Tank_Tele_Op extends OpMode {
         telemetry.addData("Right Joystick:", gamepad1.right_stick_y);
         telemetry.addData("Drive Power:", robot.dp);
         telemetry.addData("Ultra Turbo Mode Activated:", gamepad1.right_bumper && gamepad1.left_bumper);
-        telemetry.update();
     }
 }

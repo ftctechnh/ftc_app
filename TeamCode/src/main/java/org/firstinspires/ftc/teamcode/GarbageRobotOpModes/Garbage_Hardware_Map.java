@@ -17,15 +17,15 @@ public class Garbage_Hardware_Map {
     //Declaring variables
     public DcMotor fleft, fright, bleft, bright, fleckerino;
     public float dp = .3f; //Drive Power (range = 0-1)
-    public float shootPower = .4f;
+    public float shootPower = 1f;
     private HardwareMap hwMap;
     private Telemetry telemetry;
 
     //Constructor; Put program's hardwaremap first, then telemetry,  then put true if gyro will be used or false if it won't
     public Garbage_Hardware_Map(HardwareMap hwmap, Telemetry telem){
 
-        telemetry.update();
-        telemetry.addData("Ready to go", false);
+        //telemetry.addData("Ready to go", false);
+        //telemetry.update();
 
         hwMap = hwmap;
         telemetry = telem;
@@ -36,12 +36,11 @@ public class Garbage_Hardware_Map {
         bleft = hwMap.dcMotor.get("bleft");
         bright = hwMap.dcMotor.get("bright");
         fleckerino = hwMap.dcMotor.get("fleckerino");
-        fright.setDirection(DcMotor.Direction.REVERSE);
-        bright.setDirection(DcMotor.Direction.REVERSE);
+        fleft.setDirection(DcMotor.Direction.REVERSE);
+        bleft.setDirection(DcMotor.Direction.REVERSE);
 
         //Alerts user that initialization is done
-        telemetry.addData("Ready to go", true);
-        telemetry.update();
+        //telemetry.addData("Ready to go", true);
         //telemetry.update(); //This line is giving us issues, so we may just have to cut the telemetry during init
     }
 
