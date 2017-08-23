@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -25,6 +26,8 @@ public class TestHardware
 {
     /* Public OpMode members. */
     public DcMotor  Motor1   = null;
+    public NormalizedColorSensor color = null;
+    public Servo servo1 = null;
 
 
     /* local OpMode members. */
@@ -43,6 +46,8 @@ public class TestHardware
 
         // Define and Initialize Motors
         Motor1   = hwMap.dcMotor.get("motor 1");
+        color = hwMap.get(NormalizedColorSensor.class, "color_sensor");
+        servo1 = hwMap.servo.get("servo1");
 
         // Set all motors to zero power
         Motor1.setPower(0);

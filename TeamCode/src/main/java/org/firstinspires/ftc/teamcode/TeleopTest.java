@@ -32,12 +32,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -100,11 +100,20 @@ public class TeleopTest extends OpMode{
     public void loop() {
         double left;
         double right;
+        LynxI2cColorRangeSensor range = (LynxI2cColorRangeSensor) robot.color;
+        NormalizedRGBA colors = robot.color.getNormalizedColors();
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
         robot.Motor1.setPower(left);
+
+        if(gamepad1.left_bumper = true) {
+            robot.servo1.setPosition(0);
+        }else{
+            robot.servo1.setPosition(127);
+        }
+
 
 
         // Use gamepad left & right Bumpers to open and close the claw
@@ -130,6 +139,14 @@ public class TeleopTest extends OpMode{
   //      telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addLine()
+                .addData("a", "%.3f", colors.alpha)
+                .addData("r", "%.3f", colors.red)
+                .addData("g", "%.3f", colors.green)
+                .addData("b", "%.3f", colors.blue);
+
+        telemetry.addLine()
+                .addData("distance", "%.3f", range.getDistance(DistanceUnit.CM));
     }
 
     /*
