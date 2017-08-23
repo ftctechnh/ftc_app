@@ -134,6 +134,5 @@ public class Holonomic_Field_Centric_Tele_Op extends OpMode {
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
         telemetry.addData("Joystick Magnitude", gamepad1.right_stick_y);
         telemetry.addData("Gyro Heading", robot.heading);
-        telemetry.update();
     }
 }

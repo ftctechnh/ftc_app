@@ -10,7 +10,7 @@ public class Garbage_Tank_Tele_Op extends OpMode {
 
     @Override
     public void init (){
-
+        //sets up our robot class
         robot = new Garbage_Hardware_Map(hardwareMap, telemetry);
     }
 
@@ -25,14 +25,12 @@ public class Garbage_Tank_Tele_Op extends OpMode {
         //Drives robot based on joysicks in a tank drive fashion
         robot.drive(- gamepad1.left_stick_y * robot.dp, - gamepad1.right_stick_y * robot.dp);
 
+        //Makes the flicker shoot if the a button is held
         if(gamepad1.a)
-        {
             robot.fleckerino.setPower(robot.shootPower);
-        }
         else
-        {
             robot.fleckerino.setPower(0);
-        }
+
         //Telemetry
         telemetry.addData("Left Joystick:", gamepad1.left_stick_y);
         telemetry.addData("Right Joystick:", gamepad1.right_stick_y);

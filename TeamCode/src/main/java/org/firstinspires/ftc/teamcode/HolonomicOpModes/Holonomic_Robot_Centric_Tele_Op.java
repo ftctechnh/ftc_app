@@ -72,6 +72,5 @@ public class Holonomic_Robot_Centric_Tele_Op extends OpMode {
         telemetry.addData("Right Trigger:", gamepad1.right_trigger);
         telemetry.addData("Pivoting:", gamepad1.dpad_up || gamepad1.dpad_down || gamepad1.dpad_right || gamepad1.dpad_left);
         telemetry.addData("Ultra Turbo Mode Activated:", gamepad1.right_bumper && gamepad1.left_bumper);
-        telemetry.update();
     }
 }

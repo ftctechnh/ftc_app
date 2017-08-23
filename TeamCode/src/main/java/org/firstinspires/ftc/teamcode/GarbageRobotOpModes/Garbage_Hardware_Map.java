@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /*
-- Name: Holonomic Hardware Map
+- Name: Garbage Hardware Map
 - Creator[s]: Talon
-- Date Created: 6/16/17
-- Objective: To create a class that sets up the hardware map for our holonomic robot and has basic
+- Date Created: 8/18/17
+- Objective: To create a class that sets up the hardware map for our garbage display robot and has basic
              functions to reduce redundancies in other programs.
  */
 
@@ -17,18 +17,19 @@ public class Garbage_Hardware_Map {
     //Declaring variables
     public DcMotor fleft, fright, bleft, bright, fleckerino;
     public float dp = .3f; //Drive Power (range = 0-1)
-    public float shootPower = 1f;
+    public float shootPower = 1f; //Flicker Power (range = 0-1)
     private HardwareMap hwMap;
     private Telemetry telemetry;
 
-    //Constructor; Put program's hardwaremap first, then telemetry,  then put true if gyro will be used or false if it won't
+    //Constructor; Put program's hardwaremap first, then telemetry. Call in init.
     public Garbage_Hardware_Map(HardwareMap hwmap, Telemetry telem){
-
-        //telemetry.addData("Ready to go", false);
-        //telemetry.update();
-
+        //Takes telemetry and hardwaremap from opmode for use in this program
         hwMap = hwmap;
         telemetry = telem;
+
+        //Lets the user know that the initialization is not yet complete
+        telemetry.addData("Ready to go", false);
+        telemetry.update();
 
         //Setting up drive motors
         fleft = hwMap.dcMotor.get("fleft");
@@ -40,10 +41,11 @@ public class Garbage_Hardware_Map {
         bleft.setDirection(DcMotor.Direction.REVERSE);
 
         //Alerts user that initialization is done
-        //telemetry.addData("Ready to go", true);
-        //telemetry.update(); //This line is giving us issues, so we may just have to cut the telemetry during init
+        telemetry.addData("Ready to go", true);
+        telemetry.update();
     }
 
+    //Function to reduce redundancies when driving the robot
     public void drive(float left, float right) {
         fleft.setPower(ClipValue(left));
         fright.setPower(ClipValue(right));
@@ -51,6 +53,7 @@ public class Garbage_Hardware_Map {
         bright.setPower(ClipValue(right));
     }
 
+    //Makes sure the motor value doesnt go over the desired power
     float ClipValue(float value) {
         if(value > dp || value < - dp)
             return ((Math.abs(value) / value) * dp);

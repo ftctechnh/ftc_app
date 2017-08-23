@@ -29,8 +29,13 @@ public class Holonomic_Hardware_Map {
 
     //Constructor; Put program's hardwaremap first, then telemetry,  then put true if gyro will be used or false if it won't
     public Holonomic_Hardware_Map(HardwareMap hwmap, Telemetry telem, boolean usesGyro){
+
         hwMap = hwmap;
         telemetry = telem;
+
+        //Signifies that initialization is not yet finished
+        telemetry.addData("Ready to go", false);
+        telemetry.update();
 
         //Setting up drive motors
         fleft = hwMap.dcMotor.get("fleft");
@@ -56,7 +61,7 @@ public class Holonomic_Hardware_Map {
 
         //Alerts user that initialization is done
         telemetry.addData("Ready to go", true);
-        //telemetry.update(); //This line is giving us issues, so we may just have to cut the telemetry during init
+        telemetry.update();
     }
 
     public void drive(float fl, float fr, float bl, float br) {
@@ -80,11 +85,4 @@ public class Holonomic_Hardware_Map {
         else
             return value;
     }
-
-    public void doTelemetry() {
-        telemetry.addData("Ultra Turbo Mode Activated:", dp == 1);
-        telemetry.addData("Gyro Heading:", heading);
-        telemetry.update();
-    }
-
 }
