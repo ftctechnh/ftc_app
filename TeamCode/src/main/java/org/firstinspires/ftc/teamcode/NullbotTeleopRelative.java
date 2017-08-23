@@ -200,7 +200,7 @@ public class NullbotTeleopRelative extends LinearOpMode {
             }
         } else {
             // We know that the joystick position is relevant
-            double angle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+            double angle = robot.normAngle(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2);
             return new double[]{
                     Math.sin(angle + Math.PI/4),
                     Math.cos(angle + Math.PI/4),

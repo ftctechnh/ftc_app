@@ -46,6 +46,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     NullbotHardware robot = new NullbotHardware();
 
     final double turnVolatility = 2; // Higher number makes turning more jerklike, but faster
+    final int msAutoturningDisabled = 8;
 
     final double moveMotorThreshold = 0;
     final double triggerThreshold = 0.10;
@@ -56,6 +57,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     double turnSpeed;
     double desiredMax;
     double heading;
+    int msSinceLastTurn;
 
 
     boolean wasLeftBumperPressed;
@@ -66,13 +68,15 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap, this, true);
 
-        waitForStart();
-
         initialHeading = robot.getGyroHeading();
         desiredHeading = initialHeading;
 
         wasLeftBumperPressed = false;
         wasRightBumperPressed = false;
+
+        msSinceLastTurn = 0;
+
+        waitForStart();
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -96,13 +100,15 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             heading = robot.getGyroHeading();
             difference = getAngleDifference(desiredHeading, heading);
 
-            if (!turnRelevant) {
-                //boolean autoAdjust = (Math.abs(difference) > Math.PI/90);
+            if (!turnRelevant && msSinceLastTurn > msAutoturningDisabled) {
                 turnSpeed = difference / (Math.PI / turnVolatility);
                 turnSpeed = clamp(turnSpeed); // Clamp it
-                // If we're turning the wrong way, multiply this by -1
-            } else {
+            } else if (turnRelevant) {
                 turnSpeed = gamepad1.right_stick_x;
+                desiredHeading = heading;
+                msSinceLastTurn = 0;
+            } else if (!turnRelevant) {
+                msSinceLastTurn += 1000 / robot.hz;
                 desiredHeading = heading;
             }
 
@@ -132,17 +138,11 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             robot.setMotorSpeeds(unscaledMotorPowers);
 
             telemetry.addLine()
-                    .addData("TurnSpeed", turnSpeed);
-            telemetry.addLine()
-                    .addData("Raw gyro direction", robot.getGyroHeadingRaw());
-            telemetry.addLine()
-                    .addData("Raw compass direction", robot.getCompassHeading());
-            telemetry.addLine()
-                    .addData("Gyro error", robot.gyroError);
-            telemetry.addLine()
                     .addData("EAG direction", robot.getGyroHeading());
             telemetry.addLine()
-                    .addData("Initial compass heading", robot.initialCompassHeading);
+                    .addData("Desired heading", desiredHeading);
+            telemetry.addLine()
+                    .addData("Turnspeed", turnSpeed);
             telemetry.update(); // Send telemetry data to driver station
 
             // Run above code at 25hz
@@ -212,7 +212,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
         } else if (gamepad1.dpad_down) {
             controllerAngle = Math.PI;
         } else if (getDist(gamepad1) > triggerThreshold) {
-            controllerAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+            controllerAngle = robot.normAngle(Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2);
         } else {
             // If we're not moving, don't scale the values
             scale = false;
