@@ -1,12 +1,18 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
  * Created by BAbel on 8/23/2017.
  */
 
+@TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 public class MecanumArcadeDrive extends OpMode {
 
     /*
@@ -15,9 +21,13 @@ public class MecanumArcadeDrive extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
+    private Robot robot;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
+
+        robot = new Robot(hardwareMap);
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
@@ -38,6 +48,7 @@ public class MecanumArcadeDrive extends OpMode {
      */
     @Override
     public void init_loop() {
+
     }
 
     /*
@@ -53,7 +64,12 @@ public class MecanumArcadeDrive extends OpMode {
      */
     @Override
     public void loop() {
+
         telemetry.addData("Status", "Running: " + runtime.toString());
+
+        if(robot.getDrivetrain() instanceof MecanumDrive) {
+            ((MecanumDrive) robot.getDrivetrain()).arcadeDrive(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        }
     }
 
     /*
