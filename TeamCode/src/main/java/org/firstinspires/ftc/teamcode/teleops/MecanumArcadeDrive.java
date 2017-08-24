@@ -1,16 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.robotplus.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumRobot;
-import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
  * Created by BAbel on 8/23/2017.
@@ -21,6 +12,9 @@ public class MecanumArcadeDrive extends OpMode {
     /*
      * Code to run ONCE when the driver hits INIT
      */
+
+    private ElapsedTime runtime = new ElapsedTime();
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");

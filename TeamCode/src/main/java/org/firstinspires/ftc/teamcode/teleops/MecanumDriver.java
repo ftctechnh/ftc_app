@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.robotplus.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumRobot;
-import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
  * Created by Alex on 8/17/2017.
