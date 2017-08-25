@@ -32,6 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -60,6 +62,7 @@ public class TeleopTest extends OpMode{
 
     /* Declare OpMode members. */
     TestHardware robot       = new TestHardware(); // use the class created to define a Pushbot's hardware
+    float hsvValues[] = {0F,0F,0F};
                                                          // could also use HardwarePushbotMatrix class.
     //double          clawOffset  = 0.0 ;                  // Servo mid position
    // final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
@@ -74,6 +77,7 @@ public class TeleopTest extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        robot.color.enableLed(false);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -100,53 +104,44 @@ public class TeleopTest extends OpMode{
     public void loop() {
         double left;
         double right;
-        LynxI2cColorRangeSensor range = (LynxI2cColorRangeSensor) robot.color;
-        NormalizedRGBA colors = robot.color.getNormalizedColors();
+        //int servoVal;
+       // LynxI2cColorRangeSensor range = (LynxI2cColorRangeSensor) robot.color;
+
+        Color.RGBToHSV(robot.color.red() * 8, robot.color.green() * 8, robot.color.blue() * 8, hsvValues);
+
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
         robot.Motor1.setPower(left);
 
-        if(gamepad1.left_bumper = true) {
-            robot.servo1.setPosition(0);
-        }else{
-            robot.servo1.setPosition(127);
-        }
+//        if(gamepad1.right_bumper = true) {
+//            robot.servo1.setPosition(255);
+//            servoVal = 255;
+//        }else{
+//            robot.servo1.setPosition(0);
+//            servoVal = 0;
+//        }
 
-
-
-        // Use gamepad left & right Bumpers to open and close the claw
-//        if (gamepad1.right_bumper)
-//            clawOffset += CLAW_SPEED;
-//        else if (gamepad1.left_bumper)
-//            clawOffset -= CLAW_SPEED;
-
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-//        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-//        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-//        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-//        if (gamepad1.y)
-//            robot.armMotor.setPower(robot.ARM_UP_POWER);
-//        else if (gamepad1.a)
-//            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-//        else
-//            robot.armMotor.setPower(0.0);
+        robot.servo1.setPosition((right/2)+.5);
 
         // Send telemetry message to signify robot running;
   //      telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addLine()
-                .addData("a", "%.3f", colors.alpha)
-                .addData("r", "%.3f", colors.red)
-                .addData("g", "%.3f", colors.green)
-                .addData("b", "%.3f", colors.blue);
+                 .addData("Clear", robot.color.alpha())
+                 .addData("Red  ", robot.color.red())
+                 .addData("Green", robot.color.green())
+                 .addData("Blue ", robot.color.blue())
+                 .addData("Hue", hsvValues[0]);
+
+        //telemetry.addLine()
+          //      .addData("distance", "%.3f", range.getDistance(DistanceUnit.CM));
 
         telemetry.addLine()
-                .addData("distance", "%.3f", range.getDistance(DistanceUnit.CM));
+                .addData("servo value", robot.servo1.getPosition());
+               // .addData("seroSetVal", servoVal)
     }
 
     /*
