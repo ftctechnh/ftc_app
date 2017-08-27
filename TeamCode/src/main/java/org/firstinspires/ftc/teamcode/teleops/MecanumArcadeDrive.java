@@ -5,42 +5,34 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.robotplus.gamepadwrapper.ControllerWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
+import java.util.ResourceBundle;
+
 /**
- * Created by BAbel on 8/23/2017.
+ * @author Blake Abel, Alex Migala
  */
 
-@TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")
 public class MecanumArcadeDrive extends OpMode {
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
-
     private ElapsedTime runtime = new ElapsedTime();
 
     private Robot robot;
+
+    private ControllerWrapper game1;
 
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
 
         robot = new Robot(hardwareMap);
-
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        // leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        // rightMotor = hardwareMap.dcMotor.get("right_drive");
-
-        // eg: Set the drive motor directions:
-        // Reverse the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized");
+        game1 = new ControllerWrapper(gamepad1);
     }
 
     /*
@@ -64,11 +56,20 @@ public class MecanumArcadeDrive extends OpMode {
      */
     @Override
     public void loop() {
-
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         if(robot.getDrivetrain() instanceof MecanumDrive) {
             ((MecanumDrive) robot.getDrivetrain()).arcadeDrive(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        }
+
+        if (gamepad1.a) {
+            // cache the gamepad a button
+            game1.getLetterInterface().getAButton().setPress(true);
+        }
+        else if (game1.getLetterInterface().getAButton().isPressed()) {
+            // do something
+            // set the interface back
+            game1.getLetterInterface().getAButton().setPress(false);
         }
     }
 
