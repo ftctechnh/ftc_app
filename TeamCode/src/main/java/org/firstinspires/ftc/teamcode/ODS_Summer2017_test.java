@@ -27,7 +27,6 @@ public class ODS_Summer2017_test extends LinearOpMode{
 
             telemetry.addData("Raw",    ods.getRawLightDetected());//show raw light intensity
             telemetry.addData("Normal", ods.getLightDetected());//show normal light intensity
-
             telemetry.update();//probably updates what it says
 
         }
