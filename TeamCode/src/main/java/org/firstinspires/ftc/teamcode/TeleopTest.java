@@ -114,6 +114,7 @@ public class TeleopTest extends OpMode{
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
         robot.Motor1.setPower(left);
+        robot.Motor2.setPower(-right);
 
 //        if(gamepad1.right_bumper = true) {
 //            robot.servo1.setPosition(255);
@@ -123,7 +124,13 @@ public class TeleopTest extends OpMode{
 //            servoVal = 0;
 //        }
 
-        robot.servo1.setPosition((right/2)+.5);
+        if (gamepad1.b){
+            robot.servo1.setPosition(.5);
+        }else if(gamepad1.x){
+            robot.servo1.setPosition(0);
+        };
+
+        //robot.servo1.setPosition((right/2)+.5);
 
         // Send telemetry message to signify robot running;
   //      telemetry.addData("claw",  "Offset = %.2f", clawOffset);
@@ -142,6 +149,10 @@ public class TeleopTest extends OpMode{
         telemetry.addLine()
                 .addData("servo value", robot.servo1.getPosition());
                // .addData("seroSetVal", servoVal)
+
+        telemetry.addLine()
+                .addData("encoder count motor one", robot.Motor1.getCurrentPosition())
+                .addData("encoder count motor two", robot.Motor2.getCurrentPosition());
     }
 
     /*

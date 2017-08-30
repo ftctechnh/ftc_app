@@ -29,6 +29,7 @@ public class TestHardware
 {
     /* Public OpMode members. */
     public DcMotor  Motor1   = null;
+    public DcMotor Motor2 = null;
     public ColorSensor color = null;
     public Servo servo1 = null;
 
@@ -49,15 +50,18 @@ public class TestHardware
 
         // Define and Initialize Motors
         Motor1   = hwMap.dcMotor.get("motor 1");
+        Motor2 = hwMap.dcMotor.get("motor 2");
         color = hwMap.get(ColorSensor.class, "MR_color");
         servo1 = hwMap.servo.get("servo1");
 
         // Set all motors to zero power
         Motor1.setPower(0);
+        Motor2.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         Motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
