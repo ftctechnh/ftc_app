@@ -23,6 +23,11 @@ public class MecanumArcadeDrive extends OpMode {
 
     private Robot robot;
 
+    /**
+     * This is a variable that is being tested
+     */
+    public boolean testVar;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
