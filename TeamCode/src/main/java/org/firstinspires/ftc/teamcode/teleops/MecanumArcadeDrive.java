@@ -9,9 +9,8 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
- * Created by BAbel on 8/23/2017.
- */
-
+ @author Blake Abel, Alex Migala
+*/
 @TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 public class MecanumArcadeDrive extends OpMode {
 
