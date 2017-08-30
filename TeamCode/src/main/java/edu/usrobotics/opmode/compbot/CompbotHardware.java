@@ -36,7 +36,6 @@ public class CompbotHardware extends BaseHardware {
     public ColorSensor bottomLeftColorSensor;
     public ColorSensor bottomRightColorSensor;
     public ColorSensor bottomFrontColorSensor;
-    public ColorSensor bottomBackColorSensor;
 
     public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
@@ -113,10 +112,6 @@ public class CompbotHardware extends BaseHardware {
         bottomRightColorSensor.setI2cAddress(I2cAddr.create7bit(0x3e));
         bottomRightColorSensor.enableLed(false);
 
-        bottomBackColorSensor = hardwareMap.colorSensor.get("bbcs");
-        bottomBackColorSensor.setI2cAddress(I2cAddr.create7bit(0x1e));
-        bottomBackColorSensor.enableLed(false);
-
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
         shooterRight.setDirection(rightShooterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
@@ -135,7 +130,6 @@ public class CompbotHardware extends BaseHardware {
         bottomFrontColorSensor.enableLed(true);
         bottomLeftColorSensor.enableLed(true);
         bottomRightColorSensor.enableLed(true);
-        bottomBackColorSensor.enableLed(true);
 
     }
 
