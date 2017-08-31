@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.ModernRoboticsI2cRangeSensor26;
+
 /**
  * This is NOT an opmode.
  *
@@ -84,7 +84,7 @@ public class InvadersVelocityVortexBot
     public Servo   beaconLeft  = null;
     public Servo   beaconRight  = null;
 
-    public ModernRoboticsI2cRangeSensor26 UDSLeft = null; // Default I2C Address: 0x26
+    public ModernRoboticsI2cRangeSensor UDSLeft = null;   // Default I2C Address: 0x26
     public ModernRoboticsI2cRangeSensor UDSRight = null;  // Default I2C Address: 0x28
 
     public ColorSensor beaconSensorLeft = null;
@@ -161,10 +161,11 @@ public class InvadersVelocityVortexBot
         double rightDistance = UDSRight.getDistance(unit);
         double leftDistance = UDSLeft.getDistance(unit);
         int timeoutMs = 3000; // Limit this function to a maximum of 3s
-        int oldMaxSpeedRight = rightMotor.getMaxSpeed();
-        int oldMaxSpeedLeft = leftMotor.getMaxSpeed();
-        leftMotor.setMaxSpeed(250);
-        rightMotor.setMaxSpeed(250);
+        //@todo getMaxSpeed and setMaxSpeed were removed from ftc_app SDK v3.0
+        //int oldMaxSpeedRight = rightMotor.getMaxSpeed();
+        //int oldMaxSpeedLeft = leftMotor.getMaxSpeed();
+        //leftMotor.setMaxSpeed(250);
+        //rightMotor.setMaxSpeed(250);
 
         if(leftDistance > rightDistance == true){
             telemetry.addData("ATW TURNING", "RIGHT");
@@ -210,8 +211,9 @@ public class InvadersVelocityVortexBot
         }
         rightMotor.setPower(0);
         leftMotor.setPower(0);
-        leftMotor.setMaxSpeed(oldMaxSpeedLeft);
-        rightMotor.setMaxSpeed(oldMaxSpeedRight);
+        //@todo getMaxSpeed and setMaxSpeed were removed from ftc_app SDK v3.0
+        //leftMotor.setMaxSpeed(oldMaxSpeedLeft);
+        //rightMotor.setMaxSpeed(oldMaxSpeedRight);
     }
 
     public void setDriveTrainPower(double power)
@@ -681,13 +683,15 @@ public class InvadersVelocityVortexBot
 
         // Define our sensors
         touchSensor = hwMap.touchSensor.get("downLimit");
-        UDSLeft = hwMap.get(ModernRoboticsI2cRangeSensor26.class, "UDSLeft");
+        UDSLeft = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSLeft");
         UDSRight = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDSRight");
         beaconSensorLeft = hwMap.colorSensor.get("beaconSensorLeft");
         beaconSensorRight = hwMap.colorSensor.get("beaconSensorRight");
         floorSensor = hwMap.colorSensor.get("floorSensor");
 
         // Custom I2C Addresses Go Here!
+        ///@todo Need to validate that UDSLeft.setI2cAddress is working with new SDK.  Hasn't been tested since VelocityVortex championship
+        UDSLeft.setI2cAddress(I2cAddr.create8bit(0x26));
         floorSensor.setI2cAddress(I2cAddr.create8bit(0x3A));
         beaconSensorRight.setI2cAddress(I2cAddr.create8bit(0x36));
 

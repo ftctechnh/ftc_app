@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.Competition;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -124,15 +125,17 @@ public class PlatinumWumpus extends OpMode {
         if (gamepad1.x == true) {
             //DriveSpeedReduction = 1;
             LiftSpeedReduction = 1;
-            robot.rightMotor.setMaxSpeed(600000 );
-            robot.leftMotor.setMaxSpeed(600000);
+            //@todo setMaxSpeed was removed from the ftc_app.  These calls no longer work.
+            //robot.rightMotor.setMaxSpeed(600000 );
+            //robot.leftMotor.setMaxSpeed(600000);
         }
         else if (gamepad1.b == true) {
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
             //DriveSpeedReduction = 9;
             LiftSpeedReduction = 4;
-            robot.rightMotor.setMaxSpeed(1000);
-            robot.leftMotor.setMaxSpeed(1000);
+            //@todo setMaxSpeed was removed from the ftc_app.  These calls no longer work.
+            //robot.rightMotor.setMaxSpeed(1000);
+            //robot.leftMotor.setMaxSpeed(1000);
         }
         else{
             //Nothing is being pressed, don't change the value.
