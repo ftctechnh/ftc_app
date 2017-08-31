@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
- * Created by BAbel on 8/23/2017.
- */
-
+ * @author Blake Abel, Alex Migala
+ * @since 8------
+*/
 @TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 public class MecanumArcadeDrive extends OpMode {
 
@@ -22,6 +22,11 @@ public class MecanumArcadeDrive extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private Robot robot;
+
+    /**
+     * This is a variable that is being tested
+     */
+    public boolean testVar;
 
     @Override
     public void init() {
