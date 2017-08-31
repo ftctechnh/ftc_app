@@ -51,6 +51,7 @@ public class MecanumArcadeDrive extends OpMode {
 
         if(robot.getDrivetrain() instanceof MecanumDrive) {
             ((MecanumDrive) robot.getDrivetrain()).arcadeDrive(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            ((MecanumDrive) robot.getDrivetrain()).dPadDrive(gamepad1);
         }
     }
 
