@@ -14,17 +14,12 @@ import java.util.ResourceBundle;
 /**
  * @author Blake Abel, Alex Migala
  */
-
 @TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")
 public class MecanumArcadeDrive extends OpMode {
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     private ElapsedTime runtime = new ElapsedTime();
 
     private Robot robot;
-
+  
     private ControllerWrapper game1;
 
     @Override
@@ -35,31 +30,26 @@ public class MecanumArcadeDrive extends OpMode {
         game1 = new ControllerWrapper(gamepad1);
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+    // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
     @Override
     public void init_loop() {
 
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
+    // Code to run ONCE when the driver hits PLAY
     @Override
     public void start() {
         runtime.reset();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
+    // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         if(robot.getDrivetrain() instanceof MecanumDrive) {
             ((MecanumDrive) robot.getDrivetrain()).arcadeDrive(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            ((MecanumDrive) robot.getDrivetrain()).dPadDrive(gamepad1);
         }
 
         if (gamepad1.a) {
@@ -73,11 +63,10 @@ public class MecanumArcadeDrive extends OpMode {
         }
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
+    // Code to run ONCE after the driver hits STOP
     @Override
     public void stop() {
+
     }
 
 }
