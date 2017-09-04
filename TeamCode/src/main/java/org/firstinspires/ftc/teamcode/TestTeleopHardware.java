@@ -25,11 +25,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class TestHardware
+public class TestTeleopHardware
 {
     /* Public OpMode members. */
-    public DcMotor  Motor1   = null;
-    public DcMotor Motor2 = null;
+    public DcMotor  Motor1;
+    public DcMotor Motor2;
     public ColorSensor color = null;
     public Servo servo1 = null;
 
@@ -39,7 +39,7 @@ public class TestHardware
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public TestHardware(){
+    public TestTeleopHardware(){
 
     }
 
@@ -51,17 +51,21 @@ public class TestHardware
         // Define and Initialize Motors
         Motor1   = hwMap.dcMotor.get("motor 1");
         Motor2 = hwMap.dcMotor.get("motor 2");
-        color = hwMap.get(ColorSensor.class, "MR_color");
+
+        color = hwMap.get(ColorSensor.class, "color_sensor");
         servo1 = hwMap.servo.get("servo1");
 
         // Set all motors to zero power
         Motor1.setPower(0);
         Motor2.setPower(0);
 
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        Motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        MotorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        MotorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        MotorRearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        MotorRearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 

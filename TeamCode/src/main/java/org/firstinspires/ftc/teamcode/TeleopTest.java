@@ -34,12 +34,8 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
-import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -61,7 +57,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class TeleopTest extends OpMode{
 
     /* Declare OpMode members. */
-    TestHardware robot       = new TestHardware(); // use the class created to define a Pushbot's hardware
+    TestTeleopHardware robot       = new TestTeleopHardware(); // use the class created to define a Pushbot's hardware
     float hsvValues[] = {0F,0F,0F};
                                                          // could also use HardwarePushbotMatrix class.
     //double          clawOffset  = 0.0 ;                  // Servo mid position
@@ -77,7 +73,7 @@ public class TeleopTest extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        robot.color.enableLed(false);
+        robot.color.enableLed(true);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
