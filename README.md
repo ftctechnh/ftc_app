@@ -12,7 +12,9 @@ It is important to note that this repository is large and can take a long time a
 
 * If you are a git user, *FIRST* recommends that you use the --depth command line argument to only clone the most current version of the repository:
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;git clone --depth=1 https://github.com/ftctechnh/ftc_app.git</p>
+```bash
+git clone --depth=1 https://github.com/ftctechnh/ftc_app.git</p>
+```
 
 * Or, if you prefer, you can use the "Download Zip" button available through the main repository page.  Downloading the project as a .ZIP file will keep the size of the download manageable.
 
@@ -47,15 +49,11 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 # Release Information
 **************************************************************************************
 
-Version 3.2 (built on 17.08.02)
+### Version 3.2 (built on 17.08.02)
 
-This version of the software introduces the "OnBot Java" Development Tool.  Similar to the FTC Blocks Development Tool, the FTC OnBot Java Development Tool allows a user to create, edit and build op modes dynamically using only a Javascript-enabled web browser.
+This version of the software introduces the "OnBot Java" Development Tool.  Similar to the FTC Blocks Development Tool, the FTC OnBot Java Development Tool allows a user to create, edit and build op modes dynamically using only a web browser, and does NOT need Android Studio.
 
-The OnBot Java Development Tool is an integrated development environment (IDE) that is served up by the Robot Controller.  Op modes are created and edited using a Javascript-enabled browser (Google Chromse is recommended).  Op modes are saved on the Robot Controller Android device directly.  
-
-The OnBot Java Development Tool provides a Java programming environment that does NOT need Android Studio.
-
-
+The OnBot Java Development Tool is an integrated development environment (IDE) that is served up by the Robot Controller.  Op modes are created and edited using a browser.  Op modes are saved on the Robot Controller Android device directly.
 
 Changes with version 3.2 include:
  * Enhanced web-based development tools
@@ -85,7 +83,7 @@ Known issues:
 
 **************************************************************************************
 
-Version 3.10 (built on 17.05.09)
+### Version 3.10 (built on 17.05.09)
 
 This version of the software provides support for the REV Robotics Expansion Hub.  This version also includes improvements in the USB communication layer in an effort to enhance system resiliency.  If you were using a 2.x version of the software previously, updating to version 3.1 requires that you also update your Driver Station software in addition to updating the Robot Controller software.
 
@@ -101,7 +99,7 @@ Changes include:
 
 **************************************************************************************
 
-Additional Notes Regarding Version 3.00 (built on 17.04.13)
+### Additional Notes Regarding Version 3.00 (built on 17.04.13)
 
 In addition to the release changes listed below (see section labeled "Version 3.00 (built on 17.04.013)"), version 3.00 has the following important changes:
 
@@ -111,9 +109,9 @@ In addition to the release changes listed below (see section labeled "Version 3.
 
 **************************************************************************************
 
-Version 3.00 (built on 17.04.13)
+### Version 3.00 (built on 17.04.13)
 
-*** Use this version of the software at YOUR OWN RISK!!! ***
+~~*** Use this version of the software at YOUR OWN RISK!!! ***~~
 
 This software is being released as an "alpha" version.  Use this version at your own risk!
 
@@ -121,7 +119,7 @@ This pre-release software contains SIGNIFICANT changes, including changes to the
 
 Please note, however, that version 3.00 is considered "alpha" code.  This code is being released so that the FIRST community will have an opportunity to test the new REV Expansion Hub electronics module when it becomes available in May.  The developers do not recommend using this code for critical applications (i.e., competition use).
 
-*** Use this version of the software at YOUR OWN RISK!!! ***
+~~*** Use this version of the software at YOUR OWN RISK!!! ***~~
 
 Changes include:
  * Major rework of sensor-related infrastructure.  Includes rewriting sensor classes to implement synchronous I2C communication.
@@ -149,19 +147,19 @@ Changes include:
 
 **************************************************************************************
 
-Version 2.62 (built on 17.01.07)
+### Version 2.62 (built on 17.01.07)
   * Added null pointer check before calling modeToByte() in finishModeSwitchIfNecessary method for ModernRoboticsUsbDcMotorController class.
   * Changes to enhance Modern Robotics USB protocol robustness.
 
 **************************************************************************************
 
-Version 2.61 (released on 16.12.19)
+### Version 2.61 (released on 16.12.19)
   * Blocks Programming mode changes:
      - Fix to correct issue when an exception was thrown because an OpticalDistanceSensor object appears twice in the hardware map (the second time as a LightSensor).
 
 **************************************************************************************
 
-Version 2.6 (released on 16.12.16)
+### Version 2.6 (released on 16.12.16)
   * Fixes for Gyro class:
      - Improve (decrease) sensor refresh latency.
      - fix isCalibrating issues.
@@ -170,7 +168,7 @@ Version 2.6 (released on 16.12.16)
 
 **************************************************************************************
 
-Version 2.5 (internal release on released on 16.12.13)
+### Version 2.5 (internal release on released on 16.12.13)
   * Blocks Programming mode changes:
      - Added blocks support for AdafruitBNO055IMU.
      - Added Download Op Mode button to FtcBocks.html.
@@ -222,7 +220,7 @@ Version 2.5 (internal release on released on 16.12.13)
 
 **************************************************************************************
 
-Version 2.4 (released on 16.11.13)
+### Version 2.4 (released on 16.11.13)
   * Fix to avoid crashing for nonexistent resources.
   * Blocks Programming mode changes:
      - Added blocks to support OpenGLMatrix, MatrixF, and VectorF.
@@ -257,12 +255,12 @@ Version 2.4 (released on 16.11.13)
 
 **************************************************************************************
 
-Version 2.35 (released on 16.10.06)
+### Version 2.35 (released on 16.10.06)
   * Blockly programming mode - Removed unnecesary idle() call from blocks for new project.
 
 **************************************************************************************
 
-Version 2.30 (released on 16.10.05)
+### Version 2.30 (released on 16.10.05)
   * Blockly programming mode:
      - Mechanism added to save Blockly op modes from Programming Mode Server onto local device
      - To avoid clutter, blocks are displayed in categorized folders
@@ -287,7 +285,7 @@ Version 2.30 (released on 16.10.05)
 
 **************************************************************************************
 
-Version 2.20 (released on 16.09.08)
+### Version 2.20 (released on 16.09.08)
   * Support for Modern Robotics Compass Sensor.
   * Support for Modern Robotics Range Sensor.
   * Revise device names for Pushbot templates to match the names used in Pushbot guide.
@@ -303,7 +301,7 @@ Version 2.20 (released on 16.09.08)
 
 **************************************************************************************
 
-Version 2.10 (released on 16.09.03)
+### Version 2.10 (released on 16.09.03)
  * Support for Adafruit IMU.
  * Improvements to ModernRoboticsI2cGyro class
     - Block on reset of z axis.
@@ -325,7 +323,7 @@ Version 2.10 (released on 16.09.03)
 
 **************************************************************************************
 
-Version 2.00 (released on 16.08.19)
+### Version 2.00 (released on 16.08.19)
  * This is the new release for the upcoming 2016-2017 FIRST Tech Challenge Season.
  * Channel change is enabled in the FTC Robot Controller app for Moto G 2nd and 3rd Gen phones.
  * Users can now use annotations to register/disable their Op Modes.
@@ -355,15 +353,14 @@ Version 2.00 (released on 16.08.19)
 
 **************************************************************************************
 
-Release 16.07.08
+### Release 16.07.08
 
  * For the ftc_app project, the gradle files have been modified to support Android Studio 2.1.x.
 
 
-
 **************************************************************************************
 
-Release 16.03.30
+### Release 16.03.30
 
  * For the MIT App Inventor, the design blocks have new icons that better represent the function of each design component.
  * Some changes were made to the shutdown logic to ensure the robust shutdown of some of our USB services.
@@ -372,7 +369,7 @@ Release 16.03.30
 
 **************************************************************************************
 
-Release 16.03.09
+### Release 16.03.09
 
  * Changes made to make the FTC SDK synchronous (significant change!)
     - waitOneFullHardwareCycle() and waitForNextHardwareCycle() are no longer needed and have been deprecated.
@@ -406,7 +403,7 @@ Release 16.03.09
 
 **************************************************************************************
 
-Release 16.02.09
+### Release 16.02.09
 
  * Improved battery checker feature so that voltage values get refreshed regularly (every 250 msec) on Driver Station (DS) user interface.
  * Improved software so that Robot Controller (RC) is much more resilient and “self-healing” to USB disconnects:
@@ -428,7 +425,7 @@ Release 16.02.09
 
 **************************************************************************************
 
-Release 16.01.04
+### Release 16.01.04
 
  * Updated compileSdkVersion for apps
  * Prevent Wifi from entering power saving mode
@@ -463,7 +460,7 @@ Release 16.01.04
 
 **************************************************************************************
 
-Release 15.11.04.001
+### Release 15.11.04.001
 
  * Added Support for Modern Robotics Gyro.
   - The GyroSensor class now supports the MR Gyro Sensor.
@@ -505,7 +502,7 @@ November 5, 2015
 
 **************************************************************************************
 
-Release 15.10.06.002
+### Release 15.10.06.002
 
  * Added support for Legacy Matrix 9.6V motor/servo controller.
  * Cleaned up build.gradle file.
@@ -517,7 +514,7 @@ October 6, 2015
 
 **************************************************************************************
 
-In this latest version of the FTC SDK (20150803_001) the following changes should be noted:
+### Release 15.08.03.001
 
  * New user interfaces for FTC Driver Station and FTC Robot Controller apps.
  * An init() method is added to the OpMode class.
