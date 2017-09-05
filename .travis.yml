@@ -3,22 +3,21 @@ jdk: oraclejdk8
 sudo: false
 
 android:
-        components:
-                - platform-tools
-                - tools
-                - build-tools-21.1.2
-                - build-tools-23.0.3
-                - build-tools-25.0.0
-                - android-19
-                - android-21
-                - android-23
-                - android-25
-                #- sys-img-armeabi-v7a-android-21
-                #- extra-android-m2repository
-
- notifications:
-    slack: technoramic5190:DzHEyly89iwtuHPp933y0cNE
-
+ components:
+  - platform-tools
+  - tools
+  - build-tools-21.1.2
+  - build-tools-23.0.3
+  - build-tools-25.0.0
+  - android-19
+  - android-21
+  - android-23
+  - android-25
+  #- sys-img-armeabi-v7a-android-21
+  #- extra-android-m2repository
+  
+notifications:
+ slack: technoramic5190:DzHEyly89iwtuHPp933y0cNE
 #
 #  before_script:
 #          #create and start emulator
