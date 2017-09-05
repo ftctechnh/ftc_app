@@ -16,6 +16,9 @@ android:
                 #- sys-img-armeabi-v7a-android-21
                 #- extra-android-m2repository
 
+ notifications:
+    slack: technoramic5190:DzHEyly89iwtuHPp933y0cNE
+
 #
 #  before_script:
 #          #create and start emulator
