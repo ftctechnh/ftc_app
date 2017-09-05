@@ -13,7 +13,7 @@ It is important to note that this repository is large and can take a long time a
 * If you are a git user, *FIRST* recommends that you use the --depth command line argument to only clone the most current version of the repository:
 
 ```bash
-git clone --depth=1 https://github.com/ftctechnh/ftc_app.git</p>
+git clone --depth=1 https://github.com/ftctechnh/ftc_app.git
 ```
 
 * Or, if you prefer, you can use the "Download Zip" button available through the main repository page.  Downloading the project as a .ZIP file will keep the size of the download manageable.
