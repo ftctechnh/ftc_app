@@ -47,7 +47,7 @@ public class AutonTest extends OpMode{
             robot.MotorRearLeft.setPower(0);
         }
 
-        if (robot.color.red() > 30 && robot.color.blue() > 30 && robot.color.green() > 30){
+        if ( hsvValues[1] > .30 &&  hsvValues [2] > .30){
             state += 1;
         }
 
@@ -55,8 +55,11 @@ public class AutonTest extends OpMode{
                 .addData("Clear", robot.color.alpha())
                 .addData("Red  ", robot.color.red())
                 .addData("Green", robot.color.green())
-                .addData("Blue ", robot.color.blue())
-                .addData("Hue", hsvValues[0]);
+                .addData("Blue ", robot.color.blue());
+        telemetry.addLine()
+                .addData("Hue", hsvValues[0])
+                .addData("Saturation", hsvValues[1])
+                .addData("Value", hsvValues[2]);
 
     }
 }
