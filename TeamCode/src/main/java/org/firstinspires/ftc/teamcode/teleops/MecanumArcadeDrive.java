@@ -5,30 +5,29 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.robotplus.gamepadwrapper.ControllerWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
+import java.util.ResourceBundle;
+
 /**
  * @author Blake Abel, Alex Migala
- * @since 8/24/17
-*/
-@TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+ */
+@TeleOp(name="Mecanum Arcade Drive", group="Iterative Opmode")
 public class MecanumArcadeDrive extends OpMode {
-
     private ElapsedTime runtime = new ElapsedTime();
 
     private Robot robot;
-
-    /**
-     * This is a variable that is being tested
-     */
-    public boolean testVar;
+  
+    private ControllerWrapper game1;
 
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
 
         robot = new Robot(hardwareMap);
+        game1 = new ControllerWrapper(gamepad1);
     }
 
     // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -46,12 +45,21 @@ public class MecanumArcadeDrive extends OpMode {
     // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
-
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         if(robot.getDrivetrain() instanceof MecanumDrive) {
             ((MecanumDrive) robot.getDrivetrain()).arcadeDrive(gamepad1.left_stick_x, gamepad1.left_stick_y);
             ((MecanumDrive) robot.getDrivetrain()).dPadDrive(gamepad1);
+        }
+
+        if (gamepad1.a) {
+            // cache the gamepad a button
+            game1.getLetterInterface().getAButton().setPress(true);
+        }
+        else if (game1.getLetterInterface().getAButton().isPressed()) {
+            // do something
+            // set the interface back
+            game1.getLetterInterface().getAButton().setPress(false);
         }
     }
 
