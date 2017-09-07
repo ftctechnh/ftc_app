@@ -28,6 +28,34 @@ public class WeirdAnalog extends LinearOpMode{
         while(opModeIsActive()) {
 
 
+            float triggerValue1;
+            float triggerValue2;
+
+            float sineFunctionValue;
+            float cubeRootValue;
+
+            if (gamepad1.right_trigger >= gamepad1.left_trigger) {
+                triggerValue1 = gamepad1.right_trigger;
+
+            } else {
+                triggerValue1 = -gamepad1.left_trigger;
+            }
+
+            if (gamepad2.right_trigger >= gamepad2.left_trigger) {
+                triggerValue2 = gamepad2.right_trigger;
+            } else {
+                triggerValue2 = -gamepad2.left_trigger;
+            }
+
+            sineFunctionValue = sineFunction(triggerValue1);
+            cubeRootValue = cubeRoot(triggerValue2);
+
+            leftFront.setPower(sineFunctionValue);
+            leftBack.setPower(sineFunctionValue);
+
+            rightFront.setPower(cubeRootValue);
+            rightBack.setPower(cubeRootValue);
+
             idle();
         }
 
@@ -45,9 +73,26 @@ public class WeirdAnalog extends LinearOpMode{
 
     }
 
-    private float function1(float gamepadAnalog) {
+    private float sineFunction(float gamepadAnalog) {
 
-        return 0
+        double value;
+
+        value = Math.PI * double.class.cast(gamepadAnalog);
+
+        double sine = Math.sin(value);
+
+        return float.class.cast(sine);
+
+    }
+
+    private float cubeRoot(float gamepadAnalog) {
+
+        double value = double.class.cast(gamepadAnalog);
+
+        value = Math.cbrt(value);
+
+        return float.class.cast(value);
+
     }
 
 }
