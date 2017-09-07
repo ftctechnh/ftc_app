@@ -2,21 +2,32 @@ package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.Random;
 
 /**
  * Created by ftc6347 on 10/16/16.
  */
-@TeleOp(name = "TELEOP", group = "tele-op")
-public class Teleop extends LinearOpModeBase {
+@TeleOp(name = "DEMO TELEOP", group = "tele-op")
+public class DemoTeleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
 
-    private float frontLeftPower;
-    private float frontRightPower;
-    private float backLeftPower;
-    private float backRightPower;
+    private double frontLeftPower;
+    private double frontRightPower;
+    private double backLeftPower;
+    private double backRightPower;
+
+    private double motorPowerMultiplier = 0.5;
 
     private boolean driveReversed = false;
+
+    private ElapsedTime timer;
+    private Random random;
+
+    private double randomTime;
+    boolean powerUp;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,34 +45,18 @@ public class Teleop extends LinearOpModeBase {
                 while(opModeIsActive()) {
                     if(gamepad2.y) {
                         launchParticle();
-                    } else if(gamepad2.a) {
-                        if(getLauncherChamberColorSensor().alpha()
-                                > LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
-                            getIntakeMotor().setPower(0);
-
-                            // run launcher motor for an entire rotation
-                            getRobotRuntime().reset();
-                            while(opModeIsActive() && getRobotRuntime().milliseconds() < 900) {
-                                getLauncherMotor().setPower(1.0);
-                            }
-                            getLauncherMotor().setPower(0);
-
-                            // run the intake before finding the black line
-                            getIntakeMotor().setPower(-1.0);
-
-                            // look for the black line
-                            while(opModeIsActive() && getDiskOds().getRawLightDetected() > 1) {
-                                getLauncherMotor().setPower(0.3);
-                            }
-                            getLauncherMotor().setPower(0);
-                        } else {
-                            // otherwise, run the intake
-                            getIntakeMotor().setPower(-1.0);
-                        }
                     }
                 }
             }
         };
+
+        timer = new ElapsedTime();
+        random = new Random();
+
+        powerUp = false;
+
+        // wait 15 to 30 seconds before receiving first power up
+        randomTime = generateRandomInt(15, 30);
 
         waitForStart();
 
@@ -87,67 +82,38 @@ public class Teleop extends LinearOpModeBase {
                 backRightPower /= 4;
             }
 
+            if(timer.seconds() > randomTime) {
+                if(powerUp) {
+                    motorPowerMultiplier = 0.5;
+                    powerUp = false;
+
+                    // wait 20 to 30 seconds for next power up
+                    randomTime = generateRandomInt(20, 30);
+                } else {
+                    motorPowerMultiplier = 1.0;
+                    powerUp = true;
+
+                    // allow power up to last for 10 to 20 seconds
+                    randomTime = generateRandomInt(10, 20);
+                }
+                timer.reset();
+            }
+
             // set the actual motor powers
-            getFrontLeftDrive().setPower(frontLeftPower);
-            getFrontRightDrive().setPower(frontRightPower);
-            getBackLeftDrive().setPower(backLeftPower);
-            getBackRightDrive().setPower(backRightPower);
+            getFrontLeftDrive().setPower(frontLeftPower * motorPowerMultiplier);
+            getFrontRightDrive().setPower(frontRightPower * motorPowerMultiplier);
+            getBackLeftDrive().setPower(backLeftPower * motorPowerMultiplier);
+            getBackRightDrive().setPower(backRightPower * motorPowerMultiplier);
 
             handleIntake();
-            handleCapBallMechanism();
             handleTelemetry();
-
-            // control for button pusher servo motors
-            if(gamepad1.right_bumper) {
-                // move beacons servos out
-                getBeaconsServo1().setPosition(0.6);
-                getBeaconsServo2().setPosition(0.4);
-            } else if(gamepad1.left_bumper) {
-                // move beacons servos in
-                getBeaconsServo1().setPosition(0);
-                getBeaconsServo2().setPosition(1);
-            }
 
             idle();
         }
     }
 
-    private void handleCapBallMechanism() {
-        double spoolMotorSpeed = -gamepad2.left_stick_y;
-        getSpoolMotor1().setPower(spoolMotorSpeed);
-        getSpoolMotor2().setPower(spoolMotorSpeed);
-
-        if (gamepad1.left_trigger > 0) {
-            // reverse all drive motors
-            getBackLeftDrive().setDirection(DcMotor.Direction.FORWARD);
-            getBackRightDrive().setDirection(DcMotor.Direction.FORWARD);
-            getFrontLeftDrive().setDirection(DcMotor.Direction.FORWARD);
-            getFrontRightDrive().setDirection(DcMotor.Direction.FORWARD);
-
-            driveReversed = true;
-        } else {
-            // reverse all drive motors
-            getBackLeftDrive().setDirection(DcMotor.Direction.REVERSE);
-            getBackRightDrive().setDirection(DcMotor.Direction.REVERSE);
-            getFrontLeftDrive().setDirection(DcMotor.Direction.REVERSE);
-            getFrontRightDrive().setDirection(DcMotor.Direction.REVERSE);
-
-            driveReversed = false;
-        }
-
-        // control to open the cap ball latch
-        if(gamepad2.dpad_down) {
-            getLatch4().setPosition(1.0);
-        }
-
-        // controls for the cap ball
-        if(gamepad2.right_trigger > 0) {
-            // move up
-            getPusher5().setPosition(0.7);
-        } else if(gamepad2.left_trigger > 0) {
-            // move down
-            getPusher5().setPosition(0);
-        }
+    private int generateRandomInt(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
     }
 
     private void handleIntake() {
@@ -185,6 +151,11 @@ public class Teleop extends LinearOpModeBase {
 
         telemetry.addData("left ods", getLeftOds().getRawLightDetected());
         telemetry.addData("right ods", getRightOds().getRawLightDetected());
+
+        if(powerUp) {
+            telemetry.addData(">",
+                    "Your power up will last " + (int)(randomTime - timer.seconds()) + " seconds!");
+        }
 
         telemetry.update();
     }

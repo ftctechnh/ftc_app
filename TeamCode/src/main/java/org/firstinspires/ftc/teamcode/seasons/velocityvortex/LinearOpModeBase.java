@@ -37,7 +37,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
 
     private static final double P_RANGE_DRIVE_COEFF = 0.04;
 
-    protected static final double LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD = 12;
+    protected static final double LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD = 14;
 
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -104,6 +104,11 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         frontRightDrive = hardwareMap.dcMotor.get("fr");
         backLeftDrive = hardwareMap.dcMotor.get("bl");
         backRightDrive = hardwareMap.dcMotor.get("br");
+
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         launcherMotor = hardwareMap.dcMotor.get("launcher");
         // keep launcher motor speed consistent

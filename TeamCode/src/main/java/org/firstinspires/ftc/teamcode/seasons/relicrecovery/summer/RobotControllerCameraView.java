@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
+package org.firstinspires.ftc.teamcode.seasons.relicrecovery.summer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +10,9 @@ import android.util.Log;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
+
+import java.util.List;
 
 /**
  * Created by ftc6347 on 7/11/17.
@@ -18,6 +21,11 @@ import org.opencv.core.Mat;
 public class RobotControllerCameraView extends JavaCameraView {
     public RobotControllerCameraView(Context context, int cameraId) {
         super(context, cameraId);
+    }
+
+    @Override
+    protected Size calculateCameraFrameSize(List<?> supportedSizes, ListItemAccessor accessor, int surfaceWidth, int surfaceHeight) {
+        return super.calculateCameraFrameSize(supportedSizes, accessor, surfaceWidth, surfaceHeight);
     }
 
     @Override

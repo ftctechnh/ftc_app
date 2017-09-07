@@ -37,7 +37,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
     private Thread mThread;
     private boolean mStopThread;
 
-    protected Camera mCamera;
+    public Camera mCamera;
     protected JavaCameraFrame[] mCameraFrame;
     private SurfaceTexture mSurfaceTexture;
 
@@ -140,9 +140,13 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                 Log.d(TAG, "getSupportedPreviewSizes()");
                 List<android.hardware.Camera.Size> sizes = params.getSupportedPreviewSizes();
 
+                for(android.hardware.Camera.Size size: sizes) {
+                    Log.d(TAG, String.format("Supported size: %d, %d", size.width, size.height));
+                }
+
                 if (sizes != null) {
                     /* Select the size that fits surface considering maximum size allowed */
-                    Size frameSize = calculateCameraFrameSize(sizes, new JavaCameraSizeAccessor(), width, height);
+                    Size frameSize = /* new Size(768, 432) */ calculateCameraFrameSize(sizes, new JavaCameraSizeAccessor(), width, height);
 
                     params.setPreviewFormat(ImageFormat.NV21);
                     Log.d(TAG, "Set preview size to " + Integer.valueOf((int)frameSize.width) + "x" + Integer.valueOf((int)frameSize.height));

@@ -113,11 +113,11 @@ public class Teleop extends LinearOpModeBase {
     }
 
     private void handleCapBallMechanism() {
-        double spoolMotorSpeed = -gamepad2.left_stick_y;
+        double spoolMotorSpeed = gamepad2.left_stick_y;
         getSpoolMotor1().setPower(spoolMotorSpeed);
         getSpoolMotor2().setPower(spoolMotorSpeed);
 
-        if (gamepad1.left_trigger > 0) {
+        if (gamepad1.left_trigger < .5) {
             // reverse all drive motors
             getBackLeftDrive().setDirection(DcMotor.Direction.FORWARD);
             getBackRightDrive().setDirection(DcMotor.Direction.FORWARD);
@@ -192,7 +192,7 @@ public class Teleop extends LinearOpModeBase {
     private void handlePivot() {
         double pivotPower = gamepad1.left_stick_x;
 
-        if(!driveReversed) {
+        if(driveReversed) {
             pivotPower *= -1;
         }
 

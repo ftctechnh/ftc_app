@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
+package org.firstinspires.ftc.teamcode.seasons.relicrecovery.summer;
 
 import android.app.Activity;
 import android.util.Log;
@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
 
 /**
@@ -20,7 +19,8 @@ import org.opencv.android.OpenCVLoader;
 public abstract class VisionOpMode extends OpMode implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private static final String LOG_TAG = "VisionOpMode";
-    private RobotControllerCameraView cameraView;
+    private static RobotControllerCameraView cameraView;
+
     private Activity activity;
 
     public void initializeOpenCV() {
@@ -39,11 +39,14 @@ public abstract class VisionOpMode extends OpMode implements CameraBridgeViewBas
                                 LinearLayout cameraMonitorLayout =
                                         (LinearLayout)activity.findViewById(R.id.cameraMonitorViewId);
 
-                                cameraView = new RobotControllerCameraView(activity, 0);
-                                cameraMonitorLayout.addView(cameraView);
+                                if(cameraView == null) {
+                                    cameraView = new RobotControllerCameraView(activity, 0);
+                                    cameraMonitorLayout.addView(cameraView);
+                                }
 
-                                cameraView.enableFpsMeter();
                                 cameraView.enableView();
+                                cameraView.enableFpsMeter();
+                                cameraView.setVisibility(View.VISIBLE);
                             }
                         });
                     default:

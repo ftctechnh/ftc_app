@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by ftc6347 on 10/16/16.
  */
-@TeleOp(name = "TELEOP", group = "tele-op")
-public class Teleop extends LinearOpModeBase {
+@TeleOp(name = "TELEOP-single-user", group = "tele-op")
+public class SingleUserTeleop extends LinearOpModeBase {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
 
@@ -26,15 +26,14 @@ public class Teleop extends LinearOpModeBase {
         setDriveMotorsMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         gamepad1.setJoystickDeadzone(JOYSTICK_DEADZONE);
-        gamepad2.setJoystickDeadzone(JOYSTICK_DEADZONE);
 
         Thread launcherThread = new Thread() {
             @Override
             public void run() {
                 while(opModeIsActive()) {
-                    if(gamepad2.y) {
+                    if(gamepad1.y) {
                         launchParticle();
-                    } else if(gamepad2.a) {
+                    } else if(gamepad1.right_trigger > 0.1) {
                         if(getLauncherChamberColorSensor().alpha()
                                 > LAUNCHER_CHAMBER_COLOR_SENSOR_THRESHOLD) {
                             getIntakeMotor().setPower(0);
@@ -98,7 +97,7 @@ public class Teleop extends LinearOpModeBase {
             handleTelemetry();
 
             // control for button pusher servo motors
-            if(gamepad1.right_bumper) {
+            /*if(gamepad1.right_bumper) {
                 // move beacons servos out
                 getBeaconsServo1().setPosition(0.6);
                 getBeaconsServo2().setPosition(0.4);
@@ -106,7 +105,7 @@ public class Teleop extends LinearOpModeBase {
                 // move beacons servos in
                 getBeaconsServo1().setPosition(0);
                 getBeaconsServo2().setPosition(1);
-            }
+            }*/
 
             idle();
         }
@@ -117,7 +116,12 @@ public class Teleop extends LinearOpModeBase {
         getSpoolMotor1().setPower(spoolMotorSpeed);
         getSpoolMotor2().setPower(spoolMotorSpeed);
 
-        if (gamepad1.left_trigger < .5) {
+        getBackLeftDrive().setDirection(DcMotor.Direction.FORWARD);
+        getBackRightDrive().setDirection(DcMotor.Direction.FORWARD);
+        getFrontLeftDrive().setDirection(DcMotor.Direction.FORWARD);
+        getFrontRightDrive().setDirection(DcMotor.Direction.FORWARD);
+
+        /*if (gamepad1.left_trigger < .5) {
             // reverse all drive motors
             getBackLeftDrive().setDirection(DcMotor.Direction.FORWARD);
             getBackRightDrive().setDirection(DcMotor.Direction.FORWARD);
@@ -133,34 +137,23 @@ public class Teleop extends LinearOpModeBase {
             getFrontRightDrive().setDirection(DcMotor.Direction.REVERSE);
 
             driveReversed = false;
-        }
+        }*/
 
-        // control to open the cap ball latch
-        if(gamepad2.dpad_down) {
-            getLatch4().setPosition(1.0);
-        }
 
-        // controls for the cap ball
-        if(gamepad2.right_trigger > 0) {
-            // move up
-            getPusher5().setPosition(0.7);
-        } else if(gamepad2.left_trigger > 0) {
-            // move down
-            getPusher5().setPosition(0);
-        }
+
+
     }
 
     private void handleIntake() {
-        if (gamepad2.b){
+        if (gamepad1.left_trigger > 0.1){
             getDoor3().setPosition(0.25);
             getIntakeMotor().setPower(-1.0);
         }
-        else if(gamepad2.right_stick_y >= 0.2 || gamepad2.right_stick_y <= -0.2 ){
-            getDoor3().setPosition(0.55);
-            getIntakeMotor().setPower(gamepad2.right_stick_y);
+        if (gamepad1.right_bumper){
+            getIntakeMotor().setPower(1.0);
         }
         else {
-            if(!gamepad2.a)
+            if(gamepad1.right_trigger < 0.1 && gamepad1.left_trigger < 0.1 && !gamepad1.right_bumper)
                 getIntakeMotor().setPower(0);
 
             getDoor3().setPosition(0.25);
@@ -192,7 +185,7 @@ public class Teleop extends LinearOpModeBase {
     private void handlePivot() {
         double pivotPower = gamepad1.left_stick_x;
 
-        if(driveReversed) {
+        if(!driveReversed) {
             pivotPower *= -1;
         }
 
