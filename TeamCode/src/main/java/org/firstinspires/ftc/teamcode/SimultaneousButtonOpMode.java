@@ -76,8 +76,8 @@ public class SimultaneousButtonOpMode extends LinearOpMode {
             if (gamepad1.b && gamepad2.a && gamepad2.right_bumper) {
                 leftMotor.setPower(-1);
             }
-            //a1 and b1 and leftbumper1 and x2 and down2 and right2 is rightfront and rightback and leftback and leftfront reverse
-            if(gamepad1.a && gamepad1.b && gamepad1.left_bumper && gamepad2.x && gamepad2.dpad_down && gamepad2.dpad_right){
+            //a1 and b1 and leftbumper1 and x2 and down2 and right2 and rightbumper2 is rightfront and rightback and leftback and leftfront reverse
+            if(gamepad1.a && gamepad1.b && gamepad1.left_bumper && gamepad2.x && gamepad2.dpad_down && gamepad2.dpad_right && gamepad2.right_bumper){
                 leftMotor.setPower(-1);
                 leftBackMotor.setPower(-1);
                 rightBackMotor.setPower(-1);
