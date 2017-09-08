@@ -37,6 +37,8 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
@@ -149,6 +151,9 @@ public class TeleopTest extends OpMode{
         telemetry.addLine()
                 .addData("encoder count motor one", robot.Motor1.getCurrentPosition())
                 .addData("encoder count motor two", robot.Motor2.getCurrentPosition());
+
+        telemetry.addLine()
+                .addData("range", robot.MRrange.getDistance(DistanceUnit.CM));
     }
 
     /*

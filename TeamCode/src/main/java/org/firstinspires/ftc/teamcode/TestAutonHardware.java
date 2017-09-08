@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.hardware.Sensor;
-
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -34,6 +31,7 @@ public class TestAutonHardware
     public DcMotor MotorRearLeft;
     public ColorSensor color = null;
     public Servo servo1 = null;
+   // public ModernRoboticsI2cRangeSensor MRrange = null;
 
 
     /* local OpMode members. */

@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.hardware.Sensor;
-
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -32,6 +30,7 @@ public class TestTeleopHardware
     public DcMotor Motor2;
     public ColorSensor color = null;
     public Servo servo1 = null;
+    public ModernRoboticsI2cRangeSensor MRrange = null;
 
 
     /* local OpMode members. */
@@ -54,6 +53,7 @@ public class TestTeleopHardware
 
         color = hwMap.get(ColorSensor.class, "color_sensor");
         servo1 = hwMap.servo.get("servo1");
+        MRrange = hwMap.get(ModernRoboticsI2cRangeSensor.class, "MRrange");
 
         // Set all motors to zero power
         Motor1.setPower(0);
