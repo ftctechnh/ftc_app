@@ -69,36 +69,83 @@ public class SimultaneousButtonOpMode extends LinearOpMode {
             if (gamepad1.b && gamepad2.a && gamepad2.right_bumper) {
                 leftMotor.setPower(-1);
             }
-            //if b1 and y2 leftback and right front
+            //the random combinations
+            //if b1 and y2 leftback is right front
             if (gamepad1.b && gamepad2.y) {
                 leftBackMotor.setPower(1);
                 rightMotor.setPower(1);
             }
+            //a1 and y2 is leftfront is leftback
             if (gamepad1.a && gamepad2.y) {
                 leftBackMotor.setPower(1);
                 leftMotor.setPower(1);
             }
+            //y1 and b2 is leftfront is rightBack
             if (gamepad1.y && gamepad2.b) {
                 leftMotor.setPower(1);
                 rightBackMotor.setPower(1);
             }
+            //y1 and y2 is leftfront
             if (gamepad1.y && gamepad2.y && gamepad1.left_bumper) {
                 leftMotor.setPower(1);
                 rightMotor.setPower(1);
             }
+            //a1 and leftbumper2 is leftfront and rightfront
             if (gamepad1.a && gamepad2.left_bumper) {
                 leftMotor.setPower(1);
                 rightMotor.setPower(1);
             }
+            //rightbumper1 and leftbumper2 is rightfront and rightback
             if (gamepad1.right_bumper && gamepad2.left_bumper) {
                 rightBackMotor.setPower(1);
                 rightMotor.setPower(1);
             }
+            //leftbumper1 and leftbumper2 is leftfront and leftback reverse and rightfront and rightback
             if (gamepad1.left_bumper && gamepad2.left_bumper) {
                 leftMotor.setPower(-1);
                 leftBackMotor.setPower(-1);
                 rightMotor.setPower(1);
                 rightBackMotor.setPower(1);
+            }
+
+
+            //the random combinations reversed (add rightbumper2 to reverse anything)
+            //if b1 and y2 and rightbumper2 is leftback and right front reverse
+            if (gamepad1.b && gamepad2.y) {
+                leftBackMotor.setPower(-1);
+                rightMotor.setPower(-1);
+            }
+            //a1 and y2 is leftfront and rightbumper2 is leftback reverse
+            if (gamepad1.a && gamepad2.y) {
+                leftBackMotor.setPower(-1);
+                leftMotor.setPower(-1);
+            }
+            //y1 and b2 is leftfront and rightbumper2 is rightBack reverse
+            if (gamepad1.y && gamepad2.b) {
+                leftMotor.setPower(-1);
+                rightBackMotor.setPower(-1);
+            }
+            //y1 and y2 and rightbumper2 is leftfront reverse
+            if (gamepad1.y && gamepad2.y && gamepad1.left_bumper) {
+                leftMotor.setPower(-1);
+                rightMotor.setPower(-1);
+            }
+            //a1 and leftbumper2 and rightbumper2 is leftfront and rightfront reverse
+            if (gamepad1.a && gamepad2.left_bumper) {
+                leftMotor.setPower(-1);
+                rightMotor.setPower(-1);
+            }
+            //rightbumper1 and leftbumper2 and rightbumper2 is rightfront and rightback reverse
+            if (gamepad1.right_bumper && gamepad2.left_bumper) {
+                rightBackMotor.setPower(-1);
+                rightMotor.setPower(-1);
+            }
+            //leftbumper1 and leftbumper2 and rightbumper2 is leftfront and leftback forward and rightfront and rightback reverse
+            if (gamepad1.left_bumper && gamepad2.left_bumper) {
+                leftMotor.setPower(1);
+                leftBackMotor.setPower(1);
+                rightMotor.setPower(-1);
+                rightBackMotor.setPower(-1);
             }
 
             idle();
