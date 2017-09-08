@@ -154,6 +154,9 @@ public class TeleopTest extends OpMode{
 
         telemetry.addLine()
                 .addData("range", robot.MRrange.getDistance(DistanceUnit.CM));
+
+        telemetry.addLine()
+                .addData("heading", robot.heading);
     }
 
     /*

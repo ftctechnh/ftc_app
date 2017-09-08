@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -32,6 +38,9 @@ public class TestAutonHardware
     public ColorSensor color = null;
     public Servo servo1 = null;
    // public ModernRoboticsI2cRangeSensor MRrange = null;
+
+    public double heading = 0;
+
 
 
     /* local OpMode members. */
@@ -69,7 +78,31 @@ public class TestAutonHardware
 //        MotorRearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        MotorRearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        SensorEventListener orientationListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                heading = event.values[0];
+                /*azimuth_angle = event.values[0];
+                pitch_angle = event.values[1];
+                roll_angle = event.values[2];*/
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                // do not use this method
+            }
+        };
+
+        SensorManager sensorManager;
+        sensorManager =
+                (SensorManager) ahwMap.appContext.getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(orientationListener , sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_GAME);
+
+
     }
+
+
 
     /***
      *

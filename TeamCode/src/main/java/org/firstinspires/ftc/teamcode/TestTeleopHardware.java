@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,7 +37,10 @@ public class TestTeleopHardware
     public ColorSensor color = null;
     public Servo servo1 = null;
     public ModernRoboticsI2cRangeSensor MRrange = null;
+    //public Sensor magneticField = null;
+    //public Sensor accelField = null;
 
+    public double heading = 0;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -59,8 +68,38 @@ public class TestTeleopHardware
         Motor1.setPower(0);
         Motor2.setPower(0);
 
+       /* SensorManager manager = (SensorManager) ahwMap.appContext.getSystemService(Context.SENSOR_SERVICE);
+        magneticField = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        accelField = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);*/
 
-        // Set all motors to run without encoders.
+         SensorEventListener orientationListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                heading = event.values[0];
+                /*azimuth_angle = event.values[0];
+                pitch_angle = event.values[1];
+                roll_angle = event.values[2];*/
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                // do not use this method
+            }
+        };
+
+        SensorManager sensorManager;
+        sensorManager =
+                (SensorManager) ahwMap.appContext.getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(orientationListener , sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_GAME);
+
+
+
+
+
+
+
+            // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 //        MotorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        MotorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
