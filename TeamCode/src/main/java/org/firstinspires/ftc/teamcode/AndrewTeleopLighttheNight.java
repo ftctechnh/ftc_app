@@ -24,10 +24,10 @@ public class AndrewTeleopLighttheNight extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException {
-        hardwareMap.dcMotor.get("motorLeftFront");
-        hardwareMap.dcMotor.get("motorRightFront");
-        hardwareMap.dcMotor.get("motorLeftBack");
-        hardwareMap.dcMotor.get("motorRightBack");
+        hardwareMap.dcMotor.get("LeftFront");
+        hardwareMap.dcMotor.get("RightFront");
+        hardwareMap.dcMotor.get("LeftBack");
+        hardwareMap.dcMotor.get("RightBack");
 
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
