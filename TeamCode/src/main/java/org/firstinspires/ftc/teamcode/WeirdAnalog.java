@@ -77,21 +77,21 @@ public class WeirdAnalog extends LinearOpMode{
 
         double value;
 
-        value = Math.PI * double.class.cast(gamepadAnalog);
+        value = Math.PI * (double) gamepadAnalog;
 
         double sine = Math.sin(value);
 
-        return float.class.cast(sine);
+        return (float) sine;
 
     }
 
     private float cubeRoot(float gamepadAnalog) {
 
-        double value = double.class.cast(gamepadAnalog);
+        double value = (double) gamepadAnalog;
 
         value = Math.cbrt(value);
 
-        return float.class.cast(value);
+        return (float) value;
 
     }
 

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "Obstacle Course Andrew LTN Drive")
+@TeleOp(name = "Hard")
 //declare variables
 public class SimultaneousButtonOpMode extends LinearOpMode {
     private DcMotor leftMotor;
