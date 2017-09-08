@@ -35,7 +35,7 @@ public class SimultaneousButtonOpMode extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            //straights basic motors
+            //straights basic motors and fourwheel drive
             //y1 and x2 is rightfront
             if (gamepad1.y && gamepad2.x) {
                 rightMotor.setPower(1);
@@ -51,6 +51,13 @@ public class SimultaneousButtonOpMode extends LinearOpMode {
             //b1 and a2 is leftfront
             if (gamepad1.b && gamepad2.a) {
                 leftMotor.setPower(1);
+            }
+            //a1 and b1 and leftbumper1 and x2 and down2 and right2 is rightfront and rightback and leftback and leftfront
+            if(gamepad1.a && gamepad1.b && gamepad1.left_bumper && gamepad2.x && gamepad2.dpad_down && gamepad2.dpad_right){
+                leftMotor.setPower(1);
+                leftBackMotor.setPower(1);
+                rightBackMotor.setPower(1);
+                rightMotor.setPower(1);
             }
             //The reverses
             //y1, x2, rightbumper2 = rightfront reverse
@@ -68,6 +75,13 @@ public class SimultaneousButtonOpMode extends LinearOpMode {
             //b1, x2, a2 = leftfront reverse
             if (gamepad1.b && gamepad2.a && gamepad2.right_bumper) {
                 leftMotor.setPower(-1);
+            }
+            //a1 and b1 and leftbumper1 and x2 and down2 and right2 is rightfront and rightback and leftback and leftfront reverse
+            if(gamepad1.a && gamepad1.b && gamepad1.left_bumper && gamepad2.x && gamepad2.dpad_down && gamepad2.dpad_right){
+                leftMotor.setPower(-1);
+                leftBackMotor.setPower(-1);
+                rightBackMotor.setPower(-1);
+                rightMotor.setPower(-1);
             }
             //the random combinations
             //if b1 and y2 leftback is right front
