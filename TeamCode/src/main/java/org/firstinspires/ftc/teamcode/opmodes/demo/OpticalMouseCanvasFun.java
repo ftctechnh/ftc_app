@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -45,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 @Autonomous(name = "Optical Mouse Path Drawing Demo", group = "Test")
 public class OpticalMouseCanvasFun extends OpMode implements PointHandler{
 
-    private final RelativeLayout layout = FtcRobotControllerActivity.getGraphLayout();
+    private final RelativeLayout layout = (RelativeLayout)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.CheapCamera);
     private LineView lineView;
     private UsbManager usbManager;
     private UsbDevice usbDevice;
@@ -64,7 +65,7 @@ public class OpticalMouseCanvasFun extends OpMode implements PointHandler{
         telemetry.update();
 
         //usb stuff
-        connect(FtcRobotControllerActivity.getAppContext());
+        connect(hardwareMap.appContext);
 
         //canvas stuff
         Runnable doCanvasSetup = new Runnable() {
@@ -72,7 +73,7 @@ public class OpticalMouseCanvasFun extends OpMode implements PointHandler{
             public void run() {
                 Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 paint.setColor(Color.RED);
-                lineView = new LineView(FtcRobotControllerActivity.getAppContext(), pointer, paint);
+                lineView = new LineView(hardwareMap.appContext, pointer, paint);
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layout.addView(lineView, params);

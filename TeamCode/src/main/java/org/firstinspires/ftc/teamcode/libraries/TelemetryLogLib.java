@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.robocol.TelemetryMessage;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.Util;
 
-import org.firstinspires.ftc.robotcore.internal.TelemetryImpl;
+import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TelemetryLogLib {
 
-    public static class TelemetryLog extends TelemetryImpl{
+    public static class TelemetryLog extends TelemetryImpl {
         private FileWriter mLog;
         private long startTime = 0;
 

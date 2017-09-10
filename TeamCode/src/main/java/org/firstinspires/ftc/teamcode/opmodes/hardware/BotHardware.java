@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.libraries.MultiplexColorSensor;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 
@@ -39,7 +38,7 @@ public class BotHardware
     public DeviceInterfaceModule dim;
     public AHRS navX;
 
-    private MultiplexColorSensor mux = null;
+    //private MultiplexColorSensor mux = null;
 
     public NavXHeading navXHeading;
 
@@ -60,14 +59,14 @@ public class BotHardware
 
             final int[] ports = {6,7};
             final int milliSeconds = 48;
-            mux = new MultiplexColorSensor(opMode.hardwareMap, "mux", "color",
-                    ports, milliSeconds,
-                    MultiplexColorSensor.GAIN_16X);
+            //mux = new MultiplexColorSensor(opMode.hardwareMap, "mux", "color",
+            //        ports, milliSeconds,
+            //        MultiplexColorSensor.GAIN_16X);
 
-            mux.startPolling();
+            //mux.startPolling();
 
-            leftSensor = new MuxColor(ports[1], mux);
-            rightSensor = new MuxColor(ports[0], mux);
+            //leftSensor = new MuxColor(ports[1], mux);
+            //rightSensor = new MuxColor(ports[0], mux);
 
 
             //leftSensor = opMode.hardwareMap.colorSensor.get("sensor_left");
@@ -205,18 +204,18 @@ public class BotHardware
 
     public class MuxColor implements ColorSensor{
         private int mPort;
-        private MultiplexColorSensor mSensor;
+        //private MultiplexColorSensor mSensor;
         private int[] crgb = new int[4];
         private double lastTime;
 
-        MuxColor(int port, MultiplexColorSensor sensor){
-            mPort = port;
-            mSensor = sensor;
-        }
+        //MuxColor(int port, MultiplexColorSensor sensor){
+        //    mPort = port;
+        //    mSensor = sensor;
+        //}
 
         private boolean updateColor(){
             if(period.milliseconds() - lastTime > 50){
-                crgb = mux.getCRGB(mPort);
+               // crgb = mux.getCRGB(mPort);
                 lastTime = period.milliseconds();
             }
             return crgb[0] != 65535;
@@ -359,10 +358,10 @@ public class BotHardware
     }
 
     public void setMaxSpeedAll(int encoderTicks){
-        frontLeftMotor.setMaxSpeed(encoderTicks);
-        frontRightMotor.setMaxSpeed(encoderTicks);
-        backLeftMotor.setMaxSpeed(encoderTicks);
-        backRightMotor.setMaxSpeed(encoderTicks);
+        //frontLeftMotor.setMaxSpeed(encoderTicks);
+        //frontRightMotor.setMaxSpeed(encoderTicks);
+        //backLeftMotor.setMaxSpeed(encoderTicks);
+        //backRightMotor.setMaxSpeed(encoderTicks);
     }
 
     public void setFrontPower(double power) {

@@ -371,7 +371,8 @@ public class TeleOpMain extends OpMode {
             //check if jerk is beyond thresh
             if(Math.abs(jerk) > mThresh){
                 //attempt to correct speed towards actual value if so
-                final double error = vel - (mMotor.getMaxSpeed() * mMotor.getPower());
+                //final double error = vel - (mMotor.getMaxSpeed() * mMotor.getPower());
+                final double error = vel - mMotor.getPower();
                 //and return the correction
                 return -mPid.loop((float)error, (float)dt);
             }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -33,7 +34,7 @@ public class OpenCVGraphFun extends OpenCVLib {
 
     private int[] yValStore = new int[3];
 
-    private final RelativeLayout layout = hardwareMap.appContext.getResources().getIdentifier();
+    private RelativeLayout layout;
     private LineChart chart;
 
     private LinkedList<Entry> dataAngle = new LinkedList<Entry>();
@@ -41,10 +42,12 @@ public class OpenCVGraphFun extends OpenCVLib {
 
     @Override
     public void init(){
+        layout = (RelativeLayout)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.CheapCamera);
+
         Runnable doGraphSetup = new Runnable() {
             @Override
             public void run() {
-                chart = new LineChart(FtcRobotControllerActivity.getAppContext());
+                chart = new LineChart(hardwareMap.appContext);
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layout.addView(chart, params);
@@ -65,7 +68,7 @@ public class OpenCVGraphFun extends OpenCVLib {
         initOpenCV();
         startCamera();
 
-        //catch a frame
+        //catch a frame as soon as one becomes availible
         Mat frame = getCameraFrame();
 
         //init scanline Y values
@@ -90,6 +93,7 @@ public class OpenCVGraphFun extends OpenCVLib {
     @Override
     public void loop(){
         //get frame
+        //catch a frame
         Mat frame = getCameraFrame();
 
         final double angle = LineFollowLib.getAngle(frame, yValStore[0], yValStore[2]);

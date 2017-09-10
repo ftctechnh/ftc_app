@@ -22,7 +22,7 @@ import java.util.Iterator;
  * code stolen from: http://stackoverflow.com/questions/13280402/reading-raw-mouse-data-on-android
  */
 
-//@Autonomous(name="USB Mouse Fun", group ="Test")
+@Autonomous(name="USB Mouse Fun", group ="Test")
 
 public class OpticalMouseFun extends OpMode {
     UsbManager usbManager;
@@ -30,12 +30,6 @@ public class OpticalMouseFun extends OpMode {
 
     private static final String usbTAG = "Mouse Fun";
     private Context context;
-
-    @OpModeRegistrar
-    public static void register(Context huh, OpModeManager manage){
-        OpModeMeta meta = new OpModeMeta("USB Mouse Fun", OpModeMeta.Flavor.AUTONOMOUS, "Test");
-        manage.register(meta, OpticalMouseFun.class);
-    }
 
     private void connect() {
         this.usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);

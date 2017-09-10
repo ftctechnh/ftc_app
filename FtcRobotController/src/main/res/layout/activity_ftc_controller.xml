@@ -125,26 +125,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_below="@+id/textOpMode"
       android:layout_above="@+id/textGamepad1">
 
-      <RelativeLayout
-          android:id="@+id/CheapCamera"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-
-        <org.opencv.android.JavaCameraView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/image_manipulations_activity_surface_view" />
-
-        <LinearLayout
-            android:id="@+id/cameraMonitorViewId"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            />
-
-      </RelativeLayout>
-
       <!-- When visible, the error message will overlay and thus partially
            obscure part of the camera monitor. We make this trade off so as to
            allow for a bigger camera monitor view in the common case when the
@@ -188,6 +168,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:textStyle="bold"
       android:visibility="invisible"
       android:text="" />
+
+    <RelativeLayout
+        android:id="@+id/CheapCamera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textOpMode">
+
+      <org.opencv.android.JavaCameraView
+        android:id="@+id/image_manipulations_activity_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+
+      <LinearLayout
+          android:id="@+id/cameraMonitorViewId"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical" />
+
+    </RelativeLayout>
 
   </RelativeLayout>
 

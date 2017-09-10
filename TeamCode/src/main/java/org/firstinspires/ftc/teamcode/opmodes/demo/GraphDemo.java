@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -27,7 +28,7 @@ import java.util.List;
 public class GraphDemo extends OpMode{
     int stupid = 0;
 
-    private final RelativeLayout layout = FtcRobotControllerActivity.getGraphLayout();
+    private RelativeLayout layout;
     private LineChart chart;
 
     @Override
@@ -35,10 +36,12 @@ public class GraphDemo extends OpMode{
         telemetry.addData("Graph test!", "Go!");
         telemetry.update();
 
+        layout = (RelativeLayout)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.CheapCamera);
+
         Runnable doGraphSetup = new Runnable() {
             @Override
             public void run() {
-                chart = new LineChart(FtcRobotControllerActivity.getAppContext());
+                chart = new LineChart(hardwareMap.appContext);
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layout.addView(chart, params);

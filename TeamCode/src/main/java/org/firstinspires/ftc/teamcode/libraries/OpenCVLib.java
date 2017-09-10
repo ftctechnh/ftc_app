@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -24,6 +25,9 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * Created by Noah on 11/10/2016.
  */
@@ -34,52 +38,48 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
 
     private CameraBridgeViewBase mOpenCvCameraView;
 
-    private Context mContext;
     private View mView;
 
-    private boolean catchFrame = false;
-    private boolean updateNeeded = true;
-
-    private Mat frameStore;
+    private BlockingQueue<Mat> frameStore = new LinkedBlockingQueue<>(1);
 
     public OpenCVLib(){
-        mContext = FtcRobotControllerActivity.getAppContext();
-        mView = FtcRobotControllerActivity.getCameraView();
+
     }
 
-    public OpenCVLib(Context context, View view){
-        mContext = context;
+    public OpenCVLib(View view){
         mView = view;
     }
 
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(mContext) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS: {
-                }
-                break;
-                default: {
-                    super.onManagerConnected(status);
-                }
-                break;
-            }
-        }
-    };
-
     public void initOpenCV(){
+
+        if(mView == null) mView = ((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.image_manipulations_activity_surface_view);
+
+        Log.i("OPENCV", hardwareMap.appContext.toString());
+
+        BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(hardwareMap.appContext) {
+            @Override
+            public void onManagerConnected(int status) {
+                switch (status) {
+                    case LoaderCallbackInterface.SUCCESS: {
+                    }
+                    break;
+                    default: {
+                        super.onManagerConnected(status);
+                    }
+                    break;
+                }
+            }
+        };
 
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         if (!OpenCVLoader.initDebug()) {
             RobotLog.vv(cvTAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, mContext, mLoaderCallback);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, hardwareMap.appContext, mLoaderCallback);
         } else {
             RobotLog.vv(cvTAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
-
-        frameStore = new Mat();
 
         mOpenCvCameraView = (CameraBridgeViewBase) mView;
         //mOpenCvCameraView.setAlpha(0.0f);
@@ -127,26 +127,31 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
     }
 
     public void stopCamera(){
-        frameStore.release();
-        catchFrame = false;
+        frameStore.clear();
         stopOpenCV();
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
-        if(catchFrame){
-            frameStore = frame.gray();
-            catchFrame = false;
-        }
+        if(frameStore.isEmpty()) frameStore.add(frame.gray());
 
-        if(!updateNeeded) updateNeeded = true;
+        Mat src = frame.gray();
 
-        return frame.rgba();
+        Imgproc.threshold(src, src, 0, 200, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY);
+
+        return src;
     }
 
-    public Mat getCameraFrame(){
-        catchFrame = true;
-        while (catchFrame && updateNeeded);
-        updateNeeded = false;
-        return frameStore.clone();
+    public BlockingQueue<Mat> getFrameQueue() {
+        return frameStore;
+    }
+
+    public Mat getCameraFrame() {
+        //catch a frame
+        try {
+            return getFrameQueue().take().clone();
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException("Oh fuck");
+        }
     }
 }

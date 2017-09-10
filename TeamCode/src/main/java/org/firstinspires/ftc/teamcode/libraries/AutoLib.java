@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
+import com.qualcomm.robotcore.hardware.configuration.UserConfigurationType;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -1017,7 +1019,10 @@ public class AutoLib {
 
         public String getDeviceName() { return "AutoLib_TestMotor: " + mName; }
 
+        //uhhhhh no
+        public void setMotorType(MotorConfigurationType type) {}
 
+        public MotorConfigurationType getMotorType() { return null; }
     }
 
     // a dummy Servo that just logs commands we send to it --

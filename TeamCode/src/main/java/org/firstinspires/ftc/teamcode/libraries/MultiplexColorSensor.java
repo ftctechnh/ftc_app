@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
  *
  * Partially based on:
  * https://github.com/OliviliK/FTC_Library/blob/master/TCS34725_ColorSensor.java
- */
+
 public class MultiplexColorSensor {
 
     // Registers
@@ -54,7 +54,7 @@ public class MultiplexColorSensor {
      * @param ports        Out ports on multiplexer with color sensors attached
      * @param milliSeconds Integration time in milliseconds
      * @param gain         Gain (GAIN_1X, GAIN_4X, GAIN_16X, GAIN_60X)
-     */
+
     public MultiplexColorSensor(HardwareMap hardwareMap,
                                 String muxName,
                                 String colorName,
@@ -87,7 +87,7 @@ public class MultiplexColorSensor {
     /**
      * Set the integration time on all the color sensors
      * @param milliSeconds Time in millseconds
-     */
+
     public void setIntegrationTime(double milliSeconds) {
         int val = integrationByte(milliSeconds);
 
@@ -117,7 +117,7 @@ public class MultiplexColorSensor {
      *
      * @param port Port on multiplexer of given color sensor
      * @return Array containing the Clear, Red, Green, and Blue color values
-     */
+
     public int[] getCRGB(int port) {
         // Write to I2C port on the multiplexer
         muxReader.write8(0x0, 1 << port, true);
@@ -133,3 +133,4 @@ public class MultiplexColorSensor {
         return crgb;
     }
 }
+*/
