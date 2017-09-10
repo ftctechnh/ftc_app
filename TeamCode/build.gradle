@@ -11,6 +11,6 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 dependencies {
-    compile project(':openCVLibrary310dev')
+    compile project(':openCVLibrary330')
     compile project(':MPChartLib')
 }

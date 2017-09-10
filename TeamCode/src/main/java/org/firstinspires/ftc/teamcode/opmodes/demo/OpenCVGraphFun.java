@@ -33,7 +33,7 @@ public class OpenCVGraphFun extends OpenCVLib {
 
     private int[] yValStore = new int[3];
 
-    private final RelativeLayout layout = FtcRobotControllerActivity.getGraphLayout();
+    private final RelativeLayout layout = hardwareMap.appContext.getResources().getIdentifier();
     private LineChart chart;
 
     private LinkedList<Entry> dataAngle = new LinkedList<Entry>();
