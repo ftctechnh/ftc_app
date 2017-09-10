@@ -2,16 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.qualcomm.ftcrobotcontroller"
-          android:versionCode="19"
-          android:versionName="2.62">
+          android:versionCode="24"
+          android:versionName="3.4">
+
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
   <application
     android:allowBackup="true"
     android:largeHeap="true"
     android:icon="@drawable/ic_launcher"
     android:label="@string/app_name"
-    android:theme="@style/AppTheme" >
+    android:theme="@style/AppThemeRedRC" >
 
+    <!-- The main robot controller activity -->
     <activity
       android:name="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
       android:configChanges="orientation|screenSize"
@@ -19,8 +22,8 @@
       android:launchMode="singleTask" >
 
       <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
+        <action android:name="android.intent.action.MAIN" />
       </intent-filter>
 
       <intent-filter>
@@ -32,6 +35,7 @@
         android:resource="@xml/device_filter" />
     </activity>
 
+    <!-- The robot controller service in which most of the robot functionality is managed -->
     <service
       android:name="com.qualcomm.ftccommon.FtcRobotControllerService"
       android:enabled="true" />
