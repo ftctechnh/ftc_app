@@ -136,6 +136,8 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         colorSensor1.enableLed(false);
         colorSensor2.enableLed(false);
 
+        opModeIsActive();
+
         frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
 //        leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
