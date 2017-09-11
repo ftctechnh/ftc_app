@@ -1,4 +1,4 @@
-# Relic Recovery Robot Controller App [![Build Status](https://travis-ci.org/MICDSRobotics/RelicRecovery.svg?branch=master)](https://travis-ci.org/MICDSRobotics/RelicRecovery) [![MIT License][license-badge]](LICENSE.md)
+# Relic Recovery Robot Controller App [![Build Status](https://travis-ci.org/MICDSRobotics/RelicRecovery.svg?branch=master)](https://travis-ci.org/MICDSRobotics/RelicRecovery)
 ## First Tech Competition 2017-2018 Season
 
 *Currently using version 3.4 of the ftc_app (built on 17.09.06)*
