@@ -36,28 +36,32 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.Image;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-
 import org.firstinspires.ftc.teamcode._Libs.VuforiaLib_FTC2016;
+import org.firstinspires.ftc.teamcode._Libs.VuforiaLib_FTC2017;
 
 import java.nio.ByteBuffer;
+
+import static org.firstinspires.ftc.teamcode._Libs.VuforiaLib_FTC2017.formatPosition;
 
 /**
  * This OpMode illustrates the basics of using the VuforiaLib_FTC2016 library to determine
  * positioning and orientation of robot on the FTC field.
  */
 
-@Autonomous(name="Test: Vuforia Navigation Test 1", group ="Test")
+@Autonomous(name="Test: Vuforia Navigation Test 2", group ="Test")
 //@Disabled
-public class VuforiaNavigationTest1 extends OpMode {
+public class VuforiaNavigationTest2 extends OpMode {
 
-    VuforiaLib_FTC2016 mVLib;
+    VuforiaLib_FTC2017 mVLib;
 
     @Override public void init() {
         /**
-         * Start up Vuforia using VuforiaLib_FTC2016
+         * Start up Vuforia using VuforiaLib_FTC2017
          */
-        mVLib = new VuforiaLib_FTC2016();
+        mVLib = new VuforiaLib_FTC2017();
         mVLib.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
     }
 
@@ -69,10 +73,43 @@ public class VuforiaNavigationTest1 extends OpMode {
 
     @Override public void loop()
     {
-        mVLib.loop(true);       // update location info and do debug telemetry
+        mVLib.loop();       // update recognition info
+
+        RelicRecoveryVuMark vuMark = mVLib.getVuMark();
+
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+            /* Found an instance of the template. In the actual game, you will probably
+             * loop until this condition occurs, then move on to act accordingly depending
+             * on which VuMark was visible. */
+            telemetry.addData("VuMark", "%s visible", vuMark);
+
+            /* For fun, we also show the navigational pose data. In the Relic Recovery game,
+             * it is unlikely that you will be able to act on this pose information,
+             * since there are multiple copies of the same sign in different locations. */
+            OpenGLMatrix lastLocation = mVLib.getLastLocation();
+
+            /**
+             * Provide feedback as to where the robot was last located (if we know).
+             */
+            if (mVLib.haveLocation())
+                telemetry.addData("Position:", VuforiaLib_FTC2017.formatPosition(lastLocation));
+            else
+                telemetry.addData("Position:", "Unknown");
+            if (mVLib.haveHeading())
+                telemetry.addData("Orientation:", VuforiaLib_FTC2017.formatOrientation(lastLocation));
+            else
+                telemetry.addData("Orientation:", "Unknown");
+        }
+        else {
+            telemetry.addData("VuMark", "not visible");
+        }
+
+        // report the current recognized sign
 
         // test image access through Vuforia
         //
+        /*
         VuforiaLocalizer.CloseableFrame f = mVLib.getFrame();
         if (f != null)
         {
@@ -91,8 +128,8 @@ public class VuforiaNavigationTest1 extends OpMode {
                 }
             }
         }
-
         mVLib.releaseFrame(); //
+        */
     }
 
     @Override public void stop()
