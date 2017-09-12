@@ -3,7 +3,7 @@ package org.firstinspires.ftc.team9853;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeMeta;
+//import com.qualcomm.robotcore.eventloop.opmode.OpModeMeta; //FIXME: idk where OpModeMeta went
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import java.io.File;
@@ -36,16 +36,16 @@ public class CustomRegistry {
             String opModeName = clazz.getSimpleName();
 
             // red
-            manager.register(
-                    new OpModeMeta("Red: " + opModeName, OpModeMeta.Flavor.AUTONOMOUS, groupName),
-                    clazz.getConstructor(Boolean.class).newInstance(true)
-            );
+//            manager.register(
+//                    new OpModeMeta("Red: " + opModeName, OpModeMeta.Flavor.AUTONOMOUS, groupName),
+//                    clazz.getConstructor(Boolean.class).newInstance(true)
+//            ); // FIXME: idk where OpModeMeta went
 
             // blue
-            manager.register(
-                    new OpModeMeta("Blue: " + opModeName, OpModeMeta.Flavor.AUTONOMOUS, groupName),
-                    clazz.getConstructor(Boolean.class).newInstance(false)
-            );
+//            manager.register(
+//                    new OpModeMeta("Blue: " + opModeName, OpModeMeta.Flavor.AUTONOMOUS, groupName),
+//                    clazz.getConstructor(Boolean.class).newInstance(false)
+//            ); // FIXME: idk where OpModeMeta went
         }
     }
 
