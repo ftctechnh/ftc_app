@@ -51,7 +51,7 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 
 ### Version 3.2 (built on 17.08.02)
 
-This version of the software introduces the "OnBot Java" Development Tool.  Similar to the FTC Blocks Development Tool, the FTC OnBot Java Development Tool allows a user to create, edit and build op modes dynamically using only a web browser, and does NOT need Android Studio.
+This version of the software introduces the "OnBot Java" Development Tool.  Similar to the FTC Blocks Development Tool, the javascript-based FTC OnBot Java Development Tool allows a user to create, edit and build op modes dynamically using only a web browser, and does NOT need Android Studio.
 
 The OnBot Java Development Tool is an integrated development environment (IDE) that is served up by the Robot Controller.  Op modes are created and edited using a browser.  Op modes are saved on the Robot Controller Android device directly.
 
