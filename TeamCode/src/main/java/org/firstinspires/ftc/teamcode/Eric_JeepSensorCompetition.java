@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+//package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by Eric on 8/28/2017.
- */
+
 @TeleOp (name="EricJeepSensor", group="Test_JeepSensor")
 @Disabled
 public class Eric_JeepSensorCompetition extends LinearOpMode{
@@ -31,3 +31,4 @@ public class Eric_JeepSensorCompetition extends LinearOpMode{
 
     }
 }
+*/
