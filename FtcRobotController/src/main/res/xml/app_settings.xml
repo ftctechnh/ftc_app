@@ -2,7 +2,7 @@
 
 <!--
 
-preferences.xml in FtcRobotController
+app_settings.xml in FtcRobotController
 
 Copyright (c) 2014, 2015 Qualcomm Technologies Inc
 
@@ -38,11 +38,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 See https://developer.android.com/guide/topics/ui/settings.html
 -->
 
-<PreferenceScreen
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context=".FtcRobotControllerActivity"
-    >
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  tools:context=".FtcRobotControllerActivity">
 
   <PreferenceCategory
     android:title="@string/prefcat_configure_robot">
@@ -52,6 +51,15 @@ See https://developer.android.com/guide/topics/ui/settings.html
         android:summary="@string/prefedit_device_name_summary_rc"
         android:key="@string/pref_device_name"
         android:defaultValue=""
+        />
+
+    <org.firstinspires.ftc.robotcore.internal.ui.ColorListPreference
+        android:title="@string/prefedit_app_theme_rc"
+        android:summary="@string/prefedit_app_theme_summary_rc"
+        android:key="@string/pref_app_theme"
+        android:entries="@array/app_theme_names"
+        android:entryValues="@array/app_theme_tokens"
+        app:colors="@array/app_theme_colors"
         />
 
     <SwitchPreference
@@ -65,7 +73,10 @@ See https://developer.android.com/guide/topics/ui/settings.html
         android:title="@string/titleAdvancedRCSettings"
         android:summary="@string/summaryAdvancedRCSettings"
         android:key="@string/pref_launch_advanced_rc_settings">
-        <intent android:action="com.qualcomm.ftccommon.FtcAdvancedRCSettingsActivity.intent.action.Launch"/>
+        <intent
+            android:targetPackage="@string/packageName"
+            android:targetClass="com.qualcomm.ftccommon.FtcAdvancedRCSettingsActivity"
+            />
     </PreferenceScreen>
 
     <PreferenceScreen
@@ -73,7 +84,7 @@ See https://developer.android.com/guide/topics/ui/settings.html
         android:summary="@string/prefedit_view_logs_summary"
         android:key="@string/pref_launch_viewlogs">
       <intent
-        android:action="com.qualcomm.ftccommon.ViewLogsActivity.intent.action.Launch"
+        android:targetPackage="@string/packageName"
         android:targetClass="com.qualcomm.ftccommon.ViewLogsActivity" />
     </PreferenceScreen>
 
