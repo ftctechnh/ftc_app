@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
              functions to reduce redundancies in other programs.
  */
 
-public class Holonomic_Hardware_Map {
+public class Holonomic_Hardware {
 
     //Declaring variables
     public DcMotor fleft, fright, bleft, bright;
@@ -28,7 +28,7 @@ public class Holonomic_Hardware_Map {
     private Telemetry telemetry;
 
     //Constructor; Put program's hardwaremap first, then telemetry,  then put true if gyro will be used or false if it won't
-    public Holonomic_Hardware_Map(HardwareMap hwmap, Telemetry telem, boolean usesGyro){
+    public Holonomic_Hardware(HardwareMap hwmap, Telemetry telem, boolean usesGyro){
 
         hwMap = hwmap;
         telemetry = telem;

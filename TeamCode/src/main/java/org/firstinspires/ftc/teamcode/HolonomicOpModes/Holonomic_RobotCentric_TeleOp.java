@@ -21,16 +21,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name = "Holonomic Robot-Centric Tele-Op", group = "holonomic")
-public class Holonomic_Robot_Centric_Tele_Op extends OpMode {
+public class Holonomic_RobotCentric_TeleOp extends OpMode {
 
-    Holonomic_Hardware_Map robot;
+    Holonomic_Hardware robot;
 
     //Array for pivoting(fl = 0, fr = 1, bl = 2, br = 3)
     float[] pivoting = new float[4];
 
     @Override
     public void init (){
-        robot = new Holonomic_Hardware_Map(hardwareMap, telemetry, false);
+        robot = new Holonomic_Hardware(hardwareMap, telemetry, false);
     }
 
     @Override

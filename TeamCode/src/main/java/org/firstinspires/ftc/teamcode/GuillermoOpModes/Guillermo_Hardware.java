@@ -1,7 +1,10 @@
-package org.firstinspires.ftc.teamcode.GarbageRobotOpModes;
+package org.firstinspires.ftc.teamcode.GuillermoOpModes;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /*
@@ -12,17 +15,21 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
              functions to reduce redundancies in other programs.
  */
 
-public class Garbage_Hardware_Map {
+public class Guillermo_Hardware {
 
     //Declaring variables
-    public DcMotor fleft, fright, bleft, bright, fleckerino;
-    public float dp = .3f; //Drive Power (range = 0-1)
-    public float shootPower = 1f; //Flicker Power (range = 0-1)
+    public DcMotor fleft, fright, bleft, bright;
+    public Servo lub, rub;
+    public float drivePower = .3f; //Drive Power (range = 0-1)
+    public float OUTSIDE_SERVO_POSITION = .2f;
+    public float INSIDE_SERVO_POSITION = .8f;
+
+    public ElapsedTime time = new ElapsedTime();
     private HardwareMap hwMap;
     private Telemetry telemetry;
 
     //Constructor; Put program's hardwaremap first, then telemetry. Call in init.
-    public Garbage_Hardware_Map(HardwareMap hwmap, Telemetry telem){
+    public Guillermo_Hardware(HardwareMap hwmap, Telemetry telem){
         //Takes telemetry and hardwaremap from opmode for use in this program
         hwMap = hwmap;
         telemetry = telem;
@@ -33,12 +40,15 @@ public class Garbage_Hardware_Map {
 
         //Setting up drive motors
         fleft = hwMap.dcMotor.get("fleft");
-        fright = hwMap.dcMotor.get("fright");
         bleft = hwMap.dcMotor.get("bleft");
+        fright = hwMap.dcMotor.get("fright");
         bright = hwMap.dcMotor.get("bright");
-        fleckerino = hwMap.dcMotor.get("fleckerino");
-        fleft.setDirection(DcMotor.Direction.REVERSE);
-        bleft.setDirection(DcMotor.Direction.REVERSE);
+
+        fright.setDirection(DcMotor.Direction.REVERSE);
+        bright.setDirection(DcMotor.Direction.REVERSE);
+
+        lub = hwMap.servo.get("lub");
+        rub = hwMap.servo.get("rub");
 
         //Alerts user that initialization is done
         telemetry.addData("Ready to go", true);
@@ -46,17 +56,17 @@ public class Garbage_Hardware_Map {
     }
 
     //Function to reduce redundancies when driving the robot
-    public void drive(float left, float right) {
-        fleft.setPower(ClipValue(left));
-        fright.setPower(ClipValue(right));
-        bleft.setPower(ClipValue(left));
-        bright.setPower(ClipValue(right));
+    public void drive(float l, float r) {
+        fleft.setPower(ClipValue(l));
+        fright.setPower(ClipValue(r));
+        bleft.setPower(ClipValue(l));
+        bright.setPower(ClipValue(r));
     }
 
     //Makes sure the motor value doesnt go over the desired power
     float ClipValue(float value) {
-        if(value > dp || value < - dp)
-            return ((Math.abs(value) / value) * dp);
+        if(value > drivePower || value < - drivePower)
+            return ((Math.abs(value) / value) * drivePower);
         else
             return value;
     }

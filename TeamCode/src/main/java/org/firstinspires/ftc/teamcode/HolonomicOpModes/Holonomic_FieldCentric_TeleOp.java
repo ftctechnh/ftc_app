@@ -31,16 +31,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 @Disabled
 @TeleOp(name = "Holonomic Field-Centric Tele-Op", group = "holonomic")
-public class Holonomic_Field_Centric_Tele_Op extends OpMode {
+public class Holonomic_FieldCentric_TeleOp extends OpMode {
 
-    Holonomic_Hardware_Map robot;
+    Holonomic_Hardware robot;
     float fieldCentricAngle = 0; //Controls the field centric angle, for lack of a better term
     float desiredAngle = 0; //Angle the robot should be at
     boolean isTurning = false; //Whether the robot is being turned with the triggers
 
     @Override
     public void init (){
-        robot = new Holonomic_Hardware_Map(hardwareMap, telemetry, true);
+        robot = new Holonomic_Hardware(hardwareMap, telemetry, true);
     }
 
     @Override
