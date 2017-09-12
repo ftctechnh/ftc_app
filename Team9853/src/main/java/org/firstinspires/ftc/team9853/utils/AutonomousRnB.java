@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team9853;
+package org.firstinspires.ftc.team9853.utils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,5 +17,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutonomousRnB {
     String name() default "";
-    String group() default "";
+    String group() default "Default";
 }
