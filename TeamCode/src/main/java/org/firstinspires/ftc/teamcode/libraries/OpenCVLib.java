@@ -32,9 +32,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by Noah on 11/10/2016.
  */
 
-public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.CvCameraViewListener2{
+public abstract class OpenCVLib extends OpenCVLoad implements CameraBridgeViewBase.CvCameraViewListener2{
 
-    public static final String cvTAG = "OpenCVInit";
+    public static final String cvTAG = "OpenCVCamInit";
 
     private CameraBridgeViewBase mOpenCvCameraView;
 
@@ -50,36 +50,11 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
         mView = view;
     }
 
+    @Override
     public void initOpenCV(){
+        super.initOpenCV();
 
         if(mView == null) mView = ((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.image_manipulations_activity_surface_view);
-
-        Log.i("OPENCV", hardwareMap.appContext.toString());
-
-        BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(hardwareMap.appContext) {
-            @Override
-            public void onManagerConnected(int status) {
-                switch (status) {
-                    case LoaderCallbackInterface.SUCCESS: {
-                    }
-                    break;
-                    default: {
-                        super.onManagerConnected(status);
-                    }
-                    break;
-                }
-            }
-        };
-
-        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        if (!OpenCVLoader.initDebug()) {
-            RobotLog.vv(cvTAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, hardwareMap.appContext, mLoaderCallback);
-        } else {
-            RobotLog.vv(cvTAG, "OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
 
         mOpenCvCameraView = (CameraBridgeViewBase) mView;
         //mOpenCvCameraView.setAlpha(0.0f);
@@ -88,6 +63,7 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
+    @Override
     public void stopOpenCV(){
         Runnable mCameraStop = new Runnable() {
             @Override

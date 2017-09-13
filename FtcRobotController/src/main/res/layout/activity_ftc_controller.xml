@@ -183,10 +183,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:orientation="vertical" />
 
       <LinearLayout
-          android:id="@+id/cameraMonitorViewId"
+        android:id="@+id/cameraMonitorViewId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+
+      <ImageView
+          android:id="@+id/OpenCVOverlay"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:orientation="vertical" />
+          android:orientation="vertical"
+          android:alpha="0"/>
 
     </RelativeLayout>
 
