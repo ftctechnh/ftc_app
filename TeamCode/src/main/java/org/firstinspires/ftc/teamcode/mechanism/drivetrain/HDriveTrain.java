@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.mechanism.drivetrain;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-/**
- * Created by daniel on 9/10/17.
- */
-
 public class HDriveTrain implements IDirectionalDriveTrain {
     @Override
     public void directionalDrive(double speedX, double speedY, double rotationSpeed, int targetDistance) {

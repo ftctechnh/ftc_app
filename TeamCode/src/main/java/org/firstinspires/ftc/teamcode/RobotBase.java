@@ -12,10 +12,6 @@ import org.firstinspires.ftc.teamcode.mechanism.drivetrain.IDirectionalDriveTrai
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.IDriveTrain;
 
 /**
- * Created by daniel on 9/9/17.
- */
-
-/**
  * This class implements general algorithms that aren't specific to any particular FTC season.
  * The dependencies of this class are injected as abstract interfaces which all extend
  * {@link org.firstinspires.ftc.teamcode.mechanism.IMechanism}. As such, this
