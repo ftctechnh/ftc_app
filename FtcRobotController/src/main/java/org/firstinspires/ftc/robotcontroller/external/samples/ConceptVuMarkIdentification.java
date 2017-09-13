@@ -31,6 +31,7 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.vuforia.Image;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -45,6 +46,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import java.util.concurrent.BlockingQueue;
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -70,6 +73,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class ConceptVuMarkIdentification extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
+
+    private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
 
     OpenGLMatrix lastLocation = null;
 
@@ -129,6 +134,10 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
 
         relicTrackables.activate();
 
+        this.vuforia.setFrameQueueCapacity(1);
+        this.ray = this.vuforia.getFrameQueue();
+
+
         while (opModeIsActive()) {
 
             /**
@@ -172,11 +181,44 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
             }
 
+            try {
+                VuforiaLocalizer.CloseableFrame frame = ray.take();
+                telemetry.addData("frame", frame.getNumImages() + " images");
+                for (int i = 0; i < frame.getNumImages(); i++) {
+                    Image temp = frame.getImage(i);
+                    telemetry.addData("image #" + i, "type: %d width: %d", temp.getFormat(), temp.getBufferWidth());
+                }
+                frame.close();
+            }
+            catch (InterruptedException e) {
+                //oops
+            }
+
             telemetry.update();
         }
     }
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
+
+    private class GetImg extends Thread {
+        @Override
+        public void run() {
+            try {
+                while(true) {
+                    VuforiaLocalizer.CloseableFrame frame = ray.take();
+                    telemetry.addData("frame", frame.getNumImages() + " images");
+                    for (int i = 0; i < frame.getNumImages(); i++) {
+                        Image temp = frame.getImage(i);
+                        telemetry.addData("image #" + i, "type: ", temp.getFormat() + ", width:" + temp.getBufferHeight());
+                    }
+                }
+            }
+            catch (InterruptedException e) {
+                //oops
+            }
+        }
+
     }
 }
