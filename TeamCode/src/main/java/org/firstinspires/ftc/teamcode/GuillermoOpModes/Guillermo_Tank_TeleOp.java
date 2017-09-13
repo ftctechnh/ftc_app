@@ -22,6 +22,12 @@ public class Guillermo_Tank_TeleOp extends OpMode {
         else
             robot.drivePower = 0.3f;
 
+        //Moves the servos when a or b is pressed
+        if(gamepad1.a)
+            robot.grabGlyph();
+        else if(gamepad1.b)
+            robot.releaseGlyph();
+
         //Drives robot based on joysicks in a tank drive fashion
         robot.drive(- gamepad1.left_stick_y * robot.drivePower, - gamepad1.right_stick_y * robot.drivePower);
 
@@ -30,6 +36,8 @@ public class Guillermo_Tank_TeleOp extends OpMode {
         telemetry.addData("Right Joystick:", gamepad1.right_stick_y);
         telemetry.addData("Drive Power:", robot.drivePower);
         telemetry.addData("Ultra Turbo Mode Activated:", gamepad1.right_bumper && gamepad1.left_bumper);
-        telemetry.addData("Time:", robot.time);
+        telemetry.addData("Left Servo Position:", robot.lub.getPosition());
+        telemetry.addData("Right Servo Position:", robot.rub.getPosition());
+        telemetry.addData("Elapsed Time:", robot.time);
     }
 }

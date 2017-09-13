@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.GuillermoOpModes;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -44,6 +45,7 @@ public class Guillermo_Hardware {
         fright = hwMap.dcMotor.get("fright");
         bright = hwMap.dcMotor.get("bright");
 
+        fleft.setDirection(DcMotor.Direction.REVERSE);
         fright.setDirection(DcMotor.Direction.REVERSE);
         bright.setDirection(DcMotor.Direction.REVERSE);
 
@@ -61,6 +63,16 @@ public class Guillermo_Hardware {
         fright.setPower(ClipValue(r));
         bleft.setPower(ClipValue(l));
         bright.setPower(ClipValue(r));
+    }
+
+    public void grabGlyph() {
+        lub.setPosition(INSIDE_SERVO_POSITION);
+        rub.setPosition(INSIDE_SERVO_POSITION);
+    }
+
+    public void releaseGlyph() {
+        lub.setPosition(OUTSIDE_SERVO_POSITION);
+        rub.setPosition(OUTSIDE_SERVO_POSITION);
     }
 
     //Makes sure the motor value doesnt go over the desired power
