@@ -16,6 +16,7 @@ public class HardwareBACONbot {
     public DcMotor motor = null;
     public Servo servo = null;
     public ColorSensor colorSensor = null;
+    public TouchSensor touchSensor = null;
     public boolean enableLed = true;
 
     /* local OpMode members. */
@@ -33,9 +34,10 @@ public class HardwareBACONbot {
         hwMap = ahwMap;
 
         // Define and Initialize Hardware
-        motor = hwMap.dcMotor.get("FL");
-        colorSensor = hwMap.colorSensor.get("CS");
-        servo = hwMap.servo.get("GS");
+        motor = hwMap.dcMotor.get("motorGuy");
+        colorSensor = hwMap.colorSensor.get("colorSensor");
+        servo = hwMap.servo.get("servo0");
+        touchSensor = hwMap.touchSensor.get("touchSensor");
 
         // Set all hardware to default position
         motor.setPower(0);
