@@ -12,7 +12,7 @@ import org.firstinspires.ftc.team9853.utils.AutonomousRnB;
  * @Last Modified by: storm
  * @Last Modified time: 9/3/2017
  */
-@AutonomousRnB(name = "Auto Test")
+//@AutonomousRnB(name = "Auto Test")
 public class AutoTest extends LinearOpMode {
     public AutoTest(boolean isRedTeam) {
 
