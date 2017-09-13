@@ -37,7 +37,12 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -55,16 +60,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 
 @TeleOp(name="TeleopTest", group="Pushbot")
-
 public class TeleopTest extends OpMode{
 
     /* Declare OpMode members. */
     TestTeleopHardware robot       = new TestTeleopHardware(); // use the class created to define a Pushbot's hardware
     float hsvValues[] = {0F,0F,0F};
-                                                         // could also use HardwarePushbotMatrix class.
-    //double          clawOffset  = 0.0 ;                  // Servo mid position
-   // final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
+    VuforiaLocalizer vuforia;
+    VuforiaTrackable relicTemplate;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -76,6 +79,18 @@ public class TeleopTest extends OpMode{
          */
         robot.init(hardwareMap);
         robot.color.enableLed(true);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "ARBXEdT/////AAAAGY2Q5MtVQEHQmwvm8X0bY7J/9Zf721jAIWZEpecl4azd6rvsEoabTso95SFlfWxAZxCd/AhM733sVVxYWDr+6Nwe02C5aEukRUwDpoP/ONoq2cBBwiQ/GuXiFDB7rClbUW0YPmmhVqMdJrV3yX5HJNW3aLD0vHx6udXXMoECsnlmQkBXy5TLjrNoKA4K7+YojSCjuWmnIRw3LcKYmijaXvcfpeW7MHX5j5SsZ3MDT6F84lNeE/S4EOSTX4Ii65IGYjkfMH4PQ0iCaV2wOPNP8u8vUEH+wvweovKcPiS4LHMF3v+w8C9ksn+gpeJU+aq3tDJ+hgsQXykgthAWiyyzB+DYp3ciP3RPOEGojX1Pu/RO";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -130,8 +145,18 @@ public class TeleopTest extends OpMode{
 
         //robot.servo1.setPosition((right/2)+.5);
 
-        // Send telemetry message to signify robot running;
-  //      telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+            telemetry.addData("VuMark", "%s visible", vuMark);
+        } else {
+            telemetry.addData("Vumark ", "Not Found");
+        }
+
+        // ALL THE FREAKING TELEMETRY IN OUR TELEOP THERES A LOT
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addLine()
