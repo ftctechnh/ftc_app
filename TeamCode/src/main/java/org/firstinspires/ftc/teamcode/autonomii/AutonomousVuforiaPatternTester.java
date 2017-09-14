@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.robotplus.autonomoushelper.VuforiaWrapper;
+import org.firstinspires.ftc.teamcode.robotplus.autonomous.VuforiaWrapper;
 
 @Autonomous(name = "VuforiaImageTester", group = "Autonomous")
-public class TestVuforiaAutonomous extends LinearOpMode {
+public class AutonomousVuforiaPatternTester extends LinearOpMode {
     private VuforiaWrapper identifier;
 
     public void runOpMode() {
