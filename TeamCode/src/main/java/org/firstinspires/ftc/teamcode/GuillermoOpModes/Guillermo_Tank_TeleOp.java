@@ -16,19 +16,21 @@ public class Guillermo_Tank_TeleOp extends OpMode {
 
     @Override
     public void loop (){
-        //Hold both bumpers for ultra-turbo mode
-        if(gamepad1.right_bumper && gamepad1.left_bumper)
+        //Hold left bumper for ultra-turbo mode
+        if(gamepad1.left_bumper)
             robot.drivePower = 1f;
         else
             robot.drivePower = 0.3f;
 
-        //Moves the servos when a or b is pressed
-        if(gamepad1.a)
+        //Moves the servos when triggers or the right bumper are pressed
+        if(gamepad1.right_trigger > 0)
             robot.grabGlyph();
-        else if(gamepad1.b)
+        else if(gamepad1.left_trigger > 0)
             robot.releaseGlyph();
+        else if(gamepad1.right_bumper)
+            robot.slightlyReleaseGlyph();
 
-        //Drives robot based on joysicks in a tank drive fashion
+        //Drives robot based on joysticks in a tank drive fashion
         robot.drive(- gamepad1.left_stick_y * robot.drivePower, - gamepad1.right_stick_y * robot.drivePower);
 
         //Telemetry
