@@ -48,14 +48,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
- * This is the Final Teleop!
- * This teleop will:
- * 1. Make the ball collector work while the left bumper is pressed
- * 2. Allow drive control of the robot by moving with the left joystick and rotating with the right joystick
- * using the left bumper to slow the robot,
- * 3. Make the ball shooter spin while the B button is pressed
- * 4. Move the servo to push position and neutral position using the Y button as a toggle
- * 5. Move the grabber to grab position as long as the X button is held
+ * Hey! This code runs a motor at full speed!
  */
 
 @TeleOp(name = "♥ A Running Motor ♥", group = "BACONbot")
@@ -81,6 +74,8 @@ public class RunningMotor  extends LinearOpMode {
 
         while (opModeIsActive()) {
             robot.motor.setPower(1);
+
+            telemetry.addLine("I'm rolling! :D");
         }
     }
 }
