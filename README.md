@@ -1,3 +1,3 @@
 # Rhomans FTC Repository
 
-Who knew?
+Welcome to the Rhomans FTC 2018 repository.
