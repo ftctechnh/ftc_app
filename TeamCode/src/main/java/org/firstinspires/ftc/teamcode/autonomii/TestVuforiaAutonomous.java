@@ -3,17 +3,17 @@ package org.firstinspires.ftc.teamcode.autonomii;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.robotplus.autonomoushelper.ImageIdentifier;
+import org.firstinspires.ftc.teamcode.robotplus.autonomoushelper.VuforiaWrapper;
 
 /**
  * Created by amigala on 9/9/2017.
  */
 
 public class TestVuforiaAutonomous extends LinearOpMode {
-    private ImageIdentifier identifier;
+    private VuforiaWrapper identifier;
 
     public void runOpMode() {
-        identifier = new ImageIdentifier(hardwareMap);
+        identifier = new VuforiaWrapper(hardwareMap);
 
         waitForStart();
 
