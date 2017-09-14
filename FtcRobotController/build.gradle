@@ -26,4 +26,5 @@ apply from: 'build.release.gradle'
 
 dependencies {
     compile files('/Users/rishabhbector/Desktop/Rhomans/ftc_app/libs/libtensorflow-1.3.0.jar')
+    compile files('C:/Users/TheSenate/Desktop/FTC_REPOSITORY/ftc_app/libs/libtensorflow-1.3.0.jar')
 }
