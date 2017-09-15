@@ -6,6 +6,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMUImpl;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -37,6 +40,7 @@ public class TestAutonHardware
     public DcMotor MotorRearLeft;
     public ColorSensor color = null;
     public Servo servo1 = null;
+    public BNO055IMU imu;
    // public ModernRoboticsI2cRangeSensor MRrange = null;
 
     public double heading = 0;
@@ -65,6 +69,18 @@ public class TestAutonHardware
 
         color = hwMap.get(ColorSensor.class, "MR_color");
 
+        imu = hwMap.get(BNO055IMU.class, "imu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu.initialize(parameters);
+
         // Set all motors to zero power
         MotorFrontRight.setPower(0);
         MotorFrontLeft.setPower(0);
@@ -77,6 +93,8 @@ public class TestAutonHardware
 //        MotorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        MotorRearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        MotorRearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        /* Android in-built gyro register */
 
         SensorEventListener orientationListener = new SensorEventListener() {
             @Override
