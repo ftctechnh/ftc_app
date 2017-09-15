@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomii;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.robotplus.autonomous.JewelAnalyzer;
+import org.firstinspires.ftc.teamcode.robotplus.autonomous.ColorSensorWrapper;
 
 /**
  * Tests the JewelIdentifier
@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.robotplus.autonomous.JewelAnalyzer;
  */
 public class AutonomousJewelChecker extends LinearOpMode {
 
-    private JewelAnalyzer analyzer;
+    private ColorSensorWrapper sensorWrapper;
 
     @Override
     public void runOpMode() {
         // init
-        this.analyzer = new JewelAnalyzer(hardwareMap);
+        this.sensorWrapper = new ColorSensorWrapper(hardwareMap);
 
         waitForStart();
 
@@ -24,7 +24,7 @@ public class AutonomousJewelChecker extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            telemetry.addData("Colors", this.analyzer.getFormattedTelemetryMessage());
+            telemetry.addData("Colors", this.sensorWrapper.getFormattedTelemetryMessage());
             telemetry.update();
         }
     }
