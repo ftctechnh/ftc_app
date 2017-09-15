@@ -20,13 +20,13 @@ public class AutonomousVuforiaPatternTester extends LinearOpMode {
         telemetry.addData("Status", "Ready");
         telemetry.update();
 
+        RelicRecoveryVuMark relicRecoveryVuMark;
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running");
             // run the opMode
-            RelicRecoveryVuMark relicRecoveryVuMark = RelicRecoveryVuMark.from(this.identifier.getLoader().getRelicTemplate());
+             relicRecoveryVuMark = RelicRecoveryVuMark.from(this.identifier.getLoader().getRelicTemplate());
 
             if (relicRecoveryVuMark != RelicRecoveryVuMark.UNKNOWN) {
-                telemetry.addData("Relic Visibility", relicRecoveryVuMark);
                 telemetry.addData("VuMark Column", relicRecoveryVuMark.name());
             }
 
