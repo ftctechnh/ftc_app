@@ -18,16 +18,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Guillermo_Hardware {
 
     //Declaring variables
-    public DcMotor fleft, fright, bleft, bright;
+    public DcMotor fleft, fright, bleft, bright, lift;
     public Servo lub, rub;
-    public float drivePower = .3f;
-    public float OPEN_SERVO_POSITION = .7f;
-    public float MIDDLE_SERVO_POSITION = 0.2f;
-    public float CLOSED_SERVO_POSITION = 0f;
-
-    public ElapsedTime time = new ElapsedTime();
+    public static final float DRIVE_POWER = .3f;
+    public static final float OPEN_SERVO_POSITION = .7f;
+    public static final float MIDDLE_SERVO_POSITION = 0.2f;
+    public static final float CLOSED_SERVO_POSITION = 0f;
     private HardwareMap hwMap;
     private Telemetry telemetry;
+
+    float currentDrivePower = DRIVE_POWER;
+    public ElapsedTime time = new ElapsedTime();
+
 
     //Constructor; Put program's hardwaremap first, then telemetry. Call in init.
     public Guillermo_Hardware(HardwareMap hwmap, Telemetry telem){
@@ -44,6 +46,7 @@ public class Guillermo_Hardware {
         bleft = hwMap.dcMotor.get("bleft");
         fright = hwMap.dcMotor.get("fright");
         bright = hwMap.dcMotor.get("bright");
+        lift = hwMap.dcMotor.get("lift");
 
         fleft.setDirection(DcMotor.Direction.REVERSE);
         fright.setDirection(DcMotor.Direction.REVERSE);
@@ -79,6 +82,7 @@ public class Guillermo_Hardware {
         lub.setPosition(MIDDLE_SERVO_POSITION);
         rub.setPosition(MIDDLE_SERVO_POSITION);
     }
+
     //Fully opens the nubs
     public void releaseGlyph() {
         lub.setPosition(OPEN_SERVO_POSITION);
@@ -87,8 +91,8 @@ public class Guillermo_Hardware {
 
     //Makes sure the motor value doesn't go over the desired power
     float ClipValue(float value) {
-        if(value > drivePower || value < - drivePower)
-            return ((Math.abs(value) / value) * drivePower);
+        if(value > currentDrivePower || value < - currentDrivePower)
+            return ((Math.abs(value) / value) * currentDrivePower);
         else
             return value;
     }

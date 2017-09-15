@@ -16,28 +16,37 @@ public class Guillermo_Tank_TeleOp extends OpMode {
 
     @Override
     public void loop (){
-        //Hold left bumper for ultra-turbo mode
-        if(gamepad1.left_bumper)
-            robot.drivePower = 1f;
-        else
-            robot.drivePower = 0.3f;
-
-        //Moves the servos when triggers or the right bumper are pressed
+        //Hold right bumper to speed up and left to slow down (on first gamepad)
         if(gamepad1.right_trigger > 0)
-            robot.grabGlyph();
+            robot.currentDrivePower = robot.DRIVE_POWER + (1 - robot.DRIVE_POWER) * gamepad1.right_trigger;
         else if(gamepad1.left_trigger > 0)
+            robot.currentDrivePower = robot.DRIVE_POWER - (robot.DRIVE_POWER - .1f) * gamepad1.left_trigger;
+        else
+            robot.currentDrivePower = robot.DRIVE_POWER;
+
+        //Moves the servos when triggers or the right bumper are pressed on second gamepad
+        if(gamepad2.right_trigger > 0)
+            robot.grabGlyph();
+        else if(gamepad2.left_trigger > 0)
             robot.releaseGlyph();
-        else if(gamepad1.right_bumper)
+        else if(gamepad2.left_bumper)
             robot.slightlyReleaseGlyph();
 
-        //Drives robot based on joysticks in a tank drive fashion
-        robot.drive(- gamepad1.left_stick_y * robot.drivePower, - gamepad1.right_stick_y * robot.drivePower);
+        //Raises or lowers the lift when dpad on second gamepad is pressed
+        if(gamepad2.dpad_up)
+            robot.lift.setPower(1);
+        else if(gamepad2.dpad_down)
+            robot.lift.setPower(-1);
+        else
+            robot.lift.setPower(0);
+
+        //Drives robot based on first gamepad joysticks in a tank drive fashion
+        robot.drive(- gamepad1.left_stick_y * robot.currentDrivePower, - gamepad1.right_stick_y * robot.currentDrivePower);
 
         //Telemetry
         telemetry.addData("Left Joystick:", gamepad1.left_stick_y);
         telemetry.addData("Right Joystick:", gamepad1.right_stick_y);
-        telemetry.addData("Drive Power:", robot.drivePower);
-        telemetry.addData("Ultra Turbo Mode Activated:", gamepad1.right_bumper && gamepad1.left_bumper);
+        telemetry.addData("Drive Power:", robot.currentDrivePower);
         telemetry.addData("Left Servo Position:", robot.lub.getPosition());
         telemetry.addData("Right Servo Position:", robot.rub.getPosition());
         telemetry.addData("Elapsed Time:", robot.time);
