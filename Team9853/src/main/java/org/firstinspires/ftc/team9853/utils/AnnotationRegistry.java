@@ -40,7 +40,7 @@ public class AnnotationRegistry implements ClassFilter {
      * @param manager       the opmode manager
      * @throws IOException
      */
-//    @OpModeRegistrar
+    @OpModeRegistrar
     public static void register(OpModeManager manager) throws IOException {
         ClassManager classManager = ClassManager.getInstance();
         AnnotationRegistry registry = new AnnotationRegistry();

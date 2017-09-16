@@ -66,7 +66,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.*;
  */
 public class ConceptRegisterOpModes
 {
-    @OpModeRegistrar
+//    @OpModeRegistrar
     public static void registerMyOpModes(OpModeManager manager) {
       // Un-comment any line to enable that sample.
       // Or add your own lines to register your Team opmodes.
