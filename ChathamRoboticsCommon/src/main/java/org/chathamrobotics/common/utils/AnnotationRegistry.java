@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team9853.utils;
+package org.chathamrobotics.common.utils;
 
 import android.util.Log;
 
@@ -28,6 +28,7 @@ import java.util.ArrayList;
  * @Last Modified by: storm
  * @Last Modified time: 9/10/2017
  */
+
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class AnnotationRegistry implements ClassFilter {
     public static final String TAG = AnnotationRegistry.class.getSimpleName();
@@ -38,6 +39,10 @@ public class AnnotationRegistry implements ClassFilter {
         public static AnnotationRegistry theInstance = new AnnotationRegistry();
     }
 
+    /**
+     * Gets an instance of AnnotationRegistry
+     * @return the instance
+     */
     public static AnnotationRegistry getInstance() {
         return InstanceHolder.theInstance;
     }
@@ -55,6 +60,7 @@ public class AnnotationRegistry implements ClassFilter {
         registry.useAnnotation(AutonomousRnB.class, (Class<?> clazz) -> {
             try {
                 // ensure that the constructor exists
+                //noinspection unchecked
                 clazz.getConstructor(Boolean.TYPE);
 
                 return true;
@@ -145,6 +151,7 @@ public class AnnotationRegistry implements ClassFilter {
             if (! clazz.isAnnotationPresent(annotation)) return;
 
             if (filterer.filter(clazz)) {
+                //noinspection unchecked
                 annotatedOpModes.add((Class<OpMode>) clazz);
             }
         }

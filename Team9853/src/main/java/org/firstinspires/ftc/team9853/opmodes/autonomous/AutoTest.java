@@ -3,7 +3,7 @@ package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.team9853.utils.AutonomousRnB;
+import org.chathamrobotics.common.utils.AutonomousRnB;
 
 /*!
  * FTC_APP_2018
