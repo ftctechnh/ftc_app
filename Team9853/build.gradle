@@ -13,3 +13,10 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+
+android {
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}

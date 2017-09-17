@@ -15,12 +15,19 @@ import org.firstinspires.ftc.team9853.utils.AutonomousRnB;
  */
 @AutonomousRnB(name = "Auto Test")
 public class AutoTest extends LinearOpMode {
-    public AutoTest(boolean isRedTeam) {
+    private Boolean isRedTeam;
 
+    public AutoTest(boolean isRedTeam) {
+        this.isRedTeam = isRedTeam;
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
+        waitForStart();
 
+        while (opModeIsActive()) {
+            telemetry.addLine("Hello, World! I am " + (isRedTeam ? "Red" : "Blue"));
+            telemetry.update();
+        }
     }
 }

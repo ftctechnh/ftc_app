@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassFilter;
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
-import org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaClassLoader;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 
 import java.io.IOException;
@@ -31,53 +30,166 @@ import java.util.ArrayList;
  * @Last Modified time: 9/10/2017
  */
 public class AnnotationRegistry implements ClassFilter {
-    private static final String TAG = AnnotationRegistry.class.getSimpleName();
-    private static ArrayList<Class<OpMode>> annotatedClasses= new ArrayList();
+    public static final String TAG = AnnotationRegistry.class.getSimpleName();
+    private static final ArrayList<Class<OpMode>> annotatedClasses = new ArrayList();
+
+    private ArrayList<OpModeAnnotation> opModeAnnotations = new ArrayList<>();
+
+    private static class InstanceHolder {
+        public static AnnotationRegistry theInstance = new AnnotationRegistry();
+    }
+
+    public static AnnotationRegistry getInstance() {
+        return InstanceHolder.theInstance;
+    }
 
     /**
      * Register all of the opmodes using the custom annotations
      *
      * @param manager       the opmode manager
-     * @throws IOException
      */
     @OpModeRegistrar
-    public static void register(OpModeManager manager) throws IOException {
-        ClassManager classManager = ClassManager.getInstance();
-        AnnotationRegistry registry = new AnnotationRegistry();
+    public static void register(OpModeManager manager) {
+        AnnotationRegistry registry = getInstance();
 
-        classManager.registerFilter(registry);
+        // add annotations to use
+        registry.useAnnotation(AutonomousRnB.class, (Class clazz) -> {
+            try {
+                // ensure that the constructor exists
+                clazz.getConstructor(Boolean.TYPE);
+
+                return true;
+            } catch (Exception err) {
+                return false;
+            }
+        }, (Class<OpMode> clazz, OpModeManager opModeManager) -> {
+            String opModeName = getOpModeName(clazz);
+            String opModeGroup = getOpModeGroup(clazz);
+            Constructor<OpMode> constructor = clazz.getConstructor(Boolean.TYPE);
+
+            Log.d(TAG, "Registered \"" + opModeName + "\" opmode using AutonomousRnB");
+
+            manager.register(
+                    new OpModeMeta(opModeName + " (Red)", OpModeMeta.Flavor.AUTONOMOUS, opModeGroup),
+                    constructor.newInstance(true)
+            );
+
+            manager.register(
+                    new OpModeMeta(opModeName + " (Blue)", OpModeMeta.Flavor.AUTONOMOUS, opModeGroup),
+                    constructor.newInstance(false)
+            );
+        });
+
+        registry.doRegister(manager);
+    }
+
+    /**
+     * Preforms all of the opmode annotation's register and filter functions
+     *
+     * @param manager   the opmode manager
+     */
+    private void doRegister(OpModeManager manager) {
+        ClassManager classManager = ClassManager.getInstance();
+
+        classManager.registerFilter(getInstance());
 
         classManager.processAllClasses();
 
-        for (Class<OpMode> clazz : annotatedClasses) {
-            try {
-                if (clazz.isAnnotationPresent(AutonomousRnB.class)) {
-                    Annotation annotation = clazz.getAnnotation(AutonomousRnB.class);
-                    String opModeName = getOpModeName(clazz);
-                    String opModeGroup = getOpModeGroup(clazz);
-                    Constructor<OpMode> constructor = clazz.getConstructor(Boolean.TYPE);
+        for (OpModeAnnotation opModeAnnotation : opModeAnnotations) {
+            opModeAnnotation.doRegister(manager);
+        }
+    }
 
-                    Log.d(TAG, "Registered " + opModeName + " opmode using AutonomousRnB");
+    /**
+     * A filter function for annotated class
+     */
+    interface AnnotationFilterer {
+        boolean filter(Class clazz);
+    }
 
-                    manager.register(
-                            new OpModeMeta(opModeName + " (Red)", OpModeMeta.Flavor.AUTONOMOUS, opModeGroup),
-                            constructor.newInstance(true)
-                    );
+    /**
+     * A register function for annotated opmodes
+     */
+    interface AnnotatedOpModeRegister {
+        void register(Class<OpMode> clazz, OpModeManager manager) throws Exception;
+    }
 
-                    manager.register(
-                            new OpModeMeta(opModeName + " (Blue)", OpModeMeta.Flavor.AUTONOMOUS, opModeGroup),
-                            constructor.newInstance(false)
-                    );
+    /**
+     * Handles filtering and registration for a opmode annotation
+     */
+    private class OpModeAnnotation {
+        public Class<? extends Annotation> annotation;
+
+        private AnnotationFilterer filterer;
+        private AnnotatedOpModeRegister register;
+        private ArrayList<Class<OpMode>> annotatedOpModes = new ArrayList<>();
+
+        /**
+         * Creates an instance of OpModeAnnotation
+         * @param annotation    the annotation class
+         * @param filterer      the filter function
+         * @param registerer    the register function
+         */
+        public OpModeAnnotation(Class<? extends  Annotation> annotation, AnnotationFilterer filterer, AnnotatedOpModeRegister registerer) {
+            this.annotation = annotation;
+            this.filterer = filterer;
+            this.register = registerer;
+        }
+
+        /**
+         * Filters the class for the opmode annotation
+         *
+         * @param clazz the class to filter
+         */
+        public void doFilter(Class clazz) {
+            if (! clazz.isAnnotationPresent(annotation)) return;
+
+            if (filterer.filter(clazz)) {
+                annotatedOpModes.add(clazz);
+            }
+        }
+
+        /**
+         * Registers all opmodes using the annotation
+         *
+         * @param manager   the opmode manager
+         */
+        public void doRegister(OpModeManager manager) {
+            for (Class<OpMode> clazz : annotatedOpModes) {
+                try {
+                    register.register(clazz, manager);
+                } catch (Exception err) {
+                    reportOpModeConfigurationError("Encountered an error while registering '%s': %s",
+                            clazz.getSimpleName(), err.getStackTrace());
                 }
-            } catch (Exception err) {
-                reportOpModeConfigurationError("Encountered error while trying to instantiate class '%s': '%s'", clazz.getSimpleName(), err.getMessage());
             }
         }
     }
 
+    /**
+     * Tells AnnotationRegistry to use a opmode annotation
+     *
+     * @param annotation    the annotation
+     * @param filterer      the annotation filter function
+     * @param registerer    the opmode register function
+     */
+    public void useAnnotation(Class<? extends  Annotation> annotation, AnnotationFilterer filterer, AnnotatedOpModeRegister registerer) {
+        useAnnotation(new OpModeAnnotation(annotation, filterer, registerer));
+    }
+
+    /**
+     * Tells AnnotationRegistry to use a opmode annotation
+     *
+     * @param annotation    the opmode annotation
+     */
+    public void useAnnotation(OpModeAnnotation annotation) {
+        opModeAnnotations.add(annotation);
+    }
+
+
     @Override
     public void filterAllClassesStart() {
-        annotatedClasses.clear();
+        // Do nothing
     }
 
     /**
@@ -87,53 +199,58 @@ public class AnnotationRegistry implements ClassFilter {
      */
     @Override
     public void filterClass(Class clazz) {
-        if (! isSupportedAnnotation(clazz)) return;
         if (clazz.isAnnotationPresent(Disabled.class)) return;
 
-        // check that class only uses one of these annotations
-        if ((Boolean.compare(clazz.isAnnotationPresent(TeleOp.class), false)
-                + Boolean.compare(clazz.isAnnotationPresent(Autonomous.class), false)
-                + Boolean.compare(clazz.isAnnotationPresent(AutonomousRnB.class), false)
-        ) > 1) {
+        // check that class only uses one opmode annotation
+        int opModeAnnotationCount = Boolean.compare(clazz.isAnnotationPresent(TeleOp.class), false)
+                + Boolean.compare(clazz.isAnnotationPresent(Autonomous.class), false);
+
+        for (OpModeAnnotation opModeAnnotation : opModeAnnotations) {
+            if(clazz.isAnnotationPresent(opModeAnnotation.annotation)) opModeAnnotationCount ++;
+        }
+
+        if (opModeAnnotationCount == 0 ){
+            return;
+        } else if (opModeAnnotationCount > 1) {
             reportOpModeConfigurationError("'%s' class is annotated by multiple opmode annotations", clazz.getSimpleName());
             return;
         }
 
+        // ensure that the class is an opmode
         if (! ClassUtil.inheritsFrom(clazz, OpMode.class)) {
             reportOpModeConfigurationError("'%s' class doesn't inherit from the class 'OpMode'", clazz.getSimpleName());
             return;
         }
 
+        // ensure that the class is public
         if (! Modifier.isPublic(clazz.getModifiers())) {
             reportOpModeConfigurationError("'%s' class is not declared 'public'", clazz.getSimpleName());
             return;
         }
 
+        // validate opmode name
         String name = getOpModeName(clazz);
         if (name.equals(OpModeManager.DEFAULT_OP_MODE_NAME) || name.trim().equals("")) {
             reportOpModeConfigurationError("\"%s\" is not a legal OpMode name", name);
             return;
         }
 
-        if (! hasConstructor(clazz)) {
-            reportOpModeConfigurationError("'%s' class does not contain the necessary constructor", clazz.getSimpleName());
-            return;
+        // call filter functions
+        for (OpModeAnnotation opModeAnnotation : opModeAnnotations) {
+            if (clazz.isAnnotationPresent(opModeAnnotation.annotation)) {
+                opModeAnnotation.doFilter(clazz);
+            }
         }
-
-        annotatedClasses.add(clazz);
     }
 
     @Override
     public void filterAllClassesComplete() {
-        // nothing
+        // do nothing
     }
 
     @Override
     public void filterOnBotJavaClassesStart() {
-        for (Class<OpMode> clazz : annotatedClasses) {
-            if (OnBotJavaClassLoader.isOnBotJava(clazz))
-                annotatedClasses.remove(clazz);
-        }
+        // Do nothing
     }
 
     @Override
@@ -152,22 +269,12 @@ public class AnnotationRegistry implements ClassFilter {
      * @param format    the format string
      * @param args      the substring args
      */
-    public static void reportOpModeConfigurationError(String format, Object... args) {
+    private static void reportOpModeConfigurationError(String format, Object... args) {
         String message = String.format(format, args);
         // Show the message in the log
         Log.w(TAG, String.format("configuration error: %s", message));
         // Make the message appear on the driver station (only the first one will actually appear)
         RobotLog.setGlobalErrorMsg(message);
-    }
-
-    /**
-     * Check whether or not this class is using a annotation that is supported
-     *
-     * @param clazz the class to check
-     * @return      whether or not this class is using a annotation that is supported
-     */
-    private static Boolean isSupportedAnnotation(Class<OpMode> clazz) {
-        return clazz.isAnnotationPresent(AutonomousRnB.class);
     }
 
     /**
@@ -208,26 +315,5 @@ public class AnnotationRegistry implements ClassFilter {
         }
 
         return group;
-    }
-
-    /**
-     * Check whether or not the opmode has the required constructors
-     *
-     * @param clazz the opmode class
-     * @return      whether or not the opmode has the required constructors
-     */
-    private static Boolean hasConstructor(Class<OpMode> clazz) {
-        try {
-            if (clazz.isAnnotationPresent(AutonomousRnB.class)) {
-                // ensure that the constructor exists
-                clazz.getConstructor(Boolean.TYPE);
-
-                return true;
-            }
-
-            return false;
-        } catch (Exception err) {
-            return false;
-        }
     }
 }
