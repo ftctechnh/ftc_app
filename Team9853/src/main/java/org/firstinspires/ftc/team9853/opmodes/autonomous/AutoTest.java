@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.chathamrobotics.common.utils.AutonomousRnB;
 
-/**
+/*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
  * MIT License
@@ -14,6 +14,7 @@ import org.chathamrobotics.common.utils.AutonomousRnB;
  * @Last Modified time: 9/3/2017
  */
 @AutonomousRnB(name = "Auto Test")
+@SuppressWarnings("unused")
 public class AutoTest extends LinearOpMode {
     private Boolean isRedTeam;
 

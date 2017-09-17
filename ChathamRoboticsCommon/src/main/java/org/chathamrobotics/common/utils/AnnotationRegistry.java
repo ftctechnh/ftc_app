@@ -28,10 +28,10 @@ import java.util.ArrayList;
  * @Last Modified by: storm
  * @Last Modified time: 9/10/2017
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
+
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class AnnotationRegistry implements ClassFilter {
     public static final String TAG = AnnotationRegistry.class.getSimpleName();
-    private static final ArrayList<Class<OpMode>> annotatedClasses = new ArrayList<>();
 
     private ArrayList<OpModeAnnotation> opModeAnnotations = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public class AnnotationRegistry implements ClassFilter {
         AnnotationRegistry registry = getInstance();
 
         // add annotations to use
-        registry.useAnnotation(AutonomousRnB.class, (Class clazz) -> {
+        registry.useAnnotation(AutonomousRnB.class, (Class<?> clazz) -> {
             try {
                 // ensure that the constructor exists
                 //noinspection unchecked
@@ -68,8 +68,8 @@ public class AnnotationRegistry implements ClassFilter {
                 return false;
             }
         }, (Class<OpMode> clazz, OpModeManager opModeManager) -> {
-            String opModeName = getOpModeName(clazz);
-            String opModeGroup = getOpModeGroup(clazz);
+            String opModeName = registry.getOpModeName(clazz);
+            String opModeGroup = registry.getOpModeGroup(clazz);
             Constructor<OpMode> constructor = clazz.getConstructor(Boolean.TYPE);
 
             Log.d(TAG, "Registered \"" + opModeName + "\" opmode using AutonomousRnB");
@@ -109,7 +109,7 @@ public class AnnotationRegistry implements ClassFilter {
      * A filter function for annotated class
      */
     interface AnnotationFilterer {
-        boolean filter(Class clazz);
+        boolean filter(Class<?> clazz);
     }
 
     /**
@@ -146,12 +146,13 @@ public class AnnotationRegistry implements ClassFilter {
          *
          * @param clazz the class to filter
          */
+        @SuppressWarnings("unchecked")
         public void doFilter(Class clazz) {
             if (! clazz.isAnnotationPresent(annotation)) return;
 
             if (filterer.filter(clazz)) {
                 //noinspection unchecked
-                annotatedOpModes.add(clazz);
+                annotatedOpModes.add((Class<OpMode>) clazz);
             }
         }
 
@@ -208,8 +209,8 @@ public class AnnotationRegistry implements ClassFilter {
         if (clazz.isAnnotationPresent(Disabled.class)) return;
 
         // check that class only uses one opmode annotation
-        int opModeAnnotationCount = Boolean.compare(clazz.isAnnotationPresent(TeleOp.class), false)
-                + Boolean.compare(clazz.isAnnotationPresent(Autonomous.class), false);
+        int opModeAnnotationCount = (clazz.isAnnotationPresent(TeleOp.class) ? 1 : 0)
+                + (clazz.isAnnotationPresent(Autonomous.class) ? 1 : 0);
 
         for (OpModeAnnotation opModeAnnotation : opModeAnnotations) {
             if(clazz.isAnnotationPresent(opModeAnnotation.annotation)) opModeAnnotationCount ++;
@@ -236,7 +237,7 @@ public class AnnotationRegistry implements ClassFilter {
 
         // validate opmode name
         @SuppressWarnings("unchecked")
-        String name = getOpModeName(clazz);
+        String name = getOpModeName((Class<OpMode>) clazz);
         if (name.equals(OpModeManager.DEFAULT_OP_MODE_NAME) || name.trim().equals("")) {
             reportOpModeConfigurationError("\"%s\" is not a legal OpMode name", name);
             return;
@@ -285,13 +286,14 @@ public class AnnotationRegistry implements ClassFilter {
         RobotLog.setGlobalErrorMsg(message);
     }
 
+
     /**
      * Gets the name of the opmode
      *
      * @param clazz the opmode class
      * @return      the name of the opmode
      */
-    private static String getOpModeName(Class<OpMode> clazz) {
+    private String getOpModeName(Class<OpMode> clazz) {
         String name = clazz.getSimpleName();
 
         if (clazz.isAnnotationPresent(AutonomousRnB.class)) {
@@ -311,7 +313,7 @@ public class AnnotationRegistry implements ClassFilter {
      * @param clazz the opmode class
      * @return      the opmode's group
      */
-    private static String getOpModeGroup(Class<OpMode> clazz) {
+    private String getOpModeGroup(Class<OpMode> clazz) {
         String group = "";
 
         if (clazz.isAnnotationPresent(AutonomousRnB.class)) {
