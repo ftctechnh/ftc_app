@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team9853.utils;
+package org.chathamrobotics.common.utils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team9853.utils;
+package org.chathamrobotics.common.utils;
 
 import android.util.Log;
 
@@ -15,13 +15,12 @@ import org.firstinspires.ftc.robotcore.internal.opmode.ClassFilter;
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
-/**
+/*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
  * MIT License
@@ -29,9 +28,10 @@ import java.util.ArrayList;
  * @Last Modified by: storm
  * @Last Modified time: 9/10/2017
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class AnnotationRegistry implements ClassFilter {
     public static final String TAG = AnnotationRegistry.class.getSimpleName();
-    private static final ArrayList<Class<OpMode>> annotatedClasses = new ArrayList();
+    private static final ArrayList<Class<OpMode>> annotatedClasses = new ArrayList<>();
 
     private ArrayList<OpModeAnnotation> opModeAnnotations = new ArrayList<>();
 
@@ -39,6 +39,10 @@ public class AnnotationRegistry implements ClassFilter {
         public static AnnotationRegistry theInstance = new AnnotationRegistry();
     }
 
+    /**
+     * Gets an instance of AnnotationRegistry
+     * @return the instance
+     */
     public static AnnotationRegistry getInstance() {
         return InstanceHolder.theInstance;
     }
@@ -56,6 +60,7 @@ public class AnnotationRegistry implements ClassFilter {
         registry.useAnnotation(AutonomousRnB.class, (Class clazz) -> {
             try {
                 // ensure that the constructor exists
+                //noinspection unchecked
                 clazz.getConstructor(Boolean.TYPE);
 
                 return true;
@@ -145,6 +150,7 @@ public class AnnotationRegistry implements ClassFilter {
             if (! clazz.isAnnotationPresent(annotation)) return;
 
             if (filterer.filter(clazz)) {
+                //noinspection unchecked
                 annotatedOpModes.add(clazz);
             }
         }
@@ -229,6 +235,7 @@ public class AnnotationRegistry implements ClassFilter {
         }
 
         // validate opmode name
+        @SuppressWarnings("unchecked")
         String name = getOpModeName(clazz);
         if (name.equals(OpModeManager.DEFAULT_OP_MODE_NAME) || name.trim().equals("")) {
             reportOpModeConfigurationError("\"%s\" is not a legal OpMode name", name);
@@ -236,6 +243,7 @@ public class AnnotationRegistry implements ClassFilter {
         }
 
         // call filter functions
+        //noinspection Convert2streamapi
         for (OpModeAnnotation opModeAnnotation : opModeAnnotations) {
             if (clazz.isAnnotationPresent(opModeAnnotation.annotation)) {
                 opModeAnnotation.doFilter(clazz);
