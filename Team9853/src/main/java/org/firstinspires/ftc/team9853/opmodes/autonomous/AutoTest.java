@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.team9853;
+package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.team9853.utils.AutonomousRnB;
 
-/**
+/*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
  * MIT License
@@ -14,6 +14,7 @@ import org.firstinspires.ftc.team9853.utils.AutonomousRnB;
  * @Last Modified time: 9/3/2017
  */
 @AutonomousRnB(name = "Auto Test")
+@SuppressWarnings("unused")
 public class AutoTest extends LinearOpMode {
     private Boolean isRedTeam;
 
