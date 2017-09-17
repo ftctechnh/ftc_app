@@ -1,1 +1,1 @@
-apply from: "../teamcode.build.release.gradle"
+apply from: "../teamcode.dependencies.gradle"
