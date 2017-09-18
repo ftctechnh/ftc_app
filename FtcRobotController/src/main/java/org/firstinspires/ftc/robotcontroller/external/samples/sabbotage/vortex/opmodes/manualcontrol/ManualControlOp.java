@@ -1,12 +1,12 @@
 
-package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.manualcontrol;
+package org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.manualcontrol;
 
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.robot.Robot;
 
 
 public class ManualControlOp extends OpMode {

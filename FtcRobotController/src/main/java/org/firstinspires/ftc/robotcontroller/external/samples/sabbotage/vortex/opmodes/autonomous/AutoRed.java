@@ -29,17 +29,17 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous;
+package org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.StepInterface;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_Beacon;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_Strafe;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_StrafeAngle;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_Straight;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps.Step_TurnRight;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.StepInterface;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_Beacon;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_Strafe;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_StrafeAngle;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_Straight;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_TurnRight;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.robot.Robot;
 
 import java.util.ArrayList;
 

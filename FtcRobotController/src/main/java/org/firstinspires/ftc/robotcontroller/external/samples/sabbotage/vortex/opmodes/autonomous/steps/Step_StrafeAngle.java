@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.vortex.sabbotage.opmodes.autonomous.steps;
+package org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps;
 
 
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.robot.Robot;
 
 public class Step_StrafeAngle implements StepInterface {
 

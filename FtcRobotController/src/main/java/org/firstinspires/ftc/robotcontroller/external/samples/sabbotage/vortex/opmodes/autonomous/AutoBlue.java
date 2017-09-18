@@ -40,7 +40,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.o
 import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_Straight;
 import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_TurnLeft;
 import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_TurnRight;
-import org.firstinspires.ftc.teamcode.vortex.sabbotage.robot.Robot;
+import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.robot.Robot;
 
 import java.util.ArrayList;
 
