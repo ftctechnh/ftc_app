@@ -193,6 +193,108 @@ public class AutonomousMethodMaster extends LinearOpMode {
 //            motorLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
         }
     }
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches,
+                             double timeoutS) {
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            robot.leftDrive.setTargetPosition(newLeftTarget);
+            robot.rightDrive.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.leftDrive.setPower(Math.abs(speed));
+            robot.rightDrive.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path2",  "Running at %7d :%7d",
+                        robot.leftDrive.getCurrentPosition(),
+                        robot.rightDrive.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.leftDrive.setPower(0);
+            robot.rightDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
+    }
+    public void encoderMove(double power, double leftInches, double rightInches) {
+        /** This method makes the motors move a certain distance **/
+        resetEncoders();
+
+        // Sets the power range
+        power = Range.clip(power, -1, 1);
+
+        // Setting the target positions
+        motorFrontL.setTargetPosition((int)(leftInches * -ticksPerInch));
+        motorFrontR.setTargetPosition((int)(rightInches * -ticksPerInch));
+        motorBackL.setTargetPosition((int)(leftInches * -ticksPerInch));
+        motorBackR.setTargetPosition((int)(rightInches * -ticksPerInch));
+
+        runToPositionEncoders();
+
+        // Sets the motors' position
+        motorFrontL.setPower(power);
+        motorFrontR.setPower(power);
+        motorBackL.setPower(power);
+        motorBackR.setPower(power);
+
+        // While loop for updating telemetry
+        while(motorFrontL.isBusy() && motorFrontR.isBusy() && motorBackL.isBusy() && motorBackR.isBusy() && opModeIsActive()){
+
+            // Updates the position of the motors
+            double frontLPos = motorFrontL.getCurrentPosition();
+            double frontRPos = motorFrontR.getCurrentPosition();
+            double backLPos = motorBackL.getCurrentPosition();
+            double backRPos = motorBackR.getCurrentPosition();
+
+            // Adds telemetry of the drive motors
+            telemetry.addData("MotorFrontL Pos", frontLPos);
+            telemetry.addData("MotorFrontR Pos", frontRPos);
+            telemetry.addData("MotorBackL Pos", backLPos);
+            telemetry.addData("MotorBackR Pos", backRPos);
+
+            // Updates the telemetry
+            telemetry.update();
+
+        }
+
+        // Stops the motors
+        stopMotion();
+
+        // Resets to run using encoders mode
+        runUsingEncoders();
+
+    }
+
 
     /** ----------------------------------------- **/
 }
