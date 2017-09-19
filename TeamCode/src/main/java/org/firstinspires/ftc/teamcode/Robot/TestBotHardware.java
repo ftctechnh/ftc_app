@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 
 public class TestBotHardware {
-ColorSensor colorSensor = null;
+public ColorSensor colorSensor = null;
     public void init (HardwareMap hwMap){
         colorSensor = hwMap.colorSensor.get("color_sensor");
     }
