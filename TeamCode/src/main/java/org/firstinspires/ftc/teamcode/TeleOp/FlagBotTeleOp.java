@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Robot.FlagBotHardware;
 /**
  * Created by Kearneyg20428 on 2/7/2017.
  */
-@TeleOp(name="Clawbot", group="TeleOp")
+@TeleOp(name="Flagbot", group="TeleOp")
 public class FlagBotTeleOp extends OpMode  {
 
     final double    CLAW_SPEED  = 0.05 ;

@@ -61,6 +61,7 @@ public class ClawbotTeleOp extends OpMode  {
         telemetry.addData("claw",  "Absolute = %.2f", robot.MID_SERVO - clawOffset);
         telemetry.addData("arm pos", "%d", robot.armMotor.getCurrentPosition());
         telemetry.addData("arm speed", "%.2f", robot.armMotor.getPower());
+        telemetry.addData("left joystick position","%.2f",-gamepad1.left_stick_y);
         telemetry.update();
     }
 }

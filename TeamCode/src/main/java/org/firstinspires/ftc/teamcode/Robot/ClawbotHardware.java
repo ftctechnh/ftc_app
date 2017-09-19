@@ -14,8 +14,8 @@ public class ClawbotHardware {
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.30 ;
     public static final double ARM_DOWN_POWER  = -0.15 ;
-    public static final double MIN_SAFE_CLAW_OFFSET = -0.5;
-    public static final double MAX_SAFE_CLAW_OFFSET = 0.14;
+    public static final double MIN_SAFE_CLAW_OFFSET = 0;
+    public static final double MAX_SAFE_CLAW_OFFSET = 0.4;
 
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
