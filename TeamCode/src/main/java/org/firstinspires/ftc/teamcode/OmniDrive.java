@@ -78,7 +78,7 @@ public class OmniDrive extends OpMode
         double drive_x = -gamepad1.left_stick_x;
         telemetry.addData("drive_y", drive_y);
         telemetry.addData("drive_x", drive_x);
-        double turn  = gamepad1.right_stick_x;
+        double turn  = -gamepad1.right_stick_x;
 
         if(Math.abs(drive_y) > .3) {
             telemetry.addData("Status", "drive");
