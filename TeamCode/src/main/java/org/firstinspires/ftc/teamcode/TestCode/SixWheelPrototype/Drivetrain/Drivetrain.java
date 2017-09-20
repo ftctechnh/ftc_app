@@ -13,6 +13,8 @@
 package org.firstinspires.ftc.teamcode.TestCode.SixWheelPrototype.Drivetrain;
 
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -54,12 +56,25 @@ public class Drivetrain extends RobotComponent
     }
 
 
-    /**
-     * Standard drive- currently has testing values. The drivetrain is fixed at maximum speed.
-     */
-    public Command stdDrive = () ->
+    @SequentialCommand
+    public void stdDrive(double drive , double rotate)
     {
-        motorLeft.setPower(1);
-        motorRight.setPower(1);
-    };
+        motorLeft.setPower(drive + rotate);
+        motorRight.setPower(drive - rotate);
+    }
+
+
+    @ParallelCommand
+    public void testParallel()
+    {
+        Thread t;
+
+        new Thread(() ->
+        {
+            for(int i = 0; i < 20; i ++)
+            {
+                Log.i("Test Parallel" , Integer.toString(i));
+            }
+        }).start();
+    }
 }
