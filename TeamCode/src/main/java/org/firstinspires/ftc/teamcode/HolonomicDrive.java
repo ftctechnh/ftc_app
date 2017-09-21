@@ -51,9 +51,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Hey! This code runs a motor at full speed!
  */
 
-@TeleOp(name = "♥ Holonomic Drive ♥", group = "BACONbot")
+@TeleOp(name = "♥ I don't believe you ♥", group = "BACONbot")
 //@Disabled
-public class HolonomicDrive  extends LinearOpMode {
+public class HolonomicDrive extends LinearOpMode {
 
     /* This says to use BACONbot hardware */
     HardwareBACONbot robot = new HardwareBACONbot();
@@ -150,3 +150,4 @@ public class HolonomicDrive  extends LinearOpMode {
     }
 
 }
+
