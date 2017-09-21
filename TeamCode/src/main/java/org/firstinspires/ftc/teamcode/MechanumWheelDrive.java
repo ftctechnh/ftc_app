@@ -39,21 +39,17 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
  * Hey! This code runs a motor at full speed!
  */
 
-@TeleOp(name = "♥ Robot 7080 ♥", group = "BACONbot")
+@TeleOp(name = "♥ Mechanum Wheel Drive ♥", group = "BACONbot")
 //@Disabled
-public class HolonomicDrive extends LinearOpMode {
+public class MechanumWheelDrive extends LinearOpMode {
 
     /* This says to use BACONbot hardware */
     HardwareBACONbot robot = new HardwareBACONbot();
@@ -78,11 +74,6 @@ public class HolonomicDrive extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
-            /* Do servo stuff! */
-            if ((gamepad1.a)){
-                robot.servo.setDirection();
-            }
 
             /* This is the code that controls the robot's drive!*/
 
@@ -122,8 +113,8 @@ public class HolonomicDrive extends LinearOpMode {
 
         /*calculate the power for each wheel*/
         frontLeft = -y - x - r;
-        frontRight = +y - x - r;
-        backLeft = -y + x - r;
+        frontRight = +y + x - r;
+        backLeft = -y - x - r;
         backRight = +y + x - r;
 
         /*Normalize the values so none exceeds +/- 1.0*/
