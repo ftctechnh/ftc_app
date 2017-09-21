@@ -1,0 +1,27 @@
+//
+// This file is intended to hold overall information about the robot design.
+//
+
+
+// ROBOT DRIVE
+// Robot has 4 mechanum wheels, driven by independent motors.
+// robot drive mechanism can move forward, backwards, sideways and can turn
+//
+//
+// ROBOT ARM
+// Robot has arm mechanism that can lift similar to a forklift (up/down)
+// left/right adjustments for the robot arm must be made by driving the robot side-to-side
+//
+// ROBOT CLAW
+// Robot had claw mechanism on the ARM that can grasp glyphs (open/close)
+//
+// ROBOT POLE
+// Robot has a fishing pole mechanism for delivering the icon. Pole can extend/retract
+// Pole mechanism has a hinge at the robot end and can raise/lower it's tip.
+//
+// ROBOT VUE
+// Robot uses the on-phone camera to detect and decode Vuemarks
+//
+// ROBOT NAV
+// Robot uses the on-phone camera to determine it's absolute position on the field
+//
