@@ -23,15 +23,14 @@ public class MecanumDrive extends OpMode{
     public void loop() {
 
         double leftX, rightX, leftY, rightY;
-        boolean speedslow, turnslow;
+        boolean speedslow;
 
         leftX = gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y;
         rightY = gamepad1.right_stick_y;
 
-        speedslow = gamepad1.left_bumper;
-        turnslow = gamepad1.right_bumper;
+        speedslow = gamepad1.left_bumper || gamepad1.right_bumper;
 
         double v_lf;
         double v_lr;
@@ -43,7 +42,7 @@ public class MecanumDrive extends OpMode{
         double rotationSpeed = rightX;
 
         if(!(rightX ==0 && rightY == 0 && !speedslow)){
-            desiredSpeed = desiredSpeed/2;
+            desiredSpeed = desiredSpeed*0.4;
         }
 
         if (leftX != 0){
@@ -63,8 +62,8 @@ public class MecanumDrive extends OpMode{
             }
         }
 
-        if (!(leftX == 0 && leftY == 0 && !turnslow)) {
-            rotationSpeed = rotationSpeed/2;
+        if (!(leftX == 0 && leftY == 0 && !speedslow)) {
+            rotationSpeed = rotationSpeed*0.4;
 
         }
 
