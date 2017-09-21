@@ -13,33 +13,33 @@ public class Drive {
     private DcMotor rearRight;
 
     // function to move forward
-    public forward()
+    public void forward()
     {
     }
 
     // function to move backward
-    public backward()
+    public void backward()
     {
     }
 
     // function to move left (not turn!)
-    public left()
+    public void left()
     {
     }
 
     // function to move right (not turn!)
-    public right()
+    public void right()
     {
 
     }
 
     // function to move diagonal
-    public diagonal()
+    public void diagonal()
     {
     }
 
     // function to turn
-    public turn()
+    public void turn()
     {
     }
 
