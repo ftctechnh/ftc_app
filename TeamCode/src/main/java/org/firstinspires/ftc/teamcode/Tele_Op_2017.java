@@ -63,6 +63,7 @@ public class Tele_Op_2017 extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
+    private Pole wep = new Pole();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -110,6 +111,24 @@ public class Tele_Op_2017 extends OpMode
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
         // leftMotor.setPower(-gamepad1.left_stick_y);
         // rightMotor.setPower(-gamepad1.right_stick_y);
+        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+
+
+        // Use gamepad Y & A raise and lower the arm
+        if (gamepad1.a)
+           wep.lift();
+        else
+            wep.liftstop();
+
+            if (gamepad1.y)
+           wep.lower();
+
+        // Use gamepad X & B to extend and retract the arm
+        if (gamepad1.x)
+           wep.extend();
+        else if (gamepad1.b)
+           wep.retract();
+
     }
 
     /*
