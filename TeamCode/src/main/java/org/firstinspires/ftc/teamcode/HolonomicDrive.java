@@ -79,11 +79,6 @@ public class HolonomicDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            /* Do servo stuff! */
-            if ((gamepad1.a)){
-                robot.servo.setDirection();
-            }
-
             /* This is the code that controls the robot's drive!*/
 
             /*If the left bumper is being pressed it allows the robot to run at only 1/5 of its full speed*/
