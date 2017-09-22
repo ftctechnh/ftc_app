@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.robotplus.autonomous.ColorSensorWrapper;
+import org.firstinspires.ftc.teamcode.robotplus.hardware.ColorSensorWrapper;
 
 /**
  * Tests the JewelIdentifier
