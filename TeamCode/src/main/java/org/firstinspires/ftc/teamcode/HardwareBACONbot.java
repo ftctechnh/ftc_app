@@ -17,10 +17,10 @@ public class HardwareBACONbot {
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
-    public Servo servo = null;
-    public ColorSensor colorSensor = null;
-    public TouchSensor touchSensor = null;
-    public boolean enableLed = true;
+//    public Servo servo = null;
+//    public ColorSensor colorSensor = null;
+//    public TouchSensor touchSensor = null;
+//    public boolean enableLed = true;
 
 
     /* Give place holder values for the motors and the grabber servo */
@@ -51,9 +51,9 @@ public class HardwareBACONbot {
         frontRightMotor = hwMap.dcMotor.get("FR");
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
-        colorSensor = hwMap.colorSensor.get("colorSensor");
-        servo = hwMap.servo.get("servo0");
-        touchSensor = hwMap.touchSensor.get("touchSensor");
+//        colorSensor = hwMap.colorSensor.get("colorSensor");
+//        servo = hwMap.servo.get("servo0");
+//        touchSensor = hwMap.touchSensor.get("touchSensor");
 
         // Set all hardware to default position
         // Set all hardware to default position
@@ -61,7 +61,7 @@ public class HardwareBACONbot {
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-        servo.setPosition(0);
+//        servo.setPosition(0);
 
     }
 }
