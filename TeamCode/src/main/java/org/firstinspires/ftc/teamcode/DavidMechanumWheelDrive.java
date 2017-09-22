@@ -80,6 +80,8 @@ public class DavidMechanumWheelDrive extends LinearOpMode {
         while (opModeIsActive()) {
 
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            r = r/2; //Don't let rotation dominate movement
+
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = gamepad1.right_stick_x;
             final double v1 = r * Math.cos(robotAngle) + rightX;
