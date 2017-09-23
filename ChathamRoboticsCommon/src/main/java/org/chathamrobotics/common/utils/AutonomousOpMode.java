@@ -23,6 +23,9 @@ import java.lang.reflect.ParameterizedType;
 public abstract class AutonomousOpMode<R extends Robot> extends LinearOpMode {
     protected R robot;
 
+    /**
+     * Creates a new instance of AutonomousOpMode
+     */
     public AutonomousOpMode() {
         try {
             //noinspection unchecked
@@ -43,12 +46,16 @@ public abstract class AutonomousOpMode<R extends Robot> extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         try {
+            robot.start();
+            waitForStart();
             run();
         } catch (StoppedException | InterruptedException err) {
-            stop();
+            // do nothing
         } catch (Exception err) {
             Log.wtf(this.getClass().getSimpleName(), err);
             RobotLog.setGlobalErrorMsg(err.getMessage());
+        } finally {
+            robot.stop();
             stop();
         }
     }
