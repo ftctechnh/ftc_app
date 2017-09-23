@@ -31,7 +31,6 @@ public class AutoTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addLine("Hello, World! I am " + (isRedTeam ? "Red" : "Blue"));
-            robot.log.info("test");
             telemetry.update();
         }
     }
