@@ -37,7 +37,10 @@ android {
         applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 19
         targetSdkVersion 23
-        jackOptions.enabled true
+
+        if (androidPluginVersion == "2.3.3") {
+            jackOptions.enabled true
+        }
 
         /**
          * We keep the versionCode and versionName of robot controller applications in sync with
