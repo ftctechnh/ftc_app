@@ -3,7 +3,9 @@ package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.chathamrobotics.common.utils.AutonomousOpMode;
 import org.chathamrobotics.common.utils.AutonomousRnB;
+import org.firstinspires.ftc.team9853.Robot9853;
 
 /*!
  * FTC_APP_2018
@@ -15,15 +17,16 @@ import org.chathamrobotics.common.utils.AutonomousRnB;
  */
 @AutonomousRnB(name = "Auto Test")
 @SuppressWarnings("unused")
-public class AutoTest extends LinearOpMode {
+public class AutoTest extends AutonomousOpMode<Robot9853> {
     private Boolean isRedTeam;
 
     public AutoTest(boolean isRedTeam) {
+        super();
         this.isRedTeam = isRedTeam;
     }
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void run() throws InterruptedException {
         waitForStart();
 
         while (opModeIsActive()) {
