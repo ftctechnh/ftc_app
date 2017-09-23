@@ -3,6 +3,8 @@ package org.chathamrobotics.common.utils;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.util.RobotLog;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /*!
@@ -71,6 +73,14 @@ public class RobotLogger {
      * @return  the telemetry's level.
      */
     public Level getTelemetryLevel() {return this.teleLevel;}
+
+    /**
+     * Sets the max number of lines the telemetry can display
+     * @param capacity  the number of lines
+     */
+    public void setTelemetryCapacity(int capacity) {
+        this.telemetry.log().setCapacity(capacity);
+    }
 
     /**
      * Logs at the fatal level. This should be information that shows an error that the robot
@@ -390,7 +400,9 @@ public class RobotLogger {
      * @param line  the line to log
      */
     private void logTele(Level level, String line) {
-        if (level.priority >= this.teleLevel.priority) {
+        if(level == Level.FATAL) {
+            RobotLog.setGlobalErrorMsg(line);
+        } else if (level.priority >= this.teleLevel.priority) {
             telemetry.addData("[" + this.tag + "/" + level.name().toUpperCase() + "]", line);
         }
     }
