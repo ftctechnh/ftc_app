@@ -7,6 +7,13 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
@@ -14,8 +21,27 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * @Last Modified by: storm
  * @Last Modified time: 9/17/2017
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class RobotLogger {
+    /**
+     * Interval at which to clear the recent logs list
+     */
+    private static final int CLEAN_UP_INTERVAL = 500;
+
+    /**
+     * A list containing all of the recent logs. This is used to prevent filling the flog file with repetitive logs
+     */
+    private static final List<String> recentLogs = Collections.synchronizedList(new ArrayList<>());
+
+    static {
+        // clear recent logs using CLEAN_UP_INTERVAL as the rate
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
+            synchronized (recentLogs) {
+                recentLogs.clear();
+            }
+        }, CLEAN_UP_INTERVAL, CLEAN_UP_INTERVAL, TimeUnit.MILLISECONDS);
+    }
+
     /**
      * The tag the logger is using.
      */
@@ -83,30 +109,17 @@ public class RobotLogger {
     }
 
     /**
-     * Logs at the fatal level. This should be information that shows an error that the robot
-     * will not be able to recover from.
-     *
-     * @param line      the line to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void fatal(String line, boolean looping) {
-        logAndroid(Level.FATAL, line, looping);
-        logTele(Level.FATAL, line);
-    }
-
-    /**
-     * Logs at the fatal level. Assumes not in loop.
-     * @see RobotLogger#fatal(String, boolean)
+     * Logs at the fatal level.
      *
      * @param line the line to log.
      */
     public void fatal(String line) {
-        fatal(line, false);
+        logAndroid(Level.FATAL, line);
+        logTele(Level.FATAL, line);
     }
 
     /**
-     * Logs a exception at the fatal level. Assumes not in loop.
-     * @see RobotLogger#fatal(String, boolean)
+     * Logs a exception at the fatal level.
      *
      * @param line  the line to log.
      * @param tr    the exception to log.
@@ -118,53 +131,26 @@ public class RobotLogger {
 
     /**
      * Formats the line as "{caption}: {value}" and logs at the fatal level.
-     * @see RobotLogger#fatal(String, boolean)
-     *
-     * @param caption   the caption for the value.
-     * @param value     the value to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void fatal(String caption, Object value, boolean looping) {
-        fatal(format(caption, value), looping);
-    }
-
-    /**
-     * Formats the line as "{caption}: {value}" and logs at the fatal level. Assumes not in loop.
-     * @see RobotLogger#fatal(String, boolean)
-     * @see RobotLogger#fatal(String, Object, boolean)
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void fatal(String caption, Object value) {
-        fatal(format(caption, value), false);
+        fatal(format(caption, value));
     }
 
     /**
-     * Logs at the error level. This should be information that expresses error might let the robot
-     * continue to run.
-     *
-     * @param line      the line to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void error(String line, boolean looping) {
-        logAndroid(Level.ERROR, line, looping);
-        logTele(Level.ERROR, line);
-    }
-
-    /**
-     * Logs at the error level. Assumes not in loop.
-     * @see RobotLogger#error(String, boolean)
+     * Logs at the error level.
      *
      * @param line  the line to log.
      */
     public void error(String line) {
-        error(line, false);
+        logAndroid(Level.ERROR, line);
+        logTele(Level.ERROR, line);
     }
 
     /**
-     * Logs a exception at the error level. Assumes not in loop.
-     * @see RobotLogger#error(String, boolean)
+     * Logs a exception at the error level.
      *
      * @param line  the line to log.
      * @param tr    the exception to log.
@@ -176,53 +162,26 @@ public class RobotLogger {
 
     /**
      * Formats the line as "{caption}: {value}" and logs at the error level.
-     * @see RobotLogger#error(String, boolean)
-     *
-     * @param caption   the caption for the value.
-     * @param value     the value to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void error(String caption, Object value, boolean looping) {
-        error(format(caption, value), looping);
-    }
-
-    /**
-     * Formats the line as "{caption}: {value}" and logs at the error level. Assumes not in loop.
-     * @see RobotLogger#error(String, boolean)
-     * @see RobotLogger#error(String, Object, boolean)
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void error(String caption, Object value) {
-        error(format(caption, value), false);
+        error(format(caption, value));
     }
 
     /**
-     * Logs at the warning level. This should be information that warns of potentially problematic
-     * situations.
-     *
-     * @param line      the line to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void warn(String line, boolean looping) {
-        logAndroid(Level.WARN, line, looping);
-        logTele(Level.WARN, line);
-    }
-
-    /**
-     * Logs at the warning level. Assumes not in loop.
-     * @see RobotLogger#warn(String, boolean)
+     * Logs at the warning level.
      *
      * @param line  the line to log.
      */
     public void warn(String line) {
-        warn(line, false);
+        logAndroid(Level.WARN, line);
+        logTele(Level.WARN, line);
     }
 
     /**
-     * Logs a exception at the warning level. Assumes not in loop.
-     * @see RobotLogger#warn(String, boolean)
+     * Logs a exception at the warning level.
      *
      * @param line  the line to log.
      * @param tr    the exception to log.
@@ -234,163 +193,73 @@ public class RobotLogger {
 
     /**
      * Formats the line as "{caption}: {value}" and logs at the warning level.
-     * @see RobotLogger#warn(String, boolean)
-     *
-     * @param caption   the caption for the value.
-     * @param value     the value to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void warn(String caption, Object value, boolean looping) {
-        warn(format(caption, value), looping);
-    }
-
-    /**
-     * Formats the line as "{caption}: {value}" and logs at the warning level. Assumes not in loop.
-     * @see RobotLogger#warn(String, boolean)
-     * @see RobotLogger#warn(String, Object, boolean)
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void warn(String caption, Object value) {
-        warn(format(caption, value), false);
+        warn(format(caption, value));
     }
 
     /**
-     * Logs at the info level. This should be information show the progress of the robot.
-     *
-     * @param line      the line to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void info(String line, boolean looping) {
-        logAndroid(Level.INFO, line, looping);
-        logTele(Level.INFO, line);
-    }
-
-    /**
-     * Logs at the info level. Assumes not in loop.
-     * @see RobotLogger#info(String, boolean)
+     * Logs at the info level.
      *
      * @param line  the line to log.
      */
     public void info(String line) {
-        info(line, false);
+        logAndroid(Level.INFO, line);
+        logTele(Level.INFO, line);
     }
 
     /**
      * Formats the line as "{caption}: {value}" and logs at the info level.
-     * @see RobotLogger#debug(String, boolean)
-     *
-     * @param caption   the caption for the value.
-     * @param value     the value to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void info(String caption, Object value, boolean looping) {
-        info(format(caption, value), looping);
-    }
-
-    /**
-     * Formats the line as "{caption}: {value}" and logs at the info level. Assumes not in loop.
-     * @see RobotLogger#debug(String, boolean)
-     * @see RobotLogger#debug(String, Object, boolean)
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void info(String caption, Object value) {
-        info(format(caption, value), false);
+        info(format(caption, value));
     }
 
-    /**
-     * Logs at the debug level. This should be information that would be used to determine where a
-     * bug occurred.
-     *
-     * @param line      the line to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void debug(String line, boolean looping) {
-        logAndroid(Level.DEBUG, line, looping);
-        logTele(Level.DEBUG, line);
-    }
 
     /**
-     * Logs at the debug level. Assumes that not in loop.
-     * @see RobotLogger#debug(String, boolean)
+     * Logs at the debug level.
      *
      * @param line  the line to log.
      */
     public void debug(String line) {
-        debug(line, false);
+        logAndroid(Level.DEBUG, line);
+        logTele(Level.DEBUG, line);
     }
 
     /**
      * Formats the line as "{caption}: {value}" and logs at the debug level.
-     * @see RobotLogger#debug(String, boolean)
-     *
-     * @param caption   the caption for the value.
-     * @param value     the value to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void debug(String caption, Object value, boolean looping) {
-        debug(format(caption, value), looping);
-    }
-
-    /**
-     * Formats the line as "{caption}: {value}" and logs at the debug level. Assumes not in loop.
-     * @see RobotLogger#debug(String, boolean)
-     * @see RobotLogger#debug(String, Object, boolean)
      *
      * @param caption   the values caption.
      * @param value     the value to log.
      */
     public void debug(String caption, Object value) {
-        debug(format(caption, value), false);
+        debug(format(caption, value));
     }
 
     /**
-     * logs at the verbose level. This should be information that is a little overkill.
-     * @see <a href="http://www.computerhope.com/jargon/v/verbose.htm">Verbose</a>
-     *
-     * @param line      the line to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void verbose(String line, boolean looping) {
-        logAndroid(Level.VERBOSE, line, looping);
-        logTele(Level.VERBOSE, line);
-    }
-
-    /**
-     * logs at the verbose level. Assumes not in loop.
-     * @see RobotLogger#verbose(String, boolean)
+     * logs at the verbose level.
      *
      * @param line      the line to log.
      */
     public void verbose(String line) {
-        verbose(line, false);
+        logAndroid(Level.VERBOSE, line);
+        logTele(Level.VERBOSE, line);
     }
 
     /**
-     * Formats the line as "{caption}: {value}" and logs at the verbose level.
-     * @see RobotLogger#verbose(String, boolean)
-     *
-     * @param caption   the caption for the value.
-     * @param value     the value to log.
-     * @param looping   whether this is contained in a loop. If it is, the line will not be logged to the log cat facilities.
-     */
-    public void verbose(String caption, Object value, boolean looping) {
-        verbose(format(caption, value), looping);
-    }
-
-    /**
-     * formats the line as "{caption}: {value}" and logs at the verbose level. Assumes not in loop.
-     * @see RobotLogger#verbose(String, boolean)
-     * @see RobotLogger#verbose(String, Object, boolean)
+     * formats the line as "{caption}: {value}" and logs at the verbose level.
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void verbose(String caption, Object value) {
-        verbose(format(caption, value), false);
+        verbose(format(caption, value));
     }
 
     /**
@@ -402,7 +271,7 @@ public class RobotLogger {
     private void logTele(Level level, String line) {
         if(level == Level.FATAL) {
             RobotLog.setGlobalErrorMsg(line);
-        } else if (level.priority >= this.teleLevel.priority) {
+        } else if (level.priority <= this.teleLevel.priority) {
             telemetry.addData("[" + this.tag + "/" + level.name().toUpperCase() + "]", line);
         }
     }
@@ -412,13 +281,14 @@ public class RobotLogger {
      *
      * @param level     the level to log at
      * @param line      the line to log
-     * @param looping   whether logging in a loop
      */
-    private void logAndroid(Level level, String line, boolean looping) {
-        // the log files flood fast when looping
-        if(! looping) {
-            // logs at the desired level
+    private void logAndroid(Level level, String line) {
+        if (! isRecentLog(line)) {
             Log.println(level.priority, this.tag, line);
+
+            synchronized (recentLogs) {
+                recentLogs.add(line);
+            }
         }
     }
 
@@ -431,5 +301,16 @@ public class RobotLogger {
      */
     private String format(String caption, Object value) {
         return caption + ": " + value.toString();
+    }
+
+    /**
+     * Check if the line was recently logged
+     * @param line  the line to check for
+     * @return  whether the line was recently logged
+     */
+    private boolean isRecentLog(String line) {
+        synchronized (recentLogs) {
+            return recentLogs.contains(line);
+        }
     }
 }
