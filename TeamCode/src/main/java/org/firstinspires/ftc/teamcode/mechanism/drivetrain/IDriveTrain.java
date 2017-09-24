@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanism.drivetrain;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 
 /**
@@ -39,15 +41,17 @@ public interface IDriveTrain extends IMechanism {
     void stopDriveMotors();
 
     /**
-     * Enable motor encoders for each drive motor
-     * to regulate speed while driving the robot without a target distance.
-     * This method will only take effect if zero is passed as the
-     * {@code targetDistance} parameter to {@link #drive(double, int)}.
-     * <p>
-     * Passing {@code false} to this method will disable encoders.
+     * Sets the drive mode for all motors to the {@code DcMotor.RunMode} parameter.
      *
-     * @param enable a boolean whose value represents whether to enable motor encoders
+     * @see com.qualcomm.robotcore.hardware.DcMotor.RunMode
+     * @param runMode the specified mode to set all motors to
      */
-    void enableEncoders(boolean enable);
-    boolean encodersEnabled();
+    void setRunMode(DcMotor.RunMode runMode);
+
+    /**
+     * This method returns the drive mode that is currently set for all drive motors.
+     * @return the active drive mode for all drive motors
+     * @see com.qualcomm.robotcore.hardware.DcMotor.RunMode
+     */
+    DcMotor.RunMode getRunMode();
 }

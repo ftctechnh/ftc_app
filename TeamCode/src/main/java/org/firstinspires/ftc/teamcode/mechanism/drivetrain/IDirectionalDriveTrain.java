@@ -7,18 +7,21 @@ package org.firstinspires.ftc.teamcode.mechanism.drivetrain;
 public interface IDirectionalDriveTrain extends IDriveTrain {
 
     /**
-     * Drive in the direction as specified as a velocity vector composed of {@code speedX}
-     * representing the axial speed and {@code speedY} representing the lateral speed.
-     * <p>
-     * The {@code pivotSpeed} parameter is used to pivot (or rotate) the robot while driving.
-     * <p>
-     * Setting {@code targetDistance} to zero will drive the robot indefinitely,
-     * until {@link #stopDriveMotors()} has been called.
+     * Drive in the direction specified as an angle in degrees at the specified speed for the set
+     * distance
      *
-     * @param speedX the axial robot speed
-     * @param speedY the lateral robot speed
-     * @param pivotSpeed speed at which to pivot while driving
-     * @param targetDistance the distance the robot should drive
+     * @param angleDegrees the angle of which to drive at
+     * @param speed speed at which to drive at
+     * @param targetDistance the distance the robot should drive <b>in inches</b>
      */
-    void directionalDrive(double speedX, double speedY, double pivotSpeed, int targetDistance);
+    void directionalDrive(double angleDegrees, double speed, int targetDistance);
+
+    /**
+     * Drives the robot in the direction specified by {@code speedX} and {@code speedY}
+     * indefinitely.
+     *
+     * @param speedX the axial movement speed
+     * @param speedY the lateral movement speed
+     */
+    void drive(double speedX, double speedY);
 }
