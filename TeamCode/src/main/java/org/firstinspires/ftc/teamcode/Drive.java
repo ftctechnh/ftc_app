@@ -55,8 +55,8 @@ public class Drive {
     {
         frontLeft.setPower(power1);
         rearRight.setPower(power1);
-        rearRight.setPower(power2);
-        rearLeft.setPower(power2);
+        rearRight.setPower(-power2);
+        rearLeft.setPower(-power2);
     }
 
     // function to turn
