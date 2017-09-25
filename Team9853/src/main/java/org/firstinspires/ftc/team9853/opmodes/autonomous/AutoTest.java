@@ -19,6 +19,7 @@ import org.firstinspires.ftc.team9853.Robot9853;
 @SuppressWarnings("unused")
 public class AutoTest extends AutonomousOpMode<Robot9853> {
     private Boolean isRedTeam;
+    private Robot9853 robot;
 
     public AutoTest(boolean isRedTeam) {
         super();

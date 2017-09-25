@@ -101,8 +101,7 @@ public abstract class Robot {
         for (Map.Entry<String, DcMotor> motorEntry : hardwareMap.dcMotor.entrySet()) {
             log.debug(
                     motorEntry.getKey() + " Motor Power",
-                    motorEntry.getValue().getPower(),
-                    isLooping
+                    motorEntry.getValue().getPower()
             );
         }
 
@@ -110,8 +109,7 @@ public abstract class Robot {
         for (Map.Entry<String, Servo> servoEntry : hardwareMap.servo.entrySet()) {
             log.debug(
                     servoEntry.getKey() + " Servo Position",
-                    servoEntry.getValue().getPosition(),
-                    isLooping
+                    servoEntry.getValue().getPosition()
             );
         }
 
@@ -119,8 +117,7 @@ public abstract class Robot {
         for (Map.Entry<String, CRServo> crServoEntry : hardwareMap.crservo.entrySet()) {
             log.debug(
                     crServoEntry.getKey() + " CRServo Power",
-                    crServoEntry.getValue().getPower(),
-                    isLooping
+                    crServoEntry.getValue().getPower()
             );
         }
 
@@ -138,8 +135,7 @@ public abstract class Robot {
         for (Map.Entry<String, OpticalDistanceSensor> odsEntry : hardwareMap.opticalDistanceSensor.entrySet()) {
             log.debug(
                     odsEntry.getKey() + " ODS Light Level",
-                    odsEntry.getValue().getLightDetected(),
-                    isLooping
+                    odsEntry.getValue().getLightDetected()
             );
         }
 
@@ -147,8 +143,7 @@ public abstract class Robot {
         for (Map.Entry<String, TouchSensor> touchSensorEntry : hardwareMap.touchSensor.entrySet()) {
             log.debug(
                     touchSensorEntry.getKey() + " Touch Sensor isPressed",
-                    touchSensorEntry.getValue().isPressed(),
-                    isLooping
+                    touchSensorEntry.getValue().isPressed()
             );
         }
 
@@ -161,8 +156,7 @@ public abstract class Robot {
                             colorSensorEntry.getValue().red(),
                             colorSensorEntry.getValue().green(),
                             colorSensorEntry.getValue().blue()
-                    ),
-                    isLooping
+                    )
             );
         }
 
@@ -170,8 +164,7 @@ public abstract class Robot {
         for (Map.Entry<String, AccelerationSensor> asEntry : hardwareMap.accelerationSensor.entrySet()) {
             log.debug(
                     asEntry.getKey() + " Acceleration Sensor Acceleration",
-                    asEntry.getValue().getAcceleration(),
-                    isLooping
+                    asEntry.getValue().getAcceleration()
             );
         }
 
@@ -179,8 +172,7 @@ public abstract class Robot {
         for (Map.Entry<String, CompassSensor> compassSensorEntry : hardwareMap.compassSensor.entrySet()) {
             log.debug(
                     compassSensorEntry.getKey() + " Compass Sensor Direction",
-                    compassSensorEntry.getValue().getDirection(),
-                    isLooping
+                    compassSensorEntry.getValue().getDirection()
             );
         }
 
@@ -188,14 +180,12 @@ public abstract class Robot {
         for (Map.Entry<String, IrSeekerSensor> irssEntry : hardwareMap.irSeekerSensor.entrySet()) {
             log.debug(
                     irssEntry.getKey() + " IR Seeker Angle",
-                    irssEntry.getValue().getAngle(),
-                    isLooping
+                    irssEntry.getValue().getAngle()
             );
 
             log.debug(
                     irssEntry.getKey() + " IR Seeker Strength",
-                    irssEntry.getValue().getStrength(),
-                    isLooping
+                    irssEntry.getValue().getStrength()
             );
         }
 
@@ -203,8 +193,7 @@ public abstract class Robot {
         for (Map.Entry<String, LightSensor> lightSensorEntry : hardwareMap.lightSensor.entrySet()) {
             log.debug(
                     lightSensorEntry.getKey() + " Light Sensor Level",
-                    lightSensorEntry.getValue().getLightDetected(),
-                    isLooping
+                    lightSensorEntry.getValue().getLightDetected()
             );
         }
 
@@ -212,8 +201,7 @@ public abstract class Robot {
         for (Map.Entry<String, UltrasonicSensor> usEntry : hardwareMap.ultrasonicSensor.entrySet()) {
             log.debug(
                     usEntry.getKey() + " Ultrasonic Sensor Level",
-                    usEntry.getValue().getUltrasonicLevel(),
-                    isLooping
+                    usEntry.getValue().getUltrasonicLevel()
             );
         }
 
@@ -221,8 +209,7 @@ public abstract class Robot {
         for (Map.Entry<String, VoltageSensor> vsEntry : hardwareMap.voltageSensor.entrySet()) {
             log.debug(
                     vsEntry.getKey() + " Voltage Sensor Voltage",
-                    vsEntry.getValue().getVoltage(),
-                    isLooping
+                    vsEntry.getValue().getVoltage()
             );
         }
 
