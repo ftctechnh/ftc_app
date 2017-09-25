@@ -72,19 +72,29 @@ public class DirtyMecanum extends OpMode
 
     @Override
     public void start() {
-
         runtime.reset();
     }
 
     @Override
     public void loop() {
         // TODO: find a better way to do this
-        dpadStates[0] = gamepad1.dpad_up ? true : false;
-        dpadStates[1] = gamepad1.dpad_right ? true : false;
-        dpadStates[2] = gamepad1.dpad_down ? true : false;
-        dpadStates[3] = gamepad1.dpad_left ? true : false;
+        dpadStates[0] = gamepad1.dpad_up;
+        dpadStates[1] = gamepad1.dpad_right;
+        dpadStates[2] = gamepad1.dpad_down;
+        dpadStates[3] = gamepad1.dpad_left;
 
-        telemetry.addData("D-Pad Status", dpadStates);
+        if (dpadStates[0]){
+            robot.setAllMotors(1);
+        } else if (dpadStates[2]){
+            robot.setAllMotors(-1);
+        } else {
+            robot.setAllMotors(0);
+        }
+
+        telemetry.addData("D-Pad up", dpadStates[0]);
+        telemetry.addData("D-Pad right", dpadStates[1]);
+        telemetry.addData("D-Pad down", dpadStates[2]);
+        telemetry.addData("D-Pad left", dpadStates[3]);
     }
 
     /*

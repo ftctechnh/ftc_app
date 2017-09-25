@@ -84,5 +84,12 @@ public class Hardware750
         frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+    public void setAllMotors(double requestedSpeed) {
+        flDrive.setPower(requestedSpeed);
+        frDrive.setPower(requestedSpeed);
+        rlDrive.setPower(requestedSpeed);
+        rrDrive.setPower(requestedSpeed);
+    }
 }
 
