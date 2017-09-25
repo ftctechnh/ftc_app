@@ -4,6 +4,7 @@ package org.firstinspires.ftc.team9853.opmodes.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.chathamrobotics.common.utils.AutonomousRnB;
+import org.firstinspires.ftc.team9853.Robot9853;
 
 /*!
  * FTC_APP_2018
@@ -17,6 +18,7 @@ import org.chathamrobotics.common.utils.AutonomousRnB;
 @SuppressWarnings("unused")
 public class AutoTest extends LinearOpMode {
     private Boolean isRedTeam;
+    private Robot9853 robot;
 
     public AutoTest(boolean isRedTeam) {
         this.isRedTeam = isRedTeam;
@@ -24,6 +26,7 @@ public class AutoTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        robot = new Robot9853(hardwareMap, telemetry);
         waitForStart();
 
         while (opModeIsActive()) {
