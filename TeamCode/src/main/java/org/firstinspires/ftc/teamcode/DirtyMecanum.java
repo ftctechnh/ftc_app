@@ -83,10 +83,20 @@ public class DirtyMecanum extends OpMode
         dpadStates[2] = gamepad1.dpad_down;
         dpadStates[3] = gamepad1.dpad_left;
 
-        if (dpadStates[0]){
+        if (dpadStates[0]){         // full forward
             robot.setAllMotors(1);
-        } else if (dpadStates[2]){
+        } else if (dpadStates[1]) { // right strafe
+            robot.flDrive.setPower(1);
+            robot.frDrive.setPower(-1);
+            robot.rlDrive.setPower(-1);
+            robot.rrDrive.setPower(1);
+        } else if (dpadStates[2]) { // full reverse
             robot.setAllMotors(-1);
+        } else if (dpadStates[3]) { // left strafe
+            robot.flDrive.setPower(-1);
+            robot.frDrive.setPower(1);
+            robot.rlDrive.setPower(1);
+            robot.rrDrive.setPower(-1);
         } else {
             robot.setAllMotors(0);
         }
