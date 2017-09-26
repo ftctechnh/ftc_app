@@ -25,7 +25,7 @@ public class Hardware9330 {
 
         // Define and Initialize Motors
 
-        grabber = hwMap.servo.get("brake");
+        grabber = hwMap.servo.get("grabber");
         grabber.setDirection(Servo.Direction.REVERSE);
     }
 }
