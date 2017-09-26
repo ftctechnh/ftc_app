@@ -9,7 +9,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +33,8 @@ public class RobotLogger {
     /**
      * A list containing all of the recent logs. This is used to prevent filling the flog file with repetitive logs
      */
-    private static final List<String> recentLogs = Collections.synchronizedList(new ArrayList<>());
+//    private static final List<String> recentLogs = Collections.synchronizedList(new ArrayList<>());
+    private static  final Set<String> recentLogs = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
     static {
         // clear recent logs using CLEAN_UP_INTERVAL as the rate
