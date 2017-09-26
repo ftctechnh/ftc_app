@@ -25,17 +25,32 @@ public class Camera_test extends OpMode {
     Context appContext;
 
     @Override
+
     public void init() {
+        appContext = hwMap.appContext;
+
         testBot.init(hardwareMap);
         hwMap = hardwareMap;
-        int id = findBackFacingCamera();
-        appContext = hwMap.appContext;
-        camera = Camera.open(id);
         preview = new SurfaceView(appContext);
-        View view =
-                appContext.findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
-view.addView
     }
+
+    public Camera openCamera(int cameraInfoType) {
+        int cameraId = -1;
+        Camera cam = null;
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == cameraInfoType) { // Camera.CameraInfo.CAMERA_FACING_FRONT or BACK
+                cameraId = i;
+                break;
+            }
+        }
+        camera = Camera.open(cameraId);
+
+
+
+
     private int findBackFacingCamera() {
         int cameraId = -1;
         // Search for the back facing camera
