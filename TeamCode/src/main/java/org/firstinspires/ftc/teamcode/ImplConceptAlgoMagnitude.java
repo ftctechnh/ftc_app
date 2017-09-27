@@ -83,15 +83,14 @@ public class ImplConceptAlgoMagnitude extends OpMode
         if (angle < 0) {
             angle += Math.PI*2;
         }
-        double leftTrig = (-1 * gamepad1.left_trigger);
-        double rightTrig = gamepad1.right_trigger;
+        double trig = (-1 * gamepad1.left_trigger) + gamepad1.right_trigger;
         telemetry.addData("ang le", angle);
         telemetry.addData("number of pi", (angle / Math.PI));
         double extraPi = angle / Math.PI;
-        double VM1 = ((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + rightTrig);
-        double VM2 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + leftTrig);
-        double VM3 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + rightTrig);
-        double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + leftTrig));
+        double VM1 = ((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + trig);
+        double VM2 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + trig);
+        double VM3 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + trig);
+        double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + trig));
         boolean [] VM = new boolean [4];
         double [] thing = {VM1, VM2, VM3, VM4, 1};
         int idk = 4;
