@@ -94,7 +94,7 @@ public class ImplConceptAlgoMagnitude extends OpMode
         double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + leftTrig));
         boolean [] VM = new boolean [4];
         double [] thing = {VM1, VM2, VM3, VM4};
-        int idk;
+        int idk = 0;
         for (int i = 1; i < 3; i++) {
             if (Math.abs(thing [i]) > Math.abs(thing [i - 1])) {
                 VM [i] = true;
