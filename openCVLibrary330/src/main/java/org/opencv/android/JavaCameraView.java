@@ -1,6 +1,7 @@
 package org.opencv.android;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import android.content.Context;
 import android.graphics.ImageFormat;
@@ -138,7 +139,13 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
             /* Now set camera parameters */
             try {
+                /* Focal length debug logging for funsizes */
                 Camera.Parameters params = mCamera.getParameters();
+
+                float[] foci;
+                Log.i("TEST", "Horizontal angle:" + Float.toString(params.getHorizontalViewAngle()));
+                Log.i("TEST", "Vertical angle:" + Float.toString(params.getVerticalViewAngle()));
+
                 Log.d(TAG, "getSupportedPreviewSizes()");
                 List<android.hardware.Camera.Size> sizes = params.getSupportedPreviewSizes();
 

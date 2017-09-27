@@ -51,6 +51,22 @@ public class VumarkOpenCV extends OpenCVLoad {
 
     private ImageView mView;
 
+    //sensor sizes for my nexus 5x
+    private static final float sensroWidthMM = 10.2f;
+    private static final float sensorHeightMM = 8.0f;
+
+    //viewing angles for nexus 5x (in degreres)
+    private static final float horizontalViewAngle = 67.5747f;
+    private static final float verticalViewAngle = 53.2988f;
+
+    //will need to get sensor sizes for other phones if I do desire
+
+    //the final focal for openCV calculation
+
+    private static double calcFocalPixel(int length, float angle) {
+        return (length * 0.5f) / Math.tan(Math.toRadians(0.5f * angle));
+    }
+
     @Override
     public void init() {
         mView = (ImageView) ((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.OpenCVOverlay);
