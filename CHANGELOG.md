@@ -14,6 +14,15 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Thorough documentation on the new system (teamcode.Core package)
 - Inevitable bug fixes that come from not being able to test code
 
+### [0.2.0] - 2017-09-26
+#### Added
+- Code for testing the spools prototype
+- Tutorial Code for teaching new teams
+#### Removed
+- Support for Java 8- the robot controller cannot detect hardware devices when using Java 8
+#### Fixed
+- Gradle files associated with the move the Java 8
+
 ### [0.1.0] - 2017-09-06
 #### Added
 - Support for sequential and parallel command execution (UNTESTED)
