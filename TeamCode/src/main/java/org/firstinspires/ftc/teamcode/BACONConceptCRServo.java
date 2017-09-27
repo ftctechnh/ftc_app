@@ -45,7 +45,7 @@ import static android.R.attr.direction;
  * power values for open and close.
  */
 @Autonomous(name = "Concept: CRServo", group = "Concept")
-@Disabled
+//@Disabled
 public class BACONConceptCRServo extends LinearOpMode {
 
     static final double OPEN     =  1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
