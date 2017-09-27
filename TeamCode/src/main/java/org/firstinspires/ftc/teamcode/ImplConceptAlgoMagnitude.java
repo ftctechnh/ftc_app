@@ -95,7 +95,7 @@ public class ImplConceptAlgoMagnitude extends OpMode
         boolean [] VM = new boolean [4];
         double [] thing = {VM1, VM2, VM3, VM4, 1};
         int idk = 4;
-        for (int i = 1; i < 3; i++) {
+        for (int i = 1; i < 4; i++) {
             if (Math.abs(thing [i]) > Math.abs(thing [i - 1])) {
                 VM [i] = true;
                 VM [i - 1] = false;
@@ -104,7 +104,7 @@ public class ImplConceptAlgoMagnitude extends OpMode
         }
         /* int idk = 0;
         for ( int i = 0; i < 3; i++) {
-            if (VM[i] == true) {
+            if (VM[i] == true) {8
                 idk = i;
             }
         } */
@@ -113,8 +113,17 @@ public class ImplConceptAlgoMagnitude extends OpMode
         VM20 [1] = 0;
         VM20 [2] = 0;
         VM20 [3] = 0;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             VM20[i] = (thing[i]/thing[idk]);
+        }
+        if (VM20[0] > 1) {
+            VM20[0] = 1;
+        } else if (VM20[1] > 1) {
+            VM20[2] = 1;
+        } else if (VM20[2] > 1) {
+            VM20[2] = 1;
+        } else if (VM20[3] > 1) {
+            VM20[3] = 1;
         }
         telemetry.addData("VM1", VM20 [0]);
         telemetry.addData("VM2", VM20 [1]);
