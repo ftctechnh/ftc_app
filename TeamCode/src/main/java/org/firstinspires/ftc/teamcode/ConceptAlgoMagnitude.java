@@ -72,10 +72,14 @@ public class ConceptAlgoMagnitude extends OpMode
         telemetry.addData("lstick Y", (-1 * gamepad1.left_stick_y));
         double presquare = Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2);
         telemetry.addData("presquare", presquare);
-        double magnitude = (gamepad1.left_stick_y > 0) ? -1*Math.sqrt(presquare) : Math.sqrt(presquare);
+        double magnitude = ((-1 * gamepad1.left_stick_y) < 0) ? -1*Math.sqrt(presquare) : Math.sqrt(presquare);
         telemetry.addData("magnitude", magnitude);
-        double angle = Math.atan((1*gamepad1.left_stick_y)/gamepad1.left_stick_x);
+        double angle = Math.atan2((-1*gamepad1.left_stick_y),gamepad1.left_stick_x);
+        if (angle < 0) {
+            angle += Math.PI*2;
+        }
         telemetry.addData("ang le", angle);
+        telemetry.addData("number of pi", (angle / Math.PI));
     }
 
     /*
