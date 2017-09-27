@@ -109,6 +109,40 @@ public class DavidMechanumWheelDrive extends LinearOpMode {
                     robot.backRightMotor.setPower(v4);
                 robot.BackRightPower = backRight;
             }
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double rightX = gamepad1.right_stick_x;
+
+            double GLY = gamepad1.left_stick_y;
+            double GRX = gamepad1.right_stick_x;
+            double GLX = gamepad1.left_stick_x;
+
+
+            final double v1 = GLY + GRX + GLX;
+            final double v2 = GLY + GRX - GLX;
+            final double v3 = GLY - GRX - GLX;
+            final double v4 = GLY - GRX + GLX;
+            frontLeft = v1;
+            frontRight = v2;
+            backLeft = v3;
+            backRight = v4;
+
+            if (robot.FrontLeftPower != frontLeft) {
+                robot.frontLeftMotor.setPower(v1);
+                robot.FrontLeftPower = frontLeft;
+            }
+            if (robot.FrontRightPower != frontRight) {
+                robot.frontRightMotor.setPower(v2);
+                robot.FrontRightPower = frontRight;
+            }
+            if (robot.BackLeftPower != backLeft) {
+                robot.backLeftMotor.setPower(v3);
+                robot.BackLeftPower = backLeft;
+            }
+            if (robot.BackRightPower != backRight)
+                robot.backRightMotor.setPower(v4);
+            robot.BackRightPower = backRight;
+
         }
     }
 }
