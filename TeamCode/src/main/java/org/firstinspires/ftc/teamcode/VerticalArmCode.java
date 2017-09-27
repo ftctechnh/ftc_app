@@ -73,15 +73,15 @@ public class VerticalArmCode extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if(gamepad1.dpad_up) {
-            robot.verticalArmMotor.setPower(1);
+            if (gamepad1.dpad_up) {
+                robot.verticalArmMotor.setPower(1);
             }
-            if(gamepad1.dpad_down) {
+            if (gamepad1.dpad_down) {
                 robot.verticalArmMotor.setPower(-1);
             }
-            }
-            }
-
         }
+    }
+
+}
 
 
