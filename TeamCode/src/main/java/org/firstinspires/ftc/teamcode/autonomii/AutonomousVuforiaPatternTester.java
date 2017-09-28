@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.robotplus.autonomoushelper.VuforiaWrapper;
+import org.firstinspires.ftc.teamcode.robotplus.autonomous.VuforiaWrapper;
 
 @Autonomous(name = "VuforiaImageTester", group = "Autonomous")
-public class TestVuforiaAutonomous extends LinearOpMode {
+public class AutonomousVuforiaPatternTester extends LinearOpMode {
     private VuforiaWrapper identifier;
 
     public void runOpMode() {
@@ -20,13 +20,13 @@ public class TestVuforiaAutonomous extends LinearOpMode {
         telemetry.addData("Status", "Ready");
         telemetry.update();
 
+        RelicRecoveryVuMark relicRecoveryVuMark;
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running");
             // run the opMode
-            RelicRecoveryVuMark relicRecoveryVuMark = RelicRecoveryVuMark.from(this.identifier.getLoader().getRelicTemplate());
+             relicRecoveryVuMark = RelicRecoveryVuMark.from(this.identifier.getLoader().getRelicTemplate());
 
             if (relicRecoveryVuMark != RelicRecoveryVuMark.UNKNOWN) {
-                telemetry.addData("Relic Visibility", relicRecoveryVuMark);
                 telemetry.addData("VuMark Column", relicRecoveryVuMark.name());
             }
 
