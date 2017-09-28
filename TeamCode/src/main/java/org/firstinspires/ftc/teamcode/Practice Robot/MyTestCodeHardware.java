@@ -11,13 +11,9 @@ public class MyTestCodeHardware extends OpMode {
 
     DcMotor rightMotor;
     DcMotor leftMotor;
-    DcMotor liftMotor;
-    DcMotor armMotor;
 
     double rightPower;
     double leftPower;
-    double liftPower;
-    double armPower;
 
     @Override
     public void init() {
@@ -33,9 +29,6 @@ public class MyTestCodeHardware extends OpMode {
         rightMotor = hardwareMap.dcMotor.get("rm");
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotor = hardwareMap.dcMotor.get("lm");
-        liftMotor = hardwareMap.dcMotor.get("lift");
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        armMotor = hardwareMap.dcMotor.get("arm");
     }
 }
 
