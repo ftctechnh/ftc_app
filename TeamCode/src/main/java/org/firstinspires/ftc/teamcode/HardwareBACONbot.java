@@ -17,6 +17,7 @@ public class HardwareBACONbot {
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
+    public DcMotor verticalArmMotor = null;
 //    public Servo servo = null;
 //    public ColorSensor colorSensor = null;
 //    public TouchSensor touchSensor = null;
@@ -28,7 +29,6 @@ public class HardwareBACONbot {
     double FrontRightPower = 0;
     double BackRightPower = 0;
     double BackLeftPower = 0;
-
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
@@ -51,6 +51,7 @@ public class HardwareBACONbot {
         frontRightMotor = hwMap.dcMotor.get("FR");
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
+        verticalArmMotor = hwMap.dcMotor.get("VAM");
 //        colorSensor = hwMap.colorSensor.get("colorSensor");
 //        servo = hwMap.servo.get("servo0");
 //        touchSensor = hwMap.touchSensor.get("touchSensor");
@@ -61,7 +62,22 @@ public class HardwareBACONbot {
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
+        verticalArmMotor.setPower(0);
 //        servo.setPosition(0);
+
+
+        // Set proper encoder state for all motor
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+//        // Set proper encoder state for all motor
+//        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 }

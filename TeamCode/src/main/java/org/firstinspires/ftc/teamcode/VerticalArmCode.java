@@ -42,17 +42,20 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.internal.android.dex.EncodedValueReader;
+
 
 /**
  * Hey! This code runs a motor at full speed!
  */
 
-@TeleOp(name = "♥ Mechanum Wheel Drive ♥", group = "BACONbot")
+@TeleOp(name = "Vertical", group = "BACONbot")
 //@Disabled
-public class MechanumWheelDrive extends LinearOpMode {
+public class VerticalArmCode extends LinearOpMode {
 
     /* This says to use BACONbot hardware */
-    HardwareBACONbot robot = new HardwareBACONbot();
+    armclass robot = new armclass();
+
 
     /* Allow This Teleop to run! */
     @Override
@@ -62,13 +65,7 @@ public class MechanumWheelDrive extends LinearOpMode {
         robot.init(hardwareMap);
 
         /*These values are used for the drive*/
-        double x;
-        double y;
-        double frontLeft;
-        double frontRight;
-        double backLeft;
-        double backRight;
-        double max;
+
 
         /* Send telemetry message to signify that the robot's ready to play! */
         telemetry.addLine("♥ ♪ Ready to Run ♪ ♥");
@@ -79,36 +76,17 @@ public class MechanumWheelDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            double rightX = gamepad1.right_stick_x;
+            if (gamepad1.dpad_up) {
+                robot.verticalArmMotor.setPower(1);
+            }
+            if (gamepad1.dpad_down) {
+                robot.verticalArmMotor.setPower(-1);
+            }
 
-            final double v1 = r * Math.cos(robotAngle) + rightX;
-            final double v2 = r * Math.sin(robotAngle) - rightX;
-            final double v3 = r * Math.sin(robotAngle) + rightX;
-            final double v4 = r * Math.cos(robotAngle) - rightX;
-
-
-            frontLeft=v1;
-            frontRight=v2;
-            backLeft=v3;
-            backRight=v4;
-            if(robot.FrontLeftPower != frontLeft) {
-                robot.frontLeftMotor.setPower(v1);
-            robot.FrontLeftPower=frontLeft;
-            }
-            if(robot.FrontRightPower!=frontRight ) {
-                robot.frontRightMotor.setPower(v2);
-                robot.FrontRightPower=frontRight;
-            }
-            if(robot.BackLeftPower!=backLeft) {
-                robot.backLeftMotor.setPower(v3);
-                robot.BackLeftPower=backLeft;
-            }
-            if(robot.BackRightPower!=backRight)
-            robot.backRightMotor.setPower(v4);
-            robot.BackRightPower=backRight;
-            }
+            telemetry.addData("FrontLeft: ", robot.verticalArmMotor.getCurrentPosition());
         }
     }
+
+}
+
 
