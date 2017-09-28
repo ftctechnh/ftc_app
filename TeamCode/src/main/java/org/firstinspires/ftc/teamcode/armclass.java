@@ -46,5 +46,7 @@ public class armclass {
         verticalArmMotor.setPower(0);
 //        servo.setPosition(0);
 
+
+        verticalArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }

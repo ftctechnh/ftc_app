@@ -42,12 +42,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.internal.android.dex.EncodedValueReader;
+
 
 /**
  * Hey! This code runs a motor at full speed!
  */
 
-@TeleOp(name = "Vertica", group = "BACONbot")
+@TeleOp(name = "Vertical", group = "BACONbot")
 //@Disabled
 public class VerticalArmCode extends LinearOpMode {
 
@@ -80,6 +82,8 @@ public class VerticalArmCode extends LinearOpMode {
             if (gamepad1.dpad_down) {
                 robot.verticalArmMotor.setPower(-1);
             }
+
+            telemetry.addData("FrontLeft: ", robot.verticalArmMotor.getCurrentPosition());
         }
     }
 
