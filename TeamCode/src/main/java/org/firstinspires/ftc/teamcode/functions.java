@@ -1,3 +1,7 @@
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+@Disabled
+
 ///These are all the functions from last year that we may want to use this year
 
     /* This is method uses the front right wheel and its encoder to give a number of ticks that the robot should move */
