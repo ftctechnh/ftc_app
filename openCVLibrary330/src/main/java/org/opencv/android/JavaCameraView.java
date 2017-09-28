@@ -142,7 +142,6 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                 /* Focal length debug logging for funsizes */
                 Camera.Parameters params = mCamera.getParameters();
 
-                float[] foci;
                 Log.i("TEST", "Horizontal angle:" + Float.toString(params.getHorizontalViewAngle()));
                 Log.i("TEST", "Vertical angle:" + Float.toString(params.getVerticalViewAngle()));
 

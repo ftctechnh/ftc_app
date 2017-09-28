@@ -25,14 +25,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.android.dx.util.ByteArray;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLoad;
 import org.opencv.android.Utils;
+import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfDouble;
+import org.opencv.core.MatOfFloat;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.MatOfPoint3f;
 import org.opencv.core.Point;
+import org.opencv.core.Point3;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.concurrent.BlockingQueue;
 
+import static org.opencv.core.CvType.CV_32FC1;
 import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.core.CvType.CV_8UC3;
 
@@ -59,13 +66,29 @@ public class VumarkOpenCV extends OpenCVLoad {
     private static final float horizontalViewAngle = 67.5747f;
     private static final float verticalViewAngle = 53.2988f;
 
+    //viewport sizes
+    private static final int viewWidth = 640;
+    private static final int viewHeight = 360;
+
+    //pixel constants
+    private static final float horizConst = (float)((viewWidth * 0.5) / Math.tan(Math.toRadians(0.5 * horizontalViewAngle)));
+    private static final float vertConst = (float)((viewHeight * 0.5) / Math.tan(Math.toRadians(0.5 * verticalViewAngle)));
+
+    //center points
+    private static final int centerX = viewWidth / 2;
+    private static final int centerY = viewHeight / 2;
+
+    //identity mats to be constructed later in the project
+    private MatOfPoint3f point = new MatOfPoint3f(new Point3(0, 0, 0));
+    private Mat tvec;
+    private Mat rvec;
+    private MatOfDouble distCoff;
+    private Mat cameraMatrix;
+    //output mat
+    private MatOfPoint2f imagePoints;
+
+
     //will need to get sensor sizes for other phones if I do desire
-
-    //the final focal for openCV calculation
-
-    private static double calcFocalPixel(int length, float angle) {
-        return (length * 0.5f) / Math.tan(Math.toRadians(0.5f * angle));
-    }
 
     @Override
     public void init() {
@@ -73,6 +96,14 @@ public class VumarkOpenCV extends OpenCVLoad {
         mView.setAlpha(1.0f);
 
         initOpenCV();
+        //constrt matrixes
+        tvec = new Mat(3, 1, CV_32FC1);
+        rvec = new MatOfFloat(0, 0, 0);
+        distCoff = new MatOfDouble(0, 0, 0, 0);
+        cameraMatrix = new Mat(3, 3, CV_32FC1);
+        cameraMatrix.put(0, 0, new float[] {horizConst, 0, centerX});
+        cameraMatrix.put(1, 0, new float[] {0, vertConst, centerY});
+        cameraMatrix.put(0, 0, new float[] {0, 0, 1});
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -109,7 +140,7 @@ public class VumarkOpenCV extends OpenCVLoad {
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
             telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
@@ -127,42 +158,49 @@ public class VumarkOpenCV extends OpenCVLoad {
                 double rX = rot.firstAngle;
                 double rY = rot.secondAngle;
                 double rZ = rot.thirdAngle;
+
+                //create translation vector from that data
+                tvec.put(0, 0, tX, tY, tZ);
+
+                try {
+                    VuforiaLocalizer.CloseableFrame frame = ray.take();
+                    telemetry.addData("frame", frame.getNumImages() + " images");
+                    for (int i = 0; i < frame.getNumImages(); i++) {
+                        Image temp = frame.getImage(i);
+                        telemetry.addData("image #" + i, "type: %d width: %d height: %d", temp.getFormat(), temp.getBufferWidth(), temp.getBufferHeight());
+                    }
+
+                    Mat temp = getMatFromImage(frame.getImage(1));
+                    frame.close();
+
+                    //now we have a mat, lets draw a point on it from conversions in 3d space
+                    Calib3d.projectPoints(point, rvec, tvec, cameraMatrix, distCoff, imagePoints);
+
+                    Point[] ray = imagePoints.toArray();
+
+                    for(int i = 0; i < ray.length; i++){
+                        telemetry.addData("Projected point", "X: %d, Y: %d", ray[i].x, ray[i].y);
+                        Imgproc.drawMarker(temp, ray[i], new Scalar(255, 0, 0));
+                    }
+
+                    //convert to bitmap
+                    final Bitmap bm = Bitmap.createBitmap(temp.cols(), temp.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(temp, bm);
+
+                    //display!
+                    mView.getHandler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.setImageBitmap(bm);
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    //oops
+                }
             }
-        }
-        else {
+        } else {
             telemetry.addData("VuMark", "not visible");
         }
-
-        try {
-            VuforiaLocalizer.CloseableFrame frame = ray.take();
-            telemetry.addData("frame", frame.getNumImages() + " images");
-            for (int i = 0; i < frame.getNumImages(); i++) {
-                Image temp = frame.getImage(i);
-                telemetry.addData("image #" + i, "type: %d width: %d", temp.getFormat(), temp.getBufferWidth());
-            }
-
-            Mat temp = getMatFromImage(frame.getImage(3));
-            frame.close();
-            //now we have a mat, lets draw a box on it
-            Imgproc.rectangle(temp, new Point(10, 10), new Point(50, 50), new Scalar(0, 255, 0));
-
-            //convert to bitmap
-            final Bitmap bm = Bitmap.createBitmap(temp.cols(), temp.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(temp, bm);
-
-            //display!
-            mView.getHandler().post(new Runnable() {
-                @Override
-                public void run() {
-                    mView.setImageBitmap(bm);
-                }
-            });
-        }
-        catch (InterruptedException e) {
-            //oops
-        }
-
-        telemetry.update();
     }
 
     @Override
