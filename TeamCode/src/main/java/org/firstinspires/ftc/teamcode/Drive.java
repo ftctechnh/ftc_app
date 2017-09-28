@@ -6,57 +6,138 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by gstaats on 18/09/17.
  */
 
-public class Drive {
+public class Drive
+{
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
     private DcMotor rearLeft = null;
     private DcMotor rearRight = null;
 
     // function to move forward
-    public void forward( double power, double negativepower )
+    public void forward( double power )
     {
-        frontLeft.setPower(negativepower);
+        frontLeft.setPower(-power);
         rearLeft.setPower(power);
-        frontRight.setPower(negativepower);
+        frontRight.setPower(-power);
         rearRight.setPower(power);
     }
+
+    // function to move forward
+    public void forward( )
+    {
+        frontLeft.setPower(1);
+        frontRight.setPower(-1);
+        rearLeft.setPower(1);
+        rearRight.setPower(-1);
+    }
+
 
     // function to move backward
-    public void backward(double negativepower, double power)
+    public void backward( double power)
     {
-        frontLeft.setPower(negativepower);
+        frontLeft.setPower(-power);
         frontRight.setPower(power);
         rearRight.setPower(power);
-        rearLeft.setPower(negativepower);
+        rearLeft.setPower(-power);
 
     }
+    // function to move backward
+    public void backward()
+    {
+        frontLeft.setPower(-1);
+        frontRight.setPower(1);
+        rearLeft.setPower(-1);
+        rearRight.setPower(1);
+    }
+
 
     // function to move left (not turn!)
-    public void left(double power, double negativepower )
+    public void turn_left()
     {
-      frontLeft.setPower(negativepower);
-      rearLeft.setPower(power);
-      rearRight.setPower(power);
-      frontRight.setPower(negativepower);
-
+        frontLeft.setPower(-1);
+        frontRight.setPower(1);
+        rearLeft.setPower(-1);
+        rearRight.setPower(1);
     }
 
     // function to move right (not turn!)
-    public void right(double power, double negativepower)
+    public void turn_right()
+    {
+        frontLeft.setPower(1);
+        frontRight.setPower(-1);
+        rearLeft.setPower(1);
+        rearRight.setPower(-1);
+    }
+
+    // function to move diagonal 45 degrees from the front of the robot
+    public void diagonal45()
+    {
+        frontRight.setPower(1);
+        rearLeft.setPower(-1);
+
+    }
+    //function to move 225 degrees
+    public void diagonal225()
+    {
+        frontRight.setPower(-1);
+        rearLeft.setPower(1);
+    }
+
+    public void diagonal135()
+    {frontLeft.setPower(-1);
+
+
+        rearRight.setPower(1);
+
+    }
+    public void diagonal315()
+    {frontLeft.setPower(1);
+
+        rearRight.setPower(-1);
+    }
+
+    // function to move left (not turn!)
+    public void left(double power  )
+    {
+      frontLeft.setPower(-power);
+      rearLeft.setPower(power);
+      rearRight.setPower(power);
+      frontRight.setPower(-power);
+
+    }
+
+    // function to go left
+    public void left()
+    { frontLeft.setPower(1);
+        frontRight.setPower(-1);
+        rearLeft.setPower(-1);
+        rearRight.setPower(1);
+    }
+
+    // function to move right (not turn!)
+    public void right(double power)
     {
       frontLeft.setPower(power);
-        rearLeft.setPower(negativepower);
-        rearRight.setPower(negativepower);
+        rearLeft.setPower(-power);
+        rearRight.setPower(-power);
         frontRight.setPower(power);
     }
 
+    //function to go left
+    public void right() {
+        frontLeft.setPower(-1);
+        frontRight.setPower(1);
+        rearLeft.setPower(1);
+        rearRight.setPower(-1);
+    }
+
     // function to move diagonal
-    public void diagonal(double power1, double power2)
+    public void diagonal( double power )
     {
-        frontLeft.setPower(power1);
-        rearRight.setPower(power1);
-        rearRight.setPower(-power2);
-        rearLeft.setPower(-power2);
+        frontLeft.setPower( power1 );
+        rearRight.setPower( power1 );
+        rearRight.setPower( -power2 );
+        rearLeft.setPower( -power2 );
     }
 
     // function to turn
@@ -74,7 +155,5 @@ public class Drive {
             rearRight.setPower(signedSpeed);
         }
     }
-//assuming that we are turning in one direction
-    //this turns  counterclockwise
 }
 
