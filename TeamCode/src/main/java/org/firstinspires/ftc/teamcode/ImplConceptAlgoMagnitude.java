@@ -96,7 +96,7 @@ public class ImplConceptAlgoMagnitude extends OpMode
         double [] thing = {1, VM1, VM2, VM3, VM4};
         int idk = 0;
         for (int i = 1; i < 5; i++) {
-          if (Math.abs(thing [i]) > 1 && (Math.abs(thing [i]) > Math.abs(thing [i - 1]))) {
+          if ((Math.abs(thing [i]) > 1) && (Math.abs(thing [i]) > Math.abs(thing [i - 1]))) {
                 idk = i;
           }
         }
@@ -126,15 +126,11 @@ public class ImplConceptAlgoMagnitude extends OpMode
         telemetry.addData("VM2", VM20 [1]);
         telemetry.addData("VM3", VM20 [2]);
         telemetry.addData("VM4", VM20 [3]);
-
-
     }
-
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
     public void stop() {
     }
-
 }
