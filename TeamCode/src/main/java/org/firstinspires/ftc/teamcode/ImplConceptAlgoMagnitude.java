@@ -93,39 +93,33 @@ public class ImplConceptAlgoMagnitude extends OpMode
         double VM3 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + trig);
         double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + trig));
         //finds the largest Voltage Magnitude above 1 or below -1 and records it
-        boolean [] VM = new boolean [4];
-        double [] thing = {1, VM1, VM2, VM3, VM4, 1};
-        int idk = 4;
+        double [] thing = {1, VM1, VM2, VM3, VM4};
+        int idk = 0;
         for (int i = 1; i < 5; i++) {
-          if (Math.abs(thing [i]) > 1) {
-            if (Math.abs(thing [i]) > Math.abs(thing [i - 1])) {
-                VM [i] = true;
-                VM [i - 1] = false;
+          if (Math.abs(thing [i]) > 1 && (Math.abs(thing [i]) > Math.abs(thing [i - 1]))) {
                 idk = i;
-            }
           }
         }
-        /* int idk = 0;
-        for ( int i = 0; i < 3; i++) {
-            if (VM[i] == true) {8
-                idk = i;
-            }
-        } */
+        //Create an array
         double [] VM20 = new double [4];
         VM20 [0] = 0;
         VM20 [1] = 0;
         VM20 [2] = 0;
         VM20 [3] = 0;
+        //Set the final values and make sure they're under 1
         for (int i = 1; i < 5; i++) {
-            VM20[i] = (thing[i]/thing[idk]);
+            VM20[i - 1] = (thing[i]/thing[idk]);
         }
         if (VM20[0] > 1) {
             VM20[0] = 1;
-        } else if (VM20[1] > 1) {
+        }
+        if (VM20[1] > 1) {
             VM20[2] = 1;
-        } else if (VM20[2] > 1) {
+        }
+        if (VM20[2] > 1) {
             VM20[2] = 1;
-        } else if (VM20[3] > 1) {
+        }
+        if (VM20[3] > 1) {
             VM20[3] = 1;
         }
         telemetry.addData("VM1", VM20 [0]);
