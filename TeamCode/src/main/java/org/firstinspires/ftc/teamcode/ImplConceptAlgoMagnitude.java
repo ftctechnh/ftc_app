@@ -87,19 +87,23 @@ public class ImplConceptAlgoMagnitude extends OpMode
         telemetry.addData("ang le", angle);
         telemetry.addData("number of pi", (angle / Math.PI));
         double extraPi = angle / Math.PI;
+        //Makes variables for the Voltage Magnitude
         double VM1 = ((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + trig);
         double VM2 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + trig);
         double VM3 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + trig);
         double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + trig));
+        //finds the largest Voltage Magnitude above 1 or below -1 and records it
         boolean [] VM = new boolean [4];
-        double [] thing = {VM1, VM2, VM3, VM4, 1};
+        double [] thing = {1, VM1, VM2, VM3, VM4, 1};
         int idk = 4;
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i < 5; i++) {
+          if (Math.abs(thing [i]) > 1) {
             if (Math.abs(thing [i]) > Math.abs(thing [i - 1])) {
                 VM [i] = true;
                 VM [i - 1] = false;
                 idk = i;
             }
+          }
         }
         /* int idk = 0;
         for ( int i = 0; i < 3; i++) {
@@ -112,7 +116,7 @@ public class ImplConceptAlgoMagnitude extends OpMode
         VM20 [1] = 0;
         VM20 [2] = 0;
         VM20 [3] = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i < 5; i++) {
             VM20[i] = (thing[i]/thing[idk]);
         }
         if (VM20[0] > 1) {
