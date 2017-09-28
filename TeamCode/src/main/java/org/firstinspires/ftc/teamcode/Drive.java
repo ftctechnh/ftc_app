@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by gstaats on 18/09/17.
@@ -12,6 +13,36 @@ public class Drive
     private DcMotor frontRight = null;
     private DcMotor rearLeft = null;
     private DcMotor rearRight = null;
+
+    public Drive( HardwareMap ahwMap )
+    {
+        // Define and Initialize Motors
+        frontRight = ahwMap.dcMotor.get( "front_right" );
+        frontLeft  = ahwMap.dcMotor.get( "front_left" );
+        rearRight  = ahwMap.dcMotor.get( "rear_right" );
+        rearLeft   = ahwMap.dcMotor.get( "rear_left" );
+
+        // Set direction so positive is always forward with respect to
+        // the robot. Right side motors need to be set to reverse, because
+        // they spin counter-clockwise to move the robot forward.
+        frontRight.setDirection( DcMotor.Direction.REVERSE );
+        rearRight.setDirection( DcMotor.Direction.REVERSE );
+        frontRight.setDirection( DcMotor.Direction.FORWARD );
+        rearRight.setDirection( DcMotor.Direction.FORWARD );
+
+        // Set all motors to zero power. Don't want robot moving till
+        // we're ready.
+        frontLeft.setPower( 0 );
+        frontRight.setPower( 0 );
+        rearLeft.setPower( 0 );
+        rearRight.setPower( 0 );
+
+        // Set all motors to run with encoders.
+        frontLeft.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
+        frontRight.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
+        rearLeft.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
+        rearRight.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
+    }
 
     // function to move forward
     public void forward( double power )
@@ -134,10 +165,10 @@ public class Drive
     // function to move diagonal
     public void diagonal( double power )
     {
-        frontLeft.setPower( power1 );
-        rearRight.setPower( power1 );
-        rearRight.setPower( -power2 );
-        rearLeft.setPower( -power2 );
+        frontLeft.setPower( power );
+        rearRight.setPower( power );
+        rearRight.setPower( -power );
+        rearLeft.setPower( -power );
     }
 
     // function to turn
