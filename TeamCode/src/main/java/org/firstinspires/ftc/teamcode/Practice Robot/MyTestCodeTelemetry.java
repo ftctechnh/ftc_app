@@ -19,7 +19,5 @@ public class MyTestCodeTelemetry extends MyTestCodeHardware {
     protected void myTelemetry() {
         telemetry.addData("Right Motor Power", rightPower);
         telemetry.addData("Left Motor Power", leftPower);
-        telemetry.addData("Lift Motor Power", liftPower);
-        telemetry.addData("Arm Motor Power", armPower);
     }
 }
