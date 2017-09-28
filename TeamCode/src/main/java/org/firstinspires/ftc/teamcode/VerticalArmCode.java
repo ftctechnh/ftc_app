@@ -47,12 +47,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Hey! This code runs a motor at full speed!
  */
 
-@TeleOp(name = "♥ Mechanum Wheel Drive ♥", group = "BACONbot")
+@TeleOp(name = "Vertica", group = "BACONbot")
 //@Disabled
 public class VerticalArmCode extends LinearOpMode {
 
     /* This says to use BACONbot hardware */
-    HardwareBACONbot robot = new HardwareBACONbot();
+    armclass robot = new armclass();
+
 
     /* Allow This Teleop to run! */
     @Override
