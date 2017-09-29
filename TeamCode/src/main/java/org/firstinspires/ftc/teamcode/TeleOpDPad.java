@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 @TeleOp(name = "TeleOpDPad ", group = "linear OpMode")
