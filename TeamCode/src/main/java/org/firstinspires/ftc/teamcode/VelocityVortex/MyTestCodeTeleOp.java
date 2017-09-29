@@ -1,11 +1,14 @@
-package org.firstinspires.ftc.teamcode.Shane;
+package org.firstinspires.ftc.teamcode.VelocityVortex;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 /**
  * Created by team on 7/19/2017.
  */
 
-@TeleOp(name = "Practice Robot TeleOp", group = "TeleOp")
+//@TeleOp(name = "Practice Robot TeleOp", group = "TeleOp")
+//@Autonomous(name = "Practice Robot", group = "Autonomous")
+@Autonomous(name = "Test", group = "Autonomous")
 public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
 
     private int padCofig = 0;

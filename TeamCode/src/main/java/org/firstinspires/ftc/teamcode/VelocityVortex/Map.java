@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.VelocityVortex;
 
-import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.hardware.AccelerationSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -30,7 +29,7 @@ public class Map extends VelocityVortexHardware {
             motor.setPower(initPower);
         } catch (Exception opModeException) {
             warning.setDriveWarning(motor.toString());
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
         }
         return motor;
     }
@@ -40,7 +39,7 @@ public class Map extends VelocityVortexHardware {
             motor.setPower(initPower);
         } catch (Exception opModeException) {
             warning.setDriveWarning(s);
-            DbgLog.msg("" + opModeException.getLocalizedMessage());
+            //DbgLog.msg("" + opModeException.getLocalizedMessage());
         }
         return motor;
     }
@@ -52,7 +51,7 @@ public class Map extends VelocityVortexHardware {
             motor.setPower(initPower);
         } catch (Exception opModeException) {
             warning.setDriveWarning(motor.toString());
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
         }
         return motor;
     }
@@ -64,7 +63,7 @@ public class Map extends VelocityVortexHardware {
             motor.setPower(initPower);
         } catch (Exception opModeException) {
             warning.setDriveWarning(s);
-            DbgLog.msg("" + opModeException.getLocalizedMessage());
+            //DbgLog.msg("" + opModeException.getLocalizedMessage());
         }
         return motor;
     }
@@ -74,7 +73,7 @@ public class Map extends VelocityVortexHardware {
             servo.setPosition(initPosition);
         } catch (Exception opModeException) {
             //warning.setServoWarningMessage(servo.getDeviceName());
-            DbgLog.msg("" + opModeException.getLocalizedMessage());
+            //DbgLog.msg("" + opModeException.getLocalizedMessage());
             //servo = null;
         }
         return servo;
@@ -85,7 +84,7 @@ public class Map extends VelocityVortexHardware {
             servo.setPosition(initPosition);
         } catch (Exception opModeException) {
             //warning.setServoWarningMessage(s);
-            DbgLog.msg("" + opModeException.getLocalizedMessage());
+            //DbgLog.msg("" + opModeException.getLocalizedMessage());
             //servo = null;
         }
         return servo;
@@ -96,7 +95,7 @@ public class Map extends VelocityVortexHardware {
             servo.setPower(initPosition);
         } catch (Exception opModeException) {
             warning.setServoWarningMessage(servo.getDeviceName());
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             //servo = null;
         }
     }
@@ -105,7 +104,7 @@ public class Map extends VelocityVortexHardware {
             acceleration = hardwareMap.accelerationSensor.get("acceleration");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("acceleration");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             acceleration = null;
         }
     }
@@ -114,7 +113,7 @@ public class Map extends VelocityVortexHardware {
             color = hardwareMap.colorSensor.get(color.getDeviceName());
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage(color.getDeviceName());
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             color = null;
         }
     }
@@ -126,7 +125,7 @@ public class Map extends VelocityVortexHardware {
             //pauseTime = time + HOLD_POSITION;
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("compass");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             compass = null;
         }
     }
@@ -135,7 +134,7 @@ public class Map extends VelocityVortexHardware {
             motorController = hardwareMap.dcMotorController.get("motorController");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("motorController");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             motorController = null;
         }
     }
@@ -144,7 +143,7 @@ public class Map extends VelocityVortexHardware {
             gyro = hardwareMap.gyroSensor.get("gyro");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("gyro");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             gyro = null;
         }
     }
@@ -153,7 +152,7 @@ public class Map extends VelocityVortexHardware {
             ir = hardwareMap.irSeekerSensor.get("ir");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("ir");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             ir = null;
         }
     }
@@ -163,7 +162,7 @@ public class Map extends VelocityVortexHardware {
             light.enableLed(true);
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("light");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             light = null;
         }
     }
@@ -172,7 +171,7 @@ public class Map extends VelocityVortexHardware {
             servoController = hardwareMap.servoController.get("servoController");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("servoController");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             servoController = null;
         }
     }
@@ -181,7 +180,7 @@ public class Map extends VelocityVortexHardware {
             touch = hardwareMap.touchSensor.get("touch");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("touch");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             touch = null;
         }
     }
@@ -190,7 +189,7 @@ public class Map extends VelocityVortexHardware {
             multi = hardwareMap.touchSensorMultiplexer.get("multi");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("multi");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             multi = null;
         }
     }
@@ -199,7 +198,7 @@ public class Map extends VelocityVortexHardware {
             sonar = hardwareMap.ultrasonicSensor.get("sonar");
         } catch (Exception opModeException) {
             warning.setSensorWarningMessage("sonar");
-            DbgLog.msg(opModeException.getLocalizedMessage());
+            //DbgLog.msg(opModeException.getLocalizedMessage());
             sonar = null;
         }
     }

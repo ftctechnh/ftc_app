@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.VelocityVortex;
 
-import android.util.Log;
-
-import com.qualcomm.ftccommon.DbgLog;
-
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
