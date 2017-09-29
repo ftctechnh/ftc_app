@@ -73,8 +73,8 @@ public class InvadersVelocityVortexBot
     public ElapsedTime period  = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
     /* Public OpMode members. */
-    public DcMotor leftMotor   = null;
-    public DcMotor rightMotor  = null;
+    public DcMotor leftDrive   = null;
+    public DcMotor rightDrive  = null;
     public CRServo ballElevator = null;
     public DcMotor leftBallLauncher = null;
     public DcMotor rightBallLauncher = null;
@@ -162,10 +162,10 @@ public class InvadersVelocityVortexBot
         double leftDistance = UDSLeft.getDistance(unit);
         int timeoutMs = 3000; // Limit this function to a maximum of 3s
         //@todo getMaxSpeed and setMaxSpeed were removed from ftc_app SDK v3.0
-        //int oldMaxSpeedRight = rightMotor.getMaxSpeed();
-        //int oldMaxSpeedLeft = leftMotor.getMaxSpeed();
-        //leftMotor.setMaxSpeed(250);
-        //rightMotor.setMaxSpeed(250);
+        //int oldMaxSpeedRight = rightDrive.getMaxSpeed();
+        //int oldMaxSpeedLeft = leftDrive.getMaxSpeed();
+        //leftDrive.setMaxSpeed(250);
+        //rightDrive.setMaxSpeed(250);
 
         if(leftDistance > rightDistance == true){
             telemetry.addData("ATW TURNING", "RIGHT");
@@ -175,8 +175,8 @@ public class InvadersVelocityVortexBot
             //sleepMs(3000);
 
             period.reset();
-            leftMotor.setPower(1);
-            rightMotor.setPower(-1);
+            leftDrive.setPower(1);
+            rightDrive.setPower(-1);
             while(opModeIsActive() && (period.time() <= timeoutMs) && (leftDistance > rightDistance)){
                 rightDistance = UDSRight.getDistance(unit);
                 leftDistance = UDSLeft.getDistance(unit);
@@ -192,8 +192,8 @@ public class InvadersVelocityVortexBot
             //sleepMs(3000);
 
             period.reset();
-            leftMotor.setPower(-1);
-            rightMotor.setPower(1);
+            leftDrive.setPower(-1);
+            rightDrive.setPower(1);
             while(opModeIsActive() && (period.time() <= timeoutMs) && (leftDistance < rightDistance)){
                 rightDistance = UDSRight.getDistance(unit);
                 leftDistance = UDSLeft.getDistance(unit);
@@ -209,11 +209,11 @@ public class InvadersVelocityVortexBot
             //Thread.yield();
             //sleepMs(3000);
         }
-        rightMotor.setPower(0);
-        leftMotor.setPower(0);
+        rightDrive.setPower(0);
+        leftDrive.setPower(0);
         //@todo getMaxSpeed and setMaxSpeed were removed from ftc_app SDK v3.0
-        //leftMotor.setMaxSpeed(oldMaxSpeedLeft);
-        //rightMotor.setMaxSpeed(oldMaxSpeedRight);
+        //leftDrive.setMaxSpeed(oldMaxSpeedLeft);
+        //rightDrive.setMaxSpeed(oldMaxSpeedRight);
     }
 
     public void setDriveTrainPower(double power)
@@ -223,13 +223,13 @@ public class InvadersVelocityVortexBot
 
     public void setDriveTrainPower(double leftPower, double rightPower)
     {
-        if(leftMotor != null) leftMotor.setPower(leftPower);
-        if(rightMotor != null) rightMotor.setPower(rightPower);
+        if(leftDrive != null) leftDrive.setPower(leftPower);
+        if(rightDrive != null) rightDrive.setPower(rightPower);
     }
 
     public void sensorTroubleshoot(boolean wiggletest){
-        int leftmotorstartpos = leftMotor.getCurrentPosition();
-        int rightmotorstartpos = rightMotor.getCurrentPosition();
+        int leftDrivestartpos = leftDrive.getCurrentPosition();
+        int rightDrivestartpos = rightDrive.getCurrentPosition();
         double rightbeaconstartpos = beaconRight.getPosition();
         double leftbeaconstartpos = beaconLeft.getPosition();
         double gyrostartpos = gyro.getHeading();
@@ -242,19 +242,19 @@ public class InvadersVelocityVortexBot
         double leftudsstart = UDSLeft.getDistance(DistanceUnit.INCH);
         int Errors = 0;
 
-        rightMotor.setPower(0.2);
-        leftMotor.setPower(0.2);
+        rightDrive.setPower(0.2);
+        leftDrive.setPower(0.2);
         sleepMs(500);
-        rightMotor.setPower(0);
-        leftMotor.setPower(0);
-        if (rightmotorstartpos != rightMotor.getCurrentPosition()){
+        rightDrive.setPower(0);
+        leftDrive.setPower(0);
+        if (rightDrivestartpos != rightDrive.getCurrentPosition()){
             telemetry.addData("Right Encoder Functioning Properly", "");
         }
         else{
             telemetry.addData("Check Right Encoder", "");
             Errors ++;
         }
-        if(leftmotorstartpos != leftMotor.getCurrentPosition()){
+        if(leftDrivestartpos != leftDrive.getCurrentPosition()){
             telemetry.addData("Left Encoder Functioning Properly", "");
         }
         else {
@@ -280,11 +280,11 @@ public class InvadersVelocityVortexBot
         beaconLeft.setPosition(leftbeaconstartpos);
         beaconRight.setPosition(rightbeaconstartpos);
 
-        leftMotor.setPower(0.5);
-        rightMotor.setPower(-0.5);
+        leftDrive.setPower(0.5);
+        rightDrive.setPower(-0.5);
         sleepMs(500);
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
         if (gyro.getHeading() != gyrostartpos){
             telemetry.addData("Gyro Function Correctly", "");
         }
@@ -298,13 +298,13 @@ public class InvadersVelocityVortexBot
         sleepMs(10000);
 
         if (wiggletest == true){
-            leftMotor.setPower(1);
+            leftDrive.setPower(1);
             sleepMs(500);
-            leftMotor.setPower(0);
+            leftDrive.setPower(0);
             sleepMs(1000);
-            rightMotor.setPower(1);
+            rightDrive.setPower(1);
             sleepMs(500);
-            rightMotor.setPower(0);
+            rightDrive.setPower(0);
             sleepMs(1000);
             beaconLeft.setPosition(1);
             sleepMs(500);
@@ -354,24 +354,24 @@ public class InvadersVelocityVortexBot
 //
 //            // Determine new target position, and pass to motor controller
 //            moveCounts = (int)(distance * COUNTS_PER_INCH);
-//            newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
-//            newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
+//            newLeftTarget = leftDrive.getCurrentPosition() + moveCounts;
+//            newRightTarget = rightDrive.getCurrentPosition() + moveCounts;
 //
 //            // Set Target and Turn On RUN_TO_POSITION
-//            leftMotor.setTargetPosition(newLeftTarget);
-//            rightMotor.setTargetPosition(newRightTarget);
+//            leftDrive.setTargetPosition(newLeftTarget);
+//            rightDrive.setTargetPosition(newRightTarget);
 //
-//            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //
 //            // start motion.
 //            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-//            leftMotor.setPower(speed);
-//            rightMotor.setPower(speed);
+//            leftDrive.setPower(speed);
+//            rightDrive.setPower(speed);
 //
 //            // keep looping while we are still active, and BOTH motors are running.
 //            while (opModeIsActive() &&
-//                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+//                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 //
 //                error = getError(angle);
 //                steer = getSteer(error, P_DRIVE_COEFF);
@@ -391,25 +391,25 @@ public class InvadersVelocityVortexBot
 //                    rightSpeed /= max;
 //                }
 //
-//                leftMotor.setPower(leftSpeed);
-//                rightMotor.setPower(rightSpeed);
+//                leftDrive.setPower(leftSpeed);
+//                rightDrive.setPower(rightSpeed);
 //
 //                // Display drive status for the driver.
 //                //telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
 //                //telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
-//                //telemetry.addData("Actual",  "%7d:%7d",      robot.leftMotor.getCurrentPosition(),
-//                        rightMotor.getCurrentPosition();
+//                //telemetry.addData("Actual",  "%7d:%7d",      robot.leftDrive.getCurrentPosition(),
+//                        rightDrive.getCurrentPosition();
 //                //telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
 //                //telemetry.update();
 //            }
 //
 //            // Stop all motion;
-//            leftMotor.setPower(0);
-//            rightMotor.setPower(0);
+//            leftDrive.setPower(0);
+//            rightDrive.setPower(0);
 //
 //            // Turn off RUN_TO_POSITION
-//            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        }
 //    }
 
@@ -510,8 +510,8 @@ public class InvadersVelocityVortexBot
         }
 
         // Stop all motion;
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
     }
 
     boolean onHeading(double speed, double angle, double PCoeff) {
@@ -537,8 +537,8 @@ public class InvadersVelocityVortexBot
         }
 
         // Send desired speeds to motors.
-        leftMotor.setPower(leftSpeed);
-        rightMotor.setPower(rightSpeed);
+        leftDrive.setPower(leftSpeed);
+        rightDrive.setPower(rightSpeed);
 
         // Display it for the driver.
         telemetry.addData("Target", "%5.2f", angle);
@@ -644,15 +644,15 @@ public class InvadersVelocityVortexBot
         this.activeOpMode = activeOpMode;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("backLeft");
-        rightMotor  = hwMap.dcMotor.get("backRight");
+        leftDrive   = hwMap.dcMotor.get("backLeft");
+        rightDrive  = hwMap.dcMotor.get("backRight");
         rightBallLauncher = hwMap.dcMotor.get("RightLauncher");
         leftBallLauncher = hwMap.dcMotor.get("LeftLauncher");
         capBall = hwMap.dcMotor.get("CapBall");
         sweeper = hwMap.dcMotor.get("Sweeper");
 
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
         leftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
         capBall.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -665,10 +665,10 @@ public class InvadersVelocityVortexBot
         setLauncherState(LauncherState.OFF);
 
         // Set all non-driving motors to run without encoders.
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -838,14 +838,14 @@ public class InvadersVelocityVortexBot
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
             // Determine new target position, and pass to motor controller
-            newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newRightTarget = rightMotor.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            leftMotor.setTargetPosition(newLeftTarget);
-            rightMotor.setTargetPosition(newRightTarget);
+            newLeftTarget = leftDrive.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightTarget = rightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            leftDrive.setTargetPosition(newLeftTarget);
+            rightDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             period.reset();
@@ -854,13 +854,13 @@ public class InvadersVelocityVortexBot
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
                     (period.seconds() < timeoutS) &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
                 telemetry.addData("Path2", "Running at %7d :%7d",
-                        leftMotor.getCurrentPosition(),
-                        rightMotor.getCurrentPosition());
+                        leftDrive.getCurrentPosition(),
+                        rightDrive.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -868,8 +868,8 @@ public class InvadersVelocityVortexBot
             setDriveTrainPower(0);
 
             // Turn off RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleepMs(250);   // optional pause after each move
         }

@@ -93,8 +93,8 @@ public class Alyssa extends LinearOpMode {
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  Drive forward for 3 seconds
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.leftDrive.setPower(FORWARD_SPEED);
+        robot.rightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
@@ -103,35 +103,35 @@ public class Alyssa extends LinearOpMode {
         }
 
         // Step 2:  Spin right for 1.3 seconds
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.leftMotor.setPower(-TURN_SPEED);
-        robot.rightMotor.setPower(TURN_SPEED);
+        robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftDrive.setPower(-TURN_SPEED);
+        robot.rightDrive.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.3)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
         }
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         // Step 3:  Drive Backwards for 1 Second
-        robot.leftMotor.setPower(-FORWARD_SPEED);
-        robot.rightMotor.setPower(-FORWARD_SPEED);
+        robot.leftDrive.setPower(-FORWARD_SPEED);
+        robot.rightDrive.setPower(-FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
         }
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 4:  Stop and close the claw.
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
        // robot.leftClaw.setPosition(0.1);
         //robot.rightClaw.setPosition(0.1);
 
@@ -141,19 +141,19 @@ public class Alyssa extends LinearOpMode {
         idle();
 
 
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftDrive.setPower(FORWARD_SPEED);
+        robot.rightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
         }
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.leftDrive.setPower(FORWARD_SPEED);
+        robot.rightDrive.setPower(FORWARD_SPEED);
             while (opModeIsActive() && (runtime.seconds() < 3.0)) {
                 telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
                 telemetry.update();

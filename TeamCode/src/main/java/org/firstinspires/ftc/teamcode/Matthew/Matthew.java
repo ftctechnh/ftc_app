@@ -92,38 +92,38 @@ public class Matthew extends LinearOpMode {
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  Drive forward for 3 seconds
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.leftDrive.setPower(FORWARD_SPEED);
+        robot.rightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             idle();
         }
 
         // Step 2:  Move arm / servos to knock off cap ball
-		//robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.leftMotor.setPower(TURN_SPEED);
-        robot.rightMotor.setPower(TURN_SPEED);
+		//robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftDrive.setPower(TURN_SPEED);
+        robot.rightDrive.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 2.2)) {
             idle();
         }
-		//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+		//robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 3:  Drive Backwards for 1 Second
-		robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-		robot.rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+		robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+		robot.rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftDrive.setPower(FORWARD_SPEED);
+        robot.rightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             idle();
         }
-		//robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-		//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+		//robot.rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+		//robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 4:  Stop and close the claw.
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
         robot.leftClaw.setPosition(0.5);
         robot.rightClaw.setPosition(0.5);
 
@@ -132,8 +132,8 @@ public class Matthew extends LinearOpMode {
         sleep(1000);
         idle();
 
-        robot.leftMotor.setPower(-FORWARD_SPEED);
-        robot.rightMotor.setPower(-FORWARD_SPEED);
+        robot.leftDrive.setPower(-FORWARD_SPEED);
+        robot.rightDrive.setPower(-FORWARD_SPEED);
         telemetry.update();
         sleep(1000);
         runtime.reset();
@@ -142,8 +142,8 @@ public class Matthew extends LinearOpMode {
 
 
     }
-	//robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-	//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+	//robot.rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+	//robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 }

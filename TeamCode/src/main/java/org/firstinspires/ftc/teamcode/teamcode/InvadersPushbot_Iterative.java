@@ -40,7 +40,6 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-
 /**
  * This file provides Telop driving for the IfSpace Invaders 2015/16 Pushbot robot.
  * The code is structured as an Iterative OpMode
@@ -120,8 +119,8 @@ public class InvadersPushbot_Iterative extends OpMode{
         right = Range.clip(y+x, -1, +1);
 
         // Call the setPower functions with our calculated values to activate the motors
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        robot.leftDrive.setPower(left);
+        robot.rightDrive.setPower(right);
 
         // Use gamepad left & right triggers to open and close the claw
         if (gamepad1.right_trigger > 0)

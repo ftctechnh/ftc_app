@@ -72,8 +72,8 @@ public class Matthew_TeleOp {
                     right /= max;
                 }
 
-                robot.leftMotor.setPower(left);
-                robot.rightMotor.setPower(right);
+                robot.leftDrive.setPower(left);
+                robot.rightDrive.setPower(right);
 
                 // Use gamepad left & right Bumpers to open and close the claw
                 if (gamepad1.right_bumper)

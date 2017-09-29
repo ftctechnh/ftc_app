@@ -119,8 +119,8 @@ public class InvadersPushbot_Iterative extends OpMode{
         right = Range.clip(y - x, -1, +1);
 
         // Call the setPower functions with our calculated values to activate the motors
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        robot.leftDrive.setPower(left);
+        robot.rightDrive.setPower(right);
 
         // Read our limit switch to see if the arm is too high
         boolean limitTriggered = robot.touchSensor.isPressed();
@@ -208,8 +208,8 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         // Stop the motors
         robot.sweeper.setPower(0);
-        robot.leftMotor.setPower(0.0);
-        robot.rightMotor.setPower(0.0);
+        robot.leftDrive.setPower(0.0);
+        robot.rightDrive.setPower(0.0);
         robot.leftBallLauncher.setPower(0.0);
         robot.rightBallLauncher.setPower(0.0);
     }

@@ -80,8 +80,8 @@ public class PlatinumWumpus extends OpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(this);
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         // Send telemetry message to signify robot waiting;
@@ -108,8 +108,8 @@ public class PlatinumWumpus extends OpMode {
     @Override
     public void start() {
     }
-    //int startMaxSpeedL = robot.leftMotor.getMaxSpeed();
-    //int startMaxSpeedR = robot.rightMotor.getMaxSpeed();
+    //int startMaxSpeedL = robot.leftDrive.getMaxSpeed();
+    //int startMaxSpeedR = robot.rightDrive.getMaxSpeed();
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
@@ -126,16 +126,16 @@ public class PlatinumWumpus extends OpMode {
             //DriveSpeedReduction = 1;
             LiftSpeedReduction = 1;
             //@todo setMaxSpeed was removed from the ftc_app.  These calls no longer work.
-            //robot.rightMotor.setMaxSpeed(600000 );
-            //robot.leftMotor.setMaxSpeed(600000);
+            //robot.rightDrive.setMaxSpeed(600000 );
+            //robot.leftDrive.setMaxSpeed(600000);
         }
         else if (gamepad1.b == true) {
             //DO NOT SET THIS TO 0! 1 = ZERO REDUCTION IN SPEED.
             //DriveSpeedReduction = 9;
             LiftSpeedReduction = 4;
             //@todo setMaxSpeed was removed from the ftc_app.  These calls no longer work.
-            //robot.rightMotor.setMaxSpeed(1000);
-            //robot.leftMotor.setMaxSpeed(1000);
+            //robot.rightDrive.setMaxSpeed(1000);
+            //robot.leftDrive.setMaxSpeed(1000);
         }
         else{
             //Nothing is being pressed, don't change the value.

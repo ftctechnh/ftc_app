@@ -97,8 +97,8 @@ public class Test_opmode_willow extends LinearOpMode {
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  Drive forward for 3 seconds
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.leftDrive.setPower(FORWARD_SPEED);
+        robot.rightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
@@ -108,8 +108,8 @@ public class Test_opmode_willow extends LinearOpMode {
         }
 
 // Step 3:  Drive Backwards for 1 Second
-        robot.leftMotor.setPower(-FORWARD_SPEED);
-        robot.rightMotor.setPower(-FORWARD_SPEED);
+        robot.leftDrive.setPower(-FORWARD_SPEED);
+        robot.rightDrive.setPower(-FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
@@ -119,13 +119,13 @@ public class Test_opmode_willow extends LinearOpMode {
 
             // Step 2:  Spin right for 1.3 seconds
 
-            robot.leftMotor.setPower(TURN_SPEED);
-            robot.rightMotor.setPower(-TURN_SPEED);
+            robot.leftDrive.setPower(TURN_SPEED);
+            robot.rightDrive.setPower(-TURN_SPEED);
 
-            //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            robot.leftMotor.setPower(TURN_SPEED);
-            //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.rightMotor.setPower(TURN_SPEED);
+            //robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.leftDrive.setPower(TURN_SPEED);
+            //robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.rightDrive.setPower(TURN_SPEED);
 
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 1.3)) {
@@ -136,8 +136,8 @@ public class Test_opmode_willow extends LinearOpMode {
 
 
             // Step 3:  Drive Backwards for 1 Second
-            robot.leftMotor.setPower(-FORWARD_SPEED);
-            robot.rightMotor.setPower(-FORWARD_SPEED);
+            robot.leftDrive.setPower(-FORWARD_SPEED);
+            robot.rightDrive.setPower(-FORWARD_SPEED);
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 1.2)) {
                 telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
@@ -147,8 +147,8 @@ public class Test_opmode_willow extends LinearOpMode {
 
 
             // Step 4:  Stop and close the claw.
-            robot.leftMotor.setPower(3);
-            robot.rightMotor.setPower(3);
+            robot.leftDrive.setPower(3);
+            robot.rightDrive.setPower(3);
             robot.leftClaw.setPosition(1.0);
             robot.rightClaw.setPosition(1.0);
 
