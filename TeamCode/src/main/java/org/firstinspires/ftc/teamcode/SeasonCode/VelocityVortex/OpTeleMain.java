@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -22,6 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * That's all, folks!
  */
 @TeleOp(name = "Main TeleOp")
+@Disabled
 @SuppressWarnings("all")
 final class OpTeleMain extends LinearOpMode
 {

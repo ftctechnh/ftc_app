@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 /**
@@ -21,6 +22,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * That's all, folks!
  */
 @Autonomous(name = "Simple 2 Shot")
+@Disabled
 @SuppressWarnings("all")
 final class OpAuto2Shot extends UtilAuto
 {

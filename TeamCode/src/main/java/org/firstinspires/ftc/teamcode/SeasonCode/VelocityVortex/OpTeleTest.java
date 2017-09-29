@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * That's all, folks!
  */
 @TeleOp(name = "BetaBranch Test Realm")
+@Disabled
 @SuppressWarnings("all")
 final class OpTeleTest extends LinearOpMode
 {

@@ -27,8 +27,8 @@ public abstract class RobotCommand
     {
         if(t == null)
         {
-            t = new Thread(this::runSequentially);
-            t.start();
+//            t = new Thread(this::runSequentially);
+//            t.start();
         }
     }
 }

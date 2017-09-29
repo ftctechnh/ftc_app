@@ -14,11 +14,13 @@ package org.firstinspires.ftc.teamcode.TestCode.SixWheelPrototype;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 /**
  * The main op mode for the six wheel prototype
  */
+@TeleOp(name = "Six Wheel" , group = "Prototypes")
 public class OpMain extends LinearOpMode
 {
     private SixWheelBase robot = new SixWheelBase();
@@ -37,7 +39,7 @@ public class OpMain extends LinearOpMode
 
         while(opModeIsActive() && !isStopRequested())
         {
-            robot.drivetrain.runSequential(robot.drivetrain.stdDrive);
+//            robot.drivetrain.runSequential(robot.drivetrain.stdDrive);
         }
     }
 }

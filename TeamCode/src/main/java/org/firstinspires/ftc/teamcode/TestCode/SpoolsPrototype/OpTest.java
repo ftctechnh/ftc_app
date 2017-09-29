@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 /**
  * Quick OpMode that just tests the spools
  */
-@SuppressWarnings("unused")
 @TeleOp(name = "Spools Test" , group = "Prototypes")
+@SuppressWarnings("unused")
 public class OpTest extends LinearOpMode
 {
     private Base base = new Base();

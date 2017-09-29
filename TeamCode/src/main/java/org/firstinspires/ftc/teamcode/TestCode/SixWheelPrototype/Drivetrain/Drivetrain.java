@@ -69,12 +69,12 @@ public class Drivetrain extends RobotComponent
     {
         Thread t;
 
-        new Thread(() ->
-        {
-            for(int i = 0; i < 20; i ++)
-            {
-                Log.i("Test Parallel" , Integer.toString(i));
-            }
-        }).start();
+//        new Thread(() ->
+//        {
+//            for(int i = 0; i < 20; i ++)
+//            {
+//                Log.i("Test Parallel" , Integer.toString(i));
+//            }
+//        }).start();
     }
 }
