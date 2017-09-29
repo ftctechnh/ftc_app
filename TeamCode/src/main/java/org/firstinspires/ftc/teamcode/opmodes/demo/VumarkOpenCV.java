@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -58,28 +59,33 @@ public class VumarkOpenCV extends OpenCVLoad {
 
     private ImageView mView;
 
-    //sensor sizes for my nexus 5x
-    private static final float sensroWidthMM = 10.2f;
-    private static final float sensorHeightMM = 8.0f;
+    //bullshoot factors
+    private static final float horizBullFactor = -15.0f;
+    private static final float vertBullFactor = -7.0f;
 
     //viewing angles for nexus 5x (in degreres)
-    private static final float horizontalViewAngle = 67.5747f;
-    private static final float verticalViewAngle = 53.2988f;
+    private static final float horizontalViewAngle = 53.2988f + horizBullFactor;
+    private static final float verticalViewAngle = 67.5747f + vertBullFactor;
 
     //viewport sizes
-    private static final int viewWidth = 640;
-    private static final int viewHeight = 360;
+    private static final int viewWidth = 360;
+    private static final int viewHeight = 640;
 
     //pixel constants
     private static final float horizConst = (float)((viewWidth * 0.5) / Math.tan(Math.toRadians(0.5 * horizontalViewAngle)));
-    private static final float vertConst = (float)((viewHeight * 0.5) / Math.tan(Math.toRadians(0.5 * verticalViewAngle)));
+    private static final float vertConst = -(float)((viewHeight * 0.5) / Math.tan(Math.toRadians(0.5 * verticalViewAngle)));
 
     //center points
     private static final int centerX = viewWidth / 2;
     private static final int centerY = viewHeight / 2;
 
+    //define the jewel platform relative to the image with a buncha vectors to add
+    //all units in vuforia are mm, so we multiply to inches to make it readable
+    private static final float inToMM = 25.4f;
+
+
     //identity mats to be constructed later in the project
-    private MatOfPoint3f point = new MatOfPoint3f(new Point3(0, 0, 0));
+    private MatOfPoint3f point;
     private Mat tvec;
     private Mat rvec;
     private MatOfDouble distCoff;
@@ -87,8 +93,16 @@ public class VumarkOpenCV extends OpenCVLoad {
     //output mat
     private MatOfPoint2f imagePoints;
 
-
     //will need to get sensor sizes for other phones if I do desire
+    private static final int BOT_LEFT = 0;
+    private static final int BOT_RIGHT = 1;
+    private static final int BOT_FRONT_LEFT = 2;
+    private static final int BOT_FRONT_RIGHT = 3;
+    private static final int TOP_LEFT = 4;
+    private static final int TOP_RIGHT = 5;
+    private static final int TOP_FRONT_LEFT = 6;
+    private static final int TOP_FRONT_RIGHT = 7;
+
 
     @Override
     public void init() {
@@ -97,18 +111,34 @@ public class VumarkOpenCV extends OpenCVLoad {
 
         initOpenCV();
         //constrt matrixes
+        //construct points like a box
+        Point3 botLeft = new Point3(5 * inToMM, -5 * inToMM, 0);
+        Point3 botRight = new Point3(10 * inToMM, -5 * inToMM, 0);
+        Point3 botFrontLeft = new Point3(5 * inToMM, -5 * inToMM, 2 * inToMM);
+        Point3 botFrontRight = new Point3(10 * inToMM, -5 * inToMM, 2 * inToMM);
+
+        Point3 topLeft = new Point3(5 * inToMM, -2 * inToMM, 0);
+        Point3 topRight = new Point3(10 * inToMM, -2 * inToMM, 0);
+        Point3 topFrontLeft = new Point3(5 * inToMM, -2 * inToMM, 2 * inToMM);
+        Point3 topFrontRight = new Point3(10 * inToMM, -2 * inToMM, 2 * inToMM);
+
+        point = new MatOfPoint3f(   botLeft, botRight, botFrontLeft, botFrontRight,
+                                    topLeft, topRight, topFrontLeft, topFrontRight);
+
         tvec = new Mat(3, 1, CV_32FC1);
         rvec = new MatOfFloat(0, 0, 0);
         distCoff = new MatOfDouble(0, 0, 0, 0);
         cameraMatrix = new Mat(3, 3, CV_32FC1);
         cameraMatrix.put(0, 0, new float[] {horizConst, 0, centerX});
         cameraMatrix.put(1, 0, new float[] {0, vertConst, centerY});
-        cameraMatrix.put(0, 0, new float[] {0, 0, 1});
+        cameraMatrix.put(2, 0, new float[] {0, 0, 1});
+        imagePoints = new MatOfPoint2f();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AZPbGaP/////AAAAGcIykH/KO0QNvZGSYxc0fDlVytYrk0HHv6OLmjHsswRvi/1l9RZCkepChaAZup3DIJlrjK2BV57DEz/noNO0oqT9iu2moP/svGmJ+pBG7FlfF4RHxu6UhvVLaKUZCsTJ1zTkd7XnMuRw8aSuIxowOiLJQYcgjmddi11LG26lAr6aRmoWJzr2pv6Yui2Gom0wt9J4+1g3kXqjngnH3h6NPA/6aUfpVngFaFPp5knyDJWZT88THttPsqcKW41QC/qgNh3CHIdADu15Rm51JNRlvG+2+sYstiHeHFQqCDwUkTgWor0v/Bk+xXoj3oUCb4REwT9w94E/VEI4qEAFPpmeo6YgxQ4LLFknu6tgNy8xdD6S";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.NONE;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         telemetry.addData(">", "Press Play to start");
@@ -147,29 +177,17 @@ public class VumarkOpenCV extends OpenCVLoad {
                  * translational components */
             if (pose != null) {
                 VectorF trans = pose.getTranslation();
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
                 // Extract the X, Y, and Z components of the offset of the target relative to the robot
                 double tX = trans.get(0);
                 double tY = trans.get(1);
                 double tZ = trans.get(2);
 
-                // Extract the rotational components of the target relative to the robot
-                double rX = rot.firstAngle;
-                double rY = rot.secondAngle;
-                double rZ = rot.thirdAngle;
-
                 //create translation vector from that data
                 tvec.put(0, 0, tX, tY, tZ);
 
                 try {
                     VuforiaLocalizer.CloseableFrame frame = ray.take();
-                    telemetry.addData("frame", frame.getNumImages() + " images");
-                    for (int i = 0; i < frame.getNumImages(); i++) {
-                        Image temp = frame.getImage(i);
-                        telemetry.addData("image #" + i, "type: %d width: %d height: %d", temp.getFormat(), temp.getBufferWidth(), temp.getBufferHeight());
-                    }
-
                     Mat temp = getMatFromImage(frame.getImage(1));
                     frame.close();
 
@@ -178,10 +196,15 @@ public class VumarkOpenCV extends OpenCVLoad {
 
                     Point[] ray = imagePoints.toArray();
 
-                    for(int i = 0; i < ray.length; i++){
-                        telemetry.addData("Projected point", "X: %d, Y: %d", ray[i].x, ray[i].y);
-                        Imgproc.drawMarker(temp, ray[i], new Scalar(255, 0, 0));
-                    }
+                    //draw a box!
+                    //rectangles
+                    Scalar color = new Scalar(0, 255, 0);
+                    for(int i = 0; i < 2; i++)
+                        for(int o = 1; o < 4; o++)
+                            Imgproc.line(temp, ray[i * 4 + o - 1], ray[i * 4 + o], color);
+
+                    //connect the rectangles
+                    for(int i = 0; i < 4; i++) Imgproc.line(temp, ray[i], ray[i + 4], color);
 
                     //convert to bitmap
                     final Bitmap bm = Bitmap.createBitmap(temp.cols(), temp.rows(), Bitmap.Config.ARGB_8888);
@@ -221,9 +244,8 @@ public class VumarkOpenCV extends OpenCVLoad {
         grey.get(ray);
         thing.put(0, 0, ray);
         //rotate -90
-        Mat dst = new Mat(thing.cols(), thing.rows(), CV_8U);
         Core.transpose(thing, thing);
-        Core.flip(thing, thing, 1);
+        Core.flip(thing, thing, 0);
 
         //fill color space
         Imgproc.cvtColor(thing, thing, Imgproc.COLOR_GRAY2RGB);
