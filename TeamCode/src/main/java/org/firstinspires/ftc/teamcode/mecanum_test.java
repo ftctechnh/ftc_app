@@ -54,14 +54,16 @@ public class mecanum_test extends LinearOpMode {
         }
         */
         while (opModeIsActive()){
-            drive = -gamepad1.left_stick_y;
+            //start: define turn
+            drive = -gamepad1.left_stick_y; //turn power
 
-            turn = gamepad1.right_stick_x;
+            turn = gamepad1.right_stick_x; //turn direction
 
             left  = drive + turn;
             right = drive - turn;
+            //End: define turn
 
-            max = Math.max(abs(left), abs(right));
+            max = Math.max(abs(left), abs(right)); //
             if (max > 1.0)
             {
                 left /= max;
