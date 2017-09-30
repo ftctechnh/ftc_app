@@ -47,23 +47,23 @@ public class Camera_test extends OpMode {
             }
         }
         camera = Camera.open(cameraId);
-
-
+return camera;
+    }
 
 
     private int findBackFacingCamera() {
-        int cameraId = -1;
+        int Id = -1;
         // Search for the back facing camera
         int numberOfCameras = Camera.getNumberOfCameras();
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(i, info);
             if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                cameraId = i;
+                Id = i;
                 break;
             }
         }
-        return cameraId;
+        return Id;
     }
 
 
