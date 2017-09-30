@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -24,6 +25,9 @@ public class Robot {
     public DcMotor motorRight;
     public DcMotor motorLeft;
 
+    public Servo servoRightPaddle;
+    public Servo servoLeftPaddle;
+
     public Robot(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.hardwareMap = hardwareMap;
@@ -38,6 +42,9 @@ public class Robot {
 
         this.motorLeft = this.hardwareMap.dcMotor.get("motorLeft");
         this.motorRight = this.hardwareMap.dcMotor.get("motorRight");
+
+        this.servoRightPaddle = hardwareMap.servo.get("servoRightPaddle");
+        this.servoLeftPaddle = hardwareMap.servo.get("servoLeftPaddle");
 
         resetHardwarePositions();
     }
@@ -70,6 +77,11 @@ public class Robot {
 
     public void resetServos() {
 
+        this.servoLeftPaddle.setDirection(Servo.Direction.REVERSE);
+        this.servoRightPaddle.setDirection(Servo.Direction.REVERSE);
+
+        this.servoLeftPaddle.setPosition(0.0);
+        this.servoRightPaddle.setPosition(0.0);
     }
 
     public void setDriveMotorForwardDirection() {

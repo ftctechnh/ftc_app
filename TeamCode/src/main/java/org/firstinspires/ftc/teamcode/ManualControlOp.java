@@ -3,13 +3,17 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+@Autonomous(name="SimpleRobot", group="Concept")
 
 public class ManualControlOp extends OpMode {
     private static final String KEY = "Manual";
+    public static final double SERVO_OPEN = 0.7;
+    public static final int SERVO_CLOSE = 0;
 
     private Robot robot;
 
@@ -37,16 +41,21 @@ public class ManualControlOp extends OpMode {
         loopCounter = loopCounter + 1;
 
         driver_controlDriveMotors();
-//        operator_controlBeaconButton();
+        operator_controlPaddles();
 
     }
 
-    private void operator_controlBeaconButton() {
+    private void operator_controlPaddles() {
 
-        if (gamepad1.y) {
-
-        } else {
+        if (gamepad1.x) {
+            robot.servoLeftPaddle.setPosition(SERVO_OPEN);
+            robot.servoRightPaddle.setPosition(SERVO_OPEN);
         }
+        if (gamepad1.b) {
+            robot.servoLeftPaddle.setPosition(SERVO_CLOSE);
+            robot.servoRightPaddle.setPosition(SERVO_CLOSE);
+        }
+
     }
 
 
