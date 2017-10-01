@@ -10,13 +10,8 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     private static final int COUNTS_PER_MOTOR_REV = 1120;
 
-    private static final double GYRO_ERROR_THRESHOLD = 1.0;
-
-    private static final double P_GYRO_TURN_COEFF = 0.01;
-    private static final double P_GYRO_DRIVE_COEFF = 0.008;
-
-    protected static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
-            (WHEEL_DIAMETER_INCHES * Math.PI));
+    protected static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     private DcMotor frontLeft, frontRight, backLeft, backRight, middleLeft, middleRight;
     private LinearOpMode opMode;
@@ -79,16 +74,14 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     }
 
-
     @Override
     public void directionalDrive(double angleDegrees, double speed, int targetDistance) {
-
-        int encoderTargetCounts = COUNTS_PER_INCH * targetDistance;
+        double encoderTargetCounts = COUNTS_PER_INCH * targetDistance;
         double angleRadians = Math.toRadians(angleDegrees);
-        int lateralCounts= encoderTargetCounts * (int)Math.sin(angleRadians);
-        int axialCounts = encoderTargetCounts * (int)Math.cos(angleRadians);
+        int lateralCounts = (int)(encoderTargetCounts * Math.sin(angleRadians));
+        int axialCounts = (int)(encoderTargetCounts * Math.cos(angleRadians));
 
-        // RUN_TO_POSITION)=run to a set distance rather than
+        // RUN_TO_POSITION = run to a set distance rather than
         // using encoders or run with a certain voltage
         setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
