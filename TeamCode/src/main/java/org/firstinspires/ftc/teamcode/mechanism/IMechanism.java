@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanism;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * A mechanism represents a discrete piece of hardware on the robot
@@ -14,5 +15,5 @@ public interface IMechanism {
      *
      * @param opMode the calling op-mode
      */
-    void initialize(LinearOpMode opMode);
+    void initialize(OpMode opMode);
 }

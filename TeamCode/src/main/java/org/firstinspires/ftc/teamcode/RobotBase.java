@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
@@ -78,7 +79,7 @@ public abstract class RobotBase {
             throw new UnsupportedOperationException("distance sensor not enabled");
         }
 
-        driveTrain.enableEncoders(true);
+        driveTrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         while(opMode.opModeIsActive()) {
             distance = distanceSensor.getDistance(DistanceUnit.CM);

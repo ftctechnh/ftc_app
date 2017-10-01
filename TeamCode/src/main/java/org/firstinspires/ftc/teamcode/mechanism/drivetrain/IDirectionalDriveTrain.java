@@ -10,7 +10,11 @@ public interface IDirectionalDriveTrain extends IDriveTrain {
      * Drive in the direction specified as an angle in degrees at the specified speed for the set
      * distance
      *
-     * @param angleDegrees the angle of which to drive at
+     * @param angleDegrees the angle to drive at in relation to the robot. <br>
+     *                     0 deg = Forward <br>
+     *                     90 deg = Right <br>
+     *                     -90 deg = Left <br>
+     *                     180 deg = Backwards <br>
      * @param speed speed at which to drive at
      * @param targetDistance the distance the robot should drive <b>in inches</b>
      */
@@ -18,7 +22,7 @@ public interface IDirectionalDriveTrain extends IDriveTrain {
 
     /**
      * Drives the robot in the direction specified by {@code speedX} and {@code speedY}
-     * indefinitely.
+     * indefinitely unless overridden by some other command.
      *
      * @param speedX the axial movement speed
      * @param speedY the lateral movement speed

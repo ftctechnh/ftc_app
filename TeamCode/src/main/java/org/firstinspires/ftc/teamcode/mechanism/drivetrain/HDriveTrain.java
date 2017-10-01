@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mechanism.drivetrain;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -10,17 +11,13 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     private static final int COUNTS_PER_MOTOR_REV = 1120;
 
-    private static final double GYRO_ERROR_THRESHOLD = 1.0;
-
-    private static final double P_GYRO_TURN_COEFF = 0.01;
-    private static final double P_GYRO_DRIVE_COEFF = 0.008;
-
-    protected static final int COUNTS_PER_INCH = (int)(COUNTS_PER_MOTOR_REV /
-            (WHEEL_DIAMETER_INCHES * Math.PI));
+    protected static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     private DcMotor frontLeft, frontRight, backLeft, backRight, middleLeft, middleRight;
-    private LinearOpMode opMode;
+    private OpMode opMode;
     private DcMotor.RunMode mode;
+    private boolean isRunningToPosition;
 
     @Override
     public void pivot(double pivotSpeed) {
@@ -66,7 +63,7 @@ public class HDriveTrain implements IDirectionalDriveTrain {
     }
 
     @Override
-    public void initialize(LinearOpMode opMode) {
+    public void initialize(OpMode opMode) {
         this.opMode = opMode;
         HardwareMap hWMap = opMode.hardwareMap;
 
@@ -76,19 +73,15 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         backLeft = hWMap.dcMotor.get("bl");
         middleLeft = hWMap.dcMotor.get("ml");
         middleRight = hWMap.dcMotor.get("mr");
-
     }
 
-
-    @Override
-    public void directionalDrive(double angleDegrees, double speed, int targetDistance) {
-
-        int encoderTargetCounts = COUNTS_PER_INCH * targetDistance;
+    private void setDirectionalTargetPosition(double angleDegrees, double speed, int targetDistance) {
+        double encoderTargetCounts = COUNTS_PER_INCH * targetDistance;
         double angleRadians = Math.toRadians(angleDegrees);
-        int lateralCounts= encoderTargetCounts * (int)Math.sin(angleRadians);
-        int axialCounts = encoderTargetCounts * (int)Math.cos(angleRadians);
+        int lateralCounts = (int)(encoderTargetCounts * Math.sin(angleRadians));
+        int axialCounts = (int)(encoderTargetCounts * Math.cos(angleRadians));
 
-        // RUN_TO_POSITION)=run to a set distance rather than
+        // RUN_TO_POSITION = run to a set distance rather than
         // using encoders or run with a certain voltage
         setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -101,17 +94,41 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         middleLeft.setTargetPosition(axialCounts);
         middleRight.setTargetPosition(axialCounts);
 
+        // set motor powers
         frontLeft.setPower(speed);
         frontRight.setPower(speed);
         backLeft.setPower(speed);
         backRight.setPower(speed);
         middleLeft.setPower(speed);
         middleRight.setPower(speed);
+    }
 
-        while(opMode.opModeIsActive() && areDriveMotorsBusy()) {
-            opMode.idle();
+    @Override
+    public void directionalDrive(double angleDegrees, double speed, int targetDistance) {
+        if(!(opMode instanceof LinearOpMode)) {
+            directionalDriveAsync(angleDegrees, speed, targetDistance);
+        } else {
+            directionalDriveSync(angleDegrees, speed, targetDistance);
         }
+    }
 
+    private void directionalDriveAsync(double angleDegrees, double speed, int targetDistance) {
+        if(!this.isRunningToPosition) {
+            setDirectionalTargetPosition(angleDegrees, speed, targetDistance);
+            this.isRunningToPosition = true;
+        } else if(!areDriveMotorsBusy()) {
+            stopDriveMotors();
+            this.isRunningToPosition = false;
+        }
+    }
+
+    private void directionalDriveSync(double angleDegrees, double speed, int targetDistance) {
+        setDirectionalTargetPosition(angleDegrees, speed, targetDistance);
+
+        LinearOpMode linearOpMode = (LinearOpMode)opMode;
+        while(linearOpMode.opModeIsActive() && areDriveMotorsBusy()) {
+            linearOpMode.idle();
+        }
         stopDriveMotors();
     }
 
