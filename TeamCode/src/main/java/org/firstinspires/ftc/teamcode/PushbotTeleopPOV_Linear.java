@@ -102,10 +102,10 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);
 
-            // Use gamepad x and b to open and close the claw
-            if (gamepad1.x)
+            // Use gamepad left & right triggers to open and close the claw
+            if (gamepad1.left_trigger == 1)
                 clawOffset += CLAW_SPEED;
-            else if (gamepad1.b)
+            else if (gamepad1.right_trigger == 1)
                 clawOffset -= CLAW_SPEED;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
