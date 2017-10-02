@@ -2,13 +2,16 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.sun.tools.javac.util.ByteBuffer;
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
@@ -64,7 +67,7 @@ import com.vuforia.Vec3F;
 
 @Autonomous(name="Concept: VuMark OpenCV", group ="Concept")
 //@Disabled
-public class VumarkOpenCV extends OpenCVLoad {
+public class VumarkOpenCV extends OpMode {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
     private VuforiaLocalizerShim vuforia;
@@ -100,21 +103,20 @@ public class VumarkOpenCV extends OpenCVLoad {
     //identity mats to be constructed later in the project
     private Vec3F[] point;
     //storage points
-    private Point imagePoints[];
-    //output mat
-    private Mat out;
+    private float[][] imagePoints;
     //output bitmap
     Bitmap bm;
+    Canvas canvas;
+    Paint p;
+
 
     //storage camera calibration
     private CameraCalibration camCal;
 
     @Override
     public void init() {
-        mView = (ImageView) ((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.OpenCVOverlay);
+        mView = (ImageView)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.OpenCVOverlay);
         mView.setAlpha(1.0f);
-
-        initOpenCV();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -151,11 +153,15 @@ public class VumarkOpenCV extends OpenCVLoad {
         imagePoints = new MatOfPoint2f();
         */
 
-        imagePoints = new Point[8];
+        imagePoints = new float[8][2];
 
         float[] size = camCal.getSize().getData();
 
-        out = new Mat((int)size[0], (int)size[1], CV_8UC4);
+        bm = Bitmap.createBitmap((int)size[0], (int)size[1], Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bm);
+        p = new Paint();
+        p.setColor(Color.GREEN);
+        p.setStrokeWidth(1);
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
@@ -203,42 +209,34 @@ public class VumarkOpenCV extends OpenCVLoad {
                 //use vuforias projectPoints method to project all those box points
                 for(int i = 0; i < point.length; i++){
                     //project
-                    float[] tempPoint = Tool.projectPoint(camCal, goodCodeWritten, point[i]).getData();
+                    imagePoints[i] = Tool.projectPoint(camCal, goodCodeWritten, point[i]).getData();
                     //convert to opencv language
-                    imagePoints[i] = new Point(tempPoint[0], tempPoint[1]);
-                    telemetry.addData("point", "num: %d, x: %f.2, y: %f.2", i, imagePoints[i].x, imagePoints[i].y);
+
+                    telemetry.addData("point", "num: %d, x: %f.2, y: %f.2", i, imagePoints[i][0], imagePoints[i][1]);
                 }
 
                 telemetry.addData("Camera Size", "w: %f.2, h: %f.2", camCal.getSize().getData()[0], camCal.getSize().getData()[1]);
 
-                float[] size = camCal.getSize().getData();
-                final Bitmap bm = Bitmap.createBitmap((int)size[1], (int)size[0], Bitmap.Config.ARGB_8888);
-
-                //reset out
-                //out = Mat.zeros(out.size(), CV_8UC4);
-                //out.create(out.size(), CV_8UC4);
-                //draw a box!
-                //rectangles
-                Scalar color = new Scalar(0, 255, 0);
-                for(int i = 0; i < 2; i++)
-                    for(int o = 0; o < 4; o++)
-                        Imgproc.line(out, imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1], imagePoints[i * 4 + o], color);
-
-                //connect the rectangles
-                for(int i = 0; i < 4; i++) Imgproc.line(out, imagePoints[i], imagePoints[i + 4], color);
-
-                //convert to bitmap
-                Utils.matToBitmap(out, bm);
-                //final Bitmap thing = Bitmap.createScaledBitmap(bm, 640, 1137, true);
 
                 //display!
                 mView.getHandler().post(new Runnable() {
                     @Override
                     public void run() {
-                        //mView.invalidate();
+                        mView.invalidate();
+                        bm.recycle();
+                        float[] size = camCal.getSize().getData();
+                        bm = Bitmap.createBitmap((int)size[0], (int)size[1], Bitmap.Config.ARGB_8888);
+
+                        for(int i = 0; i < 2; i++)
+                            for(int o = 0; o < 4; o++)
+                                canvas.drawLine(imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][0], imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][1], imagePoints[i * 4 + o][0], imagePoints[i * 4 + o][1], p);
+
+                        //connect the rectangles
+                        for(int i = 0; i < 4; i++) canvas.drawLine(imagePoints[i][0], imagePoints[i][1], imagePoints[i + 4][0], imagePoints[i + 4][1], p);
                         mView.setImageBitmap(bm);
                     }
                 });
+
             }
         } else {
             telemetry.addData("VuMark", "not visible");
