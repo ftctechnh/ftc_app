@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * jlemke 9/26/2017 @ 7:26 AM
  */
 
-@TeleOp(name="Mecanum Magnitude Algorithm fConcept", group="Concept")
+@TeleOp(name="Mecanum Drive Test", group="TeleOp")
 public class ImplMecanumDrive extends OpMode
 {
     // move that gear up
