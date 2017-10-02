@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Mecanum Magnitude Algorithm fConcept", group="Concept")
-public class ImplConceptAlgoMagnitude extends OpMode
+public class ImplMecanumDrive extends OpMode
 {
     // move that gear up
     Hardware750 robot = new Hardware750();
@@ -83,15 +83,15 @@ public class ImplConceptAlgoMagnitude extends OpMode
         if (angle < 0) {
             angle += Math.PI*2;
         }
-        double trig = (-1 * gamepad1.left_trigger) + gamepad1.right_trigger;
+        double triggerVal = (-1 * gamepad1.left_trigger) + gamepad1.right_trigger;
         telemetry.addData("ang le", angle);
         telemetry.addData("number of pi", (angle / Math.PI));
         double extraPi = angle / Math.PI;
         //Makes variables for the Voltage Magnitude
-        double VM1 = ((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + trig);
-        double VM2 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + trig);
-        double VM3 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + trig);
-        double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + trig));
+        double VM1 = ((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + triggerVal);
+        double VM2 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) - triggerVal);
+        double VM3 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + triggerVal);
+        double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) - triggerVal));
         //finds the largest Voltage Magnitude above 1 or below -1 and records it
         double [] thing = {1, VM1, VM2, VM3, VM4};
         int idk = 0;
@@ -110,17 +110,25 @@ public class ImplConceptAlgoMagnitude extends OpMode
         for (int i = 1; i < 5; i++) {
             VM20[i - 1] = (thing[i]/thing[idk]);
         }
-        if (VM20[0] > 1) {
+        if(VM20[0] > 1){
             VM20[0] = 1;
+        } else if (VM20[0] < -1){
+            VM20[0] = -1;
         }
-        if (VM20[1] > 1) {
+        if(VM20[1] > 1){
+            VM20[1] = 1;
+        } else if (VM20[1] < -1){
+            VM20[1] = -1;
+        }
+        if(VM20[2] > 1){
             VM20[2] = 1;
+        } else if (VM20[2] < -1){
+            VM20[2] = -1;
         }
-        if (VM20[2] > 1) {
-            VM20[2] = 1;
-        }
-        if (VM20[3] > 1) {
+        if(VM20[3] > 1){
             VM20[3] = 1;
+        } else if (VM20[3] < -1){
+            VM20[3] = -1;
         }
         telemetry.addData("VM1", VM20 [0]);
         telemetry.addData("VM2", VM20 [1]);
