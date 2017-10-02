@@ -54,7 +54,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
     HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
                                                                // could also use HardwarePushbotMatrix class.
 
-    double          clawOffset      = 40;                      // Servo mid position
+    double          clawOffset      = 0;                      // Servo mid position
     final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
 
     @Override
@@ -109,8 +109,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                 clawOffset -= CLAW_SPEED;
 
             // Set the max of servo rotation for the claw
-            if (clawOffset < 40)
-                clawOffset = 40;
+            if (clawOffset < 0)
+                clawOffset = 0;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
             clawOffset = Range.clip(clawOffset, -0.5, 0.5);
