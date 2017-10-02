@@ -99,7 +99,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                 right /= max;
             }
 
-            // Output the safe vales to the motor drives.
+            // Output the safe values to the motor drives.
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);
 
@@ -115,9 +115,9 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 //            robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
             // Use gamepad buttons to move arm up (Y) and down (A)
-            if (gamepad1.y)
+            if (gamepad1.left_bumper)
                 robot.armDrive.setPower(robot.ARM_UP_POWER);
-            else if (gamepad1.a)
+            else if (gamepad1.right_bumper)
                 robot.armDrive.setPower(robot.ARM_DOWN_POWER);
             else
                 robot.armDrive.setPower(0.0);
