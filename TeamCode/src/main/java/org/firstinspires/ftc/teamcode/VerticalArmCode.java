@@ -46,7 +46,7 @@ import org.firstinspires.ftc.robotcore.internal.android.dex.EncodedValueReader;
 
 
 /**
- * Hey! This code runs a motor at full speed!
+ *This moves the vertical arm up and down with a motor~~
  */
 
 @TeleOp(name = "Vertical", group = "BACONbot")
