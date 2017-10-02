@@ -8,6 +8,12 @@ public abstract class RobotCommand
     protected Thread t = null;
 
 
+    public RobotCommand()
+    {
+        // Do nothing
+    }
+
+
     public RobotCommand(RobotComponent COMPONENT)
     {
         component = COMPONENT;
@@ -17,18 +23,29 @@ public abstract class RobotCommand
     /**
      * Runs the command on the main thread.
      */
-    abstract void runSequentially();
+    public abstract void runSequentially();
 
 
     /**
      * Runs the command on a new thread
      */
-    protected void runParallel()
+    public void runParallel()
     {
         if(t == null)
         {
-//            t = new Thread(this::runSequentially);
-//            t.start();
+            t = new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    runSequentially();
+                }
+            });
+
+            t.start();
         }
     }
+
+
+    public abstract void stop();
 }
