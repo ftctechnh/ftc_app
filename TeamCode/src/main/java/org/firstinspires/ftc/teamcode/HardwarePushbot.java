@@ -56,10 +56,7 @@ public class HardwarePushbot
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor  armDrive    = null;
-
-    // disable the claw first
-//    public Servo    leftClaw    = null;
-//    public Servo    rightClaw   = null;
+    public Servo claw = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    = -0.45 ;
@@ -98,10 +95,8 @@ public class HardwarePushbot
         armDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-//        leftClaw  = hwMap.get(Servo.class, "left_hand");
-//        rightClaw = hwMap.get(Servo.class, "right_hand");
-//        leftClaw.setPosition(MID_SERVO);
-//        rightClaw.setPosition(MID_SERVO);
+        claw = hwMap.get(Servo.class, "claw_servo");
+        claw.setPosition(MID_SERVO);
     }
  }
 
