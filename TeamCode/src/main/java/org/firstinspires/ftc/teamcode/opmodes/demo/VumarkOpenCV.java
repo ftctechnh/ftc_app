@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.sun.tools.javac.util.ByteBuffer;
+import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -24,6 +26,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.android.dx.util.ByteArray;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaPoseMatrix;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableImpl;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackablesImpl;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLoad;
 import org.opencv.android.Utils;
 import org.opencv.calib3d.Calib3d;
@@ -43,6 +49,13 @@ import java.util.concurrent.BlockingQueue;
 import static org.opencv.core.CvType.CV_32FC1;
 import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.core.CvType.CV_8UC3;
+import static org.opencv.core.CvType.CV_8UC4;
+
+import com.vuforia.Matrix34F;
+import com.vuforia.Tool;
+import com.vuforia.Trackable;
+import com.vuforia.Vec2F;
+import com.vuforia.Vec3F;
 
 /**
  * Created by Noah on 9/12/2017.
@@ -54,7 +67,7 @@ import static org.opencv.core.CvType.CV_8UC3;
 public class VumarkOpenCV extends OpenCVLoad {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
-    private VuforiaLocalizer vuforia;
+    private VuforiaLocalizerShim vuforia;
     private VuforiaTrackable relicTemplate;
 
     private ImageView mView;
@@ -85,24 +98,16 @@ public class VumarkOpenCV extends OpenCVLoad {
 
 
     //identity mats to be constructed later in the project
-    private MatOfPoint3f point;
-    private Mat tvec;
-    private Mat rvec;
-    private MatOfDouble distCoff;
-    private Mat cameraMatrix;
+    private Vec3F[] point;
+    //storage points
+    private Point imagePoints[];
     //output mat
-    private MatOfPoint2f imagePoints;
+    private Mat out;
+    //output bitmap
+    Bitmap bm;
 
-    //will need to get sensor sizes for other phones if I do desire
-    private static final int BOT_LEFT = 0;
-    private static final int BOT_RIGHT = 1;
-    private static final int BOT_FRONT_LEFT = 2;
-    private static final int BOT_FRONT_RIGHT = 3;
-    private static final int TOP_LEFT = 4;
-    private static final int TOP_RIGHT = 5;
-    private static final int TOP_FRONT_LEFT = 6;
-    private static final int TOP_FRONT_RIGHT = 7;
-
+    //storage camera calibration
+    private CameraCalibration camCal;
 
     @Override
     public void init() {
@@ -110,21 +115,32 @@ public class VumarkOpenCV extends OpenCVLoad {
         mView.setAlpha(1.0f);
 
         initOpenCV();
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "AZPbGaP/////AAAAGcIykH/KO0QNvZGSYxc0fDlVytYrk0HHv6OLmjHsswRvi/1l9RZCkepChaAZup3DIJlrjK2BV57DEz/noNO0oqT9iu2moP/svGmJ+pBG7FlfF4RHxu6UhvVLaKUZCsTJ1zTkd7XnMuRw8aSuIxowOiLJQYcgjmddi11LG26lAr6aRmoWJzr2pv6Yui2Gom0wt9J4+1g3kXqjngnH3h6NPA/6aUfpVngFaFPp5knyDJWZT88THttPsqcKW41QC/qgNh3CHIdADu15Rm51JNRlvG+2+sYstiHeHFQqCDwUkTgWor0v/Bk+xXoj3oUCb4REwT9w94E/VEI4qEAFPpmeo6YgxQ4LLFknu6tgNy8xdD6S";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.NONE;
+        //bwahaha java shim
+        this.vuforia = new VuforiaLocalizerShim(parameters);
+        camCal = vuforia.getCameraCalibration();
+
         //constrt matrixes
         //construct points like a box
-        Point3 botLeft = new Point3(5 * inToMM, -5 * inToMM, 0);
-        Point3 botRight = new Point3(10 * inToMM, -5 * inToMM, 0);
-        Point3 botFrontLeft = new Point3(5 * inToMM, -5 * inToMM, 2 * inToMM);
-        Point3 botFrontRight = new Point3(10 * inToMM, -5 * inToMM, 2 * inToMM);
+        Vec3F botLeft = new Vec3F(5 * inToMM, -5 * inToMM, 0);
+        Vec3F botRight = new Vec3F(5 * inToMM, -10 * inToMM, 0);
+        Vec3F botFrontLeft = new Vec3F(5 * inToMM, -5 * inToMM, 2 * inToMM);
+        Vec3F botFrontRight = new Vec3F(5 * inToMM, -10 * inToMM, 2 * inToMM);
 
-        Point3 topLeft = new Point3(5 * inToMM, -2 * inToMM, 0);
-        Point3 topRight = new Point3(10 * inToMM, -2 * inToMM, 0);
-        Point3 topFrontLeft = new Point3(5 * inToMM, -2 * inToMM, 2 * inToMM);
-        Point3 topFrontRight = new Point3(10 * inToMM, -2 * inToMM, 2 * inToMM);
+        Vec3F topLeft = new Vec3F(3 * inToMM, -5 * inToMM, 0);
+        Vec3F topRight = new Vec3F(3 * inToMM, -10 * inToMM, 0);
+        Vec3F topFrontLeft = new Vec3F(3 * inToMM, -5 * inToMM, 2 * inToMM);
+        Vec3F topFrontRight = new Vec3F(3 * inToMM, -10 * inToMM, 2 * inToMM);
 
-        point = new MatOfPoint3f(   botLeft, botRight, botFrontLeft, botFrontRight,
-                                    topLeft, topRight, topFrontLeft, topFrontRight);
+        point = new Vec3F[] {   botLeft, botRight, botFrontRight, botFrontLeft,
+                                topLeft, topRight, topFrontRight, topFrontLeft};
 
+        /*opencv stuff
         tvec = new Mat(3, 1, CV_32FC1);
         rvec = new MatOfFloat(0, 0, 0);
         distCoff = new MatOfDouble(0, 0, 0, 0);
@@ -133,13 +149,13 @@ public class VumarkOpenCV extends OpenCVLoad {
         cameraMatrix.put(1, 0, new float[] {0, vertConst, centerY});
         cameraMatrix.put(2, 0, new float[] {0, 0, 1});
         imagePoints = new MatOfPoint2f();
+        */
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "AZPbGaP/////AAAAGcIykH/KO0QNvZGSYxc0fDlVytYrk0HHv6OLmjHsswRvi/1l9RZCkepChaAZup3DIJlrjK2BV57DEz/noNO0oqT9iu2moP/svGmJ+pBG7FlfF4RHxu6UhvVLaKUZCsTJ1zTkd7XnMuRw8aSuIxowOiLJQYcgjmddi11LG26lAr6aRmoWJzr2pv6Yui2Gom0wt9J4+1g3kXqjngnH3h6NPA/6aUfpVngFaFPp5knyDJWZT88THttPsqcKW41QC/qgNh3CHIdADu15Rm51JNRlvG+2+sYstiHeHFQqCDwUkTgWor0v/Bk+xXoj3oUCb4REwT9w94E/VEI4qEAFPpmeo6YgxQ4LLFknu6tgNy8xdD6S";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        parameters.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.NONE;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        imagePoints = new Point[8];
+
+        float[] size = camCal.getSize().getData();
+
+        out = new Mat((int)size[0], (int)size[1], CV_8UC4);
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
@@ -147,7 +163,7 @@ public class VumarkOpenCV extends OpenCVLoad {
 
     @Override
     public void start() {
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackables relicTrackables = this.vuforia.loadShimTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
@@ -170,56 +186,59 @@ public class VumarkOpenCV extends OpenCVLoad {
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+            //qualcomm is stupid and didn't let me see the real vuforia matrix, so I shimmed it
+            //heres where is gets good
+            VuforiaDefaultListenerShim writeGoodCode = (VuforiaDefaultListenerShim) relicTemplate.getListener();
+
+            OpenGLMatrix pose = writeGoodCode.getRawPose();
             telemetry.addData("Pose", format(pose));
 
                 /* We further illustrate how to decompose the pose into useful rotational and
                  * translational components */
             if (pose != null) {
-                VectorF trans = pose.getTranslation();
+                //alternate projection!
+                //get vuforia's real position matrix
+                Matrix34F goodCodeWritten = writeGoodCode.getRealPose();
 
-                // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                double tX = trans.get(0);
-                double tY = trans.get(1);
-                double tZ = trans.get(2);
-
-                //create translation vector from that data
-                tvec.put(0, 0, tX, tY, tZ);
-
-                try {
-                    VuforiaLocalizer.CloseableFrame frame = ray.take();
-                    Mat temp = getMatFromImage(frame.getImage(1));
-                    frame.close();
-
-                    //now we have a mat, lets draw a point on it from conversions in 3d space
-                    Calib3d.projectPoints(point, rvec, tvec, cameraMatrix, distCoff, imagePoints);
-
-                    Point[] ray = imagePoints.toArray();
-
-                    //draw a box!
-                    //rectangles
-                    Scalar color = new Scalar(0, 255, 0);
-                    for(int i = 0; i < 2; i++)
-                        for(int o = 1; o < 4; o++)
-                            Imgproc.line(temp, ray[i * 4 + o - 1], ray[i * 4 + o], color);
-
-                    //connect the rectangles
-                    for(int i = 0; i < 4; i++) Imgproc.line(temp, ray[i], ray[i + 4], color);
-
-                    //convert to bitmap
-                    final Bitmap bm = Bitmap.createBitmap(temp.cols(), temp.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(temp, bm);
-
-                    //display!
-                    mView.getHandler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mView.setImageBitmap(bm);
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    //oops
+                //use vuforias projectPoints method to project all those box points
+                for(int i = 0; i < point.length; i++){
+                    //project
+                    float[] tempPoint = Tool.projectPoint(camCal, goodCodeWritten, point[i]).getData();
+                    //convert to opencv language
+                    imagePoints[i] = new Point(tempPoint[0], tempPoint[1]);
+                    telemetry.addData("point", "num: %d, x: %f.2, y: %f.2", i, imagePoints[i].x, imagePoints[i].y);
                 }
+
+                telemetry.addData("Camera Size", "w: %f.2, h: %f.2", camCal.getSize().getData()[0], camCal.getSize().getData()[1]);
+
+                float[] size = camCal.getSize().getData();
+                final Bitmap bm = Bitmap.createBitmap((int)size[1], (int)size[0], Bitmap.Config.ARGB_8888);
+
+                //reset out
+                //out = Mat.zeros(out.size(), CV_8UC4);
+                //out.create(out.size(), CV_8UC4);
+                //draw a box!
+                //rectangles
+                Scalar color = new Scalar(0, 255, 0);
+                for(int i = 0; i < 2; i++)
+                    for(int o = 0; o < 4; o++)
+                        Imgproc.line(out, imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1], imagePoints[i * 4 + o], color);
+
+                //connect the rectangles
+                for(int i = 0; i < 4; i++) Imgproc.line(out, imagePoints[i], imagePoints[i + 4], color);
+
+                //convert to bitmap
+                Utils.matToBitmap(out, bm);
+                //final Bitmap thing = Bitmap.createScaledBitmap(bm, 640, 1137, true);
+
+                //display!
+                mView.getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        //mView.invalidate();
+                        mView.setImageBitmap(bm);
+                    }
+                });
             }
         } else {
             telemetry.addData("VuMark", "not visible");
@@ -244,12 +263,42 @@ public class VumarkOpenCV extends OpenCVLoad {
         grey.get(ray);
         thing.put(0, 0, ray);
         //rotate -90
-        Core.transpose(thing, thing);
+        //Core.transpose(thing, thing);
         Core.flip(thing, thing, 0);
 
         //fill color space
         Imgproc.cvtColor(thing, thing, Imgproc.COLOR_GRAY2RGB);
 
         return thing;
+    }
+
+    /**
+     * I'm so sorry
+     * Shims cerated so I can access the pose in vuforia matrix form
+     * they are protected variables, so I need to java fu my way into them
+     */
+    //start from the very begining...
+    //vuforia localizer shim
+    private static class VuforiaLocalizerShim extends VuforiaLocalizerImpl {
+        //constructor
+        VuforiaLocalizerShim(VuforiaLocalizer.Parameters params){
+            super(params);
+        }
+        //the shim part
+        public VuforiaTrackables loadShimTrackablesFromAsset(String assetName){
+            return loadTrackablesFromAsset(assetName, VuforiaDefaultListenerShim.class);
+        }
+    }
+    //vuforia default listener shim
+    public static class VuforiaDefaultListenerShim extends VuforiaTrackableDefaultListener {
+        //constructor shim
+        public VuforiaDefaultListenerShim(VuforiaTrackable trackable) {
+            super(trackable);
+        }
+        //and the jesus data gettums
+        @Nullable
+        public synchronized Matrix34F getRealPose() {
+            return this.currentPose;
+        }
     }
 }
