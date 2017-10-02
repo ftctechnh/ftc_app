@@ -157,8 +157,8 @@ Declare global variables here
         /*
         read the gamepad values and put into variables
          */
-        float leftY_gp1 = (-gamepad1.left_stick_y)*leftWheelMotorFront.getMaxSpeed();
-        float rightY_gp1 = (-gamepad1.right_stick_y)*leftWheelMotorFront.getMaxSpeed();
+        float leftY_gp1 = (-gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed;
+        float rightY_gp1 = (-gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
 
         //run the motors by setting power to the motors with the game pad values
         leftWheelMotorFront.setPower(leftY_gp1);

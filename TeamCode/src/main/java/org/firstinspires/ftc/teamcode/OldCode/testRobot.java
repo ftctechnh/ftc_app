@@ -292,11 +292,11 @@ Declare global variables here
             leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            leftWheelMotorBack.setMaxSpeed((int) leftTicks);
-            leftWheelMotorFront.setMaxSpeed((int) leftTicks);
-            rightWheelMotorBack.setMaxSpeed((int) rightTicks);
-            rightWheelMotorFront.setMaxSpeed((int) rightTicks);
+            //setMaxSpeed has been removed as of version 3.00
+//            leftWheelMotorBack.setMaxSpeed((int) leftTicks);
+//            leftWheelMotorFront.setMaxSpeed((int) leftTicks);
+//            rightWheelMotorBack.setMaxSpeed((int) rightTicks);
+//            rightWheelMotorFront.setMaxSpeed((int) rightTicks);
         }
 
     public void rangeTest(){

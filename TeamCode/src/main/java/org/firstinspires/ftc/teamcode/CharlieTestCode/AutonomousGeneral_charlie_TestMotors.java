@@ -227,10 +227,11 @@ public class AutonomousGeneral_charlie_TestMotors extends LinearOpMode {
         back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        back_left_motor.setMaxSpeed((int) leftTicks);
-        front_left_motor.setMaxSpeed((int) leftTicks);
-        back_right_motor.setMaxSpeed((int) rightTicks);
-        front_right_motor.setMaxSpeed((int) rightTicks);
+        //setMaxSpeed has been removed as of version 3.00
+//        back_left_motor.setMaxSpeed((int) leftTicks);
+//        front_left_motor.setMaxSpeed((int) leftTicks);
+//        back_right_motor.setMaxSpeed((int) rightTicks);
+//        front_right_motor.setMaxSpeed((int) rightTicks);
     }
 
     public void setMotorsToEncCharlie(double leftDist, double rightDist, double time){
@@ -241,11 +242,11 @@ public class AutonomousGeneral_charlie_TestMotors extends LinearOpMode {
         front_left_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        back_left_motor.setMaxSpeed((int) leftTicks);
-        front_left_motor.setMaxSpeed((int) leftTicks);
-        back_right_motor.setMaxSpeed((int) rightTicks);
-        front_right_motor.setMaxSpeed((int) rightTicks);
+        //setMaxSpeed has been removed as of version 3.00
+//        back_left_motor.setMaxSpeed((int) leftTicks);
+//        front_left_motor.setMaxSpeed((int) leftTicks);
+//        back_right_motor.setMaxSpeed((int) rightTicks);
+//        front_right_motor.setMaxSpeed((int) rightTicks);
     }
 
     public void setMotorsModeToColorSensing()

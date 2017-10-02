@@ -554,10 +554,11 @@ public class AutonomousGeneral extends LinearOpMode {
         back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        back_left_motor.setMaxSpeed((int) leftTicks);
-        front_left_motor.setMaxSpeed((int) leftTicks);
-        back_right_motor.setMaxSpeed((int) rightTicks);
-        front_right_motor.setMaxSpeed((int) rightTicks);
+        //setMaxSpeed methods have been removed as of version 3.00
+//        back_left_motor.setMaxSpeed((int) leftTicks);
+//        front_left_motor.setMaxSpeed((int) leftTicks);
+//        back_right_motor.setMaxSpeed((int) rightTicks);
+//        front_right_motor.setMaxSpeed((int) rightTicks);
     }
 
     public void setMotorsModeToColorSensing()

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Main.beta.AutonomousGeneral;
  * Created by adityamavalankar on 1/13/17.
  */
 @Autonomous(name = "newBlueBeaconPressAuto_two")
-@Disabled
+//@Disabled
 public class newBlueBeaconPress_autoTwo extends AutonomousGeneral {
 
 
