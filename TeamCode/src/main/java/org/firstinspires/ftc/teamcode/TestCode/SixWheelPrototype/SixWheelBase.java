@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.TestCode.SixWheelPrototype.Drivetrain.Driv
 public class SixWheelBase extends RobotBase
 {
     /** The robot's drivetrain object */
+    @SuppressWarnings("WeakerAccess")
     Drivetrain drivetrain = new Drivetrain();
 
 

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Core.RobotComponent;
 /**
  * Robot Component that manages the spool aspect of the spools prototype
  */
-public class Spools extends RobotComponent
+class Spools extends RobotComponent
 {
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;

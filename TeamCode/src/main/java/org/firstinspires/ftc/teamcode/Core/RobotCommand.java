@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Core;
 
 public abstract class RobotCommand
 {
+    @SuppressWarnings("WeakerAccess")
     protected RobotComponent component = null;
 
     protected Thread t = null;
@@ -14,6 +15,7 @@ public abstract class RobotCommand
     }
 
 
+    @SuppressWarnings("unused")
     public RobotCommand(RobotComponent COMPONENT)
     {
         component = COMPONENT;

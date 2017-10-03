@@ -19,9 +19,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 @TeleOp(name = "Vuforia Test" , group = "Prototypes")
+@SuppressWarnings("unused")
 public class OpVuforiaInfo extends LinearOpMode
 {
-    VuforiaLocalizer vuforia;
+    @SuppressWarnings("FieldCanBeLocal")
+    private VuforiaLocalizer vuforia;
 
     public void runOpMode() throws InterruptedException
     {
@@ -39,15 +41,6 @@ public class OpVuforiaInfo extends LinearOpMode
 
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
-
-
-
-        VuforiaTrackables test = this.vuforia.loadTrackablesFromAsset("Test_OT");
-
-        VuforiaTrackable intelStick = test.get(0);
-        intelStick.setName("Intel Stick");
-
-
 
         waitForStart();
 
@@ -111,30 +104,6 @@ public class OpVuforiaInfo extends LinearOpMode
             }
             else {
                 telemetry.addData("VuMark", "not visible");
-            }
-
-            OpenGLMatrix pose2 = ((VuforiaTrackableDefaultListener)intelStick.getListener()).getPose();
-
-            if(pose2 != null)
-            {
-
-
-                VectorF translate = pose2.getTranslation();
-                Orientation rotate = Orientation.getOrientation(pose2 , AxesReference.EXTRINSIC , AxesOrder.XYZ , AngleUnit.DEGREES);
-
-                telemetry.addData("Test tx" , translate.get(0));
-                telemetry.addData("Test ty" , translate.get(1));
-                telemetry.addData("Test tz" , translate.get(2));
-
-                telemetry.addLine();
-
-                telemetry.addData("Test rx" , rotate.firstAngle);
-                telemetry.addData("Test ry" , rotate.secondAngle);
-                telemetry.addData("Test rz" , rotate.thirdAngle);
-            }
-            else
-            {
-                telemetry.addData("test" , "not visible");
             }
 
             telemetry.update();

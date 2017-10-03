@@ -13,8 +13,6 @@
 package org.firstinspires.ftc.teamcode.TestCode.SixWheelPrototype.Drivetrain;
 
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -57,6 +55,7 @@ public class Drivetrain extends RobotComponent
 
 
     @SequentialCommand
+    @SuppressWarnings("unused")
     public void stdDrive(double drive , double rotate)
     {
         motorLeft.setPower(drive + rotate);
@@ -65,6 +64,7 @@ public class Drivetrain extends RobotComponent
 
 
     @ParallelCommand
+    @SuppressWarnings("unused")
     public void testParallel()
     {
         Thread t;

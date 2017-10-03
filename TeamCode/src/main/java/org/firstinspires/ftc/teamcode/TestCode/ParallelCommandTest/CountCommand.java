@@ -5,7 +5,7 @@ import android.util.Log;
 import org.firstinspires.ftc.teamcode.Core.RobotCommand;
 
 
-public class CountCommand extends RobotCommand
+class CountCommand extends RobotCommand
 {
     private boolean _running = false;
     private boolean _stop = false;
@@ -39,9 +39,9 @@ public class CountCommand extends RobotCommand
 
                         try
                         {
-                            t.sleep(1_000);
+                            Thread.sleep(1_000);
                         }
-                        catch(Exception e){}
+                        catch(Exception ignored){}
                     }
                 }
             });
@@ -59,7 +59,7 @@ public class CountCommand extends RobotCommand
     }
 
 
-    public boolean isRunning()
+    boolean isRunning()
     {
         return _running;
     }

@@ -37,6 +37,7 @@ public class OpMain extends LinearOpMode
         robot.init(hardwareMap);
         waitForStart();
 
+        //noinspection StatementWithEmptyBody
         while(opModeIsActive() && !isStopRequested())
         {
 //            robot.drivetrain.runSequential(robot.drivetrain.stdDrive);

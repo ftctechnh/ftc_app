@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.Core.Utility.UtilToggle;
 
 
 @TeleOp(name = "Parallel Command Test" , group = "Prototypes")
+@SuppressWarnings("unused")
 public class OpTest extends LinearOpMode
 {
     private UtilToggle toggleCommand = new UtilToggle();
