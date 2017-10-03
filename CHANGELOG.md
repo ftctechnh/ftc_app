@@ -14,6 +14,14 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Thorough documentation on the new system (teamcode.Core package)
 - Inevitable bug fixes that come from not being able to test code
 
+### [0.3.0] - 2017-10-02
+#### Added
+- Code for testing Vuforia
+- Code for testing the Core package
+- Code for testing parallel commands
+#### Fixed
+- Supressed warnings for clean build
+
 ### [0.2.0] - 2017-09-26
 #### Added
 - Code for testing the spools prototype
