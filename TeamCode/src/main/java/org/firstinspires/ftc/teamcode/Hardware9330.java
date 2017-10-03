@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by robot on 9/25/2017.
@@ -11,6 +12,8 @@ public class Hardware9330 {
     /* Public OpMode members. */
 
     public Servo  grabber    = null;
+    public DcMotor left = null;
+    public DcMotor right = null;
 
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -27,5 +30,7 @@ public class Hardware9330 {
 
         grabber = hwMap.servo.get("grabber");
         grabber.setDirection(Servo.Direction.REVERSE);
+        left = hwMap.dcMotor.get("leftMotor");
+        right = hwMap.dcMotor.get("rightMotor");
     }
 }
