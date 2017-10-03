@@ -12,7 +12,9 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 
 ### [Unreleased]
 - Thorough documentation on the new system (teamcode.Core package)
-- Inevitable bug fixes that come from not being able to test code
+- Wrapper class for Vuforia
+- Support for button actions such as double clicking and long clicks
+- Support for motor speed ramping
 
 ### [0.3.0] - 2017-10-02
 #### Added
