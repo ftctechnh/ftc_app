@@ -23,14 +23,17 @@ import java.lang.reflect.ParameterizedType;
 public abstract class AutonomousOpMode<R extends Robot> extends LinearOpMode {
     protected R robot;
 
+    /**
+     * Creates a new instance of AutonomousOpMode
+     */
     public AutonomousOpMode() {
         try {
             //noinspection unchecked
             robot = (R)(
                     // Get generic type class
                     ((Class)((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0])
-                            // Get robot class
-                            .getConstructor(HardwareMap.class, Telemetry.class)
+                    // Get robot class
+                    .getConstructor(HardwareMap.class, Telemetry.class)
                     // Instantiate robot class
                     .newInstance(hardwareMap, telemetry)
             );
