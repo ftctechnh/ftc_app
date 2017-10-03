@@ -88,26 +88,49 @@ public class Drive
         rearLeft.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
         rearRight.setMode( DcMotor.RunMode.RUN_USING_ENCODER );
     }
-/*
-    public void vector(double driveY, double driveX)
+
+    /*
+     * Use X (-1 full left, +1 full right) and Y (-1 backwards, +1 forwards)
+     * from the joystick input to determine power settings for each wheel.
+     * In order to do this, the X & Y inputs are translated from Cartesian coordinates
+     * to polar coordinates. This gives a direction in terms of an angle and a
+     * speed in terms of a magnitude. These values can be used with standard formulas
+     * found on-line to translate into speeds for each of the wheels.
+     *
+     */
+    public void VectorMove( double xLeftRight, double yFwdRev, double rotate )
     {
-        if (driveY > 0)
-        {
+        // Create polar coordinate variables theta and magnitude for the angle and magnitude.
+        // During creation, calculate the values from the input.
+        double magnitude = Math.sqrt( ( xLeftRight * xLeftRight ) + ( yFwdRev * yFwdRev ) );
+        double theta = Math.atan2( yFwdRev, xLeftRight ) + ( Math.PI / 4.0 );
 
-        } else if (driveY < 0)
-        {
+        // calculate powers for wheel motors
+        double frontLeftPower = magnitude * Math.sin( theta ) + rotate;
+        double frontRightPower = magnitude * Math.cos( theta ) - rotate;
+        double rearLeftPower = magnitude * Math.sin( theta ) + rotate;
+        double rearRightPower = magnitude * Math.cos( theta ) - rotate;
 
+        // Powers can be > 1 using above equations, so scale if they are
+        double biggestFront = Math.max( Math.abs( frontLeftPower ), Math.abs( frontRightPower ) );
+        double biggestRear = Math.max( Math.abs( rearLeftPower ), Math.abs( rearRightPower ) );
+        double biggest = Math.max( biggestFront, biggestFront );
+
+        if ( biggest > 1.0 )
+        {
+            frontLeftPower = frontLeftPower / biggest;
+            frontRightPower = frontRightPower / biggest;
+            rearLeftPower = rearLeftPower / biggest;
+            rearRightPower = rearRightPower / biggest;
         }
 
-        if (driveX > 0)
-        {
+        frontLeft.setPower(frontLeftPower);
+        rearLeft.setPower(frontRightPower);
+        frontRight.setPower(rearLeftPower);
+        rearRight.setPower(rearRightPower);
 
-        } else if (driveX < 0)
-        {
-
-        }
     }
- */
+
 
     // function to move forward
     public void forward( double power )
@@ -127,8 +150,8 @@ public class Drive
         rearRight.setPower(1);
     }
 
-
     // function to move backward
+
     public void backward( double power)
     {
         frontLeft.setPower(power);
