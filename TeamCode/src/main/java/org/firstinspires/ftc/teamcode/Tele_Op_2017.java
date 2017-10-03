@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -53,6 +54,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * test test2ladedagftygcdfygcfng
  * test mscott
+ *
+ * test arush
  */
 
 @TeleOp(name="Tele Op 2017", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
@@ -61,28 +64,65 @@ public class Tele_Op_2017 extends OpMode
 {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
+
+    private DcMotor frontLeft = null;
+    private DcMotor frontRight = null;
+    private DcMotor rearLeft = null;
+    private DcMotor rearRight = null;
+
+    HardwareMap robotMap = hardwareMap;
+    private Drive go = null;
+   // private Drive go = new Drive(hardwareMap);
+
+    private Pole wep = new Pole();
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initializing");
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        // leftMotor  = hardwareMap.dcMotor.get("left_drive");
+        frontLeft  = hardwareMap.dcMotor.get("front_left");
+        frontRight  = hardwareMap.dcMotor.get("front_right");
+        rearLeft  = hardwareMap.dcMotor.get("rear_left");
+        rearRight  = hardwareMap.dcMotor.get("rear_right");
+
+        go = new Drive(frontLeft, frontRight, rearLeft, rearRight);
+/*
+        // Set direction so positive is always forward with respect to
+        // the robot. Right side motors need to be set to reverse, because
+        // they spin counter-clockwise to move the robot forward.
+        frontRight.setDirection( DcMotor.Direction.REVERSE );
+        rearRight.setDirection( DcMotor.Direction.REVERSE );
+        frontRight.setDirection( DcMotor.Direction.FORWARD );
+        rearRight.setDirection( DcMotor.Direction.FORWARD );
+
+        // Set all motors to zero power. Don't want robot moving till
+        // we're ready.
+        frontLeft.setPower( 0 );
+        frontRight.setPower( 0 );
+        rearLeft.setPower( 0 );
+        rearRight.setPower( 0 );
+
+        // Set all motors to run with encoders.
+
+        frontLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+        frontRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+        rearLeft.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+        rearRight.setMode( DcMotor.RunMode.RUN_WITHOUT_ENCODER );
+*/
         // rightMotor = hardwareMap.dcMotor.get("right_drive");
 
         // eg: Set the drive motor directions:
         // Reverse the motor that runs backwards when connected directly to the battery
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -107,9 +147,109 @@ public class Tele_Op_2017 extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
+        // Show joystick information as some other illustrative data
+        telemetry.addLine("left joystick | ")
+                .addData("x", gamepad1.left_stick_x)
+                .addData("y", gamepad1.left_stick_y);
+        telemetry.addLine("right joystick | ")
+                .addData("x", gamepad1.right_stick_x)
+                .addData("y", gamepad1.right_stick_y);
+
+        // Show joystick information as some other illustrative data
+        telemetry.addLine("left joystick2 | ")
+                .addData("x", gamepad2.left_stick_x)
+                .addData("y", gamepad2.left_stick_y);
+        telemetry.addLine("right joystick2 | ")
+                .addData("x", gamepad2.right_stick_x)
+                .addData("y", gamepad2.right_stick_y);
+
+        telemetry.addLine("Front Motors | ")
+                .addData("l", frontLeft.getPower())
+                .addData("r", frontRight.getPower());
+        telemetry.addLine("Rear Motors | ")
+                .addData("l", frontLeft.getPower())
+                .addData("r", frontRight.getPower());
+
+
+
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
         // leftMotor.setPower(-gamepad1.left_stick_y);
         // rightMotor.setPower(-gamepad1.right_stick_y);
+        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+
+/*
+        // Use gamepad Y & A raise and lower the arm
+        if (gamepad1.a)
+           wep.lift();
+        else
+            wep.liftstop();
+
+            if (gamepad1.y)
+           wep.lower();
+
+        // Use gamepad X & B to extend and retract the arm
+        if (gamepad1.x)
+           wep.extend();
+        else if (gamepad1.b)
+           wep.retract();
+           */
+
+        if (gamepad1.left_stick_y > 0.0)
+        {
+            // go.forward(gamepad1.left_stick_y);
+            go.forward( );
+        }
+        else if (gamepad1.left_stick_y < 0.0)
+        {
+            // go.backward(gamepad1.left_stick_y);
+            go.backward( );
+        } else{
+            go.forward(0.0);
+            // go.backward(0);
+        }
+
+        if (gamepad1.right_stick_x < 0.0) {
+            // go.left(gamepad1.right_stick_x);
+            go.diagonal45( );
+        }
+        else if (gamepad1.right_stick_x > 0.0)
+        {
+            // go.right(gamepad1.right_stick_x);
+            go.diagonal135( );
+        } else {
+            go.left(0.0);
+            // go.right(0);
+        }
+
+
+/*
+        if (gamepad1.left_stick_y > 0)
+        {
+            go.forward(1);
+        }
+        else if (gamepad1.left_stick_y < 0)
+        {
+            go.backward(1);
+        } else {
+            go.backward(0);
+            go.forward(0);
+        }
+
+        if (gamepad1.left_stick_x > 0)
+        {
+            go.left(1);
+        }
+        else if (gamepad1.left_stick_x < 0)
+        {
+            go.right(1);
+        }
+        else
+        {
+            go.left(0);
+            go.right(0);
+        }
+*/
+        telemetry.update();
     }
 
     /*
