@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Hardware9330;
+import org.firstinspires.ftc.teamcode.subsystems.Grabber9330;
+
 /**
  * Created by robot on 9/25/2017.
  */
@@ -9,7 +12,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name="TeleOp9330", group="Opmode")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class TeleOp9330 extends OpMode {
+    Hardware9330 robotMap = new Hardware9330();
+    Grabber9330 grabber9330 = new Grabber9330(robotMap);
 
+    float yPower = 0;
+    float spinPower = 0;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -35,7 +42,17 @@ public class TeleOp9330 extends OpMode {
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop()
+    {
+        yPower = gamepad1.left_stick_y;
+        spinPower = gamepad1.right_stick_x;
+
+        Hardware9330.leftMotor.setPower(-yPower - spinPower);
+        Hardware9330.rightMotor.setPower(yPower - spinPower);
+        if(gamepad2.a)
+        grabber9330.openArms();
+        else
+        grabber9330.closeArms();
     }
 
     /*
@@ -43,5 +60,7 @@ public class TeleOp9330 extends OpMode {
      */
     @Override
     public void stop() {
+        Hardware9330.leftMotor.setPower(0);
+        Hardware9330.rightMotor.setPower(0);
     }
 }

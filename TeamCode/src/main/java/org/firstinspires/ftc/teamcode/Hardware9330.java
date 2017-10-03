@@ -12,8 +12,8 @@ public class Hardware9330 {
     /* Public OpMode members. */
 
     public Servo  grabber    = null;
-    public DcMotor left = null;
-    public DcMotor right = null;
+    public static DcMotor leftMotor = null;
+    public static DcMotor rightMotor = null;
 
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -30,7 +30,7 @@ public class Hardware9330 {
 
         grabber = hwMap.servo.get("grabber");
         grabber.setDirection(Servo.Direction.REVERSE);
-        left = hwMap.dcMotor.get("leftMotor");
-        right = hwMap.dcMotor.get("rightMotor");
+        leftMotor = hwMap.dcMotor.get("leftMotor");
+        rightMotor = hwMap.dcMotor.get("rightMotor");
     }
 }
