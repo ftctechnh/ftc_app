@@ -16,7 +16,7 @@ import org.firstinspires.ftc.team9853.Robot9853;
  * @Last Modified by: storm
  * @Last Modified time: 9/3/2017
  */
-//@AutonomousRnB(name = "Auto Test")
+@AutonomousRnB(name = "Auto Test")
 @SuppressWarnings("unused")
 public class AutoTest extends AutonomousOpMode<Robot9853> {
     private Boolean isRedTeam;
