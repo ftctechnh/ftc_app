@@ -12,4 +12,3 @@ The latest documentation for their SDK can be viewed here: [http://ftctechnh.git
 # Current TeleOp and Autonomous features:
 
 None lol the game's not out yet
-
