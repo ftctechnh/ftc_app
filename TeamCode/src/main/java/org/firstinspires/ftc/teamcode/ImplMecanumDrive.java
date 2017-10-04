@@ -91,7 +91,7 @@ public class ImplMecanumDrive extends OpMode
         double VM1 = ((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) + triggerVal);
         double VM2 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) - triggerVal);
         double VM3 = ((magnitude) * (Math.cos(extraPi + (Math.PI / 4))) + triggerVal);
-        double VM4 = (((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) - triggerVal));
+        double VM4 = ((magnitude) * (Math.sin(extraPi + (Math.PI / 4))) - triggerVal);
         //finds the largest Voltage Magnitude above 1 or below -1 and records it
         double [] thing = {1, VM1, VM2, VM3, VM4};
         int idk = 0;
@@ -109,13 +109,13 @@ public class ImplMecanumDrive extends OpMode
         for (int i = 1; i < 5; i++) {
             VM20[i - 1] = (thing[i]/thing[idk]);
         }
-        for (int i = 0; i < 4; i++) {
+        /*for (int i = 0; i < 4; i++) {
             if (VM20[i] > 1) {
                 VM20[i] = 1;
             } else if (VM20[i] < -1) {
                 VM20[i] = -1;
             }
-        }
+        } */
         telemetry.addData("VM1", VM20 [0]);
         telemetry.addData("VM2", VM20 [1]);
         telemetry.addData("VM3", VM20 [2]);
