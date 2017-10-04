@@ -166,8 +166,7 @@ public class AnnotationRegistry implements ClassFilter {
                 try {
                     register.register(clazz, manager);
                 } catch (Exception err) {
-                    reportOpModeConfigurationError("Encountered an error while registering '%s': %s",
-                            clazz.getSimpleName(), err.getStackTrace());
+                    RobotErrors.reportError(TAG, err, "Encountered an error while registering '%s'", clazz.getSimpleName());
                 }
             }
         }
@@ -219,19 +218,19 @@ public class AnnotationRegistry implements ClassFilter {
         if (opModeAnnotationCount == 0 ){
             return;
         } else if (opModeAnnotationCount > 1) {
-            reportOpModeConfigurationError("'%s' class is annotated by multiple opmode annotations", clazz.getSimpleName());
+            RobotErrors.reportError(TAG,"'%s' class is annotated by multiple opmode annotations", clazz.getSimpleName());
             return;
         }
 
         // ensure that the class is an opmode
         if (! ClassUtil.inheritsFrom(clazz, OpMode.class)) {
-            reportOpModeConfigurationError("'%s' class doesn't inherit from the class 'OpMode'", clazz.getSimpleName());
+            RobotErrors.reportError(TAG,"'%s' class doesn't inherit from the class 'OpMode'", clazz.getSimpleName());
             return;
         }
 
         // ensure that the class is public
         if (! Modifier.isPublic(clazz.getModifiers())) {
-            reportOpModeConfigurationError("'%s' class is not declared 'public'", clazz.getSimpleName());
+            RobotErrors.reportError(TAG,"'%s' class is not declared 'public'", clazz.getSimpleName());
             return;
         }
 
@@ -239,7 +238,7 @@ public class AnnotationRegistry implements ClassFilter {
         @SuppressWarnings("unchecked")
         String name = getOpModeName((Class<OpMode>) clazz);
         if (name.equals(OpModeManager.DEFAULT_OP_MODE_NAME) || name.trim().equals("")) {
-            reportOpModeConfigurationError("\"%s\" is not a legal OpMode name", name);
+            RobotErrors.reportError(TAG, "\"%s\" is not a legal OpMode name", name);
             return;
         }
 
@@ -270,20 +269,6 @@ public class AnnotationRegistry implements ClassFilter {
     @Override
     public void filterOnBotJavaClassesComplete() {
         // nothing
-    }
-
-    /**
-     * Reports an error that was encountered while configuring the opmode
-     *
-     * @param format    the format string
-     * @param args      the substring args
-     */
-    private static void reportOpModeConfigurationError(String format, Object... args) {
-        String message = String.format(format, args);
-        // Show the message in the log
-        Log.w(TAG, String.format("configuration error: %s", message));
-        // Make the message appear on the driver station (only the first one will actually appear)
-        RobotLog.setGlobalErrorMsg(message);
     }
 
 

@@ -59,8 +59,6 @@ public abstract class Robot {
         this.telemetry = telemetry;
 
         this.log = new RobotLogger(this.getClass().getSimpleName(), telemetry);
-
-        this.init();
     }
 
     /**
