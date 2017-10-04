@@ -1,3 +1,5 @@
+//* In order to break everything, remove one of the slashes. Your welcome.
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="basicDiagonal_mecanum_test",group="mecanum" )
 public class basicDiagonal_mecanum_test extends LinearOpMode {
-    HardwareSensorMap robot   = new HardwareSensorMap();   // Use a Pushbot's hardware
+    HardwareSensorMap robot   = new HardwareSensorMap();   // Use a Pushbot's hardware  // no
     //power variables
     DcMotor leftFrontMotor;
     DcMotor rightFrontMotor;
@@ -50,8 +52,11 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
             boolean strafingRight = leftX > 0;
             //main if/then
             if (turningRight) {
+                //
                 //pushing right joystick to the right
                 //turn right by left wheels going forward and right going backwards
+
+                //
                 turnRight(power);
             } else if (notTurning) {
                 //no movement in right joystick
@@ -65,9 +70,9 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
                     }
                 } else {
                     if (strafingRight) { //right
-                        strafeRight(power, drive);
+                        strafeRight(Math.abs(leftX), drive);
                     } else { //left
-                        strafeLeft(power, drive);
+                        strafeLeft(Math.abs(leftX), drive);
                     }
                 }
             } else {
@@ -110,7 +115,7 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
         rightFrontMotor.setPower(-power);
     }
 
-    private void strafeLeft(double power, double drive){
+    private void strafeLeft(double power, double drive){ //this is where the trouble lies
         if (drive > 0){
             leftBackMotor.setPower(-power);
             leftFrontMotor.setPower(power - drive);
@@ -125,7 +130,7 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
 
     }
 
-    private void strafeRight(double power, double drive){
+    private void strafeRight(double power, double drive){//this is also where the trouble lies
         if (drive > 0 ){
             leftBackMotor.setPower(power - drive);
             leftFrontMotor.setPower(-power);

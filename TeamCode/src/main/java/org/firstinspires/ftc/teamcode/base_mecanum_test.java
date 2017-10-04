@@ -46,7 +46,7 @@ public class base_mecanum_test extends LinearOpMode {
             leftX = gamepad1.left_stick_x; //left joystick moving right and left
             power = getPathagorus(leftX, drive); //the current joystick position
 
-            boolean turningRight = turn > 0;
+            boolean turningRight = turn < 0;
             boolean notTurning = turn == 0;
             boolean movingVertical = Math.abs(drive) > Math.abs(leftX);
             boolean strafingRight = leftX > 0;
@@ -112,14 +112,14 @@ public class base_mecanum_test extends LinearOpMode {
         rightFrontMotor.setPower(-power);
     }
 
-    private void strafeLeft(double power){
+    private void strafeRight(double power){
         leftBackMotor.setPower(-power);
         leftFrontMotor.setPower(power);
         rightBackMotor.setPower(power);
         rightFrontMotor.setPower(-power);
     }
 
-    private void strafeRight(double power){
+    private void strafeLeft(double power){
         leftBackMotor.setPower(power);
         leftFrontMotor.setPower(-power);
         rightBackMotor.setPower(-power);
