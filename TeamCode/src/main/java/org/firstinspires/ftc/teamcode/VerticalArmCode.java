@@ -79,8 +79,14 @@ public class VerticalArmCode extends LinearOpMode {
             if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
             }
+            else {
+                robot.verticalArmMotor.setPower(0);
+            }
             if (gamepad1.dpad_down) {
                 robot.verticalArmMotor.setPower(-1);
+            }
+            else {
+                robot.verticalArmMotor.setPower(0);
             }
 
             telemetry.addData("FrontLeft: ", robot.verticalArmMotor.getCurrentPosition());
