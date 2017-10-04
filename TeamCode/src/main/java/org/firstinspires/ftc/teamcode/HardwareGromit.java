@@ -82,9 +82,9 @@ public class HardwareGromit
 
         // Define and Initialize Motors
         right_front  = hwMap.get(DcMotor.class, "right_front");
-        right_back  = hwMap.get(DcMotor.class, "right_back");
+       // right_back  = hwMap.get(DcMotor.class, "right_back");
         left_front = hwMap.get(DcMotor.class, "left_front");
-        left_back = hwMap.get(DcMotor.class, "left_back");
+       // left_back = hwMap.get(DcMotor.class, "left_back");
 
         right_front.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         right_back.setDirection(DcMotor.Direction.REVERSE);
