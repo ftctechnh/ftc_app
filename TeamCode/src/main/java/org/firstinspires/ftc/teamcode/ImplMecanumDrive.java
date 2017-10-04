@@ -102,42 +102,28 @@ public class ImplMecanumDrive extends OpMode
         }
         //Create an array
         double [] VM20 = new double [4];
-        VM20 [0] = 0;
-        VM20 [1] = 0;
-        VM20 [2] = 0;
-        VM20 [3] = 0;
+        for (int i = 0; i < 4; i++) {
+            VM20[i] = 0;
+        }
         //Set the final values and make sure they're under 1
         for (int i = 1; i < 5; i++) {
             VM20[i - 1] = (thing[i]/thing[idk]);
         }
-        if(VM20[0] > 1){
-            VM20[0] = 1;
-        } else if (VM20[0] < -1){
-            VM20[0] = -1;
-        }
-        if(VM20[1] > 1){
-            VM20[1] = 1;
-        } else if (VM20[1] < -1){
-            VM20[1] = -1;
-        }
-        if(VM20[2] > 1){
-            VM20[2] = 1;
-        } else if (VM20[2] < -1){
-            VM20[2] = -1;
-        }
-        if(VM20[3] > 1){
-            VM20[3] = 1;
-        } else if (VM20[3] < -1){
-            VM20[3] = -1;
+        for (int i = 0; i < 4; i++) {
+            if (VM20[i] > 1) {
+                VM20[i] = 1;
+            } else if (VM20[i] < -1) {
+                VM20[i] = -1;
+            }
         }
         telemetry.addData("VM1", VM20 [0]);
         telemetry.addData("VM2", VM20 [1]);
         telemetry.addData("VM3", VM20 [2]);
         telemetry.addData("VM4", VM20 [3]);
     }
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
+
+     //Code to run ONCE after the driver hits STOP
+
     @Override
     public void stop() {
     }

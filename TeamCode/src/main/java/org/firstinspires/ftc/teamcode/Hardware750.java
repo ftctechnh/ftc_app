@@ -39,8 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *  this is my hardware
  *  owo
  */
-public class Hardware750
-{
+public class Hardware750 {
     /* Public OpMode members. */
     public DcMotor flDrive = null;
     public DcMotor frDrive = null;
