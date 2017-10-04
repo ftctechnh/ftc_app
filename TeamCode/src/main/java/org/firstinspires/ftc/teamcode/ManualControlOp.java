@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 
 public class ManualControlOp extends OpMode {
     private static final String KEY = "Manual";
-    public static final double SERVO_OPEN = 0.7;
+    public static final double SERVO_OPEN = 0.99;
     public static final int SERVO_CLOSE = 0;
 
     private Robot robot;
