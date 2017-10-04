@@ -14,20 +14,17 @@ public class HDriveTrain implements IDirectionalDriveTrain {
     protected static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
             (WHEEL_DIAMETER_INCHES * Math.PI);
 
-    private DcMotor frontLeft, frontRight, backLeft, backRight, middleLeft, middleRight;
+    private DcMotor leftDrive, rightDrive, middleDrive;
     private OpMode opMode;
     private DcMotor.RunMode mode;
     private boolean isRunningToPosition;
 
     @Override
     public void pivot(double pivotSpeed) {
-        frontLeft.setPower(pivotSpeed);
-        frontRight.setPower(-pivotSpeed);
-        backLeft.setPower(pivotSpeed);
-        backRight.setPower(-pivotSpeed);
+        leftDrive.setPower(pivotSpeed);
+        rightDrive.setPower(-pivotSpeed);
 
-        middleLeft.setPower(0);
-        middleRight.setPower(0);
+        middleDrive.setPower(0);
     }
 
     @Override
@@ -37,23 +34,17 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     @Override
     public void stopDriveMotors() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        middleLeft.setPower(0);
-        middleRight.setPower(0);
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+        middleDrive.setPower(0);
     }
 
     @Override
     public void setRunMode(DcMotor.RunMode runMode) {
-        frontLeft.setMode(runMode);
-        frontRight.setMode(runMode);
-        backLeft.setMode(runMode);
-        backRight.setMode(runMode);
+        leftDrive.setMode(runMode);
+        rightDrive.setMode(runMode);
+        middleDrive.setMode(runMode);
 
-        middleRight.setMode(runMode);
-        middleLeft.setMode(runMode);
         this.mode = runMode;
     }
 
@@ -67,12 +58,9 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         this.opMode = opMode;
         HardwareMap hWMap = opMode.hardwareMap;
 
-        frontLeft = hWMap.dcMotor.get("fl");
-        frontRight = hWMap.dcMotor.get("fr");
-        backRight = hWMap.dcMotor.get("br");
-        backLeft = hWMap.dcMotor.get("bl");
-        middleLeft = hWMap.dcMotor.get("ml");
-        middleRight = hWMap.dcMotor.get("mr");
+        leftDrive = hWMap.dcMotor.get("l");
+        rightDrive = hWMap.dcMotor.get("r");
+        middleDrive = hWMap.dcMotor.get("m");
     }
 
     private void setDirectionalTargetPosition(double angleDegrees, double speed, int targetDistance) {
@@ -87,21 +75,15 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // setting wheels to a distance defined by a custom unit of "encoder counts"
-        frontLeft.setTargetPosition(lateralCounts);
-        frontRight.setTargetPosition(lateralCounts);
-        backRight.setTargetPosition(lateralCounts);
-        backLeft.setTargetPosition(lateralCounts);
+        leftDrive.setTargetPosition(lateralCounts);
+        rightDrive.setTargetPosition(lateralCounts);
 
-        middleLeft.setTargetPosition(axialCounts);
-        middleRight.setTargetPosition(axialCounts);
+        middleDrive.setTargetPosition(axialCounts);
 
         // set motor powers
-        frontLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backLeft.setPower(speed);
-        backRight.setPower(speed);
-        middleLeft.setPower(speed);
-        middleRight.setPower(speed);
+        leftDrive.setPower(speed);
+        rightDrive.setPower(speed);
+        middleDrive.setPower(speed);
     }
 
     @Override
@@ -134,19 +116,14 @@ public class HDriveTrain implements IDirectionalDriveTrain {
     }
 
     private boolean areDriveMotorsBusy() {
-        return frontLeft.isBusy() && frontRight.isBusy()
-                && backLeft.isBusy() && backRight.isBusy()
-                && middleLeft.isBusy() && middleRight.isBusy();
+        return leftDrive.isBusy() && rightDrive.isBusy() && middleDrive.isBusy();
     }
 
     @Override
     public void drive(double speedX, double speedY) {
-        frontLeft.setPower(speedY);
-        frontRight.setPower(speedY);
-        backLeft.setPower(speedY);
-        backRight.setPower(speedY);
+        leftDrive.setPower(speedY);
+        rightDrive.setPower(speedY);
 
-        middleRight.setPower(speedX);
-        middleLeft.setPower(speedX);
+        middleDrive.setPower(speedX);
     }
 }
