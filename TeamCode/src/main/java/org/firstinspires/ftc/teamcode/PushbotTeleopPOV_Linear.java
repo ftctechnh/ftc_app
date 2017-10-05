@@ -29,9 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.util.Range;
 
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
@@ -51,11 +51,13 @@ import com.qualcomm.robotcore.util.Range;
 public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
-                                                               // could also use HardwarePushbotMatrix class.
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    // could also use HardwarePushbotMatrix class.
 
-    double          clawOffset      = 0;                       // Servo mid position
-    final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
+    double clawOffset = 0;                       // Servo mid position
+    final double CLAW_SPEED = 0.04;                   // sets rate to move servo
+
+    boolean precisionMode = false;
 
     @Override
     public void runOpMode() {
@@ -63,6 +65,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         double right;
         double drive;
         double turn;
+        double precDrive;
+        double precTurn;
         double max;
 
         /* Initialize the hardware variables.
@@ -80,58 +84,71 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            // This way it's also easy to just drive straight, or just turn.
-            drive = -gamepad1.left_stick_y;
-            turn  =  gamepad1.right_stick_x;
-
-            // Combine drive and turn for blended motion.
-            left  = drive + turn;
-            right = drive - turn;
-
-            // Normalize the values so neither exceed +/- 1.0
-            max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
-                left /= max;
-                right /= max;
+            if (gamepad1.a) {
+                precisionMode = true;
+            }
+            if (gamepad1.x) {
+                precisionMode = false;
             }
 
-            // Output the safe values to the motor drives.
-            robot.leftDrive.setPower(left);
-            robot.rightDrive.setPower(right);
+                // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
+                // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
+                // This way it's also easy to just drive straight, or just turn.
+                drive = -gamepad1.left_stick_y;
+                turn = gamepad1.right_stick_x;
+                precDrive = drive / 5;
+                precTurn = turn / 5;
 
-            // Use gamepad left & right triggers to open and close the claw
-            if (gamepad1.left_trigger > 0)
-                clawOffset += CLAW_SPEED;
-            else if (gamepad1.right_trigger > 0)
-                clawOffset -= CLAW_SPEED;
+                // Combine drive and turn for blended motion.
+                left = drive + turn;
+                right = drive - turn;
 
-            // Set the max of servo rotation for the claw
-            if (clawOffset < 0)
-                clawOffset = 0;
+                if (precisionMode == true) {
+                    left = precDrive + precTurn;
+                    right = precDrive - precTurn;
+                }
 
-            // Move both servos to new position.  Assume servos are mirror image of each other.
-            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-            robot.claw.setPosition(robot.MID_SERVO - clawOffset);
+                // Normalize the values so neither exceed +/- 1.0
+                max = Math.max(Math.abs(left), Math.abs(right));
+                if (max > 1.0) {
+                    left /= max;
+                    right /= max;
+                }
 
-            // Use gamepad buttons to move arm up (Y) and down (A)
-            if (gamepad1.left_bumper)
-                robot.armDrive.setPower(robot.ARM_UP_POWER);
-            else if (gamepad1.right_bumper)
-                robot.armDrive.setPower(robot.ARM_DOWN_POWER);
-            else
-                robot.armDrive.setPower(0.0);
+                // Output the safe values to the motor drives.
+                robot.leftDrive.setPower(left);
+                robot.rightDrive.setPower(right);
 
-            // Send telemetry message to signify robot running;
-            telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-            telemetry.addData("left",  "%.2f", left);
-            telemetry.addData("right", "%.2f", right);
-            telemetry.update();
+                // Use gamepad left & right triggers to open and close the claw
+                if (gamepad1.left_trigger > 0)
+                    clawOffset += CLAW_SPEED;
+                else if (gamepad1.right_trigger > 0)
+                    clawOffset -= CLAW_SPEED;
 
-            // Pace this loop so jaw action is reasonable speed.
-            sleep(50);
+                // Set the max of servo rotation for the claw
+                if (clawOffset < 0)
+                    clawOffset = 0;
+
+                // Move both servos to new position.  Assume servos are mirror image of each other.
+                clawOffset = Range.clip(clawOffset, -0.5, 0.5);
+                robot.claw.setPosition(robot.MID_SERVO - clawOffset);
+
+                // Use gamepad buttons to move arm up (Y) and down (A)
+                if (gamepad1.left_bumper)
+                    robot.armDrive.setPower(robot.ARM_UP_POWER);
+                else if (gamepad1.right_bumper)
+                    robot.armDrive.setPower(robot.ARM_DOWN_POWER);
+                else
+                    robot.armDrive.setPower(0.0);
+
+                // Send telemetry message to signify robot running;
+                telemetry.addData("claw", "Offset = %.2f", clawOffset);
+                telemetry.addData("left", "%.2f", left);
+                telemetry.addData("right", "%.2f", right);
+                telemetry.update();
+
+                // Pace this loop so jaw action is reasonable speed.
+                sleep(50);
+            }
         }
     }
-}
