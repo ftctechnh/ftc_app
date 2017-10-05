@@ -21,6 +21,9 @@ import java.lang.reflect.ParameterizedType;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class AutonomousOpMode<R extends Robot> extends LinearOpMode {
+    /**
+     * The robot object
+     */
     protected R robot;
 
     /**

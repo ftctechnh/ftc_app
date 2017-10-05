@@ -14,11 +14,25 @@ import java.lang.reflect.InvocationTargetException;
  * @Last Modified by: storm
  * @Last Modified time: 10/3/2017
  */
+@SuppressWarnings("WeakerAccess")
 public class RobotErrors {
+    /**
+     * Reports a global error
+     * @param TAG       the tag to use when logging to log cat
+     * @param format    the format string
+     * @param args      the format args
+     */
     public static void reportError(String TAG, String format, Object ...args) {
         reportError(TAG, null, format, args);
     }
 
+    /**
+     * Reports a global error
+     * @param TAG       the tag to use when logging to log cat
+     * @param e         the error to report
+     * @param format    the format string
+     * @param args      the format args
+     */
     public static void reportError(String TAG, Throwable e, String format, Object ...args) {
         if (e instanceof InvocationTargetException) {
             reportError(

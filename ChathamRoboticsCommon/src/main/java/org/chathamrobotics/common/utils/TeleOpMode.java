@@ -18,6 +18,9 @@ import java.lang.reflect.ParameterizedType;
  */
 @SuppressWarnings("unused")
 public abstract class TeleOpMode<R extends Robot> extends OpMode {
+    /**
+     * The robot object
+     */
     public R robot;
 
     /**
