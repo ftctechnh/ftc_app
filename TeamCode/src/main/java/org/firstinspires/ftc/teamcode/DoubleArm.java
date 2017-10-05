@@ -31,5 +31,6 @@ public class DoubleArm extends OpMode{
                 Claw.setPosition(Claw.getPosition() - 0.05);
             }
         }
+
     }
 }
