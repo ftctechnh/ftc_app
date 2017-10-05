@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 /**
@@ -40,7 +41,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
  * This example runs the servo at full speed.  Easy to change that by changing the
  * power values for open and close.
  */
-@Autonomous(name = "SharonServoCode", group = "Concept")
+@TeleOp(name = "Sharon's Servo Code", group = "BACONbot")
 //@Disabled
 public class SharonServoCode extends LinearOpMode {
 
@@ -72,10 +73,10 @@ HardwareBACONbot robot = new HardwareBACONbot();
             telemetry.update();
 
             while (gamepad1.y) {
-                robot.clawServo.setPosition();
+                robot.clawServo.setPosition(0);
             }
             while (gamepad1.a) {
-                robot.clawServo.setPosition();
+                robot.clawServo.setPosition(1);
             }
         }
 
