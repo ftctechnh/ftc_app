@@ -18,6 +18,8 @@ public class HardwareBACONbot {
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
+    public Servo clawServo = null;
+
 //    public Servo servo = null;
 //    public ColorSensor colorSensor = null;
 //    public TouchSensor touchSensor = null;
@@ -52,7 +54,9 @@ public class HardwareBACONbot {
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
         verticalArmMotor = hwMap.dcMotor.get("VAM");
-//        colorSensor = hwMap.colorSensor.get("colorSensor");
+        clawServo =  hwMap.servo.get("CS");
+
+//      colorSensor = hwMap.colorSensor.get("colorSensor");
 //        servo = hwMap.servo.get("servo0");
 //        touchSensor = hwMap.touchSensor.get("touchSensor");
 

@@ -46,16 +46,15 @@ public class SharonServoCode extends LinearOpMode {
 
 //    static final double OPEN     =  1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
 //    static final double CLOSE     =  -1;
-
-    // Define class members
-    CRServo clamp;
+        /* This says to use BACONbot hardware */
+HardwareBACONbot robot = new HardwareBACONbot();
 
     @Override
     public void runOpMode() {
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        clamp = hardwareMap.get(CRServo.class, "left_hand");
+//        clamp = hardwareMap.get(CRServo.class, "left_hand");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
@@ -73,10 +72,10 @@ public class SharonServoCode extends LinearOpMode {
             telemetry.update();
 
             while (gamepad1.y) {
-                clamp.setPower(0);
+                robot.clawServo.setPosition();
             }
             while (gamepad1.a) {
-                clamp.setPower(180);
+                robot.clawServo.setPosition();
             }
         }
 
