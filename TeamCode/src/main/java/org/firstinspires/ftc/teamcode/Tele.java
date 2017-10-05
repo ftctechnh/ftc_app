@@ -102,9 +102,9 @@ public class Tele extends OpMode{
         right = -gamepad1.right_stick_y;
 
         gromit.left_front.setPower(left);
-        gromit.left_back.setPower(left);
+        //gromit.left_back.setPower(left);
         gromit.right_front.setPower(right);
-        gromit.right_back.setPower(right);
+        //gromit.right_back.setPower(right);
 
     }
 
