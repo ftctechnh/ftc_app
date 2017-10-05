@@ -2,9 +2,10 @@
     Main robot teleop program
  */
 
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.outdated;
 
 import com.kauailabs.navx.ftc.AHRS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,8 +18,8 @@ import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 import org.firstinspires.ftc.teamcode.opmodes.LineDrive;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 
-@TeleOp(name = "TeleOpMain", group = "Main")
-//@Disabled
+@TeleOp(name = "Ye Olde TeleOpMain", group = "Main")
+@Disabled
 public class TeleOpMain extends OpMode {
 
     BotHardware robot = new BotHardware();
@@ -67,11 +68,11 @@ public class TeleOpMain extends OpMode {
         SensorLib.PID mHeadingPid = new SensorLib.PID(Kp, Ki, Kd, KiCut);
         SensorLib.PID mUltraPid = new SensorLib.PID(Kp4, Ki4, Kd4, Ki4Cutoff);
 
-        mBeacon = new AutoLib.LinearSequence();
+        //mBeacon = new AutoLib.LinearSequence();
 
-        mBeacon.add(new AutoLib.GyroTurnStep(this, 0, new UltraHeading(robot.distSensorLeft, robot.distSensorRight), robot.getMotorArray(), 1.0f, 5.0f, true));
-        mBeacon.add(new LineDrive.UltraSquirrleyAzimuthFinDriveStep(this, 0, 0, new UltraHeading(robot.distSensorLeft, robot.distSensorRight), new LineDrive.UltraCorrectedDisplacement(this, robot.distSensorLeft, 15), mHeadingPid, mUltraPid,
-            robot.getMotorArray(), 1.0f, new LineDrive.UltraSensors(robot.distSensorLeft, 15, 3.0f), true));
+        //mBeacon.add(new AutoLib.GyroTurnStep(this, 0, new UltraHeading(robot.distSensorLeft, robot.distSensorRight), robot.getMotorArray(), 1.0f, 5.0f, true));
+        //mBeacon.add(new LineDrive.UltraSquirrleyAzimuthFinDriveStep(this, 0, 0, new UltraHeading(robot.distSensorLeft, robot.distSensorRight), new LineDrive.UltraCorrectedDisplacement(this, robot.distSensorLeft, 15), mHeadingPid, mUltraPid,
+        //    robot.getMotorArray(), 1.0f, new LineDrive.UltraSensors(robot.distSensorLeft, 15, 3.0f), true));
 
         AutoLib.Sequence mPush = new AutoLib.ConcurrentSequence();
 
