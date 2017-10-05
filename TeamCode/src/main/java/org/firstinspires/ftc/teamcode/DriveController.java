@@ -5,31 +5,42 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-/**
+/*
  * This class manages all motor and drive base methods.
+ * FYI, the grey comments are just things to notice, but the green ones are top priority
  */
 
 public class DriveController {
+    // Declare OpMode members. AKA, variables and shit.
+    public DcMotor driveLeftFront;
+    public DcMotor driveLeftBack;
+    public DcMotor driveRightFront;
+    public DcMotor driveRightBack;
 
-    public DcMotor motorRightF;
-    public DcMotor motorRightB;
-    public DcMotor motorLeftF;
-    public DcMotor motorLeftB;
-
+    /**
+     * idk wtf this is supposed to signify, but is probably some unfinished thing
     ///// MOTOR ENCODER VALUES /////
-
+    */
     public DriveController(HardwareMap hMap, LinearOpMode linearOpMode) {
 
         HardwareMap hardwareMap = hMap;
 
-        motorLeftF = hardwareMap.dcMotor.get("FLM");
-        motorLeftB = hardwareMap.dcMotor.get("BLM");
-        motorRightF = hardwareMap.dcMotor.get("FRM");
-        motorRightB = hardwareMap.dcMotor.get("BRM");
+        //initialize hardware shit. N.B. Names MUST correspond to those in the phones configuration.
+        driveLeftFront  = hardwareMap.get(DcMotor.class, "drive_left_front");
+        driveLeftBack = hardwareMap.get(DcMotor.class, "drive_left_back");
+        driveRightFront = hardwareMap.get(DcMotor.class, "drive_right_front");
+        driveRightBack = hardwareMap.get(DcMotor.class, "drive_right_back");
 
-        //motorLeftF.setDirection(DcMotor.Direction.REVERSE);
-        //motorLeftB.setDirection(DcMotor.Direction.REVERSE);
+        /**
+         //reverse the motors that need to be reversed
+         driveLeftFront.setDirection(DcMotor.Direction.???);
+         driveLeftBack.setDirection(DcMotor.Direction.???);
+         driveRightFront.setDirection(DcMotor.Direction.???);
+         driveRightBack.setDirection(DcMotor.Direction.???);
+         */
 
+        /**
+         * this block needs to be confirmed
         motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -37,9 +48,10 @@ public class DriveController {
         motorLeftB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorRightF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorLeftF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        */
 
     }
-
+            //Fuck, everything past here needs to be checked
     public void initEncoders() {
         motorRightB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLeftB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -75,6 +87,11 @@ public class DriveController {
         motorRightB.setPower(r);
         motorLeftF.setPower(l);
         motorLeftB.setPower(l);
+    }
+
+    public void turnGyro(double degres, Telemetry telemetry, int speed/* speed is between 1 and 5 inclusive*/ ){
+        telemetry.addData("Error", "Code not writen yet: DriveController.turnGyro");
+        
     }
 
 
