@@ -71,7 +71,6 @@ public class MotorTask implements Task {
 
         } else { // If we are running blind until onExecuted() returns true
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setMaxSpeed(maxMotorSpeed);
             motor.setPower(getDampedPower(power));
         }
 
