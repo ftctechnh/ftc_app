@@ -16,22 +16,23 @@ public class DoubleArm extends OpMode{
 
     public void init(){
         Claw = hardwareMap.servo.get("s1");
-        Claw.setPosition(0.4);
+        Claw.setPosition(0.6);
 
     }
 
     @Override
     public void loop(){
         if (gamepad1.a){
-            if (Claw.getPosition() < 0.5) {
-                Claw.setPosition(Claw.getPosition() + 0.05);
+            if (Claw.getPosition() < 1.00) {
+                Claw.setPosition(Claw.getPosition() + 0.075);
             }
         }
         if (gamepad1.b){
-            if (Claw.getPosition() > 0.3) {
-                Claw.setPosition(Claw.getPosition() - 0.05);
+            if (Claw.getPosition() > 0.4) {
+                Claw.setPosition(Claw.getPosition() - 0.075);
             }
         }
-
+        telemetry.addData("ClawServoPos",Claw.getPosition());
+        telemetry.update();
     }
 }
