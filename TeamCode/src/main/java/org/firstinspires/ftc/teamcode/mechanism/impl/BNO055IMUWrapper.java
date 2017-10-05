@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mechanism;
+package org.firstinspires.ftc.teamcode.mechanism.impl;
 
 /**
  * Created by ftc6347 on 9/1/17.
@@ -20,6 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.teamcode.IRobot;
+import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 
 import java.io.File;
 import java.util.Locale;
@@ -29,15 +31,15 @@ import java.util.Locale;
  *
  * @see AdafruitBNO055IMU
  */
-public class BNO055IMUMechanism implements IMechanism {
+public class BNO055IMUWrapper implements IMechanism {
 
     private BNO055IMU imu;
 
     public static final String CALIBRATION_DATA_FILE = "BNO055IMUCalibration.json";
 
     @Override
-    public void initialize(OpMode opMode) {
-        HardwareMap hardwareMap = opMode.hardwareMap;
+    public void initialize(IRobot iRobot) {
+        HardwareMap hardwareMap = iRobot.getCurrentOpMode().hardwareMap;
         this.imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

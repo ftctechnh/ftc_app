@@ -39,19 +39,4 @@ public interface IDriveTrain extends IMechanism {
      * This will cause the robot to come to a complete stop.
      */
     void stopDriveMotors();
-
-    /**
-     * Sets the drive mode for all motors to the {@code DcMotor.RunMode} parameter.
-     *
-     * @see com.qualcomm.robotcore.hardware.DcMotor.RunMode
-     * @param runMode the specified mode to set all motors to
-     */
-    void setRunMode(DcMotor.RunMode runMode);
-
-    /**
-     * This method returns the drive mode that is currently set for all drive motors.
-     * @return the active drive mode for all drive motors
-     * @see com.qualcomm.robotcore.hardware.DcMotor.RunMode
-     */
-    DcMotor.RunMode getRunMode();
 }

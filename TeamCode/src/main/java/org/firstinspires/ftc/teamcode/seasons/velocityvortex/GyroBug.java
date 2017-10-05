@@ -35,8 +35,8 @@ public class GyroBug extends LinearOpModeBase {
 //
 //        // wait for the drive motors to stop
 //        while(opModeIsActive()
-//                && getFrontRightDrive().isBusy()
-//                && getBackLeftDrive().isBusy()) {
+//                && getFrontRightDrive().isDriveTrainBusy()
+//                && getBackLeftDrive().isDriveTrainBusy()) {
 //
 //            // run the other motors to drive at a steeper angle
 //            getFrontLeftDrive().setPower(-0.2);

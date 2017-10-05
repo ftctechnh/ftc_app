@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.mechanism;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.IRobot;
 
 /**
  * A mechanism represents a discrete piece of hardware on the robot
@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  */
 public interface IMechanism {
     /**
-     * Initialize this mechanism with a reference to the calling op-mode
-     * to provide access to telemetry and also the hardware map for
+     * Initialize this mechanism with a reference to the robot to provide
+     * access to the current op-mode, telemetry, and also the hardware map for
      * mechanism-specific hardware initialization.
      *
-     * @param opMode the calling op-mode
+     * @param robot the robot using this mechanism
      */
-    void initialize(OpMode opMode);
+    void initialize(IRobot robot);
 }

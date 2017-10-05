@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.mechanism.BNO055IMUMechanism;
+import org.firstinspires.ftc.teamcode.mechanism.impl.BNO055IMUWrapper;
 import org.firstinspires.ftc.teamcode.utils.I2draw;
 import org.firstinspires.ftc.teamcode.utils.MRIColorBeacon;
 
@@ -33,7 +33,7 @@ public class Kickoff2017 extends OpMode {
     //set gyro to read -180 to 180
     int headingVal ;
     int previousHead = 0;
-    BNO055IMUMechanism imuHelper;
+    BNO055IMUWrapper imuHelper;
     BNO055IMU.Parameters parameters;
     MRIColorBeacon beacon;
     DcMotor demoMotor;
@@ -65,7 +65,7 @@ public class Kickoff2017 extends OpMode {
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = calibrationDataFile; // see the calibration sample opmode
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imuHelper = new BNO055IMUMechanism("imu", parameters, this);
+        imuHelper = new BNO055IMUWrapper("imu", parameters, this);
 
         // Start the logging of measured acceleration
         imuHelper.getInstance().startAccelerationIntegration(new Position(), new Velocity(), 1000);
