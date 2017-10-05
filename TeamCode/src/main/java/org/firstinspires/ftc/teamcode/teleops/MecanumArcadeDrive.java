@@ -48,7 +48,7 @@ public class MecanumArcadeDrive extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         if(robot.getDrivetrain() instanceof MecanumDrive) {
-            ((MecanumDrive) robot.getDrivetrain()).arcadeDrive(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            ((MecanumDrive) robot.getDrivetrain()).complexDrive(gamepad1);
             ((MecanumDrive) robot.getDrivetrain()).dPadDrive(gamepad1);
         }
 
