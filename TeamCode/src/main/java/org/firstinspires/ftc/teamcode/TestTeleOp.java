@@ -12,11 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @TeleOp(name = "TankTestTele", group = "Test")
 public class TestTeleOp extends OpMode
 {
-    private TankBase tank = new TankBase();
+    private TankBase tank;
 
     public void init()
     {
-        tank.init(hardwareMap);
+        tank = new TankBase(hardwareMap);
         gamepad1.setJoystickDeadzone(.1f);
         gamepad2.setJoystickDeadzone(.1f);
     }
@@ -28,6 +28,7 @@ public class TestTeleOp extends OpMode
 
     public void loop()
     {
+        telemetry.addData("Expected velcoity ", 3 * Math.PI);
         telemetry.addData("Radian Velocity Left", tank.getDriveLeftOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("radian v right", tank.getDriveRightOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("LJoyStick= ", gamepad1.left_stick_y);

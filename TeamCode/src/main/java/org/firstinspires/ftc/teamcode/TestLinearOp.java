@@ -7,19 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Jeremy on 8/27/2017.
  */
-@Autonomous(name = "name", group = "concept")
+@Autonomous(name = "24in", group = "concept")
 public class TestLinearOp extends LinearOpMode
 {
+    private TankBase robot;
     @Override
     public void runOpMode() throws InterruptedException
     {
-        TankBase robot = new TankBase();
-        robot.init(hardwareMap);
+        robot = new TankBase(hardwareMap);
         waitForStart();
-        robot.spin_Left(120);
-        robot.spin_Right(120);
-        robot.pivot(120);
         robot.driveStraight_In(24);
+        sleep(5000);
         robot.driveStraight_In(-24);
     }
 }
