@@ -15,7 +15,8 @@ public class DoubleArm extends OpMode{
     @Override
 
     public void init(){
-        Claw = hardwareMap.servo.get("s1" );
+        Claw = hardwareMap.servo.get("s1");
+        Claw.setPosition(0.4);
 
     }
 
