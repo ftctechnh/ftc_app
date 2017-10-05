@@ -80,6 +80,7 @@ public class HardwareGromit
         // Save reference to Hardware map
         hwMap = ahwMap;
 
+
         // Define and Initialize Motors
         right_front  = hwMap.get(DcMotor.class, "right_front");
        // right_back  = hwMap.get(DcMotor.class, "right_back");
