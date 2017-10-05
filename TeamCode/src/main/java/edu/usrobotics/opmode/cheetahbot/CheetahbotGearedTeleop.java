@@ -37,17 +37,23 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name="Cheetahbot Teleop", group="Cheetabot")
-public class CheetahbotTeleop extends OpMode {
+@TeleOp(name="Cheetahbot Geared Teleop", group="Cheetabot")
+public class CheetahbotGearedTeleop extends OpMode {
 
     private DcMotor leftMotor;
     private DcMotor rightMotor;
 
+    private int gear;
+
     private boolean rightMotorReversed = false;
     private boolean leftMotorReversed = true;
 
+    private long lastGearChange = -1L;
+
     @Override
     public void init() {
+
+        gear = 1;
 
         telemetry.addData("Status", "Initialized");
 
@@ -65,8 +71,53 @@ public class CheetahbotTeleop extends OpMode {
     @Override
     public void loop() {
 
-        leftMotor.setPower(-gamepad1.left_stick_y);
-        rightMotor.setPower(-gamepad1.right_stick_y);
+        if(gamepad1.right_bumper && System.currentTimeMillis() - lastGearChange >= 1000L && gear < 4){
+
+            gear++;
+            lastGearChange = System.currentTimeMillis();
+
+        }
+
+        else if(gamepad1.left_bumper && System.currentTimeMillis() - lastGearChange >= 1000L && gear > -1){
+
+            gear--;
+            lastGearChange = System.currentTimeMillis();
+            System.currentTimeMillis();
+
+        }
+
+        float throttle = gamepad1.right_trigger;
+        float turning = gamepad1.right_stick_x;
+
+        float leftMotorPower = 0f;
+        float rightMotorPower = 0f;
+
+        switch (gear){
+
+            case -1:
+                leftMotorPower = -0.33f + (0.33f * turning);
+                rightMotorPower = -0.33f - (0.33f * turning);
+                break;
+
+            case 1:
+                leftMotorPower = 0.33f + (0.33f * turning);
+                rightMotorPower = 0.33f - (0.33f * turning);
+                break;
+
+            case 2:
+                leftMotorPower = 0.66f + (0.66f * turning);
+                rightMotorPower = 0.66f - (0.66f * turning);
+                break;
+
+            case 3:
+                leftMotorPower = 1f + turning;
+                rightMotorPower = 1f - turning;
+                break;
+
+        }
+
+        leftMotor.setPower(leftMotorPower);
+        rightMotor.setPower(rightMotorPower);
 
         telemetry.addData("Left stick y", gamepad1.left_stick_y);
         telemetry.addData("Right stick y", gamepad1.right_stick_y);
