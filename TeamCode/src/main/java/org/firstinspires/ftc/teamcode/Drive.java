@@ -71,8 +71,8 @@ public class Drive
         // they spin counter-clockwise to move the robot forward.
         frontRight.setDirection( DcMotor.Direction.FORWARD );
         rearRight.setDirection( DcMotor.Direction.FORWARD );
-        frontRight.setDirection( DcMotor.Direction.REVERSE );
-        rearRight.setDirection( DcMotor.Direction.REVERSE );
+        frontLeft.setDirection( DcMotor.Direction.REVERSE );
+        rearLeft.setDirection( DcMotor.Direction.REVERSE );
 
         // Set all motors to zero power. Don't want robot moving till
         // we're ready.
@@ -103,13 +103,13 @@ public class Drive
         // Create polar coordinate variables theta and magnitude for the angle and magnitude.
         // During creation, calculate the values from the input.
         double magnitude = Math.sqrt( ( xLeftRight * xLeftRight ) + ( yFwdRev * yFwdRev ) );
-        double theta = Math.atan2( yFwdRev, xLeftRight ) + ( Math.PI / 4.0 );
+        double theta = Math.atan2( yFwdRev, xLeftRight ) - ( Math.PI / 4.0 );
 
         // calculate powers for wheel motors
         double frontLeftPower = magnitude * Math.sin( theta ) + rotate;
         double frontRightPower = magnitude * Math.cos( theta ) - rotate;
-        double rearLeftPower = magnitude * Math.sin( theta ) + rotate;
-        double rearRightPower = magnitude * Math.cos( theta ) - rotate;
+        double rearLeftPower = magnitude * Math.cos( theta ) + rotate;
+        double rearRightPower = magnitude * Math.sin( theta ) - rotate;
 
         // Powers can be > 1 using above equations, so scale if they are
         double biggestFront = Math.max( Math.abs( frontLeftPower ), Math.abs( frontRightPower ) );
@@ -125,8 +125,8 @@ public class Drive
         }
 
         frontLeft.setPower(frontLeftPower);
-        rearLeft.setPower(frontRightPower);
-        frontRight.setPower(rearLeftPower);
+        frontRight.setPower(frontRightPower);
+        rearLeft.setPower(rearLeftPower);
         rearRight.setPower(rearRightPower);
 
     }
