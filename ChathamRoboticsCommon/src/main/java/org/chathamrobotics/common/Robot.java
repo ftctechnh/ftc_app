@@ -36,7 +36,7 @@ public abstract class Robot {
     /**
      * The robot's hardware map
      */
-    protected HardwareMap hardwareMap;
+    public HardwareMap hardwareMap;
 
     /**
      * The opmode's telemetry
