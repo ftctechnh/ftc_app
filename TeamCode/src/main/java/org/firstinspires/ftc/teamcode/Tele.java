@@ -94,17 +94,17 @@ public class Tele extends OpMode{
      */
     @Override
     public void loop() {
-        double left;
-        double right;
+        double forward;
+        double turn;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        // Run wheels in tank mode (note: The joystick goes negat when pushed forwards, so negate it)
+        turn = -gamepad1.right_stick_x;
+        forward = -gamepad1.right_stick_y;
 
-        gromit.left_front.setPower(left);
-        //gromit.left_back.setPower(left);
-        gromit.right_front.setPower(right);
-        //gromit.right_back.setPower(right);
+        gromit.left_front.setPower(forward/4.0 - turn/4.0);
+        gromit.left_back.setPower(forward/4.0 - turn/4.0);
+        gromit.right_front.setPower(forward/4.0 + turn/4.0);
+        gromit.right_back.setPower(forward/4.0 + turn/4.0);
 
     }
 
