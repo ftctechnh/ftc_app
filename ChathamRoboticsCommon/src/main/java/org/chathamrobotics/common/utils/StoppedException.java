@@ -8,6 +8,7 @@ package org.chathamrobotics.common.utils;
  * @Last Modified by: storm
  * @Last Modified time: 9/17/2017
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class StoppedException extends Exception {
     /**
      * Creates a new instance of StoppedException
