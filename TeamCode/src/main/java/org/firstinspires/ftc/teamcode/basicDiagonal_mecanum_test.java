@@ -44,7 +44,7 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
             drive = gamepad1.left_stick_y; //left joystick moving up and down
             turn = gamepad1.right_stick_x; //right joystick left and right
             leftX = gamepad1.left_stick_x; //left joystick moving right and left
-            power = getPathagorus(leftX, drive); //the current joystick position
+            power = getPythagoras(leftX, drive); //the current joystick position
 
             boolean turningRight = turn > 0;
             boolean notTurning = turn == 0;
@@ -115,22 +115,22 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
         rightFrontMotor.setPower(-power);
     }
 
-    private void strafeLeft(double power, double drive){ //this is where the trouble lies
+    private void strafeRight(double power, double drive){ //this is where the trouble lies
         if (drive > 0){
-            leftBackMotor.setPower(-power);
-            leftFrontMotor.setPower(power - drive);
-            rightBackMotor.setPower(power - drive);
-            rightFrontMotor.setPower(-power);
-        }else{
             leftBackMotor.setPower(-(power - drive));
             leftFrontMotor.setPower(power);
             rightBackMotor.setPower(power);
             rightFrontMotor.setPower(-(power - drive));
+        }else{
+            leftBackMotor.setPower(-power);
+            leftFrontMotor.setPower(power - drive);
+            rightBackMotor.setPower(power - drive);
+            rightFrontMotor.setPower(-power);
         }
 
     }
 
-    private void strafeRight(double power, double drive){//this is also where the trouble lies
+    private void strafeLeft(double power, double drive){//this is also where the trouble lies
         if (drive > 0 ){
             leftBackMotor.setPower(power - drive);
             leftFrontMotor.setPower(-power);
@@ -145,7 +145,7 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
 
     }
 
-    private double getPathagorus(double a, double b){//Define Pythagorean Theorem
+    private double getPythagoras(double a, double b){//Define Pythagorean Theorem
         double c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
         return c;
 
