@@ -84,6 +84,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+            precisionMode = false;
+
             if (gamepad1.a) {
                 precisionMode = true;
             }
