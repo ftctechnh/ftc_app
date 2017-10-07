@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.utils.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -36,8 +37,17 @@ public class HolonomicDriver {
 
     /**
      * Builds a new {@link HolonomicDriver} using FrontLeft, FrontRight, BackLeft and BackRight for the motor names
+     * @param robot     the robot to build the holonomic driver from
+     * @return          the built {@link HolonomicDriver}
+     */
+    public static HolonomicDriver build(Robot robot) {
+        return build(robot.hardwareMap, robot.log);
+    }
+
+    /**
+     * Builds a new {@link HolonomicDriver} using FrontLeft, FrontRight, BackLeft and BackRight for the motor names
      * @param hardwareMap   the robot's hardware map
-     * @return              the build {@link HolonomicDriver}
+     * @return              the built {@link HolonomicDriver}
      */
     public static HolonomicDriver build(HardwareMap hardwareMap) {
         return build(hardwareMap, (RobotLogger) null);
@@ -47,7 +57,7 @@ public class HolonomicDriver {
      * Builds a new {@link HolonomicDriver} using FrontLeft, FrontRight, BackLeft and BackRight for the motor names
      * @param hardwareMap   the robot's hardware map
      * @param telemetry     the opmode's telemetry
-     * @return              the build {@link HolonomicDriver}
+     * @return              the built {@link HolonomicDriver}
      */
     public static HolonomicDriver build(HardwareMap hardwareMap, Telemetry telemetry) {
         return build(hardwareMap, new RobotLogger(TAG, telemetry));
@@ -57,7 +67,7 @@ public class HolonomicDriver {
      * Builds a new {@link HolonomicDriver} using FrontLeft, FrontRight, BackLeft and BackRight for the motor names
      * @param hardwareMap   the robot's hardware map
      * @param logger        the robot's logger
-     * @return              the build {@link HolonomicDriver}
+     * @return              the built {@link HolonomicDriver}
      */
     public static HolonomicDriver build(HardwareMap hardwareMap, RobotLogger logger) {
         return new HolonomicDriver(
