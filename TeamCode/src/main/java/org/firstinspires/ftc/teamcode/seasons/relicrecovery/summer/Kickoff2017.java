@@ -65,11 +65,14 @@ public class Kickoff2017 extends OpMode {
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = calibrationDataFile; // see the calibration sample opmode
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imuHelper = new BNO055IMUWrapper("imu", parameters, this);
+
+        // TODO: Fix broken code
+
+//        imuHelper = new BNO055IMUWrapper("imu", parameters, this);
 
         // Start the logging of measured acceleration
         imuHelper.getInstance().startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        imuHelper.composeTelemetry(telemetry);
+//        imuHelper.composeTelemetry(telemetry);
 
         deviceInterfaceModule = hardwareMap.deviceInterfaceModule.get("cdi");
 
@@ -152,7 +155,7 @@ public class Kickoff2017 extends OpMode {
 
 
         if (gamepad1.start && gamepad1.x){
-            imuHelper.writeCalFile(calibrationDataFile);
+//            imuHelper.writeCalFile(calibrationDataFile);
         }
 
     }

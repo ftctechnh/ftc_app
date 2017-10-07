@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.algorithms;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by daniel on 10/3/17.
+ * A gyro-pivot algorithm is an algorithm that implements pivoting (turning) of the robot
+ * to a certain degree angle on the Z axis using a gyroscopic sensor or one built into an IMU.
  */
 
 public interface GyroPivotAlgorithm {

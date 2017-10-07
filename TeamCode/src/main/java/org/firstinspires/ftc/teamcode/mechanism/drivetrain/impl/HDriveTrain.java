@@ -5,8 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.IRobot;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.IDirectionalDriveTrain;
+
+/**
+ * This class implements control of an "H" drive train, which has four wheels parallel to the
+ * sides of the robot and one wheel middle perpendicular to the sides of the robot. These
+ * wheels are driven by three motors.
+ */
 
 public class HDriveTrain implements IDirectionalDriveTrain {
 
@@ -24,8 +30,12 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     private boolean isRunningToPosition;
 
-    @Override
-    public void initialize(IRobot robot) {
+    /**
+     * Construct a new {@link HDriveTrain} with a reference to the utilizing robot.
+     *
+     * @param robot the robot using this drive train
+     */
+    public HDriveTrain(Robot robot) {
         this.opMode = robot.getCurrentOpMode();
         HardwareMap hWMap = opMode.hardwareMap;
 

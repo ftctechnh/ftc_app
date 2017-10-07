@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.mechanism.drivetrain;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.IRobot;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 
 /**
@@ -16,7 +15,7 @@ public interface IDirectionalDriveTrain extends IDriveTrain {
      * Drive in the direction specified as an angle in degrees at the specified speed for the set
      * distance. The sign of the target distance determines the direction of movement. For example,
      * a negative target distance results in backward movement. Depending on the concrete class
-     * of the OpMode passed to {@link IMechanism#initialize(IRobot)}, either the a blocking or non-
+     * of the OpMode passed to {@link IMechanism#initialize(Robot)}, either the a blocking or non-
      * blocking implementation will be called. The latter indicates completion of the drive movement
      * with {@link #isDriveTrainBusy()}.
      *
