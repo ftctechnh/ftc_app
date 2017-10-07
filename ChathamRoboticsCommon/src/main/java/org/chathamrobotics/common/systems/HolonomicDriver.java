@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.chathamrobotics.common.Robot;
+import org.chathamrobotics.common.utils.RobotFace;
 import org.chathamrobotics.common.utils.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -105,6 +106,14 @@ public class HolonomicDriver {
         this.backRight = backRight;
 
         this.logger = logger;
+    }
+
+    /**
+     * Set the front of the robot
+     * @param face  the face to set the front of the robot to
+     */
+    public void setFront(RobotFace face) {
+        this.offsetAngle = face.holonomicOffset;
     }
 
     /**
