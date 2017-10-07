@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * Created by Eric on 10/1/2017!
  */
@@ -33,6 +35,7 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
         double turn; //turn direction
         double power; //move power
         double leftX; //left x: joystick
+        double diagonal = 0;
         double leftBackMotorPower; //leftBackMotor
         double rightBackMotorPower; //rightBackMotor
         double leftFrontMotorPower; //leftFrontMotor
@@ -46,9 +49,9 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
             leftX = gamepad1.left_stick_x; //left joystick moving right and left
             power = getPythagoras(leftX, drive); //the current joystick position
 
-            boolean turningRight = turn > 0;
+            boolean turningRight = turn < 0;
             boolean notTurning = turn == 0;
-            boolean movingVertical = Math.abs(drive) > Math.abs(leftX);
+            boolean movingVertical = Math.abs(drive) / Math.abs(leftX) > 4;
             boolean strafingRight = leftX > 0;
             //main if/then
             if (turningRight) {
@@ -63,12 +66,16 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
 
                 //start of driving section
                 if (movingVertical) { //forward/back or left/right?
+                    diagonal = 0;
                     if (drive > 0) { //forward
                        driveForward(power);
                     } else { //back
                         driveBackward(power);
                     }
                 } else {
+                    if (drive != 0){
+                        diagonal = 1;
+                    }
                     if (strafingRight) { //right
                         strafeRight(Math.abs(leftX), drive);
                     } else { //left
@@ -83,6 +90,7 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
             telemetry.addData("front right", rightFrontMotor.getPower());
             telemetry.addData("back left", leftBackMotor.getPower());
             telemetry.addData("back right", rightBackMotor.getPower());
+            telemetry.addData("Diagonal?", diagonal);
             telemetry.update();
         }
     }
@@ -115,13 +123,15 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
         rightFrontMotor.setPower(-power);
     }
 
-    private void strafeRight(double power, double drive){ //this is where the trouble lies
+    private void strafeLeft(double power, double drive){ //this is where the trouble lies
         if (drive > 0){
+            drive = Math.abs(drive);
             leftBackMotor.setPower(-(power - drive));
             leftFrontMotor.setPower(power);
             rightBackMotor.setPower(power);
             rightFrontMotor.setPower(-(power - drive));
         }else{
+            drive = Math.abs(drive);
             leftBackMotor.setPower(-power);
             leftFrontMotor.setPower(power - drive);
             rightBackMotor.setPower(power - drive);
@@ -130,13 +140,15 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
 
     }
 
-    private void strafeLeft(double power, double drive){//this is also where the trouble lies
+    private void strafeRight(double power, double drive){//this is also where the trouble lies
         if (drive > 0 ){
-            leftBackMotor.setPower(power - drive);
-            leftFrontMotor.setPower(-power);
-            rightBackMotor.setPower(-power);
-            rightFrontMotor.setPower(power - drive);
+            drive = Math.abs(drive);
+            leftBackMotor.setPower(-(power - drive));
+            leftFrontMotor.setPower(power);
+            rightBackMotor.setPower(power);
+            rightFrontMotor.setPower(-(power - drive));
         }else{
+            drive = Math.abs(drive);
             leftBackMotor.setPower(power);
             leftFrontMotor.setPower(-(power - drive));
             rightBackMotor.setPower(-(power - drive));
@@ -149,7 +161,7 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
         double c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
         return c;
 
-        //Finding the joystick position using pythagorean theorem (a2 + b2 = c2)
+        //Finding the joystick position using pythagorean theorem (a^2 + b^2 = c^2)
     }
 
 
