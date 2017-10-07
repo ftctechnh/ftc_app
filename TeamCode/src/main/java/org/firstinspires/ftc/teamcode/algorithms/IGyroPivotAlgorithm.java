@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * to a certain degree angle on the Z axis using a gyroscopic sensor or one built into an IMU.
  */
 
-public interface GyroPivotAlgorithm {
+public interface IGyroPivotAlgorithm {
     /**
      * Pivot the robot to the specified degree angle using a gyroscopic sensor.
      *

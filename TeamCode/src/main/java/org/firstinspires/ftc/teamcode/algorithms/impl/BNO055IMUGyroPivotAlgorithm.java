@@ -5,16 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Robot;
-import org.firstinspires.ftc.teamcode.algorithms.GyroPivotAlgorithm;
+import org.firstinspires.ftc.teamcode.algorithms.IGyroPivotAlgorithm;
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.IDriveTrain;
 import org.firstinspires.ftc.teamcode.mechanism.impl.BNO055IMUWrapper;
 
 /**
- * An implementation of {@link GyroPivotAlgorithm}
+ * An implementation of {@link IGyroPivotAlgorithm}
  * utilizing an {@link BNO055IMUWrapper} as the gyroscopic sensor.
  */
 
-public class BNO055IMUGyroPivotAlgorithm implements GyroPivotAlgorithm {
+public class BNO055IMUGyroPivotAlgorithm implements IGyroPivotAlgorithm {
 
     private BNO055IMUWrapper imu;
     private IDriveTrain driveTrain;
