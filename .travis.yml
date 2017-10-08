@@ -7,6 +7,10 @@ android:
     - build-tools-23.0.3
     - android-23
     - extra
+licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 after_failure:
   - "resultsPath=TeamCode/build/outputs/lint-results-debug.xml"
   - "[ -f $resultsPath ] && cat $resultsPath"
