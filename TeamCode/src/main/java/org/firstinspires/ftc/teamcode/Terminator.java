@@ -24,8 +24,10 @@ public class Terminator extends LinearOpMode {
     String backward = "BACKWARD";
     String left = "LEFT";
     String right = "RIGHT";
+    String spin = "SPIN";
     String none = "NONE";
 
+    double max = 1.0;
     double fast = .8;
     double medium = .5;
     double normal = .2;
@@ -114,8 +116,26 @@ public class Terminator extends LinearOpMode {
                 e.printStackTrace();
             }
 
-            stopMotor();
         }
+
+        if (direction == "SPIN") {
+
+            try {
+
+                F_L.setPower(power);
+                F_R.setPower(power);
+                R_L.setPower(power);
+                R_R.setPower(power);
+
+                Thread.sleep(time);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        stopMotor();
     }
 
 
