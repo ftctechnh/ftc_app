@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,6 +21,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
                          like we wanted it, so no adjustments need to be made.
  */
 
+@Disabled
 @TeleOp(name = "Holonomic Robot-Centric Tele-Op", group = "holonomic")
 public class Holonomic_RobotCentric_TeleOp extends OpMode {
 

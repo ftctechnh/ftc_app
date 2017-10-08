@@ -19,60 +19,58 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 - Possible Improvements: Creating a version of the program that successfully incorporates field
 centric Drive.
  */
+
 @TeleOp(name = "Mecanum Talon Style Controls", group = "Daquan")
 public class Daquan_Talon_TeleOp_robotCentric extends OpMode
 {
     Daquan_Hardware robot;
 
-    @Override
+    @Override   //Initializes the robot class and sets up its hardware map
     public void init()
     {
         robot = new Daquan_Hardware(hardwareMap, telemetry, false);
     }
 
     @Override
-    public void loop ()
-    {
-        if(gamepad1.right_bumper && gamepad1.left_bumper)
-        {
-            robot.dp = 1f;
-        }
-        else
-        {
-            robot.dp = .2f;
-        }
+    public void loop () {
 
-        robot.drive(
-                -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_trigger-gamepad1.left_trigger,
-                -gamepad1.left_stick_y-gamepad1.left_stick_x-gamepad1.right_trigger+gamepad1.left_trigger,
-                -gamepad1.left_stick_y-gamepad1.left_stick_x+gamepad1.right_trigger-gamepad1.left_trigger,
-                -gamepad1.left_stick_y+gamepad1.left_stick_x-gamepad1.right_trigger+gamepad1.left_trigger
-        );
-
-        if(gamepad2.right_trigger != 1)
-        {
-            robot.rurricane.setPower(.16*gamepad1.right_trigger);
-            robot.lurricane.setPower(1*gamepad1.right_trigger);
+        //Runs the intake motors according to the dpad
+        if(gamepad1.dpad_down) {
+            robot.rurricane.setPower(robot.INTAKE_POWER);
+            robot.lurricane.setPower(1); //Due to motor imbalances the speed for this motor is 1
         }
-        else if(gamepad2.left_trigger != 1)
-        {
-            robot.rurricane.setPower(-.16*gamepad1.left_trigger);
-            robot.lurricane.setPower(-1*gamepad1.left_trigger);
+        else if(gamepad1.dpad_up) {
+            robot.rurricane.setPower(- robot.INTAKE_POWER);
+            robot.lurricane.setPower(- 1); //Due to motor imbalances the speed for this motor is 1
         }
-        else
-        {
+        else {
             robot.rurricane.setPower(0);
             robot.lurricane.setPower(0);
         }
 
-        telemetry.addData(" Left Joystick X Axis:", gamepad1.left_stick_x);
-        telemetry.addData(" Left Joystick Y Axis:", gamepad1.left_stick_y);
-        telemetry.addData(" Right Joystick X Axis:", gamepad1.right_stick_x);
-        telemetry.addData("Left Trigger Drive:", gamepad1.left_trigger);
-        telemetry.addData("Right Trigger Drive:", gamepad1.right_trigger);
-        telemetry.addData("Left Trigger Intake:", gamepad2.left_trigger);
-        telemetry.addData("Right Trigger Intake:", gamepad2.right_trigger);
+        //Ultra-Turbo Mode when both bumpers are held
+        if(gamepad1.right_bumper && gamepad1.left_bumper)
+            robot.currentDrivePower = 1f;
+        else
+            robot.currentDrivePower = robot.DRIVE_POWER;
 
+        //Arcade drive with right joystick, turn with triggers(clockwise-right, counterclockwise-left)
+        //Format: +/- Turning +/- Forward/Backward +/- Strafing
+        robot.drive(
+                robot.currentDrivePower * (gamepad1.right_trigger - gamepad1.left_trigger) + robot.currentDrivePower * (- gamepad1.right_stick_y) + robot.currentDrivePower * (gamepad1.right_stick_x),
+                robot.currentDrivePower * (- gamepad1.right_trigger + gamepad1.left_trigger) + robot.currentDrivePower * (- gamepad1.right_stick_y) + robot.currentDrivePower * (- gamepad1.right_stick_x),
+                robot.currentDrivePower * (gamepad1.right_trigger - gamepad1.left_trigger) + robot.currentDrivePower * (- gamepad1.right_stick_y) + robot.currentDrivePower * (- gamepad1.right_stick_x),
+                robot.currentDrivePower * (- gamepad1.right_trigger + gamepad1.left_trigger) + robot.currentDrivePower * (- gamepad1.right_stick_y) + robot.currentDrivePower * (gamepad1.right_stick_x)
+        );
+        
+        //Adding telemetry to debug if needed
+        telemetry.addData("Drive Speed:", robot.currentDrivePower);
+        telemetry.addData("Right Joystick X Axis:", gamepad1.right_stick_x);
+        telemetry.addData("Right Joystick Y Axis:", gamepad1.right_stick_y);
+        telemetry.addData("Left Trigger:", gamepad1.left_trigger);
+        telemetry.addData("Right Trigger:", gamepad1.right_trigger);
+        telemetry.addData("Dpad Up:", gamepad2.left_trigger);
+        telemetry.addData("Dpad Down:", gamepad2.right_trigger);
         telemetry.addData("Ultra Turbo Mode Activated:", gamepad1.right_bumper && gamepad1.left_bumper);
     }
 }

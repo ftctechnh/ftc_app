@@ -35,11 +35,11 @@ public class Daquan_Erik_TeleOp_robotCentric extends OpMode
     {
         if(gamepad1.right_bumper && gamepad1.left_bumper)
         {
-            robot.dp = 1f;
+            robot.currentDrivePower = 1f;
         }
         else
         {
-            robot.dp = .2f;
+            robot.currentDrivePower = .2f;
         }
 
         robot.drive(

@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.GuillermoOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@Disabled
 @TeleOp(name = "Guillermo Tank Tele-Op", group = "guillermo")
 public class Guillermo_Tank_TeleOp extends OpMode {
 

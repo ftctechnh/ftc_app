@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -21,6 +22,8 @@ import org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes.Holonomic
 - Possible Improvements: Creating a version of the program that successfully incorporates field
 centric Drive.
  */
+
+@Disabled
 @TeleOp(name = "Mecanum Erik Style Controls", group = "Daquan")
 public class Holonomic_RobotCentric_TeleOp_Erik extends OpMode
 {
