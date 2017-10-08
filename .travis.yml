@@ -22,7 +22,7 @@ before_install:
 jdk: oraclejdk8
 
 after_failure:
-  - "resultsPath=TeamCode/build/outputs/lint-results.xml"
+  - "resultsPath=TeamCode/build/reports/lint-results.xml"
   - "[ -f $resultsPath ] && cat $resultsPath"
 notifications:
 slack: meisterdevs:mif0ed8xNKNS9LUoHhV7YEui
