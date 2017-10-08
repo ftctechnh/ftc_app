@@ -22,19 +22,19 @@ public class TankBase implements TankInterface
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
     private float wheelCircCm = (float)(10.16 * Math.PI);
 
-    public void init(HardwareMap hMap)
+    public TankBase(HardwareMap hMap)
     {
         driveLeftOne = (DcMotorImplEx) hMap.dcMotor.get("driveLeftOne");
         driveRightOne = (DcMotorImplEx) hMap.dcMotor.get("driveRightOne");
 
         driveRightOne.setVelocity(3 * Math.PI, AngleUnit.RADIANS); //Neverrest 40 has 160 RPM; 2.6 rev per second
-        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        driveRightOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveLeftOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        resetEncoders();
         driveRightOne.setVelocity(3 * Math.PI, AngleUnit.RADIANS);
         driveLeftOne.setVelocity(3* Math.PI, AngleUnit.RADIANS);
+        driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
+        driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
+
 /*
         driveRightOne.setDirection(DcMotorSimple.Direction.REVERSE);
         driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -200,8 +200,10 @@ public class TankBase implements TankInterface
 
     private void resetEncoders()
     {
-        driveRightOne.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        driveLeftOne.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        driveRightOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveLeftOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public DcMotorImplEx getDriveLeftOne()
