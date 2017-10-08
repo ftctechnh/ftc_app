@@ -4,7 +4,11 @@ import java.util.regex.Pattern
 //
 apply plugin: 'com.android.library'
 android {
+    lintOptions {
 
+        abortOnError false
+
+    }
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 19
