@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HolonomicOpModes;
+package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;

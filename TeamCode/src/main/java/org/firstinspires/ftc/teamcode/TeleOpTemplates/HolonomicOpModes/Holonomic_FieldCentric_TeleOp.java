@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HolonomicOpModes;
+package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
