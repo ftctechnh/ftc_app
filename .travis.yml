@@ -11,6 +11,17 @@ licenses:
     - 'android-sdk-preview-license-.+'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
+before_install:
+    - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+    - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
+    - export JAVA_HOME=$JAVA8_HOME
+
+    - git clone https://github.com/urho3d/android-ndk.git $HOME/android-ndk-root
+    - export ANDROID_NDK_HOME=$HOME/android-ndk-root
+    - echo "ndk.dir=$ANDROID_NDK_HOME" > local.properties
+
+jdk: oraclejdk8
+
 after_failure:
   - "resultsPath=TeamCode/build/outputs/lint-results-debug.xml"
   - "[ -f $resultsPath ] && cat $resultsPath"
