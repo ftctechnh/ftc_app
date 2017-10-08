@@ -16,42 +16,6 @@ public class TestLinearOp extends LinearOpMode
     {
         robot = new TankBase(hardwareMap);
         waitForStart();
-        robot.driveStraight_In(24);
-        sleep(5000);
-        robot.driveStraight_In(-24);
+        robot.driveStraight_In(36);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
