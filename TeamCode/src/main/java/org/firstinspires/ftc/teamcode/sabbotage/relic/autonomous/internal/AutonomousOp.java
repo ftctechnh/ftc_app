@@ -1,12 +1,12 @@
 
-package org.firstinspires.ftc.teamcode.relic.autonomous.steps;
+package org.firstinspires.ftc.teamcode.sabbotage.relic.autonomous.internal;
 
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.StepInterface;
-import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.robot.Robot;
+
+import org.firstinspires.ftc.teamcode.sabbotage.relic.robot.Robot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public abstract class AutonomousOp extends OpMode {
     private void init_calibrateGyroSensors() {
 
 
-        robot.gyroSensor.calibrate();
+//        robot.gyroSensor.calibrate();
 
     }
 
@@ -72,7 +72,8 @@ public abstract class AutonomousOp extends OpMode {
 
     private boolean isCalibratingGyroSensor() {
 
-        return (robot.gyroSensor.isCalibrating());
+//        return (robot.gyroSensor.isCalibrating());
+        return false;
     }
 
     private void initStartTime() {
@@ -91,10 +92,8 @@ public abstract class AutonomousOp extends OpMode {
 
         robot.resetEncodersAndStopMotors();
 
-        robot.motorRightFront.setPower(0);
-        robot.motorRightRear.setPower(0);
-        robot.motorLeftFront.setPower(0);
-        robot.motorRightRear.setPower(0);
+        robot.motorDriveLeft.setPower(0);
+        robot.motorDriveRight.setPower(0);
     }
 
     private void sendMessageToDriverPhone() {
@@ -151,14 +150,11 @@ public abstract class AutonomousOp extends OpMode {
         String key = "A_" + keySuffix;
 
         Log.i(key, "--------------------------------------------------------------------------------------");
-        Log.i(key, " Motor Mode:" + robot.motorLeftFront.getMode() + " --- " + robot.motorRightFront.getMode());
-        Log.i(key, " Motor Mode:" + robot.motorLeftRear.getMode() + " --- " + robot.motorRightRear.getMode());
+        Log.i(key, " Motor Mode:" + robot.motorDriveLeft.getMode() + " --- " + robot.motorDriveRight.getMode());
         Log.i(key, "-------------------------------");
-        Log.i(key, " speed:" + robot.motorLeftFront.getPower() + " --- " + robot.motorRightFront.getPower());
-        Log.i(key, " speed:" + robot.motorLeftRear.getPower() + " --- " + robot.motorRightRear.getPower());
+        Log.i(key, " speed:" + robot.motorDriveLeft.getPower() + " --- " + robot.motorDriveRight.getPower());
         Log.i(key, "-------------------------------");
-        Log.i(key, " zero:" + robot.motorLeftFront.getZeroPowerBehavior() + " --- " + robot.motorRightFront.getZeroPowerBehavior());
-        Log.i(key, " zero:" + robot.motorLeftRear.getZeroPowerBehavior() + " --- " + robot.motorRightRear.getZeroPowerBehavior());
+        Log.i(key, " zero:" + robot.motorDriveLeft.getZeroPowerBehavior() + " --- " + robot.motorDriveRight.getZeroPowerBehavior());
         Log.i(key, "--------------------------------------------------------------------------------------");
     }
 
@@ -191,4 +187,18 @@ public abstract class AutonomousOp extends OpMode {
         this.delayUntilLoopCount = robot.loopCounter + 10;
     }
 
+    public static interface StepInterface {
+
+
+        void setRobot(Robot robot);
+
+        void runStep();
+
+        boolean isStepDone();
+
+        boolean isAborted();
+
+        String getLogKey();
+
+    }
 }

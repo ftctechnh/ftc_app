@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.StepInterface;
 import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.Step_Beacon;
@@ -44,6 +45,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.r
 import java.util.ArrayList;
 
 @Autonomous(name = "AutoRed", group = "Red")
+@Disabled
 public class AutoRed extends AutonomousOp {
 
     @Override

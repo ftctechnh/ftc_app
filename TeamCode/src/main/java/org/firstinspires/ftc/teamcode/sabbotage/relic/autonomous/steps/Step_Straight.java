@@ -1,14 +1,14 @@
-package org.firstinspires.ftc.teamcode.relic.autonomous.steps;
+package org.firstinspires.ftc.teamcode.sabbotage.relic.autonomous.steps;
 
 
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.opmodes.autonomous.steps.StepInterface;
-import org.firstinspires.ftc.robotcontroller.external.samples.sabbotage.vortex.robot.Robot;
+import org.firstinspires.ftc.teamcode.sabbotage.relic.autonomous.internal.AutonomousOp;
+import org.firstinspires.ftc.teamcode.sabbotage.relic.robot.Robot;
 
-public class Step_Straight implements StepInterface {
+public class Step_Straight implements AutonomousOp.StepInterface {
 
     private final Integer distanceEncoderCounts;
     private final Robot.DirectionEnum direction;
@@ -66,18 +66,15 @@ public class Step_Straight implements StepInterface {
     }
     private DcMotor getEncoderMotor() {
 
-        return robot.motorRightRear;
+        return robot.motorDriveRight;
 
     }
     private void goStraight() {
 
         double motorPower = determineMotorPower();
 
-        robot.motorRightFront.setPower(motorPower);
-        robot.motorRightRear.setPower(motorPower);
-        robot.motorLeftFront.setPower(motorPower);
-        robot.motorLeftRear.setPower(motorPower);
-
+        robot.motorDriveLeft.setPower(motorPower);
+        robot.motorDriveRight.setPower(motorPower);
 
     }
 
@@ -110,7 +107,7 @@ public class Step_Straight implements StepInterface {
 
     private void resetEncodersAndStopMotors_Only_Once() {
 
-        if (resetMotors_DoneFlag == false) {
+        if (!resetMotors_DoneFlag) {
 
             robot.resetEncodersAndStopMotors();
             resetMotors_DoneFlag = true;
@@ -124,7 +121,7 @@ public class Step_Straight implements StepInterface {
     private void initializeMotors_Only_Once() {
 
 
-        if (initializedMotors_DoneFlag == false) {
+        if (!initializedMotors_DoneFlag) {
 
             initializeMotorDirection();
 
@@ -165,7 +162,7 @@ public class Step_Straight implements StepInterface {
     @Override
     public boolean isStepDone() {
 
-        if (robot.isStillWaiting() || resetMotors_DoneFlag == false || initializedMotors_DoneFlag == false) {
+        if (robot.isStillWaiting() || !resetMotors_DoneFlag || !initializedMotors_DoneFlag) {
             return false;
         }
 
@@ -177,10 +174,8 @@ public class Step_Straight implements StepInterface {
             logEncoders(">done");
             robot.resetEncodersAndStopMotors();
 
-            robot.motorRightFront.setPower(0);
-            robot.motorRightRear.setPower(0);
-            robot.motorLeftFront.setPower(0);
-            robot.motorLeftRear.setPower(0);
+            robot.motorDriveRight.setPower(0);
+            robot.motorDriveLeft.setPower(0);
             logEncoders("<done");
             return true;
         }
@@ -198,11 +193,9 @@ public class Step_Straight implements StepInterface {
         String key = getLogKey() + keySuffix;
 
         Log.i(key, "--------------------------------------------------------------------------------------");
-        Log.i(key, " CurrentPosition:" + robot.motorLeftFront.getCurrentPosition() + " --- " + robot.motorRightFront.getCurrentPosition());
-        Log.i(key, " CurrentPosition:" + robot.motorLeftRear.getCurrentPosition() + " --- " + robot.motorRightRear.getCurrentPosition());
+        Log.i(key, " CurrentPosition:" + robot.motorDriveRight.getCurrentPosition() + " --- " + robot.motorDriveLeft.getCurrentPosition());
         Log.i(key, "----------------------");
-        Log.i(key, " speed:" + robot.motorLeftFront.getPower() + " --- " + robot.motorRightFront.getPower());
-        Log.i(key, " speed:" + robot.motorLeftRear.getPower() + " --- " + robot.motorRightRear.getPower());
+        Log.i(key, " speed:" + robot.motorDriveLeft.getPower() + " --- " + robot.motorDriveRight.getPower());
         Log.i(key, "--------------------------------------------------------------------------------------");
     }
 
@@ -210,8 +203,8 @@ public class Step_Straight implements StepInterface {
 
         StringBuilder sb = new StringBuilder();
         sb.append(methodName);
-        sb.append(" CurrentPosition:" + robot.motorLeftFront.getCurrentPosition());
-        sb.append(" Target:" + robot.motorLeftFront.getTargetPosition());
+        sb.append(" CurrentPosition:" + robot.motorDriveLeft.getCurrentPosition());
+        sb.append(" Target:" + robot.motorDriveLeft.getTargetPosition());
         sb.append(" Remaining:" + this.getRemainingDistance());
         Log.i(getLogKey(), sb.toString());
 

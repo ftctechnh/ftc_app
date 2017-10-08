@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.sabbotage.relic.robot;
 
 import android.util.Log;
 
@@ -22,8 +22,8 @@ public class Robot {
 
     public Telemetry telemetry;
 
-    public DcMotor motorRight;
-    public DcMotor motorLeft;
+    public DcMotor motorDriveRight;
+    public DcMotor motorDriveLeft;
 
     public Servo servoRightPaddle;
     public Servo servoLeftPaddle;
@@ -40,8 +40,8 @@ public class Robot {
         }
 
 
-        this.motorLeft = this.hardwareMap.dcMotor.get("motorLeft");
-        this.motorRight = this.hardwareMap.dcMotor.get("motorRight");
+        this.motorDriveLeft = this.hardwareMap.dcMotor.get("motorDriveLeft");
+        this.motorDriveRight = this.hardwareMap.dcMotor.get("motorDriveRight");
 
         this.servoRightPaddle = hardwareMap.servo.get("servoRightPaddle");
         this.servoLeftPaddle = hardwareMap.servo.get("servoLeftPaddle");
@@ -60,8 +60,8 @@ public class Robot {
     public void resetEncodersAndStopMotors() {
 
         Log.w("ROBOT", "resetEncodersAndStopMotors..." + loopCounter);
-        this.motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorDriveLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorDriveRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
     }
@@ -86,32 +86,32 @@ public class Robot {
 
     public void setDriveMotorForwardDirection() {
 
-        this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        this.motorRight.setDirection(DcMotor.Direction.FORWARD);
+        this.motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
+        this.motorDriveRight.setDirection(DcMotor.Direction.FORWARD);
 
 
     }
 
     public void setDriveMotorReverseDirection() {
 
-        this.motorLeft.setDirection(DcMotor.Direction.FORWARD);
-        this.motorRight.setDirection(DcMotor.Direction.REVERSE);
+        this.motorDriveLeft.setDirection(DcMotor.Direction.FORWARD);
+        this.motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
 
     }
 
     public void runWithoutEncoders() {
 
-        this.motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        this.motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.motorDriveRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.motorDriveLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
 
     public void runWithEncoders_MAINTAINS_SPEED() {
 
-        this.motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motorDriveRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motorDriveLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 

@@ -1,12 +1,12 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.sabbotage.relic.manual;
 
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.sabbotage.relic.robot.Robot;
 
 @Autonomous(name="SimpleRobot", group="Concept")
 
@@ -62,11 +62,11 @@ public class ManualControlOp extends OpMode {
     private void driver_controlDriveMotors() {
 
         // write the values to the motors
-        robot.motorRight.setPower(limitValue(gamepad1.right_stick_y));
-        robot.motorLeft.setPower(limitValue(gamepad1.left_stick_y));
+        robot.motorDriveRight.setPower(limitValue(gamepad1.right_stick_y));
+        robot.motorDriveLeft.setPower(limitValue(gamepad1.left_stick_y));
 
         Log.i(KEY, "--Robot");
-        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorRight.getPower() * 100) + "]---[" + String.format("%.0f", robot.motorLeft.getPower() * 100) + "]");
+        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorDriveRight.getPower() * 100) + "]---[" + String.format("%.0f", robot.motorDriveLeft.getPower() * 100) + "]");
         Log.i(KEY, "------------------------------------------");
 
     }
