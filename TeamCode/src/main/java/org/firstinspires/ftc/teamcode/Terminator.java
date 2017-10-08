@@ -73,8 +73,8 @@ public class Terminator extends LinearOpMode {
 
                 F_L.setPower(power);
                 F_R.setPower(power);
-                R_L.setPower(power);
-                R_R.setPower(power);
+                R_L.setPower(-power);
+                R_R.setPower(-power);
 
                 Thread.sleep(time);
 
@@ -87,8 +87,8 @@ public class Terminator extends LinearOpMode {
 
             try {
 
-                F_L.setPower(power);
-                F_R.setPower(power);
+                F_L.setPower(-power);
+                F_R.setPower(-power);
                 R_L.setPower(power);
                 R_R.setPower(power);
 
@@ -166,9 +166,13 @@ public class Terminator extends LinearOpMode {
 
         waitForStart();
 
-        moveMotorWithTime(normal, 3000, forward);
+        //moveMotorWithTime(normal, 3000, forward);
+        //stopMotor();
+        //moveMotorWithTime(normal, 3000, backward);
+        //stopMotor();
+        moveMotorWithTime(normal, 3000, left);
         stopMotor();
-        moveMotorWithTime(normal, 3000, backward);
+        moveMotorWithTime(normal, 3000, right);
     }
 
 }
