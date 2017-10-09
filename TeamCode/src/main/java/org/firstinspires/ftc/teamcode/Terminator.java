@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-
 /**
  * Created by Swagster_Wagster on 9/29/17.
  */
@@ -177,10 +176,10 @@ public class Terminator extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        F_L = hardwareMap.dcMotor.get("F_L");
-        F_R = hardwareMap.dcMotor.get("F_R");
-        R_L = hardwareMap.dcMotor.get("R_L");
-        R_R = hardwareMap.dcMotor.get("R_R");
+        F_L = hardwareMap.dcMotor.get("left_drive");
+        F_R = hardwareMap.dcMotor.get("right_drive");
+        R_L = hardwareMap.dcMotor.get("left_back");
+        R_R = hardwareMap.dcMotor.get("right_back");
 
         telemetry.addData("ACTION COMPLETED", "READY FOR BREACH");
 
