@@ -119,10 +119,16 @@ public class HolonomicTeleop extends OpMode{
 
         //Use gamepad 1 RIGHT JOYSTICK for counterclockwise and clockwise rotation
         //NOTE: this is untested, but in theory it should work
-        robot.leftDrive.setPower(right);
-        robot.rightDrive.setPower(right);
-        robot.rightbackdrive.setPower(right);
-        robot.leftbackdrive.setPower(right);
+
+        if((left+left2==0) && (right2!=0)) {
+            int dir = 1;
+            if(right2<0) dir =-1;
+            robot.leftDrive.setPower(dir*0.3);
+            robot.rightDrive.setPower(dir*0.3);
+            robot.rightbackdrive.setPower(dir*0.3);
+            robot.leftbackdrive.setPower(dir*0.3);
+        }
+
 
         // Send telemetry message to signify robot running;
         telemetry.addData("left stick y",  "%.2f", left);
