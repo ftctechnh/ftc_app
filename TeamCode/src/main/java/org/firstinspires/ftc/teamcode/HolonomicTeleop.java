@@ -29,12 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides basic Telop driving for a Holonomic robot.
@@ -95,52 +91,52 @@ public class HolonomicTeleop extends OpMode{
     public void loop() {
         //define variables for a cleaner code.
         // 2 is for the X AXIS on the JOYSTICK.
-        double left;
-        double left2;
-        double right;
-        double right2;
+        double left_y;
+        double left_x;
+        double right_y;
+        double right_x;
 
 
         // Run wheels in holonomic mode (note: The joystick goes negative when pushed forwards, so negate it)
 
-        //For Joystick 1(LEFT JOYSTICK): direction moving forward, backward, left, right & straight at an angle
-        left = -gamepad1.left_stick_y;
-        left2 = gamepad1.left_stick_x;
+        //For Joystick 1(LEFT JOYSTICK): direction moving forward, backward, left, right_y & straight at an angle
+        left_y = -gamepad1.left_stick_y;
+        left_x = gamepad1.left_stick_x;
         //For Joystick 2 (RIGHT JOYSTICK): rotation clockwise and counterclockwise
-        right = -gamepad1.right_stick_y;
-        right2 = gamepad1.right_stick_x;
+        right_y = -gamepad1.right_stick_y;
+        right_x = gamepad1.right_stick_x;
 
 
-        //Use gamepad 1 LEFT JOYSTICK for right, left, forward, and back movement
-        robot.leftDrive.setPower(left + left2);
-        robot.rightDrive.setPower(left2 - left);
-        robot.rightbackdrive.setPower(-left - left2);
-        robot.leftbackdrive.setPower(left - left2);
+        //Use gamepad 1 LEFT JOYSTICK for right_y, left, forward, and back movement
+        robot.F_L.setPower(left_y + left_x);
+        robot.F_R.setPower(left_x - left_y);
+        robot.R_R.setPower(-left_y - left_x);
+        robot.R_L.setPower(left_y - left_x);
 
         //Use gamepad 1 RIGHT JOYSTICK for counterclockwise and clockwise rotation
         //NOTE: this is untested, but in theory it should work
 
-        if((left+left2==0) && (right2!=0)) {
+        if((left_y+left_x==0) && (right_x!=0)) {
             int dir = 1;
-            if(right2<0) dir =-1;
-            robot.leftDrive.setPower(dir*0.3);
-            robot.rightDrive.setPower(dir*0.3);
-            robot.rightbackdrive.setPower(dir*0.3);
-            robot.leftbackdrive.setPower(dir*0.3);
+            if(right_x<0) dir =-1;
+            robot.F_L.setPower(dir*0.3);
+            robot.F_R.setPower(dir*0.3);
+            robot.R_R.setPower(dir*0.3);
+            robot.R_L.setPower(dir*0.3);
         }
 
 
         
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left stick y",  "%.2f", left);
-        telemetry.addData("right stick y", "%.2f", right);
-        telemetry.addData("left stick x", "%.2f",left2);
-        telemetry.addData("right stick x", "%.2f", right2);
-        telemetry.addData("left front drive", "%.2f", robot.leftDrive.getPower());
-        telemetry.addData("right front drive", "%.2f", robot.rightDrive.getPower());
-        telemetry.addData("left back drive", "%.2f", robot.leftbackdrive.getPower());
-        telemetry.addData("right back drive", "%.2f", robot.rightbackdrive.getPower());
+        telemetry.addData("left stick y",  "%.2f", left_y);
+        telemetry.addData("right_y stick y", "%.2f", right_y);
+        telemetry.addData("left stick x", "%.2f",left_x);
+        telemetry.addData("right_y stick x", "%.2f", right_x);
+        telemetry.addData("left front drive", "%.2f", robot.F_L.getPower());
+        telemetry.addData("right_y front drive", "%.2f", robot.F_R.getPower());
+        telemetry.addData("left back drive", "%.2f", robot.R_L.getPower());
+        telemetry.addData("right_y back drive", "%.2f", robot.R_R.getPower());
     }
 
     /*

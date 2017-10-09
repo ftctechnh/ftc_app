@@ -30,9 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -58,10 +56,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HolonomicHardware
 {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  leftbackdrive = null;
-    public DcMotor  rightbackdrive = null;
+    public DcMotor  F_L = null;
+    public DcMotor  F_R = null;
+    public DcMotor  R_L = null;
+    public DcMotor  R_R = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -78,30 +76,30 @@ public class HolonomicHardware
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        leftbackdrive = hwMap.get(DcMotor.class, "left_back");
-        rightbackdrive = hwMap.get(DcMotor.class, "right_back");
+        F_L = hwMap.get(DcMotor.class, "F_L");
+        F_R = hwMap.get(DcMotor.class, "F_R");
+        R_L = hwMap.get(DcMotor.class, "R_L");
+        R_R = hwMap.get(DcMotor.class, "R_R");
         /*For holonomic drive: change all direction of motors to the same direction.
          * Because we are not negating/changing directions in our code (see HolonomicTeleop.java) we are
          * using REVERSE direction. */
-        leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors FOR TANK DRIVE
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors FOR TANK DRIVE
-        leftbackdrive.setDirection(DcMotor.Direction.REVERSE);
-        rightbackdrive.setDirection(DcMotor.Direction.REVERSE);
+        F_L.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors FOR TANK DRIVE
+        F_R.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors FOR TANK DRIVE
+        R_L.setDirection(DcMotor.Direction.REVERSE);
+        R_R.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        leftbackdrive.setPower(0);
-        rightbackdrive.setPower(0);
+        F_L.setPower(0);
+        F_R.setPower(0);
+        R_L.setPower(0);
+        R_R.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftbackdrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightbackdrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        F_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        F_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        R_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        R_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
 
