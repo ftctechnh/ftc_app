@@ -86,13 +86,11 @@ public class HolonomicHardware
          * Because we are not negating/changing directions in our code (see HolonomicTeleop.java) we are
          * using REVERSE direction. */
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors FOR TANK DRIVE
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        rightbackdrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors FOR TANK DRIVE
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors FOR TANK DRIVE
         leftbackdrive.setDirection(DcMotor.Direction.REVERSE);
+        rightbackdrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         leftbackdrive.setPower(0);
