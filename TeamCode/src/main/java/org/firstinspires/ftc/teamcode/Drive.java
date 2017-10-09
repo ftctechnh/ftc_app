@@ -102,7 +102,7 @@ public class Drive
     {
         // Create polar coordinate variables theta and magnitude for the angle and magnitude.
         // During creation, calculate the values from the input.
-        double magnitude = Math.sqrt( ( xLeftRight * xLeftRight ) + ( yFwdRev * yFwdRev ) );
+        double magnitude = Math.sqrt( ( xLeftRight * xLeftRight ) + ( yFwdRev * yFwdRev ) ); //pythagorean theory
         double theta = Math.atan2( yFwdRev, xLeftRight ) - ( Math.PI / 4.0 );
 
         // calculate powers for wheel motors
@@ -131,147 +131,37 @@ public class Drive
 
     }
 
-
-    // function to move forward
-    public void forward( double power )
+    /*
+     *
+     */
+    public void MoveSimple( double xLeftRight, double yFwdRev, double rotate )
     {
-        frontLeft.setPower(power);
-        rearLeft.setPower(power);
-        frontRight.setPower(power);
-        rearRight.setPower(power);
-    }
-
-    // function to move forward
-    public void forward( )
-    {
-        frontLeft.setPower(1);
-        frontRight.setPower(1);
-        rearLeft.setPower(1);
-        rearRight.setPower(1);
-    }
-
-    // function to move backward
-
-    public void backward( double power)
-    {
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        rearRight.setPower(power);
-        rearLeft.setPower(power);
-
-    }
-    // function to move backward
-    public void backward()
-    {
-        frontLeft.setPower(-1);
-        frontRight.setPower(-1);
-        rearLeft.setPower(-1);
-        rearRight.setPower(-1);
-    }
+        // variables for calculating wheel powers
+        double frontLeftPower = ( -1.0 * xLeftRight ) + ( 1.0 * yFwdRev ) + ( 1.0 * rotate );
+        double frontRightPower = ( 1.0 * xLeftRight ) + (1.0 * yFwdRev ) + (-1.0 * rotate);
+        double rearLeftPower = xLeftRight + yFwdRev + rotate;
+        double rearRightPower = (xLeftRight * -1.0) + ( yFwdRev * 1.0) + (-1.0 * rotate);
 
 
-    // function to move left (not turn!)
-    public void turn_left()
-    {
-        frontLeft.setPower(-1);
-        frontRight.setPower(1);
-        rearLeft.setPower(-1);
-        rearRight.setPower(1);
-    }
+        // Powers can be > 1 using above equations, so scale if they are
+        double biggestFront = Math.max( Math.abs( frontLeftPower ), Math.abs( frontRightPower ) );
+        double biggestRear = Math.max( Math.abs( rearLeftPower ), Math.abs( rearRightPower ) );
+        double biggest = Math.max( biggestFront, biggestFront );
 
-    // function to move right (not turn!)
-    public void turn_right()
-    {
-        frontLeft.setPower(1);
-        frontRight.setPower(-1);
-        rearLeft.setPower(1);
-        rearRight.setPower(-1);
-    }
-
-    // function to move diagonal 45 degrees from the front of the robot
-    public void diagonal45()
-    {
-        frontRight.setPower(1);
-        rearLeft.setPower(1);
-
-    }
-    //function to move 225 degrees
-    public void diagonal225()
-    {
-        frontRight.setPower(-1);
-        rearLeft.setPower(1);
-    }
-
-    public void diagonal135()
-    {
-        frontLeft.setPower(1);
-        rearRight.setPower(1);
-
-    }
-    public void diagonal315()
-    {frontLeft.setPower(1);
-
-        rearRight.setPower(-1);
-    }
-
-    // function to move left (not turn!)
-    public void left(double power  )
-    {
-      frontLeft.setPower(power);
-      rearLeft.setPower(-power);
-      rearRight.setPower(-power);
-      frontRight.setPower(power);
-
-    }
-
-    // function to go left
-    public void left()
-    { frontLeft.setPower(1);
-        frontRight.setPower(-1);
-        rearLeft.setPower(-1);
-        rearRight.setPower(1);
-    }
-
-    // function to move right (not turn!)
-    public void right(double power)
-    {
-      frontLeft.setPower(-power);
-        rearLeft.setPower(power);
-        rearRight.setPower(power);
-        frontRight.setPower(-power);
-    }
-
-    //function to go left
-    public void right() {
-        frontLeft.setPower(-1);
-        frontRight.setPower(1);
-        rearLeft.setPower(1);
-        rearRight.setPower(-1);
-    }
-
-    // function to move diagonal
-    public void diagonal( double power )
-    {
-        frontLeft.setPower( power );
-        rearRight.setPower( power );
-        rearRight.setPower( -power );
-        rearLeft.setPower( -power );
-    }
-
-    // function to turn
-    public void turn( double signedSpeed )
-    {
-        if ( signedSpeed <= 0.0 )
+        if ( biggest > 1.0 )
         {
-            // when speed is < 0, rotate CCW. To rotate CCW
-            // set ..... <this is not correct, yet>
-            double power = -1.0 * signedSpeed;
-
-            frontLeft.setPower(signedSpeed);
-            rearLeft.setPower(power);
-            frontRight.setPower(power);
-            rearRight.setPower(signedSpeed);
+            frontLeftPower = frontLeftPower / biggest;
+            frontRightPower = frontRightPower / biggest;
+            rearLeftPower = rearLeftPower / biggest;
+            rearRightPower = rearRightPower / biggest;
         }
+
+        frontLeft.setPower(frontLeftPower);
+        frontRight.setPower(frontRightPower);
+        rearLeft.setPower(rearLeftPower);
+        rearRight.setPower(rearRightPower);
+
     }
+
 }
 
