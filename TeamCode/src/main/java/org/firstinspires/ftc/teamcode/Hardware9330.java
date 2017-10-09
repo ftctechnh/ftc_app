@@ -3,6 +3,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 /**
  * Created by robot on 9/25/2017.
@@ -11,9 +13,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class Hardware9330 {
     /* Public OpMode members. */
 
-    public Servo  grabber    = null;
+    public Servo  lowClamp    = null;
+    public Servo  highClamp    = null;
     public static DcMotor leftMotor = null;
     public static DcMotor rightMotor = null;
+    public static DcMotor liftMotor = null;
+    public ColorSensor cs = null;
 
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -28,9 +33,13 @@ public class Hardware9330 {
 
         // Define and Initialize Motors
 
-        grabber = hwMap.servo.get("grabber");
-        grabber.setDirection(Servo.Direction.REVERSE);
+        lowClamp = hwMap.servo.get("lowClamp");
+        lowClamp.setDirection(Servo.Direction.REVERSE);
+        highClamp = hwMap.servo.get("highClamp");
+        highClamp.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
         rightMotor = hwMap.dcMotor.get("rightMotor");
+        liftMotor = hwMap.dcMotor.get("liftMotor");
+        cs = hwMap.colorSensor.get("cs");
     }
 }

@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
-import org.firstinspires.ftc.teamcode.subsystems.Grabber9330;
+import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 
 /**
  * Created by robot on 9/25/2017.
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Grabber9330;
 //@Disabled
 public class TeleOp9330 extends OpMode {
     Hardware9330 robotMap = new Hardware9330();
-    Grabber9330 grabber9330 = new Grabber9330(robotMap);
+    Clamps9330 grabber9330 = new Clamps9330(robotMap);
 
     float yPower = 0;
     float spinPower = 0;
@@ -50,9 +50,9 @@ public class TeleOp9330 extends OpMode {
         Hardware9330.leftMotor.setPower(-yPower - spinPower);
         Hardware9330.rightMotor.setPower(yPower - spinPower);
         if(gamepad2.a)
-        grabber9330.openArms();
+        grabber9330.openLowClamp();
         else
-        grabber9330.closeArms();
+        grabber9330.closeLowClamp();
     }
 
     /*
