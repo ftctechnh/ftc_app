@@ -12,9 +12,14 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 
 ### [Unreleased]
 - Thorough documentation on the new system (teamcode.Core package)
-- Wrapper class for Vuforia
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
+
+### [0.4.0] - 2017-10-08
+### Added
+- Vuforia wrapper class for Relic Recovery
+- Servo mapping support in HardwareMapper
+- Code for testing Relic Grabber prototype
 
 ### [0.3.0] - 2017-10-02
 #### Added
