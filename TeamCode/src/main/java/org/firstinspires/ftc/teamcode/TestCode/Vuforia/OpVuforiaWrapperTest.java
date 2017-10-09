@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Core.Utility.UtilVuforia;
  * Tests the Vuforia wrapper class
  */
 @TeleOp(name = "Vuforia Wrapper" , group = "Prototypes")
+@SuppressWarnings("unused")
 public class OpVuforiaWrapperTest extends LinearOpMode
 {
     private UtilVuforia _vuforia = new UtilVuforia();
@@ -27,7 +28,15 @@ public class OpVuforiaWrapperTest extends LinearOpMode
 
         while(opModeIsActive())
         {
+            _vuforia.readMarker();
+
             telemetry.addData("Vu Mark" , _vuforia.currentMarker());
+            telemetry.addData("Trans X" , _vuforia.xTrans());
+            telemetry.addData("Trans Y" , _vuforia.yTrans());
+            telemetry.addData("Trans Z" , _vuforia.zTrans());
+            telemetry.addData("Rot x" , _vuforia.xAngle());
+            telemetry.addData("Rot y" , _vuforia.yAngle());
+            telemetry.addData("Rot z" , _vuforia.zAngle());
             telemetry.update();
         }
     }

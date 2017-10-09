@@ -23,6 +23,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 
@@ -52,6 +53,8 @@ public final class HardwareMapper
      * operator (=) to map the desired motor. Sends a log error message if failed.
      *
      * @param NAME Name of the DcMotor as it appears in the configuration file
+     * @param DIRECTION Direction of the motor
+     *
      * @return Returns a DcMotor, mapped if succeeded, null if failed
      */
     public DcMotor mapMotor(final String NAME , final DcMotorSimple.Direction DIRECTION)
@@ -69,6 +72,33 @@ public final class HardwareMapper
         }
 
         return myMotor;
+    }
+
+
+    /**
+     * Maps a servo with provided name. Result is returned, allowing assignment operator (=) to
+     * map to the desired servo. Sends a log error message if failed.
+     *
+     * @param NAME Name of the servo as it appears in the configuration file
+     * @param DIRECTION Direction of the servo
+     *
+     * @return Mapped servo (null if mapping failed)
+     */
+    public Servo mapServo(final String NAME , final Servo.Direction DIRECTION)
+    {
+        Servo myServo = null;
+
+        try
+        {
+            myServo = _robot.hardware.servo.get(NAME);
+            myServo.setDirection(DIRECTION);
+        }
+        catch(Exception e)
+        {
+            Log.e("Error" , "Cannot map servo with name " + NAME);
+        }
+
+        return myServo;
     }
 
 

@@ -4,10 +4,17 @@ package org.firstinspires.ftc.teamcode.Core.Utility;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableContainer;
 
 
 /**
@@ -28,6 +35,11 @@ public class UtilVuforia
     @SuppressWarnings("FieldCanBeLocal")
     private final String _MARK_ASSETS = "RelicVuMark";
 
+    @SuppressWarnings("WeakerAccess")
+    static final double DEFAULT_TRANS = -100;
+    @SuppressWarnings("WeakerAccess")
+    static final double DEFAULT_ROTATE = 370;
+
 
     @SuppressWarnings("FieldCanBeLocal")
     private VuforiaLocalizer _vuforia;
@@ -35,6 +47,7 @@ public class UtilVuforia
     private VuforiaTrackable _template;
     @SuppressWarnings("FieldCanBeLocal")
     private RelicRecoveryVuMark _vuMark;
+    private OpenGLMatrix _pose;
 
 
     /**
@@ -81,5 +94,101 @@ public class UtilVuforia
         _vuMark = RelicRecoveryVuMark.from(_template);
 
         return _vuMark;
+    }
+
+
+    /**
+     * Reads markers, sets the pose. Pose is null if nothing is found
+     */
+    public void readMarker()
+    {
+        _pose =  ((VuforiaTrackableDefaultListener)_template.getListener()).getPose();
+    }
+
+
+    /**
+     * @return Returns the angle from the Vuforia marker (forward to backward pitch).
+     */
+    public double xAngle()
+    {
+        if(_pose != null)
+        {
+            return Orientation.getOrientation(_pose , AxesReference.EXTRINSIC , AxesOrder.XYZ ,
+                                                AngleUnit.DEGREES).firstAngle;
+        }
+
+        return DEFAULT_ROTATE;
+    }
+
+
+    /**
+     * @return Returns the angle from the Vuforia marker (side to side pitch).
+     */
+    public double yAngle()
+    {
+        if(_pose != null)
+        {
+            return Orientation.getOrientation(_pose , AxesReference.EXTRINSIC , AxesOrder.XYZ ,
+                    AngleUnit.DEGREES).secondAngle;
+        }
+
+        return DEFAULT_ROTATE;
+    }
+
+
+    /**
+     * @return Returns the angle from the Vuforia marker (side to side rotation).
+     */
+    public double zAngle()
+    {
+        if(_pose != null)
+        {
+            return Orientation.getOrientation(_pose , AxesReference.EXTRINSIC , AxesOrder.XYZ ,
+                    AngleUnit.DEGREES).thirdAngle;
+        }
+
+        return DEFAULT_ROTATE;
+    }
+
+
+    /**
+     * @return Returns the distance from the Vuforia marker (left to right direction).
+     */
+    public double xTrans()
+    {
+        if(_pose != null)
+        {
+            return _pose.getTranslation().get(0);
+        }
+
+        return DEFAULT_TRANS;
+    }
+
+
+    /**
+     * @return Returns the distance from the Vuforia marker (up to down direction).
+     */
+    public double yTrans()
+    {
+        if(_pose != null)
+        {
+            return _pose.getTranslation().get(1);
+        }
+
+        return DEFAULT_TRANS;
+    }
+
+
+    /**
+     * @return Returns the distance from the Vuforia marker (forward to backward direction).
+     */
+    public double zTrans()
+    {
+        if(_pose != null)
+        {
+            return _pose.getTranslation().get(2);
+        }
+
+        return DEFAULT_TRANS;
     }
 }
