@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
     * Created by Roma Bhatia (@sugarcrystals01) on 9/21/17
     * Last edit: 10/7/17
     */
-@TeleOp(name="Holonomic: Teleop Holo", group="We Love Pi")
+@TeleOp(name="Holonomic_TeleOp", group="We Love Pi")
 
 public class HolonomicTeleop extends OpMode{
 
