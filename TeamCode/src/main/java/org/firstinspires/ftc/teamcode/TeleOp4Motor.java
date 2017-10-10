@@ -12,7 +12,7 @@ import junit.framework.Test;
  * Created by BeehiveRobotics-3648 on 7/20/2017.
  */
 
-
+@TeleOp(name = "4MotorTeleOp", group = "linear OpMode")
 public class TeleOp4Motor extends OpMode {
 
     DcMotor FrontLeft;

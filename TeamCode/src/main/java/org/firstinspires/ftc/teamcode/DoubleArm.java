@@ -12,44 +12,61 @@ public class DoubleArm extends OpMode{
     Servo UpDown;
     Servo BigRotation;
     double clawSpeed = 0.075;
-    double clawPosition = 0;
+    double clawPosition = 0.4;
+    double clawHighEnd = 1.00;
+    double clawLowEnd = 0.3;
     double upDownSpeed = 0.05;
-    double upDownPosition = 0;
-    double bigRotationSpeed = 0.05;
-    double bigRotationPosition = 0;
+    double upDownPosition = 0.5;
+    double bigRotationSpeed = 0.025;
+    double bigRotationPosition = 0.4;
+    double bigRotationHighEnd = 0.49;
+    double bigRotationLowEnd = 0.38;
     
     @Override
 
     public void init(){
         Claw = hardwareMap.servo.get("s1");
-        Claw.setPosition(0.6);
+        Claw.setPosition(clawPosition);
         UpDown = hardwareMap.servo.get("s2");
-        UpDown.setPosition(0.5);
+        UpDown.setPosition(upDownPosition);
         BigRotation = hardwareMap.servo.get("s3");
-        BigRotation.setPosition(0.2);
+        BigRotation.setPosition(bigRotationPosition);
     }
 
     @Override
     public void loop(){
-        bigRotationPosition = gamepad1.left_stick_y*bigRotationSpeed + bigRotationPosition;
+
+        bigRotationPosition = (gamepad1.left_stick_y*bigRotationSpeed/16) + bigRotationPosition;
 
         if (gamepad1.a){
-            if (Claw.getPosition() < 1.00) {
+            if (Claw.getPosition() < clawHighEnd) {
                 clawPosition = Claw.getPosition() + clawSpeed;
             }
         }
         if (gamepad1.b){
-            if (Claw.getPosition() > 0.4) {
+            if (Claw.getPosition() > clawLowEnd) {
                 clawPosition = Claw.getPosition() + -clawSpeed;
             }
         }
 
         Claw.setPosition(clawPosition);
+        Claw.setPosition(clawPosition);
         UpDown.setPosition(upDownPosition);
-        BigRotation.setPosition(bigRotationPosition);
+        UpDown.setPosition(upDownPosition);
+        if (bigRotationPosition < bigRotationHighEnd && bigRotationPosition > bigRotationLowEnd) {
+            BigRotation.setPosition(bigRotationPosition);
+            BigRotation.setPosition(bigRotationPosition);
+        }
+        else if (bigRotationPosition < bigRotationLowEnd){
+            bigRotationPosition = bigRotationLowEnd;
+        }
+        else if (bigRotationPosition > bigRotationHighEnd){
+            bigRotationPosition = bigRotationHighEnd;
+        }
 
         telemetry.addData("ClawServoPos",Claw.getPosition());
-        telemetry.addData("Wirst servo position",UpDown.getPosition());
+        telemetry.addData("Wrist servo position",UpDown.getPosition());
+        telemetry.addData("Big Rotation goal",bigRotationPosition);
         telemetry.addData("big rotation position",BigRotation.getPosition());
         telemetry.update();
     }
