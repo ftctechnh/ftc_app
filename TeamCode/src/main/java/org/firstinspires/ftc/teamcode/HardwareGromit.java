@@ -83,30 +83,28 @@ public class HardwareGromit
 
         // Define and Initialize Motors
         right_front  = hwMap.get(DcMotor.class, "right_front");
-       // right_back  = hwMap.get(DcMotor.class, "right_back");
+        right_back  = hwMap.get(DcMotor.class, "right_back");
         left_front = hwMap.get(DcMotor.class, "left_front");
-       // left_back = hwMap.get(DcMotor.class, "left_back");
+        left_back = hwMap.get(DcMotor.class, "left_back");
 
         right_front.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         left_front.setDirection(DcMotor.Direction.FORWARD); // Set to Forward if using AndyMark motors
-        right_front.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        left_front.setDirection(DcMotor.Direction.REVERSE); // Set to Forward if using AndyMark motors
-        //right_back.setDirection(DcMotor.Direction.REVERSE);
-        //left_back.setDirection(DcMotor.Direction.FORWARD);
+        right_back.setDirection(DcMotor.Direction.REVERSE);
+        left_back.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         right_front.setPower(0.0);
-        //right_back.setPower(0.0);
+        right_back.setPower(0.0);
         left_front.setPower(0.0);
-       // left_back.setPower(0.0);
+        left_back.setPower(0.0);
 
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         right_front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //right_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left_front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //left_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left_back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
 //        leftClaw  = hwMap.get(Servo.class, "left_hand");

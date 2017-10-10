@@ -101,10 +101,15 @@ public class Tele extends OpMode{
         turn = -gamepad1.right_stick_x;
         forward = -gamepad1.right_stick_y;
 
-        gromit.left_front.setPower(forward/4.0 - turn/4.0);
-        gromit.left_back.setPower(forward/4.0 - turn/4.0);
-        gromit.right_front.setPower(forward/4.0 + turn/4.0);
-        gromit.right_back.setPower(forward/4.0 + turn/4.0);
+        //gromit.left_front.setPower(forward/2.0);
+        //gromit.left_back.setPower(forward/2.0);
+        //gromit.right_front.setPower(forward/2.0);
+        //gromit.right_back.setPower(forward/2.0);
+        gromit.left_front.setPower(turn/2.0 + forward/2.0);
+        gromit.left_back.setPower(-turn/2.0 + forward/2.0);
+        gromit.right_front.setPower(-turn/2.0 + forward/2.0);
+        gromit.right_back.setPower(turn/2.0 + forward/2.0);
+
 
     }
 
