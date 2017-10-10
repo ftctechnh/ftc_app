@@ -18,7 +18,7 @@ public class DoubleArm extends OpMode{
     double upDownSpeed = 0.05;
     double upDownPosition = 0.5;
     double bigRotationSpeed = 0.025;
-    double bigRotationPosition = 0.4;
+    double bigRotationPosition = 0.43;
     double bigRotationHighEnd = 0.49;
     double bigRotationLowEnd = 0.38;
     
@@ -35,7 +35,6 @@ public class DoubleArm extends OpMode{
 
     @Override
     public void loop(){
-
         bigRotationPosition = (gamepad1.left_stick_y*bigRotationSpeed/16) + bigRotationPosition;
 
         if (gamepad1.a){
@@ -56,6 +55,7 @@ public class DoubleArm extends OpMode{
         if (bigRotationPosition < bigRotationHighEnd && bigRotationPosition > bigRotationLowEnd) {
             BigRotation.setPosition(bigRotationPosition);
             BigRotation.setPosition(bigRotationPosition);
+            bigRotationPosition = BigRotation.getPosition();
         }
         else if (bigRotationPosition < bigRotationLowEnd){
             bigRotationPosition = bigRotationLowEnd;
