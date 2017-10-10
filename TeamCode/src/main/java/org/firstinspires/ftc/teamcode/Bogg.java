@@ -7,7 +7,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+This is a class left over from last season...
+We will update this class to have both a drive engine and sensors
+that are appropriate for the new robot.
+ */
 public class Bogg
 {
     Gamepad gamepad;

@@ -11,6 +11,10 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+/*
+This is also an old class that needs to be updated...
+ */
+
 public class Sensors {
     HardwareMap hardwareMap = null;
 
