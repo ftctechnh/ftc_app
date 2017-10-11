@@ -128,11 +128,11 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                     clawOffset -= CLAW_SPEED;
 
                 // Set the max of servo rotation for the claw
-                if (clawOffset < -2)
-                    clawOffset = -2;
+                if (clawOffset < -0.4)
+                    clawOffset = -0.4;
 
                 // Move both servos to new position.  Assume servos are mirror image of each other.
-                clawOffset = Range.clip(clawOffset, -2, 1);
+                clawOffset = Range.clip(clawOffset, -0.4, 1);
                 robot.claw.setPosition(robot.MID_SERVO - clawOffset);
 
                 // Use gamepad buttons to move arm up (Y) and down (A)
