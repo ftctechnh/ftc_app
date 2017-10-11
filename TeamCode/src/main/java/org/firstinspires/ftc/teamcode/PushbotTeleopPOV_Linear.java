@@ -98,8 +98,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                 // This way it's also easy to just drive straight, or just turn.
                 drive = -gamepad1.left_stick_y;
                 turn = gamepad1.right_stick_x;
-                precDrive = drive / 5;
-                precTurn = turn / 5;
+                precDrive = drive / 4;
+                precTurn = turn / 6;
 
                 // Combine drive and turn for blended motion.
                 left = drive + turn;
