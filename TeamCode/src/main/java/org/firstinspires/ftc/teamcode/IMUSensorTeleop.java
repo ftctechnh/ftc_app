@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,7 +19,7 @@ import java.util.Locale;
 @TeleOp
 public class IMUSensorTeleop extends OpMode {
 
-    TestAutonHardware robot = new TestAutonHardware();
+    whiskerHardware robot = new whiskerHardware();
 
     Orientation angles;
     Acceleration gravity;
