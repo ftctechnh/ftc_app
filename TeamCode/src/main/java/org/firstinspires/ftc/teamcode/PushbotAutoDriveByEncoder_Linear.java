@@ -111,10 +111,10 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  36,  36, 5.0);
 
-        robot.claw.setPosition(1.0);
-        sleep(1000);
-        robot.claw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
+        // robot.claw.setPosition(1.0);
+        // sleep(1000);
+        // robot.claw.setPosition(0.0);
+        // sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

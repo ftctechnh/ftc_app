@@ -81,10 +81,10 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        precisionMode = false;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            precisionMode = false;
 
             if (gamepad1.a) {
                 precisionMode = true;
@@ -128,11 +128,11 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                     clawOffset -= CLAW_SPEED;
 
                 // Set the max of servo rotation for the claw
-                if (clawOffset < -1)
-                    clawOffset = -1;
+                if (clawOffset < -2)
+                    clawOffset = -2;
 
                 // Move both servos to new position.  Assume servos are mirror image of each other.
-                clawOffset = Range.clip(clawOffset, -1, 1);
+                clawOffset = Range.clip(clawOffset, -2, 1);
                 robot.claw.setPosition(robot.MID_SERVO - clawOffset);
 
                 // Use gamepad buttons to move arm up (Y) and down (A)
@@ -145,6 +145,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
                 // Send telemetry message to signify robot running;
                 telemetry.addData("claw", "Offset = %.2f", clawOffset);
+                telemetry.addData("rawClaw", robot.claw.getPosition());
                 telemetry.addData("left", "%.2f", left);
                 telemetry.addData("right", "%.2f", right);
                 telemetry.update();
