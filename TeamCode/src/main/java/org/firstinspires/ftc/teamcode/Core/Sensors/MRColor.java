@@ -8,20 +8,7 @@ import org.firstinspires.ftc.teamcode.Core.HardwareMapper;
 import org.firstinspires.ftc.teamcode.Core.Utility.UtilColor.Color;
 
 /**
- * <p>
- *      Class to manage the color sensor.
- * </p>
- *
- *
- * <p>
- *      While coding in this package, keep these units in mind: <br>
- *      1. Assume all angles are measured in degrees <br>
- *      2. Assume all distances are measured in centimeters <br>
- *      3. Assume all measurements of time are done in milliseconds <br>
- * </p>
- *
- *
- * That's all, folks!
+ * Class to manage the Modern Robotics color sensor.
  */
 @SuppressWarnings("unused")
 public final class MRColor

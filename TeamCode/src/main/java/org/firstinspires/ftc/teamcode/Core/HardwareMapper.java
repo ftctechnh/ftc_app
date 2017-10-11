@@ -15,11 +15,13 @@ package org.firstinspires.ftc.teamcode.Core;
 
 import android.util.Log;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsAnalogOpticalDistanceSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cAddr;
@@ -103,11 +105,39 @@ public final class HardwareMapper
 
 
     /**
+     * Maps a continuous rotation servo with provided name. Result is returned, allowing assignment
+     * operator (=) to map to the desired servo. Sends a log error message if failed.
+     *
+     * @param NAME Name of the continuous rotation servo as it appears in the configuration file
+     * @param DIRECTION Direction of the continuous rotation servo
+     *
+     * @return Mapped continuous rotation servo (null if mapping failed)
+     */
+    public CRServo mapCRServo(final String NAME , final CRServo.Direction DIRECTION)
+    {
+        CRServo myServo = null;
+
+        try
+        {
+            myServo = _robot.hardware.crservo.get(NAME);
+            myServo.setDirection(DIRECTION);
+        }
+        catch(Exception e)
+        {
+            Log.e("Error" , "Cannot map continuous rotation servo with name " + NAME);
+        }
+
+        return myServo;
+    }
+
+
+    /**
      * Attempts to map a Modern Robotics Integrating Gyroscope. Also attempts to set its heading
      * mode to cartesian. Result is returned, allowing an assignment operator to map the desired
      * gyro. Sends a log error message if failed.
      *
      * @param NAME Name of the Gyro as it appears in the configuration file
+     *
      * @return Returns a gyro, mapped if succeeded, null if failed
      */
     public ModernRoboticsI2cGyro mapMRGyro(final String NAME , ModernRoboticsI2cGyro.HeadingMode mode)
@@ -133,6 +163,7 @@ public final class HardwareMapper
      * operator to map the desired range sensor. Sends a log error message if failed.
      *
      * @param NAME Name of the Range sensor as it appears in the configuration file
+     *
      * @return Returns a range sensor, mapped if succeeded, null if failed
      */
     public ModernRoboticsI2cRangeSensor mapMRRange(final String NAME)
@@ -157,6 +188,7 @@ public final class HardwareMapper
      * operator to map the desired color sensor. Sends a log error message if failed.
      *
      * @param NAME Name of the Color sensor as it appears in the configuration file
+     *
      * @return Returns a color sensor, mapped if succeeded, null if failed
      */
     public ModernRoboticsI2cColorSensor mapMRColor(final String NAME , final int ADDRESS)
@@ -182,6 +214,7 @@ public final class HardwareMapper
      * operator to map the desired ODS. Sends a log error message if failed.
      *
      * @param NAME Name of the ODS as it appears in the configuration file
+     *
      * @return Returns a ODS, mapped if succeeded, null if failed
      */
     public ModernRoboticsAnalogOpticalDistanceSensor mapMRODS(final String NAME)
@@ -207,6 +240,7 @@ public final class HardwareMapper
      * operator to map the desired range sensor. Sends a log error message if failed.
      *
      * @param NAME Name of the Touch sensor as it appears in the configuration file
+     *
      * @return Returns a touch sensor, mapped if succeeded, null if failed
      */
     public ModernRoboticsTouchSensor mapMRTouch(final String NAME)
@@ -231,6 +265,7 @@ public final class HardwareMapper
      * operator to map the desired ultrasonic sensor. Sends a log error message if failed.
      *
      * @param NAME Name of the Ultrasonic sensor as it appears in the configuration file
+     *
      * @return Returns a ultrasonic sensor, mapped if succeeded, null if failed
      */
     public UltrasonicSensor mapLegoUltra(final String NAME)
@@ -247,5 +282,31 @@ public final class HardwareMapper
         }
 
         return myUltra;
+    }
+
+    /**
+     * Attempts to map the REV Module IMU. Result is returned, allowing an assignment
+     * operator to map the desired IMU. Sends a log error message if failed.
+     *
+     * @param NAME Name of the IMU as it appears in the configuration file
+     * @param PARAMETERS IMU parameters, initialized properly
+     *
+     * @return Returns an IMU sensor, mapped if succeeded, null if failed
+     */
+    public BNO055IMU mapREVIMU(final String NAME , final BNO055IMU.Parameters PARAMETERS)
+    {
+        BNO055IMU myIMU = null;
+
+        try
+        {
+            myIMU = _robot.hardware.get(BNO055IMU.class , NAME);
+            myIMU.initialize(PARAMETERS);
+        }
+        catch(Exception e)
+        {
+            Log.e("Error" , "Cannot map BNO055 IMU with name " + NAME + ". Are you using REV?");
+        }
+
+        return myIMU;
     }
 }

@@ -11,20 +11,7 @@ import org.firstinspires.ftc.teamcode.Core.Utility.UtilBasic;
 
 
 /**
- * <p>
  *      Class to manage the gyro sensor.
- * </p>
- *
- *
- * <p>
- *      While coding in this package, keep these units in mind: <br>
- *      1. Assume all angles are measured in degrees <br>
- *      2. Assume all distances are measured in centimeters <br>
- *      3. Assume all measurements of time are done in milliseconds <br>
- * </p>
- *
- *
- * That's all, folks!
  */
 @SuppressWarnings("unused")
 public final class MRGyro

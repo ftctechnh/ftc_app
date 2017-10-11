@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.TestCode.RelicGrabber;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 
 @TeleOp(name = "Relic Grabber" , group = "Prototypes")
@@ -11,19 +11,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class OpRelicGrabber extends LinearOpMode
 {
     @SuppressWarnings("FieldCanBeLocal")
-    private Servo _servo = null;
+    private CRServo _servo = null;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
-        _servo = hardwareMap.servo.get("servo");
+        _servo = hardwareMap.crservo.get("servo");
 
         waitForStart();
 
 
         while(opModeIsActive())
         {
-            _servo.setPosition(.5 + -gamepad1.left_stick_y / 2);
+            _servo.setPower(-gamepad1.left_stick_y);
         }
     }
 }
