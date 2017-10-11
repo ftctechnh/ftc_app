@@ -51,7 +51,7 @@ public class SharonServoCode extends LinearOpMode {
 HardwareBACONbot robot = new HardwareBACONbot();
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
@@ -73,11 +73,13 @@ HardwareBACONbot robot = new HardwareBACONbot();
             telemetry.update();
 
             if (gamepad1.a) {
-                robot.clawServo.setPosition();
+                robot.clawServo.setPosition(180);
+                wait(500);
                 telemetry.addLine("HIII");
             }
-//            if (gamepad1.y) {
-//                robot.clawServo.setPosition(1);
+            if (gamepad1.y) {
+                robot.clawServo.setPosition(1);
+                wait(500);
             // hi
 //            }
         }
