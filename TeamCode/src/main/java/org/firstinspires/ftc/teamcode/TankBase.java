@@ -1,13 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
  * Created by Jeremy on 6/11/2017.
@@ -16,6 +23,9 @@ public class TankBase implements TankInterface
 {
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
+    private BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
 
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
     private float roboDiameterCm = 100; // can be adjusted
@@ -24,16 +34,28 @@ public class TankBase implements TankInterface
 
     public TankBase(HardwareMap hMap)
     {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu = (hMap.get(BNO055IMU.class, "imu"));
+        imu.initialize(parameters);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
         driveLeftOne = (DcMotorImplEx) hMap.dcMotor.get("driveLeftOne");
         driveRightOne = (DcMotorImplEx) hMap.dcMotor.get("driveRightOne");
 
-        driveRightOne.setVelocity(3 * Math.PI, AngleUnit.RADIANS); //Neverrest 40 has 160 RPM; 2.6 rev per second
-
+        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         resetEncoders();
-        driveRightOne.setVelocity(3 * Math.PI, AngleUnit.RADIANS);
-        driveLeftOne.setVelocity(3* Math.PI, AngleUnit.RADIANS);
+        driveRightOne.setVelocity(1 * Math.PI, AngleUnit.RADIANS);
+        driveLeftOne.setVelocity(1 * Math.PI, AngleUnit.RADIANS);
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
 /*
         driveRightOne.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -204,6 +226,29 @@ public class TankBase implements TankInterface
         driveLeftOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public double[] returnOrientation()
+    {
+        double [] sensValues = new double[3];
+        return sensValues;
+    }
+
+    public double selfBalStraight()
+    {
+        return Math.atan(gravity.yAccel/gravity.zAccel);
+    }
+
+    public String returnGrav()
+    {
+        updateIMUValues();
+        return gravity.toString();
+    }
+
+    public void updateIMUValues()
+    {
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        gravity  = imu.getGravity();
     }
 
     public DcMotorImplEx getDriveLeftOne()
