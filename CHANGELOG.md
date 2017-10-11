@@ -15,6 +15,15 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
 
+### [0.5.0] - 2017-10-10
+### Added
+- Support for mapping continuous rotation servos and the Bosch BNO055 IMU in HardwareMapper.java
+- Wrapper class for easy data retrieval of Bosch BNO055 IMU
+- Test code for Bosh BNO055 IMU (Robot base and an OpMode)
+### Fixed
+- Relic Grabber actually uses a continuous rotation servo as opposed to a regular servo. Oops.
+- Cleaning up some JavaDoc comments
+
 ### [0.4.0] - 2017-10-08
 ### Added
 - Vuforia wrapper class for Relic Recovery
