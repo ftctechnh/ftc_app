@@ -73,13 +73,13 @@ HardwareBACONbot robot = new HardwareBACONbot();
             telemetry.update();
 
             if (gamepad1.a) {
-                robot.clawServo.setPosition(180);
-                wait(500);
+                robot.clawServo.setPosition(100);
+                wait(1000);
                 telemetry.addLine("HIII");
             }
             if (gamepad1.y) {
-                robot.clawServo.setPosition(1);
-                wait(500);
+                robot.clawServo.setPosition(80);
+                wait(1000);
             // hi
 //            }
         }
