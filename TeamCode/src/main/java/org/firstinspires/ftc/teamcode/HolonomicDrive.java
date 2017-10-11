@@ -48,10 +48,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
- * Hey! This code runs a motor at full speed!
+ * Hey! This code is for a holonomic drive configuration!
  */
 
-@TeleOp(name = "♥ Robot 7080 ♥", group = "BACONbot")
+@TeleOp(name = "Holonomic Drive!", group = "BACONbot")
 //@Disabled
 public class HolonomicDrive extends LinearOpMode {
 
@@ -71,7 +71,7 @@ public class HolonomicDrive extends LinearOpMode {
         double r;
 
         /* Send telemetry message to signify that the robot's ready to play! */
-        telemetry.addLine("♥ ♪ Ready to Run ♪ ♥");
+        telemetry.addLine("♥ ♪ Ready to Run, btw I was uploaded wirelessly! ♪ ♥");
         telemetry.update();
 
         /* Wait for the game to start (driver presses PLAY)*/
@@ -140,7 +140,7 @@ public class HolonomicDrive extends LinearOpMode {
             robot.FrontRightPower = frontRight;
         }
         if (robot.BackLeftPower != backLeft) {
-            robot.backLeftMotor.setPower(backLeft);
+            robot.backLeftMotor.setPower(-backLeft);
             robot.BackLeftPower = backLeft;
         }
         if (robot.BackRightPower != backRight) {
