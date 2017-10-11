@@ -78,6 +78,7 @@ HardwareBACONbot robot = new HardwareBACONbot();
             }
 //            if (gamepad1.y) {
 //                robot.clawServo.setPosition(1);
+            // hi
 //            }
         }
 
