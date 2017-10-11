@@ -72,12 +72,13 @@ HardwareBACONbot robot = new HardwareBACONbot();
             telemetry.addData(">", "Press Stop to end test." );
             telemetry.update();
 
-            while (gamepad1.y) {
-                robot.clawServo.setPosition(0);
+            if (gamepad1.a) {
+                robot.clawServo.getPosition();
+                telemetry.addLine("HIII");
             }
-            while (gamepad1.a) {
-                robot.clawServo.setPosition(1);
-            }
+//            if (gamepad1.y) {
+//                robot.clawServo.setPosition(1);
+//            }
         }
 
         // Signal done;
