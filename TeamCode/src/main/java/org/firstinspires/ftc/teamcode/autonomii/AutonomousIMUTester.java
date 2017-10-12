@@ -26,7 +26,7 @@ public class AutonomousIMUTester extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            telemetry.addData("Orientation", this.imuWrapper.getIMU().getAngularOrientation().toString());
+            telemetry.addData("Orientation", this.imuWrapper.getOrientation().toString());
             telemetry.update();
         }
     }
