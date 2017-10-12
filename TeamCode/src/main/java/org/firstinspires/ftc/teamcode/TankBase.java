@@ -28,7 +28,7 @@ public class TankBase implements TankInterface
     Acceleration gravity;
 
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
-    private float roboDiameterCm = 100; // can be adjusted
+    private float roboDiameterCm = 45.7f; // can be adjusted
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
     private float wheelCircCm = (float)(10.16 * Math.PI);
 
@@ -45,14 +45,17 @@ public class TankBase implements TankInterface
         imu.initialize(parameters);
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        driveLeftOne = (DcMotorImplEx) hMap.dcMotor.get("driveLeftOne");
-        driveRightOne = (DcMotorImplEx) hMap.dcMotor.get("driveRightOne");
+        driveLeftOne = hMap.get(DcMotorImplEx.class, "driveLeftOne");
+        driveRightOne = hMap.get(DcMotorImplEx.class, "driveRightOne");
 
         driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         resetEncoders();
-        driveRightOne.setVelocity(1 * Math.PI, AngleUnit.RADIANS);
-        driveLeftOne.setVelocity(1 * Math.PI, AngleUnit.RADIANS);
+        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        driveRightOne.setVelocity(0, AngleUnit.RADIANS);
+        driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -123,7 +126,7 @@ public class TankBase implements TankInterface
     {
         float degToRad = degrees * (float)Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm) * 2;
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
 
@@ -141,13 +144,15 @@ public class TankBase implements TankInterface
 
             while(driveRightOne.getCurrentPosition() < encTarget){}
         }
+
+        stopAllMotors();
     }
 
     public void spin_Left(float degrees)//Left Motor only moves!!!!!!!
     {
         float degToRad = degrees * (float)Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm) * 2;
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
 
@@ -166,6 +171,8 @@ public class TankBase implements TankInterface
 
             while(driveLeftOne.getCurrentPosition() > encTarget){}
         }
+
+        stopAllMotors();
     }
 
 
@@ -173,7 +180,7 @@ public class TankBase implements TankInterface
     {
         float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm) / 2;
+        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
         //we divide it by two at the end to compensate for using two motors
@@ -196,6 +203,8 @@ public class TankBase implements TankInterface
 
             while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) {}
         }
+
+        stopAllMotors();
     }
 
     public int getRightEncoderPos()
@@ -228,18 +237,13 @@ public class TankBase implements TankInterface
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public double[] returnOrientation()
-    {
-        double [] sensValues = new double[3];
-        return sensValues;
-    }
 
-    public double selfBalStraight()
+    public double anglePerpToGrav()
     {
         return Math.atan(gravity.yAccel/gravity.zAccel);
     }
 
-    public String returnGrav()
+    public String returnGravToString()
     {
         updateIMUValues();
         return gravity.toString();
