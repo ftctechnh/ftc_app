@@ -80,18 +80,18 @@ public class SharonServoCode extends LinearOpMode {
             if (gamepad1.y) {
                 robot.clawServo.setPosition(80);
                 wait(1000);
-               }
+            }
 
             // hi
-          }
-        }
->>>>>>> Stashed changes
-
-
-
-            // Signal done;
-            telemetry.addData(">", "Done");
-            telemetry.update();
         }
     }
 }
+
+
+
+//            // Signal done;
+//            telemetry.addData(">", "Done");
+//            telemetry.update();
+//        }
+//    }
+//}
