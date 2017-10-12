@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.sabbotage.relic.robot.Robot;
 
-@Autonomous(name="SimpleRobot", group="Concept")
+@Autonomous(name="ManualRobot", group="Concept")
 
 public class ManualControlOp extends OpMode {
     private static final String KEY = "Manual";
@@ -62,12 +62,13 @@ public class ManualControlOp extends OpMode {
     private void driver_controlDriveMotors() {
 
         // write the values to the motors
-        robot.motorDriveRight.setPower(limitValue(gamepad1.right_stick_y));
-        robot.motorDriveLeft.setPower(limitValue(gamepad1.left_stick_y));
+        robot.motorDriveRight.setPower(limitValue(-gamepad1.right_stick_y));
+        robot.motorDriveLeft.setPower(limitValue(-gamepad1.left_stick_y));
 
-        Log.i(KEY, "--Robot");
-        Log.i(KEY, "WHEELS: [" + String.format("%.0f", robot.motorDriveRight.getPower() * 100) + "]---[" + String.format("%.0f", robot.motorDriveLeft.getPower() * 100) + "]");
-        Log.i(KEY, "------------------------------------------");
+        Log.i(KEY,"gamepad1.right_stick_y" + -gamepad1.right_stick_y);
+        Log.i(KEY, "WHEELS: [" + robot.motorDriveRight.getDirection()+ ": " +
+                String.format("%.0f", robot.motorDriveRight.getPower() * 100) + "]---[" +
+                robot.motorDriveRight.getDirection()+ ": " +String.format("%.0f", robot.motorDriveLeft.getPower() * 100) + "]");
 
     }
 
