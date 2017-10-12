@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 /**
  * This OpMode uses the CRServo class whcih makes a continuous rotation servo act like a
  * simple motor.  Power range from -1 to 1 with 0 being stop.
- *
+ * <p>
  * This example runs the servo at full speed.  Easy to change that by changing the
  * power values for open and close.
  */
@@ -45,10 +45,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 //@Disabled
 public class SharonServoCode extends LinearOpMode {
 
-//    static final double OPEN     =  1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
+    //    static final double OPEN     =  1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
 //    static final double CLOSE     =  -1;
         /* This says to use BACONbot hardware */
-HardwareBACONbot robot = new HardwareBACONbot();
+    ArmHardwareClass robot = new ArmHardwareClass();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -58,18 +58,18 @@ HardwareBACONbot robot = new HardwareBACONbot();
 //        clamp = hardwareMap.get(CRServo.class, "left_hand");
 
         // Wait for the start button
-        telemetry.addData(">", "Press Start to scan Servo." );
+        telemetry.addData(">", "Press Start to scan Servo.");
         telemetry.update();
         waitForStart();
 
 
         // Scan servo till stop pressed.
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
 
 
             // Display the current value
             telemetry.addData("Servo Controls", "Y is OPEN, A is close");
-            telemetry.addData(">", "Press Stop to end test." );
+            telemetry.addData(">", "Press Stop to end test.");
             telemetry.update();
 
             if (gamepad1.a) {
@@ -80,12 +80,15 @@ HardwareBACONbot robot = new HardwareBACONbot();
             if (gamepad1.y) {
                 robot.clawServo.setPosition(80);
                 wait(1000);
-            // hi
+                // hi
 //            }
-        }
+            }
 
-        // Signal done;
-        telemetry.addData(">", "Done");
-        telemetry.update();
+
+
+            // Signal done;
+            telemetry.addData(">", "Done");
+            telemetry.update();
+        }
     }
 }

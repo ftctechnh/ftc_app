@@ -56,7 +56,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HolonomicDrive extends LinearOpMode {
 
     /* This says to use BACONbot hardware */
-    HardwareBACONbot robot = new HardwareBACONbot();
+    HolonomicHardwareClass robot = new HolonomicHardwareClass();
 
     /* Allow This Teleop to run! */
     @Override
@@ -71,7 +71,7 @@ public class HolonomicDrive extends LinearOpMode {
         double r;
 
         /* Send telemetry message to signify that the robot's ready to play! */
-        telemetry.addLine("♥ ♪ Ready to Run, btw I was uploaded wirelessly! ♪ ♥");
+        telemetry.addLine("♥ ♪ Ready to Run ♪ ♥");
         telemetry.update();
 
         /* Wait for the game to start (driver presses PLAY)*/

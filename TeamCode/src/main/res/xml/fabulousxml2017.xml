@@ -6,9 +6,7 @@
             <NeveRest40Gearmotor name="FR" port="1" />
             <NeveRest40Gearmotor name="BR" port="2" />
             <NeveRest40Gearmotor name="BL" port="3" />
-            <Servo name="servo0" port="0" />
-            <ModernRoboticsAnalogTouchSensor name="touchSensor" port="0" />
-            <LynxColorSensor name="colorSensor" port="0" bus="0" />
+            <Servo name="CS" port="0" />
         </LynxModule>
     </LynxUsbDevice>
 </Robot>
