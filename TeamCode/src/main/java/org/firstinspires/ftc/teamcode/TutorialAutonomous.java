@@ -55,8 +55,10 @@ import com.qualcomm.robotcore.util.Range;
 @Autonomous(name="Tutorial OpMode")
 public class TutorialAutonomous extends LinearOpMode {
 
-    
+
     DcMotor motorRight = null;
+    DcMotor motorLeft = null;
+    //hello!
 
     @Override
     public void runOpMode() throws InterruptedException {
