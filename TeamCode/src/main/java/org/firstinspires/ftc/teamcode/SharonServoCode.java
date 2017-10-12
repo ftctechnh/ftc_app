@@ -82,17 +82,16 @@ public class SharonServoCode extends LinearOpMode {
                 wait(1000);
                }
             }
-=======
+
             // hi
           }
         }
->>>>>>> Stashed changes
 
 
 
-            // Signal done;
-            telemetry.addData(">", "Done");
-            telemetry.update();
-        }
-    }
-}
+//            // Signal done;
+//            telemetry.addData(">", "Done");
+//            telemetry.update();
+//        }
+//    }
+//}
