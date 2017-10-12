@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,7 +15,7 @@ public class ArmHardwareClass {
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
-    public Servo   clawServo = null;
+    public CRServo   clawServo = null;
 
 
     /* Give place holder values for the motors and the grabber servo */
@@ -45,7 +46,7 @@ public class ArmHardwareClass {
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
         verticalArmMotor = hwMap.dcMotor.get("VAM");
-        clawServo =  hwMap.servo.get("CS");
+        clawServo =  hwMap.crservo.get("CS");
 
         // Set all hardware to default position
         // Set all hardware to default position
@@ -54,7 +55,7 @@ public class ArmHardwareClass {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         verticalArmMotor.setPower(0);
-        clawServo.setPosition(0);
+        clawServo.setPower(0);
 
 
         // Set proper encoder state for all motor
