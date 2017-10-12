@@ -68,20 +68,56 @@ public class REVIMU
     }
 
 
+    /**
+     * @return Returns x orientation from the gyro
+     */
     public double xAngle()
     {
         return _orien.firstAngle;
     }
 
 
+    /**
+     * @return Returns y orientation from the gyro
+     */
     public double yAngle()
     {
         return _orien.secondAngle;
     }
 
 
+    /**
+     * @return Returns z orientation from the gyro
+     */
     public double zAngle()
     {
         return _orien.thirdAngle;
+    }
+
+
+    /**
+     * @return Returns acceleration in the x direction from the accelerometer
+     */
+    public double xAccel()
+    {
+        return _accel.xAccel;
+    }
+
+
+    /**
+     * @return Returns acceleration in the y direction from the accelerometer
+     */
+    public double yAccel()
+    {
+        return _accel.yAccel;
+    }
+
+
+    /**
+     * @return Returns acceleration in the z direction from the accelerometer
+     */
+    public double zAccel()
+    {
+        return _accel.zAccel;
     }
 }
