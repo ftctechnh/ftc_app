@@ -81,7 +81,6 @@ public class SharonServoCode extends LinearOpMode {
                 robot.clawServo.setPosition(80);
                 wait(1000);
                 // hi
-//            }
             }
 
 
