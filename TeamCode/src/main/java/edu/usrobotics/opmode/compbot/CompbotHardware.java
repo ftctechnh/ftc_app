@@ -52,9 +52,6 @@ public class CompbotHardware extends BaseHardware {
     public double liftServoClosePosition = 0.5f;
     public double liftServoOpenPosition = 0f;
 
-    public double lockServoStartPosition;
-    public double lockServoDelta = 0.3f;
-
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
     public float wheelCircumference = 2f * (float)(Math.PI) * wheelRadius;
