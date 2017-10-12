@@ -80,7 +80,6 @@ public class SharonServoCode extends LinearOpMode {
             if (gamepad1.y) {
                 robot.clawServo.setPosition(80);
                 wait(1000);
-<<<<<<< Updated upstream
                }
             }
 =======
