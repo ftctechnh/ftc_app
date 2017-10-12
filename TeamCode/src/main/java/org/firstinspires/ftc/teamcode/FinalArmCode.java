@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * This example runs the servo at full speed.  Easy to change that by changing the
  * power values for open and close.
  */
-@TeleOp(name = "Sharon's Servo Code", group = "BACONbot")
+@TeleOp(name = "Final Arm Code", group = "BACONbot")
 //@Disabled
 public class FinalArmCode extends LinearOpMode {
 
@@ -71,37 +71,26 @@ public class FinalArmCode extends LinearOpMode {
             telemetry.update();
 
             if (gamepad1.a) {
-                robot.clawServo.setPosition(100);
+                robot.clawServo.setPosition(0);
                 wait(1000);
                 telemetry.addLine("HIII");
             }
             if (gamepad1.y) {
-                robot.clawServo.setPosition(80);
+                robot.clawServo.setPosition(1);
                 wait(1000);
-               }
+            }
 
             if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
-            }
-            else {
+            } else {
                 robot.verticalArmMotor.setPower(0);
             }
             if (gamepad1.dpad_down) {
                 robot.verticalArmMotor.setPower(-1);
-            }
-            else {
+            } else {
                 robot.verticalArmMotor.setPower(0);
             }
 
-        }
-    }
->>>>>>> Stashed changes
-
-
-
-            // Signal done;
-            telemetry.addData(">", "Done");
-            telemetry.update();
         }
     }
 }
