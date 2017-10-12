@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class MechanumWheelDrive extends LinearOpMode {
 
     /* This says to use BACONbot hardware */
-    HardwareBACONbot robot = new HardwareBACONbot();
+    HolonomicHardwareClass robot = new HolonomicHardwareClass();
 
     /* Allow This Teleop to run! */
     @Override
