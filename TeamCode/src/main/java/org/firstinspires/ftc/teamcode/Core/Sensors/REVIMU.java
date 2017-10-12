@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.Core.Sensors;
 
 
+import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMUImpl;
+import com.qualcomm.hardware.lynx.LynxEmbeddedIMU;
+import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -10,8 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Core.HardwareMapper;
 import org.firstinspires.ftc.teamcode.Core.RobotBase;
+
+import java.io.File;
 
 public class REVIMU
 {
@@ -21,6 +28,7 @@ public class REVIMU
 
     private Orientation _orien = null;
     private Acceleration _accel = null;
+    private Position _pos = null;
 
 
     /**
@@ -50,6 +58,27 @@ public class REVIMU
 
 
     /**
+     * Writes the calibration data to the file.
+     */
+    public void writeCalibrationFile()
+    {
+        BNO055IMU.CalibrationData calData = _imu.readCalibrationData();
+
+        File file = AppUtil.getInstance().getSettingsFile(_imu.getParameters().calibrationDataFile);
+        ReadWriteFile.writeFile(file , calData.serialize());
+    }
+
+
+    /**
+     * @return The calibration status as a String
+     */
+    public String calibrationStatus()
+    {
+        return _imu.getCalibrationStatus().toString();
+    }
+
+
+    /**
      * Starts the logging of measured acceleration
      */
     public void startAccelMeasurement()
@@ -65,6 +94,7 @@ public class REVIMU
     {
         _orien = _imu.getAngularOrientation(AxesReference.INTRINSIC , AxesOrder.XYZ , AngleUnit.DEGREES);
         _accel = _imu.getGravity();
+        _pos = _imu.getPosition();
     }
 
 
@@ -119,5 +149,32 @@ public class REVIMU
     public double zAccel()
     {
         return _accel.zAccel;
+    }
+
+
+    /**
+     * @return Returns position in the x direction
+     */
+    public double xPos()
+    {
+        return _pos.x;
+    }
+
+
+    /**
+     * @return Returns position in the y direction
+     */
+    public double yPos()
+    {
+        return _pos.y;
+    }
+
+
+    /**
+     * @return Returns position in the z direction
+     */
+    public double zPos()
+    {
+        return _pos.z;
     }
 }

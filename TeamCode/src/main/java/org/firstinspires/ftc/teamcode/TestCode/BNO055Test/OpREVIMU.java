@@ -16,18 +16,25 @@ public class OpREVIMU extends LinearOpMode
 
         waitForStart();
 
+        _base.imu.startAccelMeasurement();
+
         while(opModeIsActive())
         {
             _base.imu.pull();
 
-            telemetry.addData("imu" , "Pulling data okay");
-            telemetry.update();
-
-            telemetry.clear();
+            telemetry.addData("Calibration" , _base.imu.calibrationStatus());
 
             telemetry.addData("imu x" , _base.imu.xAngle());
             telemetry.addData("imu y" , _base.imu.yAngle());
             telemetry.addData("imu z" , _base.imu.zAngle());
+
+            telemetry.addData("accel x" , _base.imu.xAccel());
+            telemetry.addData("accel y" , _base.imu.yAccel());
+            telemetry.addData("accel z" , _base.imu.zAccel());
+
+            telemetry.addData("pos x" , _base.imu.xPos());
+            telemetry.addData("pos y" , _base.imu.yPos());
+            telemetry.addData("pos z" , _base.imu.zPos());
 
             telemetry.update();
         }
