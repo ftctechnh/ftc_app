@@ -29,10 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 /**
  * This OpMode uses the CRServo class whcih makes a continuous rotation servo act like a
@@ -43,7 +41,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
  */
 @TeleOp(name = "Sharon's Servo Code", group = "BACONbot")
 //@Disabled
-public class SharonServoCode extends LinearOpMode {
+public class FinalArmCode extends LinearOpMode {
 
     //    static final double OPEN     =  1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
 //    static final double CLOSE     =  -1;
@@ -82,9 +80,21 @@ public class SharonServoCode extends LinearOpMode {
                 wait(1000);
                }
 
-            // hi
-          }
+            if (gamepad1.dpad_up) {
+                robot.verticalArmMotor.setPower(1);
+            }
+            else {
+                robot.verticalArmMotor.setPower(0);
+            }
+            if (gamepad1.dpad_down) {
+                robot.verticalArmMotor.setPower(-1);
+            }
+            else {
+                robot.verticalArmMotor.setPower(0);
+            }
+
         }
+    }
 >>>>>>> Stashed changes
 
 
