@@ -12,15 +12,16 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 public class Hardware9330 {
     /* Public OpMode members. */
+/*
+    public static Servo  lowClamp     = null;
+    public static Servo  highClamp    = null;
+    public static DcMotor leftMotor   = null;
+    public static DcMotor rightMotor  = null;
+    public static DcMotor liftMotor   = null;
+    public static ColorSensor cs      = null;
+*/
+    HardwareMap hwMap                 = null;
 
-    public Servo  lowClamp    = null;
-    public Servo  highClamp    = null;
-    public static DcMotor leftMotor = null;
-    public static DcMotor rightMotor = null;
-    public static DcMotor liftMotor = null;
-    public ColorSensor cs = null;
-
-    HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     public Hardware9330() {
@@ -32,7 +33,7 @@ public class Hardware9330 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-
+/*
         lowClamp = hwMap.servo.get("lowClamp");
         lowClamp.setDirection(Servo.Direction.REVERSE);
         highClamp = hwMap.servo.get("highClamp");
@@ -41,5 +42,6 @@ public class Hardware9330 {
         rightMotor = hwMap.dcMotor.get("rightMotor");
         liftMotor = hwMap.dcMotor.get("liftMotor");
         cs = hwMap.colorSensor.get("cs");
+*/
     }
 }

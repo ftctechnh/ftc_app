@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-
 import org.firstinspires.ftc.teamcode.Hardware9330;
 
 /**
@@ -8,5 +7,26 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
  */
 
 public class Drive9330 {
+    Hardware9330 robotMap = new Hardware9330();
+/*
+    void driveForward(int speed) { //Speed mush be between 0 and 100
+        Hardware9330.leftMotor.setPower(-speed);
+        Hardware9330.rightMotor.setPower(speed);
+    }
 
+    void turnLeft(int speed) { //Speed mush be between 0 and 100
+        Hardware9330.leftMotor.setPower(speed);
+        Hardware9330.rightMotor.setPower(speed);
+    }
+
+    void turnRight(int speed) { //Speed mush be between 0 and 100
+        Hardware9330.leftMotor.setPower(speed);
+        Hardware9330.rightMotor.setPower(-speed);
+    }
+
+    void stopDrive() {
+        Hardware9330.leftMotor.setPower(0);
+        Hardware9330.rightMotor.setPower(0);
+    }
+    */
 }
