@@ -2,7 +2,7 @@
 <Robot type="FirstInspires-FTC">
     <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ176SRZ" parentModuleAddress="3">
         <LynxModule name="Expansion Hub 3" port="3">
-            <NeveRest40Gearmotor name="VAM" port="0" />
-            <Servo name="CS" port="0" />        </LynxModule>
+            <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+        </LynxModule>
     </LynxUsbDevice>
 </Robot>
