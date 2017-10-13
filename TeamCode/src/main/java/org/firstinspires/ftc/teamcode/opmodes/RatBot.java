@@ -4,6 +4,15 @@
 
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -20,9 +29,13 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDist
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import java.util.LinkedList;
+
 @TeleOp(name = "RatBot", group = "Misc.")
 //@Disabled
 public class RatBot extends OpMode {
+
+    private static final int DATA_MAX = 100;
 
     DcMotorEx frontLeftMotor;
     DcMotorEx backLeftMotor;
@@ -35,6 +48,13 @@ public class RatBot extends OpMode {
 
     UltrasonicSensor side;
     UltrasonicSensor front;
+
+    private RelativeLayout layout;
+    private LineChart chart;
+
+    final LinkedList<Entry> data = new LinkedList<>();
+    final LineDataSet lineData = new LineDataSet(data, "Dist (mm)");
+    final LineData realLineData = new LineData(lineData);
 
     @Override
     public void init() {
@@ -50,6 +70,7 @@ public class RatBot extends OpMode {
         mahColor = hardwareMap.get(ColorSensor.class, "color");
         mahDistance = hardwareMap.get(DistanceSensor.class, "color");
         touch = hardwareMap.get(DigitalChannel.class, "touch");
+        touch.setMode(DigitalChannel.Mode.INPUT);
 
         side = hardwareMap.get(UltrasonicSensor.class, "ul_side");
         front = hardwareMap.get(UltrasonicSensor.class, "ul_front");
@@ -60,10 +81,26 @@ public class RatBot extends OpMode {
         backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //setup data display stuff
+        lineData.setColor(Color.GREEN);
+
+        //graph stuff
+        layout = (RelativeLayout)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.CheapCamera);
+
+        Runnable doGraphSetup = new Runnable() {
+            @Override
+            public void run() {
+                chart = new LineChart(hardwareMap.appContext);
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                layout.addView(chart, params);
+
+                chart.setData(realLineData);
+            }
+        };
+
+        layout.getHandler().post(doGraphSetup);
+
     }
 
     @Override
@@ -82,7 +119,18 @@ public class RatBot extends OpMode {
 
         telemetry.addData("touch", touch.getState());
 
+        telemetry.addData("side status", side.status());
+        telemetry.addData("front status", front.status());
         telemetry.addData("side", side.getUltrasonicLevel());
         telemetry.addData("front", front.getUltrasonicLevel());
+
+        Runnable postData = new Runnable() {
+            @Override
+            public void run() {
+                chart.invalidate();
+            }
+        };
+
+        layout.getHandler().post(postData);
     }
 }
