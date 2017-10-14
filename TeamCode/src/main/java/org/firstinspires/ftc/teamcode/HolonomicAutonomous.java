@@ -25,8 +25,6 @@ public class HolonomicAutonomous extends LinearOpMode {
 
         af.moveMotorWithTime(Constants.speed_medium, 4000, Constants.forward);
 
-        af.moveMotorWithEncoder(Constants.speed_medium, 2000);
-
 
     }
 }
