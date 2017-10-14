@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 /**
@@ -17,9 +20,13 @@ public class Hardware9330 {
     public static Servo  highClamp    = null;
     public static DcMotor leftMotor   = null;
     public static DcMotor rightMotor  = null;
-    public static DcMotor liftMotor   = null;
-    public static ColorSensor cs      = null;
-*/
+    public static DcMotor liftMotor   = null; */
+    //public static DistanceSensor distance     = null;
+    public static TouchSensor touch;
+    public static ColorSensor cs;
+    public static DistanceSensor ds;
+
+
     HardwareMap hwMap                 = null;
 
     private ElapsedTime period  = new ElapsedTime();
@@ -40,8 +47,11 @@ public class Hardware9330 {
         highClamp.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
         rightMotor = hwMap.dcMotor.get("rightMotor");
-        liftMotor = hwMap.dcMotor.get("liftMotor");
-        cs = hwMap.colorSensor.get("cs");
-*/
+        liftMotor = hwMap.dcMotor.get("liftMotor"); */
+        //distance = hwMap.get(DistanceSensor.class, "distance");
+       // touch = hwMap.touchSensor.get("touch");
+        cs = hwMap.get(ColorSensor.class, "cs");
+        ds = hwMap.get(DistanceSensor.class, "cs");
+
     }
 }
