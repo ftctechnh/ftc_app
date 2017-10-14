@@ -134,7 +134,7 @@ public class Autonomous_Functions {
         stopMotor();
     }
 
-    // MOVES THE MOTOR AT AN ANGLE WITH THE INPUTS POWER, TIME, DIRECTION, AND DEFREES
+    // MOVES THE MOTOR AT AN ANGLE WITH THE INPUTS POWER, TIME, DIRECTION, AND DEGREES
     public void moveAtAngle(double power, long time, String direction, double degrees){
 
         if (direction == Constants.angle) {
