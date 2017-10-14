@@ -1,0 +1,155 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".configuration.FtcConfigurationActivity"
+              android:orientation="vertical">
+
+    <include layout="@layout/header"
+        android:id="@+id/included_header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <include layout="@layout/button_list"/>
+
+            <!--
+            Note: we would like to just
+                <include layout="@layout/info_button"/>
+            but no matter how hard we try, we can't manage to
+            both do that and to have the vertical alignment
+            work out correctly. So we skip the indirection and
+            just embed the info button logic here. For consistency
+            we also embed a copy below for the other button.
+            -->
+
+            <Button
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/button_shape"
+                android:onClick="onDoneInfoButtonPressed"
+                android:shadowColor="@color/info_shadow"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:text="i"
+                android:textColor="?attr/textWhite"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/gray_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="@string/saveButton_text"/>
+
+        <TextView
+            android:paddingBottom="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rescanButton_text"/>
+
+        <!-- an anchor for pop-up feedback text when we need same -->
+        <LinearLayout
+            android:id="@+id/feedbackAnchorDuplicateNames"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <include layout="@layout/red_line"/>
+
+        <RelativeLayout
+            android:id="@+id/devices_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="@string/captionAvailableUsbDevices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <!-- see comment above -->
+            <Button
+              android:id="@+id/devices_info_btn"
+              android:onClick="onDevicesInfoButtonPressed"
+
+              android:text="i"
+              android:textColor="?attr/textWhite"
+              android:textSize="12sp"
+              android:textStyle="bold"
+
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:layout_marginTop="5dp"
+              android:layout_marginBottom="5dp"
+              android:layout_marginLeft="5dp"
+              android:layout_marginStart="5dp"
+              android:layout_marginEnd="5dp"
+              android:layout_marginRight="5dp"
+              android:layout_alignParentEnd="true"
+
+              android:background="@drawable/button_shape"
+              android:shadowColor="@color/info_shadow"
+              android:shadowDx="0"
+              android:shadowDy="0"
+              android:shadowRadius="5"
+              />
+
+        </RelativeLayout>
+
+        <!-- FrameLayout allows the feedback text to overlay the list -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- the ListView is intrinsically scrollable; we need not wrap it in a ScrollView -->
+            <ListView
+              android:id="@+id/controllersList"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+
+            <!-- also used for feedback text placement -->
+            <LinearLayout
+                android:id="@+id/feedbackAnchor"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

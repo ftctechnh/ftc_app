@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/Swagster_Wagster/Work/ftc_app/TeamCode/build/intermediates/res/merged/debug/menu/menu_server.xml",
+        "source": "/Users/Swagster_Wagster/.android/build-cache/c5803c8a9c70b567fb2ba8c849116feac1953742/output/res/menu/menu_server.xml"
+    },
+    {
+        "merged": "/Users/Swagster_Wagster/Work/ftc_app/TeamCode/build/intermediates/res/merged/debug/menu/main_menu.xml",
+        "source": "/Users/Swagster_Wagster/.android/build-cache/b2d780f14f19bc050e2238aa8bfcaa207bed730b/output/res/menu/main_menu.xml"
+    },
+    {
+        "merged": "/Users/Swagster_Wagster/Work/ftc_app/TeamCode/build/intermediates/res/merged/debug/menu/ftc_robot_controller.xml",
+        "source": "/Users/Swagster_Wagster/Work/ftc_app/FtcRobotController/build/intermediates/bundles/default/res/menu/ftc_robot_controller.xml"
+    }
+]

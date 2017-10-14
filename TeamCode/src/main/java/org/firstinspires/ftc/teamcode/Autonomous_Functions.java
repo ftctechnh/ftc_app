@@ -131,7 +131,11 @@ public class Autonomous_Functions {
     }
 
     // MOVES THE MOTOR AT AN ANGLE WITH THE INPUTS POWER, TIME, DIRECTION, AND DEGREES
+<<<<<<< HEAD
     public void moveAtAngle(double power, long time, String direction, double degrees) {
+=======
+    public void moveAtAngle(double power, long time, String direction, double degrees){
+>>>>>>> a097ce6a49300e122b253544cedc11b661053aec
 
         if (direction == Constants.angle) {
 

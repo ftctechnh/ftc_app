@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".EditDigitalDevicesActivity">
+
+    <include
+        android:id="@+id/included_header"
+        layout="@layout/header"/>
+
+    <include layout="@layout/button_list"/>
+
+    <include layout="@layout/gray_line"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:keepScreenOn="true"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <include layout="@layout/red_line"/>
+
+            <TableLayout
+                android:id="@+id/tableLayout_analogOutput_devices"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/port_attached_row"/>
+
+                <!-- just draw a red line -->
+                <View
+                    android:layout_height="2dip"
+                    android:background="?attr/lineBright"/>
+
+                <include layout="@layout/item_list_parent"/>
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
