@@ -33,44 +33,24 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Holonomic bot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  Front Drive motor:        "left_drive"
- * Motor channel:  Right Front Drive motor:        "right_drive"
- * Motor channel:  Left Back Drive motor:          "left_back"
- * Motor channel:  Right Back Drive motor:         "right_back"
- */
+public class HolonomicHardware {
 
-    /*
-    * Created by Roma Bhatia (@sugarcrystals01) on 9/21/17
-    * Last edit: 10/7/17
-    */
-public class HolonomicHardware
-{
-    /* Public OpMode members. */
+    // PUBLIC OPMODE MEMBERS
     public DcMotor  F_L = null;
     public DcMotor  F_R = null;
     public DcMotor  R_L = null;
     public DcMotor  R_R = null;
 
-    /* local OpMode members. */
+    // LOCAL OPMODE MEMBERS
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
-    /* Constructor */
+    // Constructor
     public HolonomicHardware(){
 
     }
 
-    /* Initialize standard Hardware interfaces */
+    // Init function for Hardware
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
@@ -80,22 +60,20 @@ public class HolonomicHardware
         F_R = hwMap.get(DcMotor.class, "F_R");
         R_L = hwMap.get(DcMotor.class, "R_L");
         R_R = hwMap.get(DcMotor.class, "R_R");
-        /*For holonomic drive: change all direction of motors to the same direction.
-         * Because we are not negating/changing directions in our code (see HolonomicTeleop.java) we are
-         * using REVERSE direction. */
-        F_L.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors FOR TANK DRIVE
-        F_R.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors FOR TANK DRIVE
+
+        // REVERSE THE MOTORS
+        F_L.setDirection(DcMotor.Direction.REVERSE);
+        F_R.setDirection(DcMotor.Direction.REVERSE);
         R_L.setDirection(DcMotor.Direction.REVERSE);
         R_R.setDirection(DcMotor.Direction.REVERSE);
 
-        // Set all motors to zero power
+        // SET ALL MOTOR POWERS TO ZERO
         F_L.setPower(0);
         F_R.setPower(0);
         R_L.setPower(0);
         R_R.setPower(0);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        // SET THE MOTORS TO RUN WITHOUT ENCODERS
         F_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         F_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         R_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

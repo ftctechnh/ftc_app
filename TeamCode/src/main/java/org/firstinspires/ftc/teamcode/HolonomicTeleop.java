@@ -32,90 +32,50 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-/**
- * This file provides basic Telop driving for a Holonomic robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Holonomic hardware class to define the devices on the robot.
- * All device access is managed through the HolonomicHardware class.
- *
- * This particular OpMode executes a basic Holonomic Drive Teleop for a Holonomic bot with omniwheels
- * facing at 45 degree angles.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-    /*
-    * Created by Roma Bhatia (@sugarcrystals01) on 9/21/17
-    * Last edit: 10/7/17
-    */
+// Created by Roma Bhatia  on 9/21/17
+
+// Last edit: 10/7/17 BY MRINAAL RAMACHANDRAN
+
 @TeleOp(name="Holonomic_TeleOp", group="We Love Pi")
 
-public class HolonomicTeleop extends OpMode{
+public class HolonomicTeleop extends OpMode {
 
-    /* Declare OpMode members. */
+    // DECLARE OPMODE MEMBERS
     HolonomicHardware robot       = new HolonomicHardware(); // use the class created to define a Pushbot's hardware
-    // could also use HardwarePushbotMatrix class.
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
+
     @Override
     public void init() {
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
+        // INIT robot
         robot.init(hardwareMap);
 
-        // Send telemetry message to signify robot waiting;
+        // TELL DRIVER STATION THAT ROBOT IS INIT
         telemetry.addData("Status", "Initialized");    //
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-
-    @Override
-    public void start() {
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
-        //define variables for a cleaner code.
-        // 2 is for the X AXIS on the JOYSTICK.
+
+        // THE X AND Y AXIS FOR EACH SIDE (LEFT AND RIGHT)
         double left_y;
         double left_x;
         double right_y;
         double right_x;
 
-
-        // Run wheels in holonomic mode (note: The joystick goes negative when pushed forwards, so negate it)
-
-        //For Joystick 1(LEFT JOYSTICK): direction moving forward, backward, left, right_y & straight at an angle
+        // SETTING VALUES FOR LEFT X AND Y
         left_y = -gamepad1.left_stick_y;
         left_x = gamepad1.left_stick_x;
-        //For Joystick 2 (RIGHT JOYSTICK): rotation clockwise and counterclockwise
+        // SETTING VALUES FOR RIGHT X AND Y
         right_y = -gamepad1.right_stick_y;
         right_x = gamepad1.right_stick_x;
 
-
-        //Use gamepad 1 LEFT JOYSTICK for right_y, left, forward, and back movement
+        // SETTING THE POWER TO MOVE THE ROBOT WITH EACH MOTOR
         robot.F_L.setPower(left_y + left_x);
         robot.F_R.setPower(left_x - left_y);
         robot.R_R.setPower(-left_y - left_x);
         robot.R_L.setPower(left_y - left_x);
 
-        //Use gamepad 1 RIGHT JOYSTICK for counterclockwise and clockwise rotation
-        //NOTE: this is untested, but in theory it should work
-
+        // MAKE THE ROBOT ROTATE
         if((left_y+left_x==0) && (right_x!=0)) {
             int dir = 1;
             if(right_x<0) dir =-1;
@@ -125,10 +85,7 @@ public class HolonomicTeleop extends OpMode{
             robot.R_L.setPower(dir*0.3);
         }
 
-
-        
-
-        // Send telemetry message to signify robot running;
+        // TELEMETRY WITH INFO ABOUT POWER, AND VALUES OF (X,Y)
         telemetry.addData("left stick y",  "%.2f", left_y);
         telemetry.addData("right_y stick y", "%.2f", right_y);
         telemetry.addData("left stick x", "%.2f",left_x);
@@ -139,10 +96,4 @@ public class HolonomicTeleop extends OpMode{
         telemetry.addData("right_y back drive", "%.2f", robot.R_R.getPower());
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
 }

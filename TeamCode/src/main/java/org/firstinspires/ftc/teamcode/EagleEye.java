@@ -13,10 +13,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.opengl.models.Teapot;
 
-/**
- * Created by Swagster_Wagster on 9/30/17.
- */
+// Created by Swagster_Wagster on 9/30/17
 
+// Last edit: 9/30/17 BY MRINAAL RAMACHANDRAN
+
+// DEFAULT CODE FOR CAMERA SENSOR
 
 @TeleOp(name = "EagleEye")
 public class EagleEye extends LinearOpMode {
@@ -31,14 +32,11 @@ public class EagleEye extends LinearOpMode {
         para.vuforiaLicenseKey = license_key;
         para.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
 
-
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(para);
-
 
         VuforiaTrackables image = vuforia.loadTrackablesFromAsset("RelicVuMark");
 
         image.get(0).setName("RelicRecovery");
-
 
         waitForStart();
 
@@ -62,13 +60,9 @@ public class EagleEye extends LinearOpMode {
 
                     telemetry.addData(im.getName() + "Degrees", degreeTurn);
 
-
                 }
             }
-
             telemetry.update();
-
-
         }
     }
 }

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by Swagster_Wagster on 10/9/17.
- */
+// Created bY MRINAAL RAMACHANDRAN on 10/9/17
 
+// Last edit: 10/7/17 BY MRINAAL RAMACHANDRAN
 public class Constants {
 
     // DIRECTIONS

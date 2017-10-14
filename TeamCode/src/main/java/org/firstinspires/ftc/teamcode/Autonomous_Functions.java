@@ -3,28 +3,26 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+// Created by MRINAAL RAMACHANDRAN on 10/8/17
 
-/**
- * Created by Swagster_Wagster on 10/8/17.
- */
+// Last edit: 10/7/17 BY MRINAAL RAMACHANDRAN
 
 public class Autonomous_Functions {
 
     // MOTOR NAMES
 
-    public DcMotor  F_L = null;
-    public DcMotor  F_R = null;
-    public DcMotor  R_L = null;
-    public DcMotor  R_R = null;
+    protected DcMotor F_L = null;
+    protected DcMotor F_R = null;
+    protected DcMotor R_L = null;
+    protected DcMotor R_R = null;
 
     // LOCAL OPMODE MEMBERS
-    HardwareMap hwMap  =  null;
+    HardwareMap hwMap = null;
 
     // HARDWARE INIT
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
-
 
         F_L = hwMap.get(DcMotor.class, "F_L");
         F_R = hwMap.get(DcMotor.class, "F_R");
@@ -40,7 +38,6 @@ public class Autonomous_Functions {
         F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         R_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
 
     }
 
@@ -96,46 +93,45 @@ public class Autonomous_Functions {
         if (direction == Constants.backward) {
 
 
-
-                F_L.setPower(power);
-                F_R.setPower(-power);
-                R_L.setPower(power);
-                R_R.setPower(-power);
-                mysleep(time);
+            F_L.setPower(power);
+            F_R.setPower(-power);
+            R_L.setPower(power);
+            R_R.setPower(-power);
+            mysleep(time);
         }
 
         if (direction == Constants.left) {
 
-                F_L.setPower(power);
-                F_R.setPower(power);
-                R_L.setPower(-power);
-                R_R.setPower(-power);
-                mysleep(time);
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(-power);
+            R_R.setPower(-power);
+            mysleep(time);
         }
 
         if (direction == Constants.right) {
 
-                F_L.setPower(-power);
-                F_R.setPower(-power);
-                R_L.setPower(power);
-                R_R.setPower(power);
-                mysleep(time);
+            F_L.setPower(-power);
+            F_R.setPower(-power);
+            R_L.setPower(power);
+            R_R.setPower(power);
+            mysleep(time);
         }
 
         if (direction == Constants.spin) {
 
-                F_L.setPower(power);
-                R_L.setPower(power);
-                R_R.setPower(power);
-                mysleep(time);
+            F_L.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
+            mysleep(time);
 
         }
 
         stopMotor();
     }
 
-    // MOVES THE MOTOR AT AN ANGLE WITH THE INPUTS POWER, TIME, DIRECTION, AND DEFREES
-    public void moveAtAngle(double power, long time, String direction, double degrees){
+    // MOVES THE MOTOR AT AN ANGLE WITH THE INPUTS POWER, TIME, DIRECTION, AND DEGREES
+    public void moveAtAngle(double power, long time, String direction, double degrees) {
 
         if (direction == Constants.angle) {
 
