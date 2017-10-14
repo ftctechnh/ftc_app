@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 /**
  * Created by Jeremy on 6/11/2017.
  */
-public class TankBase implements TankInterface
+public class TankBase
 {
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
@@ -28,22 +28,15 @@ public class TankBase implements TankInterface
     Acceleration gravity;
 
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
-    private float roboDiameterCm = 45.7f; // can be adjusted
+    private float roboDiameterCm = (float)(45.7*Math.PI); // can be adjusted
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
-    private float wheelCircCm = (float)(10.16 * Math.PI);
+    private float wheelCircCm = (float)(10* Math.PI);
 
     public TankBase(HardwareMap hMap)
     {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
         imu = (hMap.get(BNO055IMU.class, "imu"));
-        imu.initialize(parameters);
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        initIMU();
 
         driveLeftOne = hMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hMap.get(DcMotorImplEx.class, "driveRightOne");
@@ -67,9 +60,13 @@ public class TankBase implements TankInterface
         stopAllMotors();
     }
 
-    public void driveStraight_In(float inches)
+    public void driveStraight_In(float inches, double pow)
     {
-        float encTarget = encCountsPerRev / wheelCircIn * inches;
+        float encTarget;
+        if(inches > 1)
+        encTarget = encCountsPerRev / wheelCircIn * (inches-1);
+        else
+            encTarget = encCountsPerRev / wheelCircIn * (inches);
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         resetEncoders();
@@ -78,15 +75,15 @@ public class TankBase implements TankInterface
 
         if(inches < 0)
         {
-            driveRightOne.setPower(-1);
-            driveLeftOne.setPower(1);
+            driveRightOne.setPower(-Math.abs(pow));
+            driveLeftOne.setPower(Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
         }
         else
         {
-            driveRightOne.setPower(1);
-            driveLeftOne.setPower(-1);
+            driveRightOne.setPower(Math.abs(pow));
+            driveLeftOne.setPower(-Math.abs(pow));
 
             while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
         }
@@ -94,7 +91,7 @@ public class TankBase implements TankInterface
         stopAllMotors();
     }
 
-    public void driveStraight_Cm(float cm)
+    public void driveStraight_Cm(float cm, double pow)
     {
         float encTarget = encCountsPerRev / wheelCircCm * cm;
 
@@ -104,15 +101,15 @@ public class TankBase implements TankInterface
 
         if(cm < 0)
         {
-            driveRightOne.setPower(-1);
-            driveLeftOne.setPower(1);
+            driveRightOne.setPower(-Math.abs(pow));
+            driveLeftOne.setPower(Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
         }
         else
         {
-            driveRightOne.setPower(1);
-            driveLeftOne.setPower(-1);
+            driveRightOne.setPower(Math.abs(pow));
+            driveLeftOne.setPower(-Math.abs(pow));
 
             while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
         }
@@ -122,11 +119,12 @@ public class TankBase implements TankInterface
 
 
 
-    public void spin_Right(float degrees)// Right Motor only moves!
-    {
-        float degToRad = degrees * (float)Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm) * 2;
+    public void spin_Right(float degrees, double pow)// Right Motor only moves!
+    {
+        double degToRad = degrees * Math.PI / 180.0f; // converts it to Radians
+
+        double encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
 
@@ -134,13 +132,13 @@ public class TankBase implements TankInterface
 
         if (degrees < 0) //spins clockwise
         {
-            driveRightOne.setPower(-1);
+            driveRightOne.setPower(-Math.abs(pow));
 
             while(driveRightOne.getCurrentPosition() > encTarget){}
         }
         else //spins cc
         {
-            driveRightOne.setPower(1);
+            driveRightOne.setPower(Math.abs(pow));
 
             while(driveRightOne.getCurrentPosition() < encTarget){}
         }
@@ -148,11 +146,22 @@ public class TankBase implements TankInterface
         stopAllMotors();
     }
 
-    public void spin_Left(float degrees)//Left Motor only moves!!!!!!!
+    public void spin_Right_IMU(float degrees, double pow)
+    {
+        if (degrees < 0)
+        {
+            initIMU();
+            updateIMUValues();
+            driveRightOne.setPower(-Math.abs(pow));
+        //    while(imu)
+        }
+    }
+
+    public void spin_Left(float degrees, double pow)//Left Motor only moves!!!!!!!
     {
         float degToRad = degrees * (float)Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm) * 2;
+        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
 
@@ -160,14 +169,14 @@ public class TankBase implements TankInterface
 
         if (degrees > 0) //This spins the robot counterclockwise
         {
-            driveLeftOne.setPower(1);
+            driveLeftOne.setPower(Math.abs(pow));
 
             while(driveLeftOne.getCurrentPosition() < encTarget){}
 
         }
         else //spins clockwise
         {
-            driveLeftOne.setPower(-1);
+            driveLeftOne.setPower(-Math.abs(pow));
 
             while(driveLeftOne.getCurrentPosition() > encTarget){}
         }
@@ -176,7 +185,7 @@ public class TankBase implements TankInterface
     }
 
 
-    public void pivot(float degrees)//Utilizes two motors at a time; spins in place
+    public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
         float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
 
@@ -190,16 +199,16 @@ public class TankBase implements TankInterface
         //It pivots in the direction of how to unit circle spins
         if (degrees < 0) //Pivot Clockwise
         {
-            driveRightOne.setPower(-1);
-            driveLeftOne.setPower(-1);
+            driveRightOne.setPower(-Math.abs(pow));
+            driveLeftOne.setPower(-Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
 
         }
         else //CounterClockwise
         {
-            driveRightOne.setPower(1);
-            driveLeftOne.setPower(1);
+            driveRightOne.setPower(Math.abs(pow));
+            driveLeftOne.setPower(Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) {}
         }
@@ -235,6 +244,19 @@ public class TankBase implements TankInterface
         driveLeftOne.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void initIMU()
+    {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu.initialize(parameters);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
 

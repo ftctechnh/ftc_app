@@ -39,8 +39,6 @@ public class TestIMU extends LinearOpMode
                 robot.stopAllMotors();
             }
 
-
-
             telemetry.addData("Angle ",angle);
             telemetry.addData("y", y);
             telemetry.addData("z", z);

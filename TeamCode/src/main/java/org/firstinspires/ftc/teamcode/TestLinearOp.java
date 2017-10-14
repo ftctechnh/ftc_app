@@ -4,6 +4,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+import java.util.Locale;
+
 /**
  * Created by Jeremy on 8/27/2017.
  */
@@ -16,50 +20,26 @@ public class TestLinearOp extends LinearOpMode
     {
         robot = new TankBase(hardwareMap);
         waitForStart();
-        /*
-        robot.driveStraight_In(24);
-        //telemetry.addData("R Encoders", robot.getDriveRightOne().)
-        while(gamepad1.a == false)
-        {
+        robot.updateIMUValues();
+        telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
+        telemetry.update();
+        robot.driveStraight_In(36, .75);
 
-        }
-        robot.driveStraight_In(48);
-        while(gamepad1.a == false)
-        {
-
-        }
-      //  robot.driveStraight_In(3);
-      */
-        robot.spin_Left(-90);
+        telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
+        telemetry.update();
+        sleep(5000);
+        telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
+        telemetry.update();
+        robot.spin_Right(90,1);
         while(!gamepad1.a)
         {
-            telemetry.addData("L Enc", robot.getLeftEncoderPos());
+            robot.updateIMUValues();
+            telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
             telemetry.update();
         }
-        robot.spin_Left(-90);
-        while(!gamepad1.a)
-        {
+    }
 
-        }
-        robot.spin_Right(90);
-        while(!gamepad1.a)
-        {
-
-        }
-        robot.spin_Right(-90);
-        while(!gamepad1.a)
-        {
-
-        }
-        robot.pivot(90);
-        while(!gamepad1.a)
-        {
-
-        }
-        robot.pivot(-90);
-        while(!gamepad1.a)
-        {
-
-        }
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }
