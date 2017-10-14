@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
+//import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //This class defines all the specific hardware for a the BACONbot robot.
@@ -15,14 +15,15 @@ public class ArmHardwareClass {
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
-    public CRServo   clawServo = null;
+    public CRServo clawServo = null;
 
 
     /* Give place holder values for the motors and the grabber servo */
-    double FrontLeftPower = 0;
-    double FrontRightPower = 0;
-    double BackRightPower = 0;
-    double BackLeftPower = 0;
+    //double FrontLeftPower = 0;
+   // double FrontRightPower = 0;
+   // double BackRightPower = 0;
+    //double BackLeftPower = 0;
+    //double verticalArmMotor = 0;
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
