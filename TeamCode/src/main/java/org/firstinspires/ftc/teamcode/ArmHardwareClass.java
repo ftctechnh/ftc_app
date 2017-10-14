@@ -63,7 +63,7 @@ public class ArmHardwareClass {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        verticalArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 //        // Set proper encoder state for all motor
 //        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
