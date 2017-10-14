@@ -53,8 +53,6 @@ public class RatBot extends OpMode {
     private LineChart chart;
 
     final LinkedList<Entry> data = new LinkedList<>();
-    final LineDataSet lineData = new LineDataSet(data, "Dist (mm)");
-    final LineData realLineData = new LineData(lineData);
 
     @Override
     public void init() {
@@ -82,7 +80,7 @@ public class RatBot extends OpMode {
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //setup data display stuff
-        lineData.setColor(Color.GREEN);
+
 
         //graph stuff
         layout = (RelativeLayout)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.CheapCamera);
@@ -94,8 +92,6 @@ public class RatBot extends OpMode {
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layout.addView(chart, params);
-
-                chart.setData(realLineData);
             }
         };
 
@@ -124,9 +120,18 @@ public class RatBot extends OpMode {
         telemetry.addData("side", side.getUltrasonicLevel());
         telemetry.addData("front", front.getUltrasonicLevel());
 
+        //add data
+        if(data.size() >= DATA_MAX) data.removeFirst();
+        data.add(new Entry((float)getRuntime(), (float)mahDistance.getDistance(DistanceUnit.INCH)));
+
+        final LineDataSet lineData = new LineDataSet(data, "Dist (mm)");
+        lineData.setColor(Color.GREEN);
+        final LineData realLineData = new LineData(lineData);
+
         Runnable postData = new Runnable() {
             @Override
             public void run() {
+                chart.setData(realLineData);
                 chart.invalidate();
             }
         };
