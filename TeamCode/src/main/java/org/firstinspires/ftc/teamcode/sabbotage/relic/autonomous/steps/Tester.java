@@ -56,9 +56,9 @@ import java.util.ArrayList;
     protected ArrayList<StepInterface> stepList() {
         ArrayList<StepInterface> definedStepList = new ArrayList<StepInterface>();
 
-        definedStepList.add(new Step_Straight(1500, Robot.DirectionEnum.FORWARD));
+        definedStepList.add(new Step_ReadVuMark());
 
-        definedStepList.add(new Step_Straight(1500, Robot.DirectionEnum.REVERSE));
+//        definedStepList.add(new Step_Straight(1500, Robot.DirectionEnum.REVERSE));
 
         return definedStepList;
     }
