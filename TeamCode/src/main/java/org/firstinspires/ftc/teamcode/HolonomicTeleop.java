@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- * This file provides basic Telop driving for a Holonomic robot.
+ * This file provides basic Teleop driving for a Holonomic robot.
  * The code is structured as an Iterative OpMode
  *
  * This OpMode uses the common Holonomic hardware class to define the devices on the robot.
