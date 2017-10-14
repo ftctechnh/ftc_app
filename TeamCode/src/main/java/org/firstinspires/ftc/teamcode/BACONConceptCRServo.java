@@ -79,11 +79,16 @@ public class BACONConceptCRServo extends LinearOpMode {
 
             if (gamepad1.y) {
                 clamp.setPower(OPEN);
-            } else if (gamepad1.a) {
-                clamp.setPower(CLOSE);
-            } else {
-                clamp.setPower(STOP);
             }
+                else  {
+                    clamp.setPower(STOP);
+                }
+             if (gamepad1.a) {
+                clamp.setPower(CLOSE);
+            }
+            else {
+            clamp.setPower(STOP);
+        }
         }
 
         // Signal done;
