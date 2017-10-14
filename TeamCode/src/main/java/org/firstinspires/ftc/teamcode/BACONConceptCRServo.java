@@ -48,8 +48,8 @@ import static android.R.attr.direction;
 //@Disabled
 public class BACONConceptCRServo extends LinearOpMode {
 
-    static final double OPEN     =  1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
-    static final double CLOSE     =  -1;
+    static final double OPEN     =  -1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
+    static final double CLOSE     =  1;
     static final double STOP     =  0;
 
     // Define class members
