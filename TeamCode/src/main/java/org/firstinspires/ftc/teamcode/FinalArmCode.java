@@ -70,15 +70,15 @@ public class FinalArmCode extends LinearOpMode {
             telemetry.addData(">", "Press Stop to end test.");
             telemetry.update();
 
-            if (gamepad1.a) {
-                robot.clawServo.setPower(-1);
-                wait(1000);
-                telemetry.addLine("HIII");
-            }
-            if (gamepad1.y) {
-                robot.clawServo.setPower(1);
-                wait(1000);
-            }
+            //if (gamepad1.a) {
+                //robot.clawServo.setPower(-1);
+                //wait(1000);
+                //telemetry.addLine("HIII");
+            //}
+            //if (gamepad1.y) {
+                //robot.clawServo.setPower(1);
+             //   wait(1000);
+           // }
             if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
             } else {
