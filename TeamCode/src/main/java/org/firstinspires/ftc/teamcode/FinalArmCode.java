@@ -79,7 +79,6 @@ public class FinalArmCode extends LinearOpMode {
                 robot.clawServo.setPower(1);
                 wait(1000);
             }
-
             if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
             } else {
