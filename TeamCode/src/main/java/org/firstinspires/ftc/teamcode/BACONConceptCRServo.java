@@ -48,12 +48,14 @@ import static android.R.attr.direction;
 //@Disabled
 public class BACONConceptCRServo extends LinearOpMode {
 
-    static final double OPEN     =  -1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
+    static final double OPEN     =  -.5;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
     static final double CLOSE     =  1;
-    static final double STOP     =  0;
+    static final double STOP     =  .5;
 
     // Define class members
     CRServo clamp;
+
+    double position = 0;
 
     @Override
     public void runOpMode() {
@@ -66,6 +68,7 @@ public class BACONConceptCRServo extends LinearOpMode {
         telemetry.addData(">", "Press Start to scan Servo." );
         telemetry.update();
         waitForStart();
+        clamp.setPower(STOP);
 
 
         // Scan servo till stop pressed.
@@ -75,6 +78,10 @@ public class BACONConceptCRServo extends LinearOpMode {
             // Display the current value
             telemetry.addData("Servo Controls", "Y is OPEN, A is close");
             telemetry.addData(">", "Press Stop to end test." );
+            telemetry.addData("Servo power is", clamp.getDirection());
+            telemetry.update();
+
+            // Signal done;
             telemetry.update();
 
             if (gamepad1.y) {
@@ -91,8 +98,5 @@ public class BACONConceptCRServo extends LinearOpMode {
         }
         }
 
-        // Signal done;
-        telemetry.addData(">", "Done");
-        telemetry.update();
     }
 }
