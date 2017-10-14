@@ -10,7 +10,8 @@ public class Constants {
     protected static String backward = "BACKWARD";
     protected static String left = "LEFT";
     protected static String right = "RIGHT";
-    protected static String spin = "SPIN";
+    protected static String spinRight = "SPIN_RIGHT";
+    protected static String spinLeft = "SPIN_LEFT";
     protected static String angle = "ANGLE";
 
     // SPEEDS
