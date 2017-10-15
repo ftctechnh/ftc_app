@@ -84,6 +84,7 @@ public class BACONConceptCRServo extends LinearOpMode {
             // Signal done;
             telemetry.update();
 
+
             if (gamepad1.y) {
                 clamp.setPower(OPEN);
             }
