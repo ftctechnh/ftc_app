@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 // Created by Swagster_Wagster on 9/29/17
 
@@ -15,16 +16,12 @@ public class HolonomicAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addData("ACTION COMPLETED", "READY FOR BREACH");
-
         af.init(hardwareMap);
-
-        telemetry.addData("ACTION COMPLETED", "READY FOR ACTION");
 
         waitForStart();
 
-        af.moveMotorWithTime(Constants.speed_medium, 4000, Constants.forward);
+        af.moveMotorWithEncoder(.2, 3000, Constants.forward);
 
-
+        
     }
 }

@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 // Created by MRINAAL RAMACHANDRAN on 10/8/17
 
-// Last edit: 10/13/17 BY MRINAAL RAMACHANDRAN
+// Last edit: 10/7/17 BY MRINAAL RAMACHANDRAN
 
 public class Autonomous_Functions {
 
@@ -40,7 +39,6 @@ public class Autonomous_Functions {
         R_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
     }
 
     // SLEEPING THREAD FUNCTION
@@ -63,6 +61,7 @@ public class Autonomous_Functions {
         R_L.setPower(0);
         R_R.setPower(0);
         mysleep(time);
+
     }
 
     // STOP MOTOR
@@ -72,54 +71,7 @@ public class Autonomous_Functions {
         F_R.setPower(0);
         R_L.setPower(0);
         R_R.setPower(0);
-    }
 
-    public void driveForward(double power){
-
-        F_L.setPower(-power);
-        F_R.setPower(power);
-        R_L.setPower(-power);
-        R_R.setPower(power);
-    }
-
-    public void driveBackward (double power){
-
-        F_L.setPower(power);
-        F_R.setPower(-power);
-        R_L.setPower(power);
-        R_R.setPower(-power);
-    }
-
-    public void driveLeft (double power) {
-
-        F_L.setPower(power);
-        F_R.setPower(power);
-        R_L.setPower(-power);
-        R_R.setPower(-power);
-    }
-
-    public void driveRight (double power) {
-
-        F_L.setPower(-power);
-        F_R.setPower(-power);
-        R_L.setPower(power);
-        R_R.setPower(power);
-    }
-
-    public void spinLeft ( double power) {
-
-        F_L.setPower(power);
-        F_R.setPower(power);
-        R_L.setPower(power);
-        R_R.setPower(power);
-    }
-
-    public void spinRight ( double power) {
-
-        F_L.setPower(-power);
-        F_R.setPower(-power);
-        R_L.setPower(-power);
-        R_R.setPower(-power);
     }
 
     // MOVES THE MOTOR FOR TIME WITH INPUTS POWER, TIME, AND DIRECTION
@@ -127,169 +79,147 @@ public class Autonomous_Functions {
 
         if (direction == Constants.forward) {
 
-            driveForward(power);
+            F_L.setPower(-power);
+            F_R.setPower(power);
+            R_L.setPower(-power);
+            R_R.setPower(power);
             mysleep(time);
         }
 
         if (direction == Constants.backward) {
 
-            driveBackward(power);
+
+            F_L.setPower(power);
+            F_R.setPower(-power);
+            R_L.setPower(power);
+            R_R.setPower(-power);
             mysleep(time);
         }
 
         if (direction == Constants.left) {
 
-            driveLeft(power);
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(-power);
+            R_R.setPower(-power);
             mysleep(time);
         }
 
         if (direction == Constants.right) {
 
-            driveRight(power);
-            mysleep(time);
-        }
-
-        if (direction == Constants.spinLeft) {
-
-            spinLeft(power);
-            mysleep(time);
-
-        }
-
-        if (direction == Constants.spinRight) {
-
-            spinRight(power);
-            mysleep(time);
-
-        }
-
-        stopMotor();
-    }
-
-    // MOVES THE MOTOR AT AN ANGLE WITH INPUTS POWER, TIME, DIRECTION, AND DEGREES
-    public void moveAtAngle(double power, long time, String direction, double degrees){
-
-        if (direction == Constants.angle) {
-
-            F_L.setPower(power);
-            F_R.setPower(power);
+            F_L.setPower(-power);
+            F_R.setPower(-power);
             R_L.setPower(power);
             R_R.setPower(power);
             mysleep(time);
         }
+
+        if (direction == Constants.spinRight) {
+
+
+        }
+
+        if (direction == Constants.spinLeft) {
+
+
+        }
+        stopMotor();
     }
 
-    // MOVES THE MOTOR WITH ENCODERS WITH INPUTS POWER AND DISTANCE
+    // MOVES THE MOTOR WITH ENCODERS WITH INPUTS POWER, TIME, AND DISTANCE
     public void moveMotorWithEncoder(double power, int distance, String direction) {
 
         if (direction == Constants.forward) {
 
-            F_L.setTargetPosition(distance);
-            F_R.setTargetPosition(distance);
-            R_L.setTargetPosition(distance);
-            R_R.setTargetPosition(distance);
-
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            driveForward(power);
+            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
+            R_L.setTargetPosition(distance);
+            R_R.setTargetPosition(distance);
 
-            while (F_L.isBusy() && R_L.isBusy()) {
+            F_L.setPower(-power);
+            F_R.setPower(power);
+            R_L.setPower(-power);
+            R_R.setPower(power);
+
+
+            while (F_L.isBusy() && F_R.isBusy()) {
 
             }
-
-            stopMotor();
-
-            F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         if (direction == Constants.backward) {
 
-            F_L.setTargetPosition(distance);
-            F_R.setTargetPosition(distance);
-            R_L.setTargetPosition(distance);
-            R_R.setTargetPosition(distance);
-
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            driveBackward(power);
+            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
+            R_L.setTargetPosition(distance);
+            R_R.setTargetPosition(distance);
 
-            while (F_L.isBusy() && R_L.isBusy()) {
+            F_L.setPower(power);
+            F_R.setPower(-power);
+            R_L.setPower(power);
+            R_R.setPower(-power);
+
+            while (F_L.isBusy() && F_R.isBusy()) {
 
             }
-
-            stopMotor();
-
-            F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         if (direction == Constants.left) {
 
-            F_L.setTargetPosition(distance);
-            F_R.setTargetPosition(distance);
-            R_L.setTargetPosition(distance);
-            R_R.setTargetPosition(distance);
-
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            driveLeft(power);
+            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
+            R_L.setTargetPosition(distance);
+            R_R.setTargetPosition(distance);
 
-            while (F_L.isBusy() && R_L.isBusy()) {
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(-power);
+            R_R.setPower(-power);
+
+            while (F_L.isBusy() && F_R.isBusy()) {
 
             }
-
-            stopMotor();
-
-            F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         }
 
         if (direction == Constants.right) {
 
-            F_L.setTargetPosition(distance);
-            F_R.setTargetPosition(distance);
-            R_L.setTargetPosition(distance);
-            R_R.setTargetPosition(distance);
-
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            driveRight(power);
+            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
+            R_L.setTargetPosition(distance);
+            R_R.setTargetPosition(distance);
 
-            while (F_L.isBusy() && R_L.isBusy()) {
+            F_L.setPower(-power);
+            F_R.setPower(-power);
+            R_L.setPower(power);
+            R_R.setPower(power);
+
+            while (F_L.isBusy() && F_R.isBusy()) {
 
             }
-
-            stopMotor();
-
-            F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         }
+        stopMotor();
     }
 }
-
 
 
 
