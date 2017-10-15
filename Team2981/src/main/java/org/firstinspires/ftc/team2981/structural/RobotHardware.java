@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.team2981.structural;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,16 +9,16 @@ import com.qualcomm.robotcore.util.Range;
  * Created by 200462069 on 9/12/2017.
  */
 
-public class Hardware {
+public class RobotHardware {
 
-    DcMotor fL = null, fR = null, bL = null, bR = null;
-    int cpr = 0;                                                        //encoder counts per revolution
-    double circum = 0;                                                  //encoded drive wheel circumference
+    public DcMotor fL = null, fR = null, bL = null, bR = null;
+    private final int CPR = 0;                                                        //encoder counts per revolution
+    private final double DIAMETER = 0;                                                  //encoded drive wheel circumference
+    private final double GEARING = 1;
+    public final double CPI = (CPR * GEARING) / (DIAMETER * Math.PI);
+    private HardwareMap map = null;
 
-
-    HardwareMap map = null;
-
-    public void init(HardwareMap map){
+    public RobotHardware(HardwareMap map){
         this.map = map;
 
         fL = map.get(DcMotor.class, "fL");
@@ -47,13 +46,13 @@ public class Hardware {
         bR.setPower(power);
     }
 
-    public void driveAll(double power){
+    public void drive(double power){
         driveLeft(power);
         driveRight(power);
     }
 
     public void stop(){
-        driveAll(0);
+        drive(0);
     }
 
     public void resetEnc(){
@@ -69,11 +68,12 @@ public class Hardware {
         fL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         fR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        int counts = (int) ((dist * circum) / cpr);
+        int counts = (int) (dist * CPI);
         fL.setTargetPosition(counts);
         fR.setTargetPosition(counts);
 
-        driveAll(power);
+        drive(power);
+        resetEnc();
     }
 
     public boolean isBusy(){
