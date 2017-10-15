@@ -11,23 +11,21 @@ import com.qualcomm.robotcore.util.Range;
  */
 @TeleOp(name = "DoubleArm", group = "linear OpMode")
 public class DoubleArm extends OpMode{
-    Servo Claw;
-    Servo UpDown;
-    CRServo BigRotation;
-    double clawSpeed = 0.075;
-    double clawPosition = 0.4;
-    double clawHighEnd = 1.00;
-    double clawLowEnd = 0.3;
-    double upDownSpeed = 0.075;
-    double upDownPosition = 0.5;
-    double upDownHighEnd = 1.00;
-    double upDownLowEnd = 0.00;
-    double bigRotationSpeed = 0;
-    double bigRotationInit = 0.3;
-    double bigRotationMaxSpeed = 0.03;
-    double bigRotationHighEnd = 0.49;
-    double bigRotationLowEnd = 0.43;
-    
+    private Servo Claw;
+    private Servo UpDown;
+    private CRServo BigRotation;
+    private double clawPosition = 0.4;
+    private double clawHighEnd = 1.00;
+    private double clawLowEnd = 0.3;
+    private double upDownSpeed = 0.075;
+    private double upDownPosition = 0.5;
+    private double upDownHighEnd = 1.00;
+    private double upDownLowEnd = 0.00;
+    private double bigRotationSpeed = 0;
+    private double bigRotationInit = 1.0;
+    private double bigRotationHighEnd = -0.05;
+    private double bigRotationLowEnd = -0.23;
+
     @Override
     public void init(){
         Claw = hardwareMap.servo.get("s1");
@@ -41,36 +39,25 @@ public class DoubleArm extends OpMode{
     @Override
     public void loop(){
         bigRotationSpeed = Range.scale(gamepad1.left_stick_y,-1.0,1.0,bigRotationLowEnd,bigRotationHighEnd);
-        upDownPosition = (gamepad1.right_stick_y*upDownSpeed/16) + upDownPosition;
-        BigRotation.setPower(bigRotationSpeed);
+        upDownPosition = Range.clip((gamepad1.right_stick_y*upDownSpeed/16),upDownLowEnd, upDownHighEnd) + upDownPosition;
 
         if (gamepad1.a){
             if (Claw.getPosition() < clawHighEnd) {
-                clawPosition = Claw.getPosition() + clawSpeed;
+                clawPosition = 1.0;
             }
         }
         if (gamepad1.b){
             if (Claw.getPosition() > clawLowEnd) {
-                clawPosition = Claw.getPosition() + -clawSpeed;
+                clawPosition = 0.3;
             }
         }
 
-        Claw.setPosition(clawPosition);
-        Claw.setPosition(clawPosition);
         UpDown.setPosition(upDownPosition);
         UpDown.setPosition(upDownPosition);
-
-        if (upDownPosition < upDownHighEnd && upDownPosition > upDownLowEnd) {
-            UpDown.setPosition(upDownPosition);
-            UpDown.setPosition(upDownPosition);
-            upDownPosition = UpDown.getPosition();
-        }
-        else if (upDownPosition < upDownLowEnd){
-            upDownPosition = upDownLowEnd;
-        }
-        else if (upDownPosition > upDownHighEnd){
-            upDownPosition = upDownHighEnd;
-        }
+        Claw.setPosition(clawPosition);
+        Claw.setPosition(clawPosition);
+        BigRotation.setPower(bigRotationSpeed);
+        BigRotation.setPower(bigRotationSpeed);
 
         telemetry.addData("ClawServoPos",Claw.getPosition());
         telemetry.addData("Wrist servo position",UpDown.getPosition());
