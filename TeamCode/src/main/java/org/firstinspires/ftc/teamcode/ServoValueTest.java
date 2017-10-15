@@ -45,9 +45,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
 //@Disabled
 public class ServoValueTest extends LinearOpMode {
 
-    static final double OPEN     =  -1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
-    static final double CLOSE     =  1;
-    static final double STOP     =  .1;
+    static final double OPEN     =  -.5;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
+    static final double CLOSE     =  -.01;
+    static final double STOP     =  .5;
 
     double increment = 0;
 
@@ -81,16 +81,8 @@ public class ServoValueTest extends LinearOpMode {
             // Signal done;
             telemetry.update();
 
-            if(gamepad1.dpad_up){
-                increment = increment +.01;
-            }
-
-            if(gamepad1.dpad_down){
-                increment = increment - .01;
-            }
-
             if(gamepad1.a){
-                clamp.setPower(0.000);
+                clamp.setPower(0);
             }
 
             if(gamepad1.x){
