@@ -2,38 +2,58 @@ package org.firstinspires.ftc.teamcode.RelicRecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by jeppe on 25-09-2017.
  */
 @TeleOp (name = "test",group = "TeleOp")
-public class RelicRecoveryHardware extends OpMode {
+public class RelicRecoveryHardware extends OpMode
+{
+    // -----Hardware-----
+    // ---Motors---
+    protected DcMotor right;
+    protected DcMotor left;
+    protected DcMotor lift;
+    
+    // ---Servos---
+    // normal
+    protected Servo blockLatch;
 
-    DcMotor rightMotor;
-    DcMotor leftMotor;
+    // continuous rotation
+    protected CRServo relicClaw;
 
-    // power
+    // -----Variables-----
     double rightPower;
     double leftPower;
 
+    double relicClawPosition;
 
+    // -------Init-------
     @Override
-    public void init() {
+    public void init() 
+    {
+        // ---Hardware Mapping---
+        // ---DcMotor---
+        right = hardwareMap.dcMotor.get("r");
+        left = hardwareMap.dcMotor.get("l");
+        lift = hardwareMap.dcMotor.get("lift");
 
-        // Hardware Mapping
-        rightMotor = hardwareMap.dcMotor.get("rightMotor");
-        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        // ---Servos---
+        // normal
+        blockLatch = hardwareMap.servo.get("latch");
+        // continuous rotation
+        relicClaw = hardwareMap.crservo.get("claw");
 
-        // Other initialization stuff
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        // -----set direction-----
+        right.setDirection(DcMotorSimple.Direction.REVERSE);
+        left.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
+    // -------loop-------
     @Override
-    public void loop() {
-        rightPower = -gamepad1.right_stick_y;
-        leftPower = -gamepad1.left_stick_y;
-    }
+    public void loop() {}
 }
