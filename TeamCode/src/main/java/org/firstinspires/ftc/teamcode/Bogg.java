@@ -25,7 +25,7 @@ public class Bogg
     {
         this.hardwareMap = hardwareMap;
         this.gamepad = gamepad;
-        driveEngine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad);
+//        driveEngine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad);
 
         pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
         pusherRightMotor = hardwareMap.dcMotor.get("pusher_right");
@@ -76,7 +76,7 @@ public class Bogg
         double radius = Math.tan(90-sensors.angleToWall()) * Math.abs(distanceToTarget);
 
 
-        driveEngine.setCircleMotorPower(radius, maxPower, !targetOnRight);
+//        driveEngine.setCircleMotorPower(radius, maxPower, !targetOnRight);
     }
 
     public void curveTowards(double distanceToTarget, double maxPower, boolean targetOnRight)
@@ -91,7 +91,7 @@ public class Bogg
 
         if(sensors.angleToWall() < 60)
         {
-            driveEngine.setCircleMotorPower(radius, maxPower, targetOnRight);
+//            driveEngine.setCircleMotorPower(radius, maxPower, targetOnRight);
         }
 
     }
