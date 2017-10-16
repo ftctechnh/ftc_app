@@ -1,3 +1,15 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-09-??
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core.Sensors;
 
 
@@ -11,7 +23,8 @@ import org.firstinspires.ftc.teamcode.Core.Utility.UtilBasic;
 
 
 /**
- *      Class to manage the gyro sensor.
+ * Wrapper class for the Modern Robotics I2C Integrating 3-axis Gyro. Provides for easy retrieval
+ * of sensor data.
  */
 @SuppressWarnings("unused")
 public final class MRGyro

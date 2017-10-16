@@ -1,21 +1,21 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-09-??
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core.Utility;
 
 
 /**
- * <p>
- *      Utility class that deals with color.
- * </p>
- *
- *
- * <p>
- *      While coding in this package, keep these units in mind: <br>
- *      1. Assume all angles are measured in degrees <br>
- *      2. Assume all distances are measured in centimeters <br>
- *      3. Assume all measurements of time are done in milliseconds <br>
- * </p>
- *
- *
- * That's all, folks!
+ * Utility class that manages color- could be applicable to both color sensors and things like
+ * alliance color.
  */
 @SuppressWarnings("unused")
 public class UtilColor

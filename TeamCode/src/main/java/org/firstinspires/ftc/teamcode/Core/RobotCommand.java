@@ -1,20 +1,48 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-09-??
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core;
 
 
+/**
+ * Class used to manage commands that can be run either sequentially or in series. In other words,
+ * if you need something to run on a separate thread, this class is for you. Commands that are to be
+ * run on the main thread to not need to be wrapped by this class.
+ */
 public abstract class RobotCommand
 {
+    /** Component this command is attached to */
     @SuppressWarnings("WeakerAccess")
     protected RobotComponent component = null;
 
+    /** Thread object parallel command is run on */
     protected Thread t = null;
 
 
+    /**
+     * Default constructor- does nothing
+     */
     public RobotCommand()
     {
-        // Do nothing
+        // Do nothing :)
     }
 
 
+    /**
+     * Constructor- ties the command to a component, giving it all of its internal components and
+     * accessible methods
+     *
+     * @param COMPONENT Component to tie the command to
+     */
     @SuppressWarnings("unused")
     public RobotCommand(RobotComponent COMPONENT)
     {
@@ -49,5 +77,8 @@ public abstract class RobotCommand
     }
 
 
+    /**
+     * Stops current command execution
+     */
     public abstract void stop();
 }

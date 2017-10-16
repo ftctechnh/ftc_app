@@ -1,3 +1,15 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-09-??
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core.Utility;
 
 
@@ -17,7 +29,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 /**
- * Utility class used for simplifying Vuforai code for Relic Recovery
+ * Utility class used for simplifying Vuforia code for Relic Recovery- provides for easy and
+ * simplified retrieval of data.
  */
 public class UtilVuforia
 {
@@ -30,7 +43,6 @@ public class UtilVuforia
                                 "Az0nnaAX9W5OdDy+78grYk+R9kdYu6eBNwZ/G01zlkiJM24slrCR7wlfiWtH+ywO" +
                                 "ZpWYRZTGIrsrMLIk3USWLRRO/Yf0wKzyu1nHiqBuRQeVlZgm35T19WQk55FO";
 
-
     @SuppressWarnings("FieldCanBeLocal")
     private final String _MARK_ASSETS = "RelicVuMark";
 
@@ -38,7 +50,6 @@ public class UtilVuforia
     static final double DEFAULT_TRANS = -100;
     @SuppressWarnings("WeakerAccess")
     static final double DEFAULT_ROTATE = 370;
-
 
     @SuppressWarnings("FieldCanBeLocal")
     private VuforiaLocalizer _vuforia;

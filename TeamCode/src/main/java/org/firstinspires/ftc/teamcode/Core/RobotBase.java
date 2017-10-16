@@ -17,7 +17,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 /**
- * Base of a robot- every robot base should have these components to run properly.
+ * Base of a robot- every robot base should have these components to run properly. The base acts
+ * as a sort of "tie" between components and sensors- it provides a single object to pass around to
+ * OpModes and provides easy hardware mapping.
  */
 @SuppressWarnings("unused")
 public abstract class RobotBase

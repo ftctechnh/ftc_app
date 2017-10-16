@@ -1,10 +1,19 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-10-12
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core.Sensors;
 
 
-import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.BNO055IMUImpl;
-import com.qualcomm.hardware.lynx.LynxEmbeddedIMU;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -20,19 +29,23 @@ import org.firstinspires.ftc.teamcode.Core.RobotBase;
 
 import java.io.File;
 
+
+/**
+ * Wrapper for the BNO055 that is built into the REV modules- handles easy retrieval of orientation
+ * and acceleration
+ */
 public class REVIMU
 {
     private RobotBase _robot = null;
 
-    private LynxEmbeddedIMU _imu = null;
+    private BNO055IMU _imu = null;
 
     private Orientation _orien = null;
     private Acceleration _accel = null;
-    private Position _pos = null;
 
 
     /**
-     * Creates a new gyroscope
+     * Creates a new IMU
      *
      * @param myRobot The robot we're working with
      */
@@ -40,7 +53,6 @@ public class REVIMU
     {
         _robot = myRobot;
     }
-
 
 
     /**
@@ -53,7 +65,7 @@ public class REVIMU
     {
         HardwareMapper mapHelper = new HardwareMapper(_robot);  // Helps with mapping
 
-        _imu = (LynxEmbeddedIMU)mapHelper.mapREVIMU(NAME , PARAMETERS);
+        _imu = mapHelper.mapREVIMU(NAME , PARAMETERS);
     }
 
 
@@ -94,7 +106,6 @@ public class REVIMU
     {
         _orien = _imu.getAngularOrientation(AxesReference.INTRINSIC , AxesOrder.XYZ , AngleUnit.DEGREES);
         _accel = _imu.getLinearAcceleration();
-        _pos = _imu.getPosition();
     }
 
 
@@ -149,32 +160,5 @@ public class REVIMU
     public double zAccel()
     {
         return _accel.zAccel;
-    }
-
-
-    /**
-     * @return Returns position in the x direction
-     */
-    public double xPos()
-    {
-        return _pos.x;
-    }
-
-
-    /**
-     * @return Returns position in the y direction
-     */
-    public double yPos()
-    {
-        return _pos.y;
-    }
-
-
-    /**
-     * @return Returns position in the z direction
-     */
-    public double zPos()
-    {
-        return _pos.z;
     }
 }

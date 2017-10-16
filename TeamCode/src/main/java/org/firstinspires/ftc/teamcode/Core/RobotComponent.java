@@ -33,16 +33,4 @@ public abstract class RobotComponent
     {
         mapper  = new HardwareMapper(BASE);
     }
-
-
-    /**
-     * Annotation used to denote a sequential command
-     */
-    protected @interface SequentialCommand{}
-
-
-    /**
-     * Annotation used to denote a parallel command
-     */
-    protected @interface ParallelCommand{}
 }

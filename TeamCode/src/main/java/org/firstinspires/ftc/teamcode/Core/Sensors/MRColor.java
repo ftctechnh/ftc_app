@@ -1,3 +1,15 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-09-??
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core.Sensors;
 
 
@@ -7,8 +19,10 @@ import org.firstinspires.ftc.teamcode.Core.RobotBase;
 import org.firstinspires.ftc.teamcode.Core.HardwareMapper;
 import org.firstinspires.ftc.teamcode.Core.Utility.UtilColor.Color;
 
+
 /**
- * Class to manage the Modern Robotics color sensor.
+ * Wrapper class for the Modern Robotics I2C Color Sensor. Provides for easy retrieval of sensor
+ * data.
  */
 @SuppressWarnings("unused")
 public final class MRColor

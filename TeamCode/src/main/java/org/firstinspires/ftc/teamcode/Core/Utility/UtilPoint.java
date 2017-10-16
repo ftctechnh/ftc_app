@@ -1,36 +1,25 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-09-??
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core.Utility;
 
 
 /**
- * <p>
- *      Utility class that deals with coordinates in R2 (2d)
- * </p>
+ * Utility class that deals with coordinates in R2 (2d).
  *
- *
- * <p>
- *      The class allows for smooth and quick conversion between cartesian and polar systems.
- *      It is important to understand that, although the constructor asks for a coordinate type,
- *      it only needs the information to know which values are already given and which values
- *      need to be calculated. Once you call the constructor, the coordinate type does not matter.
- * </p>
- *
- * <p>
- *     Assume all angular measurements are in degrees.
- *     Polar coordinates operate on a system where the angle is from 0 to 360 and the radius
- *     is always positive. 0 is "east", 90 is "north", etc.
- *     When setting values using accessors, the other values are changed automatically.
- * </p>
- *
- *
- * <p>
- *      While coding in this package, keep these units in mind: <br>
- *      1. Assume all angles are measured in degrees <br>
- *      2. Assume all distances are measured in centimeters <br>
- *      3. Assume all measurements of time are done in milliseconds <br>
- * </p>
- *
- *
- * That's all, folks!
+ * The class allows for smooth and quick conversion between cartesian and polar systems.
+ * It is important to understand that, although the constructor asks for a coordinate type,
+ * it only needs the information to know which values are already given and which values
+ * need to be calculated. Once you call the constructor, the coordinate type does not matter.
  */
 @SuppressWarnings("unused")
 public final class UtilPoint

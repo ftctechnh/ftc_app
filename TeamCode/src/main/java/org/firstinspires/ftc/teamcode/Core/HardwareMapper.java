@@ -13,8 +13,6 @@
 package org.firstinspires.ftc.teamcode.Core;
 
 
-import android.util.Log;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsAnalogOpticalDistanceSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
@@ -32,7 +30,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 /**
  * Class used to manage hardware mapping. It holds methods used to map components.
  */
-@SuppressWarnings({"unused", "AccessStaticViaInstance", "ConstantConditions"})
+@SuppressWarnings({"unused", "AccessStaticViaInstance", "ConstantConditions", "WeakerAccess"})
 public final class HardwareMapper
 {
     // Robot base object we use to hardware map
@@ -52,26 +50,19 @@ public final class HardwareMapper
 
     /**
      * Attempts to map a motor with the provided name. Result is returned, allowing an assignment
-     * operator (=) to map the desired motor. Sends a log error message if failed.
+     * operator (=) to map the desired motor. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the DcMotor as it appears in the configuration file
      * @param DIRECTION Direction of the motor
      *
-     * @return Returns a DcMotor, mapped if succeeded, null if failed
+     * @return Returns a DcMotor, mapped if succeeded. Driver station error results from failure.
      */
     public DcMotor mapMotor(final String NAME , final DcMotorSimple.Direction DIRECTION)
     {
-        DcMotor myMotor = null;             // Motor to be mapped
+        DcMotor myMotor;                // Motor to be mapped
 
-        try
-        {
-            myMotor = _robot.hardware.dcMotor.get(NAME);
-            myMotor.setDirection(DIRECTION);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map DcMotor with name " + NAME);
-        }
+        myMotor = _robot.hardware.dcMotor.get(NAME);
+        myMotor.setDirection(DIRECTION);
 
         return myMotor;
     }
@@ -79,26 +70,19 @@ public final class HardwareMapper
 
     /**
      * Maps a servo with provided name. Result is returned, allowing assignment operator (=) to
-     * map to the desired servo. Sends a log error message if failed.
+     * map to the desired servo. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the servo as it appears in the configuration file
      * @param DIRECTION Direction of the servo
      *
-     * @return Mapped servo (null if mapping failed)
+     * @return Mapped servo. Driver station error results from failure.
      */
     public Servo mapServo(final String NAME , final Servo.Direction DIRECTION)
     {
-        Servo myServo = null;
+        Servo myServo;                              // Servo to be mapped
 
-        try
-        {
-            myServo = _robot.hardware.servo.get(NAME);
-            myServo.setDirection(DIRECTION);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map servo with name " + NAME);
-        }
+        myServo = _robot.hardware.servo.get(NAME);
+        myServo.setDirection(DIRECTION);
 
         return myServo;
     }
@@ -106,26 +90,19 @@ public final class HardwareMapper
 
     /**
      * Maps a continuous rotation servo with provided name. Result is returned, allowing assignment
-     * operator (=) to map to the desired servo. Sends a log error message if failed.
+     * operator (=) to map to the desired servo. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the continuous rotation servo as it appears in the configuration file
      * @param DIRECTION Direction of the continuous rotation servo
      *
-     * @return Mapped continuous rotation servo (null if mapping failed)
+     * @return Mapped continuous rotation servo. Driver station error results from failure.
      */
     public CRServo mapCRServo(final String NAME , final CRServo.Direction DIRECTION)
     {
-        CRServo myServo = null;
+        CRServo myServo;                            // Continuous rotation servo to be mapped
 
-        try
-        {
-            myServo = _robot.hardware.crservo.get(NAME);
-            myServo.setDirection(DIRECTION);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map continuous rotation servo with name " + NAME);
-        }
+        myServo = _robot.hardware.crservo.get(NAME);
+        myServo.setDirection(DIRECTION);
 
         return myServo;
     }
@@ -134,102 +111,130 @@ public final class HardwareMapper
     /**
      * Attempts to map a Modern Robotics Integrating Gyroscope. Also attempts to set its heading
      * mode to cartesian. Result is returned, allowing an assignment operator to map the desired
-     * gyro. Sends a log error message if failed.
+     * gyro. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the Gyro as it appears in the configuration file
+     * @param MODE Heading mode of the Gyro (mathematical or navigational)
+     * @param ADDRESS Address of the Gyro sensor as defined by the Core Device Discovery utility
      *
-     * @return Returns a gyro, mapped if succeeded, null if failed
+     * @return Returns a gyro, mapped if succeeded. Driver station error results from failure.
      */
-    public ModernRoboticsI2cGyro mapMRGyro(final String NAME , ModernRoboticsI2cGyro.HeadingMode mode)
+    public ModernRoboticsI2cGyro mapMRGyro(final String NAME ,
+        final ModernRoboticsI2cGyro.HeadingMode MODE , final int ADDRESS)
     {
-        ModernRoboticsI2cGyro myGyro = null;            // MR gyro to be mapped
+        ModernRoboticsI2cGyro myGyro;               // MR gyro to be mapped
 
-        try
-        {
-            myGyro = (ModernRoboticsI2cGyro)_robot.hardware.gyroSensor.get(NAME);
-            myGyro.setHeadingMode(mode);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map MR Gyroscope with name " + NAME);
-        }
+        myGyro = (ModernRoboticsI2cGyro)_robot.hardware.gyroSensor.get(NAME);
+        myGyro.setHeadingMode(MODE);
+        myGyro.setI2cAddress(I2cAddr.create8bit(ADDRESS));
 
         return myGyro;
     }
 
 
     /**
+     * Attempts to map a Modern Robotics Integrating Gyroscope. Also attempts to set its heading
+     * mode to cartesian. Result is returned, allowing an assignment operator to map the desired
+     * gyro. Driver station displays error if mapping failed.
+     *
+     * @param NAME Name of the Gyro as it appears in the configuration file
+     * @param MODE Heading mode of the Gyro (mathematical or navigational)
+     *
+     * @return Returns a gyro, mapped if succeeded. Driver station error results from failure.
+     */
+    public ModernRoboticsI2cGyro mapMRGyro(final String NAME ,
+        final ModernRoboticsI2cGyro.HeadingMode MODE)
+    {
+        return mapMRGyro(NAME , MODE , ModernRoboticsI2cGyro.ADDRESS_I2C_DEFAULT.get8Bit());
+    }
+
+
+    /**
      * Attempts to map a Modern Robotics Range sensor. Result is returned, allowing an assignment
-     * operator to map the desired range sensor. Sends a log error message if failed.
+     * operator to map the desired range sensor. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the Range sensor as it appears in the configuration file
+     * @param ADDRESS Address of the Range sensor as defined by the Core Device Discovery utility
      *
-     * @return Returns a range sensor, mapped if succeeded, null if failed
+     * @return Returns a range sensor, mapped if succeeded. Driver station error results from
+     *         failure
      */
-    public ModernRoboticsI2cRangeSensor mapMRRange(final String NAME)
+    public ModernRoboticsI2cRangeSensor mapMRRange(final String NAME , final int ADDRESS)
     {
-        ModernRoboticsI2cRangeSensor myRange = null;        // MR Range to be mapped
+        ModernRoboticsI2cRangeSensor myRange;           // MR Range to be mapped
 
-        try
-        {
-            myRange = (ModernRoboticsI2cRangeSensor)_robot.hardware.get(NAME);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map MR Range sensor with name " + NAME);
-        }
+        myRange = (ModernRoboticsI2cRangeSensor)_robot.hardware.get(NAME);
+        myRange.setI2cAddress(I2cAddr.create8bit(ADDRESS));
 
         return myRange;
     }
 
 
     /**
+     * Attempts to map a Modern Robotics Range sensor. Result is returned, allowing an assignment
+     * operator to map the desired range sensor. Driver station displays error if mapping failed.
+     *
+     * @param NAME Name of the Range sensor as it appears in the configuration file
+     *
+     * @return Returns a range sensor, mapped if succeeded. Driver station error results from
+     *         failure.
+     */
+    public ModernRoboticsI2cRangeSensor mapMRRange(final String NAME)
+    {
+        return mapMRRange(NAME , ModernRoboticsI2cRangeSensor.ADDRESS_I2C_DEFAULT.get8Bit());
+    }
+
+
+    /**
      * Attempts to map a Modern Robotics color sensor. Result is returned, allowing an assignment
-     * operator to map the desired color sensor. Sends a log error message if failed.
+     * operator to map the desired color sensor. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the Color sensor as it appears in the configuration file
+     * @param ADDRESS Address of the Color sensor as defined by the Core Device Discovery utility
      *
-     * @return Returns a color sensor, mapped if succeeded, null if failed
+     * @return Returns a color sensor, mapped if succeeded. Driver station error results from
+     *         failure.
      */
     public ModernRoboticsI2cColorSensor mapMRColor(final String NAME , final int ADDRESS)
     {
-        ModernRoboticsI2cColorSensor myColor = null;        // MR color to be mapped
+        ModernRoboticsI2cColorSensor myColor;           // MR color to be mapped
 
-        try
-        {
-            myColor = (ModernRoboticsI2cColorSensor)_robot.hardware.colorSensor.get(NAME);
-            myColor.setI2cAddress(I2cAddr.create8bit(ADDRESS));
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map MR Color sensor with name " + NAME);
-        }
+        myColor = (ModernRoboticsI2cColorSensor)_robot.hardware.colorSensor.get(NAME);
+        myColor.setI2cAddress(I2cAddr.create8bit(ADDRESS));
+
 
         return myColor;
+    }
+
+    /**
+     * Attempts to map a Modern Robotics color sensor. Result is returned, allowing an assignment
+     * operator to map the desired color sensor. Driver station displays error if mapping failed.
+     *
+     * @param NAME Name of the Color sensor as it appears in the configuration file
+     *
+     * @return Returns a color sensor, mapped if succeeded. Driver station error results from
+     *         failure.
+     */
+    public ModernRoboticsI2cColorSensor mapMRColor(final String NAME)
+    {
+        return mapMRColor(NAME , ModernRoboticsI2cColorSensor.ADDRESS_I2C_DEFAULT.get8Bit());
     }
 
 
     /**
      * Attempts to map a Modern Robotics ODS. Result is returned, allowing an assignment
-     * operator to map the desired ODS. Sends a log error message if failed.
+     * operator to map the desired ODS. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the ODS as it appears in the configuration file
      *
-     * @return Returns a ODS, mapped if succeeded, null if failed
+     * @return Returns a ODS, mapped if succeeded. Driver station error results from failure.
      */
     public ModernRoboticsAnalogOpticalDistanceSensor mapMRODS(final String NAME)
     {
-        ModernRoboticsAnalogOpticalDistanceSensor myODS = null;     // MR ODS to be mapped
+        ModernRoboticsAnalogOpticalDistanceSensor myODS;        // MR ODS to be mapped
 
-        try
-        {
-            myODS = (ModernRoboticsAnalogOpticalDistanceSensor)
-                    _robot.hardware.opticalDistanceSensor.get(NAME);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map MR ODS with name " + NAME);
-        }
+        myODS = (ModernRoboticsAnalogOpticalDistanceSensor)
+                _robot.hardware.opticalDistanceSensor.get(NAME);
 
         return myODS;
     }
@@ -237,24 +242,18 @@ public final class HardwareMapper
 
     /**
      * Attempts to map a Modern Robotics Touch sensor. Result is returned, allowing an assignment
-     * operator to map the desired range sensor. Sends a log error message if failed.
+     * operator to map the desired range sensor. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the Touch sensor as it appears in the configuration file
      *
-     * @return Returns a touch sensor, mapped if succeeded, null if failed
+     * @return Returns a touch sensor, mapped if succeeded. Driver station error results from
+     *         failure.
      */
     public ModernRoboticsTouchSensor mapMRTouch(final String NAME)
     {
-        ModernRoboticsTouchSensor myTouch = null;        // MR touch to be mapped
+        ModernRoboticsTouchSensor myTouch;          // MR touch to be mapped
 
-        try
-        {
-            myTouch = (ModernRoboticsTouchSensor)_robot.hardware.touchSensor.get(NAME);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map MR Touch sensor with name " + NAME);
-        }
+        myTouch = (ModernRoboticsTouchSensor)_robot.hardware.touchSensor.get(NAME);
 
         return myTouch;
     }
@@ -262,50 +261,40 @@ public final class HardwareMapper
 
     /**
      * Attempts to map a Lego Ultrasonic sensor. Result is returned, allowing an assignment
-     * operator to map the desired ultrasonic sensor. Sends a log error message if failed.
+     * operator to map the desired ultrasonic sensor. Driver station displays error if mapping
+     * failed.
      *
      * @param NAME Name of the Ultrasonic sensor as it appears in the configuration file
      *
-     * @return Returns a ultrasonic sensor, mapped if succeeded, null if failed
+     * @return Returns a ultrasonic sensor, mapped if succeeded. Driver station error results from
+     *         failure.
      */
     public UltrasonicSensor mapLegoUltra(final String NAME)
     {
-        UltrasonicSensor myUltra = null;                // LEGO ultrasonic to be mapped
+        UltrasonicSensor myUltra;                   // LEGO ultrasonic to be mapped
 
-        try
-        {
-            myUltra = _robot.hardware.ultrasonicSensor.get(NAME);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map Lego Ultrasonic sensor with name " + NAME);
-        }
+        myUltra = _robot.hardware.ultrasonicSensor.get(NAME);
 
         return myUltra;
     }
 
+
     /**
      * Attempts to map the REV Module IMU. Result is returned, allowing an assignment
-     * operator to map the desired IMU. Sends a log error message if failed.
+     * operator to map the desired IMU. Driver station displays error if mapping failed.
      *
      * @param NAME Name of the IMU as it appears in the configuration file
      * @param PARAMETERS IMU parameters, initialized properly
      *
-     * @return Returns an IMU sensor, mapped if succeeded, null if failed
+     * @return Returns an IMU sensor, mapped if succeeded. Driver station error results from
+     *         failure.
      */
     public BNO055IMU mapREVIMU(final String NAME , final BNO055IMU.Parameters PARAMETERS)
     {
-        BNO055IMU myIMU = null;
+        BNO055IMU myIMU;                            // REV Internal IMU to be mapped
 
-        try
-        {
-            myIMU = _robot.hardware.get(BNO055IMU.class , NAME);
-            myIMU.initialize(PARAMETERS);
-        }
-        catch(Exception e)
-        {
-            Log.e("Error" , "Cannot map BNO055 IMU with name " + NAME + ". Are you using REV?");
-        }
+        myIMU = _robot.hardware.get(BNO055IMU.class , NAME);
+        myIMU.initialize(PARAMETERS);
 
         return myIMU;
     }

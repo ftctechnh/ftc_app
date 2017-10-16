@@ -1,3 +1,15 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-09-??
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 package org.firstinspires.ftc.teamcode.Core.Utility;
 
 
@@ -7,20 +19,7 @@ import org.firstinspires.ftc.teamcode.Core.Utility.UtilColor.Color;
 
 
 /**
- * <p>
- *      Utility class that manages niche autonomous-specific functions
- * </p>
- *
- *
- * <p>
- *      While coding in this package, keep these units in mind: <br>
- *      1. Assume all angles are measured in degrees <br>
- *      2. Assume all distances are measured in centimeters <br>
- *      3. Assume all measurements of time are done in milliseconds <br>
- * </p>
- *
- *
- * That's all, folks!
+ * Utility for autonomous-specific functionality, including the autonomous pre-run initializer
  */
 @SuppressWarnings({"unused" , "WeakerAccess"})
 public abstract class UtilAuto extends LinearOpMode
