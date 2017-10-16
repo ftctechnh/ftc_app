@@ -23,9 +23,9 @@ public class Vision {
 
     public Vision(HardwareMap hardwareMap){
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        //parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        //parameters = new VuforiaLocalizer.Parameters();
+        parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = "AaDxUz3/////AAAAGSJYyeGWDU3Im6rx85GbYy5gq8Raja7mkDAmDCUs6BvNAusEF4omrCaZUFeEG7gyW/Sq1exxlBmowJ4IY2ICrleyyxb1XJaFw0IsYhuBzESI/duL9SW2gVXcULoqBd7q4wniSHWZNNlkMYiuSbaW6z7299VJzV0QEi0HugnY+5PhZHUts9CU+lGIukrkAIDWP5bXOEmERBRpl4XKWIviWeCGHiVQVwAjeBEPnX1fsqRf+178gAoXEXDanp9cHriUGyU4a0vqhvJyb2LoQG5NrNLoFGUMU45pTWdjjY8TuVv9sfYSVwcboP2vzFeh8TVBbQRJrNrdWiRbw35nn+JSrZY6ulR5ZSDTq7l1apzxTy/s\n";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;

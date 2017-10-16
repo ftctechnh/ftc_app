@@ -3,6 +3,7 @@ package org.firstinspires.ftc.team2981.structural;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -11,25 +12,38 @@ import com.qualcomm.robotcore.util.Range;
 
 public class RobotHardware {
 
-    public DcMotor fL = null, fR = null, bL = null, bR = null;
-    private final int CPR = 0;                                                        //encoder counts per revolution
+    private HardwareMap map = null;
+
+    public DcMotor  fL = null, fR = null, bL = null, bR = null;                          //Drive Motors
+    public DcMotor  fourBar = null;                                                      //4-Bar motor
+    public Servo    claw = null;
+
+    private final int CPR = 0;                                                          //encoder counts per revolution
     private final double DIAMETER = 0;                                                  //encoded drive wheel circumference
     private final double GEARING = 1;
-    public final double CPI = (CPR * GEARING) / (DIAMETER * Math.PI);
-    private HardwareMap map = null;
+    private final double CPI = (CPR * GEARING) / (DIAMETER * Math.PI);
+
+    public final double claw_open = 0.1;
+    public final double claw_closed = 0.6;
 
     public RobotHardware(HardwareMap map){
         this.map = map;
+    }
 
+    public void init(){
         fL = map.get(DcMotor.class, "fL");
         fR = map.get(DcMotor.class, "fR");
         bL = map.get(DcMotor.class, "bL");
         bR = map.get(DcMotor.class, "bR");
 
+        fourBar = map.get(DcMotor.class, "fourBar");
+
         fR.setDirection(DcMotorSimple.Direction.FORWARD);
         bR.setDirection(DcMotorSimple.Direction.FORWARD);
         fL.setDirection(DcMotorSimple.Direction.REVERSE);
         bL.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        fourBar.setDirection(DcMotorSimple.Direction.FORWARD);
 
         resetEnc();
     }
