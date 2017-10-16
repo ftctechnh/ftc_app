@@ -24,7 +24,7 @@ public class REVIMU
 {
     private RobotBase _robot = null;
 
-    private BNO055IMU _imu = null;
+    private LynxEmbeddedIMU _imu = null;
 
     private Orientation _orien = null;
     private Acceleration _accel = null;
@@ -53,7 +53,7 @@ public class REVIMU
     {
         HardwareMapper mapHelper = new HardwareMapper(_robot);  // Helps with mapping
 
-        _imu = mapHelper.mapREVIMU(NAME , PARAMETERS);
+        _imu = (LynxEmbeddedIMU)mapHelper.mapREVIMU(NAME , PARAMETERS);
     }
 
 
@@ -93,7 +93,7 @@ public class REVIMU
     public void pull()
     {
         _orien = _imu.getAngularOrientation(AxesReference.INTRINSIC , AxesOrder.XYZ , AngleUnit.DEGREES);
-        _accel = _imu.getGravity();
+        _accel = _imu.getLinearAcceleration();
         _pos = _imu.getPosition();
     }
 

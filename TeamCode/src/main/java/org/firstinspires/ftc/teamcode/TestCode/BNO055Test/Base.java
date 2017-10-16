@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestCode.BNO055Test;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.bosch.NaiveAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Core.RobotBase;
@@ -28,7 +29,6 @@ public class Base extends RobotBase
         params.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         params.loggingEnabled = true;
         params.loggingTag = "IMU";
-        params.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         params.calibrationDataFile = "IMUCalibration.json";
 //        params.mode = NDOF_FMC_OFF;
 
