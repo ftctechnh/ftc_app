@@ -94,6 +94,10 @@ public class HolonomicTeleop extends OpMode {
             robot.R_L.setPower(left_y - left_x);
         }
 
+        //robot.sword.setPosition(gamepad1.left_trigger);
+
+        robot.clamp.setPosition(gamepad1.right_trigger);
+
         // MAKE THE ROBOT ROTATE
         if((left_y+left_x==0) && (right_x!=0)) {
             int dir = 1;
