@@ -32,10 +32,25 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-    //Created by Roma Bhatia (@sugarcrystals01) on 9/21/17
+// Created by Roma Bhatia  on 9/21/17
 
-    //Last edit: 10/7/17
+// Last edit: 10/15/17 BY Roma Bhatia
 
+/**
+ * This file provides basic Teleop driving for a Holonomic robot.
+ * The code is structured as an Iterative OpMode
+ *
+ * This OpMode uses the common Holonomic hardware class to define the devices on the robot.
+ * All device access is managed through the HolonomicHardware class.
+ *
+ * This particular OpMode executes a basic Holonomic Drive Teleop for a Holonomic bot with omniwheels
+ * facing at 45 degree angles.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ */
+    /*
+    * Created by Roma Bhatia (@sugarcrystals01) on 9/21/17
+    * Last edit: 10/7/17
+    */
 @TeleOp(name="Holonomic_TeleOp", group="We Love Pi")
 
 public class HolonomicTeleop extends OpMode {
@@ -70,10 +85,14 @@ public class HolonomicTeleop extends OpMode {
         right_x = gamepad1.right_stick_x;
 
         // SETTING THE POWER TO MOVE THE ROBOT WITH EACH MOTOR
-        robot.F_L.setPower(left_y + left_x);
-        robot.F_R.setPower(left_x - left_y);
-        robot.R_R.setPower(-left_y - left_x);
-        robot.R_L.setPower(left_y - left_x);
+
+        if((right_x==0) ){
+
+            robot.F_L.setPower(left_y + left_x);
+            robot.F_R.setPower(left_x - left_y);
+            robot.R_R.setPower(-left_y - left_x);
+            robot.R_L.setPower(left_y - left_x);
+        }
 
         // MAKE THE ROBOT ROTATE
         if((left_y+left_x==0) && (right_x!=0)) {
