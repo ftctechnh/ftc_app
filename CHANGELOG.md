@@ -15,6 +15,21 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
 
+### [0.6.0] - 2017-10-16
+#### Added
+- Ability to pass in I2C Addresses when mapping MR I2C hardware
+- Functions that map MR I2C hardware with default addresses
+
+#### Removed
+- Ability to grab position from IMU- the sensor isn't accurate enough to handle double integrating the sensor values
+- Command annotations from RobotCommand- really, they were quite useless
+- Try/Catch blocks from HardwareMapper- it's arguably better to get a mass of errors immediately rather than in the middle of runtime.
+
+#### Fixed
+- Comments
+- More comments
+- Typos in the comments
+
 ### [0.5.0] - 2017-10-10
 #### Added
 - Support for mapping continuous rotation servos and the Bosch BNO055 IMU in HardwareMapper.java
