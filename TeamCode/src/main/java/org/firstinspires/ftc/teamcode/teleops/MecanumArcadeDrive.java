@@ -47,11 +47,15 @@ public class MecanumArcadeDrive extends OpMode {
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        if(robot.getDrivetrain() instanceof MecanumDrive) {
-            ((MecanumDrive) robot.getDrivetrain()).complexDrive(gamepad1);
+        if(gamepad1.b){
+            robot.getDrivetrain().setPower(1);
+        }
+        else if(robot.getDrivetrain() instanceof MecanumDrive) {
+            ((MecanumDrive) robot.getDrivetrain()).complexDrive(gamepad1, telemetry);
             ((MecanumDrive) robot.getDrivetrain()).dPadDrive(gamepad1);
         }
 
+        /*
         if (gamepad1.a) {
             // cache the gamepad a button
             game1.getLetterInterface().getAButton().setPress(true);
@@ -61,6 +65,15 @@ public class MecanumArcadeDrive extends OpMode {
             // set the interface back
             game1.getLetterInterface().getAButton().setPress(false);
         }
+        */
+
+        if(robot.getDrivetrain() instanceof MecanumDrive) {
+            telemetry.addData("Main1", ((MecanumDrive) robot.getDrivetrain()).getmajorDiagonal().getMotor1().getPower());
+            telemetry.addData("Minor1", ((MecanumDrive) robot.getDrivetrain()).getMinorDiagonal().getMotor1().getPower());
+            telemetry.addData("Minor2", ((MecanumDrive) robot.getDrivetrain()).getMinorDiagonal().getMotor2().getPower());
+            telemetry.addData("Main2", ((MecanumDrive) robot.getDrivetrain()).getmajorDiagonal().getMotor2().getPower());
+        }
+
     }
 
     // Code to run ONCE after the driver hits STOP
