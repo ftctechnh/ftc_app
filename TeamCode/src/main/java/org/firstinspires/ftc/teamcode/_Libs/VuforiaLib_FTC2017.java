@@ -186,6 +186,8 @@ public class VuforiaLib_FTC2017 implements HeadingSensor, LocationSensor {
 
     public void stop()
     {
+        /** Stop tracking the data sets we care about. */
+        relicTrackables.deactivate();
     }
 
     // return last recognized sign
