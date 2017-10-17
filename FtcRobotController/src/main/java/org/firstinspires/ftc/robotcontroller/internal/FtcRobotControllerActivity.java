@@ -52,6 +52,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -119,6 +120,10 @@ public class FtcRobotControllerActivity extends Activity
 {
   // OpenCV Stuff //////////////////////////////////////////////////////////////////////////////////
   private OpenCVManager _openCVManager;
+
+  private TextView _layoutHeader;
+  private Button _analyzeButton;
+  private Button _showHideButton;
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
   public static final String TAG = "RCActivity";
@@ -316,7 +321,37 @@ public class FtcRobotControllerActivity extends Activity
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
     _openCVManager = new OpenCVManager(this);
     _openCVManager.init();
-//    _openCVManager.disableCameraView();
+    _analyzeButton = (Button)findViewById(R.id.Analyze_OpenCV_Button);
+    _showHideButton = (Button)findViewById(R.id.Show_Hide_Button);
+    _layoutHeader = (TextView)findViewById(R.id.OpenCV_Layout_Header_Text);
+
+    _analyzeButton.setOnClickListener(new View.OnClickListener()
+    {
+      public void onClick(View v)
+      {
+        // Analyze stuff :)
+      }
+    });
+
+
+    _showHideButton.setOnClickListener(new View.OnClickListener()
+    {
+      public void onClick(View v)
+      {
+        if(_showHideButton.getText() == getString(R.string.hide))
+        {
+          _openCVManager.disableCameraView();
+          _showHideButton.setText(R.string.show);
+          _layoutHeader.setText(R.string.OpenCvCameraViewDisabled);
+        }
+        else
+        {
+          _openCVManager.enableCameraView();
+          _showHideButton.setText(R.string.hide);
+          _layoutHeader.setText(R.string.opencv_camera_view_enabled);
+        }
+      }
+    });
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
