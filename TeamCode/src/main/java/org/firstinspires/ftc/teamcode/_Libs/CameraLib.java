@@ -372,7 +372,8 @@ public class CameraLib {
                 mCamera.startPreview();
             }
             catch (Exception e) {
-                mCamera.release();
+                if (mCamera != null)
+                    mCamera.release();
                 mCamera = null;
                 return false;
             }

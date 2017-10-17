@@ -48,6 +48,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +77,18 @@ import java.util.concurrent.BlockingQueue;
  * is explained below.
  */
 
+class myVuforiaLocalizerImpl extends VuforiaLocalizerImpl
+{
+    public myVuforiaLocalizerImpl(VuforiaLocalizer.Parameters parameters)
+    {
+        super(parameters);
+    }
+    public void _close()  { close(); }
+}
 
 public class VuforiaLib_FTC2017 implements HeadingSensor, LocationSensor {
 
-    VuforiaLocalizer vuforia;
+    myVuforiaLocalizerImpl vuforia;
     VuforiaTrackables relicTrackables = null;
     VuforiaTrackable relicTemplate;
 
@@ -124,7 +133,7 @@ public class VuforiaLib_FTC2017 implements HeadingSensor, LocationSensor {
                 (licenseKey != null && licenseKey.length() > 0) ? licenseKey :
                 "ARf809H/////AAAAGRswBQwUCUJ5nqfgZxGbDEQ8oO7YP5GdnbReYr8ZHinqQ74OsP7UdOxNZJDmhaF2OeGD20jpSexpr2CcXGSGuHXNB2p9Z6zUNLDTfEggL+yg4ujefoqdkSpCqZf1medpwh3KXcK76FcfSJuqEudik2PC6kQW/cqJXnnHofVrrDTzJmWMnK3hlqTMjig81DEPMAHbRnA5wn7Eu0irnmqqboWyOlQ0xTF+P4LVuxaOUFlQC8zPqkr1Gvzvix45paWtyuLCnS9YDWMvI1jIM4giMrTRCT0lG8F+vkuKMiK647KJp9QIsFdWQ0ecQhau3ODNQ03pcTzprVN72b9VObpv6FNBpjGKRAcA59xlZiM2l6fc";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        this.vuforia = new myVuforiaLocalizerImpl(parameters); // ClassFactory.createVuforiaLocalizer(parameters);
 
         /**
          * Load the data sets that for the trackable objects we wish to track. These particular data
@@ -188,6 +197,9 @@ public class VuforiaLib_FTC2017 implements HeadingSensor, LocationSensor {
     {
         /** Stop tracking the data sets we care about. */
         relicTrackables.deactivate();
+
+        // close down Vuforia NOW so other code can use the camera
+        vuforia._close();
     }
 
     // return last recognized sign
