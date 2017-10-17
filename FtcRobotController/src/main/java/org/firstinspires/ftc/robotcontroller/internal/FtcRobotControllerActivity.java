@@ -125,7 +125,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2
 {
-
   // OpenCV Stuff //////////////////////////////////////////////////////////////////////////////////
   private JavaCameraView _javaCameraView;
   private Mat _rgba , _grayScale , _imgCanny;
