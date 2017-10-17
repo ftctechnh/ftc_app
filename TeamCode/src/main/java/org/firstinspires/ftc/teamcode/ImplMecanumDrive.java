@@ -81,8 +81,17 @@ public class ImplMecanumDrive extends OpMode
         telemetry.addData("VM2", VM20 [1]);
         telemetry.addData("VM3", VM20 [2]);
         telemetry.addData("VM4", VM20 [3]);
-    }
 
+        try {
+            robot.flDrive.setPower(VM20[0]);
+            robot.frDrive.setPower(VM20[1]);
+            robot.rlDrive.setPower(VM20[2]);
+            robot.rrDrive.setPower(VM20[3]);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            robot.setAllMotors(0);
+        }
+    }
     @Override
     public void stop() {
     }
