@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 /**
  * Created by ftc6347 on 2/9/17.
  */
-
+@Disabled
 public class EncoderValues {
     private double frontLeft = 0;
     private double frontRight = 0;

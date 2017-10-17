@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by ftc6347 on 4/21/17.
  */
+@Disabled
 @Autonomous(name = "Beacons 2 BLUE", group = "2 beacons")
 public class AutonomousBeaconsBlue2 extends LinearOpModeBase {
     @Override
