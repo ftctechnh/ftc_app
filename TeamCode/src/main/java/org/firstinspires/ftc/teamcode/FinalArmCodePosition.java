@@ -43,17 +43,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //@Disabled
 public class FinalArmCodePosition extends LinearOpMode {
 
-    //    static final double OPEN     =  1;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
-//    static final double CLOSE     =  -1;
-        /* This says to use BACONbot hardware */
     ArmHardwareClass robot = new ArmHardwareClass();
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        // Connect to servo (Assume PushBot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
-//        clamp = hardwareMap.get(CRServo.class, "left_hand");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo.");
@@ -69,17 +62,12 @@ public class FinalArmCodePosition extends LinearOpMode {
             telemetry.addData("Servo Controls", "Y is OPEN, A is close");
             telemetry.addData(">", "Press Stop to end test.");
             telemetry.update();
+//
+//            if(gamepad1.a){
+////                if(robot.clawServo2.setPosition();)
+//                robot.clawServo2.setPosition(.5);
+//            }
 
-            //if (gamepad1.a) {
-                //robot.clawServo2.setPosition(90);
-                //wait(1000);
-                //telemetry.addLine("HIII");
-            //}
-            //if (gamepad1.y) {
-                //robot.clawServo2.setPosition(180);
-             //   wait(1000);
-            //    telemetry.addLine("Hiii");
-           // }
             if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
             } else {

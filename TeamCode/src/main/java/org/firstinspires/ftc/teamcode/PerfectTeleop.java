@@ -30,45 +30,30 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import static android.R.attr.direction;
 
 /**
- * This OpMode uses the CRServo class whcih makes a continuous rotation servo act like a
- * simple motor.  Power range from -1 to 1 with 0 being stop.
- *
- * This example runs the servo at full speed.  Easy to change that by changing the
- * power values for open and close.
+ ☺ Hi! This is the perfect teleop code for December 11, 2017! ☺
  */
-@Autonomous(name = "Concept: CRServo", group = "Concept")
+@TeleOp(name = "Perfect Teleop", group = "Concept")
 //@Disabled
-public class BACONConceptCRServo extends LinearOpMode {
+public class PerfectTeleop extends LinearOpMode {
 
-    static final double OPEN     =  -.5;     // need to test OPEN and CLOSE is right, one is CW and the other CCW
-    static final double CLOSE     =  1;
-    static final double STOP     =  .5;
-
-    // Define class members
-    CRServo clamp;
-
-    double position = 0;
+    /* this says use ArmHardwareClass */
+ArmHardwareClass robot = new ArmHardwareClass();
 
     @Override
     public void runOpMode() {
 
-        // Connect to servo (Assume PushBot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
-        clamp = hardwareMap.get(CRServo.class, "left_hand");
+        /* The init() method of the hardware class does all the work here*/
+        robot.init(hardwareMap);
 
         // Wait for the start button
-        telemetry.addData(">", "Press Start to scan Servo." );
+        telemetry.addLine("!☻ Start Claw Control ☻!");
         telemetry.update();
         waitForStart();
-        clamp.setPower(STOP);
 
 
         // Scan servo till stop pressed.
@@ -76,27 +61,29 @@ public class BACONConceptCRServo extends LinearOpMode {
 
 
             // Display the current value
-            telemetry.addData("Servo Controls", "Y is OPEN, A is close");
-            telemetry.addData(">", "Press Stop to end test." );
-            telemetry.addData("Servo power is", clamp.getDirection());
+            telemetry.addData("Servo Controls", "X is OPEN, Y is CLOSE");
+            telemetry.addData("Motor Controls","Use the D-Pad ↑ & ↓ buttons!");
             telemetry.update();
 
-            // Signal done;
-            telemetry.update();
-
-
-            if (gamepad1.y) {
-                clamp.setPower(OPEN);
+        /* Servo Control */
+            if(gamepad1.x){
+                robot.clawServo.setPower(robot.clawOpen);
             }
-                else  {
-                    clamp.setPower(STOP);
-                }
-             if (gamepad1.a) {
-                clamp.setPower(CLOSE);
+            if(gamepad1.y){
+                robot.clawServo.setPower(robot.clawClose);
             }
-            else {
-            clamp.setPower(STOP);
-        }
+
+        /* Vertical Arm Motor */
+            if (gamepad1.dpad_up) {
+                robot.verticalArmMotor.setPower(1);
+            } else {
+                robot.verticalArmMotor.setPower(0);
+            }
+            if (gamepad1.dpad_down) {
+                robot.verticalArmMotor.setPower(-1);
+            } else {
+                robot.verticalArmMotor.setPower(0);
+            }
         }
 
     }
