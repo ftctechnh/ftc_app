@@ -4,6 +4,7 @@ package org.firstinspires.ftc.robotcontroller.internal.OpenCV;
 import android.app.Activity;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.qualcomm.ftcrobotcontroller.R;
 
@@ -12,6 +13,7 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -40,7 +42,7 @@ public class OpenCVManager implements CameraBridgeViewBase.CvCameraViewListener2
     /**
      * Type of Mat to use/get/display
      */
-    enum MAT_TYPE
+    public enum MAT_TYPE
     {
         RGBA ,
         GRAY ,
@@ -53,7 +55,7 @@ public class OpenCVManager implements CameraBridgeViewBase.CvCameraViewListener2
      *
      * @param MAIN_ACTIVITY The main activity of the app
      */
-    OpenCVManager(final Activity MAIN_ACTIVITY)
+    public OpenCVManager(final Activity MAIN_ACTIVITY)
     {
         _mainActivity = MAIN_ACTIVITY;
 
@@ -78,6 +80,7 @@ public class OpenCVManager implements CameraBridgeViewBase.CvCameraViewListener2
         };
 
         _currentMat = MAT_TYPE.RGBA;
+
     }
 
 
@@ -105,7 +108,6 @@ public class OpenCVManager implements CameraBridgeViewBase.CvCameraViewListener2
         Imgproc.cvtColor(_rgba , _grayScale , Imgproc.COLOR_RGB2GRAY);
         Imgproc.Canny(_grayScale , _canny , 50 , 100);
 
-
         switch(_currentMat)
         {
             case RGBA:
@@ -124,7 +126,14 @@ public class OpenCVManager implements CameraBridgeViewBase.CvCameraViewListener2
 
     public void init()
     {
-        enableView();
+        if (!OpenCVLoader.initDebug())
+        {
+            Log.e(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), not working.");
+        }
+        else
+        {
+            Log.d(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), working.");
+        }
 
         _javaCameraView = (JavaCameraView)_mainActivity.findViewById(R.id.java_camera_view);
         _javaCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -154,5 +163,17 @@ public class OpenCVManager implements CameraBridgeViewBase.CvCameraViewListener2
         {
             _javaCameraView.disableView();
         }
+    }
+
+
+    public void enableCameraView()
+    {
+        _javaCameraView.setVisibility(View.VISIBLE);
+    }
+
+
+    public void disableCameraView()
+    {
+        _javaCameraView.setVisibility(View.GONE);
     }
 }

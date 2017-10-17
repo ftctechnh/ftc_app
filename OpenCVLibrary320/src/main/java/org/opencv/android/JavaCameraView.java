@@ -3,6 +3,7 @@ package org.opencv.android;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -165,7 +166,11 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     mFrameHeight = params.getPreviewSize().height;
 
                     if ((getLayoutParams().width == LayoutParams.MATCH_PARENT) && (getLayoutParams().height == LayoutParams.MATCH_PARENT))
-                        mScale = Math.min(((float)height)/mFrameHeight, ((float)width)/mFrameWidth);
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            mScale = 1;
+                        } else {
+                            mScale = 0;
+                        }
                     else
                         mScale = 0;
 

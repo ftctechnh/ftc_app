@@ -47,11 +47,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
@@ -96,6 +94,7 @@ import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
+import org.firstinspires.ftc.robotcontroller.internal.OpenCV.OpenCVManager;
 import org.firstinspires.ftc.robotcore.internal.hardware.DragonboardLynxDragonboardIsPresentPin;
 import org.firstinspires.ftc.robotcore.internal.network.DeviceNameManager;
 import org.firstinspires.ftc.robotcore.internal.network.PreferenceRemoterRC;
@@ -110,43 +109,16 @@ import org.firstinspires.ftc.robotcore.internal.ui.UILocation;
 import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo;
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+
 @SuppressWarnings("WeakerAccess")
-public class FtcRobotControllerActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2
+public class FtcRobotControllerActivity extends Activity
 {
   // OpenCV Stuff //////////////////////////////////////////////////////////////////////////////////
-  private JavaCameraView _javaCameraView;
-  private Mat _rgba , _grayScale , _imgCanny;
-  private BaseLoaderCallback _loaderCallBack = new BaseLoaderCallback(this)
-  {
-    @Override
-    public void onManagerConnected(int status)
-    {
-      switch(status)
-      {
-        case BaseLoaderCallback.SUCCESS:
-          _javaCameraView.enableView();
-          break;
-
-        default:
-          super.onManagerConnected(status);
-          break;
-      }
-
-      super.onManagerConnected(status);
-    }
-  };
+  private OpenCVManager _openCVManager;
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
   public static final String TAG = "RCActivity";
@@ -187,35 +159,6 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
 
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
-
-
-
-  // OpenCV Stuff //////////////////////////////////////////////////////////////////////////////////
-  @Override
-  public void onCameraViewStarted(int width, int height)
-  {
-    _rgba = new Mat(height , width , CvType.CV_8UC4);
-    _grayScale = new Mat(height , width , CvType.CV_8UC1);
-    _imgCanny = new Mat(height , width , CvType.CV_8UC1);
-  }
-
-  @Override
-  public void onCameraViewStopped()
-  {
-    _rgba.release();
-  }
-
-  @Override
-  public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
-  {
-    _rgba = inputFrame.rgba();
-
-    Imgproc.cvtColor(_rgba , _grayScale , Imgproc.COLOR_RGB2GRAY);
-
-    return _grayScale;
-  }
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
   protected class RobotRestarter implements Restarter {
@@ -371,18 +314,9 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
 
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    if (!OpenCVLoader.initDebug())
-    {
-      Log.e(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), not working.");
-    }
-    else
-    {
-      Log.d(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), working.");
-    }
-
-    _javaCameraView = (JavaCameraView)findViewById(R.id.java_camera_view);
-    _javaCameraView.setVisibility(SurfaceView.VISIBLE);
-    _javaCameraView.setCvCameraViewListener(this);
+    _openCVManager = new OpenCVManager(this);
+    _openCVManager.init();
+//    _openCVManager.disableCameraView();
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
@@ -429,16 +363,7 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
 
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    if (!OpenCVLoader.initDebug())
-    {
-      Log.e(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), not working.");
-      OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0 , this , _loaderCallBack);
-    }
-    else
-    {
-      Log.d(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), working.");
-      _loaderCallBack.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-    }
+      _openCVManager.enableView();
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
@@ -451,10 +376,7 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
     }
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    if(_javaCameraView != null)
-    {
-      _javaCameraView.disableView();
-    }
+      _openCVManager.disableView();
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
@@ -486,10 +408,7 @@ public class FtcRobotControllerActivity extends Activity implements CameraBridge
     RobotLog.cancelWriteLogcatToDisk();
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    if(_javaCameraView != null)
-    {
-      _javaCameraView.disableView();
-    }
+      _openCVManager.disableView();
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
