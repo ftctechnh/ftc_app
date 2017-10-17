@@ -71,12 +71,12 @@ public class FinalArmCodePosition extends LinearOpMode {
             telemetry.update();
 
             //if (gamepad1.a) {
-                //robot.clawServo.setPower(-1);
+                //robot.clawServo2.setPosition(90);
                 //wait(1000);
                 //telemetry.addLine("HIII");
             //}
             //if (gamepad1.y) {
-                //robot.clawServo.setPower(1);
+                //robot.clawServo2.setPosition(180);
              //   wait(1000);
            // }
             if (gamepad1.dpad_up) {
