@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.PictographScan9330;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +32,6 @@ public class AutoVuforia9330 extends LinearOpMode {
     ColorDistance9330 colorDistance = new ColorDistance9330(robotMap);
     PictographScan9330 PictographScan = new PictographScan9330();
     VuforiaTrackables info;
-    Orientation angles;
     Double PictoYRotation;
     Double PictoZTranslation;
     String PictoImageType;
@@ -40,6 +40,8 @@ public class AutoVuforia9330 extends LinearOpMode {
     Integer ColorGreen;
     Integer ColorBlue;
     Integer ColorAlpha;
+
+    Orientation angles;
 
     public void log(String name, Object value) {
         telemetry.addData(name,value);
@@ -84,8 +86,6 @@ public class AutoVuforia9330 extends LinearOpMode {
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        robotMap.gyro.initialize(parameters);
 
         robotMap.init(hardwareMap);
         info = PictographScan.init(hardwareMap,true);
@@ -99,11 +99,18 @@ public class AutoVuforia9330 extends LinearOpMode {
                 updatePictogramInfo(PictographScan.checkPosition(info));
                 log("","");
                 updateColorDistance(colorDistance.getInfo());
+
+            robotMap.gyro.initialize(parameters);
+
             angles   = robotMap.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-                //String rotation = angleFormat(angles.angleUnit, angles.firstAngle);
+            float degrees =  0;
 
-                //log("Gyro Rotation", rotation);
+            degrees +=  AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
+            telemetry.addData("gyro angle fixed maybe part 2", degrees);
+
+            //telemetry.addData("Gyro Angle", String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle))));
+            //telemetry.addData("Gyro Angle fixed maybe", angles.firstAngle);
 
             // Diameter: 3.78
             // Width:
@@ -113,6 +120,7 @@ public class AutoVuforia9330 extends LinearOpMode {
             //}
 
     }
+
 }
 
 
