@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 //import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //This class defines all the specific hardware for a the BACONbot robot.
@@ -16,6 +17,7 @@ public class ArmHardwareClass {
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
     public CRServo clawServo = null;
+    public Servo clawServo2 = null;
 
 
     /* Give place holder values for the motors and the grabber servo */
@@ -48,7 +50,7 @@ public class ArmHardwareClass {
         backRightMotor = hwMap.dcMotor.get("BR");
         verticalArmMotor = hwMap.dcMotor.get("VAM");
         clawServo =  hwMap.crservo.get("CS");
-
+        clawServo2 = hwMap.servo.get("S");
         // Set all hardware to default position
         // Set all hardware to default position
 //        frontLeftMotor.setPower(0);
@@ -57,7 +59,7 @@ public class ArmHardwareClass {
         backRightMotor.setPower(0);
         verticalArmMotor.setPower(0);
         clawServo.setPower(0);
-
+        clawServo2.setPosition(0);
 
         // Set proper encoder state for all motor
 //        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
