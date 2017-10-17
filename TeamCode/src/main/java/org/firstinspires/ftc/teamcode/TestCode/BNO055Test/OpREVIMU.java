@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 @TeleOp(name = "IMU Test" , group = "Prototypes")
+@SuppressWarnings("unused")
 public class OpREVIMU extends LinearOpMode
 {
     private Base _base = new Base();
