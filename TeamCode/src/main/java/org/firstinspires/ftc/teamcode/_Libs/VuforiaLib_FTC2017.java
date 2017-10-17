@@ -77,6 +77,8 @@ import java.util.concurrent.BlockingQueue;
  * is explained below.
  */
 
+// we need to break into the "impl" class to get access to its close() function so we can
+// really shut it down and get back control of the camera
 class myVuforiaLocalizerImpl extends VuforiaLocalizerImpl
 {
     public myVuforiaLocalizerImpl(VuforiaLocalizer.Parameters parameters)
