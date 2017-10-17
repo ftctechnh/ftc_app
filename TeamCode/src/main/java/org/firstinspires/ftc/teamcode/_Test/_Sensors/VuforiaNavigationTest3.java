@@ -108,7 +108,7 @@ public class VuforiaNavigationTest3 extends OpMode {
             if (frame != null) {
                 // log text representations of several significant scanlines
                 Camera.Size camSize = frame.cameraSize();
-                final int bandSize = 10;
+                final int bandSize = 6;
                 telemetry.addData("hue a(1/3): ", frame.scanlineHue(camSize.height / 3, bandSize));
                 telemetry.addData("hue b(1/2): ", frame.scanlineHue(camSize.height / 2, bandSize));
                 telemetry.addData("hue c(2/3): ", frame.scanlineHue(2 * camSize.height / 3, bandSize));
