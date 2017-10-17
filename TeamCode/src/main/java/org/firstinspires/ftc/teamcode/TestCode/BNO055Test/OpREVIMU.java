@@ -34,12 +34,6 @@ public class OpREVIMU extends LinearOpMode
             telemetry.addData("accel y" , _base.imu.yAccel());
             telemetry.addData("accel z" , _base.imu.zAccel());
 
-            telemetry.addLine();
-
-            telemetry.addData("pos x" , _base.imu.xPos());
-            telemetry.addData("pos y" , _base.imu.yPos());
-            telemetry.addData("pos z" , _base.imu.zPos());
-
             telemetry.update();
         }
     }
