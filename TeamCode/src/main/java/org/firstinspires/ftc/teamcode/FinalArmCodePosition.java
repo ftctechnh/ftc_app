@@ -78,6 +78,7 @@ public class FinalArmCodePosition extends LinearOpMode {
             //if (gamepad1.y) {
                 //robot.clawServo2.setPosition(180);
              //   wait(1000);
+            //    telemetry.addLine("Hiii");
            // }
             if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
