@@ -14,6 +14,9 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Thorough documentation on the new system (teamcode.Core package)
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
+- Wrapper class for OpenCV
+- Actually figuring out how to use OpenCV
+- Allowing toggling visibility of XML Camera View
 
 ### [0.6.0] - 2017-10-16
 #### Added
