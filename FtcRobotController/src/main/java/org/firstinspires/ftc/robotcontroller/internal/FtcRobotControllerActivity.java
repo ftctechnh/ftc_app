@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -108,6 +109,7 @@ import org.firstinspires.ftc.robotcore.internal.ui.UILocation;
 import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo;
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
+import org.opencv.android.OpenCVLoader;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -304,6 +306,12 @@ public class FtcRobotControllerActivity extends Activity
     ServiceController.startService(FtcRobotControllerWatchdogService.class);
     bindToService();
     logPackageVersions();
+
+    if (!OpenCVLoader.initDebug()) {
+      Log.e(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), not working.");
+    } else {
+      Log.d(this.getClass().getSimpleName(), "  OpenCVLoader.initDebug(), working.");
+    }
   }
 
   protected UpdateUI createUpdateUI() {
