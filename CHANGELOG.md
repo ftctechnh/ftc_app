@@ -17,6 +17,9 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 
 ### [0.6.0] - 2017-10-16
 #### Added
+- [OpenCV](https://opencv.org/) support! Version 3.2.0
+- Test code in the activity class
+- XML item in the main activity for displaying camera view
 - Ability to pass in I2C Addresses when mapping MR I2C hardware
 - Functions that map MR I2C hardware with default addresses
 
@@ -24,6 +27,7 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Ability to grab position from IMU- the sensor isn't accurate enough to handle double integrating the sensor values
 - Command annotations from RobotCommand- really, they were quite useless
 - Try/Catch blocks from HardwareMapper- it's arguably better to get a mass of errors immediately rather than in the middle of runtime.
+- Some broken code left over in previous commits that evaded code analysis
 
 #### Fixed
 - Comments
