@@ -55,6 +55,7 @@ public class DirtyMecanum extends OpMode
     boolean[] dpadStates = new boolean[4];
     // setup runtime timer
     private ElapsedTime runtime = new ElapsedTime();
+    static double SPEED = 0.5;
 
     @Override
     public void init() {
@@ -86,37 +87,37 @@ public class DirtyMecanum extends OpMode
 
 
         if (dpadStates[0]){         // full forward
-            robot.setAllMotors(1);
+            robot.setAllMotors(SPEED);
         } else if (dpadStates[1]) { // right strafe
-            robot.flDrive.setPower(1);
-            robot.frDrive.setPower(-1);
-            robot.rlDrive.setPower(-1);
-            robot.rrDrive.setPower(1);
+            robot.flDrive.setPower(SPEED);
+            robot.frDrive.setPower(-1 * SPEED);
+            robot.rlDrive.setPower(-1 * SPEED);
+            robot.rrDrive.setPower(SPEED);
         } else if (dpadStates[2]) { // full reverse
-            robot.setAllMotors(-1);
+            robot.setAllMotors(-1 * SPEED);
         } else if (dpadStates[3]) { // left strafe
-            robot.flDrive.setPower(-1);
-            robot.frDrive.setPower(1);
-            robot.rlDrive.setPower(1);
-            robot.rrDrive.setPower(-1);
+            robot.flDrive.setPower(-1 * SPEED);
+            robot.frDrive.setPower(SPEED);
+            robot.rlDrive.setPower(SPEED);
+            robot.rrDrive.setPower(-1 * SPEED);
         } else if (gamepad1.right_bumper) {
-            robot.flDrive.setPower(1);
-            robot.frDrive.setPower(-1);
-            robot.rlDrive.setPower(1);
-            robot.rrDrive.setPower(-1);
+            robot.flDrive.setPower(SPEED);
+            robot.frDrive.setPower(-1 * SPEED);
+            robot.rlDrive.setPower(SPEED);
+            robot.rrDrive.setPower(-1 * SPEED);
         } else if (gamepad1.left_bumper) {
-            robot.flDrive.setPower(-1);
-            robot.frDrive.setPower(1);
-            robot.rlDrive.setPower(-1);
-            robot.rrDrive.setPower(1);
+            robot.flDrive.setPower(-1 * SPEED);
+            robot.frDrive.setPower(SPEED);
+            robot.rlDrive.setPower(-1 * SPEED);
+            robot.rrDrive.setPower(SPEED);
         } else if (gamepad1.a){
-            robot.flDrive.setPower(1);
+            robot.flDrive.setPower(SPEED);
         } else if (gamepad1.b){
-            robot.frDrive.setPower(1);
+            robot.frDrive.setPower(SPEED);
         } else if (gamepad1.x){
-            robot.rlDrive.setPower(1);
+            robot.rlDrive.setPower(SPEED);
         } else if (gamepad1.y){
-            robot.rrDrive.setPower(1);
+            robot.rrDrive.setPower(SPEED);
         } else {
             robot.setAllMotors(0);
         }
