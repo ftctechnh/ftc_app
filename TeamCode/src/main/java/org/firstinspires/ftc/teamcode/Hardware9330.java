@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,12 +21,13 @@ public class Hardware9330 {
     public static Servo  lowClamp     = null;
     public static Servo  highClamp    = null;
     public static DcMotor leftMotor   = null;
-    public static DcMotor rightMotor  = null;
     public static DcMotor liftMotor   = null; */
     //public static DistanceSensor distance     = null;
     public static TouchSensor touch;
     public static ColorSensor cs;
     public static DistanceSensor ds;
+    public static DcMotor rightMotor;
+    public static BNO055IMU gyro;
 
 
     HardwareMap hwMap                 = null;
@@ -46,12 +49,13 @@ public class Hardware9330 {
         highClamp = hwMap.servo.get("highClamp");
         highClamp.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
-        rightMotor = hwMap.dcMotor.get("rightMotor");
         liftMotor = hwMap.dcMotor.get("liftMotor"); */
         //distance = hwMap.get(DistanceSensor.class, "distance");
        // touch = hwMap.touchSensor.get("touch");
         cs = hwMap.get(ColorSensor.class, "cs");
         ds = hwMap.get(DistanceSensor.class, "cs");
+        rightMotor = hwMap.dcMotor.get("rightMotor");
+        gyro = hwMap.get(BNO055IMU.class, "imu");
 
     }
 }
