@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- * Created by ftc6347 on 10/15/17.
+ * This class is the competition robot tele-op program.
  */
 @TeleOp(name = "TELEOP", group = "teleop")
 public class RobotTeleOp extends LinearOpMode {
