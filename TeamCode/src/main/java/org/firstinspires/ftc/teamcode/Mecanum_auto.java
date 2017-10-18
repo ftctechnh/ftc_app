@@ -34,8 +34,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+
+import static java.lang.Math.abs;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -123,16 +126,35 @@ public class Mecanum_auto extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void mecanumDrive(double speed,
-                             double heading,
+                             double target_heading,
                              double distance)
     {
+        if(speed > 1) speed = 1;
+        else if(speed <= 0) speed = 0.1;
+
+
+        double max;
+        double multiplier;
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            double lfpower = Math.sin(heading+45);
-            double lrpower = Math.cos(heading+45);
-            double rfpower = Math.cos(heading+45);
-            double rrpower = Math.sin(heading+45);
+            double lfpower = Math.sin(target_heading+45);
+            double lrpower = Math.cos(target_heading+45);
+            double rfpower = Math.cos(target_heading+45);
+            double rrpower = Math.sin(target_heading+45);
+
+            //Determine largest power being applied
+            max = lfpower;
+            if (lrpower > max) max = lrpower;
+            if (rfpower > max) max = rfpower;
+            if (rrpower > max) max = rrpower;
+
+            multiplier = speed/max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+
+            lfpower*=multiplier;
+            lrpower*=multiplier;
+            rfpower*=multiplier;
+            rrpower*=multiplier;
 
             gromit.left_front.setPower(lfpower);
             gromit.left_back.setPower(lrpower);
@@ -141,5 +163,59 @@ public class Mecanum_auto extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+    public void mecanumTurn( double speed,
+                             double target_heading,
+                            String type) {
+        if(speed > 1) speed = 1.0;
+        else if(speed <= 0) speed = 0.1;
+        /**READ IMU
+
+         */
+        double correction = target_heading /**- IMU reading*/;
+        if (correction <= -180) correction +=360;   // correction should be +/- 180 (to the left negative, right positive)
+        if (correction >=  180) correction -=360;
+
+        //FRONT PIVOT
+        if(type == "front"){
+
+        }
+        //Rear Pivot
+        else if (type == "rear"){
+
+        }
+        //PIVOT
+        else{
+            while(abs(correction) >= gromit.turn_THRESHOLD &&  opModeIsActive()) {
+                /**READ IMU*/
+
+                correction = target_heading; /** - CURRENT HEADING*/
+                if(abs(correction) >= gromit.turn_THRESHOLD) break;
+
+                if (correction <= -180) correction +=360;   // correction should be +/- 180 (to the left negative, right positive)
+                if (correction >=  180) correction -=360;
+                /**^^^^^^^^^^^MAYBE WE ONLY NEED TO DO THIS ONCE?????*/
+
+                double adjustment = Range.clip((Math.signum(correction) * gromit.turn_MIN_SPEED + gromit.turn_COEF * correction / 180), -1, 1);  // adjustment is motor power: sign of correction *0.07 (base power)  + a proportional bit
+
+                gromit.left_front.setPower(adjustment * speed);
+                gromit.left_back.setPower(adjustment * speed);
+                gromit.right_front.setPower(-(adjustment * speed));
+                gromit.right_back.setPower(-(adjustment * speed));
+            }
+            stop_drivetrain();
+
+        }
+
+
+
+
+
+    }
+    public void stop_drivetrain(){
+        gromit.left_front.setPower(0.0);
+        gromit.left_back.setPower(0.0);
+        gromit.right_front.setPower(0.0);
+        gromit.right_back.setPower(0.0);
     }
 }
