@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 /**
  ☺ Hi! This is the perfect teleop code for December 11, 2017! ☺
  */
-@TeleOp(name = "Perfect Teleop", group = "Concept")
+@TeleOp(name = "♪ Perfect Teleop ♪", group = "Concept")
 //@Disabled
 public class PerfectTeleop extends LinearOpMode {
 
@@ -71,6 +71,10 @@ ArmHardwareClass robot = new ArmHardwareClass();
             }
             if(gamepad1.y){
                 robot.clawServo.setPower(robot.clawClose);
+            }
+
+            if (gamepad1.y != true && gamepad1.x != true){
+                robot.clawServo.setPower(robot.clawStill);
             }
 
         /* Vertical Arm Motor */
