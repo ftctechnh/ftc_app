@@ -49,6 +49,19 @@ public class RobotHardware
         resetEnc();
     }
 
+    public void SetArm(double power)
+    {
+        power = Range.clip(power, -1d, 1d);
+        armL.setPower(power);
+        armR.setPower(power);
+    }
+
+    public void SetDrive(double powerLeft, double powerRight)
+    {
+        driveLeft(powerLeft);
+        driveRight(powerRight);
+    }
+
     public void driveLeft(double power)
     {
         power = Range.clip(power, -1d, 1d);
