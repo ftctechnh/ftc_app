@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //This class defines all the specific hardware for a the BACONbot robot.
 
 public class ArmHardwareClass {
+
     /* Public OpMode members. */
     public DcMotor verticalArmMotor = null;
     public CRServo clawServo = null;
