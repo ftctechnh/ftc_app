@@ -55,7 +55,7 @@ public class DirtyMecanum extends OpMode
     boolean[] dpadStates = new boolean[4];
     // setup runtime timer
     private ElapsedTime runtime = new ElapsedTime();
-    static double SPEED = 0.5;
+    static double SPEED = 1;
 
     @Override
     public void init() {
@@ -126,6 +126,11 @@ public class DirtyMecanum extends OpMode
         telemetry.addData("D-Pad right", dpadStates[1]);
         telemetry.addData("D-Pad down", dpadStates[2]);
         telemetry.addData("D-Pad left", dpadStates[3]);
+        telemetry.addData("ENCODERS", "");
+        telemetry.addData("FL", robot.flDrive.getCurrentPosition());
+        telemetry.addData("FR", robot.frDrive.getCurrentPosition());
+        telemetry.addData("RL", robot.rlDrive.getCurrentPosition());
+        telemetry.addData("RR", robot.rrDrive.getCurrentPosition());
     }
 
     /*
