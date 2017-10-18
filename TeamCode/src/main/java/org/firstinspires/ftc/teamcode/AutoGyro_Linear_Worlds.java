@@ -655,7 +655,7 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
 
     /**MENUIING JOYSTICK CONTROL IN INIT
      * Menu to change variables corresponding to gyrodrives and turns and delays etc
-     * * *************************************************************************************************************************/
+     * * ***********************************************************************************************/
 
     public void OurMenu(String fileName) {
 
@@ -664,7 +664,7 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
         String filePath = directoryPath + fileName;
         new File(directoryPath).mkdir();        // Make sure that the directory exists
 
-        // if the left bumper is down skip reading the file!
+        /** if the left bumper is down skip reading the file! */
         if (!gamepad1.back) {
 
             // read labels & values from file before we start the init loop
@@ -695,8 +695,6 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
         }
 
 
-//==========================================
-//This while loop is the "editing" loop
         int index = 0;
 
         boolean yisreleased = true;
@@ -707,6 +705,7 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
         boolean rjoyisreleased = true;
         boolean editmode = false;
 
+        /** This while loop is the "editing" loop   */
         while (!isStarted() && !gamepad1.right_stick_button ) {
 
             // update the values we want to use
@@ -743,7 +742,11 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
 //            } else {                    //Otherwise must be Red Highlight if index is 0
 //                if (index == 0 && editmode ){telemetry.addLine("RED Alliance  <=======");} else {telemetry.addLine("RED Alliance");}
 //            }
-//          loop to display the configured items  if the index matches add arrow.
+
+
+            /**          loop to display the configured items  if the index matches add arrow.
+            *          First two entries are treate separately with additional strings  */
+
             if (0 == index && editmode) {
                 telemetry.addLine().addData(gromit.menulabel[0], gromit.menuvalue[0] + "  " + gromit.teamname[gromit.menuvalue[0]]+"  <=======");
             }else{
@@ -758,7 +761,7 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
 
 
 
-//          loop to display the configured items  if the index matches add arrow.
+            /**    loop to display the configured items  if the index matches add arrow.   */
             for ( i=2; i < gromit.menuvalue.length; i++){
                 //telemetry.addData("*",values[i]);
                 if (i == index && editmode) {
@@ -771,24 +774,27 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
             }
             telemetry.addLine("");
 
-            // blink lights for red/blue  while in the menu method
-            boolean even = (((int) (runtime.time()) & 0x01) == 0);             // Determine if we are on an odd or even second
-            if ( gromit.TeamisBlue) {
-                gromit.dim.setLED(gromit.BLUE_LED, even); // blue for true
-                gromit.dim.setLED(gromit.RED_LED, false);
-                if(even) {
-                    gromit.lightsblue.setPower(0.5);
-                }
-                else{
-                    gromit.lightsblue.setPower(0.0);
-                }
-            } else {
-                gromit.dim.setLED(gromit.RED_LED,  even); // Red for false
-                gromit.dim.setLED(gromit.BLUE_LED, false);
-            }
 
-            //THIS IS EDIT MODE=============================================
-            //          if we haven't pressed settings done bumper, look for button presses, blink the LED
+
+//            // blink lights for red/blue  while in the menu method
+//            boolean even = (((int) (runtime.time()) & 0x01) == 0);             // Determine if we are on an odd or even second
+//            if ( gromit.TeamisBlue) {
+//                gromit.dim.setLED(gromit.BLUE_LED, even); // blue for true
+//                gromit.dim.setLED(gromit.RED_LED, false);
+//                if(even) {
+//                    gromit.lightsblue.setPower(0.5);
+//                }
+//                else{
+//                    gromit.lightsblue.setPower(0.0);
+//                }
+//            } else {
+//                gromit.dim.setLED(gromit.RED_LED,  even); // Red for false
+//                gromit.dim.setLED(gromit.BLUE_LED, false);
+//            }
+
+
+            /**THIS IS EDIT MODE=============================================
+            *         if we haven't pressed settings done bumper, look for button presses, blink the LED  */
             if (editmode) {
                 //menu buttons,  Y,A increase/decrease the index   X,B increase/decrease the value  (debounce logic )
                 if (gamepad1.a) {
@@ -857,10 +863,10 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
                     rbumperisreleased = true;
                 }
             }
-            //END OF EDIT MODE===================================================
+                /** END OF EDIT MODE===================================================
+                /** in ready mode check if you'd like to return to editing, add telemetry line.  */
             else {
 
-//          in ready mode check if you'd like to return to editing, add telemetry line.
 
                 if (gamepad1.right_bumper) {
                     if (rbumperisreleased) {
@@ -882,27 +888,27 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
         }
 
 
-        // Init loop finished, move to running now  First write the config file
-//==========================================
+        /**  Init loop finished, move to running now  First write the config file
+        //==========================================  */
         try {
-            FileWriter fw = new FileWriter(filePath);
-            for ( i=0; i<=gromit.menuvalue.length-1; i++){
+              FileWriter fw = new FileWriter(filePath);
+              for ( i=0; i<=gromit.menuvalue.length-1; i++){
                 fw.write((gromit.menulabel[i]));
                 fw.write(System.lineSeparator());
                 fw.write(Integer.toString(gromit.menuvalue[i]));
                 fw.write(System.lineSeparator());
-            }
+              }
 //            fw.write(values);
 //            fw.write(System.lineSeparator());
             fw.close();
 
         } catch (IOException ex) {
-            System.err.println("Couldn't log this: "+filePath);
-        }
+            System.err.println("Couldn't write this file: "+filePath);
+           }
         telemetry.addData("ConfigFile saved to", filePath);
         telemetry.update();
         sleep(500);
-//==========================================
+
 
 
     }
