@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static java.lang.Double.NaN;
+
 /**
  * concept for reworked adv. mecanum drive
  *
@@ -27,7 +29,7 @@ public class MecanumRework extends OpMode
     double angle = 0;
     double rotate = 0;
     double gp1y;
-    double[] voltageMultiplier;
+    double[] voltageMultiplier = {0,0,0,0};
 
     @Override
     public void init() {
@@ -56,25 +58,38 @@ public class MecanumRework extends OpMode
         speed = gamepad1.right_trigger;
         // angle - this is calculated using the direction our stick is pointing. should be in a
         // range of [0,2pi] like a unit circle. terrible things, unit circles.
-        // this means the stick held right should be 0.
+        // this means the stick held right should be 2pi.
         angle = Math.atan2(gp1y, gamepad1.left_stick_x);
+        // corrections to ensure our angle is like a unit circle instead of delivering a coordinate
+        if (angle <= 0) {
+            angle += Math.PI * 2;
+        }
+        if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0){
+            angle = 0;
+        }
+
+        /*else if (angle < 0){
+            angle += Math.PI * 2;
+        }*/
+
         // rotation magnitude
         if (gamepad1.left_bumper){
             rotate = gamepad1.left_trigger * -1;
         } else {
-            rotate = gamepad1.left_trigger * -1;
+            rotate = gamepad1.left_trigger;
         }
 
         //DEBUG: dump outputs
         telemetry.addData("REQUIRED INFORMATION", "");
         telemetry.addData("speed:", speed);
         telemetry.addData("angle:", angle);
+        telemetry.addData("angle (pi):", angle/Math.PI);
         telemetry.addData("rot. magnitude:", rotate);
         // calc voltage multipliers
-        voltageMultiplier[0] = speed * Math.sin(angle + (Math.PI/4)) + angle;
-        voltageMultiplier[1] = speed * Math.cos(angle + (Math.PI/4)) - angle;
-        voltageMultiplier[2] = speed * Math.cos(angle + (Math.PI/4)) + angle;
-        voltageMultiplier[3] = speed * Math.sin(angle + (Math.PI/4)) - angle;
+        voltageMultiplier[0] = speed * Math.sin(angle + (Math.PI/4)) + rotate;
+        voltageMultiplier[1] = speed * Math.cos(angle + (Math.PI/4)) - rotate;
+        voltageMultiplier[2] = speed * Math.cos(angle + (Math.PI/4)) + rotate;
+        voltageMultiplier[3] = speed * Math.sin(angle + (Math.PI/4)) - rotate;
         //DEBUG: voltage multiplier output
         telemetry.addData("VOLTAGE MULTIPLIERS (unnormalized)", "");
         telemetry.addData("VM1", voltageMultiplier[0]);
@@ -90,8 +105,12 @@ public class MecanumRework extends OpMode
             }
         }
         // followed by dividing them all by the top one
+        // additionally, do a sanity check that turns any NaNs into 0s.
         for (int x = 0; x < 4; x++){
             voltageMultiplier[x] /= topStore;
+            if (voltageMultiplier[x] == NaN){
+                voltageMultiplier[x] = 0;
+            }
         }
         telemetry.addData("VOLTAGE MULTIPLIERS (normalized)", "");
         telemetry.addData("VM1", voltageMultiplier[0]);
