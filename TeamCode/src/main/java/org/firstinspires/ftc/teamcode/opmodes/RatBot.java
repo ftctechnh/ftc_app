@@ -92,6 +92,7 @@ public class RatBot extends OpMode {
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 layout.addView(chart, params);
+                chart.setAlpha(1.0f);
             }
         };
 
@@ -121,8 +122,9 @@ public class RatBot extends OpMode {
         telemetry.addData("front", front.getUltrasonicLevel());
 
         //add data
-        if(data.size() >= DATA_MAX) data.removeFirst();
         data.add(new Entry((float)getRuntime(), (float)mahDistance.getDistance(DistanceUnit.INCH)));
+        if(data.size() >= DATA_MAX) data.removeFirst();
+
 
         final LineDataSet lineData = new LineDataSet(data, "Dist (mm)");
         lineData.setColor(Color.GREEN);
@@ -131,8 +133,10 @@ public class RatBot extends OpMode {
         Runnable postData = new Runnable() {
             @Override
             public void run() {
+                //chart.fitScreen();
                 chart.setData(realLineData);
                 chart.invalidate();
+                //chart.fitScreen();
             }
         };
 
