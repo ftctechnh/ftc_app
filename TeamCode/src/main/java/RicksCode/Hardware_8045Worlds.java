@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RicksCode;
+package RicksCode;
 
 //import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.hardware.AnalogInput;
