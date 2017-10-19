@@ -43,6 +43,5 @@ public class ArmHardwareClass {
         verticalArmMotor.setPower(0);
         clawServo.setPower(0);
 
-
     }
 }
