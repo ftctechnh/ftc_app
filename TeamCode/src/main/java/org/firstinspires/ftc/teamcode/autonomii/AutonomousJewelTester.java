@@ -2,23 +2,30 @@ package org.firstinspires.ftc.teamcode.autonomii;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.ColorSensorWrapper;
+import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
 
 /**
  * Tests the JewelIdentifier
  * @author Alex Migala, Nick Clifford, Blake Abel
  * @since 9/14/17
  */
+@Autonomous(name = "Color Tester", group = "Testing")
 public class AutonomousJewelTester extends LinearOpMode {
 
     private ColorSensorWrapper sensorWrapper;
+    //private IMUWrapper imuWrapper;
 
     @Override
     public void runOpMode() {
         // init
         this.sensorWrapper = new ColorSensorWrapper(hardwareMap);
+        //this.imuWrapper = new IMUWrapper(hardwareMap);
 
         waitForStart();
 
@@ -27,6 +34,7 @@ public class AutonomousJewelTester extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addData("Colors", this.sensorWrapper.getFormattedTelemetryMessage());
+            //telemetry.addData("Accleration", "");
 
             this.sensorWrapper.getRelativeLayout().post(new Runnable() {
                 @Override
