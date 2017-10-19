@@ -117,8 +117,12 @@ public class Tele extends OpMode{
 //        gromit.right_front.setPower(rotate/1.0);
 //        gromit.right_back.setPower(rotate/1.0);
 
-
-
+        if (gamepad1.dpad_up) {
+            gromit.jewelsservo.setPosition(0.7);
+        }
+        if (gamepad1.dpad_down) {
+            gromit.jewelsservo.setPosition(0.2);
+        }
     }
 
     /*

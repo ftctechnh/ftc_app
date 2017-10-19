@@ -60,7 +60,7 @@ public class HardwareGromit
     public DcMotor  left_back  = null;
 //    public DcMotor  leftArm     = null;
 //    public Servo    leftClaw    = null;
-//    public Servo    rightClaw   = null;
+    public Servo    jewelsservo   = null;
 
 
     /**
@@ -129,7 +129,7 @@ public class HardwareGromit
 
         // Define and initialize ALL installed servos.
 //        leftClaw  = hwMap.get(Servo.class, "left_hand");
-//        rightClaw = hwMap.get(Servo.class, "right_hand");
+        jewelsservo = hwMap.get(Servo.class, "jewel_arm");
 //        leftClaw.setPosition(MID_SERVO);
 //        rightClaw.setPosition(MID_SERVO);
     }

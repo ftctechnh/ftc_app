@@ -67,8 +67,8 @@ import static java.lang.Math.abs;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
-@Disabled
+@Autonomous(name="Nathan", group="Pushbot")
+//@Disabled
 public class Mecanum_auto extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -96,10 +96,10 @@ public class Mecanum_auto extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        gromit.left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        gromit.left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        gromit.right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        gromit.right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        gromit.left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        gromit.left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        gromit.right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        gromit.right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
 //        telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -110,11 +110,18 @@ public class Mecanum_auto extends LinearOpMode {
         /** Wait for the game to start (driver presses PLAY)**/
         waitForStart();
 
-        sleep(1000);     // pause for servos to move
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
         mecanumDrive(1,45,4.0);
+        sleep(2000);
+        stop_drivetrain();
+        mecanumDrive(-1,45,4.0);
+        sleep(2000);
+        mecanumDrive(1,0,4.0);
+            sleep(1000);     // pause for servos to move
     }
 
     /*
@@ -129,8 +136,7 @@ public class Mecanum_auto extends LinearOpMode {
                              double target_heading,
                              double distance)
     {
-        if(speed > 1) speed = 1;
-        else if(speed <= 0) speed = 0.1;
+        if(abs(speed)> 1) speed = speed/abs(speed);
 
 
         double max;
@@ -138,10 +144,10 @@ public class Mecanum_auto extends LinearOpMode {
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            double lfpower = Math.sin(target_heading+45);
-            double lrpower = Math.cos(target_heading+45);
-            double rfpower = Math.cos(target_heading+45);
-            double rrpower = Math.sin(target_heading+45);
+            double lfpower = Math.sin(Math.toRadians(target_heading+45));
+            double lrpower = Math.cos(Math.toRadians(target_heading+45));
+            double rfpower = Math.cos(Math.toRadians(target_heading+45));
+            double rrpower = Math.sin(Math.toRadians(target_heading+45));
 
             //Determine largest power being applied
             max = lfpower;
@@ -151,10 +157,10 @@ public class Mecanum_auto extends LinearOpMode {
 
             multiplier = speed/max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
 
-            lfpower*=multiplier;
-            lrpower*=multiplier;
-            rfpower*=multiplier;
-            rrpower*=multiplier;
+            lfpower = multiplier*lfpower;
+            lrpower = multiplier*lrpower;
+            rfpower = multiplier*rfpower;
+            rrpower = multiplier*rrpower;
 
             gromit.left_front.setPower(lfpower);
             gromit.left_back.setPower(lrpower);

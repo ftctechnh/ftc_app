@@ -48,7 +48,7 @@ import java.io.IOException;
 import static java.lang.Math.abs;
 
 
-@Autonomous(name="Gromit:  Auto", group="Team")
+@Autonomous(name="MenuTest", group="Team")
 //@Disabled
 
 
