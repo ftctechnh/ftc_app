@@ -22,12 +22,21 @@ public class MecanumArcadeDrive extends OpMode {
   
     private ControllerWrapper game1;
 
+    private MecanumDrive drivetrain;
+
+    private DcMotor raiser;
+    private DcMotor grabber;
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
 
         robot = new Robot(hardwareMap);
         game1 = new ControllerWrapper(gamepad1);
+        drivetrain = (MecanumDrive) robot.getDrivetrain();
+
+        raiser = hardwareMap.dcMotor.get("raiser");
+        grabber = hardwareMap.dcMotor.get("grabber");
     }
 
     // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -48,11 +57,26 @@ public class MecanumArcadeDrive extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         if(gamepad1.b){
-            robot.getDrivetrain().setPower(1);
+            drivetrain.setPower(1);
         }
-        else if(robot.getDrivetrain() instanceof MecanumDrive) {
-            ((MecanumDrive) robot.getDrivetrain()).complexDrive(gamepad1, telemetry);
-            ((MecanumDrive) robot.getDrivetrain()).dPadDrive(gamepad1);
+
+        drivetrain.complexDrive(gamepad1, telemetry);
+        drivetrain.dPadDrive(gamepad1);
+
+        if(gamepad1.y){
+            raiser.setPower(1);
+        } else if (gamepad1.a) {
+            raiser.setPower(-1);
+        } else {
+            raiser.setPower(0);
+        }
+
+        if(gamepad1.b){
+            grabber.setPower(1);
+        } else if (gamepad1.x){
+            grabber.setPower(-1);
+        } else {
+            grabber.setPower(0);
         }
 
         /*
@@ -67,12 +91,10 @@ public class MecanumArcadeDrive extends OpMode {
         }
         */
 
-        if(robot.getDrivetrain() instanceof MecanumDrive) {
-            telemetry.addData("Main1", ((MecanumDrive) robot.getDrivetrain()).getmajorDiagonal().getMotor1().getPower());
-            telemetry.addData("Minor1", ((MecanumDrive) robot.getDrivetrain()).getMinorDiagonal().getMotor1().getPower());
-            telemetry.addData("Minor2", ((MecanumDrive) robot.getDrivetrain()).getMinorDiagonal().getMotor2().getPower());
-            telemetry.addData("Main2", ((MecanumDrive) robot.getDrivetrain()).getmajorDiagonal().getMotor2().getPower());
-        }
+        telemetry.addData("Main1", drivetrain.getmajorDiagonal().getMotor1().getPower());
+        telemetry.addData("Minor1", drivetrain.getMinorDiagonal().getMotor1().getPower());
+        telemetry.addData("Minor2", drivetrain.getMinorDiagonal().getMotor2().getPower());
+        telemetry.addData("Main2", drivetrain.getmajorDiagonal().getMotor2().getPower());
 
     }
 
