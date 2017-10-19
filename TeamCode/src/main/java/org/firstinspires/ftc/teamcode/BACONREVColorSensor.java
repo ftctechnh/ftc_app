@@ -76,6 +76,9 @@ public class BACONREVColorSensor extends LinearOpMode {
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
 
+
+    // clara's stuff :D
+
     @Override
     public void runOpMode() {
 
