@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.RicksCode;
 
 //import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -16,33 +16,33 @@ import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 public class Hardware_8045Worlds
 {
     /* Public OpMode members. */
-    public DcMotor  motorleft   = null;
-    public DcMotor  motorright  = null;
-    public DcMotor  motorforklift = null;
-    public DcMotor  motorsweeper = null;
-    public DcMotor  motorlauncher = null;
-    public DcMotor  lightsgreen = null;
-    public DcMotor  lightsblue = null;
-    public DcMotor  motorforkliftright = null;
+//    public DcMotor  motorleft   = null;
+//    public DcMotor  motorright  = null;
+//    public DcMotor  motorforklift = null;
+//    public DcMotor  motorsweeper = null;
+//    public DcMotor  motorlauncher = null;
+//    public DcMotor  lightsgreen = null;
+//    public DcMotor  lightsblue = null;
+//    public DcMotor  motorforkliftright = null;
 
-    public CRServo  servoCR     = null;
-    public Servo    servoloader = null;
-    public Servo    servoforklock = null;
-    public Servo    servoforklockleft = null;
-    public Servo    servoforkthumb = null;
-    public Servo    servodeflector = null;
+//    public CRServo  servoCR     = null;
+//    public Servo    servoloader = null;
+//    public Servo    servoforklock = null;
+//    public Servo    servoforklockleft = null;
+//    public Servo    servoforkthumb = null;
+//    public Servo    servodeflector = null;
 //    public LightSensor lightSensor = null;
 //    public ColorSensor HTcolorsensor = null;
-    public OpticalDistanceSensor odsSensor;  // Hardware Device Object
-    public AnalogInput maxbotixleft;
-    public AnalogInput maxbotixright;
-    public AnalogInput sharp;
-    public AnalogInput ballsensor;
-    public AnalogInput robotsensor;
-    public DigitalChannel ballsensor2isEmpty;                // Device Object
+//    public OpticalDistanceSensor odsSensor;  // Hardware Device Object
+//    public AnalogInput maxbotixleft;
+//    public AnalogInput maxbotixright;
+//    public AnalogInput sharp;
+//    public AnalogInput ballsensor;
+//    public AnalogInput robotsensor;
+//    public DigitalChannel ballsensor2isEmpty;                // Device Object
 
     //public MuxColorSensor muxColor;                        // Moved to Linear opmode
-   public int[] ports = {2,3,4,5};
+//   public int[] ports = {2,3,4,5};
 //    public int[] red_ports = {2,3,4,5};
 //    public int[] blue_ports = {0,1,4,5};
 
@@ -181,8 +181,8 @@ public class Hardware_8045Worlds
 //    private ElapsedTime period  = new ElapsedTime();
 
 //    public BNO055IMU imu = null;
-    public DeviceInterfaceModule   dim;
-    public DeviceInterfaceModule   dim2;
+//    public DeviceInterfaceModule   dim;
+//    public DeviceInterfaceModule   dim2;
 
 
     /* Constructor */
@@ -194,83 +194,83 @@ public class Hardware_8045Worlds
     public void init(HardwareMap ahwMap, boolean imuenabled) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-        // Define and Initialize Motors from the hardwaremap
-        motorleft   = hwMap.dcMotor.get("motorleft");
-        motorright  = hwMap.dcMotor.get("motorright");
-        motorforklift = hwMap.dcMotor.get("motorforklift");
-        motorforkliftright = hwMap.dcMotor.get("motorforkliftright");
-        motorsweeper = hwMap.dcMotor.get("motorsweeper");
-        motorlauncher = hwMap.dcMotor.get("motorlauncher");
-        lightsgreen = hwMap.dcMotor.get("lightsgreen");
-        lightsblue = hwMap.dcMotor.get("lightsblue");
-
-        motorleft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        motorright.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        motorforklift.setDirection(DcMotor.Direction.REVERSE);
-        motorforkliftright.setDirection(DcMotor.Direction.FORWARD);
-        motorsweeper.setDirection(DcMotor.Direction.FORWARD);
-        lightsgreen.setDirection(DcMotor.Direction.FORWARD);
-        lightsblue.setDirection(DcMotor.Direction.FORWARD);
-
-
-        // Set all motors to zero power
-        motorleft.setPower(0.0);
-        motorright.setPower(0.0);
-        motorforklift.setPower(0.0);
-        motorforkliftright.setPower(0.0);
-        motorsweeper.setPower(0.0);
-        motorlauncher.setPower(0.0);
-
-        //Turn Off lights
-        lightsgreen.setPower(0.0);
-        lightsblue.setPower(0.0);
-
-
-        // Set all motors to reset encoders.
-        motorleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorforklift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorforkliftright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorlauncher.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Pid Control for motors
-        motorleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorforklift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorforkliftright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorlauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorsweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lightsgreen.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lightsblue.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // zero power mode  // default is coast?
-        motorleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorforklift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorforkliftright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorsweeper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motorlauncher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lightsgreen.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        lightsblue.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        // Define and initialize ALL installed servos.
-        servoCR = hwMap.crservo.get("servobutton");
-        servoCR.setPower(0.0);
-        //Ball Loading Servo
-        servoloader = hwMap.servo.get("servoloader");
-        servoloader.setPosition(loaderopen);
-        //Forklift locking servo
-        servoforklock = hwMap.servo.get("servoforklock");
-        servoforklock.setPosition(forkclosed);
-        //Left Fork Lock servo
-        servoforklockleft = hwMap.servo.get("servoforklockleft");
-        servoforklockleft.setPosition(forkleftclosed);
-        //Thumb on forklift
-        servoforkthumb = hwMap.servo.get("servoforkthumb");
-        servoforkthumb.setPosition(thumbinitialized);
-        //Ball deflector in tele-op
-        servodeflector = hwMap.servo.get("servodeflector");
-//        servodeflector.setPosition(deflectordown);
+//        // Define and Initialize Motors from the hardwaremap
+//        motorleft   = hwMap.dcMotor.get("motorleft");
+//        motorright  = hwMap.dcMotor.get("motorright");
+//        motorforklift = hwMap.dcMotor.get("motorforklift");
+//        motorforkliftright = hwMap.dcMotor.get("motorforkliftright");
+//        motorsweeper = hwMap.dcMotor.get("motorsweeper");
+//        motorlauncher = hwMap.dcMotor.get("motorlauncher");
+//        lightsgreen = hwMap.dcMotor.get("lightsgreen");
+//        lightsblue = hwMap.dcMotor.get("lightsblue");
+//
+//        motorleft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+//        motorright.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+//        motorforklift.setDirection(DcMotor.Direction.REVERSE);
+//        motorforkliftright.setDirection(DcMotor.Direction.FORWARD);
+//        motorsweeper.setDirection(DcMotor.Direction.FORWARD);
+//        lightsgreen.setDirection(DcMotor.Direction.FORWARD);
+//        lightsblue.setDirection(DcMotor.Direction.FORWARD);
+//
+//
+//        // Set all motors to zero power
+//        motorleft.setPower(0.0);
+//        motorright.setPower(0.0);
+//        motorforklift.setPower(0.0);
+//        motorforkliftright.setPower(0.0);
+//        motorsweeper.setPower(0.0);
+//        motorlauncher.setPower(0.0);
+//
+//        //Turn Off lights
+//        lightsgreen.setPower(0.0);
+//        lightsblue.setPower(0.0);
+//
+//
+//        // Set all motors to reset encoders.
+//        motorleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorforklift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorforkliftright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorlauncher.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        //Pid Control for motors
+//        motorleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorforklift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorforkliftright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorlauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        motorsweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        lightsgreen.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        lightsblue.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//
+//        // zero power mode  // default is coast?
+//        motorleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorforklift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorforkliftright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorsweeper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        motorlauncher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        lightsgreen.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        lightsblue.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//
+//        // Define and initialize ALL installed servos.
+//        servoCR = hwMap.crservo.get("servobutton");
+//        servoCR.setPower(0.0);
+//        //Ball Loading Servo
+//        servoloader = hwMap.servo.get("servoloader");
+//        servoloader.setPosition(loaderopen);
+//        //Forklift locking servo
+//        servoforklock = hwMap.servo.get("servoforklock");
+//        servoforklock.setPosition(forkclosed);
+//        //Left Fork Lock servo
+//        servoforklockleft = hwMap.servo.get("servoforklockleft");
+//        servoforklockleft.setPosition(forkleftclosed);
+//        //Thumb on forklift
+//        servoforkthumb = hwMap.servo.get("servoforkthumb");
+//        servoforkthumb.setPosition(thumbinitialized);
+//        //Ball deflector in tele-op
+//        servodeflector = hwMap.servo.get("servodeflector");
+////        servodeflector.setPosition(deflectordown);
 
 
 //        //Define and initialize the imu
@@ -285,8 +285,8 @@ public class Hardware_8045Worlds
 //        }
 
         // setup the DeviceInterface Module
-        dim = hwMap.deviceInterfaceModule.get("dim");
-        dim2 = hwMap.deviceInterfaceModule.get("dim2");
+//        dim = hwMap.deviceInterfaceModule.get("dim");
+//        dim2 = hwMap.deviceInterfaceModule.get("dim2");
         // setup lego light sensor
         //LightSensor lightSensor;  // Hardware Device Object
         // get a reference to our Light Sensor object.
@@ -300,19 +300,19 @@ public class Hardware_8045Worlds
                 ports, milliSeconds,
                 MuxColorSensor.GAIN_60X);//Change this for potential different Gain*/
 
-        //Maxbotix Sensor
-        maxbotixleft = hwMap.analogInput.get("maxsonarleft");
-        maxbotixright = hwMap.analogInput.get("maxsonarright");
-        //Sharp IR Sensors
-        sharp = hwMap.analogInput.get("sharpir");
-        ballsensor = hwMap.analogInput.get("ballsensor");
-        robotsensor = hwMap.analogInput.get("robotsensor");
-        //Digital Sharp sensor
-        ballsensor2isEmpty = hwMap.digitalChannel.get("ballsensor2");
-        ballsensor2isEmpty.setMode(DigitalChannelController.Mode.INPUT);          // Set the direction of each channel
-
-        // Optical Distance Sensor
-        odsSensor = hwMap.opticalDistanceSensor.get("ods");
+//        //Maxbotix Sensor
+//        maxbotixleft = hwMap.analogInput.get("maxsonarleft");
+//        maxbotixright = hwMap.analogInput.get("maxsonarright");
+//        //Sharp IR Sensors
+//        sharp = hwMap.analogInput.get("sharpir");
+//        ballsensor = hwMap.analogInput.get("ballsensor");
+//        robotsensor = hwMap.analogInput.get("robotsensor");
+//        //Digital Sharp sensor
+//        ballsensor2isEmpty = hwMap.digitalChannel.get("ballsensor2");
+//        ballsensor2isEmpty.setMode(DigitalChannelController.Mode.INPUT);          // Set the direction of each channel
+//
+//        // Optical Distance Sensor
+//        odsSensor = hwMap.opticalDistanceSensor.get("ods");
     }
 
 //    public void setImuParameters() {
