@@ -143,10 +143,10 @@ public class basicDiagonal_mecanum_test extends LinearOpMode {
     private void strafeRight(double power, double drive){//this is also where the trouble lies
         if (drive > 0 ){
             drive = Math.abs(drive);
-            leftBackMotor.setPower(-(power - drive));
-            leftFrontMotor.setPower(power);
-            rightBackMotor.setPower(power);
-            rightFrontMotor.setPower(-(power - drive));
+            leftBackMotor.setPower((power));
+            leftFrontMotor.setPower(-(power - drive));
+            rightBackMotor.setPower(-(power - drive));
+            rightFrontMotor.setPower(-(power));
         }else{
             drive = Math.abs(drive);
             leftBackMotor.setPower(power);
