@@ -17,6 +17,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Guillermo_Hardware {
 
+
+    //testing github
     //Declaring variables
     public DcMotor fleft, fright, bleft, bright, lift;
     public Servo lub, rub;
