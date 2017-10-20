@@ -31,7 +31,5 @@ public class AutoDriveTest9330 extends LinearOpMode{
             telemetry.addData("Program", "Driving Forward");
         }
 
-        public void encoderDrive
-
 }
 
