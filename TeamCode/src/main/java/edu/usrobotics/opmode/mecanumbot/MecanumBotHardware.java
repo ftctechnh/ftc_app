@@ -3,8 +3,9 @@ package edu.usrobotics.opmode.mecanumbot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import edu.usrobotics.opmode.BaseHardware;
 
@@ -19,12 +20,24 @@ public class MecanumBotHardware extends BaseHardware {
     public DcMotor backRight;
     public DcMotor backLeft;
 
+    public DcMotor blockLift;
+
+    public Servo gripperRight;
+    public Servo gripperLeft;
+
     public Servo ballKnocker;
 
-    public boolean frCorrectDirection = false;
-    public boolean flCorrectDirection = true;
-    public boolean brCorrectDirection = false;
-    public boolean blCorrectDirection = true;
+    public ColorSensor colorSensor;
+
+    public DigitalChannel topLimitSwitch;
+    public DigitalChannel bottomLimitSwitch;
+
+    public boolean frCorrectDirection = true;
+    public boolean flCorrectDirection = false;
+    public boolean brCorrectDirection = true;
+    public boolean blCorrectDirection = false;
+
+    public boolean blockLiftCorrectDirection = false;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
@@ -51,25 +64,77 @@ public class MecanumBotHardware extends BaseHardware {
         backRight = hardwareMap.dcMotor.get ("br");
         backLeft = hardwareMap.dcMotor.get ("bl");
 
+        blockLift = hardwareMap.dcMotor.get("gripperlift");
+        blockLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        gripperLeft = hardwareMap.servo.get("gl");
+        gripperRight = hardwareMap.servo.get("gr");
+
         ballKnocker = hardwareMap.servo.get("bk");
 
+        colorSensor = hardwareMap.colorSensor.get("cs");
+
+        topLimitSwitch = hardwareMap.get(DigitalChannel.class, "tls");
+        // bottomLimitSwitch = hardwareMap.get(DigitalChannel.class, "bls");
+
+        topLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        // bottomLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
+        bringUpBallKnocker();
+
+        frontRight.setDirection(frCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(flCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(brCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(blCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+
+        blockLift.setDirection(blockLiftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+
     }
 
-    public int inchesToEncoderTicks(float inches){
+    public void setPower(float p){
 
-        return (int) (inches / wheelCircumference * 360f * 3.12);
-
-    }
-
-    public int inchesStraifingToEncoderTicks(float inches){
-
-        return (int) (inches / wheelCircumference * 360f * 4.16);
+        frontRight.setPower(p);
+        frontLeft.setPower(p);
+        backRight.setPower(p);
+        backLeft.setPower(p);
 
     }
 
-    public int degreesToEncoderTicks(float degrees){
+    public void closeGripper(){
 
-        return (int) (degrees * 24f);
+        gripperRight.setPosition(0.69f);
+        gripperLeft.setPosition(0.58f);
+
+    }
+
+    public void openGripper(){
+
+        gripperRight.setPosition(0.55f);
+        gripperLeft.setPosition(0.83f);
+
+    }
+
+    public void bringDownBallKnocker(){
+
+        ballKnocker.setPosition(0.2);
+
+    }
+
+    public void bringUpBallKnocker(){
+
+        ballKnocker.setPosition(0.8);
+
+    }
+
+    public boolean readingRed(){
+
+        return colorSensor.red() > colorSensor.blue();
+
+    }
+
+    public boolean readingBlue(){
+
+        return colorSensor.blue() > colorSensor.red();
 
     }
 
@@ -152,12 +217,6 @@ public class MecanumBotHardware extends BaseHardware {
     public DcMotorSimple.Direction getMotorDirection(DcMotorSimple.Direction regular, boolean correctDirection) {
 
         return (correctDirection ? regular : (regular.equals(DcMotorSimple.Direction.REVERSE) ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE));
-
-    }
-
-    public boolean sensingWhite(ColorSensor sensor){
-
-        return sensor.red() >= 2 && sensor.green() >= 2 && sensor.blue() >= 2;
 
     }
 

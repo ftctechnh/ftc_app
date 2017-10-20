@@ -19,12 +19,8 @@ public class CompbotTele extends RobotOp {
 
     boolean aButtonPressedLastTime = false;
     boolean bButtonPressedLastTime = false;
-    boolean xButtonPressedLastTime = false;
-    boolean yButtonPressedLastTime = false;
 
     boolean controlsReversed = false;
-
-    double lockServoPosition = robot.lockServoStartPosition;
 
     @Override
     public void init () {
@@ -84,7 +80,7 @@ public class CompbotTele extends RobotOp {
 
         }
 
-        else{
+        else {
 
             //Forward and backwards reversed
             frInputs += gamepad1.right_stick_y;
@@ -123,7 +119,7 @@ public class CompbotTele extends RobotOp {
 
         }
 
-        //Lift
+        // Lift
         liftInput = -gamepad2.left_stick_y;
 
         if(!gamepad2.dpad_down && liftInput < 0){
@@ -132,7 +128,7 @@ public class CompbotTele extends RobotOp {
 
         }
 
-        //Lift Servo
+        // Lift Servo
         if(gamepad2.a && !aButtonPressedLastTime){
 
             isLiftServoOpen = !isLiftServoOpen;
@@ -146,34 +142,7 @@ public class CompbotTele extends RobotOp {
 
         }
 
-        //Lock servo
-        if(gamepad2.x && !xButtonPressedLastTime){
-
-            lockServoPosition += robot.lockServoDelta;
-            xButtonPressedLastTime = true;
-
-        }
-
-        if(!gamepad2.x){
-
-            xButtonPressedLastTime = false;
-
-        }
-
-        if(gamepad2.y && !yButtonPressedLastTime){
-
-            lockServoPosition += -robot.lockServoDelta;
-            yButtonPressedLastTime = true;
-
-        }
-
-        if(!gamepad2.y){
-
-            yButtonPressedLastTime = false;
-
-        }
-
-        //Reversing the controls
+        // Reversing the controls
         if(gamepad1.b && !bButtonPressedLastTime){
 
             controlsReversed = !controlsReversed;
@@ -284,8 +253,6 @@ public class CompbotTele extends RobotOp {
 
         telemetry.addData("isLiftServoOpen", isLiftServoOpen);
         telemetry.addData("liftServoPosition", liftServoPosition);
-
-        telemetry.addData("lockServoPosition", lockServoPosition);
 
         telemetry.addData("buttonPresserColorSensor", robot.buttonPresserColorSensor.red() + " " + robot.buttonPresserColorSensor.green() + " " + robot.buttonPresserColorSensor.blue());
 
