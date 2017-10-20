@@ -14,7 +14,7 @@ public class RobotHardware
 
     public DcMotor fR, fL, bR, bL;
     public DcMotor armR, armL;
-    public Servo   armServo;
+    public Servo   claw, sideArm;
 
     private final int CPR = 0;
     private final double DIAMETER = 0;
@@ -46,6 +46,8 @@ public class RobotHardware
         armR.setDirection(DcMotorSimple.Direction.FORWARD);
         armL.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        claw = map.get(Servo.class, "claw");
+        sideArm = map.get(Servo.class, "sidearm");
         resetEnc();
     }
 

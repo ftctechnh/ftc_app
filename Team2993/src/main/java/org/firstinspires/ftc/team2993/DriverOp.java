@@ -44,9 +44,9 @@ public class DriverOp extends OpMode
         robot.driveRight(rightStick);
 
         if      (gamepad1.left_trigger > .5f)
-            robot.armServo.setPosition(robot.SERVO_CLOSED);
+            robot.claw.setPosition(robot.SERVO_CLOSED);
         else if (gamepad1.left_bumper == true)
-            robot.armServo.setPosition(robot.SERVO_OPEN);
+            robot.claw.setPosition(robot.SERVO_OPEN);
 
         if      (gamepad1.right_trigger > .5f)
             robot.SetArm(speed);
