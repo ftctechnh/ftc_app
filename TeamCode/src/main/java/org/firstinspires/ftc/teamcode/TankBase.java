@@ -59,6 +59,7 @@ public class TankBase
         driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
 */
         stopAllMotors();
+        updateIMUValues();
     }
 
     public void driveStraight_In(float inches)
@@ -71,7 +72,7 @@ public class TankBase
     {
         float encTarget;
         if(inches > 1)
-        encTarget = encCountsPerRev / wheelCircIn * (inches-1);
+            encTarget = encCountsPerRev / wheelCircIn * (inches-1);
         else
             encTarget = encCountsPerRev / wheelCircIn * (inches);
         //You get the number of encoder counts per unit and multiply it by how far you want to go
