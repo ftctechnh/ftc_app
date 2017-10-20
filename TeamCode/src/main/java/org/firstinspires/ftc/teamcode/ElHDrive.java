@@ -44,15 +44,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 /**
- * Hey! This code runs mecanum drive!
+ * Hey! This code is for a holonomic drive configuration!
  */
 
-@TeleOp(name = "!David Mechanum Wheel Drive!", group = "BACONbot")
+@TeleOp(name = "El H Drive", group = "BACONbot")
 //@Disabled
-public class DavidMechanumWheelDrive extends LinearOpMode {
+public class ElHDrive extends LinearOpMode {
 
-    /* This says to use the holnomic hardware class */
-    HolonomicHardwareClass robot = new HolonomicHardwareClass();
+    /* This says to use BACONbot hardware */
+    HDriveHardwareClass robot = new HDriveHardwareClass();
 
     /* Allow This Teleop to run! */
     @Override
@@ -60,6 +60,11 @@ public class DavidMechanumWheelDrive extends LinearOpMode {
 
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
+
+        /*These values are used for the drive*/
+        double x;
+        double y;
+        double r;
 
         /* Send telemetry message to signify that the robot's ready to play! */
         telemetry.addLine("♥ ♪ Ready to Run ♪ ♥");
@@ -70,73 +75,82 @@ public class DavidMechanumWheelDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-//            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-//            r = r / 2; //Don't let rotation dominate movement
-//            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-//            double rightX = gamepad1.right_stick_x;
+            /* This is the code that controls the robot's drive!*/
 
-            double GLY = gamepad1.left_stick_y;
-            double GRX = gamepad1.right_stick_x;
-            double GLX = gamepad1.left_stick_x;
+            /*If the left bumper is being pressed it allows the robot to run at only 1/5 of its full speed*/
+            if ((gamepad1.left_bumper)) {
+                y = -gamepad1.left_stick_y / 5;
+                x = gamepad1.left_stick_x / 5;
+                r = gamepad1.right_stick_x / 5;
 
+                /*do not let rotation dominate movement*/
+                r = r / 2;
 
-            final double v1 = GLY + GRX + GLX;
-            final double v2 = GLY + GRX - GLX;
-            final double v3 = GLY - GRX - GLX;
-            final double v4 = GLY - GRX + GLX;
+                /*use the setpower function to do all the math using the given x, y, and r values*/
+                setWheelPower(x, y, r);
+            }
+            /*If the left bumper is not being pressed, this allows the robot to run at full speed*/
+            else {
+                y = -gamepad1.left_stick_y;
+                x = gamepad1.left_stick_x;
+                r = gamepad1.right_stick_x;
 
-            setWheelPower(v1, v2, v3, v4);
-        }
-
-        /* While the gamepad's right joystick is moved, use this math to determine the power to set on
-           the wheels */
-        if (gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
-//                double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-//                double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-//                double rightX = gamepad1.right_stick_x;
-            final double v1 = gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;
-            final double v2 = gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x;
-            final double v3 = gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
-            final double v4 = gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
-
-            setWheelPower(v1, v2, v3, v4);
+                /*do not let rotation dominate movement*/
+                r = r / 2;
+                setWheelPower(x, y, r);
+            }
         }
     }
+            /* This method does all of the math that calculates the power to set on the wheels*/
 
-    /***********************************************************************************************
-     * These are all of the methods used in the Teleop*
-     ***********************************************************************************************/
+    public void setWheelPower(double x, double y, double r) {
 
-    /* This function sets power to the wheels based on values given*/
-    public void setWheelPower(double v1, double v2, double v3, double v4){
-        /*These values are used for the drive*/
         double frontLeft;
         double frontRight;
         double backLeft;
         double backRight;
+        double centerMotor;
+        double max;
 
-        frontLeft = v1;
-        frontRight = v2;
-        backLeft = v3;
-        backRight = v4;
+        /*calculate the power for each wheel*/
+        frontLeft = y;
+        frontRight = y;
+        backLeft = y;
+        backRight = y;
+        centerMotor = x;
 
+
+        /*Normalize the values so none exceeds +/- 1.0*/
+        max = Math.max(Math.max(Math.abs(frontLeft), Math.abs(frontRight)), Math.max(Math.abs(frontRight), Math.abs(frontRight)));
+        if (max > 1.0) {
+            frontLeft = frontLeft / max;
+            frontRight = frontRight / max;
+            backLeft = backLeft / max;
+            backRight = backRight / max;
+        }
+
+        /*Set power on each wheel*/
         if (robot.FrontLeftPower != frontLeft) {
-            robot.frontLeftMotor.setPower(v1);
+            robot.frontLeftMotor.setPower(frontLeft);
             robot.FrontLeftPower = frontLeft;
         }
         if (robot.FrontRightPower != frontRight) {
-            robot.frontRightMotor.setPower(v2);
+            robot.frontRightMotor.setPower(frontRight);
             robot.FrontRightPower = frontRight;
         }
         if (robot.BackLeftPower != backLeft) {
-            robot.backLeftMotor.setPower(v3);
+            robot.backLeftMotor.setPower(-backLeft);
             robot.BackLeftPower = backLeft;
         }
-        if (robot.BackRightPower != backRight)
-            robot.backRightMotor.setPower(v4);
+        if (robot.BackRightPower != backRight) {
+            robot.backRightMotor.setPower(backRight);
             robot.BackRightPower = backRight;
-
+        }
+        if (robot.CenterPower != centerMotor) {
+            robot.centerMotor.setPower(centerMotor);
+            robot.CenterPower = centerMotor;
+        }
     }
-}
 
+}
 

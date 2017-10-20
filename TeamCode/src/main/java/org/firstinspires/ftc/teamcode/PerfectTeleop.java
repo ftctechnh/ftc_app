@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 /**
- ☺ Hi! This is the perfect teleop code for December 11, 2017! ☺
+ ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
 @TeleOp(name = "♪ Perfect Teleop ♪", group = "Concept")
 //@Disabled
@@ -55,10 +55,7 @@ ArmHardwareClass robot = new ArmHardwareClass();
         telemetry.update();
         waitForStart();
 
-
-        // Scan servo till stop pressed.
         while(opModeIsActive()){
-
 
             // Display the current value
             telemetry.addData("Servo Controls", "X is OPEN, Y is CLOSE");
@@ -89,6 +86,10 @@ ArmHardwareClass robot = new ArmHardwareClass();
                 robot.verticalArmMotor.setPower(0);
             }
         }
-
     }
+
+    /***********************************************************************************************
+     * These are all of the methods used in the Teleop*
+     ***********************************************************************************************/
+
 }
