@@ -118,7 +118,7 @@ public class FrameGrabber implements CameraBridgeViewBase.CvCameraViewListener2 
 
     //get the rgb alpha image
     tmp1 = inputFrame.rgba();
-    ImageUtil.rotate(tmp1, frame, 90);
+    //ImageUtil.rotate(tmp1, frame, 90); Don't rotate frame
 
     //process the image using the provided imageProcessor
     result = imageProcessor.process(frameTime, frame, saveImages); //process
