@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * Created by BeehiveRobotics-3648 on 9/19/2017.
+ * Created by Kaden on 10/19/2017.
  */
-@TeleOp(name = "DoubleArm", group = "linear OpMode")
-public class DoubleArm extends OpMode{
+@TeleOp(name = "DoubleArmDrive", group = "linear OpMode")
+public class DoubleArmDrive extends OpMode {
     private Servo Claw;
     private Servo UpDown;
     private CRServo BigRotation;
@@ -25,32 +26,50 @@ public class DoubleArm extends OpMode{
     private double bigRotationInit = 1.0;
     private double bigRotationHighEnd = -0.05;
     private double bigRotationLowEnd = -0.23;
+    private DcMotor FrontLeft;
+    private DcMotor FrontRight;
+    private DcMotor RearLeft;
+    private DcMotor RearRight;
 
     @Override
-    public void init(){
+    public void init() {
+        FrontLeft = hardwareMap.dcMotor.get("m1");
+        FrontRight = hardwareMap.dcMotor.get("m2");
+        RearLeft = hardwareMap.dcMotor.get("m3");
+        RearRight = hardwareMap.dcMotor.get("m4");
         Claw = hardwareMap.servo.get("s1");
         Claw.setPosition(clawPosition);
         UpDown = hardwareMap.servo.get("s2");
         UpDown.setPosition(upDownPosition);
         BigRotation = hardwareMap.crservo.get("s3");
         BigRotation.setPower(bigRotationInit);
+        reverseMotor(FrontLeft);
+        reverseMotor(RearLeft);
     }
 
     @Override
-    public void loop(){
+    public void loop() {
+        double right = gamepad1.right_stick_y;
+        double left = gamepad1.left_stick_y;
+        FrontRight.setPower(right);
+        FrontLeft.setPower(left);
+        RearRight.setPower(right);
+        RearLeft.setPower(left);
+        reverseMotor(FrontLeft);
+        reverseMotor(RearLeft);
+
         bigRotationSpeed = Range.scale(gamepad1.left_stick_y,-1.0,1.0,bigRotationLowEnd,bigRotationHighEnd);
         upDownPosition = Range.clip((gamepad1.right_stick_y*upDownSpeed/16) + upDownPosition,upDownLowEnd, upDownHighEnd);
 
         if (gamepad1.a){
-            if (Claw.getPosition() < clawHighEnd) {
-                clawPosition = 1.0;
-            }
+
+                clawPosition = clawHighEnd;
+
         }
         if (gamepad1.b){
-            if (Claw.getPosition() > clawLowEnd) {
-                clawPosition = 0.3;
+                clawPosition = clawLowEnd;
             }
-        }
+
 
         UpDown.setPosition(upDownPosition);
         UpDown.setPosition(upDownPosition);
@@ -64,5 +83,9 @@ public class DoubleArm extends OpMode{
         telemetry.addData("Big Rotation goal",bigRotationSpeed);
         telemetry.addData("big rotation speed",BigRotation.getPower());
         telemetry.update();
+    }
+    public void reverseMotor(DcMotor motor) {
+
+        motor.setDirection(DcMotor.Direction.REVERSE);
     }
 }
