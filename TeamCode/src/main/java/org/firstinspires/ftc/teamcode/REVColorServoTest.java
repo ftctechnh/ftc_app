@@ -47,9 +47,9 @@ import java.util.Locale;
  * This is an example LinearOpMode that shows how to use
  * the REV Robotics Color-Distance Sensor.
  */
-@Autonomous(name = "REVColorDistanceTest", group = "Sensor")
+@Autonomous(name = "REVColorServoTest", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
-public class REVColorDistanceTest extends LinearOpMode {
+public class REVColorServoTest extends LinearOpMode {
     TestHardwareClass robot = new TestHardwareClass();
     /**
      * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
@@ -86,7 +86,7 @@ public class REVColorDistanceTest extends LinearOpMode {
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
+        double xPos;
         // wait for the start button to be pressed.
         waitForStart();
 
@@ -100,7 +100,8 @@ public class REVColorDistanceTest extends LinearOpMode {
                     (int) (robot.sensorColor.green() * SCALE_FACTOR),
                     (int) (robot.sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
-
+            xPos  =  gamepad1.right_stick_x;
+            robot.gemServo.setPosition(xPos);
             // send the info back to driver station using telemetry function.
             telemetry.addData("Distance (cm)",
                     String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
