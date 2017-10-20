@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,10 +16,12 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 public class Hardware9330 {
     /* Public OpMode members. */
 
-    //public static Servo  lowClamp;
-    //public static Servo  highClamp;
+    public static Servo lowGlyphClamp;
+    public static Servo highGlyphClamp;
+    public static Servo relicHandServo;
+    public static Servo relicWristServo;
     //public static DcMotor leftMotor;
-    //public static DcMotor liftMotor;
+    public static DcMotor glyphLiftMotor;
     public static TouchSensor touch;
     public static ColorSensor cs;
     public static DistanceSensor ds;
@@ -43,12 +43,16 @@ public class Hardware9330 {
 
         // Define and Initialize Motors
 
-        //lowClamp = hwMap.servo.get("lowClamp");
-        //lowClamp.setDirection(Servo.Direction.REVERSE);
-        //highClamp = hwMap.servo.get("highClamp");
-        //highClamp.setDirection(Servo.Direction.REVERSE);
+        lowGlyphClamp = hwMap.servo.get("lowGlyphClamp");
+        lowGlyphClamp.setDirection(Servo.Direction.REVERSE);
+        highGlyphClamp = hwMap.servo.get("highGlyphClamp");
+        highGlyphClamp.setDirection(Servo.Direction.REVERSE);
+        relicHandServo = hwMap.servo.get("relicHandServo");
+        relicHandServo.setDirection(Servo.Direction.REVERSE);
+        relicWristServo = hwMap.servo.get("relicWristServo");
+        relicWristServo.setDirection(Servo.Direction.REVERSE);
         //leftMotor = hwMap.dcMotor.get("leftMotor ");
-        //liftMotor = hwMap.dcMotor.get("liftMotor");
+        glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
         touch = hwMap.touchSensor.get("touch");
         cs = hwMap.get(ColorSensor.class, "cs");
         ds = hwMap.get(DistanceSensor.class, "cs");

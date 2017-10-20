@@ -17,11 +17,11 @@ public class GlyphLift9330 {
     }
 
     public void liftUp(){
-        hwMap.liftMotor.setPower(50);
+        hwMap.glyphLiftMotor.setPower(50);
         //Maybe a second one is required?
     }
 
     public void liftDown(){
-        hwMap.liftMotor.setPower(-50);
+        hwMap.glyphLiftMotor.setPower(-50);
     }
 }

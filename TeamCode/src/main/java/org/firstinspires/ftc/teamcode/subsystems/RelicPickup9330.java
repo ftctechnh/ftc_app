@@ -24,25 +24,25 @@ public class RelicPickup9330 {
 
     public void openHand(){
         if(isHandClosed){
-            hwMap.handServo.setPosition(OPEN_POS);
+            hwMap.relicHandServo.setPosition(OPEN_POS);
         }
     }
 
     public void closeHand(){
         if(!isHandClosed){
-            hwMap.handServo.setPosition(CLOSED_POS);
+            hwMap.relicHandServo.setPosition(CLOSED_POS);
         }
     }
 
     public void raiseWrist(){
         if(!isHandClosed){
-            hwMap.wristServo.setPosition(OPEN_POS);
+            hwMap.relicWristServo.setPosition(OPEN_POS);
         }
     }
 
     public void lowerWrist(){
         if(isHandClosed){
-            hwMap.wristServo.setPosition(CLOSED_POS);
+            hwMap.relicWristServo.setPosition(CLOSED_POS);
         }
     }
 }
