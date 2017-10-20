@@ -17,12 +17,11 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class Hardware9330 {
     /* Public OpMode members. */
-/*
-    public static Servo  lowClamp     = null;
-    public static Servo  highClamp    = null;
-    public static DcMotor leftMotor   = null;
-    public static DcMotor liftMotor   = null; */
-    //public static DistanceSensor distance     = null;
+
+    //public static Servo  lowClamp;
+    //public static Servo  highClamp;
+    //public static DcMotor leftMotor;
+    //public static DcMotor liftMotor;
     public static TouchSensor touch;
     public static ColorSensor cs;
     public static DistanceSensor ds;
@@ -43,15 +42,14 @@ public class Hardware9330 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-/*
-        lowClamp = hwMap.servo.get("lowClamp");
-        lowClamp.setDirection(Servo.Direction.REVERSE);
-        highClamp = hwMap.servo.get("highClamp");
-        highClamp.setDirection(Servo.Direction.REVERSE);
-        leftMotor = hwMap.dcMotor.get("leftMotor");
-        liftMotor = hwMap.dcMotor.get("liftMotor"); */
-        //distance = hwMap.get(DistanceSensor.class, "distance");
-       // touch = hwMap.touchSensor.get("touch");
+
+        //lowClamp = hwMap.servo.get("lowClamp");
+        //lowClamp.setDirection(Servo.Direction.REVERSE);
+        //highClamp = hwMap.servo.get("highClamp");
+        //highClamp.setDirection(Servo.Direction.REVERSE);
+        //leftMotor = hwMap.dcMotor.get("leftMotor ");
+        //liftMotor = hwMap.dcMotor.get("liftMotor");
+        touch = hwMap.touchSensor.get("touch");
         cs = hwMap.get(ColorSensor.class, "cs");
         ds = hwMap.get(DistanceSensor.class, "cs");
         rightMotor = hwMap.dcMotor.get("rightMotor");

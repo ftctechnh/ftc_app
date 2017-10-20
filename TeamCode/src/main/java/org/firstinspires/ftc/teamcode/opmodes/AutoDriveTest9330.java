@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
 /**
  * Created by robot on 10/16/2017.
  */
-@Autonomous(name="LeftAuto9330", group = "Opmode")
+@Autonomous(name="AutoDriveTest9330", group = "Opmode")
 public class AutoDriveTest9330 extends LinearOpMode{
         Hardware9330 robotMap = new Hardware9330();
     //Diameter = 3.78
