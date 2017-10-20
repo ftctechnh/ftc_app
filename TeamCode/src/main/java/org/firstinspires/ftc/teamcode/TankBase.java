@@ -27,10 +27,11 @@ public class TankBase
     Orientation angles;
     Acceleration gravity;
 
+
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
     private float roboDiameterCm = (float)(45.7*Math.PI); // can be adjusted
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
-    private float wheelCircCm = (float)(10* Math.PI);
+    private float wheelCircCm = (float)(9.8* Math.PI);
 
     public TankBase(HardwareMap hMap)
     {
@@ -59,6 +60,12 @@ public class TankBase
 */
         stopAllMotors();
     }
+
+    public void driveStraight_In(float inches)
+    {
+        driveStraight_In(inches, .75);
+    }
+
 
     public void driveStraight_In(float inches, double pow)
     {
@@ -117,8 +124,10 @@ public class TankBase
         stopAllMotors();
     }
 
-
-
+    public void spin_Right(float degrees)
+    {
+        spin_Right(degrees, 1);
+    }
 
     public void spin_Right(float degrees, double pow)// Right Motor only moves!
     {
@@ -148,20 +157,40 @@ public class TankBase
 
     public void spin_Right_IMU(float degrees, double pow)
     {
+        while (degrees > 180)
+        {
+            degrees -= 360;
+        }
+        while (degrees <-180)
+        {
+            degrees += 360;
+        }
+
+        initIMU();
         if (degrees < 0)
         {
-            initIMU();
-            updateIMUValues();
             driveRightOne.setPower(-Math.abs(pow));
-        //    while(imu)
+            while(getYaw() > degrees) {}
         }
+        else
+        {
+            driveRightOne.setPower(Math.abs(pow));
+            while(getYaw() < degrees) {}
+        }
+
+        stopAllMotors();
+    }
+
+    public void spin_Left(float degrees)
+    {
+        spin_Left(degrees, 1);
     }
 
     public void spin_Left(float degrees, double pow)//Left Motor only moves!!!!!!!
     {
-        float degToRad = degrees * (float)Math.PI / 180.0f; // converts it to Radians
+        double degToRad = degrees * Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        double encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
 
@@ -184,12 +213,47 @@ public class TankBase
         stopAllMotors();
     }
 
+    public void spin_Left_IMU(float deg, double pow)
+    {
+        float degrees = deg;
+        if (deg > 0)
+        {
+            degrees -= 5.2f;
+        }
+        else
+        {
+            degrees += 5.2f;
+        }
+
+        while (degrees > 180)
+        {
+            degrees -= 360;
+        }
+        while (degrees <-180)
+        {
+            degrees += 360;
+        }
+
+        initIMU();
+        if (degrees < 0)
+        {
+            driveLeftOne.setPower(-Math.abs(pow));
+            while(getYaw() > degrees) {}
+        }
+        else
+        {
+            driveLeftOne.setPower(Math.abs(pow));
+            while(getYaw() < degrees) {}
+        }
+
+        stopAllMotors();
+    }
 
     public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
         float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm)/2;
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
         //we divide it by two at the end to compensate for using two motors
@@ -211,6 +275,34 @@ public class TankBase
             driveLeftOne.setPower(Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) {}
+        }
+
+        stopAllMotors();
+    }
+
+    public void pivot_IMU(float degrees, double pow)
+    {
+        while (degrees > 180)
+        {
+            degrees -= 360;
+        }
+        while (degrees <-180)
+        {
+            degrees += 360;
+        }
+
+        initIMU();
+        if (degrees < 0)
+        {
+            driveRightOne.setPower(-Math.abs(pow));
+            driveLeftOne.setPower(-Math.abs(pow));
+            while(getYaw() > degrees) {}
+        }
+        else
+        {
+            driveRightOne.setPower(Math.abs(pow));
+            driveLeftOne.setPower(Math.abs(pow));
+            while(getYaw() < degrees) {}
         }
 
         stopAllMotors();
@@ -262,13 +354,20 @@ public class TankBase
 
     public double anglePerpToGrav()
     {
+        updateIMUValues();
         return Math.atan(gravity.yAccel/gravity.zAccel);
     }
 
-    public String returnGravToString()
+    public String getGravToString()
     {
         updateIMUValues();
         return gravity.toString();
+    }
+
+    public float getYaw()
+    {
+        updateIMUValues();
+        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
     public void updateIMUValues()
