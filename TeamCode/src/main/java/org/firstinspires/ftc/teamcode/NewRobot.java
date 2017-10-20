@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
- * Created by Jeremy on 10/18/2017.
+ * Created by Jeremy and Raghav on 10/18/2017.
  */
 
 public class NewRobot
