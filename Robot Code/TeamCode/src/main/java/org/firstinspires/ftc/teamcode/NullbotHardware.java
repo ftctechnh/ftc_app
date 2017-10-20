@@ -5,9 +5,11 @@ import android.os.Environment;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbLegacyModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,20 +27,34 @@ import java.util.Date;
 // This is NOT an opmode
 
 public class NullbotHardware {
+    // Alliance
+    Alliance color;
+    boolean isTestChassis;
+
     // Motors
     public DcMotor frontLeft;
     public DcMotor frontRight;
     public DcMotor backLeft;
     public DcMotor backRight;
 
+    public DcMotor liftLeft;
+    public DcMotor liftRight;
+    public DcMotor zType;
+
     // Servos
-    public Servo leftGemHitter;
-    boolean leftGemHitterDown = false;
+    public Servo leftWhipSnake;
+    public Servo rightWhipSnake;
+    public Servo leftBlockClaw;
+    public Servo rightBlockClaw;
 
     // Sensors
     public ModernRoboticsI2cGyro gyro;
     public ModernRoboticsI2cCompassSensor compass;
+    public ManualHeadingAdjustmentController headingAdjuster;
     public ModernRoboticsUsbDeviceInterfaceModule deviceInterface;
+
+    // Adjustment gamepad
+    private Gamepad gp2;
 
     // Telemetry
     public Telemetry tel;
@@ -66,21 +82,53 @@ public class NullbotHardware {
 
     public NullbotHardware(){}
     private void init() {
+        deviceInterface = hwMap.get(ModernRoboticsUsbDeviceInterfaceModule.class, "deviceInterface");
+
+        try {
+            hwMap.get(ModernRoboticsUsbLegacyModule.class, "legacyModule");
+            isTestChassis = true;
+        } catch (IllegalArgumentException e) {
+            isTestChassis = false;
+        }
+
         // Motor initialization
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
 
-        leftGemHitter = hwMap.servo.get("leftGemHitter");
+        if (!isTestChassis) {
+            liftLeft = hwMap.dcMotor.get("liftLeft");
+            liftRight = hwMap.dcMotor.get("liftRight");
+
+            zType = hwMap.dcMotor.get("zType");
+
+            leftWhipSnake = hwMap.servo.get("leftGemHitter");
+            rightWhipSnake = hwMap.servo.get("rightGemHitter");
+
+            leftBlockClaw = hwMap.servo.get("leftClaw");
+            rightBlockClaw = hwMap.servo.get("rightClaw");
+
+            raiseWhipSnake();
+            openBlockClaw();
+        }
 
         gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
         compass = hwMap.get(ModernRoboticsI2cCompassSensor.class, "acc");
 
-        deviceInterface = hwMap.get(ModernRoboticsUsbDeviceInterfaceModule.class, "deviceInterface");
+        // Set color
+
+        deviceInterface.setDigitalChannelMode(0, DigitalChannel.Mode.INPUT);
+        boolean zeropin = deviceInterface.getDigitalChannelState(0);
+        if (zeropin) {
+            color = Alliance.BLUE;
+        } else {
+            color = Alliance.RED;
+        }
 
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
 
+        headingAdjuster = new ManualHeadingAdjustmentController(gp2);
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -95,9 +143,10 @@ public class NullbotHardware {
         inducedGyroError = 0;
     }
 
-    public void init(HardwareMap ahwMap, LinearOpMode oM, boolean teleoperated) {
+    public void init(HardwareMap ahwMap, LinearOpMode oM, boolean teleoperated, Gamepad g) {
         hwMap = ahwMap;
         tel = oM.telemetry;
+        gp2 = g;
         init();
         calibrate(oM);
         if (teleoperated) {
@@ -115,6 +164,11 @@ public class NullbotHardware {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
+        if (!isTestChassis) {
+            setLiftMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            zType.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
         calibrationTimer.reset();
         while (!m.isStopRequested() && gyro.isCalibrating()) {
             tel.addData("Calibrating", "%s", Math.round(calibrationTimer.seconds()) % 2 == 0 ? "|.." : "..|");
@@ -130,13 +184,31 @@ public class NullbotHardware {
         for (DcMotor motor : motorArr) {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+
+        if (!isTestChassis) {
+            setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
+            zType.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
     }
 
+    /**
+     * Sets runMode to RUN_USING_ENCODER for all drivetrain motors
+     *
+     * @see DcMotor.RunMode
+     */
     public void enableMotorEncoders() {
         for (DcMotor m : motorArr) {
             m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+
+    /**
+     * Takes an array of motor speeds, and then uses
+     * built-in PID control to run motors at those speeds
+     *
+     * @param speeds   The speeds for the motors to run at, between -1.0 and 1.0.
+     *                 Motor order is front left, front right, back left, back right.
+     */
     public void setMotorSpeeds(double[] speeds) {
         boolean[] resetMotors = new boolean[motorArr.length];
 
@@ -174,6 +246,12 @@ public class NullbotHardware {
         return Math.max(-1, Math.min(1, val));
     }
 
+    /**
+     * Intelligently waits a given number of milliseconds. If program is terminated, sleeping
+     * will end immediately.
+     *
+     * @param milliseconds   The amount of time to wait
+     */
     public final void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
@@ -182,6 +260,12 @@ public class NullbotHardware {
         }
     }
 
+    /**
+     * Intelligently waits a given number of milliseconds. If program is terminated, sleeping
+     * will end immediately.
+     *
+     * @param g   The amount of time to wait
+     */
     public void writeLogTick(Gamepad g) {
         // Logging
         if (logPosition < hz * secondsToTrack) {
@@ -195,6 +279,14 @@ public class NullbotHardware {
         }
     }
 
+    /**
+     * Most op modes are set to run a certain number of times per second. waitForTick() is
+     * called at the end of an op mode, in order to perform clean-up steps. It sets msSinceLastMoved,
+     * updates the gyroscope error with respect to the compass, and then sleeps for the requested
+     * amount of time.
+     *
+     * @param periodMs   The amount of time to wait
+     */
     public void waitForTick(long periodMs) {
         boolean moving = false;
         for (DcMotor m : motorArr) {
@@ -215,6 +307,7 @@ public class NullbotHardware {
                 gyroError = newGyroError;
             } // Otherwise, value is considered absurd and is thrown out
         }
+        gyroError += headingAdjuster.getHeadingAdjustments();
 
         long remaining = periodMs - (long) period.milliseconds();
 
@@ -230,9 +323,12 @@ public class NullbotHardware {
         // Reset the cycle clock for the next pass.
         period.reset();
     }
+
+    /**
+     * Writes the current logs out to a file
+     *
+     */
     public void writeLogFile() {
-        tel.log().add("Gyro calibration complete");
-        tel.update();
         final File path =
                 Environment.getExternalStoragePublicDirectory
                         (
@@ -260,12 +356,17 @@ public class NullbotHardware {
             fOut.close();
         }
         catch (IOException e)
-        {
-        }
+        {}
 
     }
+
+    /**
+     * Translates inputted angle between 0 and 2 pi radians
+     *
+     * @param a   The angle to be translated
+     * @return    The translated angle
+     */
     public double normAngle(double a) {
-        // Takes in an angle in radians, outputs it as an angle between 0 and tau
         a = a % (Math.PI * 2);
 
         if (a < 0) {
@@ -273,14 +374,57 @@ public class NullbotHardware {
         }
         return a;
     }
+
+    /**
+     * @return    The current raw gyroscope heading, in radians between -pi and pi
+     */
     public double getGyroHeadingRaw() {
         return Math.toRadians(gyro.getHeading());
     }
+
+    /**
+     * @return    The current compass heading, in radians (-pi to pi) relative to starting position
+     */
     public double getCompassHeading() {
         return normAngle(Math.toRadians(compass.getDirection()) - initialCompassHeading);
     }
+
+    /**
+     * @return    The error adjusted gyro position, between 0 and 2pi radians
+     */
     public double getGyroHeading() {
         return getGyroHeadingRaw() - gyroError;
+    }
+
+    public void raiseWhipSnake() {
+
+        if (color == Alliance.BLUE) {
+            rightWhipSnake.setPosition(180.0/255.0);
+        } else {
+            leftWhipSnake.setPosition(75.0/255.0); // This position is incorrect
+        }
+    }
+    public void lowerWhipSnake() {
+        if (color == Alliance.BLUE) {
+            rightWhipSnake.setPosition(30.0/255.0);
+        } else {
+            leftWhipSnake.setPosition(225.0/255.0); // This position is incorrect
+        }
+    }
+
+    public void openBlockClaw() {
+        leftBlockClaw.setPosition(55.0/255.0);
+        rightBlockClaw.setPosition(210.0/255.0);
+    }
+
+    public void closeBlockClaw() {
+        leftBlockClaw.setPosition(105.0/255.0);
+        rightBlockClaw.setPosition(160.0/255.0);
+    }
+
+    public void setLiftMode(DcMotor.RunMode m) {
+        liftLeft.setMode(m);
+        liftRight.setMode(m);
     }
 }
 

@@ -25,7 +25,7 @@ public class NullbotReplayMotorPowers extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this, false);
+        robot.init(hardwareMap, this, false, gamepad2);
         try {
             loadFile(f);
         } catch (JSONException e) {

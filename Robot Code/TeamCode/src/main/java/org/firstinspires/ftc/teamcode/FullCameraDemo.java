@@ -20,8 +20,8 @@ import org.opencv.core.Mat;
 import java.util.ArrayList;
 import java.util.List;
 
-import ftc.vision.BallColorResult;
 import ftc.vision.BallProcessor;
+import ftc.vision.CryptoBoxResult;
 import ftc.vision.ImageProcessor;
 
 @Autonomous(name="Nullbot: Full camera test", group ="Concept")
@@ -34,7 +34,7 @@ public class FullCameraDemo extends LinearOpMode {
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "Ac4jpF3/////AAAAGYER4VUDLEYGlD++ha+MStuNhKORp/7DQz1D1+tQwcrsMnbQwLqRgpkFtCOIGrZ942gdL179juAJmdXeeH+Dk0pVgxLFq6O0AzY1MS3wS5JHvSLppO9v8W//finYio3hQk+TFKD+qWq9Q1nAZx0bMWFeF6IuIjUPQLioBzC/lYzI/L7oi/AJAbFlf6wue3gDs0dgwrAgpe+JFHTgM3g2+y4hS6O0mcJjobAWSNeRxq9caOGfl/q6f09Eu2EccSmHLAaqje0i70eAIZ4Tbg5C31sPZxBOPTEGTQ9NvFhP4FNAXlvPCdiBt6XYE8P17UzPN72p7lRKyp4xR1oC8B/4dYbivso+rQUed5/H7AnQYOdA";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables pictographAssets = this.vuforia.loadTrackablesFromAsset("FirstRelicRecoveryPictographs");
@@ -77,7 +77,7 @@ public class FullCameraDemo extends LinearOpMode {
 
         // Stop looking for pictographs
         pictographAssets.deactivate();
-
+        telemetry.log().add("Switching to ball identification mode");
 
 
         // Start using openCV for ball recognition
@@ -103,7 +103,7 @@ public class FullCameraDemo extends LinearOpMode {
             frame.close(); // Stop memory leakage
 
             long frameTime = System.currentTimeMillis();
-            BallColorResult result = (BallColorResult) processor.process(frameTime, tmp, true).getResult();
+            CryptoBoxResult result = (CryptoBoxResult) processor.process(frameTime, tmp, true).getResult();
 
             telemetry.addData("Left ball color", result.getLeftColor().toString());
             telemetry.addData("Right ball color", result.getRightColor().toString());

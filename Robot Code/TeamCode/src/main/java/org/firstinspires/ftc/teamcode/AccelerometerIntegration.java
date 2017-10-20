@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Nullbot: Calibrate compass", group="Calibration")
-public class NullbotCalibrateCompass extends LinearOpMode {
+@Autonomous(name="Nullbot: Test accelerometer", group="Calibration")
+public class AccelerometerIntegration extends LinearOpMode {
 
     NullbotHardware robot   = new NullbotHardware();
     private ElapsedTime runtime = new ElapsedTime();

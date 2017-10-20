@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.ConstrainedPIDMotor.Direction.BACKWARD;
+import static org.firstinspires.ftc.teamcode.ConstrainedPIDMotor.Direction.COAST;
+import static org.firstinspires.ftc.teamcode.ConstrainedPIDMotor.Direction.FORWARD;
+import static org.firstinspires.ftc.teamcode.ConstrainedPIDMotor.Direction.HOLD;
 import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
 
 
@@ -19,7 +22,8 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     final double moveMotorThreshold = 0;
     final double triggerThreshold = 0.10;
     final double minSlowModePower = 0.15;
-    final int headingLockMS = 250;
+    final int headingLockMS = 1000;
+    final int motorEncoderMS = 200;
     double initialHeading;
     double desiredHeading;
     double difference;
@@ -27,18 +31,24 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     double desiredMax;
     double heading;
 
-    boolean leftGemHitterDown;
-
-    boolean wasAButtonPressed;
     boolean wasLeftBumperPressed;
     boolean wasRightBumperPressed;
     boolean scale;
 
     ElapsedTime timeTillHeadingLock;
 
+
+    ConstrainedPIDMotor liftLeft;
+    ConstrainedPIDMotor liftRight;
+    ConstrainedPIDMotor zType;
+
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this, true);
+        robot.init(hardwareMap, this, true, gamepad2);
+
+        liftLeft = new ConstrainedPIDMotor(robot.liftLeft, 100, 0.4, 0, 2000);
+        liftRight = new ConstrainedPIDMotor(robot.liftRight, 100, 0.4, 0, 2000);
+        zType = new ConstrainedPIDMotor(robot.zType, 100, 0.2, 0, 12288);
 
         waitForStart();
 
@@ -47,13 +57,9 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
         wasLeftBumperPressed = false;
         wasRightBumperPressed = false;
-        wasAButtonPressed = false;
-        leftGemHitterDown = false;
         timeTillHeadingLock = new ElapsedTime();
 
-        for (DcMotor m : robot.motorArr) {
-            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+        robot.enableMotorEncoders();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -66,22 +72,68 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             }
 
             adjustDesiredHeading();
-            setServoPositions();
+
+            if (!robot.isTestChassis) {
+
+                setOverride(gamepad1.a);
+
+                if (gamepad1.back) { // Back coasts all motors
+                    liftLeft.setDirection(COAST);
+                    liftRight.setDirection(COAST);
+                    zType.setDirection(COAST);
+                } else {
+                    // Adjust lift
+                    if (gamepad1.dpad_up) {
+                        liftLeft.setDirection(FORWARD);
+                        liftRight.setDirection(FORWARD);
+                    } else if (gamepad1.dpad_down) {
+                        liftLeft.setDirection(BACKWARD);
+                        liftRight.setDirection(FORWARD);
+                    } else {
+                        liftLeft.setDirection(HOLD);
+                        liftRight.setDirection(HOLD);
+                    }
+
+                    if (gamepad1.dpad_right) {
+                        zType.setDirection(FORWARD);
+                    } else if (gamepad1.dpad_left) {
+                        zType.setDirection(BACKWARD);
+                    } else {
+                        zType.setDirection(HOLD);
+                    }
+                    if (gamepad1.x) {
+                        robot.closeBlockClaw();
+                    } else if (gamepad1.b) {
+                        robot.openBlockClaw();
+                    }
+
+                    if (!gamepad1.y) {
+                        robot.raiseWhipSnake();
+                    } else {
+                        robot.lowerWhipSnake();
+                    }
+                }
+            }
 
             boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
 
             // Auto turning code
             heading = robot.getGyroHeading();
-            difference = getAngleDifference(desiredHeading, heading);
 
 
             if (turnRelevant || timeTillHeadingLock.milliseconds() < headingLockMS){
-                turnSpeed = gamepad1.right_stick_x;
+                desiredHeading = heading;
+                turnSpeed = 0;
 
                 if (turnRelevant) {
+                    turnSpeed = gamepad1.right_stick_x;
+                    if (gamepad1.left_trigger > triggerThreshold) {
+                        turnSpeed /= 10.0;
+                    }
                     timeTillHeadingLock.reset();
                 }
             } else {
+                difference = getAngleDifference(desiredHeading, heading);
                 turnSpeed = difference / (Math.PI / turnVolatility);
                 turnSpeed = clamp(turnSpeed);
             }
@@ -90,7 +142,6 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             // Add turning and scaling to powers
 
             for (int i = 0; i < unscaledMotorPowers.length; i++) {
-                unscaledMotorPowers[i] *= desiredMax;
                 if (i % 2 == 0) {
                     unscaledMotorPowers[i] += turnSpeed;
                 } else {
@@ -104,6 +155,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
                 for (double d : unscaledMotorPowers) {
                     greatest = Math.max(greatest, Math.abs(d));
                 }
+                greatest /= desiredMax;
                 for (int i = 0; i < unscaledMotorPowers.length; i++) {
                     unscaledMotorPowers[i] = chop(unscaledMotorPowers[i] / greatest);
                 }
@@ -112,17 +164,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             robot.setMotorSpeeds(unscaledMotorPowers);
 
             telemetry.addLine()
-                    .addData("TurnSpeed", turnSpeed);
-            telemetry.addLine()
-                    .addData("Raw gyro direction", robot.getGyroHeadingRaw());
-            telemetry.addLine()
-                    .addData("Raw compass direction", robot.getCompassHeading());
-            telemetry.addLine()
-                    .addData("Gyro error", robot.gyroError);
-            telemetry.addLine()
-                    .addData("EAG direction", robot.getGyroHeading());
-            telemetry.addLine()
-                    .addData("Initial compass heading", robot.initialCompassHeading);
+                    .addData("Is X pressed", gamepad1.x);
             telemetry.update(); // Send telemetry data to driver station
 
             // Run above code at 25hz
@@ -150,17 +192,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
         wasLeftBumperPressed = gamepad1.left_bumper;
         wasRightBumperPressed = gamepad1.right_bumper;
     }
-    private void setServoPositions() {
-        if (!wasAButtonPressed && gamepad1.a) {
-            leftGemHitterDown = !leftGemHitterDown;
-        }
 
-        if (leftGemHitterDown) {
-            robot.leftGemHitter.setPosition(0.0);
-        } else {
-            robot.leftGemHitter.setPosition(0.5);
-        }
-    }
     public double getAngleDifference(double d1, double d2) {
         double diff = d2 - d1;
         if (d1 > Math.PI) {d1 -= 2 * Math.PI;}
@@ -181,28 +213,9 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
     public double[] getDesiredDirection() {
         double controllerAngle;
-        if (gamepad1.dpad_right) {
-            if (gamepad1.dpad_up) {
-                controllerAngle = Math.PI/4;
-            } else if (gamepad1.dpad_down) {
-                controllerAngle = 3*Math.PI/4;
-            } else {
-                controllerAngle = Math.PI/2;
-            }
-        } else if (gamepad1.dpad_left) {
-            if (gamepad1.dpad_up) {
-                controllerAngle = 7*Math.PI/4;
-            } else if (gamepad1.dpad_down) {
-                controllerAngle = 5*Math.PI/4;
-            } else {
-                controllerAngle = 3*Math.PI/2;
-            }
-        } else if (gamepad1.dpad_up) {
-            controllerAngle = 0.0;
-        } else if (gamepad1.dpad_down) {
-            controllerAngle = Math.PI;
-        } else if (getLeftStickDist(gamepad1) > triggerThreshold) {
+        if (getLeftStickDist(gamepad1) > triggerThreshold) {
             controllerAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2;
+            controllerAngle = robot.normAngle(controllerAngle);
         } else {
             // If we're not moving, don't scale the values
             scale = false;
@@ -211,12 +224,11 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
         double robotAngle;
 
-        if (gamepad1.right_trigger > triggerThreshold) {// Right trigger activates relative drive
-            robotAngle = controllerAngle;
-        } else { // Default is nonrelative drive
-            // When calculating the robot's angle, we don't have to take into account the initial heading,
-            // because it is always 0 (we'll always calibrate the gyro)
+        if (gamepad1.right_trigger > triggerThreshold) { // Right trigger activates nonrelative drive
             robotAngle = robot.normAngle(controllerAngle + heading);
+        } else { // Default is relative drive
+            robotAngle = controllerAngle;
+
         }
 
         double[] unscaledPowers = new double[4];
@@ -225,5 +237,11 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
         unscaledPowers[2] = unscaledPowers[1];
         unscaledPowers[3] = unscaledPowers[0];
         return unscaledPowers;
+    }
+
+    public void setOverride (boolean b) {
+        liftLeft.override = b;
+        liftRight.override = b;
+        zType.override = b;
     }
 }

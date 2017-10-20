@@ -31,7 +31,7 @@ public class NullbotTeleopRelative extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this, true);
+        robot.init(hardwareMap, this, true, gamepad2);
 
         waitForStart();
 

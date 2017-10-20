@@ -18,12 +18,11 @@ public class NullbotTestWheelFriction extends LinearOpMode {
 
     final int HOLD_TIME_MS  = 3000;
     final int WARN_TIME_SEC = 1;
-    final int ENCODER_TICKS_PER_REV = 7 * 40 * 40;
 
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, this, false);
+        robot.init(hardwareMap, this, false, gamepad2);
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
