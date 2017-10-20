@@ -23,14 +23,18 @@ public class TestLinearOp extends LinearOpMode
         robot.updateIMUValues();
         telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
         telemetry.update();
-        robot.driveStraight_In(36, .75);
-
         telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
         telemetry.update();
-        sleep(5000);
         telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
         telemetry.update();
-        robot.spin_Right(90,1);
+        robot.pivot_IMU(90, .25);
+        while(!gamepad1.a)
+        {
+            robot.updateIMUValues();
+            telemetry.addData("Angle =", formatDegrees(AngleUnit.DEGREES.fromUnit(AngleUnit.DEGREES, robot.angles.firstAngle)));
+            telemetry.update();
+        }
+        robot.pivot_IMU(-90, .25);
         while(!gamepad1.a)
         {
             robot.updateIMUValues();
