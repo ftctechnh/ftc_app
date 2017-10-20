@@ -37,10 +37,14 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
     ElapsedTime timeTillHeadingLock;
 
-
     ConstrainedPIDMotor liftLeft;
     ConstrainedPIDMotor liftRight;
     ConstrainedPIDMotor zType;
+
+    ElapsedTime timeSinceStartToggle;
+    boolean wasStartPressed;
+    boolean autoAdjustHeading;
+
 
     @Override
     public void runOpMode() {
@@ -59,10 +63,23 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
         wasRightBumperPressed = false;
         timeTillHeadingLock = new ElapsedTime();
 
+        timeSinceStartToggle = new ElapsedTime();
+        wasStartPressed = false;
+        autoAdjustHeading = true;
+
         robot.enableMotorEncoders();
 
-        // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+            // Toggle auto heading adjustment
+            if (gamepad1.start && !wasStartPressed) {
+                if (timeSinceStartToggle.milliseconds() > 100) {
+                    timeSinceStartToggle.reset();
+                    autoAdjustHeading = !autoAdjustHeading;
+                }
+            }
+            wasStartPressed = gamepad1.start;
+
             scale = true;
             // Calculate speed reduction
             desiredMax = 1;
@@ -133,9 +150,14 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
                     timeTillHeadingLock.reset();
                 }
             } else {
-                difference = getAngleDifference(desiredHeading, heading);
-                turnSpeed = difference / (Math.PI / turnVolatility);
-                turnSpeed = clamp(turnSpeed);
+                // Auto turning
+                if (autoAdjustHeading) {
+                    difference = getAngleDifference(desiredHeading, heading);
+                    turnSpeed = difference / (Math.PI / turnVolatility);
+                    turnSpeed = clamp(turnSpeed);
+                } else {
+                    turnSpeed = 0;
+                }
             }
 
             double[] unscaledMotorPowers = getDesiredDirection();
