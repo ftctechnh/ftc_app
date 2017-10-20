@@ -398,18 +398,18 @@ public class NullbotHardware {
 
     public void raiseWhipSnake() {
 
-        if (color == Alliance.BLUE) {
+        //if (color == Alliance.BLUE) {
             rightWhipSnake.setPosition(180.0/255.0);
-        } else {
+        //} else {
             leftWhipSnake.setPosition(75.0/255.0); // This position is incorrect
-        }
+        //}
     }
     public void lowerWhipSnake() {
-        if (color == Alliance.BLUE) {
+        //if (color == Alliance.BLUE) {
             rightWhipSnake.setPosition(30.0/255.0);
-        } else {
+        //} else {
             leftWhipSnake.setPosition(225.0/255.0); // This position is incorrect
-        }
+        //}
     }
 
     public void openBlockClaw() {
