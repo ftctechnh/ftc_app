@@ -1,11 +1,10 @@
 package edu.usrobotics.opmode.mecanumbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import edu.usrobotics.opmode.RobotOp;
-import edu.usrobotics.opmode.compbot.CompbotHardware;
 
 /**
  * Created by dsiegler19 on 10/13/16.
@@ -14,6 +13,9 @@ import edu.usrobotics.opmode.compbot.CompbotHardware;
 public class MecanumTele extends RobotOp {
 
     MecanumBotHardware robot = new MecanumBotHardware();
+
+    private int bottomBlockLiftPos = 100;
+    private int topBlockLiftPos = 750;
 
     @Override
     public void init () {
@@ -35,13 +37,21 @@ public class MecanumTele extends RobotOp {
         float creepyness = gamepad1.left_trigger;
         float multiplier = 1f - (creepyness * 0.66f);
 
-        float gripperLiftPower = gamepad2.right_stick_y * 0.5f;
+        float liftPower = gamepad2.right_stick_y * 0.4f;
 
-        if(gripperLiftPower < 0.3f && gripperLiftPower > -0.3f){
+        if(!robot.topLimitSwitch.getState()){
 
-            gripperLiftPower = 0.3f;
+            // liftPower = Math.min(liftPower, 0f);
+            topBlockLiftPos = robot.blockLift.getCurrentPosition();
 
         }
+
+        // if(!robot.bottomLimitSwitch.getState()){
+
+            // liftPower = Math.max(liftPower, 0f);
+            // bottomBlockLiftPos = robot.blockLift.getCurrentPosition();
+
+        // }
 
         if(gamepad2.b){
 
@@ -106,7 +116,13 @@ public class MecanumTele extends RobotOp {
         robot.backRight.setPower(brPower);
         robot.backLeft.setPower(blPower);
 
-        robot.gripperLift.setPower(gripperLiftPower);
+        robot.blockLift.setPower(liftPower);
+
+        telemetry.addData("Top pressed", robot.topLimitSwitch.getState());
+        // telemetry.addData("Bottom pressed", robot.bottomLimitSwitch.getState());
+
+        telemetry.addData("Right gripper pos", robot.gripperRight.getPosition());
+        telemetry.addData("Left gripper pos", robot.gripperLeft.getPosition());
 
         telemetry.addData("GP1 Right Stick X", gamepad1.right_stick_x);
         telemetry.addData("GP1 Right Stick Y", gamepad1.right_stick_y);

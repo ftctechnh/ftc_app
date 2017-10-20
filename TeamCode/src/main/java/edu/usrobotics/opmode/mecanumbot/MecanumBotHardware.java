@@ -3,7 +3,9 @@ package edu.usrobotics.opmode.mecanumbot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import edu.usrobotics.opmode.BaseHardware;
 
@@ -18,7 +20,7 @@ public class MecanumBotHardware extends BaseHardware {
     public DcMotor backRight;
     public DcMotor backLeft;
 
-    public DcMotor gripperLift;
+    public DcMotor blockLift;
 
     public Servo gripperRight;
     public Servo gripperLeft;
@@ -27,10 +29,15 @@ public class MecanumBotHardware extends BaseHardware {
 
     public ColorSensor colorSensor;
 
+    public DigitalChannel topLimitSwitch;
+    public DigitalChannel bottomLimitSwitch;
+
     public boolean frCorrectDirection = true;
     public boolean flCorrectDirection = false;
     public boolean brCorrectDirection = true;
     public boolean blCorrectDirection = false;
+
+    public boolean blockLiftCorrectDirection = false;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
@@ -57,7 +64,8 @@ public class MecanumBotHardware extends BaseHardware {
         backRight = hardwareMap.dcMotor.get ("br");
         backLeft = hardwareMap.dcMotor.get ("bl");
 
-        gripperLift = hardwareMap.dcMotor.get("gripperlift");
+        blockLift = hardwareMap.dcMotor.get("gripperlift");
+        blockLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         gripperLeft = hardwareMap.servo.get("gl");
         gripperRight = hardwareMap.servo.get("gr");
@@ -66,12 +74,20 @@ public class MecanumBotHardware extends BaseHardware {
 
         colorSensor = hardwareMap.colorSensor.get("cs");
 
+        topLimitSwitch = hardwareMap.get(DigitalChannel.class, "tls");
+        // bottomLimitSwitch = hardwareMap.get(DigitalChannel.class, "bls");
+
+        topLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
+        // bottomLimitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
         bringUpBallKnocker();
 
         frontRight.setDirection(frCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(flCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(brCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(blCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+
+        blockLift.setDirection(blockLiftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -86,15 +102,15 @@ public class MecanumBotHardware extends BaseHardware {
 
     public void closeGripper(){
 
-        gripperRight.setPosition(0.53f);
-        gripperLeft.setPosition(0.45f);
+        gripperRight.setPosition(0.69f);
+        gripperLeft.setPosition(0.58f);
 
     }
 
     public void openGripper(){
 
-        gripperRight.setPosition(0.75f);
-        gripperLeft.setPosition(0.36f);
+        gripperRight.setPosition(0.55f);
+        gripperLeft.setPosition(0.83f);
 
     }
 
