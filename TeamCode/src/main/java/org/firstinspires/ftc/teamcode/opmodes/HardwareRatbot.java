@@ -27,6 +27,8 @@ public class HardwareRatbot {
 
         hwMap = ahwMap;
 
+        //entire code base
+
         leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
