@@ -31,7 +31,7 @@ public class PracticeAutonomous extends LinearOpMode
 
         while (opModeIsActive()) {
             hwMap.rightMotor.setPower(50);
-            while (true && !isStopRequested()) {
+            while (hwMap.touch.getState() && !isStopRequested()) {
                 telemetry.addData("Touch ", hwMap.touch.getState());
                 telemetry.update();
             }

@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -16,7 +14,6 @@ import org.firstinspires.ftc.teamcode.subsystems.PictographScan9330;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -74,7 +71,7 @@ public class AutoVuforia9330 extends LinearOpMode {
                 else if (me.getKey() == "Blue") ColorBlue = (Integer)me.getValue();
                 log(me.getKey().toString(), me.getValue()); //Adds value and Info to telemetry
             }
-        } else log("Info", "404 - Image not found YET ;(");
+        } else log("Info", "404 - Color not found :'(");
     }
 
     @Override
@@ -88,6 +85,7 @@ public class AutoVuforia9330 extends LinearOpMode {
         parameters.loggingTag          = "IMU";
 
         robotMap.init(hardwareMap);
+        robotMap.gyro.initialize(parameters);
         info = PictographScan.init(hardwareMap,true);
         log("Info","Initialized. Press start when ready.");
         telemetry.update();
@@ -100,17 +98,9 @@ public class AutoVuforia9330 extends LinearOpMode {
                 log("","");
                 updateColorDistance(colorDistance.getInfo());
 
-            robotMap.gyro.initialize(parameters);
-
             angles   = robotMap.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-            float degrees =  0;
-
-            degrees +=  AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
-            telemetry.addData("gyro angle fixed maybe part 2", degrees);
-
-            //telemetry.addData("Gyro Angle", String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle))));
-            //telemetry.addData("Gyro Angle fixed maybe", angles.firstAngle);
+            telemetry.addData("Gyro Angle", angles.firstAngle);
 
             // Diameter: 3.78
             // Width:
