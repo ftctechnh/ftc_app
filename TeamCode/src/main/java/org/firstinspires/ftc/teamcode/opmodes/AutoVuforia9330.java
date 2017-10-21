@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
+import org.firstinspires.ftc.teamcode.subsystems.Drive9330;
 import org.firstinspires.ftc.teamcode.subsystems.PictographScan9330;
 
 import java.util.HashMap;
@@ -28,6 +29,10 @@ public class AutoVuforia9330 extends LinearOpMode {
     Hardware9330 robotMap = new Hardware9330();
     ColorDistance9330 colorDistance = new ColorDistance9330(robotMap);
     PictographScan9330 PictographScan = new PictographScan9330();
+    Drive9330 drive = new Drive9330();
+    Integer TurnError = 1;
+    Integer TurnSpeed = 10;
+    Integer hahaUseless;
     VuforiaTrackables info;
     Double PictoYRotation;
     Double PictoZTranslation;
@@ -41,7 +46,13 @@ public class AutoVuforia9330 extends LinearOpMode {
     Orientation angles;
 
     public void log(String name, Object value) {
+        telemetry.clear();
         telemetry.addData(name,value);
+        telemetry.update();
+    }
+
+    public void checkStop() {
+        if (isStopRequested()) stop();
     }
 
     public void updatePictogramInfo(HashMap hm) {
@@ -53,9 +64,9 @@ public class AutoVuforia9330 extends LinearOpMode {
                 if (me.getKey() == "Y Rotation") PictoYRotation = (Double)me.getValue();
                 else if (me.getKey() == "Z Translation (Distance)") PictoZTranslation = (Double)me.getValue();
                 else if (me.getKey() == "Image Position") PictoImageType = (String)me.getValue();
-                log(me.getKey().toString(), me.getValue()); //Adds value and Info to telemetry
+                //log(me.getKey().toString(), me.getValue()); //Adds value and Info to telemetry
             }
-        } else log("Info", "404 - Image not found YET ;(");
+        } else hahaUseless = 1; //log("Info", "404 - Image not found YET ;(");
     }
 
     public void updateColorDistance(HashMap hm) {
@@ -69,15 +80,14 @@ public class AutoVuforia9330 extends LinearOpMode {
                 else if (me.getKey() == "Red") ColorRed = (Integer)me.getValue();
                 else if (me.getKey() == "Green") ColorGreen = (Integer)me.getValue();
                 else if (me.getKey() == "Blue") ColorBlue = (Integer)me.getValue();
-                log(me.getKey().toString(), me.getValue()); //Adds value and Info to telemetry
+                //log(me.getKey().toString(), me.getValue()); //Adds value and Info to telemetry
             }
-        } else log("Info", "404 - Color not found :'(");
+        } else hahaUseless = 1;//log("Info", "404 - Color not found :'(");
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
         log("Info","Initializing. Please wait.");
-        telemetry.update();
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -88,26 +98,54 @@ public class AutoVuforia9330 extends LinearOpMode {
         robotMap.gyro.initialize(parameters);
         info = PictographScan.init(hardwareMap,true);
         log("Info","Initialized. Press start when ready.");
-        telemetry.update();
         waitForStart();
         while(opModeIsActive()) {
 
-            //while (PictoYRotation == null || PictoZTranslation == null || PictoImageType == null) {
+            log("Info","Searching for image...");
+            while (PictoImageType == null) {
                 telemetry.clear();
                 updatePictogramInfo(PictographScan.checkPosition(info));
-                log("","");
-                updateColorDistance(colorDistance.getInfo());
+                checkStop();
+            }
+
+            log("Info","Found image! Centering to the wall...");
+            while (-TurnError > PictoYRotation || TurnError < PictoYRotation) {
+                updatePictogramInfo(PictographScan.checkPosition(info));
+                log("Rotation of pictogram", PictoYRotation.toString());
+                if (PictoYRotation > 0)
+                    drive.turnRight(TurnSpeed);
+                else
+                    drive.turnLeft(TurnSpeed);
+
+                checkStop();
+            }
+
+            drive.stopDrive();
+            log("Info","Centered to the wall! Checking team color...");
+
+            while (ColorRed == null || ColorBlue == null) {
+                updateColorDistance(colorDistance.getInfo()); // Check the color of the pad beneath you
+                checkStop();
+            }
+
+                if (ColorRed > ColorBlue) {
+                    //Knock down blue
+                    log("Info", "We are red! Knocking down blue.");
+                } else {
+                    //Knock down red
+                    log("Info", "We are blue! Knocking down red.");
+                }
 
             angles   = robotMap.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-            telemetry.addData("Gyro Angle", angles.firstAngle);
-
+            //log("Gyro Angle", angles.firstAngle);
             // Diameter: 3.78
             // Width:
+            while(!isStopRequested() && robotMap.touch.getState())
+            {
 
-            telemetry.update();
+            }
+            stop();
         }
-            //}
 
     }
 
