@@ -47,22 +47,22 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="PushbotPotato: Teleop POV", group="PushbotPotato")
+@TeleOp(name="PushbotPotato: 2 servo calibration", group="PushbotPotato")
 public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
 
-    /*double clawOffset = 0;                       // Servo mid position
+    double clawOffset = 0;                            // Servo mid position
     final double CLAW_SPEED = 0.04;                   // sets rate to move servo
-*/
+
     boolean precisionMode = false;
 
     @Override
     public void runOpMode() {
-        double left;
-        double right;
+        double driveLeft;
+        double driveRight;
         double drive;
         double turn;
         double precDrive;
@@ -102,27 +102,27 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 precTurn = turn / 6;
 
                 // Combine drive and turn for blended motion.
-                left = drive + turn;
-                right = drive - turn;
+                driveLeft = drive + turn;
+                driveRight = drive - turn;
 
                 if (precisionMode == true) {
-                    left = precDrive + precTurn;
-                    right = precDrive - precTurn;
+                    driveLeft = precDrive + precTurn;
+                    driveRight = precDrive - precTurn;
                 }
 
                 // Normalize the values so neither exceed +/- 1.0
-                max = Math.max(Math.abs(left), Math.abs(right));
+                max = Math.max(Math.abs(driveLeft), Math.abs(driveRight));
                 if (max > 1.0) {
-                    left /= max;
-                    right /= max;
+                    driveLeft /= max;
+                    driveRight /= max;
                 }
 
                 // Output the safe values to the motor drives.
-                robot.leftDrive.setPower(left);
-                robot.rightDrive.setPower(right);
+                robot.leftDrive.setPower(driveLeft);
+                robot.rightDrive.setPower(driveRight);
 
                 // Use gamepad left & right triggers to open and close the claw
-                /*if (gamepad1.left_trigger > 0)
+                if (gamepad1.left_trigger > 0)
                     clawOffset += CLAW_SPEED;
                 else if (gamepad1.right_trigger > 0)
                     clawOffset -= CLAW_SPEED;
@@ -133,9 +133,9 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
 
                 // Move both servos to new position.  Assume servos are mirror image of each other.
                 clawOffset = Range.clip(clawOffset, -0.4, 1);
-                robot.clawr.setPosition(robot.MID_SERVO - clawOffset);
-                robot.clawl.setPosition(-robot.MID_SERVO + clawOffset);
-*/
+                robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+                robot.leftClaw.setPosition(-robot.MID_SERVO + clawOffset);
+
                 // Use gamepad buttons to move arm up (Y) and down (A)
                 if (gamepad1.left_bumper)
                     robot.armDrive.setPower(robot.ARM_UP_POWER);
@@ -145,11 +145,11 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                     robot.armDrive.setPower(0.0);
 
                 // Send telemetry message to signify robot running;
-                /*telemetry.addData("claw", "Offset = %.2f", clawOffset);*/
-                telemetry.addData("rawClaw", robot.clawl.getPosition());
-                telemetry.addData("rawClaw", robot.clawr.getPosition());
-                telemetry.addData("left", "%.2f", left);
-                telemetry.addData("right", "%.2f", right);
+                //telemetry.addData("claw", "Offset = %.2f", clawOffset);
+                telemetry.addData("ClawLeft", robot.leftClaw.getPosition());
+                telemetry.addData("ClawRight", robot.rightClaw.getPosition());
+                telemetry.addData("DriveLeft", "%.2f", driveLeft);
+                telemetry.addData("DriveRight", "%.2f", driveRight);
                 telemetry.update();
 
                 // Pace this loop so jaw action is reasonable speed.

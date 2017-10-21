@@ -61,8 +61,8 @@ public class PushbotTeleopPOV_LinearWith2Servos extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        double left;
-        double right;
+        double driveLeft;
+        double driveRight;
         double drive;
         double turn;
         double precDrive;
@@ -102,24 +102,24 @@ public class PushbotTeleopPOV_LinearWith2Servos extends LinearOpMode {
                 precTurn = turn / 6;
 
                 // Combine drive and turn for blended motion.
-                left = drive + turn;
-                right = drive - turn;
+                driveLeft = drive + turn;
+                driveRight = drive - turn;
 
                 if (precisionMode == true) {
-                    left = precDrive + precTurn;
-                    right = precDrive - precTurn;
+                    driveLeft = precDrive + precTurn;
+                    driveRight = precDrive - precTurn;
                 }
 
                 // Normalize the values so neither exceed +/- 1.0
-                max = Math.max(Math.abs(left), Math.abs(right));
+                max = Math.max(Math.abs(driveLeft), Math.abs(driveRight));
                 if (max > 1.0) {
-                    left /= max;
-                    right /= max;
+                    driveLeft /= max;
+                    driveRight /= max;
                 }
 
                 // Output the safe values to the motor drives.
-                robot.leftDrive.setPower(left);
-                robot.rightDrive.setPower(right);
+                robot.leftDrive.setPower(driveLeft);
+                robot.rightDrive.setPower(driveRight);
 
                 // Use gamepad left & right triggers to open and close the claw
                 if (gamepad1.left_trigger > 0)
@@ -133,8 +133,8 @@ public class PushbotTeleopPOV_LinearWith2Servos extends LinearOpMode {
 
                 // Move both servos to new position.  Assume servos are mirror image of each other.
                 clawOffset = Range.clip(clawOffset, -0.4, 1);
-                robot.clawr.setPosition(robot.MID_SERVO - clawOffset);
-                robot.clawl.setPosition(-robot.MID_SERVO + clawOffset);
+                robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+                robot.leftClaw.setPosition(-robot.MID_SERVO + clawOffset);
 
                 // Use gamepad buttons to move arm up (Y) and down (A)
                 if (gamepad1.left_bumper)
@@ -146,10 +146,10 @@ public class PushbotTeleopPOV_LinearWith2Servos extends LinearOpMode {
 
                 // Send telemetry message to signify robot running;
                 telemetry.addData("claw", "Offset = %.2f", clawOffset);
-                telemetry.addData("rawClaw", robot.clawl.getPosition());
-                telemetry.addData("rawClaw", robot.clawr.getPosition());
-                telemetry.addData("left", "%.2f", left);
-                telemetry.addData("right", "%.2f", right);
+                telemetry.addData("ClawLeft", robot.leftClaw.getPosition());
+                telemetry.addData("ClawRight", robot.rightClaw.getPosition());
+                telemetry.addData("DriveLeft", "%.2f", driveLeft);
+                telemetry.addData("DriveRight", "%.2f", driveRight);
                 telemetry.update();
 
                 // Pace this loop so jaw action is reasonable speed.
