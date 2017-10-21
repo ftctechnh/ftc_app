@@ -49,17 +49,6 @@ public class Clamps9330 {
         }
     }
 
-    public void toggleClampPivot(){
-        if(!highClampPivoted){
-            highClampPivoted = true;
-            hwMap.glyphPivotServo.setPosition(PIVOTED_POS);
-        } else{
-            highClampPivoted = false;
-            hwMap.glyphPivotServo.setPosition(STRAIGHT_POS);
-        }
-    }
-
-
     public void closeLowClamp(){
         if(!lowClampEngaged){
             lowClampEngaged = true;
@@ -87,7 +76,18 @@ public class Clamps9330 {
             hwMap.highGlyphClamp.setPosition(RELEASE_POS);
         }
     }
-    //Pivots the high clamp
+    /*Pivots the high clamp
+
+    public void toggleClampPivot(){
+        if(!highClampPivoted){
+            highClampPivoted = true;
+            hwMap.glyphPivotServo.setPosition(PIVOTED_POS);
+        } else{
+            highClampPivoted = false;
+            hwMap.glyphPivotServo.setPosition(STRAIGHT_POS);
+        }
+    }
+
     public void pivotHighClamp(){
         if(!highClampPivoted){
             highClampPivoted = true;
@@ -101,6 +101,7 @@ public class Clamps9330 {
             hwMap.glyphPivotServo.setPosition(STRAIGHT_POS);
         }
     }
+    */
 
     // query brake state
     public boolean islowClampEngaged() {
