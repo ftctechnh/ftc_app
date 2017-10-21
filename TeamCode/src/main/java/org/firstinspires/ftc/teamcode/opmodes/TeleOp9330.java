@@ -13,7 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 //@Disabled
 public class TeleOp9330 extends OpMode {
     Hardware9330 robotMap = new Hardware9330();
-    Clamps9330 clamps = new Clamps9330(robotMap);
+    Clamps9330 clamps;
+
 
     float yPower = 0;
     float spinPower = 0;
@@ -26,6 +27,7 @@ public class TeleOp9330 extends OpMode {
     @Override
     public void init() {
         robotMap.init(hardwareMap);
+         clamps = new Clamps9330(robotMap);
     }
 
     /*
