@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,13 +22,14 @@ public class Hardware9330 {
     public static Servo highGlyphClamp;
     public static Servo relicHandServo;
     public static Servo relicWristServo;
-    //public static DcMotor leftMotor;
+    public static DcMotor leftMotor;
     public static DcMotor glyphLiftMotor;
-    public static TouchSensor touch;
     public static ColorSensor cs;
     public static DistanceSensor ds;
     public static DcMotor rightMotor;
     public static BNO055IMU gyro;
+    public static DigitalChannel touch;                // Device Object
+
 
 
     HardwareMap hwMap                 = null;
@@ -51,13 +54,13 @@ public class Hardware9330 {
         relicHandServo.setDirection(Servo.Direction.REVERSE);
         relicWristServo = hwMap.servo.get("relicWristServo");
         relicWristServo.setDirection(Servo.Direction.REVERSE);
-        //leftMotor = hwMap.dcMotor.get("leftMotor ");
+        leftMotor = hwMap.dcMotor.get("leftMotor");
         glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
-        touch = hwMap.touchSensor.get("touch");
         cs = hwMap.get(ColorSensor.class, "cs");
         ds = hwMap.get(DistanceSensor.class, "cs");
         rightMotor = hwMap.dcMotor.get("rightMotor");
         gyro = hwMap.get(BNO055IMU.class, "imu");
+        touch  = hwMap.get(DigitalChannel.class, "touch");
 
     }
 }
