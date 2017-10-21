@@ -26,7 +26,7 @@ public class RelicPickup9330 {
     }
 
     public void toggleHand(){
-        if(!isHandClosed){
+        if(isHandClosed == false){
             isHandClosed = true;
             hwMap.highGlyphClamp.setPosition(CLOSED_POS);
         } else {
@@ -36,7 +36,7 @@ public class RelicPickup9330 {
     }
 
     public void toggleWrist(){
-        if(!isWristUp){
+        if(isWristUp == false){
             isWristUp = true;
             hwMap.highGlyphClamp.setPosition(HIGH_POS);
         } else {

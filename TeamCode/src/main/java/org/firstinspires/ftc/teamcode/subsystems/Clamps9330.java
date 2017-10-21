@@ -30,7 +30,7 @@ public class Clamps9330 {
     }
     //  Engaging the low clamp
     public void toggleLowClamp(){
-        if(!lowClampEngaged){
+        if(lowClampEngaged == false){
             lowClampEngaged = true;
             hwMap.lowGlyphClamp.setPosition(ENGAGED_POS);
         } else {
@@ -40,7 +40,7 @@ public class Clamps9330 {
     }
 
     public void toggleHighClamp(){
-        if(!highClampEngaged){
+        if(highClampEngaged == false){
             highClampEngaged = true;
             hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
         } else {
@@ -79,7 +79,7 @@ public class Clamps9330 {
     /*Pivots the high clamp
 
     public void toggleClampPivot(){
-        if(!highClampPivoted){
+        if(highClampPivoted == false){
             highClampPivoted = true;
             hwMap.glyphPivotServo.setPosition(PIVOTED_POS);
         } else{
