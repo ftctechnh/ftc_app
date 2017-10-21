@@ -60,6 +60,7 @@ public class TeleOp9330 extends OpMode {
             if (aBtnHeld == true) return;
             clamps.toggleLowClamp();
             telemetry.addData("Program", "Low clamp toggled!");
+            clamps.toggleLowClamp();
             telemetry.update();
             aBtnHeld = true;
         } else aBtnHeld = false;
@@ -68,6 +69,7 @@ public class TeleOp9330 extends OpMode {
             if (bBtnHeld == true) return;
             clamps.toggleHighClamp();
             telemetry.addData("Program", "High clamp toggled!");
+            clamps.toggleHighClamp();
             bBtnHeld = true;
         } else bBtnHeld = false;
 

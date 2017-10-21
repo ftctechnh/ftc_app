@@ -16,33 +16,61 @@ public class RelicPickup9330 {
     static final Double CLOSED_POS = 0.8;
     static final Double OPEN_POS = 0.25;
 
+    static final Double LOW_POS = 0.8;
+    static final Double HIGH_POS = 0.25;
+
     public RelicPickup9330(Hardware9330 robotMap){
         hwMap = robotMap;
         isHandClosed = false;
         isWristUp = false;
     }
 
+    public void toggleHand(){
+        if(!isHandClosed){
+            isHandClosed = true;
+            hwMap.highGlyphClamp.setPosition(CLOSED_POS);
+        } else {
+            isHandClosed = false;
+            hwMap.highGlyphClamp.setPosition(OPEN_POS);
+        }
+    }
+
+    public void toggleWrist(){
+        if(!isWristUp){
+            isWristUp = true;
+            hwMap.highGlyphClamp.setPosition(HIGH_POS);
+        } else {
+            isWristUp = false;
+            hwMap.highGlyphClamp.setPosition(LOW_POS);
+        }
+    }
+
     public void openHand(){
         if(isHandClosed){
+            isHandClosed = false;
             hwMap.relicHandServo.setPosition(OPEN_POS);
         }
     }
 
     public void closeHand(){
         if(!isHandClosed){
+            isHandClosed = true;
             hwMap.relicHandServo.setPosition(CLOSED_POS);
         }
     }
 
     public void raiseWrist(){
-        if(!isHandClosed){
-            hwMap.relicWristServo.setPosition(OPEN_POS);
+        if(!isWristUp){
+            isWristUp = true;
+            hwMap.relicWristServo.setPosition(HIGH_POS);
         }
     }
 
     public void lowerWrist(){
-        if(isHandClosed){
-            hwMap.relicWristServo.setPosition(CLOSED_POS);
+        if(isWristUp){
+            isWristUp = false;
+            hwMap.relicWristServo.setPosition(LOW_POS);
+
         }
     }
 }
