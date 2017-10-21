@@ -9,10 +9,14 @@ public class Clamps9330 {
 
     private boolean lowClampEngaged;
     private boolean highClampEngaged;
+    private boolean highClampPivoted;
 
     //   Declaring Set positions for servo
     static final Double ENGAGED_POS = 0.8;
     static final Double RELEASE_POS = 0.25;
+    //   Declaring set positions of the pivot
+    static final Double PIVOTED_POS = 0.8;
+    static final Double STRAIGHT_POS = 0.25;
     //   accessing Hardware9330
     private Hardware9330 hwMap = null;
     //Constructor for brake class
@@ -22,6 +26,7 @@ public class Clamps9330 {
         hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
         lowClampEngaged = false;
         highClampEngaged = false;
+        highClampPivoted = false;
     }
     //  Engaging the low clamp
     public void toggleLowClamp(){
@@ -37,10 +42,20 @@ public class Clamps9330 {
     public void toggleHighClamp(){
         if(!highClampEngaged){
             highClampEngaged = true;
-            //hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
+            hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
         } else {
             highClampEngaged = false;
             hwMap.highGlyphClamp.setPosition(RELEASE_POS);
+        }
+    }
+
+    public void toggleClampPivot(){
+        if(!highClampPivoted){
+            highClampPivoted = true;
+            hwMap.glyphPivotServo.setPosition(PIVOTED_POS);
+        } else{
+            highClampPivoted = false;
+            hwMap.glyphPivotServo.setPosition(STRAIGHT_POS);
         }
     }
 
@@ -48,28 +63,42 @@ public class Clamps9330 {
     public void closeLowClamp(){
         if(!lowClampEngaged){
             lowClampEngaged = true;
-            //hwMap.lowGlyphClamp.setPosition(ENGAGED_POS);
+            hwMap.lowGlyphClamp.setPosition(ENGAGED_POS);
         }
     }
     // Releasing the low clamp
     public void openLowClamp(){
         if(lowClampEngaged){
             lowClampEngaged = false;
-            //hwMap.lowGlyphClamp.setPosition(RELEASE_POS);
+            hwMap.lowGlyphClamp.setPosition(RELEASE_POS);
         }
     }
     //Engaging the high clamp
     public void closeHighClamp(){
         if(!highClampEngaged){
             highClampEngaged = true;
-            //hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
+            hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
         }
     }
     // Releasing the high clamp
     public void openHighClamp(){
         if(highClampEngaged){
             highClampEngaged = false;
-            //hwMap.highGlyphClamp.setPosition(RELEASE_POS);
+            hwMap.highGlyphClamp.setPosition(RELEASE_POS);
+        }
+    }
+    //Pivots the high clamp
+    public void pivotHighClamp(){
+        if(!highClampPivoted){
+            highClampPivoted = true;
+            hwMap.glyphPivotServo.setPosition(PIVOTED_POS);
+        }
+    }
+    //Straightens the high clamp
+    public void straightenHighClamp(){
+        if(highClampPivoted){
+            highClampPivoted = false;
+            hwMap.glyphPivotServo.setPosition(STRAIGHT_POS);
         }
     }
 
