@@ -22,7 +22,7 @@ public class TCHardwarePushbot {
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
-    //Maps the hardware
+    //Maps the hardware to ahwMap
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
@@ -36,7 +36,7 @@ public class TCHardwarePushbot {
         lDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
-        // Set all motors to zero power
+        // Set all motors to zero power to get ready for start
         rDrive.setPower(0);
         lDrive.setPower(0);
         cDrive.setPower(0);
