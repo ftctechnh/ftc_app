@@ -26,12 +26,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -66,10 +68,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
-@Disabled
+//Disabled
 public class ConceptVuMarkIdentification extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
+
+    DcMotor motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
+    DcMotor motorRight = hardwareMap.get(DcMotor.class, "motorRight");
 
     OpenGLMatrix lastLocation = null;
 
@@ -103,7 +108,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        parameters.vuforiaLicenseKey = "AVOX2///////AAAAGYZUicr/c0mOplG/WJW3889mXG9aCS7HLxeSPVRQn18wqvY5AWzOakV9OVj35jiNRn3q0b5pYs5BZ5/S+fdUikcunbbhD/J3S3QJFxKMoh4PDRbm6QLvSW47a05s53zPSQ/n8WJcRzdOkJ1u3KBWKflBDD3atgQ0T77Y65dGM//nyG9azrQ08aJkF7kqPER3LlT3XzAVlAcHIq9TMep5LMyJ8YDroKz7r7mfDsmKBgpa05AAp5k0buuUUxuHhtvauHqhelisWUYFWalaNj/rUJ7ESd8sRhvS+y17htbDKAFaaq+fY0tb6m7fC0s11RW6162EibvLz/PVG8p79QhWqvirnQKOjhUZx3rCAoAftDSi";
 
         /*
          * We also indicate which camera on the RC that we wish to use.
@@ -145,6 +150,21 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
                  * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
+                if (vuMark.equals("LEFT"))
+                {
+                    motorLeft.setPower(1);
+                }
+
+                if (vuMark.equals("RIGHT"))
+                {
+                    motorRight.setPower(1);
+                }
+
+                if (vuMark.equals("CENTER"))
+                {
+                    motorLeft.setPower(1);
+                    motorRight.setPower(1);
+                }
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
