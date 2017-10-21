@@ -54,9 +54,9 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
 
-    double clawOffset = 0;                       // Servo mid position
+    /*double clawOffset = 0;                       // Servo mid position
     final double CLAW_SPEED = 0.04;                   // sets rate to move servo
-
+*/
     boolean precisionMode = false;
 
     @Override
@@ -122,7 +122,7 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 robot.rightDrive.setPower(right);
 
                 // Use gamepad left & right triggers to open and close the claw
-                if (gamepad1.left_trigger > 0)
+                /*if (gamepad1.left_trigger > 0)
                     clawOffset += CLAW_SPEED;
                 else if (gamepad1.right_trigger > 0)
                     clawOffset -= CLAW_SPEED;
@@ -135,7 +135,7 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 clawOffset = Range.clip(clawOffset, -0.4, 1);
                 robot.clawr.setPosition(robot.MID_SERVO - clawOffset);
                 robot.clawl.setPosition(-robot.MID_SERVO + clawOffset);
-
+*/
                 // Use gamepad buttons to move arm up (Y) and down (A)
                 if (gamepad1.left_bumper)
                     robot.armDrive.setPower(robot.ARM_UP_POWER);
@@ -145,7 +145,7 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                     robot.armDrive.setPower(0.0);
 
                 // Send telemetry message to signify robot running;
-                telemetry.addData("claw", "Offset = %.2f", clawOffset);
+                /*telemetry.addData("claw", "Offset = %.2f", clawOffset);*/
                 telemetry.addData("rawClaw", robot.clawl.getPosition());
                 telemetry.addData("rawClaw", robot.clawr.getPosition());
                 telemetry.addData("left", "%.2f", left);
