@@ -11,7 +11,7 @@ public class ColorDistance9330 {
 
     public HashMap getInfo() {
         HashMap hm = new HashMap();
-        hm.put("Distance (cm)", new String(String.format(Locale.US, "%.02f", hwMap.ds.getDistance(DistanceUnit.CM))));
+        hm.put("Distance (cm)",  (hwMap.ds.getDistance(DistanceUnit.CM)));
         hm.put("Alpha", new Integer(hwMap.cs.alpha()));
         hm.put("Red", new Integer(hwMap.cs.red()));
         hm.put("Green",new Integer( hwMap.cs.green()));
