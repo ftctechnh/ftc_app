@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.internal.TelemetryInternal;
+import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryInternal;
 
 /**
  * Created by Max on 12/18/2016.

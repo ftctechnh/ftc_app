@@ -100,6 +100,7 @@ public class FtcRobotControllerWatchdogService extends Service
         boolean result = false;
 
         // We only *ever* autorun in the embedded, headless lynx case
+        /*
         if (LynxConstants.isDragonboardWithEmbeddedLynxModule())
             {
             // But we might be asked to pretend we're not there
@@ -112,7 +113,7 @@ public class FtcRobotControllerWatchdogService extends Service
                     }
                 }
             }
-
+        */
         RobotLog.vv(TAG, "shouldAutoLauchRobotController() result=%s", result);
         return result;
         }

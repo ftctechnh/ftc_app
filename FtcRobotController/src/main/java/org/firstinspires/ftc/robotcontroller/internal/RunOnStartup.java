@@ -71,9 +71,9 @@ import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.robotcore.internal.AppUtil;
-import org.firstinspires.ftc.robotcore.internal.DragonboardLynxDragonboardIsPresentPin;
-import org.firstinspires.ftc.robotcore.internal.PreferencesHelper;
+import org.firstinspires.ftc.robotcore.internal.hardware.DragonboardLynxDragonboardIsPresentPin;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.robotcore.internal.system.PreferencesHelper;
 
 /**
  * {@link RunOnStartup} is responsible for auto-starting the robot controller app when
@@ -83,7 +83,7 @@ public class RunOnStartup extends BroadcastReceiver
     {
     public static final String TAG = "RunOnStartup";
 
-    protected Context           context = null;
+    protected Context context = null;
     protected PreferencesHelper preferencesHelper = null;
 
     @Override public void onReceive(Context context, Intent intent)
@@ -136,12 +136,12 @@ public class RunOnStartup extends BroadcastReceiver
     protected void noteDragonboardPresenceAndExitIfNoRC()
         {
         RobotLog.vv(TAG, "noteDragonboardPresenceAndExitIfNoRC()");
-        //
+        /*
         if (LynxConstants.isDragonboardWithEmbeddedLynxModule())
             {
             DragonboardLynxDragonboardIsPresentPin.getInstance().setState(!LynxConstants.disableDragonboard());
             }
-        //
+        */
         if (!isRobotControllerRunningInThisProcess())
             {
             AppUtil.getInstance().exitApplication();

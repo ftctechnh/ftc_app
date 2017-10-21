@@ -3,12 +3,23 @@ package com.borsch.sim.hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 /**
  * Created by Max on 12/17/2016.
  */
 
 public class SimulatedDcMotorController implements DcMotorController, VoltageSensor {
+    @Override
+    public void setMotorType(int i, MotorConfigurationType motorConfigurationType) {
+
+    }
+
+    @Override
+    public MotorConfigurationType getMotorType(int i) {
+        return null;
+    }
+
     @Override
     public void setMotorMode(int i, DcMotor.RunMode runMode) {
 
@@ -26,16 +37,6 @@ public class SimulatedDcMotorController implements DcMotorController, VoltageSen
 
     @Override
     public double getMotorPower(int i) {
-        return 0;
-    }
-
-    @Override
-    public void setMotorMaxSpeed(int i, int i1) {
-
-    }
-
-    @Override
-    public int getMotorMaxSpeed(int i) {
         return 0;
     }
 

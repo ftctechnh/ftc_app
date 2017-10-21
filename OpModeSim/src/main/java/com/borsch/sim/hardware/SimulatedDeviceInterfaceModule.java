@@ -1,8 +1,11 @@
 package com.borsch.sim.hardware;
 
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.util.SerialNumber;
+
+import org.firstinspires.ftc.robotcore.internal.hardware.TimeWindow;
 
 import java.util.concurrent.locks.Lock;
 
@@ -182,8 +185,18 @@ public class SimulatedDeviceInterfaceModule implements DeviceInterfaceModule {
     }
 
     @Override
+    public TimeWindow getI2cReadCacheTimeWindow(int i) {
+        return null;
+    }
+
+    @Override
     public byte[] getI2cWriteCache(int i) {
         return new byte[0];
+    }
+
+    @Override
+    public int getMaxI2cWriteLatency(int i) {
+        return 0;
     }
 
     @Override
@@ -237,8 +250,13 @@ public class SimulatedDeviceInterfaceModule implements DeviceInterfaceModule {
     }
 
     @Override
-    public Mode getDigitalChannelMode(int i) {
+    public DigitalChannel.Mode getDigitalChannelMode(int i) {
         return null;
+    }
+
+    @Override
+    public void setDigitalChannelMode(int i, DigitalChannel.Mode mode) {
+
     }
 
     @Override
