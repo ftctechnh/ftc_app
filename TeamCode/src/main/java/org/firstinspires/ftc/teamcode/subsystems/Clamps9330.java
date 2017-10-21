@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
 
 public class Clamps9330 {
 
-    private boolean lowClampEngaged;
-    private boolean highClampEngaged;
+    private boolean lowClampEngaged = true;
+    private boolean highClampEngaged = true;
     private boolean highClampPivoted;
 
     //   Declaring Set positions for servo
@@ -24,9 +24,6 @@ public class Clamps9330 {
         hwMap = robotMap;
         hwMap.lowGlyphClamp.setPosition(ENGAGED_POS);
         hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
-        lowClampEngaged = false;
-        highClampEngaged = false;
-        highClampPivoted = false;
     }
     //  Engaging the low clamp
     public void toggleLowClamp(){

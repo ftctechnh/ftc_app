@@ -58,7 +58,6 @@ public class TeleOp9330 extends OpMode {
 
         if(gamepad2.a) {
             if (aBtnHeld == true) return;
-            clamps.toggleLowClamp();
             telemetry.addData("Program", "Low clamp toggled!");
             clamps.toggleLowClamp();
             telemetry.update();
@@ -67,7 +66,6 @@ public class TeleOp9330 extends OpMode {
 
         if(gamepad2.b) {
             if (bBtnHeld == true) return;
-            clamps.toggleHighClamp();
             telemetry.addData("Program", "High clamp toggled!");
             clamps.toggleHighClamp();
             bBtnHeld = true;
