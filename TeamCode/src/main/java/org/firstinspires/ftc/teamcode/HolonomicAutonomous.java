@@ -17,19 +17,17 @@ public class HolonomicAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addData("ACTION COMPLETED", "READY FOR BREACH");
-
         af.init(hardwareMap);
-
-        af.moveMotorWithTime(Constants.speed_medium , 4000, Constants.forward);
-
 
         telemetry.addData("ACTION COMPLETED", "READY FOR ACTION");
 
         waitForStart();
 
-        af.moveMotorWithTime(.1, 1000, Constants.forward);
-        af.moveMotorWithEncoder(.2, 3000, Constants.forward);
+        af.moveMotorWithEncoder(.1, 2000, Constants.forward);
+        af.stopMotor();
+        af.moveMotorWithEncoder(.1, 1300, Constants.spinLeft);
+        af.stopMotor();
+
 
     }
 }

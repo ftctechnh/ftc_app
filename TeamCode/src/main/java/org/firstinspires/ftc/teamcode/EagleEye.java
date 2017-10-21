@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.vuforia.HINT;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.opengl.models.Teapot;
+
 
 // Created by Swagster_Wagster on 9/30/17
 
@@ -30,13 +29,19 @@ public class EagleEye extends LinearOpMode {
         VuforiaLocalizer.Parameters para = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         para.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         para.vuforiaLicenseKey = license_key;
-        para.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
+        para.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.TEAPOT;
 
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(para);
 
-        VuforiaTrackables image = vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackables image = vuforia.loadTrackablesFromAsset("FTC_IMAGE_REG");
 
-        image.get(0).setName("RelicRecovery");
+        telemetry.addData("size is ", image.size());
+        image.get(0).setName("RIGHT");
+        image.get(1).setName("CENTER");
+        image.get(2).setName("LEFT");
+        telemetry.addData("name is ", image.get(0).getName());
+        telemetry.addData("name is ", image.get(1).getName());
+        telemetry.addData("name is ", image.get(2).getName());
 
         waitForStart();
 
@@ -54,13 +59,32 @@ public class EagleEye extends LinearOpMode {
 
                     VectorF translate = pose.getTranslation();
 
-                    telemetry.addData(im.getName() + "translate", translate);
+                    //telemetry.addData(im.getName() + "translate", translate);
 
                     double degreeTurn = Math.toDegrees(Math.atan2(translate.get(1), translate.get(2)));
 
-                    telemetry.addData(im.getName() + "Degrees", degreeTurn);
+                    //telemetry.addData(im.getName() + "Degrees", degreeTurn);
+
+                    if (im.getName() == "RIGHT") {
+
+                        telemetry.addData("I AM THE RIGHT IMAGE", "YEET");
+                        telemetry.update();
+                    }
+
+                    if (im.getName() == "CENTER") {
+
+                        telemetry.addData("I AM THE CENTER IMAGE", "YEET");
+                        telemetry.update();
+                    }
+
+                    if (im.getName() == "LEFT") {
+
+                        telemetry.addData("I AM THE LEFT IMAGE", "YEET");
+                        telemetry.update();
+                    }
 
                 }
+
             }
             telemetry.update();
         }
