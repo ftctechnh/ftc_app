@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 @Autonomous(name = "Vuforia letters", group = "Test")
-public class TestSpinPivot extends LinearOpMode
+public class VuforiaLetterTest extends LinearOpMode
 {
     private NewRobot robot;
 

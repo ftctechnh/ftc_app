@@ -19,18 +19,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class NewRobot
 {
 
-    ColorSensor topColorSens = null;
-    ColorSensor forwardColorSens = null;
-    ColorSensor floorColorSens = null;
+    private ColorSensor topColorSens = null;
+    private ColorSensor forwardColorSens = null;
+    private ColorSensor floorColorSens = null;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
 
-    OpenGLMatrix lastLocation = null;
-
-    VuforiaLocalizer vuforia;
-    VuforiaLocalizer.Parameters parameters;
-    VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-    VuforiaTrackable relicTemplate = relicTrackables.get(0);
+    private VuforiaLocalizer vuforia;
+    private VuforiaLocalizer.Parameters parameters;
+    private VuforiaTrackables relicTrackables;
+    private VuforiaTrackable relicTemplate;
+    private RelicRecoveryVuMark vuMark;
+    private int cameraMonitorViewId;
 
 
     public NewRobot(HardwareMap hardwareMap)
@@ -39,23 +39,31 @@ public class NewRobot
         //forwardColorSens = hardwareMap.colorSensor.get("forwardColorSens");
         //floorColorSens = hardwareMap.colorSensor.get("floorColorSens");
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
+        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
 
         relicTrackables.activate();
     }
 
-    public String getGlyphCipher()
+    public char getGlyphCipher()
     {
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        return vuMark.toString();
+        if (vuMark.equals(RelicRecoveryVuMark.CENTER))
+            return 'c';
+        else if (vuMark.equals(RelicRecoveryVuMark.LEFT))
+            return 'l';
+        else if (vuMark.equals(RelicRecoveryVuMark.RIGHT))
+            return 'r';
+        else
+            return 'u';
     }
 
     public float getHueValue(ColorSensor in_ColorSens)
