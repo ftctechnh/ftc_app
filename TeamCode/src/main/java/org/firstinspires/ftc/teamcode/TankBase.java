@@ -24,8 +24,8 @@ public class TankBase
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
     private BNO055IMU imu;
-    Orientation angles;
-    Acceleration gravity;
+    private Orientation angles;
+    private Acceleration gravity;
 
 
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
