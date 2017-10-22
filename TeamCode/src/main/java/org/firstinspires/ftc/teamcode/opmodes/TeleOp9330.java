@@ -53,7 +53,7 @@ public class TeleOp9330 extends OpMode {
         yPower = gamepad1.left_stick_y;
         spinPower = gamepad1.right_stick_x;
 
-//        Hardware9330.leftMotor.setPower(-yPower - spinPower);
+        Hardware9330.leftMotor.setPower(-yPower - spinPower);
         Hardware9330.rightMotor.setPower(yPower - spinPower);
 
 
@@ -85,7 +85,7 @@ public class TeleOp9330 extends OpMode {
      */
     @Override
     public void stop() {
-//        Hardware9330.leftMotor.setPower(0);
-//        Hardware9330.rightMotor.setPower(0);
+        Hardware9330.leftMotor.setPower(0);
+        Hardware9330.rightMotor.setPower(0);
     }
 }

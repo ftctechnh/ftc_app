@@ -11,11 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
 import org.firstinspires.ftc.teamcode.subsystems.Drive9330;
-import org.firstinspires.ftc.teamcode.subsystems.PictographScan9330;
+import org.firstinspires.ftc.teamcode.subsystems.Vuforia9330;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ public class AutoVuforia9330 extends LinearOpMode {
 
     Hardware9330 robotMap = new Hardware9330();
     ColorDistance9330 colorDistance = new ColorDistance9330(robotMap);
-    PictographScan9330 PictographScan = new PictographScan9330();
+    Vuforia9330 PictographScan = new Vuforia9330();
     Drive9330 drive = new Drive9330();
     Integer TurnError = 1;
     Integer TurnSpeed = 10;

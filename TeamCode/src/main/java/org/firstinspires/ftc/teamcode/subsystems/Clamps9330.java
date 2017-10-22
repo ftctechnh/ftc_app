@@ -12,8 +12,8 @@ public class Clamps9330 {
     private boolean highClampPivoted;
 
     //   Declaring Set positions for servo
-    static final Double ENGAGED_POS = 0.45;
-    static final Double RELEASE_POS = 0.0;
+    static final Double ENGAGED_POS = 0.1;
+    static final Double RELEASE_POS = 0.5;
     //   Declaring set positions of the pivot
     static final Double PIVOTED_POS = 0.8;
     static final Double STRAIGHT_POS = 0.25;

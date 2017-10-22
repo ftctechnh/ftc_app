@@ -45,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.HashMap;
 
-public class PictographScan9330 {
+public class Vuforia9330 {
 
     VuforiaLocalizer vuforia;
 
