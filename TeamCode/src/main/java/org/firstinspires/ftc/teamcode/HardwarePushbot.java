@@ -59,7 +59,8 @@ public class HardwarePushbot
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
 
-    public static final double MID_SERVO             =  0.5 ;
+    //Range of motion for right claw (0 .. 0.5)
+    public static final double MID_SERVO             =  0.25 ;
     public static final double ARM_UP_POWER          = -0.45 ;
     public static final double ARM_DOWN_POWER        =  0.45 ;
 
