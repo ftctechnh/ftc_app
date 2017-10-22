@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Disabled
 public class RedAutoRef extends LinearOpMode
 {
-    TankBase robot;
+    private TankBase robot;
     public void runOpMode()
     {
         robot = new TankBase(hardwareMap);
