@@ -33,8 +33,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 // Created by Roma Bhatia  on 9/21/17
-
-// Last edit: 10/15/17 BY Roma Bhatia
+//
+//
+// Last edit: 10/21/17 by Mrinaal Ramachandran
 
 /**
  * This file provides basic Teleop driving for a Holonomic robot.
@@ -93,7 +94,7 @@ public class HolonomicTeleop extends OpMode {
             robot.R_L.setPower(left_y - left_x);
         }
 
-        
+
         robot.clamp.setPosition(gamepad1.right_trigger);
 
         // MAKE THE ROBOT ROTATE

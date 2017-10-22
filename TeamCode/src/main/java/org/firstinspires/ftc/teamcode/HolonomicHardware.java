@@ -36,8 +36,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 // Created by Roma Bhatia  on 9/21/17
-
-// // Last edit: 10/15/17 BY MRINAAL RAMACHANDRAN
+//
+//
+//  Last edit: 10/21/17 BY MRINAAL RAMACHANDRAN
 
 public class HolonomicHardware {
 
