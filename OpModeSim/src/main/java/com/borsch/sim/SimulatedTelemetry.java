@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryInternal;
  * Created by Max on 12/18/2016.
  */
 
-public class TelemetrySim implements Telemetry, TelemetryInternal {
+public class SimulatedTelemetry implements Telemetry, TelemetryInternal {
 
-    public TelemetrySim (OpMode opMode) {
+    public SimulatedTelemetry(OpMode opMode) {
 
     }
 

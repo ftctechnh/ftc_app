@@ -15,5 +15,7 @@ copy {
 
 dependencies {
     compile files('libs/RobotCore-release.jar')
+    compile files('../libs/Vuforia.jar')
     compile project(':TelemetryAPI')
+    compile project(':TeamCode')
 }

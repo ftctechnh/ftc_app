@@ -10,7 +10,7 @@ import edu.usrobotics.opmode.RobotOp;
  * Created by dsiegler19 on 10/13/16.
  */
 @TeleOp(name="Mecanum TeleOp", group="MecanumBot")
-public class MecanumTele extends RobotOp {
+public class MecanumBotTele extends RobotOp {
 
     MecanumBotHardware robot = new MecanumBotHardware();
 

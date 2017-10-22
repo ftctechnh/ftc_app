@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 
 @Autonomous(name="MecanumBot Blue", group="MecanumBot")
-public class MecanumTeleBlue extends MecanumAuto {
+public class MecanumBotAutoBlue extends MecanumBotAuto {
 
-    public MecanumTeleBlue(){
+    public MecanumBotAutoBlue(){
 
         super(true);
 

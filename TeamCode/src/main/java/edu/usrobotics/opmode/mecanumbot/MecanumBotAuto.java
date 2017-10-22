@@ -28,7 +28,7 @@ import edu.usrobotics.opmode.task.TaskType;
 /**
  * Created by mborsch19 & dsiegler19 on 10/13/16.
  */
-public abstract class MecanumAuto extends LinearOpMode {
+public abstract class MecanumBotAuto extends LinearOpMode {
 
     private MecanumBotHardware robot = new MecanumBotHardware();
 
@@ -38,7 +38,7 @@ public abstract class MecanumAuto extends LinearOpMode {
     private VuforiaTrackables cryptogramPictures;
     private List<VuforiaTrackable> allTrackables;
 
-    public MecanumAuto(boolean color){
+    public MecanumBotAuto(boolean color){
 
         isBlue = color;
 

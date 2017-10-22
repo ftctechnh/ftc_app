@@ -1,67 +1,47 @@
 package com.borsch;
 
+import com.borsch.sim.RobotConfiguration;
+import com.borsch.sim.VuforiaConfiguration;
 import com.borsch.sim.hardware.SimulatedColorSensor;
-import com.borsch.sim.hardware.SimulatedDcMotorController;
+import com.borsch.sim.hardware.SimulatedDcMotor;
 import com.borsch.sim.hardware.SimulatedDeviceInterfaceModule;
 import com.borsch.sim.hardware.SimulatedServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorImpl;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
+import com.qualcomm.robotcore.hardware.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashMap;
 import java.util.Map;
 
-public class OpModeSim {
+public class OpModeSimulation {
 
     private OpMode opMode;
+    public static VuforiaConfiguration vuforiaConfiguration;
 
-    public static void main (String[] args) {
-        HashMap<String, Class <? extends HardwareDevice>> deviceMap = new HashMap<>();
-        deviceMap.put("fr", DcMotor.class);
-        deviceMap.put("fl", DcMotor.class);
-        deviceMap.put("br", DcMotor.class);
-        deviceMap.put("bl", DcMotor.class);
-        deviceMap.put("harvester", DcMotor.class);
-        deviceMap.put("lft", DcMotor.class);
-        deviceMap.put("sr", DcMotor.class);
-        deviceMap.put("sl", DcMotor.class);
-        deviceMap.put("ls", Servo.class);
-        deviceMap.put("los", Servo.class);
-        deviceMap.put("cs", ColorSensor.class);
-        deviceMap.put("lcs", ColorSensor.class);
-        deviceMap.put("dim", DeviceInterfaceModule.class);
-
-
-        // Create simulation
-        OpModeSim sim = new OpModeSim(args[0], deviceMap);
-        sim.init ();
-        sim.start ();
+    public OpModeSimulation(Class <? extends OpMode> opModeClass, RobotConfiguration robot) {
+        create(opModeClass, robot, new VuforiaConfiguration());
     }
 
-    public OpModeSim(Class <? extends OpMode> opModeClass, HashMap<String, Class <? extends HardwareDevice>> deviceMap) {
-        create(opModeClass, deviceMap);
+    public OpModeSimulation(Class <? extends OpMode> opModeClass, RobotConfiguration robot, VuforiaConfiguration vuforiaConfig) {
+        create(opModeClass, robot, vuforiaConfig);
     }
 
-    public OpModeSim(String classPath, HashMap<String, Class<? extends HardwareDevice>> deviceMap) {
-        create (classPath, deviceMap);
+    public OpModeSimulation(String classPath, RobotConfiguration robot) {
+        create(classPath, robot, new VuforiaConfiguration());
+    }
+
+    public OpModeSimulation(String classPath, RobotConfiguration robot, VuforiaConfiguration vuforiaConfig) {
+        create(classPath, robot, vuforiaConfig);
     }
 
     /**
      * Creates a simulation of the given OpMode class (path) and provides it with a simulated HardwareMap created from the devicesMap (DeviceName, DeviceType)
      * Ex.
      * deviceMap.put ("frontRight", DcMotor.class)
-     * new OpModeSim ("edu.usrobotics.opmode.BaseOp", deviceMap)
+     * new OpModeSimulation ("edu.usrobotics.opmode.BaseOp", deviceMap)
      */
-    private void create(String classPath, HashMap<String, Class<? extends HardwareDevice>> deviceMap) {
+    private void create(String classPath, RobotConfiguration robot, VuforiaConfiguration vuforiaConfig) {
         Class<OpMode> opModeClass = null;
         try {
             URLClassLoader urlcl = new URLClassLoader(new URL[] {new URL("file://" + System.getProperty("user.dir") + "/TeamCode/build/intermediates/classes/release/")});
@@ -73,21 +53,23 @@ public class OpModeSim {
             e.printStackTrace();
         }
 
-        create (opModeClass, deviceMap);
+        create(opModeClass, robot, vuforiaConfig);
     }
 
     /**
      * Creates a simulation of the given OpMode class and provides it with a simulated HardwareMap created from the devicesMap (DeviceName, DeviceType)
      * Ex.
      * deviceMap.put ("frontRight", DcMotor.class)
-     * new OpModeSim (edu.usrobotics.opmode.BaseOp.class, deviceMap)
+     * new OpModeSimulation (edu.usrobotics.opmode.BaseOp.class, deviceMap)
     */
-    private void create(Class<? extends OpMode> opModeClass, HashMap<String, Class<? extends HardwareDevice>> deviceMap) {
+    private void create(Class<? extends OpMode> opModeClass, RobotConfiguration robot, VuforiaConfiguration vuforiaConfig) {
+        vuforiaConfiguration = vuforiaConfig;
+
         // Create simulated HardwareMap
         HardwareMap hardwareMap = new HardwareMap(null);
 
         // Add requested devices to simulated HardwareMap
-        for (Map.Entry<String, Class <? extends HardwareDevice>> entry : deviceMap.entrySet()) {
+        for (Map.Entry<String, Class <? extends HardwareDevice>> entry : robot.getDeviceMap().entrySet()) {
             createHardwareDevice (hardwareMap, entry.getKey(), entry.getValue());
         }
 
@@ -119,6 +101,13 @@ public class OpModeSim {
     }
 
     /**
+     * Simulates stop() event call on the OpMode.
+     */
+    public void stop () {
+        opMode.stop();
+    }
+
+    /**
      *
      * @return The OpMode instance being simulated.
      */
@@ -131,14 +120,14 @@ public class OpModeSim {
      *
      * @param hardwareMap The HardwareMap to add the new device to.
      * @param deviceName The name of the new device.
-     *@param deviceType The class that the new HardwareDevice should be.  @return A new HardwareDevice of the type provided.
+     * @param deviceType The class that the new HardwareDevice should be.  @return A new HardwareDevice of the type provided.
      */
     private HardwareDevice createHardwareDevice(HardwareMap hardwareMap, String deviceName, Class<? extends HardwareDevice> deviceType) {
         HardwareDevice device = null;
 
         if (deviceType.equals(DcMotor.class)) {
-            System.out.println ("Created Simulated HardwareDevice: DcMotorImpl(SimulatedDcMotorController)");
-            device = new DcMotorImpl(new SimulatedDcMotorController(), 0);
+            System.out.println ("Created Simulated HardwareDevice: SimulatedDcMotor");
+            device = new SimulatedDcMotor(); // BYPASS CONTROLLER
             hardwareMap.dcMotor.put(deviceName, (DcMotor) device);
 
         } else if (deviceType.equals(Servo.class)) {

@@ -5,7 +5,7 @@
 
 package com.qualcomm.robotcore.eventloop.opmode;
 
-import com.borsch.sim.TelemetrySim;
+import com.borsch.sim.SimulatedTelemetry;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.robocol.TelemetryMessage;
@@ -20,7 +20,7 @@ public abstract class OpMode {
     OpModeServices opModeServices = null;
     public Gamepad gamepad1 = null;
     public Gamepad gamepad2 = null;
-    public Telemetry telemetry = new TelemetrySim(this);
+    public Telemetry telemetry = new SimulatedTelemetry(this);
     public HardwareMap hardwareMap = null;
     public double time = 0.0D;
     private long startTime = 0L;
