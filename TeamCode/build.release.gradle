@@ -6,3 +6,8 @@ dependencies {
     compile (name:'Analytics-release', ext:'aar')
     compile (name:'WirelessP2p-release', ext:'aar')
 }
+repositories {
+    flatDir {
+        dirs 'libs', 'C:\\Users\\pston\\GMR\\GMR2016-2017\\RelicRecovery\\navx-micro\\navx-micro\\android\\libs'
+    }
+}

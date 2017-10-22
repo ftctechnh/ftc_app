@@ -47,6 +47,11 @@ public class FourMotorChasis extends OpMode {
         leftRear = hardwareMap.dcMotor.get(LeftRear);
         rightRear = hardwareMap.dcMotor.get(RightRear);
 
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         leftFront.setPower(0);
         rightFront.setPower(0);
         leftRear.setPower(0);
@@ -58,6 +63,11 @@ public class FourMotorChasis extends OpMode {
         x = gamepad1.left_stick_x;
         y = -gamepad1.left_stick_y;
         z = gamepad1.right_stick_x;
+
+        telemetry.addData("", leftFront.getCurrentPosition());
+        telemetry.addData("", rightFront.getCurrentPosition());
+        telemetry.addData("", leftRear.getCurrentPosition());
+        telemetry.addData("", rightRear.getCurrentPosition());
 
         setMotorPower(x, y, z);
     }
