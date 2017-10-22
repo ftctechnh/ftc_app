@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 public class REVTest extends OpMode {
-    DcMotor testMotor;
+    private DcMotor testMotor;
 
     @Override
     public void init() {
