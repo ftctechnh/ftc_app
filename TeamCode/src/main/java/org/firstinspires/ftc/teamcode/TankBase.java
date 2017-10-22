@@ -52,8 +52,6 @@ public class TankBase
         driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
-
-
 /*
         driveRightOne.setDirection(DcMotorSimple.Direction.REVERSE);
         driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -73,8 +71,10 @@ public class TankBase
         float encTarget;
         if(inches > 1)
             encTarget = encCountsPerRev / wheelCircIn * (inches-1);
+        else if (inches < -1)
+            encTarget = encCountsPerRev / wheelCircIn * (inches+1);
         else
-            encTarget = encCountsPerRev / wheelCircIn * (inches);
+            encTarget = encCountsPerRev / wheelCircCm * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         resetEncoders();
