@@ -47,7 +47,7 @@ public class HolonomicHardware {
     public DcMotor  R_L = null;
     public DcMotor  R_R = null;
 
-    public DcMotor upThingy = null;
+    public DcMotor elevator = null;
     public Servo clamp = null;
 
     // LOCAL OPMODE MEMBERS
@@ -70,7 +70,7 @@ public class HolonomicHardware {
         R_L = hwMap.get(DcMotor.class, "R_L");
         R_R = hwMap.get(DcMotor.class, "R_R");
 
-        upThingy = hwMap.get(DcMotor.class, "upThingy");
+        elevator = hwMap.get(DcMotor.class, "upThingy");
 
         clamp = hwMap.get(Servo.class, "clamp");
 
@@ -79,8 +79,6 @@ public class HolonomicHardware {
         F_R.setDirection(DcMotor.Direction.REVERSE);
         R_L.setDirection(DcMotor.Direction.REVERSE);
         R_R.setDirection(DcMotor.Direction.REVERSE);
-
-        upThingy.setDirection(DcMotor.Direction.REVERSE);
 
         // SET ALL MOTOR POWERS TO ZERO
         F_L.setPower(0);

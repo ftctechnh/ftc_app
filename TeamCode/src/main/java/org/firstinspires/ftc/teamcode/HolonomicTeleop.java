@@ -62,7 +62,6 @@ public class HolonomicTeleop extends OpMode {
     @Override
     public void init() {
         // INIT robot
-        robot.init(hardwareMap);
 
         // TELL DRIVER STATION THAT ROBOT IS INIT
         telemetry.addData("Status", "Initialized");    //
@@ -94,25 +93,8 @@ public class HolonomicTeleop extends OpMode {
             robot.R_L.setPower(left_y - left_x);
         }
 
-        //robot.sword.setPosition(gamepad1.left_trigger);
-
+        
         robot.clamp.setPosition(gamepad1.right_trigger);
-
-        boolean pressed = false;
-
-        if (gamepad1.a) {
-
-            pressed = true;
-        }
-
-        if (pressed) {
-            robot.upThingy.setPower(gamepad1.left_trigger);
-
-        } else {
-
-            robot.upThingy.setPower(-gamepad1.left_trigger);
-        }
-
 
         // MAKE THE ROBOT ROTATE
         if((left_y+left_x==0) && (right_x!=0)) {

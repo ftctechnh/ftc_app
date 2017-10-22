@@ -45,6 +45,10 @@ public class HolonomicAutonomous extends LinearOpMode {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
+        af.init(hardwareMap);
+
+        af.dropper.setPosition(50);
+
         waitForStart();
 
         relicTrackables.activate();
@@ -52,6 +56,7 @@ public class HolonomicAutonomous extends LinearOpMode {
         while (opModeIsActive()) {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
                 telemetry.addData("VuMark", "%s visible", vuMark);

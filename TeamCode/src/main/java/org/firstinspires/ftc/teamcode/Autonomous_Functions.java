@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -20,15 +21,16 @@ public class Autonomous_Functions {
     protected DcMotor R_L = null;
     protected DcMotor R_R = null;
 
+    protected Servo dropper = null;
+
     // LOCAL OPMODE MEMBERS
     HardwareMap hwMap = null;
     Telemetry telemetry = null;
 
     // HARDWARE INIT
-    public void init(HardwareMap hwMap, Telemetry telemetry) {
+    public void init(HardwareMap ahwMap) {
 
-        this.hwMap = hwMap;
-        this.telemetry = telemetry;
+        hwMap = ahwMap;
 
         F_L = hwMap.get(DcMotor.class, "F_L");
         F_R = hwMap.get(DcMotor.class, "F_R");
@@ -44,6 +46,9 @@ public class Autonomous_Functions {
         F_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         R_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         R_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        dropper = hwMap.get(Servo.class, "dropper");
+
 
     }
 
@@ -171,10 +176,27 @@ public class Autonomous_Functions {
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
-            F_L.setPower(power*10);
-            F_R.setPower(power*10);
-            R_L.setPower(power*10);
-            R_R.setPower(power*10);
+            F_L.setPower(power * 10);
+            F_R.setPower(power * 10);
+            R_L.setPower(power * 10);
+            R_R.setPower(power * 10);
+
+            while (F_L.getCurrentPosition() < distance/2) {
+
+                try {
+
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+
+                    e.printStackTrace();
+                }
+            }
+
+            F_L.setPower(power * 5);
+            F_R.setPower(power * 5);
+            R_L.setPower(power * 5);
+            R_R.setPower(power * 5);
+
 
             while (F_L.isBusy() ) {
 
