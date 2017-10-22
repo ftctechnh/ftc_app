@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 // Created by MRINAAL RAMACHANDRAN on 10/8/17
 
-// Last edit: 10/15/17 BY MRINAAL RAMACHANDRAN
+// Last edit: 10/21/17 BY MRINAAL RAMACHANDRAN
 
 public class Autonomous_Functions {
 
@@ -20,11 +22,13 @@ public class Autonomous_Functions {
 
     // LOCAL OPMODE MEMBERS
     HardwareMap hwMap = null;
+    Telemetry telemetry = null;
 
     // HARDWARE INIT
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap hwMap, Telemetry telemetry) {
 
-        hwMap = ahwMap;
+        this.hwMap = hwMap;
+        this.telemetry = telemetry;
 
         F_L = hwMap.get(DcMotor.class, "F_L");
         F_R = hwMap.get(DcMotor.class, "F_R");
@@ -56,7 +60,7 @@ public class Autonomous_Functions {
     }
 
     // STOP MOTOR FOR (x) TIME FUNCTION
-    public void stopMotorTime(long time) {
+    public void stopMotor(long time) {
 
         F_L.setPower(0);
         F_R.setPower(0);
@@ -69,10 +73,7 @@ public class Autonomous_Functions {
     // STOP MOTOR
     public void stopMotor() {
 
-        F_L.setPower(0);
-        F_R.setPower(0);
-        R_L.setPower(0);
-        R_R.setPower(0);
+        stopMotor(0);
 
     }
 
@@ -81,33 +82,52 @@ public class Autonomous_Functions {
 
         if (direction == Constants.forward) {
 
-            F_L.setPower(-power);
+            F_L.setDirection(DcMotor.Direction.REVERSE);
+            F_R.setDirection(DcMotor.Direction.FORWARD);
+            R_L.setDirection(DcMotor.Direction.REVERSE);
+            R_R.setDirection(DcMotor.Direction.FORWARD);
+
+            F_L.setPower(power);
             F_R.setPower(power);
-            R_L.setPower(-power);
+            R_L.setPower(power);
             R_R.setPower(power);
             mysleep(time);
         }
 
         if (direction == Constants.backward) {
 
+            F_R.setDirection(DcMotor.Direction.REVERSE);
+            F_L.setDirection(DcMotor.Direction.FORWARD);
+            R_L.setDirection(DcMotor.Direction.FORWARD);
+            R_R.setDirection(DcMotor.Direction.REVERSE);
 
             F_L.setPower(power);
-            F_R.setPower(-power);
+            F_R.setPower(power);
             R_L.setPower(power);
-            R_R.setPower(-power);
+            R_R.setPower(power);
             mysleep(time);
         }
 
         if (direction == Constants.left) {
 
+            R_L.setDirection(DcMotor.Direction.REVERSE);
+            F_L.setDirection(DcMotor.Direction.FORWARD);
+            F_R.setDirection(DcMotor.Direction.FORWARD);
+            R_R.setDirection(DcMotor.Direction.REVERSE);
+
             F_L.setPower(power);
             F_R.setPower(power);
-            R_L.setPower(-power);
-            R_R.setPower(-power);
+            R_L.setPower(power);
+            R_R.setPower(power);
             mysleep(time);
         }
 
         if (direction == Constants.right) {
+
+            F_L.setDirection(DcMotor.Direction.REVERSE);
+            F_R.setDirection(DcMotor.Direction.REVERSE);
+            R_L.setDirection(DcMotor.Direction.FORWARD);
+            R_R.setDirection(DcMotor.Direction.FORWARD);
 
             F_L.setPower(-power);
             F_R.setPower(-power);
@@ -116,15 +136,6 @@ public class Autonomous_Functions {
             mysleep(time);
         }
 
-        if (direction == Constants.spinRight) {
-
-
-        }
-
-        if (direction == Constants.spinLeft) {
-
-
-        }
         stopMotor();
     }
 
@@ -141,6 +152,9 @@ public class Autonomous_Functions {
             R_R.setDirection(DcMotor.Direction.FORWARD);
 
             F_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            F_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -148,9 +162,12 @@ public class Autonomous_Functions {
             R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             F_L.setTargetPosition(distance);
-            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
@@ -172,6 +189,9 @@ public class Autonomous_Functions {
             R_R.setDirection(DcMotor.Direction.REVERSE);
 
             F_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            F_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -179,9 +199,12 @@ public class Autonomous_Functions {
             R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             F_L.setTargetPosition(distance);
-            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
@@ -203,6 +226,9 @@ public class Autonomous_Functions {
             R_R.setDirection(DcMotor.Direction.REVERSE);
 
             F_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            F_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -210,9 +236,12 @@ public class Autonomous_Functions {
             R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             F_L.setTargetPosition(distance);
-            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
@@ -234,6 +263,9 @@ public class Autonomous_Functions {
             R_R.setDirection(DcMotor.Direction.FORWARD);
 
             F_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            F_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -241,9 +273,12 @@ public class Autonomous_Functions {
             R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             F_L.setTargetPosition(distance);
-            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
@@ -265,6 +300,9 @@ public class Autonomous_Functions {
             R_R.setDirection(DcMotor.Direction.FORWARD);
 
             F_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            F_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -272,9 +310,12 @@ public class Autonomous_Functions {
             R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             F_L.setTargetPosition(distance);
-            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
@@ -296,6 +337,9 @@ public class Autonomous_Functions {
             R_R.setDirection(DcMotor.Direction.REVERSE);
 
             F_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            F_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_L.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            R_R.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             F_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -303,9 +347,12 @@ public class Autonomous_Functions {
             R_R.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             F_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            F_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_L.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            R_R.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             F_L.setTargetPosition(distance);
-            F_L.setTargetPosition(distance);
+            F_R.setTargetPosition(distance);
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 

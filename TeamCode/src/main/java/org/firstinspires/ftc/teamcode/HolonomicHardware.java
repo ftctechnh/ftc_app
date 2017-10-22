@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,7 +47,7 @@ public class HolonomicHardware {
     public DcMotor  R_L = null;
     public DcMotor  R_R = null;
 
-    public Servo sword = null;
+    public DcMotor upThingy = null;
     public Servo clamp = null;
 
     // LOCAL OPMODE MEMBERS
@@ -69,7 +70,7 @@ public class HolonomicHardware {
         R_L = hwMap.get(DcMotor.class, "R_L");
         R_R = hwMap.get(DcMotor.class, "R_R");
 
-        //sword = hwMap.get(Servo.class, "sword");
+        upThingy = hwMap.get(DcMotor.class, "upThingy");
 
         clamp = hwMap.get(Servo.class, "clamp");
 
@@ -78,6 +79,8 @@ public class HolonomicHardware {
         F_R.setDirection(DcMotor.Direction.REVERSE);
         R_L.setDirection(DcMotor.Direction.REVERSE);
         R_R.setDirection(DcMotor.Direction.REVERSE);
+
+        upThingy.setDirection(DcMotor.Direction.REVERSE);
 
         // SET ALL MOTOR POWERS TO ZERO
         F_L.setPower(0);
