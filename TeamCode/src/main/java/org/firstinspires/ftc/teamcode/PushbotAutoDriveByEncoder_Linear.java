@@ -115,7 +115,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         encoderDrive(TURN_SPEED,   11, -11, 2.0);
 
-        encoderDrive(DRIVE_SPEED,  4,  4, 2.0);
+        encoderDrive(DRIVE_SPEED,  2,  2, 2.0);
 
         // robot.claw.setPosition(1.0);
         // sleep(1000);
