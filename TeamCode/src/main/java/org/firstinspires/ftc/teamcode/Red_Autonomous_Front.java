@@ -4,27 +4,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 // Created by Swagster_Wagster on 9/29/17
 //
 //
-// Last edit: 10/21/17 BY MRINAAL RAMACHANDRAN
+// Last edit: 10/22/17 BY MRINAAL RAMACHANDRAN
 
 
-@Autonomous(name = "Holonomic_Autonomous",group="We Love Pi")
-public class HolonomicAutonomous extends LinearOpMode {
+@Autonomous(name = "Red_Autonomous_Front",group="We Love Pi")
+public class Red_Autonomous_Front extends LinearOpMode {
 
     Autonomous_Functions af = new Autonomous_Functions();
 
@@ -45,9 +37,16 @@ public class HolonomicAutonomous extends LinearOpMode {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
-        af.init(hardwareMap);
+        //af.init(hardwareMap);
 
         waitForStart();
+
+        af.dropper.setPosition(.5);
+        //sense color
+        // if color red turn that way
+        af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
+        // if color blue turn other way
+        af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
 
         relicTrackables.activate();
 
@@ -55,11 +54,43 @@ public class HolonomicAutonomous extends LinearOpMode {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
 
-                telemetry.addData("VuMark", "%s visible", vuMark);
+                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2,1300, Constants.spinRight);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2, 2600, Constants.left);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
+                af.stopMotor();
+            }
 
-            } else {
+            else if (vuMark == RelicRecoveryVuMark.CENTER) {
+
+                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2,1300, Constants.spinRight);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2, 2600, Constants.left);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
+                af.stopMotor();
+            }
+
+            else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+
+                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2,1300, Constants.spinRight);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2, 2600, Constants.left);
+                af.stopMotor();
+                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
+                af.stopMotor();
+            }
+
+            else {
                 telemetry.addData("VuMark", "not visible");
             }
 

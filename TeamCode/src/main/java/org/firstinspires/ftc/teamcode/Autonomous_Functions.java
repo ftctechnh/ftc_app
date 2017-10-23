@@ -18,9 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 // Created by MRINAAL RAMACHANDRAN on 10/8/17
 //
 //
-// Last edit: 10/21/17 BY MRINAAL RAMACHANDRAN
-
-// Last edit: 10/21/17 BY SAMIH QURESHI
+// Last edit: 10/22/17 BY MRINAAL RAMACHANDRAN
 
 public class Autonomous_Functions {
 
