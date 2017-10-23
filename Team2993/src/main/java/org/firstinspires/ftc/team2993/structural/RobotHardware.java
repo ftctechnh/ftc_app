@@ -14,6 +14,8 @@ public class RobotHardware
     public DcMotor armR, armL;
     public Servo   claw, sideArm;
 
+    public Sensors color;
+
     public final double SERVO_OPEN = 0.1;
     public final double SERVO_CLOSED = 0.6;
 
@@ -51,6 +53,8 @@ public class RobotHardware
         sideArm = map.get(Servo.class, "sidearm");
 
         claw.scaleRange(.4, 1);
+
+        color = new Sensors(map);
     }
 
     public void SetArm(double power)

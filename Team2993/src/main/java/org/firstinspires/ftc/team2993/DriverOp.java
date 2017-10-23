@@ -11,15 +11,18 @@ import org.firstinspires.ftc.team2993.structural.Sensors;
 public class DriverOp extends OpMode
 {
     private RobotHardware robot;
+    public Sensors color;
 
-    private final double threshhold = 0.2;
-    private final double speed = .5d;
+    private final double threshhold = 0.1;
+    private double speed = .5d;
 
     @Override
     public void init()
     {
         robot = new RobotHardware(hardwareMap);
+        color = new Sensors(hardwareMap);
         robot.init();
+        color.init();
     }
 
     @Override
@@ -41,25 +44,28 @@ public class DriverOp extends OpMode
         leftStick = (Math.abs(leftStick) > threshhold ? leftStick : 0);
         rightStick = (Math.abs(rightStick) > threshhold ? rightStick : 0);
 
-        robot.driveLeft(leftStick);
-        robot.driveRight(rightStick);
+        robot.driveLeft(leftStick * speed);
+        robot.driveRight(rightStick * speed);
 
         if (gamepad1.b)
-            robot.SetArm(.25);
+            robot.SetArm(.5);
         else if (gamepad1.x)
-            robot.SetArm(-.25);
+            robot.SetArm(-.5);
         else
             robot.SetArm(0);
 
-        if (gamepad1.a || gamepad1.left_bumper)
+        if (gamepad1.left_bumper)
             robot.claw.setPosition(0);
-        else if (gamepad1.y || gamepad1.right_bumper)
+        else if (gamepad1.right_bumper)
             robot.claw.setPosition(1);
 
         if (gamepad1.dpad_down)
-            robot.sideArm.setPosition(-1);
+            robot.sideArm.setPosition(.5);
         else if (gamepad1.dpad_up)
             robot.sideArm.setPosition(1);
+
+        if (gamepad1.a)
+            speed = speed == 1d ? .5d : 1d;
     }
 
     public void telemetry(double msg)
