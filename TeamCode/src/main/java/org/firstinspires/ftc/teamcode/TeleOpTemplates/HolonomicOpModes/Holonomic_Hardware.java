@@ -22,7 +22,7 @@ public class Holonomic_Hardware {
     //Declaring variables
     public DcMotor fleft, fright, bleft, bright;
     public BNO055IMU gyro;
-    public float heading;
+    public double heading;
     public float dp = .2f; //Drive Power (range = 0-1)
     private HardwareMap hwMap;
     private Telemetry telemetry;
@@ -64,7 +64,7 @@ public class Holonomic_Hardware {
         telemetry.update();
     }
 
-    public void drive(float fl, float fr, float bl, float br) {
+    public void drive(double fl, double fr, double bl, double br) {
         fleft.setPower(ClipValue(fl));
         fright.setPower(ClipValue(fr));
         bleft.setPower(ClipValue(bl));
@@ -73,13 +73,10 @@ public class Holonomic_Hardware {
 
     public void updateGyro() {
         //May not have to make negative? Make it so that turning is CCW
-        heading = - gyro.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle;
-        //Changes the range to -180 to 180 instead of 0 to 360
-        if(heading > 180)
-            heading = heading - 360;
+         heading =  gyro.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle + Math.PI/2;
     }
 
-    float ClipValue(float value) {
+    double ClipValue(double value) {
         if(value > dp || value < - dp)
             return ((Math.abs(value) / value) * dp);
         else
