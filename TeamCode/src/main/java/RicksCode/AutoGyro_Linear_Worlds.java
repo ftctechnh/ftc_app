@@ -31,6 +31,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package RicksCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -43,7 +44,7 @@ import java.io.IOException;
 import static java.lang.Math.abs;
 
 
-@Autonomous(name="MenuTest", group="Team")
+@Autonomous(name="OriginalMenu", group="Team")
 //@Disabled
 
 
@@ -73,8 +74,6 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
         telemetry.addData(">", "Robot Ready.");//Send Telemetry that the robot is ready to run
         telemetry.update();
 
-
-
         // get menu values
         OurMenu("8045config.txt");
 
@@ -83,9 +82,6 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
          |--------------------------------------Init Loop-----------------------------------------------|
          \**********************************************************************************************/
              while (!isStarted()) {
-
-            //Maxbotix Sensor
-            //telemetry.addData("", "Maxbotix volts, Distance(cm): %4.2f  %4.1f", voltage, MaxbotixDistance);
 
 
             // display the menu values that are set
@@ -136,6 +132,8 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
 
     public void OurMenu(String fileName) {
 
+
+
         int i;
         String directoryPath = "/sdcard/FIRST/";
         String filePath = directoryPath + fileName;
@@ -167,7 +165,7 @@ public class AutoGyro_Linear_Worlds extends LinearOpMode {
                 System.err.println("Couldn't read this: " + filePath);//idk where this is printing
             }
         } else{
-            telemetry.addLine("****** File NOT read from PHONE ********");
+            telemetry.addLine("****** File NOT read from PHONE , defaults used ********");
             telemetry.update();
             sleep(2000);
         }
