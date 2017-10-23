@@ -142,7 +142,7 @@ public class Tele_Op_Simple_Drive extends OpMode
 
 
 
-        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x  );
 
         telemetry.update();
     }

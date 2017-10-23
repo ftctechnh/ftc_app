@@ -137,10 +137,10 @@ public class Drive
     public void MoveSimple( double xLeftRight, double yFwdRev, double rotate )
     {
         // variables for calculating wheel powers
-        double frontLeftPower = ( -1.0 * xLeftRight ) + ( 1.0 * yFwdRev ) + ( 1.0 * rotate );
-        double frontRightPower = ( 1.0 * xLeftRight ) + (1.0 * yFwdRev ) + (-1.0 * rotate);
+        double frontLeftPower = ( -xLeftRight ) + (   yFwdRev ) + (  rotate );
+        double frontRightPower = (  xLeftRight ) + (  yFwdRev ) + (-rotate);
         double rearLeftPower = xLeftRight + yFwdRev + rotate;
-        double rearRightPower = (xLeftRight * -1.0) + ( yFwdRev * 1.0) + (-1.0 * rotate);
+        double rearRightPower = (-xLeftRight) + ( yFwdRev) + (-rotate);
 
 
         // Powers can be > 1 using above equations, so scale if they are

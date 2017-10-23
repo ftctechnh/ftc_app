@@ -5,7 +5,35 @@
 
 // ROBOT DRIVE
 // Robot has 4 mechanum wheels, driven by independent motors.
-// robot drive mechanism can move forward, backwards, sideways and can turn
+// reference the slide show that is at maxwellscott922@gmail.com
+//All the Y vectors are just y/-y because those are the standard vectors for forward* and backward**.
+// The vectors for x is just the standard ones for left*** and right****.
+//Turn is well, the vectors*****/ wheel values to turn. Then, all the matrixes add together.
+//The scsling program takes any numbers above one and makes them one.
+//So if any numbers end up being more than one, they go back down to one.
+//
+//How did we get there?
+//WEll, we found some equations online.
+//Those equations didn’t work so we subtracted pi/4 instead of adding pi/4.
+//Then, We realized that polar coordinates, sines and vectors were too much so, we simplified it.
+//So, instead of converting cartesian to polar coordinates, we decided to add the vectors directly  so we don't have to deal with the law of sines and cartesian coordinates.
+//WE just brought the scaling over from the other, more complicated drive class. The plan is to change it right now…
+//
+//What I learned
+//I learned that in coding, don’t use “brute force” with lots of if statements and straight commands.
+//I also learned that there are other types of coordinates than x and y.
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 // ROBOT ARM
