@@ -72,7 +72,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: AutonomousBlueNear", group="Pushbot")
+@Autonomous(name="Pushbot: Vuforia_test", group="Pushbot")
 @Disabled
 
 public class AutonomousBlueNear extends LinearOpMode {
