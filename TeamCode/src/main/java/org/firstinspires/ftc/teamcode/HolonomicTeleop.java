@@ -63,6 +63,7 @@ public class HolonomicTeleop extends OpMode {
     @Override
     public void init() {
         // INIT robot
+        robot.init(hardwareMap);
 
         // TELL DRIVER STATION THAT ROBOT IS INIT
         telemetry.addData("Status", "Initialized");    //

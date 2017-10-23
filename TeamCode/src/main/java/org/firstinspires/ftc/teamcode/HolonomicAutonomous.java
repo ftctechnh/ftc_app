@@ -47,8 +47,6 @@ public class HolonomicAutonomous extends LinearOpMode {
 
         af.init(hardwareMap);
 
-        af.dropper.setPosition(50);
-
         waitForStart();
 
         relicTrackables.activate();
