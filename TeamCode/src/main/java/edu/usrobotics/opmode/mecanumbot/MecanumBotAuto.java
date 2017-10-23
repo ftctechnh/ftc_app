@@ -1,29 +1,15 @@
 package edu.usrobotics.opmode.mecanumbot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.usrobotics.opmode.LoggedOp;
-import edu.usrobotics.opmode.RobotOp;
-import edu.usrobotics.opmode.Route;
-import edu.usrobotics.opmode.compbot.CompbotHardware;
-import edu.usrobotics.opmode.task.ConcurrentTaskSet;
-import edu.usrobotics.opmode.task.Goal;
-import edu.usrobotics.opmode.task.MotorTask;
-import edu.usrobotics.opmode.task.Task;
-import edu.usrobotics.opmode.task.TaskType;
+import java.util.Map;
 
 /**
  * Created by mborsch19 & dsiegler19 on 10/13/16.
@@ -31,6 +17,7 @@ import edu.usrobotics.opmode.task.TaskType;
 public abstract class MecanumBotAuto extends LinearOpMode {
 
     private MecanumBotHardware robot = new MecanumBotHardware();
+    private static boolean isAlive = true;
 
     private boolean isBlue;
 
@@ -77,17 +64,17 @@ public abstract class MecanumBotAuto extends LinearOpMode {
 
         cryptogramPictures.activate();
 
-        for (VuforiaTrackable trackable : allTrackables) {
-
-            telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
-
-            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-
-        }
+        ImageIdentifierWorker tracker = new ImageIdentifierWorker(allTrackables);
+        new Thread(tracker).start();
 
         robot.bringDownBallKnocker();
 
         sleep(500);
+
+        tracker.stop();
+        for (Map.Entry<VuforiaTrackable, Integer> result : tracker.visibilityCount.entrySet()) {
+            telemetry.addData(result.getKey().getName() + " Count", result.getValue());
+        }
 
         float motorPower = 0f;
 
