@@ -71,7 +71,7 @@ public class Holonomic_FieldCentric_Erik_NewControls2 extends OpMode
         if(robotCentric == false)
             theta = (jTheta + angleFromDriver - robot.heading);
         else if(robotCentric)
-            theta = angleFromDriver;
+            theta = jTheta;
 
         robot.drive(
                 (Math.sin(theta)+Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
@@ -85,5 +85,7 @@ public class Holonomic_FieldCentric_Erik_NewControls2 extends OpMode
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
         telemetry.addData("Joystick Magnitude", jp);
         telemetry.addData("Gyro Heading", robot.heading);
+        telemetry.addData("toggle", toggle);
+        telemetry.addData("robotCentric", robotCentric);
     }
 }

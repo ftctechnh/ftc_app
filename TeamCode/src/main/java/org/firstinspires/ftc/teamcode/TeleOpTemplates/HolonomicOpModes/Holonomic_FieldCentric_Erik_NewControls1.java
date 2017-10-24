@@ -42,7 +42,6 @@ public class Holonomic_FieldCentric_Erik_NewControls1 extends OpMode
     public void init ()
     {
         robot = new Holonomic_Hardware(hardwareMap, telemetry, true);
-
     }
 
     @Override
@@ -59,6 +58,7 @@ public class Holonomic_FieldCentric_Erik_NewControls1 extends OpMode
         {
             robotCentric = false;
         }
+
         //Makes it so it becomes robot centric based on the last heading before pressing the button
         if(robotCentric == false)
             robot.updateGyro();
@@ -84,6 +84,7 @@ public class Holonomic_FieldCentric_Erik_NewControls1 extends OpMode
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
         telemetry.addData("Joystick Magnitude", jp);
         telemetry.addData("Gyro Heading", robot.heading);
+        telemetry.addData("toggle", toggle);
+        telemetry.addData("robotCentric", robotCentric);
     }
 }
-
