@@ -28,8 +28,8 @@ public class Ultrasonic9330 {
     }
 
     public Long returnDistance() {
-        Long initialTimeSeconds = System.currentTimeMillis() * 1000;
-        while (System.currentTimeMillis() * 1000 < initialTimeSeconds + 1) {
+        Long initialTimeSeconds = System.currentTimeMillis()/1000;
+        while (System.currentTimeMillis()/1000 < initialTimeSeconds + 1) {
             if (hwMap.ultrasonicEcho.getState() == true) return getMicroTime();
         }
         return null;
