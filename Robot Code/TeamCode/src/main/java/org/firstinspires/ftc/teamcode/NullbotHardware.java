@@ -37,8 +37,7 @@ public class NullbotHardware {
     public DcMotor backLeft;
     public DcMotor backRight;
 
-    public DcMotor liftLeft;
-    public DcMotor liftRight;
+    public DcMotor lift;
     public DcMotor zType;
 
     // Servos
@@ -62,7 +61,7 @@ public class NullbotHardware {
     // Utility mechanisms
     public DcMotor[] motorArr;
     public LogTick[] log;
-    public int hz = 25;
+    public int hz = 100;
     public int secondsToTrack = 60;
     public int logPosition = 0;
     double initialCompassHeading;
@@ -98,9 +97,7 @@ public class NullbotHardware {
         backRight = hwMap.dcMotor.get("backRight");
 
         if (!isTestChassis) {
-            liftLeft = hwMap.dcMotor.get("liftLeft");
-            liftRight = hwMap.dcMotor.get("liftRight");
-
+            lift = hwMap.dcMotor.get("lift");
             zType = hwMap.dcMotor.get("zType");
 
             leftWhipSnake = hwMap.servo.get("leftGemHitter");
@@ -118,12 +115,12 @@ public class NullbotHardware {
 
         // Set color
 
-        deviceInterface.setDigitalChannelMode(0, DigitalChannel.Mode.INPUT);
-        boolean zeropin = deviceInterface.getDigitalChannelState(0);
+        deviceInterface.setDigitalChannelMode(7, DigitalChannel.Mode.INPUT);
+        boolean zeropin = deviceInterface.getDigitalChannelState(7);
         if (zeropin) {
-            color = Alliance.BLUE;
-        } else {
             color = Alliance.RED;
+        } else {
+            color = Alliance.BLUE;
         }
 
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
@@ -196,9 +193,12 @@ public class NullbotHardware {
      *
      * @see DcMotor.RunMode
      */
-    public void enableMotorEncoders() {
+    public void adjustMotorEncoders(DcMotor.RunMode r) {
+        if (frontRight.getMode() == r) {
+            return; // It's already in a position we like
+        }
         for (DcMotor m : motorArr) {
-            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            m.setMode(r);
         }
     }
 
@@ -399,18 +399,23 @@ public class NullbotHardware {
     public void raiseWhipSnake() {
 
         //if (color == Alliance.BLUE) {
-            rightWhipSnake.setPosition(180.0/255.0);
+            rightWhipSnake.setPosition(200.0/255.0);
         //} else {
-            leftWhipSnake.setPosition(75.0/255.0); // This position is incorrect
+            leftWhipSnake.setPosition(55.0/255.0);
         //}
     }
     public void lowerWhipSnake() {
         //if (color == Alliance.BLUE) {
             rightWhipSnake.setPosition(30.0/255.0);
         //} else {
-            leftWhipSnake.setPosition(225.0/255.0); // This position is incorrect
+            leftWhipSnake.setPosition(225.0/255.0);
         //}
     }
+    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(225.0/255.0);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(55.0/255.0);}
+    public void lowerRightWhipSnake() {leftWhipSnake.setPosition(30.0/255.0);}
+    public void raiseRightWhipSnake() {leftWhipSnake.setPosition(200.0/255.0);}
+
 
     public void openBlockClaw() {
         leftBlockClaw.setPosition(55.0/255.0);
@@ -423,8 +428,7 @@ public class NullbotHardware {
     }
 
     public void setLiftMode(DcMotor.RunMode m) {
-        liftLeft.setMode(m);
-        liftRight.setMode(m);
+        lift.setMode(m);
     }
 }
 

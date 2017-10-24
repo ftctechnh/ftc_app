@@ -15,15 +15,18 @@ public class ConstrainedPIDMotor {
     ElapsedTime timer;
     int timeTillLock;
     int lockPos;
-    double runSpeed;
+    double forwardRunSpeed;
+    double backwardRunSpeed;
     int min;
     int max;
     public boolean override;
 
-    public ConstrainedPIDMotor(DcMotor m, int t, double runSpeed, int min, int max) {
+    public ConstrainedPIDMotor(DcMotor m, int t, double forwardRunSpeed, double backwardRunSpeed,
+                               int min, int max) {
         this.m = m;
         timeTillLock = t;
-        this.runSpeed = runSpeed;
+        this.forwardRunSpeed = forwardRunSpeed;
+        this.backwardRunSpeed = backwardRunSpeed;
         timer = new ElapsedTime();
         this.min = min;
         this.max = max;
@@ -42,7 +45,7 @@ public class ConstrainedPIDMotor {
                 break;
 
             case HOLD:
-                if (timer.milliseconds() < -timeTillLock) {
+                if (timer.milliseconds() < timeTillLock) {
                     releaseMotor();
                     lockPos = m.getCurrentPosition();
                 } else {
@@ -51,11 +54,11 @@ public class ConstrainedPIDMotor {
                 break;
 
             case FORWARD:
-                goToPos(max, runSpeed, true, 1);
+                goToPos(max, forwardRunSpeed, true, 1);
                 break;
 
             case BACKWARD:
-                goToPos(min, runSpeed, true, -1);
+                goToPos(min, backwardRunSpeed, true, -1);
                 break;
         }
     }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -33,12 +34,13 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
     boolean wasLeftBumperPressed;
     boolean wasRightBumperPressed;
+    boolean wasRightTriggerPressed;
+    boolean nonrelativeDriveModeEnabled;
     boolean scale;
 
     ElapsedTime timeTillHeadingLock;
 
-    ConstrainedPIDMotor liftLeft;
-    ConstrainedPIDMotor liftRight;
+    ConstrainedPIDMotor lift;
     ConstrainedPIDMotor zType;
 
     ElapsedTime timeSinceStartToggle;
@@ -50,9 +52,8 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap, this, true, gamepad2);
 
-        liftLeft = new ConstrainedPIDMotor(robot.liftLeft, 100, 0.4, 0, 2000);
-        liftRight = new ConstrainedPIDMotor(robot.liftRight, 100, 0.4, 0, 2000);
-        zType = new ConstrainedPIDMotor(robot.zType, 100, 0.2, 0, 12288);
+        lift = new ConstrainedPIDMotor(robot.lift, 100, 0.6, 0.6, 0, -1300);
+        zType = new ConstrainedPIDMotor(robot.zType, 100, 0.2, 0.15, 0, 12288);
 
         waitForStart();
 
@@ -66,8 +67,10 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
         timeSinceStartToggle = new ElapsedTime();
         wasStartPressed = false;
         autoAdjustHeading = true;
+        nonrelativeDriveModeEnabled = true;
+        wasRightTriggerPressed = false;
 
-        robot.enableMotorEncoders();
+        robot.adjustMotorEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         while (opModeIsActive()) {
 
@@ -80,35 +83,41 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             }
             wasStartPressed = gamepad1.start;
 
+            // Toggle control mode
+            if (gamepad1.right_trigger > 0.75) {
+                if (!wasRightTriggerPressed) {
+                    nonrelativeDriveModeEnabled = !nonrelativeDriveModeEnabled;
+                }
+                wasRightTriggerPressed = true;
+            } else if (gamepad1.right_trigger < 0.25) {
+                wasRightTriggerPressed = false;
+            }
+
             scale = true;
             // Calculate speed reduction
             desiredMax = 1;
 
+            // Toggle motor encoders
             if (gamepad1.left_trigger > triggerThreshold) {// Left trigger activates slow mode
                 desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
+                robot.adjustMotorEncoders(DcMotor.RunMode.RUN_USING_ENCODER);
             }
-
-            adjustDesiredHeading();
 
             if (!robot.isTestChassis) {
 
                 setOverride(gamepad1.a);
 
                 if (gamepad1.back) { // Back coasts all motors
-                    liftLeft.setDirection(COAST);
-                    liftRight.setDirection(COAST);
+                    lift.setDirection(COAST);
                     zType.setDirection(COAST);
                 } else {
                     // Adjust lift
                     if (gamepad1.dpad_up) {
-                        liftLeft.setDirection(FORWARD);
-                        liftRight.setDirection(FORWARD);
+                        lift.setDirection(FORWARD);
                     } else if (gamepad1.dpad_down) {
-                        liftLeft.setDirection(BACKWARD);
-                        liftRight.setDirection(FORWARD);
+                        lift.setDirection(BACKWARD);
                     } else {
-                        liftLeft.setDirection(HOLD);
-                        liftRight.setDirection(HOLD);
+                        lift.setDirection(HOLD);
                     }
 
                     if (gamepad1.dpad_right) {
@@ -151,7 +160,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
                 }
             } else {
                 // Auto turning
-                if (autoAdjustHeading) {
+                if (true) {
                     difference = getAngleDifference(desiredHeading, heading);
                     turnSpeed = difference / (Math.PI / turnVolatility);
                     turnSpeed = clamp(turnSpeed);
@@ -169,6 +178,19 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
                 } else {
                     unscaledMotorPowers[i] -= turnSpeed;
                 }
+            }
+
+            // Turning around a point bypasses all previous settings
+            if (gamepad1.left_bumper || gamepad1.right_bumper) {
+                robot.adjustMotorEncoders(DcMotor.RunMode.RUN_USING_ENCODER);
+                if (gamepad1.left_bumper) {
+                    unscaledMotorPowers = new double[]{-1, -0.8, 1, 0.8};
+                } else {
+                    unscaledMotorPowers = new double[]{0.8, 1, -0.8, -1};
+                }
+
+            } else if (gamepad1.left_trigger < triggerThreshold) { // If there's nothing that needs precision running
+                robot.adjustMotorEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
             if (scale) {
@@ -202,18 +224,6 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             return d;
         }
     }
-    private void adjustDesiredHeading() {
-        // Turn 45 degrees based on right and left buttons
-        if (!wasLeftBumperPressed && gamepad1.left_bumper) {desiredHeading += Math.PI/4;}
-        if (!wasRightBumperPressed && gamepad1.right_bumper) {desiredHeading -= Math.PI/4;}
-
-        // Normalize desired heading between 0 and tau radians
-        desiredHeading = robot.normAngle(desiredHeading);
-
-        // Store bumper positions for next run through loop
-        wasLeftBumperPressed = gamepad1.left_bumper;
-        wasRightBumperPressed = gamepad1.right_bumper;
-    }
 
     public double getAngleDifference(double d1, double d2) {
         double diff = d2 - d1;
@@ -246,11 +256,10 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
         double robotAngle;
 
-        if (gamepad1.right_trigger > triggerThreshold) { // Right trigger activates nonrelative drive
+        if (nonrelativeDriveModeEnabled) { // Right trigger activates nonrelative drive
             robotAngle = robot.normAngle(controllerAngle + heading);
         } else { // Default is relative drive
             robotAngle = controllerAngle;
-
         }
 
         double[] unscaledPowers = new double[4];
@@ -262,8 +271,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     }
 
     public void setOverride (boolean b) {
-        liftLeft.override = b;
-        liftRight.override = b;
+        lift.override = b;
         zType.override = b;
     }
 }

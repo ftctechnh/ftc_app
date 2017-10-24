@@ -15,7 +15,7 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
 
     NullbotHardware robot   = new NullbotHardware();
 
-    final int DISTANCE_TO_DRIVE = 480;
+    final int DISTANCE_TO_DRIVE = 400;
 
     PixyCam pixyCam;
     PixyCam.Block redBall;
@@ -62,7 +62,11 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
 
         telemetry.addData("Rightmost ball:", rightMostBall);
 
-        robot.lowerWhipSnake();
+        if (robot.color == Alliance.BLUE) {
+            robot.lowerLeftWhipSnake();
+        } else {
+            robot.lowerRightWhipSnake();
+        }
         robot.waitForTick(500);
 
 
@@ -73,16 +77,22 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
         }
 
         for (DcMotor m : robot.motorArr) {
-            m.setTargetPosition(desiredDistance);
+            m.setPower(0.2);
         }
 
-        while (opModeIsActive()) {
-            for (DcMotor m : robot.motorArr) {
-                double toGo = Math.abs(m.getTargetPosition() - m.getCurrentPosition());
-                m.setPower(robot.clamp(toGo/100.0));
-            }
-        }
+        robot.frontLeft.setTargetPosition(desiredDistance);
+        robot.backLeft.setTargetPosition(desiredDistance);
+        robot.frontRight.setTargetPosition(-desiredDistance);
+        robot.backRight.setTargetPosition(-desiredDistance);
+
+        robot.sleep(1000);
         robot.raiseWhipSnake();
+        robot.sleep(500);
+
+        for (DcMotor m : robot.motorArr) {
+            m.setTargetPosition(0);
+        }
+        robot.sleep(1000);
     }
 
     public void updateBlocks() {
