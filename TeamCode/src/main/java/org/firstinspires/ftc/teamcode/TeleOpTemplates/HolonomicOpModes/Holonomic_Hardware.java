@@ -23,7 +23,7 @@ public class Holonomic_Hardware {
     public DcMotor fleft, fright, bleft, bright;
     public BNO055IMU gyro;
     public double heading;
-    public float dp = .2f; //Drive Power (range = 0-1)
+    public double dp = .2f; //Drive Power (range = 0-1)
     private HardwareMap hwMap;
     private Telemetry telemetry;
 

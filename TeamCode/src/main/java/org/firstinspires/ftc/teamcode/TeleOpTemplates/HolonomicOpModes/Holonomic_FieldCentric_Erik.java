@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
 
-        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-        import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /*
 - Name: Holonomic Field-Centric Tele-Op
-- Creator[s]: Talon
-- Date Created: 6/16/17
+- Creator[s]: Erik
+- Date Created: 10/23/17
 - Objective: To drive our holonomic robot around in a field centric manner, which is easier for drivers
            since they don't have to keep track of the front of the robot.
-- Controls: The right joystick controls translational movement, while the triggers control rotation.
-          Additionally, the A button makes the robot rotate to face the current direction of travel,
-          the start button sets the forward direction of the robot to its current heading,
+- Controls: The left joystick controls translational movement, while the right joystick controls rotation.
           and holding both bumpers sends the robot into ultra-turbo mode, which enhances its speed.
 - Sensor Usage: Our Adafruit IMU gyro sensor is used in this program for detecting the robot's heading,
                 which is used to determine what direction the robot needs to go with respect to its front.
@@ -31,7 +29,7 @@ package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
  */
 
 @TeleOp(name = "Holonomic Field-Centric Tele-Op", group = "holonomic")
-public class Holonomic_FieldCentric_TeleOp extends OpMode
+public class Holonomic_FieldCentric_Erik extends OpMode
 {
     Holonomic_Hardware robot;
     double angleFromDriver = Math.PI/2;
@@ -56,9 +54,9 @@ public class Holonomic_FieldCentric_TeleOp extends OpMode
 
         robot.updateGyro();
 
-        jTheta = (double) Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x);
+        jTheta = (double) Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x);
 
-        jp = (double) Math.sqrt(gamepad1.right_stick_x * gamepad1.right_stick_x + gamepad1.right_stick_y * gamepad1.right_stick_y);
+        jp = (double) Math.sqrt(gamepad1.left_stick_x * gamepad1.left_stick_x + gamepad1.left_stick_y * gamepad1.left_stick_y);
 
         if(jp > 1)
             jp = 1;
@@ -66,17 +64,16 @@ public class Holonomic_FieldCentric_TeleOp extends OpMode
         theta = (jTheta + angleFromDriver - robot.heading);
 
         robot.drive(
-                (Math.sin(theta)+Math.cos(theta))*jp/2 + gamepad1.right_trigger - gamepad1.left_trigger,
-                (Math.sin(theta)-Math.cos(theta))*jp/2 - gamepad1.right_trigger + gamepad1.left_trigger,
-                (Math.sin(theta)-Math.cos(theta))*jp/2 + gamepad1.right_trigger - gamepad1.left_trigger,
-                (Math.sin(theta)+Math.cos(theta))*jp/2 - gamepad1.right_trigger + gamepad1.left_trigger
+                (Math.sin(theta)+Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
+                (Math.sin(theta)-Math.cos(theta))*jp/2 + gamepad1.right_stick_x,
+                (Math.sin(theta)-Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
+                (Math.sin(theta)+Math.cos(theta))*jp/2 + gamepad1.right_stick_x
                     );
 
         telemetry.addData("Ultra Turbo Mode Activated", gamepad1.right_bumper && gamepad1.left_bumper);
-        telemetry.addData("Left Trigger", gamepad1.left_trigger);
-        telemetry.addData("Right Trigger", gamepad1.right_trigger);
+        telemetry.addData(" Right Joystick X Axis:", gamepad1.right_stick_x);
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
-        telemetry.addData("Joystick Magnitude", gamepad1.right_stick_y);
+        telemetry.addData("Joystick Magnitude", jp);
         telemetry.addData("Gyro Heading", robot.heading);
     }
 }
