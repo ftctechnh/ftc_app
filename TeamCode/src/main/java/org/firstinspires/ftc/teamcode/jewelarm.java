@@ -9,11 +9,11 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by Aus on 10/24/2017.
  */
-@TeleOp(name = "drawerSlideClaw", group = "linear OpMode")
-public class drawerSlideClaw extends OpMode {
+@TeleOp(name = "jewelarm", group = "linear OpMode")
+public class jewelarm extends OpMode {
     private Servo claw;
     private double servolowend = 0.0;
-    private double servohighend = 0.43;
+    private double servohighend = 1.0;
 
 
     @Override
@@ -27,12 +27,12 @@ public class drawerSlideClaw extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.a) {
-            //    claw.setPosition(Range.clip(claw.getPosition() + 0.001, servolowend, servohighend));
-            claw.setPosition(servolowend);
+            claw.setPosition(Range.clip(claw.getPosition() + 0.05, servolowend, servohighend));
+            //claw.setPosition(servolowend);
         }
         if (gamepad1.b) {
-            //    claw.setPosition(Range.clip(claw.getPosition() - 0.001, servolowend, servohighend));
-            claw.setPosition(servohighend);
+            claw.setPosition(Range.clip(claw.getPosition() - 0.05, servolowend, servohighend));
+            //claw.setPosition(servohighend);
         }
         telemetry.addData("clawposition: ", claw.getPosition());
     }
