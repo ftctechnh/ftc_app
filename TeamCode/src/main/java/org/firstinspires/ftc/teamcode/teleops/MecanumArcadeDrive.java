@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robotplus.gamepadwrapper.ControllerWrapper;
@@ -37,6 +38,8 @@ public class MecanumArcadeDrive extends OpMode {
 
         raiser = hardwareMap.dcMotor.get("raiser");
         grabber = hardwareMap.dcMotor.get("grabber");
+
+        raiser.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -56,10 +59,6 @@ public class MecanumArcadeDrive extends OpMode {
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        if(gamepad1.b){
-            drivetrain.setPower(1);
-        }
-
         drivetrain.complexDrive(gamepad1, telemetry);
         drivetrain.dPadDrive(gamepad1);
 
@@ -71,9 +70,9 @@ public class MecanumArcadeDrive extends OpMode {
             raiser.setPower(0);
         }
 
-        if(gamepad1.b){
+        if(gamepad1.left_bumper){
             grabber.setPower(1);
-        } else if (gamepad1.x){
+        } else if (gamepad1.right_bumper){
             grabber.setPower(-1);
         } else {
             grabber.setPower(0);
