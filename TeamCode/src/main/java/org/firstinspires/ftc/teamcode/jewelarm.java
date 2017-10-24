@@ -27,11 +27,11 @@ public class jewelarm extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.a) {
-            claw.setPosition(Range.clip(claw.getPosition() + 0.05, servolowend, servohighend));
+            claw.setPosition(Range.clip(claw.getPosition() + 0.003, servolowend, servohighend));
             //claw.setPosition(servolowend);
         }
         if (gamepad1.b) {
-            claw.setPosition(Range.clip(claw.getPosition() - 0.05, servolowend, servohighend));
+            claw.setPosition(Range.clip(claw.getPosition() - 0.003, servolowend, servohighend));
             //claw.setPosition(servohighend);
         }
         telemetry.addData("clawposition: ", claw.getPosition());
