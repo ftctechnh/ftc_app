@@ -2,28 +2,35 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
+
 
 /**
  * Created by Aus on 10/24/2017.
  */
 
 public class drawerSlideClaw extends OpMode {
-    Servo claw;
+    private Servo claw;
+    private double servolowend = 0.0;
+    private double servohighend = 1.0;
+
 
     @Override
 
-    public void init(){
-        claw = hardwareMap.servo.get("s1" );
+    public void init() {
+        claw = hardwareMap.servo.get("s1");
 
     }
 
     @Override
-    public void loop(){
-            if (gamepad1.a) {
-                claw.setPosition(claw.getPosition()+0.001);
-                if (gamepad1.b) {
-                    claw.setPosition(claw.getPosition()-0.001);
+    public void loop() {
+        if (gamepad1.a) {
+            claw.setPosition(claw.getPosition() + 0.001);
         }
+        if (gamepad1.b) {
+            claw.setPosition(claw.getPosition() - 0.001);
+        }
+        telemetry.addData("clawposition: ", claw.getPosition());
     }
 
 }
