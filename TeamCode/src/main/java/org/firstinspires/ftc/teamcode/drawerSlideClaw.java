@@ -25,10 +25,10 @@ public class drawerSlideClaw extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.a) {
-            claw.setPosition(claw.getPosition() + 0.001);
+            claw.setPosition(Range.clip(claw.getPosition() + 0.001, servolowend, servohighend));
         }
         if (gamepad1.b) {
-            claw.setPosition(claw.getPosition() - 0.001);
+            claw.setPosition(Range.clip(claw.getPosition() - 0.001, servolowend, servohighend));
         }
         telemetry.addData("clawposition: ", claw.getPosition());
     }
