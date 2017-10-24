@@ -45,7 +45,7 @@ import static java.lang.Math.abs;
 
 
 @Autonomous(name="OriginalMenu", group="Team")
-//@Disabled
+@Disabled
 
 
 public class AutoGyro_Linear_Worlds extends LinearOpMode {
