@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 
 /**
@@ -7,7 +8,15 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
  */
 
 public class Drive9330 {
-    Hardware9330 robotMap = new Hardware9330();
+    private Hardware9330 hwMap = null;
+    Integer turnError = 2;
+    Gyro9330 gyro;
+
+    public Drive9330(Hardware9330 robotMap) {
+        hwMap = robotMap;
+        gyro = new Gyro9330(robotMap);
+        if (gyro!=null) if (!gyro.isCalibrated()) gyro.init();
+    }
 
     public void driveForward(int speed) { //Speed mush be between 0 and 100
         Hardware9330.leftMotor.setPower(-speed);
@@ -27,5 +36,16 @@ public class Drive9330 {
     public void stopDrive() {
         Hardware9330.leftMotor.setPower(0);
         Hardware9330.rightMotor.setPower(0);
+    }
+
+    public void gyroTurn(float degrees, int speed) {
+        Double initialAngle = gyro.getYaw();
+        while (gyro.getYaw() - initialAngle < degrees - turnError || gyro.getYaw() - initialAngle > degrees + turnError) {
+            if (gyro.getYaw() - initialAngle < degrees - turnError) {
+                turnRight(speed);
+            } else {
+                turnLeft(speed);
+            }
+        }
     }
 }

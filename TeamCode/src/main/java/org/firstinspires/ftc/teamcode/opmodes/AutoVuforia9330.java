@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
 import org.firstinspires.ftc.teamcode.subsystems.Drive9330;
+import org.firstinspires.ftc.teamcode.subsystems.Gyro9330;
 import org.firstinspires.ftc.teamcode.subsystems.Vuforia9330;
 
 import java.util.HashMap;
@@ -28,7 +24,8 @@ public class AutoVuforia9330 extends LinearOpMode {
     Hardware9330 robotMap = new Hardware9330();
     ColorDistance9330 colorDistance = new ColorDistance9330(robotMap);
     Vuforia9330 PictographScan = new Vuforia9330();
-    Drive9330 drive = new Drive9330();
+    Gyro9330 gyro = new Gyro9330(robotMap);
+    Drive9330 drive = new Drive9330(robotMap);
     Integer TurnError = 1;
     Integer TurnSpeed = 10;
     Integer hahaUseless;
@@ -41,8 +38,6 @@ public class AutoVuforia9330 extends LinearOpMode {
     Integer ColorGreen;
     Integer ColorBlue;
     Integer ColorAlpha;
-
-    Orientation angles;
 
     public void log(String name, Object value) {
         telemetry.clear();
@@ -88,13 +83,10 @@ public class AutoVuforia9330 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         log("Info","Initializing. Please wait.");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-
         robotMap.init(hardwareMap);
-        robotMap.gyro.initialize(parameters);
+
+        gyro.init();
+
         info = PictographScan.init(hardwareMap,true);
         log("Info","Initialized. Press start when ready.");
         waitForStart();
@@ -135,10 +127,8 @@ public class AutoVuforia9330 extends LinearOpMode {
                     log("Info", "We are blue! Knocking down red.");
                 }
 
-            angles   = robotMap.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            //log("Gyro Angle", angles.firstAngle);
-            // Diameter: 3.78
-            // Width:
+            //log("Gyro Angle", gyro.getYaw());
+
             while(!isStopRequested() && robotMap.touch.getState())
             {
 
