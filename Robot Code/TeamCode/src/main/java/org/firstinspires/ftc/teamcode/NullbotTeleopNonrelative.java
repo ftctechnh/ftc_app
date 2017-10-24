@@ -43,9 +43,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
     ConstrainedPIDMotor lift;
     ConstrainedPIDMotor zType;
 
-    ElapsedTime timeSinceStartToggle;
-    boolean wasStartPressed;
-    boolean autoAdjustHeading;
+    ElapsedTime timeSinceDriveModeToggle;
 
 
     @Override
@@ -64,9 +62,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
         wasRightBumperPressed = false;
         timeTillHeadingLock = new ElapsedTime();
 
-        timeSinceStartToggle = new ElapsedTime();
-        wasStartPressed = false;
-        autoAdjustHeading = true;
+        timeSinceDriveModeToggle = new ElapsedTime();
         nonrelativeDriveModeEnabled = true;
         wasRightTriggerPressed = false;
 
@@ -74,24 +70,14 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // Toggle auto heading adjustment
-            if (gamepad1.start && !wasStartPressed) {
-                if (timeSinceStartToggle.milliseconds() > 100) {
-                    timeSinceStartToggle.reset();
-                    autoAdjustHeading = !autoAdjustHeading;
-                }
-            }
-            wasStartPressed = gamepad1.start;
-
             // Toggle control mode
-            if (gamepad1.right_trigger > 0.75) {
-                if (!wasRightTriggerPressed) {
-                    nonrelativeDriveModeEnabled = !nonrelativeDriveModeEnabled;
-                }
-                wasRightTriggerPressed = true;
-            } else if (gamepad1.right_trigger < 0.25) {
-                wasRightTriggerPressed = false;
+            if (gamepad1.right_trigger > triggerThreshold && !wasRightTriggerPressed &&
+                    timeSinceDriveModeToggle.milliseconds() > 100) {
+                nonrelativeDriveModeEnabled = !nonrelativeDriveModeEnabled;
+                timeSinceDriveModeToggle.reset();
             }
+
+            wasRightTriggerPressed = gamepad1.right_trigger > triggerThreshold;
 
             scale = true;
             // Calculate speed reduction

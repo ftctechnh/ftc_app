@@ -4,8 +4,10 @@ import android.os.Environment;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbLegacyModule;
+import com.qualcomm.hardware.motors.NeveRest40Gearmotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +15,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
+import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -36,6 +40,8 @@ public class NullbotHardware {
     public DcMotor frontRight;
     public DcMotor backLeft;
     public DcMotor backRight;
+
+    public PIDTestInterface[] driveInterface;
 
     public DcMotor lift;
     public DcMotor zType;
@@ -61,12 +67,12 @@ public class NullbotHardware {
     // Utility mechanisms
     public DcMotor[] motorArr;
     public LogTick[] log;
-    public int hz = 100;
+    public int hz = 1000;
     public int secondsToTrack = 60;
     public int logPosition = 0;
     double initialCompassHeading;
     double gyroError;
-    int msMagFieldKill = 3000; // Robot must stay still for half a second before it is assumed the
+    int msMagFieldKill = 3000; // Robot must stay still for three seconds before it is assumed the
                               // motors are not generating any magnetic field
 
     double absurdValueFiltering = (Math.PI * 2) / 180; // Any attempt to alter the gyroscope's error
@@ -108,6 +114,20 @@ public class NullbotHardware {
 
             raiseWhipSnake();
             openBlockClaw();
+
+            ModernRoboticsUsbDcMotorController leftWheels =
+                    hwMap.get(ModernRoboticsUsbDcMotorController.class, "leftWheels");
+
+            ModernRoboticsUsbDcMotorController rightWheels =
+                    hwMap.get(ModernRoboticsUsbDcMotorController.class, "rightWheels");
+            DifferentialControlLoopCoefficients d = new DifferentialControlLoopCoefficients(160, 32, 112);
+
+            for (int i = 1; i <= 2; i++) { // Runs for i = 1 and i = 2
+                leftWheels.setMotorType(i, MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class));
+                rightWheels.setMotorType(i, MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class));
+                leftWheels.setDifferentialControlLoopCoefficients(i, d);
+                rightWheels.setDifferentialControlLoopCoefficients(i, d);
+            }
         }
 
         gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -137,6 +157,12 @@ public class NullbotHardware {
         motorArr[1] = frontRight;
         motorArr[2] = backLeft;
         motorArr[3] = backRight;
+
+        driveInterface = new PIDTestInterface[4];
+
+        for (int i = 0; i < motorArr.length; i++) {
+            driveInterface[i] = new PIDTestMashupPID(motorArr[i], tel);
+        }
         inducedGyroError = 0;
     }
 
@@ -210,31 +236,11 @@ public class NullbotHardware {
      *                 Motor order is front left, front right, back left, back right.
      */
     public void setMotorSpeeds(double[] speeds) {
-        boolean[] resetMotors = new boolean[motorArr.length];
-
         for (int i = 0; i < motorArr.length; i++) {
-            double finalPower = clamp(speeds[i]);
-
-            if (Math.abs(finalPower) + 0.1 < Math.abs(motorArr[i].getPower())) {
-                resetMotors[i] = true;
-            } else {
-                resetMotors[i] = false;
-            }
-            motorArr[i].setPower(finalPower);
-        }
-
-        for (int i = 0; i < motorArr.length; i++) {
-            if (resetMotors[i]) {
-                motorArr[i].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-        }
-        sleep(1);
-        for (int i = 0; i < motorArr.length; i++) {
-            if (resetMotors[i]) {
-                motorArr[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
+            driveInterface[i].setPower(clamp(speeds[i]));
         }
     }
+
     /**
      * Clamps inputted value between -1.0 and 1.0, for use with DcMotor.setPower
      *
