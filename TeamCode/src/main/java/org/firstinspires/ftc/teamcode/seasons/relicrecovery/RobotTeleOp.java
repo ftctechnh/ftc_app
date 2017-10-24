@@ -23,12 +23,19 @@ public class RobotTeleOp extends LinearOpMode {
         double pivot;
 
         while (opModeIsActive()) {
-            speedX = gamepad1.right_stick_x;
+            speedX = -gamepad1.right_stick_x;
             speedY = gamepad1.right_stick_y;
-            pivot = gamepad1.left_stick_x;
+            pivot = -gamepad1.left_stick_x;
 
-            robot.hDriveTrain.pivot(-pivot);
-            robot.hDriveTrain.drive(-speedX,speedY);
+            // slow down robot with right trigger
+            if(gamepad1.right_trigger > 0) {
+                speedY /= 3;
+                pivot /= 3;
+                speedX /= 2;
+            }
+
+            robot.hDriveTrain.pivot(pivot);
+            robot.hDriveTrain.drive(speedX,speedY);
         }
     }
 }
