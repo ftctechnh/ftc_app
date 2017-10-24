@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -22,6 +23,22 @@ public class Blue_Autonomous_Back extends LinearOpMode {
 
     VuforiaLocalizer vuforia;
 
+    public void doDropper () {
+
+        af.dropper.setPosition(0);
+        af.stopMotor(1000);
+        //sense color
+        // if color red turn that way
+        af.moveMotorWithEncoder(.05, 500, Constants.spinLeft);
+        af.stopMotor(1000);
+        // if color blue turn other way
+        af.dropper.setPosition(1);
+        af.stopMotor(1000);
+        af.moveMotorWithEncoder(.05, 500, Constants.spinRight);
+        af.stopMotor(1000);
+
+    }
+
     @Override
     public void runOpMode() {
 
@@ -37,64 +54,92 @@ public class Blue_Autonomous_Back extends LinearOpMode {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
-        //af.init(hardwareMap);
 
         waitForStart();
 
-        af.dropper.setPosition(.5);
-        //sense color
-        // if color red turn that way
-        af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
-        // if color blue turn other way
-        af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
+        // Moved the init hardware below wait for start. Dropper motor doesnt go 0-1 above wait for start
+        af.init(hardwareMap);
 
+        //STEP ONE KNOCK OFF BALL
+
+        telemetry.addData("vumark", "before activate");
+        telemetry.update();
         relicTrackables.activate();
 
+        telemetry.addData("vumark", "after activate");
+        telemetry.update();
+        boolean found=false;
         while (opModeIsActive()) {
 
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            // IMAGE REG MIGHT NOT WORK DUE TO LIGHTING. BEFORE FREAKING OUT, GO TO A LOCATION WITH BETTER LIGHTING AND TEST
+            if(!found) {
+                RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                if (vuMark == RelicRecoveryVuMark.LEFT) {
 
-            if (vuMark == RelicRecoveryVuMark.LEFT) {
-
-                af.moveMotorWithEncoder(.2, 2600, Constants.backward);
-                af.stopMotor();
+                    telemetry.addData("vuMark", vuMark);
+                    telemetry.update();
+                    found=true;
+                    doDropper();
+                    telemetry.addData("autonomous_left", "moving backward");
+                    telemetry.update();
+                    af.moveMotorWithEncoder(.05, 3000, Constants.left);
+                    af.stopMotor();
+                /*
                 af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
                 af.stopMotor();
                 af.moveMotorWithEncoder(.2, 2600, Constants.right);
                 af.stopMotor();
                 af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-            }
 
-            else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                */
 
-                af.moveMotorWithEncoder(.2, 2600, Constants.backward);
-                af.stopMotor();
+                } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+
+                    telemetry.addData("vuMark", vuMark);
+                    telemetry.update();
+                    found=true;
+                    doDropper();
+                    telemetry.addData("autonomous_left", "moving backward");
+                    telemetry.update();
+                    af.moveMotorWithEncoder(.05, 3000, Constants.left);
+                    af.stopMotor();
+                /*
                 af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
                 af.stopMotor();
                 af.moveMotorWithEncoder(.2, 2600, Constants.right);
                 af.stopMotor();
                 af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-            }
 
-            else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                */
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
 
-                af.moveMotorWithEncoder(.2, 2600, Constants.backward);
-                af.stopMotor();
+                    telemetry.addData("vuMark", vuMark);
+                    telemetry.update();
+                    found=true;
+                    doDropper();
+                    telemetry.addData("autonomous_left", "moving backward");
+                    telemetry.update();
+                    af.moveMotorWithEncoder(.05, 3000, Constants.left);
+                    af.stopMotor();
+                /*
                 af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
                 af.stopMotor();
                 af.moveMotorWithEncoder(.2, 2600, Constants.right);
                 af.stopMotor();
                 af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-            }
 
-            else {
-                telemetry.addData("VuMark", "not visible");
-            }
+                */
+                } else {
+                    telemetry.addData("VuMark", "not visible");
 
+                }
+            }
             telemetry.update();
+
         }
     }
 }
+
 
 
 
