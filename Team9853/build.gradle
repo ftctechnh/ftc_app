@@ -19,4 +19,5 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    buildToolsVersion '25.0.3'
 }
