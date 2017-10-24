@@ -20,6 +20,7 @@ public class drawerSlideClaw extends OpMode {
 
     public void init() {
         claw = hardwareMap.servo.get("s1");
+        claw.setPosition(servolowend);
 
     }
 
