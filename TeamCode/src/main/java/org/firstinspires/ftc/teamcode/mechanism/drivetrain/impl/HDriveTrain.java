@@ -49,6 +49,13 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         middleDrive = hWMap.dcMotor.get("m");
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // set all motors to brake
+        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        middleDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -58,8 +65,6 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     @Override
     public void pivot(double pivotSpeed) {
-        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         this.currentPivot = pivotSpeed;
 
         leftDrive.setPower(this.currentSpeedY + pivotSpeed);
@@ -139,8 +144,6 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     @Override
     public void drive(double speedX, double speedY) {
-        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         this.currentSpeedY = speedY;
 
         leftDrive.setPower(this.currentPivot + speedY);
