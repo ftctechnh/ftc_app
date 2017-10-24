@@ -62,5 +62,8 @@ public class Hardware9330 {
         gyro = hwMap.get(BNO055IMU.class, "imu");
         touch  = hwMap.get(DigitalChannel.class, "touch");
 
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 }
