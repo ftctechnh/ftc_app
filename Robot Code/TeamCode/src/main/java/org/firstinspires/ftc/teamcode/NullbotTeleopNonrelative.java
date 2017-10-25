@@ -66,7 +66,7 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
         nonrelativeDriveModeEnabled = true;
         wasRightTriggerPressed = false;
 
-        robot.adjustMotorEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //robot.adjustMotorEncoders(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         while (opModeIsActive()) {
 
@@ -194,10 +194,12 @@ public class NullbotTeleopNonrelative extends LinearOpMode {
             robot.setMotorSpeeds(unscaledMotorPowers);
 
             telemetry.addLine()
-                    .addData("Is X pressed", gamepad1.x);
+                    .addData("Current lift position", robot.lift.getCurrentPosition());
+            telemetry.addLine()
+                    .addData("Locked position", lift.lockPos);
             telemetry.update(); // Send telemetry data to driver station
 
-            // Run above code at 25hz
+            // Run above code at 1Khz
             robot.writeLogTick(gamepad1);
             robot.waitForTick(1000 / robot.hz);
         }

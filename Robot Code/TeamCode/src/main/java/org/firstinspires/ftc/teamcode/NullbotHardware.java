@@ -7,7 +7,6 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbLegacyModule;
-import com.qualcomm.hardware.motors.NeveRest40Gearmotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,7 +14,6 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -67,7 +65,7 @@ public class NullbotHardware {
     // Utility mechanisms
     public DcMotor[] motorArr;
     public LogTick[] log;
-    public int hz = 1000;
+    public int hz = 100;
     public int secondsToTrack = 60;
     public int logPosition = 0;
     double initialCompassHeading;
@@ -123,8 +121,8 @@ public class NullbotHardware {
             DifferentialControlLoopCoefficients d = new DifferentialControlLoopCoefficients(160, 32, 112);
 
             for (int i = 1; i <= 2; i++) { // Runs for i = 1 and i = 2
-                leftWheels.setMotorType(i, MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class));
-                rightWheels.setMotorType(i, MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class));
+                /*leftWheels.setMotorType(i, MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class));
+                rightWheels.setMotorType(i, MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class));*/
                 leftWheels.setDifferentialControlLoopCoefficients(i, d);
                 rightWheels.setDifferentialControlLoopCoefficients(i, d);
             }
@@ -237,7 +235,7 @@ public class NullbotHardware {
      */
     public void setMotorSpeeds(double[] speeds) {
         for (int i = 0; i < motorArr.length; i++) {
-            driveInterface[i].setPower(clamp(speeds[i]));
+            motorArr[i].setPower(clamp(speeds[i]));
         }
     }
 
@@ -403,24 +401,17 @@ public class NullbotHardware {
     }
 
     public void raiseWhipSnake() {
-
-        //if (color == Alliance.BLUE) {
-            rightWhipSnake.setPosition(200.0/255.0);
-        //} else {
-            leftWhipSnake.setPosition(55.0/255.0);
-        //}
+        raiseLeftWhipSnake();
+        raiseRightWhipSnake();
     }
     public void lowerWhipSnake() {
-        //if (color == Alliance.BLUE) {
-            rightWhipSnake.setPosition(30.0/255.0);
-        //} else {
-            leftWhipSnake.setPosition(225.0/255.0);
-        //}
+        lowerLeftWhipSnake();
+        lowerRightWhipSnake();
     }
     public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(225.0/255.0);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(55.0/255.0);}
-    public void lowerRightWhipSnake() {leftWhipSnake.setPosition(30.0/255.0);}
-    public void raiseRightWhipSnake() {leftWhipSnake.setPosition(200.0/255.0);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(45.0/255.0);}
+    public void lowerRightWhipSnake() {rightWhipSnake.setPosition(30.0/255.0);}
+    public void raiseRightWhipSnake() {rightWhipSnake.setPosition(200.0/255.0);}
 
 
     public void openBlockClaw() {

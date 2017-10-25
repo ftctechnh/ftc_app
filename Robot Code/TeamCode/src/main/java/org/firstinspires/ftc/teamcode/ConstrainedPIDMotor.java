@@ -46,8 +46,12 @@ public class ConstrainedPIDMotor {
 
             case HOLD:
                 if (timer.milliseconds() < timeTillLock) {
-                    releaseMotor();
+                    setMotorMode(RunMode.RUN_USING_ENCODER);
                     lockPos = m.getCurrentPosition();
+                    if (m.getZeroPowerBehavior() != DcMotor.ZeroPowerBehavior.BRAKE) {
+                        m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    }
+                    m.setPower(0);
                 } else {
                     goToPos(lockPos, 0.05, false, 0);
                 }
@@ -72,13 +76,9 @@ public class ConstrainedPIDMotor {
     }
     private void goToPos(int pos, double speed, boolean enableOverride, int dir) {
         if (enableOverride && override) {
-            if (m.getMode() != RunMode.RUN_USING_ENCODER) {
-                m.setMode(RunMode.RUN_USING_ENCODER);
-            }
+            setMotorMode(RunMode.RUN_USING_ENCODER);
         } else {
-            if (m.getMode() != RunMode.RUN_TO_POSITION) {
-                m.setMode(RunMode.RUN_TO_POSITION);
-            }
+            setMotorMode(RunMode.RUN_TO_POSITION);
         }
 
         if (m.getTargetPosition() != pos) {
@@ -91,6 +91,12 @@ public class ConstrainedPIDMotor {
             } else {
                 m.setPower(speed);
             }
+        }
+    }
+
+    private void setMotorMode(DcMotor.RunMode mode) {
+        if (m.getMode() != mode) {
+            m.setMode(mode);
         }
     }
 }
