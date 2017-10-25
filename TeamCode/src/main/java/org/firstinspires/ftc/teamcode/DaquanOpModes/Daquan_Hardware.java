@@ -25,8 +25,8 @@ public class Daquan_Hardware {
     public static final float DRIVE_POWER = 0.3f;
     public static final float INTAKE_POWER = 0.16f;
     public BNO055IMU gyro;
-    public float heading;
-    public float currentDrivePower = DRIVE_POWER;
+    public double heading;
+    public double currentDrivePower = DRIVE_POWER;
     private HardwareMap hwMap;
     private Telemetry telemetry;
 
@@ -38,7 +38,7 @@ public class Daquan_Hardware {
         telemetry.update();
 
         fleft = hwMap.dcMotor.get("fleft");
-        fright = hwMap.dcMotor.get("fight");
+        fright = hwMap.dcMotor.get("fright");
         bleft = hwMap.dcMotor.get("bleft");
         bright = hwMap.dcMotor.get("bright");
         lurricane = hwMap.dcMotor.get("lurricane");
@@ -51,7 +51,7 @@ public class Daquan_Hardware {
         if(usesGyro) {
             gyro = hwMap.get(BNO055IMU.class, "imu");
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
             parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
             parameters.calibrationDataFile = "AdafruitIMUCalibration.json";
             parameters.loggingEnabled = true;
@@ -64,7 +64,7 @@ public class Daquan_Hardware {
         telemetry.update();
     }
 
-    public void drive(float fl, float fr, float bl, float br) {
+    public void drive(double fl, double fr, double bl, double br) {
         fleft.setPower(clipValue(fl));
         fright.setPower(clipValue(fr));
         bleft.setPower(clipValue(bl));
@@ -72,14 +72,11 @@ public class Daquan_Hardware {
     }
 
     public void updateGyro() {
-        heading = - gyro.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle;
-
-        if (heading > 180)
-            heading = heading - 360;
+        heading = gyro.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle + Math.PI / 2;
     }
 
 
-    float clipValue(float value) {
+    double clipValue(double value) {
         if(value > currentDrivePower || value < -currentDrivePower)
             return(value / Math.abs(value) * currentDrivePower);
         else
