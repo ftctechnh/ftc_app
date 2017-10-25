@@ -85,6 +85,7 @@ ArmHardwareClass robot = new ArmHardwareClass();
             } else {
                 robot.verticalArmMotor.setPower(0);
             }
+
         }
     }
 
