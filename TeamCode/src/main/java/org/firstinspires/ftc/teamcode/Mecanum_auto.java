@@ -93,8 +93,8 @@ public class Mecanum_auto extends LinearOpMode {
         gromit.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
+//        telemetry.addData("Status", "Resetting Encoders");    //
+//        telemetry.update();
 
 //        gromit.left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        gromit.left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -111,17 +111,19 @@ public class Mecanum_auto extends LinearOpMode {
         waitForStart();
 
 
+    sleep(1000);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
-        mecanumDrive(1,45,4.0);
+        mecanumDrive(1,25,34);
         sleep(2000);
         stop_drivetrain();
-        mecanumDrive(-1,45,4.0);
+        mecanumDrive(-1,45,34);
         sleep(2000);
-        mecanumDrive(1,0,4.0);
-            sleep(1000);     // pause for servos to move
+        stop_drivetrain();
+
+
     }
 
     /*
@@ -132,10 +134,7 @@ public class Mecanum_auto extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void mecanumDrive(double speed,
-                             double target_heading,
-                             double distance)
-    {
+    public void mecanumDrive(double speed, double direction,double distance){
         if(abs(speed)> 1) speed = speed/abs(speed);
 
 
@@ -144,10 +143,77 @@ public class Mecanum_auto extends LinearOpMode {
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            double lfpower = Math.sin(Math.toRadians(target_heading+45));
-            double lrpower = Math.cos(Math.toRadians(target_heading+45));
-            double rfpower = Math.cos(Math.toRadians(target_heading+45));
-            double rrpower = Math.sin(Math.toRadians(target_heading+45));
+            double lfpower = Math.cos(Math.toRadians(direction+45));
+            double lrpower = Math.sin(Math.toRadians(direction+45));
+            double rfpower = Math.sin(Math.toRadians(direction+45));
+            double rrpower = Math.cos(Math.toRadians(direction+45));
+
+            //Determine largest power being applied
+            max = abs(lfpower);
+            if (abs(lrpower) > max) max = abs(lrpower);
+            if (abs(rfpower) > max) max = abs(rfpower);
+            if (abs(rrpower) > max) max = abs(rrpower);
+
+            multiplier = speed/max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+
+            lfpower = multiplier*lfpower;
+            lrpower = multiplier*lrpower;
+            rfpower = multiplier*rfpower;
+            rrpower = multiplier*rrpower;
+
+            gromit.left_front.setPower(lfpower);
+            gromit.left_back.setPower(lrpower);
+            gromit.right_front.setPower(rfpower);
+            gromit.right_back.setPower(rrpower);
+
+            //  sleep(250);   // optional pause after each move
+        }
+    }
+     /**
+     *  Method to Move in a Given direction at a certain Orientation or heading
+     *
+     */
+    public void mecanumDriveGyro(double speed,double direction, double orientation, double distance)
+    {
+        if(abs(speed)> 1) speed = speed/abs(speed);                                                 //Correct Speed if outside of Range
+
+        /**
+        * VARIABLES FOR THIS METHOD
+        */
+        double max;
+        double multiplier;
+        double turn_correction;
+        double correction_speed =0;
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        //Figure out better way to determine which way to turn
+
+
+        /**
+        * Drive Loop of this method
+        */
+        if(opModeIsActive()) {                                                                     // Ensure that the opmode is still active
+             /**
+             * READ IMU
+             */
+            turn_correction = orientation /**- IMU reading*/;
+
+            if (turn_correction <= -180) turn_correction +=360;   // correction should be +/- 180 (to the left negative, right positive)
+            if (turn_correction >=  180) turn_correction -=360;
+
+            correction_speed = Math.signum(turn_correction) * gromit.drive_COEF * turn_correction / 180;
+
+
+
+
+
+            lfpower = Math.sin(Math.toRadians(direction+45)); //+ correction_speed;
+            lrpower = Math.cos(Math.toRadians(direction+45)); //+ correction_speed;
+            rfpower = Math.cos(Math.toRadians(direction+45)); //- correction_speed;
+            rrpower = Math.sin(Math.toRadians(direction+45)); //- correction_speed;
 
             //Determine largest power being applied
             max = lfpower;
@@ -155,7 +221,7 @@ public class Mecanum_auto extends LinearOpMode {
             if (rfpower > max) max = rfpower;
             if (rrpower > max) max = rrpower;
 
-            multiplier = speed/max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+            multiplier = speed/max;                                                                 //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
 
             lfpower = multiplier*lfpower;
             lrpower = multiplier*lrpower;
@@ -182,16 +248,7 @@ public class Mecanum_auto extends LinearOpMode {
         if (correction <= -180) correction +=360;   // correction should be +/- 180 (to the left negative, right positive)
         if (correction >=  180) correction -=360;
 
-        //FRONT PIVOT
-        if(type == "front"){
-
-        }
-        //Rear Pivot
-        else if (type == "rear"){
-
-        }
-        //PIVOT
-        else{
+        //
             while(abs(correction) >= gromit.turn_THRESHOLD &&  opModeIsActive()) {
                 /**READ IMU*/
 
@@ -210,14 +267,11 @@ public class Mecanum_auto extends LinearOpMode {
                 gromit.right_back.setPower(-(adjustment * speed));
             }
             stop_drivetrain();
-
-        }
-
-
-
-
-
     }
+
+    /**
+    * STOP ALL DRIVETRAIN MOTORS
+    */
     public void stop_drivetrain(){
         gromit.left_front.setPower(0.0);
         gromit.left_back.setPower(0.0);
