@@ -29,8 +29,8 @@ package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
                          trigonometry. Also pivoting could be added in if found to be useful, but
                          I have not yet thought of a practical use for it.
  */
-@Disabled
-@TeleOp(name = "Holonomic Field-Centric Tele-Op", group = "holonomic")
+
+@TeleOp(name = "Holonomic Field-Centric Tele-Op Talon", group = "holonomic Talon")
 public class Holonomic_FieldCentric_TeleOp extends OpMode
 {
     Holonomic_Hardware robot;

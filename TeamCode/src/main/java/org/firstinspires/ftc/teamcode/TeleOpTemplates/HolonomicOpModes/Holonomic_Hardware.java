@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -26,6 +27,7 @@ public class Holonomic_Hardware {
     public double dp = .2f; //Drive Power (range = 0-1)
     private HardwareMap hwMap;
     private Telemetry telemetry;
+    public ElapsedTime time = new ElapsedTime();
 
     //Constructor; Put program's hardwaremap first, then telemetry,  then put true if gyro will be used or false if it won't
     public Holonomic_Hardware(HardwareMap hwmap, Telemetry telem, boolean usesGyro){
@@ -42,8 +44,8 @@ public class Holonomic_Hardware {
         fright = hwMap.dcMotor.get("fright");
         bleft = hwMap.dcMotor.get("bleft");
         bright = hwMap.dcMotor.get("bright");
-        fright.setDirection(DcMotor.Direction.REVERSE);
-        bright.setDirection(DcMotor.Direction.REVERSE);
+        fleft.setDirection(DcMotor.Direction.REVERSE);
+        bleft.setDirection(DcMotor.Direction.REVERSE);
 
         //Setting up gyro sensor if necessary
         if(usesGyro) {
