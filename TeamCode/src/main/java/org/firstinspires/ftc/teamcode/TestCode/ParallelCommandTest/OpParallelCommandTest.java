@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TestCode;
+package org.firstinspires.ftc.teamcode.TestCode.ParallelCommandTest;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

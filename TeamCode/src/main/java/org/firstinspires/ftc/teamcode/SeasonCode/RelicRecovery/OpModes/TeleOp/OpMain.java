@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.OpModes.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
-import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 
 
 /**
  * Main TeleOp for Relic Recovery Robot
  */
+@TeleOp(name = "Main TeleOp" , group = "Relic Recovery")
 public class OpMain extends LinearOpMode
 {
     private Base _base = new Base();        // Robot base
@@ -26,6 +27,13 @@ public class OpMain extends LinearOpMode
         _base.init(hardwareMap);
 
         waitForStart();
+
+        while(opModeIsActive())
+        {
+            _grabInput();
+
+            _runComponents();
+        }
     }
 
 
@@ -36,14 +44,12 @@ public class OpMain extends LinearOpMode
     {
         if(_toggleReverse.isPressed(gamepad1.x))
         {
-            if(_base.drivetrain.state() == Drivetrain.State.FORWARD)
-            {
-                _base.drivetrain.setState(Drivetrain.State.REVERSE);
-            }
-            else
-            {
-                _base.drivetrain.setState(Drivetrain.State.FORWARD);
-            }
+            _base.drivetrain.flipDirection();
+        }
+
+        if(_toggleSlow.isPressed(gamepad1.a))
+        {
+            _base.drivetrain.flipSpeed();
         }
     }
 

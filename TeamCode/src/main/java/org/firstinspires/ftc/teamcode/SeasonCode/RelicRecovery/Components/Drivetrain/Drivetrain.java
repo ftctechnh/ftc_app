@@ -37,14 +37,11 @@ public class Drivetrain extends RobotComponent
      */
     public enum State
     {
-        FORWARD ,
-        REVERSE ,
-        FAST ,
-        SLOW ,
-        STOP;
-
-        boolean isSlow = false;
-        boolean isReverse = false;
+        FORWARD_FAST ,
+        FORWARD_SLOW ,
+        REVERSE_FAST ,
+        REVERSE_SLOW ,
+        STOP
     }
 
 
@@ -63,6 +60,9 @@ public class Drivetrain extends RobotComponent
     }
 
 
+    /**
+     * @return Returns the current state of the drivetrain
+     */
     public State state()
     {
         return _state;
@@ -78,25 +78,20 @@ public class Drivetrain extends RobotComponent
     {
         switch(STATE)
         {
-            case FORWARD:
-                _powerMultiplier = _FORWARD_MULTIPLIER;
+            case FORWARD_FAST:
+                _powerMultiplier = _FORWARD_MULTIPLIER * _FAST_MULTIPLIER;
                 break;
 
-            case REVERSE:
-                _powerMultiplier = _REVERSE_MULTIPLIER;
+            case FORWARD_SLOW:
+                _powerMultiplier = _FORWARD_MULTIPLIER * _SLOW_MULTIPLIER;
                 break;
 
-            case FAST:
-                if(_state.isReverse)
-                {
-                    _powerMultiplier =
-                }
-
-            case SLOW:
-                if(_state == State.REVERSE)
-
-                _powerMultiplier = _SLOW_MULTIPLIER;
+            case REVERSE_FAST:
+                _powerMultiplier = _REVERSE_MULTIPLIER * _FAST_MULTIPLIER;
                 break;
+
+            case REVERSE_SLOW:
+                _powerMultiplier = _REVERSE_MULTIPLIER * _SLOW_MULTIPLIER;
 
             case STOP:
                 _powerMultiplier = _STOP_MULTIPLIER;
@@ -127,5 +122,57 @@ public class Drivetrain extends RobotComponent
 
         leftMotor.setPower(drivePower + rotatePower);
         rightMotor.setPower(drivePower - rotatePower);
+    }
+
+
+    /**
+     * Flips the direction of the drivetrain (forward/reverse)
+     */
+    public void flipDirection()
+    {
+        switch(_state)
+        {
+            case FORWARD_FAST:
+                setState(State.REVERSE_FAST);
+                break;
+
+            case FORWARD_SLOW:
+                setState(State.REVERSE_SLOW);
+                break;
+
+            case REVERSE_FAST:
+                setState(State.FORWARD_FAST);
+                break;
+
+            case REVERSE_SLOW:
+                setState(State.FORWARD_SLOW);
+                break;
+        }
+    }
+
+
+    /**
+     * Flips the speed of the drivetrain (fast/slow)
+     */
+    public void flipSpeed()
+    {
+        switch(_state)
+        {
+            case FORWARD_FAST:
+                setState(State.FORWARD_SLOW);
+                break;
+
+            case FORWARD_SLOW:
+                setState(State.FORWARD_FAST);
+                break;
+
+            case REVERSE_FAST:
+                setState(State.REVERSE_SLOW);
+                break;
+
+            case REVERSE_SLOW:
+                setState(State.REVERSE_FAST);
+                break;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestCode.Vuforia;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilVuforia;
  * Tests the Vuforia wrapper class
  */
 @TeleOp(name = "Vuforia Wrapper" , group = "Prototypes")
+@Disabled
 @SuppressWarnings("unused")
 public class OpVuforiaWrapperTest extends LinearOpMode
 {

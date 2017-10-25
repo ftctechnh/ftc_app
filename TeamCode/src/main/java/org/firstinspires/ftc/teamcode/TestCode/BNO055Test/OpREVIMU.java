@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.TestCode.BNO055Test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 @TeleOp(name = "IMU Test" , group = "Prototypes")
+@Disabled
 @SuppressWarnings("unused")
 public class OpREVIMU extends LinearOpMode
 {

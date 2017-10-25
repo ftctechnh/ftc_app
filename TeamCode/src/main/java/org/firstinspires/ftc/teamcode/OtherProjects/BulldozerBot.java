@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OtherProjects;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 
 
 @TeleOp(name = "Bulldozer" , group = "Prototypes")
+@Disabled
 @SuppressWarnings({"unused" , "WeakerAccess"})
 public final class BulldozerBot extends LinearOpMode
 {
