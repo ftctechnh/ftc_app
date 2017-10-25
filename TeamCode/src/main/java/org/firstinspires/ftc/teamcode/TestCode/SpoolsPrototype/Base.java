@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestCode.SpoolsPrototype;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Core.RobotBase;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 
 
 public class Base extends RobotBase

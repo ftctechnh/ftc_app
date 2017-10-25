@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.TestCode.BNO055Test;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Core.Utility.UtilToggle;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 
 
 @TeleOp(name = "IMU Calibration" , group = "Prototypes")

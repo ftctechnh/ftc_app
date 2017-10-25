@@ -10,7 +10,7 @@
     Distance: Centimeters
     Angle: Degrees (mathematical orientation)
  */
-package org.firstinspires.ftc.teamcode.Core;
+package org.firstinspires.ftc.robotcontroller.internal.Core;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;

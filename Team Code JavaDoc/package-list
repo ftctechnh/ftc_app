@@ -1,6 +1,6 @@
-org.firstinspires.ftc.teamcode.Core
-org.firstinspires.ftc.teamcode.Core.Sensors
-org.firstinspires.ftc.teamcode.Core.Utility
+org.firstinspires.ftc.robotcontroller.internal.Core
+org.firstinspires.ftc.robotcontroller.internal.Core.Sensors
+org.firstinspires.ftc.robotcontroller.internal.Core.Utility
 org.firstinspires.ftc.teamcode.OtherProjects
 org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex
 org.firstinspires.ftc.teamcode.TestCode.SixWheelPrototype

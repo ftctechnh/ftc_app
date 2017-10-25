@@ -10,12 +10,12 @@
     Distance: Centimeters
     Angle: Degrees (mathematical orientation)
  */
-package org.firstinspires.ftc.teamcode.Core.Utility;
+package org.firstinspires.ftc.robotcontroller.internal.Core.Utility;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Core.Utility.UtilColor.Color;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilColor.Color;
 
 
 /**

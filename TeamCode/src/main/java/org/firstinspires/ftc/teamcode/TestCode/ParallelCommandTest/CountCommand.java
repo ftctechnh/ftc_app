@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestCode.ParallelCommandTest;
 
 import android.util.Log;
 
-import org.firstinspires.ftc.teamcode.Core.RobotCommand;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand;
 
 
 class CountCommand extends RobotCommand

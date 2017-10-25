@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestCode.CoreTest;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Core.RobotBase;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 
 
 class TestBase extends RobotBase

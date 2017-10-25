@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.Core.Utility.UtilVuforia;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilVuforia;
 
 
 /**

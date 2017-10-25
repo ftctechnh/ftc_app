@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.TestCode.SpoolsPrototype;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Core.RobotBase;
-import org.firstinspires.ftc.teamcode.Core.RobotComponent;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
 
 
 /**

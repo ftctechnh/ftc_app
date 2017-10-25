@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.internal.OpenCV;
+package org.firstinspires.ftc.robotcontroller.internal.Core.OpenCV;
 
 
 import android.app.Activity;
@@ -13,7 +13,6 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;

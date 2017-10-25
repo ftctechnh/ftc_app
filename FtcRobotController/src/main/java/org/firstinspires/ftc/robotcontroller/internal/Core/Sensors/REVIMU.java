@@ -10,7 +10,7 @@
     Distance: Centimeters
     Angle: Degrees (mathematical orientation)
  */
-package org.firstinspires.ftc.teamcode.Core.Sensors;
+package org.firstinspires.ftc.robotcontroller.internal.Core.Sensors;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -24,8 +24,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.Core.HardwareMapper;
-import org.firstinspires.ftc.teamcode.Core.RobotBase;
+import org.firstinspires.ftc.robotcontroller.internal.Core.HardwareMapper;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 
 import java.io.File;
 

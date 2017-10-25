@@ -10,14 +10,14 @@
     Distance: Centimeters
     Angle: Degrees (mathematical orientation)
  */
-package org.firstinspires.ftc.teamcode.Core.Sensors;
+package org.firstinspires.ftc.robotcontroller.internal.Core.Sensors;
 
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import org.firstinspires.ftc.teamcode.Core.RobotBase;
-import org.firstinspires.ftc.teamcode.Core.HardwareMapper;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
+import org.firstinspires.ftc.robotcontroller.internal.Core.HardwareMapper;
 
 
 /**

@@ -10,16 +10,16 @@
     Distance: Centimeters
     Angle: Degrees (mathematical orientation)
  */
-package org.firstinspires.ftc.teamcode.Core.Sensors;
+package org.firstinspires.ftc.robotcontroller.internal.Core.Sensors;
 
 
 import android.util.Log;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
-import org.firstinspires.ftc.teamcode.Core.RobotBase;
-import org.firstinspires.ftc.teamcode.Core.HardwareMapper;
-import org.firstinspires.ftc.teamcode.Core.Utility.UtilBasic;
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
+import org.firstinspires.ftc.robotcontroller.internal.Core.HardwareMapper;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilBasic;
 
 
 /**
