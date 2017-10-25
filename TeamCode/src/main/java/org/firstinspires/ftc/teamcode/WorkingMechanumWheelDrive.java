@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "!Working Mechanum Wheel Drive!", group = "BACONbot")
 //@Disabled
-public class OldMechanumWheelDrive extends LinearOpMode {
+public class WorkingMechanumWheelDrive extends LinearOpMode {
 
     /* This says to use BACONbot hardware */
     HolonomicHardwareClass robot = new HolonomicHardwareClass();
