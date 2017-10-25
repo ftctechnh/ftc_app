@@ -23,7 +23,7 @@ public class base_mecanum_test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        JeffThePenguin jeffThePenguin = new JeffThePenguin(hardwareMap);
+        JeffThePengwin jeffThePengwin = new JeffThePengwin(hardwareMap);
 
         /*
         //get motors
@@ -37,7 +37,6 @@ public class base_mecanum_test extends LinearOpMode {
         //neat variables
         double drive; //turn power
         double turn; //turn direction
-        double power; //move power
         double leftX; //left x: joystick
         boolean move;
         double position;
@@ -65,7 +64,7 @@ public class base_mecanum_test extends LinearOpMode {
             }
 
             //
-            power = getPathagorus(leftX, drive); //the current joystick position
+            double power = getPathagorus(leftX, drive); //the current joystick position
 
             double degreePower = 1;
             if(gamepad1.left_bumper) {
@@ -74,7 +73,9 @@ public class base_mecanum_test extends LinearOpMode {
             else if(gamepad1.right_bumper){
                 degreePower = 0.25;
             }
-            power = degreePower*power;
+
+            jeffThePengwin.degreeOfPower = degreePower;
+            jeffThePengwin.powerInput = power;
             boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
             boolean notTurning = turn == 0;
             boolean movingVertical = Math.abs(drive) > Math.abs(leftX);
@@ -86,29 +87,29 @@ public class base_mecanum_test extends LinearOpMode {
                 if (movingVertical) { //forward/back or left/right?
                     if (drive > 0) { //forward
                         telemetry.addData("I say ", "go foward");
-                      jeffThePenguin.driveForward(power);
+                      jeffThePengwin.driveForward();
                     } else { //back
                         telemetry.addData("I say ", "go backward");
-                        jeffThePenguin.driveBackward(power);
+                        jeffThePengwin.driveBackward();
                     }
                 } else {
                     if (strafingRight) { //right
                         telemetry.addData("I say ", "strafe right");
-                        jeffThePenguin.strafeRight(power);
+                        jeffThePengwin.strafeRight();
                     } else { //left
                         telemetry.addData("I say ", "strafe left");
-                        jeffThePenguin.strafeLeft(power);
+                        jeffThePengwin.strafeLeft();
                     }
                 }
             } else if (turningRight) {
                 //pushing right joystick to the right
                 //turn right by left wheels going forward and right going backwards
                 telemetry.addData("I say ", "turn right");
-                jeffThePenguin.turnRight(power);
+                jeffThePengwin.turnRight();
             } else {
                 //turn left
                 telemetry.addData("I say ", "turn left");
-                jeffThePenguin.turnLeft(power);
+                jeffThePengwin.turnLeft();
             }
 
             telemetry.addData("front left", leftFrontMotor.getPower());
