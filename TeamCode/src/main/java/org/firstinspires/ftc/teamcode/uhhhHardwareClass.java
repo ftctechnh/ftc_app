@@ -50,8 +50,8 @@ public class uhhhHardwareClass {
         // Set proper encoder state for all motor
 
 
-//        // Set proper encoder state for all motor
-//        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//       // Set proper encoder state for all motor
+//       frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
