@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
+package org.firstinspires.ftc.teamcode.DaquanOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -28,10 +28,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
                          I have not yet thought of a practical use for it.
  */
 @Disabled
-@TeleOp(name = "Holonomic Field-Centric Tele-Op Erik", group = "holonomic Erik")
-public class Holonomic_FieldCentric_Erik extends OpMode
+@TeleOp(name = "Daquan Field-Centric Erik", group = "Daquan")
+public class Daquan_Field_Centric_Erik extends OpMode
 {
-    Holonomic_Hardware robot;
+    Daquan_Hardware robot;
     double angleFromDriver = Math.PI/2;
     double jTheta;
     double jp;
@@ -40,7 +40,7 @@ public class Holonomic_FieldCentric_Erik extends OpMode
     @Override
     public void init ()
     {
-        robot = new Holonomic_Hardware(hardwareMap, telemetry, true);
+        robot = new Daquan_Hardware(hardwareMap, telemetry, true);
 
     }
 
@@ -63,7 +63,7 @@ public class Holonomic_FieldCentric_Erik extends OpMode
                 (Math.sin(theta)-Math.cos(theta))*jp/2 + gamepad1.right_stick_x,
                 (Math.sin(theta)-Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
                 (Math.sin(theta)+Math.cos(theta))*jp/2 + gamepad1.right_stick_x
-                    );
+        );
 
         telemetry.addData("Ultra Turbo Mode Activated", gamepad1.right_bumper && gamepad1.left_bumper);
         telemetry.addData(" Right Joystick X Axis:", gamepad1.right_stick_x);
@@ -71,4 +71,3 @@ public class Holonomic_FieldCentric_Erik extends OpMode
         telemetry.addData("Joystick Magnitude", jp);
         telemetry.addData("Gyro Heading", robot.heading);
     }
-}

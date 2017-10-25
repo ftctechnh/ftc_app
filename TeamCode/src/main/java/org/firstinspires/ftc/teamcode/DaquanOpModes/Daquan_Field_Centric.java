@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.DaquanOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Tafon Field-Centric", group = "Daquan")
+@TeleOp(name = "Daquan Field-Centric Tafon", group = "Daquan")
 public class Daquan_Field_Centric extends OpMode {
 
     Daquan_Hardware robot;

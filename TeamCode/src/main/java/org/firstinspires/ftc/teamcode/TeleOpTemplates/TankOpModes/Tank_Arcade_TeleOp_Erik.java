@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @Disabled
-@TeleOp(name = "Guillermo Arcade Tele-Op", group = "guillermo")
+@TeleOp(name = "Arcade Tele-Op Erik", group = "Tank")
 public class Tank_Arcade_TeleOp_Erik extends OpMode {
 
     Tank_Hardware robot;

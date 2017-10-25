@@ -24,7 +24,7 @@ centric Drive.
  */
 
 @Disabled
-@TeleOp(name = "Mecanum Erik Style Controls", group = "Daquan")
+@TeleOp(name = "Holonomic Robot-Centric Tele-Op Erik", group = "Daquan")
 public class Holonomic_RobotCentric_TeleOp_Erik extends OpMode
 {
     Holonomic_Hardware robot;
