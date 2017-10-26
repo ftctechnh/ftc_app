@@ -68,13 +68,11 @@ public class MecanumRework extends OpMode
         if (angle <= 0) {
             angle += Math.PI * 2;
         }
+        /*
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0){
-            angle = 0;
+            angle = (Math.PI)/2;
         }
-
-        /*else if (angle < 0){
-            angle += Math.PI * 2;
-        }*/
+        */
 
         // rotation magnitude
         if (gamepad1.left_bumper){
@@ -90,6 +88,11 @@ public class MecanumRework extends OpMode
         telemetry.addData("angle (pi):", angle/Math.PI);
         telemetry.addData("rot. magnitude:", rotate);
         // calc voltage multipliers
+        if (gamepad1.b || (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0)) {
+            speed = 0;
+        }
+
+
         voltageMultiplier[0] = speed * Math.cos(angle - (Math.PI/4)) + rotate;
         voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;
         voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;
