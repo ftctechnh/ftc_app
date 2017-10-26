@@ -55,7 +55,11 @@ public class MecanumRework extends OpMode
         // calculations bloc
         // speed - while our technical value is within the range of [-1,1], we'll just keep it
         // positive.
-        speed = gamepad1.right_trigger;
+        if (gamepad1.right_bumper) {
+            speed = -1 * gamepad1.right_trigger;
+        } else {
+            speed = gamepad1.right_trigger;
+        }
         // angle - this is calculated using the direction our stick is pointing. should be in a
         // range of [0,2pi] like a unit circle. terrible things, unit circles.
         // this means the stick held right should be 2pi.
@@ -86,10 +90,10 @@ public class MecanumRework extends OpMode
         telemetry.addData("angle (pi):", angle/Math.PI);
         telemetry.addData("rot. magnitude:", rotate);
         // calc voltage multipliers
-        voltageMultiplier[0] = speed * Math.sin(angle + (Math.PI/4)) + rotate;
-        voltageMultiplier[1] = speed * Math.cos(angle + (Math.PI/4)) - rotate;
-        voltageMultiplier[2] = speed * Math.cos(angle + (Math.PI/4)) + rotate;
-        voltageMultiplier[3] = speed * Math.sin(angle + (Math.PI/4)) - rotate;
+        voltageMultiplier[0] = speed * Math.cos(angle - (Math.PI/4)) + rotate;
+        voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;
+        voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;
+        voltageMultiplier[3] = speed * Math.cos(angle - (Math.PI/4)) - rotate;
         //DEBUG: voltage multiplier output
         telemetry.addData("VOLTAGE MULTIPLIERS (unnormalized)", "");
         telemetry.addData("VM1", voltageMultiplier[0]);
@@ -100,23 +104,30 @@ public class MecanumRework extends OpMode
         // store the biggest voltage multiplier
         double topStore = 0;
         for (int x = 0; x < 4; x++){
-            if (voltageMultiplier[x] > topStore){
-                topStore = voltageMultiplier[x];
+            if (Math.abs(voltageMultiplier[x]) > topStore){
+                topStore = Math.abs(voltageMultiplier[x]);
             }
         }
         // followed by dividing them all by the top one
-        // additionally, do a sanity check that turns any NaNs into 0s.
-        for (int x = 0; x < 4; x++){
-            voltageMultiplier[x] /= topStore;
-            if (voltageMultiplier[x] == NaN){
-                voltageMultiplier[x] = 0;
+        // additionally, do a sanity check that ensures we don't actually do this
+        // if our top stored number is "0" because that would make NaN and do bad
+        // things ;~;
+        if (topStore != 0) {
+            for (int x = 0; x < 4; x++){
+                voltageMultiplier[x] /= topStore;
             }
         }
+
         telemetry.addData("VOLTAGE MULTIPLIERS (normalized)", "");
         telemetry.addData("VM1", voltageMultiplier[0]);
         telemetry.addData("VM2", voltageMultiplier[1]);
         telemetry.addData("VM3", voltageMultiplier[2]);
         telemetry.addData("VM4", voltageMultiplier[3]);
+
+        robot.flDrive.setPower(voltageMultiplier[0]);
+        robot.frDrive.setPower(voltageMultiplier[1]);
+        robot.rlDrive.setPower(voltageMultiplier[2]);
+        robot.rrDrive.setPower(voltageMultiplier[3]);
     }
 
     @Override
