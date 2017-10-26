@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
@@ -100,30 +101,34 @@ MasterHardwareClass robot = new MasterHardwareClass();
                     double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
                     double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
                     double rightX = gamepad1.right_stick_x;
-                    final double v1 = gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;
-                    final double v2 = gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x;
-                    final double v3 = gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
-                    final double v4 = gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
+                    final double r1 = gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;
+                    final double r2 = gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x;
+                    final double r3 = gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
+                    final double r4 = gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
 
-                    frontLeft = v1;
-                    frontRight = v2;
-                    backLeft = v3;
-                    backRight = v4;
+                    frontLeft = r1;
+                    frontRight = r2;
+                    backLeft = r3;
+                    backRight = r4;
+
+
+                    robot.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
 
                     if (robot.FrontLeftPower != frontLeft) {
-                        robot.frontLeftMotor.setPower(v1);
+                        robot.frontLeftMotor.setPower(r1);
                         robot.FrontLeftPower = frontLeft;
                     }
                     if (robot.FrontRightPower != frontRight) {
-                        robot.frontRightMotor.setPower(v2);
+                        robot.frontRightMotor.setPower(r2);
                         robot.FrontRightPower = frontRight;
                     }
                     if (robot.BackLeftPower != backLeft) {
-                        robot.backLeftMotor.setPower(v3);
+                        robot.backLeftMotor.setPower(r3);
                         robot.BackLeftPower = backLeft;
                     }
                     if (robot.BackRightPower != backRight)
-                        robot.backRightMotor.setPower(v4);
+                        robot.backRightMotor.setPower(r4);
                     robot.BackRightPower = backRight;
                 }
 
