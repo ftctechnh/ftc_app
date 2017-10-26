@@ -12,11 +12,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class TestHardwareClass {
     /* Public OpMode members. */
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+    ColorSensor sensorColorRight;
+    DistanceSensor sensorDistanceRight;
     Servo gemServo;
-    ColorSensor colorSensor;
-    DistanceSensor distanceSensor;
+    ColorSensor sensorColorLeft;
+    DistanceSensor sensorDistanceLeft;
     /* local OpMode members. */
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
@@ -31,13 +31,13 @@ public class TestHardwareClass {
         // Save reference to Hardware map
         hwMap = ahwMap;
         // Define and Initialize Hardware
-        sensorColor = hwMap.get(ColorSensor.class, "colorsensor");
+        sensorColorRight = hwMap.get(ColorSensor.class, "colorsensor");
         // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hwMap.get(DistanceSensor.class, "colorsensor");
+        sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
         //Second Color Sensor
-        colorSensor = hwMap.get(ColorSensor.class,"othercolorsensor");
+        sensorColorLeft = hwMap.get(ColorSensor.class,"othercolorsensor");
         //Distance Sensor of the Second Color Sensor
-        distanceSensor = hwMap.get(DistanceSensor.class,"othercolorsensor");
+        sensorDistanceLeft = hwMap.get(DistanceSensor.class,"othercolorsensor");
         gemServo = hwMap.get(Servo.class, "gemservo");
 
     }
