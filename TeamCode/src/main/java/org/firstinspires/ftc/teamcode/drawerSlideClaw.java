@@ -17,7 +17,9 @@ public class drawerSlideClaw extends OpMode {
     private double servohighend = 0.43;
     private double motorSpeed;
     private Servo arm;
-    private double servoDir;
+    private double armDir;
+    private double armlowend = 0.0;
+    private double armhighend = 1.0;
 
     @Override
     public void init() {
@@ -25,12 +27,13 @@ public class drawerSlideClaw extends OpMode {
         claw.setPosition(servohighend);
         motor = hardwareMap.dcMotor.get("m5");
         arm = hardwareMap.servo.get("s2");
+        arm.setPosition(armlowend);
     }
 
     @Override
     public void loop() {
         motorSpeed = gamepad1.left_stick_y;
-        servoDir = Range.scale(gamepad1.right_stick_y, -1.0, 1.0, 0.0, 1.0);
+        armDir = Range.scale(gamepad1.right_stick_y, -1.0, 1.0, 0.0, 1.0);
         if (gamepad1.a) {
             //    claw.setPosition(Range.clip(claw.getPosition() + 0.001, servolowend, servohighend));
             claw.setPosition(servolowend);
@@ -40,10 +43,10 @@ public class drawerSlideClaw extends OpMode {
             claw.setPosition(servohighend);
         }
         motor.setPower(motorSpeed);
-        motor.setPower(servoDir);
-
+        arm.setPosition(armDir);
+        arm.setPosition(armDir);
         telemetry.addData("clawposition: ", claw.getPosition());
-        telemetry.addData("servo dir", servo.getPosition());
+        telemetry.addData("servo pos", arm.getPosition());
     }
 
 }
