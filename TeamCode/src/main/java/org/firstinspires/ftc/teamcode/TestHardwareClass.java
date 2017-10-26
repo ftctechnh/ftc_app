@@ -15,6 +15,8 @@ public class TestHardwareClass {
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
     Servo gemServo;
+    ColorSensor colorSensor;
+    DistanceSensor distanceSensor;
     /* local OpMode members. */
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
@@ -32,7 +34,10 @@ public class TestHardwareClass {
         sensorColor = hwMap.get(ColorSensor.class, "colorsensor");
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hwMap.get(DistanceSensor.class, "colorsensor");
-
+        //Second Color Sensor
+        colorSensor = hwMap.get(ColorSensor.class,"othercolorsensor");
+        //Distance Sensor of the Second Color Sensor
+        distanceSensor = hwMap.get(DistanceSensor.class,"othercolorsensor");
         gemServo = hwMap.get(Servo.class, "gemservo");
 
     }
