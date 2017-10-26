@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Robot9853 extends Robot {
 
-    private HolonomicDriver driver;
+    public HolonomicDriver driver;
 
     public static Robot9853 build(OpMode opMode) {
         return new Robot9853(opMode.hardwareMap, opMode.telemetry);

@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class HolonomicDriver {
     public static final double HOLONOMIC_AXIS_CORRECTION = Math.PI / 4;
+    private static final double ROOT_TWO = Math.sqrt(2);
 
     private static final String TAG = "HolonomicDriver";
 
@@ -168,7 +169,7 @@ public class HolonomicDriver {
      * @param rotation      the factor by which to rotate the robot
      */
     public void setDrivePower(double direction, AngleUnit angleUnit, double magnitude, double rotation) {
-        Range.throwIfRangeIsInvalid(magnitude, 0, 1);
+        Range.throwIfRangeIsInvalid(magnitude, 0, ROOT_TWO);
         Range.throwIfRangeIsInvalid(rotation, -1, 1);
 
         direction = angleUnit.toRadians(direction);
