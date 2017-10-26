@@ -211,56 +211,55 @@ public class VumarkOpenCV extends OpenCVLoad {
                 Matrix34F goodCodeWritten = writeGoodCode.getRealPose();
 
                 //reset imagePoints
-                final float[][] imagePoints = new float[8][2];
+                final float[][] vufPoints = new float[8][2];
 
                 //use vuforias projectPoints method to project all those box points
                 for(int i = 0; i < point.length; i++){
                     //project
-                    imagePoints[i] = Tool.projectPoint(camCal, goodCodeWritten, point[i]).getData();
+                    vufPoints[i] = Tool.projectPoint(camCal, goodCodeWritten, point[i]).getData();
                     //convert to opencv language
 
-                    telemetry.addData("point", "num: %d, x: %f.2, y: %f.2", i, imagePoints[i][0], imagePoints[i][1]);
+                    telemetry.addData("point", "num: %d, x: %f.2, y: %f.2", i, vufPoints[i][0], vufPoints[i][1]);
                 }
 
                 telemetry.addData("Camera Size", "w: %f.2, h: %f.2", camCal.getSize().getData()[0], camCal.getSize().getData()[1]);
 
-                Mat out;
                 //get frame from vuforia
                 try{
                     VuforiaLocalizer.CloseableFrame frame = ray.take();
 
-                    int i = 0;
-                    for(; i < frame.getNumImages(); i++){
-                        Log.i("OPENCV", "Image " + i + " " + frame.getImage(i).getWidth());
-                        if(frame.getImage(i).getWidth() == size[0]) break;
+                    int img = 0;
+                    for(; img < frame.getNumImages(); img++){
+                        Log.i("OPENCV", "Image " + img + " " + frame.getImage(img).getWidth());
+                        if(frame.getImage(img).getWidth() == size[0]) break;
                     }
 
-                    if(i < frame.getNumImages()) out = getMatFromImage(frame.getImage(i));
+                    final Mat out;
+                    if(img < frame.getNumImages()) out = getMatFromImage(frame.getImage(img));
                     else throw new IllegalArgumentException("No frame with matching width!");
 
                     frame.close();
-                }
-                catch (Exception e){
-                    Log.e("OPENCV", e.getLocalizedMessage());
-                }
 
-                //TODO: FIX THIS SH!T
+                    //create an array of points fron the float
+                    Point imagePoints[] = new Point[vufPoints.length];
 
-                Scalar color = new Scalar(0, 255, 0);
-                for(int i = 0; i < 2; i++)
-                    for(int o = 0; o < 4; o++)
-                        Imgproc.line(out, imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1], imagePoints[i * 4 + o], color);
+                    for(int i = 0; i < vufPoints.length; i++) imagePoints[i] = new Point((double)vufPoints[i][0], (double)vufPoints[i][1]);
 
-                //connect the rectangles
-                for(int i = 0; i < 4; i++) Imgproc.line(out, imagePoints[i], imagePoints[i + 4], color);
+                    Scalar color = new Scalar(0, 255, 0);
+                    for(int i = 0; i < 2; i++)
+                        for(int o = 0; o < 4; o++)
+                            Imgproc.line(out, imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1], imagePoints[i * 4 + o], color);
 
-                //convert to bitmap
-                Utils.matToBitmap(out, bm);
+                    //connect the rectangles
+                    for(int i = 0; i < 4; i++) Imgproc.line(out, imagePoints[i], imagePoints[i + 4], color);
 
-                //display!
-                mView.getHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
+                    //display!
+                    mView.getHandler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                        //convert to bitmap
+                        Utils.matToBitmap(out, bm);
+
                         mView.invalidate();
                         //old vuforia stuff
                         /*
@@ -273,10 +272,13 @@ public class VumarkOpenCV extends OpenCVLoad {
                         //connect the rectangles
                         for(int i = 0; i < 4; i++) canvas.drawLine(imagePoints[i][0], imagePoints[i][1], imagePoints[i + 4][0], imagePoints[i + 4][1], p);
                         */
-                        mView.setImageBitmap(bm);
-                    }
-                });
-
+                            mView.setImageBitmap(bm);
+                        }
+                    });
+                }
+                catch (Exception e){
+                    Log.e("OPENCV", e.getLocalizedMessage());
+                }
             }
         } else {
             telemetry.addData("VuMark", "not visible");
@@ -312,7 +314,7 @@ public class VumarkOpenCV extends OpenCVLoad {
 
     /**
      * I'm so sorry
-     * Shims cerated so I can access the pose in vuforia matrix form
+     * Shims created so I can access the pose in vuforia matrix form
      * they are protected variables, so I need to java fu my way into them
      */
     //start from the very begining...
