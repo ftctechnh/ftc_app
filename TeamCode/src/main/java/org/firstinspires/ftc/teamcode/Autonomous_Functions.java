@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
+
 import android.graphics.Color;
-import android.view.View;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
@@ -12,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
-
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 // Created by MRINAAL RAMACHANDRAN on 10/8/17
@@ -29,8 +28,21 @@ public class Autonomous_Functions {
     protected DcMotor R_L = null;
     protected DcMotor R_R = null;
 
-
     protected Servo dropper = null;
+
+    ColorSensor colorSensor = null;
+
+    String jewelColor = null;
+
+    float hsvValues[] = {0F,0F,0F};
+
+    // bPrevState and bCurrState represent the previous and current state of the button.
+    boolean bPrevState = false;
+    boolean bCurrState = false;
+
+    // bLedOn represents the state of the LED.
+    boolean bLedOn = true;
+
 
     // LOCAL OPMODE MEMBERS
     HardwareMap hwMap = null;
@@ -39,7 +51,6 @@ public class Autonomous_Functions {
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
-
 
         F_L = hwMap.get(DcMotor.class, "F_L");
         F_R = hwMap.get(DcMotor.class, "F_R");
@@ -57,6 +68,8 @@ public class Autonomous_Functions {
         R_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         dropper = hwMap.get(Servo.class, "dropper");
+
+        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
     }
 
@@ -324,8 +337,8 @@ public class Autonomous_Functions {
 
         if (direction == Constants.spinRight) {
 
-            F_L.setDirection(DcMotor.Direction.FORWARD);
-            F_R.setDirection(DcMotor.Direction.FORWARD);
+                F_L.setDirection(DcMotor.Direction.FORWARD);
+                F_R.setDirection(DcMotor.Direction.FORWARD);
             R_L.setDirection(DcMotor.Direction.FORWARD);
             R_R.setDirection(DcMotor.Direction.FORWARD);
 
@@ -397,7 +410,89 @@ public class Autonomous_Functions {
         }
         stopMotor();
     }
+
+    public String senseJewelColor () {
+
+        String color = "NOTHING";
+
+
+        // Turn LED on
+        if (bCurrState && (bCurrState != bPrevState))  {
+
+            // button is transitioning to a pressed state. So Toggle LED
+            bLedOn = !bLedOn;
+            colorSensor.enableLed(bLedOn);
+        }
+
+        // update previous state variable.
+        bPrevState = bCurrState;
+
+        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+
+        int red = colorSensor.red();
+        int blue = colorSensor.blue();
+        int green = colorSensor.green();
+
+        // sense color blue
+        if (blue >=2 && blue >red) {
+
+            //telemetry.addData("i am blue", colorSensor.blue());
+            //telemetry.addData("red value is ", colorSensor.red());
+            //telemetry.update();
+
+            color = "BLUE";
+        }
+
+        // sense color red
+        if (red >=2  && red>blue ) {
+
+            //telemetry.addData("i am red", colorSensor.red());
+            //telemetry.addData("blue value is ", colorSensor.blue());
+            //telemetry.update();
+
+            color = "RED";
+        }
+
+        // Turn LED off
+        colorSensor.enableLed(false);
+
+        // Return the color
+        return color;
+    }
+
+    public void knockOffJewel () {
+
+        jewelColor = senseJewelColor();
+
+        dropper.setPosition(0);
+        stopMotor(1000);
+
+        //sense color
+
+        // if color red turn that way
+        if (jewelColor == "RED") {
+
+            moveMotorWithEncoder(.05, 500, Constants.spinLeft);
+            stopMotor(1000);
+            dropper.setPosition(1);
+            stopMotor(1000);
+            moveMotorWithEncoder(.03, 500, Constants.spinRight);
+            stopMotor(1000);
+        }
+
+        // if color blue turn other way
+        else if (jewelColor == "BLUE") {
+            moveMotorWithEncoder(.05, 500, Constants.spinRight);
+            stopMotor(1000);
+            dropper.setPosition(1);
+            stopMotor(1000);
+            moveMotorWithEncoder(.03, 500, Constants.spinLeft);
+            stopMotor(1000);
+        }
+
+    }
 }
+
 
 
 
