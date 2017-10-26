@@ -12,8 +12,4 @@
 // Custom definitions may go here
 
 // Include common definitions from above.
-apply from: '../build.common.gradle'
-
-android {
-    buildToolsVersion '26.0.2'
-}
+apply from: '../teamcode.build.gradle'
