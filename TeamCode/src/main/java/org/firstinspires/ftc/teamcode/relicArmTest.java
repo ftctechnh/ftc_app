@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class relicArmTest extends OpMode{
     Servo servo;
     DcMotor motor;
+    boolean armhasInitiated = false;
     @Override
 
     public void init() {
@@ -29,10 +30,20 @@ public class relicArmTest extends OpMode{
         motor.setPower(moveMotor);
 
         if (gamepad1.a){
-
-                servo.setPosition(1);
-                servo.setPosition(1);
+            if(armhasInitiated == false){
+                servo.setPosition(1.0);
+                armhasInitiated = true;
+            }
+            if (armhasInitiated){
+                servo.setPosition(.5);
+                armhasInitiated = false;
+            }
         }
-
+        if (gamepad1.b){
+            servo.setPosition(0);
+            armhasInitiated = false;
+            telemetry.addData("Servo Position: ", servo.getPosition());
+            telemetry.update();
+        }
     }
 }
