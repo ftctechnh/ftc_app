@@ -57,7 +57,7 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
     double clawOffset = 0;                            // Servo mid position
     final double CLAW_SPEED = 0.04;                   // sets rate to move servo
 
-    boolean precisionMode = false;
+    double speedBonus = 0;
 
     @Override
     public void runOpMode() {
@@ -65,8 +65,6 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
         double driveRight;
         double drive;
         double turn;
-        double precDrive;
-        double precTurn;
         double max;
 
         /* Initialize the hardware variables.
@@ -81,16 +79,22 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        precisionMode = false;
-
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if (gamepad1.a) {
-                precisionMode = true;
+            if (gamepad1.dpad_up) {
+                speedBonus += 0.1;
             }
-            if (gamepad1.x) {
-                precisionMode = false;
+            if (gamepad1.dpad_down) {
+                speedBonus -= 0.1;
+            }
+
+            if (speedBonus > 2) {
+                speedBonus = 2;
+            }
+
+            if (speedBonus < -0.8) {
+                speedBonus = -0.8;
             }
 
                 // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -98,21 +102,16 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 // This way it's also easy to just drive straight, or just turn.
                 drive = -gamepad1.left_stick_y;
                 turn = gamepad1.right_stick_x;
-                precDrive = drive / 4;
-                precTurn = turn / 6;
 
                 // Combine drive and turn for blended motion.
-                driveLeft = drive + turn;
-                driveRight = drive - turn;
+                    driveLeft = drive + turn;
+                    driveRight = drive - turn;
+                    driveLeft += (speedBonus * driveLeft);
+                    driveRight += (speedBonus * driveRight);
 
-                if (precisionMode == true) {
-                    driveLeft = precDrive + precTurn;
-                    driveRight = precDrive - precTurn;
-                }
-
-                // Normalize the values so neither exceed +/- 1.0
+                // Normalize the values so neither exceed +/- 2.0
                 max = Math.max(Math.abs(driveLeft), Math.abs(driveRight));
-                if (max > 1.0) {
+                if (max > 3.0) {
                     driveLeft /= max;
                     driveRight /= max;
                 }
@@ -146,6 +145,8 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 telemetry.addData("claw", "rightPosition = %.2f", robot.rightClaw.getPosition());
                 telemetry.addData("DriveLeft", "%.2f", driveLeft);
                 telemetry.addData("DriveRight", "%.2f", driveRight);
+                telemetry.addData("RawDriveLeft", "%.2f", robot.leftDrive.getPower());
+                telemetry.addData("RawDriveRight", "%.2f", robot.rightDrive.getPower());
                 telemetry.update();
 
                 // Pace this loop so jaw action is reasonable speed.
