@@ -2,18 +2,24 @@ package org.chathamrobotics.common.hardware.modernrobotics;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import org.chathamrobotics.common.hardware.LimitSwitch;
 
-/**
- * Created by carsonstorm on 10/26/2017.
- */
-
 @SuppressWarnings("unused")
 public class ModernRoboticsLimitSwitch implements LimitSwitch {
+    private final DigitalChannel digitalChannel;
     private final DigitalChannelController digitalChannelController;
     private final int physicalPort;
+
+    /**
+     * Creates a instance of ModernRoboticsLimitSwitch
+     * @param digitalChannel    the digital channel for the limit switch
+     */
+    public ModernRoboticsLimitSwitch(DigitalChannel digitalChannel) {
+        this.digitalChannel = digitalChannel;
+        this.digitalChannelController = null;
+        this.physicalPort = 0;
+    }
 
     /**
      * Creates a instance of ModernRoboticsLimitSwitch
@@ -21,13 +27,22 @@ public class ModernRoboticsLimitSwitch implements LimitSwitch {
      * @param physicalPort      the device's physical port
      */
     public ModernRoboticsLimitSwitch(DigitalChannelController digitalController, int physicalPort) {
+        this.digitalChannel = null;
         this.digitalChannelController = digitalController;
         this.physicalPort = physicalPort;
     }
 
+    /**
+     * Whether or not the limit switch is being pressed
+     * @return  Whether or not the limit switch is being pressed
+     */
     @Override
     public boolean isPressed() {
-        return digitalChannelController.getDigitalChannelState(physicalPort);
+        if (digitalChannelController != null) {
+            return digitalChannelController.getDigitalChannelState(physicalPort);
+        }
+
+        return digitalChannel.getState();
     }
 
     @Override
@@ -47,7 +62,11 @@ public class ModernRoboticsLimitSwitch implements LimitSwitch {
 
     @Override
     public String getConnectionInfo() {
-        return digitalChannelController.getConnectionInfo() + "; digital port " + physicalPort;
+        if (digitalChannelController != null) {
+            return digitalChannelController.getConnectionInfo() + "; digital port " + physicalPort;
+        }
+
+        return digitalChannel.getConnectionInfo();
     }
 
     @Override
