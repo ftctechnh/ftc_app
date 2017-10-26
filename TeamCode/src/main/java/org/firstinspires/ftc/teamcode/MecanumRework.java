@@ -95,6 +95,11 @@ public class MecanumRework extends OpMode
         voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;
         voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;
         voltageMultiplier[3] = speed * Math.cos(angle - (Math.PI/4)) - rotate;
+        if (rotate == 0) {
+            for (int i = 0; i < 4; i++) {
+                voltageMultiplier[i] *= Math.sqrt(2);
+            }
+        }
         //DEBUG: voltage multiplier output
         telemetry.addData("VOLTAGE MULTIPLIERS (unnormalized)", "");
         telemetry.addData("VM1", voltageMultiplier[0]);
@@ -124,10 +129,9 @@ public class MecanumRework extends OpMode
         telemetry.addData("VM4", voltageMultiplier[3]);
 
         if (gamepad1.b) {
-            voltageMultiplier[0] = 0;
-            voltageMultiplier[1] = 0;
-            voltageMultiplier[2] = 0;
-            voltageMultiplier[3] = 0;
+            for (int i = 1; i < 4; i++) {
+                voltageMultiplier[i] = 0;
+            }
         }
 
         robot.flDrive.setPower(voltageMultiplier[0]);
