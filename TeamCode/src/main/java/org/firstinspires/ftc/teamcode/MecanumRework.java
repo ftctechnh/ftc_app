@@ -40,6 +40,7 @@ public class MecanumRework extends OpMode
 
     @Override
     public void init_loop() {
+
     }
 
     @Override
@@ -80,7 +81,6 @@ public class MecanumRework extends OpMode
         } else {
             rotate = gamepad1.left_trigger;
         }
-
         //DEBUG: dump outputs
         telemetry.addData("REQUIRED INFORMATION", "");
         telemetry.addData("speed:", speed);
@@ -91,8 +91,6 @@ public class MecanumRework extends OpMode
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) {
             speed = 0;
         }
-
-
         voltageMultiplier[0] = speed * Math.cos(angle - (Math.PI/4)) + rotate;
         voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;
         voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;
@@ -105,20 +103,18 @@ public class MecanumRework extends OpMode
         telemetry.addData("VM4", voltageMultiplier[3]);
         // begin normalization process
         // store the biggest voltage multiplier
-        double topStore = 0;
+        double topStore = 1;
         for (int x = 0; x < 4; x++){
-            if (Math.abs(voltageMultiplier[x]) > topStore){
+            if (Math.abs(voltageMultiplier[x]) > topStore) {
                 topStore = Math.abs(voltageMultiplier[x]);
             }
         }
         // followed by dividing them all by the top one
         // additionally, do a sanity check that ensures we don't actually do this
         // if our top stored number is "0" because that would make NaN and do bad
-        // things ;~;
-        if (topStore != 0) {
-            for (int x = 0; x < 4; x++){
-                voltageMultiplier[x] /= topStore;
-            }
+        // things ;~
+        for (int x = 0; x < 4; x++) {
+            voltageMultiplier[x] /= topStore;
         }
 
         telemetry.addData("VOLTAGE MULTIPLIERS (normalized)", "");
