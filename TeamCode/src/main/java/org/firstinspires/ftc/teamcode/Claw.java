@@ -6,14 +6,16 @@ package org.firstinspires.ftc.teamcode;
 //Hello!
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 //Declaration of Servos
-public class claw {
-private Servo leftClawMotor = null;
-private Servo rightClawMotor = null;
+public class Claw {
+        private Servo leftClawMotor = null;
+        private Servo rightClawMotor = null;
+        private double leftClawPosition = 0.0;
+        private double rightClawPosition = 0.0;
 
-        public claw( HardwareMap ahwMap )
+        public Claw( HardwareMap ahwMap )
         {
                 //Hardware Map
                 rightClawMotor = ahwMap.servo.get( "rightClawMotor" );
@@ -22,23 +24,25 @@ private Servo rightClawMotor = null;
                 //Setting direction of Servos
                 rightClawMotor.setDirection( Servo.Direction.FORWARD );
                 leftClawMotor.setDirection( Servo.Direction.FORWARD );
-
-                //Setting power to 0
-                rightClawMotor.setPower( 0 );
-                leftClawMotor.setPower( 0 );
         }
 
-//
-//Claw inward motion
-public void claw_Inward(){
-        leftClawMotor.setPower(1);
-        rightClawMotor.setPower(-1);
-        }
-//Claw outward motion
-public void claw_Outward(){
-        leftClawMotor.setPower(-1);
-        rightClawMotor.setPower(1);
+        //
+        //Claw inward motion
+        public void claw_Inward(){
 
+                leftClawPosition += 0.1;
+                rightClawPosition += -0.1;
+                leftClawMotor.setPosition( leftClawPosition );
+                rightClawMotor.setPosition( rightClawPosition );
         }
 
+        //Claw outward motion
+        public void claw_Outward(){
+
+                leftClawPosition += -0.1;
+                rightClawPosition += +0.1;
+                leftClawMotor.setPosition( leftClawPosition );
+                rightClawMotor.setPosition( rightClawPosition );
         }
+
+}
