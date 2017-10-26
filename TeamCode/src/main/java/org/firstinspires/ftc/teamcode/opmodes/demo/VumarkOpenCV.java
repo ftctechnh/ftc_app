@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -102,8 +103,6 @@ public class VumarkOpenCV extends OpMode {
 
     //identity mats to be constructed later in the project
     private Vec3F[] point;
-    //storage points
-    private float[][] imagePoints;
     //output bitmap
     Bitmap bm;
     Canvas canvas;
@@ -152,8 +151,6 @@ public class VumarkOpenCV extends OpMode {
         cameraMatrix.put(2, 0, new float[] {0, 0, 1});
         imagePoints = new MatOfPoint2f();
         */
-
-        imagePoints = new float[8][2];
 
         float[] size = camCal.getSize().getData();
 
@@ -206,6 +203,9 @@ public class VumarkOpenCV extends OpMode {
                 //get vuforia's real position matrix
                 Matrix34F goodCodeWritten = writeGoodCode.getRealPose();
 
+                //reset imagePoints
+                final float[][] imagePoints = new float[8][2];
+
                 //use vuforias projectPoints method to project all those box points
                 for(int i = 0; i < point.length; i++){
                     //project
@@ -217,16 +217,13 @@ public class VumarkOpenCV extends OpMode {
 
                 telemetry.addData("Camera Size", "w: %f.2, h: %f.2", camCal.getSize().getData()[0], camCal.getSize().getData()[1]);
 
-
                 //display!
                 mView.getHandler().post(new Runnable() {
                     @Override
                     public void run() {
                         mView.invalidate();
-                        bm.recycle();
-                        float[] size = camCal.getSize().getData();
-                        bm = Bitmap.createBitmap((int)size[0], (int)size[1], Bitmap.Config.ARGB_8888);
-
+                        //clear canvas
+                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                         for(int i = 0; i < 2; i++)
                             for(int o = 0; o < 4; o++)
                                 canvas.drawLine(imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][0], imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][1], imagePoints[i * 4 + o][0], imagePoints[i * 4 + o][1], p);

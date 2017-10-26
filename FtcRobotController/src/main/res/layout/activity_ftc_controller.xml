@@ -191,8 +191,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <ImageView
           android:id="@+id/OpenCVOverlay"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
+          android:layout_height="wrap_content"
           android:orientation="vertical"
+          android:adjustViewBounds="true"
+          android:scaleType="fitCenter"
           android:alpha="0"/>
 
     </RelativeLayout>
