@@ -194,7 +194,7 @@ public class Tele_Op_2017 extends OpMode
            wep.retract();
            */
 
-        go.VectorMove( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
+        go.MoveSimple( gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x );
 
         /*
         if (gamepad1.left_stick_y > 0.0)
