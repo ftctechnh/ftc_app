@@ -88,7 +88,7 @@ public class MecanumRework extends OpMode
         telemetry.addData("angle (pi):", angle/Math.PI);
         telemetry.addData("rot. magnitude:", rotate);
         // calc voltage multipliers
-        if (gamepad1.b || (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0)) {
+        if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) {
             speed = 0;
         }
 
@@ -126,6 +126,13 @@ public class MecanumRework extends OpMode
         telemetry.addData("VM2", voltageMultiplier[1]);
         telemetry.addData("VM3", voltageMultiplier[2]);
         telemetry.addData("VM4", voltageMultiplier[3]);
+
+        if (gamepad1.b) {
+            voltageMultiplier[0] = 0;
+            voltageMultiplier[1] = 0;
+            voltageMultiplier[2] = 0;
+            voltageMultiplier[3] = 0;
+        }
 
         robot.flDrive.setPower(voltageMultiplier[0]);
         robot.frDrive.setPower(voltageMultiplier[1]);
