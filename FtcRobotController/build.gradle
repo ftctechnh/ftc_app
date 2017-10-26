@@ -6,8 +6,8 @@ apply plugin: 'com.android.library'
 android {
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 19 //Old ZTE Speeds
+        targetSdkVersion 23 //Moto G4 Plays 
     }
 
     compileSdkVersion 23

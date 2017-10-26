@@ -11,10 +11,10 @@ android:
 #  - build-tools-25.0.0
 #  - build-tools-25.0.3
   - build-tools-26.0.2
-  - android-19
-  - android-21
-  - android-23
-  - android-25
+  - android-19 #Minimum API Version
+#  - android-21
+  - android-23 #Target API Version
+#  - android-26 #Newest API Version
   #- sys-img-armeabi-v7a-android-21
   #- extra-android-m2repository
 
