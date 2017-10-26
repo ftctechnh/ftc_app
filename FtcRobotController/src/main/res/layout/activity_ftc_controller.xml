@@ -194,7 +194,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           android:layout_height="wrap_content"
           android:orientation="vertical"
           android:adjustViewBounds="true"
-          android:scaleType="fitCenter"
+          android:scaleType="centerInside"
           android:alpha="0"/>
 
     </RelativeLayout>

@@ -34,6 +34,7 @@ import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaPoseMatrix;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableImpl;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackablesImpl;
+import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLoad;
 import org.opencv.android.Utils;
 import org.opencv.calib3d.Calib3d;
@@ -68,7 +69,7 @@ import com.vuforia.Vec3F;
 
 @Autonomous(name="Concept: VuMark OpenCV", group ="Concept")
 //@Disabled
-public class VumarkOpenCV extends OpMode {
+public class VumarkOpenCV extends OpenCVLib {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
     private VuforiaLocalizerShim vuforia;

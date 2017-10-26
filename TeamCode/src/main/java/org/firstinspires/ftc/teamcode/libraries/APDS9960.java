@@ -30,13 +30,16 @@ public class APDS9960 {
     }
 
     //initialize using config
-    public void initDevice() {
+    public byte initDevice() {
+        sensor.disengage();
+        sensor.engage();
         //kill I2c if it was doing anythig
-        sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(0, 0, I2cDeviceSynch.ReadMode.ONLY_ONCE));
+        //sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(0, 0, I2cDeviceSynch.ReadMode.ONLY_ONCE));
         //setup address
         sensor.setI2cAddress(I2cAddr.create7bit(ADDR));
         sensor.enableWriteCoalescing(true);
         //read id
+        //bad code!
         byte thing = sensor.read8(Regs.ID.REG); //TODO: FIX?
         if((thing & 0xFF) != 0xAB) throw new InvalidParameterException("That's no sensor! " + thing);
         //disable device
@@ -50,6 +53,7 @@ public class APDS9960 {
         sensor.write8(Regs.CONFIG2.REG, config.CONFIG2);
         //wait for it
         sensor.waitForWriteCompletions(I2cWaitControl.WRITTEN);
+        return thing;
     }
 
     public void startDevice() {
@@ -58,12 +62,12 @@ public class APDS9960 {
         //start I2c background polling
         //read from PDATA in background if no interrupt
         //else read from STATUS-PDATA to check interrupt
-        if(!config.interruptEnabled) sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.PDATA.REG, 1, I2cDeviceSynch.ReadMode.REPEAT));
-        else sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.STATUS.REG, 10, I2cDeviceSynch.ReadMode.REPEAT));
+        //if(!config.interruptEnabled) sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.PDATA.REG, 1, I2cDeviceSynch.ReadMode.REPEAT));
+        //else sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.STATUS.REG, 10, I2cDeviceSynch.ReadMode.REPEAT));
     }
 
-    public byte getDist() {
-        return sensor.read8(Regs.PDATA.REG);
+    public int getDist() {
+        return sensor.read8(Regs.PDATA.REG) & 0xff;
     }
 
     public boolean checkInterrupt() {
@@ -161,7 +165,7 @@ public class APDS9960 {
 
         //register specific functions
         public void disableInterrupt() {
-            this.ENABLE = 1 & (1 << 2);
+            this.ENABLE = (byte)(0b00000101);
             this.PILT = 0;
             this.PIHT = 0;
             this.PERS = 0;
@@ -172,7 +176,7 @@ public class APDS9960 {
             //argcheck
             if(overCount > 15 || overCount < 0) throw new InvalidParameterException("Interrupt persistence outside possible values");
             //enable power, proximity sensing, and interrupt if desired
-            this.ENABLE = 1 & (1 << 2) & (1 << 5);
+            this.ENABLE = (byte)(0b00100101);//(byte)(1 | (1 << 2) | (1 << 5));
             this.PILT = lowThresh;
             this.PIHT = highThresh;
             this.PERS = (byte)(overCount << 4);
