@@ -8,24 +8,24 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.utils.RobotLogger;
 
-/**
- * Created by carsonstorm on 10/24/2017.
- */
+import java.util.Timer;
+import java.util.TimerTask;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class JewelDisplacer {
-    public static final double ARM_UP_POSITION = 0.0;
+    public static final double ARM_UP_POSITION = 1.0;
     public static final double ARM_DOWN_POSITION = 0.0;
     public static final long TIME_SHIFT_LEFT = 1000;
     public static final long TIME_SHIFT_RIGHT = 1000;
+    private static final Timer timer = new Timer();
 
-    private Servo jewelArmServo;
-    private CRServo armShifterServo;
-    private ColorSensor jewelColorSensor;
-
-    private RobotLogger logger;
+    private final Servo jewelArmServo;
+    private final CRServo armShifterServo;
+    private final ColorSensor jewelColorSensor;
+    private final RobotLogger logger;
 
     private boolean isArmUp;
+    private boolean isShifting;
 
     /**
      * Builds a new JewelDisplacer using the standard hardware names.
@@ -74,31 +74,98 @@ public class JewelDisplacer {
         this.isArmUp = Math.abs(jewelArmServo.getPosition() - ARM_UP_POSITION) <= 1e-10;
     }
 
+    /**
+     * Raises the jewel arm
+     */
     public void raise() {
-        jewelArmServo.setPosition(ARM_UP_POSITION);
-    }
-
-    public void drop() {
-        jewelArmServo.setPosition(ARM_DOWN_POSITION);
-    }
-
-    public void shiftRightSync() {
-        long end = System.currentTimeMillis() + TIME_SHIFT_RIGHT;
-
-        while (System.currentTimeMillis() < end) {
-            armShifterServo.setPower(1);
+        if (! isArmUp) {
+            jewelArmServo.setPosition(ARM_UP_POSITION);
+            isArmUp = true;
         }
+    }
 
-        armShifterServo.setPower(0);
+    /**
+     * Drops the jewel arm
+     */
+    public void drop() {
+        if (isArmUp) {
+            jewelArmServo.setPosition(ARM_DOWN_POSITION);
+            isArmUp = false;
+        }
     }
 
     public void shiftLeftSync() {
+        logger.debug("Shifting jewel arm to the left");
         long end = System.currentTimeMillis() + TIME_SHIFT_LEFT;
 
+        setShiftPower(-1);
+
+        //noinspection StatementWithEmptyBody
         while (System.currentTimeMillis() < end) {
-            armShifterServo.setPower(-1);
+            // delay
         }
 
-        armShifterServo.setPower(0);
+        setShiftPower(0);
+        logger.debug("Finished shifting jewel arm to the left");
+    }
+
+    public void shiftLeft() {
+        shiftLeft(null);
+    }
+
+    public void shiftLeft(Runnable cb) {
+        logger.debug("Shifting jewel arm to the left");
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setShiftPower(0);
+                logger.debug("Finished shifting jewel arm to the left");
+
+                if (cb != null) cb.run();
+            }
+        }, TIME_SHIFT_LEFT);
+
+        setShiftPower(-1);
+    }
+
+    public void shiftRightSync() {
+        logger.debug("Shifting jewel arm to the right");
+        long end = System.currentTimeMillis() + TIME_SHIFT_RIGHT;
+
+        setShiftPower(1);
+
+        //noinspection StatementWithEmptyBody
+        while (System.currentTimeMillis() < end) {
+            // delay
+        }
+
+        setShiftPower(0);
+        logger.debug("Finished shifting jewel arm to the right");
+    }
+
+    public void shiftRight() {
+        shiftRight(null);
+    }
+
+    public void shiftRight(Runnable cb) {
+        logger.debug("Shifting jewel arm to the right");
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                setShiftPower(0);
+                logger.debug("Finished shifting jewel arm to the right");
+
+                if (cb != null) cb.run();
+            }
+        }, TIME_SHIFT_RIGHT);
+
+        setShiftPower(1);
+    }
+
+    private void setShiftPower(double power) {
+        synchronized ( armShifterServo ) {
+            armShifterServo.setPower(1);
+        }
     }
 }
