@@ -69,7 +69,7 @@ import com.vuforia.Vec3F;
 
 @Autonomous(name="Concept: VuMark OpenCV", group ="Concept")
 //@Disabled
-public class VumarkOpenCV extends OpenCVLib {
+public class VumarkOpenCV extends OpenCVLoad {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
     private VuforiaLocalizerShim vuforia;
@@ -104,6 +104,7 @@ public class VumarkOpenCV extends OpenCVLib {
 
     //identity mats to be constructed later in the project
     private Vec3F[] point;
+    private float[] size;
     //output bitmap
     Bitmap bm;
     Canvas canvas;
@@ -153,13 +154,18 @@ public class VumarkOpenCV extends OpenCVLib {
         imagePoints = new MatOfPoint2f();
         */
 
-        float[] size = camCal.getSize().getData();
+        size = camCal.getSize().getData();
+
+        Log.i("OPENCV", "width " + size[0]);
+        Log.i("OPENCV", "height " + size[1]);
 
         bm = Bitmap.createBitmap((int)size[0], (int)size[1], Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bm);
-        p = new Paint();
-        p.setColor(Color.GREEN);
-        p.setStrokeWidth(1);
+        //canvas = new Canvas(bm);
+        //p = new Paint();
+        //p.setColor(Color.GREEN);
+        //p.setStrokeWidth(1);
+
+        initOpenCV();
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
@@ -218,11 +224,46 @@ public class VumarkOpenCV extends OpenCVLib {
 
                 telemetry.addData("Camera Size", "w: %f.2, h: %f.2", camCal.getSize().getData()[0], camCal.getSize().getData()[1]);
 
+                Mat out;
+                //get frame from vuforia
+                try{
+                    VuforiaLocalizer.CloseableFrame frame = ray.take();
+
+                    int i = 0;
+                    for(; i < frame.getNumImages(); i++){
+                        Log.i("OPENCV", "Image " + i + " " + frame.getImage(i).getWidth());
+                        if(frame.getImage(i).getWidth() == size[0]) break;
+                    }
+
+                    if(i < frame.getNumImages()) out = getMatFromImage(frame.getImage(i));
+                    else throw new IllegalArgumentException("No frame with matching width!");
+
+                    frame.close();
+                }
+                catch (Exception e){
+                    Log.e("OPENCV", e.getLocalizedMessage());
+                }
+
+                //TODO: FIX THIS SH!T
+
+                Scalar color = new Scalar(0, 255, 0);
+                for(int i = 0; i < 2; i++)
+                    for(int o = 0; o < 4; o++)
+                        Imgproc.line(out, imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1], imagePoints[i * 4 + o], color);
+
+                //connect the rectangles
+                for(int i = 0; i < 4; i++) Imgproc.line(out, imagePoints[i], imagePoints[i + 4], color);
+
+                //convert to bitmap
+                Utils.matToBitmap(out, bm);
+
                 //display!
                 mView.getHandler().post(new Runnable() {
                     @Override
                     public void run() {
                         mView.invalidate();
+                        //old vuforia stuff
+                        /*
                         //clear canvas
                         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                         for(int i = 0; i < 2; i++)
@@ -231,6 +272,7 @@ public class VumarkOpenCV extends OpenCVLib {
 
                         //connect the rectangles
                         for(int i = 0; i < 4; i++) canvas.drawLine(imagePoints[i][0], imagePoints[i][1], imagePoints[i + 4][0], imagePoints[i + 4][1], p);
+                        */
                         mView.setImageBitmap(bm);
                     }
                 });
