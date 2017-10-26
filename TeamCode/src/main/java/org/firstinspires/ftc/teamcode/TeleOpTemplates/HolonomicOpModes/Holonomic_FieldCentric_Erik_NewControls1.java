@@ -16,7 +16,6 @@ public class Holonomic_FieldCentric_Erik_NewControls1 extends OpMode
     double jp;
     double theta;
     boolean robotCentric = false;
-    boolean toggle = false;
     int dpad = 0;
     int z = 1;
 
@@ -34,22 +33,6 @@ public class Holonomic_FieldCentric_Erik_NewControls1 extends OpMode
         else
             robotCentric = false;
 
-        if(gamepad1.left_bumper && toggle == false)
-        {
-            robotCentric = true;
-            toggle = true;
-            robot.time.reset();
-        }
-        else if(gamepad1.left_bumper && toggle && robot.time.seconds() == 1)
-        {
-            robotCentric = false;
-            toggle = true;
-        }
-        else if(gamepad1.right_bumper == false && toggle == false)
-        {
-            robotCentric = false;
-        }
-
         //Makes it so it becomes robot centric based on the last heading before pressing the button
         if(robotCentric == false)
             robot.updateGyro();
@@ -63,12 +46,18 @@ public class Holonomic_FieldCentric_Erik_NewControls1 extends OpMode
 
         theta = (jTheta + angleFromDriver - robot.heading);
 
+        robot.drive(
+                 (Math.sin(theta)+Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
+                (Math.sin(theta)-Math.cos(theta))*jp/2 + gamepad1.right_stick_x,
+                (Math.sin(theta)-Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
+                (Math.sin(theta)+Math.cos(theta))*jp/2 + gamepad1.right_stick_x
+        );
+
         telemetry.addData("Ultra Turbo Mode Activated", gamepad1.right_bumper && gamepad1.left_bumper);
         telemetry.addData(" Right Joystick X Axis:", gamepad1.right_stick_x);
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
         telemetry.addData("Joystick Magnitude", jp);
         telemetry.addData("Gyro Heading", robot.heading);
-        telemetry.addData("toggle", toggle);
         telemetry.addData("robotCentric", robotCentric);
 
 

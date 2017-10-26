@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.DaquanOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 @TeleOp(name = "Daquan Field-Centric Tafon", group = "Daquan")
 public class Daquan_Field_Centric extends OpMode {
 

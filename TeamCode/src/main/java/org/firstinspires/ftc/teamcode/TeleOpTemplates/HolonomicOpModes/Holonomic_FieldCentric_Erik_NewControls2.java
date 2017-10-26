@@ -16,7 +16,6 @@ public class Holonomic_FieldCentric_Erik_NewControls2 extends OpMode
     double jp;
     double theta;
     boolean robotCentric = false;
-    boolean toggle = false;
 
     @Override
     public void init ()
@@ -32,22 +31,6 @@ public class Holonomic_FieldCentric_Erik_NewControls2 extends OpMode
             robotCentric = true;
         else
             robotCentric = false;
-
-        if(gamepad1.left_bumper && toggle == false)
-        {
-            robotCentric = true;
-            toggle = true;
-            robot.time.reset();
-        }
-        else if(gamepad1.left_bumper && toggle && robot.time.seconds() == 1)
-        {
-            robotCentric = false;
-            toggle = true;
-        }
-        else if(gamepad1.right_bumper == false && toggle == false)
-        {
-            robotCentric = false;
-        }
 
         robot.updateGyro();
 
@@ -76,7 +59,6 @@ public class Holonomic_FieldCentric_Erik_NewControls2 extends OpMode
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
         telemetry.addData("Joystick Magnitude", jp);
         telemetry.addData("Gyro Heading", robot.heading);
-        telemetry.addData("toggle", toggle);
         telemetry.addData("robotCentric", robotCentric);
     }
 }

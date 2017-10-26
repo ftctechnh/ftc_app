@@ -18,13 +18,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
              functions to reduce redundancies in other programs.
  */
 
-public class Holonomic_Hardware {
+public class    Holonomic_Hardware {
 
     //Declaring variables
     public DcMotor fleft, fright, bleft, bright;
     public BNO055IMU gyro;
     public double heading;
-    public double dp = .2f; //Drive Power (range = 0-1)
+    public double dp = 1.0f; //Drive Power (range = 0-1)
     private HardwareMap hwMap;
     private Telemetry telemetry;
     public ElapsedTime time = new ElapsedTime();
@@ -44,8 +44,8 @@ public class Holonomic_Hardware {
         fright = hwMap.dcMotor.get("fright");
         bleft = hwMap.dcMotor.get("bleft");
         bright = hwMap.dcMotor.get("bright");
-        fleft.setDirection(DcMotor.Direction.REVERSE);
-        bleft.setDirection(DcMotor.Direction.REVERSE);
+        fright.setDirection(DcMotor.Direction.REVERSE);
+        bright.setDirection(DcMotor.Direction.REVERSE);
 
         //Setting up gyro sensor if necessary
         if(usesGyro) {

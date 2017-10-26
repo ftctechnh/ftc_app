@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 centric Drive.
  */
 
+@Disabled
 @TeleOp(name = "Daquan Robot-Centric Tafon", group = "Daquan")
 public class Daquan_Talon_TeleOp_robotCentric extends OpMode
 {

@@ -17,7 +17,6 @@ public class Holonomic_FieldCentric_Erik_NewControls3 extends OpMode
     double theta;
     boolean robotCentric = false;
     boolean toggle = false;
-    int dpad = 0;
     int z = 1;
 
     @Override
@@ -40,6 +39,40 @@ public class Holonomic_FieldCentric_Erik_NewControls3 extends OpMode
 
         theta = (jTheta + angleFromDriver - robot.heading);
 
+        robot.drive(
+                (Math.sin(theta)+Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
+                (Math.sin(theta)-Math.cos(theta))*jp/2 + gamepad1.right_stick_x,
+                (Math.sin(theta)-Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
+                (Math.sin(theta)+Math.cos(theta))*jp/2 + gamepad1.right_stick_x
+        );
+
+        if(gamepad1.dpad_up)
+        {
+            if(robot.heading > 0 && robot.heading < Math.PI)
+            {
+                while (robot.heading < 2*Math.PI && robot.heading > Math.PI)
+                {
+                    robot.drive(
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z
+                    );
+                }
+            }
+            else if(robot.heading > Math.PI)
+            {
+                while (robot.heading < Math.PI) {
+                    robot.drive(
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z
+                    );
+                }
+            }
+        }
+
         telemetry.addData("Ultra Turbo Mode Activated", gamepad1.right_bumper && gamepad1.left_bumper);
         telemetry.addData(" Right Joystick X Axis:", gamepad1.right_stick_x);
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
@@ -47,94 +80,6 @@ public class Holonomic_FieldCentric_Erik_NewControls3 extends OpMode
         telemetry.addData("Gyro Heading", robot.heading);
         telemetry.addData("toggle", toggle);
         telemetry.addData("robotCentric", robotCentric);
-
-        if(gamepad1.dpad_up)
-            dpad = 1;
-        else if(gamepad1.dpad_right)
-            dpad = 2;
-        else if(gamepad1.dpad_down)
-            dpad = 3;
-        else if(gamepad1.dpad_left)
-            dpad = 4;
-        else
-            dpad = 0;
-
-        switch(dpad)
-        {
-            case 0:
-                robot.drive(
-                        (Math.sin(theta)+Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
-                        (Math.sin(theta)-Math.cos(theta))*jp/2 + gamepad1.right_stick_x,
-                        (Math.sin(theta)-Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
-                        (Math.sin(theta)+Math.cos(theta))*jp/2 + gamepad1.right_stick_x
-                );
-                break;
-            case 1: // 0
-                if(robot.heading > 0 && robot.heading < Math.PI)
-                {
-                    while (robot.heading < 2*Math.PI && robot.heading > Math.PI)
-                    {
-                        robot.drive(
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z
-                        );
-                    }
-                    dpad = 0;
-                }
-                else if(robot.heading > Math.PI)
-                {
-                    while (robot.heading < Math.PI) {
-                        robot.drive(
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z
-                        );
-                    }
-                    dpad = 0;
-                }
-                else
-                    dpad =0;
-                break;
-            case 2: //270
-                if(robot.heading > Math.PI/2 && robot.heading < 3*Math.PI/2)
-                {
-                    while (robot.heading < 3*Math.PI/2)
-                    {
-                        robot.drive(
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z
-                        );
-                    }
-                    dpad = 0;
-                }
-                else if(robot.heading > 3*Math.PI/2 || robot.heading < Math.PI/2)
-                {
-                    while (robot.heading > 3*Math.PI/2) {
-                        robot.drive(
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
-                                (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
-                                (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z
-                        );
-                    }
-                    dpad = 0;
-                }
-                else
-                    dpad =0;
-                break;
-            default:
-                robot.drive(
-                        (Math.sin(theta)+Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
-                        (Math.sin(theta)-Math.cos(theta))*jp/2 + gamepad1.right_stick_x,
-                        (Math.sin(theta)-Math.cos(theta))*jp/2 - gamepad1.right_stick_x,
-                        (Math.sin(theta)+Math.cos(theta))*jp/2 + gamepad1.right_stick_x
-                );
-        }
 
     }
 }
