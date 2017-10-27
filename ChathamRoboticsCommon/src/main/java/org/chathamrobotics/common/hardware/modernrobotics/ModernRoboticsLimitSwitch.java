@@ -1,5 +1,7 @@
 package org.chathamrobotics.common.hardware.modernrobotics;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
@@ -43,6 +45,49 @@ public class ModernRoboticsLimitSwitch implements LimitSwitch {
         }
 
         return digitalChannel.getState();
+    }
+
+    @Override
+    public boolean getState() {
+        return  isPressed();
+    }
+
+    @Override
+    public void setState(boolean state) {
+        Log.d("Limit Switch State", String.valueOf(state));
+
+        if (digitalChannelController != null) {
+            digitalChannelController.setDigitalChannelState(physicalPort, state);
+        }
+
+        digitalChannel.setState(state);
+    }
+
+    @Override
+    public Mode getMode() {
+        if (digitalChannelController != null) {
+            return digitalChannelController.getDigitalChannelMode(physicalPort);
+        }
+
+        return digitalChannel.getMode();
+    }
+
+    @Override
+    public void setMode(DigitalChannelController.Mode mode) {
+        if (digitalChannelController != null) {
+            digitalChannelController.setDigitalChannelMode(physicalPort, mode);
+        }
+
+        digitalChannel.setMode(mode);
+    }
+
+    @Override
+    public void setMode(Mode mode) {
+        if (digitalChannelController != null) {
+            digitalChannelController.setDigitalChannelMode(physicalPort, mode);
+        }
+
+        digitalChannel.setMode(mode);
     }
 
     @Override

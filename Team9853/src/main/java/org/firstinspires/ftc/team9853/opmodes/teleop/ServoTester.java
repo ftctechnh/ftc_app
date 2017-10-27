@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.chathamrobotics.common.utils.RobotLogger;
+
 import java.util.Map;
 
 /**
@@ -21,10 +23,11 @@ public class ServoTester extends OpMode {
     private long lastPressX;
     private long lastPressY;
     private long pressBuffer = 500;
+    private RobotLogger logger;
 
     @Override
     public void init() {
-
+        logger = new RobotLogger("ServoTester", telemetry);
     }
 
     @Override
@@ -53,6 +56,9 @@ public class ServoTester extends OpMode {
 
         setServoPositions(position);
         setCrServoPowers(power);
+
+        logger.debug("position", position);
+        logger.debug("power", power);
     }
 
     private void setServoPositions(double pos) {

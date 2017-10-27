@@ -14,7 +14,7 @@ import java.util.TimerTask;
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class JewelDisplacer {
     public static final double ARM_UP_POSITION = 1.0;
-    public static final double ARM_DOWN_POSITION = 0.0;
+    public static final double ARM_DOWN_POSITION = 0.3;
     public static final long TIME_SHIFT_LEFT = 1000;
     public static final long TIME_SHIFT_RIGHT = 1000;
     private static final Timer timer = new Timer();
