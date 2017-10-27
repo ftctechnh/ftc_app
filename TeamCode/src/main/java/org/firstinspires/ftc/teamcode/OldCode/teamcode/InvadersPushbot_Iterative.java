@@ -30,17 +30,15 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OldCode.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.OldCode.Competition.InvadersVelocityVortexBot;
-
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides Telop driving for the IfSpace Invaders 2015/16 Pushbot robot.
@@ -57,21 +55,16 @@ import org.firstinspires.ftc.teamcode.OldCode.Competition.InvadersVelocityVortex
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-
-
-//This opmode lets the driver drive with only one stick. This means that we have a lot of buttons to map to other things.
-
-@TeleOp(name="Bigly", group="Pushbot")
+@TeleOp(name="Invaders: Pushbot Teleop2", group="Pushbot")
 @Disabled
 public class InvadersPushbot_Iterative extends OpMode{
 
     /* Declare OpMode members. */
-    InvadersVelocityVortexBot robot       = new InvadersVelocityVortexBot(); // use the class created to define a Pushbot's hardware
+    HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
-    Gamepad lastGamePadState = new Gamepad();
-
-
-
+    double          clawOffset  = 0.0 ;                  // Servo mid position
+    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    TouchSensor     limitSwitch;                         // Will be connected to PushBot's Limit Switch
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -81,10 +74,17 @@ public class InvadersPushbot_Iterative extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(this);
+        robot.init(hardwareMap);
+
+        // Connect our limit switch TouchSensor object to the Robot
+        limitSwitch = hardwareMap.touchSensor.get("arm limit");
+        assert(limitSwitch != null);
 
         // Send telemetry message to signify robot waiting;
-         updateTelemetry(telemetry);
+        telemetry.addData("Say", "Uh oh, Matthew's messing with stuff.");
+        updateTelemetry(telemetry);
+        robot.leftClaw.setPosition(0.0);
+        robot.rightClaw.setPosition(0.0);
     }
 
     /*
@@ -110,107 +110,53 @@ public class InvadersPushbot_Iterative extends OpMode{
         double right;
 
         // Use the left joystick to move the robot forwards/backwards and turn left/right
-        double x = gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
+        double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
         double y = -gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
 
         // Algorithm for setting power to left/right motors based on joystick x/y values
         // note: The Range.clip function just ensures we stay between Â±100%
-        left = Range.clip(y + x, -1, +1);
-        right = Range.clip(y - x, -1, +1);
+        left = Range.clip(y-x, -1, +1);
+        right = Range.clip(y+x, -1, +1);
 
         // Call the setPower functions with our calculated values to activate the motors
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
 
-        // Read our limit switch to see if the arm is too high
-        boolean limitTriggered = robot.touchSensor.isPressed();
+        // Use gamepad left & right triggers to open and close the claw
+        if (gamepad1.right_trigger > 0)
+            clawOffset += CLAW_SPEED;
+        else if (gamepad1.left_trigger > 0)
+            clawOffset -= CLAW_SPEED;
 
-        if (limitTriggered) {
-            robot.ballElevator.setPower(0);  //Elevator off
-        }
+        // Move both servos to new position.  Assume servos are mirror image of each other.
+        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
+        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
+        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+
+        // Read our limit switch to see if the arm is too high
+        boolean limitTriggered = limitSwitch.isPressed();
+
+        // Use right joystick the arm up (as long as our limit switch hasn't been triggered) or down
+        if ((gamepad1.right_stick_y > 0) && !limitTriggered)
+            //robot.armMotor.setPower(robot.ARM_UP_POWER);
+        //else if (gamepad1.right_stick_y < 0)
+            //robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+        //else
+            //robot.armMotor.setPower(0.0);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left", "%.2f", left);
+        telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+        telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData("touchSensor:", "%s", limitTriggered ? "Triggered" : "Open");
-        telemetry.addData("ballElevator:", robot.ballElevator.getPower());
-        telemetry.addData("beacon servos", "L: %.02f, R: %.02f", robot.beaconLeft.getPosition(), robot.beaconRight.getPosition());
-        telemetry.addData("Color: ", "A:%03d,R%03d,G%03d,B%03d",
-                robot.floorSensor.red(),
-                robot.floorSensor.green(),
-                robot.floorSensor.blue(),
-                robot.floorSensor.alpha());
-        telemetry.addData("UDSLeft:", "%.2fcm", robot.UDSLeft.getDistance(DistanceUnit.CM));
-        //telemetry.addData("ODS:", "%.2fpercent", robot.ODS.getLightDetected());
+        telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
         updateTelemetry(telemetry);
-
-        //Beacon button and pusher button
-        robot.beaconLeft.setPosition(1 - gamepad1.left_trigger);
-        robot.beaconRight.setPosition(1 - gamepad1.left_trigger);
-        //arobot.sweeper.setPower(1 - gamepad1.right_trigger);
-
-        if (gamepad1.a == true) {
-            if (robot.touchSensor.isPressed() == true) {
-                robot.setBallElevator(0,InvadersVelocityVortexBot.BallElevatorState.OFF);
-            } else {
-
-                robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.DOWN); // Elevator down
-            }
-        } else if (gamepad1.y == true) {
-            robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.UP);
-        } else {
-            robot.setBallElevator(0,InvadersVelocityVortexBot.BallElevatorState.OFF);
-        }
-
-        if (gamepad1.start == true) {
-            //robot.leftBallLauncher.setPower(-1);
-            //robot.rightBallLauncher.setPower(-1);
-            robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.ON);
-        } else if (gamepad1.back == true) {
-            //robot.leftBallLauncher.setPower(0);
-            //robot.rightBallLauncher.setPower(0);
-            robot.setLauncherState(InvadersVelocityVortexBot.LauncherState.OFF);
-            if (!limitTriggered) {
-                robot.setBallElevator(1,InvadersVelocityVortexBot.BallElevatorState.DOWN);  //Elevator down
-            }
-        }
-        //CapBall lifter
-        if (gamepad1.dpad_up) {
-            robot.setCapBallMotorPower(0.5, InvadersVelocityVortexBot.CapBallState.UP);
-        } else if (gamepad1.dpad_down) {
-            robot.setCapBallMotorPower(0.5, InvadersVelocityVortexBot.CapBallState.DOWN);
-        } else
-        {
-            robot.setCapBallMotorPower(0, InvadersVelocityVortexBot.CapBallState.OFF);
-        }
-
-        if (gamepad1.dpad_left) {
-            robot.setSweeperPower(1, InvadersVelocityVortexBot.SweeperDirection.IN);
-        }
-        else if (gamepad1.dpad_right) {
-            robot.setSweeperPower(1, InvadersVelocityVortexBot.SweeperDirection.OUT);
-        }
-        else {
-            robot.setSweeperPower(0, InvadersVelocityVortexBot.SweeperDirection.IN);
-        }
     }
-
-
-
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
     @Override
     public void stop() {
-        // Reset/Stop the continuous rotation servo(s)
-        robot.ballElevator.setPower(0);
-
-        // Stop the motors
-        robot.sweeper.setPower(0);
-        robot.leftDrive.setPower(0.0);
-        robot.rightDrive.setPower(0.0);
-        robot.leftBallLauncher.setPower(0.0);
-        robot.rightBallLauncher.setPower(0.0);
     }
+
 }
