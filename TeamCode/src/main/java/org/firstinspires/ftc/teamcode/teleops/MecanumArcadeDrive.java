@@ -60,7 +60,6 @@ public class MecanumArcadeDrive extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
         drivetrain.complexDrive(gamepad1, telemetry);
-        drivetrain.dPadDrive(gamepad1);
 
         if(gamepad1.y){
             raiser.setPower(1);
