@@ -107,8 +107,8 @@ public class VumarkOpenCV extends OpenCVLoad {
     private float[] size;
     //output bitmap
     Bitmap bm;
-    Canvas canvas;
-    Paint p;
+    //Canvas canvas;
+    //Paint p;
 
 
     //storage camera calibration
@@ -130,15 +130,15 @@ public class VumarkOpenCV extends OpenCVLoad {
 
         //constrt matrixes
         //construct points like a box
-        Vec3F botLeft = new Vec3F(5 * inToMM, -5 * inToMM, 0);
-        Vec3F botRight = new Vec3F(5 * inToMM, -10 * inToMM, 0);
-        Vec3F botFrontLeft = new Vec3F(5 * inToMM, -5 * inToMM, 2 * inToMM);
-        Vec3F botFrontRight = new Vec3F(5 * inToMM, -10 * inToMM, 2 * inToMM);
+        Vec3F botLeft = new Vec3F(-5 * inToMM, -5 * inToMM, 0);
+        Vec3F botRight = new Vec3F(-10 * inToMM, -5 * inToMM, 0);
+        Vec3F botFrontLeft = new Vec3F(-5 * inToMM, -5 * inToMM, 2 * inToMM);
+        Vec3F botFrontRight = new Vec3F(-10 * inToMM, -5* inToMM, 2 * inToMM);
 
-        Vec3F topLeft = new Vec3F(3 * inToMM, -5 * inToMM, 0);
-        Vec3F topRight = new Vec3F(3 * inToMM, -10 * inToMM, 0);
-        Vec3F topFrontLeft = new Vec3F(3 * inToMM, -5 * inToMM, 2 * inToMM);
-        Vec3F topFrontRight = new Vec3F(3 * inToMM, -10 * inToMM, 2 * inToMM);
+        Vec3F topLeft = new Vec3F(-5 * inToMM, -3 * inToMM, 0);
+        Vec3F topRight = new Vec3F(-10 * inToMM, -3 * inToMM, 0);
+        Vec3F topFrontLeft = new Vec3F(-5 * inToMM, -3 * inToMM, 2 * inToMM);
+        Vec3F topFrontRight = new Vec3F(-10 * inToMM, -3 * inToMM, 2 * inToMM);
 
         point = new Vec3F[] {   botLeft, botRight, botFrontRight, botFrontLeft,
                                 topLeft, topRight, topFrontRight, topFrontLeft};
@@ -156,6 +156,10 @@ public class VumarkOpenCV extends OpenCVLoad {
 
         size = camCal.getSize().getData();
 
+        //half size b/c vuforia does that internally
+        size[0] /= 2;
+        size[1] /= 2;
+
         Log.i("OPENCV", "width " + size[0]);
         Log.i("OPENCV", "height " + size[1]);
 
@@ -164,6 +168,14 @@ public class VumarkOpenCV extends OpenCVLoad {
         //p = new Paint();
         //p.setColor(Color.GREEN);
         //p.setStrokeWidth(1);
+
+        //setup view
+        mView.post(new Runnable() {
+            @Override
+            public void run() {
+                mView.setImageBitmap(bm);
+            }
+        });
 
         initOpenCV();
 
@@ -219,10 +231,10 @@ public class VumarkOpenCV extends OpenCVLoad {
                     vufPoints[i] = Tool.projectPoint(camCal, goodCodeWritten, point[i]).getData();
                     //convert to opencv language
 
-                    telemetry.addData("point", "num: %d, x: %f.2, y: %f.2", i, vufPoints[i][0], vufPoints[i][1]);
+                    //telemetry.addData("point", "num: %d, x: %f.2, y: %f.2", i, vufPoints[i][0], vufPoints[i][1]);
                 }
 
-                telemetry.addData("Camera Size", "w: %f.2, h: %f.2", camCal.getSize().getData()[0], camCal.getSize().getData()[1]);
+                //telemetry.addData("Camera Size", "w: %f.2, h: %f.2", camCal.getSize().getData()[0], camCal.getSize().getData()[1]);
 
                 //get frame from vuforia
                 try{
@@ -230,7 +242,7 @@ public class VumarkOpenCV extends OpenCVLoad {
 
                     int img = 0;
                     for(; img < frame.getNumImages(); img++){
-                        Log.i("OPENCV", "Image " + img + " " + frame.getImage(img).getWidth());
+                        //Log.i("OPENCV", "Image " + img + " " + frame.getImage(img).getWidth());
                         if(frame.getImage(img).getWidth() == size[0]) break;
                     }
 
@@ -243,7 +255,8 @@ public class VumarkOpenCV extends OpenCVLoad {
                     //create an array of points fron the float
                     Point imagePoints[] = new Point[vufPoints.length];
 
-                    for(int i = 0; i < vufPoints.length; i++) imagePoints[i] = new Point((double)vufPoints[i][0], (double)vufPoints[i][1]);
+                    //convert points, halfing distances b/c vuforia does that internally so we gotta fix it
+                    for(int i = 0; i < vufPoints.length; i++) imagePoints[i] = new Point((int)vufPoints[i][0] / 2, (int)vufPoints[i][1] / 2);
 
                     Scalar color = new Scalar(0, 255, 0);
                     for(int i = 0; i < 2; i++)
@@ -253,26 +266,27 @@ public class VumarkOpenCV extends OpenCVLoad {
                     //connect the rectangles
                     for(int i = 0; i < 4; i++) Imgproc.line(out, imagePoints[i], imagePoints[i + 4], color);
 
+                    //flip it for display
+                    Core.flip(out, out, -1);
+
                     //display!
                     mView.getHandler().post(new Runnable() {
                         @Override
                         public void run() {
-                        //convert to bitmap
-                        Utils.matToBitmap(out, bm);
+                            //convert to bitmap
+                            Utils.matToBitmap(out, bm);
+                            mView.invalidate();
+                            //old vuforia stuff
+                            /*
+                            //clear canvas
+                            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                            for(int i = 0; i < 2; i++)
+                                for(int o = 0; o < 4; o++)
+                                    canvas.drawLine(imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][0], imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][1], imagePoints[i * 4 + o][0], imagePoints[i * 4 + o][1], p);
 
-                        mView.invalidate();
-                        //old vuforia stuff
-                        /*
-                        //clear canvas
-                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                        for(int i = 0; i < 2; i++)
-                            for(int o = 0; o < 4; o++)
-                                canvas.drawLine(imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][0], imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][1], imagePoints[i * 4 + o][0], imagePoints[i * 4 + o][1], p);
-
-                        //connect the rectangles
-                        for(int i = 0; i < 4; i++) canvas.drawLine(imagePoints[i][0], imagePoints[i][1], imagePoints[i + 4][0], imagePoints[i + 4][1], p);
-                        */
-                            mView.setImageBitmap(bm);
+                            //connect the rectangles
+                            for(int i = 0; i < 4; i++) canvas.drawLine(imagePoints[i][0], imagePoints[i][1], imagePoints[i + 4][0], imagePoints[i + 4][1], p);
+                            */
                         }
                     });
                 }
@@ -288,6 +302,14 @@ public class VumarkOpenCV extends OpenCVLoad {
     @Override
     public void stop() {
         mView.setAlpha(0.0f);
+        mView.post(new Runnable() {
+            @Override
+            public void run() {
+                mView.setImageDrawable(null);
+                mView.invalidate();
+                if(bm != null) bm.recycle();
+            }
+        });
     }
 
     private String format(OpenGLMatrix transformationMatrix) {
@@ -304,7 +326,7 @@ public class VumarkOpenCV extends OpenCVLoad {
         thing.put(0, 0, ray);
         //rotate -90
         //Core.transpose(thing, thing);
-        Core.flip(thing, thing, 0);
+        //Core.flip(thing, thing, 0);
 
         //fill color space
         Imgproc.cvtColor(thing, thing, Imgproc.COLOR_GRAY2RGB);
