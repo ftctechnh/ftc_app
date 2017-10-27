@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.GeneralCode.TeleOpTemplates.HolonomicOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /*
 Program where using the bumpers simply takes you to the last gyro heading retrieved
  */
-
+@Disabled
 @TeleOp(name = "Holonomic Field-Centric Tele-Op Test 1", group = "holonomic Erik")
 public class Holonomic_FieldCentric_Erik_NewControls1 extends OpMode
 {

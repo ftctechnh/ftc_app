@@ -1,18 +1,18 @@
-package org.firstinspires.ftc.teamcode.GuillermoOpModes;
+package org.firstinspires.ftc.teamcode.TalonCode.GuillermoOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @Disabled
-@TeleOp(name = "Guillermo Arcade Tele-Op", group = "guillermo")
-public class Guillermo_Arcade_TeleOp extends OpMode {
+@TeleOp(name = "Guillermo Tank Tele-Op", group = "guillermo")
+public class Guillermo_Tank_TeleOp extends OpMode {
 
     Guillermo_Hardware robot;
 
     @Override
     public void init (){
-        //Sets up the robot class for this program
+        //sets up our robot class
         robot = new Guillermo_Hardware(hardwareMap, telemetry);
     }
 
@@ -42,12 +42,12 @@ public class Guillermo_Arcade_TeleOp extends OpMode {
         else
             robot.lift.setPower(0);
 
-        //Drives robot based on joysticks in an arcade drive fashion
-        robot.drive((- gamepad1.left_stick_y + gamepad1.left_stick_x) * robot.currentDrivePower, (- gamepad1.left_stick_y - gamepad1.left_stick_x) * robot.currentDrivePower);
+        //Drives robot based on first gamepad joysticks in a tank drive fashion
+        robot.drive(- gamepad1.left_stick_y * robot.currentDrivePower, - gamepad1.right_stick_y * robot.currentDrivePower);
 
         //Telemetry
-        telemetry.addData("Joystick X Axis:", gamepad1.left_stick_x);
-        telemetry.addData("Joystick Y Axis:", gamepad1.left_stick_y);
+        telemetry.addData("Left Joystick:", gamepad1.left_stick_y);
+        telemetry.addData("Right Joystick:", gamepad1.right_stick_y);
         telemetry.addData("Drive Power:", robot.currentDrivePower);
         telemetry.addData("Left Servo Position:", robot.lub.getPosition());
         telemetry.addData("Right Servo Position:", robot.rub.getPosition());

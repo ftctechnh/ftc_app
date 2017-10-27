@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.TeleOpTemplates.TankOpModes;
+package org.firstinspires.ftc.teamcode.TalonCode.TeleOpTemplates.TankOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @Disabled
-@TeleOp(name = "Arcade Tele-Op Erik", group = "Tank")
-public class Tank_Arcade_TeleOp_Erik extends OpMode {
+@TeleOp(name = "Arcade Tele-Op Talon", group = "Tank")
+public class Tank_Arcade_TeleOp extends OpMode {
 
     Tank_Hardware robot;
 
@@ -19,10 +19,10 @@ public class Tank_Arcade_TeleOp_Erik extends OpMode {
     @Override
     public void loop (){
         //Hold right bumper to speed up and left to slow down (on first gamepad)
-        if(gamepad1.right_stick_y > 0)
-            robot.currentDrivePower = robot.DRIVE_POWER + (1 - robot.DRIVE_POWER) * gamepad1.right_stick_y;
-        else if(gamepad1.right_stick_y < 0)
-            robot.currentDrivePower = robot.DRIVE_POWER - (robot.DRIVE_POWER - .1f) * gamepad1.right_stick_y* -1;
+        if(gamepad1.right_trigger > 0)
+            robot.currentDrivePower = robot.DRIVE_POWER + (1 - robot.DRIVE_POWER) * gamepad1.right_trigger;
+        else if(gamepad1.left_trigger > 0)
+            robot.currentDrivePower = robot.DRIVE_POWER - (robot.DRIVE_POWER - .1f) * gamepad1.left_trigger;
         else
             robot.currentDrivePower = robot.DRIVE_POWER;
 

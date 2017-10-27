@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode.GeneralCode.TeleOpTemplates.HolonomicOpModes;
+package org.firstinspires.ftc.teamcode.ErikCode.TeleOpTemplates.HolonomicOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.GeneralCode.TeleOpTemplates.HolonomicOpModes.Holonomic_Hardware;
 
 /*
 - Name: Daquan Robot-Centric Tele-Op with Erik's Controls
@@ -20,11 +22,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 - Possible Improvements: Creating a version of the program that successfully incorporates field
 centric Drive.
  */
-@Disabled
+
 @TeleOp(name = "Holonomic Robot-Centric Tele-Op Erik", group = "holonomic Erik")
 public class Holonomic_RobotCentric_TeleOp_Erik extends OpMode
 {
-    Holonomic_Hardware robot;
+    org.firstinspires.ftc.teamcode.GeneralCode.TeleOpTemplates.HolonomicOpModes.Holonomic_Hardware robot;
 
     @Override
     public void init()

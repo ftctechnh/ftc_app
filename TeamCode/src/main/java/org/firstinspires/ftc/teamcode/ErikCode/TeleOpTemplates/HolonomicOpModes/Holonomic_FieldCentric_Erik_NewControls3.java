@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes;
+package org.firstinspires.ftc.teamcode.ErikCode.TeleOpTemplates.HolonomicOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 Tests the Dpad Functions moving rotating (just top and right as of now)
  */
 
-@TeleOp(name = "Holonomic Field-Centric Tele-Op Test 4", group = "holonomic Erik")
-public class Holonomic_FieldCentric_Erik_NewControls4 extends OpMode
+@TeleOp(name = "Holonomic Field-Centric Tele-Op Test 3", group = "holonomic Erik")
+public class Holonomic_FieldCentric_Erik_NewControls3 extends OpMode
 {
     Holonomic_Hardware robot;
     double angleFromDriver = Math.PI/2;
@@ -16,6 +16,7 @@ public class Holonomic_FieldCentric_Erik_NewControls4 extends OpMode
     double jp;
     double theta;
     boolean robotCentric = false;
+    boolean toggle = false;
     int z = 1;
 
     @Override
@@ -47,27 +48,26 @@ public class Holonomic_FieldCentric_Erik_NewControls4 extends OpMode
 
         if(gamepad1.dpad_up)
         {
-            if(robot.heading > Math.PI/2 && robot.heading <=3*Math.PI/2) {
-                while (robot.heading > Math.PI / 2) {
-                    robot.updateGyro();
+            if(robot.heading > 0 && robot.heading < Math.PI)
+            {
+                while (robot.heading < 2*Math.PI && robot.heading > Math.PI)
+                {
                     robot.drive(
-                            -z,
-                            z,
-                            -z,
-                            z
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z
                     );
                 }
             }
-            else if(robot.heading != Math.PI/2)
+            else if(robot.heading > Math.PI)
             {
-                while((robot.heading >= 3*Math.PI/2 && robot.heading <= Math.PI*2) || (robot.heading > 0 && robot.heading < Math.PI/2))
-                {
-                    robot.updateGyro();
+                while (robot.heading < Math.PI) {
                     robot.drive(
-                            z,
-                            -z,
-                            z,
-                            -z
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 - z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 + z,
+                            (Math.sin(theta) - Math.cos(theta)) * jp / 2 - z,
+                            (Math.sin(theta) + Math.cos(theta)) * jp / 2 + z
                     );
                 }
             }
@@ -78,7 +78,8 @@ public class Holonomic_FieldCentric_Erik_NewControls4 extends OpMode
         telemetry.addData("Joystick Direction", Math.toDegrees(jTheta));
         telemetry.addData("Joystick Magnitude", jp);
         telemetry.addData("Gyro Heading", robot.heading);
+        telemetry.addData("toggle", toggle);
         telemetry.addData("robotCentric", robotCentric);
-        telemetry.addData("tophat up", gamepad1.dpad_up);
+
     }
 }

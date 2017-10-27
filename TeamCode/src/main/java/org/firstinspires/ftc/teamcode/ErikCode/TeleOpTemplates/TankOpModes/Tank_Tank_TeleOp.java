@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOpTemplates.TankOpModes;
+package org.firstinspires.ftc.teamcode.ErikCode.TeleOpTemplates.TankOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
