@@ -49,7 +49,9 @@ import org.opencv.core.Point3;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import static org.opencv.core.CvType.CV_32FC1;
 import static org.opencv.core.CvType.CV_8U;
@@ -110,6 +112,7 @@ public class VumarkOpenCV extends OpenCVLoad {
     //Canvas canvas;
     //Paint p;
 
+    BlockingDeque<Mat> matQueue = new LinkedBlockingDeque<>();
 
     //storage camera calibration
     private CameraCalibration camCal;
@@ -269,13 +272,22 @@ public class VumarkOpenCV extends OpenCVLoad {
                     //flip it for display
                     Core.flip(out, out, -1);
 
+                    matQueue.add(out);
+
                     //display!
                     mView.getHandler().post(new Runnable() {
                         @Override
                         public void run() {
-                            //convert to bitmap
-                            Utils.matToBitmap(out, bm);
-                            mView.invalidate();
+                            try {
+                                Mat frame = matQueue.take();
+                                //convert to bitmap
+                                Utils.matToBitmap(frame, bm);
+                                frame.release();
+                                mView.invalidate();
+                            }
+                            catch (InterruptedException e) {
+                                //huh
+                            }
                             //old vuforia stuff
                             /*
                             //clear canvas
@@ -308,8 +320,10 @@ public class VumarkOpenCV extends OpenCVLoad {
                 mView.setImageDrawable(null);
                 mView.invalidate();
                 if(bm != null) bm.recycle();
+                matQueue.clear();
             }
         });
+        this.ray.clear();
     }
 
     private String format(OpenGLMatrix transformationMatrix) {
