@@ -47,15 +47,29 @@ public class Holonomic_FieldCentric_Erik_NewControls4 extends OpMode
 
         if(gamepad1.dpad_up)
         {
-            while(robot.heading > Math.PI/2)
+            if(robot.heading > Math.PI/2 && robot.heading <=3*Math.PI/2) {
+                while (robot.heading > Math.PI / 2) {
+                    robot.updateGyro();
+                    robot.drive(
+                            -z,
+                            z,
+                            -z,
+                            z
+                    );
+                }
+            }
+            else if(robot.heading != Math.PI/2)
             {
-                robot.updateGyro();
-                robot.drive(
-                        z,
-                        -z,
-                        z,
-                        -z
-                );
+                while((robot.heading >= 3*Math.PI/2 && robot.heading <= Math.PI*2) || (robot.heading > 0 && robot.heading < Math.PI/2))
+                {
+                    robot.updateGyro();
+                    robot.drive(
+                            z,
+                            -z,
+                            z,
+                            -z
+                    );
+                }
             }
         }
 
