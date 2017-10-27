@@ -23,7 +23,6 @@ import org.firstinspires.ftc.teamcode.TeleOpTemplates.HolonomicOpModes.Holonomic
 centric Drive.
  */
 
-@Disabled
 @TeleOp(name = "Holonomic Robot-Centric Tele-Op Erik", group = "Daquan")
 public class Holonomic_RobotCentric_TeleOp_Erik extends OpMode
 {

@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 
 public class Daquan_Hardware {
 
-    public DcMotor fleft, fright, bleft, bright, lurricane, rurricane;
+    public DcMotor fleft, fright, bleft, bright;
     public static final float DRIVE_POWER = 0.3f;
     public static final float INTAKE_POWER = 0.16f;
     public BNO055IMU gyro;
@@ -41,12 +41,9 @@ public class Daquan_Hardware {
         fright = hwMap.dcMotor.get("fright");
         bleft = hwMap.dcMotor.get("bleft");
         bright = hwMap.dcMotor.get("bright");
-        lurricane = hwMap.dcMotor.get("lurricane");
-        rurricane = hwMap.dcMotor.get("rurricane");
 
-        fleft.setDirection(DcMotor.Direction.REVERSE);
-        bleft.setDirection(DcMotor.Direction.REVERSE);
-        rurricane.setDirection(DcMotor.Direction.REVERSE);
+        fright.setDirection(DcMotor.Direction.REVERSE);
+        bright.setDirection(DcMotor.Direction.REVERSE);
 
         if(usesGyro) {
             gyro = hwMap.get(BNO055IMU.class, "imu");

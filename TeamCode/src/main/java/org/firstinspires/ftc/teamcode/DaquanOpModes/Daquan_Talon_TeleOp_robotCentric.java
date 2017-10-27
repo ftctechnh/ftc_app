@@ -36,20 +36,6 @@ public class Daquan_Talon_TeleOp_robotCentric extends OpMode
     @Override
     public void loop () {
 
-        //Runs the intake motors according to the dpad
-        if(gamepad1.dpad_up) {
-            robot.rurricane.setPower(robot.INTAKE_POWER);
-            robot.lurricane.setPower(1); //Due to motor imbalances the speed for this motor is 1
-        }
-        else if(gamepad1.dpad_down) {
-            robot.rurricane.setPower(- robot.INTAKE_POWER);
-            robot.lurricane.setPower(- 1); //Due to motor imbalances the speed for this motor is 1
-        }
-        else {
-            robot.rurricane.setPower(0);
-            robot.lurricane.setPower(0);
-        }
-
         //Ultra-Turbo Mode when both bumpers are held
         if(gamepad1.right_bumper && gamepad1.left_bumper)
             robot.currentDrivePower = 1f;

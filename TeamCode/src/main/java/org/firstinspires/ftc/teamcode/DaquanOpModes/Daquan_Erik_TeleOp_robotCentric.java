@@ -51,21 +51,6 @@ public class Daquan_Erik_TeleOp_robotCentric extends OpMode
                 -gamepad1.left_stick_y+gamepad1.left_stick_x+gamepad1.right_stick_x
         );
 
-        if(gamepad1.right_trigger != 1)
-        {
-            robot.rurricane.setPower(.16*gamepad1.right_trigger);
-            robot.lurricane.setPower(1*gamepad1.right_trigger);
-        }
-        else if(gamepad1.left_trigger != 1)
-        {
-            robot.rurricane.setPower(-.16*gamepad1.left_trigger);
-            robot.lurricane.setPower(-1*gamepad1.left_trigger);
-        }
-        else
-        {
-            robot.rurricane.setPower(0);
-            robot.lurricane.setPower(0);
-        }
 
         telemetry.addData(" Left Joystick X Axis:", gamepad1.left_stick_x);
         telemetry.addData(" Left Joystick Y Axis:", gamepad1.left_stick_y);
