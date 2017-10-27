@@ -206,15 +206,13 @@ public class CameraLib {
             Histogram hist = new Histogram(15);      // wrgbcym01234567
             String sDom = "";               // string describing the line of pixels ito "dominant color"
             for (int x=0; x<cameraSize().width; x++) {
-                int pix = getPixel(x, y);
-                int domClr = CameraLib.Pixel.dominantColor(pix);
+                int pix = getPixel(x, y);                    // get the pixel
+                int domClr = CameraLib.Pixel.dominantColor(pix);    // get the dominant color of the pixel
+                hist.add(domClr);                            // add a sample to Histogram for this band
                 if (x%bandWidth == (bandWidth-1)) {
-                    sDom += CameraLib.Pixel.colorName((bandWidth>1) ? hist.maxBin() : domClr);
-                        // add symbol string for most popular color in this band, either directly or from histogram
+                    sDom += CameraLib.Pixel.colorName(hist.maxBin());  // add symbol string for most popular color in this band
                     hist.clear();                                // ... and restart the histogram for the next band
                 }
-                else
-                    hist.add(domClr);                            // add a sample to Histogram for this band
             }
             return sDom;
         }
@@ -226,15 +224,53 @@ public class CameraLib {
             Histogram hist = new Histogram(15);      // wrgbcym01234567
             String sDom = "";               // string describing the line of pixels ito "dominant color"
             for (int x=0; x<cameraSize().width; x++) {
-                int pix = getPixel(x, y);
-                int domClr = CameraLib.Pixel.hue(pix);            // or, use hue(pix) instead ...
+                int pix = getPixel(x, y);                        // get the pixel
+                int domClr = CameraLib.Pixel.hue(pix);           // get the Hue of the pixel
+                hist.add(domClr);                                // add the sample to Histogram for this band
                 if (x%bandWidth == (bandWidth-1)) {
-                    sDom += CameraLib.Pixel.colorName((bandWidth>1) ? hist.maxBin() : domClr);
-                    // add symbol string for most popular color in this band, either directly or from histogram
+                    sDom += CameraLib.Pixel.colorName(hist.maxBin());  // add symbol string for most popular color in this band
                     hist.clear();                                // ... and restart the histogram for the next band
                 }
-                else
-                    hist.add(domClr);                            // add a sample to Histogram for this band
+            }
+            return sDom;
+        }
+
+        // return a string representation of the most popular dominant color in each column-band of the image
+        public String columnDom(int bandWidth) {
+            // scan the given horizontal line of the image for red, green, and blue strips and report
+            // dominant pixel hue of each bandWidth-pixel band
+            Histogram hist = new Histogram(15);      // wrgbcym01234567
+            String sDom = "";               // string describing the line of pixels ito "dominant color"
+            for (int x=0; x<cameraSize().width; x++) {
+                for (int y=0; y<cameraSize().height; y++) {
+                    int pix = getPixel(x, y);                        // get the pixel
+                    int domClr = CameraLib.Pixel.dominantColor(pix);           // get the dominant color of the pixel
+                    hist.add(domClr);                                // add the sample to Histogram for this band
+                }
+                if (x%bandWidth == (bandWidth-1)) {
+                    sDom += CameraLib.Pixel.colorName(hist.maxBin());  // add symbol string for most popular color in this band
+                    hist.clear();                                    // ... and restart the histogram for the next band
+                }
+            }
+            return sDom;
+        }
+
+        // return a string representation of the most popular hue in each column-band of the image
+        public String columnHue(int bandWidth) {
+            // scan the given horizontal line of the image for red, green, and blue strips and report
+            // dominant pixel hue of each bandWidth-pixel band
+            Histogram hist = new Histogram(15);      // wrgbcym01234567
+            String sDom = "";               // string describing the line of pixels ito "dominant color"
+            for (int x=0; x<cameraSize().width; x++) {
+                for (int y=0; y<cameraSize().height; y++) {
+                    int pix = getPixel(x, y);                        // get the pixel
+                    int domClr = CameraLib.Pixel.hue(pix);           // get the Hue of the pixel
+                    hist.add(domClr);                                // add the sample to Histogram for this band
+                }
+                if (x%bandWidth == (bandWidth-1)) {
+                    sDom += CameraLib.Pixel.colorName(hist.maxBin());  // add symbol string for most popular color in this band
+                    hist.clear();                                    // ... and restart the histogram for the next band
+                }
             }
             return sDom;
         }

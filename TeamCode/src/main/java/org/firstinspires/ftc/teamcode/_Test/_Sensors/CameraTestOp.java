@@ -52,22 +52,24 @@ public class CameraTestOp extends OpMode {
 
             // log data about the most current image to driver station every loop so it stays up long enough to read
             Camera.Size camSize = frame.cameraSize();
-            telemetry.addData("preview camera size: ", String.valueOf(camSize.width) + "x" + String.valueOf(camSize.height));
-            telemetry.addData("preview data size:", frame.dataSize());
-            telemetry.addData("preview rgb(center):", String.format("%08X", frame.getPixel(camSize.width / 2, camSize.height / 2)));
-            telemetry.addData("frame number: ", mCamAcqFr.frameCount());
+            telemetry.addData("preview camera size", String.valueOf(camSize.width) + "x" + String.valueOf(camSize.height));
+            telemetry.addData("preview data size", frame.dataSize());
+            telemetry.addData("preview rgb(center)", String.format("%08X", frame.getPixel(camSize.width / 2, camSize.height / 2)));
+            telemetry.addData("frame number", mCamAcqFr.frameCount());
 
             // log text representations of several significant scanlines
-            final int bandSize = 10;
-            telemetry.addData("hue a(1/3): ", frame.scanlineHue(camSize.height / 3, bandSize));
-            telemetry.addData("hue b(1/2): ", frame.scanlineHue(camSize.height / 2, bandSize));
-            telemetry.addData("hue c(2/3): ", frame.scanlineHue(2*camSize.height / 3, bandSize));
-            //telemetry.addData("dom a(1/3): ", frame.scanlineDomColor(camSize.height / 3, bandSize));
-            //telemetry.addData("dom b(1/2): ", frame.scanlineDomColor(camSize.height / 2, bandSize));
-            //telemetry.addData("dom c(2/3): ", frame.scanlineDomColor(2*camSize.height / 3, bandSize));
-            telemetry.addData("centroid a(1/3): ", frame.scanlineGray(camSize.height / 3).fCentroid());
-            telemetry.addData("centroid b(1/2): ", frame.scanlineGray(camSize.height / 2).fCentroid());
-            telemetry.addData("centroid c(2/3): ", frame.scanlineGray(2*camSize.height / 3).fCentroid());
+            final int bandSize = 6;
+            telemetry.addData("hue columns", frame.columnHue(bandSize));
+            telemetry.addData("dom columns", frame.columnDom(bandSize));
+            telemetry.addData("hue a(1/3)", frame.scanlineHue(camSize.height / 3, bandSize));
+            telemetry.addData("hue b(1/2)", frame.scanlineHue(camSize.height / 2, bandSize));
+            telemetry.addData("hue c(2/3)", frame.scanlineHue(2*camSize.height / 3, bandSize));
+            telemetry.addData("dom a(1/3)", frame.scanlineDomColor(camSize.height / 3, bandSize));
+            telemetry.addData("dom b(1/2)", frame.scanlineDomColor(camSize.height / 2, bandSize));
+            telemetry.addData("dom c(2/3)", frame.scanlineDomColor(2*camSize.height / 3, bandSize));
+            telemetry.addData("centroid a(1/3)", frame.scanlineGray(camSize.height / 3).fCentroid());
+            telemetry.addData("centroid b(1/2)", frame.scanlineGray(camSize.height / 2).fCentroid());
+            telemetry.addData("centroid c(2/3)", frame.scanlineGray(2*camSize.height / 3).fCentroid());
         }
     }
 

@@ -34,7 +34,7 @@ public class AutoLib {
         }
 
         // returns true iff called from the first call to loop() on this Step
-        boolean firstLoopCall() {
+        public boolean firstLoopCall() {
             return (mLoopCount == 1);    // assume this is called AFTER super.loop()
         }
 

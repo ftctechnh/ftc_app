@@ -109,7 +109,7 @@ public class VuforiaNavigationTest2 extends OpMode {
 
         // test image access through Vuforia
         //
-        /*
+
         VuforiaLocalizer.CloseableFrame f = mVLib.getFrame();
         if (f != null)
         {
@@ -129,7 +129,7 @@ public class VuforiaNavigationTest2 extends OpMode {
             }
         }
         mVLib.releaseFrame(); //
-        */
+
     }
 
     @Override public void stop()
