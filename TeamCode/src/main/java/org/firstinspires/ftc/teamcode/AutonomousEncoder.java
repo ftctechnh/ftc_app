@@ -16,29 +16,27 @@ import com.qualcomm.robotcore.util.Range;
 
 public class AutonomousEncoder extends LinearOpMode{
 
-    DcMotor motorRight = null;
-    DcMotor motorLeft = null;
-    HardwareRobot robot = new HardwareRobot();
     HardwareMap hwMap = null;
+    HardwareRobot robot = new HardwareRobot(hwMap);
     //hello!
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        robot.init(hwMap);
-
-
+        waitForStart();
     }
 
     public void drive(int leftPower, int rightPower, int inches) throws InterruptedException {
 
-        robot.leftDrive.setPower(0);
-        robot.rightDrive.setPower(0);
         robot.leftDrive.setTargetPosition((int)(robot.COUNTS_PER_INCH) * inches);
         robot.rightDrive.setTargetPosition((int)(robot.COUNTS_PER_INCH) * inches);
-        robot.change();
+
+        robot.encoderToPosition();
         robot.leftDrive.setPower(leftPower);
         robot.rightDrive.setPower(rightPower);
+
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
+
 
     }
 
