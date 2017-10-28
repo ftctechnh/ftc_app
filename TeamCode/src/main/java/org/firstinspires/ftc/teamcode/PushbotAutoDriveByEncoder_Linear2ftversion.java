@@ -30,12 +30,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -64,11 +61,11 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Potato By Encoder", group="PushbotPotato")
-public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
+@Autonomous(name="Pushbot: Auto Potato By Encoder 2.5 Ft", group="PushbotPotato")
+public class PushbotAutoDriveByEncoder_Linear2ftversion extends LinearOpMode {
 
     /* Declare OpMode members. */
-    org.firstinspires.ftc.teamcode.HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -111,11 +108,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  36,  36, 5.0);
-
-        encoderDrive(TURN_SPEED,   11, -11, 2.0);
-
-        encoderDrive(DRIVE_SPEED,  2,  2, 2.0);
+        encoderDrive(DRIVE_SPEED,  28,  28, 5.0);
 
         // robot.claw.setPosition(1.0);sleep(1000);
         //
