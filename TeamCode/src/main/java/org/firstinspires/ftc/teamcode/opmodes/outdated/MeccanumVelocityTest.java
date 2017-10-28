@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.PushyLib;
@@ -58,7 +58,7 @@ import org.firstinspires.ftc.teamcode.libraries.PushyLib;
 @Disabled
 public class MeccanumVelocityTest extends OpMode {
 
-    BotHardware robot = new BotHardware();
+    BotHardwareOld robot = new BotHardwareOld();
     /* Declare OpMode members. */
 
     //some constants to make navigating the field easier

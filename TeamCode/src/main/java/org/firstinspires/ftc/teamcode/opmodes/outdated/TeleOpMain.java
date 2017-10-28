@@ -15,14 +15,13 @@ import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.SquirrelyLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
-import org.firstinspires.ftc.teamcode.opmodes.LineDrive;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 @TeleOp(name = "Ye Olde TeleOpMain", group = "Main")
 @Disabled
 public class TeleOpMain extends OpMode {
 
-    BotHardware robot = new BotHardware();
+    BotHardwareOld robot = new BotHardwareOld();
 
     boolean lastLeftBumperState = false;
     boolean lastRightBumperState = false;

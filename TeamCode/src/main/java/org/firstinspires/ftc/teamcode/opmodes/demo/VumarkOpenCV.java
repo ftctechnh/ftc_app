@@ -320,7 +320,7 @@ public class VumarkOpenCV extends OpenCVLoad {
                 mView.setImageDrawable(null);
                 mView.invalidate();
                 if(bm != null) bm.recycle();
-                matQueue.clear();
+                if(matQueue != null) matQueue.clear();
             }
         });
         this.ray.clear();

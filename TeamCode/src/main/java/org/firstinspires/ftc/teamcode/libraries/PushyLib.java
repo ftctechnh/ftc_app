@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 /**
  * Created by Noah on 12/6/2016.
@@ -17,8 +17,8 @@ public final class PushyLib {
 
     public static class pushypushy extends AutoLib.LinearSequence{
 
-        public pushypushy(OpMode mode, DcMotor[] motors, BotHardware.MuxColor leftSensor, BotHardware.MuxColor rightSensor, Servo leftServo, Servo rightServo,
-                   double pushPos, double time, boolean red, int colorThresh, float drivePower, float driveTime, int maxDriveLoop){
+        public pushypushy(OpMode mode, DcMotor[] motors, BotHardwareOld.MuxColor leftSensor, BotHardwareOld.MuxColor rightSensor, Servo leftServo, Servo rightServo,
+                          double pushPos, double time, boolean red, int colorThresh, float drivePower, float driveTime, int maxDriveLoop){
             //run color detection and pushing
             this.add(new pushyDetect(mode, motors, leftSensor, rightSensor, leftServo, rightServo, pushPos, time, red, colorThresh, drivePower, driveTime, maxDriveLoop));
 
@@ -33,8 +33,8 @@ public final class PushyLib {
 
     private static class pushyDetect extends AutoLib.Step {
         DcMotor[] mMotors;
-        BotHardware.MuxColor mLeftSensor;
-        BotHardware.MuxColor mRightSensor;
+        BotHardwareOld.MuxColor mLeftSensor;
+        BotHardwareOld.MuxColor mRightSensor;
         Servo mLeftServo;
         Servo mRightServo;
         final double mPushPos;
@@ -47,7 +47,7 @@ public final class PushyLib {
         int mMaxDriveLoop;
         OpMode mMode;
 
-        public pushyDetect(OpMode mode, DcMotor[] motors, BotHardware.MuxColor leftSensor, BotHardware.MuxColor rightSensor, Servo leftServo, Servo rightServo,
+        public pushyDetect(OpMode mode, DcMotor[] motors, BotHardwareOld.MuxColor leftSensor, BotHardwareOld.MuxColor rightSensor, Servo leftServo, Servo rightServo,
                            double pushPos, double time, boolean red, int colorThresh, float drivePower, float driveTime, int maxDriveLoop){
             //You know what, I think I'm missing some variables
             //oh never mind here they are

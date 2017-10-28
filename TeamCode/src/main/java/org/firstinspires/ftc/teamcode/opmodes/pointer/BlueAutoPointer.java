@@ -35,14 +35,14 @@ package org.firstinspires.ftc.teamcode.opmodes.pointer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 import org.firstinspires.ftc.teamcode.opmodes.LineDrive;
 
 @Autonomous(name="Blue Auto (Push Beacons)", group="Main")
 //@Disabled
 public class BlueAutoPointer extends OpMode {
 
-    BotHardware robot = new BotHardware();
+    BotHardwareOld robot = new BotHardwareOld();
 
     LineDrive auto = new LineDrive(this, false, false);
 

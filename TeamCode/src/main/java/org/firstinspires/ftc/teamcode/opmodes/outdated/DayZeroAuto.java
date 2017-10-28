@@ -34,13 +34,13 @@ package org.firstinspires.ftc.teamcode.opmodes.outdated;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 @Autonomous(name="Old Auto", group="Main")
 @Disabled
 public class DayZeroAuto extends LinearOpMode {
 
-    BotHardware robot = new BotHardware();
+    BotHardwareOld robot = new BotHardwareOld();
 
     @Override
     public void runOpMode() {

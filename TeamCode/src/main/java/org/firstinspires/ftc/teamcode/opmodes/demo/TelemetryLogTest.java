@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.libraries.TelemetryLogLib;
-import org.firstinspires.ftc.teamcode.opmodes.BlockAuto;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 
 /**
  * Created by Noah on 4/2/2017.

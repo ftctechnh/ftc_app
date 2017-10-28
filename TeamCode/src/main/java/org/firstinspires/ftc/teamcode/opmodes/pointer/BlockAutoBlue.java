@@ -6,13 +6,13 @@ package org.firstinspires.ftc.teamcode.opmodes.pointer;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 import org.firstinspires.ftc.teamcode.opmodes.BlockAuto;
 
 @Autonomous(name="Blue Block Auto (Shoot Balls, Defense)", group="Main")
 @Disabled
 public class BlockAutoBlue extends OpMode {
-    BotHardware robot = new BotHardware();
+    BotHardwareOld robot = new BotHardwareOld();
 
     BlockAuto auto = new BlockAuto(this, false);
 

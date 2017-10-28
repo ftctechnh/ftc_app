@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.libraries.MeccanumVelocityLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -61,7 +61,7 @@ public class OpticalFlowDemo extends OpenCVLib {
 
     private SensorLib.PID vPid = new SensorLib.PID(Kp2, Ki2, Kd2, Ki2Cutoff);
 
-    private BotHardware bot;
+    private BotHardwareOld bot;
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
@@ -143,7 +143,7 @@ public class OpticalFlowDemo extends OpenCVLib {
         lastMat = new Mat();
         lastMatGrey = new Mat();
 
-        bot = new BotHardware();
+        bot = new BotHardwareOld();
         bot.init(this, false);
 
         bot.startNavX();

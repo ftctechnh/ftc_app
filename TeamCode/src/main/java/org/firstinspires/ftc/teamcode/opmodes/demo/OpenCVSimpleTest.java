@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.firstinspires.ftc.teamcode.libraries.LineFollowLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 import org.opencv.core.Mat;
 
 
@@ -18,7 +18,7 @@ public class OpenCVSimpleTest extends OpenCVLib {
 
     private int[] yValStore = new int[3];
 
-    private BotHardware robot = new BotHardware();
+    private BotHardwareOld robot = new BotHardwareOld();
 
     @Override
     public void init(){

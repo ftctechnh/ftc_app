@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 
 /**
@@ -16,11 +16,11 @@ import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 //@Disabled
 public class SensorTest extends OpMode {
 
-    BotHardware bot;
+    BotHardwareOld bot;
 
     @Override
     public void init(){
-        bot = new BotHardware();
+        bot = new BotHardwareOld();
 
         bot.init(this, false);
 

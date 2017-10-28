@@ -5,11 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.libraries.SquirrelyLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.FunctionCall;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.LineFollowLib;
@@ -34,7 +33,7 @@ public class LineDrive extends OpenCVLib {
     AutoLib.Sequence mPushy;
     AutoLib.Sequence mCharge;
     boolean bDone;                          // true when the programmed sequence is done
-    BotHardware robot;                      // robot hardware object
+    BotHardwareOld robot;                      // robot hardware object
     SensorLib.PID mPid;
     SensorLib.PID mgPid;                     // PID controllers for the sequence
     SensorLib.PID mdPid;
@@ -100,7 +99,7 @@ public class LineDrive extends OpenCVLib {
     public void init() {
         //init hardware objects
         final boolean debug = false;
-        robot = new BotHardware();
+        robot = new BotHardwareOld();
         robot.init(modePointer, debug, true);
         robot.setMaxSpeedAll(2500);
 

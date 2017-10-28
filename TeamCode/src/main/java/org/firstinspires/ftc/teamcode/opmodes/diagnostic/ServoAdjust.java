@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 @TeleOp(name = "Servo Calibrate", group = "Main")
 //@Disabled
@@ -17,7 +17,7 @@ public class ServoAdjust extends OpMode {
     boolean currentServo = false;
     boolean dpadDelay = false;
 
-    BotHardware robot = new BotHardware();
+    BotHardwareOld robot = new BotHardwareOld();
 
     @Override
     public void init() {

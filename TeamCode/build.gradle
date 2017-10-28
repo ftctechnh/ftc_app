@@ -14,6 +14,3 @@ dependencies {
     compile project(':openCVLibrary330')
     compile project(':MPChartLib')
 }
-android {
-    buildToolsVersion '26.0.2'
-}

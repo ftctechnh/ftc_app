@@ -6,7 +6,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 
@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 @Disabled
 public class BlockAuto extends OpMode {
 
-    BotHardware robot = new BotHardware();
+    BotHardwareOld robot = new BotHardwareOld();
 
     AutoLib.Sequence mShoot;
 
@@ -42,7 +42,7 @@ public class BlockAuto extends OpMode {
     public void init(){
         //init hardware objects
         final boolean debug = false;
-        robot = new BotHardware();
+        robot = new BotHardwareOld();
         robot.init(modePointer, debug, true);
         robot.setMaxSpeedAll(2500);
 

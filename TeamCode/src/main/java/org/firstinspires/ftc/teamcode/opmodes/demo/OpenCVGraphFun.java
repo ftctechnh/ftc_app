@@ -13,15 +13,12 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.teamcode.libraries.LineFollowLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 
 /**
