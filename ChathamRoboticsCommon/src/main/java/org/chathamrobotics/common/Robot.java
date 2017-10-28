@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.chathamrobotics.common.utils.HardwareListeners;
 import org.chathamrobotics.common.utils.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -29,7 +30,7 @@ import java.util.Map;
  * @Last Modified time: 9/17/2017
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public abstract class Robot {
+public abstract class Robot extends HardwareListeners {
 
     private HashMap<String, Double> servoRestPositions = new HashMap<>();
 

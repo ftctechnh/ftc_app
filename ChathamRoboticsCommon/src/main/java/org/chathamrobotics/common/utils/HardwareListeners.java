@@ -26,7 +26,7 @@ public class HardwareListeners {
      * A condition for a hardware device to meet. Returns true if the condition is met.
      * @param <H>   the hardware device type
      */
-    interface HardwareCondition<H extends HardwareDevice> {
+    public interface HardwareCondition<H extends HardwareDevice> {
         /**
          * Checks whether the condition was met
          * @param device    the hardware device to check
@@ -39,7 +39,7 @@ public class HardwareListeners {
      * Listens on a hardware device and calls the callback if the condition is met.
      * @param <H>   the hardware device type
      */
-    class HardwareListener<H extends HardwareDevice> {
+    public class HardwareListener<H extends HardwareDevice> {
         private final Runnable callback;
         private final HardwareCondition<H> condition;
 
