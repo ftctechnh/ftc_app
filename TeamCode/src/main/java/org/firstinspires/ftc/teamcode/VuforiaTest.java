@@ -26,17 +26,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -70,15 +66,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
-//Disabled
-public class ConceptVuMarkIdentification extends LinearOpMode {
+@Disabled
+public class VuforiaTest extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
-
-//    DcMotor motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
-//    DcMotor motorRight = hardwareMap.get(DcMotor.class, "motorRight");
-    HardwareRobot robot = new HardwareRobot();
-    //HardwareMap map = null;
 
     OpenGLMatrix lastLocation = null;
 
@@ -96,7 +87,6 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        int counter = 0;
 
         // OR...  Do Not Activate the Camera Monitor View, to save power
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -138,7 +128,6 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
         waitForStart();
 
         relicTrackables.activate();
-        robot.init(hardwareMap);
 
         while (opModeIsActive()) {
 
@@ -155,44 +144,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
-                int x = vuMark.hashCode();
 
-                //telemetry.addData("number", x);
-                while (x==2332680)
-                {
-//                    motorLeft.setPower(1);
-                    if (counter == 0) {
-                        robot.leftDrive.setPower(1);
-                        counter++;
-                    }
-
-                }
-                //counter = 0;
-                //robot.leftDrive.setPower(0);
-                while (x==77974015)
-                {
-//                    motorRight.setPower(1);
-                    if (counter == 0) {
-                        robot.rightDrive.setPower(1);
-                        counter++;
-                    }
-                }
-                //counter = 0;
-                //robot.rightDrive.setPower(0);
-                while (x==1984282711)
-                {
-//                    motorLeft.setPower(1);
-//                    motorRight.setPower(1);
-                    if (counter == 0) {
-
-                        robot.leftDrive.setPower(1);
-                        robot.rightDrive.setPower(1);
-                        counter++;
-                    }
-                }
-                counter = 0;
-                robot.leftDrive.setPower(0);
-                robot.rightDrive.setPower(0);
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
                  * we illustrate it nevertheless, for completeness. */
