@@ -2,50 +2,26 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.sun.tools.javac.util.ByteBuffer;
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.android.dx.util.ByteArray;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaPoseMatrix;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableImpl;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackablesImpl;
-import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLoad;
 import org.opencv.android.Utils;
-import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfDouble;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.MatOfPoint3f;
 import org.opencv.core.Point;
-import org.opencv.core.Point3;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -53,15 +29,10 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import static org.opencv.core.CvType.CV_32FC1;
 import static org.opencv.core.CvType.CV_8U;
-import static org.opencv.core.CvType.CV_8UC3;
-import static org.opencv.core.CvType.CV_8UC4;
 
 import com.vuforia.Matrix34F;
 import com.vuforia.Tool;
-import com.vuforia.Trackable;
-import com.vuforia.Vec2F;
 import com.vuforia.Vec3F;
 
 /**
@@ -103,6 +74,12 @@ public class VumarkOpenCV extends OpenCVLoad {
     //all units in vuforia are mm, so we multiply to inches to make it readable
     private static final float inToMM = 25.4f;
 
+    //units in inches, then converted to mm
+    private static final float boxLeftFromImage = 3.625f * inToMM;
+    private static final float boxBottomFromImage = 5.125f * inToMM;
+    private static final float boxWidth = 9.75f * inToMM;
+    private static final float boxLength = 3.75f * inToMM;
+    private static final float boxHeight = 3.75f * inToMM;
 
     //identity mats to be constructed later in the project
     private Vec3F[] point;
@@ -133,15 +110,15 @@ public class VumarkOpenCV extends OpenCVLoad {
 
         //constrt matrixes
         //construct points like a box
-        Vec3F botLeft = new Vec3F(-5 * inToMM, -5 * inToMM, 0);
-        Vec3F botRight = new Vec3F(-10 * inToMM, -5 * inToMM, 0);
-        Vec3F botFrontLeft = new Vec3F(-5 * inToMM, -5 * inToMM, 2 * inToMM);
-        Vec3F botFrontRight = new Vec3F(-10 * inToMM, -5* inToMM, 2 * inToMM);
+        Vec3F botLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage, 0);
+        Vec3F botRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage, 0);
+        Vec3F botFrontLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage, boxLength);
+        Vec3F botFrontRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage, boxLength);
 
-        Vec3F topLeft = new Vec3F(-5 * inToMM, -3 * inToMM, 0);
-        Vec3F topRight = new Vec3F(-10 * inToMM, -3 * inToMM, 0);
-        Vec3F topFrontLeft = new Vec3F(-5 * inToMM, -3 * inToMM, 2 * inToMM);
-        Vec3F topFrontRight = new Vec3F(-10 * inToMM, -3 * inToMM, 2 * inToMM);
+        Vec3F topLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage + boxHeight, 0);
+        Vec3F topRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage + boxHeight, 0);
+        Vec3F topFrontLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage + boxHeight, boxLength);
+        Vec3F topFrontRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage + boxHeight, boxLength);
 
         point = new Vec3F[] {   botLeft, botRight, botFrontRight, botFrontLeft,
                                 topLeft, topRight, topFrontRight, topFrontLeft};
