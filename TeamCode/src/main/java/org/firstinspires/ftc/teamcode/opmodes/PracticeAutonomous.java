@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
+import org.firstinspires.ftc.teamcode.subsystems.Ultrasonic9330;
 
 /**
  * Created by robot on 10/20/2017.
@@ -18,6 +19,7 @@ public class PracticeAutonomous extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException {
         hwMap.init(hardwareMap);
+        Ultrasonic9330 ultrasonic = new Ultrasonic9330(hwMap);
 
         // wait for the start button to be pressed.
         telemetry.addData(">", "Press start!");
@@ -30,12 +32,12 @@ public class PracticeAutonomous extends LinearOpMode
         */
 
         while (opModeIsActive()) {
-            hwMap.rightMotor.setPower(50);
+            //hwMap.rightMotor.setPower(50);
             while (hwMap.touch.getState() && !isStopRequested()) {
-                telemetry.addData("Touch ", hwMap.touch.getState());
+                telemetry.addData("Ultrasonic ", ultrasonic.getDistance());
                 telemetry.update();
             }
-            hwMap.rightMotor.setPower(0);
+            //hwMap.rightMotor.setPower(0);
             stop();
         }
     }
