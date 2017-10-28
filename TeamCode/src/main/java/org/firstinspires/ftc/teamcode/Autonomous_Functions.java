@@ -3,21 +3,28 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 // Created by MRINAAL RAMACHANDRAN on 10/8/17
 //
 //
-// Last edit: 10/22/17 BY MRINAAL RAMACHANDRAN
+// Last edit: 10/27/17 BY MRINAAL RAMACHANDRAN
 
 public class Autonomous_Functions {
 
@@ -36,13 +43,10 @@ public class Autonomous_Functions {
 
     float hsvValues[] = {0F,0F,0F};
 
-    // bPrevState and bCurrState represent the previous and current state of the button.
-    boolean bPrevState = false;
-    boolean bCurrState = false;
+    IntegratingGyroscope gyro;
+    ModernRoboticsI2cGyro modernRoboticsI2cGyro;
 
-    // bLedOn represents the state of the LED.
-    boolean bLedOn = true;
-
+    ElapsedTime timer = new ElapsedTime();
 
     // LOCAL OPMODE MEMBERS
     HardwareMap hwMap = null;
@@ -70,6 +74,9 @@ public class Autonomous_Functions {
         dropper = hwMap.get(Servo.class, "dropper");
 
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+
+        modernRoboticsI2cGyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
 
     }
 
@@ -197,26 +204,10 @@ public class Autonomous_Functions {
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
-            F_L.setPower(power * 10);
-            F_R.setPower(power * 10);
-            R_L.setPower(power * 10);
-            R_R.setPower(power * 10);
-
-            while (F_L.getCurrentPosition() < distance/2) {
-
-                try {
-
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-
-                    e.printStackTrace();
-                }
-            }
-
-            F_L.setPower(power * 5);
-            F_R.setPower(power * 5);
-            R_L.setPower(power * 5);
-            R_R.setPower(power * 5);
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
 
 
             while (F_L.isBusy() ) {
@@ -251,10 +242,10 @@ public class Autonomous_Functions {
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
-            F_L.setPower(power*10);
-            F_R.setPower(power*10);
-            R_L.setPower(power*10);
-            R_R.setPower(power*10);
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
 
             while (F_L.isBusy() ) {
 
@@ -325,10 +316,10 @@ public class Autonomous_Functions {
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
-            F_L.setPower(power*10);
-            F_R.setPower(power*10);
-            R_L.setPower(power*10);
-            R_R.setPower(power*10);
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
 
             while (F_L.isBusy() ) {
 
@@ -337,8 +328,8 @@ public class Autonomous_Functions {
 
         if (direction == Constants.spinRight) {
 
-                F_L.setDirection(DcMotor.Direction.FORWARD);
-                F_R.setDirection(DcMotor.Direction.FORWARD);
+            F_L.setDirection(DcMotor.Direction.FORWARD);
+            F_R.setDirection(DcMotor.Direction.FORWARD);
             R_L.setDirection(DcMotor.Direction.FORWARD);
             R_R.setDirection(DcMotor.Direction.FORWARD);
 
@@ -362,10 +353,10 @@ public class Autonomous_Functions {
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
-            F_L.setPower(power*10);
-            F_R.setPower(power*10);
-            R_L.setPower(power*10);
-            R_R.setPower(power*10);
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
 
             while (F_L.isBusy() ) {
 
@@ -399,10 +390,10 @@ public class Autonomous_Functions {
             R_L.setTargetPosition(distance);
             R_R.setTargetPosition(distance);
 
-            F_L.setPower(power*10);
-            F_R.setPower(power*10);
-            R_L.setPower(power*10);
-            R_R.setPower(power*10);
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
 
             while (F_L.isBusy() ) {
 
@@ -411,21 +402,71 @@ public class Autonomous_Functions {
         stopMotor();
     }
 
+    // MOVES MOTOR WITH GYRO
+    public void turnMotorUsingGyro (double power, float degrees, String direction) {
+
+        modernRoboticsI2cGyro.calibrate();
+
+        modernRoboticsI2cGyro.resetZAxisIntegrator();
+
+        float zAngle = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+        if (direction == Constants.spinRight) {
+
+            while (zAngle <= degrees) {
+
+                F_L.setDirection(DcMotor.Direction.FORWARD);
+                F_R.setDirection(DcMotor.Direction.FORWARD);
+                R_L.setDirection(DcMotor.Direction.FORWARD);
+                R_R.setDirection(DcMotor.Direction.FORWARD);
+
+                F_L.setPower(power);
+                F_R.setPower(power);
+                R_L.setPower(power);
+                R_R.setPower(power);
+
+                zAngle = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+            }  if (zAngle >= degrees) {
+
+                F_L.setPower(0);
+                F_R.setPower(0);
+                R_L.setPower(0);
+                R_R.setPower(0);
+            }
+        }
+
+        if (direction == Constants.spinLeft) {
+
+            while (zAngle <= degrees) {
+
+                F_L.setDirection(DcMotor.Direction.REVERSE);
+                F_R.setDirection(DcMotor.Direction.REVERSE);
+                R_L.setDirection(DcMotor.Direction.REVERSE);
+                R_R.setDirection(DcMotor.Direction.REVERSE);
+
+                F_L.setPower(power);
+                F_R.setPower(power);
+                R_L.setPower(power);
+                R_R.setPower(power);
+
+                zAngle = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+            } if (zAngle >= degrees) {
+
+                F_L.setPower(0);
+                F_R.setPower(0);
+                R_L.setPower(0);
+                R_R.setPower(0);
+            }
+        }
+    }
+
+    // SENSES THE JEWEL USING THE COLOR SENSOR
     public String senseJewelColor () {
 
         String color = "NOTHING";
 
-
-        // Turn LED on
-        if (bCurrState && (bCurrState != bPrevState))  {
-
-            // button is transitioning to a pressed state. So Toggle LED
-            bLedOn = !bLedOn;
-            colorSensor.enableLed(bLedOn);
-        }
-
-        // update previous state variable.
-        bPrevState = bCurrState;
 
         Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
 
@@ -434,11 +475,7 @@ public class Autonomous_Functions {
         int green = colorSensor.green();
 
         // sense color blue
-        if (blue >=2 && blue >red) {
-
-            //telemetry.addData("i am blue", colorSensor.blue());
-            //telemetry.addData("red value is ", colorSensor.red());
-            //telemetry.update();
+        if (blue >=2 && blue > red) {
 
             color = "BLUE";
         }
@@ -446,51 +483,56 @@ public class Autonomous_Functions {
         // sense color red
         if (red >=2  && red>blue ) {
 
-            //telemetry.addData("i am red", colorSensor.red());
-            //telemetry.addData("blue value is ", colorSensor.blue());
-            //telemetry.update();
-
             color = "RED";
         }
-
-        // Turn LED off
-        colorSensor.enableLed(false);
 
         // Return the color
         return color;
     }
 
+    // KNOCKS OFF THE JEWEL WITH THE "DROPPER" SERVO ARM. USES senseJewelColor
     public void knockOffJewel () {
+
+        dropper.setPosition(0);
+
+        mysleep(500);
+
+        colorSensor.enableLed(true);
 
         jewelColor = senseJewelColor();
 
-        dropper.setPosition(0);
-        stopMotor(1000);
+        while(jewelColor=="NOTHING")
+        {
+            jewelColor = senseJewelColor();
 
+        }
         //sense color
 
         // if color red turn that way
         if (jewelColor == "RED") {
 
-            moveMotorWithEncoder(.05, 500, Constants.spinLeft);
+            moveMotorWithEncoder(.05, 100, Constants.spinRight);
             stopMotor(1000);
             dropper.setPosition(1);
             stopMotor(1000);
-            moveMotorWithEncoder(.03, 500, Constants.spinRight);
+            moveMotorWithEncoder(.03, 100, Constants.spinLeft);
             stopMotor(1000);
         }
 
         // if color blue turn other way
         else if (jewelColor == "BLUE") {
-            moveMotorWithEncoder(.05, 500, Constants.spinRight);
+
+            moveMotorWithEncoder(.05, 100, Constants.spinLeft);
             stopMotor(1000);
             dropper.setPosition(1);
             stopMotor(1000);
-            moveMotorWithEncoder(.03, 500, Constants.spinLeft);
+            moveMotorWithEncoder(.03, 100, Constants.spinRight);
             stopMotor(1000);
         }
 
     }
+
+
 }
 
 

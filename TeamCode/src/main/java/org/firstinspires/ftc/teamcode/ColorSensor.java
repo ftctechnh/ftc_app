@@ -21,10 +21,6 @@ public class ColorSensor extends LinearOpMode {
 
         float hsvValues[] = {0F,0F,0F};
 
-        // bPrevState and bCurrState represent the previous and current state of the button.
-        boolean bPrevState = false;
-        boolean bCurrState = false;
-
         // bLedOn represents the state of the LED.
         boolean bLedOn = true;
 
@@ -32,7 +28,7 @@ public class ColorSensor extends LinearOpMode {
         colorSensor = hardwareMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, "colorSensor");
 
         // Set the LED in the beginning
-        colorSensor.enableLed(bLedOn);
+        colorSensor.enableLed(true);
 
         // wait for the start button to be pressed.
         waitForStart();
@@ -41,17 +37,6 @@ public class ColorSensor extends LinearOpMode {
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
 
-            bCurrState = true;
-            // check for button state transitions.
-            if (bCurrState && (bCurrState != bPrevState))  {
-
-                // button is transitioning to a pressed state. So Toggle LED
-                bLedOn = !bLedOn;
-                colorSensor.enableLed(bLedOn);
-            }
-
-            // update previous state variable.
-            bPrevState = bCurrState;
 
             // convert the RGB values to HSV values.
             Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
@@ -60,19 +45,19 @@ public class ColorSensor extends LinearOpMode {
             int red = colorSensor.red();
             int blue = colorSensor.blue();
             int green = colorSensor.green();
-            telemetry.addData("i am blue", blue);
+            telemetry.addData("blue value is", blue);
             telemetry.addData("red value is ", red);
             telemetry.addData("red value is ", green);
             telemetry.update();
 
-            if (blue >=2 && blue >red) {
+            if (blue >=4 && blue >red) {
 
                 telemetry.addData("i am blue", colorSensor.blue());
                 telemetry.addData("red value is ", colorSensor.red());
                 telemetry.update();
             }
 
-            if (red >=2  && red>blue ) {
+            if (red >=4  && red>blue ) {
 
                 telemetry.addData("i am red", colorSensor.red());
                 telemetry.addData("blue value is ", colorSensor.blue());

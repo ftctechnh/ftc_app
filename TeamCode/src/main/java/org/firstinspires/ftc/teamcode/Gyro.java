@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Created by Swagster_Wagster on 10/27/17.
  */
 @Autonomous
-@Disabled
+
 public class Gyro extends LinearOpMode {
 
     IntegratingGyroscope gyro;
