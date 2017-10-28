@@ -34,6 +34,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+
+// YEAH BOIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII!!!!!!!!!!!!!
+
+
 /**
  * This OpMode ramps a single motor speed up and down repeatedly until Stop is pressed.
  * The code is structured as a LinearOpMode
