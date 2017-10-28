@@ -73,14 +73,15 @@ public class HardwareGromit
     public static final double turn_THRESHOLD      =  2.0 ;
     public static final double turn_MIN_SPEED    =  0.3 ;
     public static final double turn_COEF  = 0.90 ;
+    public static final double drive_COEF  = 0.90 ; //Maximum additional speed to add to a motor during a gyro drive
 
     /**
       _____     _              ___                         _       _     _
      /__   \___| | ___        /___\_ __   /\   /\__ _ _ __(_) __ _| |__ | | ___  ___
        / /\/ _ \ |/ _ \_____ //  // '_ \  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
       / / |  __/ |  __/_____/ \_//| |_) |  \ V / (_| | |  | | (_| | |_) | |  __/\__ \
-     \/   \___|_|\___|     \___/ | .__/    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
-                                 |_|
+      \/   \___|_|\___|     \___/ | .__/    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
+                                  |_|
      */
 
 
@@ -104,14 +105,14 @@ public class HardwareGromit
 
         // Define and Initialize Motors
         right_front  = hwMap.get(DcMotor.class, "right_front");
-        right_back  = hwMap.get(DcMotor.class, "right_back");
+        right_back  = hwMap.get(DcMotor.class, "right_rear");
         left_front = hwMap.get(DcMotor.class, "left_front");
-        left_back = hwMap.get(DcMotor.class, "left_back");
+        left_back = hwMap.get(DcMotor.class, "left_rear");
 
-        right_front.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        left_front.setDirection(DcMotor.Direction.FORWARD); // Set to Forward if using AndyMark motors
-        right_back.setDirection(DcMotor.Direction.REVERSE);
-        left_back.setDirection(DcMotor.Direction.FORWARD);
+        right_front.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        left_front.setDirection(DcMotor.Direction.REVERSE); // Set to Forward if using AndyMark motors
+        right_back.setDirection(DcMotor.Direction.FORWARD);
+        left_back.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         right_front.setPower(0.0);
