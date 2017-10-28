@@ -102,22 +102,27 @@ public class HardwareListeners {
 
             try {
                 // loop through all the listeners and call them if the conditions are met
-                for (Map.Entry<HardwareDevice, ArrayList<HardwareListener>> hardwareEntry : hardwareListeners.entrySet())
-                    for (HardwareListener listener : hardwareEntry.getValue())
-                        // TODO: find a way to check that the device matches the listener just to be safe
-                        //noinspection unchecked
-                        if (listener.check(hardwareEntry.getKey())) {
-                            try {
-                                listener.run();
-                            } catch (CallsMaxedException e) {
-                                hardwareEntry.getValue().remove(listener);
-                                Log.d(TAG, "Removed a listener from a " + hardwareEntry.getKey().getDeviceName());
+                for (Map.Entry<HardwareDevice, ArrayList<HardwareListener>> hardwareEntry : hardwareListeners.entrySet()) {
+                    for (HardwareListener listener : hardwareEntry.getValue()) {
+                        synchronized (hardwareEntry.getKey()) {
+                            // TODO: find a way to check that the device matches the listener just to be safe
+                            //noinspection unchecked
+                            if (listener.check(hardwareEntry.getKey())) {
+                                try {
+                                    listener.run();
+                                } catch (CallsMaxedException e) {
+                                    hardwareEntry.getValue().remove(listener);
+                                    Log.d(TAG, "Removed a listener from a " + hardwareEntry.getKey().getDeviceName());
 
-                                // remove the entry if there are no more listeners
-                                if (hardwareEntry.getValue().size() == 0)
-                                    hardwareListeners.remove(hardwareEntry.getKey());
+                                    // remove the entry if there are no more listeners
+                                    if (hardwareEntry.getValue().size() == 0)
+                                        hardwareListeners.remove(hardwareEntry.getKey());
+                                }
                             }
                         }
+                    }
+                }
+
 
                 // exit thread if no more listeners
                 if (hardwareListeners.isEmpty())
