@@ -18,7 +18,6 @@ public class MethodTest extends LinearOpMode {
      //public static int[] menuvalues = {10, 20, 30, 40};
      //public static String[] menulabels = {"Red", "yellow", "blue", "green",};
 
-
      @Override
      public void runOpMode() {
          /**********************************************************************************************\
