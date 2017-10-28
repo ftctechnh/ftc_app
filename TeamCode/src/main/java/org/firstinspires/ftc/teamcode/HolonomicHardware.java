@@ -47,9 +47,10 @@ public class HolonomicHardware {
     public DcMotor  F_R = null;
     public DcMotor  R_L = null;
     public DcMotor  R_R = null;
-
     public DcMotor elevator = null;
+
     public Servo clamp = null;
+    public Servo dropper = null;
 
     // LOCAL OPMODE MEMBERS
     HardwareMap hwMap           =  null;
@@ -87,13 +88,15 @@ public class HolonomicHardware {
         R_L.setPower(0);
         R_R.setPower(0);
 
+        //SET ALL SERVOS TO POSITION
+        dropper.setPosition(1); //1 is up
+        clamp.setPosition(0);
+
         // SET THE MOTORS TO RUN WITHOUT ENCODERS
         F_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         F_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         R_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         R_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Define and initialize ALL installed servos.
 
     }
  }

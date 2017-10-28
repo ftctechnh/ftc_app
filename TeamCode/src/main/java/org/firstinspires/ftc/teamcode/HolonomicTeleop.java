@@ -59,6 +59,8 @@ public class HolonomicTeleop extends OpMode {
     // DECLARE OPMODE MEMBERS
     HolonomicHardware robot       = new HolonomicHardware(); // use the class created to define a Pushbot's hardware
 
+    double limiter = 1;
+    boolean state = true;
 
     @Override
     public void init() {
@@ -79,11 +81,13 @@ public class HolonomicTeleop extends OpMode {
         double right_x;
 
         // SETTING VALUES FOR LEFT X AND Y
-        left_y = -gamepad1.left_stick_y;
-        left_x = gamepad1.left_stick_x;
+        left_y = -gamepad1.left_stick_y*limiter;
+        left_x = gamepad1.left_stick_x*limiter;
         // SETTING VALUES FOR RIGHT X AND Y
-        right_y = -gamepad1.right_stick_y;
-        right_x = gamepad1.right_stick_x;
+        right_y = -gamepad1.right_stick_y*limiter;
+        right_x = gamepad1.right_stick_x*limiter;
+
+
 
         // SETTING THE POWER TO MOVE THE ROBOT WITH EACH MOTOR
 
@@ -93,6 +97,45 @@ public class HolonomicTeleop extends OpMode {
             robot.F_R.setPower(left_x - left_y);
             robot.R_R.setPower(-left_y - left_x);
             robot.R_L.setPower(left_y - left_x);
+        }
+
+        if(gamepad1.left_trigger >0 && gamepad1.left_trigger <= 1){
+            limiter = 0.2;
+        }
+        else {
+            limiter = 1;
+        }
+
+        telemetry.addData("a button", "%b", gamepad2.a);
+        telemetry.addData("state", "%b", state);
+
+        /*if(gamepad2.a == true) {
+            state = !state;
+            telemetry.addData("a", "button", "pressed");
+        }
+        telemetry.addData("state", "%b", state);
+        if(state) {
+            robot.clamp.setPosition(1); //close
+        }
+        else {
+            robot.clamp.setPosition(0); //open
+        }
+        */
+        if(gamepad2.a == true) {
+            robot.clamp.setPosition(1);
+        }
+        else {
+            robot.clamp.setPosition(0);
+        }
+
+        if (gamepad2.right_trigger >0) {
+            robot.elevator.setPower(gamepad2.right_trigger *0.2);
+        }
+        else if(gamepad2.left_trigger >0) {
+            robot.elevator.setPower(-gamepad2.left_trigger * 0.2);
+        }
+        else {
+            robot.elevator.setPower(0);
         }
 
 
@@ -117,6 +160,10 @@ public class HolonomicTeleop extends OpMode {
         telemetry.addData("right_y front drive", "%.2f", robot.F_R.getPower());
         telemetry.addData("left back drive", "%.2f", robot.R_L.getPower());
         telemetry.addData("right_y back drive", "%.2f", robot.R_R.getPower());
+        telemetry.addData("robot clamp", "%.2f", robot.clamp.getPosition());
+        telemetry.addData("state", "%b", state);
+        telemetry.addData("elevator", "%.2f", robot.elevator.getPower());
+        telemetry.addData("a button", "%b", gamepad2.a);
     }
 
 }
