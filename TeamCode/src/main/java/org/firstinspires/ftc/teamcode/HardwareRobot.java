@@ -61,6 +61,11 @@ public class HardwareRobot {
     //public final static double ARM_MAX_RANGE  = 0.90;
     //public final static double CLAW_MIN_RANGE  = 0.20;
     //public final static double CLAW_MAX_RANGE  = 0.7;
+    final static double COUNTS_PER_MOTOR_REV = 1440;
+    final static double DRIVE_GEAR_REDUCTION = 2.91;
+    final static double WHEEL_DIAMETER_INCHES = 4.0;
+    public final static double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     /* Local OpMode members. */
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
@@ -74,8 +79,8 @@ public class HardwareRobot {
         // save reference to HW Map
         hwMap = ahwMap;
         // Define and Initialize Motors
-        leftDrive = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
+        leftDrive = hwMap.get(DcMotor.class, "leftMotor");
+        rightDrive = hwMap.get(DcMotor.class, "rightMotor");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         // Set all motors to zero power
         leftDrive.setPower(0);
@@ -84,10 +89,19 @@ public class HardwareRobot {
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Define and initialize ALL installed servos.
         //arm  = hwMap.get(Servo.class, "arm");
         //claw = hwMap.get(Servo.class, "claw");
         //arm.setPosition(ARM_HOME);
         //claw.setPosition(CLAW_HOME);
+    }
+
+    public void change() {
+
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 }
