@@ -22,15 +22,17 @@ apply plugin: 'com.android.application'
 android {
 
     //compileSdkVersion 23          //-- team Laptop
-    //buildToolsVersion '23.0.3'    //-- team Laptop
+    buildToolsVersion '23.0.3'    //-- team Laptop
     compileSdkVersion 24            //-- mac Laptop
-    buildToolsVersion '20.0.0'      //-- mac Laptop
+//    buildToolsVersion '20.0.0'      //-- mac Laptop
+//    compileSdkVersion 23
+//    buildToolsVersion '25.0.3'
 
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('../libs/ftc.debug.keystore')
+            storeFile rootProject.file('libs/ftc.debug.keystore')
             storePassword 'android'
         }
     }
@@ -52,7 +54,7 @@ android {
          * @see <a href="http://developer.android.com/tools/building/configuring-gradle.html">Configure Your Build</a>
          * @see <a href="http://developer.android.com/tools/publishing/versioning.html">Versioning Your App</a>
          */
-        def manifestFile = file('../FtcRobotController/src/main/AndroidManifest.xml');
+        def manifestFile = project(':FtcRobotController').file('src/main/AndroidManifest.xml');
         def manifestText = manifestFile.getText()
         //
         def vCodePattern = Pattern.compile("versionCode=\"(\\d+(\\.\\d+)*)\"")
@@ -93,14 +95,15 @@ android {
 
     sourceSets.main {
         jni.srcDirs = []
-        jniLibs.srcDir "../libs"
+        jniLibs.srcDir rootProject.file('libs')
     }
 }
 
 repositories {
     flatDir {
-        dirs '../libs'
+        dirs rootProject.file('libs')
     }
 }
 
 apply from: 'build.release.gradle'
+
