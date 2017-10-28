@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
 
-import java.util.Timer;
-
 /**
  * Created by robot on 10/23/2017.
  */
@@ -12,16 +10,15 @@ public class Ultrasonic9330 {
 
     private Hardware9330 hwMap = null;
     public Ultrasonic9330(Hardware9330 robotMap) { hwMap = robotMap; }
-    long initialMicroTime;
-    long initialTimeSeconds;
-    long duration = 0;
-    long rising_time;   // time of the rising edge
-    long falling_time;
-    boolean last_state; // previous pin state
+    double initialMicroTime;
+    double initialTimeSeconds;
+    double duration = 0;
+    double rising_time;   // time of the rising edge
+    double falling_time;
 
     public void microSecondWait(int microseconds) {
-        initialMicroTime = System.nanoTime()/1000; //reset initial time
-        while (System.nanoTime()/1000 - initialMicroTime < microseconds) {} //do nothing while current time is less than goal
+        initialMicroTime = System.nanoTime(); //reset initial time
+        while (System.nanoTime() - initialMicroTime < microseconds*1000) {;} //do nothing while current time is less than goal
     }
 
     public void restartTimer() {
@@ -35,30 +32,29 @@ public class Ultrasonic9330 {
     }
 
     void read_pulse() {
-        restartTimer();
-        while (timer(1)) { //try for one second
-            boolean state = hwMap.ultrasonicEcho.getState();  // current pin state
-
-            // On rising edge: record current time.
-            if (last_state == false && state == true)
-                rising_time = System.nanoTime() / 1000;
-            while (state == true) {state = hwMap.ultrasonicEcho.getState();}
-            falling_time = System.nanoTime() / 1000;
-            duration  =  falling_time - rising_time;
-            return;
-        } duration = 0;
+        duration = 0;
+        // On rising edge: record current time.
+        if (hwMap.ultrasonicEcho.getState() == true)
+            rising_time = System.nanoTime();
+        while (hwMap.ultrasonicEcho.getState() == true) {;}
+            falling_time = System.nanoTime();
+            duration = (falling_time - rising_time) / 1000;
     }
 
-    public double getDistance() { //Call THIS function to get distance
+    public String getDistance() { //Call THIS function to get distance
         hwMap.ultrasonicTrigger.setState(false);
-        microSecondWait(2);
+        microSecondWait(1);
         hwMap.ultrasonicTrigger.setState(true);
-        microSecondWait(10);
+        microSecondWait(9);
         hwMap.ultrasonicTrigger.setState(false);
+
+        restartTimer();
+        while(duration==0 && timer(1)){ //continues to get pulse until value is received/timeout
             read_pulse();
-            if(duration!=0){
-                return duration/29.1/2;
-            } return 0.0;
+        }
+        if (duration == 0) return "Cannot read distance.";
+        Double distance = Math.floor(duration / 29.1 / 2);
+        return distance.toString();
     }
 
 
