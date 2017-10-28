@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
- * Created by thund on 10/24/2017.
+ * Created by thad on 10/24/2017.
  */
 
 @TeleOp(name="JeffsRealRun",group="Jeff" )
@@ -38,24 +38,20 @@ public class JeffsRealRun extends LinearOpMode {
         //
         waitForStartify();
 
-        startify(direction);//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton ex. I will startify the code.
+        startify(direction);//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
         //
         while (opModeIsActive()) {
+            //variable
             drive = gamepad1.left_stick_y; //left joystick moving up and down
             turn = gamepad1.right_stick_x; //right joystick left and right
             leftX = gamepad1.left_stick_x; //left joystick moving right and left
-            //
+            //Use Pythagoras
             double power = getPathagorus(leftX, drive); //the current joystick position
             double rotate = getPathagorus(gamepad2.right_stick_y, gamepad2.right_stick_x);
             double stretch = getPathagorus(gamepad2.left_stick_y, gamepad2.left_stick_x);
             //
-            if(gamepad2.x){
-                pengwinArm.goeyHomey();
-            }
-            if(gamepad2.y){
-                pengwinArm.goUp();
-            }
-            //
+            buttons();
+            //Change power
             double degreeOfArmPower = 1;
             //
             double degreePower = 1;
@@ -69,25 +65,18 @@ public class JeffsRealRun extends LinearOpMode {
             int armUpDirection = gamepad2.right_stick_y > 0 ? 1 : -1;
             int extendDirection = gamepad2.left_stick_y > 0 ? 1 : -1;
             //
-            //
+            //Set the power
             if((isRaised() & rotate*direction > 0 ) || (isFelled() & rotate*direction < 0 ) || (!isRaised() & !isFelled())){
                 //
-                pengwinArm.setUpPower(armUpDirection* degreeOfArmPower*rotate);
+                pengwinArm.setUpPower(armUpDirection* degreeOfArmPower*rotate*direction);
             }
-            //
-            //
             //
             pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
             //
-            if(gamepad1.left_bumper) {
-                degreePower = 0.5;
-            }
-            else if(gamepad1.right_bumper){
-                degreePower = 0.25;
-            }
+            //Set power stuff
+            degreePower = getDegreePower(degreePower);
 
-            jeffThePengwin.degreeOfPower = degreePower;
-            jeffThePengwin.powerInput = power;
+            getPowerStuff(power, degreePower);
             //
             boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
             boolean notTurning = turn == 0;
@@ -119,16 +108,45 @@ public class JeffsRealRun extends LinearOpMode {
                 //turn left
                 jeffThePengwin.turnLeft();
             }
-            //TODO Telemetry(Fancy jazz)
-            telemetry.addData("calibrate high", pengwinArm.getCalibrate());
-            telemetry.addData("penguin power set", jeffThePengwin.getPowerInput());
-            telemetry.addData("penguin total power", jeffThePengwin.getTotalPower());
-            telemetry.addData("penguin degree of power", jeffThePengwin.getDegreeOfPower());
-            telemetry.addData("penguin arm up power", pengwinArm.getUpPower());
-            telemetry.addData("penguin arm extend power", pengwinArm.getAcrossPower());
-            telemetry.update();
+            telemetryJazz();
+
         }
 
+    }
+
+    private void telemetryJazz() {
+        //TODO Telemetry(Fancy jazz)
+        telemetry.addData("calibrate high", pengwinArm.getCalibrate());
+        telemetry.addData("penguin power set", jeffThePengwin.getPowerInput());
+        telemetry.addData("penguin total power", jeffThePengwin.getTotalPower());
+        telemetry.addData("penguin degree of power", jeffThePengwin.getDegreeOfPower());
+        telemetry.addData("penguin arm up power", pengwinArm.getUpPower());
+        telemetry.addData("penguin arm extend power", pengwinArm.getAcrossPower());
+        telemetry.update();
+    }
+
+    private double getDegreePower(double degreePower) {
+        if(gamepad1.left_bumper) {
+            degreePower = 0.5;
+        }
+        else if(gamepad1.right_bumper){
+            degreePower = 0.25;
+        }
+        return degreePower;
+    }
+
+    private void getPowerStuff(double power, double degreePower) {
+        jeffThePengwin.degreeOfPower = degreePower;
+        jeffThePengwin.powerInput = power;
+    }
+
+    private void buttons() {
+        if(gamepad2.x){
+            pengwinArm.goeyHomey();
+        }
+        if(gamepad2.y){
+            pengwinArm.goUp();
+        }
     }
 
     private void startify(double direction) {
