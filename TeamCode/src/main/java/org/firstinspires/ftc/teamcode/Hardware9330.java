@@ -22,6 +22,7 @@ public class Hardware9330 {
     public static Servo highGlyphClamp;
     public static Servo relicHandServo;
     public static Servo relicWristServo;
+    public static Servo BBoopJR;
     public static DcMotor leftMotor;
     public static DcMotor glyphLiftMotor;
     public static ColorSensor cs;
@@ -56,6 +57,8 @@ public class Hardware9330 {
         relicHandServo.setDirection(Servo.Direction.REVERSE);
         relicWristServo = hwMap.servo.get("relicWristServo");
         relicWristServo.setDirection(Servo.Direction.REVERSE);
+        BBoopJR = hwMap.servo.get("BBoopJR");
+        BBoopJR.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
         glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
         cs = hwMap.get(ColorSensor.class, "cs");
