@@ -17,7 +17,6 @@ public class JeffThePengwin {
     DcMotor rightBackMotor;
     double powerInput = 0;
     double degreeOfPower = 1;
-    double totalPower = powerInput * degreeOfPower;
 
     public void setDegreeOfPower(double degreeOfPower){
         degreeOfPower = degreeOfPower;
@@ -27,13 +26,16 @@ public class JeffThePengwin {
         powerInput = powerInput;
     }
 
+    public double getPowerInput(){return powerInput;}
+    public double getDegreeOfPower(){return degreeOfPower;}
+    public double getTotalPower(){return powerInput*degreeOfPower;}
 
     public JeffThePengwin(HardwareMap hardwareMap){
         //get motors
-        leftBackMotor = hardwareMap.dcMotor.get("m0"); //left back
-        rightBackMotor = hardwareMap.dcMotor.get("m1"); //right back
-        leftFrontMotor = hardwareMap.dcMotor.get("m2"); //left front
-        rightFrontMotor = hardwareMap.dcMotor.get("m3"); //right front
+        leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
+        rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
+        leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
+        rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
 
     }
 
@@ -71,45 +73,45 @@ public class JeffThePengwin {
 
 
     public void turnRight(){
-        leftBackMotor.setPower(totalPower);
-        leftFrontMotor.setPower(totalPower);
-        rightBackMotor.setPower(-totalPower);
-        rightFrontMotor.setPower(-totalPower);
+        leftBackMotor.setPower(powerInput*degreeOfPower);
+        leftFrontMotor.setPower(powerInput*degreeOfPower);
+        rightBackMotor.setPower(-powerInput*degreeOfPower);
+        rightFrontMotor.setPower(-powerInput*degreeOfPower);
     }
 
     public void turnLeft(){
-        leftBackMotor.setPower(-totalPower);
-        leftFrontMotor.setPower(-totalPower);
-        rightBackMotor.setPower(totalPower);
-        rightFrontMotor.setPower(totalPower);
+        leftBackMotor.setPower(-powerInput*degreeOfPower);
+        leftFrontMotor.setPower(-powerInput*degreeOfPower);
+        rightBackMotor.setPower(powerInput*degreeOfPower);
+        rightFrontMotor.setPower(powerInput*degreeOfPower);
     }
 
     public void driveForward(){
-        leftBackMotor.setPower(totalPower);
-        leftFrontMotor.setPower(totalPower);
-        rightBackMotor.setPower(totalPower);
-        rightFrontMotor.setPower(totalPower);
+        leftBackMotor.setPower(powerInput*degreeOfPower);
+        leftFrontMotor.setPower(powerInput*degreeOfPower);
+        rightBackMotor.setPower(powerInput*degreeOfPower);
+        rightFrontMotor.setPower(powerInput*degreeOfPower);
     }
 
     public void driveBackward(){
-        leftBackMotor.setPower(-totalPower);
-        leftFrontMotor.setPower(-totalPower);
-        rightBackMotor.setPower(-totalPower);
-        rightFrontMotor.setPower(-totalPower);
+        leftBackMotor.setPower(-powerInput*degreeOfPower);
+        leftFrontMotor.setPower(-powerInput*degreeOfPower);
+        rightBackMotor.setPower(-powerInput*degreeOfPower);
+        rightFrontMotor.setPower(-powerInput*degreeOfPower);
     }
 
     public void strafeLeft(){
-        leftBackMotor.setPower(-totalPower);
-        leftFrontMotor.setPower(totalPower);
-        rightBackMotor.setPower(totalPower);
-        rightFrontMotor.setPower(-totalPower);
+        leftBackMotor.setPower(-powerInput*degreeOfPower);
+        leftFrontMotor.setPower(powerInput*degreeOfPower);
+        rightBackMotor.setPower(powerInput*degreeOfPower);
+        rightFrontMotor.setPower(-powerInput*degreeOfPower);
     }
 
     public void strafeRight(){
-        leftBackMotor.setPower(totalPower);
-        leftFrontMotor.setPower(-totalPower);
-        rightBackMotor.setPower(-totalPower);
-        rightFrontMotor.setPower(totalPower);
+        leftBackMotor.setPower(powerInput*degreeOfPower);
+        leftFrontMotor.setPower(-powerInput*degreeOfPower);
+        rightBackMotor.setPower(-powerInput*degreeOfPower);
+        rightFrontMotor.setPower(powerInput*degreeOfPower);
     }
 
 }

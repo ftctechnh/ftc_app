@@ -1,8 +1,10 @@
+//TODO Dis i' da wight 1
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by thund on 10/24/2017.
@@ -11,80 +13,144 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 @TeleOp(name="JeffsRealRun",group="Jeff" )
 
 public class JeffsRealRun extends LinearOpMode {
+    TouchSensor up;
+    TouchSensor touchy;
+    PengwinArm pengwinArm;
+    JeffThePengwin jeffThePengwin;
+    //
+    //
     @Override
     public void runOpMode() throws InterruptedException {
-
-        JeffThePengwin jeffThePengwin = new JeffThePengwin(hardwareMap);
-
+        //
+        jeffThePengwin = new JeffThePengwin(hardwareMap);
+        pengwinArm = new PengwinArm(hardwareMap);
+        //
         //neat variables
         double drive; //turn power
         double turn; //turn direction
         double leftX; //left x: joystick
         //true means not pushed false means is pushed
-        DigitalChannel upTouch;  // if it is true it is not at the bottom
-        DigitalChannel downTouch;  // if it is true it is not at the top
-        upTouch = hardwareMap.get(DigitalChannel.class, "upTouch");
-        downTouch = hardwareMap.get(DigitalChannel.class, "downTouch");
+        up = hardwareMap.touchSensor.get("up");
+        touchy = hardwareMap.touchSensor.get("touchy");
+        double direction = 1;//change direction if needed (TODO is fun)
+        //positive direction is down, negative direction is up
+        //
+        //
+        waitForStartify();
 
-
-
-        waitForStart();
-
+        startify(direction);//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton ex. I will startify the code.
+        //
         while (opModeIsActive()) {
-            movingJeffThePengwin(jeffThePengwin);
-                if (upTouch.getState());
+            drive = gamepad1.left_stick_y; //left joystick moving up and down
+            turn = gamepad1.right_stick_x; //right joystick left and right
+            leftX = gamepad1.left_stick_x; //left joystick moving right and left
+            //
+            double power = getPathagorus(leftX, drive); //the current joystick position
+            double rotate = getPathagorus(gamepad2.right_stick_y, gamepad2.right_stick_x);
+            double stretch = getPathagorus(gamepad2.left_stick_y, gamepad2.left_stick_x);
+            //
+            if(gamepad2.x){
+                pengwinArm.goeyHomey();
+            }
+            if(gamepad2.y){
+                pengwinArm.goUp();
+            }
+            //
+            double degreeOfArmPower = 1;
+            //
+            double degreePower = 1;
+            if(gamepad2.left_bumper) {
+                degreeOfArmPower = 0.5;
+            }
+            else if(gamepad2.right_bumper){
+                degreeOfArmPower = 0.25;
+            }
+            //TODO This is negative stuff in color
+            int armUpDirection = gamepad2.right_stick_y > 0 ? 1 : -1;
+            int extendDirection = gamepad2.left_stick_y > 0 ? 1 : -1;
+            //
+            //
+            if((isRaised() & rotate*direction > 0 ) || (isFelled() & rotate*direction < 0 ) || (!isRaised() & !isFelled())){
+                //
+                pengwinArm.setUpPower(armUpDirection* degreeOfArmPower*rotate);
+            }
+            //
+            //
+            //
+            pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
+            //
+            if(gamepad1.left_bumper) {
+                degreePower = 0.5;
+            }
+            else if(gamepad1.right_bumper){
+                degreePower = 0.25;
+            }
+
+            jeffThePengwin.degreeOfPower = degreePower;
+            jeffThePengwin.powerInput = power;
+            //
+            boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
+            boolean notTurning = turn == 0;
+            boolean movingVertical = Math.abs(drive) > Math.abs(leftX);
+            boolean strafingRight = leftX > 0;
+            //
+            //main if/then
+            if (notTurning) {
+                //no movement in right joystick
+                //start of driving section
+                if (movingVertical) { //forward/back or left/right?
+                    if (drive > 0) { //forward
+                        jeffThePengwin.driveForward();
+                    } else { //back
+                        jeffThePengwin.driveBackward();
+                    }
+                } else {
+                    if (strafingRight) { //right
+                        jeffThePengwin.strafeRight();
+                    } else { //left
+                        jeffThePengwin.strafeLeft();
+                    }
+                }
+            } else if (turningRight) {
+                // TODO pushing right joystick to the right
+                //turn right by left wheels going forward and right going backwards
+                jeffThePengwin.turnRight();
+            } else {
+                //turn left
+                jeffThePengwin.turnLeft();
+            }
+            //TODO Telemetry(Fancy jazz)
+            telemetry.addData("calibrate high", pengwinArm.getCalibrate());
+            telemetry.addData("penguin power set", jeffThePengwin.getPowerInput());
+            telemetry.addData("penguin total power", jeffThePengwin.getTotalPower());
+            telemetry.addData("penguin degree of power", jeffThePengwin.getDegreeOfPower());
+            telemetry.addData("penguin arm up power", pengwinArm.getUpPower());
+            telemetry.addData("penguin arm extend power", pengwinArm.getAcrossPower());
+            telemetry.update();
         }
+
     }
 
-    private void movingJeffThePengwin(JeffThePengwin jeffThePengwin) {
-        double drive;
-        double turn;
-        double leftX;
-        drive = gamepad1.left_stick_y; //left joystick moving up and down
-        turn = gamepad1.right_stick_x; //right joystick left and right
-        leftX = gamepad1.left_stick_x; //left joystick moving right and left
-
-        double power = getPathagorus(leftX, drive); //the current joystick position
-
-        double degreePower = 1;
-        if(gamepad1.left_bumper) {
-            degreePower = 0.5;
-        }
-        else if(gamepad1.right_bumper){
-            degreePower = 0.25;
-        }
-
-        jeffThePengwin.degreeOfPower = degreePower;
-        jeffThePengwin.powerInput = power;
-        boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
-        boolean notTurning = turn == 0;
-        boolean movingVertical = Math.abs(drive) > Math.abs(leftX);
-        boolean strafingRight = leftX > 0;
-        //main if/then
-        if (notTurning) {
-            //no movement in right joystick
-            //start of driving section
-            if (movingVertical) { //forward/back or left/right?
-                if (drive > 0) { //forward
-                    jeffThePengwin.driveForward();
-                } else { //back
-                    jeffThePengwin.driveBackward();
-                }
-            } else {
-                if (strafingRight) { //right
-                    jeffThePengwin.strafeRight();
-                } else { //left
-                    jeffThePengwin.strafeLeft();
-                }
+    private void startify(double direction) {
+        if(!touchy.isPressed()){
+            pengwinArm.setUpPower(.4 * direction);
+            while (!touchy.isPressed()) {
+                //TODO Do nothing
             }
-        } else if (turningRight) {
-            //pushing right joystick to the right
-            //turn right by left wheels going forward and right going backwards
-            jeffThePengwin.turnRight();
-        } else {
-            //turn left
-            jeffThePengwin.turnLeft();
+            pengwinArm.setUpPower(0);
+            pengwinArm.setHome();
         }
+    }
+    public void waitForStartify(){
+        waitForStart();
+    }
+
+    private boolean isRaised(){
+        return up.isPressed();
+    }
+
+    private boolean isFelled(){
+        return touchy.isPressed();
     }
 
     private double getPathagorus(double a, double b){//Define Pythagorean Theorem
