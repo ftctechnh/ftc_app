@@ -51,6 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Note: the configuration of the servos is such that:
  *   As the arm servo approaches 0, the arm position moves up (away from the floor).
  *   As the claw servo approaches 0, the claw opens up (drops the game element).
+ *   hi! Marvin was here
  */
 public class HardwareK9bot
 {
