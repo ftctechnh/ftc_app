@@ -129,8 +129,8 @@ public class Autonomous_General extends LinearOpMode {
 //        }
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
+//        telemetry.addData("Status", "Resetting Encoders");    //
+//        telemetry.update();
 
         idle();
 
@@ -156,12 +156,12 @@ public class Autonomous_General extends LinearOpMode {
 //        intake_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d : %7d :%7d",
-                back_left_motor.getCurrentPosition(),
-                back_right_motor.getCurrentPosition(),
-                front_left_motor.getCurrentPosition(),
-                front_right_motor.getCurrentPosition());
-        telemetry.update();
+//        telemetry.addData("Path0", "Starting at %7d :%7d : %7d :%7d",
+//                back_left_motor.getCurrentPosition(),
+//                back_right_motor.getCurrentPosition(),
+//                front_left_motor.getCurrentPosition(),
+//                front_right_motor.getCurrentPosition());
+//        telemetry.update();
 
     }
 

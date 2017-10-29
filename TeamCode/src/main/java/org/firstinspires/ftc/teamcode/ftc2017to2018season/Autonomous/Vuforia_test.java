@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Vuforia.vuforia_general;
 
 //10-28-17
 @Autonomous(name="Autonomous Blue Test")
@@ -22,6 +20,8 @@ public class Vuforia_test extends Autonomous_General {
 
 
         vuforiaInit(true, true);
+        telemetry.addData("","Vuforia Initiated");
+        telemetry.update();
         initiate();
         telemetry.addData("--->", "Gyro Calibrating");
         telemetry.update();
@@ -43,11 +43,14 @@ public class Vuforia_test extends Autonomous_General {
 
         startTracking();
         telemetry.addData("","READY TO TRACK");
+        telemetry.update();
 
-        while(!vuMarkFound())  {
+        while(!vuMarkFound()){
 
         }
         //returnImage();
+        telemetry.addData("Vumark" , vuMark);
+        telemetry.update();
 
         encoderMecanumDrive(0.5,50,50,1000,0);
         gyroTurn(0.3,90);
@@ -61,8 +64,7 @@ public class Vuforia_test extends Autonomous_General {
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
 
         }
-        telemetry.addData("Vumark" , vuMark);
-        telemetry.update();
+
 
         sleep(1000);
 
