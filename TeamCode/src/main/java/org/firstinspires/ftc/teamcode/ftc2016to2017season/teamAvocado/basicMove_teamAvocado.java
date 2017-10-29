@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous(name = "basicMove_teamAvocado")
 public class basicMove_teamAvocado extends LinearOpMode{
 
+
     double encoder_ticks_per_rotation;
     double gear_ratio;
     double wheel_circumference;

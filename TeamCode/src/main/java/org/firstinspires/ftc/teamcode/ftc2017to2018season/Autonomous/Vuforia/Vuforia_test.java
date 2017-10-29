@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Vuforia;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Vuforia;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Vuforia.vuforia_general;
 
 
 @Autonomous(name="Vuforia Test")
+@Disabled
 public class Vuforia_test extends vuforia_general {
 
     DcMotor leftFront;
