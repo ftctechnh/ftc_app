@@ -38,6 +38,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode._Libs.AutoLib;
@@ -48,6 +49,8 @@ import org.firstinspires.ftc.teamcode._Libs.SensorLib;
 import org.firstinspires.ftc.teamcode._Libs.VuforiaLib_FTC2017;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This OpMode uses a Step that uses the VuforiaLib_FTC2017 library to determine
@@ -97,9 +100,13 @@ class LookForCryptoBoxStep extends AutoLib.Step {
     String mVuMarkString;
     CameraLib.CameraAcquireFrames mCamAcqFr;
     OpMode mOpMode;
+    int mCBColumn;              // which Cryptobox column we're looking for
+    Pattern mPattern;           // compiled regexp pattern we'll use to find the pattern we're looking for
 
-    public LookForCryptoBoxStep(OpMode opMode) {
+    public LookForCryptoBoxStep(OpMode opMode, String pattern) {
         mOpMode = opMode;
+        mCBColumn = -1;     // unknown
+        mPattern = Pattern.compile(pattern);    // look for the given pattern of column colors
     }
 
     public void setVuMarkString(String s) { mVuMarkString = s; }
@@ -116,17 +123,29 @@ class LookForCryptoBoxStep extends AutoLib.Step {
         // get most recent frame from camera (may be same as last time or null)
         CameraLib.CameraImage frame = mCamAcqFr.loop();
 
-        // log debug info ...
         if (frame != null) {
+            // get filtered view of colors (hues) by column bands
             final int bandSize = 6;
-            mOpMode.telemetry.addData("hue columns", frame.columnHue(bandSize));
-            mOpMode.telemetry.addData("dom columns", frame.columnDom(bandSize));
+            String colHue = frame.columnHue(bandSize);
+
+            // log debug info ...
+            mOpMode.telemetry.addData("hue columns", colHue);
+
+            // look for indicated column of Cryptobox and return true when we're there
+            // search the scanline for the target pattern
+            int patternStart = 0;
+            int patternSize = 0;
+            for (int i=0; i<colHue.length(); i++) {
+                // starting at position (i), look for the given pattern in the encoded (rgbcymw) scanline
+                Matcher m = mPattern.matcher(colHue.substring(i));
+                if (m.lookingAt() && m.groupCount() == 1) {
+                    mOpMode.telemetry.addData("found ", "%s from %d to %d", colHue, m.start(), m.end());
+                    return true;
+                }
+            }
         }
 
-        // look for indicated column of Cryptobox and return true when we're there
-        // TBD
-
-        return false;  // for now, just kill the mode manually
+        return false;  // haven't found anything yet
     }
 }
 
@@ -138,8 +157,8 @@ public class VuforiaNavStepTest1 extends OpMode {
     boolean bDone;
     AutoLib.Sequence mSequence;             // the root of the sequence tree
     DcMotor mMotors[];                      // motors, some of which can be null: assumed order is fr, br, fl, bl
-    ModernRoboticsI2cGyro mGyro;            // gyro to use for heading information
-    SensorLib.CorrectedMRGyro mCorrGyro;    // gyro corrector object
+    GyroSensor mGyro;                       // gyro to use for heading information
+    SensorLib.CorrectedGyro mCorrGyro;      // gyro corrector object
 
     @Override public void init()
     {
@@ -161,18 +180,24 @@ public class VuforiaNavStepTest1 extends OpMode {
         (mMotors[3] = mf.getDcMotor("bl")).setDirection(DcMotor.Direction.REVERSE);
 
         // get hardware gyro
-        mGyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
+        mGyro = mf.getGyro("gyro");
 
         // wrap gyro in an object that calibrates it and corrects its output
-        mCorrGyro = new SensorLib.CorrectedMRGyro(mGyro);
+        mCorrGyro = new SensorLib.CorrectedGyro(mGyro);
         mCorrGyro.calibrate();
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
-        LookForCryptoBoxStep terminatorStep = new LookForCryptoBoxStep(this);
+        // make a step that terminates the motion step by looking for a particular (in this test, blue) Cryptobox
+        LookForCryptoBoxStep terminatorStep = new LookForCryptoBoxStep(this, "b+[^b]+b+");
+        // make and add to the sequence the step that looks for the Vuforia marker and sets the column (Left,Center,Right)
+        // the motion terminator step should look for
         mSequence.add(new VuforiaGetMarkStep(this, terminatorStep));
         AutoLib.MotorGuideStep guideStep = new AutoLib.SquirrelyGyroGuideStep(this, 90, 0, mCorrGyro, null, null, 0.5f);
+        // make and add the Step that goes to the indicated Cryptobox bin
         mSequence.add(new AutoLib.GuidedTerminatedDriveStep(this, guideStep, terminatorStep, mMotors));
+        // make and add a step that stops all motors
+        mSequence.add(new AutoLib.MoveByTimeStep(mMotors, 0, 0, true));
     }
 
     @Override public void start()
