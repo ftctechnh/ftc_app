@@ -34,17 +34,21 @@ public class FullCameraDemo extends LinearOpMode {
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "Ac4jpF3/////AAAAGYER4VUDLEYGlD++ha+MStuNhKORp/7DQz1D1+tQwcrsMnbQwLqRgpkFtCOIGrZ942gdL179juAJmdXeeH+Dk0pVgxLFq6O0AzY1MS3wS5JHvSLppO9v8W//finYio3hQk+TFKD+qWq9Q1nAZx0bMWFeF6IuIjUPQLioBzC/lYzI/L7oi/AJAbFlf6wue3gDs0dgwrAgpe+JFHTgM3g2+y4hS6O0mcJjobAWSNeRxq9caOGfl/q6f09Eu2EccSmHLAaqje0i70eAIZ4Tbg5C31sPZxBOPTEGTQ9NvFhP4FNAXlvPCdiBt6XYE8P17UzPN72p7lRKyp4xR1oC8B/4dYbivso+rQUed5/H7AnQYOdA";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables pictographAssets = this.vuforia.loadTrackablesFromAsset("FirstRelicRecoveryPictographs");
-        VuforiaTrackable rightPictograph = pictographAssets.get(0);
+
+        VuforiaTrackable blueCryptoBox  = pictographAssets.get(0);
+        blueCryptoBox.setName("BlueCryptoBox");
+
+        VuforiaTrackable rightPictograph = pictographAssets.get(1);
         rightPictograph.setName("RightTarget");
 
-        VuforiaTrackable centerPictograph  = pictographAssets.get(1);
+        VuforiaTrackable centerPictograph  = pictographAssets.get(2);
         centerPictograph.setName("CenterTarget");
 
-        VuforiaTrackable leftPictograph  = pictographAssets.get(2);
+        VuforiaTrackable leftPictograph  = pictographAssets.get(3);
         leftPictograph.setName("LeftTarget");
 
         List<VuforiaTrackable> trackables = new ArrayList<VuforiaTrackable>();
@@ -62,7 +66,7 @@ public class FullCameraDemo extends LinearOpMode {
 
         String pictographLocation = null;
 
-        while (opModeIsActive() && pictographLocation == null) {
+        while (opModeIsActive()) {
 
             for (VuforiaTrackable trackable : trackables) {
                 boolean seen = ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
