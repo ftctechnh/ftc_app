@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,7 +10,8 @@ import java.util.Locale;
 /**
  * Created by supertrevor on 2015-11-13.
  */
-@TeleOp(name = "EPSTeleOp", group = "EPSilon Red (8103)")
+@TeleOp(name = "Trevor's TeleOp", group = "Historic")
+@Disabled
 public class TrevorTeleOp extends OpMode {
     DcMotor motorRight1;
     DcMotor motorLeft1;
