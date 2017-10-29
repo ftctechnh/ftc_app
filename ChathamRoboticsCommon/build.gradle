@@ -17,11 +17,11 @@ if (androidPluginVersion == "2.3.3") {
 android {
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 23
+        minSdkVersion 24
+        targetSdkVersion 24
     }
 
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion '26.0.2'
 
 

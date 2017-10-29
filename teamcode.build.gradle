@@ -20,7 +20,7 @@ import java.util.regex.Pattern
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion '26.0.2'
 
     signingConfigs {
@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
-        minSdkVersion 19
-        targetSdkVersion 23
+        minSdkVersion 24
+        targetSdkVersion 24
 
         if (androidPluginVersion == "2.3.3") {
             jackOptions.enabled true
