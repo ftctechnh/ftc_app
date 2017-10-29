@@ -18,6 +18,8 @@ import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestInterface;
+import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestMashupPID;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,6 +51,8 @@ public class NullbotHardware {
     public Servo rightWhipSnake;
     public Servo leftBlockClaw;
     public Servo rightBlockClaw;
+    public Servo relicClaw;
+    public Servo relicClawFlipper;
 
     // Sensors
     public ModernRoboticsI2cGyro gyro;
@@ -65,9 +69,9 @@ public class NullbotHardware {
     // Utility mechanisms
     public DcMotor[] motorArr;
     public LogTick[] log;
-    public int hz = 100;
-    public int secondsToTrack = 60;
-    public int logPosition = 0;
+    public final int hz = 100;
+    public final int secondsToTrack = 60;
+    public int logPosition;
     double initialCompassHeading;
     double gyroError;
     int msMagFieldKill = 3000; // Robot must stay still for three seconds before it is assumed the
@@ -77,7 +81,6 @@ public class NullbotHardware {
                             // by more than this threshold will be denied
 
     int msSinceMoved;
-    int inducedGyroError;
 
     // Local vars
     HardwareMap hwMap = null;
@@ -99,6 +102,7 @@ public class NullbotHardware {
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
+        logPosition = 0;
 
         if (!isTestChassis) {
             lift = hwMap.dcMotor.get("lift");
@@ -109,6 +113,14 @@ public class NullbotHardware {
 
             leftBlockClaw = hwMap.servo.get("leftClaw");
             rightBlockClaw = hwMap.servo.get("rightClaw");
+
+            relicClawFlipper = hwMap.servo.get("relicClawFlipper");
+            /*ServoControllerEx flipperCtrl = (ServoControllerEx) relicClawFlipper.getController();
+            int flipperPort = relicClawFlipper.getPortNumber();
+            PwmControl.PwmRange flipperRange = new PwmControl.PwmRange(553, 2425);
+            flipperCtrl.setServoPwmRange(flipperPort, flipperRange);*/
+
+            relicClaw = hwMap.servo.get("relicClaw");
 
             raiseWhipSnake();
             openBlockClaw();
@@ -161,7 +173,7 @@ public class NullbotHardware {
         for (int i = 0; i < motorArr.length; i++) {
             driveInterface[i] = new PIDTestMashupPID(motorArr[i], tel);
         }
-        inducedGyroError = 0;
+
     }
 
     public void init(HardwareMap ahwMap, LinearOpMode oM, boolean teleoperated, Gamepad g) {
@@ -394,6 +406,25 @@ public class NullbotHardware {
     }
 
     /**
+     *
+     * @param d1  The first angle
+     * @param d2  The second angle
+     * @return    The difference between the angles, between 0 and 2Pi
+     */
+    public static double getAngleDifference(double d1, double d2) {
+        double diff = d2 - d1;
+        if (d1 > Math.PI) {d1 -= 2 * Math.PI;}
+        if (d2 > Math.PI) {d2 -= 2 * Math.PI;}
+
+        double diff2 = d2 - d1;
+
+        if (Math.abs(diff) < Math.abs(diff2)) {
+            return diff;
+        } else {
+            return diff2;
+        }
+    }
+    /**
      * @return    The error adjusted gyro position, between 0 and 2pi radians
      */
     public double getGyroHeading() {
@@ -409,7 +440,7 @@ public class NullbotHardware {
         lowerRightWhipSnake();
     }
     public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(225.0/255.0);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(45.0/255.0);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(35.0/255.0);}
     public void lowerRightWhipSnake() {rightWhipSnake.setPosition(30.0/255.0);}
     public void raiseRightWhipSnake() {rightWhipSnake.setPosition(200.0/255.0);}
 
@@ -424,8 +455,51 @@ public class NullbotHardware {
         rightBlockClaw.setPosition(160.0/255.0);
     }
 
+    public final double RELIC_CLAW_OPEN_POSITION = 0.0/255.0;
+    public final double RELIC_CLAW_CLOSED_POSITION = 200.0/255.0;
+    public boolean RELIC_CLAW_IS_OPEN = false;
+
+    public void openRelicClaw() {relicClaw.setPosition(RELIC_CLAW_OPEN_POSITION); RELIC_CLAW_IS_OPEN = true;}
+    public void closeRelicClaw() {relicClaw.setPosition(RELIC_CLAW_CLOSED_POSITION); RELIC_CLAW_IS_OPEN = false;}
+
+    public void toggleRelicClaw() {
+        if (RELIC_CLAW_IS_OPEN) {
+            closeRelicClaw();
+        } else {
+            openRelicClaw();
+        }
+    }
+
+    public boolean RELIC_FLIPPER_IS_OUT = false;
+
+    public void extendFlipper() {relicClawFlipper.setPosition(20.0/255.0); RELIC_FLIPPER_IS_OUT = true;}
+    public void retractFlipper() {relicClawFlipper.setPosition(1.0/255.0); RELIC_FLIPPER_IS_OUT = false;}
+
+    public void toggleRelicClawFlipper() {
+        if (RELIC_FLIPPER_IS_OUT) {
+            retractFlipper();
+        } else {
+            extendFlipper();
+        }
+    }
+
     public void setLiftMode(DcMotor.RunMode m) {
         lift.setMode(m);
     }
+
+    public void setDriveMode(DcMotor.RunMode mode) {
+        for (DcMotor motor : motorArr) {
+            if (motor.getMode() != mode) {
+                motor.setMode(mode);
+            }
+        }
+    }
+
+    public void setMotorMode(DcMotor m, DcMotor.RunMode mode) {
+        if (m.getMode() != mode) {
+            m.setMode(mode);
+        }
+    }
+
 }
 
