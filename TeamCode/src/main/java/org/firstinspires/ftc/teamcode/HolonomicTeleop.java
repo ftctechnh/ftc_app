@@ -62,10 +62,12 @@ public class HolonomicTeleop extends OpMode {
     double limiter = 1;
     boolean state = true;
 
+
     @Override
     public void init() {
         // INIT robot
         robot.init(hardwareMap);
+        robot.dropper.setPosition(0);
 
         // TELL DRIVER STATION THAT ROBOT IS INIT
         telemetry.addData("Status", "Initialized");    //
@@ -100,7 +102,7 @@ public class HolonomicTeleop extends OpMode {
         }
 
         if(gamepad1.left_trigger >0 && gamepad1.left_trigger <= 1){
-            limiter = 0.2;
+            limiter = 0.1;
         }
         else {
             limiter = 1;
@@ -109,9 +111,15 @@ public class HolonomicTeleop extends OpMode {
         telemetry.addData("a button", "%b", gamepad2.a);
         telemetry.addData("state", "%b", state);
 
-        /*if(gamepad2.a == true) {
-            state = !state;
+
+        if(gamepad2.a == true) {
+            state =  true;
             telemetry.addData("a", "button", "pressed");
+        }
+
+        if(gamepad2.b == true) {
+            state =  false;
+            telemetry.addData("b", "button", "pressed");
         }
         telemetry.addData("state", "%b", state);
         if(state) {
@@ -120,16 +128,17 @@ public class HolonomicTeleop extends OpMode {
         else {
             robot.clamp.setPosition(0); //open
         }
-        */
-        if(gamepad2.a == true) {
+
+       /* if(gamepad2.a == true) {
             robot.clamp.setPosition(1);
         }
         else {
             robot.clamp.setPosition(0);
         }
+        */
 
         if (gamepad2.right_trigger >0) {
-            robot.elevator.setPower(gamepad2.right_trigger *0.2);
+            robot.elevator.setPower(gamepad2.right_trigger *0.5);
         }
         else if(gamepad2.left_trigger >0) {
             robot.elevator.setPower(-gamepad2.left_trigger * 0.2);
@@ -139,7 +148,6 @@ public class HolonomicTeleop extends OpMode {
         }
 
 
-        robot.clamp.setPosition(gamepad1.right_trigger);
 
         // MAKE THE ROBOT ROTATE
         if((left_y+left_x==0) && (right_x!=0)) {
@@ -164,6 +172,7 @@ public class HolonomicTeleop extends OpMode {
         telemetry.addData("state", "%b", state);
         telemetry.addData("elevator", "%.2f", robot.elevator.getPower());
         telemetry.addData("a button", "%b", gamepad2.a);
+
     }
 
 }

@@ -75,6 +75,9 @@ public class HolonomicHardware {
         elevator = hwMap.get(DcMotor.class, "upThingy");
 
         clamp = hwMap.get(Servo.class, "clamp");
+        dropper = hwMap.get(Servo.class, "dropper");
+
+        dropper.setDirection(Servo.Direction.REVERSE);
 
         // REVERSE THE MOTORS
         F_L.setDirection(DcMotor.Direction.REVERSE);
@@ -89,8 +92,9 @@ public class HolonomicHardware {
         R_R.setPower(0);
 
         //SET ALL SERVOS TO POSITION
-        dropper.setPosition(1); //1 is up
+
         clamp.setPosition(0);
+
 
         // SET THE MOTORS TO RUN WITHOUT ENCODERS
         F_L.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
