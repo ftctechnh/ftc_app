@@ -64,7 +64,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Potato By Encoder", group="PushbotPotato")
+@Autonomous(name="Pushbot: Auto Potato By Encoder With Attempt to Glyph", group="PushbotPotato")
 public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -117,10 +117,13 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         encoderDrive(DRIVE_SPEED,  2,  2, 2.0);
 
-        // robot.claw.setPosition(1.0);sleep(1000);
-        //
-        //  robot.claw.setPosition(0.0);
-        // sleep(1000);     // pause for servos to move
+        robot.armDrive.setPower(-0.45);
+        sleep(250);
+        robot.armDrive.setPower(0.0);
+
+        robot.leftClaw.setPosition(0.5);
+        robot.rightClaw.setPosition(0.0);
+        sleep(1000);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
