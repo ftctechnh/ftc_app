@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
     /*
     * Created by Roma Bhatia (@sugarcrystals01) on 9/21/17
-    * Last edit: 10/7/17
+    * Last edit: 10/29/17
     */
 @TeleOp(name="Holonomic_TeleOp", group="We Love Pi")
 
@@ -102,26 +102,31 @@ public class HolonomicTeleop extends OpMode {
         }
 
         if(gamepad1.left_trigger >0 && gamepad1.left_trigger <= 1){
-            limiter = 0.1;
+            limiter = 0.15;
         }
         else {
             limiter = 1;
         }
 
-        telemetry.addData("a button", "%b", gamepad2.a);
-        telemetry.addData("state", "%b", state);
+        if(gamepad1.right_trigger >0 && gamepad1.right_trigger <= 1){
+            limiter = 0.8;
+        }
+        else {
+            limiter = 1;
+        }
 
 
-        if(gamepad2.a == true) {
+        if(gamepad2.a) {
             state =  true;
             telemetry.addData("a", "button", "pressed");
         }
 
-        if(gamepad2.b == true) {
+        if(gamepad2.b) {
             state =  false;
             telemetry.addData("b", "button", "pressed");
         }
         telemetry.addData("state", "%b", state);
+
         if(state) {
             robot.clamp.setPosition(1); //close
         }
@@ -129,16 +134,8 @@ public class HolonomicTeleop extends OpMode {
             robot.clamp.setPosition(0); //open
         }
 
-       /* if(gamepad2.a == true) {
-            robot.clamp.setPosition(1);
-        }
-        else {
-            robot.clamp.setPosition(0);
-        }
-        */
-
         if (gamepad2.right_trigger >0) {
-            robot.elevator.setPower(gamepad2.right_trigger *0.5);
+            robot.elevator.setPower(gamepad2.right_trigger *0.65);
         }
         else if(gamepad2.left_trigger >0) {
             robot.elevator.setPower(-gamepad2.left_trigger * 0.2);
@@ -146,8 +143,6 @@ public class HolonomicTeleop extends OpMode {
         else {
             robot.elevator.setPower(0);
         }
-
-
 
         // MAKE THE ROBOT ROTATE
         if((left_y+left_x==0) && (right_x!=0)) {
