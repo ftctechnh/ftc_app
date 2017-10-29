@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.PIDTesting;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,7 +16,7 @@ public class PIDTestCustomPID extends PIDTestInterface {
     private final double MaxTicksPerMilliSecond = (MaxRPM * TicksPerRev) / (1000.0 * 60.0);
 
     public double Ts = 1.24;
-    public double Kp = 2 ;    // Tuning variable for PID.
+    public double Kp = 2 ;    // Tuning variable for SwervePID.
     public double Ti = 0.0238;  // Eliminate integral error in 1 sec.
     public double Td = 0.1;  // Account for error in 0.1 sec.
 

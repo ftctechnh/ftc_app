@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.PIDTesting;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
  * Created by guberti on 10/21/2017.
  */
 @TeleOp(name="PID Responsiveness Test", group="PID")
+@Disabled
 public class PIDTestSystem extends LinearOpMode {
     PIDTestInterface p;
     ModernRoboticsUsbDcMotorController motorController;

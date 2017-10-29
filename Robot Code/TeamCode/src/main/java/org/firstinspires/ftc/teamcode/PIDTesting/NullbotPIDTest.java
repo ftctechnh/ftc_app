@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.PIDTesting;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="Nullbot: PID test", group="Calibration")
+import org.firstinspires.ftc.teamcode.NullbotHardware;
+
+@TeleOp(name="Nullbot: SwervePID test", group="Calibration")
 public class NullbotPIDTest extends LinearOpMode {
 
     NullbotHardware robot   = new NullbotHardware();

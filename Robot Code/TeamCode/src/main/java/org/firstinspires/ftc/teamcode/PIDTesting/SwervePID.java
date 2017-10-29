@@ -1,20 +1,20 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.PIDTesting;
 
 /**
  * Created by guberti on 10/21/2017.
  */
 
-public class PID {
+public class SwervePID {
     /**
-     * Creates a PID Controller.
+     * Creates a SwervePID Controller.
      * @param kp Proportional factor to scale error to output.
      * @param ti The number of seconds to eliminate all past errors.
      * @param td The number of seconds to predict the error in the future.
      * @param integralMin The min of the running integral.
      * @param integralMax The max of the running integral.
      */
-    public PID(double kp, double ti, double td, double integralMin,
-               double integralMax) {
+    public SwervePID(double kp, double ti, double td, double integralMin,
+                     double integralMax) {
         this.kp = kp;
         this.ti = ti;
         this.td = td;
@@ -26,7 +26,7 @@ public class PID {
     }
 
     /**
-     * Performs a PID update and returns the output control.
+     * Performs a SwervePID update and returns the output control.
      * @param desiredValue The desired state value (e.g. speed).
      * @param actualValue The actual state value (e.g. speed).
      * @param dt The amount of time (sec) elapsed since last update.
