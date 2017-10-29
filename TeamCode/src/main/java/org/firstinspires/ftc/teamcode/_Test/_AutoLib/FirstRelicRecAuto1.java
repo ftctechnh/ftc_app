@@ -150,9 +150,9 @@ class LookForCryptoBoxStep extends AutoLib.Step {
 }
 
 
-@Autonomous(name="Test: VuforiaNavStepTest1", group ="Test")
+@Autonomous(name="FirstRelicRecAuto1", group ="Auto")
 //@Disabled
-public class VuforiaNavStepTest1 extends OpMode {
+public class FirstRelicRecAuto1 extends OpMode {
 
     boolean bDone;
     AutoLib.Sequence mSequence;             // the root of the sequence tree
