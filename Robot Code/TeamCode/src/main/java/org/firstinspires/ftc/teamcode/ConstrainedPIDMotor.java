@@ -19,6 +19,7 @@ public class ConstrainedPIDMotor {
     double backwardRunSpeed;
     int min;
     int max;
+    int encoderOffset;
     public boolean override;
 
     public ConstrainedPIDMotor(DcMotor m, int t, double forwardRunSpeed, double backwardRunSpeed,
@@ -32,6 +33,7 @@ public class ConstrainedPIDMotor {
         this.max = max;
         override = false;
         lockPos = 0;
+        encoderOffset = 0;
     }
 
     public void setDirection(Direction d) {
@@ -82,7 +84,7 @@ public class ConstrainedPIDMotor {
         }
 
         if (m.getTargetPosition() != pos) {
-            m.setTargetPosition(pos);
+            m.setTargetPosition(pos - encoderOffset);
         }
 
         if (m.getPower() != speed) {
