@@ -273,7 +273,7 @@ public class AutoLib {
     }
 
     // interface for setting the current power of either kind of MotorStep
-    interface SetPower {
+    public interface SetPower {
         public void setPower(double power);
     }
 
@@ -596,12 +596,54 @@ public class AutoLib {
         }
     }
 
+    // interface for setting the current power of either kind of MotorStep
+    public interface SetMotorSteps {
+        public void set(ArrayList<AutoLib.SetPower> motorsteps);
+    }
+
+    static public abstract class MotorGuideStep extends AutoLib.Step implements SetMotorSteps {
+        public void set(ArrayList<AutoLib.SetPower> motorsteps){}
+    }
+
+    // a generic Step that uses a MotorGuideStep to steer the robot while driving along a given path
+    // until the terminatorStep tells us that we're there, thereby terminating this step.
+    static public class GuidedTerminatedDriveStep extends AutoLib.ConcurrentSequence {
+
+        public GuidedTerminatedDriveStep(OpMode mode, AutoLib.MotorGuideStep guideStep, AutoLib.Step terminatorStep, DcMotor[] motors)
+        {
+            // add a concurrent Step to control each motor
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors)
+                if (em != null) {
+                    AutoLib.TimedMotorStep step = new AutoLib.TimedMotorStep(em, 0, 0, false);
+                    // the terminatorStep will stop the motors and complete the sequence
+                    this.add(step);
+                    steps.add(step);
+                }
+
+            // add a concurrent Step that terminates the whole sequence when we're "there"
+            this.preAdd(terminatorStep);
+
+            // tell the guideStep about the motor Steps it should control
+            guideStep.set(steps);
+
+            // add a concurrent Step to control the motor steps based on gyro input
+            // put it at the front of the list so it can update the motors BEFORE their steps run
+            // and BEFORE the terminatorStep might try to turn the motors off.
+            this.preAdd(guideStep);
+        }
+
+        // the base class loop function does all we need -- it will return "done" when
+        // all the motors are done.
+
+    }
+
     // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
     // driving "squirrely wheels" that can move sideways by differential turning of front vs. back wheels.
     // assumes 4 concurrent drive motor steps in order right front, right back, left front, left back.
     // this step tries to maintain the robot's absolute orientation (heading) given by the gyro by adjusting the left vs. right motors
     // while the front vs. back power is adjusted to translate in the desired absolute direction.
-    static public class SquirrelyGyroGuideStep extends AutoLib.Step {
+    static public class SquirrelyGyroGuideStep extends AutoLib.MotorGuideStep {
         private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
         private float mDirection;                           // relative direction along which the robot should move (0 ahead; positive CCW)
         private float mHeading;                             // orientation the robot should maintain while moving
@@ -629,6 +671,12 @@ public class AutoLib {
             }
             mMotorSteps = motorsteps;
             mPower = power;
+        }
+
+        // set motor control steps this step should control (assumes ctor called with null argument)
+        public void set(ArrayList<AutoLib.SetPower> motorsteps)
+        {
+            mMotorSteps = motorsteps;
         }
 
         // update target direction, heading, and power --
