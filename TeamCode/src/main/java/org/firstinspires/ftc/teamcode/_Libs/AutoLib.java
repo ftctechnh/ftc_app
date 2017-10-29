@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode._Libs;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
@@ -1467,9 +1468,18 @@ public class AutoLib {
     // these are primarily intended for use in testing autonomous mode code, but could
     // also be useful for testing tele-operator modes.
 
+    static public class TestHardware implements HardwareDevice {
+        public HardwareDevice.Manufacturer getManufacturer() { return Manufacturer.Unknown; }
+        public String getDeviceName() { return "AutoLib_TestHardware"; }
+        public String getConnectionInfo() { return "connection info unknown"; }
+        public int getVersion() { return 0; }
+        public void resetDeviceConfigurationForOpMode() {}
+        public void close() {}
+    }
+
     // a dummy DcMotor that just logs commands we send to it --
     // useful for testing Motor code when you don't have real hardware handy
-    static public class TestMotor implements DcMotor {
+    static public class TestMotor extends TestHardware implements DcMotor {
         OpMode mOpMode;     // needed for logging data
         String mName;       // string id of this motor
         double mPower;      // current power setting
@@ -1501,7 +1511,6 @@ public class AutoLib {
             mPower = power;
             mOpMode.telemetry.addData(mName, " power: " + String.valueOf(mPower));
         }
-
         public double getPower() {
             return mPower;
         }
@@ -1518,7 +1527,6 @@ public class AutoLib {
             mPowerFloat = true;
             mOpMode.telemetry.addData(mName, " setPowerFloat();");
         }
-
         public boolean getPowerFloat() {
             return mPowerFloat;
         }
@@ -1528,18 +1536,15 @@ public class AutoLib {
             mMaxSpeed = encoderTicksPerSecond;
             mOpMode.telemetry.addData(mName, "maxSpeed: " + String.valueOf(encoderTicksPerSecond));
         }
-
         public int getMaxSpeed() { return mMaxSpeed; }
 
         public void setTargetPosition(int position) {
             mTargetPosition = position;
             mOpMode.telemetry.addData(mName, "target: " + String.valueOf(position));
         }
-
         public int getTargetPosition() {
             return mTargetPosition;
         }
-
         public int getCurrentPosition() {
             return mTargetPosition;
         }
@@ -1548,7 +1553,6 @@ public class AutoLib {
             this.mMode = mode;
             mOpMode.telemetry.addData(mName, "run mode: " + String.valueOf(mode));
         }
-
         public DcMotor.RunMode getMode() {
             return this.mMode;
         }
@@ -1558,13 +1562,11 @@ public class AutoLib {
             mDirection = direction;
             mOpMode.telemetry.addData(mName, "direction: " + String.valueOf(direction));
         }
-
         public Direction getDirection() { return mDirection; }
 
         public String getConnectionInfo() {
             return mName + " port: unknown";
         }
-
         public DcMotorController getController()
         {
             return null;
@@ -1583,28 +1585,22 @@ public class AutoLib {
         {
             return mZeroPowerBehavior;
         }
-
         public void setZeroPowerBehavior(ZeroPowerBehavior zeroPowerBehavior)
         {
             mZeroPowerBehavior = zeroPowerBehavior;
             mOpMode.telemetry.addData(mName, "zeroPowerBehavior: " + String.valueOf(zeroPowerBehavior));
         }
 
-        public int getVersion() { return 0; }
-
-        public HardwareDevice.Manufacturer getManufacturer() { return Manufacturer.Unknown; }
-
         public String getDeviceName() { return "AutoLib_TestMotor: " + mName; }
 
         public void setMotorType(MotorConfigurationType motorType) { mMotorType = motorType; }
-
         public MotorConfigurationType getMotorType() { return mMotorType; }
 
     }
 
     // a dummy Servo that just logs commands we send to it --
     // useful for testing Servo code when you don't have real hardware handy
-    static public class TestServo implements Servo {
+    static public class TestServo extends TestHardware implements Servo {
         OpMode mOpMode;     // needed for logging data
         String mName;       // string id of this servo
         double mPosition;   // current target position
@@ -1666,10 +1662,36 @@ public class AutoLib {
 
     }
 
+    // a dummy Gyro that just returns default info --
+    // useful for testing Gyro code when you don't have real hardware handy
+    static public class TestGyro extends TestHardware implements GyroSensor {
+        OpMode mOpMode;     // needed for logging data
+        String mName;       // string id of this gyro
+
+        public TestGyro(String name, OpMode opMode) {
+            super();
+            mOpMode = opMode;
+            mName = name;
+        }
+
+        public void calibrate() {}
+        public boolean isCalibrating() { return false; }
+        public int getHeading() { return 0; }
+        public double getRotationFraction() { return 0; }
+        public int rawX() { return 0; }
+        public int rawY() { return 0; }
+        public int rawZ() { return 0; }
+        public void resetZAxisIntegrator() {}
+        public String status() { return "Status okay"; }
+        public String getDeviceName() { return "AutoLib_TestGyro: " + mName; }
+
+    }
+
     // define interface to Factory that creates various kinds of hardware objects
     static public interface HardwareFactory {
         public DcMotor getDcMotor(String name);
         public Servo getServo(String name);
+        public GyroSensor getGyro(String name);
     }
 
     // this implementation generates test-hardware objects that just log data
@@ -1686,6 +1708,10 @@ public class AutoLib {
 
         public Servo getServo(String name){
             return new TestServo(name, mOpMode);
+        }
+
+        public GyroSensor getGyro(String name){
+            return new TestGyro(name, mOpMode);
         }
     }
 
@@ -1725,9 +1751,21 @@ public class AutoLib {
             // just to make sure - a previous OpMode may have set it differently ...
             if (servo != null)
                 servo.setDirection(Servo.Direction.FORWARD);
-            
+
             return servo;
         }
+
+        public GyroSensor getGyro(String name){
+            GyroSensor gyro = null;
+            try {
+                gyro = mOpMode.hardwareMap.gyroSensor.get(name);
+            }
+            catch (Exception e) {
+                // okay - just return null (absent) for this servo
+            }
+            return gyro;
+        }
+
     }
 
 }

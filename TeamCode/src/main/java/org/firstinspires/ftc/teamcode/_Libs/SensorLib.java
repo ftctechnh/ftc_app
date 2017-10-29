@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode._Libs;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 /**
@@ -70,6 +71,62 @@ public class SensorLib {
             return output;
         }
 
+    }
+
+    // class that tries to correct systemic errors in ModernRoboticsI2cGyro output
+    public static class CorrectedGyro implements HeadingSensor {
+
+        GyroSensor mGyro;            // the underlying physical Gyro
+        float mCorrection = (360.0f/376.0f);    // default correction factor = ~16 degrees per revolution
+
+        public CorrectedGyro(GyroSensor gyro)
+        {
+            // remember the physical gyro we're using
+            mGyro = gyro;
+        }
+
+        public void calibrate()
+        {
+            // start a calibration sequence on the gyro and wait for it to finish
+            mGyro.calibrate();
+            while (mGyro.isCalibrating()) {
+                try {Thread.sleep(100);}
+                catch (Exception e) {}
+            }
+
+            // reset the on-board z-axis integrator and wait for it to zero
+            mGyro.resetZAxisIntegrator();
+            while (mGyro.getHeading() != 0);
+        }
+
+        // override the default correction factor if your gyro is different
+        public void setCorrection(float corr)
+        {
+            mCorrection = corr;
+        }
+
+        // implements HeadingSensor interface
+        public float getHeading()
+        {
+            // since the physical gyro appears to have a small (~5%) error in the angles it reports,
+            // we scale the cumulative integrated Z reported by the gyro and use that integrated Z to compute "heading".
+
+            float intZ = mGyro.getHeading();     // our convention is positive CCW (right hand rule) -- need to check actual output <<< ???
+            intZ *= mCorrection;                    // apply corrective scaling factor (empirically derived by testing)
+            float heading = intZ % 360.0f;          // wrap to [0..360) range <<< ??? Java % operator preserves sign of first arg ...
+
+            return heading;         // unlike Gyro interface, we return this as float, not int
+        }
+
+        public boolean haveHeading()
+        {
+            return !mGyro.isCalibrating();  // data is always available from this device once it's calibrated
+        }
+
+        public void stop()
+        {
+            mGyro.close();
+        }
     }
 
     // class that tries to correct systemic errors in ModernRoboticsI2cGyro output
