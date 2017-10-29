@@ -272,7 +272,7 @@ public class RobotLogger {
         if(level == Level.FATAL) {
             RobotLog.setGlobalErrorMsg(line);
         } else if (level.priority <= this.teleLevel.priority) {
-            telemetry.addData("[" + this.tag + "/" + level.name().toUpperCase() + "]", line);
+            telemetry.addData("[" + level.name().toUpperCase() + "]", line);
         }
     }
 
