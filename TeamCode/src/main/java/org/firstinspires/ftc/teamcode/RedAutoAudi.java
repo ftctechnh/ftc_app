@@ -1,27 +1,52 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by Jeremy on 10/20/2017.
+ * Created by Jeremy on 10/29/2017.
  */
-@Disabled
+@Autonomous(name = "RedAutoAudi", group = "Auto")
 public class RedAutoAudi extends LinearOpMode
 {
-    private TankBase robot;
+    private TankBase robot; //Used for the driving functions
+    private NewRobot newRobot; //Will be used for vision tracking and/or getting the glyph position
+
     public void runOpMode()
     {
+        float x = 0; //Unbreaks it represents unknown values
+        float center = 0; //distance for center in in
         robot = new TankBase(hardwareMap);
-        waitForStart();
-        //Need to identify the cipher picture
-        //Spin to knock Jewel out
-        robot.pivot_IMU(30, .25);
-        robot.pivot(-30, .25);
-        //Drive distance based on cipher
-        robot.pivot_IMU(-90f,.25);
-        robot.driveStraight_In(12f,.3);
-        //Drop cipher in box
+        newRobot = new NewRobot(hardwareMap);
+        waitForStart(); //stops the code running until after pressing the play button on phone
+        // Close doors
+        // Lift up doors to get glyph
+        // Lower the right arm
+        // Look at the color of platform
+        // Sense color of the jewel
+        // if the jewel has the same color as the platform; move backwards; return to original position
+        // else if the jewel isn't same color; move forward; return to orignal position
+        // else (no color sense); do nothing
+        // raise/retract arm arm
+        // decode pictogram
+        switch (newRobot.getGlyphCipher()) //Switch statement; it also decodes the image at the same time and
+                                            //returns the column in a character
+        {
+            case 'l': robot.driveStraight_In(x); //lowercase L represents left;
+                break;
+            case 'c': robot.driveStraight_In(x); // represents the center; robot drives distance to center column
+                break;
+            case 'r': robot.driveStraight_In(x);//represents right; robot drives dist to right column
+                break;
+            default: robot.driveStraight_In(center); //robot goes into center if it can't find a glyph
+        }
+        robot.pivot_IMU(-90, .25);
+        robot.driveStraight_In(x); //Drive to the glyph to column at normal speed first, but not into it
+        robot.driveStraight_In(x, .25);
+        //lower door attachment to ground
+        //open door attachment to release glyph
+        robot.driveStraight_In(-2); // back up
         robot.stopAllMotors();
     }
 }
