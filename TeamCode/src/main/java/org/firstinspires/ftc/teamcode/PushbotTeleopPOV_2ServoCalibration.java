@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -83,18 +84,18 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (gamepad1.dpad_up) {
-                speedBonus += 0.1;
+                speedBonus += 0.05;
             }
             if (gamepad1.dpad_down) {
-                speedBonus -= 0.1;
+                speedBonus -= 0.05;
             }
 
             if (speedBonus > 2) {
                 speedBonus = 2;
             }
 
-            if (speedBonus < -0.8) {
-                speedBonus = -0.8;
+            if (speedBonus < -0.9) {
+                speedBonus = -0.9;
             }
 
                 // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -115,6 +116,9 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                     driveLeft /= max;
                     driveRight /= max;
                 }
+
+                robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
                 // Output the safe values to the motor drives.
                 robot.leftDrive.setPower(driveLeft);
