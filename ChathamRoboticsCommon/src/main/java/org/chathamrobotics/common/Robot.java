@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 import com.qualcomm.robotcore.hardware.LightSensor;
@@ -30,8 +31,11 @@ import java.util.Map;
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class Robot {
+    private static final int MAX_MOTOR_RPM = 160;
 
-    private HashMap<String, Double> servoRestPositions = new HashMap<>();
+    private interface HardwareDebugFunc<E extends HardwareDevice> {
+        void debug(String name, E device);
+    }
 
     /**
      * The robot's hardware map
@@ -47,6 +51,60 @@ public abstract class Robot {
      * A logger for the robot that logs to telemetry and logcat
      */
     public RobotLogger log;
+
+    // hardware debuggers
+    private final HardwareDebugFunc<DcMotor> motorDebugger = (name, motor) -> {
+        if (motor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
+            log.debug(String.format(Locale.US, "%s Motor Speed: %f",
+                    name, MAX_MOTOR_RPM * motor.getPower()));
+        else if (motor.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
+            log.debug(name + " Motor Position", motor.getCurrentPosition());
+            log.debug(name + " Motor Target Position", motor.getTargetPosition());
+        } else
+            log.debug(name + " Motor Power", motor.getPower());
+    };
+
+    private final HardwareDebugFunc<Servo> servoDebugger = (name, servo) ->
+        log.debug(name + "Servo Position", servo.getPosition());
+
+    private final HardwareDebugFunc<CRServo> crServoDebugger = (name, crServo) ->
+            log.debug(name + "CRServo Power", crServo.getPower());
+
+    private final HardwareDebugFunc<OpticalDistanceSensor> odsDebugger = (name, ods) ->
+            log.debug(name + " ODS Light", ods.getLightDetected());
+
+    private final  HardwareDebugFunc<TouchSensor> touchSensorDebugger = (name, touch) ->
+            log.debug(name + "Touch Sensor isPressed", touch.isPressed());
+
+    private final HardwareDebugFunc<ColorSensor> colorSensorDebugger = (name, color) ->
+            log.debug(name + " Color Sensor Color", String.format(Locale.US, "<%d, %d, %d>",
+                    color.red(),
+                    color.green(),
+                    color.blue()
+            ));
+
+    private final HardwareDebugFunc<AccelerationSensor> accelSensorDebugger = (name, as) ->
+            log.debug(name + " Acceleration Sensor Value", as.getAcceleration());
+
+    private final HardwareDebugFunc<CompassSensor> compassDebugger = (name, compass) ->
+            log.debug(name + " Compass Sensor Direction", compass.getDirection());
+
+    private final HardwareDebugFunc<IrSeekerSensor> irSensorDebugger = (name, ir) -> {
+        log.debug(name + " IR Seeker Angle", ir.getAngle());
+        log.debug(name + " IR Seeker Strength", ir.getStrength());
+    };
+
+    private final HardwareDebugFunc<LightSensor> lightSensorDebugger = (name, light) ->
+            log.debug(name + " Light Sensor Light", light.getLightDetected());
+
+    private final HardwareDebugFunc<UltrasonicSensor> ultrasonicDebugger = (name, u) ->
+            log.debug(name + " Ultrasonic Sensor Level", u.getUltrasonicLevel());
+
+    private final HardwareDebugFunc<VoltageSensor> voltageSensorDebugger = (name, v) ->
+            log.debug(name + " Voltage Sensor Voltage", v.getVoltage());
+
+    private HashMap<String, Double> servoRestPositions = new HashMap<>();
+
 
     /**
      * Creates an instance of Robot
@@ -85,131 +143,27 @@ public abstract class Robot {
      * Debugs all hardware device values
      */
     public void debugHardware() {
-        debugHardware(true, true);
+        debugHardware(true);
     }
 
     /**
      * Debugs all hardware device values
+     *  @param shouldUpdate  whether or not to update the telemetry
      *
-     * @param shouldUpdate  whether or not to update the telemetry
-     * @param isLooping     whether or not the debug is contained in a loop
      */
-    public void debugHardware(boolean shouldUpdate, boolean isLooping) {
-        //  debug motor values
-        for (Map.Entry<String, DcMotor> motorEntry : hardwareMap.dcMotor.entrySet()) {
-            log.debug(
-                    motorEntry.getKey() + " Motor Power",
-                    motorEntry.getValue().getPower()
-            );
-        }
-
-        // debug servo values
-        for (Map.Entry<String, Servo> servoEntry : hardwareMap.servo.entrySet()) {
-            log.debug(
-                    servoEntry.getKey() + " Servo Position",
-                    servoEntry.getValue().getPosition()
-            );
-        }
-
-        // debug continuous rotation servo values
-        for (Map.Entry<String, CRServo> crServoEntry : hardwareMap.crservo.entrySet()) {
-            log.debug(
-                    crServoEntry.getKey() + " CRServo Power",
-                    crServoEntry.getValue().getPower()
-            );
-        }
-
-        // debug touch sensor multiplexer values
-        // TODO: debug this
-//        for (Map.Entry<String, TouchSensorMultiplexer> tsmEntry : hardwareMap.touchSensorMultiplexer.entrySet()) {
-//            log.debug(
-//                    tsmEntry.getKey() + " CRServo Power",
-//                    tsmEntry.getValue().,
-//                    isLooping
-//            );
-//        }
-
-        // debug optical distance sensor
-        for (Map.Entry<String, OpticalDistanceSensor> odsEntry : hardwareMap.opticalDistanceSensor.entrySet()) {
-            log.debug(
-                    odsEntry.getKey() + " ODS Light Level",
-                    odsEntry.getValue().getLightDetected()
-            );
-        }
-
-        // debug touch sensor values
-        for (Map.Entry<String, TouchSensor> touchSensorEntry : hardwareMap.touchSensor.entrySet()) {
-            log.debug(
-                    touchSensorEntry.getKey() + " Touch Sensor isPressed",
-                    touchSensorEntry.getValue().isPressed()
-            );
-        }
-
-        // debug color sensor values
-        for (Map.Entry<String, ColorSensor> colorSensorEntry : hardwareMap.colorSensor.entrySet()) {
-            log.debug(
-                    colorSensorEntry.getKey() + " Color Sensor Color",
-                    // format as <r, g, b>
-                    String.format(Locale.US, "<%d, %d, %d>",
-                            colorSensorEntry.getValue().red(),
-                            colorSensorEntry.getValue().green(),
-                            colorSensorEntry.getValue().blue()
-                    )
-            );
-        }
-
-        // debug acceleration sensor values
-        for (Map.Entry<String, AccelerationSensor> asEntry : hardwareMap.accelerationSensor.entrySet()) {
-            log.debug(
-                    asEntry.getKey() + " Acceleration Sensor Acceleration",
-                    asEntry.getValue().getAcceleration()
-            );
-        }
-
-        // debug compass sensor values
-        for (Map.Entry<String, CompassSensor> compassSensorEntry : hardwareMap.compassSensor.entrySet()) {
-            log.debug(
-                    compassSensorEntry.getKey() + " Compass Sensor Direction",
-                    compassSensorEntry.getValue().getDirection()
-            );
-        }
-
-        // debug ir seeker values
-        for (Map.Entry<String, IrSeekerSensor> irssEntry : hardwareMap.irSeekerSensor.entrySet()) {
-            log.debug(
-                    irssEntry.getKey() + " IR Seeker Angle",
-                    irssEntry.getValue().getAngle()
-            );
-
-            log.debug(
-                    irssEntry.getKey() + " IR Seeker Strength",
-                    irssEntry.getValue().getStrength()
-            );
-        }
-
-        // debug light sensor values
-        for (Map.Entry<String, LightSensor> lightSensorEntry : hardwareMap.lightSensor.entrySet()) {
-            log.debug(
-                    lightSensorEntry.getKey() + " Light Sensor Level",
-                    lightSensorEntry.getValue().getLightDetected()
-            );
-        }
-
-        // debug ultrasonic sensor values
-        for (Map.Entry<String, UltrasonicSensor> usEntry : hardwareMap.ultrasonicSensor.entrySet()) {
-            log.debug(
-                    usEntry.getKey() + " Ultrasonic Sensor Level",
-                    usEntry.getValue().getUltrasonicLevel()
-            );
-        }
-
-        // debug voltage sensor values
-        for (Map.Entry<String, VoltageSensor> vsEntry : hardwareMap.voltageSensor.entrySet()) {
-            log.debug(
-                    vsEntry.getKey() + " Voltage Sensor Voltage",
-                    vsEntry.getValue().getVoltage()
-            );
-        }
+    public void debugHardware(boolean shouldUpdate) {
+        debugHardwareDevice(hardwareMap.dcMotor, motorDebugger);
+        debugHardwareDevice(hardwareMap.servo, servoDebugger);
+        debugHardwareDevice(hardwareMap.crservo, crServoDebugger);
+        debugHardwareDevice(hardwareMap.opticalDistanceSensor, odsDebugger);
+        debugHardwareDevice(hardwareMap.touchSensor, touchSensorDebugger);
+        debugHardwareDevice(hardwareMap.colorSensor, colorSensorDebugger);
+        debugHardwareDevice(hardwareMap.accelerationSensor, accelSensorDebugger);
+        debugHardwareDevice(hardwareMap.compassSensor, compassDebugger);
+        debugHardwareDevice(hardwareMap.irSeekerSensor, irSensorDebugger);
+        debugHardwareDevice(hardwareMap.lightSensor, lightSensorDebugger);
+        debugHardwareDevice(hardwareMap.ultrasonicSensor, ultrasonicDebugger);
+        debugHardwareDevice(hardwareMap.voltageSensor, voltageSensorDebugger);
 
         if (shouldUpdate) {
             telemetry.update();
@@ -241,6 +195,14 @@ public abstract class Robot {
         for (Map.Entry<String, Double> servoRestPosition : servoRestPositions.entrySet()) {
             hardwareMap.servo.get(servoRestPosition.getKey())
                     .setPosition(servoRestPosition.getValue());
+        }
+    }
+
+    private <E extends HardwareDevice> void debugHardwareDevice(HardwareMap.DeviceMapping<E> devices, HardwareDebugFunc<E> debugger) {
+        for (Map.Entry<String, E> entry : devices.entrySet()) {
+            if (entry.getValue() == null) continue;
+
+            debugger.debug(entry.getKey(), entry.getValue());
         }
     }
 }
