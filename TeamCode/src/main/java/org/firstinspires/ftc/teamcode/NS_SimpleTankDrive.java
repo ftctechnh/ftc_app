@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Nithilan on 9/2/2017.
  */
-@TeleOp(name = "NI: Tank Drive", group = "Training")
+@TeleOp(name = "NS: Simple Tank Drive", group = "Training")
 public class NS_SimpleTankDrive extends OpMode {
 
     DcMotor leftwheel;
