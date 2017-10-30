@@ -158,10 +158,12 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
                 int x = vuMark.hashCode();
 
                 //telemetry.addData("number", x);
-                while (x==2332680)
+                if (x==2332680)
                 {
 //                    motorLeft.setPower(1);
                     if (counter == 0) {
+                        //robot.leftDrive.setPower(0);
+                        robot.rightDrive.setPower(0);
                         robot.leftDrive.setPower(1);
                         counter++;
                     }
@@ -169,17 +171,19 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
                 }
                 //counter = 0;
                 //robot.leftDrive.setPower(0);
-                while (x==77974015)
+                if (x==77974015)
                 {
 //                    motorRight.setPower(1);
                     if (counter == 0) {
+                        robot.leftDrive.setPower(0);
+                        //robot.rightDrive.setPower(0);
                         robot.rightDrive.setPower(1);
                         counter++;
                     }
                 }
                 //counter = 0;
                 //robot.rightDrive.setPower(0);
-                while (x==1984282711)
+                if (x==1984282711)
                 {
 //                    motorLeft.setPower(1);
 //                    motorRight.setPower(1);

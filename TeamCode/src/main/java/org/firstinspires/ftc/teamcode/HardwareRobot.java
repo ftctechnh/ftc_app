@@ -25,12 +25,16 @@ public class HardwareRobot {
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
+
         // Define and Initialize Motors
         leftDrive = hwMap.get(DcMotor.class, "motorLeft");
         rightDrive = hwMap.get(DcMotor.class, "motorRight");
 
-        leftDrive = hwMap.get(DcMotor.class, "leftMotor");
-        rightDrive = hwMap.get(DcMotor.class, "rightMotor");
+
+        // Define and Initialize Motors
+        //leftDrive = hwMap.get(DcMotor.class, "motorLeft");
+        //rightDrive = hwMap.get(DcMotor.class, "motorRight"); 
+     
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
 
         leftDrive.setPower(0);
