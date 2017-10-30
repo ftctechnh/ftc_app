@@ -115,6 +115,7 @@ public class NullbotHardware {
             rightBlockClaw = hwMap.servo.get("rightClaw");
 
             relicClawFlipper = hwMap.servo.get("relicClawFlipper");
+            retractFlipper();
             /*ServoControllerEx flipperCtrl = (ServoControllerEx) relicClawFlipper.getController();
             int flipperPort = relicClawFlipper.getPortNumber();
             PwmControl.PwmRange flipperRange = new PwmControl.PwmRange(553, 2425);
@@ -455,7 +456,7 @@ public class NullbotHardware {
         rightBlockClaw.setPosition(160.0/255.0);
     }
 
-    public final double RELIC_CLAW_OPEN_POSITION = 0.0/255.0;
+    public final double RELIC_CLAW_OPEN_POSITION = 40.0/255.0;
     public final double RELIC_CLAW_CLOSED_POSITION = 200.0/255.0;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
@@ -470,17 +471,30 @@ public class NullbotHardware {
         }
     }
 
-    public boolean RELIC_FLIPPER_IS_OUT = false;
+    public double relicFipperPosition = 80;
+    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 88.0/255.0;
+    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 75.0/255.0;
 
-    public void extendFlipper() {relicClawFlipper.setPosition(20.0/255.0); RELIC_FLIPPER_IS_OUT = true;}
-    public void retractFlipper() {relicClawFlipper.setPosition(1.0/255.0); RELIC_FLIPPER_IS_OUT = false;}
+    public void extendFlipper() {
+        relicClawFlipper.setPosition(RELIC_CLAW_FLIPPER_EXTENDED_POSITION);
+        relicFipperPosition = RELIC_CLAW_FLIPPER_EXTENDED_POSITION;
+    }
+
+    public void retractFlipper() {
+        relicClawFlipper.setPosition(RELIC_CLAW_FLIPPER_RETRACTED_POSITION);
+        relicFipperPosition = RELIC_CLAW_FLIPPER_RETRACTED_POSITION;
+    }
 
     public void toggleRelicClawFlipper() {
-        if (RELIC_FLIPPER_IS_OUT) {
+        if (relicFipperPosition == RELIC_CLAW_FLIPPER_EXTENDED_POSITION) {
             retractFlipper();
         } else {
             extendFlipper();
         }
+    }
+
+    public void updateFlipperPos() {
+        relicClawFlipper.setPosition(relicFipperPosition);
     }
 
     public void setLiftMode(DcMotor.RunMode m) {

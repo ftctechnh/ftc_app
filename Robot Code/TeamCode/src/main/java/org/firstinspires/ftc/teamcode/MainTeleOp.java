@@ -50,12 +50,14 @@ public class MainTeleOp extends LinearOpMode {
 
     ElapsedTime totalElapsedTime;
 
+    ElapsedTime timeAPressed;
+    boolean wasBackPressed;
+    boolean slowMode;
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap, this, true, gamepad2);
 
-        robot.retractFlipper();
         lift = new ConstrainedPIDMotor(robot.lift, 100, 0.6, 0.6, 0, -1600);
         zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.3, 0, 12288);
 
@@ -72,9 +74,13 @@ public class MainTeleOp extends LinearOpMode {
         timeSinceDriveModeToggle = new ElapsedTime();
         timeSinceSlowModeToggle = new ElapsedTime();
         totalElapsedTime = new ElapsedTime();
+        timeAPressed = new ElapsedTime();
         nonrelativeDriveModeEnabled = true;
         wasRightTriggerPressed = false;
         wasLeftTriggerPressed = false;
+        wasBackPressed = false;
+        slowMode = false;
+
 
         while (opModeIsActive()) {
 
@@ -94,17 +100,28 @@ public class MainTeleOp extends LinearOpMode {
             // Toggle slow mode
             if (gamepad1.left_trigger > triggerThreshold && !wasLeftTriggerPressed &&
                     timeSinceSlowModeToggle.milliseconds() > 100) {// Left trigger activates slow mode
-                desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
+                slowMode = !slowMode;
                 timeSinceSlowModeToggle.reset();
             }
             wasRightTriggerPressed = gamepad1.right_trigger > triggerThreshold;
 
+            if (slowMode) {
+                desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
+            }
+
 
             if (!robot.isTestChassis) {
 
+                if (!gamepad1.a) {
+                    timeAPressed.reset();
+                }
+                if (gamepad1.back && !wasBackPressed) {
+                    timeAPressed.reset();
+                }
+
                 setOverride((gamepad1.a && !gamepad1.start));
 
-                if (gamepad1.back && !gamepad1.start) { // Back coasts all motors
+                if (gamepad1.start && !gamepad1.back && !gamepad1.a) { // Back coasts all motors
                     lift.setDirection(COAST);
                     zType.setDirection(COAST);
                 } else {
@@ -134,8 +151,18 @@ public class MainTeleOp extends LinearOpMode {
                     if (gamepad1.left_bumper && !wasLeftBumperPressed) {
                         robot.toggleRelicClaw();
                     }
-                    if (gamepad1.right_bumper && !wasRightBumperPressed) {
-                        robot.toggleRelicClawFlipper();
+                    if (gamepad1.right_bumper) {
+                        if (gamepad1.back && gamepad1.a && timeAPressed.milliseconds() > 500) {
+                            robot.relicFipperPosition -= 1;
+                            robot.updateFlipperPos();
+
+                        } else if (!gamepad1.back && gamepad1.a && timeAPressed.milliseconds() > 500) { // Explicitly stated for clarity
+                            robot.relicFipperPosition += 1;
+                            robot.updateFlipperPos();
+
+                        } else if (!wasRightBumperPressed) {
+                            robot.toggleRelicClawFlipper();
+                        }
                     }
                     wasLeftBumperPressed = gamepad1.left_bumper;
                     wasRightBumperPressed = gamepad1.right_bumper;
@@ -148,12 +175,15 @@ public class MainTeleOp extends LinearOpMode {
                     }
 
                     if (gamepad1.start && gamepad1.back) {
+
                         robot.gyroError = robot.getGyroHeadingRaw();
                     }
 
                     if (gamepad1.start && gamepad1.a) {
                         lift.encoderOffset = robot.lift.getCurrentPosition();
                     }
+
+                    wasBackPressed = gamepad1.back;
                 }
             }
 
