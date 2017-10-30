@@ -66,6 +66,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
+@Autonomous(name="VuForia Cam", group ="Concept")
 //@Disabled
 public class VuForiaTest extends LinearOpMode {
 
