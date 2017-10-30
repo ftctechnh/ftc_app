@@ -55,8 +55,8 @@ public class Drivetrain extends RobotComponent
     {
         super.init(BASE);
 
-        leftMotor = mapper.mapMotor("leftDrive" , DcMotorSimple.Direction.FORWARD);
-        rightMotor = mapper.mapMotor("rightDrive" , DcMotorSimple.Direction.REVERSE);
+        leftMotor = mapper.mapMotor("leftDrive" , DcMotorSimple.Direction.REVERSE);
+        rightMotor = mapper.mapMotor("rightDrive" , DcMotorSimple.Direction.FORWARD);
     }
 
 

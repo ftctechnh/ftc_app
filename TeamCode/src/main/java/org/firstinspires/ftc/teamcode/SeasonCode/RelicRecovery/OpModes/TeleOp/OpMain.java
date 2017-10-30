@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 
 
 /**
@@ -28,11 +29,15 @@ public class OpMain extends LinearOpMode
 
         waitForStart();
 
+        _base.drivetrain.setState(Drivetrain.State.FORWARD_FAST);
+
         while(opModeIsActive())
         {
             _grabInput();
 
             _runComponents();
+
+            telemetry.update();
         }
     }
 
@@ -57,5 +62,9 @@ public class OpMain extends LinearOpMode
     private void _runComponents()
     {
         _base.drivetrain.run(-gamepad1.left_stick_y , gamepad1.right_stick_x , true);
+        _base.lift.run(-gamepad2.left_stick_y);
+        telemetry.addData("Controls, 1LY" , -gamepad1.left_stick_y);
+        telemetry.addData("Controls, 1RX" , gamepad1.right_stick_x);
+        telemetry.addData("Controls, 2LY" , -gamepad2.left_stick_y);
     }
 }
