@@ -138,9 +138,13 @@ class LookForCryptoBoxStep extends AutoLib.Step {
             for (int i=0; i<colHue.length(); i++) {
                 // starting at position (i), look for the given pattern in the encoded (rgbcymw) scanline
                 Matcher m = mPattern.matcher(colHue.substring(i));
-                if (m.lookingAt() && m.groupCount() == 1) {
-                    mOpMode.telemetry.addData("found ", "%s from %d to %d", colHue, m.start(), m.end());
+                if (m.lookingAt() /* && m.groupCount() == 1 */) {
+                    mOpMode.telemetry.addData("found ", "pattern from %d to %d", i+m.start(), i+m.end()-1);
+                    i += m.end();       // skip over this match
+                    /*
+                    mCamAcqFr.stop();       // release the camera
                     return true;
+                    */
                 }
             }
         }
@@ -150,7 +154,7 @@ class LookForCryptoBoxStep extends AutoLib.Step {
 }
 
 
-@Autonomous(name="FirstRelicRecAuto1", group ="Auto")
+//@Autonomous(name="FirstRelicRecAuto1", group ="Auto")
 //@Disabled
 public class FirstRelicRecAuto1 extends OpMode {
 
@@ -160,7 +164,9 @@ public class FirstRelicRecAuto1 extends OpMode {
     GyroSensor mGyro;                       // gyro to use for heading information
     SensorLib.CorrectedGyro mCorrGyro;      // gyro corrector object
 
-    @Override public void init()
+    public void init() {}
+
+    public void init(boolean bLookForBlue)
     {
         // get the hardware
         AutoLib.HardwareFactory mf = null;
@@ -188,8 +194,8 @@ public class FirstRelicRecAuto1 extends OpMode {
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
-        // make a step that terminates the motion step by looking for a particular (in this test, blue) Cryptobox
-        LookForCryptoBoxStep terminatorStep = new LookForCryptoBoxStep(this, "b+[^b]+b+");
+        // make a step that terminates the motion step by looking for a particular (red or blue) Cryptobox
+        LookForCryptoBoxStep terminatorStep = new LookForCryptoBoxStep(this, bLookForBlue ? "^b+" : "^r+");
         // make and add to the sequence the step that looks for the Vuforia marker and sets the column (Left,Center,Right)
         // the motion terminator step should look for
         mSequence.add(new VuforiaGetMarkStep(this, terminatorStep));
@@ -222,3 +228,4 @@ public class FirstRelicRecAuto1 extends OpMode {
     }
 
 }
+
