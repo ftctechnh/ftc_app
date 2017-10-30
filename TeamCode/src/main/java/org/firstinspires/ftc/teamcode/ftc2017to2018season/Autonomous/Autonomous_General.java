@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -57,6 +58,7 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
     public ModernRoboticsI2cGyro gyro;
+    public ModernRoboticsI2cRangeSensor rangeSensor;
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -87,6 +89,7 @@ public class Autonomous_General extends LinearOpMode {
         back_left_motor = hardwareMap.dcMotor.get("leftWheelMotorBack");
         back_right_motor = hardwareMap.dcMotor.get("rightWheelMotorBack");
         idle();
+
 
 //        // Connect to motor (Assume standard left wheel)
 //        // Change the text in quotes to match any motor name on your robot.
@@ -128,6 +131,7 @@ public class Autonomous_General extends LinearOpMode {
 //            idle();
 //        }
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         // Send telemetry message to signify robot waiting;
 //        telemetry.addData("Status", "Resetting Encoders");    //
 //        telemetry.update();
@@ -577,6 +581,7 @@ public class Autonomous_General extends LinearOpMode {
             telemetry.addData("-->","inside while loop :-(");
             telemetry.update();
         }
+        stopMotors();
         telemetry.addData("done with gyro turn","-----");
         telemetry.update();
     }
@@ -604,8 +609,12 @@ public class Autonomous_General extends LinearOpMode {
             rightSpeed = speed * steer;
             leftSpeed = -rightSpeed;
             //leftSpeed = -5;
-        }
+    }
 
+        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         front_left_motor.setPower(leftSpeed);
         front_right_motor.setPower(rightSpeed);
         back_left_motor.setPower(leftSpeed);
@@ -746,6 +755,19 @@ public class Autonomous_General extends LinearOpMode {
             return translation;
         }
         return null;
+    }
+
+    public void strafeRangeDistance(double distInCM, double speed) {
+
+        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM) {
+            strafeRight(speed);
+        }
+        stopMotors();
+        sleep(400);
+        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM) {
+            strafeLeft(speed);
+        }
+        stopMotors();
     }
 
     public Enum<RelicRecoveryVuMark> returnImage() {

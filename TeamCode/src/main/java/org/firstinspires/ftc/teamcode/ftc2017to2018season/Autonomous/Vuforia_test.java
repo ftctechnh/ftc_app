@@ -52,16 +52,20 @@ public class Vuforia_test extends Autonomous_General {
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
 
-        encoderMecanumDrive(0.5,50,50,1000,0);
-        gyroTurn(0.3,90);
-        encoderMecanumDrive(0.5,50,50,1000,0);
+        encoderMecanumDrive(0.5,65,65,1000,0);
+        sleep(1000);
+        gyroTurn(0.3,89);
+        sleep(1000);
+        encoderMecanumDrive(0.75,45,45,1000,0);
         if (vuMark == RelicRecoveryVuMark.CENTER){
-
+            strafeRangeDistance(88, 0.3);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
+            strafeRangeDistance(71, 0.8);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
+            strafeRangeDistance(108, 0.8);
 
         }
 
