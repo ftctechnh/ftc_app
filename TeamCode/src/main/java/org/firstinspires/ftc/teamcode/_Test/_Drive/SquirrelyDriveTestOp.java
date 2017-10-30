@@ -42,13 +42,13 @@ public class SquirrelyDriveTestOp extends OpMode {
 
         // create an autonomous sequence with the steps to drive
         // several legs of a polygonal course ---
-        float power = 1.0f;
+        float power = 0.3f;
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
 
         // add a bunch of timed "legs" to the sequence - use Gyro heading convention of positive degrees CCW from initial heading
-        float leg = debug ? 6.0f : 3.0f;  // time along each leg of the polygon
+        float leg = debug ? 2.0f : 3.0f;  // time along each leg of the polygon
 
         // drive a square
         mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, -90, power, leg/2, false));
@@ -57,7 +57,7 @@ public class SquirrelyDriveTestOp extends OpMode {
         mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, 180, power, leg, false));
         mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, 270, power, leg/2, false));
 
-        // ... and then a diamond
+       /* // ... and then a diamond
         mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, -45, power, leg, false));
         mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, 45, power, leg, false));
         mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, 135, power, leg, false));
@@ -70,7 +70,7 @@ public class SquirrelyDriveTestOp extends OpMode {
             boolean stop = (i == n-1);
             mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, heading, power, leg/n, stop));
         }
-
+        */
         // start out not-done
         bDone = false;
     }
