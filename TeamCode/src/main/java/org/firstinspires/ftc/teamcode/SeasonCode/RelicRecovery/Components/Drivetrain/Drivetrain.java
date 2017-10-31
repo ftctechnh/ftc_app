@@ -21,8 +21,6 @@ public class Drivetrain extends RobotComponent
     private final double _SLOW_MULTIPLIER = .5;
     private final double _STOP_MULTIPLIER = 0;
 
-    // Some additional state variables
-
     // Motors
     public DcMotor leftMotor;
     public DcMotor rightMotor;

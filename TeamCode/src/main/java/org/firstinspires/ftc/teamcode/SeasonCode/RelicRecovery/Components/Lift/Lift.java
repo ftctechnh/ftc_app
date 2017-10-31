@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
 /**
  * Lift for the Relic Recovery robot
  */
+@SuppressWarnings("WeakerAccess")
 public class Lift extends RobotComponent
 {
     public DcMotor _liftMotor;
@@ -18,6 +19,7 @@ public class Lift extends RobotComponent
     /**
      * Position to lift to
      */
+    @SuppressWarnings("unused")
     enum Position
     {
         LOW(0) ,
@@ -61,6 +63,7 @@ public class Lift extends RobotComponent
     /**
      * @param POSITION Sets the position of the lift motor
      */
+    @SuppressWarnings("unused")
     public void toPos(final Position POSITION)
     {
         _liftMotor.setTargetPosition(POSITION.encoderCount());

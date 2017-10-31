@@ -63,14 +63,7 @@ public abstract class RobotCommand
     {
         if(t == null)
         {
-            t = new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    runSequentially();
-                }
-            });
+            t = new Thread(this::runSequentially);
 
             t.start();
         }
