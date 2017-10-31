@@ -33,5 +33,15 @@ public class NS_Robot_GoldenGears {
         clawLeftServo = hardwareMap.servo.get("clawLeftServo");
         clawRightServo = hardwareMap.servo.get("clawRightServo");
         clawRightServo.setDirection(Servo.Direction.REVERSE);
+
+        this.Reset();
+    }
+
+    public void Reset(){
+        driveLeftMotor.setPower(0);
+        driveRightMotor.setPower(0);
+
+        clawRightServo.setPosition(0);
+        clawLeftServo.setPosition(0);
     }
 }
