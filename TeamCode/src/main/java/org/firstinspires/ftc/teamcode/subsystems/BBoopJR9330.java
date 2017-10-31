@@ -26,7 +26,7 @@ public class BBoopJR9330 {
             isArmUp = false;
         }else{
             hwMap.BBoopJR.setPosition(UP_POS);
-        }
 
+        }
     }
 }
