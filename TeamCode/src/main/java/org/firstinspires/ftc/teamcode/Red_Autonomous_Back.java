@@ -2,8 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -22,6 +27,86 @@ public class Red_Autonomous_Back extends LinearOpMode {
 
     VuforiaLocalizer vuforia;
 
+    String jewelColor = null;
+
+    ElapsedTime timer = new ElapsedTime();
+
+    public String senseJewelColor() {
+
+        while (opModeIsActive()) {
+
+            int red = af.colorSensor.red();
+            int blue = af.colorSensor.blue();
+            int green = af.colorSensor.green();
+
+            // sense color blue
+
+            if (blue >= 4 && red <= 1 && green <= 1) {
+
+                return "BLUE";
+            }
+
+            // sense color red
+            if (red >= 4 && blue <= 1 && green <= 1) {
+
+                return "RED";
+            }
+
+            telemetry.addData("values ", blue);
+            telemetry.update();
+
+        }
+
+        return "NOTHING";
+    }
+
+    public void turnMotorUsingGyro(double power, float degrees, String direction) {
+
+        af.modernRoboticsI2cGyro.resetZAxisIntegrator();
+
+        if (direction == Constants.spinLeft) {
+
+            af.F_L.setDirection(DcMotor.Direction.FORWARD);
+            af.F_R.setDirection(DcMotor.Direction.FORWARD);
+            af.R_L.setDirection(DcMotor.Direction.FORWARD);
+            af.R_R.setDirection(DcMotor.Direction.FORWARD);
+
+            af.F_L.setPower(power);
+            af.F_R.setPower(power);
+            af.R_L.setPower(power);
+            af.R_R.setPower(power);
+        } else {
+
+            af.F_L.setDirection(DcMotor.Direction.REVERSE);
+            af.F_R.setDirection(DcMotor.Direction.REVERSE);
+            af.R_L.setDirection(DcMotor.Direction.REVERSE);
+            af.R_R.setDirection(DcMotor.Direction.REVERSE);
+
+            af.F_L.setPower(power);
+            af.F_R.setPower(power);
+            af.R_L.setPower(power);
+            af.R_R.setPower(power);
+        }
+
+        float zAngle = af.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+        while (opModeIsActive() && Math.abs(zAngle - degrees) > 5) {
+            zAngle = af.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+            telemetry.addData("angle", "%s deg", formatFloat(zAngle));
+            telemetry.update();
+        }
+
+        af.F_L.setPower(0);
+        af.F_R.setPower(0);
+        af.R_L.setPower(0);
+        af.R_R.setPower(0);
+    }
+
+    String formatFloat(float rate) {
+        return String.format("%.3f", rate);
+    }
+
+
     @Override
     public void runOpMode() {
 
@@ -37,65 +122,139 @@ public class Red_Autonomous_Back extends LinearOpMode {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
-        //af.init(hardwareMap);
+        // Moved the init hardware below wait for start. Dropper motor doesnt go 0-1 above wait for start
+        af.init(hardwareMap);
+
+        af.modernRoboticsI2cGyro.calibrate();
+
+        timer.reset();
+
+        while (!isStopRequested() && af.modernRoboticsI2cGyro.isCalibrating()) {
+            telemetry.addData("calibrating", "%s", Math.round(timer.seconds()) % 2 == 0 ? "|.." : "..|");
+            telemetry.update();
+            sleep(50);
+        }
 
         waitForStart();
 
-        af.dropper.setPosition(.5);
-        //sense color
-        // if color red turn that way
-        af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
-        // if color blue turn other way
-        af.moveMotorWithEncoder(.2, 1300, Constants.spinLeft);
-
         relicTrackables.activate();
 
-        while (opModeIsActive()) {
+        boolean found = false;
+        RelicRecoveryVuMark vuMark = null;
 
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-            if (vuMark == RelicRecoveryVuMark.LEFT) {
-
-                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 1300, Constants.spinRight);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 2600, Constants.left);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
+        while (opModeIsActive() && !found) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark == RelicRecoveryVuMark.LEFT || vuMark == RelicRecoveryVuMark.RIGHT || vuMark == RelicRecoveryVuMark.CENTER) {
+                found = true;
             }
-
-            else if (vuMark == RelicRecoveryVuMark.CENTER) {
-
-                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 1300, Constants.spinRight);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 2600, Constants.left);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-            }
-
-            else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-
-                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 1300, Constants.spinRight);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 2600, Constants.left);
-                af.stopMotor();
-                af.moveMotorWithEncoder(.2, 2600, Constants.forward);
-            }
-
-            else {
-                telemetry.addData("VuMark", "not visible");
-            }
-
-            telemetry.update();
         }
 
+        if (opModeIsActive() && found) {
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+
+                telemetry.addData("vuMark", vuMark);
+                telemetry.update();
+
+                af.dropper.setPosition(0);
+
+                telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
+                telemetry.update();
+
+                if (jewelColor == "BLUE") {
+
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.moveMotorWithTime(.2, 1000, Constants.left);
+
+                }
+
+                if (jewelColor == "RED") {
+
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.moveMotorWithTime(.2, 1000, Constants.left);
+
+                }
+
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+
+                telemetry.addData("vuMark", vuMark);
+                telemetry.update();
+
+                af.dropper.setPosition(0);
+
+                telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
+                telemetry.update();
+
+                if (jewelColor == "BLUE") {
+
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.moveMotorWithTime(.2, 1000, Constants.left);
+
+                }
+
+                if (jewelColor == "RED") {
+
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.moveMotorWithTime(.2, 1000, Constants.left);
+
+                } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                    telemetry.addData("vuMark", vuMark);
+                    telemetry.update();
+
+                    af.dropper.setPosition(0);
+
+                    telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
+                    telemetry.update();
+
+                    if (jewelColor == "BLUE") {
+
+                        turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                        af.dropper.setPosition(1);
+                        turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                        af.stopMotor(500);
+                        af.moveMotorWithTime(.2, 2200, Constants.forward);
+                        af.moveMotorWithTime(.2, 1000, Constants.left);
+
+                    }
+
+                    if (jewelColor == "RED") {
+
+                        turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                        af.dropper.setPosition(1);
+                        turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                        af.stopMotor(500);
+                        af.moveMotorWithTime(.2, 2200, Constants.forward);
+                        af.moveMotorWithTime(.2, 1000, Constants.left);
+
+                    }
+                }
+
+                while (opModeIsActive()) {
+
+
+                }
+            }
+        }
     }
 }
+
+
 
 
 

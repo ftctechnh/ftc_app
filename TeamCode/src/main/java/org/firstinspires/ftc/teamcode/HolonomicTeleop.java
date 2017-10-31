@@ -212,8 +212,5 @@ public class HolonomicTeleop extends OpMode {
         telemetry.addData("robot clamp", "%.2f", robot.clamp.getPower());
         telemetry.addData("elevator", "%.2f", robot.elevator.getPower());
         telemetry.addData("a button", "%b", gamepad2.a);
-       // telemetry.addData("limiter", "%d", limiter);
-
     }
-
 }
