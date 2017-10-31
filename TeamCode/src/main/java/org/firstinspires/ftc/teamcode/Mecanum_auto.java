@@ -19,6 +19,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 
 
 
@@ -72,6 +83,8 @@ public class Mecanum_auto extends LinearOpMode {
 //    static final double     TURN_SPEED              = 0.5;
 // The IMU sensor object
     BNO055IMU imu;
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
 
     // State used for updating telemetry
     Orientation angles;
@@ -105,6 +118,27 @@ public class Mecanum_auto extends LinearOpMode {
         // Set up our telemetry dashboard
         composeTelemetry();
 
+        // get a reference to the color sensor.
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+
+        // get a reference to the distance sensor that shares the same name.
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+
         // Wait until we're told to go
         //waitForStart();
 
@@ -133,8 +167,59 @@ public class Mecanum_auto extends LinearOpMode {
             double power=0.3;
         resetStartTime();      // start timer
 
-        mecanumDriveGyro(1.0,0.0,0.0,0);
-//        while (opModeIsActive()) {
+        // pretend we're red for now...
+        if (sensorColor.red() < sensorColor.blue()) {
+            gromit.left_front.setPower(1.0);
+            gromit.left_back.setPower(1.0);
+            gromit.right_front.setPower( - 1.0);
+            gromit.right_back.setPower( - 1.0);
+
+            sleep(50);
+            gromit.left_front.setPower(-1.0);
+            gromit.left_back.setPower (-1.0);
+            gromit.right_front.setPower(1.0);
+            gromit.right_back.setPower (1.0);
+            sleep(50);
+
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
+        }
+        else {
+            gromit.left_front.setPower(-1.0);
+            gromit.left_back.setPower(-1.0);
+            gromit.right_front.setPower( 1.0);
+            gromit.right_back.setPower( 1.0);
+
+            sleep(50);
+            gromit.left_front.setPower(1.0);
+            gromit.left_back.setPower(1.0);
+            gromit.right_front.setPower(-1.0);
+            gromit.right_back.setPower(-1.0);
+            sleep(50);
+
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
+        }
+
+       // mecanumDriveGyro(1.0,0.0,0.0,0);
+       while (opModeIsActive()) {
+           Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                   (int) (sensorColor.green() * SCALE_FACTOR),
+                   (int) (sensorColor.blue() * SCALE_FACTOR),
+                   hsvValues);
+
+           // send the info back to driver station using telemetry function.
+           telemetry.addData("Distance (cm)",
+                   String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+           telemetry.addData("Alpha", sensorColor.alpha());
+           telemetry.addData("Red  ", sensorColor.red());
+           telemetry.addData("Green", sensorColor.green());
+           telemetry.addData("Blue ", sensorColor.blue());
+           telemetry.addData("Hue", hsvValues[0]);
 //            telemetry.update();
 //            error=(angles.firstAngle-0)/90;
 //            gromit.left_front.setPower(power + error/1.0);
@@ -144,7 +229,8 @@ public class Mecanum_auto extends LinearOpMode {
 //
 //
 //
-//        }
+           telemetry.update();
+       }
 
 //        telemetry.addData("Path", "Complete");
 //        telemetry.update();
