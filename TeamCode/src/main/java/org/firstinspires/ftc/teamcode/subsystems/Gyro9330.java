@@ -35,6 +35,15 @@ public class Gyro9330 {
         angles = hwMap.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
     }
+    public double getPitch() {
+        angles = hwMap.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.secondAngle;
+    }
+
+    public double getRoll() {
+        angles = hwMap.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.thirdAngle;
+    }
 
     public boolean isCalibrated() {
         return hwMap.gyro.isGyroCalibrated();

@@ -39,9 +39,9 @@ public class Drive9330 {
     }
 
     public void gyroTurn(float degrees, int speed) {
-        Double initialAngle = gyro.getYaw();
-        while (gyro.getYaw() - initialAngle < degrees - turnError || gyro.getYaw() - initialAngle > degrees + turnError) {
-            if (gyro.getYaw() - initialAngle < degrees - turnError) {
+        Double initialAngle = gyro.getPitch();
+        while (gyro.getPitch() - initialAngle < degrees - turnError || gyro.getPitch() - initialAngle > degrees + turnError) {
+            if (gyro.getPitch() - initialAngle < degrees - turnError) {
                 turnRight(speed);
             } else {
                 turnLeft(speed);
