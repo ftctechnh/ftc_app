@@ -5,7 +5,10 @@ import android.app.Activity
 import android.util.Log
 import android.view.View
 import com.qualcomm.ftcrobotcontroller.R
+import org.directcurrent.opencv.visionprocessors.GrayGlyphFinder
+import org.directcurrent.opencv.visionprocessors.VisionProcessor
 import org.opencv.android.*
+import org.opencv.core.Mat
 
 
 /**
@@ -17,7 +20,7 @@ import org.opencv.android.*
  * Default Constructor:
  * Takes the main activity of the FTC App and implicitly uses the back camera
  */
-abstract class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int) : CameraBridgeViewBase.CvCameraViewListener2
+class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int) : CameraBridgeViewBase.CvCameraViewListener2
 {
     private var _jCamView: JavaCameraView? = null       // Camera View in main activity
 
@@ -36,6 +39,10 @@ abstract class OpenCVRunner constructor(var mainActivity: Activity , var cameraI
             super.onManagerConnected(status)
         }
     }
+
+    private var _visionProcessors = ArrayList<VisionProcessor>()
+
+    private var _analyze = false
 
 
     /**
@@ -56,16 +63,14 @@ abstract class OpenCVRunner constructor(var mainActivity: Activity , var cameraI
             Log.d(this.javaClass.simpleName, "  OpenCVLoader.initDebug(), working.")
         }
 
-        mainActivity.runOnUiThread(object: Runnable
-        {
-            override fun run()
-            {
-                _jCamView = mainActivity.findViewById(R.id.java_camera_view) as JavaCameraView
-                _jCamView!!.setCameraIndex(cameraIndex)
-                _jCamView!!.setCvCameraViewListener(this@OpenCVRunner)
-            }
+        mainActivity.runOnUiThread {
+            _jCamView = mainActivity.findViewById(R.id.java_camera_view) as JavaCameraView
+            _jCamView!!.setCameraIndex(cameraIndex)
+            _jCamView!!.setCvCameraViewListener(this@OpenCVRunner)
+        }
 
-        })
+        // Add our vision processors
+        _visionProcessors.add(GrayGlyphFinder())
     }
 
 
@@ -126,5 +131,66 @@ abstract class OpenCVRunner constructor(var mainActivity: Activity , var cameraI
     {
         _jCamView?.visibility = View.GONE
         disableView()
+    }
+
+
+    /**
+     * Toggles whether to perform vision analysis on frame or not
+     */
+    fun toggleAnalyze()
+    {
+        _analyze = !_analyze
+    }
+
+
+    /**
+     * Returns whether or not analysis in enabled
+     */
+    fun analysisEnabled(): Boolean
+    {
+        return _analyze
+    }
+
+
+    /**
+     * Initializes Mats of all vision processors
+     */
+    override fun onCameraViewStarted(width: Int, height: Int)
+    {
+        for(i in _visionProcessors)
+        {
+            i.initMats(width , height)
+        }
+    }
+
+
+    /**
+     * Releases Mats of all vision processors
+     */
+    override fun onCameraViewStopped()
+    {
+        for(i in _visionProcessors)
+        {
+            i.releaseMats()
+        }
+    }
+
+
+    /**
+     * Runs each vision processor in order added to list and returns end result
+     */
+    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame?): Mat?
+    {
+        var processedFrame = inputFrame?.rgba()
+
+        if(_analyze)
+        {
+            for(i in _visionProcessors)
+            {
+                processedFrame = i.processFrame(processedFrame)
+            }
+        }
+
+        return processedFrame
     }
 }

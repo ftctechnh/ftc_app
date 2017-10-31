@@ -14,9 +14,20 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Thorough documentation on the new system (teamcode.Core package)
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
-- Wrapper class for OpenCV
-- Actually figuring out how to use OpenCV
-- Allowing toggling visibility of XML Camera View
+
+
+### [0.7.0] -2017-10-30
+#### Added
+- Kotlin support!
+- OpenCV wrapper classes (in Kotlin)
+- Drivetrain and Lift for Relic Recovery robot
+- Ability to toggle off and on OpenCV and the Java Camera View seen in the main activity
+- Migrate to Java 8- previous issues were probably caused by a clash between Moto G4s and REV hardware, not the SDK. Plus, Android officially supports some parts J8 now.
+
+#### Removed
+- Disabled all test OpModes- they were getting quite numerous
+- JavaDocs- they belong elsewhere, and are rarely updated. Still figuring out where they go, bear with me :)
+
 
 ### [0.6.0] - 2017-10-16
 #### Added

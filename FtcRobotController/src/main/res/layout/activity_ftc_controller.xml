@@ -192,11 +192,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           android:layout_marginBottom="5dp"
           android:layout_alignParentTop="true"/>
 
+      <TextView
+          android:id = "@+id/OpenCV_Analysis_Text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text = "@string/analysis_disabled"
+          android:textStyle = "bold"
+          android:layout_marginBottom = "5dp"
+          android:layout_below = "@id/OpenCV_Layout_Header_Text"/>
+
       <org.opencv.android.JavaCameraView
           android:id="@+id/java_camera_view"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@id/OpenCV_Layout_Header_Text"/>
+          android:layout_below="@id/OpenCV_Analysis_Text"/>
 
       <Button
           android:id="@+id/Analyze_OpenCV_Button"

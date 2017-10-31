@@ -92,6 +92,7 @@ import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 
+import org.directcurrent.opencv.OpenCVRunner;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
@@ -113,16 +114,15 @@ import org.firstinspires.inspection.RcInspectionActivity;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.directcurrent.opencv.CVFind;
-
 
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity
 {
   // OpenCV Stuff //////////////////////////////////////////////////////////////////////////////////
-  private CVFind _cvFind;
+  private OpenCVRunner _openCVRunner;
 
   private TextView _layoutHeader;
+  private TextView _analysisText;
   private Button _analyzeButton;
   private Button _showHideButton;
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -320,40 +320,51 @@ public class FtcRobotControllerActivity extends Activity
 
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    _cvFind = new CVFind(this , 0);
+    _openCVRunner = new OpenCVRunner(this , 0);
 
-    _cvFind.start();
+    _openCVRunner.start();
 
     _analyzeButton = (Button)findViewById(R.id.Analyze_OpenCV_Button);
     _showHideButton = (Button)findViewById(R.id.Show_Hide_Button);
     _layoutHeader = (TextView)findViewById(R.id.OpenCV_Layout_Header_Text);
+    _analysisText = (TextView)findViewById(R.id.OpenCV_Analysis_Text);
 
-    _analyzeButton.setOnClickListener(new View.OnClickListener()
+    _analyzeButton.setOnClickListener(v ->
     {
-      public void onClick(View v)
-      {
-
-//        jFinder.process(System.currentTimeMillis() , _jewelFinder.onCameraFrame() , true);
-      }
-    });
-
-
-    _showHideButton.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View v)
-      {
-        if(_showHideButton.getText() == getString(R.string.hide))
+        _openCVRunner.toggleAnalyze();
+        if(_openCVRunner.analysisEnabled())
         {
-          _cvFind.disableCameraView();
-          _showHideButton.setText(R.string.show);
-          _layoutHeader.setText(R.string.OpenCvCameraViewDisabled);
+            _analysisText.setText(R.string.analysis_enabled);
         }
         else
         {
-          _cvFind.enableCameraView();
-          _showHideButton.setText(R.string.hide);
-          _layoutHeader.setText(R.string.opencv_camera_view_enabled);
+            _analysisText.setText(R.string.analysis_disabled);
         }
+    });
+
+
+    _showHideButton.setOnClickListener(v -> {
+      if(_showHideButton.getText() == getString(R.string.hide))
+      {
+        _openCVRunner.disableCameraView();
+        _showHideButton.setText(R.string.show);
+        _layoutHeader.setText(R.string.OpenCvCameraViewDisabled);
+
+        if(_openCVRunner.analysisEnabled())
+        {
+            _analysisText.setText(R.string.analysis_enabled);
+        }
+        else
+        {
+            _analysisText.setText(R.string.analysis_disabled);
+        }
+      }
+      else
+      {
+        _openCVRunner.enableCameraView();
+        _showHideButton.setText(R.string.hide);
+        _layoutHeader.setText(R.string.opencv_camera_view_enabled);
+        _analysisText.setText(R.string.analysis_disabled);
       }
     });
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -402,7 +413,7 @@ public class FtcRobotControllerActivity extends Activity
 
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    _cvFind.enableView();
+    _openCVRunner.enableView();
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
@@ -415,7 +426,7 @@ public class FtcRobotControllerActivity extends Activity
     }
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    _cvFind.disableView();
+    _openCVRunner.disableView();
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
@@ -447,7 +458,7 @@ public class FtcRobotControllerActivity extends Activity
     RobotLog.cancelWriteLogcatToDisk();
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    _cvFind.disableView();
+    _openCVRunner.disableView();
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 

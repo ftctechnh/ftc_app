@@ -109,14 +109,14 @@ public class Drivetrain extends RobotComponent
      */
     public void run(double drivePower , double rotatePower , boolean scale)
     {
-        drivePower *= _powerMultiplier;
-        rotatePower *= _powerMultiplier;
-
         if(scale)
         {
             drivePower = UtilBasic.scaleValue(drivePower);
             rotatePower = UtilBasic.scaleValue(rotatePower);
         }
+
+        drivePower *= _powerMultiplier;
+        rotatePower *= _powerMultiplier;
 
         leftMotor.setPower(drivePower + rotatePower);
         rightMotor.setPower(drivePower - rotatePower);
