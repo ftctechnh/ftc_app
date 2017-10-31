@@ -21,12 +21,21 @@ public class CrystalArm9330 {
     }
 
     public void toggleArmServo(){
+        if(isArmUp == true) lowerArmServo();
+        else raiseArmServo();
+    }
+
+    public void raiseArmServo() {
+        if(isArmUp == false){
+            hwMap.crystalArm.setPosition(UP_POS);
+            isArmUp = true;
+        }
+    }
+
+    public void lowerArmServo() {
         if(isArmUp == true){
             hwMap.crystalArm.setPosition(OUT_POS);
             isArmUp = false;
-        }else{
-            hwMap.crystalArm.setPosition(UP_POS);
-
         }
     }
 }

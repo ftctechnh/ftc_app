@@ -9,14 +9,10 @@ public class Clamps9330 {
 
     private boolean lowClampEngaged = true;
     private boolean highClampEngaged = true;
-    private boolean highClampPivoted;
 
     //   Declaring Set positions for servo
     static final Double ENGAGED_POS = 1.0;
     static final Double RELEASE_POS = 0.0;
-    //   Declaring set positions of the pivot
-    static final Double PIVOTED_POS = 0.8;
-    static final Double STRAIGHT_POS = 0.25;
     //   accessing Hardware9330
     private Hardware9330 hwMap = null;
     //Constructor for brake class
@@ -24,26 +20,6 @@ public class Clamps9330 {
         hwMap = robotMap;
         hwMap.lowGlyphClamp.setPosition(ENGAGED_POS);
         hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
-    }
-    //  Engaging the low clamp
-    public void toggleLowClamp(){
-        if(lowClampEngaged == false){
-            lowClampEngaged = true;
-            hwMap.lowGlyphClamp.setPosition(ENGAGED_POS);
-        } else {
-            lowClampEngaged = false;
-            hwMap.lowGlyphClamp.setPosition(RELEASE_POS);
-        }
-    }
-
-    public void toggleHighClamp(){
-        if(highClampEngaged == false){
-            highClampEngaged = true;
-            hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
-        } else {
-            highClampEngaged = false;
-            hwMap.highGlyphClamp.setPosition(RELEASE_POS);
-        }
     }
 
     public void closeLowClamp(){
@@ -73,34 +49,17 @@ public class Clamps9330 {
             hwMap.highGlyphClamp.setPosition(RELEASE_POS);
         }
     }
-    /*Pivots the high clamp
 
-    public void toggleClampPivot(){
-        if(highClampPivoted == false){
-            highClampPivoted = true;
-            hwMap.glyphPivotServo.setPosition(PIVOTED_POS);
-        } else{
-            highClampPivoted = false;
-            hwMap.glyphPivotServo.setPosition(STRAIGHT_POS);
-        }
+    public void toggleLowClamp(){
+        if(lowClampEngaged == false) closeLowClamp();
+        else openLowClamp();
     }
 
-    public void pivotHighClamp(){
-        if(!highClampPivoted){
-            highClampPivoted = true;
-            hwMap.glyphPivotServo.setPosition(PIVOTED_POS);
-        }
+    public void toggleHighClamp(){
+        if(highClampEngaged == false) closeHighClamp();
+        else openHighClamp();
     }
-    //Straightens the high clamp
-    public void straightenHighClamp(){
-        if(highClampPivoted){
-            highClampPivoted = false;
-            hwMap.glyphPivotServo.setPosition(STRAIGHT_POS);
-        }
-    }
-    */
 
-    // query brake state
     public boolean islowClampEngaged() {
         return lowClampEngaged;
     }

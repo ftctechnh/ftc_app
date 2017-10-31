@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 
@@ -9,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
 
 public class Drive9330 {
     private Hardware9330 hwMap = null;
-    Integer turnError = 2;
+    Integer turnError = 1;
     Gyro9330 gyro;
 
     public Drive9330(Hardware9330 robotMap) {
@@ -36,6 +38,18 @@ public class Drive9330 {
     public void stopDrive() {
         Hardware9330.leftMotor.setPower(0);
         Hardware9330.rightMotor.setPower(0);
+    }
+
+    public void driveDistance(int distance) {
+        hwMap.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hwMap.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hwMap.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hwMap.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Integer encoderDistance = distance; //not quite sure what numbers encoder needs, so calculate here
+        Hardware9330.rightMotor.setTargetPosition(encoderDistance);
+        Hardware9330.leftMotor.setTargetPosition(encoderDistance);
+        hwMap.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hwMap.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void gyroTurn(float degrees, int speed) {
