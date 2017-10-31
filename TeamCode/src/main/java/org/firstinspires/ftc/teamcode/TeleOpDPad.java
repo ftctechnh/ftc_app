@@ -8,6 +8,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by BeehiveRobotics-3648 on 7/22/2017.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import java.util.TimerTask;
 
 @TeleOp(name = "TeleOpDPad ", group = "linear OpMode")
+@Disabled
 public class TeleOpDPad extends OpMode {
 
     DcMotor FrontRight;

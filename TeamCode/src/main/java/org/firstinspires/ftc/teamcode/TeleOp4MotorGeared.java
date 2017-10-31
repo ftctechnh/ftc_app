@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,7 +14,8 @@ import junit.framework.Test;
  */
 
 @TeleOp(name = "4MotorTeleOp", group = "linear OpMode")
-public class TeleOp4Motor extends OpMode {
+@Disabled
+public class TeleOp4MotorGeared extends OpMode {
 
     DcMotor FrontLeft;
     DcMotor FrontRight;

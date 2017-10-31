@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import java.lang.*;
  */
 
 @TeleOp(name = "TeleOpVG", group = "linear OpMode")
+@Disabled
 public class TeleOpVG2 extends OpMode {
     iDrive Drive = new OpenLoop();
 

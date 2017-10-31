@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 //All imports go here, anything you will use, like motors or servos.
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import android.util.Log;
 //This makes the OpMode available in the Autonomous group under the name 'Autonomous', in the Driver Station
 @Autonomous(name = "Autonomous", group = "Autonomous")
-
+@Disabled
 //This is the basic class
 public class AutonomousSetup extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.

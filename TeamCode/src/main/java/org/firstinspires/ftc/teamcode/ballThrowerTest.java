@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,7 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by BeehiveRobotics-3648 on 8/22/2017.
  */
-    @TeleOp(name = "balllaunchtest" , group = "linear OpMode")
+@TeleOp(name = "balllaunchtest" , group = "linear OpMode")
+@Disabled
     public class ballThrowerTest extends OpMode {
 
     DcMotor ballThrowerMotor1;
