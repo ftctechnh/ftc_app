@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 // Created by Roma Bhatia  on 9/21/17
 //
@@ -60,8 +61,6 @@ public class HolonomicTeleop extends OpMode {
     HolonomicHardware robot       = new HolonomicHardware(); // use the class created to define a Pushbot's hardware
 
     double limiter = 1;
-    boolean state = true;
-
 
     @Override
     public void init() {
@@ -103,6 +102,7 @@ public class HolonomicTeleop extends OpMode {
 
         if(gamepad1.left_trigger >0 && gamepad1.left_trigger <= 1){
             limiter = 0.15;
+            telemetry.addData("limiter", "is", "0.15");
         }
         else {
             limiter = 1;
@@ -117,22 +117,17 @@ public class HolonomicTeleop extends OpMode {
 
 
         if(gamepad2.a) {
-            state =  true;
-            telemetry.addData("a", "button", "pressed");
+            robot.clamp.setPower(0.2);
         }
 
-        if(gamepad2.b) {
-            state =  false;
-            telemetry.addData("b", "button", "pressed");
-        }
-        telemetry.addData("state", "%b", state);
-
-        if(state) {
-            robot.clamp.setPosition(1); //close
+        else if(gamepad2.b) {
+            robot.clamp.setPower(-0.2);
         }
         else {
-            robot.clamp.setPosition(0); //open
+            robot.clamp.setPower(0);
         }
+
+
 
         if (gamepad2.right_trigger >0) {
             robot.elevator.setPower(gamepad2.right_trigger *0.65);
@@ -154,6 +149,68 @@ public class HolonomicTeleop extends OpMode {
             robot.R_L.setPower(dir*0.3);
         }
 
+        //DPAD DIRECTIONS
+        if(gamepad1.dpad_up) {
+            //DPAD FORWARD 0.5
+            robot.F_L.setPower(0.5);
+            robot.F_R.setPower(-0.5);
+            robot.R_L.setPower(0.5);
+            robot.R_R.setPower(-0.5);
+        }
+        else if(gamepad1.dpad_down) {
+            //DPAD BACKWARD 0.5
+            robot.F_L.setPower(-0.5);
+            robot.F_R.setPower(0.5);
+            robot.R_L.setPower(-0.5);
+            robot.R_R.setPower(0.5);
+        }
+        else if(gamepad1.dpad_left) {
+            //DPAD LEFT 0.5
+            robot.F_L.setPower(-0.5);
+            robot.F_R.setPower(-0.5);
+            robot.R_L.setPower(0.5);
+            robot.R_R.setPower(0.5);
+        }
+        else if(gamepad1.dpad_right) {
+            //DPAD RIGHT 0.5
+            robot.F_L.setPower(0.5);
+            robot.F_R.setPower(0.5);
+            robot.R_L.setPower(-0.5);
+            robot.R_R.setPower(-0.5);
+        }
+        else if(gamepad1.dpad_up && gamepad1.dpad_right) {
+            //DPAD NORTHEAST (RIGHT FRONT DIAGONAL)
+            robot.F_L.setPower(0.5);
+            robot.F_R.setPower(0);
+            robot.R_L.setPower(0);
+            robot.R_R.setPower(-0.5);
+        }
+        else if(gamepad1.dpad_up && gamepad1.dpad_left) {
+            //DPAD NORTHWEST (LEFT FRONT DIAGONAL
+            robot.F_L.setPower(0);
+            robot.F_R.setPower(-0.5);
+            robot.R_L.setPower(0.5);
+            robot.R_R.setPower(0);
+        }
+        else if(gamepad1.dpad_down && gamepad1.dpad_right) {
+            robot.F_L.setPower(0);
+            robot.F_R.setPower(0.5);
+            robot.R_L.setPower(-0.5);
+            robot.R_R.setPower(0);
+        }
+        else if(gamepad1.dpad_down && gamepad1.dpad_left) {
+            robot.F_L.setPower(-0.5);
+            robot.F_R.setPower(0);
+            robot.R_L.setPower(0);
+            robot.R_R.setPower(0.5);
+        }
+        else {
+            robot.F_L.setPower(0);
+            robot.F_R.setPower(0);
+            robot.R_L.setPower(0);
+            robot.R_R.setPower(0);
+        }
+
         // TELEMETRY WITH INFO ABOUT POWER, AND VALUES OF (X,Y)
         telemetry.addData("left stick y",  "%.2f", left_y);
         telemetry.addData("right_y stick y", "%.2f", right_y);
@@ -163,10 +220,10 @@ public class HolonomicTeleop extends OpMode {
         telemetry.addData("right_y front drive", "%.2f", robot.F_R.getPower());
         telemetry.addData("left back drive", "%.2f", robot.R_L.getPower());
         telemetry.addData("right_y back drive", "%.2f", robot.R_R.getPower());
-        telemetry.addData("robot clamp", "%.2f", robot.clamp.getPosition());
-        telemetry.addData("state", "%b", state);
+        telemetry.addData("robot clamp", "%.2f", robot.clamp.getPower());
         telemetry.addData("elevator", "%.2f", robot.elevator.getPower());
         telemetry.addData("a button", "%b", gamepad2.a);
+       // telemetry.addData("limiter", "%d", limiter);
 
     }
 

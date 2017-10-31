@@ -48,8 +48,9 @@ public class HolonomicHardware {
     public DcMotor  R_L = null;
     public DcMotor  R_R = null;
     public DcMotor elevator = null;
+    public DcMotor clamp = null;
 
-    public Servo clamp = null;
+
     public Servo dropper = null;
 
     // LOCAL OPMODE MEMBERS
@@ -71,12 +72,11 @@ public class HolonomicHardware {
         F_R = hwMap.get(DcMotor.class, "F_R");
         R_L = hwMap.get(DcMotor.class, "R_L");
         R_R = hwMap.get(DcMotor.class, "R_R");
-
+        clamp = hwMap.get(DcMotor.class, "clamp");
         elevator = hwMap.get(DcMotor.class, "upThingy");
 
-        clamp = hwMap.get(Servo.class, "clamp");
-        dropper = hwMap.get(Servo.class, "dropper");
 
+        dropper = hwMap.get(Servo.class, "dropper");
         dropper.setDirection(Servo.Direction.REVERSE);
 
         // REVERSE THE MOTORS
@@ -84,16 +84,18 @@ public class HolonomicHardware {
         F_R.setDirection(DcMotor.Direction.REVERSE);
         R_L.setDirection(DcMotor.Direction.REVERSE);
         R_R.setDirection(DcMotor.Direction.REVERSE);
+        clamp.setDirection(DcMotor.Direction.REVERSE);
 
         // SET ALL MOTOR POWERS TO ZERO
         F_L.setPower(0);
         F_R.setPower(0);
         R_L.setPower(0);
         R_R.setPower(0);
+        clamp.setPower(0);
 
         //SET ALL SERVOS TO POSITION
 
-        clamp.setPosition(0);
+
 
 
         // SET THE MOTORS TO RUN WITHOUT ENCODERS
