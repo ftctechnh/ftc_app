@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 /**
@@ -22,7 +20,7 @@ public class Hardware9330 {
     public static Servo highGlyphClamp;
     public static Servo relicHandServo;
     public static Servo relicWristServo;
-    public static Servo BBoopJR;
+    public static Servo crystalArm;
     public static DcMotor leftMotor;
     public static DcMotor glyphLiftMotor;
     public static ColorSensor cs;
@@ -57,8 +55,8 @@ public class Hardware9330 {
         relicHandServo.setDirection(Servo.Direction.REVERSE);
         relicWristServo = hwMap.servo.get("relicWristServo");
         relicWristServo.setDirection(Servo.Direction.REVERSE);
-        BBoopJR = hwMap.servo.get("BBoopJR");
-        BBoopJR.setDirection(Servo.Direction.REVERSE);
+        crystalArm = hwMap.servo.get("crystalArm");
+        crystalArm.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
         glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
         cs = hwMap.get(ColorSensor.class, "cs");

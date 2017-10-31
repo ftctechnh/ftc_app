@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
-import org.firstinspires.ftc.teamcode.subsystems.BBoopJR9330;
+import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 
 /**
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 public class TeleOp9330 extends OpMode {
     Hardware9330 robotMap = new Hardware9330();
     Clamps9330 clamps;
-    BBoopJR9330 BBoopJR;
+    CrystalArm9330 BBoopJR;
 
 
     float yPower = 0;
@@ -31,7 +31,7 @@ public class TeleOp9330 extends OpMode {
     public void init() {
         robotMap.init(hardwareMap);
          clamps = new Clamps9330(robotMap);
-         BBoopJR = new BBoopJR9330(robotMap);
+         BBoopJR = new CrystalArm9330(robotMap);
     }
 
     /*

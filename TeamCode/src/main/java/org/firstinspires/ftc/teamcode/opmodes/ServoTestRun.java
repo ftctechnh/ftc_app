@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
-import org.firstinspires.ftc.teamcode.subsystems.BBoopJR9330;
+import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 import org.firstinspires.ftc.teamcode.subsystems.RelicPickup9330;
 
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.RelicPickup9330;
 @Autonomous(name="ServoTestRun", group = "Opmode")
 public class ServoTestRun extends LinearOpMode {
     Hardware9330 robotMap = new Hardware9330();
-    BBoopJR9330 BoopJR = new BBoopJR9330(robotMap);
+    CrystalArm9330 BoopJR = new CrystalArm9330(robotMap);
     Clamps9330 clamps = new Clamps9330(robotMap);
     RelicPickup9330 relicPickup = new RelicPickup9330(robotMap);
 
