@@ -197,11 +197,6 @@ public class HolonomicTeleop extends OpMode {
                 robot.F_R.setPower(0);
                 robot.R_L.setPower(0);
                 robot.R_R.setPower(0.5);
-            } else {
-                robot.F_L.setPower(0);
-                robot.F_R.setPower(0);
-                robot.R_L.setPower(0);
-                robot.R_R.setPower(0);
             }
         }
 
