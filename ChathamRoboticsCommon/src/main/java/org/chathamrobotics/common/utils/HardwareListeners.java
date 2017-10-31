@@ -136,7 +136,7 @@ public class HardwareListeners {
     };
 
     // used to ensure that the polling loop is only running when it has to
-    private boolean isPollingThreadRunning = false;
+    private Thread pollingThread;
 
     /**
      * Sets a new listener on the given device
@@ -175,7 +175,7 @@ public class HardwareListeners {
             hardwareListenersLock.writeLock().unlock();
         }
 
-        if (! isPollingThreadRunning) startPolling();
+        if (pollingThread == null || ! pollingThread.isAlive()) startPolling();
     }
 
     /**
@@ -229,14 +229,12 @@ public class HardwareListeners {
 
     // starts the polling loop in a new thread
     private void startPolling() {
-        Thread pollingThread = new Thread(pollingLoop, "hardware listener thread");
+        pollingThread = new Thread(pollingLoop, "hardware listener thread");
 
         pollingThread.setDaemon(true);
 
         Log.d(TAG, "Starting polling loop");
         pollingThread.start();
-
-        isPollingThreadRunning = true;
     }
 
     // used to alert the polling loop that the listener has reach it's call limit
