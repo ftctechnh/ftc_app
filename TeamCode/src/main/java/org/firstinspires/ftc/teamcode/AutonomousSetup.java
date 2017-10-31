@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import android.util.Log;
@@ -18,7 +19,7 @@ public class AutonomousSetup extends LinearOpMode {
     DcMotor FrontRightMotor;
     DcMotor BackLeftMotor;
     DcMotor BackRightMotor;
-
+    ColorSensor colorSensor;
     // Now declare any universal value you will need more then once, like encoder CPR(Clicks per rotation)
     int CPR = 1120; //Encoder CPR
     int Tm = 2; // The part of the gear ratio attached to the motor
@@ -31,10 +32,11 @@ public class AutonomousSetup extends LinearOpMode {
         FrontRightMotor = hardwareMap.dcMotor.get("m2");
         BackLeftMotor = hardwareMap.dcMotor.get("m3");
         BackRightMotor = hardwareMap.dcMotor.get("m4");
-
+        colorSensor = hardwareMap.colorSensor.get("cs1");
         // Now do anything else you need to do in the initilazation phase, like calibrating the gyros, setting a color sensors lights off, etc.
         FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        colorSensor.enableLed(true);
         telemetry.addData("Anything you need to know before starting", 1);
         telemetry.update();
 
@@ -112,5 +114,9 @@ public class AutonomousSetup extends LinearOpMode {
         return (m1 + m2 + m3 + m4) / 4;
 
     }
-
+    public void JewelFinder(){
+        telemetry.addData("Red", colorSensor.red());
+        telemetry.addData("Blue", colorSensor.blue());
+        telemetry.addData("Green", colorSensor.green());
+    }
 }
