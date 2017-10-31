@@ -15,11 +15,12 @@ public class NS_Robot_GoldenGears {
     // Hardware Map of robot
     private HardwareMap hardwareMap = null;
 
-    DcMotor driveLeftMotor = null;
-    DcMotor driveRightMotor = null;
-    DcMotor armElevationMotor = null;
-    Servo clawLeftServo = null;
-    Servo clawRightServo = null;
+    private DcMotor driveLeftMotor = null;
+    private DcMotor driveRightMotor = null;
+    private DcMotor armElevationMotor = null;
+    private Servo clawLeftServo = null;
+    private Servo clawRightServo = null;
+
 
     public NS_Robot_GoldenGears(HardwareMap hm){
         hardwareMap = hm;
@@ -43,5 +44,10 @@ public class NS_Robot_GoldenGears {
 
         clawRightServo.setPosition(0);
         clawLeftServo.setPosition(0);
+    }
+
+    public void DriveRobot(double driveLeftPower, double driveRightPower){
+        driveLeftMotor.setPower(driveLeftPower);
+        driveRightMotor.setPower(driveRightPower);
     }
 }
