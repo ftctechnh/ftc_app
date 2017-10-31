@@ -31,16 +31,19 @@ public class Hardware267Bot
     // Hardware:
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
+    /*
     public ColorSensor color = null;
     public DcMotor armMotor = null;
     public Servo hopperServo = null;
     public OpticalDistanceSensor lineveiwer = null;
     public Servo buttonPusher = null;
     public DcMotor belt = null;
+
     // Other state:
     public boolean servosEnabled;
     public boolean gateOpen;
     public ButtonPusherState buttonPusherState;
+    */
     // Constants:
     public static final double HOPPER_OPEN = 0; //TODO: Find value
     public static final double HOPPER_CLOSED = 1; //TODO: Find value
@@ -64,34 +67,34 @@ public class Hardware267Bot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        lineveiwer = hwMap.opticalDistanceSensor.get("lightveiwer");
-        leftMotor   = hwMap.dcMotor.get("left");
-        rightMotor  = hwMap.dcMotor.get("right");
-        color = hwMap.colorSensor.get("color");
-        color.enableLed(false);
-        armMotor = hwMap.dcMotor.get("arm");
-        hopperServo = hwMap.servo.get("hopper");
-        hopperServo.setPosition(0);
-        hopperServo.setPosition(hopperServo.getPosition());
-        buttonPusher = hwMap.servo.get("pusher");
-        buttonPusher.setPosition(0);
-        buttonPusher.setPosition(buttonPusher.getPosition());
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //lineviewer = hwMap.opticalDistanceSensor.get("lightveiwer");
+        leftMotor   = hwMap.dcMotor.get("leftMotor");
+        rightMotor  = hwMap.dcMotor.get("rightMotor");
+        //color = hwMap.colorSensor.get("color");
+        //color.enableLed(false);
+        //armMotor = hwMap.dcMotor.get("arm");
+        //hopperServo = hwMap.servo.get("hopper");
+        //hopperServo.setPosition(0);
+        //hopperServo.setPosition(hopperServo.getPosition());
+        //buttonPusher = hwMap.servo.get("pusher");
+        //buttonPusher.setPosition(0);
+        //buttonPusher.setPosition(buttonPusher.getPosition());
+        //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        belt = hwMap.dcMotor.get("belt");
+        //belt = hwMap.dcMotor.get("belt");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        servosEnabled = true;
-        gateOpen = false;
-        buttonPusherState = ButtonPusherState.CENTER;
+        //servosEnabled = true;
+        //gateOpen = false;
+        //buttonPusherState = ButtonPusherState.CENTER;
     }
 
     /***
@@ -118,6 +121,8 @@ public class Hardware267Bot
         // Reset the cycle clock for the next pass.
         period.reset();
     }
+
+    /*
     public void openGate(boolean enableServos)
     {
         enableServos();
@@ -201,5 +206,6 @@ public class Hardware267Bot
         else
             disableServos();
     }
+    */
 }
 
