@@ -15,6 +15,8 @@ public class DoubleArmDrive extends OpMode {
     private Servo Claw;
     private Servo UpDown;
     private CRServo BigRotation;
+    private DcMotor Motor;
+    private double motorSpeed;
     private double clawPosition = 0.4;
     private double clawHighEnd = 1.00;
     private double clawLowEnd = 0.3;
@@ -37,14 +39,15 @@ public class DoubleArmDrive extends OpMode {
         FrontRight = hardwareMap.dcMotor.get("m2");
         RearLeft = hardwareMap.dcMotor.get("m3");
         RearRight = hardwareMap.dcMotor.get("m4");
+        Motor = hardwareMap.dcMotor.get("m5");
         Claw = hardwareMap.servo.get("s1");
         Claw.setPosition(clawPosition);
         UpDown = hardwareMap.servo.get("s2");
         UpDown.setPosition(upDownPosition);
         BigRotation = hardwareMap.crservo.get("s3");
         BigRotation.setPower(bigRotationInit);
-        reverseMotor(FrontLeft);
-        reverseMotor(RearLeft);
+        reverseMotor(FrontRight);
+        reverseMotor(RearRight);
     }
 
     @Override
@@ -55,18 +58,15 @@ public class DoubleArmDrive extends OpMode {
         FrontLeft.setPower(left);
         RearRight.setPower(right);
         RearLeft.setPower(left);
-        reverseMotor(FrontLeft);
-        reverseMotor(RearLeft);
 
-        bigRotationSpeed = Range.scale(gamepad1.left_stick_y,-1.0,1.0,bigRotationLowEnd,bigRotationHighEnd);
-        upDownPosition = Range.clip((gamepad1.right_stick_y*upDownSpeed/16) + upDownPosition,upDownLowEnd, upDownHighEnd);
+        bigRotationSpeed = Range.scale(gamepad2.left_stick_y,-1.0,1.0,bigRotationLowEnd,bigRotationHighEnd);
+        upDownPosition = Range.clip((gamepad2.right_stick_y*upDownSpeed/16) + upDownPosition,upDownLowEnd, upDownHighEnd);
+        motorSpeed = Range.clip(gamepad2.right_trigger - gamepad2.left_trigger, -1, 1);
 
-        if (gamepad1.a){
-
+        if (gamepad2.a){
                 clawPosition = clawHighEnd;
-
         }
-        if (gamepad1.b){
+        if (gamepad2.b){
                 clawPosition = clawLowEnd;
             }
 
@@ -77,7 +77,7 @@ public class DoubleArmDrive extends OpMode {
         Claw.setPosition(clawPosition);
         BigRotation.setPower(bigRotationSpeed);
         BigRotation.setPower(bigRotationSpeed);
-
+        Motor.setPower(motorSpeed);
         telemetry.addData("ClawServoPos",Claw.getPosition());
         telemetry.addData("Wrist servo position",UpDown.getPosition());
         telemetry.addData("Big Rotation goal",bigRotationSpeed);
