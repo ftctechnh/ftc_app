@@ -45,8 +45,12 @@ public class PowerPuffSquare extends LinearOpMode {
         encoderDrive(0.5, 100, 100);
         encoderDrive(0.5, -30, 30);
         encoderDrive(0.5, 100, 100);
-
-
+        encoderDrive(0.5, -30, 30);
+        encoderDrive(0.5, 100, 100);
+        encoderDrive(0.5, -30, 30);
+        encoderDrive(0.5, 100, 100);
+        encoderDrive(0.5, -30, 30);
+        encoderDrive(0.5, 100, 100);
     }
 
     public void encoderDrive(double speed,
