@@ -168,7 +168,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                     robot.FrontRightPower = frontRight;
                 }
                 if (robot.BackLeftPower != backLeft) {
-                    robot.backLeftMotor.setPower(v3);
+                    robot.backLeftMotor.setPower(-v3);
                     robot.BackLeftPower = backLeft;
                 }
                 if (robot.BackRightPower != backRight)
