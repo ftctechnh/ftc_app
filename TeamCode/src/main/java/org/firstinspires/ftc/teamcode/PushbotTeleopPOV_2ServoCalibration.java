@@ -117,9 +117,6 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                     driveRight /= max;
                 }
 
-                robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
                 // Output the safe values to the motor drives.
                 robot.leftDrive.setPower(driveLeft);
                 robot.rightDrive.setPower(driveRight);
