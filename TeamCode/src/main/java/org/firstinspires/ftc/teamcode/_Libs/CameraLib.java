@@ -436,9 +436,11 @@ public class CameraLib {
         }
 
         public void stop() {
-            mCamera.stopPreview();
-            mCamera.setPreviewCallback(null);
-            mCamera.release();
+            if (mCamera != null) {          // guard against extra stop() calls ...
+                mCamera.stopPreview();
+                mCamera.setPreviewCallback(null);
+                mCamera.release();
+            }
             mCamera = null;         // delete the Camera object now
             mDummyTexture = null;
             mPreviewImage = null;

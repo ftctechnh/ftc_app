@@ -99,6 +99,7 @@ class VuforiaGetMarkStep extends AutoLib.Step {
 class LookForCryptoBoxStep extends AutoLib.Step {
     String mVuMarkString;
     CameraLib.CameraAcquireFrames mCamAcqFr;
+    boolean mCameraActive;
     OpMode mOpMode;
     int mCBColumn;              // which Cryptobox column we're looking for
     Pattern mPattern;           // compiled regexp pattern we'll use to find the pattern we're looking for
@@ -115,7 +116,8 @@ class LookForCryptoBoxStep extends AutoLib.Step {
         super.loop();
         if (firstLoopCall()) {
             mCamAcqFr = new CameraLib.CameraAcquireFrames();
-            if (mCamAcqFr.init(2) == false)     // init camera at 2nd smallest size
+            mCameraActive = mCamAcqFr.init(2);
+            if (mCameraActive == false)     // init camera at 2nd smallest size
                 mOpMode.telemetry.addData("error: ", "cannot initialize camera");
         }
         mOpMode.telemetry.addData("VuMark", "%s found", mVuMarkString);
@@ -139,10 +141,11 @@ class LookForCryptoBoxStep extends AutoLib.Step {
                 // starting at position (i), look for the given pattern in the encoded (rgbcymw) scanline
                 Matcher m = mPattern.matcher(colHue.substring(i));
                 if (m.lookingAt() /* && m.groupCount() == 1 */) {
-                    mOpMode.telemetry.addData("found ", "pattern from %d to %d", i+m.start(), i+m.end()-1);
+                    mOpMode.telemetry.addData("found ", "%s from %d to %d", mPattern.pattern(), i+m.start(), i+m.end()-1);
                     i += m.end();       // skip over this match
                     /*
                     mCamAcqFr.stop();       // release the camera
+                    mCameraActive = false;
                     return true;
                     */
                 }
@@ -150,6 +153,12 @@ class LookForCryptoBoxStep extends AutoLib.Step {
         }
 
         return false;  // haven't found anything yet
+    }
+
+    public void stop() {
+        if (mCameraActive)
+            mCamAcqFr.stop();
+        mCameraActive = false;
     }
 }
 
@@ -163,6 +172,7 @@ public class FirstRelicRecAuto1 extends OpMode {
     DcMotor mMotors[];                      // motors, some of which can be null: assumed order is fr, br, fl, bl
     GyroSensor mGyro;                       // gyro to use for heading information
     SensorLib.CorrectedGyro mCorrGyro;      // gyro corrector object
+    LookForCryptoBoxStep mTerminatorStep;   // needs to be class data so stop() function can access camera
 
     public void init() {}
 
@@ -195,13 +205,13 @@ public class FirstRelicRecAuto1 extends OpMode {
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
         // make a step that terminates the motion step by looking for a particular (red or blue) Cryptobox
-        LookForCryptoBoxStep terminatorStep = new LookForCryptoBoxStep(this, bLookForBlue ? "^b+" : "^r+");
+        mTerminatorStep = new LookForCryptoBoxStep(this, bLookForBlue ? "^b+" : "^r+");
         // make and add to the sequence the step that looks for the Vuforia marker and sets the column (Left,Center,Right)
         // the motion terminator step should look for
-        mSequence.add(new VuforiaGetMarkStep(this, terminatorStep));
+        mSequence.add(new VuforiaGetMarkStep(this, mTerminatorStep));
         AutoLib.MotorGuideStep guideStep = new AutoLib.SquirrelyGyroGuideStep(this, 90, 0, mCorrGyro, null, null, 0.5f);
         // make and add the Step that goes to the indicated Cryptobox bin
-        mSequence.add(new AutoLib.GuidedTerminatedDriveStep(this, guideStep, terminatorStep, mMotors));
+        mSequence.add(new AutoLib.GuidedTerminatedDriveStep(this, guideStep, mTerminatorStep, mMotors));
         // make and add a step that stops all motors
         mSequence.add(new AutoLib.MoveByTimeStep(mMotors, 0, 0, true));
     }
@@ -225,6 +235,7 @@ public class FirstRelicRecAuto1 extends OpMode {
     @Override
     public void stop() {
         super.stop();
+        mTerminatorStep.stop();     // make sure the Camera is released
     }
 
 }
