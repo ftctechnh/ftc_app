@@ -113,8 +113,8 @@ MasterHardwareClass robot = new MasterHardwareClass();
 
                     final double v1 = +GRX;
                     final double v2 = +GRX;
-                    final double v3 = +GRX;
-                    final double v4 = +GRX;
+                    final double v3 = -GRX;
+                    final double v4 = -GRX;
                     frontLeft = v1;
                     frontRight = v2;
                     backLeft = v3;
