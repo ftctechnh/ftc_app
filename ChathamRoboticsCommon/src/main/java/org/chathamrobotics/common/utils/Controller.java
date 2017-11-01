@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.RobotLog;
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class Controller extends Gamepad {
-    enum ButtonState {
+    public enum ButtonState {
         TAPPED,
         HELD,
         STATIONARY,
@@ -63,6 +63,7 @@ public class Controller extends Gamepad {
         padDownState = updateButtonState(dpad_down, padDownState);
         padLeftState = updateButtonState(dpad_left, padLeftState);
         padRightState = updateButtonState(dpad_right, padRightState);
+
         leftBumperState = updateButtonState(left_bumper, leftBumperState);
         rightBumperState = updateButtonState(right_bumper, rightBumperState);
     }
