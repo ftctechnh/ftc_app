@@ -19,9 +19,9 @@ import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
 
+apply from: '../build.common.gradle'
+
 android {
-    compileSdkVersion 24
-    buildToolsVersion '26.0.2'
 
     signingConfigs {
         debug {
@@ -34,8 +34,6 @@ android {
 
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
-        minSdkVersion 24
-        targetSdkVersion 24
 
         if (androidPluginVersion == "2.3.3") {
             jackOptions.enabled true
@@ -87,20 +85,9 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     sourceSets.main {
         jni.srcDirs = []
         jniLibs.srcDir rootProject.file('libs')
-    }
-}
-
-repositories {
-    flatDir {
-        dirs rootProject.file('libs')
     }
 }
 

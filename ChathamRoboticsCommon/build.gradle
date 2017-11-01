@@ -14,27 +14,6 @@ if (androidPluginVersion == "2.3.3") {
     }
 }
 
-android {
-
-    defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 24
-    }
-
-    compileSdkVersion 24
-    buildToolsVersion '26.0.2'
-
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
-repositories {
-    flatDir {
-        dirs '../libs'
-    }
-}
+apply from: '../build.common.gradle'
 
 apply from: 'build.release.gradle'
