@@ -40,6 +40,7 @@ public class RedAutoAudi extends LinearOpMode
             case 'r': robot.driveStraight_In(x);//represents right; robot drives dist to right column
                 break;
             default: robot.driveStraight_In(center); //robot goes into center if it can't find a glyph
+                break;
         }
         robot.pivot_IMU(-90, .25);
         robot.driveStraight_In(x); //Drive to the glyph to column at normal speed first, but not into it
