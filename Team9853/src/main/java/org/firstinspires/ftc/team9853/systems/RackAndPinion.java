@@ -91,6 +91,13 @@ public class RackAndPinion {
         return this.isBusy;
     }
 
+    /**
+     * Moves the rack and pinion system to its upper limit synchronously.
+     * (moves in the positive direction until the upper limit switch is hit)
+     * This method will not exit until the lower limit is reached.
+     * @throws IsBusyException      thrown if the system is busy when called
+     * @throws InterruptedException thrown if the thread is interrupted while waiting
+     */
     public void moveToUpperSync() throws IsBusyException, InterruptedException {
         debug("Moving to upper limit");
         start(1);
@@ -101,6 +108,11 @@ public class RackAndPinion {
         debug("Reached upper limit");
     }
 
+    /**
+     * Moves the rack and pinion system to its upper limit.
+     * (moves in the positive direction until the upper limit switch is hit)
+     * @throws IsBusyException  thrown if the system is busy when called
+     */
     public void moveToUpper() throws IsBusyException {
         debug("Moving to upper limit");
         start(1);
@@ -112,6 +124,13 @@ public class RackAndPinion {
         });
     }
 
+    /**
+     * Moves the rack and pinion system to its lower limit synchronously.
+     * (moves in the negative direction until the lower limit switch is hit)
+     * This method will not exit until the lower limit is reached
+     * @throws IsBusyException      thrown if the system is busy when called
+     * @throws InterruptedException thrown if the thread is interrupted while waiting
+     */
     public void moveToLowerSync() throws IsBusyException, InterruptedException {
         debug("Moving to lower limit");
         start(-1);
@@ -122,6 +141,11 @@ public class RackAndPinion {
         debug("Reached lower limit");
     }
 
+    /**
+     * Moves the rack and pinion system to its lower limit.
+     * (moves in the negative direction until the lower limit switch is hit)
+     * @throws IsBusyException  thrown if the system is busy when called
+     */
     public void moveToLower() throws IsBusyException {
         debug("Moving to lower limit");
 
