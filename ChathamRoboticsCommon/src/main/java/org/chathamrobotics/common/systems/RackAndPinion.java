@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team9853.systems;
+package org.chathamrobotics.common.systems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
