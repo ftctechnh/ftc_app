@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # BeehiveRobotics  
 This is the official repo for team 3648, Beehive Robotics! We will be publishing our code throughout the season here.
 =======
@@ -103,13 +102,13 @@ Changes with verion 3.3 include:
     - Sample op modes can be selected as a template when creating new op mode.
     - Fixes and changes to complete hardware setup feature.
     - Updated (and more useful) onBot welcome message.
-    
+
 Known issues:
  * Android Studio
     - After updating to the new v3.3 Android Studio project folder, if you get error messages indicating "InvalidVirtualFileAccessException" then you might need to do a File->Invalidate Caches / Restart to clear the error.
  * OnBot Java
     - Sometimes when you push the build button to build all op modes, the RC returns an error message that the build failed.  If you press the build button a second time, the build typically suceeds.
-    
+
 **************************************************************************************
 
 Version 3.2 (built on 17.08.02)
