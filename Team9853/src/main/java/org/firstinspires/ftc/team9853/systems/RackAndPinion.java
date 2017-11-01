@@ -7,15 +7,15 @@ import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.hardware.LimitSwitch;
 import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
 import org.chathamrobotics.common.utils.HardwareListeners;
+import org.chathamrobotics.common.utils.IsBusyException;
 import org.chathamrobotics.common.utils.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Timer;
 
 /*!
- * Created by carsonstorm on 10/25/2017.
+ * Created by carson storm on 10/25/2017.
  */
-
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class RackAndPinion {
     private static final Timer TIMER = new Timer();
@@ -91,7 +91,7 @@ public class RackAndPinion {
         return this.isBusy;
     }
 
-    public void moveToUpperSync() throws Exception {
+    public void moveToUpperSync() throws IsBusyException, InterruptedException {
         debug("Moving to upper limit");
         start(1);
 
@@ -101,7 +101,7 @@ public class RackAndPinion {
         debug("Reached upper limit");
     }
 
-    public void moveToUpper() throws Exception {
+    public void moveToUpper() throws IsBusyException {
         debug("Moving to upper limit");
         start(1);
 
@@ -112,7 +112,7 @@ public class RackAndPinion {
         });
     }
 
-    public void moveToLowerSync() throws Exception {
+    public void moveToLowerSync() throws IsBusyException, InterruptedException {
         debug("Moving to lower limit");
         start(-1);
 
@@ -122,7 +122,7 @@ public class RackAndPinion {
         debug("Reached lower limit");
     }
 
-    public void moveToLower() throws Exception {
+    public void moveToLower() throws IsBusyException {
         debug("Moving to lower limit");
 
         start(-1);
@@ -140,8 +140,8 @@ public class RackAndPinion {
         }
     }
 
-    private void start(double power) throws Exception {
-        if (isBusy) throw new Exception("RackAndPinion is busy");
+    private void start(double power) throws IsBusyException {
+        if (isBusy) throw new IsBusyException("RackAndPinion is busy");
 
         synchronized (crServo) {
             crServo.setPower(power);
