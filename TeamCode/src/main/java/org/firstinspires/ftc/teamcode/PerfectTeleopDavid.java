@@ -50,7 +50,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
         robot.init(hardwareMap);
 
         // Wait for the start button
-        telemetry.addLine("!☻ Start Claw Control ☻!");
+        telemetry.addLine("!☻ Ready to Run ☻!");
         telemetry.update();
         waitForStart();
 
@@ -59,6 +59,12 @@ MasterHardwareClass robot = new MasterHardwareClass();
             // Display the current value
             telemetry.addData("Servo Controls", "X is OPEN, Y is CLOSE");
             telemetry.addData("Motor Controls", "Use the D-Pad ↑ & ↓ buttons!");
+
+            telemetry.addData("Front Left Power", robot.frontLeftMotor.getPower());
+            telemetry.addData("Front Right Power", robot.frontRightMotor.getPower());
+            telemetry.addData("Back Left Power", robot.backLeftMotor.getPower());
+            telemetry.addData("Back Right Power", robot.backRightMotor.getPower());
+
             telemetry.update();
 
         /* Servo Control */
@@ -92,43 +98,42 @@ MasterHardwareClass robot = new MasterHardwareClass();
             double backRight;
 
 
-        /* Send telemetry message to signify that the robot's ready to play! */
-            telemetry.addLine("♥ ♪ Ready to Run ♪ ♥");
-            telemetry.update();
-
-
                 if (gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
+
                     double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+                    r = r / 2; //Don't let rotation dominate movement
+
                     double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
                     double rightX = gamepad1.right_stick_x;
-                    final double r1 = gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;
-                    final double r2 = gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x;
-                    final double r3 = gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
-                    final double r4 = gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
 
-                    frontLeft = r1;
-                    frontRight = r2;
-                    backLeft = r3;
-                    backRight = r4;
+                    double GLY = gamepad1.left_stick_y;
+                    double GRX = gamepad1.right_stick_x;
+                    double GLX = gamepad1.left_stick_x;
 
 
-                    robot.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
+                    final double v1 = +GRX;
+                    final double v2 = +GRX;
+                    final double v3 = -GRX;
+                    final double v4 = -GRX;
+                    frontLeft = v1;
+                    frontRight = v2;
+                    backLeft = v3;
+                    backRight = v4;
 
                     if (robot.FrontLeftPower != frontLeft) {
-                        robot.frontLeftMotor.setPower(r1);
+                        robot.frontLeftMotor.setPower(v1);
                         robot.FrontLeftPower = frontLeft;
                     }
                     if (robot.FrontRightPower != frontRight) {
-                        robot.frontRightMotor.setPower(r2);
+                        robot.frontRightMotor.setPower(v2);
                         robot.FrontRightPower = frontRight;
                     }
                     if (robot.BackLeftPower != backLeft) {
-                        robot.backLeftMotor.setPower(r3);
+                        robot.backLeftMotor.setPower(v3);
                         robot.BackLeftPower = backLeft;
                     }
                     if (robot.BackRightPower != backRight)
-                        robot.backRightMotor.setPower(r4);
+                        robot.backRightMotor.setPower(v4);
                     robot.BackRightPower = backRight;
                 }
 
@@ -140,7 +145,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
                 double rightX = gamepad1.right_stick_x;
 
-                double GLY = gamepad1.left_stick_y;
+                double GLY = -gamepad1.left_stick_y;
                 double GRX = gamepad1.right_stick_x;
                 double GLX = gamepad1.left_stick_x;
 
@@ -163,7 +168,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                     robot.FrontRightPower = frontRight;
                 }
                 if (robot.BackLeftPower != backLeft) {
-                    robot.backLeftMotor.setPower(v3);
+                    robot.backLeftMotor.setPower(-v3);
                     robot.BackLeftPower = backLeft;
                 }
                 if (robot.BackRightPower != backRight)
