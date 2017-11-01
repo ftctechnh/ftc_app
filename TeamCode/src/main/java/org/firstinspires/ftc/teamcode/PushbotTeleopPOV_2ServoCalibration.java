@@ -58,7 +58,7 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
     double clawOffset = 0;                            // Servo mid position
     final double CLAW_SPEED = 0.04;                   // sets rate to move servo
 
-    double speedBonus = 0;
+    double speedBonus = -0.5;
 
     @Override
     public void runOpMode() {
