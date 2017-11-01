@@ -161,25 +161,34 @@ public class Mecanum_auto extends LinearOpMode {
 //                          gromit.rightDrive.getCurrentPosition());
 //        telemetry.update();
 
+        gromit.jewelsservo.setPosition(0.2);
+
         /** Wait for the game to start (driver presses PLAY)**/
         waitForStart();
             double error=.3;
-            double power=0.3;
+            double power=0.5;
         resetStartTime();      // start timer
+
+
+
+
+            gromit.jewelsservo.setPosition(0.85);
+        sleep(500);
 
         // pretend we're red for now...
         if (sensorColor.red() < sensorColor.blue()) {
-            gromit.left_front.setPower(1.0);
-            gromit.left_back.setPower(1.0);
-            gromit.right_front.setPower( - 1.0);
-            gromit.right_back.setPower( - 1.0);
+            gromit.left_front.setPower(power);
+            gromit.left_back.setPower(power);
+            gromit.right_front.setPower( - power);
+            gromit.right_back.setPower( - power);
 
-            sleep(50);
-            gromit.left_front.setPower(-1.0);
-            gromit.left_back.setPower (-1.0);
-            gromit.right_front.setPower(1.0);
-            gromit.right_back.setPower (1.0);
-            sleep(50);
+            sleep(70);
+            gromit.left_front.setPower(-power);
+            gromit.left_back.setPower (-power);
+            gromit.right_front.setPower(power);
+            gromit.right_back.setPower (power);
+            gromit.jewelsservo.setPosition(0.2);
+            sleep(70);
 
             gromit.left_front.setPower(0);
             gromit.left_back.setPower(0);
@@ -187,17 +196,18 @@ public class Mecanum_auto extends LinearOpMode {
             gromit.right_back.setPower(0);
         }
         else {
-            gromit.left_front.setPower(-1.0);
-            gromit.left_back.setPower(-1.0);
-            gromit.right_front.setPower( 1.0);
-            gromit.right_back.setPower( 1.0);
+            gromit.left_front.setPower(-power);
+            gromit.left_back.setPower(-power);
+            gromit.right_front.setPower( power);
+            gromit.right_back.setPower( power);
 
-            sleep(50);
-            gromit.left_front.setPower(1.0);
-            gromit.left_back.setPower(1.0);
-            gromit.right_front.setPower(-1.0);
-            gromit.right_back.setPower(-1.0);
-            sleep(50);
+            sleep(70);
+            gromit.left_front.setPower(power);
+            gromit.left_back.setPower(power);
+            gromit.right_front.setPower(-power);
+            gromit.right_back.setPower(-power);
+            gromit.jewelsservo.setPosition(0.2);
+            sleep(70);
 
             gromit.left_front.setPower(0);
             gromit.left_back.setPower(0);
