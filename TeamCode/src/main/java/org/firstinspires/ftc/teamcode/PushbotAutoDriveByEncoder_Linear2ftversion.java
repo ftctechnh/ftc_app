@@ -108,7 +108,7 @@ public class PushbotAutoDriveByEncoder_Linear2ftversion extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  28,  28, 5.0);
+        encoderDrive(DRIVE_SPEED,  7,  7, 5.0);
 
         // robot.claw.setPosition(1.0);sleep(1000);
         //
