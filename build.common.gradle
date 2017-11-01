@@ -1,7 +1,6 @@
 // common build setup for all modules
 
 android {
-
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 23
