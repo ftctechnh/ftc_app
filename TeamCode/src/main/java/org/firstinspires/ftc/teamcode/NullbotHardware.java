@@ -239,7 +239,7 @@ public class NullbotHardware {
      */
     public void setMotorSpeeds(double[] speeds) {
         for (int i = 0; i < motorArr.length; i++) {
-            driveInterface[i].setPower(clamp(speeds[i]));
+            motorArr[i].setPower(clamp(speeds[i]));
         }
     }
 
@@ -447,8 +447,8 @@ public class NullbotHardware {
         rightBlockClaw.setPosition(160.0/255.0);
     }
 
-    public final double RELIC_CLAW_OPEN_POSITION = 40.0/255.0;
-    public final double RELIC_CLAW_CLOSED_POSITION = 200.0/255.0;
+    public final double RELIC_CLAW_OPEN_POSITION = 100.0/255.0;
+    public final double RELIC_CLAW_CLOSED_POSITION = 0.0/255.0;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
     public void openRelicClaw() {relicClaw.setPosition(RELIC_CLAW_OPEN_POSITION); RELIC_CLAW_IS_OPEN = true;}
@@ -463,8 +463,8 @@ public class NullbotHardware {
     }
 
     public double relicFipperPosition = 80;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 88.0/255.0;
-    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 75.0/255.0;
+    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 74.0/255.0;
+    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 63.0/255.0;
 
     public void extendFlipper() {
         relicClawFlipper.setPosition(RELIC_CLAW_FLIPPER_EXTENDED_POSITION);
