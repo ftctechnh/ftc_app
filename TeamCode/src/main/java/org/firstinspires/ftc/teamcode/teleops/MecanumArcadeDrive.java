@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robotplus.gamepadwrapper.ControllerWrapper;
@@ -26,7 +27,7 @@ public class MecanumArcadeDrive extends OpMode {
     private MecanumDrive drivetrain;
 
     private DcMotor raiser;
-    private DcMotor grabber;
+    private Servo grabber;
 
     @Override
     public void init() {
@@ -37,7 +38,7 @@ public class MecanumArcadeDrive extends OpMode {
         drivetrain = (MecanumDrive) robot.getDrivetrain();
 
         raiser = hardwareMap.dcMotor.get("raiser");
-        grabber = hardwareMap.dcMotor.get("grabber");
+        grabber = hardwareMap.servo.get("grabber");
 
         raiser.setDirection(DcMotorSimple.Direction.REVERSE);
     }
@@ -71,12 +72,12 @@ public class MecanumArcadeDrive extends OpMode {
 
         // Disabled gripper during open house because hardware hoohas
         if(gamepad1.left_bumper){
-            grabber.setPower(0.5);
+            grabber.setPosition(Math.min(0, grabber.getPosition() - 0.01));
         } else if (gamepad1.right_bumper){
-            grabber.setPower(-0.5);
-        } else {
-            grabber.setPower(0);
+            grabber.setPosition(Math.max(1, grabber.getPosition() + 0.01));
         }
+
+        telemetry.addData("Servo Position", grabber.getPosition());
 
 
         /*
