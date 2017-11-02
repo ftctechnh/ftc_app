@@ -110,11 +110,11 @@ MasterHardwareClass robot = new MasterHardwareClass();
                     double GRX = gamepad1.right_stick_x;
                     double GLX = gamepad1.left_stick_x;
 
-
                     final double v1 = +GRX;
                     final double v2 = -GRX;
                     final double v3 = +GRX;
                     final double v4 = -GRX;
+
                     frontLeft = v1;
                     frontRight = v2;
                     backLeft = v3;
@@ -136,7 +136,6 @@ MasterHardwareClass robot = new MasterHardwareClass();
                         robot.backRightMotor.setPower(v4);
                     robot.BackRightPower = backRight;
                 }
-
                 //Hey there!
 
                 double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -149,18 +148,18 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 double GRX = gamepad1.right_stick_x;
                 double GLX = gamepad1.left_stick_x;
 
-
                 final double v1 = GLY + GRX + GLX;
-                final double v2 = GLY + GRX - GLX;
-                final double v3 = GLY - GRX - GLX;
+                final double v2 = GLY - GRX - GLX;
+                final double v3 = GLY + GRX - GLX;
                 final double v4 = GLY - GRX + GLX;
+
                 frontLeft = v1;
                 frontRight = v2;
                 backLeft = v3;
                 backRight = v4;
 
                 if (robot.FrontLeftPower != frontLeft) {
-                    robot.frontLeftMotor.setPower(v1);
+                    robot.frontLeftMotor.setPower(-v1);
                     robot.FrontLeftPower = frontLeft;
                 }
                 if (robot.FrontRightPower != frontRight) {
@@ -173,7 +172,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 }
                 if (robot.BackRightPower != backRight)
                     robot.backRightMotor.setPower(v4);
-                robot.BackRightPower = backRight;
+                    robot.BackRightPower = backRight;
 
             }
         }
