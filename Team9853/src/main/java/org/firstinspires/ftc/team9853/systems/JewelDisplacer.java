@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.Robot;
+import org.chathamrobotics.common.systems.RackAndPinion;
+import org.chathamrobotics.common.utils.HardwareListeners;
+import org.chathamrobotics.common.utils.IsBusyException;
 import org.chathamrobotics.common.utils.RobotLogger;
 
 import java.util.Timer;
@@ -20,7 +23,7 @@ public class JewelDisplacer {
     private static final Timer timer = new Timer();
 
     private final Servo jewelArmServo;
-    private final CRServo armShifterServo;
+    private final RackAndPinion rackAndPinion;
     private final ColorSensor jewelColorSensor;
     private final RobotLogger logger;
 
@@ -36,7 +39,7 @@ public class JewelDisplacer {
      * @return          the built JewelDisplacer
      */
     public static JewelDisplacer build(Robot robot) {
-        return build(robot.hardwareMap, robot.log);
+        return build(robot.hardwareMap, robot, robot.log);
     }
 
     /**
@@ -48,10 +51,10 @@ public class JewelDisplacer {
      * @param logger        the robot's logger
      * @return              the built JewelDisplacer
      */
-    public static JewelDisplacer build(HardwareMap hardwareMap, RobotLogger logger) {
+    public static JewelDisplacer build(HardwareMap hardwareMap, HardwareListeners hardwareListener, RobotLogger logger) {
         return new JewelDisplacer(
                 hardwareMap.servo.get("JewelArm"),
-                hardwareMap.crservo.get("ArmShifter"),
+                RackAndPinion.build(hardwareMap, hardwareListener, logger),
                 hardwareMap.colorSensor.get("JewelSensor"),
                 logger
         );
@@ -60,13 +63,13 @@ public class JewelDisplacer {
     /**
      * Creates a new instance of JewelDisplacer
      * @param jewelArmServo     the arm the drops to knock over the jewel
-     * @param armShifterServo   the servo used to shift the arm right and left
+     * @param rackAndPinion     the rack and pinion
      * @param jewelColorSensor  the color sensor used to identify the jewel on the right
      * @param logger            the logger to use for debugging
      */
-    public JewelDisplacer(Servo jewelArmServo, CRServo armShifterServo, ColorSensor jewelColorSensor, RobotLogger logger) {
+    public JewelDisplacer(Servo jewelArmServo, RackAndPinion rackAndPinion, ColorSensor jewelColorSensor, RobotLogger logger) {
         this.jewelArmServo = jewelArmServo;
-        this.armShifterServo = armShifterServo;
+        this.rackAndPinion = rackAndPinion;
         this.jewelColorSensor = jewelColorSensor;
 
         this.logger = logger;
@@ -94,78 +97,19 @@ public class JewelDisplacer {
         }
     }
 
-    public void shiftLeftSync() {
-        logger.debug("Shifting jewel arm to the left");
-        long end = System.currentTimeMillis() + TIME_SHIFT_LEFT;
-
-        setShiftPower(-1);
-
-        //noinspection StatementWithEmptyBody
-        while (System.currentTimeMillis() < end) {
-            // delay
-        }
-
-        setShiftPower(0);
-        logger.debug("Finished shifting jewel arm to the left");
+    public void shiftLeft() throws IsBusyException {
+        rackAndPinion.moveToLower();
     }
 
-    public void shiftLeft() {
-        shiftLeft(null);
+    public void shiftLeftSync() throws InterruptedException, IsBusyException {
+        rackAndPinion.moveToLowerSync();
     }
 
-    public void shiftLeft(Runnable cb) {
-        logger.debug("Shifting jewel arm to the left");
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                setShiftPower(0);
-                logger.debug("Finished shifting jewel arm to the left");
-
-                if (cb != null) cb.run();
-            }
-        }, TIME_SHIFT_LEFT);
-
-        setShiftPower(-1);
+    public void shiftRight() throws IsBusyException {
+        rackAndPinion.moveToUpper();
     }
 
-    public void shiftRightSync() {
-        logger.debug("Shifting jewel arm to the right");
-        long end = System.currentTimeMillis() + TIME_SHIFT_RIGHT;
-
-        setShiftPower(1);
-
-        //noinspection StatementWithEmptyBody
-        while (System.currentTimeMillis() < end) {
-            // delay
-        }
-
-        setShiftPower(0);
-        logger.debug("Finished shifting jewel arm to the right");
-    }
-
-    public void shiftRight() {
-        shiftRight(null);
-    }
-
-    public void shiftRight(Runnable cb) {
-        logger.debug("Shifting jewel arm to the right");
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                setShiftPower(0);
-                logger.debug("Finished shifting jewel arm to the right");
-
-                if (cb != null) cb.run();
-            }
-        }, TIME_SHIFT_RIGHT);
-
-        setShiftPower(1);
-    }
-
-    private void setShiftPower(double power) {
-        synchronized ( armShifterServo ) {
-            armShifterServo.setPower(1);
-        }
+    public void shiftRightSync() throws InterruptedException, IsBusyException {
+        rackAndPinion.moveToUpperSync();
     }
 }

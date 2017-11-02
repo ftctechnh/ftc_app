@@ -3,8 +3,11 @@ package org.firstinspires.ftc.team9853.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 
+import org.chathamrobotics.common.utils.Controller;
 import org.chathamrobotics.common.utils.TeleOpMode;
+import org.chathamrobotics.common.utils.Vector;
 import org.firstinspires.ftc.team9853.Robot9853;
 
 /**
@@ -14,50 +17,47 @@ import org.firstinspires.ftc.team9853.Robot9853;
 @TeleOp(name = "Basic Drive")
 public class BasicDrive extends OpMode {
     private Robot9853 robot;
-    private long lastPressA;
-    private long lastPressB;
-    private long pressBuffer = 500;
-    private double scale = 1;
+    private Controller controller1;
+    private Servo topLeftLift, topRightLift, bottomLeftLift, bottomRightLift;
 
     @Override
     public void init() {
-        robot = new Robot9853(hardwareMap, telemetry);
+        robot = Robot9853.build(this);
         robot.init();
+
+        topLeftLift = hardwareMap.servo.get("TopLeftLift");
+        topRightLift = hardwareMap.servo.get("TopRightLift");
+        bottomLeftLift = hardwareMap.servo.get("BottomLeftLift");
+        bottomRightLift = hardwareMap.servo.get("BottomRightLift");
+
+        bottomRightLift.setPosition(0.6);
+        topLeftLift.setPosition(0.6);
+
+        topRightLift.setPosition(0.6);
+        bottomLeftLift.setPosition(0.6);
+
+        controller1 = new Controller(gamepad1);
     }
 
     @Override
     public void loop() {
-        if (isA(gamepad1) && scale < 1) {
-            scale = 1 / (Math.pow(scale, -1) - 1);
+        controller1.update();
+        robot.driveWithControls(gamepad1);
+
+        if (controller1.aState == Controller.ButtonState.TAPPED) {
+            bottomRightLift.setPosition(0.6);
+            topLeftLift.setPosition(0.6);
+
+            topRightLift.setPosition(0.4);
+            bottomLeftLift.setPosition(0.4);
         }
 
-        if (isB(gamepad1)) {
-            scale = 1 / (Math.pow(scale, -1) + 1);
+        if (controller1.bState == Controller.ButtonState.TAPPED) {
+            bottomRightLift.setPosition(0);
+            topLeftLift.setPosition(0);
+
+            topRightLift.setPosition(1);
+            bottomLeftLift.setPosition(1);
         }
-
-        robot.log.debug("Scale", scale);
-
-        double magnitude = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y) * scale;
-        double direction = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
-
-        robot.driver.setDrivePower(direction, magnitude, gamepad1.right_stick_x);
-    }
-
-    private boolean isA(Gamepad gp) {
-        if (gp.a && System.currentTimeMillis() - pressBuffer >= lastPressA) {
-            lastPressA = System.currentTimeMillis();
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isB(Gamepad gp) {
-        if (gp.b && System.currentTimeMillis() - pressBuffer >= lastPressB) {
-            lastPressB = System.currentTimeMillis();
-            return true;
-        };
-
-        return false;
     }
 }
