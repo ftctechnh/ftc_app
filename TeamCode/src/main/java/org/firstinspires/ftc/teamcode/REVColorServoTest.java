@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -46,16 +46,11 @@ import java.util.Locale;
 /*
  * This is an example LinearOpMode that shows how to use
  * the REV Robotics Color-Distance Sensor.
- *
- * It assumes the sensor is configured with the name "sensor_color_distance".
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Sensor: REVColorDistance", group = "Sensor")
-@Disabled                            // Comment this out to add to the opmode list
-public class SensorREVColorDistance extends LinearOpMode {
-
+@Autonomous(name = "REVColorServoTest", group = "Sensor")
+//@Disabled                            // Comment this out to add to the opmode list
+public class REVColorServoTest extends LinearOpMode {
+    TestHardwareClass robot = new TestHardwareClass();
     /**
      * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
      * It has a light/distance (range) sensor.  It also has an RGB color sensor.
@@ -73,21 +68,13 @@ public class SensorREVColorDistance extends LinearOpMode {
      * to the target object.  Note that the distance sensor saturates at around 2" (5 cm).
      *
      */
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
 
     @Override
     public void runOpMode() {
-
-        // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-
-        // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        robot.init(hardwareMap);
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
-
         // values is a reference to the hsvValues array.
         final float values[] = hsvValues;
 
@@ -99,7 +86,7 @@ public class SensorREVColorDistance extends LinearOpMode {
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
+        double xPos;
         // wait for the start button to be pressed.
         waitForStart();
 
@@ -109,18 +96,45 @@ public class SensorREVColorDistance extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (robot.sensorColorRight.red() * SCALE_FACTOR),
+                    (int) (robot.sensorColorRight.green() * SCALE_FACTOR),
+                    (int) (robot.sensorColorRight.blue() * SCALE_FACTOR),
                     hsvValues);
-
+            xPos  =  gamepad1.right_stick_x;
+            robot.gemServo.setPosition(xPos);
             // send the info back to driver station using telemetry function.
-            telemetry.addData("Distance (cm)", String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
+            telemetry.addData("Distance (cm)R",
+                    String.format(Locale.US, "%.02f", robot.sensorDistanceRight.getDistance(DistanceUnit.CM)));
+            telemetry.addData("AlphaR", robot.sensorColorRight.alpha());
+            telemetry.addData("RedR  ", robot.sensorColorRight.red());
+            telemetry.addData("GreenR", robot.sensorColorRight.green());
+            telemetry.addData("BlueR ", robot.sensorColorRight.blue());
+            telemetry.addData("HueR", hsvValues[0]);
+
+            // change the background color to match the color detected by the RGB sensor.
+            // pass a reference to the hue, saturation, and value array as an argument
+            // to the HSVToColor method.
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+                }
+            });
+
+            telemetry.update();
+            Color.RGBToHSV((int) (robot.sensorColorLeft.red() * SCALE_FACTOR),
+                    (int) (robot.sensorColorLeft.green() * SCALE_FACTOR),
+                    (int) (robot.sensorColorLeft.blue() * SCALE_FACTOR),
+                    hsvValues);
+            /*xPos  =  gamepad1.right_stick_x;
+            robot.gemServo.setPosition(xPos);*/
+            // send the info back to driver station using telemetry function.
+            telemetry.addData("Distance (cm)R",
+                    String.format(Locale.US, "%.02f", robot.sensorDistanceLeft.getDistance(DistanceUnit.CM)));
+            telemetry.addData("AlphaL", robot.sensorColorLeft.alpha());
+            telemetry.addData("RedL  ", robot.sensorColorLeft.red());
+            telemetry.addData("GreenL", robot.sensorColorLeft.green());
+            telemetry.addData("BlueL ", robot.sensorColorLeft.blue());
+            telemetry.addData("HueL", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
