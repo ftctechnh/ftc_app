@@ -50,6 +50,8 @@ public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
             return this.x + (this.width / 2);
         }
 
+        public boolean isSeen() {return (x != 0) || (y != 0) || (width != 0) || (height != 0);}
+
         @Override public String toString()
         {
             return String.format("x: %d, y: %d, w: %d, h: %d", this.x, this.y, this.width, this.height);
