@@ -71,9 +71,7 @@ public class AutonomousColorServoTest extends LinearOpMode {
         robot.init(hardwareMap);
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
         // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
 
         // sometimes it helps to multiply the raw RGB values with a scale factor
         // to amplify/attentuate the measured values.
@@ -93,20 +91,10 @@ public class AutonomousColorServoTest extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (robot.sensorColorRight.red() * SCALE_FACTOR),
-                    (int) (robot.sensorColorRight.green() * SCALE_FACTOR),
-                    (int) (robot.sensorColorRight.blue() * SCALE_FACTOR),
-                    hsvValues);
-            xPos  =  gamepad1.right_stick_x;
+            xPos  =  .5;
             robot.gemServo.setPosition(xPos);
             // send the info back to driver station using telemetry function.
-            telemetry.addData("Distance (cm)R",
-                    String.format(Locale.US, "%.02f", robot.sensorDistanceRight.getDistance(DistanceUnit.CM)));
-            telemetry.addData("AlphaR", robot.sensorColorRight.alpha());
             telemetry.addData("RedR  ", robot.sensorColorRight.red());
-            telemetry.addData("GreenR", robot.sensorColorRight.green());
-            telemetry.addData("BlueR ", robot.sensorColorRight.blue());
-            telemetry.addData("HueR", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
@@ -118,20 +106,12 @@ public class AutonomousColorServoTest extends LinearOpMode {
             });
 
             telemetry.update();
-            Color.RGBToHSV((int) (robot.sensorColorLeft.red() * SCALE_FACTOR),
-                    (int) (robot.sensorColorLeft.green() * SCALE_FACTOR),
-                    (int) (robot.sensorColorLeft.blue() * SCALE_FACTOR),
-                    hsvValues);
+
             /*xPos  =  gamepad1.right_stick_x;
             robot.gemServo.setPosition(xPos);*/
             // send the info back to driver station using telemetry function.
-            telemetry.addData("Distance (cm)R",
-                    String.format(Locale.US, "%.02f", robot.sensorDistanceLeft.getDistance(DistanceUnit.CM)));
-            telemetry.addData("AlphaL", robot.sensorColorLeft.alpha());
             telemetry.addData("RedL  ", robot.sensorColorLeft.red());
-            telemetry.addData("GreenL", robot.sensorColorLeft.green());
-            telemetry.addData("BlueL ", robot.sensorColorLeft.blue());
-            telemetry.addData("HueL", hsvValues[0]);
+
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
@@ -144,7 +124,8 @@ public class AutonomousColorServoTest extends LinearOpMode {
 
             telemetry.update();
         }
-
+        xPos  =  0;
+        robot.gemServo.setPosition(xPos);
         // Set the panel back to the default color
         relativeLayout.post(new Runnable() {
             public void run() {
