@@ -30,8 +30,7 @@ public class PixyCamTest extends OpMode
             telemetry.addData("Red ball:", redBlock.toString());
             blueBlock = pixyCam.GetBiggestBlock(2);
             telemetry.addData("Blue ball:", blueBlock.toString());
-
-            telemetry.addData("Blue ball:", blueBlock.toString());
         }
+        telemetry.update();
     }
 }
