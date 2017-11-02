@@ -69,13 +69,15 @@ public class MecanumArcadeDrive extends OpMode {
             raiser.setPower(0);
         }
 
+        // Disabled gripper during open house because hardware hoohas
         if(gamepad1.left_bumper){
-            grabber.setPower(1);
+            grabber.setPower(0.5);
         } else if (gamepad1.right_bumper){
-            grabber.setPower(-1);
+            grabber.setPower(-0.5);
         } else {
             grabber.setPower(0);
         }
+
 
         /*
         if (gamepad1.a) {
