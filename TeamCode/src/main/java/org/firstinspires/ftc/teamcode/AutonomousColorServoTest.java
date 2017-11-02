@@ -90,6 +90,8 @@ public class AutonomousColorServoTest extends LinearOpMode {
         double xPos;
         // wait for the start button to be pressed.
         waitForStart();
+        xPos = 0;
+
 
         // loop and read the RGB and distance data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
@@ -116,8 +118,7 @@ public class AutonomousColorServoTest extends LinearOpMode {
             /*xPos  =  gamepad1.right_stick_x;
             robot.gemServo.setPosition(xPos);*/
             // send the info back to driver station using telemetry function.
-            telemetry.addData("RedL  ", robot.sensorColorLeft.red());
-
+            telemetry.addData("RedL  ", robot.sensorColorRight.red());
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
@@ -129,9 +130,11 @@ public class AutonomousColorServoTest extends LinearOpMode {
             });
 
             telemetry.update();
+            xPos  =  0;
+            robot.gemServo.setPosition(xPos);
+            break
         }
-        xPos  =  0;
-        robot.gemServo.setPosition(xPos);
+
         // Set the panel back to the default color
         relativeLayout.post(new Runnable() {
             public void run() {
