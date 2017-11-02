@@ -5,12 +5,6 @@
  */
 
 buildscript {
-    if (! project.hasProperty('androidPluginVersion')) {
-        ext.androidPluginVersion = "2.3.3"
-    }
-
-    println "Using android build tools version $androidPluginVersion"
-
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
