@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Nithya on 10/29/2017.
@@ -50,4 +51,26 @@ public class NS_Robot_GoldenGears {
         driveLeftMotor.setPower(driveLeftPower);
         driveRightMotor.setPower(driveRightPower);
     }
+
+    public void RotateArm(double armPower){
+        double regulator = 0.10;
+        armElevationMotor.setPower(armPower * regulator);
+    }
+
+    public void ActuateClaw(boolean open){
+        double position;
+        double delta = 0.05;
+
+        if (open == true){
+            position = clawLeftServo.getPosition() - delta;
+        }
+        else {
+            position = clawLeftServo.getPosition() + delta;
+        }
+        position = Range.clip(position, 0.0, 1.0);
+
+        clawLeftServo.setPosition(position);
+        clawRightServo.setPosition(position);
+    }
+
 }
