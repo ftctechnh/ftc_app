@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,7 +13,7 @@ import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
 import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 
 
-@TeleOp(name="Main Tele-Op", group="_Competition")
+//@TeleOp(name="Main Tele-Op", group="_Competition")
 public class MainTeleOp extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();
@@ -23,7 +22,7 @@ public class MainTeleOp extends LinearOpMode {
 
     final double moveMotorThreshold = 0;
     final double triggerThreshold = 0.10;
-    final double minSlowModePower = 0.3;
+    final double minSlowModePower = 0.45;
     final int headingLockMS = 1000;
     double initialHeading;
     double desiredHeading;
@@ -76,7 +75,6 @@ public class MainTeleOp extends LinearOpMode {
         timeSinceSlowModeToggle = new ElapsedTime();
         totalElapsedTime = new ElapsedTime();
         timeAPressed = new ElapsedTime();
-        nonrelativeDriveModeEnabled = true;
         wasRightTriggerPressed = false;
         wasLeftTriggerPressed = false;
         wasBackPressed = false;

@@ -66,7 +66,7 @@ public class CompleteAutonomous extends LinearOpMode {
         telemetry.log().add("Robot started");
 
         updateBlocks();
-        
+
         // Higher x-values are on the right
 
         if (redBall.averageX() > blueBall.averageX()) {

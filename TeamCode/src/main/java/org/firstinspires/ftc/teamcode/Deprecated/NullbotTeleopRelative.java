@@ -1,11 +1,15 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.NullbotHardware;
+
 import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
 
+@Disabled
 @TeleOp(name="Nullbot: Teleop Relative", group="Nullbot")
 public class NullbotTeleopRelative extends LinearOpMode {
 
@@ -73,11 +77,7 @@ public class NullbotTeleopRelative extends LinearOpMode {
             telemetry.addLine()
                     .addData("Raw compass direction", robot.getCompassHeading());
             telemetry.addLine()
-                    .addData("Gyro error", robot.gyroError);
-            telemetry.addLine()
                     .addData("Error adjusted gyro direction", robot.getGyroHeading());
-            telemetry.addLine()
-                    .addData("Initial compass heading", robot.initialCompassHeading);
             telemetry.update(); // Send telemetry data to driver station
             // Run above code at 25hz
             robot.writeLogTick(gamepad1);

@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.NullbotHardware;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,8 +16,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-
 @Autonomous(name="Nullbot: Encoder Replay", group="Nullbot")
+@Disabled
 public class NullbotReplayMotorPowers extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();
