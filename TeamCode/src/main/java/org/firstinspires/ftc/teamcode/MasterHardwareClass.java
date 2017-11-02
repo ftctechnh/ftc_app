@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -9,11 +10,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 //This class defines all the specific hardware for a the BACONbot robot.
 
 public class MasterHardwareClass {
     /* Public OpMode members. */
+    ColorSensor sensorColorRight;
+    DistanceSensor sensorDistanceRight;
+    Servo gemServo;
+    ColorSensor sensorColorLeft;
+    DistanceSensor sensorDistanceLeft;
+    /* local OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
@@ -79,6 +93,14 @@ public class MasterHardwareClass {
 //        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        sensorColorRight = hwMap.get(ColorSensor.class, "colorsensor");
+        // get a reference to the distance sensor that shares the same name.
+        sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
+        //Second Color Sensor
+        sensorColorLeft = hwMap.get(ColorSensor.class,"othercolorsensor");
+        //Distance Sensor of the Second Color Sensor
+        sensorDistanceLeft = hwMap.get(DistanceSensor.class,"othercolorsensor");
+        gemServo = hwMap.get(Servo.class, "gemservo");
 
     }
 }

@@ -127,11 +127,11 @@ public class AutonomousColorServoTest extends LinearOpMode {
                     relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
                 }
             });
-
             telemetry.update();
+            xPos  =  0;
+            robot.gemServo.setPosition(xPos);
         }
-        xPos  =  0;
-        robot.gemServo.setPosition(xPos);
+
         // Set the panel back to the default color
         relativeLayout.post(new Runnable() {
             public void run() {
