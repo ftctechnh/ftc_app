@@ -50,7 +50,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <ImageView
       android:id="@+id/robotIcon"
-      android:src="@drawable/icon_robotcontroller"
+      android:src="@drawable/chatham_robotics_logo"
       android:layout_width="wrap_content"
       android:layout_height="fill_parent"
       android:adjustViewBounds="true"
