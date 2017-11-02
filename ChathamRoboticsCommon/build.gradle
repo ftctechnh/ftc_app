@@ -4,16 +4,6 @@
 apply plugin: 'com.android.library'
 
 
-// Java8 not fully supported in library projects yet, https://code.google.com/p/android/issues/detail?id=211386
-// this is a temporary workaround to get at least lambdas compiling
-if (androidPluginVersion == "2.3.3") {
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xbootclasspath/a:" + System.properties.get("java.home") + "/lib/rt.jar"
-        }
-    }
-}
-
 apply from: '../build.common.gradle'
 
-apply from: 'build.release.gradle'
+apply from: '../library.dependencies.gradle'
