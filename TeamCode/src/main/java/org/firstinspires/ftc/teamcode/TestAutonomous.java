@@ -39,6 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -47,7 +48,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Hey! This code runs mecanum drive!
  */
 
-@TeleOp(name = "!Test Autonomous", group = "BACONbot")
+@Autonomous(name = "!Test Autonomous", group = "BACONbot")
 //@Disabled
 public class TestAutonomous extends LinearOpMode {
 
@@ -70,36 +71,21 @@ public class TestAutonomous extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-//            double r = Math.hypot(-1, gamepad1.left_stick_y);
-//            r = r / 2; //Don't let rotation dominate movement
-//            double robotAngle = Math.atan2(gamepad1.left_stick_y, -1) - Math.PI / 4;
-//            double rightX = gamepad1.right_stick_x;
-
-            double GLY = gamepad1.left_stick_y;
-            double GRX = gamepad1.right_stick_x;
-            double GLX = -1;
+/*
+double r = Math.hypot(-1, gamepad1.left_stick_y);
+r = r / 2; //Don't let rotation dominate movement
+double robotAngle = Math.atan2(gamepad1.left_stick_y, -1) - Math.PI / 4;
+double rightX = gamepad1.right_stick_x;
+*/
 
 
-            final double v1 = GLY + GRX + GLX;
-            final double v2 = GLY + GRX - GLX;
-            final double v3 = GLY - GRX - GLX;
-            final double v4 = GLY - GRX + GLX;
+            double rot;
+            rot = 1;
 
-            setWheelPower(v1, v2, v3, v4);
-        }
-
-        /* While the gamepad's right joystick is moved, use this math to determine the power to set on
-           the wheels */
-        if (gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
-//                double r = Math.hypot(-1, gamepad1.left_stick_y);
-//                double robotAngle = Math.atan2(gamepad1.left_stick_y, -1) - Math.PI / 4;
-//                double rightX = gamepad1.right_stick_x;
-            final double v1 = gamepad1.left_stick_y + gamepad1.right_stick_x + -1;
-            final double v2 = gamepad1.left_stick_y + gamepad1.right_stick_x - -1;
-            final double v3 = gamepad1.left_stick_y - gamepad1.right_stick_x - -1;
-            final double v4 = gamepad1.left_stick_y - gamepad1.right_stick_x + -1;
-
-            setWheelPower(v1, v2, v3, v4);
+            if (rot <= 1 && rot >= -1) {
+                setWheelPower(-rot, rot, rot, -rot, 5);
+                setWheelPower(0, 0, 0, 0, 0);
+            }
         }
     }
 
@@ -108,18 +94,18 @@ public class TestAutonomous extends LinearOpMode {
      ***********************************************************************************************/
 
     /* This function sets power to the wheels based on values given*/
-    public void setWheelPower(double v1, double v2, double v3, double v4){
+    public void setWheelPower(double v1, double v2, double v3, double v4, double length) {
         /*These values are used for the drive*/
         double frontLeft;
         double frontRight;
         double backLeft;
         double backRight;
-
+        length=length*1000;
+        int temp=(int)(length);
         frontLeft = v1;
         frontRight = v2;
         backLeft = v3;
         backRight = v4;
-
         if (robot.FrontLeftPower != frontLeft) {
             robot.frontLeftMotor.setPower(v1);
             robot.FrontLeftPower = frontLeft;
@@ -132,11 +118,15 @@ public class TestAutonomous extends LinearOpMode {
             robot.backLeftMotor.setPower(v3);
             robot.BackLeftPower = backLeft;
         }
-        if (robot.BackRightPower != backRight)
+        if (robot.BackRightPower != backRight) {
             robot.backRightMotor.setPower(v4);
             robot.BackRightPower = backRight;
+        }
 
+        sleep(temp);
     }
 }
+
+
 
 
