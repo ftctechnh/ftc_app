@@ -44,7 +44,7 @@ import java.util.Locale;
  * This is an example LinearOpMode that shows how to use
  * the REV Robotics Color-Distance Sensor.
  */
-@Autonomous(name = "REVColorServoTest", group = "Sensor")
+@Autonomous(name = "AutonomousColorServoTest", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
 public class AutonomousColorServoTest extends LinearOpMode {
     TestHardwareClass robot = new TestHardwareClass();
