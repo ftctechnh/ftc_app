@@ -42,16 +42,18 @@ public class BlueAutoAudi extends LinearOpMode
         //decode pictogram (below)
         switch (newRobot.getGlyphCipher())
         {
-            case 'l': robot.driveStraight_In(x);
+            case 'l': robot.driveStraight_In(30);
                 break;
-            case 'c': robot.driveStraight_In(x);
+            case 'c': robot.driveStraight_In(36);
                 break;
-            case 'r': robot.driveStraight_In(x);
+            case 'r': robot.driveStraight_In(42);
                 break;
-            default: robot.driveStraight_In(center);
+            default: robot.driveStraight_In(36);
+                break;
         }
         robot.pivot_IMU(90, .25);
-        robot.driveStraight_In(x);
+        robot.driveStraight_In(12);
+        robot.driveStraight_In(18,.25);
         //lower door attachment to ground
         //open door to release glyph
         robot.driveStraight_In(-2);
