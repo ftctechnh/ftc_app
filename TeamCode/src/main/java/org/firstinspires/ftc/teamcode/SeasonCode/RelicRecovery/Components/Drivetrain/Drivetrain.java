@@ -109,6 +109,7 @@ public class Drivetrain extends RobotComponent
      */
     public void run(double drivePower , double rotatePower , boolean scale)
     {
+        // Scale first- that way the multipliers don't reduce the power to like .1 or something
         if(scale)
         {
             drivePower = UtilBasic.scaleValue(drivePower);
@@ -117,6 +118,13 @@ public class Drivetrain extends RobotComponent
 
         drivePower *= _powerMultiplier;
         rotatePower *= _powerMultiplier;
+
+        // We don't want to reverse rotation- that stays constant
+        if(_state == State.REVERSE_FAST || _state == State.REVERSE_SLOW)
+        {
+            rotatePower *= -1;
+        }
+
 
         leftMotor.setPower(drivePower + rotatePower);
         rightMotor.setPower(drivePower - rotatePower);
