@@ -1,3 +1,15 @@
+/*
+    Team 5893 Direct Current
+
+    Authors: Matthew Fan
+    Date Created: 2017-11-01
+
+    Please adhere to these units when working in this project:
+
+    Time: Milliseconds
+    Distance: Centimeters
+    Angle: Degrees (mathematical orientation)
+ */
 @file:Suppress("PackageDirectoryMismatch")
 package org.directcurrent.core
 

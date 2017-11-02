@@ -25,7 +25,10 @@ public abstract class RobotComponent
 
 
     /**
-     * Initializes the hardware mapping object by creating a new instance
+     * Initializes the hardware mapping object by creating a new instance. When overriding this
+     * method, do any hardware mapping specific to your component in here.
+     *
+     * Call this for each component in your RobotBase.init() method
      *
      * @param BASE The robot base used to create the hardware mapper
      */

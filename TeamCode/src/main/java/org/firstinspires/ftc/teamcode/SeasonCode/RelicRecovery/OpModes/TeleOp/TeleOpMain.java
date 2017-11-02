@@ -12,7 +12,8 @@ import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivet
  * Main TeleOp for Relic Recovery Robot
  */
 @TeleOp(name = "Main TeleOp" , group = "Relic Recovery")
-public class OpMain extends LinearOpMode
+@SuppressWarnings("unused")
+public class TeleOpMain extends LinearOpMode
 {
     private Base _base = new Base();        // Robot base
 
@@ -21,11 +22,15 @@ public class OpMain extends LinearOpMode
     private UtilToggle _toggleSlow = new UtilToggle();
 
 
-
+    /**
+     * Runs the main TeleOp
+     *
+     * @throws InterruptedException Exception when OpMode is interrupted
+     */
     @Override
     public void runOpMode() throws InterruptedException
     {
-        _base.init(hardwareMap);
+        _base.init(hardwareMap , this);
 
         waitForStart();
 
@@ -59,6 +64,9 @@ public class OpMain extends LinearOpMode
     }
 
 
+    /**
+     * Runs components based on input given
+     */
     private void _runComponents()
     {
         _base.drivetrain.run(-gamepad1.left_stick_y , gamepad1.right_stick_x , true);
