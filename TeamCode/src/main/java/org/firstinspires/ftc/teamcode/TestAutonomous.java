@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Hey! This code runs mecanum drive!
  */
 
-@TeleOp(name = "!David Mechanum Wheel Drive!", group = "BACONbot")
+@TeleOp(name = "!Test Autonomous", group = "BACONbot")
 //@Disabled
 public class TestAutonomous extends LinearOpMode {
 
