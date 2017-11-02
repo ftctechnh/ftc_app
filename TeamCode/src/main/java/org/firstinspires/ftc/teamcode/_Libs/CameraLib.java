@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode._Libs;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 
@@ -157,6 +159,13 @@ public class CameraLib {
         }
     }
 
+    // filter interface ---
+    // client can use this to collapse the full set of recognized hues and brightnesses to a smaller set.
+    // e.g. if you want both blue and cyan to be coded as "blue".
+    public interface Filter {
+        public int map(int i);
+    }
+
     // a simple wrapper around the data returned by the camera callback
     // assumes the data is in NV21 format (for now)
     // see http://www.fourcc.org/yuv.php#NV21 for descriptions of various formats
@@ -201,13 +210,18 @@ public class CameraLib {
 
         // return a string representation of the dominant colors along the given scanline
         public String scanlineDomColor(int y, int bandWidth) {
+            return scanlineDomColor(y, bandWidth, null);
+        }
+        public String scanlineDomColor(int y, int bandWidth, Filter f) {
             // scan the given horizontal line of the image for red, green, and blue strips and report
             // dominant pixel color of each bandWidth-pixel band
-            Histogram hist = new Histogram(15);      // wrgbcym01234567
+            Histogram hist = new Histogram(15);
             String sDom = "";               // string describing the line of pixels ito "dominant color"
             for (int x=0; x<cameraSize().width; x++) {
                 int pix = getPixel(x, y);                    // get the pixel
                 int domClr = CameraLib.Pixel.dominantColor(pix);    // get the dominant color of the pixel
+                if (f != null)                                 // if a mapping filter was provided
+                    domClr = f.map(domClr);                    // use it to map values
                 hist.add(domClr);                            // add a sample to Histogram for this band
                 if (x%bandWidth == (bandWidth-1)) {
                     sDom += CameraLib.Pixel.colorName(hist.maxBin());  // add symbol string for most popular color in this band
@@ -219,13 +233,18 @@ public class CameraLib {
 
         // return a string representation of the dominant colors along the given scanline
         public String scanlineHue(int y, int bandWidth) {
+            return scanlineHue(y, bandWidth, null);
+        }
+        public String scanlineHue(int y, int bandWidth, Filter f) {
             // scan the given horizontal line of the image for red, green, and blue strips and report
             // dominant pixel hue of each bandWidth-pixel band
-            Histogram hist = new Histogram(15);      // wrgbcym01234567
+            Histogram hist = new Histogram(15);
             String sDom = "";               // string describing the line of pixels ito "dominant color"
             for (int x=0; x<cameraSize().width; x++) {
                 int pix = getPixel(x, y);                        // get the pixel
                 int domClr = CameraLib.Pixel.hue(pix);           // get the Hue of the pixel
+                if (f != null)                                 // if a mapping filter was provided
+                    domClr = f.map(domClr);                    // use it to map values
                 hist.add(domClr);                                // add the sample to Histogram for this band
                 if (x%bandWidth == (bandWidth-1)) {
                     sDom += CameraLib.Pixel.colorName(hist.maxBin());  // add symbol string for most popular color in this band
@@ -237,14 +256,19 @@ public class CameraLib {
 
         // return a string representation of the most popular dominant color in each column-band of the image
         public String columnDom(int bandWidth) {
+            return columnDom(bandWidth, null);
+        }
+        public String columnDom(int bandWidth, Filter f) {
             // scan the given horizontal line of the image for red, green, and blue strips and report
             // dominant pixel hue of each bandWidth-pixel band
-            Histogram hist = new Histogram(15);      // wrgbcym01234567
+            Histogram hist = new Histogram(15);
             String sDom = "";               // string describing the line of pixels ito "dominant color"
             for (int x=0; x<cameraSize().width; x++) {
                 for (int y=0; y<cameraSize().height; y++) {
                     int pix = getPixel(x, y);                        // get the pixel
                     int domClr = CameraLib.Pixel.dominantColor(pix);           // get the dominant color of the pixel
+                    if (f != null)                                   // if a mapping filter was provided
+                        domClr = f.map(domClr);                      // use it to map values
                     hist.add(domClr);                                // add the sample to Histogram for this band
                 }
                 if (x%bandWidth == (bandWidth-1)) {
@@ -257,15 +281,20 @@ public class CameraLib {
 
         // return a string representation of the most popular hue in each column-band of the image
         public String columnHue(int bandWidth) {
+            return columnHue(bandWidth, null);
+        }
+        public String columnHue(int bandWidth, Filter f) {
             // scan the given horizontal line of the image for red, green, and blue strips and report
             // dominant pixel hue of each bandWidth-pixel band
-            Histogram hist = new Histogram(15);      // wrgbcym01234567
+            Histogram hist = new Histogram(15);
             String sDom = "";               // string describing the line of pixels ito "dominant color"
             for (int x=0; x<cameraSize().width; x++) {
                 for (int y=0; y<cameraSize().height; y++) {
                     int pix = getPixel(x, y);                        // get the pixel
-                    int domClr = CameraLib.Pixel.hue(pix);           // get the Hue of the pixel
-                    hist.add(domClr);                                // add the sample to Histogram for this band
+                    int hue = CameraLib.Pixel.hue(pix);              // get the Hue of the pixel
+                    if (f != null)                                   // if a mapping filter was provided
+                        hue = f.map(hue);                            // use it to map values
+                    hist.add(hue);                                   // add the sample to Histogram for this band
                 }
                 if (x%bandWidth == (bandWidth-1)) {
                     sDom += CameraLib.Pixel.colorName(hist.maxBin());  // add symbol string for most popular color in this band
@@ -273,6 +302,52 @@ public class CameraLib {
                 }
             }
             return sDom;
+        }
+
+        // find the dominant color of pixels in a given rectangle of the image
+        public int rectHue(Rect r) {
+            return rectHue(r, null);
+        }
+        public int rectHue(Rect r, Filter f) {
+            Histogram hist = new Histogram(15);
+            for (int x = r.left; x < r.right; x++) {
+                for (int y = r.bottom; y < r.top; y++) {
+                    int pix = getPixel(x, y);                       // get the pixel
+                    int hue = CameraLib.Pixel.hue(pix);             // get the Hue of the pixel
+                    if (f != null)                                  // if a mapping filter was provided
+                        hue = f.map(hue);                           // use it to map values
+                    hist.add(hue);                                  // add the sample to Histogram for this rectangle
+                }
+            }
+            return hist.maxBin();
+        }
+
+        // compute the centroid of pixels of a given color in the given rectangle of the image
+        public Point colorCentroid(Rect r, int color) {
+            return colorCentroid(r, color, null);
+        }
+        public Point colorCentroid(Rect r, int color, Filter f) {
+            int sumX = 0;
+            int sumY = 0;
+            int nPix = 0;
+            for (int x = r.left; x < r.right; x++) {
+                for (int y = r.bottom; y < r.top; y++) {
+                    int pix = getPixel(x, y);                        // get the pixel
+                    int hue = CameraLib.Pixel.hue(pix);
+                    if (f != null)                                   // if a mapping filter was provided
+                        hue = f.map(hue);                            // use it to map values
+                    if (color == hue) {          // if the Hue of this pixel is what we're looking for ...
+                        sumX += x;
+                        sumY += y;
+                        nPix++;
+                    }
+                }
+            }
+            if (nPix == 0)
+                nPix++;
+            int centX = sumX / nPix;
+            int centY = sumY / nPix;
+            return new Point(centX, centY);
         }
 
         // return the given scanline as a Scanline object (an array of byte grayscale values)

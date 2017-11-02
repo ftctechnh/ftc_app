@@ -32,6 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode._Test._AutoLib;
 
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.hardware.Camera;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -92,6 +94,16 @@ class VuforiaGetMarkStep extends AutoLib.Step {
     }
 }
 
+class BlueFilter implements CameraLib.Filter {
+    public int map(int hue) {
+        // map 4 (cyan) to 5 (blue)
+        if (hue == 4)
+            return 5;
+        else
+            return hue;
+    }
+}
+
 // this is a guide step that starts up the Camera and uses it to
 // determine when the appropriate CryptoBox is in sight, at which time
 // it terminates the GuidedTerminatedDriveStep of which it is part
@@ -103,11 +115,13 @@ class LookForCryptoBoxStep extends AutoLib.Step {
     OpMode mOpMode;
     int mCBColumn;              // which Cryptobox column we're looking for
     Pattern mPattern;           // compiled regexp pattern we'll use to find the pattern we're looking for
+    CameraLib.Filter mBlueFilter;       // filter to map cyan to blue
 
     public LookForCryptoBoxStep(OpMode opMode, String pattern) {
         mOpMode = opMode;
         mCBColumn = -1;     // unknown
         mPattern = Pattern.compile(pattern);    // look for the given pattern of column colors
+        mBlueFilter = new BlueFilter();
     }
 
     public void setVuMarkString(String s) { mVuMarkString = s; }
@@ -126,15 +140,15 @@ class LookForCryptoBoxStep extends AutoLib.Step {
         CameraLib.CameraImage frame = mCamAcqFr.loop();
 
         if (frame != null) {
-            // get filtered view of colors (hues) by column bands
+            // look for cryptobox columns
+            // get unfiltered view of colors (hues) by full-image-height column bands
             final int bandSize = 6;
             String colHue = frame.columnHue(bandSize);
 
             // log debug info ...
             mOpMode.telemetry.addData("hue columns", colHue);
 
-            // look for indicated column of Cryptobox and return true when we're there
-            // search the scanline for the target pattern
+            // look for occurrences of given pattern of column colors and report them in telemetry
             int patternStart = 0;
             int patternSize = 0;
             for (int i=0; i<colHue.length(); i++) {
@@ -143,13 +157,27 @@ class LookForCryptoBoxStep extends AutoLib.Step {
                 if (m.lookingAt() /* && m.groupCount() == 1 */) {
                     mOpMode.telemetry.addData("found ", "%s from %d to %d", mPattern.pattern(), i+m.start(), i+m.end()-1);
                     i += m.end();       // skip over this match
-                    /*
-                    mCamAcqFr.stop();       // release the camera
-                    mCameraActive = false;
-                    return true;
-                    */
                 }
             }
+
+            // test ball finding functions - point camera at scene where the two balls fill the frame (mostly)
+            Camera.Size cSize = frame.cameraSize();
+            mOpMode.telemetry.addData("image rectangle", "w=%d h=%d", cSize.width, cSize.height);
+
+            // here we use a BlueFilter to treat cyan pixels as blue
+            Rect rectLeft = new Rect(0, cSize.height-1, cSize.width/2, 0);
+            int hueLeft = frame.rectHue(rectLeft, mBlueFilter);
+            mOpMode.telemetry.addData("left ball color", CameraLib.Pixel.colorName(hueLeft));
+            Point centLeft = frame.colorCentroid(rectLeft, hueLeft, mBlueFilter);
+            mOpMode.telemetry.addData("left ball rectangle", rectLeft);
+            mOpMode.telemetry.addData("left ball centroid", centLeft);
+
+            Rect rectRight = new Rect(cSize.width/2, cSize.height-1, cSize.width-1, 0);
+            int hueRight = frame.rectHue(rectRight, mBlueFilter);
+            mOpMode.telemetry.addData("right ball color", CameraLib.Pixel.colorName(hueRight));
+            Point centRight = frame.colorCentroid(rectRight, hueRight, mBlueFilter);
+            mOpMode.telemetry.addData("right ball rectangle", rectRight);
+            mOpMode.telemetry.addData("right ball centroid", centRight);
         }
 
         return false;  // haven't found anything yet
