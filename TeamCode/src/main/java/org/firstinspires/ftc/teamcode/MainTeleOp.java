@@ -23,7 +23,7 @@ public class MainTeleOp extends LinearOpMode {
 
     final double moveMotorThreshold = 0;
     final double triggerThreshold = 0.10;
-    final double minSlowModePower = 0.15;
+    final double minSlowModePower = 0.3;
     final int headingLockMS = 1000;
     double initialHeading;
     double desiredHeading;
@@ -59,7 +59,7 @@ public class MainTeleOp extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap, this, true, gamepad2);
 
-        lift = new ConstrainedPIDMotor(robot.lift, 100, 0.6, 0.6, 0, 2500);
+        lift = new ConstrainedPIDMotor(robot.lift, 100, 0.6, 0.6, 0, -2500);
         zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.3, 0, 12288);
 
         waitForStart();
@@ -99,17 +99,11 @@ public class MainTeleOp extends LinearOpMode {
             desiredMax = 1;
 
             // Toggle slow mode
-            if (gamepad1.left_trigger > triggerThreshold && !wasLeftTriggerPressed &&
-                    timeSinceSlowModeToggle.milliseconds() > 100) {// Left trigger activates slow mode
-                slowMode = !slowMode;
-                timeSinceSlowModeToggle.reset();
-            }
-
-            wasRightTriggerPressed = gamepad1.right_trigger > triggerThreshold;
-
-            if (slowMode) {
-                desiredMax = minSlowModePower;
-                // Turn on motor encoders
+            if (gamepad1.left_trigger > triggerThreshold) {// Left trigger activates slow mode
+                desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
+                robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            } else {
+                robot.setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
 
@@ -129,17 +123,17 @@ public class MainTeleOp extends LinearOpMode {
                     zType.setDirection(COAST);
                 } else {
                     // Adjust lift
-                    if (gamepad1.dpad_up) {
+                    if (gamepad1.dpad_up || gamepad2.dpad_up) {
                         lift.setDirection(FORWARD);
-                    } else if (gamepad1.dpad_down) {
+                    } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
                         lift.setDirection(BACKWARD);
                     } else {
                         lift.setDirection(HOLD);
                     }
 
-                    if (gamepad1.dpad_right) {
+                    if (gamepad1.dpad_right || gamepad2.dpad_right) {
                         zType.setDirection(FORWARD);
-                    } else if (gamepad1.dpad_left) {
+                    } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                         zType.setDirection(BACKWARD);
                     } else {
                         zType.setDirection(HOLD);
