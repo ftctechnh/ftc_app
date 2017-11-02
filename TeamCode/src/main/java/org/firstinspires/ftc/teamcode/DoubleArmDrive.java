@@ -25,9 +25,9 @@ public class DoubleArmDrive extends OpMode {
     private double upDownHighEnd = 1.00;
     private double upDownLowEnd = 0.00;
     private double bigRotationSpeed = 0;
-    private double bigRotationInit = 1.0;
     private double bigRotationHighEnd = -0.05;
     private double bigRotationLowEnd = -0.23;
+    private double bigRotationInit = -0.15;
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;
@@ -58,8 +58,8 @@ public class DoubleArmDrive extends OpMode {
         FrontLeft.setPower(left);
         RearRight.setPower(right);
         RearLeft.setPower(left);
-
-        bigRotationSpeed = Range.scale(gamepad2.left_stick_y,-1.0,1.0,bigRotationLowEnd,bigRotationHighEnd);
+        bigRotationSpeed = Range.clip(bigRotationSpeed + (gamepad2.left_stick_y/600), bigRotationLowEnd, bigRotationHighEnd);
+        //bigRotationSpeed = Range.scale(gamepad2.left_stick_y,-1.0,1.0,bigRotationLowEnd,bigRotationHighEnd);
         upDownPosition = Range.clip((gamepad2.right_stick_y*upDownSpeed/16) + upDownPosition,upDownLowEnd, upDownHighEnd);
         motorSpeed = Range.clip(gamepad2.right_trigger - gamepad2.left_trigger, -1, 1);
 
@@ -69,7 +69,6 @@ public class DoubleArmDrive extends OpMode {
         if (gamepad2.b){
                 clawPosition = clawLowEnd;
             }
-
 
         UpDown.setPosition(upDownPosition);
         UpDown.setPosition(upDownPosition);

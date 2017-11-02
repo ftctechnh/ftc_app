@@ -43,6 +43,7 @@ public class AutonomousSetup extends LinearOpMode {
         BackRightMotor.setDirection(DcMotor.Direction.REVERSE);
         */
         cS.enableLed(true);
+        telemetry.addData("it did the thing", 1);
         telemetry.addData("Anything you need to know before starting", 1);
         telemetry.update();
         waitForStart();

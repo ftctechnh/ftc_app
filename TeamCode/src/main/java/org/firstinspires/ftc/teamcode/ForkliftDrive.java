@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.util.Range;
 public class ForkliftDrive extends OpMode {
     private Servo Claw;
     private double clawPosition = 0.0;
-    private double clawHighEnd = 0.6;
-    private double clawLowEnd = 0.05;
+    private double clawHighEnd = 1.0;
+    private double clawLowEnd = 0.3;
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;
@@ -48,19 +48,14 @@ public class ForkliftDrive extends OpMode {
         RearRight.setPower(right);
         RearLeft.setPower(left);
 
-
         if (gamepad1.a) {
-            if (Claw.getPosition() < clawHighEnd) {
-                clawPosition = clawHighEnd;
-                //clawPosition = clawPosition + 0.001;
-            }
+            clawPosition = clawHighEnd;
+            //clawPosition = clawPosition + 0.001;
+
         }
         if (gamepad1.b) {
-            if (Claw.getPosition() > clawLowEnd) {
-                clawPosition = clawLowEnd;
-                //clawPosition = clawPosition - 0.001;
-
-            }
+            clawPosition = clawLowEnd;
+            //clawPosition = clawPosition - 0.001;
         }
         Claw.setPosition(clawPosition);
         Claw.setPosition(clawPosition);
@@ -70,6 +65,7 @@ public class ForkliftDrive extends OpMode {
         DrawerSlide.setPower(DrawerSlideSpeed);
         telemetry.addData("Current Claw Position", Claw.getPosition());
     }
+
     public void reverseMotor(DcMotor motor) {
 
         motor.setDirection(DcMotor.Direction.REVERSE);
