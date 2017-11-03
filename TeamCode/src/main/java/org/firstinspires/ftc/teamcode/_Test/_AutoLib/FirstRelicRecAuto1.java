@@ -164,7 +164,9 @@ class LookForCryptoBoxStep extends AutoLib.Step {
             Camera.Size cSize = frame.cameraSize();
             mOpMode.telemetry.addData("image rectangle", "w=%d h=%d", cSize.width, cSize.height);
 
-            // here we use a BlueFilter to treat cyan pixels as blue
+            // find the most popular color in the left and right halves of the frame and then
+            // find the centroid of all the pixels of that color (presumably the centroid of the ball) in each half frame.
+            // we use a BlueFilter to treat all cyan pixels as blue
             Rect rectLeft = new Rect(0, cSize.height-1, cSize.width/2, 0);
             int hueLeft = frame.rectHue(rectLeft, mBlueFilter);
             mOpMode.telemetry.addData("left ball color", CameraLib.Pixel.colorName(hueLeft));
@@ -178,6 +180,14 @@ class LookForCryptoBoxStep extends AutoLib.Step {
             Point centRight = frame.colorCentroid(rectRight, hueRight, mBlueFilter);
             mOpMode.telemetry.addData("right ball rectangle", rectRight);
             mOpMode.telemetry.addData("right ball centroid", centRight);
+
+            // try comparing red vs. blue pixel counts in the two halves of the frame
+            int countRedLeft = frame.colorCount(rectLeft, CameraLib.colors.eRed.ordinal());
+            int countBlueLeft = frame.colorCount(rectLeft, CameraLib.colors.eBlue.ordinal(), mBlueFilter);
+            int countRedRight = frame.colorCount(rectRight, CameraLib.colors.eRed.ordinal());
+            int countBlueRight = frame.colorCount(rectRight, CameraLib.colors.eBlue.ordinal(), mBlueFilter);
+            mOpMode.telemetry.addData("Red counts", "L=%d  R=%d", countRedLeft, countRedRight);
+            mOpMode.telemetry.addData("Blue counts", "L=%d  R=%d", countBlueLeft, countBlueRight);
         }
 
         return false;  // haven't found anything yet

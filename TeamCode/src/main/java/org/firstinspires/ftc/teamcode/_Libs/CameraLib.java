@@ -11,6 +11,13 @@ import android.hardware.Camera;
 import java.nio.IntBuffer;
 import java.util.List;
 
+import static org.firstinspires.ftc.teamcode._Libs.CameraLib.colors.eBlue;
+import static org.firstinspires.ftc.teamcode._Libs.CameraLib.colors.eCyan;
+import static org.firstinspires.ftc.teamcode._Libs.CameraLib.colors.eGreen;
+import static org.firstinspires.ftc.teamcode._Libs.CameraLib.colors.eMagenta;
+import static org.firstinspires.ftc.teamcode._Libs.CameraLib.colors.eRed;
+import static org.firstinspires.ftc.teamcode._Libs.CameraLib.colors.eYellow;
+
 /**
  * Library of utility classes that support acquiring images from the phone's camera
  * Created by phanau on 12/30/15.
@@ -80,11 +87,13 @@ public class CameraLib {
         }
     }
 
+    public enum colors { eWhite, eRed, eYellow, eGreen, eCyan, eBlue, eMagenta, eGray };
 
     // a simple utility class that provides a few more operations on an RGB pixel encoded as an int
     // by extending the Android Color class that does most of what we need.
     public static class Pixel extends Color {
         static float[] mHSV = new float[3];     // scratch storage - allocated once at start-up
+
 
         public static String toString(int rgb) {
             return "pixel("+Color.red(rgb)+","+green(rgb)+","+blue(rgb)+")";
@@ -114,22 +123,22 @@ public class CameraLib {
             final float n = 1.5F;    // dominance factor threshold
             int domClr = 0;     // default is white (i.e. shades of gray)
             if (red(pix)>n*green(pix) && red(pix)>n*blue(pix))
-                domClr = 1;     // red
+                domClr = eRed.ordinal();     // red
             else
             if (green(pix)>n*red(pix) && green(pix)>n*blue(pix))
-                domClr = 3;     // green
+                domClr = eGreen.ordinal();     // green
             else
             if (blue(pix)>n*red(pix) && blue(pix)>n*green(pix))
-                domClr = 5;     // blue
+                domClr = eBlue.ordinal();     // blue
             else
             if (blue(pix)>n*red(pix) && green(pix)>n*red(pix))
-                domClr = 4;     // cyan
+                domClr = eCyan.ordinal();     // cyan
             else
             if (blue(pix)>n*green(pix) && red(pix)>n*green(pix))
-                domClr = 6;     // magenta
+                domClr = eMagenta.ordinal();     // magenta
             else
             if (red(pix)>n*blue(pix) && green(pix)>n*blue(pix))
-                domClr = 2;     // yellow
+                domClr = eYellow.ordinal();     // yellow
             // if it has no discernible hue, encode its gray level 0-7
             if (domClr == 0) {
                 float value = red(pix)*0.2f + green(pix)*0.7f + blue(pix)*0.1f; // 0..255
@@ -348,6 +357,26 @@ public class CameraLib {
             int centX = sumX / nPix;
             int centY = sumY / nPix;
             return new Point(centX, centY);
+        }
+
+        // compute the number of pixels of a given color in the given rectangle of the image
+        public int colorCount(Rect r, int color) {
+            return colorCount(r, color, null);
+        }
+        public int colorCount(Rect r, int color, Filter f) {
+            int count = 0;
+            for (int x = r.left; x < r.right; x++) {
+                for (int y = r.bottom; y < r.top; y++) {
+                    int pix = getPixel(x, y);                        // get the pixel
+                    int hue = CameraLib.Pixel.hue(pix);
+                    if (f != null)                                   // if a mapping filter was provided
+                        hue = f.map(hue);                            // use it to map values
+                    if (color == hue) {          // if the Hue of this pixel is what we're looking for ...
+                        count++;                 // increment the count
+                    }
+                }
+            }
+            return count;
         }
 
         // return the given scanline as a Scanline object (an array of byte grayscale values)
