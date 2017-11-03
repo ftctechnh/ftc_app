@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.chathamrobotics.common.utils.hardware.HardwareListeners;
+import org.chathamrobotics.common.utils.hardware.HardwareListener;
 import org.chathamrobotics.common.utils.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 
-public abstract class Robot extends HardwareListeners {
+public abstract class Robot extends HardwareListener {
     private static final int MAX_MOTOR_RPM = 160;
 
     private interface HardwareDebugFunc<E extends HardwareDevice> {

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.hardware.LimitSwitch;
 import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
-import org.chathamrobotics.common.utils.hardware.HardwareListeners;
+import org.chathamrobotics.common.utils.hardware.HardwareListener;
 import org.chathamrobotics.common.utils.hardware.IsBusyException;
 import org.chathamrobotics.common.utils.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -24,7 +24,7 @@ public class RackAndPinion {
     private final CRServo crServo;
     private final LimitSwitch upperLimit;
     private final LimitSwitch lowerLimit;
-    private final HardwareListeners hardwareListener;
+    private final HardwareListener hardwareListener;
     private final RobotLogger logger;
 
     private boolean isBusy = false;
@@ -44,7 +44,7 @@ public class RackAndPinion {
      * @param telemetry     the opmode's telemetry
      * @return              the built rack and pinion system
      */
-    public static RackAndPinion build(HardwareMap hardwareMap, HardwareListeners hardwareListener, Telemetry telemetry) {
+    public static RackAndPinion build(HardwareMap hardwareMap, HardwareListener hardwareListener, Telemetry telemetry) {
         return build(hardwareMap, hardwareListener, new RobotLogger("RackAndPinion", telemetry));
     }
 
@@ -54,7 +54,7 @@ public class RackAndPinion {
      * @param logger        the robot's logger
      * @return              the built rack and pinion system
      */
-    public static RackAndPinion build(HardwareMap hardwareMap, HardwareListeners hardwareListener, RobotLogger logger) {
+    public static RackAndPinion build(HardwareMap hardwareMap, HardwareListener hardwareListener, RobotLogger logger) {
         return new RackAndPinion(
                 hardwareMap.crservo.get("CRServo"),
                 new ModernRoboticsLimitSwitch(hardwareMap.digitalChannel.get("UpperLimit")),
@@ -73,7 +73,7 @@ public class RackAndPinion {
             CRServo crServo,
             LimitSwitch upperLimit,
             LimitSwitch lowerLimit,
-            HardwareListeners hardwareListener,
+            HardwareListener hardwareListener,
             RobotLogger logger
     ) {
         this.crServo = crServo;

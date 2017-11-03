@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.systems.RackAndPinion;
-import org.chathamrobotics.common.utils.hardware.HardwareListeners;
+import org.chathamrobotics.common.utils.hardware.HardwareListener;
 import org.chathamrobotics.common.utils.hardware.IsBusyException;
 import org.chathamrobotics.common.utils.robot.RobotLogger;
 
@@ -49,7 +49,7 @@ public class JewelDisplacer {
      * @param logger        the robot's logger
      * @return              the built JewelDisplacer
      */
-    public static JewelDisplacer build(HardwareMap hardwareMap, HardwareListeners hardwareListener, RobotLogger logger) {
+    public static JewelDisplacer build(HardwareMap hardwareMap, HardwareListener hardwareListener, RobotLogger logger) {
         return new JewelDisplacer(
                 hardwareMap.servo.get("JewelArm"),
                 RackAndPinion.build(hardwareMap, hardwareListener, logger),

@@ -19,8 +19,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @Last Modified time: 10/28/2017
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class HardwareListeners {
-    private static final String TAG = HardwareListeners.class.getSimpleName();
+public class HardwareListener {
+    private static final String TAG = HardwareListener.class.getSimpleName();
 
     /**
      * A condition for a hardware device to meet. Returns true if the condition is met.
@@ -39,7 +39,7 @@ public class HardwareListeners {
      * Listens on a hardware device and calls the callback if the condition is met.
      * @param <H>   the hardware device type
      */
-    public class HardwareListener<H extends HardwareDevice> {
+    public class HardwareListenerFunc<H extends HardwareDevice> {
         private final Runnable callback;
         private final HardwareCondition<H> condition;
 
@@ -47,21 +47,21 @@ public class HardwareListeners {
         private int callCount = 0;
 
         /**
-         * Creates a new instance of {@link HardwareListener}
+         * Creates a new instance of {@link HardwareListenerFunc}
          * @param condition the condition for the hardware device to meet
          * @param callback  the callback to call when the condition is met
          */
-        public HardwareListener(HardwareCondition<H> condition, Runnable callback) {
+        public HardwareListenerFunc(HardwareCondition<H> condition, Runnable callback) {
             this(condition, callback, 0);
         }
 
         /**
-         * Creates a new instance of {@link HardwareListener}
+         * Creates a new instance of {@link HardwareListenerFunc}
          * @param condition the condition for the hardware device to meet
          * @param callback  the callback to call when the condition is met
          * @param maxCalls  the maximum number of times the callback can be called
          */
-        public HardwareListener(HardwareCondition<H> condition, Runnable callback, int maxCalls) {
+        public HardwareListenerFunc(HardwareCondition<H> condition, Runnable callback, int maxCalls) {
             this.condition = condition;
             this.callback = callback;
             this.maxCalls = maxCalls;
@@ -90,7 +90,7 @@ public class HardwareListeners {
     }
 
     // the listeners tha have been set
-    private final HashMap<HardwareDevice, ArrayList<HardwareListener>> hardwareListeners = new HashMap<>();
+    private final HashMap<HardwareDevice, ArrayList<HardwareListenerFunc>> hardwareListeners = new HashMap<>();
     private final ReadWriteLock hardwareListenersLock = new ReentrantReadWriteLock();
 
     // loops through all of the listeners and calls them if the conditions are met
@@ -102,8 +102,8 @@ public class HardwareListeners {
 
             try {
                 // loop through all the listeners and call them if the conditions are met
-                for (Map.Entry<HardwareDevice, ArrayList<HardwareListener>> hardwareEntry : hardwareListeners.entrySet()) {
-                    for (HardwareListener listener : hardwareEntry.getValue()) {
+                for (Map.Entry<HardwareDevice, ArrayList<HardwareListenerFunc>> hardwareEntry : hardwareListeners.entrySet()) {
+                    for (HardwareListenerFunc listener : hardwareEntry.getValue()) {
                         synchronized (hardwareEntry.getKey()) {
                             // TODO: find a way to check that the device matches the listener just to be safe
                             //noinspection unchecked
@@ -146,7 +146,7 @@ public class HardwareListeners {
      * @param <H>       the hardware device type
      */
     public <H extends HardwareDevice> void on(H device, HardwareCondition<H> condition, Runnable callback) {
-        on(device, new HardwareListener<>(condition, callback));
+        on(device, new HardwareListenerFunc<>(condition, callback));
     }
 
     /**
@@ -155,12 +155,12 @@ public class HardwareListeners {
      * @param listener  the listener to use
      * @param <H>       the hardware device type
      */
-    public <H extends HardwareDevice> void on(H device, HardwareListener<H> listener) {
+    public <H extends HardwareDevice> void on(H device, HardwareListenerFunc<H> listener) {
         // lock and reads until this listener has been added
         hardwareListenersLock.writeLock().lock();
 
         try {
-            ArrayList<HardwareListener> listeners = hardwareListeners.get(device);
+            ArrayList<HardwareListenerFunc> listeners = hardwareListeners.get(device);
 
             // if the list has not been initialized yet
             if (listeners == null) {
@@ -184,8 +184,8 @@ public class HardwareListeners {
      * @param listener  the listener to use
      * @param <H>       the hardware device type
      */
-    public <H extends HardwareDevice> void once(H device, HardwareListener<H> listener) {
-        on(device, new HardwareListener<>(listener.condition, listener.callback, 1));
+    public <H extends HardwareDevice> void once(H device, HardwareListenerFunc<H> listener) {
+        on(device, new HardwareListenerFunc<>(listener.condition, listener.callback, 1));
     }
 
     /**
@@ -196,7 +196,7 @@ public class HardwareListeners {
      * @param <H>       the hardware device type
      */
     public <H extends HardwareDevice> void once(H device, HardwareCondition<H> condition, Runnable callback) {
-        on(device, new HardwareListener<>(condition, callback, 1));
+        on(device, new HardwareListenerFunc<>(condition, callback, 1));
     }
 
     /**
