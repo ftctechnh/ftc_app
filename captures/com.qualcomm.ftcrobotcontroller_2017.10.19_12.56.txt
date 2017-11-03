@@ -1,0 +1,65 @@
+Activity Resolver Table:
+  Non-Data Actions:
+      android.hardware.usb.action.USB_DEVICE_ATTACHED:
+        424a5288 com.qualcomm.ftcrobotcontroller/org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity filter 424c1f30
+          Action: "android.hardware.usb.action.USB_DEVICE_ATTACHED"
+      android.intent.action.MAIN:
+        424a5288 com.qualcomm.ftcrobotcontroller/org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity filter 424c6090
+          Action: "android.intent.action.MAIN"
+          Category: "android.intent.category.LAUNCHER"
+
+Receiver Resolver Table:
+  Non-Data Actions:
+      android.intent.action.QUICKBOOT_POWERON:
+        423baf28 com.qualcomm.ftcrobotcontroller/org.firstinspires.ftc.ftccommon.internal.RunOnBoot filter 4249e808
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Category: "android.intent.category.DEFAULT"
+      android.intent.action.BOOT_COMPLETED:
+        423baf28 com.qualcomm.ftcrobotcontroller/org.firstinspires.ftc.ftccommon.internal.RunOnBoot filter 4249e808
+          Action: "android.intent.action.BOOT_COMPLETED"
+          Action: "android.intent.action.QUICKBOOT_POWERON"
+          Category: "android.intent.category.DEFAULT"
+
+Key Set Manager:
+  [com.qualcomm.ftcrobotcontroller]
+      Signing KeySets: 3, 1
+
+Packages:
+  Package [com.qualcomm.ftcrobotcontroller] (41b126f0):
+    userId=10120 gids=[3001, 3003, 3002, 1028, 1015]
+    pkg=Package{42758590 com.qualcomm.ftcrobotcontroller}
+    codePath=/data/app/com.qualcomm.ftcrobotcontroller-2.apk
+    resourcePath=/data/app/com.qualcomm.ftcrobotcontroller-2.apk
+    nativeLibraryPath=/data/app-lib/com.qualcomm.ftcrobotcontroller-2
+    versionCode=24 targetSdk=19
+    versionName=3.4
+    applicationInfo=ApplicationInfo{426b0ab8 com.qualcomm.ftcrobotcontroller}
+    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP LARGE_HEAP ]
+    dataDir=/data/data/com.qualcomm.ftcrobotcontroller
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    usesLibraries:
+      android.test.runner
+    usesLibraryFiles:
+      /system/framework/android.test.runner.jar
+    timeStamp=2017-10-19 12:54:41
+    firstInstallTime=2017-09-19 17:09:21
+    lastUpdateTime=2017-10-19 12:54:45
+    signatures=PackageSignatures{41b127b8 [41b14520]}
+    permissionsFixed=true haveGids=true installStatus=1
+    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP LARGE_HEAP ]
+    User 0:  installed=true blocked=false stopped=false notLaunched=false enabled=0
+    grantedPermissions:
+      android.permission.READ_EXTERNAL_STORAGE
+      android.permission.RECEIVE_BOOT_COMPLETED
+      android.permission.CAMERA
+      android.permission.WRITE_SETTINGS
+      android.permission.WRITE_EXTERNAL_STORAGE
+      android.permission.BLUETOOTH
+      android.permission.INTERNET
+      android.permission.CHANGE_WIFI_STATE
+      android.permission.ACCESS_WIFI_STATE
+      android.permission.CHANGE_NETWORK_STATE
+      android.permission.BLUETOOTH_ADMIN
+      android.permission.WAKE_LOCK
+      android.permission.ACCESS_NETWORK_STATE

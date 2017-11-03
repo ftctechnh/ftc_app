@@ -41,7 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.Locale;
 
 /*
- * This is an example LinearOpMode that shows how to use
+ * This is an example LinearOpMode that shows how to use boi
  * the REV Robotics Color-Distance Sensor.
  */
 @Autonomous(name = "AutonomousColorServoTest", group = "Sensor")
