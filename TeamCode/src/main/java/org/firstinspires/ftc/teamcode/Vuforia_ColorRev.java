@@ -301,6 +301,8 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_back.setPower(0);
         }
 
+        // rotate 90 to deliver block
+
 
        // mecanumDriveGyro(1.0,0.0,0.0,0);
        while (opModeIsActive()) {
