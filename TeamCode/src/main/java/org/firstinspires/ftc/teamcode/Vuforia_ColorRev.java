@@ -11,6 +11,8 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -266,14 +268,25 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_back.setPower(0);
         }
 
+
+        gromit.left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        gromit.right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        gromit.left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gromit.right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // dirve forward some Left Center Right
         //  vuMark
         if (vuMark == RelicRecoveryVuMark.LEFT){
+
             gromit.left_front.setPower(power);
             gromit.left_back.setPower(power);
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
-            sleep(800);
+
+            while(gromit.left_front.getCurrentPosition() <= 1500){
+                idle();
+            }
+
             gromit.left_front.setPower(0);
             gromit.left_back.setPower(0);
             gromit.right_front.setPower(0);
@@ -284,7 +297,11 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.left_back.setPower(power);
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
-            sleep(1200);
+
+            while(gromit.left_front.getCurrentPosition() <= 1500+600){
+                idle();
+            }
+
             gromit.left_front.setPower(0);
             gromit.left_back.setPower(0);
             gromit.right_front.setPower(0);
@@ -294,7 +311,11 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.left_back.setPower(power);
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
-            sleep(1600);
+
+            while(gromit.left_front.getCurrentPosition() <= 1500+2*600){
+                idle();
+            }
+
             gromit.left_front.setPower(0);
             gromit.left_back.setPower(0);
             gromit.right_front.setPower(0);
