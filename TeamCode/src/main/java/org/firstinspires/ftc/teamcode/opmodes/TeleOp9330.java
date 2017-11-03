@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
+import org.firstinspires.ftc.teamcode.subsystems.GlyphLift9330;
+import org.firstinspires.ftc.teamcode.subsystems.RelicPickup9330;
 
 /**
  * Created by robot on 9/25/2017.
@@ -15,7 +17,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 public class TeleOp9330 extends OpMode {
     Hardware9330 robotMap = new Hardware9330();
     Clamps9330 clamps;
-    CrystalArm9330 BBoopJR;
+    CrystalArm9330 crystalArm;
+    GlyphLift9330 glyphLift9330;
+    RelicPickup9330 relicPickup;
 
 
     float yPower = 0;
@@ -30,8 +34,10 @@ public class TeleOp9330 extends OpMode {
     @Override
     public void init() {
         robotMap.init(hardwareMap);
-         clamps = new Clamps9330(robotMap);
-         BBoopJR = new CrystalArm9330(robotMap);
+        clamps = new Clamps9330(robotMap);
+        crystalArm = new CrystalArm9330(robotMap);
+        glyphLift9330 = new GlyphLift9330(robotMap);
+        relicPickup = new RelicPickup9330(robotMap);
     }
 
     /*
@@ -57,36 +63,62 @@ public class TeleOp9330 extends OpMode {
         yPower = gamepad1.left_stick_y;
         spinPower = gamepad1.right_stick_x;
 
+        //Set powers of the motors
         Hardware9330.leftMotor.setPower(-yPower - spinPower);
         Hardware9330.rightMotor.setPower(yPower - spinPower);
 
-
-
+        //If "A" is pressed on the gamepad toggle the lower clamp
         if(gamepad2.a) {
             if (aBtnHeld == true) return;
             telemetry.addData("Program", "Low Clamp toggled!");
             clamps.toggleLowClamp();
-            telemetry.update();
             aBtnHeld = true;
-        } else aBtnHeld = false;
+        } else {
+            aBtnHeld = false;
+        }
 
+        //If "B" is pressed on the gamepad toggle the high clamp
         if(gamepad2.b) {
             if (bBtnHeld == true) return;
             telemetry.addData("Program", "High Clamp toggled!");
             clamps.toggleHighClamp();
             bBtnHeld = true;
-        } else bBtnHeld = false;
+        } else {
+            bBtnHeld = false;
+        }
 
-        if(gamepad2.dpad_up) { telemetry.addData("Program", "Lift rising!"); }//Hardware9330.liftMotor.setPower(liftSpeed);  }
-        else if (gamepad2.dpad_down) { telemetry.addData("Program", "Lift falling!"); } //Hardware9330.liftMotor.setPower(-liftSpeed);  }
-//        else Hardware9330.liftMotor.setPower(0);
+        //If up on dpad is pressed, move motor up
+        //If down on dpad is pressed, move motor down
+        //Otherwise motor is not moving
+        if(gamepad2.dpad_up) {
+            telemetry.addData("Program", "Lift rising!");
+            Hardware9330.glyphLiftMotor.setPower(liftSpeed);
+        } else if (gamepad2.dpad_down) {
+            telemetry.addData("Program", "Lift falling!");
+            Hardware9330.glyphLiftMotor.setPower(-liftSpeed);
+        } else {
+            Hardware9330.glyphLiftMotor.setPower(0);
+        }
 
+        //If "X" is pressed on the gamepad toggle the crystal arm servo
         if(gamepad2.x){
             if(xBtnHeld == true) return;
             telemetry.addData("Program", "Arm toggled!");
-            BBoopJR.toggleArmServo();
+            crystalArm.toggleArmServo();
             xBtnHeld = true;
         } else xBtnHeld = false;
+
+        //If left is pressed on the dpad toggle the hand servo
+        if(gamepad2.dpad_left){
+            relicPickup.toggleHand();
+            telemetry.addData("Program", "Hand toggled!!!!!!!!");
+        }
+
+        //If right is pressed on the dpad toggle the wrist servo
+        if (gamepad2.dpad_right){
+            relicPickup.toggleWrist();
+            telemetry.addData("Program", "Wrist toggled!!! WOW!");
+        }
 
         telemetry.update();
 }
