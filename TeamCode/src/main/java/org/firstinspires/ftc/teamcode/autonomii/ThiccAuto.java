@@ -47,6 +47,7 @@ public class ThiccAuto extends LinearOpMode {
         //Checks that blue jewel is closer towards the cryptoboxes
         if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]){
             drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.2, 0);
+            
         }
 
     }
