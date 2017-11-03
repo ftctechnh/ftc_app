@@ -23,7 +23,7 @@ public class GlyphGripper {
     private RobotLogger logger;
 
     public static GlyphGripper build(Robot robot) {
-        return build(robot.hardwareMap, robot.log);
+        return build(robot.getHardwareMap(), robot.log);
     }
 
     public static GlyphGripper build(HardwareMap hardwareMap, RobotLogger logger) {

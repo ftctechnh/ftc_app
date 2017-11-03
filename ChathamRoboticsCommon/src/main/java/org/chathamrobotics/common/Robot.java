@@ -42,12 +42,12 @@ public abstract class Robot extends HardwareListeners {
     /**
      * The robot's hardware map
      */
-    public HardwareMap hardwareMap;
+    private HardwareMap hardwareMap;
 
     /**
      * The opmode's telemetry
      */
-    protected Telemetry telemetry;
+    private Telemetry telemetry;
 
     /**
      * A logger for the robot that logs to telemetry and logcat
@@ -139,6 +139,10 @@ public abstract class Robot extends HardwareListeners {
 
         stopAllMotors();
         setServosToRestPosition();
+    }
+
+    public HardwareMap getHardwareMap() {
+        return this.hardwareMap;
     }
 
     /**

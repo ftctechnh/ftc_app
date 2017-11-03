@@ -39,7 +39,7 @@ public class Robot9853 extends Robot {
     public void init() {
         driver = HolonomicDriver.build(this);
         glyphGripper = GlyphGripper.build(this);
-        lift = hardwareMap.dcMotor.get("Lift");
+        lift = getHardwareMap().dcMotor.get("Lift");
     }
 
     @Override

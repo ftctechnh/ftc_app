@@ -37,7 +37,7 @@ public class JewelDisplacer {
      * @return          the built JewelDisplacer
      */
     public static JewelDisplacer build(Robot robot) {
-        return build(robot.hardwareMap, robot, robot.log);
+        return build(robot.getHardwareMap(), robot, robot.log);
     }
 
     /**

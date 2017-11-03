@@ -35,7 +35,7 @@ public class RackAndPinion {
      * @return          the built rack and pinion system
      */
     public static RackAndPinion build(Robot robot) {
-        return build(robot.hardwareMap, robot, robot.log);
+        return build(robot.getHardwareMap(), robot, robot.log);
     }
 
     /**

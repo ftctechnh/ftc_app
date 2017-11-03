@@ -43,7 +43,7 @@ public class HolonomicDriver {
      * @return          the built {@link HolonomicDriver}
      */
     public static HolonomicDriver build(Robot robot) {
-        return build(robot.hardwareMap, robot.log);
+        return build(robot.getHardwareMap(), robot.log);
     }
 
     /**
