@@ -4,6 +4,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.Arrays;
 
+import static java.lang.Double.NaN;
+
 /*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
@@ -19,21 +21,21 @@ public class Vector {
      * @param vectors   the vectors to add together
      * @return          the result of the vector addition
      */
-    public static Vector add(Vector ...vectors) {
-            return Arrays.stream(vectors)
-                    .map(vector -> vector.components)
-                    .sorted((v1, v2) -> v1.length > v2.length ? 1 : -1)
-                    .reduce((v1, v2) -> {
-                        double[] comps = new double[v1.length];
-
-                        for (int i = 0; i < v1.length; i++)
-                            comps[i] = v1[i] + (i < v2.length ? v2[i] : 0);
-
-                        return comps;
-                    })
-                    .map(Vector::new)
-                    .orElse(null);
-    }
+//    public static Vector add(Vector ...vectors) {
+//            return Arrays.stream(vectors)
+//                    .map(vector -> vector.components)
+//                    .sorted((v1, v2) -> v1.length > v2.length ? 1 : -1)
+//                    .reduce((v1, v2) -> {
+//                        double[] comps = new double[v1.length];
+//
+//                        for (int i = 0; i < v1.length; i++)
+//                            comps[i] = v1[i] + (i < v2.length ? v2[i] : 0);
+//
+//                        return comps;
+//                    })
+//                    .map(Vector::new)
+//                    .orElse(null);
+//    }
 
     /**
      * Performs a dot product on the given vectors
@@ -184,6 +186,8 @@ public class Vector {
 
         for (int i = 0; i < components.length; i++) {
             result[i] = angleUnit.fromRadians(Math.acos(components[i] / mag));
+
+            if (result[i] == NaN) result[i] = 0;
         }
 
         return result;
