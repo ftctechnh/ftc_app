@@ -146,8 +146,7 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 telemetry.addData("claw", "rightPosition = %.2f", robot.rightClaw.getPosition());
                 telemetry.addData("DriveLeft", "%.2f", driveLeft);
                 telemetry.addData("DriveRight", "%.2f", driveRight);
-                telemetry.addData("RawDriveLeft", "%.2f", robot.leftDrive.getPower());
-                telemetry.addData("RawDriveRight", "%.2f", robot.rightDrive.getPower());
+                telemetry.addData("Speed", "%.2f", speedBonus);
                 telemetry.update();
 
                 // Pace this loop so jaw action is reasonable speed.
