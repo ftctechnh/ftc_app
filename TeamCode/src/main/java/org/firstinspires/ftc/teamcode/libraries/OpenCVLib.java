@@ -42,12 +42,20 @@ public abstract class OpenCVLib extends OpenCVLoad implements CameraBridgeViewBa
 
     private BlockingQueue<Mat> frameStore = new LinkedBlockingQueue<>(1);
 
+    private boolean loaded = false;
+
     public OpenCVLib(){
 
     }
 
     public OpenCVLib(View view){
         mView = view;
+    }
+
+
+
+    public void loadOpenCV() {
+        super.initOpenCV();
     }
 
     @Override

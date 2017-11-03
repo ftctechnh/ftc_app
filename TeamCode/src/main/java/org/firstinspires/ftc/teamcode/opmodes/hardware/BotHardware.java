@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Noah on 10/27/2017.
@@ -19,7 +20,8 @@ public class BotHardware {
         frontRight("fr", true),
         backRight("br", false),
         frontLeft("fl", false),
-        backLeft("bl", true);
+        backLeft("bl", true),
+        lift("l", false);
 
         private final String name;
         private final boolean reverse;
@@ -38,6 +40,27 @@ public class BotHardware {
         }
     }
 
+    public enum ServoE {
+        leftGrab("lg"),
+        rightGrab("rg");
+
+        public static final double rightGrabOpen = 0.75;
+        public static final double rightGrabClose = 0.95;
+
+        public static final double leftGrabOpen = 0.5;
+        public static final double leftGrabClose = 0.25;
+
+        private final String name;
+        public Servo servo;
+        ServoE(String name) {
+            this.name = name;
+        }
+
+        void initServo(OpMode mode) {
+            this.servo = mode.hardwareMap.get(Servo.class, this.name);
+        }
+    }
+
     //opmode pointer
     private final OpMode mode;
 
@@ -49,6 +72,8 @@ public class BotHardware {
     public void init() {
         //init all motors
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
+        //init all servos
+        for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
     }
 
     public void setLeftDrive(double power) {
@@ -61,7 +86,29 @@ public class BotHardware {
         Motor.frontRight.motor.setPower(power);
     }
 
+    public void setLift(double power) {
+        Motor.lift.motor.setPower(power);
+    }
+
     public void stopAll() {
         for(Motor motor : Motor.values()) motor.motor.setPower(0);
+    }
+
+    public void openGrab() {
+        ServoE.leftGrab.servo.setPosition(ServoE.leftGrabOpen);
+        ServoE.rightGrab.servo.setPosition(ServoE.rightGrabOpen);
+    }
+
+    public void closeGrab() {
+        ServoE.leftGrab.servo.setPosition(ServoE.leftGrabClose);
+        ServoE.rightGrab.servo.setPosition(ServoE.rightGrabClose);
+    }
+
+    public Servo getLeftLift() {
+        return ServoE.leftGrab.servo;
+    }
+
+    public Servo getRightLift() {
+        return ServoE.rightGrab.servo;
     }
 }

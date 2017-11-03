@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 @TeleOp(name = "Servo Calibrate", group = "Main")
@@ -17,7 +18,7 @@ public class ServoAdjust extends OpMode {
     boolean currentServo = false;
     boolean dpadDelay = false;
 
-    BotHardwareOld robot = new BotHardwareOld();
+    BotHardware bot = new BotHardware(this);
 
     @Override
     public void init() {
@@ -27,7 +28,7 @@ public class ServoAdjust extends OpMode {
         //currentServo = robot.leftServo;
 
         // hardware maps
-        robot.init(this, false);
+        bot.init();
     }
 
     @Override
@@ -43,17 +44,17 @@ public class ServoAdjust extends OpMode {
 
 
         if (currentServo) {
-            telemetry.addData("Left Servo", robot.leftServo.getPosition());
+            telemetry.addData("Left Servo", bot.getLeftLift().getPosition());
             if (gamepad1.dpad_up)
-                robot.leftServo.setPosition(Range.clip(robot.leftServo.getPosition() + 0.01, -1, 1));
+                bot.getLeftLift().setPosition(Range.clip(bot.getLeftLift().getPosition() + 0.01, -1, 1));
             else if (gamepad1.dpad_down)
-                robot.leftServo.setPosition(Range.clip(robot.leftServo.getPosition() - 0.01, -1, 1));
+                bot.getLeftLift().setPosition(Range.clip(bot.getLeftLift().getPosition() - 0.01, -1, 1));
         } else {
-            telemetry.addData("Right Servo", robot.rightServo.getPosition());
+            telemetry.addData("Right Servo", bot.getRightLift().getPosition());
             if (gamepad1.dpad_up)
-                robot.rightServo.setPosition(Range.clip(robot.rightServo.getPosition() + 0.01, -1, 1));
+                bot.getRightLift().setPosition(Range.clip(bot.getRightLift().getPosition() + 0.01, -1, 1));
             else if (gamepad1.dpad_down)
-                robot.rightServo.setPosition(Range.clip(robot.rightServo.getPosition() - 0.01, -1, 1));
+                bot.getRightLift().setPosition(Range.clip(bot.getRightLift().getPosition() - 0.01, -1, 1));
         }
 
     }

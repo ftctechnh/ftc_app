@@ -17,7 +17,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
+import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLoad;
+import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -42,7 +44,7 @@ import com.vuforia.Vec3F;
 
 @Autonomous(name="Concept: VuMark OpenCV", group ="Concept")
 //@Disabled
-public class VumarkOpenCV extends OpenCVLoad {
+public class VumarkOpenCV extends OpenCVLib {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
     private VuforiaLocalizerShim vuforia;
@@ -81,6 +83,8 @@ public class VumarkOpenCV extends OpenCVLoad {
     private static final float boxLength = 3.75f * inToMM;
     private static final float boxHeight = 3.75f * inToMM;
 
+    private static final float ballCenterFromBoxEdge = 1.875f * inToMM;
+
     //identity mats to be constructed later in the project
     private Vec3F[] point;
     private float[] size;
@@ -93,6 +97,8 @@ public class VumarkOpenCV extends OpenCVLoad {
 
     //storage camera calibration
     private CameraCalibration camCal;
+
+    private Point[] imagePoints;
 
     @Override
     public void init() {
@@ -109,19 +115,28 @@ public class VumarkOpenCV extends OpenCVLoad {
         camCal = vuforia.getCameraCalibration();
 
         //constrt matrixes
+        //contruct top and bottom of both balls
+        final Vec3F ballLeftTop = new Vec3F(boxLeftFromImage + ballCenterFromBoxEdge, -boxBottomFromImage + boxHeight, ballCenterFromBoxEdge);
+        final Vec3F ballLeftBottom = new Vec3F(boxLeftFromImage + ballCenterFromBoxEdge, -boxBottomFromImage, ballCenterFromBoxEdge);
+
+        final Vec3F ballRightTop = new Vec3F(boxLeftFromImage + boxWidth - ballCenterFromBoxEdge, -boxBottomFromImage + boxHeight, ballCenterFromBoxEdge);
+        final Vec3F ballRightBottom = new Vec3F(boxLeftFromImage + boxWidth - ballCenterFromBoxEdge, -boxBottomFromImage, ballCenterFromBoxEdge);
+
         //construct points like a box
-        Vec3F botLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage, 0);
-        Vec3F botRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage, 0);
-        Vec3F botFrontLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage, boxLength);
-        Vec3F botFrontRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage, boxLength);
+        final Vec3F botLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage, 0);
+        final Vec3F botRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage, 0);
+        final Vec3F botFrontLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage, boxLength);
+        final Vec3F botFrontRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage, boxLength);
 
-        Vec3F topLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage + boxHeight, 0);
-        Vec3F topRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage + boxHeight, 0);
-        Vec3F topFrontLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage + boxHeight, boxLength);
-        Vec3F topFrontRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage + boxHeight, boxLength);
+        final Vec3F topLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage + boxHeight, 0);
+        final Vec3F topRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage + boxHeight, 0);
+        final Vec3F topFrontLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage + boxHeight, boxLength);
+        final Vec3F topFrontRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage + boxHeight, boxLength);
 
-        point = new Vec3F[] {   botLeft, botRight, botFrontRight, botFrontLeft,
-                                topLeft, topRight, topFrontRight, topFrontLeft};
+         point = new Vec3F[] { botLeft, botRight, botFrontRight, botFrontLeft, topLeft, topRight, topFrontRight, topFrontLeft,
+                ballLeftTop, ballLeftBottom, ballRightTop, ballRightBottom };
+
+         imagePoints = new Point[point.length];
 
         /*opencv stuff
         tvec = new Mat(3, 1, CV_32FC1);
@@ -157,14 +172,13 @@ public class VumarkOpenCV extends OpenCVLoad {
             }
         });
 
-        initOpenCV();
+        telemetry.update();
+
+        loadOpenCV();
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
-    }
 
-    @Override
-    public void start() {
         VuforiaTrackables relicTrackables = this.vuforia.loadShimTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
@@ -176,7 +190,7 @@ public class VumarkOpenCV extends OpenCVLoad {
     }
 
     @Override
-    public void loop() {
+    public void init_loop() {
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
@@ -232,9 +246,6 @@ public class VumarkOpenCV extends OpenCVLoad {
 
                     frame.close();
 
-                    //create an array of points fron the float
-                    Point imagePoints[] = new Point[vufPoints.length];
-
                     //convert points, halfing distances b/c vuforia does that internally so we gotta fix it
                     for(int i = 0; i < vufPoints.length; i++) imagePoints[i] = new Point((int)vufPoints[i][0] / 2, (int)vufPoints[i][1] / 2);
 
@@ -265,17 +276,6 @@ public class VumarkOpenCV extends OpenCVLoad {
                             catch (InterruptedException e) {
                                 //huh
                             }
-                            //old vuforia stuff
-                            /*
-                            //clear canvas
-                            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                            for(int i = 0; i < 2; i++)
-                                for(int o = 0; o < 4; o++)
-                                    canvas.drawLine(imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][0], imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1][1], imagePoints[i * 4 + o][0], imagePoints[i * 4 + o][1], p);
-
-                            //connect the rectangles
-                            for(int i = 0; i < 4; i++) canvas.drawLine(imagePoints[i][0], imagePoints[i][1], imagePoints[i + 4][0], imagePoints[i + 4][1], p);
-                            */
                         }
                     });
                 }
@@ -286,6 +286,73 @@ public class VumarkOpenCV extends OpenCVLoad {
         } else {
             telemetry.addData("VuMark", "not visible");
         }
+    }
+
+    @Override
+    public void start() {
+        //die die die
+        vuforia.stop();
+        //LIVE
+        startCamera();
+    }
+
+    @Override
+    public void loop() {
+        stopCamera();
+    }
+
+    @Override
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame) {
+        Mat currentFrame = frame.rgba();
+
+        //search projected points for color of ball
+        drawBallSubsquare(currentFrame, imagePoints[8], imagePoints[9]);
+        drawBallSubsquare(currentFrame, imagePoints[10], imagePoints[11]);
+
+        Scalar color = new Scalar(0, 255, 0);
+        for(int i = 0; i < 2; i++)
+            for(int o = 0; o < 4; o++)
+                Imgproc.line(currentFrame, imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1], imagePoints[i * 4 + o], color);
+
+        //connect the rectangles
+        for(int i = 0; i < 4; i++) Imgproc.line(currentFrame, imagePoints[i], imagePoints[i + 4], color);
+
+        //flip it for display
+        Core.flip(currentFrame, currentFrame, -1);
+
+        return currentFrame;
+    }
+
+    private void drawBallSubsquare(Mat src, Point top, Point bottom) {
+        //operation: subsquare
+        //take a square mat we are 100% sure will have a ball in it
+        //sum it up and find the average color
+
+        //find the midpoint between the two points
+        int xPoint = (int)(Math.abs((top.x - bottom.x)) / 2.0);
+        int yPoint = (int)(Math.abs((top.y - bottom.y)) / 2.0);
+        //find the y distande between the two
+        int dist = (int)(Math.abs(top.y - bottom.y));
+        int halfDist = (int)(dist / 2.0);
+
+        //top left corner is (x - dist/2), (y - dist/2) of the center point
+        xPoint -= halfDist;
+        yPoint -= halfDist;
+
+        //find the average color for all the pixels in that square
+        double total[] = new double[3];
+        for(int x = 0; x < dist; x++) for(int y = 0; y < dist; y++) {
+            double[] pixel = src.get(x + xPoint, y + yPoint);
+            total[0] += pixel[0];
+            total[1] += pixel[1];
+            total[2] += pixel[2];
+        }
+
+        //make average color
+        Scalar color = new Scalar(total[0] / (dist * dist), total[1] / (dist * dist), total[2] / (dist * dist));
+
+        //color over square with average color
+        Imgproc.rectangle(src, new Point(xPoint, yPoint), new Point(xPoint + dist, yPoint + dist), color);
     }
 
     @Override
@@ -340,6 +407,11 @@ public class VumarkOpenCV extends OpenCVLoad {
         //the shim part
         public VuforiaTrackables loadShimTrackablesFromAsset(String assetName){
             return loadTrackablesFromAsset(assetName, VuforiaDefaultListenerShim.class);
+        }
+
+        public void stop() {
+            //god damn quallcomm
+            this.stopAR();
         }
     }
     //vuforia default listener shim
