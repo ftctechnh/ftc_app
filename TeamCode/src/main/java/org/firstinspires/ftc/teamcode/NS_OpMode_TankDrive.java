@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by Nithilan on 10/29/2017.
  * Tank Drive opmode for Golden Gear robot.
  */
-
+@TeleOp(name = "NS: Tank Drive", group = "Training")
 public class NS_OpMode_TankDrive extends OpMode {
     NS_Robot_GoldenGears GGRobot = null;
 
