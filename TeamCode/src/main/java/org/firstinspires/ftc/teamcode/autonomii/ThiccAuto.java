@@ -30,25 +30,38 @@ public class ThiccAuto extends LinearOpMode {
     @Override
     public void runOpMode(){
 
+        //Initialize hardware
         robot = new Robot(hardwareMap);
         drivetrain = (MecanumDrive)robot.getDrivetrain();
         raiser = hardwareMap.dcMotor.get("raiser");
         grabber = hardwareMap.servo.get("grabber");
         imuWrapper = new IMUWrapper(hardwareMap);
 
+        //Assuming other hardware not yet on the robot
         colorRod = hardwareMap.servo.get("rod");
         colorRod.setPosition(0); // up position
-
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
-        //Hitting the ball
-        colorRod.setPosition(0.5); //out position
+        //STEP 1: Hitting the ball
+        colorRod.setPosition(0.5); //servo in 'out' position
 
-        //Checks that blue jewel is closer towards the cryptoboxes
-        if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]){
-            drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.2, 0);
-            
+        while (Math.abs(imuWrapper.getPosition().y) < 20) {
+            //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
+            if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
+                drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.2, 0);
+
+            } else {
+                drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 0.2, 0);
+            }
         }
+
+        //Head forward
+
+        while (imuWrapper.getPosition().y < 100) {
+            drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.5, 0);
+        }
+
+        //
 
     }
 }
