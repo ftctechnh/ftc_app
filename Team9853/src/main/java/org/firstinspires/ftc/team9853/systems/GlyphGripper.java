@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.Robot;
-import org.chathamrobotics.common.utils.RobotLogger;
+import org.chathamrobotics.common.utils.robot.RobotLogger;
 
 /*!
  * Created by carsonstorm on 11/3/2017.

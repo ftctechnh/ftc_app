@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.chathamrobotics.common.utils.RobotLogger;
+import org.chathamrobotics.common.utils.robot.RobotLogger;
 
 import java.util.Map;
 

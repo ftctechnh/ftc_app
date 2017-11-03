@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.team9853.systems;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.systems.RackAndPinion;
-import org.chathamrobotics.common.utils.HardwareListeners;
-import org.chathamrobotics.common.utils.IsBusyException;
-import org.chathamrobotics.common.utils.RobotLogger;
+import org.chathamrobotics.common.utils.hardware.HardwareListeners;
+import org.chathamrobotics.common.utils.hardware.IsBusyException;
+import org.chathamrobotics.common.utils.robot.RobotLogger;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class JewelDisplacer {

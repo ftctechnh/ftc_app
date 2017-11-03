@@ -3,8 +3,7 @@ package org.firstinspires.ftc.team9853.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.chathamrobotics.common.utils.Controller;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.chathamrobotics.common.utils.hardware.Controller;
 import org.firstinspires.ftc.team9853.Robot9853;
 
 /**

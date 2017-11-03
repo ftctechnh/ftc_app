@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils;
+package org.chathamrobotics.common.utils.opmode;
 
 /*!
  * FTC_APP_2018

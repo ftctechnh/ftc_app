@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils;
+package org.chathamrobotics.common.utils.hardware;
 
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -75,22 +75,6 @@ public class Controller extends Gamepad {
      */
     public float invert(float val) {
         return val * -1;
-    }
-
-    /**
-     * Returns the vector representation of the left stick's position
-     * @return the vector representation of the left stick's position
-     */
-    public Vector getLeftStickVector() {
-        return new Vector(_gamepad.left_stick_x, invert(_gamepad.left_stick_y));
-    }
-
-    /**
-     * Returns the vector representation of the right stick's position
-     * @return the vector representation of the right stick's position
-     */
-    public Vector getRightStickVector() {
-        return new Vector(_gamepad.right_stick_x, invert(_gamepad.right_stick_y));
     }
 
     private ButtonState updateButtonState(boolean pressed, ButtonState currentState) {

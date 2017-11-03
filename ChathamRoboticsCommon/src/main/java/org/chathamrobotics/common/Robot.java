@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.chathamrobotics.common.utils.HardwareListeners;
-import org.chathamrobotics.common.utils.RobotLogger;
+import org.chathamrobotics.common.utils.hardware.HardwareListeners;
+import org.chathamrobotics.common.utils.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;

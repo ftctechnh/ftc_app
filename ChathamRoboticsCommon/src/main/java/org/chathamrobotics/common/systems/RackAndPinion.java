@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.hardware.LimitSwitch;
 import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
-import org.chathamrobotics.common.utils.HardwareListeners;
-import org.chathamrobotics.common.utils.IsBusyException;
-import org.chathamrobotics.common.utils.RobotLogger;
+import org.chathamrobotics.common.utils.hardware.HardwareListeners;
+import org.chathamrobotics.common.utils.hardware.IsBusyException;
+import org.chathamrobotics.common.utils.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Timer;

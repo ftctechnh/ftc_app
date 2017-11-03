@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils;
+package org.chathamrobotics.common.utils.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;

@@ -1,12 +1,10 @@
-package org.chathamrobotics.common.utils;
-
-import android.util.Log;
+package org.chathamrobotics.common.utils.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.chathamrobotics.common.Robot;
+import org.chathamrobotics.common.utils.robot.RobotErrors;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.lang.reflect.ParameterizedType;

@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils;
+package org.chathamrobotics.common.utils.robot;
 
 /**
  * FTC_APP_2018

@@ -2,8 +2,8 @@ package org.firstinspires.ftc.team9853.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.chathamrobotics.common.utils.Controller;
-import org.chathamrobotics.common.utils.IsBusyException;
+import org.chathamrobotics.common.utils.hardware.Controller;
+import org.chathamrobotics.common.utils.hardware.IsBusyException;
 import org.firstinspires.ftc.team9853.Robot9853;
 import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
 

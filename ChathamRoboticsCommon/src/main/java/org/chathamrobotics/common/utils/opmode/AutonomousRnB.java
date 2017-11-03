@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils;
+package org.chathamrobotics.common.utils.opmode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

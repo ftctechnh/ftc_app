@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils;
+package org.chathamrobotics.common.utils.hardware;
 
 /**
  * Thrown when a system is busy and cannot perform the operation that was requested
