@@ -4,15 +4,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by thad on 10/24/2017.
  */
 
-@TeleOp(name="JeffsRealRun",group="Jeff" )
+@TeleOp(name="JeffsRealRunV2",group="Jeff" )
 
-public class JeffsRealRun extends LinearOpMode {
+public class JeffsRealRunV2CC extends LinearOpMode {
     //robot
     PengwinArm pengwinArm;
     JeffThePengwin jeffThePengwin;
@@ -98,9 +97,9 @@ public class JeffsRealRun extends LinearOpMode {
     }
 
     private void figureOutMovementOfRobot() {
-        turningRight = turn > 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
+        turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
         notTurning = turn == 0;
-        movingVertical = Math.abs(drive) >=Math.abs(leftX);
+        movingVertical = Math.abs(drive) > Math.abs(leftX);
         strafingRight = leftX > 0;
     }
 
@@ -121,33 +120,39 @@ public class JeffsRealRun extends LinearOpMode {
             //no movement in right joystick
             //start of driving section
             if (movingVertical) { //forward/back or left/right?
-                if (drive < 0) { //forward because when the joystick is foward, y = -1
+                if (drive > 0) { //forward
                     jeffThePengwin.driveForward();
                 } else { //back
                     jeffThePengwin.driveBackward();
                 }
             } else {
                 if (strafingRight) { //right
-                    jeffThePengwin.strafeRight();
+                    jeffThePengwin.turnLeft();
+                    //jeffThePengwin.strafeRight();
                 } else { //left
-                    jeffThePengwin.strafeLeft();
+                    jeffThePengwin.turnRight();
+                    //jeffThePengwin.strafeLeft();
                 }
             }
         } else if (turningRight) {
             // TODO pushing right joystick to the right
             //turn right by left wheels going forward and right going backwards
-            jeffThePengwin.turnRight();
+
+            jeffThePengwin.strafeLeft();
+
+            //jeffThePengwin.turnRight();
         } else {
             //turn left
-            jeffThePengwin.turnLeft();
+            jeffThePengwin.strafeRight();
+            //jeffThePengwin.turnLeft();
         }
     }
 
     private void setThePowerForMovingArmUpOrDown(double direction, double degreeOfArmPower, int armUpDirection) {
-        //if((isRaised() & rotate*direction > 0 ) || (isFelled() & rotate*direction < 0 ) || (!isRaised() & !isFelled())){
+       // if((isRaised() & rotate*direction > 0 ) || (isFelled() & rotate*direction < 0 ) || (!isRaised() & !isFelled())){
             //
             pengwinArm.setUpPower(armUpDirection* degreeOfArmPower*rotate*direction);
-        // v}
+        //}
     }
 
     private void telemetryJazz() {
@@ -158,10 +163,6 @@ public class JeffsRealRun extends LinearOpMode {
         telemetry.addData("penguin degree of power", jeffThePengwin.getDegreeOfPower());
         telemetry.addData("penguin arm up power", pengwinArm.getUpPower());
         telemetry.addData("penguin arm extend power", pengwinArm.getAcrossPower());
-        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
-        telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
-        telemetry.addData("Right Stick X", gamepad1.right_stick_x);
-        telemetry.addData("Unicorn Crossing", "Always a danger WATCH OUT");
         telemetry.update();
     }
 
