@@ -53,11 +53,6 @@ public abstract class OpenCVLib extends OpenCVLoad implements CameraBridgeViewBa
     }
 
 
-
-    public void loadOpenCV() {
-        super.initOpenCV();
-    }
-
     @Override
     public void initOpenCV(){
         super.initOpenCV();
@@ -65,7 +60,6 @@ public abstract class OpenCVLib extends OpenCVLoad implements CameraBridgeViewBa
         if(mView == null) mView = ((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.image_manipulations_activity_surface_view);
 
         mOpenCvCameraView = (CameraBridgeViewBase) mView;
-        //mOpenCvCameraView.setAlpha(0.0f);
         mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_BACK);
         //mOpenCvCameraView.setMaxFrameSize(400,400);
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -76,9 +70,9 @@ public abstract class OpenCVLib extends OpenCVLoad implements CameraBridgeViewBa
         Runnable mCameraStop = new Runnable() {
             @Override
             public void run() {
+                mOpenCvCameraView.setAlpha(0.0f);
                 if(mOpenCvCameraView != null)
                     mOpenCvCameraView.disableView();
-                mOpenCvCameraView.setAlpha(0.0f);
             }
         };
 

@@ -12,7 +12,6 @@ import org.opencv.android.OpenCVLoader;
 
 public abstract class OpenCVLoad extends OpMode {
     public static final String cvTAG = "OpenCVInit";
-    //TODO: abstract loading openCV from loading camera
     //load opencv
     public void initOpenCV() {
         BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(hardwareMap.appContext) {

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.vuforia.CameraCalibration;
 import com.vuforia.Image;
 
@@ -24,6 +25,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Range;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -43,7 +45,7 @@ import com.vuforia.Vec3F;
  */
 
 @Autonomous(name="Concept: VuMark OpenCV", group ="Concept")
-//@Disabled
+@Disabled
 public class VumarkOpenCV extends OpenCVLib {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
@@ -89,16 +91,25 @@ public class VumarkOpenCV extends OpenCVLib {
     private Vec3F[] point;
     private float[] size;
     //output bitmap
-    Bitmap bm;
+    private Bitmap bm;
     //Canvas canvas;
     //Paint p;
 
-    BlockingDeque<Mat> matQueue = new LinkedBlockingDeque<>();
+    private BlockingDeque<Mat> matQueue = new LinkedBlockingDeque<>();
 
     //storage camera calibration
     private CameraCalibration camCal;
 
+    private float[] sizeScalar;
     private Point[] imagePoints;
+    private int[] leftBall = new int[2];
+    private int leftDist;
+    private int[] rightBall = new int[2];
+    private int rightDist;
+
+    //vuforia -> opencv camera parameters
+    private int xOffset;
+    private int yOffset;
 
     @Override
     public void init() {
@@ -133,21 +144,10 @@ public class VumarkOpenCV extends OpenCVLib {
         final Vec3F topFrontLeft = new Vec3F(boxLeftFromImage, -boxBottomFromImage + boxHeight, boxLength);
         final Vec3F topFrontRight = new Vec3F(boxLeftFromImage + boxWidth, -boxBottomFromImage + boxHeight, boxLength);
 
-         point = new Vec3F[] { botLeft, botRight, botFrontRight, botFrontLeft, topLeft, topRight, topFrontRight, topFrontLeft,
+        point = new Vec3F[] { botLeft, botRight, botFrontRight, botFrontLeft, topLeft, topRight, topFrontRight, topFrontLeft,
                 ballLeftTop, ballLeftBottom, ballRightTop, ballRightBottom };
 
-         imagePoints = new Point[point.length];
-
-        /*opencv stuff
-        tvec = new Mat(3, 1, CV_32FC1);
-        rvec = new MatOfFloat(0, 0, 0);
-        distCoff = new MatOfDouble(0, 0, 0, 0);
-        cameraMatrix = new Mat(3, 3, CV_32FC1);
-        cameraMatrix.put(0, 0, new float[] {horizConst, 0, centerX});
-        cameraMatrix.put(1, 0, new float[] {0, vertConst, centerY});
-        cameraMatrix.put(2, 0, new float[] {0, 0, 1});
-        imagePoints = new MatOfPoint2f();
-        */
+        imagePoints = new Point[point.length];
 
         size = camCal.getSize().getData();
 
@@ -155,14 +155,7 @@ public class VumarkOpenCV extends OpenCVLib {
         size[0] /= 2;
         size[1] /= 2;
 
-        Log.i("OPENCV", "width " + size[0]);
-        Log.i("OPENCV", "height " + size[1]);
-
         bm = Bitmap.createBitmap((int)size[0], (int)size[1], Bitmap.Config.ARGB_8888);
-        //canvas = new Canvas(bm);
-        //p = new Paint();
-        //p.setColor(Color.GREEN);
-        //p.setStrokeWidth(1);
 
         //setup view
         mView.post(new Runnable() {
@@ -174,7 +167,7 @@ public class VumarkOpenCV extends OpenCVLib {
 
         telemetry.update();
 
-        loadOpenCV();
+        initOpenCV();
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
@@ -217,7 +210,7 @@ public class VumarkOpenCV extends OpenCVLib {
                 Matrix34F goodCodeWritten = writeGoodCode.getRealPose();
 
                 //reset imagePoints
-                final float[][] vufPoints = new float[8][2];
+                final float[][] vufPoints = new float[point.length][2];
 
                 //use vuforias projectPoints method to project all those box points
                 for(int i = 0; i < point.length; i++){
@@ -257,6 +250,8 @@ public class VumarkOpenCV extends OpenCVLib {
                     //connect the rectangles
                     for(int i = 0; i < 4; i++) Imgproc.line(out, imagePoints[i], imagePoints[i + 4], color);
 
+                    for(int i = 8; i < imagePoints.length; i++) Imgproc.drawMarker(out, imagePoints[i], color);
+
                     //flip it for display
                     Core.flip(out, out, -1);
 
@@ -291,25 +286,78 @@ public class VumarkOpenCV extends OpenCVLib {
     @Override
     public void start() {
         //die die die
+        mView.setAlpha(0.0f);
+
+        mView.post(new Runnable() {
+            @Override
+            public void run() {
+                mView.setImageDrawable(null);
+                mView.invalidate();
+                if(bm != null) bm.recycle();
+                if(matQueue != null) matQueue.clear();
+            }
+        });
+        this.ray.clear();
+
         vuforia.stop();
+
+        //calculate points from projection
+        //find the midpoint between the two points
+        int leftXPoint = (int)((imagePoints[8].x + imagePoints[9].x) / 2.0);
+        int leftYPoint = (int)((imagePoints[8].y + imagePoints[9].y) / 2.0);
+        //find the y distande between the two
+        leftDist = (int)(Math.abs(imagePoints[8].y - imagePoints[9].y) / 2.0);
+        leftBall = new int[] {leftXPoint - (leftDist / 2), leftYPoint - (leftDist / 2)};
+
+        //find the midpoint between the two points
+        int rightXPoint = (int)((imagePoints[10].x + imagePoints[11].x) / 2.0);
+        int rightYPoint = (int)((imagePoints[10].y + imagePoints[11].y) / 2.0);
+        //find the y distande between the two
+        rightDist = (int)(Math.abs(imagePoints[10].y - imagePoints[11].y) / 2.0);
+        rightBall = new int[] {rightXPoint - (rightDist / 2), rightYPoint - (rightDist / 2)};
+
         //LIVE
         startCamera();
     }
 
     @Override
     public void loop() {
-        stopCamera();
+        telemetry.addData("Left image point", "x: " + imagePoints[8].x + " y: " + imagePoints[8].y);
+        telemetry.addData("Left Point", "x: " + leftBall[0] + " y: " + leftBall[1]);
+        telemetry.addData("Left Dist", leftDist);
+        telemetry.addData("size", size[0] + " " + size[1]);
     }
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame) {
         Mat currentFrame = frame.rgba();
 
-        //search projected points for color of ball
-        drawBallSubsquare(currentFrame, imagePoints[8], imagePoints[9]);
-        drawBallSubsquare(currentFrame, imagePoints[10], imagePoints[11]);
+        //if we haven't figured out how to scale the size, do that
+        if(xOffset == 0 || yOffset == 0){
+            //find the offset to the sqaure of pixels vuforia looks at
+            xOffset = (int)((currentFrame.cols() - size[0]) / 2.0);
+            yOffset = (int)((currentFrame.rows() - size[1]) / 2.0);
+
+            //add the offset to all points calculated
+            for(Point point : imagePoints) {
+                point.x += xOffset;
+                point.y += yOffset;
+            }
+            leftBall[0] += xOffset;
+            leftBall[1] += yOffset;
+            rightBall[0] += xOffset;
+            rightBall[1] += yOffset;
+        }
+
+        //operation: subsquare
+        //take a square mat we are 100% sure will have a ball in it
+        //sum it up and find the average color
+
+        drawSquare(currentFrame, leftBall, leftDist);
+        drawSquare(currentFrame, rightBall, rightDist);
 
         Scalar color = new Scalar(0, 255, 0);
+
         for(int i = 0; i < 2; i++)
             for(int o = 0; o < 4; o++)
                 Imgproc.line(currentFrame, imagePoints[o == 0 ? 3 + i * 4 : i * 4 + o - 1], imagePoints[i * 4 + o], color);
@@ -323,36 +371,24 @@ public class VumarkOpenCV extends OpenCVLib {
         return currentFrame;
     }
 
-    private void drawBallSubsquare(Mat src, Point top, Point bottom) {
-        //operation: subsquare
-        //take a square mat we are 100% sure will have a ball in it
-        //sum it up and find the average color
-
-        //find the midpoint between the two points
-        int xPoint = (int)(Math.abs((top.x - bottom.x)) / 2.0);
-        int yPoint = (int)(Math.abs((top.y - bottom.y)) / 2.0);
-        //find the y distande between the two
-        int dist = (int)(Math.abs(top.y - bottom.y));
-        int halfDist = (int)(dist / 2.0);
-
-        //top left corner is (x - dist/2), (y - dist/2) of the center point
-        xPoint -= halfDist;
-        yPoint -= halfDist;
-
+    private static void drawSquare(Mat src, int[] ballPoint, int ballDist) {
+        //find average left and right ball square
         //find the average color for all the pixels in that square
-        double total[] = new double[3];
-        for(int x = 0; x < dist; x++) for(int y = 0; y < dist; y++) {
-            double[] pixel = src.get(x + xPoint, y + yPoint);
-            total[0] += pixel[0];
-            total[1] += pixel[1];
-            total[2] += pixel[2];
+        if(ballPoint[0] >= 0 && ballPoint[1] >= 0 && ballPoint[0] + ballDist < src.cols() && ballPoint[1] + ballDist < src.rows()){
+            double total[] = new double[3];
+            for(int x = 0; x < ballDist; x++)
+                for(int y = 0; y < ballDist; y++) {
+                    double[] pixel = src.get(y + ballPoint[1], x + ballPoint[0]);
+                    total[0] += pixel[0];
+                    total[1] += pixel[1];
+                    total[2] += pixel[2];
+                }
+
+            //make average color
+            Scalar color = new Scalar(total[0] / (ballDist * ballDist), total[1] / (ballDist * ballDist), total[2] / (ballDist * ballDist));
+
+            Imgproc.rectangle(src, new Point(ballPoint[0], ballPoint[1]), new Point(ballPoint[0] + ballDist, ballPoint[1] + ballDist), color, -1);
         }
-
-        //make average color
-        Scalar color = new Scalar(total[0] / (dist * dist), total[1] / (dist * dist), total[2] / (dist * dist));
-
-        //color over square with average color
-        Imgproc.rectangle(src, new Point(xPoint, yPoint), new Point(xPoint + dist, yPoint + dist), color);
     }
 
     @Override
@@ -368,6 +404,7 @@ public class VumarkOpenCV extends OpenCVLib {
             }
         });
         this.ray.clear();
+        stopCamera();
     }
 
     private String format(OpenGLMatrix transformationMatrix) {
