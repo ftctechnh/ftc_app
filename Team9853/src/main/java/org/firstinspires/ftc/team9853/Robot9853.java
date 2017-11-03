@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.systems.HolonomicDriver;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.team9853.systems.GlyphGripper;
 
 /**
  * FTC_APP_2018
@@ -23,6 +24,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Robot9853 extends Robot {
 
     public HolonomicDriver driver;
+    public GlyphGripper glyphGripper;
+    public DcMotor lift;
 
     public static Robot9853 build(OpMode opMode) {
         return new Robot9853(opMode.hardwareMap, opMode.telemetry);
@@ -35,11 +38,13 @@ public class Robot9853 extends Robot {
     @Override
     public void init() {
         driver = HolonomicDriver.build(this);
+        glyphGripper = GlyphGripper.build(this);
+        lift = hardwareMap.dcMotor.get("Lift");
     }
 
     @Override
     public void start() {
-
+        glyphGripper.close();
     }
 
     public void driveWithControls(Gamepad gp) {

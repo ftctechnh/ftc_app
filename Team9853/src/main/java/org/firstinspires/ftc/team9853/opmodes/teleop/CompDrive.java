@@ -35,7 +35,21 @@ public class CompDrive extends OpMode {
     public void loop() {
         controller1.update(); controller2.update();
 
+        if (controller1.right_trigger > 0) {
+            robot.lift.setPower(controller1.right_trigger);
+        } else if (controller1.left_trigger > 0) {
+            robot.lift.setPower(
+                    controller2.invert(controller1.left_trigger)
+            );
+        }
 
+        if (controller1.aState == Controller.ButtonState.TAPPED) {
+            robot.glyphGripper.open();
+        }
+
+        if (controller1.xState == Controller.ButtonState.TAPPED) {
+            robot.glyphGripper.grip();
+        }
 
         robot.driveWithControls(gamepad1);
     }
