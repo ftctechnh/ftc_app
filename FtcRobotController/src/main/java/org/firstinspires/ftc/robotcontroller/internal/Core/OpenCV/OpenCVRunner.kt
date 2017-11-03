@@ -17,6 +17,7 @@ import android.app.Activity
 import android.util.Log
 import android.view.View
 import com.qualcomm.ftcrobotcontroller.R
+import org.directcurrent.opencv.visionprocessors.BrownGlyphFinder
 import org.directcurrent.opencv.visionprocessors.GrayGlyphFinder
 import org.directcurrent.opencv.visionprocessors.VisionProcessor
 import org.opencv.android.*
@@ -83,6 +84,7 @@ class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int
 
         // Add our vision processors
         _visionProcessors.add(GrayGlyphFinder())
+        _visionProcessors.add(BrownGlyphFinder())
     }
 
 

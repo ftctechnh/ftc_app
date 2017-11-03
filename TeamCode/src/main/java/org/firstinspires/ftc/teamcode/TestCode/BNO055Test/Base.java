@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestCode.BNO055Test;
 
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -27,7 +28,6 @@ public class Base extends RobotBase
         params.loggingEnabled = true;
         params.loggingTag = "IMU";
         params.calibrationDataFile = "IMUCalibration.json";
-//        params.mode = NDOF_FMC_OFF;
 
         imu.mapIMU("imu" , params);
     }
