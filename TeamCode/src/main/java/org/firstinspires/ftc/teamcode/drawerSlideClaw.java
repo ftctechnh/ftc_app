@@ -42,7 +42,7 @@ public class drawerSlideClaw extends OpMode {
             //claw.setPosition(Range.clip(claw.getPosition() - 0.005, servolowend, servohighend));
             claw.setPosition(servohighend);
         }
-        motor.setPower(motorSpeed);
+        motor.setPower(motorSpeed/2);
         arm.setPosition(armDir);
         arm.setPosition(armDir);
         telemetry.addData("clawposition: ", claw.getPosition());
