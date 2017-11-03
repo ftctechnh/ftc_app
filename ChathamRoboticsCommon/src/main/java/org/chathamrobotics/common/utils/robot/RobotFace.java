@@ -1,5 +1,7 @@
 package org.chathamrobotics.common.utils.robot;
 
+import java.util.Locale;
+
 /**
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
@@ -19,5 +21,10 @@ public enum RobotFace {
 
     RobotFace(double holonomicOffset) {
         this.holonomicOffset = holonomicOffset;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "%s(offset=%.2f)", name(), holonomicOffset);
     }
 }

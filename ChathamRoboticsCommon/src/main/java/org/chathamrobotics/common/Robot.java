@@ -204,6 +204,11 @@ public abstract class Robot extends HardwareListeners {
         }
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
+
     private <E extends HardwareDevice> void debugHardwareDevice(HardwareMap.DeviceMapping<E> devices, HardwareDebugFunc<E> debugger) {
         for (Map.Entry<String, E> entry : devices.entrySet()) {
             if (entry.getValue() == null) continue;

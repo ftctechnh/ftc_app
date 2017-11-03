@@ -97,7 +97,7 @@ public class ModernRoboticsLimitSwitch implements LimitSwitch {
 
     @Override
     public String getDeviceName() {
-        return "Modern Robotics Touch Sensor"; //TODO: figure out what this should actually be
+        return "Modern Robotics Limit Sensor"; //TODO: figure out what this should actually be
     }
 
     @Override
@@ -119,4 +119,9 @@ public class ModernRoboticsLimitSwitch implements LimitSwitch {
 
     @Override
     public void close() {}
+
+    @Override
+    public String toString() {
+        return getDeviceName() + " " + getConnectionInfo();
+    }
 }
