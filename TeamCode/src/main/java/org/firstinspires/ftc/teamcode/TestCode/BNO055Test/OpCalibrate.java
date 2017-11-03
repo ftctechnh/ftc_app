@@ -22,7 +22,7 @@ public class OpCalibrate extends LinearOpMode
 
         boolean beenCalibrated = false;
 
-        _base.init(hardwareMap);
+        _base.init(hardwareMap , this);
 
         waitForStart();
 

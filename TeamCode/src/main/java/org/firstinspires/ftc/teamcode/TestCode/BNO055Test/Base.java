@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestCode.BNO055Test;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
@@ -13,9 +14,9 @@ public class Base extends RobotBase
 
 
     @Override
-    public void init(HardwareMap HW)
+    public void init(HardwareMap HW , OpMode OPMODE)
     {
-        hardware = HW;
+        super.init(HW , OPMODE);
 
         imu = new REVIMU(this);
 
