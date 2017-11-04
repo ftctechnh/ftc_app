@@ -28,7 +28,7 @@ public class NS_Robot_GoldenGears {
 
         driveLeftMotor = hardwareMap.dcMotor.get("driveLeftMotor");
         driveRightMotor = hardwareMap.dcMotor.get("driveRightMotor");
-        driveLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        driveRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         armElevationMotor = hardwareMap.dcMotor.get("armElevationMotor");
 
@@ -43,8 +43,8 @@ public class NS_Robot_GoldenGears {
         driveLeftMotor.setPower(0);
         driveRightMotor.setPower(0);
 
-        clawRightServo.setPosition(0);
-        clawLeftServo.setPosition(0);
+        clawRightServo.setPosition(0.5);
+        clawLeftServo.setPosition(0.5);
     }
 
     public void DriveRobot(double driveLeftPower, double driveRightPower){
@@ -59,13 +59,13 @@ public class NS_Robot_GoldenGears {
 
     public void ActuateClaw(boolean open){
         double position;
-        double delta = 0.05;
+        double delta = 0.005;
 
         if (open == true){
-            position = clawLeftServo.getPosition() - delta;
+            position = clawLeftServo.getPosition() + delta;
         }
         else {
-            position = clawLeftServo.getPosition() + delta;
+            position = clawLeftServo.getPosition() - delta;
         }
         position = Range.clip(position, 0.0, 1.0);
 
