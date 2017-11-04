@@ -18,10 +18,15 @@ public class PracticeAutonomous extends LinearOpMode
 {
     Hardware9330 hwMap = new Hardware9330();
 
+    public void log(String title, Object value) {
+        telemetry.addData(title,value);
+        telemetry.update();
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         hwMap.init(hardwareMap);
-        Drive9330 BillyMays = new Drive9330(hwMap);
+        Drive9330 drive = new Drive9330(hwMap);
         Ultrasonic9330 ultrasonic = new Ultrasonic9330(hwMap);
 
         // wait for the start button to be pressed.
@@ -39,13 +44,13 @@ public class PracticeAutonomous extends LinearOpMode
             while (hwMap.touch.getState() && !isStopRequested()) {
                 //telemetry.addData("Ultrasonic ", ultrasonic.getDistance());
                // telemetry.update();
-                BillyMays.gyroTurn(90, 69);
                 telemetry.addData("Program","We is turnin ninety degrees yo!!!!!!");
                 telemetry.update();
-                BillyMays.driveForward(69);
-                sleep(1000);
-                telemetry.addData("Program","We is drivin upward yo B))))))))) Help me conquer obesity!!!!!!");
+                drive.gyroTurn(90, 0.1,true);
+                telemetry.addData("Program","We're currently driving forward!");
                 telemetry.update();
+                drive.driveForward(0.5);
+                sleep(1000);
             }
             //hwMap.rightMotor.setPower(0);
             stop();

@@ -18,8 +18,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     defaultConfig {
-        minSdkVersion 22
-        targetSdkVersion 22
+        minSdkVersion 19
+        targetSdkVersion 19
     }
     productFlavors {
     }

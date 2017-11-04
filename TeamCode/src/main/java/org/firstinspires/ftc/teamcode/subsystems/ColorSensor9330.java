@@ -10,12 +10,12 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
 public class ColorSensor9330 {
     Hardware9330 hwMap;
     ColorSensor cs;
-    boolean bledOn = true;
+    //boolean bledOn = true;
 
     public ColorSensor9330(Hardware9330 robotMap){
         hwMap = robotMap;
         cs = hwMap.armCS;
-        cs.enableLed(bledOn);
+        //cs.enableLed(bledOn);
     }
 
 
@@ -24,12 +24,10 @@ public class ColorSensor9330 {
     }
 
     public float g() {
-
         return cs.green();
     }
 
     public float b() {
-
         return cs.blue();
     }
 

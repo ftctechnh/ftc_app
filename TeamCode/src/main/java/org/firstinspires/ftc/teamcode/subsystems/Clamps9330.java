@@ -19,7 +19,7 @@ public class Clamps9330 {
     public Clamps9330(Hardware9330 robotMap){
         hwMap = robotMap;
         hwMap.lowGlyphClamp.setPosition(ENGAGED_POS);
-        hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
+        //hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
     }
 
     public void closeLowClamp(){
@@ -39,14 +39,14 @@ public class Clamps9330 {
     public void closeHighClamp(){
         if(!highClampEngaged){
             highClampEngaged = true;
-            hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
+            //hwMap.highGlyphClamp.setPosition(ENGAGED_POS);
         }
     }
     // Releasing the high clamp
     public void openHighClamp(){
         if(highClampEngaged){
             highClampEngaged = false;
-            hwMap.highGlyphClamp.setPosition(RELEASE_POS);
+            //hwMap.highGlyphClamp.setPosition(RELEASE_POS);
         }
     }
 

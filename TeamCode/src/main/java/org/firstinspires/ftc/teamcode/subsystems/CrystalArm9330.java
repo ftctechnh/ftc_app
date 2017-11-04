@@ -10,8 +10,8 @@ public class CrystalArm9330 {
 
     Hardware9330 hwMap;
     //Possible Positions for Servo
-    private final float UP_POS = 1;
-    private final float OUT_POS = 0;
+    private final double UP_POS = 0.6;
+    private final double OUT_POS = 1.0;
     private boolean isArmUp;
 
     public CrystalArm9330(Hardware9330 robotMap){

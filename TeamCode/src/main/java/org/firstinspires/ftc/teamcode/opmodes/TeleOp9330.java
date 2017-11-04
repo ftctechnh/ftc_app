@@ -24,7 +24,7 @@ public class TeleOp9330 extends OpMode {
 
     float yPower = 0;
     float spinPower = 0;
-    float liftSpeed = 50;
+    double liftSpeed = 0.25;
     boolean aBtnHeld = false;
     boolean bBtnHeld = false;
     boolean xBtnHeld = false;
@@ -70,6 +70,7 @@ public class TeleOp9330 extends OpMode {
         Hardware9330.rightMotor.setPower(yPower - spinPower);
 
         //If "A" is pressed on the gamepad toggle the lower clamp
+        /*
         if(gamepad2.a) {
             if (aBtnHeld == true) return;
             telemetry.addData("Program", "Low Clamp toggled!");
@@ -77,6 +78,25 @@ public class TeleOp9330 extends OpMode {
             aBtnHeld = true;
         } else {
             aBtnHeld = false;
+        }
+        */
+
+        if(gamepad2.x) {
+            if (xBtnHeld == true) return;
+            telemetry.addData("Program", "Low Clamp closed!");
+            clamps.closeLowClamp();
+            xBtnHeld = true;
+        } else {
+            xBtnHeld = false;
+        }
+
+        if(gamepad2.b) {
+            if (bBtnHeld == true) return;
+            telemetry.addData("Program", "Low Clamp opened!");
+            clamps.openLowClamp();
+            bBtnHeld = true;
+        } else {
+            bBtnHeld = false;
         }
 
         //If "B" is pressed on the gamepad toggle the high clamp
@@ -94,21 +114,23 @@ public class TeleOp9330 extends OpMode {
         //Otherwise motor is not moving
         if(gamepad2.dpad_up) {
             telemetry.addData("Program", "Lift rising!");
-            glyphLift9330.liftUp();
+            glyphLift9330.liftUp(liftSpeed);
         } else if (gamepad2.dpad_down) {
             telemetry.addData("Program", "Lift falling!");
-            glyphLift9330.liftDown();
+            glyphLift9330.liftDown(liftSpeed);
         } else {
             glyphLift9330.liftStop();
         }
 
         //If "X" is pressed on the gamepad toggle the crystal arm servo
+        /*
         if(gamepad2.x){
             if(xBtnHeld == true) return;
             telemetry.addData("Program", "Arm toggled!");
             crystalArm.toggleArmServo();
             xBtnHeld = true;
         } else xBtnHeld = false;
+        */
 
         //If left is pressed on the dpad toggle the hand servo
         if(gamepad2.left_bumper){
@@ -136,5 +158,6 @@ public class TeleOp9330 extends OpMode {
     public void stop() {
         Hardware9330.leftMotor.setPower(0);
         Hardware9330.rightMotor.setPower(0);
+        Hardware9330.glyphLiftMotor.setPower(0);
     }
 }

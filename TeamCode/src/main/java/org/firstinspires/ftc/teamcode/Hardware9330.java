@@ -59,10 +59,9 @@ public class Hardware9330 {
         crystalArm = hwMap.servo.get("crystalArm");
         crystalArm.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
-        //glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
+        glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
         platformCS = hwMap.get(ColorSensor.class, "platformCS");
         armCS = hwMap.get(ColorSensor.class, "armCS");
-        ds = hwMap.get(DistanceSensor.class, "ds");
         rightMotor = hwMap.dcMotor.get("rightMotor");
         gyro = hwMap.get(BNO055IMU.class, "imu");
         touch  = hwMap.get(DigitalChannel.class, "touch");
@@ -74,5 +73,6 @@ public class Hardware9330 {
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        glyphLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }

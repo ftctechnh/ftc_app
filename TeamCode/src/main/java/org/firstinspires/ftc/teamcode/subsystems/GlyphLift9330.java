@@ -16,16 +16,16 @@ public class GlyphLift9330 {
         hwMap = robotMap;
     }
 
-    public void liftUp(){
-        //hwMap.glyphLiftMotor.setPower(50);
+    public void liftUp(double liftSpeed){
+        hwMap.glyphLiftMotor.setPower(-liftSpeed);
         //Maybe a second one is required?
     }
 
-    public void liftDown(){
-        //hwMap.glyphLiftMotor.setPower(-50);
+    public void liftDown(double liftSpeed){
+        hwMap.glyphLiftMotor.setPower(liftSpeed);
     }
 
     public void liftStop(){
-        //hwMap.glyphLiftMotor.setPower(0);
+        hwMap.glyphLiftMotor.setPower(0);
     }
 }
