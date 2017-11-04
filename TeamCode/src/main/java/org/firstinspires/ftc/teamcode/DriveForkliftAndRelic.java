@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * Created by BeehiveRobotics-3648 on 11/4/2017.
+ * Created by Kaden on 11/4/2017.
  */
 @TeleOp(name = "ForkliftAndRelicDrive" , group = "Linear OpMode")
 public class DriveForkliftAndRelic extends OpMode {
