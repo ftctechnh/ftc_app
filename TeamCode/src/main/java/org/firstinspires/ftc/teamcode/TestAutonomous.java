@@ -92,6 +92,15 @@ public class TestAutonomous extends OpMode {
         targetRL = robot.rlDrive.getCurrentPosition() + (int)(distance * PULSES_PER_INCH);
         targetRR = robot.rrDrive.getCurrentPosition() + (int)(distance * PULSES_PER_INCH);
 
+        telemetry.addData("Current fl: ", robot.flDrive.getCurrentPosition());
+        telemetry.addData("Current fr: ", robot.frDrive.getCurrentPosition());
+        telemetry.addData("Current rl: ", robot.rlDrive.getCurrentPosition());
+        telemetry.addData("Current rr: ", robot.rrDrive.getCurrentPosition());
+        telemetry.addData("fl: ", targetFL);
+        telemetry.addData("fr: ", targetFR);
+        telemetry.addData("rl: ", targetRL);
+        telemetry.addData("rr: ", targetRR);
+
         robot.flDrive.setTargetPosition(targetFL);
         robot.frDrive.setTargetPosition(targetFR);
         robot.rlDrive.setTargetPosition(targetRL);
@@ -101,7 +110,6 @@ public class TestAutonomous extends OpMode {
         robot.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        
     }
 
     @Override
