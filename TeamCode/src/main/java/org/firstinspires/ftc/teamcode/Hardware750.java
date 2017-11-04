@@ -39,8 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *  this is my hardware
  *  owo
  */
-public class Hardware750
-{
+public class Hardware750 {
     /* Public OpMode members. */
     public DcMotor flDrive = null;
     public DcMotor frDrive = null;
@@ -66,10 +65,10 @@ public class Hardware750
         frDrive = hwMap.get(DcMotor.class, "frDrive");
         rlDrive = hwMap.get(DcMotor.class, "rlDrive");
         rrDrive = hwMap.get(DcMotor.class, "rrDrive");
-        flDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        flDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.REVERSE);
         rlDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
-        rrDrive.setDirection(DcMotor.Direction.FORWARD);
+        rrDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         flDrive.setPower(0);
@@ -79,10 +78,10 @@ public class Hardware750
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rlDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void setAllMotors(double requestedSpeed) {

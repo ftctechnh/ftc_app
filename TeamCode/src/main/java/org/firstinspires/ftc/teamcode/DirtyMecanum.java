@@ -55,6 +55,7 @@ public class DirtyMecanum extends OpMode
     boolean[] dpadStates = new boolean[4];
     // setup runtime timer
     private ElapsedTime runtime = new ElapsedTime();
+    static double SPEED = 1;
 
     @Override
     public void init() {
@@ -83,32 +84,42 @@ public class DirtyMecanum extends OpMode
         dpadStates[2] = gamepad1.dpad_down;
         dpadStates[3] = gamepad1.dpad_left;
 
+
+
         if (dpadStates[0]){         // full forward
-            robot.setAllMotors(1);
+            robot.setAllMotors(SPEED);
         } else if (dpadStates[1]) { // right strafe
-            robot.flDrive.setPower(1);
-            robot.frDrive.setPower(-1);
-            robot.rlDrive.setPower(-1);
-            robot.rrDrive.setPower(1);
+            robot.flDrive.setPower(SPEED);
+            robot.frDrive.setPower(-1 * SPEED);
+            robot.rlDrive.setPower(-1 * SPEED);
+            robot.rrDrive.setPower(SPEED);
         } else if (dpadStates[2]) { // full reverse
-            robot.setAllMotors(-1);
+            robot.setAllMotors(-1 * SPEED);
         } else if (dpadStates[3]) { // left strafe
-            robot.flDrive.setPower(-1);
-            robot.frDrive.setPower(1);
-            robot.rlDrive.setPower(1);
-            robot.rrDrive.setPower(-1);
+            robot.flDrive.setPower(-1 * SPEED);
+            robot.frDrive.setPower(SPEED);
+            robot.rlDrive.setPower(SPEED);
+            robot.rrDrive.setPower(-1 * SPEED);
         } else if (gamepad1.right_bumper) {
-            robot.flDrive.setPower(1);
-            robot.frDrive.setPower(-1);
-            robot.rlDrive.setPower(1);
-            robot.rrDrive.setPower(-1);
+            robot.flDrive.setPower(SPEED);
+            robot.frDrive.setPower(-1 * SPEED);
+            robot.rlDrive.setPower(SPEED);
+            robot.rrDrive.setPower(-1 * SPEED);
         } else if (gamepad1.left_bumper) {
-            robot.flDrive.setPower(-1);
-            robot.frDrive.setPower(1);
-            robot.rlDrive.setPower(-1);
-            robot.rrDrive.setPower(1);
-        }
-        else {
+            robot.flDrive.setPower(-1 * SPEED);
+            robot.frDrive.setPower(SPEED);
+            robot.rlDrive.setPower(-1 * SPEED);
+            robot.rrDrive.setPower(SPEED);
+        } else if (gamepad1.a){
+            robot.flDrive.setPower(SPEED);
+        } else if (gamepad1.b){
+            robot.frDrive.setPower(SPEED);
+        } else if (gamepad1.x){
+            robot.rlDrive.setPower(SPEED);
+        } else if (gamepad1.y){
+            robot.rrDrive.setPower(SPEED);
+        } else {
+
             robot.setAllMotors(0);
         }
 
@@ -116,6 +127,11 @@ public class DirtyMecanum extends OpMode
         telemetry.addData("D-Pad right", dpadStates[1]);
         telemetry.addData("D-Pad down", dpadStates[2]);
         telemetry.addData("D-Pad left", dpadStates[3]);
+        telemetry.addData("ENCODERS", "");
+        telemetry.addData("FL", robot.flDrive.getCurrentPosition());
+        telemetry.addData("FR", robot.frDrive.getCurrentPosition());
+        telemetry.addData("RL", robot.rlDrive.getCurrentPosition());
+        telemetry.addData("RR", robot.rrDrive.getCurrentPosition());
     }
 
     /*
