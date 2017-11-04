@@ -53,7 +53,6 @@ public class testautolinear extends LinearOpMode {
             robot.flDrive.setPower(Math.abs(speed));
             robot.frDrive.setPower(Math.abs(speed));
             robot.rlDrive.setPower(Math.abs(speed));
-            //robot.rrDrive.setPower(Math.abs(speed));
             robot.rrDrive.setPower(Math.abs(speed));
             
             while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rlDrive.isBusy() && robot.rrDrive.isBusy())) {
