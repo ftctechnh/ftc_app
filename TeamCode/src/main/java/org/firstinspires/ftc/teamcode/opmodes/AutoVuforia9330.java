@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
+import org.firstinspires.ftc.teamcode.subsystems.ColorSensor9330;
 import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Drive9330;
 import org.firstinspires.ftc.teamcode.subsystems.Gyro9330;
@@ -24,6 +26,7 @@ public class AutoVuforia9330 extends LinearOpMode {
 
     Hardware9330 robotMap = new Hardware9330();
     ColorDistance9330 colorDistance = new ColorDistance9330(robotMap);
+    ColorSensor9330 cs9330 = new ColorSensor9330(robotMap);
     Vuforia9330 PictographScan = new Vuforia9330();
     Gyro9330 gyro = new Gyro9330(robotMap);
     Drive9330 drive = new Drive9330(robotMap);
@@ -39,6 +42,7 @@ public class AutoVuforia9330 extends LinearOpMode {
     Integer ColorGreen;
     Integer ColorBlue;
     Integer ColorAlpha;
+    boolean onRedTeam;
 
     public void log(String name, Object value) {
         telemetry.clear();
@@ -125,16 +129,24 @@ public class AutoVuforia9330 extends LinearOpMode {
 
                 crystalarm.lowerArmServo();
 
-                //add code to get crystal color from second color sensor HERE
-
-
                 if (ColorRed > ColorBlue) {
-                    //Knock down blue
+                    onRedTeam = true;
                     log("Info", "We are red! Knocking down blue.");
-
+                    if(cs9330.r() > cs9330.b()){
+                        drive.gyroTurn(90, TurnSpeed);
+                    }else{
+                        drive.gyroTurn(-90,TurnSpeed);
+                    }
+                    crystalarm.raiseArmServo();
                 } else {
-                    //Knock down red
+                    onRedTeam = false;
                     log("Info", "We are blue! Knocking down red.");
+                    if(cs9330.r() > cs9330.b()){
+                        drive.gyroTurn(-90, TurnSpeed);
+                    }else{
+                        drive.gyroTurn(90, TurnSpeed);
+                    }
+                    crystalarm.raiseArmServo();
                 }
 
             while(!isStopRequested() && robotMap.touch.getState()) {

@@ -23,7 +23,8 @@ public class Hardware9330 {
     public static Servo crystalArm;
     public static DcMotor leftMotor;
     public static DcMotor glyphLiftMotor;
-    public static ColorSensor cs;
+    public static ColorSensor platformCS;
+    public static ColorSensor armCS;
     public static DistanceSensor ds;
     public static DcMotor rightMotor;
     public static BNO055IMU gyro;
@@ -59,8 +60,9 @@ public class Hardware9330 {
         crystalArm.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
         glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
-        cs = hwMap.get(ColorSensor.class, "cs");
-        ds = hwMap.get(DistanceSensor.class, "cs");
+        platformCS = hwMap.get(ColorSensor.class, "platformCS");
+        armCS = hwMap.get(ColorSensor.class, "armCS");
+        ds = hwMap.get(DistanceSensor.class, "ds");
         rightMotor = hwMap.dcMotor.get("rightMotor");
         gyro = hwMap.get(BNO055IMU.class, "imu");
         touch  = hwMap.get(DigitalChannel.class, "touch");

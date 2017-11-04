@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class ColorDistance9330 {
 
@@ -12,10 +11,10 @@ public class ColorDistance9330 {
     public HashMap getInfo() {
         HashMap hm = new HashMap();
         hm.put("Distance (cm)",  (hwMap.ds.getDistance(DistanceUnit.CM)));
-        hm.put("Alpha", new Integer(hwMap.cs.alpha()));
-        hm.put("Red", new Integer(hwMap.cs.red()));
-        hm.put("Green",new Integer( hwMap.cs.green()));
-        hm.put("Blue", new Integer(hwMap.cs.blue()));
+        hm.put("Alpha", new Integer(hwMap.platformCS.alpha()));
+        hm.put("Red", new Integer(hwMap.platformCS.red()));
+        hm.put("Green",new Integer( hwMap.platformCS.green()));
+        hm.put("Blue", new Integer(hwMap.platformCS.blue()));
             return hm;
     }
 

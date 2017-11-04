@@ -28,28 +28,28 @@ public class RelicPickup9330 {
     public void openHand(){
         if(isHandClosed){
             isHandClosed = false;
-            hwMap.relicHandServo.setPosition(OPEN_POS);
+           // hwMap.relicHandServo.setPosition(OPEN_POS);
         }
     }
 
     public void closeHand(){
         if(!isHandClosed){
             isHandClosed = true;
-            hwMap.relicHandServo.setPosition(CLOSED_POS);
+           // hwMap.relicHandServo.setPosition(CLOSED_POS);
         }
     }
 
     public void raiseWrist(){
         if(!isWristUp){
             isWristUp = true;
-            hwMap.relicWristServo.setPosition(HIGH_POS);
+           // hwMap.relicWristServo.setPosition(HIGH_POS);
         }
     }
 
     public void lowerWrist(){
         if(isWristUp){
             isWristUp = false;
-            hwMap.relicWristServo.setPosition(LOW_POS);
+           // hwMap.relicWristServo.setPosition(LOW_POS);
 
         }
     }

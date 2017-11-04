@@ -18,5 +18,5 @@ public class RightAuto9330 extends LinearOpMode {
 
     }
 
-    //Will rely on cs to detect side and turn accordingly
+    //Will rely on platformCS to detect side and turn accordingly
 }
