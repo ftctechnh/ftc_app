@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
@@ -81,17 +80,22 @@ public class CompleteAutonomous extends LinearOpMode {
         robot.closeBlockClaw();
         robot.setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.5);
-        robot.lift.setTargetPosition(-ROTATION / 2);
-        robot.sleep(1000);
+        robot.lift.setTargetPosition(-2500);
+        robot.sleep(2000);
 
 
         // We have now hit the gem
 
+        if (ballPositionsKnown()) {
+            knockOffBalls();
+        }
+
         // We now need to read the pictograph
         initializeVuforia();
-        String pictographLocation = null;
+        String pictographLocation = "leftTarget"; // Should be null
         int pictograph = 0;
 
+        /*
         while (opModeIsActive() && pictographLocation == null) {
 
             for (VuforiaTrackable trackable : trackables) {
@@ -103,7 +107,8 @@ public class CompleteAutonomous extends LinearOpMode {
                 }
             }
             telemetry.update();
-        }
+        }*/
+
         switch (pictographLocation) {
             case "leftTarget":
                 pictograph = 0;
@@ -119,60 +124,59 @@ public class CompleteAutonomous extends LinearOpMode {
 
         robot.sleep(3000);
 
-        // Up and left three wheel rotations
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + ROTATION * 3);
-        //robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION*2);
-        //robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION*2);
-        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + ROTATION * 3);
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + ROTATION * 2);
+        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION*2);
+        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION*2);
+        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + ROTATION * 2);
 
         for (DcMotor m : robot.motorArr) {
             m.setPower(0.35);
         }
-        robot.sleep(3000); // Wait for this to be completed
+        robot.sleep(5000); // Wait for this to be completed
+
+        robot.frontRight.setTargetPosition(robot.frontLeft.getTargetPosition() + (int) (ROTATION * 1.5));
+        robot.backLeft.setTargetPosition(robot.backRight.getTargetPosition() + (int) (ROTATION * 1.5));
+        robot.sleep(5000);
+        // Move into corner
 
         // Up and right five wheel rotations
-        //robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + ROTATION*3);
-        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION * 3);
-        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION * 3);
-        //robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + ROTATION*3);
+        robot.backRight.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION * 2);
+        robot.frontLeft.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION * 2);
 
-        robot.sleep(3000); // Wait for this to be completed
+        robot.sleep(5000); // Wait for this to be completed
 
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() - ROTATION / 2);
-        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() - ROTATION / 2);
-        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() - ROTATION / 2);
-        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() - ROTATION / 2);
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() - (ROTATION /4)*3);
+        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() - (ROTATION /4)*3);
+        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() - (ROTATION /4)*3);
+        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() - (ROTATION /4)*3);
 
-        robot.sleep(1000); // Wait for this to be completed
+        robot.sleep(5000); // Wait for this to be completed
 
-        int driveDist = ROTATION + ROTATION / 2 * pictograph;
+        int driveDist = (ROTATION /4) * 6 + (ROTATION /4) * 3 * pictograph;
 
         robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + driveDist);
         robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() - driveDist);
         robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() - driveDist);
         robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + driveDist);
 
-        robot.sleep(3000);
+        robot.sleep(5000);
 
         robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + ROTATION);
         robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION);
         robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION);
         robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + ROTATION);
 
-        robot.sleep(1000);
+        robot.sleep(5000);
         robot.lift.setTargetPosition(0);
 
-        robot.sleep(1000);
+        robot.sleep(5000);
         robot.openRelicClaw();
-        robot.sleep(500);
+        robot.sleep(5000);
 
         robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() - ROTATION);
         robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() - ROTATION);
         robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() - ROTATION);
         robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() - ROTATION);
-        robot.openRelicClaw();
-
-
     }
 
     public void initializeVuforia() {
@@ -209,7 +213,7 @@ public class CompleteAutonomous extends LinearOpMode {
         return redBall.isSeen() && blueBall.isSeen();
     }
 
-    public void knockOffBlocks() {
+    public void knockOffBalls() {
         if (robot.color == BLUE) {
             robot.lowerLeftWhipSnake();
         } else {

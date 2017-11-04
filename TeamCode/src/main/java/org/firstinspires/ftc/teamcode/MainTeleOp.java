@@ -97,7 +97,7 @@ public class MainTeleOp extends LinearOpMode {
             desiredMax = 1;
 
             // Toggle slow mode
-            if (gamepad1.left_trigger > triggerThreshold) {// Left trigger activates slow mode
+            if (gamepad1.left_trigger > triggerThreshold || robot.zType.getCurrentPosition() > 3000) {// Left trigger activates slow mode
                 desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
                 robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
             } else {
@@ -176,6 +176,11 @@ public class MainTeleOp extends LinearOpMode {
 
                     if (gamepad1.start && gamepad1.a) {
                         lift.encoderOffset = robot.lift.getCurrentPosition();
+                    }
+
+                    if (Math.abs(gamepad2.left_stick_x) > triggerThreshold) {
+                        robot.relicFipperPosition += gamepad1.left_stick_x * 0.01;
+                        robot.relicClawFlipper.setPosition(robot.relicFipperPosition);
                     }
 
                     wasBackPressed = gamepad1.back;
