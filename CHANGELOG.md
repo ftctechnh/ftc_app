@@ -15,6 +15,15 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
 
+### [0.9.0] - 2017-11-04
+#### Added
+- OpenCV Utiliy file
+- Added Histogram Equalization to image processing
+
+#### Fixed
+- Some HSV values
+
+
 ### [0.8.0] - 2017-11-02
 #### Added
 - The TelMet class, used to bring telemetry to non-OpMode classes
