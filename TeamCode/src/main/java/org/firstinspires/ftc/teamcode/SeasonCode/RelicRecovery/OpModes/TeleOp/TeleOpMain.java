@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.OpModes.TeleOp;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
+import org.directcurrent.core.gamecontroller.Controller;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 
@@ -12,14 +13,12 @@ import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivet
  * Main TeleOp for Relic Recovery Robot
  */
 @TeleOp(name = "Main TeleOp" , group = "Relic Recovery")
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ConstantConditions"})
 public class TeleOpMain extends LinearOpMode
 {
     private Base _base = new Base();        // Robot base
 
-    // Control Togglers
-    private UtilToggle _toggleReverse = new UtilToggle();
-    private UtilToggle _toggleSlow = new UtilToggle();
+    private Controller _controller1 = new Controller();
 
 
     /**
@@ -52,12 +51,15 @@ public class TeleOpMain extends LinearOpMode
      */
     private void _grabInput()
     {
-        if(_toggleReverse.isPressed(gamepad1.x))
+        _controller1.read(gamepad1);
+
+        if(_controller1.xClicked())
         {
             _base.drivetrain.flipDirection();
         }
 
-        if(_toggleSlow.isPressed(gamepad1.a))
+
+        if(_controller1.aClicked())
         {
             _base.drivetrain.flipSpeed();
         }
@@ -69,7 +71,7 @@ public class TeleOpMain extends LinearOpMode
      */
     private void _runComponents()
     {
-        _base.drivetrain.run(-gamepad1.left_stick_y , gamepad1.right_stick_x , true);
+        _base.drivetrain.run(-_controller1.leftY() , _controller1.rightX() , true);
         _base.lift.run(-gamepad2.left_stick_y);
         telemetry.addData("Controls, 1LY" , -gamepad1.left_stick_y);
         telemetry.addData("Controls, 1RX" , gamepad1.right_stick_x);

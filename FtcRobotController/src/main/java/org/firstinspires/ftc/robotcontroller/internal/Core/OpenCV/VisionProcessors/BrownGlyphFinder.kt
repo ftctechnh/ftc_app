@@ -1,12 +1,15 @@
 @file:Suppress("PackageDirectoryMismatch")
 package org.directcurrent.opencv.visionprocessors
 
+
+import org.directcurrent.opencv.equalizeIntensity
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 
 
 class BrownGlyphFinder: VisionProcessor()
 {
+    private var equalizedMat: Mat? = null
     private var limitedHsvMat: Mat? = null
     private var contourMat: Mat? = null
     private var boundingMat: Mat? = null
@@ -28,19 +31,22 @@ class BrownGlyphFinder: VisionProcessor()
      */
     override fun processFrame(originalMat: Mat?): Mat?
     {
-        limitedHsvMat = Mat()
-        originalMat?.copyTo(contourMat)
-        originalMat?.copyTo(boundingMat)
 
+        limitedHsvMat = Mat()
+
+        equalizedMat = equalizeIntensity(originalMat)
+
+        equalizedMat?.copyTo(contourMat)
+        equalizedMat?.copyTo(boundingMat)
 
         /*
          * Get our HSV mat, and limit restrict it to a color range we want
          * Color range is HSV- you can get this by taking a picture with the phone and running
          * it through GRIP
          */
-        Imgproc.cvtColor(originalMat , limitedHsvMat , Imgproc.COLOR_RGB2HSV)
-        Core.inRange(limitedHsvMat , Scalar(0.0 , 37.0 , 69.0) ,
-                Scalar(16.0 , 179.0 , 142.0) , limitedHsvMat)
+        Imgproc.cvtColor(equalizedMat , limitedHsvMat , Imgproc.COLOR_RGB2HSV)
+        Core.inRange(limitedHsvMat , Scalar(0.0 , 23.0 , 30.0) ,
+                Scalar(19.0 , 192.0 , 159.0) , limitedHsvMat)
 
 
         Imgproc.erode(limitedHsvMat , limitedHsvMat , Imgproc.getStructuringElement
@@ -57,7 +63,7 @@ class BrownGlyphFinder: VisionProcessor()
         Imgproc.findContours(limitedHsvMat , contours , Mat() , Imgproc.RETR_EXTERNAL , Imgproc.CHAIN_APPROX_SIMPLE)
 
         // Filter out some contours
-        contours.filterTo(filteredContours) { Imgproc.contourArea(it) >= 2_000 }
+               contours.filterTo(filteredContours) { Imgproc.contourArea(it) >= 2_000 }
 
         Imgproc.drawContours(contourMat , filteredContours , -1 , Scalar(255.0 , 0.0 , 0.0) , 6)
 
@@ -74,6 +80,7 @@ class BrownGlyphFinder: VisionProcessor()
 
         // Deleting pointers
         originalMat?.release()
+        equalizedMat?.release()
         limitedHsvMat?.release()
         contourMat?.release()
 
@@ -86,6 +93,7 @@ class BrownGlyphFinder: VisionProcessor()
      */
     override fun releaseMats()
     {
+        equalizedMat?.release()
         limitedHsvMat?.release()
         contourMat?.release()
         boundingMat?.release()
