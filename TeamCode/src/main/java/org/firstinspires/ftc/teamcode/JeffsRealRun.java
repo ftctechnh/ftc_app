@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -29,7 +30,9 @@ public class JeffsRealRun extends LinearOpMode {
     double stretch;
     double degreeOfArmPower = 1;
     double degreeOfRobotPower = 1;
+    double servoPosition =.8;
     double directionOfArmMotor = 1;//change direction if needed (TODO is fun)
+    double go;
     int armUpDirection;
     int extendDirection;
     boolean turningRight; //TODO This is not working right, it should be > but it is mixing up and left and righ
@@ -52,7 +55,8 @@ public class JeffsRealRun extends LinearOpMode {
         //
         waitForStartify();
 
-        startify(directionOfArmMotor);//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
+        startify();//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
+        smartify();
         //
         while (opModeIsActive()) {
             //variable
@@ -71,10 +75,10 @@ public class JeffsRealRun extends LinearOpMode {
             extendDirection = gamepad2.left_stick_y > 0 ? 1 : -1;
             //
             //Set the power
-            moveTheArm(directionOfArmMotor, degreeOfArmPower, armUpDirection, extendDirection);
+            moveTheArm(degreeOfArmPower, armUpDirection, extendDirection);
             //
             //Set power stuff
-            degreeOfRobotPower = getDegreePower(degreeOfRobotPower);
+            setDegreePower();
 
             getPowerStuff(power, degreeOfRobotPower);
             //
@@ -82,6 +86,14 @@ public class JeffsRealRun extends LinearOpMode {
             //
             //main if/then
             moveTheRobot(turningRight, notTurning, movingVertical, strafingRight);
+            //
+            //
+            if(gamepad2.dpad_right == true){
+                pengwinArm.close();
+            }else if (gamepad2.dpad_left == true){
+                pengwinArm.open();
+            }
+            //
             telemetryJazz();
 
         }
@@ -94,6 +106,8 @@ public class JeffsRealRun extends LinearOpMode {
         }
         else if(gamepad2.right_bumper){
             degreeOfArmPower = 0.25;
+        }else{
+            degreeOfArmPower = 1.0;
         }
     }
 
@@ -104,15 +118,15 @@ public class JeffsRealRun extends LinearOpMode {
         strafingRight = leftX > 0;
     }
 
-    private void moveTheArm(double direction, double degreeOfArmPower, int armUpDirection, int extendDirection) {
-        setThePowerForMovingArmUpOrDown(direction, degreeOfArmPower, armUpDirection);
+    private void moveTheArm(double degreeOfArmPower, int armUpDirection, int extendDirection) {
+        setThePowerForMovingArmUpOrDown(degreeOfArmPower, armUpDirection);
         //
         pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
     }
 
     private void getThePowers() {
         power = getPathagorus(leftX, drive); //the current joystick position
-        rotate = getPathagorus(gamepad2.right_stick_y, gamepad2.right_stick_x);
+        rotate = (getPathagorus(gamepad2.right_stick_y, gamepad2.right_stick_x) * .25);
         stretch = getPathagorus(gamepad2.left_stick_y, gamepad2.left_stick_x);
     }
 
@@ -121,7 +135,7 @@ public class JeffsRealRun extends LinearOpMode {
             //no movement in right joystick
             //start of driving section
             if (movingVertical) { //forward/back or left/right?
-                if (drive < 0) { //forward because when the joystick is foward, y = -1
+                if (drive < 0) { //forward because when the joystick is forward, y = -1
                     jeffThePengwin.driveForward();
                 } else { //back
                     jeffThePengwin.driveBackward();
@@ -143,15 +157,16 @@ public class JeffsRealRun extends LinearOpMode {
         }
     }
 
-    private void setThePowerForMovingArmUpOrDown(double direction, double degreeOfArmPower, int armUpDirection) {
-        //if((isRaised() & rotate*direction > 0 ) || (isFelled() & rotate*direction < 0 ) || (!isRaised() & !isFelled())){
+    private void setThePowerForMovingArmUpOrDown(double degreeOfArmPower, int armUpDirection) {
+        //if((isRaised() & rotate > 0 ) || (isFelled() & rotate < 0 ) || (!isRaised() & !isFelled())){
             //
-            pengwinArm.setUpPower(armUpDirection* degreeOfArmPower*rotate*direction);
-        // v}
+            pengwinArm.setUpPower(armUpDirection* degreeOfArmPower*rotate);
+        //}
     }
 
     private void telemetryJazz() {
         //TODO Telemetry(Fancy jazz)
+        telemetry.addData("drive", drive);
         telemetry.addData("calibrate high", pengwinArm.getCalibrate());
         telemetry.addData("penguin power set", jeffThePengwin.getPowerInput());
         telemetry.addData("penguin total power", jeffThePengwin.getTotalPower());
@@ -161,18 +176,30 @@ public class JeffsRealRun extends LinearOpMode {
         telemetry.addData("Left Stick X", gamepad1.left_stick_x);
         telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
         telemetry.addData("Right Stick X", gamepad1.right_stick_x);
+        telemetry.addData("touchy", touchy.getState());
+        telemetry.addData("up", up.getState());
+        telemetry.addData("Glyphy", pengwinArm.glyphy.getPosition());
+        telemetry.addData("dpad right", gamepad2.dpad_right);
+        telemetry.addData("dpad left", gamepad2.dpad_left);
+        telemetry.addData("glyphy directions", pengwinArm.glyphy.getDirection());
+        if (gamepad2.dpad_up == true){
+            pengwinArm.upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            telemetry.addData("position", pengwinArm.upMotor.getCurrentPosition());
+            pengwinArm.upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
         telemetry.addData("Unicorn Crossing", "Always a danger WATCH OUT");
         telemetry.update();
     }
 
-    private double getDegreePower(double degreePower) {
+    private void setDegreePower() {
         if(gamepad1.left_bumper) {
-            degreePower = 0.5;
+            degreeOfRobotPower = 0.5;
         }
         else if(gamepad1.right_bumper){
-            degreePower = 0.25;
+            degreeOfRobotPower = 0.25;
+        }else{
+            degreeOfRobotPower = 1.0;
         }
-        return degreePower;
     }
 
     private void getPowerStuff(double power, double degreePower) {
@@ -189,9 +216,9 @@ public class JeffsRealRun extends LinearOpMode {
         }
     }
 
-    private void startify(double direction) {
+    private void startify() {
         if(!touchy.getState()){
-            pengwinArm.setUpPower(.4 * direction);
+            pengwinArm.setUpPower(-.4);
             while (!touchy.getState()) {
                 //TODO Do nothing
             }
@@ -216,5 +243,14 @@ public class JeffsRealRun extends LinearOpMode {
         return c;
 
         //Finding the joystick position using pythagorean theorem (a2 + b2 = c2)
+    }
+    //
+    private void smartify(){//calibrate up position
+        pengwinArm.upMotor.setPower(.4);//opposite of touchy
+        while(up.getState()){
+            //TODO Wookie
+        }
+        pengwinArm.upMotor.setPower(0);//stop the motor
+        pengwinArm.upPosition = pengwinArm.upMotor.getCurrentPosition();
     }
 }

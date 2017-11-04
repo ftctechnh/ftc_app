@@ -73,7 +73,7 @@ public class JeffsRealRunV2CC extends LinearOpMode {
             moveTheArm(directionOfArmMotor, degreeOfArmPower, armUpDirection, extendDirection);
             //
             //Set power stuff
-            degreeOfRobotPower = getDegreePower(degreeOfRobotPower);
+            setDegreePower();
 
             getPowerStuff(power, degreeOfRobotPower);
             //
@@ -157,23 +157,26 @@ public class JeffsRealRunV2CC extends LinearOpMode {
 
     private void telemetryJazz() {
         //TODO Telemetry(Fancy jazz)
-        telemetry.addData("calibrate high", pengwinArm.getCalibrate());
-        telemetry.addData("penguin power set", jeffThePengwin.getPowerInput());
-        telemetry.addData("penguin total power", jeffThePengwin.getTotalPower());
-        telemetry.addData("penguin degree of power", jeffThePengwin.getDegreeOfPower());
-        telemetry.addData("penguin arm up power", pengwinArm.getUpPower());
-        telemetry.addData("penguin arm extend power", pengwinArm.getAcrossPower());
+//        telemetry.addData("calibrate high", pengwinArm.getCalibrate());
+//        telemetry.addData("penguin power set", jeffThePengwin.getPowerInput());
+//        telemetry.addData("penguin total power", jeffThePengwin.getTotalPower());
+//        telemetry.addData("penguin degree of power", jeffThePengwin.getDegreeOfPower());
+//        telemetry.addData("penguin arm up power", pengwinArm.getUpPower());
+//        telemetry.addData("penguin arm extend power", pengwinArm.getAcrossPower());
+        telemetry.addData("gamepad left bumper", gamepad1.left_bumper);
+        telemetry.addData("gamepad right bumper", gamepad1.right_bumper);
         telemetry.update();
     }
 
-    private double getDegreePower(double degreePower) {
+    private void setDegreePower() {
         if(gamepad1.left_bumper) {
-            degreePower = 0.5;
+            degreeOfRobotPower = 0.5;
         }
         else if(gamepad1.right_bumper){
-            degreePower = 0.25;
+            degreeOfRobotPower = 0.25;
+        }else{
+            degreeOfRobotPower = 1.0;
         }
-        return degreePower;
     }
 
     private void getPowerStuff(double power, double degreePower) {

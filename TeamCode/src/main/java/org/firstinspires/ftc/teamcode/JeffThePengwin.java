@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -33,9 +34,13 @@ public class JeffThePengwin {
     public JeffThePengwin(HardwareMap hardwareMap){
         //get motors
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
         rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
+        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
         leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
@@ -43,7 +48,7 @@ public class JeffThePengwin {
         boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
         boolean notTurning = turn == 0;
         boolean movingVertical = Math.abs(drive) > Math.abs(strafe);
-        boolean strafingRight = strafe > 0;
+        boolean strafingLefty = strafe > 0;
 
         if (notTurning) {
             //no movement in right joystick
@@ -55,10 +60,10 @@ public class JeffThePengwin {
                     driveBackward();
                 }
             } else {
-                if (strafingRight) { //right
-                    strafeRight();
-                } else { //left
+                if (strafingLefty) { //right
                     strafeLeft();
+                } else { //left
+                    strafeRight();
                 }
             }
         } else if (turningRight) {
