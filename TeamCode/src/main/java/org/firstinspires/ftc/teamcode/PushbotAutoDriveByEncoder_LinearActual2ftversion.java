@@ -108,6 +108,9 @@ public class PushbotAutoDriveByEncoder_LinearActual2ftversion extends LinearOpMo
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         encoderDrive(DRIVE_SPEED,  6,  6, 5.0);
 
         // robot.claw.setPosition(1.0);sleep(1000);
