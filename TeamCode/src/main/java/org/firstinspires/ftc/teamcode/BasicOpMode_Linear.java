@@ -70,15 +70,13 @@ public class BasicOpMode_Linear extends LinearOpMode {
 				MRI2CGyro.resetZAxisIntegrator();
 			}
 			LastResState = curResState;
-            double APwr;
-            double BPwr;
-			double CPwr;
 			double angle = MRI2CGyro.getIntegratedZValue();
             double drivey = -gamepad1.left_stick_y;
 			double drivex = gamepad1.left_stick_x;
             double turn =  gamepad1.right_stick_x;
             double time = getRuntime();
-            theta += .18*.5*(time-previoustime)*turn;
+            //drivebase powers
+			theta += .18*.5*(time-previoustime)*turn;
             double θerr = angle-theta;
             double θderiv = (θerr-θpreverr)/(time-previoustime);
             double θinteg = .5*(time-previoustime)*(θerr+θpreverr);
@@ -103,6 +101,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             telemetry.addData("Data", "A (%.2f), B (%.2f), C (%.2f) angle (%.2f)", APwr, BPwr, CPwr, angle);
 			telemetry.addData("MEH too lazy to name this", "temp (%.2f) drvey (%.2f) drivey, drivex (%.2f)", temp, drivey, drivex);
             telemetry.update();
+			
         }
     }
 }
