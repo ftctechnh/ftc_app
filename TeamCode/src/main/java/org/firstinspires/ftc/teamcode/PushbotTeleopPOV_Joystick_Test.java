@@ -91,11 +91,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Pushbot: Teleop POV TC4", group = "Pushbot")
+@TeleOp(name = "Pushbot: Teleop POV Joystick Test", group = "Pushbot")
 
 //@Disabled
 
-public class PushbotTeleopPOV_Linear extends LinearOpMode {
+public class PushbotTeleopPOV_Joystick_Test extends LinearOpMode {
 
 
 
@@ -119,10 +119,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         double rDrive;
 
         double cDrive;
-
-        double fLift;
-
-        double max;
 
 
 
@@ -148,16 +144,9 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         waitForStart();
 
-
-        // run until the end of the match (driver presses STOP)
-
         while (opModeIsActive()) {
-            //sets flift servos to 90 degrees
 
-            robot.fs1.setPosition(.5);
-            robot.fs2.setPosition(.5);
-            robot.jko.setPosition(.5);
-            robot.claw.setPosition(0);
+            // run until the end of the match (driver presses STOP)
 
             // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
 
@@ -169,29 +158,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
             cDrive = -gamepad1.left_trigger + gamepad1.right_trigger;
 
-            fLift = -gamepad2.left_trigger + gamepad2.right_trigger;
-
-            if (gamepad2.a) {
-                robot.fs1.setPosition(.25);
-                robot.fs2.setPosition(.25);
-            }
-            if (gamepad2.b) {
-                robot.fs1.setPosition(.5);
-                robot.fs2.setPosition(.5);
-            }
-            if (gamepad1.a) {
-                robot.jko.setPosition(.75);
-            }
-            if (gamepad1.b) {
-                robot.jko.setPosition(.5);
-            }
-            if (gamepad2.x) {
-                robot.claw.setPosition(.75);
-            }
-
-            // Normalize the values so neither exceed +/- 1.0
-
-            max = Math.max(Math.abs(lDrive), Math.abs(rDrive));
+            double max = Math.max(Math.abs(lDrive), Math.abs(rDrive));
 
             if (max > 0.5)
 
@@ -203,7 +170,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
                 cDrive /= max;
 
-                fLift /= max;
 
             }
 
@@ -214,11 +180,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
             robot.cDrive.setPower(cDrive);
 
-            robot.fLift.setPower(fLift);
-
 
         }
 
     }
-
 }

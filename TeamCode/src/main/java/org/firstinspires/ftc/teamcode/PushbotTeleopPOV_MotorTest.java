@@ -91,11 +91,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Pushbot: Teleop POV TC4", group = "Pushbot")
+@TeleOp(name = "Pushbot: Teleop POV Motor Test", group = "Pushbot")
 
 //@Disabled
 
-public class PushbotTeleopPOV_Linear extends LinearOpMode {
+public class PushbotTeleopPOV_MotorTest extends LinearOpMode {
 
 
 
@@ -114,17 +114,13 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
-        double lDrive;
+        double lDrive = 0.5;
 
-        double rDrive;
+        double rDrive = 0.5;
 
-        double cDrive;
-
-        double fLift;
+        double cDrive = 0.5;
 
         double max;
-
-
 
 
 
@@ -139,9 +135,9 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         // Send telemetry message to signify robot waiting;
 
-        //telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Hello from MotorTest");    //
 
-        //telemetry.update();
+        telemetry.update();
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -152,42 +148,16 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-            //sets flift servos to 90 degrees
-
-            robot.fs1.setPosition(.5);
-            robot.fs2.setPosition(.5);
-            robot.jko.setPosition(.5);
-            robot.claw.setPosition(0);
 
             // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
 
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
 
-            lDrive = -gamepad1.left_stick_y + gamepad1.right_stick_x;
+         /*   lDrive = -gamepad1.left_stick_y + gamepad1.right_stick_x;
 
             rDrive = -gamepad1.left_stick_y - gamepad1.right_stick_x;
 
-            cDrive = -gamepad1.left_trigger + gamepad1.right_trigger;
-
-            fLift = -gamepad2.left_trigger + gamepad2.right_trigger;
-
-            if (gamepad2.a) {
-                robot.fs1.setPosition(.25);
-                robot.fs2.setPosition(.25);
-            }
-            if (gamepad2.b) {
-                robot.fs1.setPosition(.5);
-                robot.fs2.setPosition(.5);
-            }
-            if (gamepad1.a) {
-                robot.jko.setPosition(.75);
-            }
-            if (gamepad1.b) {
-                robot.jko.setPosition(.5);
-            }
-            if (gamepad2.x) {
-                robot.claw.setPosition(.75);
-            }
+            cDrive = -gamepad1.left_trigger + gamepad1.right_trigger;*/
 
             // Normalize the values so neither exceed +/- 1.0
 
@@ -203,8 +173,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
                 cDrive /= max;
 
-                fLift /= max;
-
             }
 
 
@@ -213,9 +181,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             robot.rDrive.setPower(rDrive);
 
             robot.cDrive.setPower(cDrive);
-
-            robot.fLift.setPower(fLift);
-
 
         }
 
