@@ -31,6 +31,7 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Updated code as necessary to fit new method signature of RobotBase.init()
 - OpenCV detection for both glyphs- brown glyphs work better because they stand out more
 - Game Pad wrapper class called Controller- gives additional functionality to the Gamepad class such as click detection
+- Updated SDK to match upstream repo
 
 #### Fixed
 - Changed Relic Recovery TeleOp class name to TeleOpMain
