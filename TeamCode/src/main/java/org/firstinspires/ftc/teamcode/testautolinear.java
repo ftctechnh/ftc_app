@@ -31,28 +31,29 @@ public class testautolinear extends LinearOpMode {
         int targetFL;
         int targetFR;
         int targetRL;
-        int targetRR;
+        //int targetRR;
 
         if(opModeIsActive()) {
             robot.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             targetFL = robot.flDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             targetFR = robot.frDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             targetRL = robot.rlDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
-            targetRR = robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
+            //targetRR = robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
 
             robot.flDrive.setTargetPosition(targetFL);
             robot.frDrive.setTargetPosition(targetFR);
             robot.rlDrive.setTargetPosition(targetRL);
-            robot.rrDrive.setTargetPosition(targetRR);
+            //robot.rrDrive.setTargetPosition(targetRR);
 
             runtime.reset();
             robot.flDrive.setPower(Math.abs(speed));
             robot.frDrive.setPower(Math.abs(speed));
             robot.rlDrive.setPower(Math.abs(speed));
+            //robot.rrDrive.setPower(Math.abs(speed));
             robot.rrDrive.setPower(Math.abs(speed));
             
             while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rlDrive.isBusy() && robot.rrDrive.isBusy())) {
