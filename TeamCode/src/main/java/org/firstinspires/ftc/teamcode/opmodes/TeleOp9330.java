@@ -94,12 +94,12 @@ public class TeleOp9330 extends OpMode {
         //Otherwise motor is not moving
         if(gamepad2.dpad_up) {
             telemetry.addData("Program", "Lift rising!");
-            Hardware9330.glyphLiftMotor.setPower(liftSpeed);
+            glyphLift9330.liftUp();
         } else if (gamepad2.dpad_down) {
             telemetry.addData("Program", "Lift falling!");
-            Hardware9330.glyphLiftMotor.setPower(-liftSpeed);
+            glyphLift9330.liftDown();
         } else {
-            Hardware9330.glyphLiftMotor.setPower(0);
+            glyphLift9330.liftStop();
         }
 
         //If "X" is pressed on the gamepad toggle the crystal arm servo
@@ -115,6 +115,7 @@ public class TeleOp9330 extends OpMode {
             if(lBumpHeld == true) return;
             relicPickup.toggleHand();
             telemetry.addData("Program", "Hand toggled!!!!!!!!");
+            lBumpHeld = true;
         }else lBumpHeld = false;
 
         //If right is pressed on the dpad toggle the wrist servo
@@ -122,6 +123,7 @@ public class TeleOp9330 extends OpMode {
             if(rBumpHeld == true) return;
             relicPickup.toggleWrist();
             telemetry.addData("Program", "Wrist toggled!!! WOW!");
+            rBumpHeld = true;
         }else rBumpHeld = false;
 
         telemetry.update();

@@ -50,27 +50,27 @@ public class Hardware9330 {
 
         lowGlyphClamp = hwMap.servo.get("lowGlyphClamp");
         lowGlyphClamp.setDirection(Servo.Direction.REVERSE);
-        highGlyphClamp = hwMap.servo.get("highGlyphClamp");
-        highGlyphClamp.setDirection(Servo.Direction.REVERSE);
-        relicHandServo = hwMap.servo.get("relicHandServo");
-        relicHandServo.setDirection(Servo.Direction.REVERSE);
-        relicWristServo = hwMap.servo.get("relicWristServo");
-        relicWristServo.setDirection(Servo.Direction.REVERSE);
+        //highGlyphClamp = hwMap.servo.get("highGlyphClamp");
+        //highGlyphClamp.setDirection(Servo.Direction.REVERSE);
+        //relicHandServo = hwMap.servo.get("relicHandServo");
+        //relicHandServo.setDirection(Servo.Direction.REVERSE);
+        //relicWristServo = hwMap.servo.get("relicWristServo");
+        //relicWristServo.setDirection(Servo.Direction.REVERSE);
         crystalArm = hwMap.servo.get("crystalArm");
         crystalArm.setDirection(Servo.Direction.REVERSE);
         leftMotor = hwMap.dcMotor.get("leftMotor");
-        glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
+        //glyphLiftMotor = hwMap.dcMotor.get("liftMotor");
         platformCS = hwMap.get(ColorSensor.class, "platformCS");
         armCS = hwMap.get(ColorSensor.class, "armCS");
         ds = hwMap.get(DistanceSensor.class, "ds");
         rightMotor = hwMap.dcMotor.get("rightMotor");
         gyro = hwMap.get(BNO055IMU.class, "imu");
         touch  = hwMap.get(DigitalChannel.class, "touch");
-        ultrasonicTrigger = hwMap.get(DigitalChannel.class, "ultrasonicTrigger");
-        ultrasonicEcho = hwMap.get(DigitalChannel.class, "ultrasonicEcho");
+        //ultrasonicTrigger = hwMap.get(DigitalChannel.class, "ultrasonicTrigger");
+        //ultrasonicEcho = hwMap.get(DigitalChannel.class, "ultrasonicEcho");
 
-        ultrasonicTrigger.setMode(DigitalChannel.Mode.OUTPUT);
-        ultrasonicEcho.setMode(DigitalChannel.Mode.INPUT);
+        //ultrasonicTrigger.setMode(DigitalChannel.Mode.OUTPUT);
+        //ultrasonicEcho.setMode(DigitalChannel.Mode.INPUT);
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
