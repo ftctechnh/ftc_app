@@ -15,7 +15,7 @@ public class OpCoreTest extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        _base.init(hardwareMap);
+        _base.init(hardwareMap , this);
 
         waitForStart();
 

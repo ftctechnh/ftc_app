@@ -1,26 +1,11 @@
-/*
-    Team 5893 Direct Current
-
-    Authors: Matthew Fan
-    Date Created: 2017-10-30
-
-    Please adhere to these units when working in this project:
-
-    Time: Milliseconds
-    Distance: Centimeters
-    Angle: Degrees (mathematical orientation)
- */
-@file:Suppress("PackageDirectoryMismatch", "ClassName", "FunctionName")
+@file:Suppress("PackageDirectoryMismatch")
 package org.directcurrent.opencv.visionprocessors
 
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 
 
-/**
- * Kotlin class for gray glyph processing. Currently draws contour around gray glyph
- */
-class GrayGlyphFinder : VisionProcessor()
+class BrownGlyphFinder: VisionProcessor()
 {
     private var limitedHsvMat: Mat? = null
     private var contourMat: Mat? = null
@@ -54,8 +39,8 @@ class GrayGlyphFinder : VisionProcessor()
          * it through GRIP
          */
         Imgproc.cvtColor(originalMat , limitedHsvMat , Imgproc.COLOR_RGB2HSV)
-        Core.inRange(limitedHsvMat , Scalar(86.0 , 5.0 , 69.0) ,
-                Scalar(157.0 , 42.0 , 190.0) , limitedHsvMat)
+        Core.inRange(limitedHsvMat , Scalar(0.0 , 37.0 , 69.0) ,
+                Scalar(16.0 , 179.0 , 142.0) , limitedHsvMat)
 
 
         Imgproc.erode(limitedHsvMat , limitedHsvMat , Imgproc.getStructuringElement
@@ -82,7 +67,7 @@ class GrayGlyphFinder : VisionProcessor()
                 .forEach {
                     Imgproc.rectangle(boundingMat , Point(it.x.toDouble() , it.y.toDouble()) ,
                             Point((it.x + it.width).toDouble(), (it.y + it.height).toDouble()) ,
-                            Scalar(0.0 , 0.0 , 255.0) , 6)
+                            Scalar(255.0 , 0.0 , 0.0) , 6)
                 }
 
 

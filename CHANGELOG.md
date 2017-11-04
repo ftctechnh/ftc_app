@@ -15,8 +15,20 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
 
+### [0.8.0] - 2017-11-02
+#### Added
+- The TelMet class, used to bring telemetry to non-OpMode classes
+- Implemented the init() method in RobotBase- use super.init() in your subclasses
+- Updated code as necessary to fit new method signature of RobotBase.init()
+- OpenCV detection for both glyphs- brown glyphs work better because they stand out more
+- Game Pad wrapper class called Controller- gives additional functionality to the Gamepad class such as click detection
 
-### [0.7.0] -2017-10-30
+#### Fixed
+- Changed Relic Recovery TeleOp class name to TeleOpMain
+- Added erosion and dilation in object detection process- helps to filter out some noise
+
+
+### [0.7.0] - 2017-10-30
 #### Added
 - Kotlin support!
 - OpenCV wrapper classes (in Kotlin)
