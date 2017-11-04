@@ -119,6 +119,7 @@ public class DirtyMecanum extends OpMode
         } else if (gamepad1.y){
             robot.rrDrive.setPower(SPEED);
         } else {
+
             robot.setAllMotors(0);
         }
 

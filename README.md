@@ -1,3 +1,6 @@
+## This is the FTC 750 repository for code this year.
+Please do NOT push changes directly to master! Everything should be reviewed by SOMEONE and needs to be PR'd.
+
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
 
