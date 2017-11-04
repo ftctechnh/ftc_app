@@ -51,12 +51,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Basic: Iterative OpMode", group="Iterative Opmode")
+@Autonomous(name="Test Autonomous", group="Autonomous")
 public class TestAutonomous extends OpMode {
     final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
-
-
-    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
 
@@ -78,14 +75,21 @@ public class TestAutonomous extends OpMode {
 
     @Override
     public void loop() {
-        encode(48);
+        for (int i = 0; i < 1; i++) {
+            encode(48, .25);
+        }
     }
 
-    public void encode(double distance) {
+    public void encode(double distance, double speed) {
         int targetFL;
         int targetFR;
         int targetRL;
         int targetRR;
+
+        robot.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         targetFL = robot.flDrive.getCurrentPosition() + (int)(distance * PULSES_PER_INCH);
         targetFR = robot.frDrive.getCurrentPosition() + (int)(distance * PULSES_PER_INCH);
@@ -106,10 +110,13 @@ public class TestAutonomous extends OpMode {
         robot.rlDrive.setTargetPosition(targetRL);
         robot.rrDrive.setTargetPosition(targetRR);
 
-        robot.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        runtime.reset();
+        robot.flDrive.setPower(Math.abs(speed));
+        robot.frDrive.setPower(Math.abs(speed));
+        robot.rlDrive.setPower(Math.abs(speed));
+        robot.rrDrive.setPower(Math.abs(speed));
+
+
     }
 
     @Override
