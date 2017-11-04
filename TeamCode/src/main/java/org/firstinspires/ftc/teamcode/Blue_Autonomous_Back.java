@@ -174,6 +174,9 @@ public class Blue_Autonomous_Back extends LinearOpMode {
                     turnMotorUsingGyro(.1, 20, Constants.spinLeft);
                     af.stopMotor(500);
                     af.moveMotorWithTime(.2, 2200, Constants.backward);
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, 90, Constants.spinLeft);
+                    af.stopMotor(1000);
                     af.moveMotorWithTime(.2, 1000, Constants.left);
 
                 }
@@ -185,6 +188,9 @@ public class Blue_Autonomous_Back extends LinearOpMode {
                     turnMotorUsingGyro(.1, -20, Constants.spinRight);
                     af.stopMotor(500);
                     af.moveMotorWithTime(.2, 2200, Constants.backward);
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, 90, Constants.spinLeft);
+                    af.stopMotor(1000);
                     af.moveMotorWithTime(.2, 1000, Constants.left);
                 }
 
