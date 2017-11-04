@@ -20,6 +20,7 @@ public class BlueAutoAudi extends LinearOpMode
         robot = new TankBase(hardwareMap);
         newRobot = new NewRobot(hardwareMap);
         waitForStart();
+        //OLD CODE DO NOT USE
         /*Need to identify the cipher picture
         //Spin to knock Jewel out
         robot.pivot_IMU(30, .25);
@@ -40,6 +41,8 @@ public class BlueAutoAudi extends LinearOpMode
         //else (no color sense); do nothing
         //raise/retract arm
         //decode pictogram (below)
+        telemetry.addData("Pos ", newRobot.getGlyphCipher());
+        telemetry.update();
         switch (newRobot.getGlyphCipher())
         {
             case 'l': robot.driveStraight_In(30);
