@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+
 /**
  * Created by Noah on 10/27/2017.
  * All teh hardwares
@@ -21,7 +23,9 @@ public class BotHardware {
         backRight("br", false),
         frontLeft("fl", false),
         backLeft("bl", true),
-        lift("l", false);
+        lift("l", false),
+        lights("green", false),
+        stick("s", false);
 
         private final String name;
         private final boolean reverse;
@@ -104,11 +108,24 @@ public class BotHardware {
         ServoE.rightGrab.servo.setPosition(ServoE.rightGrabClose);
     }
 
+    public void setLights(boolean on) {
+        if(on) Motor.lights.motor.setPower(1.0);
+        else Motor.lights.motor.setPower(0.0);
+    }
+
     public Servo getLeftLift() {
         return ServoE.leftGrab.servo;
     }
 
     public Servo getRightLift() {
         return ServoE.rightGrab.servo;
+    }
+
+    public DcMotorEx getMotor(String name) {
+        return Motor.valueOf(name).motor;
+    }
+
+    public DcMotorEx[] getMotorRay() {
+        return new DcMotorEx[] { Motor.frontRight.motor, Motor.backRight.motor, Motor.frontLeft.motor, Motor.backLeft.motor };
     }
 }
