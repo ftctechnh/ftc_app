@@ -14,25 +14,30 @@ public class TCHardwarePushbot {
     public DcMotor lDrive;
     public DcMotor cDrive;
     public DcMotor fLift;
-    public DcMotor claw1;
-    public DcMotor claw2;
+    public DcMotor arm1;
+    public DcMotor arm2;
     public Servo fs1;
     public Servo fs2;
+    public Servo jko;
+    public Servo claw;
     //Creates the hardware map
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
     //Maps the hardware to ahwMap
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap hwMap) {
         // Save reference to Hardware map
-        hwMap = ahwMap;
         // Define and Initialize Motors
         rDrive = hwMap.dcMotor.get("rDrive");
         lDrive = hwMap.dcMotor.get("lDrive");
         cDrive = hwMap.dcMotor.get("cDrive");
         fLift = hwMap.dcMotor.get("fLift");
-        claw1 = hwMap.dcMotor.get("claw1");
-        claw2 = hwMap.dcMotor.get("claw2");
+        arm1 = hwMap.dcMotor.get("arm1");
+        arm2 = hwMap.dcMotor.get("arm2");
+        fs1 = hwMap.servo.get("fs1");
+        fs2 = hwMap.servo.get("fs2");
+        jko = hwMap.servo.get("jko");
+        claw = hwMap.servo.get("claw");
         lDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -41,8 +46,8 @@ public class TCHardwarePushbot {
         lDrive.setPower(0);
         cDrive.setPower(0);
         fLift.setPower(0);
-        claw1.setPower(0);
-        claw2.setPower(0);
+        arm1.setPower(0);
+        arm2.setPower(0);
     }
 
 
