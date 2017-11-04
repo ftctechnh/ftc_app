@@ -53,7 +53,6 @@ public class AutonomousSetup extends LinearOpMode {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
-    Everything Past this point should ONLY be functions. It is outside the run function, so it can only be called as a function.
 
     void rotations(double numberOfRotations, double power) {
         boolean isNegative = false;
@@ -119,7 +118,7 @@ public class AutonomousSetup extends LinearOpMode {
         telemetry.update();
         return (m1 + m2 + m3 + m4) / 4;
 
-    //}
+    }
     public void JewelFinder(){
         telemetry.addData("Red", cS.red());
         telemetry.addData("Blue", cS.blue());
