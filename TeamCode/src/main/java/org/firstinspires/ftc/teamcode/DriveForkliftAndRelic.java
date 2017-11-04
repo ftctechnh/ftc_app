@@ -47,10 +47,11 @@ public class DriveForkliftAndRelic extends OpMode {
         Claw.setPosition(clawPosition);
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
-        claw = hardwareMap.servo.get("s1");
+        //where relic starts
+        claw = hardwareMap.servo.get("s2");
         claw.setPosition(servohighend);
-        motor = hardwareMap.dcMotor.get("m5");
-        arm = hardwareMap.servo.get("s2");
+        motor = hardwareMap.dcMotor.get("m6");
+        arm = hardwareMap.servo.get("s3");
         arm.setPosition(armlowend);
     }
 
