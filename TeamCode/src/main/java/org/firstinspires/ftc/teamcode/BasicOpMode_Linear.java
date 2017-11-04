@@ -64,6 +64,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
         double θkp = .02;
         double θki = .0000001;
         double θkd = .00001;
+		double APwr;
+		double BPwr;
+		double CPwr;
 		while (opModeIsActive()) {
 			curResState = gamepad1.a && gamepad1.b;
 			if(LastResState && !curResState){
