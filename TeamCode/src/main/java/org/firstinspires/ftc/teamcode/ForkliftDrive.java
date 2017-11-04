@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.util.Range;
 public class ForkliftDrive extends OpMode {
     private Servo Claw;
     private double clawPosition = 0.0;
-    private double clawHighEnd = 1.0;
-    private double clawLowEnd = 0.3;
+    private double clawHighEnd = 0.6;
+    private double clawLowEnd = 0.05;
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;
