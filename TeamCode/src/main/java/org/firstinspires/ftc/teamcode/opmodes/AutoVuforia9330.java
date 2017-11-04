@@ -89,13 +89,15 @@ public class AutoVuforia9330 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         log("Info","Initializing. Please wait.");
 
+        //Everything commented out at the top is only there if moving it to the bottom was a mistake
+
         robotMap.init(hardwareMap); //initializes hardware map
         gyro.init();    //initializes gyro
-        info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
+       //info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
 
         log("Info","Initialized. Press start when ready.");
         waitForStart();
-        while(opModeIsActive()) {
+       /* while(opModeIsActive()) {
 
             log("Info","Searching for image...");
             while (PictoImageType == null) {    //While pictograph hasn't been found, scan for it
@@ -117,15 +119,12 @@ public class AutoVuforia9330 extends LinearOpMode {
             }
 
             drive.stopDrive();
-            log("Info","Centered to the wall! Checking team color...");
+            log("Info","Centered to the wall!"); */
 
             while (ColorRed == null || ColorBlue == null) { //while color is unknown
                 updateColorDistance(colorDistance.getInfo()); // Check the color of the pad beneath you
                 checkStop();
             }
-
-                drive.driveDistance(-10); //I dunno we NEED TO TEST IT - drive backwards a bit
-                drive.gyroTurn(90,TurnSpeed);   //turn 90 degrees to the right
 
                 crystalarm.lowerArmServo();
 
@@ -134,20 +133,51 @@ public class AutoVuforia9330 extends LinearOpMode {
                     log("Info", "We are red! Knocking down blue.");
                     if(cs9330.r() > cs9330.b()){
                         drive.gyroTurn(90, TurnSpeed);
+                        crystalarm.raiseArmServo();
+                        drive.gyroTurn(180, TurnSpeed);
                     }else{
                         drive.gyroTurn(-90,TurnSpeed);
+                        crystalarm.raiseArmServo();
                     }
-                    crystalarm.raiseArmServo();
                 } else {
                     onRedTeam = false;
                     log("Info", "We are blue! Knocking down red.");
                     if(cs9330.r() > cs9330.b()){
                         drive.gyroTurn(-90, TurnSpeed);
+                        crystalarm.raiseArmServo();
                     }else{
                         drive.gyroTurn(90, TurnSpeed);
+                        crystalarm.raiseArmServo();
+                        drive.gyroTurn(180, TurnSpeed);
                     }
-                    crystalarm.raiseArmServo();
                 }
+            log("Info", "Target knocked down!");
+
+            info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
+
+            while(opModeIsActive()) {
+
+                log("Info","Searching for image...");
+                while (PictoImageType == null) {    //While pictograph hasn't been found, scan for it
+                    telemetry.clear();
+                    updatePictographInfo(PictographScan.checkPosition(info));
+                    checkStop();
+                }
+
+                log("Info","Found image! Centering to the wall...");
+                while (-TurnError > PictoYRotation || TurnError < PictoYRotation) { //while current rotation is outside allowed error
+                    updatePictographInfo(PictographScan.checkPosition(info));   //update current positioning
+                    log("Rotation of pictogram", PictoYRotation.toString());
+                    if (PictoYRotation > 0) //Align self more parallel to the wall
+                        drive.gyroTurn(2, TurnSpeed);
+                    else
+                        drive.gyroTurn(-2, TurnSpeed);
+
+                    checkStop();
+                }
+
+                drive.stopDrive();
+                log("Info","Centered to the wall!");
 
             while(!isStopRequested() && robotMap.touch.getState()) {
             //wait for manual direction to end code
