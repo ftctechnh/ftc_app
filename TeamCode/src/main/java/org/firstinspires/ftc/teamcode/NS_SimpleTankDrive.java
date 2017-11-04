@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Nithilan on 9/2/2017.
  */
 @TeleOp(name = "NS: Simple Tank Drive", group = "Training")
+@Disabled
 public class NS_SimpleTankDrive extends OpMode {
 
     DcMotor leftwheel;
