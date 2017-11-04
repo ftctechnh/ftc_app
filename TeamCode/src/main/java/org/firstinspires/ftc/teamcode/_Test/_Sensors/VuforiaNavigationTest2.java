@@ -129,7 +129,6 @@ public class VuforiaNavigationTest2 extends OpMode {
             }
         }
         mVLib.releaseFrame(); //
-
     }
 
     @Override public void stop()
