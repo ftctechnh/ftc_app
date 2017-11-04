@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Potato By Encoder 2 Ft", group="PushbotPotato")
+@Autonomous(name="Pushbot: Auto Potato By Encoder 2.75 Ft", group="PushbotPotato")
 public class PushbotAutoDriveByEncoder_LinearActual2dot75ftversion extends LinearOpMode {
 
     /* Declare OpMode members. */
