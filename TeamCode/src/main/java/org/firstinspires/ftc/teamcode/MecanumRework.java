@@ -20,8 +20,7 @@ import static java.lang.Double.NaN;
  */
 
 @TeleOp(name="Mecanum Rework", group="TeleOp")
-public class MecanumRework extends OpMode
-{
+public class MecanumRework extends OpMode {
     Hardware750 robot = new Hardware750();
     private ElapsedTime runtime = new ElapsedTime();
     // declare class locals for loop
