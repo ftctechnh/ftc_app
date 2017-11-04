@@ -127,9 +127,11 @@ public class AutoVuforia9330 extends LinearOpMode {
 
                 //add code to get crystal color from second color sensor HERE
 
+
                 if (ColorRed > ColorBlue) {
                     //Knock down blue
                     log("Info", "We are red! Knocking down blue.");
+
                 } else {
                     //Knock down red
                     log("Info", "We are blue! Knocking down red.");

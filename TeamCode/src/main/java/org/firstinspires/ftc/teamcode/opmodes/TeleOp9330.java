@@ -28,6 +28,8 @@ public class TeleOp9330 extends OpMode {
     boolean aBtnHeld = false;
     boolean bBtnHeld = false;
     boolean xBtnHeld = false;
+    boolean lBumpHeld = false;
+    boolean rBumpHeld = false;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -109,16 +111,18 @@ public class TeleOp9330 extends OpMode {
         } else xBtnHeld = false;
 
         //If left is pressed on the dpad toggle the hand servo
-        if(gamepad2.dpad_left){
+        if(gamepad2.left_bumper){
+            if(lBumpHeld == true) return;
             relicPickup.toggleHand();
             telemetry.addData("Program", "Hand toggled!!!!!!!!");
-        }
+        }else lBumpHeld = false;
 
         //If right is pressed on the dpad toggle the wrist servo
-        if (gamepad2.dpad_right){
+        if (gamepad2.right_bumper){
+            if(rBumpHeld == true) return;
             relicPickup.toggleWrist();
             telemetry.addData("Program", "Wrist toggled!!! WOW!");
-        }
+        }else rBumpHeld = false;
 
         telemetry.update();
 }
