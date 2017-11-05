@@ -19,7 +19,7 @@ import java.lang.Math;
 
 
 
-@TeleOp(name="Preciousss: TeleOp6217 ", group="Preciousss")
+@TeleOp(name="Preciousss: TeleOp6217_DRC ", group="Preciousss")
 
 public class TeleOp6217_DRC extends OpMode
 {
@@ -155,7 +155,7 @@ BG = Ball Grabber, WBT = Wiffle Ball Thrower, BGL = Ball Grabber Lifter, BP = Bl
 
 /*
         // use ball thrower
-        if (a) {¡
+        if (a) {
             Sweeper1.setPower(-1);
             Conveyor1.setPower(1);
             Conveyor2.setPower(1);
