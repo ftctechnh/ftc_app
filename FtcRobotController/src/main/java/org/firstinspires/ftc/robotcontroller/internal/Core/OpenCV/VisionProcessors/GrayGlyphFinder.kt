@@ -96,6 +96,12 @@ class GrayGlyphFinder : VisionProcessor()
     }
 
 
+    override fun displayInfo(contours: ArrayList<MatOfPoint>)
+    {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
     /**
      * Releases mats because garbage collection and C++
      */
