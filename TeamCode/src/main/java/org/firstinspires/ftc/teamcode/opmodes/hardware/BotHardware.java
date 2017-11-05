@@ -25,7 +25,7 @@ public class BotHardware {
         backLeft("bl", true),
         lift("l", false),
         lights("green", false),
-        stick("s", false);
+        stick("s", true);
 
         private final String name;
         private final boolean reverse;
@@ -51,8 +51,8 @@ public class BotHardware {
         public static final double rightGrabOpen = 0.75;
         public static final double rightGrabClose = 0.95;
 
-        public static final double leftGrabOpen = 0.5;
-        public static final double leftGrabClose = 0.25;
+        public static final double leftGrabOpen = 0;
+        public static final double leftGrabClose = 1.0;
 
         private final String name;
         public Servo servo;
@@ -100,12 +100,16 @@ public class BotHardware {
 
     public void openGrab() {
         ServoE.leftGrab.servo.setPosition(ServoE.leftGrabOpen);
-        ServoE.rightGrab.servo.setPosition(ServoE.rightGrabOpen);
+        //ServoE.rightGrab.servo.setPosition(ServoE.rightGrabOpen);
     }
 
     public void closeGrab() {
         ServoE.leftGrab.servo.setPosition(ServoE.leftGrabClose);
-        ServoE.rightGrab.servo.setPosition(ServoE.rightGrabClose);
+        //ServoE.rightGrab.servo.setPosition(ServoE.rightGrabClose);
+    }
+
+    public void setWhack(float power) {
+        Motor.stick.motor.setPower(power);
     }
 
     public void setLights(boolean on) {

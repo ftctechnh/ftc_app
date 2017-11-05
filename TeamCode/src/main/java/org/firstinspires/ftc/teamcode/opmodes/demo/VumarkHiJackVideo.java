@@ -333,8 +333,8 @@ public class VumarkHiJackVideo extends OpenCVLoad {
 
                 //construct sequence
                 mSeq.add(new AutoLib.TimedMotorStep(bot.getMotor("stick"), 0.2f, 0.7, true));
-                if(RED) mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.2f, 0.5, true));
-                else mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.2f, 0.5, true));
+                if(RED) mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.5f, 0.5, true));
+                else mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.5f, 0.5, true));
                 mSeq.add(new AutoLib.TimedMotorStep(bot.getMotor("stick"), -0.2f, 0.7, true));
             }
             else if (leftColor.val[0] > leftColor.val[1] && rightColor.val[0] < rightColor.val[1]) {
@@ -342,8 +342,8 @@ public class VumarkHiJackVideo extends OpenCVLoad {
 
                 //construct sequence
                 mSeq.add(new AutoLib.TimedMotorStep(bot.getMotor("stick"), 0.2f, 0.7, true));
-                if(RED) mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.2f, 0.5, true));
-                else mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.2f, 0.5, true));
+                if(RED) mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.5f, 0.5, true));
+                else mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.5f, 0.5, true));
                 mSeq.add(new AutoLib.TimedMotorStep(bot.getMotor("stick"), -0.2f, 0.7, true));
             }
             else telemetry.addData("Left", "Indeterminate");
@@ -353,7 +353,7 @@ public class VumarkHiJackVideo extends OpenCVLoad {
 
     @Override
     public void loop() {
-        //if(mSeq.loop()) requestOpModeStop();
+        if(mSeq.loop()) requestOpModeStop();
     }
 
     private static Scalar drawSquare(Mat src, int[] ballPoint, int ballDist) {

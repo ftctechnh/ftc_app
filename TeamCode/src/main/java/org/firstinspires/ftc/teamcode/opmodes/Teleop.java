@@ -49,7 +49,10 @@ public class Teleop extends OpMode {
             bot.setRightDrive(gamepad1.right_stick_y);
         }
 
-        bot.setLights(robotSlow);
+        bot.setLights(!robotSlow);
+
+        if(gamepad1.b) bot.setWhack(-0.2f);
+        else bot.setWhack(0);
 
         if(grabberClosed) bot.closeGrab();
         else bot.openGrab();
