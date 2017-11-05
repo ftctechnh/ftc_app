@@ -7,18 +7,19 @@ package org.directcurrent.opencv
  *
  * Constructor- takes interval between forced garbage collection in milliseconds
  */
-class Sweeper(val interval: Long)
+class Sweeper(private val _interval: Long)
 {
-    var initialTime = System.currentTimeMillis()
+    private var _initialTime = System.currentTimeMillis()
 
     /**
      * Forces garbage collection every so often- time intervals are defined by the constructor
      */
     fun sweep()
     {
-        if(System.currentTimeMillis() - initialTime >= interval)
+        if(System.currentTimeMillis() - _initialTime >= _interval)
         {
             System.gc()
+            System.runFinalization()
         }
     }
 }
