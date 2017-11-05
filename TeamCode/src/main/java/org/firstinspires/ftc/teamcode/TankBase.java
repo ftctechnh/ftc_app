@@ -27,7 +27,6 @@ public class TankBase
     Orientation angles;
     Acceleration gravity;
 
-
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
     private float roboDiameterCm = (float)(45.7*Math.PI); // can be adjusted
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
@@ -62,7 +61,7 @@ public class TankBase
 
     public void driveStraight_In(float inches)
     {
-        driveStraight_In(inches, .75);
+        driveStraight_In(inches,.75);
     }
 
 
