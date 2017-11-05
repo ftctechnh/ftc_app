@@ -26,7 +26,7 @@ public class testidk extends LinearOpMode {
         telemetry.addData("skatin fast,", "eatin' ass");
         telemetry.update();
         waitForStart();
-        encode(31, .5);
+        encode(100, .5);
     }
 
     public void encode(double distance, double speed) {
