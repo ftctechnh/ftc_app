@@ -757,15 +757,19 @@ public class Autonomous_General extends LinearOpMode {
         return null;
     }
 
-    public void strafeRangeDistance(double distInCM, double speed) {
+    public void strafeRangeDistance(double distInCM, double speed, double rsBufffer) {
 
-        while (rangeSensor.getDistance(DistanceUnit.CM) > distInCM) {
-            strafeRight(speed);
+        while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM-rsBufffer)) {
+            strafeLeft(speed);
+            telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
         }
         stopMotors();
         sleep(400);
-        while (rangeSensor.getDistance(DistanceUnit.CM) < distInCM) {
-            strafeLeft(speed);
+        while ((rangeSensor.getDistance(DistanceUnit.CM)-rsBufffer) < (distInCM-rsBufffer)) {
+            strafeRight(speed);
+            telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
         }
         stopMotors();
     }
