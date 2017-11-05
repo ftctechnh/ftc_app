@@ -25,14 +25,14 @@ public class testautolinear extends LinearOpMode {
         telemetry.addData("skatin fast,", "eatin' ass");
         telemetry.update();
         waitForStart();
-        encode(31, .5);
+        encode(81, .5);
     }
 
     public void encode(double distance, double speed) {
         int targetFL;
         int targetFR;
-        int targetRL;
-        //int targetRR;
+        //int targetRL;
+        int targetRR;
 
         if(opModeIsActive()) {
             robot.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -50,7 +50,7 @@ public class testautolinear extends LinearOpMode {
             robot.flDrive.setTargetPosition(targetFL);
             robot.frDrive.setTargetPosition(targetFR);
             //robot.rlDrive.setTargetPosition(targetRL);
-            robot.rrDrive.setTargetPosition(targetRR);`
+            robot.rrDrive.setTargetPosition(targetRR);
 
             runtime.reset();
             robot.flDrive.setPower(Math.abs(speed));
