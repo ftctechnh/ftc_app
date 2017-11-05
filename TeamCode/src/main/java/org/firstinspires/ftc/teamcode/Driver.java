@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  *Created by Pramodh on 10/27/2017.
  */
 @TeleOp
-public class Drive extends LinearOpMode {
+public class Driver extends LinearOpMode {
     private DcMotor motor0;
     private DcMotor motor1;
     private Servo servo0;
@@ -49,6 +49,9 @@ public class Drive extends LinearOpMode {
         motor1 = hardwareMap.get(DcMotor.class, "motor1");
         servo0 = hardwareMap.get(Servo.class, "servo0");
 
+        double leftMotorPower = 0;
+        double rightMotorPower = 0;
+
         //sends tests data to dc phone
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -56,38 +59,15 @@ public class Drive extends LinearOpMode {
         waitForStart();
 
         //run until the end of the match (driver presses STOP)
-        /*
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Initialized");
-            telemetry.update();
-        }
-        */
-        double leftMotorPower = 0;
-        double rightMotorPower = 0;
-        while (opModeIsActive()) {
+
+            //
             leftMotorPower = -this.gamepad1.left_stick_y;
             motor0.setPower(leftMotorPower);
 
             rightMotorPower = this.gamepad1.right_stick_y;
             motor1.setPower(rightMotorPower);
 
-            //check to see if we need to move the servo.
-            while(opModeIsActive()) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (gamepad1.x) {
-                    //move to 0 degrees
-                    double currentPosition = servo0.getPosition();
-                    servo0.setPosition(currentPosition + 0.1);
-                }
-                if (gamepad1.b) {
-                    double currentPosition = servo0.getPosition();
-                    servo0.setPosition(currentPosition - 0.1);
-                }
-            }
 
             telemetry.addData("Servo Position", servo0.getPosition());
             telemetry.addData("Left Power", leftMotorPower);
