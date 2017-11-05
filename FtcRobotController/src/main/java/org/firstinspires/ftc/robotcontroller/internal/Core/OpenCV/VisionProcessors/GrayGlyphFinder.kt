@@ -92,7 +92,15 @@ class GrayGlyphFinder : VisionProcessor()
         limitedHsvMat?.release()
         contourMat?.release()
 
+        sweeper.sweep()
+
         return boundingMat
+    }
+
+
+    override fun displayInfo(contours: ArrayList<MatOfPoint>)
+    {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 

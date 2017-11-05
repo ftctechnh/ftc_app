@@ -10,10 +10,8 @@ import java.lang.Math.abs
 
 class BrownGlyphFinder: VisionProcessor()
 {
-    private var equalizedMat: Mat? = null
-    private var limitedHsvMat: Mat? = null
-    private var contourMat: Mat? = null
-    private var boundingMat: Mat? = null
+    private var displayMat: Mat? = null
+    private var processingMat: Mat? = null
 
 
     /**
@@ -21,9 +19,8 @@ class BrownGlyphFinder: VisionProcessor()
      */
     override fun initMats(width: Int, height: Int)
     {
-        limitedHsvMat = Mat(width , height , CvType.CV_8UC4)
-        contourMat = Mat(width , height , CvType.CV_8UC4)
-        boundingMat = Mat(width , height , CvType.CV_8UC4)
+        displayMat = Mat(width , height , CvType.CV_8UC4)
+        processingMat = Mat(width , height , CvType.CV_8UC4)
     }
 
 
@@ -32,28 +29,30 @@ class BrownGlyphFinder: VisionProcessor()
      */
     override fun processFrame(originalMat: Mat?): Mat?
     {
+        originalMat?.copyTo(displayMat)
 
-        limitedHsvMat = Mat()
 
-        equalizedMat = equalizeIntensity(originalMat)
+        // Equalize using Histogram Equalization
+        processingMat = equalizeIntensity(originalMat)
+        originalMat?.release()
 
-        equalizedMat?.copyTo(contourMat)
-        equalizedMat?.copyTo(boundingMat)
+        // Blur for extra edge detection
+        Imgproc.medianBlur(processingMat , processingMat , 5)
 
         /*
          * Get our HSV mat, and limit restrict it to a color range we want
          * Color range is HSV- you can get this by taking a picture with the phone and running
          * it through GRIP
          */
-        Imgproc.cvtColor(equalizedMat , limitedHsvMat , Imgproc.COLOR_RGB2HSV)
-        Core.inRange(limitedHsvMat , Scalar(0.0 , 85.0 , 32.0) ,
-                Scalar(25.0 , 196.0 , 140.0) , limitedHsvMat)
+        Imgproc.cvtColor(processingMat , processingMat , Imgproc.COLOR_RGB2HSV)
+        Core.inRange(processingMat , Scalar(0.0 , 85.0 , 32.0) ,
+                Scalar(25.0 , 196.0 , 140.0) , processingMat)
 
 
-        Imgproc.erode(limitedHsvMat , limitedHsvMat , Imgproc.getStructuringElement
+        Imgproc.erode(processingMat , processingMat , Imgproc.getStructuringElement
         (Imgproc.MORPH_RECT, Size(2.0 , 2.0)) , Point(0.0 , 0.0) , 1)
 
-        Imgproc.dilate(limitedHsvMat , limitedHsvMat , Imgproc.getStructuringElement
+        Imgproc.dilate(processingMat , processingMat , Imgproc.getStructuringElement
         (Imgproc.MORPH_RECT, Size(2.0 , 2.0)) , Point(0.0 , 0.0) , 3)
 
 
@@ -61,18 +60,24 @@ class BrownGlyphFinder: VisionProcessor()
         val contours = ArrayList<MatOfPoint>()
         val filteredContours = ArrayList<MatOfPoint>()
 
-        Imgproc.findContours(limitedHsvMat , contours , Mat() , Imgproc.RETR_EXTERNAL , Imgproc.CHAIN_APPROX_SIMPLE)
+        Imgproc.findContours(processingMat , contours , Mat() , Imgproc.RETR_EXTERNAL , Imgproc.CHAIN_APPROX_SIMPLE)
+        processingMat?.release()
 
-//      Filter out some contours
+        // Filter out some contours
         contours.filterTo(filteredContours)
         {
             Imgproc.contourArea(it) >= 22_500
         }
 
-        Imgproc.drawContours(contourMat , filteredContours , -1 , Scalar(255.0 , 0.0 , 0.0) , 6)
+        displayInfo(filteredContours)
+
+        return displayMat
+    }
 
 
-        for(i in filteredContours)
+    override fun displayInfo(contours: ArrayList<MatOfPoint>)
+    {
+        for(i in contours)
         {
             val rect = Imgproc.boundingRect(i)
 
@@ -81,40 +86,25 @@ class BrownGlyphFinder: VisionProcessor()
             {
                 if(rect.x >= 500)
                 {
-                    Imgproc.rectangle(boundingMat , Point(rect.x.toDouble() , rect.y.toDouble()) ,
+                    Imgproc.rectangle(displayMat, Point(rect.x.toDouble() , rect.y.toDouble()) ,
                             Point((rect.x + rect.width).toDouble() , (rect.y + rect.height).toDouble()) ,
                             Scalar(255.0 , 0.0 , 0.0) , 6)
 
-                    Imgproc.putText(boundingMat , "Brown Glyph :)"
+                    Imgproc.putText(displayMat, "Brown Glyph :)"
                             , Point(rect.x.toDouble() ,
                             (rect.y + rect.height + 50).toDouble()) , Core.FONT_HERSHEY_COMPLEX , 1.0 ,
                             Scalar(0.0 , 255.0 , 0.0) , 3)
 
-                    Imgproc.putText(boundingMat , "x: " + rect.x , Point(rect.x.toDouble() ,
+                    Imgproc.putText(displayMat, "x: " + rect.x , Point(rect.x.toDouble() ,
                             (rect.y + rect.height + 90).toDouble()) , Core.FONT_HERSHEY_COMPLEX , 1.0 ,
+                            Scalar(0.0 , 255.0 , 0.0) , 3)
+
+                    Imgproc.putText(displayMat, "y: " + rect.y , Point(rect.x.toDouble() ,
+                            (rect.y + rect.height + 130).toDouble()) , Core.FONT_HERSHEY_COMPLEX , 1.0 ,
                             Scalar(0.0 , 255.0 , 0.0) , 3)
                 }
             }
         }
-
-        // Draw bounding rectangles over contours
-//        filteredContours
-//                .map { Imgproc.boundingRect(it) }
-//                .forEach {
-//                    Imgproc.rectangle(boundingMat , Point(it.x.toDouble() , it.y.toDouble()) ,
-//                            Point((it.x + it.width).toDouble(), (it.y + it.height).toDouble()) ,
-//                            Scalar(255.0 , 0.0 , 0.0) , 6)
-//                }
-
-
-
-        // Deleting pointers
-        originalMat?.release()
-        equalizedMat?.release()
-        limitedHsvMat?.release()
-        contourMat?.release()
-
-        return boundingMat
     }
 
 
@@ -123,9 +113,6 @@ class BrownGlyphFinder: VisionProcessor()
      */
     override fun releaseMats()
     {
-        equalizedMat?.release()
-        limitedHsvMat?.release()
-        contourMat?.release()
-        boundingMat?.release()
+        displayMat?.release()
     }
 }
