@@ -62,6 +62,7 @@ public class Drive extends LinearOpMode {
             telemetry.update();
         }
         */
+        //hi
         double leftMotorPower = 0;
         double rightMotorPower = 0;
         while (opModeIsActive()) {
