@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -8,9 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="linear spinear", group="Linear Auto")
+@Autonomous(name="linear spinear 3.0", group="Linear Auto")
 
-public class testautolinear extends LinearOpMode {
+public class testidk extends LinearOpMode {
     final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
@@ -19,7 +20,7 @@ public class testautolinear extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
         //robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("skatin fast,", "eatin' ass");
@@ -38,19 +39,20 @@ public class testautolinear extends LinearOpMode {
             robot.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //robot.rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // TODO: this is a hacky workaround to a damaged encoder
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             targetFL = robot.flDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             targetFR = robot.frDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             //targetRL = robot.rlDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
-            targetRR = robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
+            //targetRR = robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
 
             robot.flDrive.setTargetPosition(targetFL);
             robot.frDrive.setTargetPosition(targetFR);
             //robot.rlDrive.setTargetPosition(targetRL);
-            robot.rrDrive.setTargetPosition(targetRR);
+            //robot.rrDrive.setTargetPosition(targetRR);
 
             runtime.reset();
             robot.flDrive.setPower(Math.abs(speed));
@@ -58,7 +60,7 @@ public class testautolinear extends LinearOpMode {
             robot.rlDrive.setPower(Math.abs(speed));
             robot.rrDrive.setPower(Math.abs(speed));
 
-            while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rrDrive.isBusy())) {
+            while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy())) {
                 int i = 0;
                 telemetry.addData("Current fl: ", robot.flDrive.getCurrentPosition());
                 telemetry.addData("Current fr: ", robot.frDrive.getCurrentPosition());
@@ -67,7 +69,7 @@ public class testautolinear extends LinearOpMode {
                 telemetry.addData("fl: ", targetFL);
                 telemetry.addData("fr: ", targetFR);
                 //telemetry.addData("rl: ", targetRL);
-                telemetry.addData("rr: ", targetRR);
+                //telemetry.addData("rr: ", targetRR);
                 telemetry.addData("cool number: ", i);
                 i++;
                 telemetry.update();
