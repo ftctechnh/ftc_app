@@ -45,6 +45,7 @@ public class Driver extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
         motor0 = hardwareMap.get(DcMotor.class, "motor0");
         motor1 = hardwareMap.get(DcMotor.class, "motor1");
         servo0 = hardwareMap.get(Servo.class, "servo0");
@@ -55,19 +56,16 @@ public class Driver extends LinearOpMode {
         //sends tests data to dc phone
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        TankDriveTrain driveTrain = new TankDriveTrain(motor0, motor1);
 
         //run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            //
-            leftMotorPower = -this.gamepad1.left_stick_y;
-            motor0.setPower(leftMotorPower);
-
-            rightMotorPower = this.gamepad1.right_stick_y;
-            motor1.setPower(rightMotorPower);
-
+            driveTrain.move(this.gamepad1.left_stick_y, this.gamepad1.right_stick_y);
 
             telemetry.addData("Servo Position", servo0.getPosition());
             telemetry.addData("Left Power", leftMotorPower);
