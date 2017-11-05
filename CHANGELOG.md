@@ -15,9 +15,14 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - Support for motor speed ramping
 
+### [0.9.1] - 2017-11-5
+#### Fixed
+- Sweeper class, wasn't performing garbage collection as intended
+
+
 ### [0.9.0] - 2017-11-04
 #### Added
-- OpenCV Utiliy file
+- OpenCV Utility file
 - Added Histogram Equalization to image processing
 
 #### Fixed
