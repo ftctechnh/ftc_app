@@ -5,6 +5,7 @@ package org.directcurrent.opencv.visionprocessors
 import org.directcurrent.opencv.equalizeIntensity
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
+import java.lang.Math.abs
 
 
 class BrownGlyphFinder: VisionProcessor()
@@ -45,15 +46,15 @@ class BrownGlyphFinder: VisionProcessor()
          * it through GRIP
          */
         Imgproc.cvtColor(equalizedMat , limitedHsvMat , Imgproc.COLOR_RGB2HSV)
-        Core.inRange(limitedHsvMat , Scalar(0.0 , 23.0 , 30.0) ,
-                Scalar(19.0 , 192.0 , 159.0) , limitedHsvMat)
+        Core.inRange(limitedHsvMat , Scalar(0.0 , 85.0 , 32.0) ,
+                Scalar(25.0 , 196.0 , 140.0) , limitedHsvMat)
 
 
         Imgproc.erode(limitedHsvMat , limitedHsvMat , Imgproc.getStructuringElement
-        (Imgproc.MORPH_RECT, Size(2.0 , 2.0)) , Point(0.0 , 0.0) , 3)
+        (Imgproc.MORPH_RECT, Size(2.0 , 2.0)) , Point(0.0 , 0.0) , 1)
 
         Imgproc.dilate(limitedHsvMat , limitedHsvMat , Imgproc.getStructuringElement
-        (Imgproc.MORPH_RECT, Size(2.0 , 2.0)) , Point(0.0 , 0.0) , 5)
+        (Imgproc.MORPH_RECT, Size(2.0 , 2.0)) , Point(0.0 , 0.0) , 3)
 
 
         // Declare a list of contours, find them, and then draw them.
@@ -62,19 +63,48 @@ class BrownGlyphFinder: VisionProcessor()
 
         Imgproc.findContours(limitedHsvMat , contours , Mat() , Imgproc.RETR_EXTERNAL , Imgproc.CHAIN_APPROX_SIMPLE)
 
-        // Filter out some contours
-               contours.filterTo(filteredContours) { Imgproc.contourArea(it) >= 2_000 }
+//      Filter out some contours
+        contours.filterTo(filteredContours)
+        {
+            Imgproc.contourArea(it) >= 22_500
+        }
 
         Imgproc.drawContours(contourMat , filteredContours , -1 , Scalar(255.0 , 0.0 , 0.0) , 6)
 
-        // Draw bounding rectangles over contours
-        filteredContours
-                .map { Imgproc.boundingRect(it) }
-                .forEach {
-                    Imgproc.rectangle(boundingMat , Point(it.x.toDouble() , it.y.toDouble()) ,
-                            Point((it.x + it.width).toDouble(), (it.y + it.height).toDouble()) ,
+
+        for(i in filteredContours)
+        {
+            val rect = Imgproc.boundingRect(i)
+
+            // If it's roughly in the shape of a square
+            if(abs(rect.height - rect.width) <= 50 && rect.height >= 125 && rect.width >= 125)
+            {
+                if(rect.x >= 500)
+                {
+                    Imgproc.rectangle(boundingMat , Point(rect.x.toDouble() , rect.y.toDouble()) ,
+                            Point((rect.x + rect.width).toDouble() , (rect.y + rect.height).toDouble()) ,
                             Scalar(255.0 , 0.0 , 0.0) , 6)
+
+                    Imgproc.putText(boundingMat , "Brown Glyph :)"
+                            , Point(rect.x.toDouble() ,
+                            (rect.y + rect.height + 50).toDouble()) , Core.FONT_HERSHEY_COMPLEX , 1.0 ,
+                            Scalar(0.0 , 255.0 , 0.0) , 3)
+
+                    Imgproc.putText(boundingMat , "x: " + rect.x , Point(rect.x.toDouble() ,
+                            (rect.y + rect.height + 90).toDouble()) , Core.FONT_HERSHEY_COMPLEX , 1.0 ,
+                            Scalar(0.0 , 255.0 , 0.0) , 3)
                 }
+            }
+        }
+
+        // Draw bounding rectangles over contours
+//        filteredContours
+//                .map { Imgproc.boundingRect(it) }
+//                .forEach {
+//                    Imgproc.rectangle(boundingMat , Point(it.x.toDouble() , it.y.toDouble()) ,
+//                            Point((it.x + it.width).toDouble(), (it.y + it.height).toDouble()) ,
+//                            Scalar(255.0 , 0.0 , 0.0) , 6)
+//                }
 
 
 
