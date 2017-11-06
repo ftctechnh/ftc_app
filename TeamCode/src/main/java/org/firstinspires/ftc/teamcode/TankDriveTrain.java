@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by DiegoGutiDev on 11/5/17.
- */
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class TankDriveTrain {
 
     private DcMotor motor0, motor1;
-    private final int MOTOR_0_DIRECTION = -1;
-    private final int MOTOR_1_DIRECTION = 1;
+
+    private final int MOTOR_0_DIRECTION = 1;
+    private final int MOTOR_1_DIRECTION = -1;
 
     public TankDriveTrain(DcMotor motor0, DcMotor motor1) {
 

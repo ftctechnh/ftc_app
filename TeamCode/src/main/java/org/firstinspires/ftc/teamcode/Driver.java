@@ -42,6 +42,7 @@ public class Driver extends LinearOpMode {
     private DcMotor motor0;
     private DcMotor motor1;
     private Servo servo0;
+    private Servo servo1;
 
     @Override
     public void runOpMode() {
@@ -49,6 +50,7 @@ public class Driver extends LinearOpMode {
         motor0 = hardwareMap.get(DcMotor.class, "motor0");
         motor1 = hardwareMap.get(DcMotor.class, "motor1");
         servo0 = hardwareMap.get(Servo.class, "servo0");
+        servo1 = hardwareMap.get(Servo.class, "servo1");
 
         double leftMotorPower = 0;
         double rightMotorPower = 0;
@@ -61,11 +63,19 @@ public class Driver extends LinearOpMode {
         waitForStart();
 
         TankDriveTrain driveTrain = new TankDriveTrain(motor0, motor1);
+        servo0.setPosition(1.0);
 
         //run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             driveTrain.move(this.gamepad1.left_stick_y, this.gamepad1.right_stick_y);
+            if (this.gamepad1.x) { servo0.setPosition(0); }
+            if (this.gamepad1.b) { servo0.setPosition(1); }
+            //   if (this.gamepad1.y) { servo1.setPosition(1); }
+
+
+            if (this.gamepad1.a) { servo1.setPosition(0); }
+            if (this.gamepad1.y) { servo1.setPosition(1); }
 
             telemetry.addData("Servo Position", servo0.getPosition());
             telemetry.addData("Left Power", leftMotorPower);
