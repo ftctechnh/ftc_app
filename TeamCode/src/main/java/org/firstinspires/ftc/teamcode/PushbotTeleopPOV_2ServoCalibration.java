@@ -83,6 +83,8 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+            robot.jewelAnnihilator.setPosition(0.675);
+
             if (gamepad1.dpad_up) {
                 speedBonus += 0.05;
             }
