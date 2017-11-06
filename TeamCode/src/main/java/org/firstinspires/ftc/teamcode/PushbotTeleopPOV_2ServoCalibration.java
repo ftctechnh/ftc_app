@@ -140,6 +140,8 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 else
                     robot.armDrive.setPower(0.0);
 
+                robot.armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
                 if (gamepad1.dpad_left)
                     robot.jewelAnnihilator.setPosition(0.2);
                 if (gamepad1.dpad_right)
