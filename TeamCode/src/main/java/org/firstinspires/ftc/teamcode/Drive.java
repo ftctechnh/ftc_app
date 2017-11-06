@@ -44,6 +44,8 @@ public class Drive extends LinearOpMode {
     private Servo servo0;
     private Servo servo1;
     private Servo servo2;
+    private boolean rbOn = false;
+    private int increment = 1;
 
     @Override
     public void runOpMode() {
@@ -78,15 +80,43 @@ public class Drive extends LinearOpMode {
             motor1.setPower(rightMotorPower);
 
             //check to see if we need to move the servo.
+            if (gamepad1.right_bumper || gamepad2.right_bumper)
+                rbOn = !rbOn;
+
             if ((gamepad1.left_bumper || gamepad2.left_bumper)
-                    && !((gamepad1.right_bumper || gamepad2.right_bumper))) {
+                    && rbOn) {
                 servo2.setPosition(1);
             } else if ((gamepad1.left_trigger != 0 || gamepad2.left_trigger != 0)
-                    && !((gamepad1.right_bumper || gamepad2.right_bumper))) {
+                    && rbOn) {
                 servo2.setPosition(0);
 
-            } else if ((gamepad1.b || gamepad2.b)) {
+            } else if ((gamepad1.b || gamepad2.b) && rbOn) {
                 servo2.setPosition(.5);
+            }
+
+            if (increment >= 0 && increment <=4) {
+                if ((gamepad1.left_bumper || gamepad2.left_bumper)
+                        && !rbOn) {
+                    servo2.setPosition(1);
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    servo2.setPosition(0.5);
+                    increment++;
+
+                } else if ((gamepad1.left_trigger != 0 || gamepad2.left_trigger != 0)
+                        && !rbOn) {
+                    servo2.setPosition(0);
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    servo2.setPosition(0.5);
+                    increment--;
+                }
             }
 
         }
