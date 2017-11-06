@@ -25,11 +25,6 @@ public class charlieTeleOp extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
-    DcMotor ballCollectorMotor;
-    DcMotor ballShooterMotor;
-
-    Servo lift_servo;
-    DcMotor lift_motor;
 
     public Servo autoBeaconPresser;
     int servoCount = 0;
@@ -37,7 +32,6 @@ public class charlieTeleOp extends OpMode {
     public String currentColorBeaconLeft = "blank";
     double servoLeftPos = 0;
     double servoRightPos = 1;
-//asdfasdf
 
 /*
     ---------------------------------------------------------------------------------------------
