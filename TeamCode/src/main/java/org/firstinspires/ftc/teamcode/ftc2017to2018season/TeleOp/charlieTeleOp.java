@@ -25,7 +25,6 @@ public class charlieTeleOp extends OpMode {
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
 
-//asdfasdf
 
 /*
     ---------------------------------------------------------------------------------------------

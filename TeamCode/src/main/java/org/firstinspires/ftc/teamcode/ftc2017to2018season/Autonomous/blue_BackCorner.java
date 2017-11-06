@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
 @Autonomous(name="Autonomous Blue Test")
-public class blue_frontCorner extends Autonomous_General {
+public class blue_BackCorner extends Autonomous_General {
 
     DcMotor leftFront;
     DcMotor rightFront;
