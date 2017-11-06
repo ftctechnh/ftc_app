@@ -80,6 +80,12 @@ public class MecanumRework extends OpMode {
         } else {
             rotate = gamepad1.left_trigger;
         }
+        // alternative rotation mag.
+        if (gamepad1.right_stick_x != 0){
+            rotate = gamepad1.right_stick_x;
+        }
+
+
         //DEBUG: dump outputs
         telemetry.addData("REQUIRED INFORMATION", "");
         telemetry.addData("speed:", speed);
