@@ -42,12 +42,18 @@ public class Drive extends LinearOpMode {
     private DcMotor motor0;
     private DcMotor motor1;
     private Servo servo0;
+    private Servo servo1;
+    private Servo servo2;
 
     @Override
     public void runOpMode() {
         motor0 = hardwareMap.get(DcMotor.class, "motor0");
         motor1 = hardwareMap.get(DcMotor.class, "motor1");
         servo0 = hardwareMap.get(Servo.class, "servo0");
+        servo1 = hardwareMap.get(Servo.class, "servo1");
+        servo2 = hardwareMap.get(Servo.class, "servo2");
+
+
 
         //sends tests data to dc phone
         telemetry.addData("Status", "Initialized");
@@ -72,30 +78,26 @@ public class Drive extends LinearOpMode {
             motor1.setPower(rightMotorPower);
 
             //check to see if we need to move the servo.
-            while(opModeIsActive()) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (gamepad1.x) {
-                    //move to 0 degrees
-                    double currentPosition = servo0.getPosition();
-                    servo0.setPosition(currentPosition + 0.1);
-                }
-                if (gamepad1.b) {
-                    double currentPosition = servo0.getPosition();
-                    servo0.setPosition(currentPosition - 0.1);
-                }
+            if ((gamepad1.left_bumper || gamepad2.left_bumper)
+                    && !((gamepad1.right_bumper || gamepad2.right_bumper))) {
+                servo2.setPosition(1);
+            } else if ((gamepad1.left_trigger != 0 || gamepad2.left_trigger != 0)
+                    && !((gamepad1.right_bumper || gamepad2.right_bumper))) {
+                servo2.setPosition(0);
+
+            } else if ((gamepad1.b || gamepad2.b)) {
+                servo2.setPosition(.5);
             }
 
-            telemetry.addData("Servo Position", servo0.getPosition());
-            telemetry.addData("Left Power", leftMotorPower);
-            telemetry.addData("Right Power", rightMotorPower);
-            telemetry.addData("Motor Power", motor0.getPower());
-            telemetry.addData("Motor Power1", motor1.getPower());
-            telemetry.addData("Status","Running");
-            telemetry.update();
         }
-    }
+
+
+        telemetry.addData("Servo Position", servo0.getPosition());
+        telemetry.addData("Left Power", leftMotorPower);
+        telemetry.addData("Right Power", rightMotorPower);
+        telemetry.addData("Motor Power", motor0.getPower());
+        telemetry.addData("Motor Power1", motor1.getPower());
+        telemetry.addData("Status", "Running");
+        telemetry.update();
+        }
 }
