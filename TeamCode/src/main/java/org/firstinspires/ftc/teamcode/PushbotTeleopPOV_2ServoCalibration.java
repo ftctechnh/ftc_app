@@ -89,6 +89,12 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
             if (gamepad1.dpad_down) {
                 speedBonus -= 0.05;
             }
+            if (gamepad2.dpad_up) {
+                speedBonus += 0.05;
+            }
+            if (gamepad2.dpad_down) {
+                speedBonus -= 0.05;
+            }
 
             if (speedBonus > 2) {
                 speedBonus = 2;
@@ -141,11 +147,6 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                     robot.armDrive.setPower(0.0);
 
                 robot.armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-                if (gamepad1.dpad_left)
-                    robot.jewelAnnihilator.setPosition(0.2);
-                if (gamepad1.dpad_right)
-                    robot.jewelAnnihilator.setPosition(0.675);
 
                 // Send telemetry message to signify robot running;
                 telemetry.addData("claw", "Offset = %.2f", clawOffset);
