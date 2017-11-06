@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.teamcode.VuForiaTest;
 /**
  * This will be our Autonomous and our first try at a state machine (comment one)
  * Created by Joseph Liang on 10/30/2017.
@@ -20,6 +21,8 @@ public class RlcRcvryAutoSwitch extends OpMode{
     HardwarePushbot robot       = new HardwarePushbot();
     private ElapsedTime     runtime = new ElapsedTime();
 
+    int glyph = 0;
+
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
@@ -31,6 +34,7 @@ public class RlcRcvryAutoSwitch extends OpMode{
     @Override
     public void init() {
         robot.init(hardwareMap);
+        //need code for gripping glyph and moving arm slightly up
         stateMachineFlow = 0;
     }
 
@@ -39,11 +43,44 @@ public class RlcRcvryAutoSwitch extends OpMode{
     public void loop() {
         switch(stateMachineFlow){
             case 0:
-
+                runtime.reset();
                 stateMachineFlow++;
                 break;
             case 1:
+                if (getRuntime()<1) {
+                    //viewforia stuff goes here
+                    if (viewforia = center){glyph = 1;}
+                    else if (viewforia = left){glyph = 2;}
+                    else if (viewforia = right){glyph = 3;}
+                    break;
+                }
+                else stateMachineFlow++;
+                break;
+            case 2:
+                encoderDrive(TURN_SPEED);//90 degrees
+
                 stateMachineFlow++;
+                break;
+            case 3:
+                if (glyph() = 1){encoderDrive(DRIVE_SPEED);}
+                else if (glyph() = 2) {encoderDrive(DRIVE_SPEED);}
+                else if (glyph() = 3) {encoderDrive(DRIVE_SPEED);}
+                stateMachineFlow++;
+                break;
+            case 4:
+                encoderDrive(TURN_SPEED);//face box
+                stateMachineFlow++;
+                break;
+            case 5:
+                encoderDrive(DRIVE_SPEED);//move so glyph is in box
+                stateMachineFlow++;
+                break;
+            case 6:
+                //release glyph into box
+                stateMachineFlow++;
+                break;
+            case 7:
+                //end?
                 break;
         }
     }
