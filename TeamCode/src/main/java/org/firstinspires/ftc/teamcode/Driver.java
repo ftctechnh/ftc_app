@@ -38,57 +38,44 @@ import com.qualcomm.robotcore.hardware.Servo;
  *Created by Pramodh on 10/27/2017.
  */
 @TeleOp
-public class Drive extends LinearOpMode {
+public class Driver extends LinearOpMode {
     private DcMotor motor0;
     private DcMotor motor1;
     private Servo servo0;
+    private Servo servo1;
 
     @Override
     public void runOpMode() {
+
         motor0 = hardwareMap.get(DcMotor.class, "motor0");
         motor1 = hardwareMap.get(DcMotor.class, "motor1");
         servo0 = hardwareMap.get(Servo.class, "servo0");
+        servo1 = hardwareMap.get(Servo.class, "servo1");
+
+        double leftMotorPower = 0;
+        double rightMotorPower = 0;
 
         //sends tests data to dc phone
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        TankDriveTrain driveTrain = new TankDriveTrain(motor0, motor1);
+        servo0.setPosition(1.0);
+
         //run until the end of the match (driver presses STOP)
-        /*
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Initialized");
-            telemetry.update();
-        }
-        */
-        //hi
-        double leftMotorPower = 0;
-        double rightMotorPower = 0;
-        while (opModeIsActive()) {
-            leftMotorPower = -this.gamepad1.left_stick_y;
-            motor0.setPower(leftMotorPower);
 
-            rightMotorPower = this.gamepad1.right_stick_y;
-            motor1.setPower(rightMotorPower);
+            driveTrain.move(this.gamepad1.left_stick_y, this.gamepad1.right_stick_y);
+            if (this.gamepad1.x) { servo0.setPosition(0); }
+            if (this.gamepad1.b) { servo0.setPosition(1); }
+            //   if (this.gamepad1.y) { servo1.setPosition(1); }
 
-            //check to see if we need to move the servo.
-            while(opModeIsActive()) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (gamepad1.x) {
-                    //move to 0 degrees
-                    double currentPosition = servo0.getPosition();
-                    servo0.setPosition(currentPosition + 0.1);
-                }
-                if (gamepad1.b) {
-                    double currentPosition = servo0.getPosition();
-                    servo0.setPosition(currentPosition - 0.1);
-                }
-            }
+
+            if (this.gamepad1.a) { servo1.setPosition(0); }
+            if (this.gamepad1.y) { servo1.setPosition(1); }
 
             telemetry.addData("Servo Position", servo0.getPosition());
             telemetry.addData("Left Power", leftMotorPower);
