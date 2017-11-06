@@ -140,10 +140,16 @@ public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
                 else
                     robot.armDrive.setPower(0.0);
 
+                if (gamepad1.dpad_left)
+                    robot.jewelAnnihilator.setPosition(0.2);
+                if (gamepad1.dpad_right)
+                    robot.jewelAnnihilator.setPosition(0.675);
+
                 // Send telemetry message to signify robot running;
                 telemetry.addData("claw", "Offset = %.2f", clawOffset);
                 telemetry.addData("claw", "leftPosition = %.2f", robot.leftClaw.getPosition());
                 telemetry.addData("claw", "rightPosition = %.2f", robot.rightClaw.getPosition());
+                telemetry.addData("jewelz", "rawPosition = %.2f", robot.rightClaw.getPosition());
                 telemetry.addData("DriveLeft", "%.2f", driveLeft);
                 telemetry.addData("DriveRight", "%.2f", driveRight);
                 telemetry.addData("Speed", "%.2f", speedBonus);

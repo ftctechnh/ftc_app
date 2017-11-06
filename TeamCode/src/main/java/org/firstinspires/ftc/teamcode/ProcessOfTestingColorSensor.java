@@ -25,7 +25,8 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *//*
+
 
 package org.firstinspires.ftc.teamcode;
 
@@ -46,7 +47,9 @@ import java.util.Locale;
 @Autonomous(name="Pushbot: Auto Potato By Encoder", group="PushbotPotato")
 public class ProcessOfTestingColorSensor extends LinearOpMode {
 
-    /* Declare OpMode members. */
+    */
+/* Declare OpMode members. *//*
+
     HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
 
 
@@ -61,10 +64,12 @@ public class ProcessOfTestingColorSensor extends LinearOpMode {
 
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
-        /*
+        */
+/*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
-         */
+         *//*
+
         robot.init(hardwareMap);
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
@@ -110,4 +115,4 @@ public class ProcessOfTestingColorSensor extends LinearOpMode {
         telemetry.addData("Test", "Complete");
         telemetry.update();
     }
-}
+}*/

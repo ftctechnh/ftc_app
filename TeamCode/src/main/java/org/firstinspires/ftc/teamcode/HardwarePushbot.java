@@ -53,11 +53,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  armDrive    = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
+    public DcMotor  leftDrive           = null;
+    public DcMotor  rightDrive          = null;
+    public DcMotor  armDrive            = null;
+    public Servo    leftClaw            = null;
+    public Servo    rightClaw           = null;
+    public Servo    jewelAnnihilator    = null;
 
     //Range of motion for right claw (0, 0.5)
     //Range of motion for left claw (0, 0.5) but reversed
@@ -103,6 +104,7 @@ public class HardwarePushbot
         leftClaw.setPosition(MID_SERVO);
         rightClaw = hwMap.get(Servo.class, "right_claw_servo");
         rightClaw.setPosition(MID_SERVO);
+        jewelAnnihilator = hwMap.get(Servo.class, "jewel_servo");
     }
  }
 
