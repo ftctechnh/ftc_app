@@ -52,7 +52,8 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 @Disabled
-public class BasicOpMode_Linear extends LinearOpMode {
+public class BasicOpMode_Linear extends LinearOpMode
+{
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -60,7 +61,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor rightDrive = null;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -80,7 +82,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+        while (opModeIsActive())
+        {
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
