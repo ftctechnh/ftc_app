@@ -129,6 +129,7 @@ public class charlieTeleOp extends OpMode {
 
     public void mecanumStrafe(){
 
+        //Joystick 1 Left X-axis
         double J1LX = gamepad1.left_stick_x;
 
         leftWheelMotorFront.setPower(J1LX);
