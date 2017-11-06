@@ -33,7 +33,7 @@ public class charlieTeleOp extends OpMode {
 */
 
 
-    ColorSensor bColorSensorLeft;    // Hardware Device Object
+//    ColorSensor bColorSensorLeft;     Hardware Device Object
 
 
 
