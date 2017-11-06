@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Autonomous Blue Test")
-public class blue_frontCorner extends Autonomous_General {
+@Autonomous(name="Autonomous Blue Test Back")
+public class blue_BackCorner extends Autonomous_General {
 
     DcMotor leftFront;
     DcMotor rightFront;
@@ -53,20 +53,15 @@ public class blue_frontCorner extends Autonomous_General {
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
 
-        encoderMecanumDrive(0.5,65,65,1000,0);
-        sleep(1000);
-        gyroTurn(0.3,88);
-        sleep(1000);
-        encoderMecanumDrive(0.75,45,45,1000,0);
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            strafeRangeDistance(88, 1, rsBuffer, false);
+            strafeRangeDistance(88, 0.35, rsBuffer, true,false);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            strafeRangeDistance(71, 1, rsBuffer, false);
+            strafeRangeDistance(71, 0.35, rsBuffer, true, false);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            strafeRangeDistance(108, 1, rsBuffer, false);
+            strafeRangeDistance(108, 0.35, rsBuffer, true, false);
 
         }
 

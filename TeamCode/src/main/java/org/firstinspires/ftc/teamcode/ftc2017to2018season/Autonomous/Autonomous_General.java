@@ -59,6 +59,7 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor back_left_motor;
     public ModernRoboticsI2cGyro gyro;
     public ModernRoboticsI2cRangeSensor rangeSensor;
+    public ModernRoboticsI2cRangeSensor rangeSensor2;
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -132,6 +133,7 @@ public class Autonomous_General extends LinearOpMode {
 //        }
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
         // Send telemetry message to signify robot waiting;
 //        telemetry.addData("Status", "Resetting Encoders");    //
 //        telemetry.update();
@@ -441,7 +443,7 @@ public class Autonomous_General extends LinearOpMode {
 
     }
     public void encoderMecanumDrive(double speed,
-                                    double leftInches, double rightInches,
+                                    double rightInches, double leftInches,
                                     double timeoutS, int direction) {
         int newLeftFrontTarget;
         int newRightFrontTarget;
@@ -478,7 +480,7 @@ public class Autonomous_General extends LinearOpMode {
             //idle();
 
         }
-        else if (direction == 1){//right
+        else if (direction == 1){
             back_left_motor.setTargetPosition(-newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(newRightBackTarget);
@@ -489,7 +491,7 @@ public class Autonomous_General extends LinearOpMode {
             //idle();
 
         }
-        else if(direction == -1){//left
+        else if(direction == -1){
             back_left_motor.setTargetPosition(newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(-newRightBackTarget);
@@ -757,21 +759,66 @@ public class Autonomous_General extends LinearOpMode {
         return null;
     }
 
-    public void strafeRangeDistance(double distInCM, double speed, double rsBufffer) {
+    public void strafeRangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
+    if(strafe) {
+        if (!dorangeSensor2) {
+            while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
+                strafeLeft(speed);
+                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("Target Distance", distInCM - rsBufffer);
+                telemetry.update();
+            }
+            stopMotors();
+            sleep(400);
+            while ((rangeSensor.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
+                strafeRight(speed);
+                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("Target Distance", distInCM - rsBufffer);
+                telemetry.update();
+            }
+            stopMotors();
+            telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
+        } else if (dorangeSensor2) {
+            while (rangeSensor2.getDistance(DistanceUnit.CM) > (distInCM - rsBufffer)) {
+                strafeRight(speed);
+                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("Target Distance", distInCM - rsBufffer);
+                telemetry.update();
+            }
+            stopMotors();
+            sleep(400);
+            while ((rangeSensor2.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
+                strafeLeft(speed);
+                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("Target Distance", distInCM - rsBufffer);
+                telemetry.update();
+            }
+            stopMotors();
+            telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
+        }
+    }
+    else if(!strafe){
+            while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
+                straightDrive(-speed);
+                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("Target Distance", distInCM - rsBufffer);
+                telemetry.update();
+            }
+            stopMotors();
+            sleep(400);
+            while ((rangeSensor.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
+                straightDrive(speed);
+                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("Target Distance", distInCM - rsBufffer);
+                telemetry.update();
+            }
+            stopMotors();
+            telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
 
-        while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM-rsBufffer)) {
-            strafeLeft(speed);
-            telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
         }
-        stopMotors();
-        sleep(400);
-        while ((rangeSensor.getDistance(DistanceUnit.CM)-rsBufffer) < (distInCM-rsBufffer)) {
-            strafeRight(speed);
-            telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
-        }
-        stopMotors();
     }
 
     public Enum<RelicRecoveryVuMark> returnImage() {
