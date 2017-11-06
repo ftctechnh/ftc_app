@@ -14,9 +14,9 @@ import org.chathamrobotics.common.utils.robot.RobotLogger;
 public class GlyphGripper {
     private static final int RIGHT_INDEX = 0;
     private static final int LEFT_INDEX = 1;
-    private static final double[] CLOSED_POSITIONS = {0, 1};
-    private static final double[] OPEN_POSITIONS = {0.6, 0.4};
-    private static final double[] GRIP_POSITIONS = {0.5, 0,5};
+    private static final double[] CLOSED_POSITIONS = {1, 0};
+    private static final double[] OPEN_POSITIONS = {0.4, 0.6};
+    private static final double[] GRIP_POSITIONS = {0.5, 0.5};
 
     private Servo leftServo;
     private Servo rightServo;
