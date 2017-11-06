@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by inspirationteam on 11/5/2017.
  */
 
-@TeleOp(name = "charlie tele op test thingy")
+@TeleOp(name = "Charlie_teleOP")
 //@Disabled
 public class charlieTeleOp extends OpMode {
 
@@ -82,12 +82,12 @@ public class charlieTeleOp extends OpMode {
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
-        leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
+        /*---------------------------------------------------------------------
+        //leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        -----------------------------------------------------------------------*/
     }
 
     /*
@@ -143,10 +143,10 @@ public class charlieTeleOp extends OpMode {
         /*
         read the gamepad values and put into variables
          */
-        float leftY_gp1 = (gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed();
-        float rightY_gp1 = (gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
-        float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
-        float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
+        float leftY_gp1 = (-gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed();
+        float rightY_gp1 = (-gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
+        float strafeStickLeft = (-gamepad1.left_stick_x);//*leftWheelMotorFront.getMaxSpeed();
+        float strafeStickRight = (-gamepad1.right_stick_x);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
 
         if (Math.abs(strafeStickLeft) > 0) {
