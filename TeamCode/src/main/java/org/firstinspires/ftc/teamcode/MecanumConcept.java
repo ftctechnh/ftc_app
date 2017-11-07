@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Kaden on 10/20/2017.
@@ -39,10 +40,10 @@ public class MecanumConcept extends OpMode {
         y = gamepad1.left_stick_y;
         z = gamepad1.right_stick_x;
 
-        FrontLeft.setPower(y-x+z);
-        FrontRight.setPower(y+x-z);
-        RearLeft.setPower(y+x+z);
-        RearRight.setPower(y-x-z);
+        FrontLeft.setPower(clip(y-x+z));
+        FrontRight.setPower(clip(y+x-z));
+        RearLeft.setPower(clip(y+x+z));
+        RearRight.setPower(clip(y-x-z));
 
     }
 
@@ -50,5 +51,8 @@ public class MecanumConcept extends OpMode {
         motor.setDirection(DcMotor.Direction.REVERSE);
     }
 
+    public float clip(float value) {
+        return Range.clip(value, -1,1);
+    }
 
 }
