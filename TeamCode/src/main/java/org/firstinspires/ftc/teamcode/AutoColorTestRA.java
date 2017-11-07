@@ -41,19 +41,26 @@ public class AutoColorTestRA extends OpMode {
 
     @Override
     public void loop() {
-
-        if (sensorColor.red() == 100) {
+        telemetry.addData("Color Sensor Red: ", sensorColor.red());
+        telemetry.addData("Color Sensor Blue: ", sensorColor.blue());
+        telemetry.addData("Position of servo: ", thisOne.getPosition());
+        // Well I just randomly changed stuff so um you should have the original code
+        // so change it back if this is behaving weirdly
+        if (3*sensorColor.red() < sensorColor.blue()) {
             if (thisOne.getPosition() < 1) {
                 thisOne.setPosition(1);
             } else {
                 thisOne.setPosition(0);
             }
-        } else if (100 < sensorColor.red() && sensorColor.red() < 200) {
+        } else if (sensorColor.red() > 3*sensorColor.blue()) {
             if (thatOne.getPosition() < 1) {
                 thatOne.setPosition(1);
             } else {
                 thatOne.setPosition(0);
             }
+        } else {
+            thisOne.setPosition(0);
+            thatOne.setPosition(0);
         }
     }
 }
