@@ -23,7 +23,7 @@ public class Drive9330 {
         //if (gyro!=null) if (!gyro.isCalibrated()) gyro.init();
     }
 
-    public void driveForward(double speed) { //Speed mush be between 0 and 100
+    public void driveForward(double speed) { //Speed mush, MUSH! be between 0 and 100
         Hardware9330.leftMotor.setPower(-speed);
         Hardware9330.rightMotor.setPower(speed);
     }

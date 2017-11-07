@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
+import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensor9330;
 import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
@@ -21,8 +22,8 @@ import java.util.Set;
  * Created by robot on 9/25/2017.
  */
 
-@Autonomous(name="AutoVuforia9330", group="Opmode")  // @Autonomous(...) is the other common choice
-public class AutoVuforia9330 extends LinearOpMode {
+@Autonomous(name="AutoLeftVuforia9330", group="Opmode")  // @Autonomous(...) is the other common choice
+public class AutoLeftVuforia9330 extends LinearOpMode {
 
     Hardware9330 robotMap = new Hardware9330();
     ColorDistance9330 colorDistance;
@@ -34,6 +35,7 @@ public class AutoVuforia9330 extends LinearOpMode {
     //Integer TurnError = 1;
     //Double TurnSpeed = 0.1;
     //VuforiaTrackables info;
+    Clamps9330 clamps;
     Double PictoYRotation;
     Double PictoZTranslation;
     String PictoImageType;
@@ -41,7 +43,7 @@ public class AutoVuforia9330 extends LinearOpMode {
     Integer ColorGreen;
     Integer ColorBlue;
     Integer ColorAlpha;
-    boolean onRedTeam;
+    int onRedTeam; // will be used to reverse the motor direction based off of alliance
 
     public void log(String name, Object value) {
         telemetry.clear();
@@ -94,6 +96,7 @@ public class AutoVuforia9330 extends LinearOpMode {
         drive = new Drive9330(robotMap);
         crystalarm = new CrystalArm9330(robotMap);
         colorDistance = new ColorDistance9330(robotMap);
+        clamps = new Clamps9330(robotMap);
         //gyro.init();    //initializes gyro
        //info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
 
@@ -132,34 +135,34 @@ public class AutoVuforia9330 extends LinearOpMode {
                 sleep(800);
 
                 if (ColorRed > ColorBlue) {
-                    onRedTeam = true;
+                    onRedTeam = 1;
                     log("Info", "We are red! Knocking down blue.");
                     if(cs9330.r() > cs9330.b()){
                         //drive.gyroTurn(90, TurnSpeed,false);
-                        drive.driveForward(0.5);
+                        drive.driveForward(-0.5);
                         sleep(300);
                         drive.stopDrive();
                         crystalarm.raiseArmServo();
                         //drive.gyroTurn(180, TurnSpeed,false);
                     }else{
                         //drive.gyroTurn(-90,TurnSpeed,false);
-                        drive.driveForward(-0.5);
+                        drive.driveForward(0.5);
                         sleep(300);
                         drive.stopDrive();
                         crystalarm.raiseArmServo();
                     }
                 } else {
-                    onRedTeam = false;
+                    onRedTeam = -1;
                     log("Info", "We are blue! Knocking down red.");
                     if(cs9330.r() > cs9330.b()){
                         //drive.gyroTurn(-90, TurnSpeed,false);
-                        drive.driveForward(-0.5);
+                        drive.driveForward(0.5);
                         sleep(300);
                         drive.stopDrive();
                         crystalarm.raiseArmServo();
                     }else{
                         //drive.gyroTurn(90, TurnSpeed,false);
-                        drive.driveForward(0.5);
+                        drive.driveForward(-0.5);
                         sleep(300);
                         drive.stopDrive();
                         crystalarm.raiseArmServo();
@@ -167,6 +170,18 @@ public class AutoVuforia9330 extends LinearOpMode {
                     }
                 }
             log("Info", "Target knocked down!");
+                //We need to back up a distance then turn left to place a glyph
+                    drive.driveForward(-70*onRedTeam);
+                    sleep(1000);
+                    drive.stopDrive();
+                    drive.turnLeft(70);
+                    sleep(100);
+                    drive.stopDrive();
+                    clamps.openLowClamp();
+
+
+
+
 
                 /*
             info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
