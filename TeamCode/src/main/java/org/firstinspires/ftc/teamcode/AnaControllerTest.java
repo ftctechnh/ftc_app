@@ -75,8 +75,8 @@ public class AnaControllerTL extends LinearOpMode {
             if (gamepad1.y) button_y = true;
             if (gamepad1.start) start = true;
             if (gamepad1.back) back = true;
-            if (gamepad1.right_trigger) righttrigger = true;
-            if (gamepad1.left_trigger) lefttrigger = true;
+ //           if (gamepad1.right_trigger) righttrigger = true;
+//            if (gamepad1.left_trigger) lefttrigger = true;
             if (gamepad1.right_bumper) rightbumper = true;
             if (gamepad1.left_bumper) leftbumper = true;
 
