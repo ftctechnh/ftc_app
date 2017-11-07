@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="linear spinear 2.0", group="Linear Auto")
+@Autonomous(name="Go Forward", group="Linear Auto")
 
 public class testauto extends LinearOpMode {
     final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
