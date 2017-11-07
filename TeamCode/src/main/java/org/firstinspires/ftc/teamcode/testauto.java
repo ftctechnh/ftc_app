@@ -24,7 +24,7 @@ public class testauto extends LinearOpMode {
         robot.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(48, .5);
+        encode(10000, .5);
     }
 
     public void encode(double distance, double speed) {
@@ -64,7 +64,7 @@ public class testauto extends LinearOpMode {
                 telemetry.addData("fl: ", targetFL);
                 telemetry.addData("fr: ", targetFR);
                 telemetry.addData("rl: ", targetRL);
-                //telemetry.addData("rr: ", targetRR);
+                telemetry.addData("rr: ", targetRR);
                 telemetry.addData("cool number: ", i);
                 i++;
                 telemetry.update();
