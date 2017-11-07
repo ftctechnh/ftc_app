@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous
 public class AutoColorTestRA extends OpMode {
 
-    //does this work???
+    //hello
 
     DcMotor backLeft;
     DcMotor backRight;
