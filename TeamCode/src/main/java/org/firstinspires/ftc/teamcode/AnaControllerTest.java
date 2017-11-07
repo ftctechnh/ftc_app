@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="AnaOnBot ControllerTest", group="Pushbot")
 
-public class AnaControllerTL extends LinearOpMode {
+public class AnaControllerTest extends LinearOpMode {
 
     // Set all status flags to false
     public boolean dpadup = false;
