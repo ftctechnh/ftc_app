@@ -90,7 +90,7 @@ public class Drive extends LinearOpMode {
                     && rbOn) {
                 servo2.setPosition(0);
 
-            } else if ((gamepad1.b || gamepad2.b) && rbOn) {
+            } else {
                 servo2.setPosition(.5);
             }
 
