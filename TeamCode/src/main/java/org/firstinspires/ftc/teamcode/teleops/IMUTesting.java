@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
@@ -13,7 +15,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.TankDrive;
  */
 
 @TeleOp (name = "IMU Position Testing", group = "Tester")
-public class PositionTesting extends OpMode {
+public class IMUTesting extends OpMode {
 
     private Robot robot;
     private IMUWrapper imuWrapper;
@@ -21,6 +23,7 @@ public class PositionTesting extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
+        imuWrapper = new IMUWrapper(hardwareMap);
     }
 
     @Override
@@ -32,9 +35,15 @@ public class PositionTesting extends OpMode {
             ((TankDrive) robot.getDrivetrain()).getRightMotors().setPowers(gamepad1.right_stick_y);
         }
 
+        telemetry.addData("Calibration:", imuWrapper.getIMU().getCalibrationStatus().toString());
+
         telemetry.addData("X Position:", imuWrapper.getPosition().x);
         telemetry.addData("Y Position:", imuWrapper.getPosition().y);
         telemetry.addData("Z Position:", imuWrapper.getPosition().z);
+
+        telemetry.addData("First Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).firstAngle);
+        telemetry.addData("Second Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).secondAngle);
+        telemetry.addData("Third Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).thirdAngle);
     }
 
     @Override

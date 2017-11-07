@@ -72,9 +72,9 @@ public class MecanumArcadeDrive extends OpMode {
 
         // Disabled gripper during open house because hardware hoohas
         if(gamepad1.left_bumper){
-            grabber.setPosition(Math.min(0, grabber.getPosition() - 0.01));
+            grabber.setPosition(Math.max(0, grabber.getPosition() - 0.01));
         } else if (gamepad1.right_bumper){
-            grabber.setPosition(Math.max(1, grabber.getPosition() + 0.01));
+            grabber.setPosition(Math.min(1, grabber.getPosition() + 0.01));
         }
 
         telemetry.addData("Servo Position", grabber.getPosition());
