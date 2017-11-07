@@ -56,13 +56,11 @@ public class DoubleArm extends OpMode{
             motorSpeed = Range.clip(gamepad1.right_trigger - gamepad1.left_trigger, -1, 1);
         if (gamepad1.a){
             if (Claw.getPosition() < clawHighEnd) {
-                clawPosition = 1.0;
+                clawPosition = clawHighEnd;
             }
         }
         if (gamepad1.b){
-            if (Claw.getPosition() > clawLowEnd) {
-                clawPosition = 0.3;
-            }
+            clawPosition = clawLowEnd;
         }
 
         UpDown.setPosition(upDownPosition);
