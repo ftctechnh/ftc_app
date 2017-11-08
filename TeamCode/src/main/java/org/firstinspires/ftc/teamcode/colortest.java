@@ -37,9 +37,14 @@ public class colortest extends AutonomousSetup {
     }
 
     public void getmaxpoints(){
-        telemetry.addData("Red ", cS.red());
-        telemetry.addData("Blue ", cS.blue());
-        telemetry.addData("Green", cS.green());
+        telemetry.update();
+        if(cS.red() > cS.blue()){
+            telemetry.addData("Red rules the world ", "wooooooo");
+        }
+        else if(cS.blue()>cS.red()){
+            telemetry.addData("Blue rules the world ", "wooooooo");
+        }
+        telemetry.update();
     }
 
 }
