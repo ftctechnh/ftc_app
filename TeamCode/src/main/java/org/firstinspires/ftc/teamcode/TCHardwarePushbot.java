@@ -18,6 +18,8 @@ public class TCHardwarePushbot {
     public DcMotor arm2;
     public Servo fs1;
     public Servo fs2;
+    public Servo fs3;
+    public Servo fs4;
     public Servo jko;
     public Servo claw;
     //Creates the hardware map
@@ -31,13 +33,16 @@ public class TCHardwarePushbot {
         rDrive = hwMap.dcMotor.get("rDrive");
         lDrive = hwMap.dcMotor.get("lDrive");
         cDrive = hwMap.dcMotor.get("cDrive");
-        /*fLift = hwMap.dcMotor.get("fLift");
+
+        fLift = hwMap.dcMotor.get("fLift");
         arm1 = hwMap.dcMotor.get("arm1");
         arm2 = hwMap.dcMotor.get("arm2");
         fs1 = hwMap.servo.get("fs1");
         fs2 = hwMap.servo.get("fs2");
+        fs3 = hwMap.servo.get("fs3");
+        fs4 = hwMap.servo.get("fs4");
         jko = hwMap.servo.get("jko");
-        claw = hwMap.servo.get("claw");*/
+        claw = hwMap.servo.get("claw");
         lDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 

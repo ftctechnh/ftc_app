@@ -66,6 +66,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
@@ -102,7 +106,10 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
     /* Declare OpMode members. */
 
     TCHardwarePushbot robot = new TCHardwarePushbot();   // Use a Pushbot's hardware
+    private ElapsedTime     runtime = new ElapsedTime();
 
+    static final double     FORWARD_SPEED = 0.6;
+    static final double     TURN_SPEED    = 0.5;
     // could also use HardwarePushbotMatrix class.
 
     //  double          clawOffset      = 0;                       // Servo mid position
@@ -141,9 +148,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         //telemetry.addData("Say", "Hello Driver");    //
 
-        //telemetry.update();
-
-
         // Wait for the game to start (driver presses PLAY)
 
         waitForStart();
@@ -169,15 +173,18 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
             cDrive = -gamepad1.left_trigger + gamepad1.right_trigger;
 
-            fLift = -gamepad2.left_trigger + gamepad2.right_trigger;
 
             if (gamepad2.a) {
                 robot.fs1.setPosition(.25);
                 robot.fs2.setPosition(.25);
+                robot.fs3.setPosition(.25);
+                robot.fs4.setPosition(.25);
             }
             if (gamepad2.b) {
                 robot.fs1.setPosition(.5);
                 robot.fs2.setPosition(.5);
+                robot.fs3.setPosition(.5);
+                robot.fs4.setPosition(.5);
             }
             if (gamepad1.a) {
                 robot.jko.setPosition(.75);
@@ -188,6 +195,25 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             if (gamepad2.x) {
                 robot.claw.setPosition(.75);
             }
+            if (gamepad2.y) {
+                robot.arm1.setPower(FORWARD_SPEED);
+                runtime.reset();
+                while (opModeIsActive() && (runtime.seconds() < .25)) {
+                    telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                    telemetry.update();
+                }
+                robot.arm1.setPower(0);
+            }
+            if (gamepad2.dpad_up) {
+                robot.fLift.setDirection(DcMotorSimple.Direction.FORWARD);
+                robot.fLift.setPower(1);
+            }
+            if (gamepad2.dpad_down) {
+                robot.fLift.setDirection(DcMotorSimple.Direction.REVERSE);
+                robot.fLift.setPower(1);
+            }
+
+
 
             // Normalize the values so neither exceed +/- 1.0
 
@@ -203,7 +229,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
                 cDrive /= max;
 
-                fLift /= max;
 
             }
 
@@ -213,8 +238,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             robot.rDrive.setPower(rDrive);
 
             robot.cDrive.setPower(cDrive);
-
-            robot.fLift.setPower(fLift);
 
 
         }
