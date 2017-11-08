@@ -1,14 +1,11 @@
-package org.firstinspires.ftc.teamcode.autonomii;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.ColorSensorWrapper;
-import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
 
 /**
  * Tests the JewelIdentifier
