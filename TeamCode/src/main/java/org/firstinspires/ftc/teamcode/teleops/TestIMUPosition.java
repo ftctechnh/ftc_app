@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.TankDrive;
  * Created by BAbel on 11/3/2017.
  */
 
-@TeleOp (name = "IMU Position Testing", group = "Tester")
+@TeleOp (name = "IMU Position Testing", group = "Test")
 public class TestIMUPosition extends OpMode {
 
     private Robot robot;
