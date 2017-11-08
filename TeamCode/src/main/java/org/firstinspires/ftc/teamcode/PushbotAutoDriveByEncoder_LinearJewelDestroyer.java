@@ -133,16 +133,7 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
             robot.jewelAnnihilator.setPosition(d);
             sleep(50);
         }
-
-        encoderDrive(DRIVE_SPEED, 0.5, 0.5, 0.25);
-
-        for(double d = 0.15; d < 0.675; d+=0.025){
-            robot.jewelAnnihilator.setPosition(d);
-            sleep(50);
-        }
-
-        sleep(1000);
-
+        
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
                 (int) (sensorColor.blue() * SCALE_FACTOR),
@@ -151,6 +142,15 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
         if (sensorColor.blue() > 150){
             encoderDrive(DRIVE_SPEED, 0.5, 0.5, 0.5);
         }
+
+        for(double d = 0.15; d < 0.675; d+=0.025){
+            robot.jewelAnnihilator.setPosition(d);
+            sleep(50);
+        }
+
+        sleep(1000);
+
+
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
