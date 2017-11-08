@@ -50,9 +50,6 @@ public class AutonomousSetup extends LinearOpMode {
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -125,5 +122,6 @@ public class AutonomousSetup extends LinearOpMode {
         telemetry.addData("Red ", cS.red());
         telemetry.addData("Blue ", cS.blue());
         telemetry.addData("Green", cS.green());
+        telemetry.update();
     }
 }

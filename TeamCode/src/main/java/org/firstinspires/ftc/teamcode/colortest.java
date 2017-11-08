@@ -23,19 +23,23 @@ public class colortest extends AutonomousSetup {
         cS = hardwareMap.colorSensor.get("cs1");
         // Now do anything else you need to do in the initilazation phase, like calibrating the gyros, setting a color sensors lights off, etc.
 
+
         cS.enableLed(true);
         telemetry.addData("it did the thing", 1);
         telemetry.addData("Anything you need to know before starting", 1);
         telemetry.addData("What is up? ", "The Sky.");
         telemetry.update();
         waitForStart();
+
+        while (true) {
+            getmaxpoints();
+        }
     }
 
-
-
-    public void JewelFinder(){
+    public void getmaxpoints(){
         telemetry.addData("Red ", cS.red());
         telemetry.addData("Blue ", cS.blue());
         telemetry.addData("Green", cS.green());
     }
+
 }
