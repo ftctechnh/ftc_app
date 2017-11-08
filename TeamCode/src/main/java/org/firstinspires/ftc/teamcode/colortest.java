@@ -38,7 +38,6 @@ public class colortest extends AutonomousSetup {
     }
 
     public void getmaxpoints(){
-        telemetry.update();
         if(cS.red() > cS.blue()){
             telemetry.addData("Red rules the world ", "wooooooo");
         }
