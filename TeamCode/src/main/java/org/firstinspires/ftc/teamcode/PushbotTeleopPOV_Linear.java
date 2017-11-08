@@ -124,6 +124,9 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         double max;
 
+        double lVel = 0;
+
+        double rVel = 0;
 
 
 
@@ -171,6 +174,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
             fLift = -gamepad2.left_trigger + gamepad2.right_trigger;
 
+
             if (gamepad2.a) {
                 robot.fs1.setPosition(.25);
                 robot.fs2.setPosition(.25);
@@ -189,17 +193,37 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                 robot.claw.setPosition(.75);
             }
 
+            if (rVel < rDrive){
+            rVel = rVel + 0.1;
+
+            }
+
+            if (rVel > rDrive){
+                rVel = rVel - 0.1;
+
+            }
+
+            if (lVel < lDrive){
+                lVel = lVel + 0.1;
+
+            }
+
+            if (lVel > lDrive){
+                lVel = lVel - 0.1;
+
+            }
+
             // Normalize the values so neither exceed +/- 1.0
 
-            max = Math.max(Math.abs(lDrive), Math.abs(rDrive));
+            max = Math.max(Math.abs(lVel), Math.abs(rVel));
 
             if (max > 0.5)
 
             {
 
-                lDrive /= max;
+                lVel /= max;
 
-                rDrive /= max;
+                rVel /= max;
 
                 cDrive /= max;
 
@@ -208,14 +232,13 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             }
 
 
-            robot.lDrive.setPower(lDrive);
+            robot.lDrive.setPower(lVel);
 
-            robot.rDrive.setPower(rDrive);
+            robot.rDrive.setPower(rVel);
 
             robot.cDrive.setPower(cDrive);
 
             robot.fLift.setPower(fLift);
-
 
         }
 
