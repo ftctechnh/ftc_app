@@ -29,9 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -76,14 +80,32 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
+
     @Override
     public void runOpMode() {
+
+        // get a reference to the color sensor.
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+
+        // get a reference to the distance sensor that shares the same name.
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
 
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -104,6 +126,9 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         for(double d = 0.675; d > 0.15; d-=0.025){
             robot.jewelAnnihilator.setPosition(d);
             sleep(50);
@@ -116,19 +141,21 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
             sleep(50);
         }
 
-        sleep(3000);
+        sleep(1000);
+
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        if (sensorColor.blue() > 150){
+            encoderDrive(DRIVE_SPEED, 0.5, 0.5, 0.5);
+        }
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         encoderDrive(DRIVE_SPEED,  7.5,  7.5, 5.0);
-
-        // robot.claw.setPosition(1.0);sleep(1000);
-        //
-        //  robot.claw.setPosition(0.0);
-        // sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -137,7 +164,7 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
 
 
     /*
-     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
