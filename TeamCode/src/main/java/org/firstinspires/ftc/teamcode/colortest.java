@@ -9,7 +9,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * Created by Aus on 11/7/2017.
  */
 
-@Autonomous(name = "Autonomous", group = "Autonomous")
+
+@Autonomous(name = "colortest", group = "Concept")
 
 public class colortest extends AutonomousSetup {
 
@@ -43,6 +44,9 @@ public class colortest extends AutonomousSetup {
         }
         else if(cS.blue()>cS.red()){
             telemetry.addData("Blue rules the world ", "wooooooo");
+        }
+        else if(cS.green()>cS.red() && cS.green() > cS.blue()){
+            telemetry.addData("what why is green higher", "fix this now");
         }
         telemetry.update();
     }
