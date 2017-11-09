@@ -22,8 +22,8 @@ public class RobotErrors {
      * @param format    the format string
      * @param args      the format args
      */
-    public static void reportError(String TAG, String format, Object ...args) {
-        reportError(TAG, null, format, args);
+    public static void reportGlobalError(String TAG, String format, Object ...args) {
+        reportGlobalError(TAG, null, format, args);
     }
 
     /**
@@ -33,19 +33,19 @@ public class RobotErrors {
      * @param format    the format string
      * @param args      the format args
      */
-    public static void reportError(String TAG, Throwable e, String format, Object ...args) {
+    public static void reportGlobalError(String TAG, Throwable e, String format, Object ...args) {
         if (e instanceof InvocationTargetException) {
-            reportError(
+            reportGlobalError(
                     TAG, ((InvocationTargetException) e).getTargetException(), format, args
             );
         } else if (e instanceof RuntimeException && e.getCause() != null) {
-            reportError(
+            reportGlobalError(
                     TAG, e.getCause(), format, args
             );
         } else {
             String message = String.format(format, args);
             // Show the message in the log
-            Log.e(TAG, String.format("configuration error: %s", message), e);
+            Log.wtf(TAG, message, e);
 
             // Make the message appear on the driver station (only the first one will actually appear)
             RobotLog.setGlobalErrorMsg(message);

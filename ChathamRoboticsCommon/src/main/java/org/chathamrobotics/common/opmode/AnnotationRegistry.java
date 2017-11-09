@@ -165,7 +165,7 @@ public class AnnotationRegistry implements ClassFilter {
                 try {
                     register.register(clazz, manager);
                 } catch (Exception err) {
-                    RobotErrors.reportError(TAG, err, "Encountered an error while registering '%s'", clazz.getSimpleName());
+                    RobotErrors.reportGlobalError(TAG, err, "Encountered an error while registering '%s'", clazz.getSimpleName());
                 }
             }
         }
@@ -217,19 +217,19 @@ public class AnnotationRegistry implements ClassFilter {
         if (opModeAnnotationCount == 0 ){
             return;
         } else if (opModeAnnotationCount > 1) {
-            RobotErrors.reportError(TAG,"'%s' class is annotated by multiple opmode annotations", clazz.getSimpleName());
+            RobotErrors.reportGlobalError(TAG,"'%s' class is annotated by multiple opmode annotations", clazz.getSimpleName());
             return;
         }
 
         // ensure that the class is an opmode
         if (! ClassUtil.inheritsFrom(clazz, OpMode.class)) {
-            RobotErrors.reportError(TAG,"'%s' class doesn't inherit from the class 'OpMode'", clazz.getSimpleName());
+            RobotErrors.reportGlobalError(TAG,"'%s' class doesn't inherit from the class 'OpMode'", clazz.getSimpleName());
             return;
         }
 
         // ensure that the class is public
         if (! Modifier.isPublic(clazz.getModifiers())) {
-            RobotErrors.reportError(TAG,"'%s' class is not declared 'public'", clazz.getSimpleName());
+            RobotErrors.reportGlobalError(TAG,"'%s' class is not declared 'public'", clazz.getSimpleName());
             return;
         }
 
@@ -237,7 +237,7 @@ public class AnnotationRegistry implements ClassFilter {
         @SuppressWarnings("unchecked")
         String name = getOpModeName((Class<OpMode>) clazz);
         if (name.equals(OpModeManager.DEFAULT_OP_MODE_NAME) || name.trim().equals("")) {
-            RobotErrors.reportError(TAG, "\"%s\" is not a legal OpMode name", name);
+            RobotErrors.reportGlobalError(TAG, "\"%s\" is not a legal OpMode name", name);
             return;
         }
 

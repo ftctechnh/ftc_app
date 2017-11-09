@@ -52,7 +52,7 @@ public abstract class AutonomousOpMode<R extends Robot> extends LinearOpMode {
         } catch (StoppedException | InterruptedException err) {
             // Do nothing
         } catch (Exception err) {
-            RobotErrors.reportError(this.getClass().getSimpleName(), err, "Encountered error while running opmode");
+            RobotErrors.reportGlobalError(this.getClass().getSimpleName(), err, "Encountered error while running opmode");
         } finally {
             robot.stop();
             stop();
