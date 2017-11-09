@@ -7,7 +7,7 @@ public class HardwareRobot {
 
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
-    final static double COUNTS_PER_MOTOR_REV = 1440;
+    final static double COUNTS_PER_MOTOR_REV = 105;
     final static double DRIVE_GEAR_REDUCTION = 2.91;
     final static double WHEEL_DIAMETER_INCHES = 4.0;
 
@@ -16,6 +16,11 @@ public class HardwareRobot {
 
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
+
+    public HardwareRobot()
+    {
+
+    }
 
     public HardwareRobot(HardwareMap ahwMap) {
         init(ahwMap);
