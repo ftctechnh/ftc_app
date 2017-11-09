@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
 
-import org.chathamrobotics.common.opmode.AutonomousOpMode;
+import org.chathamrobotics.common.opmode.AutonomousTemplate;
 import org.chathamrobotics.common.opmode.exceptions.StoppedException;
 import org.firstinspires.ftc.team9853.Robot9853;
 
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.team9853.Robot9853;
  */
 //@AutonomousRnB(name = "Auto T est")
 @SuppressWarnings("unused")
-public class AutoTest extends AutonomousOpMode<Robot9853> {
+public class AutoTest extends AutonomousTemplate<Robot9853> {
     private Boolean isRedTeam;
 
     public AutoTest(boolean isRedTeam) {

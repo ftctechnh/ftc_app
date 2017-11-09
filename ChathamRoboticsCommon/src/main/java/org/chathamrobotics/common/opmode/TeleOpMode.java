@@ -36,6 +36,11 @@ public abstract class TeleOpMode<R extends Robot> extends OpMode {
     }
 
     @Override
+    public void loop() {
+        this.robot.debugHardware();
+    }
+
+    @Override
     public void start() {
         super.start();
         robot.start();

@@ -24,18 +24,25 @@ import java.lang.reflect.ParameterizedType;
  * @param <R>   the robot class
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public abstract class AutonomousOpMode<R extends Robot> extends LinearOpMode {
+public abstract class AutonomousTemplate<R extends Robot> extends LinearOpMode {
     /**
      * The robot object
      */
     protected R robot;
 
-    /**
-     * Creates a new instance of AutonomousOpMode
-     */
-    public AutonomousOpMode() {
+    private final boolean isRedTeam;
 
+    /**
+     * Creates a new instance of AutonomousTemplate
+     */
+    public AutonomousTemplate(boolean isRedTeam) {
+        this.isRedTeam = isRedTeam;
     }
+
+    /**
+     * Runs the robot
+     */
+    public abstract void run() throws InterruptedException, StoppedException;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,15 +60,27 @@ public abstract class AutonomousOpMode<R extends Robot> extends LinearOpMode {
     }
 
     /**
-     * Runs the robot
-     */
-    public abstract void run() throws InterruptedException, StoppedException;
-
-    /**
      * Check if opmode is active and throws a stopped exception if it is not
      * @throws StoppedException throw if opmode is inactive
      */
     public void checkActivity() throws StoppedException {
         if (! opModeIsActive()) throw new StoppedException();
+    }
+
+    /**
+     * Debugs the robot and checks the opmode activity
+     * @throws StoppedException throw if the opmode is no longer active
+     */
+    public void debug() throws StoppedException {
+        this.robot.debugHardware();
+        this.checkActivity();
+    }
+
+    /**
+     * Checks whether the opmode is being run on the red team
+     * @return  whether the opmode is being run on the red team
+     */
+    public boolean isRedTeam() {
+        return this.isRedTeam;
     }
 }
