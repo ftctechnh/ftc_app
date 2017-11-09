@@ -10,8 +10,9 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by Kaden on 10/20/2017.
  */
+
 @TeleOp(name = "MecanumDriveConcept", group = "linear OpMode")
-@Disabled
+//@Disabled
 public class MecanumConcept extends OpMode {
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
@@ -20,6 +21,8 @@ public class MecanumConcept extends OpMode {
     private float x;
     private float y;
     private float z;
+    private double speed;
+
 
     @Override
     public void init() {
@@ -29,6 +32,7 @@ public class MecanumConcept extends OpMode {
         RearRight = hardwareMap.dcMotor.get("m4");
         reverseMotor(FrontLeft);
         reverseMotor(RearLeft);
+        speed = 0.5;
     }
 
     @Override
@@ -40,10 +44,10 @@ public class MecanumConcept extends OpMode {
         y = gamepad1.left_stick_y;
         z = gamepad1.right_stick_x;
 
-        FrontLeft.setPower(clip(y-x+z));
-        FrontRight.setPower(clip(y+x-z));
-        RearLeft.setPower(clip(y+x+z));
-        RearRight.setPower(clip(y-x-z));
+        FrontLeft.setPower(speed*clip(y-x+z));
+        FrontRight.setPower(speed*clip(y+x-z));
+        RearLeft.setPower(speed*clip(y+x+z));
+        RearRight.setPower(speed*clip(y-x-z));
 
     }
 
