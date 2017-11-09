@@ -132,7 +132,6 @@ public class AutonomousColorServoTest extends LinearOpMode {
             telemetry.update();
             xPos  =  0;
             robot.gemServo.setPosition(xPos);
-
         }
 
         // Set the panel back to the default color
