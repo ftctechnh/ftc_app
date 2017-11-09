@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 //All imports go here, anything you will use, like motors or servos.
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-
+import com.qualcomm.robotcore.hardware.Servo;
 
 import android.util.Log;
 //This makes the OpMode available in the Autonomous group under the name 'Autonomous', in the Driver Station
@@ -15,7 +14,7 @@ import android.util.Log;
 //This is the basic class
 public class AutonomousSetup extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.
-
+    Servo servo;
     DcMotor FrontLeftMotor;
     DcMotor FrontRightMotor;
     DcMotor BackLeftMotor;
@@ -50,6 +49,8 @@ public class AutonomousSetup extends LinearOpMode {
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            servo.setPosition(.45);
+            JewelFinder();
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -123,5 +124,23 @@ public class AutonomousSetup extends LinearOpMode {
         telemetry.addData("Blue ", cS.blue());
         telemetry.addData("Green", cS.green());
         telemetry.update();
+        int timesRan = 0;
+        int timesBlue = 0;
+        int timesRed = 0;
+        while (timesRan <= 5) {
+            if (cS.blue() > cS.red()) {
+                timesBlue += 1;
+
+            } else {
+                timesRed += 1;
+            }
+            timesRan += 1;
+        }
+        if (timesBlue > timesRed){
+            rotations(-.25, .5);
+        }
+        else{
+            rotations(.25, .5);
+        }
     }
 }
