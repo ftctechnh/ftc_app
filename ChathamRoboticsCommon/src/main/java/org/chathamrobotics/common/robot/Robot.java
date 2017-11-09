@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
+import org.chathamrobotics.common.systems.Driver;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;
@@ -41,9 +42,11 @@ public abstract class Robot extends HardwareListener {
         void debug(String name, E device);
     }
 
-    private HardwareMap hardwareMap;
-    private Telemetry telemetry;
+    private final HardwareMap hardwareMap;
+    private final Telemetry telemetry;
+
     public RobotLogger log;
+    public Driver driver;
 
     // hardware debuggers
     private final HardwareDebugFunc<DcMotor> motorDebugger = (name, motor) -> {
