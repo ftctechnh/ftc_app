@@ -22,9 +22,6 @@ public class HardwareRobot {
 
     }
 
-    public HardwareRobot(HardwareMap ahwMap) {
-        init(ahwMap);
-    }
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
@@ -33,6 +30,7 @@ public class HardwareRobot {
 
         // Define and Initialize Motors
         leftDrive = hwMap.get(DcMotor.class, "motorLeft");
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive = hwMap.get(DcMotor.class, "motorRight");
 
 
@@ -40,7 +38,7 @@ public class HardwareRobot {
         //leftDrive = hwMap.get(DcMotor.class, "motorLeft");
         //rightDrive = hwMap.get(DcMotor.class, "motorRight"); 
      
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+
 
         leftDrive.setPower(0);
         rightDrive.setPower(0);
