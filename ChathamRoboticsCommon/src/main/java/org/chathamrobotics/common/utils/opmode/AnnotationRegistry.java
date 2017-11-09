@@ -52,7 +52,7 @@ public class AnnotationRegistry implements ClassFilter {
      *
      * @param manager       the opmode manager
      */
-    @OpModeRegistrar
+//    @OpModeRegistrar
     public static void register(OpModeManager manager) {
         AnnotationRegistry registry = getInstance();
 

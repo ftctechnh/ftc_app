@@ -2,6 +2,7 @@ package org.firstinspires.ftc.team9853;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -38,6 +39,7 @@ public class Robot9853 extends Robot {
         driver = HolonomicDriver.build(this);
         glyphGripper = GlyphGripper.build(this);
         lift = getHardwareMap().dcMotor.get("Lift");
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
