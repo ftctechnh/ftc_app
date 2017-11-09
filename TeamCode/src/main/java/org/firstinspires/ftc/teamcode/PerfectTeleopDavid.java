@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class PerfectTeleopDavid extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
-MasterHardwareClass robot = new MasterHardwareClass();
+HolonomicHardwareClass robot = new HolonomicHardwareClass();
 
     @Override
     public void runOpMode() {
@@ -68,7 +68,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
             telemetry.update();
 
         /* Servo Control */
-            if (gamepad1.x) {
+         /*   if (gamepad1.x) {
                 robot.clawServo.setPower(robot.clawOpen);
             }
             if (gamepad1.y) {
@@ -80,7 +80,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
             }
 
         /* Vertical Arm Motor */
-            if (gamepad1.dpad_up) {
+         /*   if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
             } else {
                 robot.verticalArmMotor.setPower(0);
@@ -125,7 +125,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                         robot.FrontLeftPower = frontLeft;
                     }
                     if (robot.FrontRightPower != frontRight) {
-                        robot.frontRightMotor.setPower(v2);
+                        robot.frontRightMotor.setPower(-v2);
                         robot.FrontRightPower = frontRight;
                     }
                     if (robot.BackLeftPower != backLeft) {
@@ -133,7 +133,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                         robot.BackLeftPower = backLeft;
                     }
                     if (robot.BackRightPower != backRight)
-                        robot.backRightMotor.setPower(v4);
+                        robot.backRightMotor.setPower(-v4);
                     robot.BackRightPower = backRight;
                 }
                 //Hey there!

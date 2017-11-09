@@ -6,7 +6,7 @@
             <NeveRest40Gearmotor name="FR" port="1" />
             <NeveRest40Gearmotor name="BL" port="2" />
             <NeveRest40Gearmotor name="BR" port="3" />
-            <LynxColorSensor name="colorsensor" port="1" bus="0" />
+            <LynxColorSensor name="colorsensor" port="1" bus="1" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub 1" port="1">
