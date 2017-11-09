@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils.robot;
+package org.chathamrobotics.common.robot;
 
 import android.util.Log;
 

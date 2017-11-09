@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils.opmode;
+package org.chathamrobotics.common.opmode.exceptions;
 
 /*!
  * FTC_APP_2018

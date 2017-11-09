@@ -1,10 +1,11 @@
-package org.chathamrobotics.common.utils.opmode;
+package org.chathamrobotics.common.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.chathamrobotics.common.Robot;
-import org.chathamrobotics.common.utils.robot.RobotErrors;
+import org.chathamrobotics.common.opmode.exceptions.StoppedException;
+import org.chathamrobotics.common.robot.Robot;
+import org.chathamrobotics.common.robot.RobotErrors;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.lang.reflect.ParameterizedType;

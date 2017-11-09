@@ -3,8 +3,8 @@ package org.firstinspires.ftc.team9853.systems;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.chathamrobotics.common.Robot;
-import org.chathamrobotics.common.utils.robot.RobotLogger;
+import org.chathamrobotics.common.robot.Robot;
+import org.chathamrobotics.common.robot.RobotLogger;
 
 /*!
  * Created by carsonstorm on 11/3/2017.

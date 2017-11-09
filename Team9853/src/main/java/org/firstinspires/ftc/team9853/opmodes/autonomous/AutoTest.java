@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
 
-import org.chathamrobotics.common.utils.opmode.AutonomousOpMode;
-import org.chathamrobotics.common.utils.opmode.StoppedException;
+import org.chathamrobotics.common.opmode.AutonomousOpMode;
+import org.chathamrobotics.common.opmode.exceptions.StoppedException;
 import org.firstinspires.ftc.team9853.Robot9853;
 
 /*!

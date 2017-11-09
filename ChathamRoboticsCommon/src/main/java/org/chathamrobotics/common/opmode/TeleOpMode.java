@@ -1,9 +1,9 @@
-package org.chathamrobotics.common.utils.opmode;
+package org.chathamrobotics.common.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.chathamrobotics.common.Robot;
+import org.chathamrobotics.common.robot.Robot;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.lang.reflect.ParameterizedType;
