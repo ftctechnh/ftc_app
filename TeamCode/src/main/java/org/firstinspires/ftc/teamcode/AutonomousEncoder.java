@@ -16,8 +16,10 @@ import com.qualcomm.robotcore.util.Range;
 
 public class AutonomousEncoder extends LinearOpMode{
 
-    HardwareMap hwMap = null;
-    HardwareRobot robot = new HardwareRobot(hwMap);
+
+    HardwareRobot robot = new HardwareRobot();
+    //HardwareMap hwMap = null;
+    //HardwareRobot robot = new HardwareRobot(hwMap);
     //hello!
 
     @Override
