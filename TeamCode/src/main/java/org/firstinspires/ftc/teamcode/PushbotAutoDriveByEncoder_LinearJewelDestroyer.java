@@ -129,21 +129,32 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        for(double d = 0.675; d > 0.15; d-=0.025){
+        for(double d = 0.675; d > 0.05; d-=0.025){
             robot.jewelAnnihilator.setPosition(d);
             sleep(50);
         }
-        
+
+        sleep(50);
+
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
                 (int) (sensorColor.blue() * SCALE_FACTOR),
                 hsvValues);
 
-        if (sensorColor.blue() > 150){
-            encoderDrive(DRIVE_SPEED, 0.5, 0.5, 0.5);
+        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.update();
+
+        sleep(1000);
+
+        if (sensorColor.blue() > 50){
+            encoderDrive(DRIVE_SPEED, -1, -1, 0.5);
+        }else{
+            encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
         }
 
-        for(double d = 0.15; d < 0.675; d+=0.025){
+        sleep(500);
+
+        for(double d = 0.05; d < 0.675; d+=0.025){
             robot.jewelAnnihilator.setPosition(d);
             sleep(50);
         }
