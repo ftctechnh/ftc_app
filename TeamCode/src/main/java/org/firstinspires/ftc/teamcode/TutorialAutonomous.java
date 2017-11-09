@@ -57,11 +57,9 @@ public class TutorialAutonomous extends LinearOpMode {
 
 
     DcMotor motorRight = null;
-<<<<<<< HEAD
     //Hello
-=======
+
     DcMotor motorLeft = null;
->>>>>>> 27a9f4bbf109d28b940dd19389338b370099ddc0
 
     @Override
     public void runOpMode() throws InterruptedException {

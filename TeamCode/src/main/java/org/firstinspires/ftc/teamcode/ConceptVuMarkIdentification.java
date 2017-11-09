@@ -78,6 +78,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
 //    DcMotor motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
 //    DcMotor motorRight = hardwareMap.get(DcMotor.class, "motorRight");
     HardwareRobot robot = new HardwareRobot();
+    //HardwareRobot robot = new HardwareRobot();
     //HardwareMap map = null;
 
     OpenGLMatrix lastLocation = null;
