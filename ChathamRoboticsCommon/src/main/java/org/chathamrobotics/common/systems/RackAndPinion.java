@@ -3,12 +3,12 @@ package org.chathamrobotics.common.systems;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.chathamrobotics.common.Robot;
+import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.hardware.LimitSwitch;
 import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
-import org.chathamrobotics.common.utils.hardware.HardwareListener;
-import org.chathamrobotics.common.utils.hardware.IsBusyException;
-import org.chathamrobotics.common.utils.robot.RobotLogger;
+import org.chathamrobotics.common.hardware.utils.HardwareListener;
+import org.chathamrobotics.common.IsBusyException;
+import org.chathamrobotics.common.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Timer;

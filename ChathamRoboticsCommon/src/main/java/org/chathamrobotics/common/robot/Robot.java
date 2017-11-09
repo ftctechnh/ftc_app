@@ -1,4 +1,4 @@
-package org.chathamrobotics.common;
+package org.chathamrobotics.common.robot;
 
 import com.qualcomm.robotcore.hardware.AccelerationSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -15,8 +15,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.chathamrobotics.common.utils.hardware.HardwareListener;
-import org.chathamrobotics.common.utils.robot.RobotLogger;
+import org.chathamrobotics.common.hardware.utils.HardwareListener;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.HashMap;

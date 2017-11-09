@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils.hardware;
+package org.chathamrobotics.common;
 
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;

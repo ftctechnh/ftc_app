@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-import org.chathamrobotics.common.Robot;
-import org.chathamrobotics.common.utils.robot.RobotFace;
-import org.chathamrobotics.common.utils.robot.RobotLogger;
+import org.chathamrobotics.common.robot.Robot;
+import org.chathamrobotics.common.robot.RobotFace;
+import org.chathamrobotics.common.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 

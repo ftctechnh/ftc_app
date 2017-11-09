@@ -1,4 +1,4 @@
-package org.chathamrobotics.common.utils.opmode;
+package org.chathamrobotics.common.opmode;
 
 import android.util.Log;
 
@@ -6,11 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ClassUtil;
 
-import org.chathamrobotics.common.utils.robot.RobotErrors;
+import org.chathamrobotics.common.robot.RobotErrors;
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassFilter;
 import org.firstinspires.ftc.robotcore.internal.opmode.ClassManager;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
