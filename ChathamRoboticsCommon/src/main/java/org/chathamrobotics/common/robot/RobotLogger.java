@@ -1,5 +1,12 @@
 package org.chathamrobotics.common.robot;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 9/17/2017
+ */
 
 import android.util.Log;
 
@@ -13,12 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-/*!
- * FTC_APP_2018
- * Copyright (c) 2017 Chatham Robotics
- * MIT License
- * @Last Modified by: storm
- * @Last Modified time: 9/17/2017
+/**
+ * Handles logging for the robot
  */
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class RobotLogger {

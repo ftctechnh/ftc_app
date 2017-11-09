@@ -1,5 +1,14 @@
 package org.chathamrobotics.common.hardware.utils;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ *
+ * @Last Modified by: storm
+ * @Last Modified time: 10/28/2017
+ */
+
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
@@ -10,13 +19,8 @@ import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/*!
- * FTC_APP_2018
- * Copyright (c) 2017 Chatham Robotics
- * MIT License
- *
- * @Last Modified by: storm
- * @Last Modified time: 10/28/2017
+/**
+ * Listens to hardware devices for changes to their state
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class HardwareListener {

@@ -1,15 +1,19 @@
 package org.chathamrobotics.common;
 
-import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.RobotLog;
-
 /*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
  * MIT License
  * @Last Modified by: storm
  * @Last Modified time: 10/29/2017
+ */
+
+import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.RobotLog;
+
+/**
+ * The representation of a controller
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class Controller extends Gamepad {

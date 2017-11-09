@@ -8,6 +8,10 @@ package org.chathamrobotics.common.opmode.exceptions;
  * @Last Modified by: storm
  * @Last Modified time: 9/17/2017
  */
+
+/**
+ * Thrown when a opmode is no longer active
+ */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class StoppedException extends Exception {
     /**

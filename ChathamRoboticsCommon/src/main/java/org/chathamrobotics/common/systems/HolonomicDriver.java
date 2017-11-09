@@ -1,5 +1,14 @@
 package org.chathamrobotics.common.systems;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ *
+ * @Last Modified by: storm
+ * @Last Modified time: 10/5/2017
+ */
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -10,13 +19,8 @@ import org.chathamrobotics.common.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-/*!
- * FTC_APP_2018
- * Copyright (c) 2017 Chatham Robotics
- * MIT License
- *
- * @Last Modified by: storm
- * @Last Modified time: 10/5/2017
+/**
+ * The representation of a holonomic drive system
  */
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class HolonomicDriver implements Driver {

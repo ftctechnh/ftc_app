@@ -1,5 +1,14 @@
 package org.chathamrobotics.common.hardware.modernrobotics;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ *
+ * @Last Modified by: storm
+ * @Last Modified time: 10/28/2017
+ */
+
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -7,6 +16,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
 import org.chathamrobotics.common.hardware.LimitSwitch;
 
+/**
+ * The representation of a modern robotics limit switch
+ */
 @SuppressWarnings("unused")
 public class ModernRoboticsLimitSwitch implements LimitSwitch {
     private final DigitalChannel digitalChannel;

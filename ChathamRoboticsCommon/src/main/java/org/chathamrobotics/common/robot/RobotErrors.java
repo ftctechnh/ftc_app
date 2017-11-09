@@ -1,11 +1,5 @@
 package org.chathamrobotics.common.robot;
 
-import android.util.Log;
-
-import com.qualcomm.robotcore.util.RobotLog;
-
-import java.lang.reflect.InvocationTargetException;
-
 /*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
@@ -13,6 +7,16 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @Last Modified by: storm
  * @Last Modified time: 10/3/2017
+ */
+
+import android.util.Log;
+
+import com.qualcomm.robotcore.util.RobotLog;
+
+import java.lang.reflect.InvocationTargetException;
+
+/**
+ * Handles fatal robot errors
  */
 @SuppressWarnings("WeakerAccess")
 public interface RobotErrors {

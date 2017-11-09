@@ -1,5 +1,13 @@
 package org.chathamrobotics.common.systems;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 10/29/2017
+ */
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -13,8 +21,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Timer;
 
-/*!
- * Created by carson storm on 10/25/2017.
+/**
+ * The representation of a rack and pinion with limit switches
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class RackAndPinion {

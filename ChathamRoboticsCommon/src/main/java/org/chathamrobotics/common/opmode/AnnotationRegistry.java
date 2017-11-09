@@ -1,5 +1,14 @@
 package org.chathamrobotics.common.opmode;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ *
+ * @Last Modified by: storm
+ * @Last Modified time: 9/10/2017
+ */
+
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -19,15 +28,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
-/*!
- * FTC_APP_2018
- * Copyright (c) 2017 Chatham Robotics
- * MIT License
- *
- * @Last Modified by: storm
- * @Last Modified time: 9/10/2017
+/**
+ * Handles registration for custom annotations
  */
-
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class AnnotationRegistry implements ClassFilter {
     public static final String TAG = AnnotationRegistry.class.getSimpleName();
