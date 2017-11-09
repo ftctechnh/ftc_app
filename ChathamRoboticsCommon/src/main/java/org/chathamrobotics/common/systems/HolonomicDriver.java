@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * @Last Modified time: 10/5/2017
  */
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
-public class HolonomicDriver {
+public class HolonomicDriver implements Driver {
     public static final double HOLONOMIC_AXIS_CORRECTION = Math.PI / 4;
     private static final double ROOT_TWO = Math.sqrt(2);
 
@@ -140,6 +140,13 @@ public class HolonomicDriver {
      */
     public double getOffsetAngle() {
         return offsetAngle;
+    }
+
+    /**
+     * Stops the driver
+     */
+    public void stop() {
+        setDrivePower(0,0,0);
     }
 
     /**
