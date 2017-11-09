@@ -1,5 +1,13 @@
 package org.chathamrobotics.common.robot;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 9/17/2017
+ */
+
 import com.qualcomm.robotcore.hardware.AccelerationSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -22,15 +30,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/*!
- * FTC_APP_2018
- * Copyright (c) 2017 Chatham Robotics
- * MIT License
- * @Last Modified by: storm
- * @Last Modified time: 9/17/2017
+/**
+ * Represents the physical robot in software
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
-
+@SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public abstract class Robot extends HardwareListener {
     private static final int MAX_MOTOR_RPM = 160;
 
@@ -38,19 +41,8 @@ public abstract class Robot extends HardwareListener {
         void debug(String name, E device);
     }
 
-    /**
-     * The robot's hardware map
-     */
     private HardwareMap hardwareMap;
-
-    /**
-     * The opmode's telemetry
-     */
     private Telemetry telemetry;
-
-    /**
-     * A logger for the robot that logs to telemetry and logcat
-     */
     public RobotLogger log;
 
     // hardware debuggers
@@ -140,6 +132,10 @@ public abstract class Robot extends HardwareListener {
         setServosToRestPosition();
     }
 
+    /**
+     * Returns the robot's hardware map
+     * @return  the robot's hardware map
+     */
     public HardwareMap getHardwareMap() {
         return this.hardwareMap;
     }
