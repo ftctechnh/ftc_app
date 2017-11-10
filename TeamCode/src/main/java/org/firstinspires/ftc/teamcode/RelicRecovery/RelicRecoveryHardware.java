@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by jeppe on 25-09-2017.
  */
-@TeleOp (name = "test1asdfasfasdf",group = "TeleOp")
+@TeleOp (name = "test",group = "TeleOp")
 public class RelicRecoveryHardware extends OpMode
 {
     // -----Hardware-----

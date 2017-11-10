@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by jeppe on 25-09-2017.
  */
-@TeleOp (name = "IT'S HIGH NOON",group = "TeleOp")
+@TeleOp (name = "testy",group = "TeleOp")
 public class Jeppe_teleop extends OpMode {
 
     DcMotor rightMotor;
@@ -35,8 +35,5 @@ public class Jeppe_teleop extends OpMode {
     public void loop() {
         rightPower = -gamepad1.right_stick_y;
         leftPower = -gamepad1.left_stick_y;
-
-        rightMotor.setPower(rightPower);
-        leftMotor.setPower(leftPower);
     }
 }
