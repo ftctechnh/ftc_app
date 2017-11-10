@@ -79,9 +79,9 @@ HolonomicHardwareClass robot = new HolonomicHardwareClass();
         double backLeft;
         double backRight;
 
-        frontLeft = 1;
+        frontLeft = -1;
         frontRight = 1;
-        backLeft = 1;
+        backLeft = -1;
         backRight = 1;
 
         runtime.reset();
