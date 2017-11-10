@@ -19,7 +19,7 @@ import java.util.Set;
  * Created by robot on 9/25/2017.
  */
 
-@Autonomous(name="AutoLeftVuforia9330", group="Opmode")  // @Autonomous(...) is the other common choice
+@Autonomous(name="AutoRightVuforia9330", group="Opmode")  // @Autonomous(...) is the other common choice
 public class AutoRightVuforia9330 extends LinearOpMode {
 
     Hardware9330 robotMap = new Hardware9330();
