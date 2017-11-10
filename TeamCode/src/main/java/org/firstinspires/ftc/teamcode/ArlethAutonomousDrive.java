@@ -42,8 +42,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class ArlethAutonomousDrive extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
-HolonomicHardwareClass robot = new HolonomicHardwareClass();
+    HolonomicHardwareClass robot = new HolonomicHardwareClass();
 
+    /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -52,72 +53,22 @@ HolonomicHardwareClass robot = new HolonomicHardwareClass();
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
 
-
         // Wait for the start button
-        telemetry.addLine("!☻ Ready to Run ☻!");
+        telemetry.addLine("!☻ Ready to Autonomous ☻!");
         telemetry.update();
         waitForStart();
 
         while (opModeIsActive()) {
 
-            goForwardTime(3);
+            goForwardTime(3, .5);
 
-            }
-        }
+            goBackwardTime(3, .5);
 
+            goLeftTime(3, .5);
 
-    /***********************************************************************************************
-     * These are all of the methods used in the Teleop*
-     ***********************************************************************************************/
-
-
-    /* This function sets power to the wheels based on values given*/
-    public void goForwardTime (double time) {
-        /*These values are used for the drive*/
-        double frontLeft;
-        double frontRight;
-        double backLeft;
-        double backRight;
-
-        frontLeft = -1;
-        frontRight = 1;
-        backLeft = -1;
-        backRight = 1;
-
-        runtime.reset();
-
-        if (robot.FrontLeftPower != frontLeft) {
-            robot.frontLeftMotor.setPower(-1);
-            robot.FrontLeftPower = frontLeft;
-        }
-        if (robot.FrontRightPower != frontRight) {
-            robot.frontRightMotor.setPower(1);
-            robot.FrontRightPower = frontRight;
-        }
-        if (robot.BackLeftPower != backLeft) {
-            robot.backLeftMotor.setPower(-1);
-            robot.BackLeftPower = backLeft;
-        }
-        if (robot.BackRightPower != backRight)
-            robot.backRightMotor.setPower(1);
-            robot.BackRightPower = backRight;
-
- /* Using the light value given, run the robot using given parameters until light value is found*/
-        while (opModeIsActive() && runtime.seconds() < time) {
+            goRightTime(3, .5);
 
         }
-        wheelsOff();
-        }
-
-
-    /* This method simply sets all motor to zero power*/
-    public void wheelsOff() {
-        robot.frontLeftMotor.setPower(0);
-        robot.frontRightMotor.setPower(0);
-        robot.backLeftMotor.setPower(0);
-        robot.backRightMotor.setPower(0);
     }
 
 }
-
-
