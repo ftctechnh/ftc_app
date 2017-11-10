@@ -14,19 +14,28 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 public class RedNorthRight extends LinearOpMode {
     PengwinArm pengwinArm;
     JeffThePengwin jeffThePengwin;
-
     //
+    static final double Pi = 3.141592653589793238462643383279502;
     //
     @Override
     public void runOpMode() throws InterruptedException {
+        //
+        waitForStartify();
+        //
         //woo hoo
         //
         //Insert Code Here
+        telemetry.addData("Pi", Pi);
+        telemetry.update();
     }
     //
     //
     //
     private void forward(double number){
         //Insert math Here
+    }
+    //
+    private void waitForStartify(){
+        waitForStart();
     }
 }
