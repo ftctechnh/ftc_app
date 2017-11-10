@@ -35,6 +35,7 @@ import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -44,10 +45,13 @@ import java.util.Locale;
  * This is an example LinearOpMode that shows how to use boi
  * the REV Robotics Color-Distance Sensor.
  */
-@Autonomous(name = "AutonomousColorServoTest", group = "Sensor")
+@Autonomous(name = "Arleth&LenaFinalAutoCode", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
-public class LenaArmColorSensor extends LinearOpMode {
-    TestHardwareClass robot = new TestHardwareClass();
+public class AutonomousColorServoTest extends LinearOpMode {
+    arlethlenahardwareclass robot = new arlethlenahardwareclass();
+
+    private ElapsedTime runtime = new ElapsedTime();
+
     /**
      * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
      * It has a light/distance (range) sensor.  It also has an RGB color sensor.
@@ -83,15 +87,16 @@ public class LenaArmColorSensor extends LinearOpMode {
         // sometimes it helps to multiply the raw RGB values with a scale factor
         // to amplify/attentuate the measured values.
 
+
         // get a reference to the RelativeLayout so we can change the background
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
         double xPos;
-        // wait for the start button to be pressed.
-        waitForStart();
         xPos = 0;
 
+        // wait for the start button to be pressed.
+        waitForStart();
 
         // loop and read the RGB and distance data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
@@ -103,6 +108,8 @@ public class LenaArmColorSensor extends LinearOpMode {
             robot.gemServo.setPosition(xPos);
             // send the info back to driver station using telemetry function.
             telemetry.addData("RedR  ", robot.sensorColorRight.red());
+
+
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
@@ -130,8 +137,11 @@ public class LenaArmColorSensor extends LinearOpMode {
             });
 
             telemetry.update();
-            xPos  =  0;
-            robot.gemServo.setPosition(xPos);
+//            xPos  =  0;
+//            robot.gemServo.setPosition(xPos);
+
+            goForwardTime(3);
+
         }
 
         // Set the panel back to the default color
@@ -140,5 +150,55 @@ public class LenaArmColorSensor extends LinearOpMode {
                 relativeLayout.setBackgroundColor(Color.WHITE);
             }
         });
+
     }
+
+
+    /* This function sets power to the wheels based on values given*/
+    public void goForwardTime (double time) {
+        /*These values are used for the drive*/
+        double frontLeft;
+        double frontRight;
+        double backLeft;
+        double backRight;
+
+        frontLeft = 0;
+        frontRight = 0;
+        backLeft = 0;
+        backRight = 0;
+
+        runtime.reset();
+
+ /* Using the light value given, run the robot using given parameters until light value is found*/
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+
+            if (robot.FrontLeftPower != frontLeft) {
+                robot.frontLeftMotor.setPower(1);
+                robot.FrontLeftPower = frontLeft;
+            }
+            if (robot.FrontRightPower != frontRight) {
+                robot.frontRightMotor.setPower(1);
+                robot.FrontRightPower = frontRight;
+            }
+            if (robot.BackLeftPower != backLeft) {
+                robot.backLeftMotor.setPower(1);
+                robot.BackLeftPower = backLeft;
+            }
+            if (robot.BackRightPower != backRight)
+                robot.backRightMotor.setPower(1);
+            robot.BackRightPower = backRight;
+        }
+        wheelsOff();
+
+    }
+
+    /* This method simply sets all motor to zero power*/
+    public void wheelsOff() {
+        robot.frontLeftMotor.setPower(0);
+        robot.frontRightMotor.setPower(0);
+        robot.backLeftMotor.setPower(0);
+        robot.backRightMotor.setPower(0);
+    }
+
 }

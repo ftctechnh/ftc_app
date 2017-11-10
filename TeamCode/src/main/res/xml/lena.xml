@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot type="FirstInspires-FTC">
+    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ1NVG0E" parentModuleAddress="1">
+        <LynxModule name="Expansion Hub 1" port="1">
+            <Servo name="gemservo" port="0" />
+            <LynxColorSensor name="colorsensor" port="1" bus="0" />
+        </LynxModule>
+    </LynxUsbDevice>
+</Robot>
