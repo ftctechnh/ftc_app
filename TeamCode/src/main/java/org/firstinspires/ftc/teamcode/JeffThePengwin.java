@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -16,6 +17,7 @@ public class JeffThePengwin {
     DcMotor rightFrontMotor;
     DcMotor leftBackMotor;
     DcMotor rightBackMotor;
+
     double powerInput = 0;
     double degreeOfPower = 1;
 
