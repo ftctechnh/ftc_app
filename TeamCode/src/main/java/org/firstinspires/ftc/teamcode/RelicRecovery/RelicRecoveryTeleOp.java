@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 /**
  * Created by jeppe on 22-10-2017.
  */
-@TeleOp(name = "Relic Recovery",group = "TeleOp")
+//@TeleOp(name = "Relic Recovery",group = "TeleOp")
 public class RelicRecoveryTeleOp extends RelicRecoveryTelemetry {
 
     @Override

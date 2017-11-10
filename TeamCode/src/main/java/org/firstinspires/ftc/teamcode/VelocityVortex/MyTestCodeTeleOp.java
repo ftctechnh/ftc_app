@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 //@TeleOp(name = "Practice Robot TeleOp", group = "TeleOp")
 //@Autonomous(name = "Practice Robot", group = "Autonomous")
-@Autonomous(name = "Test", group = "Autonomous")
+//@Autonomous(name = "Test", group = "Autonomous")
 public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
 
     private int padCofig = 0;

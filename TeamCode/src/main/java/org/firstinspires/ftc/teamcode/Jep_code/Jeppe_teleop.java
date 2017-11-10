@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by jeppe on 25-09-2017.
  */
-@TeleOp (name = "testy",group = "TeleOp")
+//@TeleOp (name = "testy",group = "TeleOp")
 public class Jeppe_teleop extends OpMode {
 
     DcMotor rightMotor;

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by team on 7/18/2017.
  */
-@TeleOp(name = "Metal Monstrisities MiniBertha TeleOp" , group = "TeleOp")
+//@TeleOp(name = "Metal Monstrisities MiniBertha TeleOp" , group = "TeleOp")
 public class MiniBertha extends OpMode{
 
     DcMotor right;

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by team on 7/19/2017.
  */
 
-@TeleOp(name = "jTurnZero" , group = "TeleOp")
+//@TeleOp(name = "jTurnZero" , group = "TeleOp")
 public class MyTestCodeTeleOpTurnDrive extends MyTestCodeTelemetry {
 
 

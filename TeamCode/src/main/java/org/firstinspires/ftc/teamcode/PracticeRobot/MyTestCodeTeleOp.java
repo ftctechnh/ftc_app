@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by team on 7/19/2017.
  */
 
-@TeleOp(name = "Practice Robot TeleOp", group = "TeleOp")
+//@TeleOp(name = "Practice Robot TeleOp", group = "TeleOp")
 //@Autonomous(name = "Practice Robot", group = "Autonomous")
 //@Autonomous(name = "Ramp Auto Blue", group = "Autonomous")
 public class MyTestCodeTeleOp extends MyTestCodeTelemetry {

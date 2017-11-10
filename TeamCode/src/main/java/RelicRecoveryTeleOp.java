@@ -6,7 +6,7 @@
     /**
      * Created by jeppe on 16-10-2017.
      */
-    @TeleOp(name = "Jeppe test")
+    //@TeleOp(name = "Jeppe test")
     class RelicRecoveryTeleOp extends OpMode {
 
         DcMotor rightMotor;

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by team on 7/19/2017.
  */
 
-@TeleOp(name = "Jill",group = "TeleOp" )
+//@TeleOp(name = "Jill",group = "TeleOp" )
 public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
 
     @Override
