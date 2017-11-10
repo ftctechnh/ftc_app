@@ -29,20 +29,22 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
-@TeleOp(name = "♪ Perfect Teleop ♪", group = "Concept")
+@Autonomous(name = "Arleth Auto Drive", group = "Concept")
 //@Disabled
-public class PerfectTeleop extends LinearOpMode {
+public class ArlethAutonomousDrive extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
-ArmHardwareClass robot = new ArmHardwareClass();
+HolonomicHardwareClass robot = new HolonomicHardwareClass();
+
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -50,47 +52,72 @@ ArmHardwareClass robot = new ArmHardwareClass();
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
 
+
         // Wait for the start button
-        telemetry.addLine("!☻ Start Claw Control ☻!");
+        telemetry.addLine("!☻ Ready to Run ☻!");
         telemetry.update();
         waitForStart();
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
 
-            // Display the current value
-            telemetry.addData("Servo Controls", "X is OPEN, Y is CLOSE");
-            telemetry.addData("Motor Controls","Use the D-Pad ↑ & ↓ buttons!");
-            telemetry.update();
+            goForwardTime(3);
 
-        /* Servo Control */
-            if(gamepad1.x){
-                robot.clawServo.setPower(robot.clawOpen);
             }
-            if(gamepad1.y){
-                robot.clawServo.setPower(robot.clawClose);
-            }
-
-            if (gamepad1.y != true && gamepad1.x != true){
-                robot.clawServo.setPower(robot.clawStill);
-            }
-
-        /* Vertical Arm Motor */
-            if (gamepad1.dpad_up) {
-                robot.verticalArmMotor.setPower(1);
-            } else {
-                robot.verticalArmMotor.setPower(0);
-            }
-            if (gamepad1.dpad_down) {
-                robot.verticalArmMotor.setPower(-1);
-            } else {
-                robot.verticalArmMotor.setPower(0);
-            }
-
         }
-    }
+
 
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
 
+
+    /* This function sets power to the wheels based on values given*/
+    public void goForwardTime (double time) {
+        /*These values are used for the drive*/
+        double frontLeft;
+        double frontRight;
+        double backLeft;
+        double backRight;
+
+        frontLeft = 1;
+        frontRight = 1;
+        backLeft = 1;
+        backRight = 1;
+
+        runtime.reset();
+
+        if (robot.FrontLeftPower != frontLeft) {
+            robot.frontLeftMotor.setPower(-1);
+            robot.FrontLeftPower = frontLeft;
+        }
+        if (robot.FrontRightPower != frontRight) {
+            robot.frontRightMotor.setPower(1);
+            robot.FrontRightPower = frontRight;
+        }
+        if (robot.BackLeftPower != backLeft) {
+            robot.backLeftMotor.setPower(-1);
+            robot.BackLeftPower = backLeft;
+        }
+        if (robot.BackRightPower != backRight)
+            robot.backRightMotor.setPower(1);
+            robot.BackRightPower = backRight;
+
+ /* Using the light value given, run the robot using given parameters until light value is found*/
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+        }
+        wheelsOff();
+        }
+
+
+    /* This method simply sets all motor to zero power*/
+    public void wheelsOff() {
+        robot.frontLeftMotor.setPower(0);
+        robot.frontRightMotor.setPower(0);
+        robot.backLeftMotor.setPower(0);
+        robot.backRightMotor.setPower(0);
+    }
+
 }
+
+
