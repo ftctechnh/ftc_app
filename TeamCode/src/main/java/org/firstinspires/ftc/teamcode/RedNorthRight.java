@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -10,12 +11,16 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
  */
 
 @Autonomous
-
+@Disabled
 public class RedNorthRight extends LinearOpMode {
     PengwinArm pengwinArm;
     JeffThePengwin jeffThePengwin;
     //
+    static final double countsPerRevolution = 560;//TODO Add gear reduction if needed
+    static final double diameter = 4;
     static final double Pi = 3.141592653589793238462643383279502;
+    static final double county = countsPerRevolution*diameter*Pi;//Counts per inch
+    static final double driveSpeed = .5;//TODO Find optimal speed
     //
     @Override
     public void runOpMode() throws InterruptedException {
