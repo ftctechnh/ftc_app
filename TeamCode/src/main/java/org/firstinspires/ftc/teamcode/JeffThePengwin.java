@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 
 public class JeffThePengwin {
-
-
+    //diameter stuff
+    static final double WHEEL_DIAMETER_INCHEYS = 4.0;
     //power variables
     DcMotor leftFrontMotor;
     DcMotor rightFrontMotor;
@@ -45,7 +45,7 @@ public class JeffThePengwin {
     }
 
     public void move(double drive, double turn, double strafe){
-        boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
+        boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and right
         boolean notTurning = turn == 0;
         boolean movingVertical = Math.abs(drive) > Math.abs(strafe);
         boolean strafingLefty = strafe > 0;
@@ -117,6 +117,10 @@ public class JeffThePengwin {
         leftFrontMotor.setPower(-powerInput*degreeOfPower);
         rightBackMotor.setPower(-powerInput*degreeOfPower);
         rightFrontMotor.setPower(powerInput*degreeOfPower);
+    }
+    //
+    public void runForInches(double inches){
+        //TODO okay
     }
 
 }
