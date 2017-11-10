@@ -22,6 +22,8 @@ public class MyTestCodeTelemetry extends MyTestCodeHardware {
         telemetry.addData("Left Motor Power", leftPower);
         telemetry.addData("Lift Motor Power", liftPower);
         telemetry.addData("Arm Motor Power", armPower);
+        telemetry.addData("Arm Lifter Power", armLifterPwr);
+
         //servos
         telemetry.addData("Ball Pusher Position", ballPusherPosition);
         telemetry.addData("Right Hand Position", rightHandPosition);

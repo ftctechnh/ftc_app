@@ -64,8 +64,8 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         }
         rightPower = drivePower[0];
         leftPower = drivePower[1];
-        liftPower = gamepad2.right_trigger/2 - gamepad2.left_trigger/2;
-        liftPower += gamepad1.right_trigger - gamepad1.left_trigger;
+        armPower = gamepad2.right_trigger - gamepad2.left_trigger;
+        liftPower = gamepad1.right_trigger - gamepad1.left_trigger;
         liftPower -= gamepad2.right_stick_y;
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             ifHold = true;
@@ -82,13 +82,14 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
                 crHandPosition = STOPPED_CR_HAND;
             }
         }
-        if (gamepad2.left_bumper) {
-            armPower = 1;
-        } else if (gamepad2.right_bumper) {
-            armPower = -1;
+        if (gamepad2.right_bumper) {
+            armLifterPwr = UP_ARM_LIFTER;
+        } else if (gamepad2.left_bumper) {
+            armLifterPwr = DOWN_ARM_LIFTER;
         } else {
-            armPower = 0;
+            armLifterPwr = STOPPED_ARM_LIFTER;
         }
+
         if (gamepad2.x) {
             rightHandPosition = OPEN_RIGHT_HAND;
             leftHandPosition = OPEN_LEFT_HAND;
@@ -130,6 +131,11 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "arm motor");
         }
+        try {
+            armLifter.setPower(armLifterPwr);
+        } catch (Exception OpModeException) {
+            telemetry.addData("Cant run (not mapped)", "arm lifter");
+        }
         //servos
         try {
             ballPusher.setPosition(ballPusherPosition);
@@ -168,18 +174,5 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
     }
     private void ifHold() {
         telemetry.addData("If Hold", ifHold);
-    }
-    protected void myTelemetry() {
-        //motors
-        telemetry.addData("Right Motor Power", rightPower);
-        telemetry.addData("Left Motor Power", leftPower);
-        telemetry.addData("Lift Motor Power", liftPower);
-        telemetry.addData("Arm Motor Power", armPower);
-        //servos
-        telemetry.addData("Ball Pusher Position", ballPusherPosition);
-        telemetry.addData("Right Hand Position", rightHandPosition);
-        telemetry.addData("Left Hand Position", leftHandPosition);
-        telemetry.addData("One Hand Position", oneHandPosition);
-        telemetry.addData("CR Hand Position", crHandPosition);
     }
 }
