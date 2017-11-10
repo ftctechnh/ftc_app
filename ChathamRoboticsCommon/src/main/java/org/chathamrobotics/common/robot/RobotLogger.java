@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -133,13 +134,22 @@ public class RobotLogger {
     }
 
     /**
-     * Formats the line as "{caption}: {value}" and logs at the fatal level.
+     * Formats the line as "{caption} = {value}" and logs at the fatal level.
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void fatal(String caption, Object value) {
-        fatal(format(caption, value));
+        fatal(formatCapVal(caption, value));
+    }
+
+    /**
+     * Formats the line like String.format and logs at the fatal level
+     * @param format    the format string
+     * @param args      the arguments to replace the format specifiers
+     */
+    public void fatalf(String format, Object ...args) {
+        fatal(String.format(Locale.US, format, args));
     }
 
     /**
@@ -164,15 +174,24 @@ public class RobotLogger {
     }
 
     /**
-     * Formats the line as "{caption}: {value}" and logs at the error level.
+     * Formats the line as "{caption} = {value}" and logs at the error level.
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void error(String caption, Object value) {
-        error(format(caption, value));
+        error(formatCapVal(caption, value));
     }
 
+    /**
+     * Formats the line like String.format and logs at the error level
+     * @param format    the format string
+     * @param args      the arguments to replace the format specifiers
+     */
+    public void errorf(String format, Object ...args) {
+        fatal(String.format(Locale.US, format, args));
+    }
+    
     /**
      * Logs at the warning level.
      *
@@ -195,15 +214,24 @@ public class RobotLogger {
     }
 
     /**
-     * Formats the line as "{caption}: {value}" and logs at the warning level.
+     * Formats the line as "{caption} = {value}" and logs at the warning level.
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void warn(String caption, Object value) {
-        warn(format(caption, value));
+        warn(formatCapVal(caption, value));
     }
 
+    /**
+     * Formats the line like String.format and logs at the warning level
+     * @param format    the format string
+     * @param args      the arguments to replace the format specifiers
+     */
+    public void warnf(String format, Object ...args) {
+        fatal(String.format(Locale.US, format, args));
+    }
+    
     /**
      * Logs at the info level.
      *
@@ -215,16 +243,24 @@ public class RobotLogger {
     }
 
     /**
-     * Formats the line as "{caption}: {value}" and logs at the info level.
+     * Formats the line as "{caption} = {value}" and logs at the info level.
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void info(String caption, Object value) {
-        info(format(caption, value));
+        info(formatCapVal(caption, value));
     }
 
-
+    /**
+     * Formats the line like String.format and logs at the info level
+     * @param format    the format string
+     * @param args      the arguments to replace the format specifiers
+     */
+    public void infof(String format, Object ...args) {
+        fatal(String.format(Locale.US, format, args));
+    }
+    
     /**
      * Logs at the debug level.
      *
@@ -236,15 +272,24 @@ public class RobotLogger {
     }
 
     /**
-     * Formats the line as "{caption}: {value}" and logs at the debug level.
+     * Formats the line as "{caption} = {value}" and logs at the debug level.
      *
      * @param caption   the values caption.
      * @param value     the value to log.
      */
     public void debug(String caption, Object value) {
-        debug(format(caption, value));
+        debug(formatCapVal(caption, value));
     }
 
+    /**
+     * Formats the line like String.format and logs at the debug level
+     * @param format    the format string
+     * @param args      the arguments to replace the format specifiers
+     */
+    public void debugf(String format, Object ...args) {
+        fatal(String.format(Locale.US, format, args));
+    }
+    
     /**
      * logs at the verbose level.
      *
@@ -256,15 +301,24 @@ public class RobotLogger {
     }
 
     /**
-     * formats the line as "{caption}: {value}" and logs at the verbose level.
+     * formats the line as "{caption} = {value}" and logs at the verbose level.
      *
      * @param caption   the caption for the value.
      * @param value     the value to log.
      */
     public void verbose(String caption, Object value) {
-        verbose(format(caption, value));
+        verbose(formatCapVal(caption, value));
     }
 
+    /**
+     * Formats the line like String.format and logs at the verbose level
+     * @param format    the format string
+     * @param args      the arguments to replace the format specifiers
+     */
+    public void verbosef(String format, Object ...args) {
+        fatal(String.format(Locale.US, format, args));
+    }
+    
     /**
      * logs to the telemetry
      *
@@ -302,8 +356,8 @@ public class RobotLogger {
      * @param value     the value
      * @return          the formatted line
      */
-    private String format(String caption, Object value) {
-        return caption + ": " + value.toString();
+    private String formatCapVal(String caption, Object value) {
+        return caption + " = " + value.toString();
     }
 
     /**
