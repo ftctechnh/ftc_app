@@ -46,19 +46,50 @@ public class RobotLogger {
         }, CLEAN_UP_INTERVAL, CLEAN_UP_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * The tag the logger is using.
-     */
+    // a logger for a robot system
+    private static class SystemLogger extends RobotLogger {
+        private final RobotLogger parent;
+        private final String systemTag;
+
+        public SystemLogger(RobotLogger parent, String systemTag) {
+            super(parent.tag, parent.telemetry);
+
+            this.parent = parent;
+            this.systemTag = systemTag;
+        }
+
+        @Override
+        public void setTelemetryLevel(Level level) {
+            // Do nothing
+        }
+
+        @Override
+        public void setTelemetryCapacity(int capacity) {
+            // Do nothing
+        }
+
+        @Override
+        public Level getTelemetryLevel() {
+            return parent.teleLevel;
+        }
+
+        @Override
+        protected void logTele(Level level, String line) {
+            if(level == Level.FATAL) {
+                RobotLog.setGlobalErrorMsg(line);
+            } else if (level.priority <= parent.teleLevel.priority) {
+                // [system/level]: line (if systemTag)
+                // [level]: line (if no systemTag)
+                parent.telemetry.addData(
+                        "[" + systemTag + "/" + level.name().toUpperCase() + "]",
+                        line
+                );
+            }
+        }
+    }
+
     public String tag;
-
-    /**
-     * The telemetry object to write data to.
-     */
     private Telemetry telemetry;
-
-    /**
-     * The current log level of the telemetry.
-     */
     private Level teleLevel = Level.DEBUG;
 
     /**
@@ -110,6 +141,15 @@ public class RobotLogger {
      */
     public void setTelemetryCapacity(int capacity) {
         this.telemetry.log().setCapacity(capacity);
+    }
+
+    /**
+     * Creates a new logger meant for a robot system
+     * @param systemTag the tag used to identify this system
+     * @return          the system logger
+     */
+    public RobotLogger systemLogger(String systemTag) {
+        return new SystemLogger(this, systemTag);
     }
 
     /**
@@ -318,28 +358,21 @@ public class RobotLogger {
     public void verbosef(String format, Object ...args) {
         fatal(String.format(Locale.US, format, args));
     }
-    
-    /**
-     * logs to the telemetry
-     *
-     * @param level the level to log at
-     * @param line  the line to log
-     */
-    private void logTele(Level level, String line) {
+
+    protected void logTele(Level level, String line) {
         if(level == Level.FATAL) {
             RobotLog.setGlobalErrorMsg(line);
         } else if (level.priority <= this.teleLevel.priority) {
-            telemetry.addData("[" + level.name().toUpperCase() + "]", line);
+            // [system/level]: line (if systemTag)
+            // [level]: line (if no systemTag)
+            telemetry.addData(
+                    "[" + level.name().toUpperCase() + "]",
+                    line
+            );
         }
     }
 
-    /**
-     * Logs to androids logging facilities.
-     *
-     * @param level     the level to log at
-     * @param line      the line to log
-     */
-    private void logAndroid(Level level, String line) {
+    protected void logAndroid(Level level, String line) {
         if (! isRecentLog(line)) {
             Log.println(level.priority, this.tag, line);
 
@@ -349,22 +382,10 @@ public class RobotLogger {
         }
     }
 
-    /**
-     * formats a line using a value and it's caption
-     *
-     * @param caption   the caption for the value
-     * @param value     the value
-     * @return          the formatted line
-     */
     private String formatCapVal(String caption, Object value) {
         return caption + " = " + value.toString();
     }
 
-    /**
-     * Check if the line was recently logged
-     * @param line  the line to check for
-     * @return  whether the line was recently logged
-     */
     private boolean isRecentLog(String line) {
         synchronized (recentLogs) {
             return recentLogs.contains(line);
