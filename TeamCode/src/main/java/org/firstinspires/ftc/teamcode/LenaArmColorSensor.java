@@ -47,7 +47,7 @@ import java.util.Locale;
  */
 @Autonomous(name = "Arleth&LenaFinalAutoCode", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
-public class AutonomousColorServoTest extends LinearOpMode {
+public class LenaArmColorSensor extends LinearOpMode {
     arlethlenahardwareclass robot = new arlethlenahardwareclass();
 
     private ElapsedTime runtime = new ElapsedTime();
