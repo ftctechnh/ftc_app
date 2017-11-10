@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Eric on 11/9/2017.
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 public class RedNorthRight extends LinearOpMode {
     PengwinArm pengwinArm;
     JeffThePengwin jeffThePengwin;
+    private ElapsedTime runtime = new ElapsedTime();
     //
     static final double countsPerRevolution = 560;//TODO Add gear reduction if needed
     static final double diameter = 4;
@@ -38,9 +40,21 @@ public class RedNorthRight extends LinearOpMode {
     //
     //
     //
-    private void forward(double number){
-        //Insert math Here
-        //Radius is 2"
+    private void forward(double inches, double time){
+        int move = (int)(Math.round(inches*county));
+        jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + move);
+        jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + move);
+        jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + move);
+        jeffThePengwin.rightFrontMotor.setTargetPosition(jeffThePengwin.rightFrontMotor.getCurrentPosition() + move);
+        //
+        switchify();
+        //
+        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
+        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
+        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
+        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        //
+        runtime.reset();
     }
     //
     private void waitForStartify(){
@@ -57,5 +71,12 @@ public class RedNorthRight extends LinearOpMode {
         jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    //
+    private void switchify(){
+        jeffThePengwin.leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }
