@@ -60,15 +60,125 @@ public class ArlethAutonomousDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            goForwardTime(3, .5);
+           // goForwardTime(1, .5);
 
-            goBackwardTime(3, .5);
+//            goBackwardTime(1, .5);
 
-            goLeftTime(3, .5);
+            goLeftTime(1, .5);
 
-            goRightTime(3, .5);
+  //          goRightTime(1, .5);
 
         }
     }
 
+    /***********************************************************************************************
+     * These are all of the methods used in the Autonomous *
+     ***********************************************************************************************/
+
+/* This method moves the robot forward for time and power indicated*/
+    public void goForwardTime (double time, double power) {
+    /* reset the "timer" to 0 */
+        runtime.reset();
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
+        setWheelPower(-power, power, -power, power);
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+        }
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+
+
+    /* This method moves the robot backward for time and power indicated*/
+    public void goBackwardTime (double time, double power) {
+
+    /* reset the "timer" to 0 */
+        runtime.reset();
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
+        setWheelPower(power, power, -power, -power);
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+        }
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+
+
+    /* This method moves the robot right for time and power indicated*/
+    public void goRightTime (double time, double power) {
+    /* reset the "timer" to 0 */
+        runtime.reset();
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
+        setWheelPower(-power, -power, power, power);
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+        }
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+
+
+    /* This method moves the robot left for time and power indicated*/
+    public void goLeftTime (double time, double power) {
+    /* reset the "timer" to 0 */
+        runtime.reset();
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
+        setWheelPower(power, -power, -power, power);
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+        }
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+
+
+    /* This method simply sets all motor to zero power*/
+    public void wheelsOff() {
+        setWheelPower(0,0,0,0);
+    }
+
+    /* This method powers each wheel to whichever power is desired */
+    public void setWheelPower(double fl, double fr, double bl, double br) {
+
+        /* Create power variables */
+        double frontLeft;
+        double frontRight;
+        double backLeft;
+        double backRight;
+
+        /* Initialize the powers with the values input whenever this method is called */
+        frontLeft   =   fl;
+        frontRight  =   fr;
+        backLeft    =   bl;
+        backRight   =   br;
+
+        /* set each wheel to the power indicated whenever this method is called */
+        if (robot.FrontLeftPower != frontLeft) {
+            robot.frontLeftMotor.setPower(fl);
+            robot.FrontLeftPower = frontLeft;
+        }
+        if (robot.FrontRightPower != frontRight) {
+            robot.frontRightMotor.setPower(fr);
+            robot.FrontRightPower = frontRight;
+        }
+        if (robot.BackLeftPower != backLeft) {
+            robot.backLeftMotor.setPower(bl);
+            robot.BackLeftPower = backLeft;
+        }
+        if (robot.BackRightPower != backRight)
+            robot.backRightMotor.setPower(br);
+        robot.BackRightPower = backRight;
+    }
 }
