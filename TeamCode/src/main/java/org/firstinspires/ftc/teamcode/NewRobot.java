@@ -109,7 +109,7 @@ public class NewRobot
             return;
 
         currentLvl += adjLevels;
-        
+
         if (adjLevels > 0)
         {
             liftMotor.setPower(Math.abs(pow));
