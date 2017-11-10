@@ -20,6 +20,8 @@ public class RedNorthRight extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //
+        startify();
+        //
         waitForStartify();
         //
         //woo hoo
@@ -33,9 +35,22 @@ public class RedNorthRight extends LinearOpMode {
     //
     private void forward(double number){
         //Insert math Here
+        //Radius is 2"
     }
     //
     private void waitForStartify(){
         waitForStart();
+    }
+    //
+    private void startify(){
+        jeffThePengwin.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //
+        jeffThePengwin.leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
