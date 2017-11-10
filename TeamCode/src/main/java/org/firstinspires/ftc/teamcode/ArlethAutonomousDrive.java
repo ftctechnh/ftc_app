@@ -134,7 +134,7 @@ public class ArlethAutonomousDrive extends LinearOpMode {
     /* This runs the wheel power so it moves forward, the powers for the left wheels
     are inversed so that it runs properly on the robot
      */
-        setWheelPower(power, -power, -power, power);
+        setWheelPower(power, power, -power, -power);
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
         while (opModeIsActive() && runtime.seconds() < time) {
 
