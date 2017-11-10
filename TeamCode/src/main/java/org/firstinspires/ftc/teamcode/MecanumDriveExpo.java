@@ -11,21 +11,18 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Kaden on 10/20/2017.
  */
 
-@TeleOp(name = "MecanumDriveConcept", group = "linear OpMode")
+@TeleOp(name = "MecanumDriveExpo", group = "linear OpMode")
 //@Disabled
-public class MecanumConcept extends OpMode {
+public class MecanumDriveExpo extends OpMode {
     private DcMotor FrontLeft;
-    private double flSpeed = 0;
     private DcMotor FrontRight;
-    private double frSpeed = 0;
     private DcMotor RearLeft;
-    private double rlSpeed = 0;
     private DcMotor RearRight;
-    private double rrSpeed = 0;
     private double x;
     private double y;
     private double z;
-    private double speed;
+    private double speed = 1;
+    private double expo = 1.75;
 
 
     @Override
@@ -36,7 +33,6 @@ public class MecanumConcept extends OpMode {
         RearRight = hardwareMap.dcMotor.get("m4");
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
-        speed = 0.75;
     }
 
     @Override
@@ -44,38 +40,40 @@ public class MecanumConcept extends OpMode {
         //x is forward/backward
         //y is side to side
         //z is angle
-        x = gamepad1.left_stick_y;
-        y = gamepad1.left_stick_x;
-        z = gamepad1.right_stick_x;
-        if (gamepad1.right_bumper) {
-            y = 0.75;
-            z = 0.5;
+        if (gamepad1.left_stick_y > 0) {
+            x = Math.pow(gamepad1.left_stick_y, expo);
         }
-        else if (gamepad1.left_bumper) {
-            y = -.75;
-            z = -.5;
+        else if (gamepad1.left_stick_y < 0){
+            x = -Math.pow(Math.abs(gamepad1.left_stick_y), expo);
+        }
+        else {
+            x = 0;
         }
 
-        flSpeed = -y+x-z;
-        frSpeed = y+x+z;
-        rlSpeed = y+x-z;
-        rrSpeed = -y+x+z;
-        if (gamepad1.right_bumper) {
-            flSpeed = 0;
-            frSpeed = 0;
-            rlSpeed = -1;
-            rrSpeed = 1;
+        if (gamepad1.left_stick_x > 0) {
+            y = Math.pow(gamepad1.left_stick_x, expo);
         }
-        else if (gamepad1.left_bumper) {
-            flSpeed = 0;
-            frSpeed = 0;
-            rlSpeed = 1;
-            rrSpeed = -1;
+        else if (gamepad1.left_stick_x < 0){
+            y = -Math.pow(Math.abs(gamepad1.left_stick_x), expo);
         }
-        FrontLeft.setPower(speed*clip(flSpeed));
-        FrontRight.setPower(speed*clip(frSpeed));
-        RearLeft.setPower(speed*clip(rlSpeed));
-        RearRight.setPower(speed*clip(rrSpeed));
+        else {
+            y = 0;
+        }
+
+        if (gamepad1.right_stick_x > 0) {
+            z = Math.pow(gamepad1.right_stick_x, expo);
+        }
+        else if (gamepad1.right_stick_x < 0){
+            z = -Math.pow(Math.abs(gamepad1.right_stick_x), expo);
+        }
+        else {
+            z = 0;
+        }
+
+        FrontLeft.setPower(speed*clip(-y+x-z));
+        FrontRight.setPower(speed*clip(y+x+z));
+        RearLeft.setPower(speed*clip(y+x-z));
+        RearRight.setPower(speed*clip(-y+x+z));
 
     }
 

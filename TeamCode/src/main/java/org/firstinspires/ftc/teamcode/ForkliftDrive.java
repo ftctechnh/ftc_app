@@ -11,10 +11,11 @@ import com.qualcomm.robotcore.util.Range;
  */
 @TeleOp(name = "ForkliftDrive", group = "linear OpMode")
 public class ForkliftDrive extends OpMode {
-    private Servo Claw;
+    private Servo rightClaw;
+    private Servo leftClaw;
     private double clawPosition = 0.0;
     private double clawHighEnd = 0.45;
-    private double clawLowEnd = 0.225;
+    private double clawLowEnd = 0.2;
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;
@@ -33,8 +34,12 @@ public class ForkliftDrive extends OpMode {
         RearLeft = hardwareMap.dcMotor.get("m3");
         RearRight = hardwareMap.dcMotor.get("m4");
         DrawerSlide = hardwareMap.dcMotor.get("m5");
-        Claw = hardwareMap.servo.get("s1");
-        Claw.setPosition(clawPosition);
+        // Right and Left claws are from back to front point of view
+        rightClaw = hardwareMap.servo.get("s1");
+        rightClaw.setDirection(Servo.Direction.REVERSE);
+        rightClaw.setPosition(clawPosition);
+        leftClaw = hardwareMap.servo.get("s2");
+        leftClaw.setPosition(clawPosition);
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
     }
@@ -57,13 +62,15 @@ public class ForkliftDrive extends OpMode {
             clawPosition = clawLowEnd;
             //clawPosition = clawPosition - 0.001;
         }
-        Claw.setPosition(clawPosition);
-        Claw.setPosition(clawPosition);
+        rightClaw.setPosition(clawPosition);
+        rightClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
         up = gamepad1.right_trigger;
         down = gamepad1.left_trigger;
         DrawerSlideSpeed = up - down;
         DrawerSlide.setPower(DrawerSlideSpeed);
-        telemetry.addData("Current Claw Position", Claw.getPosition());
+        telemetry.addData("Current rightClaw Position", rightClaw.getPosition());
     }
 
     public void reverseMotor(DcMotor motor) {

@@ -11,7 +11,8 @@ import com.qualcomm.robotcore.util.Range;
  */
 @TeleOp(name = "ForkliftDrivewith2remotes", group = "linear OpMode")
 public class ForkliftDrive2controllers extends OpMode {
-    private Servo Claw;
+    private Servo rightClaw;
+    private Servo leftClaw;
     private double clawPosition = 0.0;
     private double clawHighEnd = 0.45;
     private double clawLowEnd = 0.225;
@@ -33,8 +34,11 @@ public class ForkliftDrive2controllers extends OpMode {
         RearLeft = hardwareMap.dcMotor.get("m3");
         RearRight = hardwareMap.dcMotor.get("m4");
         DrawerSlide = hardwareMap.dcMotor.get("m5");
-        Claw = hardwareMap.servo.get("s1");
-        Claw.setPosition(clawPosition);
+        rightClaw = hardwareMap.servo.get("s1");
+        rightClaw.setDirection(Servo.Direction.REVERSE);
+        rightClaw.setPosition(clawPosition);
+        leftClaw = hardwareMap.servo.get("s2");
+        leftClaw.setPosition(clawPosition);
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
     }
@@ -49,21 +53,19 @@ public class ForkliftDrive2controllers extends OpMode {
             left = left * 0.4;
         }
 
-        if (gamepad2.a) {
-            if (Claw.getPosition() < clawHighEnd) {
-                clawPosition = clawHighEnd;
-                //clawPosition = clawPosition + 0.001;
-            }
-        }
-        if (gamepad2.b) {
-            if (Claw.getPosition() > clawLowEnd) {
-                clawPosition = clawLowEnd;
-                //clawPosition = clawPosition - 0.001;
+        if (gamepad1.a) {
+            clawPosition = clawHighEnd;
+            //clawPosition = clawPosition + 0.001;
 
-            }
         }
-        Claw.setPosition(clawPosition);
-        Claw.setPosition(clawPosition);
+        if (gamepad1.b) {
+            clawPosition = clawLowEnd;
+            //clawPosition = clawPosition - 0.001;
+        }
+        rightClaw.setPosition(clawPosition);
+        rightClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
         up = gamepad2.right_trigger;
         down = gamepad2.left_trigger;
         DrawerSlideSpeed = up - down;
@@ -72,7 +74,7 @@ public class ForkliftDrive2controllers extends OpMode {
         FrontLeft.setPower(left);
         RearRight.setPower(right);
         RearLeft.setPower(left);
-        telemetry.addData("Current Claw Position", Claw.getPosition());
+        telemetry.addData("Current Claw Position", rightClaw.getPosition());
     }
     public void reverseMotor(DcMotor motor) {
 

@@ -9,11 +9,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * Created by FTC on 11/2/17.
+ * Created by Peter on 11/2/17.
  */
 @TeleOp(name = "ForkliftDriveWithLimits", group = "linear OpMode")
 public class ForkliftDriveLimits extends OpMode {
-    private Servo Claw;
+    private Servo rightClaw;
+    private Servo leftClaw;
     private double clawPosition = 0.0;
     private double clawHighEnd = 0.45;
     private double clawLowEnd = 0.225;
@@ -37,8 +38,11 @@ public class ForkliftDriveLimits extends OpMode {
         RearLeft = hardwareMap.dcMotor.get("m3");
         RearRight = hardwareMap.dcMotor.get("m4");
         DrawerSlide = hardwareMap.dcMotor.get("m5");
-        Claw = hardwareMap.servo.get("s1");
-        Claw.setPosition(clawPosition);
+        rightClaw = hardwareMap.servo.get("s1");
+        rightClaw.setDirection(Servo.Direction.REVERSE);
+        rightClaw.setPosition(clawPosition);
+        leftClaw = hardwareMap.servo.get("s2");
+        leftClaw.setPosition(clawPosition);
         TopButton = hardwareMap.get(DigitalChannel.class, "b1");
         TopButton = hardwareMap.get(DigitalChannel.class, "b2");
         reverseMotor(FrontRight);
@@ -63,8 +67,10 @@ public class ForkliftDriveLimits extends OpMode {
             clawPosition = clawLowEnd;
             //clawPosition = clawPosition - 0.001;
         }
-        Claw.setPosition(clawPosition);
-        Claw.setPosition(clawPosition);
+        rightClaw.setPosition(clawPosition);
+        rightClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
         up = gamepad1.right_trigger;
         down = gamepad1.left_trigger;
         DrawerSlideSpeed = up - down;
@@ -74,7 +80,7 @@ public class ForkliftDriveLimits extends OpMode {
         else {
             DrawerSlide.setPower(0.0);
         }
-        telemetry.addData("Current Claw Position", Claw.getPosition());
+        telemetry.addData("Current Claw Position", rightClaw.getPosition());
     }
 
     public void reverseMotor(DcMotor motor) {
