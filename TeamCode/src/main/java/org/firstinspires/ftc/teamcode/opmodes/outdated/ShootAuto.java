@@ -1,18 +1,46 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+/*
+Copyright (c) 2016 Robert Atkinson
 
-/**
- * Created by Robotics on 3/7/2017.
- */
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted (subject to the limitations in the disclaimer below) provided that
+the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+Neither the name of Robert Atkinson nor the names of his contributors may be used to
+endorse or promote products derived from this software without specific prior
+written permission.
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+package org.firstinspires.ftc.teamcode.opmodes.outdated;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
-import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.SensorLib;
+import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
-@Autonomous(name="Block Auto (Shoot Balls, Defense)", group="Main")
+@Autonomous(name="Shoot Auto (Shoot Balls)", group="Main")
 @Disabled
-public class BlockAuto extends OpMode {
+public class ShootAuto extends OpMode {
 
     BotHardwareOld robot = new BotHardwareOld();
 
@@ -33,7 +61,7 @@ public class BlockAuto extends OpMode {
 
     SensorLib.PID gPid = new SensorLib.PID(Kp, Ki, Kd, KiCutoff);
 
-    public BlockAuto(OpMode mode, boolean isRed){
+    public ShootAuto(OpMode mode, boolean isRed){
         modePointer = mode;
         redColor = isRed;
     }
@@ -48,7 +76,7 @@ public class BlockAuto extends OpMode {
 
         mShoot = new AutoLib.LinearSequence();
 
-        mShoot.add(new AutoLib.LogTimeStep(modePointer, "Wait", 10.5));
+        mShoot.add(new AutoLib.LogTimeStep(modePointer, "Wait", 15.0));
         mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.4f, 1450, true));
         mShoot.add(new AutoLib.LogTimeStep(modePointer, "YAY", 0.5));
         mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0f,  1500, true, modePointer));
@@ -56,11 +84,11 @@ public class BlockAuto extends OpMode {
         mShoot.add(new AutoLib.EncoderMotorStep(robot.launcherMotor, 1.0f, 1500, true, modePointer));
 
         int direction;
-        if(redColor) direction = 25;
-        else direction = -25;
+        if(redColor) direction = -50;
+        else direction = 50;
 
         mShoot.add(new AutoLib.GyroTurnStep(modePointer, direction, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.4f, 3.0f, true));
-        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.5f, 2000, true));
+        mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.5f, 2750, true));
     }
 
     @Override

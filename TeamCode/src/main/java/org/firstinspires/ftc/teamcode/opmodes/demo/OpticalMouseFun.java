@@ -23,7 +23,7 @@ import java.util.Iterator;
  */
 
 @Autonomous(name="USB Mouse Fun", group ="Test")
-
+@Disabled
 public class OpticalMouseFun extends OpMode {
     UsbManager usbManager;
     UsbDevice usbDevice;

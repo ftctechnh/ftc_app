@@ -12,7 +12,7 @@ import org.opencv.core.Mat;
  */
 
 @Autonomous(name = "Line Follow Algorithm 3", group = "Line Follow")
-//@Disabled
+@Disabled
 public class OpenCVSimplerTest extends OpenCVLib {
 
     private int yVal;

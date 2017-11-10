@@ -6,11 +6,11 @@ package org.firstinspires.ftc.teamcode.opmodes.pointer;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.ShootAuto;
+import org.firstinspires.ftc.teamcode.opmodes.outdated.ShootAuto;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 @Autonomous(name="Red Shoot Auto (Shoot Balls)", group="Main")
-//@Disabled
+@Disabled
 public class ShootAutoRed extends OpMode {
     BotHardwareOld robot = new BotHardwareOld();
 

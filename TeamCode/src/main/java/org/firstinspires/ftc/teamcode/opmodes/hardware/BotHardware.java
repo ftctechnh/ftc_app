@@ -24,8 +24,7 @@ public class BotHardware {
         frontLeft("fl", false),
         backLeft("bl", true),
         lift("l", false),
-        lights("green", false),
-        stick("s", true);
+        lights("green", false);
 
         private final String name;
         private final boolean reverse;
@@ -45,14 +44,20 @@ public class BotHardware {
     }
 
     public enum ServoE {
-        leftGrab("lg"),
-        rightGrab("rg");
+        stick("stick"),
+        gary("gary");
 
         public static final double rightGrabOpen = 0.75;
         public static final double rightGrabClose = 0.95;
 
         public static final double leftGrabOpen = 0;
         public static final double leftGrabClose = 1.0;
+
+        public static final double stickUp = 0.35;
+        public static final double stickDown = 0.95;
+
+        public static final double garyUp = 0.3;
+        public static final double garyDown = 0.75;
 
         private final String name;
         public Servo servo;
@@ -98,31 +103,29 @@ public class BotHardware {
         for(Motor motor : Motor.values()) motor.motor.setPower(0);
     }
 
-    public void openGrab() {
-        ServoE.leftGrab.servo.setPosition(ServoE.leftGrabOpen);
-        //ServoE.rightGrab.servo.setPosition(ServoE.rightGrabOpen);
+    public void dropStick() {
+        ServoE.stick.servo.setPosition(ServoE.stickDown);
     }
 
-    public void closeGrab() {
-        ServoE.leftGrab.servo.setPosition(ServoE.leftGrabClose);
-        //ServoE.rightGrab.servo.setPosition(ServoE.rightGrabClose);
+    public void liftStick() {
+        ServoE.stick.servo.setPosition(ServoE.stickUp);
     }
 
-    public void setWhack(float power) {
-        Motor.stick.motor.setPower(power);
+    public void dropGary() {
+        ServoE.gary.servo.setPosition(ServoE.garyDown);
+    }
+
+    public void liftGary() {
+        ServoE.gary.servo.setPosition(ServoE.garyUp);
+    }
+
+    public Servo getStick() {
+        return ServoE.stick.servo;
     }
 
     public void setLights(boolean on) {
         if(on) Motor.lights.motor.setPower(1.0);
         else Motor.lights.motor.setPower(0.0);
-    }
-
-    public Servo getLeftLift() {
-        return ServoE.leftGrab.servo;
-    }
-
-    public Servo getRightLift() {
-        return ServoE.rightGrab.servo;
     }
 
     public DcMotorEx getMotor(String name) {

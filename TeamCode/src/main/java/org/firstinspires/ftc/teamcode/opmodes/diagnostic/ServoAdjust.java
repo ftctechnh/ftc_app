@@ -15,9 +15,6 @@ import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 //@Disabled
 public class ServoAdjust extends OpMode {
 
-    boolean currentServo = false;
-    boolean dpadDelay = false;
-
     BotHardware bot = new BotHardware(this);
 
     @Override
@@ -36,26 +33,10 @@ public class ServoAdjust extends OpMode {
 
     @Override
     public void loop() {
-
-        if (gamepad1.dpad_left || gamepad1.dpad_right) {
-            if (!dpadDelay) currentServo = !currentServo;
-            dpadDelay = true;
-        } else dpadDelay = false;
-
-
-        if (currentServo) {
-            telemetry.addData("Left Servo", bot.getLeftLift().getPosition());
-            if (gamepad1.dpad_up)
-                bot.getLeftLift().setPosition(Range.clip(bot.getLeftLift().getPosition() + 0.01, -1, 1));
-            else if (gamepad1.dpad_down)
-                bot.getLeftLift().setPosition(Range.clip(bot.getLeftLift().getPosition() - 0.01, -1, 1));
-        } else {
-            telemetry.addData("Right Servo", bot.getRightLift().getPosition());
-            if (gamepad1.dpad_up)
-                bot.getRightLift().setPosition(Range.clip(bot.getRightLift().getPosition() + 0.01, -1, 1));
-            else if (gamepad1.dpad_down)
-                bot.getRightLift().setPosition(Range.clip(bot.getRightLift().getPosition() - 0.01, -1, 1));
-        }
-
+        telemetry.addData("Servo", bot.getStick().getPosition());
+        if (gamepad1.dpad_up)
+            bot.getStick().setPosition(Range.clip(bot.getStick().getPosition() + 0.01, -1, 1));
+        else if (gamepad1.dpad_down)
+            bot.getStick().setPosition(Range.clip(bot.getStick().getPosition() - 0.01, -1, 1));
     }
 }

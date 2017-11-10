@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
 @Autonomous(name="Testing Sensor Code", group="Test")
-//@Disabled
+@Disabled
 public class SensorTest extends OpMode {
 
     BotHardwareOld bot;

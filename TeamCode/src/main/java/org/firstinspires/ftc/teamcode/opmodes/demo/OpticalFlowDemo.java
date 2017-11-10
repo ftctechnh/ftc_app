@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 
 @Autonomous(name = "Optical Flow 1", group = "Line Follow")
-//@Disabled
+@Disabled
 public class OpticalFlowDemo extends OpenCVLib {
 
     private int yVal;

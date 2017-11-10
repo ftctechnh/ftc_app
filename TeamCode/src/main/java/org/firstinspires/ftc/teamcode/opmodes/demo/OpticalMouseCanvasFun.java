@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous(name = "Optical Mouse Path Drawing Demo", group = "Test")
+@Disabled
 public class OpticalMouseCanvasFun extends OpMode implements PointHandler{
 
     private final RelativeLayout layout = (RelativeLayout)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.CheapCamera);

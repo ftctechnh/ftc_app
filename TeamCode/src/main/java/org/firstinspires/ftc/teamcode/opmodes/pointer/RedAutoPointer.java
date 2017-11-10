@@ -33,13 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.opmodes.pointer;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.opmodes.LineDrive;
+import org.firstinspires.ftc.teamcode.opmodes.outdated.LineDrive;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
 
 @Autonomous(name="Red Auto (Push Beacons)", group="Main")
-//@Disabled
+@Disabled
 public class RedAutoPointer extends OpMode {
 
     BotHardwareOld robot = new BotHardwareOld();

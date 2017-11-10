@@ -255,7 +255,7 @@ public class AutoLib {
             // start the Timer and start the motor on our first call
             if (firstLoopCall()) {
                 mTimer.start();
-                mMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                //mMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 mMotor.setPower(mPower);
             }
 

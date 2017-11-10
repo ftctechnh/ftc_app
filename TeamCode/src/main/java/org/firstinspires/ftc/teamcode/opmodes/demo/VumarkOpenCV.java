@@ -48,7 +48,7 @@ import com.vuforia.Vuforia;
  */
 
 @Autonomous(name="Concept: VuMark OpenCV", group ="Concept")
-//@Disabled
+@Disabled
 public class VumarkOpenCV extends OpenCVLib {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;

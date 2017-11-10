@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.CameraCalibration;
 import com.vuforia.CameraDevice;
@@ -54,7 +55,7 @@ import static org.opencv.core.CvType.CV_8UC3;
  */
 
 @Autonomous(name="Red Auto", group ="Auto")
-//@Disabled
+@Disabled
 public class VumarkHiJackVideo extends OpenCVLoad {
 
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
@@ -62,26 +63,6 @@ public class VumarkHiJackVideo extends OpenCVLoad {
     private VuforiaTrackable relicTemplate;
 
     private ImageView mView;
-
-    //bullshoot factors
-    private static final float horizBullFactor = -15.0f;
-    private static final float vertBullFactor = -7.0f;
-
-    //viewing angles for nexus 5x (in degreres)
-    private static final float horizontalViewAngle = 53.2988f + horizBullFactor;
-    private static final float verticalViewAngle = 67.5747f + vertBullFactor;
-
-    //viewport sizes
-    private static final int viewWidth = 360;
-    private static final int viewHeight = 640;
-
-    //pixel constants
-    private static final float horizConst = (float)((viewWidth * 0.5) / Math.tan(Math.toRadians(0.5 * horizontalViewAngle)));
-    private static final float vertConst = -(float)((viewHeight * 0.5) / Math.tan(Math.toRadians(0.5 * verticalViewAngle)));
-
-    //center points
-    private static final int centerX = viewWidth / 2;
-    private static final int centerY = viewHeight / 2;
 
     //define the jewel platform relative to the image with a buncha vectors to add
     //all units in vuforia are mm, so we multiply to inches to make it readable
@@ -109,7 +90,6 @@ public class VumarkHiJackVideo extends OpenCVLoad {
     //storage camera calibration
     private CameraCalibration camCal;
 
-    private float[] sizeScalar;
     private Point[] imagePoints;
     private int[] leftBall = new int[2];
     private int leftDist;
@@ -435,7 +415,7 @@ public class VumarkHiJackVideo extends OpenCVLoad {
 
         public void stop() {
             //god damn quallcomm
-            this.stopAR();
+            super.close();
         }
     }
     //vuforia default listener shim

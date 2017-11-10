@@ -21,7 +21,7 @@ import static org.opencv.core.CvType.*;
  */
 
 @Autonomous(name = "Line Follow Algorithm 1", group = "Line Follow")
-//@Disabled
+@Disabled
 public class OpenCVTest extends OpenCVLib {
     //edge kernel (stolen from http://roboreal.com)
     private static final float[][] kernel = {{-1, -1, -1, -1, -1},

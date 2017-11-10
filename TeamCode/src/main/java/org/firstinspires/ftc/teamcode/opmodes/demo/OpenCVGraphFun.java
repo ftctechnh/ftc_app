@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.libraries.LineFollowLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
@@ -26,7 +27,7 @@ import java.util.LinkedList;
  */
 
 @Autonomous(name = "Line Follow Algorithm + Graph Demo", group = "Test")
-//@Disabled
+@Disabled
 public class OpenCVGraphFun extends OpenCVLib {
 
     private int[] yValStore = new int[3];

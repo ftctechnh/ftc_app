@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.pointer;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.opmodes.demo.VumarkHiJackVideo;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.opmodes.demo.VumarkHiJackVideo;
  */
 
 @Autonomous(name="Blue Auto", group ="Auto")
+@Disabled
 public class VuMarkAutoBlue extends VumarkHiJackVideo {
     @Override
     public void init() {

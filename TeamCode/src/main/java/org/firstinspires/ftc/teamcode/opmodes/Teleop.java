@@ -51,11 +51,11 @@ public class Teleop extends OpMode {
 
         bot.setLights(!robotSlow);
 
-        if(gamepad1.b) bot.setWhack(-0.2f);
-        else bot.setWhack(0);
+        if(gamepad1.b) bot.dropStick();
+        else bot.liftStick();
 
-        if(grabberClosed) bot.closeGrab();
-        else bot.openGrab();
+        if(gamepad1.x) bot.dropGary();
+        else bot.liftGary();
 
         telemetry.addData("Grabber", grabberClosed);
         telemetry.addData("Robot Slow", robotSlow);

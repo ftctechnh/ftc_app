@@ -7,7 +7,7 @@ package org.firstinspires.ftc.teamcode.opmodes.pointer;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
-import org.firstinspires.ftc.teamcode.opmodes.BlockAuto;
+import org.firstinspires.ftc.teamcode.opmodes.outdated.BlockAuto;
 
 @Autonomous(name="Red Block Auto (Shoot Balls, Defense)", group="Main")
 @Disabled
