@@ -36,9 +36,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
-@TeleOp(name = "! Perfect Teleop David!", group = "Concept")
+@TeleOp(name = "♪ ♥ Perfect Teleop ♥  ♪", group = "Concept")
 //@Disabled
-public class PerfectTeleopDavid extends LinearOpMode {
+public class FinalPerfectTeleop extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
 HolonomicHardwareClass robot = new HolonomicHardwareClass();
