@@ -121,12 +121,12 @@ public class JeffsRealRun extends LinearOpMode {
     private void moveTheArm(double degreeOfArmPower, int armUpDirection, int extendDirection) {
         setThePowerForMovingArmUpOrDown(degreeOfArmPower, armUpDirection);
         //
-        pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
+        //pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
     }
 
     private void getThePowers() {
         power = getPathagorus(leftX, drive); //the current joystick position
-        rotate = (getPathagorus(gamepad2.right_stick_y, gamepad2.right_stick_x) * .25);
+        rotate = (getPathagorus(gamepad2.right_stick_y, gamepad2.right_stick_x) * .50);
         stretch = getPathagorus(gamepad2.left_stick_y, gamepad2.left_stick_x);
     }
 
@@ -183,9 +183,9 @@ public class JeffsRealRun extends LinearOpMode {
         telemetry.addData("dpad left", gamepad2.dpad_left);
         telemetry.addData("glyphy directions", pengwinArm.glyphy.getDirection());
         if (gamepad2.dpad_up == true){
-            pengwinArm.upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            telemetry.addData("position", pengwinArm.upMotor.getCurrentPosition());
-            pengwinArm.upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //pengwinArm.upMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            telemetry.addData("position", pengwinArm.getCalibrate());
+           // pengwinArm.upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         telemetry.addData("Unicorn Crossing", "Always a danger WATCH OUT");
         telemetry.update();
@@ -223,7 +223,7 @@ public class JeffsRealRun extends LinearOpMode {
                 //TODO Do nothing
             }
             pengwinArm.setUpPower(0);
-            pengwinArm.setHome();
+            //pengwinArm.setHome();
         }
     }
     public void waitForStartify(){
@@ -246,7 +246,7 @@ public class JeffsRealRun extends LinearOpMode {
     }
     //
     private void smartify(){//calibrate up position
-        pengwinArm.upMotor.setPower(.4);//opposite of touchy
+        pengwinArm.upMotor.setPower(.3);//opposite of touchy
         while(up.getState()){
             //TODO Wookie
         }

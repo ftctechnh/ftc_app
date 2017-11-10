@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,7 +16,6 @@ public class PengwinArm {
     DcMotor acrossMotor; //motor that goes horizontally
     Servo glyphy;
 
-
     double acrossPower;
     double upPower;
     static double open = .8;
@@ -25,6 +25,8 @@ public class PengwinArm {
     public PengwinArm(HardwareMap hardwareMap){
         //get motors
         upMotor = hardwareMap.dcMotor.get("arm"); //left back
+        //upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         acrossMotor = hardwareMap.dcMotor.get("extend"); //right back
         glyphy = hardwareMap.servo.get("glyphy");
         glyphy.setDirection(Servo.Direction.FORWARD);
@@ -39,29 +41,30 @@ public class PengwinArm {
         upPower = power;
         upMotor.setPower(upPower);
     }
+    //
     public double getAcrossPower(){return acrossPower;}
     public double getUpPower(){return upPower;}
 
     public void setHome(){
         upMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public double getCalibrate(){
        return upMotor.getCurrentPosition();
     }
     public void goeyHomey(){
-        upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       // upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         upMotor.setTargetPosition(0);
         upMotor.setPower(.4);
-        upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     //
     public void goUp(){
-        upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       // upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         upMotor.setTargetPosition(upPosition);
         upMotor.setPower(.4);
-        upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     //
     public void close(){
