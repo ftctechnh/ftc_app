@@ -47,7 +47,7 @@ public class RedNorthRight extends LinearOpMode {
         jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + move);
         jeffThePengwin.rightFrontMotor.setTargetPosition(jeffThePengwin.rightFrontMotor.getCurrentPosition() + move);
         //
-        switchify();
+        switchify();//switch to rut to position
         //
         jeffThePengwin.leftBackMotor.setPower(driveSpeed);
         jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
@@ -55,6 +55,13 @@ public class RedNorthRight extends LinearOpMode {
         jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
         //
         runtime.reset();
+        //
+        while (opModeIsActive() &&  (runtime.seconds() < time)){
+            telemetry.addData("Progress",runtime.seconds()/time + "%");
+            telemetry.update();
+        }
+        telemetry.clearAll();
+        //
     }
     //
     private void waitForStartify(){
