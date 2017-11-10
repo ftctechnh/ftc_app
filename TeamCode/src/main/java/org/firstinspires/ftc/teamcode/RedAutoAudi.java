@@ -30,24 +30,27 @@ public class RedAutoAudi extends LinearOpMode
         // else (no color sense); do nothing
         // raise/retract arm arm
         // decode pictogram
-        switch (newRobot.getGlyphCipher()) //Switch statement; it also decodes the image at the same time and
-                                            //returns the column in a character
+        sleep(2000);
+        telemetry.addData("Pos ", newRobot.getGlyphCipher());
+        telemetry.update();
+        sleep(2000);
+        switch (newRobot.getGlyphCipher())
         {
-            case 'l': robot.driveStraight_In(x); //lowercase L represents left;
+            case 'r': robot.driveStraight_In(28);
                 break;
-            case 'c': robot.driveStraight_In(x); // represents the center; robot drives distance to center column
+            case 'c': robot.driveStraight_In(39);
                 break;
-            case 'r': robot.driveStraight_In(x);//represents right; robot drives dist to right column
+            case 'l': robot.driveStraight_In(45);
                 break;
-            default: robot.driveStraight_In(center); //robot goes into center if it can't find a glyph
+            default: robot.driveStraight_In(39);
                 break;
         }
         robot.pivot_IMU(-90, .25);
-        robot.driveStraight_In(x); //Drive to the glyph to column at normal speed first, but not into it
-        robot.driveStraight_In(x, .25);
+        robot.driveStraight_In(12);
+        robot.driveStraight_In(18,.2);
         //lower door attachment to ground
-        //open door attachment to release glyph
-        robot.driveStraight_In(-2); // back up
+        //open door to release glyph
+        robot.driveStraight_In(-2);
         robot.stopAllMotors();
     }
 }
