@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
@@ -34,6 +35,8 @@ public class TestIMUPosition extends OpMode {
         }
 
         telemetry.addData("Calibration:", imuWrapper.getIMU().getCalibrationStatus().toString());
+
+        telemetry.addData("Acquisition Time:", imuWrapper.getIMU().getAcceleration().acquisitionTime);
 
         telemetry.addData("X Position:", imuWrapper.getPosition().x);
         telemetry.addData("Y Position:", imuWrapper.getPosition().y);
