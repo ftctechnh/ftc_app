@@ -30,5 +30,8 @@ public class MyTestCodeTelemetry extends MyTestCodeHardware {
         telemetry.addData("Left Hand Position", leftHandPosition);
         telemetry.addData("One Hand Position", oneHandPosition);
         telemetry.addData("CR Hand Position", crHandPosition);
+        telemetry.addData("relic grabber position", relicPosition);
+        telemetry.addData("ArmLifterS position",armLifterSPosition);
+
     }
 }

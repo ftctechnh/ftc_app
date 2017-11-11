@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Shane;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 /**
  * Created by team on 7/19/2017.
  */
@@ -10,6 +12,7 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
 
     private int padCofig = 0;
     private boolean ifHold;
+    private boolean RelicHold;
     private boolean slowDrive = false;
 
     @Override
@@ -81,7 +84,24 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
             } else {
                 crHandPosition = STOPPED_CR_HAND;
             }
+
         }
+        if (gamepad2.dpad_right) {
+            RelicHold = true;
+        } else if (gamepad2.dpad_left) {
+            RelicHold = false;
+            relicPosition = OPEN_RELIC;
+        }
+        if (RelicHold) {
+            relicPosition = CLOSED_RELIC;
+        } else {
+            if (gamepad2.dpad_left) {
+                relicPosition = OPEN_RELIC;
+            } else {
+                relicPosition = STOPPED_RELIC;
+            }
+        }
+
         if (gamepad2.right_bumper) {
             armLifterPwr = UP_ARM_LIFTER;
         } else if (gamepad2.left_bumper) {
@@ -89,6 +109,14 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         } else {
             armLifterPwr = STOPPED_ARM_LIFTER;
         }
+        if (gamepad2.right_bumper) {
+            armLifterSPosition = UP_ARM_LIFTER_S;
+        } else if (gamepad2.left_bumper) {
+            armLifterSPosition = DOWN_ARM_LIFTER_S;
+        } else {
+            armLifterSPosition = STOPPED_ARM_LIFTER_S;
+        }
+
 
         if (gamepad2.x) {
             rightHandPosition = OPEN_RIGHT_HAND;
@@ -162,7 +190,24 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "cr hand");
         }
+        try {
+            relic.setPower(relicPosition);
+        } catch (Exception opModeException) {
+            telemetry.addData("Cant run (not mapped)", "relic grabber");
+
+        }
+        try {
+            armLifterS.setPower(armLifterSPosition);
+        }catch (Exception opModeException){
+            telemetry.addData("Cant run (not mapped)", "Servo lift arm");
+        }
+        try {
+            armServo.setPower(armPower);
+        } catch (Exception opModeException) {
+            telemetry.addData("Can't run (not mapped)", "Servo lift arm motor");
+        }
     }
+
     private void configTele() {
         telemetry.addData("gamepad Configuration", padCofig);
     }

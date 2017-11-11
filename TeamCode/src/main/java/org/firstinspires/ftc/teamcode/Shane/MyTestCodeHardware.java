@@ -26,6 +26,12 @@ public class MyTestCodeHardware extends OpMode {
     protected static final double UP_ARM_LIFTER = 1;
     protected static final double DOWN_ARM_LIFTER = -1;
     protected static final double STOPPED_ARM_LIFTER = 0;
+    protected static final double STOPPED_RELIC = 0;
+    protected static final double OPEN_RELIC = 1;
+    protected static final double CLOSED_RELIC = -1;
+    protected static final double UP_ARM_LIFTER_S = 1;
+    protected static final double DOWN_ARM_LIFTER_S = -1;
+    protected static final double STOPPED_ARM_LIFTER_S = 0;
 
     // DcMotors
     DcMotor rightMotor;
@@ -39,18 +45,24 @@ public class MyTestCodeHardware extends OpMode {
     Servo leftHand;
     Servo oneHand;
     CRServo crHand;
+    CRServo relic;
+    CRServo armLifterS;
+    CRServo armServo;
+
 
     protected double rightPower;
     protected double leftPower;
     protected double liftPower;
     protected double armPower;
     protected double armLifterPwr = STOPPED_ARM_LIFTER;
+    protected double armLifterSPosition = STOPPED_ARM_LIFTER_S;
 
     protected double ballPusherPosition = BALL_PUSHER_UP;
     protected double leftHandPosition = OPEN_LEFT_HAND;
     protected double rightHandPosition = OPEN_RIGHT_HAND;
     protected double oneHandPosition = OPEN_ONE_HAND;
     protected double crHandPosition = STOPPED_CR_HAND;
+    protected double relicPosition = STOPPED_RELIC;
 
     protected String driveMode;
 
@@ -125,6 +137,27 @@ public class MyTestCodeHardware extends OpMode {
             crHand.setPower(crHandPosition);
         } catch (Exception opModeException){
             telemetry.addData("Cant map", "cr hand (crh)");
+        }
+        try {
+            relic = hardwareMap.crservo.get("relic");
+            relic.setDirection(DcMotorSimple.Direction.REVERSE);
+            relic.setPower(relicPosition);
+        } catch (Exception opModeException) {
+            telemetry.addData("Cant map", "relic grabber (relic)");
+        }
+        try {
+            armLifterS = hardwareMap.crservo.get("armLifterS");
+            armLifterS.setDirection(DcMotorSimple.Direction.REVERSE);
+            armLifterS.setPower(armLifterSPosition);
+        } catch (Exception opModeException){
+            telemetry.addData("Cant map", "arm lifter (armLifterS)");
+        }
+        try {
+            armServo = hardwareMap.crservo.get("armServo");
+            //add direction here
+            armServo.setPower(armPower);
+        } catch (Exception opModeException) {
+            telemetry.addData("Can't map", "arm lifter (armServo");
         }
     }
 }
