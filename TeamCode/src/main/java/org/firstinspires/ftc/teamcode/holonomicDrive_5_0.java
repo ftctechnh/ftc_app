@@ -15,10 +15,13 @@ public class holonomicDrive_5_0 extends LinearOpMode
     double x = 0;
     double y = 0;
     DcMotor lift = hardwareMap.dcMotor.get("lift");
-    Servo glyph = hardwareMap.servo.get("glyph");
+    Servo pincherL = hardwareMap.servo.get("pincherL");
+    Servo pincherR = hardwareMap.servo.get("pincherR");
+
     DcMotor extend = hardwareMap.dcMotor.get("extend");
     double open = 0.7;
     double close = 0.05;
+    double pinch= 0;
     @Override
     public void runOpMode()
     {
@@ -72,12 +75,16 @@ public class holonomicDrive_5_0 extends LinearOpMode
                 }
                 //Glyph Grabber
                 else if(gamepad1.right_bumper == true) {
-                    glyph.setPosition(open);
+                    pinch += .05;
+                    if (pinch > .5)
+                    {pinch = .5;}
                     x = 0;
                     y = 0;
                 }
                 else if(gamepad1.right_trigger > 0) {
-                    glyph.setPosition(close);
+                    pinch -= .05;
+                    if (pinch < 0)
+                    {pinch = 0;}
                     x = 0;
                     y = 0;
                 }
@@ -87,6 +94,8 @@ public class holonomicDrive_5_0 extends LinearOpMode
                     y = gamepad1.left_stick_y;
                 }
                 engine.drive(x,y);
+                pincherL.setPosition(pinch);
+                pincherR.setPosition(1-pinch);
             }
 
             telemetry.addData("leftx: ", gamepad1.left_stick_x);
