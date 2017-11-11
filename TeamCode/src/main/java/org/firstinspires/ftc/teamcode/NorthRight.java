@@ -30,7 +30,7 @@ public class NorthRight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //
         startify();
-        //
+        //For kids
         waitForStartify();
         //
         //woo hoo
