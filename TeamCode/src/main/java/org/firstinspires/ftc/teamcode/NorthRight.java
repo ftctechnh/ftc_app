@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,10 +16,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name="NorthRight", group="Autonomisisisisis")
 public class NorthRight extends LinearOpMode {
     PengwinArm pengwinArm;
+    PengwinFin pengwinFin;
     JeffThePengwin jeffThePengwin;
     private ElapsedTime runtime = new ElapsedTime();
     //
-    static final double countsPerRevolution = 560 ;//TODO Add gear reduction if needed
+    static final double countsPerRevolution = 1220 ;//TODO Add gear reduction if needed
     static final double diameter = 4;
     static final double Pi = 3.141592653589793238462643383279502;
     static final double countify = countsPerRevolution/(diameter*Pi);//Counts per inch
@@ -28,33 +30,56 @@ public class NorthRight extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         jeffThePengwin = new JeffThePengwin(hardwareMap);
+        pengwinArm = new PengwinArm(hardwareMap);
+        pengwinFin = new PengwinFin(hardwareMap);
         //
         startify();
+
         //For kids
         waitForStartify();
         //
         //woo hoo
         //
         //Insert Code Here
-        forward(4, 6, .5);
+        forward(12, 15, .4);
     }
     //
     //
     //
     private void forward(double inches, double time, double speed){
+
+
         int move = (int)(Math.round(inches*countify));
-        jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + move);
-        jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + move);
-        jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + move);
-        jeffThePengwin.rightFrontMotor.setTargetPosition(jeffThePengwin.rightFrontMotor.getCurrentPosition() + move);
+        int leftFrontStart = jeffThePengwin.leftFrontMotor.getCurrentPosition();
+        int leftFrontEnd = (leftFrontStart + move);
+        int leftBackStart = jeffThePengwin.leftFrontMotor.getCurrentPosition();
+        int leftBackEnd = (leftBackStart + move);
+        int rightFrontStart = jeffThePengwin.leftFrontMotor.getCurrentPosition();
+        int rightFrontEnd = rightFrontStart + move;
+        int rightBackStart = jeffThePengwin.leftFrontMotor.getCurrentPosition();
+        int rightBackEnd = rightBackStart + move;
+
+        jeffThePengwin.leftBackMotor.setTargetPosition(leftBackEnd);
+        jeffThePengwin.leftFrontMotor.setTargetPosition(leftFrontEnd);
+        jeffThePengwin.rightBackMotor.setTargetPosition(rightBackEnd);
+        jeffThePengwin.rightFrontMotor.setTargetPosition(rightFrontEnd);
         //
         switchify();//switch to rut to position
+
         //
         setDriveSpeed(speed);
         //
         runtime.reset();
         //
-        while (opModeIsActive() &&  (runtime.seconds() < time)) {
+        while (opModeIsActive() &&
+                (runtime.seconds() < time) &&
+                (jeffThePengwin.isMoving())){
+            telemetry.addData("endPosition", move);
+            telemetry.addData("lbm position", jeffThePengwin.leftBackMotor.getCurrentPosition());
+            telemetry.addData("lfm position", jeffThePengwin.leftFrontMotor.getCurrentPosition());
+            telemetry.addData("rbm position", jeffThePengwin.rightBackMotor.getCurrentPosition());
+            telemetry.addData("rfm position", jeffThePengwin.rightFrontMotor.getCurrentPosition());
+            telemetry.addData("fin position", pengwinFin.fin.getPosition());
             telemetry.addData("Progress", runtime.seconds() / time + "%");
             telemetry.update();
         }

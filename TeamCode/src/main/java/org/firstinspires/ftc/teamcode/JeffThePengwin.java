@@ -36,14 +36,19 @@ public class JeffThePengwin {
     public JeffThePengwin(HardwareMap hardwareMap){
         //get motors
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
-        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
         rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
         leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
-        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
 
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+    }
+
+    //christine added, explain!
+    public boolean isMoving(){
+        return leftBackMotor.isBusy()&& leftFrontMotor.isBusy() && rightBackMotor.isBusy() && rightFrontMotor.isBusy();
     }
 
     public void move(double drive, double turn, double strafe){
