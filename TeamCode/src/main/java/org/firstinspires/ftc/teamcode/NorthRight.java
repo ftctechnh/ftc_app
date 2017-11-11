@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,7 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
 @Disabled
-public class RedNorthRight extends LinearOpMode {
+public class NorthRight extends LinearOpMode {
     PengwinArm pengwinArm;
     JeffThePengwin jeffThePengwin;
     private ElapsedTime runtime = new ElapsedTime();
@@ -22,7 +23,8 @@ public class RedNorthRight extends LinearOpMode {
     static final double diameter = 4;
     static final double Pi = 3.141592653589793238462643383279502;
     static final double countify = countsPerRevolution*diameter*Pi;//Counts per inch
-    static final double driveSpeed = .5;//TODO Find optimal speed
+    //
+    ModernRoboticsI2cGyro lookify;
     //
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,8 +36,7 @@ public class RedNorthRight extends LinearOpMode {
         //woo hoo
         //
         //Insert Code Here
-        telemetry.addData("Pi", Pi);
-        telemetry.update();
+        forward(6, 4, .5);
     }
     //
     //
