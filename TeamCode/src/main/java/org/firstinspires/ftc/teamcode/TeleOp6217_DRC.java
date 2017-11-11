@@ -348,13 +348,14 @@ BG = Ball Grabber, WBT = Wiffle Ball Thrower, BGL = Ball Grabber Lifter, BP = Bl
 
 
        double dead = .2;
-       double max = .35;
 
+       // Regular
+       double max = .5;
        if (LB == true && RB == false){
+           // Turbo with left bumper
            max = 1;
-       }
-
-       if (LB == false && RB == true){
+       } else if (LB == false && RB == true){
+           // Turtle with right bumper
            max = .3;
        }
 
