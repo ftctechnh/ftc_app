@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 //Baby Balancing Robot Iteration 1(BBBot I1) created by Eric on 8/29/2017.
 
 @TeleOp (name="ChristineIsCrying",group="Christine" )
+//TODO console Christine
 public class ChristineIsCrying extends LinearOpMode{
 
     DcMotor dcMotor;
@@ -39,6 +40,7 @@ public class ChristineIsCrying extends LinearOpMode{
                 dcMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 dcMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 dcMotor.setTargetPosition(200);
+                dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             dcMotor.setPower(power);

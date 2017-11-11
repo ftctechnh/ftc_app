@@ -18,8 +18,8 @@ public class PengwinArm {
 
     double acrossPower;
     double upPower;
-    static double open = .8;
-    static double closed = .7;
+    static double open = .9;
+    static double closed = 8;
     int upPosition; //Set to the encoder value that is the up position
 
     public PengwinArm(HardwareMap hardwareMap){
