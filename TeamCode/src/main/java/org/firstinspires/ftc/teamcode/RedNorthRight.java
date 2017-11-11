@@ -62,6 +62,7 @@ public class RedNorthRight extends LinearOpMode {
         }
         telemetry.clearAll();
         //
+        switcheroo();//switch to run using encoder
     }
     //
     private void waitForStartify(){
@@ -85,5 +86,12 @@ public class RedNorthRight extends LinearOpMode {
         jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    //
+    private void switcheroo(){
+        jeffThePengwin.leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
