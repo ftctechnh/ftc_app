@@ -24,7 +24,7 @@ public class NorthRight extends LinearOpMode {
     static final double countify = countsPerRevolution/(diameter*Pi);//Counts per inch
     //
     ModernRoboticsI2cGyro lookify;
-    //
+    //Push
     @Override
     public void runOpMode() throws InterruptedException {
         jeffThePengwin = new JeffThePengwin(hardwareMap);
