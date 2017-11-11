@@ -65,6 +65,81 @@ public class RedNorthRight extends LinearOpMode {
         switcheroo();//switch to run using encoder
     }
     //
+    private void back(double inches, double time){
+        int move = (int)(Math.round(inches*county));
+        jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + -move);
+        jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + -move);
+        jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + -move);
+        jeffThePengwin.rightFrontMotor.setTargetPosition(jeffThePengwin.rightFrontMotor.getCurrentPosition() + -move);
+        //
+        switchify();//switch to rut to position
+        //
+        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
+        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
+        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
+        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        //
+        runtime.reset();
+        //
+        while (opModeIsActive() &&  (runtime.seconds() < time)){
+            telemetry.addData("Progress",runtime.seconds()/time + "%");
+            telemetry.update();
+        }
+        telemetry.clearAll();
+        //
+        switcheroo();//switch to run using encoder
+    }
+    //
+    private void right(double inches, double time){
+        int move = (int)(Math.round(inches*county));
+        jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + move);
+        jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + -move);
+        jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + -move);
+        jeffThePengwin.rightFrontMotor.setTargetPosition(jeffThePengwin.rightFrontMotor.getCurrentPosition() + move);
+        //
+        switchify();//switch to rut to position
+        //
+        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
+        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
+        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
+        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        //
+        runtime.reset();
+        //
+        while (opModeIsActive() &&  (runtime.seconds() < time)){
+            telemetry.addData("Progress",runtime.seconds()/time + "%");
+            telemetry.update();
+        }
+        telemetry.clearAll();
+        //
+        switcheroo();//switch to run using encoder
+    }
+    //
+    private void left(double inches, double time){
+        int move = (int)(Math.round(inches*county));
+        jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + -move);
+        jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + move);
+        jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + move);
+        jeffThePengwin.rightFrontMotor.setTargetPosition(jeffThePengwin.rightFrontMotor.getCurrentPosition() + -move);
+        //
+        switchify();//switch to rut to position
+        //
+        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
+        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
+        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
+        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        //
+        runtime.reset();
+        //
+        while (opModeIsActive() &&  (runtime.seconds() < time)){
+            telemetry.addData("Progress",runtime.seconds()/time + "%");
+            telemetry.update();
+        }
+        telemetry.clearAll();
+        //
+        switcheroo();//switch to run using encoder
+    }
+    //
     private void waitForStartify(){
         waitForStart();
     }
@@ -93,5 +168,10 @@ public class RedNorthRight extends LinearOpMode {
         jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //
+        jeffThePengwin.leftBackMotor.setPower(0);
+        jeffThePengwin.leftFrontMotor.setPower(0);
+        jeffThePengwin.rightBackMotor.setPower(0);
+        jeffThePengwin.rightFrontMotor.setPower(0);
     }
 }
