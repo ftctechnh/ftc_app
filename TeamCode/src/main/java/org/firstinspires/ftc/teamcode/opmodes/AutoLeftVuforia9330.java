@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensor9330;
-import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
+import org.firstinspires.ftc.teamcode.subsystems.JewelArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Drive9330;
-import org.firstinspires.ftc.teamcode.subsystems.Gyro9330;
-import org.firstinspires.ftc.teamcode.subsystems.Vuforia9330;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +27,7 @@ public class AutoLeftVuforia9330 extends LinearOpMode {
     //Vuforia9330 PictographScan = new Vuforia9330();
     //Gyro9330 gyro = new Gyro9330(robotMap);
     Drive9330 drive;
-    CrystalArm9330 crystalarm;
+    JewelArm9330 crystalarm;
     //Integer TurnError = 1;
     //Double TurnSpeed = 0.1;
     //VuforiaTrackables info;
@@ -94,7 +90,7 @@ public class AutoLeftVuforia9330 extends LinearOpMode {
         robotMap.init(hardwareMap); //initializes hardware map
         cs9330 = new ColorSensor9330(robotMap);
         drive = new Drive9330(robotMap);
-        crystalarm = new CrystalArm9330(robotMap);
+        crystalarm = new JewelArm9330(robotMap);
         colorDistance = new ColorDistance9330(robotMap);
         clamps = new Clamps9330(robotMap);
         //gyro.init();    //initializes gyro

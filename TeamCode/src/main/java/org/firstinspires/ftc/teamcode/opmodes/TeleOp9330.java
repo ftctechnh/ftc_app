@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
-import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
+import org.firstinspires.ftc.teamcode.subsystems.JewelArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 import org.firstinspires.ftc.teamcode.subsystems.GlyphLift9330;
 import org.firstinspires.ftc.teamcode.subsystems.RelicPickup9330;
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.RelicPickup9330;
 public class TeleOp9330 extends OpMode {
     Hardware9330 robotMap = new Hardware9330();
     Clamps9330 clamps;
-    CrystalArm9330 crystalArm;
+    JewelArm9330 crystalArm;
     GlyphLift9330 glyphLift9330;
     RelicPickup9330 relicPickup;
 
@@ -37,7 +37,7 @@ public class TeleOp9330 extends OpMode {
     public void init() {
         robotMap.init(hardwareMap);
         clamps = new Clamps9330(robotMap);
-        crystalArm = new CrystalArm9330(robotMap);
+        crystalArm = new JewelArm9330(robotMap);
         glyphLift9330 = new GlyphLift9330(robotMap);
         relicPickup = new RelicPickup9330(robotMap);
     }

@@ -25,7 +25,6 @@ public class Hardware9330 {
     public static DcMotor glyphLiftMotor;
     public static ColorSensor platformCS;
     public static ColorSensor armCS;
-    public static DistanceSensor ds;
     public static DcMotor rightMotor;
     public static BNO055IMU gyro;
     public static DigitalChannel touch;                // Device Object
@@ -65,11 +64,6 @@ public class Hardware9330 {
         rightMotor = hwMap.dcMotor.get("rightMotor");
         gyro = hwMap.get(BNO055IMU.class, "imu");
         touch  = hwMap.get(DigitalChannel.class, "touch");
-        //ultrasonicTrigger = hwMap.get(DigitalChannel.class, "ultrasonicTrigger");
-        //ultrasonicEcho = hwMap.get(DigitalChannel.class, "ultrasonicEcho");
-
-        //ultrasonicTrigger.setMode(DigitalChannel.Mode.OUTPUT);
-        //ultrasonicEcho.setMode(DigitalChannel.Mode.INPUT);
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

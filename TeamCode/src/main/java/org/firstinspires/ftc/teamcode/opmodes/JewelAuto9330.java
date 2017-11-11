@@ -4,10 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
-import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensor9330;
-import org.firstinspires.ftc.teamcode.subsystems.CrystalArm9330;
+import org.firstinspires.ftc.teamcode.subsystems.JewelArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Drive9330;
 
 import java.util.HashMap;
@@ -18,22 +17,14 @@ import java.util.Set;
 /**
  * Created by robot on 11/10/2017.
  */
-@Autonomous(name="CrystalAuto9330", group="Opmode")
-public class CrystalAuto9330 extends LinearOpMode{
+@Autonomous(name="JewelAuto9330", group="Opmode")
+public class JewelAuto9330 extends LinearOpMode{
 
     Hardware9330 robotMap = new Hardware9330();
     ColorDistance9330 colorDistance;
     ColorSensor9330 cs9330;
-    //Vuforia9330 PictographScan = new Vuforia9330();
-    //Gyro9330 gyro = new Gyro9330(robotMap);
     Drive9330 drive;
-    CrystalArm9330 crystalarm;
-    //Integer TurnError = 1;
-    //Double TurnSpeed = 0.1;
-    //VuforiaTrackables info;
-    Double PictoYRotation;
-    Double PictoZTranslation;
-    String PictoImageType;
+    JewelArm9330 jewelArm;
     Integer ColorRed;
     Integer ColorGreen;
     Integer ColorBlue;
@@ -74,7 +65,7 @@ public class CrystalAuto9330 extends LinearOpMode{
         robotMap.init(hardwareMap); //initializes hardware map
         cs9330 = new ColorSensor9330(robotMap);
         drive = new Drive9330(robotMap);
-        crystalarm = new CrystalArm9330(robotMap);
+        jewelArm = new JewelArm9330(robotMap);
         colorDistance = new ColorDistance9330(robotMap);
 
         log("Info","Initialized. Press start when ready.");
@@ -85,7 +76,7 @@ public class CrystalAuto9330 extends LinearOpMode{
             checkStop();
         }
 
-        crystalarm.lowerArmServo();
+        jewelArm.lowerArmServo();
         sleep(800);
 
         if (ColorRed > ColorBlue) {
@@ -96,14 +87,14 @@ public class CrystalAuto9330 extends LinearOpMode{
                 drive.driveForward(-0.5);
                 sleep(300);
                 drive.stopDrive();
-                crystalarm.raiseArmServo();
+                jewelArm.raiseArmServo();
                 //drive.gyroTurn(180, TurnSpeed,false);
             }else{
                 //drive.gyroTurn(-90,TurnSpeed,false);
                 drive.driveForward(0.5);
                 sleep(300);
                 drive.stopDrive();
-                crystalarm.raiseArmServo();
+                jewelArm.raiseArmServo();
             }
         } else {
             onRedTeam = false;
@@ -113,13 +104,13 @@ public class CrystalAuto9330 extends LinearOpMode{
                 drive.driveForward(0.5);
                 sleep(300);
                 drive.stopDrive();
-                crystalarm.raiseArmServo();
+                jewelArm.raiseArmServo();
             }else{
                 //drive.gyroTurn(90, TurnSpeed,false);
                 drive.driveForward(-0.5);
                 sleep(300);
                 drive.stopDrive();
-                crystalarm.raiseArmServo();
+                jewelArm.raiseArmServo();
                 //drive.gyroTurn(180, TurnSpeed,false);
             }
         }
