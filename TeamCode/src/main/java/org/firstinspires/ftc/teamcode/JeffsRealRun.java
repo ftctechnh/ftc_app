@@ -54,9 +54,9 @@ public class JeffsRealRun extends LinearOpMode {
         //positive direction is down, negative direction is up
         //
         waitForStartify();
-
-        startify();//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
-        smartify();
+        //
+        //startify();//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
+        //smartify();
         //
         while (opModeIsActive()) {
             //variable
@@ -115,13 +115,13 @@ public class JeffsRealRun extends LinearOpMode {
         turningRight = turn > 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
         notTurning = turn == 0;
         movingVertical = Math.abs(drive) >=Math.abs(leftX);
-        strafingRight = leftX > 0;
+        strafingRight = leftX < 0;
     }
 
     private void moveTheArm(double degreeOfArmPower, int armUpDirection, int extendDirection) {
         setThePowerForMovingArmUpOrDown(degreeOfArmPower, armUpDirection);
         //
-        //pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
+        pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
     }
 
     private void getThePowers() {
@@ -246,7 +246,7 @@ public class JeffsRealRun extends LinearOpMode {
     }
     //
     private void smartify(){//calibrate up position
-        pengwinArm.upMotor.setPower(.3);//opposite of touchy
+        pengwinArm.upMotor.setPower(.4);//opposite of touchy
         while(up.getState()){
             //TODO Wookie
         }

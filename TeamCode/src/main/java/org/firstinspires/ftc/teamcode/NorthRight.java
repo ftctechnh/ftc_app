@@ -12,22 +12,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Eric on 11/9/2017.
  */
 
-@Autonomous
-@Disabled
+@Autonomous(name="NorthRight", group="Autonomisisisisis")
 public class NorthRight extends LinearOpMode {
     PengwinArm pengwinArm;
     JeffThePengwin jeffThePengwin;
     private ElapsedTime runtime = new ElapsedTime();
     //
-    static final double countsPerRevolution = 560;//TODO Add gear reduction if needed
+    static final double countsPerRevolution = 560 ;//TODO Add gear reduction if needed
     static final double diameter = 4;
     static final double Pi = 3.141592653589793238462643383279502;
-    static final double countify = countsPerRevolution*diameter*Pi;//Counts per inch
+    static final double countify = countsPerRevolution/(diameter*Pi);//Counts per inch
     //
     ModernRoboticsI2cGyro lookify;
     //
     @Override
     public void runOpMode() throws InterruptedException {
+        jeffThePengwin = new JeffThePengwin(hardwareMap);
         //
         startify();
         //For kids
@@ -36,7 +36,7 @@ public class NorthRight extends LinearOpMode {
         //woo hoo
         //
         //Insert Code Here
-        forward(6, 4, .5);
+        forward(4, 6, .5);
     }
     //
     //
@@ -54,11 +54,11 @@ public class NorthRight extends LinearOpMode {
         //
         runtime.reset();
         //
-        while (opModeIsActive() &&  (runtime.seconds() < time)){
-            telemetry.addData("Progress",runtime.seconds()/time + "%");
+        while (opModeIsActive() &&  (runtime.seconds() < time)) {
+            telemetry.addData("Progress", runtime.seconds() / time + "%");
             telemetry.update();
         }
-        telemetry.clearAll();
+        telemetry.addData("Status",runtime.seconds()/time+"%");
         //
         switcheroo();//switch to run using encoder
     }
