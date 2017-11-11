@@ -37,6 +37,12 @@ public class NorthRight extends LinearOpMode {
         //
         //Insert Code Here
         forward(4, 6, .5);
+        runtime.reset();
+        while(runtime.seconds()<5 && opModeIsActive()){
+            telemetry.addData("Hello!","");
+            telemetry.update();
+        }
+        telemetry.clearAll();
     }
     //
     //
