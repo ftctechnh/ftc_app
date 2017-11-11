@@ -21,7 +21,7 @@ public class RedNorthRight extends LinearOpMode {
     static final double countsPerRevolution = 560;//TODO Add gear reduction if needed
     static final double diameter = 4;
     static final double Pi = 3.141592653589793238462643383279502;
-    static final double county = countsPerRevolution*diameter*Pi;//Counts per inch
+    static final double countify = countsPerRevolution*diameter*Pi;//Counts per inch
     static final double driveSpeed = .5;//TODO Find optimal speed
     //
     @Override
@@ -40,8 +40,8 @@ public class RedNorthRight extends LinearOpMode {
     //
     //
     //
-    private void forward(double inches, double time){
-        int move = (int)(Math.round(inches*county));
+    private void forward(double inches, double time, double speed){
+        int move = (int)(Math.round(inches*countify));
         jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + move);
         jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + move);
         jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + move);
@@ -49,10 +49,7 @@ public class RedNorthRight extends LinearOpMode {
         //
         switchify();//switch to rut to position
         //
-        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
-        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
-        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
-        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        setDriveSpeed(speed);
         //
         runtime.reset();
         //
@@ -65,8 +62,8 @@ public class RedNorthRight extends LinearOpMode {
         switcheroo();//switch to run using encoder
     }
     //
-    private void back(double inches, double time){
-        int move = (int)(Math.round(inches*county));
+    private void back(double inches, double time, double speed){
+        int move = (int)(Math.round(inches*countify));
         jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + -move);
         jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + -move);
         jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + -move);
@@ -74,10 +71,7 @@ public class RedNorthRight extends LinearOpMode {
         //
         switchify();//switch to rut to position
         //
-        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
-        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
-        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
-        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        setDriveSpeed(speed);
         //
         runtime.reset();
         //
@@ -90,8 +84,8 @@ public class RedNorthRight extends LinearOpMode {
         switcheroo();//switch to run using encoder
     }
     //
-    private void right(double inches, double time){
-        int move = (int)(Math.round(inches*county));
+    private void right(double inches, double time, double speed){
+        int move = (int)(Math.round(inches*countify));
         jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + move);
         jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + -move);
         jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + -move);
@@ -99,10 +93,7 @@ public class RedNorthRight extends LinearOpMode {
         //
         switchify();//switch to rut to position
         //
-        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
-        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
-        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
-        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        setDriveSpeed(speed);
         //
         runtime.reset();
         //
@@ -115,8 +106,8 @@ public class RedNorthRight extends LinearOpMode {
         switcheroo();//switch to run using encoder
     }
     //
-    private void left(double inches, double time){
-        int move = (int)(Math.round(inches*county));
+    private void left(double inches, double time, double speed){
+        int move = (int)(Math.round(inches*countify));
         jeffThePengwin.leftBackMotor.setTargetPosition(jeffThePengwin.leftBackMotor.getCurrentPosition() + -move);
         jeffThePengwin.leftFrontMotor.setTargetPosition(jeffThePengwin.leftFrontMotor.getCurrentPosition() + move);
         jeffThePengwin.rightBackMotor.setTargetPosition(jeffThePengwin.rightBackMotor.getCurrentPosition() + move);
@@ -124,10 +115,7 @@ public class RedNorthRight extends LinearOpMode {
         //
         switchify();//switch to rut to position
         //
-        jeffThePengwin.leftBackMotor.setPower(driveSpeed);
-        jeffThePengwin.leftFrontMotor.setPower(driveSpeed);
-        jeffThePengwin.rightBackMotor.setPower(driveSpeed);
-        jeffThePengwin.rightFrontMotor.setPower(driveSpeed);
+        setDriveSpeed(speed);
         //
         runtime.reset();
         //
@@ -173,5 +161,12 @@ public class RedNorthRight extends LinearOpMode {
         jeffThePengwin.leftFrontMotor.setPower(0);
         jeffThePengwin.rightBackMotor.setPower(0);
         jeffThePengwin.rightFrontMotor.setPower(0);
+    }
+    //
+    private void setDriveSpeed(double speed){
+        jeffThePengwin.leftBackMotor.setPower(speed);
+        jeffThePengwin.leftFrontMotor.setPower(speed);
+        jeffThePengwin.rightBackMotor.setPower(speed);
+        jeffThePengwin.rightFrontMotor.setPower(speed);
     }
 }
