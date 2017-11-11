@@ -12,6 +12,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class JeffThePengwin {
     //diameter stuff
     static final double WHEEL_DIAMETER_INCHEYS = 4.0;
+
+    static final double countsPerRevolution = 1220 ;//TODO Add gear reduction if needed
+    static final double Pi = 3.141592653589793238462643383279502;
+    static final double countify = countsPerRevolution/(WHEEL_DIAMETER_INCHEYS*Pi);//Counts per inch
+
     //power variables
     DcMotor leftFrontMotor;
     DcMotor rightFrontMotor;
@@ -83,6 +88,81 @@ public class JeffThePengwin {
         }
     }
 
+    public void forwardToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        moveAllMotorsSameDirectionAndDistance(move);
+        //
+        switchify();//switch to rut to position
+        //
+        setPowerInput(speed);
+        justDrive();
+    }
+
+    private void backToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        moveAllMotorsSameDirectionAndDistance(-move);
+        driveBackward();
+        //
+        switchify();//switch to rut to position
+        //
+        setPowerInput(speed);
+        justDrive();
+        //
+    }
+    private void rightToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        turnRightACertainDistance(move);
+        //
+        switchify();//switch to rut to position
+        //
+        setPowerInput(speed);
+        justDrive();
+        //
+    }
+    //
+    private void leftToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        turnLeftACertainDistance(move);
+        switchify();//switch to rut to position
+        //
+        setPowerInput(speed);
+        justDrive();
+        //
+    }
+
+
+
+    public void setTargetPosition(int leftBackPosition, int leftFrontPosition, int rightBackPosition, int rightFrontPosition){
+        leftBackMotor.setTargetPosition(leftBackPosition);
+        leftFrontMotor.setTargetPosition(leftFrontPosition);
+        rightBackMotor.setTargetPosition(rightBackPosition);
+        rightFrontMotor.setTargetPosition(rightFrontPosition);
+    }
+
+    public void moveAllMotorsSameDirectionAndDistance(int move){
+        int leftFrontEnd = (leftFrontMotor.getCurrentPosition() + move);
+        int leftBackEnd = (leftFrontMotor.getCurrentPosition() + move);
+        int rightFrontEnd = leftFrontMotor.getCurrentPosition() + move;
+        int rightBackEnd = leftFrontMotor.getCurrentPosition() + move;
+        setTargetPosition(leftBackEnd, leftFrontEnd, rightBackEnd, rightFrontEnd);
+    }
+
+    public void turnRightACertainDistance(int move){
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + -move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + -move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
+
+    }
+    public void turnLeftACertainDistance(int move){
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + -move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + -  move);
+
+    }
+
 
     public void turnRight(){
         leftBackMotor.setPower(powerInput*degreeOfPower);
@@ -99,6 +179,10 @@ public class JeffThePengwin {
     }
 
     public void driveForward(){
+        justDrive();
+    }
+
+    public void justDrive(){
         leftBackMotor.setPower(powerInput*degreeOfPower);
         leftFrontMotor.setPower(powerInput*degreeOfPower);
         rightBackMotor.setPower(powerInput*degreeOfPower);
@@ -125,9 +209,13 @@ public class JeffThePengwin {
         rightBackMotor.setPower(-powerInput*degreeOfPower);
         rightFrontMotor.setPower(powerInput*degreeOfPower);
     }
-    //
-    public void runForInches(double inches){
-        //TODO okay
+
+    public void switchify(){
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
 
 }
