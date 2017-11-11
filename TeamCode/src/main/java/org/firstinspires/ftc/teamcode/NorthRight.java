@@ -29,7 +29,7 @@ public class NorthRight extends LinearOpMode {
         pengwinArm = new PengwinArm(hardwareMap);
         pengwinFin = new PengwinFin(hardwareMap);
         //
-        startify();
+        jeffThePengwin.startify();
 
         //For kids
         waitForStartify();
@@ -39,8 +39,8 @@ public class NorthRight extends LinearOpMode {
         //Insert Code Here
         jeffThePengwin.forwardToPosition(12, .4);
         runtime.reset();
-        justWait(15);
-        switcheroo();
+        justWaitForSafety(15);
+        jeffThePengwin.switcheroo();
     }
     //
     //
@@ -65,7 +65,7 @@ public class NorthRight extends LinearOpMode {
 
     //
 
-    private void justWait(double time) {
+    private void justWaitForSafety(double time) {
         while (isCompletingTask(time)){
             getTelemetry(time);
         }
@@ -77,30 +77,5 @@ public class NorthRight extends LinearOpMode {
         waitForStart();
     }
     //
-    private void startify(){
-        jeffThePengwin.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //
-        jeffThePengwin.leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    //
-
-    //
-    private void switcheroo(){
-        jeffThePengwin.leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        jeffThePengwin.leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        jeffThePengwin.rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        jeffThePengwin.rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //
-        jeffThePengwin.leftBackMotor.setPower(0);
-        jeffThePengwin.leftFrontMotor.setPower(0);
-        jeffThePengwin.rightBackMotor.setPower(0);
-        jeffThePengwin.rightFrontMotor.setPower(0);
-    }
     //
 }
