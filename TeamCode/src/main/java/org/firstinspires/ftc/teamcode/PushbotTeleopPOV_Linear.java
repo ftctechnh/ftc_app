@@ -175,16 +175,16 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
 
             if (gamepad2.a) {
-                robot.fs1.setPosition(.25);
-                robot.fs2.setPosition(.25);
-                robot.fs3.setPosition(.25);
-                robot.fs4.setPosition(.25);
+                robot.fs1.setPosition(.15);
+                robot.fs2.setPosition(.6);
+                robot.fs3.setPosition(.35);
+                robot.fs4.setPosition(.7);
             }
             if (gamepad2.b) {
                 robot.fs1.setPosition(.5);
-                robot.fs2.setPosition(.5);
-                robot.fs3.setPosition(.5);
-                robot.fs4.setPosition(.5);
+                robot.fs3.setPosition(.8);
+                robot.fs2.setPosition(.25);
+                robot.fs4.setPosition(.35);
             }
             if (gamepad1.a) {
                 robot.jko.setPosition(.75);
@@ -195,15 +195,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             if (gamepad2.x) {
                 robot.claw.setPosition(.75);
             }
-            if (gamepad2.y) {
-                robot.arm1.setPower(FORWARD_SPEED);
-                runtime.reset();
-                while (opModeIsActive() && (runtime.seconds() < .25)) {
-                    telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-                    telemetry.update();
-                }
-                robot.arm1.setPower(0);
-            }
+
             if (gamepad2.dpad_up) {
                 robot.fLift.setDirection(DcMotorSimple.Direction.FORWARD);
                 robot.fLift.setPower(1);
