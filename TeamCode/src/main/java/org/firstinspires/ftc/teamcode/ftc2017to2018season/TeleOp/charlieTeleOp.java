@@ -143,8 +143,8 @@ public class charlieTeleOp extends OpMode {
         /*
         read the gamepad values and put into variables
          */
-        float leftY_gp1 = (-gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed();
-        float rightY_gp1 = (-gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
+        float leftY_gp1 = (gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed();
+        float rightY_gp1 = (gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
         float strafeStickLeft = (-gamepad1.left_stick_x);//*leftWheelMotorFront.getMaxSpeed();
         float strafeStickRight = (-gamepad1.right_stick_x);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
@@ -197,4 +197,7 @@ public class charlieTeleOp extends OpMode {
 
 
     }
+
+
+
 }
