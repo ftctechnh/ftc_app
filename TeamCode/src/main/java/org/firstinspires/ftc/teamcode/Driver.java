@@ -63,26 +63,20 @@ public class Driver extends LinearOpMode {
         waitForStart();
 
         TankDriveTrain driveTrain = new TankDriveTrain(motor0, motor1);
-        servo0.setPosition(1.0);
+        Grabber grabber = new Grabber(servo0, servo1);
 
         //run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             driveTrain.move(this.gamepad1.left_stick_y, this.gamepad1.right_stick_y);
-            if (this.gamepad1.x) { servo0.setPosition(0); }
-            if (this.gamepad1.b) { servo0.setPosition(1); }
-            //   if (this.gamepad1.y) { servo1.setPosition(1); }
+            grabber.Grab(this.gamepad1.right_bumper);
 
-
-            if (this.gamepad1.a) { servo1.setPosition(0); }
-            if (this.gamepad1.y) { servo1.setPosition(1); }
-
-            telemetry.addData("Servo Position", servo0.getPosition());
-            telemetry.addData("Left Power", leftMotorPower);
-            telemetry.addData("Right Power", rightMotorPower);
-            telemetry.addData("Motor Power", motor0.getPower());
-            telemetry.addData("Motor Power1", motor1.getPower());
-            telemetry.addData("Status","Running");
+            telemetry.addData("Left Bumper", this.gamepad1.left_bumper);
+            telemetry.addData("Right Bumper", this.gamepad1.right_bumper);
+            telemetry.addData("Left Trigger", this.gamepad1.left_trigger);
+            telemetry.addData("Right Trigger", this.gamepad1.right_trigger);
+            telemetry.addData("Left Stick Y", this.gamepad1.left_stick_y);
+            telemetry.addData("Right Stick Y", this.gamepad1.right_stick_y);
             telemetry.update();
         }
     }
