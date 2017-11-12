@@ -45,7 +45,7 @@ public class Drive extends LinearOpMode {
     private Servo servo1;
     private Servo servo2;
     private boolean rbOn = false;
-    private int increment = 1;
+    private int increment = 0;
 
     @Override
     public void runOpMode() {
@@ -85,10 +85,10 @@ public class Drive extends LinearOpMode {
 
             if ((gamepad1.left_bumper || gamepad2.left_bumper)
                     && rbOn) {
-                servo2.setPosition(1);
+                servo2.setPosition(0);
             } else if ((gamepad1.left_trigger != 0 || gamepad2.left_trigger != 0)
                     && rbOn) {
-                servo2.setPosition(0);
+                servo2.setPosition(1);
 
             } else {
                 servo2.setPosition(.5);
@@ -118,6 +118,8 @@ public class Drive extends LinearOpMode {
                     increment--;
                 }
             }
+
+
 
         }
 

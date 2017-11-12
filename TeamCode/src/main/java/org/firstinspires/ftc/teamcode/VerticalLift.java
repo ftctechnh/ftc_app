@@ -29,47 +29,60 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 /**
  *Created by Pramodh and Diego and Ronit on 10/27/2017.
  */
 @TeleOp
 public class VerticalLift extends LinearOpMode {
-    private Servo servo0;
+    NormalizedColorSensor colorSensor;
+    private boolean bCurrState;
+    private boolean bPrevState;
+    private boolean colorOn = false;
 
     @Override
     public void runOpMode() {
-        servo0 = hardwareMap.get(Servo.class, "servo0");
 
-        //sends tests data to dc phone
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        //Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
+
+        if (colorSensor instanceof SwitchableLight) {
+            ((SwitchableLight)colorSensor).enableLight(true);
+        }
 
         //run until the end of the match (driver presses STOP)
-        int x = 0;
         while(opModeIsActive()) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            bCurrState = gamepad1.x;
+
+            // If the button state is different than what it was, then act
+            if (bCurrState != bPrevState) {
+                // If the button is (now) down, then toggle the light
+                if (bCurrState) {
+                    if (colorSensor instanceof SwitchableLight) {
+                        SwitchableLight light = (SwitchableLight)colorSensor;
+                        light.enableLight(!light.isLightOn());
+                    }
+                }
             }
-            if (gamepad1.x) {
-                //move to 0 degrees
-                double currentPosition = servo0.getPosition();
-                servo0.setPosition(currentPosition + 0.1);
-            }
-            if (gamepad1.b) {
-                double currentPosition = servo0.getPosition();
-                servo0.setPosition(currentPosition - 0.1);
-            }
+            bPrevState = bCurrState;
+
+            // Read the sensor
+            NormalizedRGBA colors = colorSensor.getNormalizedColors();
+            int color = colors.toColor();
+            telemetry.addLine("raw Android color: ")
+                    .addData("a", "%02x", Color.alpha(color))
+                    .addData("r", "%02x", Color.red(color))
+                    .addData("g", "%02x", Color.green(color))
+                    .addData("b", "%02x", Color.blue(color));
+
+            if (colors.red >= 100)
+                colorOn = true;
         }
-        telemetry.addData("Servo Position", servo0.getPosition());
-        telemetry.addData("Status","Running");
-        telemetry.update();
     }
 }
