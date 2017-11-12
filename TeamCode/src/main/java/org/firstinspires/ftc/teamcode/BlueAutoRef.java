@@ -41,17 +41,17 @@ public class BlueAutoRef extends LinearOpMode
                 robot.driveStraight_In(22);
                 break;
             case 'c':
-                robot.driveStraight_In(11.5);
+                robot.driveStraight_In(11.5f);
                 break;
             case 'r':
                 robot.driveStraight_In(5);
                 break;
             default:
-                robot.driveStraight_In(11.5);
+                robot.driveStraight_In(11.5f);
                 break;
         }
 
-        robot.pivot_IMU(90, .25);
+        robot.pivot_IMU(83, .25);
         robot.driveStraight_In(x);
         robot.driveStraight_In(x, .25);
         // lower door attachment to the ground

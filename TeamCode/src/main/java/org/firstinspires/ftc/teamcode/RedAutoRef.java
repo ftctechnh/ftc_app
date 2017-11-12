@@ -40,17 +40,17 @@ public class RedAutoRef extends LinearOpMode
                 robot.driveStraight_In(22); //needs testing, fix on 11/12
                 break;
             case 'c':
-                robot.driveStraight_In(11.5);
+                robot.driveStraight_In(11.5f);
                 break;
             case 'r':
                 robot.driveStraight_In(5); //positioning is really off, need to fix on 11/12
                 break;
             default:
-                robot.driveStraight_In(11.5);
+                robot.driveStraight_In(11.5f);
                 break;
         }
 
-        robot.pivot_IMU(-85, .25);
+        robot.pivot_IMU(-83, .25);
         robot.driveStraight_In(8,.1);
         robot.driveStraight_In(8, .1);
         // lower door attachment to the ground

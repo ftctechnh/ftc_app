@@ -55,7 +55,7 @@ public class BlueAutoAudi extends LinearOpMode
             default: robot.driveStraight_In(39);
                 break;
         }
-        robot.pivot_IMU(90, .25);
+        robot.pivot_IMU(83, .25);
         robot.driveStraight_In(12);
         robot.driveStraight_In(8,.2);
         //lower door attachment to ground
