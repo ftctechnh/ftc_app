@@ -29,12 +29,6 @@ public class Auto6217Red extends LinearOpMode {
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-    DcMotor motorWBTUno;
-    DcMotor motorWBTDos;
-    CRServo Conveyor1;
-    CRServo Conveyor2;
-    CRServo Sweeper1;
-    CRServo Sweeper2;
     ColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
     OpticalDistanceSensor odsSensor;
@@ -67,18 +61,11 @@ public class Auto6217Red extends LinearOpMode {
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("c2_motor2");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
-        motorWBTUno = hardwareMap.dcMotor.get("c3_motor1");
-        motorWBTDos = hardwareMap.dcMotor.get("c3_motor2");
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
         odsSensor2 = hardwareMap.opticalDistanceSensor.get("ods2");
         colorSensor = hardwareMap.colorSensor.get("sensor_color");
         colorSensor.enableLed(true);
-        Conveyor1 = hardwareMap.crservo.get("Servo1");
-        Conveyor1.setDirection(CRServo.Direction.FORWARD);
-        Sweeper1 = hardwareMap.crservo.get("Servo2");
-        Sweeper2 = hardwareMap.crservo.get("Servo4");
-        Conveyor2 = hardwareMap.crservo.get("Servo3");
-        Conveyor2.setDirection(CRServo.Direction.REVERSE);
+
 
         // G Y R O  S E T U P
 
@@ -103,39 +90,9 @@ public class Auto6217Red extends LinearOpMode {
         telemetry.addData("0","Initial AngleZ = %d", angleZ);
         telemetry.update();
 
-        // B E G I N  A G A I N S T   W A L L
 
-        move(0.f, -0.5f, 1.85f); // in front of center vortex
 
-        motorWBTUno.setPower(-1);   // start to shoot
-        motorWBTDos.setPower(1);
 
-        Wait(1);
-
-        Conveyor1.setPower(1);
-        Conveyor2.setPower(1);
-        Sweeper1.setPower(-1);
-        Sweeper2.setPower(1);
-
-        Wait(3); // finish shooting
-
-        motorWBTUno.setPower(0);   // finish shooting
-        motorWBTDos.setPower(0);
-
-        Conveyor1.setPower(0);
-        Conveyor2.setPower(0);
-        Sweeper1.setPower(0);
-        Sweeper2.setPower(0);
-
-        pivotByZ(-35); // face opposite wall
-
-        move(0.f, -.5f, 2.5f);   // in front of corner vortex
-
-        pivotByZ(82);
-
-        move(0.f, -.25f, .3f);
-
-        // L I N E   F O L L O W
         boolean iFoundLine = false;
         while (!iFoundLine) {
 
@@ -224,13 +181,6 @@ public class Auto6217Red extends LinearOpMode {
                 telemetry.update();
             }
         }
-        pivotByZ(2);
-        // S E C O N D   B E A C O N
-
-
-
-        move(0.f, -.25f, 1.5f);
-
         // L I N E   F O L L O W
         iFoundLine = false;
         while (!iFoundLine) {
