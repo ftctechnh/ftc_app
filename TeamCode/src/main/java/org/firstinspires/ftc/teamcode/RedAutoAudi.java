@@ -28,10 +28,8 @@ public class RedAutoAudi extends LinearOpMode
         // else (no color sense); do nothing
         // raise/retract arm arm
         // decode pictogram
-        sleep(2000);
         telemetry.addData("Pos ", newRobot.getGlyphCipher());
         telemetry.update();
-        sleep(2000);
         switch (newRobot.getGlyphCipher())
         {
             case 'r': robot.driveStraight_In(26.5f);
