@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by Jeremy on 10/20/2017.
+ * Created by Raghav on 10/20/2017.
  */
 
 @Autonomous(name = "BlueAUtoRefRight", group = "Test")
@@ -33,21 +33,21 @@ public class BlueAutoRef extends LinearOpMode
         // else if the jewel isn't same color; move forward; return to original position
         // else (no color sense); do nothing
         // raise/retract arm
-        robot.driveStraight_In(x);
+        robot.driveStraight_In(24);
         robot.pivot_IMU(-90,.25);
         switch (cipher)
         {
             case 'l':
-                robot.driveStraight_In(x);
+                robot.driveStraight_In(6);
                 break;
             case 'c':
-                robot.driveStraight_In(x);
+                robot.driveStraight_In(12);
                 break;
             case 'r':
-                robot.driveStraight_In(x);
+                robot.driveStraight_In(18);
                 break;
             default:
-                robot.driveStraight_In(center);
+                robot.driveStraight_In(12);
                 break;
         }
 

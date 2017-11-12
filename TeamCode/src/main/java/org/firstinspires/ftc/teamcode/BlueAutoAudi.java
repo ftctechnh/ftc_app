@@ -41,6 +41,7 @@ public class BlueAutoAudi extends LinearOpMode
         //else (no color sense); do nothing
         //raise/retract arm
         //decode pictogram (below)
+
         telemetry.addData("Pos ", newRobot.getGlyphCipher());
         telemetry.update();
         switch (newRobot.getGlyphCipher())
@@ -55,8 +56,8 @@ public class BlueAutoAudi extends LinearOpMode
                 break;
         }
         robot.pivot_IMU(90, .25);
-        robot.driveStraight_In(12);
-        robot.driveStraight_In(18,.25);
+        robot.driveStraight_In(16);
+        robot.driveStraight_In(8,.25);
         //lower door attachment to ground
         //open door to release glyph
         robot.driveStraight_In(-2);
