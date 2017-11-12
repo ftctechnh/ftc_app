@@ -60,8 +60,10 @@ public class TestOpMode_Linear extends LinearOpMode
 
     private ElapsedTime runtime = new ElapsedTime();
 
+    @Override
     public void runOpMode()
     {
+        robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -69,11 +71,6 @@ public class TestOpMode_Linear extends LinearOpMode
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        robot.lift.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -84,27 +81,48 @@ public class TestOpMode_Linear extends LinearOpMode
         {
 
             // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
+            //double leftPower;
+            //double rightPower;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            //double leftPower = (gamepad1.left_stick_y + gamepad1.left_stick_x)/Math.sqrt(2);
+            //double rightPower  =  (gamepad1.left_stick_y - gamepad1.left_stick_x)/Math.sqrt(2);
+
+            if(gamepad1.a)
+            {
+                robot.liftPosition = robot.ONE_INCH_POSITION;
+            }
+            if(gamepad1.x)
+            {
+                robot.liftPosition = robot.SEVEN_INCH_POSITION;
+            }
+            if(gamepad1.y)
+            {
+                robot.liftPosition = robot.THIRTEEN_INCH_POSITION;
+            }
+            if(gamepad1.b)
+            {
+                robot.liftPosition = robot.NINETEEN_INCH_POSITION;
+            }
+
+            //leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            //rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
 
             // Send calculated power to wheels
-            robot.leftDrive.setPower(leftPower);
-            robot.rightDrive.setPower(rightPower);
+            //robot.leftDrive.setPower(leftPower);
+            //robot.rightDrive.setPower(rightPower);
+            robot.lift.setTargetPosition(robot.liftPosition);
+            robot.lift.setPower(robot.LIFT_POWER);
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
     }

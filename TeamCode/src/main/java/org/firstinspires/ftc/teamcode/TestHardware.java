@@ -46,9 +46,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm'
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * Motor channel:  Lift motor:               "lift"
  */
 public class TestHardware
 {
@@ -56,9 +54,18 @@ public class TestHardware
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor  lift        = null;
+    public int liftPosition = 0;
 
+    public static final int COUNT_ONE_REV = 280;
 
-    public static final double COUNT_ONE_REV = 280;
+    public static final int BASE_POSITION = 0;
+    public static final int ONE_INCH_POSITION = 280;
+    public static final int SEVEN_INCH_POSITION = 560;
+    public static final int THIRTEEN_INCH_POSITION = 840;
+    public static final int NINETEEN_INCH_POSITION = 1160;
+
+    public static final double LIFT_POWER = 0.1;
+
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -83,16 +90,18 @@ public class TestHardware
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         lift.setDirection(DcMotor.Direction.REVERSE);
+
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        //leftArm.setPower(0);
+        lift.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         // Define and initialize ALL installed servos.
         //leftClaw  = hwMap.get(Servo.class, "left_hand");
