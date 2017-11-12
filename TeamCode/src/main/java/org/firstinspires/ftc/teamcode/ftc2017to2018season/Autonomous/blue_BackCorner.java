@@ -54,14 +54,14 @@ public class blue_BackCorner extends Autonomous_General {
         telemetry.update();
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            strafeRangeDistance(88, 0.35, rsBuffer, true,false);
+            RangeDistance(88, 0.35, rsBuffer, true,false);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            strafeRangeDistance(71, 0.35, rsBuffer, true, false);
+            RangeDistance(71, 0.35, rsBuffer, true, false);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            strafeRangeDistance(108, 0.35, rsBuffer, true, false);
+            RangeDistance(108, 0.35, rsBuffer, true, false);
 
         }
 

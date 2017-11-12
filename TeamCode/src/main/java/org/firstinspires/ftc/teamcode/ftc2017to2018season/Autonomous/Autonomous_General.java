@@ -172,10 +172,10 @@ public class Autonomous_General extends LinearOpMode {
     }
 
     public void straightDrive(double power) {
-        /*front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
+        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setPower(power);
         front_left_motor.setPower(power);
         back_right_motor.setPower(power);
@@ -759,7 +759,7 @@ public class Autonomous_General extends LinearOpMode {
         return null;
     }
 
-    public void strafeRangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
+    public void RangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
     if(strafe) {
         if (!dorangeSensor2) {
             while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
