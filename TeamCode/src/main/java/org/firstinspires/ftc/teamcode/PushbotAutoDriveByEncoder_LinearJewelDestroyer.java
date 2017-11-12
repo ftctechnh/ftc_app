@@ -129,7 +129,7 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        for(double d = 0.675; d > 0.05; d-=0.025){
+        for(double d = 0.675; d > 0.1; d-=0.025){
             robot.jewelAnnihilator.setPosition(d);
             sleep(50);
         }
@@ -152,9 +152,7 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer extends LinearOpMode
             encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
         }
 
-        sleep(500);
-
-        for(double d = 0.05; d < 0.675; d+=0.025){
+        for(double d = 0.1; d < 0.675; d+=0.025){
             robot.jewelAnnihilator.setPosition(d);
             sleep(50);
         }

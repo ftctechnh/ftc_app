@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Potato By Encoder Dance", group="PushbotPotato")
+@Autonomous(name="Dabbit", group="PushbotPotato")
 public class PushbotAutoDriveByEncoder_LinearDance extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -109,21 +109,66 @@ public class PushbotAutoDriveByEncoder_LinearDance extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.leftClaw.setPosition(0.5);
-        robot.rightClaw.setPosition(0.5);
-        sleep(100);
-        robot.leftClaw.setPosition(0.0);
-        robot.rightClaw.setPosition(0.0);
-
-        // robot.claw.setPosition(1.0);sleep(1000);
-        //
-        //  robot.claw.setPosition(0.0);
-        // sleep(1000);     // pause for servos to move
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        double a = 0.8;
+        robot.jewelAnnihilator.setPosition(a);
+        for(int d = 0; d < 300; d += 1) {
+            for(int f = 0; f < 3; f += 1) {
+                robot.rightDrive.setPower(1);
+                robot.leftDrive.setPower(-1);
+                for (int e = 0; e < 2; e += 1) {
+                    robot.armDrive.setPower(1);
+                    robot.leftClaw.setPosition(0.5);
+                    robot.rightClaw.setPosition(0.5);
+                    sleep(200);
+                    robot.armDrive.setPower(-1);
+                    robot.leftClaw.setPosition(0.0);
+                    robot.rightClaw.setPosition(0.0);
+                    sleep(200);
+                    robot.jewelAnnihilator.setPosition(a -= 0.1);
+                }
+                robot.rightDrive.setPower(-1);
+                robot.leftDrive.setPower(1);
+                for (int e = 0; e < 2; e += 1) {
+                    robot.armDrive.setPower(1);
+                    robot.leftClaw.setPosition(0.5);
+                    robot.rightClaw.setPosition(0.5);
+                    sleep(200);
+                    robot.armDrive.setPower(-1);
+                    robot.leftClaw.setPosition(0.0);
+                    robot.rightClaw.setPosition(0.0);
+                    sleep(200);
+                    robot.jewelAnnihilator.setPosition(a -= 0.1);
+                }
+            }
+            for(int f = 0; f < 3; f += 1) {
+                robot.rightDrive.setPower(1);
+                robot.leftDrive.setPower(-1);
+                for (int e = 0; e < 2; e += 1) {
+                    robot.armDrive.setPower(1);
+                    robot.leftClaw.setPosition(0.5);
+                    robot.rightClaw.setPosition(0.5);
+                    sleep(200);
+                    robot.armDrive.setPower(-1);
+                    robot.leftClaw.setPosition(0.0);
+                    robot.rightClaw.setPosition(0.0);
+                    sleep(200);
+                    robot.jewelAnnihilator.setPosition(a = 0.1);
+                }
+                robot.rightDrive.setPower(-1);
+                robot.leftDrive.setPower(1);
+                for (int e = 0; e < 2; e += 1) {
+                    robot.armDrive.setPower(1);
+                    robot.leftClaw.setPosition(0.5);
+                    robot.rightClaw.setPosition(0.5);
+                    sleep(200);
+                    robot.armDrive.setPower(-1);
+                    robot.leftClaw.setPosition(0.0);
+                    robot.rightClaw.setPosition(0.0);
+                    sleep(200);
+                    robot.jewelAnnihilator.setPosition(a += 0.1);
+                }
+            }
+        }
     }
 
     /*

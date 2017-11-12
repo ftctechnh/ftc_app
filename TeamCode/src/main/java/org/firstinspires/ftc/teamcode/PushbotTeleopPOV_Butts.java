@@ -48,8 +48,8 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="PushbotPotato: 2 servo calibration", group="PushbotPotato")
-public class PushbotTeleopPOV_2ServoCalibration extends LinearOpMode {
+@TeleOp(name="PushbotPotato: Butts", group="PushbotPotato")
+public class PushbotTeleopPOV_Butts extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
