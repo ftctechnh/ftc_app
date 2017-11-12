@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -7,25 +8,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by inspirationteam on 11/20/2016.
+ * Created by inspirationteam on 11/5/2017.
  */
 
-@TeleOp(name = "strafe basic")
+@TeleOp(name = "Charlie_teleOP")
 //@Disabled
 public class charlieTeleOp extends OpMode {
 
 
-/*
-    ---------------------------------------------------------------------------------------------
+    /*
+        ---------------------------------------------------------------------------------------------
 
-   Define the actuators we use in the robot here
-*/
+       Define the actuators we use in the robot here
+    */
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
-
-//asdfasdf
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -34,24 +33,33 @@ public class charlieTeleOp extends OpMode {
 */
 
 
-    ColorSensor bColorSensorLeft;    // Hardware Device Object
+    //ColorSensor bColorSensorLeft;    // Hardware Device Object
 
 
+    /*
+     ----------------------------------------------------------------------------------------------
+    Declare global variables here
+    */public enum cap_ball_arm_state_type {
+    }
+
+    cap_ball_arm_state_type cap_ball_arm_state;
+
+    //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
 
 
-
-    static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
-    static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
-    static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
-            (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
+    //private ElapsedTime runtime = new ElapsedTime();
+    static final double COUNTS_PER_MOTOR_REV = 757;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1;     // 56/24
+    static final double WHEEL_PERIMETER_CM = 9;     // For figuring circumference
+    static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
+            (DRIVE_GEAR_REDUCTION * WHEEL_PERIMETER_CM);
     // Define class members
     //   Servo right_servo;
 
 
-/*---------------------------------------------------------------------------------------------
-        Get references to the hardware installed on the robot and name them here
-*/
+    /*---------------------------------------------------------------------------------------------
+            Get references to the hardware installed on the robot and name them here
+    */
     @Override
     public void init() {
         leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
@@ -59,8 +67,8 @@ public class charlieTeleOp extends OpMode {
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
             /* lets reverse the direction of the right wheel motor*/
-            rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
-            rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
@@ -74,29 +82,31 @@ public class charlieTeleOp extends OpMode {
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
-        leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        /*---------------------------------------------------------------------
+        //leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        -----------------------------------------------------------------------*/
     }
-/*
----------------------------------------------------------------------------------------------
 
-      Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-*/
+    /*
+    ---------------------------------------------------------------------------------------------
+
+          Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+    */
     @Override
     public void init_loop() {
     }
 
-/*
- ---------------------------------------------------------------------------------------------
+    /*
+     ---------------------------------------------------------------------------------------------
 
-      Code to run ONCE when the driver hits PLAY
+          Code to run ONCE when the driver hits PLAY
 
-*/
+    */
     @Override
-    public void start(){
+    public void start() {
 
     }
 
@@ -107,13 +117,14 @@ public class charlieTeleOp extends OpMode {
 
     @Override
     public void loop() {
+        FourWheelDriveEncoder();
+        //FourWheelDrive();
 
-    mecanumStrafe();
 
     }
 
-   /* Code to run ONCE after the driver hits STOP
-    */
+    /* Code to run ONCE after the driver hits STOP
+     */
     @Override
     public void stop() {
     }
@@ -128,17 +139,42 @@ public class charlieTeleOp extends OpMode {
     Functions go here
  */
 
-    public void mecanumStrafe(){
+    public void FourWheelDriveEncoder() {
+        /*
+        read the gamepad values and put into variables
+         */
+        float leftY_gp1 = (gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed();
+        float rightY_gp1 = (gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
+        float strafeStickLeft = (-gamepad1.left_stick_x);//*leftWheelMotorFront.getMaxSpeed();
+        float strafeStickRight = (-gamepad1.right_stick_x);//*leftWheelMotorFront.getMaxSpeed();
+        //run the motors by setting power to the motors with the game pad value
 
-        double J1LX = gamepad1.left_stick_x;
+        if (Math.abs(strafeStickLeft) > 0) {
 
-        leftWheelMotorFront.setPower(J1LX);
-        leftWheelMotorBack.setPower(-J1LX);
-        rightWheelMotorFront.setPower(-J1LX);
-        rightWheelMotorBack.setPower(J1LX);
+            leftWheelMotorFront.setPower(-strafeStickLeft);
+            leftWheelMotorBack.setPower(strafeStickLeft);
+            rightWheelMotorFront.setPower(strafeStickLeft);
+            rightWheelMotorBack.setPower(-strafeStickLeft);
+            telemetry.addData("left front encoder value", leftWheelMotorFront.getCurrentPosition());
+            telemetry.addData("right front encoder value", rightWheelMotorFront.getCurrentPosition());
+            telemetry.update();
+        } else if (Math.abs(strafeStickRight) > 0) {
+
+            leftWheelMotorFront.setPower(strafeStickRight);
+            leftWheelMotorBack.setPower(-strafeStickRight);
+            rightWheelMotorFront.setPower(-strafeStickRight);
+            rightWheelMotorBack.setPower(strafeStickRight);
+            telemetry.addData("left front encoder value", leftWheelMotorFront.getCurrentPosition());
+            telemetry.addData("right front encoder value", rightWheelMotorFront.getCurrentPosition());
+            telemetry.update();
+        } else {
+            leftWheelMotorFront.setPower(leftY_gp1);
+            leftWheelMotorBack.setPower(leftY_gp1);
+            rightWheelMotorFront.setPower(rightY_gp1);
+            rightWheelMotorBack.setPower(rightY_gp1);
+        }
     }
-/*
----------------------------------------------------------------------------------------------
-*/
-}
 
+
+
+}
