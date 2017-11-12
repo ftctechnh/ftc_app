@@ -92,6 +92,9 @@ public class TestOpMode_Linear extends LinearOpMode
             //double leftPower = (gamepad1.left_stick_y + gamepad1.left_stick_x)/Math.sqrt(2);
             //double rightPower  =  (gamepad1.left_stick_y - gamepad1.left_stick_x)/Math.sqrt(2);
 
+
+
+            //uses the a,b,x,y buttons to set the position
             if(gamepad1.a)
             {
                 robot.liftPosition = robot.ONE_INCH_POSITION;
@@ -116,6 +119,8 @@ public class TestOpMode_Linear extends LinearOpMode
             // Send calculated power to wheels
             //robot.leftDrive.setPower(leftPower);
             //robot.rightDrive.setPower(rightPower);
+
+            ///sets position and power
             robot.lift.setTargetPosition(robot.liftPosition);
             robot.lift.setPower(robot.LIFT_POWER);
 
