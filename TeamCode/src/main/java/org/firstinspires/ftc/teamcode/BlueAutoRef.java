@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Created by Raghav on 10/20/2017.
  */
 
-@Autonomous(name = "BlueAUtoRefRight", group = "Test")
-@Disabled
+@Autonomous(name = "BlueAutoRef", group = "Test")
+
 public class BlueAutoRef extends LinearOpMode
 {
     private TankBase robot;
@@ -17,8 +17,6 @@ public class BlueAutoRef extends LinearOpMode
 
     public void runOpMode()
     {
-        float x = 0;
-        float center = x;
         robot = new TankBase(hardwareMap);
         newRobot = new NewRobot(hardwareMap);
         waitForStart();
@@ -38,22 +36,22 @@ public class BlueAutoRef extends LinearOpMode
         switch (cipher)
         {
             case 'l':
-                robot.driveStraight_In(6);
+                robot.driveStraight_In(22);
                 break;
             case 'c':
-                robot.driveStraight_In(12);
+                robot.driveStraight_In(11.5f);
                 break;
             case 'r':
-                robot.driveStraight_In(18);
+                robot.driveStraight_In(5);
                 break;
             default:
-                robot.driveStraight_In(12);
+                robot.driveStraight_In(11.5f);
                 break;
         }
 
-        robot.pivot_IMU(90, .25);
-        robot.driveStraight_In(x);
-        robot.driveStraight_In(x, .25);
+        robot.pivot_IMU(83, .25);
+        robot.driveStraight_In(8, .1);
+        robot.driveStraight_In(8, .1);
         // lower door attachment to the ground
         //lower door attachment to ground
         //open door attachment to release glyph
