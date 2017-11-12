@@ -24,251 +24,69 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
  */
 public class Auto6217Red extends LinearOpMode {
 
-    //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left, BG = Ball Grabber
+    //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
+    Servo servoTapper;
+
     ColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
-    OpticalDistanceSensor odsSensor;
-    OpticalDistanceSensor odsSensor2;
+    boolean iAmBlue = false ;
+    boolean iAmRed = true;
+
 
 
     private ElapsedTime runtime = new ElapsedTime();
 
     //   public Auto6217Red() {
-    //   }
+    //  }
 
     @Override
     public void runOpMode() {
 
-        int xVal, yVal, zVal = 0;     // Gyro rate Values
-        int heading = 0;              // Gyro integrated heading
-        int angleZ = 0;
-        boolean lastResetState = false;
-        boolean curResetState = false;
-        boolean blueDesired = false;
-        boolean redDesired = true;
-        double ls1;
-        double ls2;
 
-        motorFL = hardwareMap.dcMotor.get("c1_motor1");
+
+        motorFL = hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.FORWARD);
-        motorFR = hardwareMap.dcMotor.get("c1_motor2");
+        motorFR = hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.REVERSE);
-        motorBL = hardwareMap.dcMotor.get("c2_motor1");
+        motorBL = hardwareMap.dcMotor.get("motorBL");
         motorBL.setDirection(DcMotor.Direction.FORWARD);
-        motorBR = hardwareMap.dcMotor.get("c2_motor2");
+        motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
-        odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
-        odsSensor2 = hardwareMap.opticalDistanceSensor.get("ods2");
+        servoTapper = hardwareMap.servo.get("tapper");
         colorSensor = hardwareMap.colorSensor.get("sensor_color");
         colorSensor.enableLed(true);
 
-
-        // G Y R O  S E T U P
-
-        gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
-        telemetry.addData(">", "Gyro Calibrating. Do Not move!");
-        telemetry.update();
-        gyro.calibrate();
-        while (gyro.isCalibrating()) {
-            sleep(50);
-            idle();
-        }
-        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
-        telemetry.update();
-
         waitForStart();
 
-        gyro.resetZAxisIntegrator();
-
-        angleZ = gyro.getIntegratedZValue();
-        int initialHeading = gyro.getHeading();
-        telemetry.addData("0","Initial Heading = %d", initialHeading);
-        telemetry.addData("0","Initial AngleZ = %d", angleZ);
-        telemetry.update();
+        servoTapper.setPosition(90);
 
 
 
+        boolean iSeeBlue = false;
+        boolean iSeeRed = false;
 
-        boolean iFoundLine = false;
-        while (!iFoundLine) {
+        int blueval = 0;
+        int redval = 0;
+        blueval = colorSensor.blue();
+        redval = colorSensor.red();
+        iSeeRed = (blueval == 0) && (redval > 2);
+        iSeeBlue = (blueval > 3) && (redval == 0);
 
-            while (!iFoundLine) {
 
-                letsGo(0.f, -0.1f);
-
-                ls1 = lightLevel(odsSensor.getRawLightDetected());
-                ls2 = lightLevel(odsSensor2.getRawLightDetected());
-
-                double lightPctDiff = (ls2 - ls1) / Math.min(ls1, ls2);
-
-                if (Math.abs(lightPctDiff) > 0.4) {
-                    iFoundLine = true;
-                }
-                telemetry.addData("0", "Percent = %f", lightPctDiff);
-                telemetry.addData("1", "iFoundLine = %b", iFoundLine);
-                telemetry.update();
-            }
-            sR();
-
-            float followSpeed = .3f;
-            boolean iSeeColor = false;
-            boolean iSeeBlue = false;
-            boolean iSeeRed = false;
-            int blueval = 0;
-            int redval = 0;
-            letsGo(-followSpeed, 0.f);
-            while (!iSeeColor) {
-
-                ls1 = lightLevel(odsSensor.getRawLightDetected());
-                ls2 = lightLevel(odsSensor2.getRawLightDetected());
-
-                double drift = (ls1 - ls2) / Math.min(ls1, ls2) * followSpeed / 3f;
-
-                //move(followSpeed, (float) drift, 0.1f);
-
-                blueval = colorSensor.blue();
-                redval = colorSensor.red();
-                iSeeRed = (blueval == 0) && (redval > 2);
-                iSeeBlue = (blueval > 3) && (redval == 0);
-                iSeeColor = iSeeRed || iSeeBlue;
-
-                telemetry.addData("0", "iSeeBlue %b iSeeRed %b iSeeColor %b", iSeeBlue, iSeeRed, iSeeColor);
-                telemetry.addData("1", "blue %02d red %02d", blueval, redval);
-                telemetry.update();
-            }
-            sR();
-
-            // Correct robot's angular drift during line follow
-
-            //pivotByZ(-1);
-
-            iSeeColor = false;
-            boolean buttonPushed = false;
-            while (!buttonPushed) {
-
-                if (iSeeColor) {
-                    if ((iSeeBlue && blueDesired) || (iSeeRed && !blueDesired)) {
-
-                        // Found the button I want, so push it
-                        move(0.5f, 0.f, 0.2f);
-                        Wait(1);
-                        move(-0.5f, 0.f, 0.2f);
-                        buttonPushed = true;
-
-                    } else {
-
-                        // Didn't find the right color yet, so move right and keep searching
-                        move(0.f, -0.125f, 0.6f);
-                        move(0.5f, 0.f, 0.2f);
-                        Wait(1);
-                        move(-0.5f, 0.f, 0.35f);
-                        buttonPushed = true;
-                    }
-                } else {
-                    blueval = colorSensor.blue();
-                    redval = colorSensor.red();
-                    iSeeRed = (blueval == 0) && (redval > 2);
-                    iSeeBlue = (blueval > 3) && (redval == 0);
-                    iSeeColor = iSeeRed || iSeeBlue;
-                }
-                telemetry.addData("0", "iSeeBlue %b iSeeRed %b iSeeColor %b", iSeeBlue, iSeeRed, iSeeColor);
-                telemetry.addData("1", "buttonPushed %b", buttonPushed);
-                telemetry.addData("2", "blue %02d red %02d", blueval, redval);
-                telemetry.update();
-            }
+        if  ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
+            move(0f, -.25f, 2);
         }
-        // L I N E   F O L L O W
-        iFoundLine = false;
-        while (!iFoundLine) {
-
-            while (!iFoundLine) {
-
-                letsGo(0.f, -0.1f);
-
-                ls1 = lightLevel(odsSensor.getRawLightDetected());
-                ls2 = lightLevel(odsSensor2.getRawLightDetected());
-
-                double lightPctDiff = (ls2 - ls1) / Math.min(ls1, ls2);
-
-                if (Math.abs(lightPctDiff) > 0.4) {
-                    iFoundLine = true;
-                }
-                telemetry.addData("0", "Percent = %f", lightPctDiff);
-                telemetry.addData("1", "iFoundLine = %b", iFoundLine);
-                telemetry.update();
+        else {
+            move(0f,.25f,2);
             }
-            sR();
 
-            float followSpeed = .3f;
-            boolean iSeeColor = false;
-            boolean iSeeBlue = false;
-            boolean iSeeRed = false;
-            int blueval = 0;
-            int redval = 0;
-            letsGo(-followSpeed, 0.f);
-            while (!iSeeColor) {
+        servoTapper.setPosition(0);
 
-                ls1 = lightLevel(odsSensor.getRawLightDetected());
-                ls2 = lightLevel(odsSensor2.getRawLightDetected());
 
-                double drift = (ls1 - ls2) / Math.min(ls1, ls2) * followSpeed / 3f;
-
-                //move(followSpeed, (float) drift, 0.1f);
-
-                blueval = colorSensor.blue();
-                redval = colorSensor.red();
-                iSeeRed = (blueval == 0) && (redval > 2);
-                iSeeBlue = (blueval > 3) && (redval == 0);
-                iSeeColor = iSeeRed || iSeeBlue;
-
-                telemetry.addData("0", "iSeeBlue %b iSeeRed %b iSeeColor %b", iSeeBlue, iSeeRed, iSeeColor);
-                telemetry.addData("1", "blue %02d red %02d", blueval, redval);
-                telemetry.update();
-            }
-            sR();
-
-            //pivotByZ(-2);
-            //move(0.f, .25f, .1f);
-
-            iSeeColor = false;
-            boolean buttonPushed = false;
-            while (!buttonPushed) {
-
-                if (iSeeColor) {
-                    if ((iSeeBlue && blueDesired) || (iSeeRed && !blueDesired)) {
-
-                        // Found the button I want, so push it
-                        move(0.5f, 0.f, 0.3f);
-                        Wait(1);
-                        move(-0.5f, 0.f, 0.2f);
-                        buttonPushed = true;
-
-                    } else {
-
-                        // Didn't find the right color yet, so move right and keep searching
-                        move(0.f, -0.125f, 0.6f);
-                        move(0.5f, 0.f, 0.3f);
-                        Wait(1);
-                        move(-0.5f, 0.f, 0.2f);
-                        buttonPushed = true;
-                    }
-                } else {
-                    blueval = colorSensor.blue();
-                    redval = colorSensor.red();
-                    iSeeRed = (blueval == 0) && (redval > 2);
-                    iSeeBlue = (blueval > 3) && (redval == 0);
-                    iSeeColor = iSeeRed || iSeeBlue;
-                }
-                telemetry.addData("0", "iSeeBlue %b iSeeRed %b iSeeColor %b", iSeeBlue, iSeeRed, iSeeColor);
-                telemetry.addData("1", "buttonPushed %b", buttonPushed);
-                telemetry.addData("2", "blue %02d red %02d", blueval, redval);
-                telemetry.update();
-            }
-        }
     }
 
     void move(float posx, float posy, float waitTime) {
