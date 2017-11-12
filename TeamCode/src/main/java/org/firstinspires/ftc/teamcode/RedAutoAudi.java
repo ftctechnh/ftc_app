@@ -15,8 +15,6 @@ public class RedAutoAudi extends LinearOpMode
 
     public void runOpMode()
     {
-        float x = 0; //Unbreaks it represents unknown values
-        float center = 0; //distance for center in in
         robot = new TankBase(hardwareMap);
         newRobot = new NewRobot(hardwareMap);
         waitForStart(); //stops the code running until after pressing the play button on phone
@@ -36,18 +34,17 @@ public class RedAutoAudi extends LinearOpMode
         sleep(2000);
         switch (newRobot.getGlyphCipher())
         {
-            case 'r': robot.driveStraight_In(28);
+            case 'r': robot.driveStraight_In(26.5f);
                 break;
-            case 'c': robot.driveStraight_In(39);
+            case 'c': robot.driveStraight_In(34.5f);
                 break;
-            case 'l': robot.driveStraight_In(45);
+            case 'l': robot.driveStraight_In(41);
                 break;
-            default: robot.driveStraight_In(39);
+            default: robot.driveStraight_In(35);
                 break;
         }
-        robot.pivot_IMU(-90, .25);
-        robot.driveStraight_In(12);
-        robot.driveStraight_In(18,.2);
+        robot.pivot_IMU(-83, .25);
+        robot.driveStraight_In(8,.1);
         //lower door attachment to ground
         //open door to release glyph
         robot.driveStraight_In(-2);
