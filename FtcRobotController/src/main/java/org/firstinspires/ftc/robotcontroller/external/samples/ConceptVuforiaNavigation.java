@@ -129,7 +129,7 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
 
         /**
          * Load the data sets that for the trackable objects we wish to track. These particular data
-         * sets are stored in the 'assets' part of our application (you'll see them in the Android
+         * sets are stored in the ''assets part of our application (you'll see them in the Android
          * Studio 'Project' view over there on the left of the screen). You can make your own datasets
          * with the Vuforia Target Manager: https://developer.vuforia.com/target-manager. PDFs for the
          * example "StonesAndChips", datasets can be found in in this project in the
