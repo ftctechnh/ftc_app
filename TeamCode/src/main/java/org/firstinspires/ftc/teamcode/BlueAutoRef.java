@@ -38,16 +38,16 @@ public class BlueAutoRef extends LinearOpMode
         switch (cipher)
         {
             case 'l':
-                robot.driveStraight_In(6);
+                robot.driveStraight_In(22);
                 break;
             case 'c':
-                robot.driveStraight_In(12);
+                robot.driveStraight_In(11.5);
                 break;
             case 'r':
-                robot.driveStraight_In(18);
+                robot.driveStraight_In(5);
                 break;
             default:
-                robot.driveStraight_In(12);
+                robot.driveStraight_In(11.5);
                 break;
         }
 

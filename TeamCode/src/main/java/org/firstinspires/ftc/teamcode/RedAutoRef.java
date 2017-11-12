@@ -40,13 +40,13 @@ public class RedAutoRef extends LinearOpMode
                 robot.driveStraight_In(22); //needs testing, fix on 11/12
                 break;
             case 'c':
-                robot.driveStraight_In(11.5f);
+                robot.driveStraight_In(11.5);
                 break;
             case 'r':
                 robot.driveStraight_In(5); //positioning is really off, need to fix on 11/12
                 break;
             default:
-                robot.driveStraight_In(12);
+                robot.driveStraight_In(11.5);
                 break;
         }
 
