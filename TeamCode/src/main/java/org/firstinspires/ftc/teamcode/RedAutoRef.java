@@ -56,6 +56,21 @@ public class RedAutoRef extends LinearOpMode
         // lower door attachment to the ground
         //lower door attachment to ground
         //open door attachment to release glyph
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         robot.driveStraight_In(-2); // back up
         robot.stopAllMotors();
     }
