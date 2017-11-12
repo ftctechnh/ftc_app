@@ -1,37 +1,36 @@
-/*
-    Team 5893 Direct Current
-
-    Authors: Matthew Fan
-    Date Created: 2017-10-30
-
-    Please adhere to these units when working in this project:
-
-    Time: Milliseconds
-    Distance: Centimeters
-    Angle: Degrees (mathematical orientation)
- */
-@file:Suppress("PackageDirectoryMismatch", "ClassName", "FunctionName")
+@file:Suppress("PackageDirectoryMismatch")
 package org.directcurrent.opencv.visionprocessors
 
+
+import org.directcurrent.opencv.equalizeIntensity
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 
 
 /**
- * Kotlin class for gray glyph processing. Currently draws contour around gray glyph
+ * Abstract Kotlin class for finding objects
  */
-class GrayGlyphFinder : VisionProcessor()
+abstract class ObjectFinder: VisionProcessor()
 {
-    private var limitedHsvMat: Mat? = null
-    private var contourMat: Mat? = null
-    private var boundingMat: Mat? = null
+    /** Mat that has undergone Histogram Equalization */
+    protected var equalizedMat: Mat? = null
+
+    /** HSV mat that has had its range limited */
+    protected var limitedHsvMat: Mat? = null
+
+    /** Mat that contains drawn contours */
+    protected var contourMat: Mat? = null
+
+    /** Mat that contains bounding shapes and other elements */
+    protected var boundingMat: Mat? = null
 
 
     /**
-     * Initializes internal Mats for gray glyph processing
+     * Initializes internal Mats for object detection
      */
-    override fun initMats(width: Int, height: Int)
+    override fun initMats(width: Int , height: Int)
     {
+        equalizedMat = Mat(width , height , CvType.CV_8UC4)
         limitedHsvMat = Mat(width , height , CvType.CV_8UC4)
         contourMat = Mat(width , height , CvType.CV_8UC4)
         boundingMat = Mat(width , height , CvType.CV_8UC4)
@@ -39,23 +38,26 @@ class GrayGlyphFinder : VisionProcessor()
 
 
     /**
-     * Finds grey glyphs and draws a contour around them on a mat, which is returned
+     * Finds an object and draws a contour around them on a mat, which is returned
      */
     override fun processFrame(originalMat: Mat?): Mat?
     {
-        limitedHsvMat = Mat()
-        originalMat?.copyTo(contourMat)
-        originalMat?.copyTo(boundingMat)
 
+        limitedHsvMat = Mat()
+
+        equalizedMat = equalizeIntensity(originalMat)
+
+        equalizedMat?.copyTo(contourMat)
+        equalizedMat?.copyTo(boundingMat)
 
         /*
          * Get our HSV mat, and limit restrict it to a color range we want
          * Color range is HSV- you can get this by taking a picture with the phone and running
          * it through GRIP
          */
-        Imgproc.cvtColor(originalMat , limitedHsvMat , Imgproc.COLOR_RGB2HSV)
-        Core.inRange(limitedHsvMat , Scalar(86.0 , 5.0 , 69.0) ,
-                Scalar(157.0 , 42.0 , 190.0) , limitedHsvMat)
+        Imgproc.cvtColor(equalizedMat , limitedHsvMat , Imgproc.COLOR_RGB2HSV)
+        Core.inRange(limitedHsvMat , Scalar(0.0 , 23.0 , 30.0) ,
+                Scalar(19.0 , 192.0 , 159.0) , limitedHsvMat)
 
 
         Imgproc.erode(limitedHsvMat , limitedHsvMat , Imgproc.getStructuringElement
@@ -82,25 +84,24 @@ class GrayGlyphFinder : VisionProcessor()
                 .forEach {
                     Imgproc.rectangle(boundingMat , Point(it.x.toDouble() , it.y.toDouble()) ,
                             Point((it.x + it.width).toDouble(), (it.y + it.height).toDouble()) ,
-                            Scalar(0.0 , 0.0 , 255.0) , 6)
+                            Scalar(255.0 , 0.0 , 0.0) , 6)
                 }
-
 
 
         // Deleting pointers
         originalMat?.release()
+        equalizedMat?.release()
         limitedHsvMat?.release()
         contourMat?.release()
-
-        sweeper.sweep()
 
         return boundingMat
     }
 
 
-    override fun displayInfo(contours: ArrayList<MatOfPoint>)
+
+    fun restrictHSV(hsvMat: Mat , lowBound: Scalar , highBound: Scalar)
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Core.inRange(hsvMat , lowBound , highBound , hsvMat)
     }
 
 
@@ -109,6 +110,7 @@ class GrayGlyphFinder : VisionProcessor()
      */
     override fun releaseMats()
     {
+        equalizedMat?.release()
         limitedHsvMat?.release()
         contourMat?.release()
         boundingMat?.release()

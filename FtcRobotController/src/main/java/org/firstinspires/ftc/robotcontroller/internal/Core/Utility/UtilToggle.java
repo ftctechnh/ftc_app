@@ -54,11 +54,11 @@ public final class UtilToggle
         if(buttonStatus && _status == Status.NOT_BEGUN)
             _status = Status.IN_PROGRESS;
 
-            // If the button is not being pressed and the toggle was in progress
+        // If the button is not being pressed and the toggle was in progress
         else if(!buttonStatus && _status == Status.IN_PROGRESS)
             _status = Status.COMPLETE;
 
-            // If the toggle is finished
+        // If the toggle is finished
         else if(_status == Status.COMPLETE)
             _status = Status.NOT_BEGUN;
 

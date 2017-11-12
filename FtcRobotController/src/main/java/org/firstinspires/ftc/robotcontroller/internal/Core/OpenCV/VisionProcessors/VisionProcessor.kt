@@ -13,7 +13,9 @@
 @file:Suppress("PackageDirectoryMismatch", "ClassName", "FunctionName")
 package org.directcurrent.opencv.visionprocessors
 
+import org.directcurrent.opencv.Sweeper
 import org.opencv.core.Mat
+import org.opencv.core.MatOfPoint
 
 
 /**
@@ -21,6 +23,8 @@ import org.opencv.core.Mat
  */
 abstract class VisionProcessor
 {
+    protected val sweeper = Sweeper(20_000)
+
     /**
      * Initializes mats for use
      */
@@ -31,6 +35,13 @@ abstract class VisionProcessor
      * Processes mat and returns result
      */
     abstract fun processFrame(originalMat: Mat?): Mat?
+
+
+    /**
+     * Called toward the end of processFrame- should be used for things such as drawing
+     * bounding boxes and adding text
+     */
+    abstract fun displayInfo(contours: ArrayList<MatOfPoint>)
 
 
     /**

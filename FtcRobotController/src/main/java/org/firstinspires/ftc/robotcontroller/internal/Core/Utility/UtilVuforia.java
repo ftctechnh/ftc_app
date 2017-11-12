@@ -32,10 +32,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Utility class used for simplifying Vuforia code for Relic Recovery- provides for easy and
  * simplified retrieval of data.
  */
+@SuppressWarnings({"FieldCanBeLocal", "WeakerAccess"})
 public class UtilVuforia
 {
     // You're not going to guess this :)
-    @SuppressWarnings("FieldCanBeLocal")
     private final String _KEY = "AVL5SH7/////AAAAGQHMTrmZFkVaqLgyIFXlUot8Bj4E0gdKiux+X0Pw/1vkCO02" +
                                 "YQNTTWDYnCV2DpnMYwq1E4S745dGDU0oUTRAD8XmI4WPL5MpPRCjvPPUaixm+D4u" +
                                 "UrjpGH7+P8v+ZqqSKINM3NayE6lzg96ZrdLhGVnchvIpFsanlkm6hQfQeUSompiO" +
@@ -43,25 +43,20 @@ public class UtilVuforia
                                 "Az0nnaAX9W5OdDy+78grYk+R9kdYu6eBNwZ/G01zlkiJM24slrCR7wlfiWtH+ywO" +
                                 "ZpWYRZTGIrsrMLIk3USWLRRO/Yf0wKzyu1nHiqBuRQeVlZgm35T19WQk55FO";
 
-    @SuppressWarnings("FieldCanBeLocal")
     private final String _MARK_ASSETS = "RelicVuMark";
 
-    @SuppressWarnings("WeakerAccess")
     static final double DEFAULT_TRANS = -100;
-    @SuppressWarnings("WeakerAccess")
     static final double DEFAULT_ROTATE = 370;
 
-    @SuppressWarnings("FieldCanBeLocal")
     private VuforiaLocalizer _vuforia;
     private VuforiaTrackables _trackables;
     private VuforiaTrackable _template;
-    @SuppressWarnings("FieldCanBeLocal")
     private RelicRecoveryVuMark _vuMark;
     private OpenGLMatrix _pose;
 
 
     /**
-     * Initializes Vuforia for use
+     * Initializes Vuforia for use. Call this first.
      *
      * @param HW The OpMode's HardwareMap object- in your opmode, just put in "hardwareMap".
      *
@@ -86,7 +81,7 @@ public class UtilVuforia
 
 
     /**
-     * Activates Vuforia
+     * Activates Vuforia. Call this directly after initialization.
      */
     public void activate()
     {
