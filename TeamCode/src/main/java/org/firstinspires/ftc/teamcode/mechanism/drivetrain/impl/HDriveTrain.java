@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mechanism.drivetrain.impl;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Robot;
@@ -30,6 +31,10 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     private boolean isRunningToPosition;
 
+    // currentSpeedX isn't need because it is only handled in the drive() method
+    private double currentSpeedY;
+    private double currentPivot;
+
     /**
      * Construct a new {@link HDriveTrain} with a reference to the utilizing robot.
      *
@@ -42,6 +47,15 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         leftDrive = hWMap.dcMotor.get("l");
         rightDrive = hWMap.dcMotor.get("r");
         middleDrive = hWMap.dcMotor.get("m");
+
+        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // set all motors to brake
+        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        middleDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -51,12 +65,10 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     @Override
     public void pivot(double pivotSpeed) {
-        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.currentPivot = pivotSpeed;
 
-        leftDrive.setPower(pivotSpeed);
-        rightDrive.setPower(-pivotSpeed);
-
-        middleDrive.setPower(0);
+        leftDrive.setPower(this.currentSpeedY + pivotSpeed);
+        rightDrive.setPower(this.currentSpeedY - pivotSpeed);
     }
 
     @Override
@@ -132,10 +144,10 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     @Override
     public void drive(double speedX, double speedY) {
-        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.currentSpeedY = speedY;
 
-        leftDrive.setPower(speedY);
-        rightDrive.setPower(speedY);
+        leftDrive.setPower(this.currentPivot + speedY);
+        rightDrive.setPower(-this.currentPivot + speedY);
 
         middleDrive.setPower(speedX);
     }

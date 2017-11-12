@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by ftc6347 on 3/12/17.
  */
+@Disabled
 @Autonomous(name = "Simple 1 BLUE", group = "3 simple")
 public class AutonomousSimpleBlue1 extends LinearOpModeBase {
     @Override

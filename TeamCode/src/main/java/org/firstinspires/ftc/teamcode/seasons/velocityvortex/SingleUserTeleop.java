@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by ftc6347 on 10/16/16.
  */
+@Disabled
 @TeleOp(name = "TELEOP-single-user", group = "tele-op")
 public class SingleUserTeleop extends LinearOpModeBase {
 

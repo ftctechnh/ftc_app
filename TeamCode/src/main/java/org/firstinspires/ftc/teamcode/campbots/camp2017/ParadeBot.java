@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by ftc6347 on 6/27/17.
  */
-@TeleOp(name = "Parade Robot TeleOp", group = "demos")
+@TeleOp(name = "Parade Robot RobotTeleOp", group = "demos")
 public class ParadeBot extends OpMode {
 
     private DcMotor frontRight;

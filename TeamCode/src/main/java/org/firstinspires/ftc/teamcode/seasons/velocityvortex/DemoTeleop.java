@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,6 +10,7 @@ import java.util.Random;
 /**
  * Created by ftc6347 on 10/16/16.
  */
+@Disabled
 @TeleOp(name = "DEMO TELEOP", group = "tele-op")
 public class DemoTeleop extends LinearOpModeBase {
 
