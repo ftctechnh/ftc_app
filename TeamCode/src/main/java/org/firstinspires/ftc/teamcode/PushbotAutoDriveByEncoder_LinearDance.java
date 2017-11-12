@@ -113,59 +113,55 @@ public class PushbotAutoDriveByEncoder_LinearDance extends LinearOpMode {
         robot.jewelAnnihilator.setPosition(a);
         for(int d = 0; d < 300; d += 1) {
             for(int f = 0; f < 3; f += 1) {
-                robot.rightDrive.setPower(1);
-                robot.leftDrive.setPower(-1);
+                robot.rightDrive.setPower(0.25);
+                robot.leftDrive.setPower(-0.25);
                 for (int e = 0; e < 2; e += 1) {
-                    robot.armDrive.setPower(1);
+                    robot.armDrive.setPower(0.25);
                     robot.leftClaw.setPosition(0.5);
                     robot.rightClaw.setPosition(0.5);
-                    sleep(200);
-                    robot.armDrive.setPower(-1);
+                    sleep(400);
+                    robot.armDrive.setPower(-0.25);
                     robot.leftClaw.setPosition(0.0);
                     robot.rightClaw.setPosition(0.0);
-                    sleep(200);
-                    robot.jewelAnnihilator.setPosition(a -= 0.1);
+                    sleep(400);
                 }
-                robot.rightDrive.setPower(-1);
-                robot.leftDrive.setPower(1);
+                robot.rightDrive.setPower(-0.25);
+                robot.leftDrive.setPower(0.25);
                 for (int e = 0; e < 2; e += 1) {
-                    robot.armDrive.setPower(1);
+                    robot.armDrive.setPower(0.25);
                     robot.leftClaw.setPosition(0.5);
                     robot.rightClaw.setPosition(0.5);
-                    sleep(200);
-                    robot.armDrive.setPower(-1);
+                    sleep(400);
+                    robot.armDrive.setPower(-0.25);
                     robot.leftClaw.setPosition(0.0);
                     robot.rightClaw.setPosition(0.0);
-                    sleep(200);
-                    robot.jewelAnnihilator.setPosition(a -= 0.1);
+                    sleep(400);
                 }
             }
             for(int f = 0; f < 3; f += 1) {
-                robot.rightDrive.setPower(1);
-                robot.leftDrive.setPower(-1);
+                robot.rightDrive.setPower(0.25);
+                robot.leftDrive.setPower(-0.25);
                 for (int e = 0; e < 2; e += 1) {
-                    robot.armDrive.setPower(1);
+                    robot.armDrive.setPower(0.25);
                     robot.leftClaw.setPosition(0.5);
                     robot.rightClaw.setPosition(0.5);
                     sleep(200);
-                    robot.armDrive.setPower(-1);
+                    robot.armDrive.setPower(-0.25);
                     robot.leftClaw.setPosition(0.0);
                     robot.rightClaw.setPosition(0.0);
                     sleep(200);
-                    robot.jewelAnnihilator.setPosition(a = 0.1);
                 }
-                robot.rightDrive.setPower(-1);
-                robot.leftDrive.setPower(1);
+                robot.rightDrive.setPower(-0.25);
+                robot.leftDrive.setPower(0.25);
                 for (int e = 0; e < 2; e += 1) {
-                    robot.armDrive.setPower(1);
+                    robot.armDrive.setPower(0.25);
                     robot.leftClaw.setPosition(0.5);
                     robot.rightClaw.setPosition(0.5);
                     sleep(200);
-                    robot.armDrive.setPower(-1);
+                    robot.armDrive.setPower(-0.25);
                     robot.leftClaw.setPosition(0.0);
                     robot.rightClaw.setPosition(0.0);
                     sleep(200);
-                    robot.jewelAnnihilator.setPosition(a += 0.1);
                 }
             }
         }

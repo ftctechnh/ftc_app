@@ -55,7 +55,7 @@ public class PushbotTeleopPOV_Butts extends LinearOpMode {
     HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
 
-    double clawOffset = 0;                            // Servo mid position
+    double clawOffset = 0.0;                            // Servo mid position
     final double CLAW_SPEED = 0.04;                   // sets rate to move servo
 
     double speedBonus = -0.5;
@@ -72,6 +72,8 @@ public class PushbotTeleopPOV_Butts extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        robot.leftClaw.setPosition(0.5);
+        robot.rightClaw.setPosition(0.5);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("PushbotPotato", "Robot is waiting...");    //
@@ -106,62 +108,62 @@ public class PushbotTeleopPOV_Butts extends LinearOpMode {
                 speedBonus = -0.9;
             }
 
-                // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
-                // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-                // This way it's also easy to just drive straight, or just turn.
-                drive = -gamepad1.left_stick_y;
-                turn = gamepad1.right_stick_x;
+            // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
+            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
+            // This way it's also easy to just drive straight, or just turn.
+            drive = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
 
-                // Combine drive and turn for blended motion.
-                    driveLeft = drive + turn;
-                    driveRight = drive - turn;
-                    driveLeft += (speedBonus * driveLeft);
-                    driveRight += (speedBonus * driveRight);
+            // Combine drive and turn for blended motion.
+            driveLeft = drive + turn;
+            driveRight = drive - turn;
+            driveLeft += (speedBonus * driveLeft);
+            driveRight += (speedBonus * driveRight);
 
-                // Normalize the values so neither exceed +/- 2.0
-                max = Math.max(Math.abs(driveLeft), Math.abs(driveRight));
-                if (max > 3.0) {
-                    driveLeft /= max;
-                    driveRight /= max;
-                }
-
-                // Output the safe values to the motor drives.
-                robot.leftDrive.setPower(driveLeft);
-                robot.rightDrive.setPower(driveRight);
-
-                // Use gamepad left & right triggers to open and close the claw
-                if (gamepad1.left_trigger > 0)
-                    clawOffset += CLAW_SPEED;
-                else if (gamepad1.right_trigger > 0)
-                    clawOffset -= CLAW_SPEED;
-
-                // Move both servos to new position.  Assume servos are mirror image of each other.
-                clawOffset = Range.clip(clawOffset, -0.25, 0.25);
-                robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-                robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-
-                // Use gamepad buttons to move arm up (Y) and down (A)
-                if (gamepad1.left_bumper)
-                    robot.armDrive.setPower(robot.ARM_UP_POWER);
-                else if (gamepad1.right_bumper)
-                    robot.armDrive.setPower(robot.ARM_DOWN_POWER);
-                else
-                    robot.armDrive.setPower(0.0);
-
-                robot.armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-                // Send telemetry message to signify robot running;
-                telemetry.addData("claw", "Offset = %.2f", clawOffset);
-                telemetry.addData("claw", "leftPosition = %.2f", robot.leftClaw.getPosition());
-                telemetry.addData("claw", "rightPosition = %.2f", robot.rightClaw.getPosition());
-                telemetry.addData("jewelz", "rawPosition = %.2f", robot.rightClaw.getPosition());
-                telemetry.addData("DriveLeft", "%.2f", driveLeft);
-                telemetry.addData("DriveRight", "%.2f", driveRight);
-                telemetry.addData("Speed", "%.2f", speedBonus);
-                telemetry.update();
-
-                // Pace this loop so jaw action is reasonable speed.
-                sleep(50);
+            // Normalize the values so neither exceed +/- 2.0
+            max = Math.max(Math.abs(driveLeft), Math.abs(driveRight));
+            if (max > 3.0) {
+                driveLeft /= max;
+                driveRight /= max;
             }
+
+            // Output the safe values to the motor drives.
+            robot.leftDrive.setPower(driveLeft);
+            robot.rightDrive.setPower(driveRight);
+
+            // Use gamepad left & right triggers to open and close the claw
+            if (gamepad1.left_trigger > 0)
+                clawOffset += CLAW_SPEED;
+            else if (gamepad1.right_trigger > 0)
+                clawOffset -= CLAW_SPEED;
+
+            // Move both servos to new position.  Assume servos are mirror image of each other.
+            clawOffset = Range.clip(clawOffset, -0.35, 0.35);
+            robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+            robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
+
+            // Use gamepad buttons to move arm up (Y) and down (A)
+            if (gamepad1.left_bumper)
+                robot.armDrive.setPower(robot.ARM_UP_POWER);
+            else if (gamepad1.right_bumper)
+                robot.armDrive.setPower(robot.ARM_DOWN_POWER);
+            else
+                robot.armDrive.setPower(0.0);
+
+            robot.armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            // Send telemetry message to signify robot running;
+            telemetry.addData("claw", "Offset = %.2f", clawOffset);
+            telemetry.addData("claw", "leftPosition = %.2f", robot.leftClaw.getPosition());
+            telemetry.addData("claw", "rightPosition = %.2f", robot.rightClaw.getPosition());
+            telemetry.addData("jewelz", "rawPosition = %.2f", robot.rightClaw.getPosition());
+            telemetry.addData("DriveLeft", "%.2f", driveLeft);
+            telemetry.addData("DriveRight", "%.2f", driveRight);
+            telemetry.addData("Speed", "%.2f", speedBonus);
+            telemetry.update();
+
+            // Pace this loop so jaw action is reasonable speed.
+            sleep(50);
         }
     }
+}
