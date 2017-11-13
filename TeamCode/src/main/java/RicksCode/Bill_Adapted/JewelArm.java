@@ -7,30 +7,36 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by jmgu3 on 11/7/2016.
  */
 public class JewelArm {
-    public Servo rightServo;
-    public Servo leftServo;
+    public Servo jewelArmServo;
+    public Servo jewelFlickerServo;
 
     public void init(HardwareMap hardwareMap) {
-        rightServo = hardwareMap.servo.get("rightPusher");
-        leftServo = hardwareMap.servo.get("leftPusher");
-        rightIn();
-        leftIn();
+        jewelArmServo = hardwareMap.servo.get("jewelarm");
+        jewelFlickerServo = hardwareMap.servo.get("jewelflicker");
+
+        jewelArmUp();
+
+        jewelflickerCenter();
+
+        //leftIn();
     }
 
-    public void rightIn() {
-        rightServo.setPosition(35.0/256.0);
+    public void jewelArmUp() {
+        jewelArmServo.setPosition(0.2);
     }
 
-    public void rightOut() {
-        rightServo.setPosition(170.0/256.0);
+    public void jewelArmDown() {
+        jewelArmServo.setPosition(0.85);
     }
 
-    public void leftIn() {
-        leftServo.setPosition(235.0/256.0);
+    public void jewelflickerBack() {
+        jewelFlickerServo.setPosition(0.0);
     }
-
-    public void leftOut() {
-        leftServo.setPosition(100.0/256.0);
+    public void jewelflickerCenter() {
+        jewelFlickerServo.setPosition(0.5);
+    }
+    public void jewelflickerForward() {
+        jewelArmServo.setPosition(1.0);
     }
 
 

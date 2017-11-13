@@ -2,17 +2,17 @@ package RicksCode.Bill_Adapted;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class Gromit {
-    RicksCode.Bill_Adapted.DriveTrain driveTrain;
-    RicksCode.Bill_Adapted.JewelArm jewelArm;
-    RicksCode.Bill_Adapted.RelicArm relicArm;
+public class RobotRR {
+    DriveTrain driveTrain;
+    JewelArm jewelArm;
+    RelicArm relicArm;
     //Shooter shooter;
     //Loader loader;
     //Sweeper sweeper;
     //BeaconColorDetector beaconColorDetector;
     //LineDetector lineDetector;
 
-    public Gromit()
+    public RobotRR()
     {
         driveTrain = new DriveTrain();
         relicArm = new RelicArm();
