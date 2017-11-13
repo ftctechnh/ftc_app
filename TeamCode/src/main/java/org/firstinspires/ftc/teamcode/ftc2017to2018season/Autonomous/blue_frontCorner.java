@@ -58,21 +58,21 @@ public class blue_frontCorner extends Autonomous_General {
         gyroTurn(0.3,-88);
         sleep(1000);
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            RangeDistance(88, 0.6, rsBuffer, false, false);
+            simpleRangeDistance(88, 0.2, rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            RangeDistance(71, 0.6, rsBuffer, false, false);
+            simpleRangeDistance(71, 0.2, rsBuffer);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            RangeDistance(108, 0.6, rsBuffer, false, false);
+            simpleRangeDistance(108, 0.2, rsBuffer);
 
         }
 
 
         sleep(1000);
 
-
+        gyroTurn(0.3,0);
 
     }
 
