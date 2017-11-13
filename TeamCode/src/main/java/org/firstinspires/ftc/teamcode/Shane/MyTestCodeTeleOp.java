@@ -88,9 +88,11 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         }
         if (gamepad2.dpad_right) {
             RelicHold = true;
+            oneHandPosition = OPEN_ONE_HAND;
         } else if (gamepad2.dpad_left) {
             RelicHold = false;
             relicPosition = OPEN_RELIC;
+            oneHandPosition = CLOSED_ONE_HAND;
         }
         if (RelicHold) {
             relicPosition = CLOSED_RELIC;
@@ -121,20 +123,25 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         if (gamepad2.x) {
             rightHandPosition = OPEN_RIGHT_HAND;
             leftHandPosition = OPEN_LEFT_HAND;
+            //oneHandPosition = OPEN_ONE_HAND;
+            armPosition = ARM_OUT;
         }
         if (gamepad2.y) {
             rightHandPosition = CLOSED_RIGHT_HAND;
             leftHandPosition = CLOSED_LEFT_HAND;
+            //oneHandPosition = CLOSED_ONE_HAND;
+            armPosition = ARM_IN;
         }
-        if (gamepad2.dpad_up) {
+        /*if (gamepad2.dpad_up) {
             oneHandPosition = CLOSED_ONE_HAND;
         } else if (gamepad2.dpad_down) {
             oneHandPosition = OPEN_ONE_HAND;
-        }
+        }*/
         if (slowDrive) {
             rightPower /= 2;
             leftPower /= 2;
         }
+        armPosition = gamepad2.right_trigger;
     }
 
     private void setMotorPower() {
@@ -204,7 +211,12 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         try {
             armServo.setPower(armPower);
         } catch (Exception opModeException) {
-            telemetry.addData("Can't run (not mapped)", "Servo lift arm motor");
+            telemetry.addData("Can't run (not mapped)", "Servo arm motor");
+        }
+        try {
+            arm.setPosition(armPosition);
+        } catch (Exception opModeException) {
+            telemetry.addData("Can't run (not mapped)", "Servo arm");
         }
     }
 

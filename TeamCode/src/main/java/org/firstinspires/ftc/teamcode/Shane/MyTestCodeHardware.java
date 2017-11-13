@@ -32,6 +32,8 @@ public class MyTestCodeHardware extends OpMode {
     protected static final double UP_ARM_LIFTER_S = 1;
     protected static final double DOWN_ARM_LIFTER_S = -1;
     protected static final double STOPPED_ARM_LIFTER_S = 0;
+    protected static final double ARM_IN = 0;
+    protected static final double ARM_OUT = 1;
 
     // DcMotors
     DcMotor rightMotor;
@@ -48,6 +50,7 @@ public class MyTestCodeHardware extends OpMode {
     CRServo relic;
     CRServo armLifterS;
     CRServo armServo;
+    Servo arm;
 
 
     protected double rightPower;
@@ -63,6 +66,7 @@ public class MyTestCodeHardware extends OpMode {
     protected double oneHandPosition = OPEN_ONE_HAND;
     protected double crHandPosition = STOPPED_CR_HAND;
     protected double relicPosition = STOPPED_RELIC;
+    protected double armPosition = ARM_IN;
 
     protected String driveMode;
 
@@ -157,8 +161,16 @@ public class MyTestCodeHardware extends OpMode {
             //add direction here
             armServo.setPower(armPower);
         } catch (Exception opModeException) {
-            telemetry.addData("Can't map", "arm lifter (armServo");
+            telemetry.addData("Can't map", "arm cr(armServo)");
         }
+        try {
+            arm = hardwareMap.servo.get("armS");
+            //add direction here
+            arm.setPosition(armPosition);
+        } catch (Exception opModeException) {
+            telemetry.addData("Can't map", "servo arm (armS)");
+        }
+
     }
 }
 
