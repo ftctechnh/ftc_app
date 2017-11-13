@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.Shane;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.DriveTrain.TankDrive;
+import org.firstinspires.ftc.teamcode.DriveTrain.TurnDrive;
+
 /**
  * Created by team on 7/19/2017.
  */
