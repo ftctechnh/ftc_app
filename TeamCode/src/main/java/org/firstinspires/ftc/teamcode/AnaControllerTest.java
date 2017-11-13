@@ -24,6 +24,11 @@ public class AnaControllerTest extends LinearOpMode {
     public boolean lefttrigger = false;
     public boolean rightbumper = false;
     public boolean leftbumper = false;
+    public boolean rightstickx = false;
+    public boolean rightsticky = false;
+    public boolean leftstickx = false;
+    public boolean leftsticky = false;
+
 
 
     @Override
@@ -54,12 +59,17 @@ public class AnaControllerTest extends LinearOpMode {
             telemetry.addLine().addData("", button_a).addData("Button A  ", gamepad1.a);
             telemetry.addLine().addData("", button_b).addData("Button B  ", gamepad1.b);
             telemetry.addLine().addData("", button_x).addData("Button X  ", gamepad1.x);
+            telemetry.addLine().addData("", button_y).addData("Button Y  ", gamepad1.y);
             telemetry.addLine().addData("", start).addData("Start  ", gamepad1.start);
             telemetry.addLine().addData("", back ).addData("Back  ", gamepad1.back);
             telemetry.addLine().addData("", righttrigger ).addData(" Right Trigger  ", gamepad1.right_trigger);
             telemetry.addLine().addData("", lefttrigger ).addData(" Left Trigger  ", gamepad1.left_trigger);
             telemetry.addLine().addData("", rightbumper ).addData(" Right Bumper  ", gamepad1.right_bumper);
             telemetry.addLine().addData("", leftbumper ).addData(" Left Bumper  ", gamepad1.left_bumper);
+            telemetry.addLine().addData("", rightstickx ).addData(" Right Stick X  ", gamepad1.right_stick_x);
+            telemetry.addLine().addData("", rightsticky ).addData(" Right Stick Y  ", gamepad1.right_stick_y);
+            telemetry.addLine().addData("", leftstickx ).addData(" Left Stick X  ", gamepad1.left_stick_x);
+            telemetry.addLine().addData("", leftsticky ).addData(" Left Stick Y  ", gamepad1.left_stick_y);
 
 
 
@@ -75,10 +85,16 @@ public class AnaControllerTest extends LinearOpMode {
             if (gamepad1.y) button_y = true;
             if (gamepad1.start) start = true;
             if (gamepad1.back) back = true;
- //           if (gamepad1.right_trigger) righttrigger = true;
-//            if (gamepad1.left_trigger) lefttrigger = true;
+            if (gamepad1.right_trigger > 0.5 ) righttrigger = true;
+            if (gamepad1.left_trigger > 0.5) lefttrigger = true;
             if (gamepad1.right_bumper) rightbumper = true;
             if (gamepad1.left_bumper) leftbumper = true;
+            if (gamepad1.right_stick_x > 0.5) rightstickx = true;
+            if (gamepad1.right_stick_y > 0.5) rightsticky = true;
+            if (gamepad1.left_stick_x > 0.5) leftstickx = true;
+            if (gamepad1.left_stick_y > 0.5) leftsticky = true;
+
+
 
 /**    controller buttons I can think of
  *      gamepad1.dpad_left
@@ -113,7 +129,12 @@ public class AnaControllerTest extends LinearOpMode {
                     (righttrigger) &&
                     (lefttrigger) &&
                     (rightbumper) &&
-                    (leftbumper) )
+                    (leftbumper) &&
+                    (rightstickx) &&
+                    (rightsticky) &&
+                    (leftstickx) &&
+                    (leftsticky)
+                    )
             {
 
                 telemetry.addLine("****** All TESTS COMPLETE*******");

@@ -171,6 +171,8 @@ public class Vuforia_ColorRev extends LinearOpMode {
 //        telemetry.update();
 
         gromit.jewelsservo.setPosition(0.2);
+        gromit.leftlower.setPosition(0.9);
+        gromit.rightlower.setPosition(1);
  /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
@@ -298,7 +300,7 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
 
-            while(gromit.left_front.getCurrentPosition() <= 1500+600){
+            while(gromit.left_front.getCurrentPosition() <= 1500+900){
                 idle();
             }
 
@@ -323,7 +325,55 @@ public class Vuforia_ColorRev extends LinearOpMode {
         }
 
         // rotate 90 to deliver block
+        gromit.left_front.setPower(-power);
+        gromit.left_back.setPower(-power);
+        gromit.right_front.setPower( power);
+        gromit.right_back.setPower( power);
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+                });
+        telemetry.update();
+        while(angles.firstAngle < 88){
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            idle();
+            telemetry.addLine()
+                    .addData("heading", new Func<String>() {
+                        @Override public String value() {
+                            return formatAngle(angles.angleUnit, angles.firstAngle);
+                        }
+                    });
+            telemetry.update();
+            power = (angles.firstAngle-90)/-180 +0.1;
+            gromit.left_front.setPower(-power);
+            gromit.left_back.setPower(-power);
+            gromit.right_front.setPower( power);
+            gromit.right_back.setPower( power);
 
+
+        }
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
+
+            //Drive forward
+        power= 0.3;
+            gromit.left_front.setPower(power);
+            gromit.left_back.setPower(power);
+            gromit.right_front.setPower( power);
+            gromit.right_back.setPower( power);
+
+            while(gromit.left_front.getCurrentPosition() <= 1500+2*600){
+                idle();
+            }
+
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
 
        // mecanumDriveGyro(1.0,0.0,0.0,0);
        while (opModeIsActive()) {
