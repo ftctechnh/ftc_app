@@ -29,9 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -61,8 +65,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Potato By Encoder With Attempt to Glyph Blue", group="PushbotPotato")
-public class PushbotAutoDriveByEncoder_Linear_Blue extends LinearOpMode {
+@Autonomous(name="Pushbot: Auto Potato By Encoder With Jewels", group="PushbotPotato")
+public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_RED_TEAM_TOWARDS_AUDIENCE extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -76,14 +80,32 @@ public class PushbotAutoDriveByEncoder_Linear_Blue extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
+
     @Override
     public void runOpMode() {
+
+        // get a reference to the color sensor.
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+
+        // get a reference to the distance sensor that shares the same name.
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
 
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -97,37 +119,61 @@ public class PushbotAutoDriveByEncoder_Linear_Blue extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftDrive.getCurrentPosition(),
-                          robot.rightDrive.getCurrentPosition());
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        sleep(3000);
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        for(double d = 0.675; d > 0.1; d-=0.025){
+            robot.jewelAnnihilator.setPosition(d);
+            sleep(50);
+        }
+
+        sleep(50);
+
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.update();
+
+        sleep(1000);
+
+        if (sensorColor.blue() > 50){
+            encoderDrive(DRIVE_SPEED, -1, -1, 0.5);
+        }else{
+            encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
+        }
+
+        for(double d = 0.1; d < 0.675; d+=0.025){
+            robot.jewelAnnihilator.setPosition(d);
+            sleep(50);
+        }
+
+        sleep(1000);
+
+
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  9,  9, 3.0);
 
-        encoderDrive(TURN_SPEED,   -2.75, 2.75, 1.0);
-
-        encoderDrive(DRIVE_SPEED,  0.5,  0.5, 1.0);
-
-        robot.armDrive.setPower(-0.45);
-        sleep(250);
-        robot.armDrive.setPower(0.0);
-
-        robot.leftClaw.setPosition(0.5);
-        robot.rightClaw.setPosition(0.0);
-        sleep(1000);
+        encoderDrive(DRIVE_SPEED,  7.5,  7.5, 5.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-    }
+        }
+
+
 
     /*
-     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
@@ -165,14 +211,14 @@ public class PushbotAutoDriveByEncoder_Linear_Blue extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftDrive.getCurrentPosition(),
-                                            robot.rightDrive.getCurrentPosition());
+                        robot.leftDrive.getCurrentPosition(),
+                        robot.rightDrive.getCurrentPosition());
                 telemetry.update();
             }
 
