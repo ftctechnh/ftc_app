@@ -758,7 +758,9 @@ public class Autonomous_General extends LinearOpMode {
         }
         return null;
     }
-
+    /**
+     * Uses the range sensor in a while loop, you can choose whether it strafes or drives
+     */
     public void RangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
     if(strafe) {
         if (!dorangeSensor2) {
@@ -819,6 +821,22 @@ public class Autonomous_General extends LinearOpMode {
             telemetry.update();
 
         }
+    }
+
+    /**
+     * uses range sensor by reading distance and then driving that distance
+     * @param distInCM
+     * @param speed
+     * @param rsBufffer
+     */
+    public void simpleRangeDistance(double distInCM, double speed, double rsBufffer) {
+
+            double distancetoDrive = (distInCM-rsBufffer) - rangeSensor.getDistance(DistanceUnit.CM);
+            encoderMecanumDrive(speed,distancetoDrive,distancetoDrive,500,0);
+            sleep(400);
+            distancetoDrive = (distInCM-rsBufffer) - rangeSensor.getDistance(DistanceUnit.CM);
+            encoderMecanumDrive(0.1,distancetoDrive,distancetoDrive,500,0);
+
     }
 
     public Enum<RelicRecoveryVuMark> returnImage() {
