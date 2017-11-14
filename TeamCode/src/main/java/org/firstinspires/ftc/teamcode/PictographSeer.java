@@ -1,34 +1,35 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-
-import java.util.List;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 /**
  * Created by guberti on 11/3/2017.
  */
 @Autonomous(name="Pictograph seer", group="Autonomous")
-public class PictographSeer extends LinearOpMode {
+public class PictographSeer extends CompleteAutonomous {
 
-    NullbotHardware robot = new NullbotHardware();
-    VuforiaLocalizer vuforia;
-    List<VuforiaTrackable> trackables;
-
+    @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, this, false, gamepad2);
+        robot.init(hardwareMap, this, gamepad1, gamepad2);
+        initializeVuforia();
 
+        waitForStart();
 
         while (opModeIsActive()) {
 
-            for (VuforiaTrackable trackable : trackables) {
-                boolean seen = ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible();
-                telemetry.addData(trackable.getName(), seen ? "Visible" : "Not Visible");
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+                telemetry.addData("VuMark", "%s visible", vuMark);
+            } else {
+                telemetry.addData("VuMark", "not visible");
             }
             telemetry.update();
         }
