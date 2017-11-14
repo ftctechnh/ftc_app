@@ -137,10 +137,12 @@ public class AutonomousSetup extends LinearOpMode {
             timesRan += 1;
         }
         if (timesBlue > timesRed){
-            rotations(-.25, .5);
+            rotations(-.25, .25);
+            rotations(.25, .25);
         }
         else{
-            rotations(.25, .5);
+            rotations(.25, .25);
+            rotations(-.25, .25);
         }
     }
 }
