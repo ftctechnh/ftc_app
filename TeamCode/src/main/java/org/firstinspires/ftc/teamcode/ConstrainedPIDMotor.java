@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import static org.firstinspires.ftc.teamcode.ConstrainedPIDMotor.Direction.HOLD;
 
 public class ConstrainedPIDMotor {
@@ -21,9 +23,10 @@ public class ConstrainedPIDMotor {
     int max;
     int encoderOffset;
     public boolean override;
+    Telemetry logging;
 
     public ConstrainedPIDMotor(DcMotor m, int t, double forwardRunSpeed, double backwardRunSpeed,
-                               int min, int max) {
+                               int min, int max, Telemetry tel) {
         this.m = m;
         timeTillLock = t;
         this.forwardRunSpeed = forwardRunSpeed;
@@ -34,6 +37,7 @@ public class ConstrainedPIDMotor {
         override = false;
         lockPos = 0;
         encoderOffset = 0;
+        logging = tel;
     }
 
     public void setDirection(Direction d) {
@@ -84,7 +88,7 @@ public class ConstrainedPIDMotor {
         }
 
         if (m.getTargetPosition() != pos) {
-            m.setTargetPosition(pos - encoderOffset);
+            m.setTargetPosition(pos + encoderOffset);
         }
 
         if (m.getPower() != speed) {
