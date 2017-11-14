@@ -1,58 +1,51 @@
 package org.firstinspires.ftc.teamcode.Utilities;
 
-import android.util.Log;
-
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * Created by spmycp on 11/13/2017.
  */
-
 public class Map {
-
-    HardwareMap map;
-
-    public Map(final HardwareMap MAP)
-    {
-        map = MAP;
+    // -------------------------- Objects ---------------------------
+    HardwareMap hardwareMap;
+    Telemetry telemetry;
+    // ------------------------ Constructor -------------------------
+    public Map(final HardwareMap map, final Telemetry tele) {
+        hardwareMap = map;
+        telemetry = tele;
     }
-
-
-    public DcMotor motor(String name) {return m(map,name,false);}
-    public DcMotor revMotor(String name) {return m(map,name,true);}
-    //public Servo servo(Servo servo, String name, double position) {return s(servo,name,position,false);}
-    ///public Servo revServo(Servo servo, String name, double position) {return s(servo,name,position,true);}
-    //public CRServo crservo(CRServo crservo, String name, double power) {return crs(crservo,name,power,false);}
-    //public CRServo revCrservo(CRServo crservo, String name, double power) {return crs(crservo,name,power,true);}
-
-    private DcMotor m(HardwareMap hardwareMap, String name, boolean ifReverse) {
+    // ----------------------- Public Methods -----------------------
+    // ---------------- DcMotors ----------------
+    public DcMotor motor(String name) {return m(name,false);}
+    public DcMotor revMotor(String name) {return m(name,true);}
+    // ------------ Standard Servos -------------
+    public Servo servo(String name, double position) {return s(name,position,false);}
+    public Servo revServo(String name, double position) {return s(name,position,true);}
+    // ------- Continuous Rotation Servos -------
+    public CRServo crservo(String name) {return crs(name,false);}
+    public CRServo revCrservo(String name) {return crs(name,true);}
+    // ---------------------- Private Methods -----------------------
+    // ---------------- DcMotors ----------------
+    private DcMotor m(String name, boolean ifReverse) {
         DcMotor motor = null;
         try {
             motor = hardwareMap.dcMotor.get(name);
             if (ifReverse)
                 motor.setDirection(DcMotorSimple.Direction.REVERSE);
         } catch (Exception opModeException) {
-            //telemetry.addData("Can't map motor", name);
+            telemetry.addData("Can't map motor", name);
         }
-        if(hardwareMap == null)
-        {
-            //telemetry.addData("Hardware Mapping" , "REEEEEEEEE");
-
-            //Log.e("Hardware Mapping" , "REEEEEEE");
-        } else {
-            //telemetry.addData("asdasdad","Asd");
-
-            //Log.e("Hardware Mapping" , "no reeeeee");
-        }
-//        motor.setPower(0);
         return motor;
     }
-    /*private Servo s(Servo servo, String name, double position, boolean ifReverse) {
+    // ------------ Standard Servos -------------
+    private Servo s(String name, double position, boolean ifReverse) {
+        Servo servo = null;
         try {
             servo = hardwareMap.servo.get(name);
             if (ifReverse)
@@ -63,15 +56,16 @@ public class Map {
         }
         return servo;
     }
-    private CRServo crs(CRServo crservo, String name, double power, boolean ifReverse) {
+    // ------- Continuous Rotation Servos -------
+    private CRServo crs(String name, boolean ifReverse) {
+        CRServo crservo = null;
         try {
             crservo = hardwareMap.crservo.get(name);
             if (ifReverse)
                 crservo.setDirection(DcMotorSimple.Direction.REVERSE);
-            crservo.setPower(power);
         } catch (Exception opModeException) {
             telemetry.addData("Can't map crservo", name);
         }
         return crservo;
-    }*/
+    }
 }

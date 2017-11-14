@@ -74,21 +74,21 @@ public class RelicRecoveryHardware extends OpMode {
     }
     // ---------------------- Private Methods -----------------------
     private void hardwareInit() {
-        Map map = new Map(hardwareMap);
+        Map map = new Map(hardwareMap,telemetry);
         // -------------- DcMotors --------------
         mRight = map.revMotor("r");
-        //mLeft = map.motor(hardwareMap, "l");
-        //mLift = map.motor(hardwareMap, "lift");
-        //mArm = map.motor(mArm, "arm");
-        //mArmLift = map.motor(mArmLift, "armlift");
+        mLeft = map.motor("l");
+        mLift = map.motor("lift");
+        mArm = map.motor("arm");
+        mArmLift = map.motor("armlift");
         // ---------- Standard Servos -----------
-        /*ssBallPusher = map.servo(ssBallPusher,"ball", ballPusherPosition);
-        ssArm = map.servo(ssArm, "armS", armPosition);
-        ssRelicGrabber = map.servo(ssRelicGrabber, "hand", oneHandPosition);*/
+        ssBallPusher = map.servo("ball", ballPusherPosition);
+        ssArm = map.servo("armS", armPosition);
+        ssRelicGrabber = map.servo("hand", oneHandPosition);
         // ------- Continuous Rotation Servos -------
-        /*crHand = map.revCrservo(crHand,"crh",crHandPosition);
-        crRelicGrabber = map.revCrservo(crRelicGrabber, "relic", relicPosition);
-        crArmLift = map.revCrservo(crArmLift, "armLifters", armLifterSPosition);
-        crArm = map.crservo(crArm, "armServo", armPower);*/
+        crHand = map.revCrservo("crh");
+        crRelicGrabber = map.revCrservo("relic");
+        crArmLift = map.revCrservo("armLifters");
+        crArm = map.crservo("armServo");
     }
 }
