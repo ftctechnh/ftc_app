@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.RelicRecovery;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Utilities.Map;
@@ -54,12 +53,12 @@ public class RelicRecoveryHardware extends OpMode {
     protected double liftPower;
     protected double armPower;
     protected double armLifterPwr = STOPPED_ARM_LIFTER;
-    protected double armLifterSPosition = STOPPED_ARM_LIFTER_S;
 
     protected double ballPusherPosition = BALL_PUSHER_UP;
     protected double oneHandPosition = OPEN_ONE_HAND;
     protected double crHandPosition = STOPPED_CR_HAND;
     protected double relicPosition = STOPPED_RELIC;
+    protected double armLifterSPosition = STOPPED_ARM_LIFTER_S;
     protected double armPosition = ARM_IN;
 
     protected String driveMode;
@@ -75,60 +74,21 @@ public class RelicRecoveryHardware extends OpMode {
     }
     // ---------------------- Private Methods -----------------------
     private void hardwareInit() {
-        // -------------- DcMotors --------------
         Map map = new Map();
+        // -------------- DcMotors --------------
         mRight = map.revMotor(mRight,"r");
         mLeft = map.motor(mLeft, "l");
         mLift = map.motor(mLift, "l");
         mArm = map.motor(mArm, "arm");
         mArmLift = map.motor(mArmLift, "armlift");
         // ---------- Standard Servos -----------
-        try {
-            ssBallPusher = hardwareMap.servo.get("ball");
-            ssBallPusher.setPosition(ballPusherPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant map", "ball pusher (ball)");
-        }
-        try {
-            ssRelicGrabber = hardwareMap.servo.get("hand");
-            ssRelicGrabber.setPosition(oneHandPosition);
-        } catch (Exception opModeException){
-            telemetry.addData("Cant map", "one hand (hand)");
-        }
+        ssBallPusher = map.servo(ssBallPusher,"ball", ballPusherPosition);
+        ssArm = map.servo(ssArm, "armS", armPosition);
+        ssRelicGrabber = map.servo(ssRelicGrabber, "hand", oneHandPosition);
         // ------- Continuous Rotation Servos -------
-        try {
-            crHand = hardwareMap.crservo.get("crh");
-            crHand.setDirection(DcMotorSimple.Direction.REVERSE);
-            crHand.setPower(crHandPosition);
-        } catch (Exception opModeException){
-            telemetry.addData("Cant map", "cr hand (crh)");
-        }
-        try {
-            crRelicGrabber = hardwareMap.crservo.get("relic");
-            crRelicGrabber.setDirection(DcMotorSimple.Direction.REVERSE);
-            crRelicGrabber.setPower(relicPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant map", "relic grabber (relic)");
-        }
-        try {
-            crArmLift = hardwareMap.crservo.get("armLifterS");
-            crArmLift.setDirection(DcMotorSimple.Direction.REVERSE);
-            crArmLift.setPower(armLifterSPosition);
-        } catch (Exception opModeException){
-            telemetry.addData("Cant map", "arm lifter (armLifterS)");
-        }
-        try {
-            crArm = hardwareMap.crservo.get("armServo");
-            //add direction here
-            crArm.setPower(armPower);
-        } catch (Exception opModeException) {
-            telemetry.addData("Can't map", "arm cr(armServo)");
-        }
-        try {
-            ssArm = hardwareMap.servo.get("armS");
-            ssArm.setPosition(armPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Can't map", "servo arm (armS)");
-        }
+        crHand = map.revCrservo(crHand,"crh",crHandPosition);
+        crRelicGrabber = map.revCrservo(crRelicGrabber, "relic", relicPosition);
+        crArmLift = map.revCrservo(crArmLift, "armLifters", armLifterSPosition);
+        crArm = map.crservo(crArm, "armServo", armPower);
     }
 }
