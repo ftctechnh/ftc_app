@@ -3,22 +3,24 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.Alliance.BLUE;
 import static org.firstinspires.ftc.teamcode.Alliance.RED;
+import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 
 /**
  * Created by guberti on 10/17/2017.
  */
-@Autonomous(name="Full autonomous", group="Autonomous")
+@Autonomous(name="Complete FRONT BLUE autonomous", group="Autonomous")
 public class CompleteAutonomous extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();
@@ -27,7 +29,7 @@ public class CompleteAutonomous extends LinearOpMode {
 
     final double INITIAL_DESIRED_HEADING = Math.PI / 2;
     final double TURN_VOLATILITY = 1.5 * Math.PI;
-    final double ACCEPTABLE_HEADING_VARIATION = Math.PI / 180; // 1 degree
+    final double ACCEPTABLE_HEADING_VARIATION = Math.PI / 90; // 1 degree
     final int DISTANCE_TO_DRIVE = 400;
     final int ROTATION = 1120; // 2880 encoder clicks per wheel rotation
 
@@ -35,12 +37,15 @@ public class CompleteAutonomous extends LinearOpMode {
     PixyCam.Block redBall;
     PixyCam.Block blueBall;
     Alliance rightMostBall; // Which alliance the rightmost ball belongs to, from robot POV
-    double difference;
+
+    VuforiaTrackable relicTemplate;
 
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, this, false, gamepad2);
+        robot.init(hardwareMap, this, gamepad1, gamepad2);
+
+        robot.color = Alliance.RED;
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -75,133 +80,163 @@ public class CompleteAutonomous extends LinearOpMode {
         }
 
         telemetry.addData("Rightmost ball:", rightMostBall);
+        telemetry.update();
+
+        initializeVuforia();
+
+        int pictograph = 1;
+
+        ElapsedTime timeUntilGuess = new ElapsedTime();
+        while (opModeIsActive() && timeUntilGuess.seconds() < 5) {
+
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                telemetry.addData("VuMark", "%s visible", vuMark);
+
+                switch (vuMark) {
+                    case RIGHT:
+                        pictograph = 0;
+                        break;
+                    case CENTER:
+                        pictograph = 1;
+                        break;
+                    case LEFT:
+                        pictograph = 2;
+                        break;
+                }
+                telemetry.update();
+                break;
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+            telemetry.update();
+        }
 
         // Grab and clamp the block in front of us
-        robot.closeBlockClaw();
+        robot.crunchBlockClaw();
         robot.setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.5);
         robot.lift.setTargetPosition(-2500);
         robot.sleep(2000);
 
-
-        // We have now hit the gem
+        robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
+        for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
 
         if (ballPositionsKnown()) {
             knockOffBalls();
         }
 
-        // We now need to read the pictograph
-        initializeVuforia();
-        String pictographLocation = "leftTarget"; // Should be null
-        int pictograph = 0;
+        // Drive backwards off the pad
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 2000);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - 2000);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - 2000);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 2000);
 
-        /*
-        while (opModeIsActive() && pictographLocation == null) {
+        log("Finished setting motors to drive sideways");
+        waitUntilMovementsComplete();
 
-            for (VuforiaTrackable trackable : trackables) {
-                boolean seen = ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible();
-                telemetry.addData(trackable.getName(), seen ? "Visible" : "Not Visible");
-                if (seen) {
-                    pictographLocation = trackable.getName();
-                    break;
-                }
-            }
-            telemetry.update();
-        }*/
+        turnToPos(0);
+        for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
+        log("Corrected heading");
 
-        switch (pictographLocation) {
-            case "leftTarget":
-                pictograph = 0;
-                break;
-            case "centerTarget":
-                pictograph = 1;
-                break;
-            case "rightTarget":
-                pictograph = 2;
-                break;
-        }
-        // We now need to move into the corner
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 1600);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + 1600);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + 1600);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 1600);
 
-        robot.sleep(3000);
+        log("Moving forward...");
 
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + ROTATION * 2);
-        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION*2);
-        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION*2);
-        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + ROTATION * 2);
+        waitUntilMovementsComplete();
 
-        for (DcMotor m : robot.motorArr) {
-            m.setPower(0.35);
-        }
-        robot.sleep(5000); // Wait for this to be completed
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + (int) (ROTATION * 3.5));
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + (int) (ROTATION * 3.5));
+        log("Ramming wall...");
 
-        robot.frontRight.setTargetPosition(robot.frontLeft.getTargetPosition() + (int) (ROTATION * 1.5));
-        robot.backLeft.setTargetPosition(robot.backRight.getTargetPosition() + (int) (ROTATION * 1.5));
-        robot.sleep(5000);
+        waitUntilMovementsComplete();
+
+        turnToPos(0);
+        for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
+
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - 800);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - 800);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - 800);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - 800);
+
+        waitUntilMovementsComplete();
         // Move into corner
 
+        robot.backLeft.setPower(0.6);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.frontRight.setPower(0.6);
+
         // Up and right five wheel rotations
-        robot.backRight.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION * 2);
-        robot.frontLeft.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION * 2);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + (int) (ROTATION * 2.5));
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition());
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition());
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + (int) (ROTATION * 2.5));
 
-        robot.sleep(5000); // Wait for this to be completed
+        log("Ramming corner...");
 
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() - (ROTATION /4)*3);
-        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() - (ROTATION /4)*3);
-        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() - (ROTATION /4)*3);
-        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() - (ROTATION /4)*3);
+        waitUntilMovementsComplete();
 
-        robot.sleep(5000); // Wait for this to be completed
+        turnToPos(0);
+        for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
 
-        int driveDist = (ROTATION /4) * 6 + (ROTATION /4) * 3 * pictograph;
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - ROTATION);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - ROTATION);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - ROTATION);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - ROTATION);
+        log("Moving to correct plane...");
 
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + driveDist);
-        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() - driveDist);
-        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() - driveDist);
-        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + driveDist);
+        waitUntilMovementsComplete();
 
-        robot.sleep(5000);
+        int driveDist = 1000 + pictograph * 630;
 
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() + ROTATION);
-        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() + ROTATION);
-        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() + ROTATION);
-        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() + ROTATION);
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - driveDist);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + driveDist);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + driveDist);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - driveDist);
 
-        robot.sleep(5000);
+        waitUntilMovementsComplete();
+
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 840);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + 840);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + 840);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 840);
+
+        waitUntilMovementsComplete();
         robot.lift.setTargetPosition(0);
 
-        robot.sleep(5000);
-        robot.openRelicClaw();
-        robot.sleep(5000);
+        robot.sleep(1000);
+        robot.openBlockClaw();
+        robot.sleep(500);
 
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getTargetPosition() - ROTATION);
-        robot.backLeft.setTargetPosition(robot.backLeft.getTargetPosition() - ROTATION);
-        robot.frontRight.setTargetPosition(robot.frontRight.getTargetPosition() - ROTATION);
-        robot.backRight.setTargetPosition(robot.backRight.getTargetPosition() - ROTATION);
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - ROTATION/2);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - ROTATION/2);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - ROTATION/2);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - ROTATION/2);
+
+        waitUntilMovementsComplete();
     }
 
     public void initializeVuforia() {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
         parameters.vuforiaLicenseKey = "Ac4jpF3/////AAAAGYER4VUDLEYGlD++ha+MStuNhKORp/7DQz1D1+tQwcrsMnbQwLqRgpkFtCOIGrZ942gdL179juAJmdXeeH+Dk0pVgxLFq6O0AzY1MS3wS5JHvSLppO9v8W//finYio3hQk+TFKD+qWq9Q1nAZx0bMWFeF6IuIjUPQLioBzC/lYzI/L7oi/AJAbFlf6wue3gDs0dgwrAgpe+JFHTgM3g2+y4hS6O0mcJjobAWSNeRxq9caOGfl/q6f09Eu2EccSmHLAaqje0i70eAIZ4Tbg5C31sPZxBOPTEGTQ9NvFhP4FNAXlvPCdiBt6XYE8P17UzPN72p7lRKyp4xR1oC8B/4dYbivso+rQUed5/H7AnQYOdA";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        VuforiaTrackables pictographAssets = this.vuforia.loadTrackablesFromAsset("FirstRelicRecoveryPictographs");
-        VuforiaTrackable blueCryptoBox = pictographAssets.get(0);
-        blueCryptoBox.setName("BlueCryptoBox");
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        VuforiaTrackable rightPictograph = pictographAssets.get(1);
-        rightPictograph.setName("RightTarget");
+        relicTrackables.activate();
 
-        VuforiaTrackable centerPictograph = pictographAssets.get(2);
-        centerPictograph.setName("CenterTarget");
-
-        VuforiaTrackable leftPictograph = pictographAssets.get(3);
-        leftPictograph.setName("LeftTarget");
-
-        trackables = new ArrayList<VuforiaTrackable>();
-        trackables.addAll(pictographAssets);
-
-        pictographAssets.activate();
     }
 
     public void updateBlocks() {
@@ -214,13 +249,10 @@ public class CompleteAutonomous extends LinearOpMode {
     }
 
     public void knockOffBalls() {
-        if (robot.color == BLUE) {
-            robot.lowerLeftWhipSnake();
-        } else {
-            robot.lowerRightWhipSnake();
-        }
-        robot.sleep(500);
 
+        robot.lowerLeftWhipSnake();
+
+        robot.sleep(500);
 
         int desiredDistance = DISTANCE_TO_DRIVE;
 
@@ -244,5 +276,64 @@ public class CompleteAutonomous extends LinearOpMode {
         for (DcMotor m : robot.motorArr) {
             m.setTargetPosition(0);
         }
+    }
+    public void turnToPos(double pos) {
+        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double difference = Double.MAX_VALUE;
+
+
+        while(Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION && opModeIsActive()) {
+            telemetry.addData("Heading difference", difference);
+            double heading = robot.getGyroHeading();
+
+            difference = getAngleDifference(pos, heading);
+            double turnSpeed = difference;
+            turnSpeed = Math.max(-0.5, Math.min(0.5, turnSpeed));
+
+            double[] unscaledMotorPowers = new double[4];
+            telemetry.addData("Turnspeed", turnSpeed);
+
+            for (int i = 0; i < unscaledMotorPowers.length; i++) {
+                if (i % 2 == 0) {
+                    unscaledMotorPowers[i] = turnSpeed;
+                } else {
+                    unscaledMotorPowers[i] = -turnSpeed;
+                }
+            }
+            telemetry.addData("M1", unscaledMotorPowers[0]);
+            telemetry.addData("M2", unscaledMotorPowers[1]);
+            telemetry.addData("M3", unscaledMotorPowers[2]);
+            telemetry.addData("M4", unscaledMotorPowers[3]);
+
+            telemetry.update();
+
+            robot.setMotorSpeeds(unscaledMotorPowers);
+        }
+        robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
+        stopMoving();
+    }
+
+    public void stopMoving() {
+        for (DcMotor m : robot.motorArr) {
+            m.setPower(0);
+        }
+    }
+    public void log(String s) {
+        telemetry.log().add(s);
+    }
+    public void waitUntilMovementsComplete() {
+        boolean done = false;
+
+        while (!done) {
+            done = true;
+            for (DcMotor m : robot.motorArr) {
+                if (Math.abs(m.getTargetPosition() - m.getCurrentPosition()) > 75) {
+                    done = false;
+                    break;
+                }
+            }
+
+        }
+        robot.sleep(500);
     }
 }
