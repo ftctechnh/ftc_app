@@ -19,7 +19,7 @@ public class AutoTest extends AutonomousTemplate<Robot9853> {
     private Boolean isRedTeam;
 
     public AutoTest(boolean isRedTeam) {
-        super();
+    super(true); //super(); FIXME: it wont compile
         this.isRedTeam = isRedTeam;
     }
 
