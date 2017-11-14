@@ -14,18 +14,31 @@ import android.util.Log;
 //This is the basic class
 public class AutonomousSetup extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.
+    //Forklift
+    private Servo rightClaw;
+    private Servo leftClaw;
+    private double clawPosition = 0.0, clawHighEnd = 0.45, clawLowEnd = 0.2;
+    private DcMotor DrawerSlide;
+    private double DrawerSlideLowEnd;
+    private double DrawerSlideHighEnd;
+    private double DrawerSlideSpeed = 0;
+    rightClaw = hardwareMap.servo.get("s1");
+    rightClaw.setDirection(Servo.Direction.REVERSE);
+    rightClaw.setPosition(clawPosition);
+    leftClaw = hardwareMap.servo.get("s2");
+    leftClaw.setPosition(clawPosition);
+    reverseMotor(FrontRight);
+    reverseMotor(RearRight);
+    //Jewel Arm
     Servo servo;
-    DcMotor FrontLeftMotor;
-    DcMotor FrontRightMotor;
-    DcMotor BackLeftMotor;
-    DcMotor BackRightMotor;
+    DcMotor FrontLeftMotor, FrontRightMotor, BackLeftMotor, BackRightMotor;
     boolean a = true;
     ColorSensor cS;
     // Now declare any universal value you will need more then once, like encoder CPR(Clicks per rotation)
     int CPR = 1120; //Encoder CPR
     int Tm = 2; // The part of the gear ratio attached to the motor
     int Tw = 1; //The part of the gear ratio attached to the wheel
-    double D = 2.5; //Diameter of wheels
+    double D = 4.0; //Diameter of wheels
     double C = D * Math.PI;//One rotation of tank gear/wheel
     public void runOpMode() throws InterruptedException {
         //Start with the basic declaration of variable strings that the phones will read
@@ -56,6 +69,7 @@ public class AutonomousSetup extends LinearOpMode {
 
     void rotations(double numberOfRotations, double power) {
         boolean isNegative = false;
+
         if (numberOfRotations < 0) {
             isNegative = true;
         }
@@ -73,7 +87,11 @@ public class AutonomousSetup extends LinearOpMode {
         } else {
             forward(power);
         }
-
+        clawPosition = clawHighEnd;
+        rightClaw.setPosition(clawPosition);
+        rightClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
+        leftClaw.setPosition(clawPosition);
         while (now < goal) {
         telemetry.addData("Current clicks: ", now);
         now = encodervalue();
@@ -136,11 +154,18 @@ public class AutonomousSetup extends LinearOpMode {
             }
             timesRan += 1;
         }
+
         if (timesBlue > timesRed){
             rotations(-.25, .5);
         }
         else{
             rotations(.25, .5);
         }
+    }
+    public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
+
+    }
+    public void closeClaw() {
+
     }
 }
