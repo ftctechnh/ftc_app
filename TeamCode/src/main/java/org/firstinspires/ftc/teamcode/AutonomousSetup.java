@@ -48,6 +48,7 @@ public class AutonomousSetup extends LinearOpMode {
         leftClaw.setPosition(clawPosition);
         
         cS = hardwareMap.colorSensor.get("cs1");
+        servo = hardwareMap.servo.get("s3");
         // Now do anything else you need to do in the initilazation phase, like calibrating the gyros, setting a color sensors lights off, etc.
 
         FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -153,7 +154,7 @@ public class AutonomousSetup extends LinearOpMode {
             }
             timesRan += 1;
         }
-
+        closeClaw();
         if (timesBlue > timesRed){
             rotations(-.25, .25);
             rotations(.25, .25);
@@ -167,6 +168,15 @@ public class AutonomousSetup extends LinearOpMode {
 
     }
     public void closeClaw() {
-
+        rightClaw.setPosition(clawHighEnd);
+        rightClaw.setPosition(clawHighEnd);
+        leftClaw.setPosition(clawHighEnd);
+        leftClaw.setPosition(clawHighEnd);
+    }
+    public void openClaw() {
+        rightClaw.setPosition(clawLowEnd);
+        rightClaw.setPosition(clawLowEnd);
+        leftClaw.setPosition(clawLowEnd);
+        leftClaw.setPosition(clawLowEnd);
     }
 }
