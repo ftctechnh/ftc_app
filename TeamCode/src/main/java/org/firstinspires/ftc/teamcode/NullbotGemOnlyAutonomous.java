@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -11,11 +12,13 @@ import static org.firstinspires.ftc.teamcode.Alliance.RED;
  * Created by guberti on 10/17/2017.
  */
 @Autonomous(name="Knock off gem", group="Autonomous")
+@Disabled
 public class NullbotGemOnlyAutonomous extends LinearOpMode {
 
     NullbotHardware robot   = new NullbotHardware();
 
     final int DISTANCE_TO_DRIVE = 400;
+    int directionMultiplier;
 
     PixyCam pixyCam;
     PixyCam.Block redBall;
@@ -24,13 +27,15 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, this, false, gamepad2);
+        if (!robot.initialized) {
+            robot.init(hardwareMap, this, gamepad1, gamepad2);
+        }
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        pixyCam = hardwareMap.get(PixyCam.class, "leftPixyCam");
+        pixyCam = robot.leftPixyCam;
 
         telemetry.clearAll();
 
@@ -62,11 +67,8 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
 
         telemetry.addData("Rightmost ball:", rightMostBall);
 
-        if (robot.color == Alliance.BLUE) {
-            robot.lowerLeftWhipSnake();
-        } else {
-            robot.lowerRightWhipSnake();
-        }
+        robot.lowerLeftWhipSnake();
+
         robot.waitForTick(500);
 
 
@@ -75,6 +77,14 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
         if (rightMostBall == robot.color) {
             desiredDistance *= -1;
         }
+        desiredDistance *= directionMultiplier;
+
+
+        robot.closeBlockClaw();
+        robot.setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setPower(0.5);
+        robot.lift.setTargetPosition(-1000);
+        robot.sleep(2000);
 
         for (DcMotor m : robot.motorArr) {
             m.setPower(0.2);
