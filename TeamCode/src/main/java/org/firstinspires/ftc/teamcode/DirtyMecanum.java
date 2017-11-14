@@ -29,13 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * 'Dirty' Mecanum TeleOp
@@ -87,14 +83,14 @@ public class DirtyMecanum extends OpMode
 
 
         if (dpadStates[0]){         // full forward
-            robot.setAllMotors(SPEED);
+            robot.setAllDriveMotors(SPEED);
         } else if (dpadStates[1]) { // right strafe
             robot.flDrive.setPower(SPEED);
             robot.frDrive.setPower(-1 * SPEED);
             robot.rlDrive.setPower(-1 * SPEED);
             robot.rrDrive.setPower(SPEED);
         } else if (dpadStates[2]) { // full reverse
-            robot.setAllMotors(-1 * SPEED);
+            robot.setAllDriveMotors(-1 * SPEED);
         } else if (dpadStates[3]) { // left strafe
             robot.flDrive.setPower(-1 * SPEED);
             robot.frDrive.setPower(SPEED);
@@ -120,7 +116,7 @@ public class DirtyMecanum extends OpMode
             robot.rrDrive.setPower(SPEED);
         } else {
 
-            robot.setAllMotors(0);
+            robot.setAllDriveMotors(0);
         }
 
         telemetry.addData("D-Pad up", dpadStates[0]);
