@@ -156,10 +156,12 @@ public class AutonomousSetup extends LinearOpMode {
         }
 
         if (timesBlue > timesRed){
-            rotations(-.25, .5);
+            rotations(-.25, .25);
+            rotations(.25, .25);
         }
         else{
-            rotations(.25, .5);
+            rotations(.25, .25);
+            rotations(-.25, .25);
         }
     }
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
