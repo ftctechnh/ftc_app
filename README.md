@@ -10,9 +10,11 @@ Note that the wiki is an "evergreen" document that is constantly being updated a
 ## Downloading the Project
 It is important to note that this repository is large and can take a long time and use a lot of space to download. If you would like to save time and space, there are some options that you can choose to download only the most current version of the Android project folder:
 
-* If you are a git user, *FIRST* recommends that you use the --depth command line argument to only clone the most current version of the repository:
+* If you are a git user, *FIRST* recommends that you use the `--depth` command line argument to only clone the most current version of the repository:
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;git clone --depth=1 https://github.com/ftctechnh/ftc_app.git</p>
+    ```bash
+    git clone --depth=1 https://github.com/ftctechnh/ftc_app.git
+    ```
 
 * Or, if you prefer, you can use the "Download Zip" button available through the main repository page.  Downloading the project as a .ZIP file will keep the size of the download manageable.
 
@@ -44,7 +46,6 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 
 **************************************************************************************
 # Release Information
-**************************************************************************************
 
 Version 3.5 (built on 17.10.30)
 
@@ -59,9 +60,7 @@ Changes with version 3.5 include:
  * Improved error message on OnBot Java that occurs when renaming a file fails.
  * Removed unneeded resources from android.jar binaries used by OnBot Java to reduce final size of Robot Controller app.
  * Added MR_ANALOG_TOUCH_SENSOR block to Blocks Programming Tool.
-
-**************************************************************************************
-# Release Information
+ 
 **************************************************************************************
 
 Version 3.4 (built on 17.09.06)
