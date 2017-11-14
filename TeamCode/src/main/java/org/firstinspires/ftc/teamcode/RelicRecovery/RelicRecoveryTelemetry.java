@@ -26,8 +26,8 @@ public class RelicRecoveryTelemetry extends RelicRecoveryHardware {
 
         //servos
         telemetry.addData("Ball Pusher Position", ballPusherPosition);
-        telemetry.addData("Right Hand Position", rightHandPosition);
-        telemetry.addData("Left Hand Position", leftHandPosition);
+        //telemetry.addData("Right Hand Position", rightHandPosition);
+        //telemetry.addData("Left Hand Position", leftHandPosition);
         telemetry.addData("One Hand Position", oneHandPosition);
         telemetry.addData("CR Hand Position", crHandPosition);
         telemetry.addData("relic grabber position", relicPosition);

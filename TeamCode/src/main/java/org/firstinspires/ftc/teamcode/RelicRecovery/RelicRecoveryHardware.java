@@ -78,7 +78,7 @@ public class RelicRecoveryHardware extends OpMode {
         // -------------- DcMotors --------------
         mRight = map.revMotor(mRight,"r");
         mLeft = map.motor(mLeft, "l");
-        mLift = map.motor(mLift, "l");
+        mLift = map.motor(mLift, "lift");
         mArm = map.motor(mArm, "arm");
         mArmLift = map.motor(mArmLift, "armlift");
         // ---------- Standard Servos -----------
