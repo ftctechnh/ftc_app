@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
  */
 
 @Autonomous(name="Vuforia Ball Demo", group ="Demo")
-public class VuforiaBallFramework extends VuforiaBallLib {
+public class VuforiaBallDemo extends VuforiaBallLib {
 
     @Override
     public void init() {
@@ -18,7 +18,7 @@ public class VuforiaBallFramework extends VuforiaBallLib {
 
     @Override
     public void start() {
-        super.startVuforia();
+        super.startTracking();
     }
 
     @Override

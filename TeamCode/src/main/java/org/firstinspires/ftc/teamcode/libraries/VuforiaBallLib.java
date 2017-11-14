@@ -61,11 +61,12 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
     protected Vec3F[] point;
     //output bitmap
     private Bitmap bm;
+    //output bitmap lock
+    private static final Object bmLock = new Object();
 
     private ImageView mView;
 
-    private BlockingDeque<Mat> matQueue = new LinkedBlockingDeque<>();
-    private BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
+    protected BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
 
     //vuforia objects
     protected VuforiaLocalizerShim vuforia;
@@ -137,7 +138,7 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
     }
 
     //start vuforia tracking
-    protected void startVuforia() {
+    protected void startTracking() {
         relicTemplate.getTrackables().activate();
     }
 
@@ -152,27 +153,7 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
     protected BallColor getBallColor() {
         //get frame from vuforia
         try{
-            VuforiaLocalizer.CloseableFrame frame = ray.take();
-
-            int img = 0;
-            for(; img < frame.getNumImages(); img++){
-                //telemetry.addData("Image format " + img, frame.getImage(img).getFormat());
-                if(frame.getImage(img).getFormat() == PIXEL_FORMAT.RGB888) break;
-            }
-
-            if(img == frame.getNumImages()) throw new IllegalArgumentException("Incorrect format");
-            Image mImage = frame.getImage(img);
-
-            //stick it in a Mat for "display purposes"
-            Mat out = new Mat(mImage.getHeight(), mImage.getWidth(), CV_8UC3);
-
-            java.nio.ByteBuffer color = mImage.getPixels();
-            byte[] ray = new byte[color.limit()];
-            color.rewind();
-            color.get(ray);
-            out.put(0, 0, ray);
-
-            frame.close();
+            Mat out = getFrame();
 
             //get vuforia's real position matrix
             Matrix34F goodCodeWritten = ((VuforiaDefaultListenerShim) relicTemplate.getListener()).getRealPose();
@@ -227,24 +208,7 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
                 //flip it for display
                 Core.flip(out, out, -1);
 
-                matQueue.add(out);
-
-                //display!
-                mView.getHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Mat frame = matQueue.take();
-                            //convert to bitmap
-                            Utils.matToBitmap(frame, bm);
-                            frame.release();
-                            mView.invalidate();
-                        }
-                        catch (InterruptedException e) {
-                            //huh
-                        }
-                    }
-                });
+                drawFrame(out);
             }
 
             if(leftColor != null && rightColor != null) {
@@ -260,6 +224,10 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
         }
     }
 
+    protected void stopTracking() {
+        relicTemplate.getTrackables().deactivate();
+    }
+
     protected void stopVuforia() {
         this.vuforia.stop();
         if(displayData) {
@@ -267,10 +235,11 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
             mView.post(new Runnable() {
                 @Override
                 public void run() {
-                    mView.setImageDrawable(null);
-                    mView.invalidate();
-                    if(bm != null) bm.recycle();
-                    if(matQueue != null) matQueue.clear();
+                    synchronized (bmLock) {
+                        mView.setImageDrawable(null);
+                        mView.invalidate();
+                        if(bm != null) bm.recycle();
+                    }
                 }
             });
             this.ray.clear();
@@ -297,6 +266,45 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
             return color;
         }
         else return null;
+    }
+
+    protected void drawFrame(Mat frame) {
+        //convert to bitmap, synchronized
+        synchronized (bmLock) { Utils.matToBitmap(frame, bm); }
+
+        //display!
+        mView.getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (bmLock) { mView.invalidate(); }
+            }
+        });
+    }
+
+    protected Mat getFrame() throws InterruptedException {
+        VuforiaLocalizer.CloseableFrame frame = ray.take();
+
+        int img = 0;
+        for(; img < frame.getNumImages(); img++){
+            //telemetry.addData("Image format " + img, frame.getImage(img).getFormat());
+            if(frame.getImage(img).getFormat() == PIXEL_FORMAT.RGB888) break;
+        }
+
+        if(img == frame.getNumImages()) throw new IllegalArgumentException("Incorrect format");
+        Image mImage = frame.getImage(img);
+
+        //stick it in a Mat for "display purposes"
+        Mat out = new Mat(mImage.getHeight(), mImage.getWidth(), CV_8UC3);
+
+        java.nio.ByteBuffer color = mImage.getPixels();
+        byte[] ray = new byte[color.limit()];
+        color.rewind();
+        color.get(ray);
+        out.put(0, 0, ray);
+
+        frame.close();
+
+        return out;
     }
 
     public enum BallColor {

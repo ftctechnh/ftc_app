@@ -37,7 +37,7 @@ public class RedBallAuto extends VuforiaBallLib {
 
     @Override
     public void start() {
-        startVuforia();
+        startTracking();
     }
 
     @Override

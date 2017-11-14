@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.sun.tools.javac.util.List;
 
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
  */
 
 @Autonomous(name="OpenCV Peaks")
+@Disabled
 public class OpenCVPeakFinding extends OpenCVLib{
     private Mat kernel;
 
@@ -33,7 +35,7 @@ public class OpenCVPeakFinding extends OpenCVLib{
         //emptey memory
         out.clear();
         //dilate red data
-        Mat dilated = new Mat(red.size(), red.type());
+        Mat dilated = new Mat(red.size(), CvType.CV_8UC1);
         Imgproc.dilate(red, dilated, kernel);
         //filter out any that increased
         Core.compare(red, dilated, red, Core.CMP_GE);
