@@ -128,6 +128,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         double cDrive;
 
         double fLift;
+        double arm1;
+        double arm2;
 
         double max;
 
@@ -158,8 +160,6 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         while (opModeIsActive()) {
             //sets flift servos to 90 degrees
 
-            robot.fs1.setPosition(.5);
-            robot.fs2.setPosition(.5);
             robot.jko.setPosition(.5);
             robot.claw.setPosition(0);
 
@@ -172,6 +172,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             rDrive = -gamepad1.left_stick_y - gamepad1.right_stick_x;
 
             cDrive = -gamepad1.left_trigger + gamepad1.right_trigger;
+            arm1 = -gamepad2.left_stick_y;
+            arm2 = -gamepad2.right_stick_y;
 
 
             if (gamepad2.a) {
@@ -200,9 +202,15 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                 robot.fLift.setDirection(DcMotorSimple.Direction.FORWARD);
                 robot.fLift.setPower(1);
             }
+            else if(!gamepad2.dpad_up) {
+                robot.fLift.setPower(0);
+            }
             if (gamepad2.dpad_down) {
                 robot.fLift.setDirection(DcMotorSimple.Direction.REVERSE);
                 robot.fLift.setPower(1);
+            }
+            else if(!gamepad2.dpad_down) {
+                robot.fLift.setPower(0);
             }
 
 
@@ -230,6 +238,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             robot.rDrive.setPower(rDrive);
 
             robot.cDrive.setPower(cDrive);
+            robot.arm1.setPower(arm1);
+            robot.arm2.setPower(arm2);
 
 
         }
