@@ -2,6 +2,12 @@ package RicksCode.Bill_Adapted;
 
 import android.content.Context;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Tele;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,6 +21,14 @@ import java.io.OutputStreamWriter;
  * Created by jmgu3 on 11/7/2016.
  */
 public class ConfigFileHandler {
+    //private Gamepad gamepad;
+
+
+    Telemetry telemetry;
+    public ConfigFileHandler(Telemetry telemetry){
+        this.telemetry = telemetry;
+        //gamepad = g;
+        }
 
     // variables used during the configuration process
     private String configFileName = "8045Relic.txt";
@@ -49,6 +63,7 @@ public class ConfigFileHandler {
 
 
     public void initializeValues() {
+
 //        waitTime = 0;
 //        shooterWait = 7;
 //        shooterForwardTime = 8;
@@ -91,7 +106,6 @@ public class ConfigFileHandler {
         menuvalue[5] = 15;
         menulabel[6] = "test6";
         menuvalue[6] = 16;
-
 
 
 
@@ -147,6 +161,9 @@ public class ConfigFileHandler {
     public void readDataFromTxtFile(Context context) {
         // setup initial configuration parameters here
         initializeValues();
+//        telemetry.addData("x", gamepad.x);
+//        telemetry.addData("joyrx", gamepad.right_stick_x);
+//        telemetry.update();
 
         // read configuration data from file
 //        String fileName = "test.txt";

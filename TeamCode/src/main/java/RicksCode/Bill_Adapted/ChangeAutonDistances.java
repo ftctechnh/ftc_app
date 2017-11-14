@@ -15,8 +15,9 @@ public class ChangeAutonDistances extends OpMode {
 
     @Override
     public void init() {
-        parameterFile = new ConfigFileHandler();
+        parameterFile = new ConfigFileHandler(telemetry);
         parameterFile.readDataFromTxtFile(hardwareMap.appContext);
+
     }
 
     @Override

@@ -8,7 +8,11 @@ package RicksCode.Bill_Adapted;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Tele;
 
 
 @Autonomous(name="AUTOTEST",group="zRick")  // @Autonomous(...) is the other common choice
@@ -18,7 +22,7 @@ public class Auto extends LinearOpMode {
     RobotRR gromit;
 
     private ElapsedTime runtime = new ElapsedTime();
-
+    private ConfigFileHandler configFile;
 
 
     @Override
@@ -26,21 +30,21 @@ public class Auto extends LinearOpMode {
         gromit = new RobotRR();
         gromit.init(hardwareMap);
 
-        ConfigFileHandler configFile;
-        configFile = new ConfigFileHandler();
+        configFile = new ConfigFileHandler(telemetry);
+
         if (!gamepad1.back) {
             configFile.readDataFromTxtFile(hardwareMap.appContext);
         } else{
             configFile.initializeValues();
         }
-
+        sleep(5000);
         //configFile.writeDataToFile(hardwareMap.appContext);
         configFile.writeDataToTxtFile(hardwareMap.appContext);
 
         int i=0;
 
         for ( i=0; i < configFile.menulabel.length; i++){
-            telemetry.addData(configFile.menulabel[0], configFile.menuvalue[0]);
+            telemetry.addData(configFile.menulabel[i], configFile.menuvalue[i]);
         }
 //        telemetry.addData("SHOOTER WAIT:", configFile.menuvalue[1]);
 //        telemetry.addData("SHOOTER FORWARD AFTER SHOOT:", configFile.menuvalue[2]);
