@@ -4,7 +4,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,6 +17,7 @@ public class TCHardwarePushbot {
     public DcMotor lDrive;
     public DcMotor cDrive;
     public DcMotor fLift;
+
     public DcMotor arm1;
     public DcMotor arm2;
     public Servo fs1;
@@ -23,17 +26,21 @@ public class TCHardwarePushbot {
     public Servo fs4;
     public Servo jko;
     public Servo claw;
+
     //Creates the hardware map
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
+
     //Maps the hardware to ahwMap
     public void init(HardwareMap hwMap) {
         // Save reference to Hardware map
+
         // Define and Initialize Motors
         rDrive = hwMap.dcMotor.get("rDrive");
         lDrive = hwMap.dcMotor.get("lDrive");
         cDrive = hwMap.dcMotor.get("cDrive");
+
 
         fLift = hwMap.dcMotor.get("fLift");
         arm1 = hwMap.dcMotor.get("arm1");
@@ -54,6 +61,7 @@ public class TCHardwarePushbot {
        /* fLift.setPower(0);
         arm1.setPower(0);
         arm2.setPower(0);*/
+
     }
 
 
