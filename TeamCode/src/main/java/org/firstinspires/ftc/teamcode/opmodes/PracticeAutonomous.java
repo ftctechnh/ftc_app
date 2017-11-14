@@ -27,7 +27,6 @@ public class PracticeAutonomous extends LinearOpMode
     public void runOpMode() throws InterruptedException {
         hwMap.init(hardwareMap);
         Drive9330 drive = new Drive9330(hwMap);
-        Ultrasonic9330 ultrasonic = new Ultrasonic9330(hwMap);
 
         // wait for the start button to be pressed.
         telemetry.addData(">", "Press start!");
@@ -46,7 +45,7 @@ public class PracticeAutonomous extends LinearOpMode
                // telemetry.update();
                 telemetry.addData("Program","We is turnin ninety degrees yo!!!!!!");
                 telemetry.update();
-                drive.gyroTurn(90, 0.1,true);
+                drive.gyroTurn(90, 0.2,true);
                 telemetry.addData("Program","We're currently driving forward!");
                 telemetry.update();
                 drive.driveForward(0.5);

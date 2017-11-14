@@ -14,13 +14,11 @@ public class Drive9330 {
     private Hardware9330 hwMap = null;
     Integer turnError = 1;
     Gyro9330 gyro;
-    PracticeAutonomous practiceAuto;
 
     public Drive9330(Hardware9330 robotMap) {
         hwMap = robotMap;
         gyro = new Gyro9330(robotMap);
-        practiceAuto = new PracticeAutonomous();
-        //if (gyro!=null) if (!gyro.isCalibrated()) gyro.init();
+        gyro.init();
     }
 
     public void driveForward(double speed) { //Speed mush, MUSH! be between 0 and 100
@@ -28,12 +26,24 @@ public class Drive9330 {
         Hardware9330.rightMotor.setPower(speed);
     }
 
-    public void turnLeft(double speed) { //Speed mush be between 0 and 100
-        Hardware9330.leftMotor.setPower(speed);
-        Hardware9330.rightMotor.setPower(speed);
+    public void turnLeft(double speed, boolean allWheel) {
+        if (!allWheel)
+        {
+            Hardware9330.leftMotor.setPower(0);
+            Hardware9330.rightMotor.setPower(speed);
+        }
+        //Speed mush be between 0 and 100
+            Hardware9330.leftMotor.setPower(speed);
+            Hardware9330.rightMotor.setPower(speed);
+
     }
 
-    public void turnRight(double speed) { //Speed mush be between 0 and 100
+    public void turnRight(double speed, boolean allWheel) { //Speed mush be between 0 and 100
+        if (!allWheel)
+        {
+            Hardware9330.leftMotor.setPower(speed);
+            Hardware9330.rightMotor.setPower(0);
+        }
         Hardware9330.leftMotor.setPower(speed);
         Hardware9330.rightMotor.setPower(-speed);
     }
@@ -55,16 +65,13 @@ public class Drive9330 {
         hwMap.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void gyroTurn(float degrees, double speed, boolean practiceAutonomous) {
-        Double initialAngle = gyro.getPitch();
-        while (gyro.getPitch() - initialAngle < degrees - turnError || gyro.getPitch() - initialAngle > degrees + turnError) {
-            if (practiceAutonomous) {
-                practiceAuto.log("Gyro:",gyro.getPitch() - initialAngle);
-            }
-            if (gyro.getPitch() - initialAngle < degrees - turnError) {
-                turnRight(speed);
+    public void gyroTurn(float degrees, double speed, boolean allWheel) {
+        Double initialAngle = gyro.getYaw();
+        while (gyro.getYaw() - initialAngle < degrees - turnError || gyro.getYaw() - initialAngle > degrees + turnError) {
+            if (gyro.getYaw() - initialAngle < degrees - turnError) {
+                turnLeft(speed, allWheel);
             } else {
-                turnLeft(speed);
+                turnRight(speed, allWheel);
             }
         }
     }

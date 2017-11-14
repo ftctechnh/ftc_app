@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.subsystems.Clamps9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorDistance9330;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensor9330;
+import org.firstinspires.ftc.teamcode.subsystems.Gyro9330;
 import org.firstinspires.ftc.teamcode.subsystems.JewelArm9330;
 import org.firstinspires.ftc.teamcode.subsystems.Drive9330;
+import org.firstinspires.ftc.teamcode.subsystems.Vuforia9330;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,20 +22,20 @@ import java.util.Set;
  * Created by robot on 9/25/2017.
  */
 
-@Autonomous(name="AutoRightVuforia9330", group="Opmode")  // @Autonomous(...) is the other common choice
-public class AutoRightVuforia9330 extends LinearOpMode {
+@Autonomous(name="FrontVuforia9330", group="Opmode")  // @Autonomous(...) is the other common choice
+public class FrontVuforia9330 extends LinearOpMode {
 
     Hardware9330 robotMap = new Hardware9330();
     ColorDistance9330 colorDistance;
     ColorSensor9330 cs9330;
-    //Vuforia9330 PictographScan = new Vuforia9330();
+    Vuforia9330 PictographScan = new Vuforia9330();
     //Gyro9330 gyro = new Gyro9330(robotMap);
     Drive9330 drive;
     JewelArm9330 crystalarm;
     Clamps9330 clamps;
-    //Integer TurnError = 1;
-    //Double TurnSpeed = 0.1;
-    //VuforiaTrackables info;
+    Integer TurnError = 1;
+    Double TurnSpeed = 0.2;
+    VuforiaTrackables info;
     Double PictoYRotation;
     Double PictoZTranslation;
     String PictoImageType;
@@ -95,11 +98,11 @@ public class AutoRightVuforia9330 extends LinearOpMode {
         colorDistance = new ColorDistance9330(robotMap);
         clamps = new Clamps9330(robotMap);
         //gyro.init();    //initializes gyro
-       //info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
+       info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
 
         log("Info","Initialized. Press start when ready.");
         waitForStart();
-       /* while(opModeIsActive()) {
+        while(opModeIsActive()) {
 
             log("Info","Searching for image...");
             while (PictoImageType == null) {    //While pictograph hasn't been found, scan for it
@@ -112,16 +115,21 @@ public class AutoRightVuforia9330 extends LinearOpMode {
             while (-TurnError > PictoYRotation || TurnError < PictoYRotation) { //while current rotation is outside allowed error
                 updatePictographInfo(PictographScan.checkPosition(info));   //update current positioning
                 log("Rotation of pictogram", PictoYRotation.toString());
-                if (PictoYRotation > 0) //Align self more parallel to the wall
-                    drive.gyroTurn(2, TurnSpeed);
+                if (PictoYRotation < 0) //Align self more parallel to the wall
+                    drive.gyroTurn(2, TurnSpeed, false);
                 else
-                    drive.gyroTurn(-2, TurnSpeed);
+                    drive.gyroTurn(-2, TurnSpeed, false);
 
+                if (PictoZTranslation > -250)
+                {
+                    drive.driveForward(-.50);
+                    sleep(250);
+                }
                 checkStop();
             }
 
             drive.stopDrive();
-            log("Info","Centered to the wall!"); */
+            log("Info","Centered to the wall!");
 
             while (ColorRed == null || ColorBlue == null) { //while color is unknown
                 updateColorDistance(colorDistance.getInfo()); // Check the color of the pad beneath you
@@ -170,16 +178,16 @@ public class AutoRightVuforia9330 extends LinearOpMode {
                 //We need to back up a distance then turn left to place a glyph
                    if(onRedTeam == false) //if we are on red team
                    {
-                       drive.turnLeft(1);
+                       drive.turnLeft(1, true);
                        sleep(10);
                        drive.stopDrive();
                        drive.driveForward(70);
                        sleep(100);
                        drive.stopDrive();
-                   }else //if we are on red alliance
+                   }else //if we are on blue alliance
                    {
                         //turn completely around and slightly angle to cryptobox.  Drive forward
-                       drive.turnLeft(100);
+                       drive.turnLeft(100, true);
                        sleep(500);
                        drive.stopDrive();
                        drive.driveForward(80);
@@ -188,40 +196,6 @@ public class AutoRightVuforia9330 extends LinearOpMode {
                        clamps.openLowClamp();
                    }
 
-
-
-
-
-
-
-                /*
-            info = PictographScan.init(hardwareMap,true);   //initializes Vuforia
-
-            while(opModeIsActive()) {
-
-                log("Info","Searching for image...");
-                while (PictoImageType == null) {    //While pictograph hasn't been found, scan for it
-                    telemetry.clear();
-                    updatePictographInfo(PictographScan.checkPosition(info));
-                    checkStop();
-                }
-
-                log("Info","Found image! Centering to the wall...");
-                while (-TurnError > PictoYRotation || TurnError < PictoYRotation) { //while current rotation is outside allowed error
-                    updatePictographInfo(PictographScan.checkPosition(info));   //update current positioning
-                    log("Rotation of pictogram", PictoYRotation.toString());
-                    if (PictoYRotation > 0) //Align self more parallel to the wall
-                        drive.gyroTurn(2, TurnSpeed,false);
-                    else
-                        drive.gyroTurn(-2, TurnSpeed,false);
-
-                    checkStop();
-                }
-
-                drive.stopDrive();
-                log("Info","Centered to the wall!");
-                */
-
             while(!isStopRequested() && robotMap.touch.getState()) {
             //wait for manual direction to end code
             }
@@ -229,6 +203,7 @@ public class AutoRightVuforia9330 extends LinearOpMode {
         }
 
     }
+}
 
 
 
