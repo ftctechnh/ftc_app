@@ -30,7 +30,7 @@ public class AutonomousSetup extends LinearOpMode {
     ColorSensor cS;
     // Now declare any universal value you will need more then once, like encoder CPR(Clicks per rotation)
     int CPR = 1120; //Encoder CPR
-    int Tm = 2; // The part of the gear ratio attached to the motor
+    int Tm = 1; // The part of the gear ratio attached to the motor
     int Tw = 1; //The part of the gear ratio attached to the wheel
     double D = 4.0; //Diameter of wheels
     double C = D * Math.PI;//One rotation of tank gear/wheel
@@ -83,19 +83,19 @@ public class AutonomousSetup extends LinearOpMode {
             isNegative = true;
         }
         double start, now, goal;
-        double distancePerClicks = (((numberOfRotations - 1) / 2)/(Tm/Tw)) * CPR;
-
-
+        double distancePerClicks = numberOfRotations * CPR;
         telemetry.addData("Total number of rotations: ", + numberOfRotations);
         telemetry.addData("Total number of clicks: ", + distancePerClicks);
         start = encodervalue();
         now = start;
-        goal = start + distancePerClicks;
-        if (isNegative == true) {
+        goal = Math.abs(start + distancePerClicks);
+        if (isNegative) {
             forward(-power);
         } else {
             forward(power);
         }
+        telemetry.addData("goal: ", goal);
+        telemetry.update();
         //clawPosition = clawHighEnd;
         //rightClaw.setPosition(clawPosition);
         //rightClaw.setPosition(clawPosition);
@@ -130,13 +130,13 @@ public class AutonomousSetup extends LinearOpMode {
 
     int encodervalue() {
         int m1;
-        m1 = FrontLeftMotor.getCurrentPosition();
+        m1 = Math.abs(FrontLeftMotor.getCurrentPosition());
         int m2;
-        m2 = FrontRightMotor.getCurrentPosition();
+        m2 = Math.abs(FrontRightMotor.getCurrentPosition());
         int m3;
-        m3 = BackLeftMotor.getCurrentPosition();
+        m3 = Math.abs(BackLeftMotor.getCurrentPosition());
         int m4;
-        m4 = BackRightMotor.getCurrentPosition();
+        m4 = Math.abs(BackRightMotor.getCurrentPosition());
         telemetry.addData("FLM: ", m1);
         telemetry.addData("FRM: ", m2);
         telemetry.addData("BLM: ", m3);
@@ -165,12 +165,12 @@ public class AutonomousSetup extends LinearOpMode {
         }
         //closeClaw();
         if (timesBlue > timesRed){
-            rotations(-1, .25);
-            rotations(1, .25);
+            rotations(-.5, .25);
+            rotations(.5, .25);
         }
         else{
-            rotations(1, .25);
-            rotations(-1, .25);
+            rotations(.5, .25);
+            rotations(-.5, .25);
         }
     }
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
