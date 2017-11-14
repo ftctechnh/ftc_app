@@ -15,7 +15,7 @@ public class DriveOffTable extends LinearOpMode {
         telemetry.addLine("Please don't run this code");
         telemetry.addLine("You don't want to be the next Aman");
         telemetry.update();
-        robot.init(hardwareMap, this, false, gamepad2);
+        robot.init(hardwareMap, this, gamepad1, gamepad2);
 
         //IN HONOR OF HENRY MENG'S VALIANT HUMILIATION AND USAGE OF WHILE(TRUE)
         while(true) {

@@ -22,7 +22,7 @@ public class NullbotTestWheelFriction extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, this, false, gamepad2);
+        robot.init(hardwareMap, this, gamepad1, gamepad2);
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

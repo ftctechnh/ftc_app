@@ -22,7 +22,7 @@ public class NullbotPIDTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, this, false, gamepad2);
+        robot.init(hardwareMap, this, gamepad1, gamepad2);
 
         targetSpeed = 0.0;
         lastReset = 0.0;

@@ -35,7 +35,7 @@ public class NullbotTeleopRelative extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this, true, gamepad2);
+        robot.init(hardwareMap, this, gamepad1, gamepad2);
 
         waitForStart();
 
@@ -73,14 +73,10 @@ public class NullbotTeleopRelative extends LinearOpMode {
             robot.backRight.setPower(chop(clamp(motorPowers[3] - turnSpeed)));
 
             telemetry.addLine()
-                    .addData("Raw gyro direction", robot.getGyroHeadingRaw());
-            telemetry.addLine()
-                    .addData("Raw compass direction", robot.getCompassHeading());
-            telemetry.addLine()
                     .addData("Error adjusted gyro direction", robot.getGyroHeading());
             telemetry.update(); // Send telemetry data to driver station
             // Run above code at 25hz
-            robot.writeLogTick(gamepad1);
+            robot.writeLogTick();
             robot.waitForTick(1000 / robot.hz);
         }
 
