@@ -71,6 +71,8 @@ public class TankDrive extends LinearOpMode {
         while (opModeIsActive()) {
             // Nico's tank drive code
 
+            robot.arm.setPower(gamepad2.right_stick_y);
+
             time = System.currentTimeMillis();
 
             Forward = gamepad1.right_stick_y;
@@ -106,9 +108,7 @@ public class TankDrive extends LinearOpMode {
             robot.FRMotor.setPower(Forward * 0.65 * Rt);
             robot.BRMotor.setPower(Forward * 0.65 * Rt);
 
-            if (Math.abs(gamepad2.right_stick_y) > 0.01) {
-                robot.arm.setPower(gamepad2.right_stick_y);
-            }
+
 
             robot.SideMotor.setPower(Side / 2);
 
@@ -133,6 +133,8 @@ public class TankDrive extends LinearOpMode {
 
                 lastClawToggle = time;
             }
+
+
         }
     }
 }
