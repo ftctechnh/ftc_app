@@ -67,8 +67,12 @@ public class AutonomousSetup extends LinearOpMode {
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            servo.setPosition(.45);
+            servo.setPosition(.43);
+            Thread.sleep(5000);
             JewelFinder();
+            Thread.sleep(1000);
+            servo.setPosition(0.9);
+            Thread.sleep(2000);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -92,11 +96,11 @@ public class AutonomousSetup extends LinearOpMode {
         } else {
             forward(power);
         }
-        clawPosition = clawHighEnd;
-        rightClaw.setPosition(clawPosition);
-        rightClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
+        //clawPosition = clawHighEnd;
+        //rightClaw.setPosition(clawPosition);
+        //rightClaw.setPosition(clawPosition);
+        //leftClaw.setPosition(clawPosition);
+        //leftClaw.setPosition(clawPosition);
         while (now < goal) {
         telemetry.addData("Current clicks: ", now);
         now = encodervalue();
@@ -159,14 +163,14 @@ public class AutonomousSetup extends LinearOpMode {
             }
             timesRan += 1;
         }
-        closeClaw();
+        //closeClaw();
         if (timesBlue > timesRed){
-            rotations(-.25, .25);
-            rotations(.25, .25);
+            rotations(-1, .25);
+            rotations(1, .25);
         }
         else{
-            rotations(.25, .25);
-            rotations(-.25, .25);
+            rotations(1, .25);
+            rotations(-1, .25);
         }
     }
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
