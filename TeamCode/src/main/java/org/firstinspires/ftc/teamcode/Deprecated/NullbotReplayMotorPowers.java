@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.NullbotHardware;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,7 +26,7 @@ public class NullbotReplayMotorPowers extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this, false, gamepad2);
+        robot.init(hardwareMap, this, gamepad1, gamepad2);
         try {
             loadFile(f);
         } catch (JSONException e) {
@@ -39,7 +38,7 @@ public class NullbotReplayMotorPowers extends LinearOpMode {
         }
         waitForStart();
 
-        while (opModeIsActive() && index < robot.secondsToTrack * robot.hz) {
+        /*while (opModeIsActive() && index < robot.secondsToTrack * robot.hz) {
             try {
                 JSONObject command = commands.getJSONObject(index);
                 robot.motorArr[0].setPower(command.getDouble("fLE"));
@@ -52,7 +51,7 @@ public class NullbotReplayMotorPowers extends LinearOpMode {
                 telemetry.log().add("JSON failed to be parsed");
                 sleep(5000);
             }
-        }
+        }*/
     }
 
     public void loadFile(String filename) throws IOException, JSONException {
