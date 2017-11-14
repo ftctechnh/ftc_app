@@ -2,30 +2,25 @@ package RicksCode.Bill_Adapted;
 
 import android.content.Context;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Tele;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
 /**
  * Created by jmgu3 on 11/7/2016.
  */
-public class ConfigFileHandler {
+public class MenuFileHandler {
     private Gamepad gamepad;
 
 
     Telemetry telemetry;
-    public ConfigFileHandler(Telemetry telemetry, Gamepad g){
+    public MenuFileHandler(Telemetry telemetry, Gamepad g){
         this.telemetry = telemetry;
         gamepad = g;
         }

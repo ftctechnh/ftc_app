@@ -22,7 +22,7 @@ public class Auto extends LinearOpMode {
     RobotRR gromit;
 
     private ElapsedTime runtime = new ElapsedTime();
-    private ConfigFileHandler configFile;
+    private MenuFileHandler menuFile;
 
 
     @Override
@@ -30,34 +30,29 @@ public class Auto extends LinearOpMode {
         gromit = new RobotRR();
         gromit.init(hardwareMap);
 
-        configFile = new ConfigFileHandler(telemetry);
+        menuFile = new MenuFileHandler(telemetry, gamepad1);
 
         if (!gamepad1.back) {
-            configFile.readDataFromTxtFile(hardwareMap.appContext);
+            menuFile.readDataFromTxtFile(hardwareMap.appContext);
         } else{
-            configFile.initializeValues();
+            menuFile.initializeValues();
         }
-        sleep(5000);
-        //configFile.writeDataToFile(hardwareMap.appContext);
-        configFile.writeDataToTxtFile(hardwareMap.appContext);
+        //sleep(5000);
+        //menuFile.writeDataToFile(hardwareMap.appContext);
+        menuFile.writeDataToTxtFile(hardwareMap.appContext);
 
         int i=0;
 
-        for ( i=0; i < configFile.menulabel.length; i++){
-            telemetry.addData(configFile.menulabel[i], configFile.menuvalue[i]);
+        for ( i=0; i < menuFile.menulabel.length; i++){
+            telemetry.addData(menuFile.menulabel[i], menuFile.menuvalue[i]);
         }
-//        telemetry.addData("SHOOTER WAIT:", configFile.menuvalue[1]);
-//        telemetry.addData("SHOOTER FORWARD AFTER SHOOT:", configFile.menuvalue[2]);
-//        telemetry.addData("SHOOTER FORWARD TIME:", configFile.menuvalue[3]);
-//        telemetry.addData("DRIVE SPEED", configFile.menuvalue[4]);
-//        telemetry.addData("WHITE COLOR" , configFile.menuvalue[5]);
-//        telemetry.addData("DRIVE BACK_DIST" , configFile.menuvalue[6]);
         telemetry.update();
 
         waitForStart();
-
-//           gromit.shooter.turnOn();
-//           gromit.sweeper.sweepIn();
+        while (opModeIsActive()) {
+            telemetry.update();
+            menuFile.testGamepad();
+        }
 
 //        gromit.driveTrain.drive(0,0,0);
 
