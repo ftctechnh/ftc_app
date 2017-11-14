@@ -22,13 +22,7 @@ public class AutonomousSetup extends LinearOpMode {
     private double DrawerSlideLowEnd;
     private double DrawerSlideHighEnd;
     private double DrawerSlideSpeed = 0;
-    rightClaw = hardwareMap.servo.get("s1");
-    rightClaw.setDirection(Servo.Direction.REVERSE);
-    rightClaw.setPosition(clawPosition);
-    leftClaw = hardwareMap.servo.get("s2");
-    leftClaw.setPosition(clawPosition);
-    reverseMotor(FrontRight);
-    reverseMotor(RearRight);
+
     //Jewel Arm
     Servo servo;
     DcMotor FrontLeftMotor, FrontRightMotor, BackLeftMotor, BackRightMotor;
@@ -47,7 +41,12 @@ public class AutonomousSetup extends LinearOpMode {
         FrontRightMotor = hardwareMap.dcMotor.get("m2");
         BackLeftMotor = hardwareMap.dcMotor.get("m3");
         BackRightMotor = hardwareMap.dcMotor.get("m4");
-
+        rightClaw = hardwareMap.servo.get("s1");
+        rightClaw.setDirection(Servo.Direction.REVERSE);
+        rightClaw.setPosition(clawPosition);
+        leftClaw = hardwareMap.servo.get("s2");
+        leftClaw.setPosition(clawPosition);
+        
         cS = hardwareMap.colorSensor.get("cs1");
         // Now do anything else you need to do in the initilazation phase, like calibrating the gyros, setting a color sensors lights off, etc.
 
