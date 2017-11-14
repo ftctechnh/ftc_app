@@ -41,11 +41,16 @@ public class AutonomousSetup extends LinearOpMode {
         FrontRightMotor = hardwareMap.dcMotor.get("m2");
         BackLeftMotor = hardwareMap.dcMotor.get("m3");
         BackRightMotor = hardwareMap.dcMotor.get("m4");
-        rightClaw = hardwareMap.servo.get("s1");
-        rightClaw.setDirection(Servo.Direction.REVERSE);
-        rightClaw.setPosition(clawPosition);
-        leftClaw = hardwareMap.servo.get("s2");
-        leftClaw.setPosition(clawPosition);
+        try {
+            rightClaw = hardwareMap.servo.get("s1");
+            rightClaw.setDirection(Servo.Direction.REVERSE);
+            rightClaw.setPosition(clawPosition);
+            leftClaw = hardwareMap.servo.get("s2");
+            leftClaw.setPosition(clawPosition);
+        }
+        catch (IllegalArgumentException e) {
+
+        }
         
         cS = hardwareMap.colorSensor.get("cs1");
         servo = hardwareMap.servo.get("s3");
