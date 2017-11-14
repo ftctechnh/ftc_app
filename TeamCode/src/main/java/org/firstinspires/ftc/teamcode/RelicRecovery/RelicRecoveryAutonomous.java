@@ -7,5 +7,5 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 
 @Autonomous(name = "Auto", group = "Autonomous")
-public class RelicRecoveryAutonomous {
+public class RelicRecoveryAutonomous extends RelicRecoveryTelemetry {
 }

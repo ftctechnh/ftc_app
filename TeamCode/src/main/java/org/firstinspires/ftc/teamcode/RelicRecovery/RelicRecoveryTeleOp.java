@@ -122,22 +122,11 @@ public class RelicRecoveryTeleOp extends RelicRecoveryTelemetry {
 
 
         if (gamepad2.x) {
-            rightHandPosition = OPEN_RIGHT_HAND;
-            leftHandPosition = OPEN_LEFT_HAND;
-            //oneHandPosition = OPEN_ONE_HAND;
             armPosition = ARM_OUT;
         }
         if (gamepad2.y) {
-            rightHandPosition = CLOSED_RIGHT_HAND;
-            leftHandPosition = CLOSED_LEFT_HAND;
-            //oneHandPosition = CLOSED_ONE_HAND;
             armPosition = ARM_IN;
         }
-        /*if (gamepad2.dpad_up) {
-            oneHandPosition = CLOSED_ONE_HAND;
-        } else if (gamepad2.dpad_down) {
-            oneHandPosition = OPEN_ONE_HAND;
-        }*/
         if (slowDrive) {
             rightPower /= 2;
             leftPower /= 2;
@@ -148,48 +137,38 @@ public class RelicRecoveryTeleOp extends RelicRecoveryTelemetry {
     private void setMotorPower() {
         //motors
         try {
-            rightMotor.setPower(rightPower);
+            mRight.setPower(rightPower);
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "right motor");
         }
         try {
-            leftMotor.setPower(leftPower);
+            mLeft.setPower(leftPower);
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "left motor");
         }
         try {
-            liftMotor.setPower(liftPower);
+            mLift.setPower(liftPower);
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "lift motor");
         }
         try {
-            armMotor.setPower(armPower);
+            mArm.setPower(armPower);
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "arm motor");
         }
         try {
-            armLifter.setPower(armLifterPwr);
+            mArmLift.setPower(armLifterPwr);
         } catch (Exception OpModeException) {
             telemetry.addData("Cant run (not mapped)", "arm lifter");
         }
         //servos
         try {
-            ballPusher.setPosition(ballPusherPosition);
+            ssBallPusher.setPosition(ballPusherPosition);
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "ball pusher");
         }
         try {
-            rightHand.setPosition(rightHandPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "right hand");
-        }
-        try {
-            leftHand.setPosition(leftHandPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "left hand");
-        }
-        try {
-            oneHand.setPosition(oneHandPosition);
+            ssRelicGrabber.setPosition(oneHandPosition);
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "one hand");
         }
@@ -199,23 +178,23 @@ public class RelicRecoveryTeleOp extends RelicRecoveryTelemetry {
             telemetry.addData("Cant run (not mapped)", "cr hand");
         }
         try {
-            relic.setPower(relicPosition);
+            crRelicGrabber.setPower(relicPosition);
         } catch (Exception opModeException) {
             telemetry.addData("Cant run (not mapped)", "relic grabber");
 
         }
         try {
-            armLifterS.setPower(armLifterSPosition);
+            crArmLift.setPower(armLifterSPosition);
         }catch (Exception opModeException){
             telemetry.addData("Cant run (not mapped)", "Servo lift arm");
         }
         try {
-            armServo.setPower(armPower);
+            crArm.setPower(armPower);
         } catch (Exception opModeException) {
             telemetry.addData("Can't run (not mapped)", "Servo arm motor");
         }
         try {
-            arm.setPosition(armPosition);
+            ssArm.setPosition(armPosition);
         } catch (Exception opModeException) {
             telemetry.addData("Can't run (not mapped)", "Servo arm");
         }

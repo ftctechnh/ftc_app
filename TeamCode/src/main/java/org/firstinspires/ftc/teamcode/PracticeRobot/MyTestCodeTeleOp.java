@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.PracticeRobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.DriveTrain.TankDrive;
+import org.firstinspires.ftc.teamcode.DriveTrain.TurnDrive;
+
 /**
  * Created by team on 7/19/2017.
  */
 
 //@TeleOp(name = "Practice Robot TeleOp", group = "TeleOp")
-//@Autonomous(name = "Practice Robot", group = "Autonomous")
-//@Autonomous(name = "Ramp Auto Blue", group = "Autonomous")
 public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
 
     private int padCofig = 0;
