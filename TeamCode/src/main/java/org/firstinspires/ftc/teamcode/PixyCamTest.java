@@ -8,16 +8,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class PixyCamTest extends OpMode
 {
 
-    PixyCam pixyCam;
-    PixyCam.Block redBlock;
-    PixyCam.Block blueBlock;
+    PixyCam leftPixyCam;
+    PixyCam.Block red1Block;
+    PixyCam.Block blue1Block;
     ElapsedTime elapsedTime = new ElapsedTime();
 
     @Override
     public void init()
     {
 
-        pixyCam = hardwareMap.get(PixyCam.class, "leftPixyCam");
+        leftPixyCam = hardwareMap.get(PixyCam.class, "leftPixy");
+
     }
 
     @Override
@@ -26,10 +27,10 @@ public class PixyCamTest extends OpMode
         if (elapsedTime.milliseconds() > 50) // Update every twentieth of a second.
         {
             elapsedTime.reset();
-            redBlock = pixyCam.GetBiggestBlock(1);
-            telemetry.addData("Red ball:", redBlock.toString());
-            blueBlock = pixyCam.GetBiggestBlock(2);
-            telemetry.addData("Blue ball:", blueBlock.toString());
+            red1Block = leftPixyCam.GetBiggestBlock(1);
+            telemetry.addData("Left red ball:", red1Block.toString());
+            blue1Block = leftPixyCam.GetBiggestBlock(2);
+            telemetry.addData("Left blue ball:", blue1Block.toString());
         }
         telemetry.update();
     }
