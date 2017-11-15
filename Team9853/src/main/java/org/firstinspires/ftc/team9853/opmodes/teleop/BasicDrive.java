@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.chathamrobotics.common.utils.hardware.Controller;
+import org.chathamrobotics.common.Controller;
 import org.firstinspires.ftc.team9853.Robot9853;
 
 /**

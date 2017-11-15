@@ -1,20 +1,28 @@
 package org.chathamrobotics.common.systems;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 10/29/2017
+ */
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.chathamrobotics.common.Robot;
+import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.hardware.LimitSwitch;
 import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
-import org.chathamrobotics.common.utils.hardware.HardwareListener;
-import org.chathamrobotics.common.utils.hardware.IsBusyException;
-import org.chathamrobotics.common.utils.robot.RobotLogger;
+import org.chathamrobotics.common.hardware.utils.HardwareListener;
+import org.chathamrobotics.common.IsBusyException;
+import org.chathamrobotics.common.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.Timer;
 
-/*!
- * Created by carson storm on 10/25/2017.
+/**
+ * The representation of a rack and pinion with limit switches
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class RackAndPinion {

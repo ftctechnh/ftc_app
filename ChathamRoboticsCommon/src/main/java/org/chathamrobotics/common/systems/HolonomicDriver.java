@@ -1,15 +1,5 @@
 package org.chathamrobotics.common.systems;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
-
-import org.chathamrobotics.common.Robot;
-import org.chathamrobotics.common.utils.robot.RobotFace;
-import org.chathamrobotics.common.utils.robot.RobotLogger;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
 /*!
  * FTC_APP_2018
  * Copyright (c) 2017 Chatham Robotics
@@ -18,8 +8,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * @Last Modified by: storm
  * @Last Modified time: 10/5/2017
  */
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
+
+import org.chathamrobotics.common.robot.Robot;
+import org.chathamrobotics.common.robot.RobotFace;
+import org.chathamrobotics.common.robot.RobotLogger;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+/**
+ * The representation of a holonomic drive system
+ */
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
-public class HolonomicDriver {
+public class HolonomicDriver implements Driver {
     public static final double HOLONOMIC_AXIS_CORRECTION = Math.PI / 4;
     private static final double ROOT_TWO = Math.sqrt(2);
 
@@ -140,6 +144,13 @@ public class HolonomicDriver {
      */
     public double getOffsetAngle() {
         return offsetAngle;
+    }
+
+    /**
+     * Stops the driver
+     */
+    public void stop() {
+        setDrivePower(0,0,0);
     }
 
     /**
