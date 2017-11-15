@@ -46,12 +46,11 @@ public class Grabber {
                 }
 
                 isPressed = true;
-            } else {
-
-                isPressed = false;
-
             }
 
+        }
+        if (!change) {
+            isPressed = false;
         }
     }
 
