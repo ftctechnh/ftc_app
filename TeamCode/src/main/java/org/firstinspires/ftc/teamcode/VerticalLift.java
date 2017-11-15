@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class VerticalLift {
 
     private Servo liftServo;
-    private int increment = 0;
+    private boolean rbOn = false;
 
     public VerticalLift(Servo servo) {
 
@@ -17,17 +17,21 @@ public class VerticalLift {
 
     }
 
-    public void Lift(boolean rightButton, double gp1Trigger, double gp2Trigger) {
-        if ((gp1Trigger != 0 || gp2Trigger != 0)
-                && !rightButton) {
+    public void Lift(boolean gp1RightBumper, boolean gp2RightBumper,
+            boolean gp1LeftBumper, boolean gp2LeftBumper
+            , double gp1Trigger, double gp2Trigger) {
+        if (gp1RightBumper || gp2RightBumper)
+            rbOn = !rbOn;
+
+        if ((gp1LeftBumper|| gp2LeftBumper)
+                && rbOn) {
             liftServo.setPosition(0);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            liftServo.setPosition(0.5);
-            increment--;
+        } else if ((gp1Trigger != 0 || gp2Trigger != 0)
+                && rbOn) {
+            liftServo.setPosition(1);
+
+        } else {
+            liftServo.setPosition(.5);
         }
     }
 
