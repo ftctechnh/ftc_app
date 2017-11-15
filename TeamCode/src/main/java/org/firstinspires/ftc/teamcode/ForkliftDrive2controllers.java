@@ -15,7 +15,7 @@ public class ForkliftDrive2controllers extends OpMode {
     private Servo leftClaw;
     private double clawPosition = 0.0;
     private double clawHighEnd = 0.45;
-    private double clawLowEnd = 0.225;
+    private double clawLowEnd = 0.1;
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;

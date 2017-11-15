@@ -29,7 +29,7 @@ public class AutonomousSetup extends LinearOpMode {
     ColorSensor cS;
     // Now declare any universal value you will need more then once, like encoder CPR(Clicks per rotation)
     int CPR = 1120; //Encoder CPR
-    int Tm = 2; // The part of the gear ratio attached to the motor
+    int Tm = 1; // The part of the gear ratio attached to the motor
     int Tw = 1; //The part of the gear ratio attached to the wheel
     double D = 4.0; //Diameter of wheels
     double C = D * Math.PI;//One rotation of tank gear/wheel
@@ -40,13 +40,19 @@ public class AutonomousSetup extends LinearOpMode {
         FrontRightMotor = hardwareMap.dcMotor.get("m2");
         BackLeftMotor = hardwareMap.dcMotor.get("m3");
         BackRightMotor = hardwareMap.dcMotor.get("m4");
-        rightClaw = hardwareMap.servo.get("s1");
-        rightClaw.setDirection(Servo.Direction.REVERSE);
-        rightClaw.setPosition(clawPosition);
-        leftClaw = hardwareMap.servo.get("s2");
-        leftClaw.setPosition(clawPosition);
+        try {
+            rightClaw = hardwareMap.servo.get("s1");
+            rightClaw.setDirection(Servo.Direction.REVERSE);
+            rightClaw.setPosition(clawPosition);
+            leftClaw = hardwareMap.servo.get("s2");
+            leftClaw.setPosition(clawPosition);
+        }
+        catch (IllegalArgumentException e) {
+
+        }
         
         cS = hardwareMap.colorSensor.get("cs1");
+        servo = hardwareMap.servo.get("s3");
         // Now do anything else you need to do in the initilazation phase, like calibrating the gyros, setting a color sensors lights off, etc.
 
         FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -60,8 +66,12 @@ public class AutonomousSetup extends LinearOpMode {
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            servo.setPosition(.45);
+            servo.setPosition(.43);
+            Thread.sleep(5000);
             JewelFinder();
+            Thread.sleep(1000);
+            servo.setPosition(0.9);
+            Thread.sleep(2000);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -72,24 +82,24 @@ public class AutonomousSetup extends LinearOpMode {
             isNegative = true;
         }
         double start, now, goal;
-        double distancePerClicks = (((numberOfRotations - 1) / 2)/(Tm/Tw)) * CPR;
-
-
+        double distancePerClicks = numberOfRotations * CPR;
         telemetry.addData("Total number of rotations: ", + numberOfRotations);
         telemetry.addData("Total number of clicks: ", + distancePerClicks);
         start = encodervalue();
         now = start;
-        goal = start + distancePerClicks;
-        if (isNegative == true) {
+        goal = Math.abs(start + distancePerClicks);
+        if (isNegative) {
             forward(-power);
         } else {
             forward(power);
         }
-        clawPosition = clawHighEnd;
-        rightClaw.setPosition(clawPosition);
-        rightClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
+        telemetry.addData("goal: ", goal);
+        telemetry.update();
+        //clawPosition = clawHighEnd;
+        //rightClaw.setPosition(clawPosition);
+        //rightClaw.setPosition(clawPosition);
+        //leftClaw.setPosition(clawPosition);
+        //leftClaw.setPosition(clawPosition);
         while (now < goal) {
         telemetry.addData("Current clicks: ", now);
         now = encodervalue();
@@ -119,13 +129,13 @@ public class AutonomousSetup extends LinearOpMode {
 
     int encodervalue() {
         int m1;
-        m1 = FrontLeftMotor.getCurrentPosition();
+        m1 = Math.abs(FrontLeftMotor.getCurrentPosition());
         int m2;
-        m2 = FrontRightMotor.getCurrentPosition();
+        m2 = Math.abs(FrontRightMotor.getCurrentPosition());
         int m3;
-        m3 = BackLeftMotor.getCurrentPosition();
+        m3 = Math.abs(BackLeftMotor.getCurrentPosition());
         int m4;
-        m4 = BackRightMotor.getCurrentPosition();
+        m4 = Math.abs(BackRightMotor.getCurrentPosition());
         telemetry.addData("FLM: ", m1);
         telemetry.addData("FRM: ", m2);
         telemetry.addData("BLM: ", m3);
@@ -152,20 +162,29 @@ public class AutonomousSetup extends LinearOpMode {
             }
             timesRan += 1;
         }
-
+        //closeClaw();
         if (timesBlue > timesRed){
-            rotations(-.25, .25);
-            rotations(.25, .25);
+            rotations(-.5, .25);
+            rotations(.5, .25);
         }
         else{
-            rotations(.25, .25);
-            rotations(-.25, .25);
+            rotations(.5, .25);
+            rotations(-.5, .25);
         }
     }
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
 
     }
     public void closeClaw() {
-
+        rightClaw.setPosition(clawHighEnd);
+        rightClaw.setPosition(clawHighEnd);
+        leftClaw.setPosition(clawHighEnd);
+        leftClaw.setPosition(clawHighEnd);
+    }
+    public void openClaw() {
+        rightClaw.setPosition(clawLowEnd);
+        rightClaw.setPosition(clawLowEnd);
+        leftClaw.setPosition(clawLowEnd);
+        leftClaw.setPosition(clawLowEnd);
     }
 }
