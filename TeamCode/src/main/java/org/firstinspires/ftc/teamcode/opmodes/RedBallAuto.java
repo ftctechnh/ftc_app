@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+
 /**
  * Created by Noah on 11/9/2017.
  */
@@ -24,15 +26,29 @@ public class RedBallAuto extends VuforiaBallLib {
         bot.init();
         initVuforia(true);
 
-        mLeftRedSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
-        mLeftRedSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.2, 0.5, true));
-        mLeftRedSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.2, 0.5, true));
-        mLeftRedSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.5, false));
+        AutoLib.Sequence mStart = new AutoLib.LinearSequence();
+        //half lower
+        mStart.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown - 0.1, 0.5, false));
+        //drive forward
+        mStart.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.2, 0.2, true));
+        //full lower
+        mStart.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
 
-        mLeftBlueSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
-        mLeftBlueSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.2, 0.5, true));
-        mLeftBlueSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.2, 0.5, true));
+        AutoLib.Sequence mEnd = new AutoLib.LinearSequence();
+        //back up
+        mEnd.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.2, 0.4, true));
+
+        mLeftRedSeq.add(mStart);
+        mLeftRedSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), -0.2, 0.2, 1.0, true));
+        mLeftRedSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.5, false));
+        mLeftRedSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), 0.2, -0.2, 1.0, true));
+        mLeftRedSeq.add(mEnd);
+
+        mLeftBlueSeq.add(mStart);
+        mLeftBlueSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), 0.2, -0.2, 1.0, true));
         mLeftBlueSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.5, false));
+        mLeftBlueSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), -0.2, 0.2, 1.0, true));
+        mLeftBlueSeq.add(mEnd);
     }
 
     @Override

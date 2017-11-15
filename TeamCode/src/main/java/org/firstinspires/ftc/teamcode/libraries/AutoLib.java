@@ -794,6 +794,17 @@ public class AutoLib {
                 this.add(new TimedMotorStep(bl, leftPower, seconds, stop));
         }
 
+        public TurnByTimeStep(DcMotor[] ray, double rightPower, double leftPower, double seconds, boolean stop)
+        {
+            if (ray[0] != null)
+                this.add(new TimedMotorStep(ray[0], rightPower, seconds, stop));
+            if (ray[1] != null)
+                this.add(new TimedMotorStep(ray[1], rightPower, seconds, stop));
+            if (ray[2] != null)
+                this.add(new TimedMotorStep(ray[2], leftPower, seconds, stop));
+            if (ray[3] != null)
+                this.add(new TimedMotorStep(ray[3], leftPower, seconds, stop));
+        }
     }
 
 
