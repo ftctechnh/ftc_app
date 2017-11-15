@@ -19,11 +19,11 @@ public class RelicArm {
     }
 
     public void jawOpen() {
-        relicServo.setPosition(35.0/256.0);
+        relicServo.setPosition(0.2);
     }
 
     public void jawClosed() {
-        relicServo.setPosition(170.0/256.0);
+        relicServo.setPosition(0.8);
     }
 
 

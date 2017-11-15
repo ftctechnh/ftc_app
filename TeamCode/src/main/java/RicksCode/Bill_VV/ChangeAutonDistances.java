@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 @TeleOp(name = "zChangeParameters", group = "Test")
-//@Disabled
+@Disabled
 public class ChangeAutonDistances extends OpMode {
 
     ParameterFileHandler parameterFile;

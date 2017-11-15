@@ -1,6 +1,7 @@
 package RicksCode.Bill_Adapted;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -24,16 +25,22 @@ public class DriveTrain {
 
 
     public void init(HardwareMap hardwareMap) {
-        left_front  = hardwareMap.get(DcMotor.class, "left_front" );
-        right_front = hardwareMap.get(DcMotor.class, "right_front" );
-        right_rear  = hardwareMap.get(DcMotor.class, "right_rear" );
-        left_rear   = hardwareMap.get(DcMotor.class, "left_rear" );
+        left_front  = hardwareMap.get(DcMotor.class, "leftfront" );
+        right_front = hardwareMap.get(DcMotor.class, "rightfront" );
+        right_rear  = hardwareMap.get(DcMotor.class, "rightrear" );
+        left_rear   = hardwareMap.get(DcMotor.class, "leftrear" );
 
 
-        left_front.setDirection(DcMotor.Direction.REVERSE);   // Set left to REVERSE if using AndyMark motors
-        right_front.setDirection(DcMotor.Direction.FORWARD);  // Set right to FORWARD if using AndyMark motors
-        right_rear.setDirection(DcMotor.Direction.FORWARD);
+//      Neverest Motors
+//        left_front.setDirection(DcMotor.Direction.FORWARD);
+//        left_rear.setDirection(DcMotor.Direction.FORWARD);
+//        right_front.setDirection(DcMotor.Direction.REVERSE);
+//        right_rear.setDirection(DcMotor.Direction.REVERSE);
+//      Tetrix Motors
+        left_front.setDirection(DcMotor.Direction.REVERSE);
         left_rear.setDirection(DcMotor.Direction.REVERSE);
+        right_front.setDirection(DcMotor.Direction.FORWARD);
+        right_rear.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         left_front.setPower(0.0);
@@ -79,13 +86,12 @@ public class DriveTrain {
 
 
         //DRIVE CODE APPLYING MOTOR POWERS
-        left_front.setPower(Range.clip (speedMultiplier*(x + y + turn), -1, 1));
-        right_rear.setPower(Range.clip (speedMultiplier*(-x - y + turn), -1, 1));
+        left_front.setPower(Range.clip (speedMultiplier*( y + x + turn), -1, 1));
+        left_rear.setPower(Range.clip  (speedMultiplier*( y - x + turn), -1, 1));
 
-        right_front.setPower(Range.clip(speedMultiplier*(x - y + turn), -1, 1));
-        left_rear.setPower(Range.clip  (speedMultiplier*(-x + y + turn), -1, 1));
+        right_front.setPower(Range.clip(speedMultiplier*( y - x + turn), -1, 1));
+        right_rear.setPower(Range.clip (speedMultiplier*( y + x + turn), -1, 1));
 
-        
     }
 
     public void stop() {

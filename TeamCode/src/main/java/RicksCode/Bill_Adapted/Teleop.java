@@ -9,11 +9,11 @@ import static RicksCode.Bill_Adapted.DriveTrain.SpeedSetting.FAST;
 import static RicksCode.Bill_Adapted.DriveTrain.SpeedSetting.SLOW;
 
 
-@TeleOp(name = "zMoo")  // @Autonomous(...) is the other common choice
-@Disabled
+@TeleOp(name = "zMoo", group="zRick")  // @Autonomous(...) is the other common choice
+//@Disabled
 public class Teleop extends OpMode {
     
-    Gromit gromit;
+    RobotRR gromit;
     double turnDirection;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -26,7 +26,7 @@ public class Teleop extends OpMode {
     @Override
     public void init() {
 
-        gromit = new Gromit();
+        gromit = new RobotRR();
         gromit.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
 
@@ -107,26 +107,20 @@ public class Teleop extends OpMode {
 //        loadedLastTime = gamepad2.right_bumper;
 
         //Beacon pusher in and out
-        if (gamepad1.left_bumper) {
-            gromit.jewelArm.leftOut();
-            gromit.jewelArm.rightOut();
+//        if (gamepad1.left_bumper) {
+//            gromit.jewelArm.leftOut();
+//            gromit.jewelArm.rightOut();
+//        }
+//        if (gamepad1.left_trigger>0.5){
+//            gromit.jewelArm.leftIn();
+//            gromit.jewelArm.rightIn();
+//        }
+        if (gamepad1.y) {
+            gromit.jewelArm.jewelArmUp();
         }
-        if (gamepad1.left_trigger>0.5){
-            gromit.jewelArm.leftIn();
-            gromit.jewelArm.rightIn();
+        if (gamepad1.a){
+            gromit.jewelArm.jewelArmDown();
         }
-        if (gamepad2.y) {
-            gromit.jewelArm.leftOut();
-            gromit.jewelArm.rightOut();
-        }
-        if (gamepad2.a){
-            gromit.jewelArm.leftIn();
-            gromit.jewelArm.rightIn();
-        }
-        if (gamepad2.x)
-            gromit.jewelArm.leftOut();
-        if (gamepad2.b)
-            gromit.jewelArm.rightOut();
 
         //telemetry.addData("Status", "Running: " + runtime.toString());
         telemetry.addLine("Time Left: " + timeLeft );

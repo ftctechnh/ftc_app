@@ -8,31 +8,53 @@ package RicksCode.Bill_Adapted;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Tele;
 
-@Autonomous(name="AUTOTEST")  // @Autonomous(...) is the other common choice
-@Disabled
+
+@Autonomous(name="AUTOTEST",group="zRick")  // @Autonomous(...) is the other common choice
+//@Disabled
 public class Auto extends LinearOpMode {
 
-    Gromit gromit;
+    RobotRR gromit;
 
     private ElapsedTime runtime = new ElapsedTime();
-
+    private MenuFileHandler menuFile;
 
 
     @Override
     public void runOpMode() {
-        gromit = new Gromit();
+        gromit = new RobotRR();
         gromit.init(hardwareMap);
 
+        menuFile = new MenuFileHandler(telemetry, gamepad1);
+
+        if (!gamepad1.back) {
+            menuFile.readDataFromTxtFile(hardwareMap.appContext);
+        } else{
+            menuFile.initializeValues();
+        }
+        //sleep(5000);
+        //menuFile.writeDataToFile(hardwareMap.appContext);
+        menuFile.writeDataToTxtFile(hardwareMap.appContext);
+
+        int i=0;
+
+        for ( i=0; i < menuFile.menulabel.length; i++){
+            telemetry.addData(menuFile.menulabel[i], menuFile.menuvalue[i]);
+        }
+        telemetry.update();
 
         waitForStart();
+        while (opModeIsActive()) {
+            telemetry.update();
+            menuFile.testGamepad();
+        }
 
-//           gromit.shooter.turnOn();
-//           gromit.sweeper.sweepIn();
-
-        gromit.driveTrain.drive(0,0,0);
+//        gromit.driveTrain.drive(0,0,0);
 
 
     }
