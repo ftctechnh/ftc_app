@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
  *Created by Pramodh and Diego and Ronit on 10/27/2017.
  */
 @TeleOp
-public class VerticalLift extends LinearOpMode {
+public class Autonomous extends LinearOpMode {
     NormalizedColorSensor colorSensor;
     private boolean bCurrState;
     private boolean bPrevState;
@@ -58,20 +58,6 @@ public class VerticalLift extends LinearOpMode {
 
         //run until the end of the match (driver presses STOP)
         while(opModeIsActive()) {
-            bCurrState = gamepad1.x;
-
-            // If the button state is different than what it was, then act
-            if (bCurrState != bPrevState) {
-                // If the button is (now) down, then toggle the light
-                if (bCurrState) {
-                    if (colorSensor instanceof SwitchableLight) {
-                        SwitchableLight light = (SwitchableLight)colorSensor;
-                        light.enableLight(!light.isLightOn());
-                    }
-                }
-            }
-            bPrevState = bCurrState;
-
             // Read the sensor
             NormalizedRGBA colors = colorSensor.getNormalizedColors();
             int color = colors.toColor();
@@ -81,8 +67,10 @@ public class VerticalLift extends LinearOpMode {
                     .addData("g", "%02x", Color.green(color))
                     .addData("b", "%02x", Color.blue(color));
 
-            if (colors.red >= 100)
-                colorOn = true;
+           // if (colors.red >= 100)
+
+
+
         }
     }
 }

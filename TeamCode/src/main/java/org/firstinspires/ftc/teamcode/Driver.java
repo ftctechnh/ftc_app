@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  *Created by Pramodh on 10/27/2017.
  */
 @TeleOp
-public class Drive extends LinearOpMode {
+public class Driver extends LinearOpMode {
     private DcMotor motor0;
     private DcMotor motor1;
     private Servo servo0;
