@@ -80,7 +80,6 @@ public class AutonomousSetup extends LinearOpMode {
 
     void rotations(double numberOfRotations, double power) {
         boolean isNegative = false;
-
         if (numberOfRotations < 0) {
             isNegative = true;
         }
