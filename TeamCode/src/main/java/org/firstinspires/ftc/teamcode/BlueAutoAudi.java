@@ -16,8 +16,6 @@ public class BlueAutoAudi extends LinearOpMode
     private NewRobot newRobot;
     public void runOpMode()
     {
-        float center = 0;//placeholder distances
-        float x = 0; //placeholder distances
         robot = new TankBase(hardwareMap);
         newRobot = new NewRobot(hardwareMap);
         waitForStart();
