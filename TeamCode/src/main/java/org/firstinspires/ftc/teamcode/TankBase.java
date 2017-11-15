@@ -97,7 +97,7 @@ public class TankBase
 
         stopAllMotors();
     }
-
+/*
     public void driveStraight_Cm(float cm, double pow)
     {
         float encTarget = encCountsPerRev / wheelCircCm * cm;
@@ -123,6 +123,7 @@ public class TankBase
 
         stopAllMotors();
     }
+    */
 
     public void spin_Right(float degrees)
     {
