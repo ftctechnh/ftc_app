@@ -66,7 +66,12 @@ public class JeffsRealRun extends LinearOpMode {
             //Use Pythagoras
             getThePowers();
             //
-            buttons();
+            if(gamepad2.x){
+                pengwinArm.goeyHomey();
+            }
+            if(gamepad2.y){
+                pengwinArm.goUp();
+            }
             //Change power
             //
 
@@ -209,15 +214,6 @@ public class JeffsRealRun extends LinearOpMode {
     private void getPowerStuff(double power, double degreePower) {
         jeffThePengwin.degreeOfPower = degreePower;
         jeffThePengwin.powerInput = power;
-    }
-
-    private void buttons() {
-        if(gamepad2.x){
-            pengwinArm.goeyHomey();
-        }
-        if(gamepad2.y){
-            pengwinArm.goUp();
-        }
     }
 
     private void startify() {
