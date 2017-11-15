@@ -20,8 +20,11 @@ public class Robot {
         this.hardwareMap = hardwareMap;
     }
 
-    Claw claw = new Claw();
+    private Claw claw;
 
+    public void update () {
+
+    }
 
     public HardwareMap getHardwareMap() {
         return hardwareMap;

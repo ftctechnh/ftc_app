@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,6 +20,7 @@ import static org.firstinspires.ftc.teamcode.robot.Claw.CLAW_INCREMENT;
 public class TestOp extends OpMode {
     private DcMotor leftDrive, rightDrive,joint;
     private Claw claw;
+    private ColorSensor colorSensor;
 
     @Override
     public void init() {
@@ -36,6 +38,8 @@ public class TestOp extends OpMode {
 
             rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
             joint.setZeroPowerBehavior(BRAKE);
+
+            colorSensor = hardwareMap.colorSensor.get("color");
 
 
         } catch (Exception e) {
@@ -61,5 +65,7 @@ public class TestOp extends OpMode {
         if (gamepad2.dpad_left) {
             claw.setPosition(claw.getPosition() - CLAW_INCREMENT);
         }
+
+        telemetry.addData("ColorRGB",colorSensor.red() + ", " + colorSensor.green() + ", " + colorSensor.blue());
     }
 }
