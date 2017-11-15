@@ -22,6 +22,7 @@ public class AutonomousSetup extends LinearOpMode {
     private double DrawerSlideLowEnd;
     private double DrawerSlideHighEnd;
     private double DrawerSlideSpeed = 0;
+    boolean jewelDone = false;
 
     //Jewel Arm
     Servo servo;
@@ -67,10 +68,11 @@ public class AutonomousSetup extends LinearOpMode {
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            servo.setPosition(.43);
-            Thread.sleep(5000);
+            servo.setPosition(.39);
+            Thread.sleep(1000);
             JewelFinder();
             Thread.sleep(1000);
+            servo.setPosition(0.9);
             servo.setPosition(0.9);
             Thread.sleep(2000);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,10 +149,13 @@ public class AutonomousSetup extends LinearOpMode {
 
     }
     public void JewelFinder(){
-        telemetry.addData("Red ", cS.red());
-        telemetry.addData("Blue ", cS.blue());
-        telemetry.addData("Green", cS.green());
-        telemetry.update();
+        while (cS.red() < 2 && cS.blue() < 2) {
+            telemetry.addData("Red ", cS.red());
+            telemetry.addData("Blue ", cS.blue());
+            telemetry.addData("Green", cS.green());
+            telemetry.update();
+        }
+        try {Thread.sleep(10);} catch (InterruptedException e) {}
         int timesRan = 0;
         int timesBlue = 0;
         int timesRed = 0;
@@ -165,13 +170,27 @@ public class AutonomousSetup extends LinearOpMode {
         }
         //closeClaw();
         if (timesBlue > timesRed){
-            rotations(-.5, .25);
-            rotations(.5, .25);
+            rotations(-.125, .25);
+            servo.setPosition(0.9);
+            servo.setPosition(0.9);
+            try {Thread.sleep(1000);} catch (InterruptedException e) {}
+            telemetry.addData("about to go other way", 1);
+            telemetry.update();
+            rotations(.125, .25);
+            telemetry.addData("went other way", 1);
+            telemetry.update();
         }
         else{
-            rotations(.5, .25);
-            rotations(-.5, .25);
+            telemetry.addData("somehow we got here",1);
+            telemetry.update()
+            rotations(.125, .25);
+            servo.setPosition(0.9);
+            servo.setPosition(0.9);
+            try {Thread.sleep(1000);} catch (InterruptedException e) {}
+            rotations(-.125, .25);
+
         }
+        try {Thread.sleep(1000);} catch (InterruptedException e) {}
     }
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
 
