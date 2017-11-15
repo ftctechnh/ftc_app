@@ -55,8 +55,8 @@ public class JeffsRealRun extends LinearOpMode {
         //
         waitForStartify();
         //
-        //startify();//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
-        //smartify();
+        startify();//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
+        smartify();
         //
         while (opModeIsActive()) {
             //variable
@@ -69,6 +69,8 @@ public class JeffsRealRun extends LinearOpMode {
             buttons();
             //Change power
             //
+
+
             getDegreeOfArmMotor();
             //TODO This is negative stuff in color
             armUpDirection = gamepad2.right_stick_y > 0 ? 1 : -1;
@@ -158,24 +160,26 @@ public class JeffsRealRun extends LinearOpMode {
     }
 
     private void setThePowerForMovingArmUpOrDown(double degreeOfArmPower, int armUpDirection) {
-        //if((isRaised() & rotate > 0 ) || (isFelled() & rotate < 0 ) || (!isRaised() & !isFelled())){
+//        if((!isRaised() & armUpDirection < 0 ) || (isFelled() & armUpDirection > 0  )
+//                || (isRaised() && !isFelled())){
             //
             pengwinArm.setUpPower(armUpDirection* degreeOfArmPower*rotate);
-        //}
+//        }
     }
 
     private void telemetryJazz() {
         //TODO Telemetry(Fancy jazz)
         telemetry.addData("drive", drive);
         telemetry.addData("calibrate high", pengwinArm.getCalibrate());
-        telemetry.addData("penguin power set", jeffThePengwin.getPowerInput());
-        telemetry.addData("penguin total power", jeffThePengwin.getTotalPower());
-        telemetry.addData("penguin degree of power", jeffThePengwin.getDegreeOfPower());
+        telemetry.addData("penguin power set", jeffThePengwin.powerInput);
+        telemetry.addData("penguin total power", jeffThePengwin.powerInput * jeffThePengwin.degreeOfPower);
+        telemetry.addData("penguin degree of power", jeffThePengwin.degreeOfPower);
         telemetry.addData("penguin arm up power", pengwinArm.getUpPower());
         telemetry.addData("penguin arm extend power", pengwinArm.getAcrossPower());
         telemetry.addData("Left Stick X", gamepad1.left_stick_x);
         telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
         telemetry.addData("Right Stick X", gamepad1.right_stick_x);
+        telemetry.addData("Right Stick y", gamepad1.right_stick_y);
         telemetry.addData("touchy", touchy.getState());
         telemetry.addData("up", up.getState());
         telemetry.addData("Glyphy", pengwinArm.glyphy.getPosition());

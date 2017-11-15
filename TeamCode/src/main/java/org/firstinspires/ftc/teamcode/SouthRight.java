@@ -1,26 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Eric on 11/9/2017.
  */
 
-@Autonomous(name="NorthRight", group="Autonomisisisisis")
-public class NorthRight extends LinearOpMode {
+@Autonomous(name="SouthBlue ", group="Autonomisisisisis")
+public class SouthRight extends LinearOpMode {
     PengwinArm pengwinArm;
     PengwinFin pengwinFin;
     JeffThePengwin jeffThePengwin;
     private ElapsedTime runtime = new ElapsedTime();
     //
-
     //
     //Push
     @Override
@@ -30,21 +24,31 @@ public class NorthRight extends LinearOpMode {
         pengwinFin = new PengwinFin(hardwareMap);
         //
         jeffThePengwin.startify();
-
-
-        //For kids
+        //For kids //for ages 3-1020000000078605400000123
         waitForStartify();
         //
         //woo hoo
         //
         //Insert Code Here
         //12 went 9.5 inches, with a twist at the end?
-
-        jeffThePengwin.forwardToPosition(12, .4);
+        //
+        jeffThePengwin.leftToPosition(5, .4);
+        //
+        //jeffThePengwin.forwardToPosition(12, .4);
         runtime.reset();
         waitify(15);
         jeffThePengwin.switcheroo();
 
+        pengwinFin.moveFinDown();
+
+        telemetry.addData("Color Blue Sensorify", pengwinFin.doesColorSensorSeeBlueJewel());
+        telemetry.addData("Color Red Sensorify", !pengwinFin.doesColorSensorSeeBlueJewel());
+        telemetry.addData("telemetry test", Math.random());
+        telemetry.update();
+        runtime.reset();
+        while(runtime.seconds() < 60){
+
+        }
     }
     //
     //
