@@ -11,6 +11,7 @@ public class Grabber {
     private Servo leftServo, rightServo;
 
     public boolean closed = false;
+    public boolean isPressed = false;
 
     private final double LEFT_CLOSED_POSITION = 0.5 - (6.0/180);
     private final double LEFT_OPEN_POSITION = 1 - (6.0/180);
@@ -29,22 +30,27 @@ public class Grabber {
 
     public void Grab(boolean close) {
 
-        if (close) {
+        if (!isPressed) {
+            if (close) {
 
-            leftServo.setPosition(LEFT_CLOSED_POSITION);
-            rightServo.setPosition(RIGHT_CLOSED_POSITION);
+                isPressed = true;
+                leftServo.setPosition(LEFT_CLOSED_POSITION);
+                rightServo.setPosition(RIGHT_CLOSED_POSITION);
 
-            closed = true;
+                closed = true;
+                isPressed = false;
 
-        } else {
+            } else {
 
-            leftServo.setPosition(LEFT_OPEN_POSITION);
-            rightServo.setPosition(RIGHT_OPEN_POSITION);
+                isPressed = true;
 
-            closed = false;
+                leftServo.setPosition(LEFT_OPEN_POSITION);
+                rightServo.setPosition(RIGHT_OPEN_POSITION);
 
+                closed = false;
+                isPressed = false;
+            }
         }
-
     }
 
 }
