@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.DriveTrain.TankDrive;
 import org.firstinspires.ftc.teamcode.DriveTrain.TurnDrive;
+import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
 
 /**
  * Created by Shane on 13-11-2017.
  */
 @TeleOp(name = "Relic Recovery",group = "TeleOp")
-public class RelicRecoveryTeleOp extends RelicRecoveryTelemetry {
+public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
 
     private int padCofig = 0;
     private boolean ifHold;
@@ -35,7 +36,6 @@ public class RelicRecoveryTeleOp extends RelicRecoveryTelemetry {
         configTele();
         padControls();
         setMotorPower();
-        super.myTelemetry();
     }   //end loop
 
     private void padControls() {
@@ -132,72 +132,31 @@ public class RelicRecoveryTeleOp extends RelicRecoveryTelemetry {
             leftPower /= 2;
         }
         armPosition = gamepad2.right_trigger;
+        if(gamepad2.right_stick_button) {
+            poopPosition = POOP_OPEN;
+        } else {
+            poopPosition = POOP_CLOSED;
+        }
     }
 
     private void setMotorPower() {
-        //motors
-        try {
-            mRight.setPower(rightPower);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "right motor");
-        }
-        try {
-            mLeft.setPower(leftPower);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "left motor");
-        }
-        try {
-            mLift.setPower(liftPower);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "lift motor");
-        }
-        try {
-            mArm.setPower(armPower);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "arm motor");
-        }
-        try {
-            mArmLift.setPower(armLifterPwr);
-        } catch (Exception OpModeException) {
-            telemetry.addData("Cant run (not mapped)", "arm lifter");
-        }
-        //servos
-        try {
-            ssBallPusher.setPosition(ballPusherPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "ball pusher");
-        }
-        try {
-            ssRelicGrabber.setPosition(oneHandPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "one hand");
-        }
-        try {
-            crHand.setPower(crHandPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "cr hand");
-        }
-        try {
-            crRelicGrabber.setPower(relicPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Cant run (not mapped)", "relic grabber");
-
-        }
-        try {
-            crArmLift.setPower(armLifterSPosition);
-        }catch (Exception opModeException){
-            telemetry.addData("Cant run (not mapped)", "Servo lift arm");
-        }
-        try {
-            crArm.setPower(armPower);
-        } catch (Exception opModeException) {
-            telemetry.addData("Can't run (not mapped)", "Servo arm motor");
-        }
-        try {
-            ssArm.setPosition(armPosition);
-        } catch (Exception opModeException) {
-            telemetry.addData("Can't run (not mapped)", "Servo arm");
-        }
+        SetRobot setRobot = new SetRobot(telemetry);
+        // -------------- DcMotors --------------
+        setRobot.power(mRight,rightPower,"right motor");
+        setRobot.power(mLeft,leftPower,"left motor");
+        setRobot.power(mLift,liftPower,"lift motor");
+        setRobot.power(mArm,armPower,"arm motor");
+        setRobot.power(mArmLift,armLifterPwr,"arm lift motor");
+        // ---------- Standard Servos -----------
+        setRobot.position(ssBallPusher,ballPusherPosition,"ball pusher servo");
+        setRobot.position(ssArm,armPosition,"arm servo");
+        setRobot.position(ssRelicGrabber,oneHandPosition,"relic grabber servo");
+        setRobot.position(ssPoop,poopPosition,"poop");
+        // ------- Continuous Rotation Servos -------
+        setRobot.position(crHand,crHandPosition,"hand crservo");
+        setRobot.position(crRelicGrabber,relicPosition, "relic grabber crservo");
+        setRobot.position(crArmLift,armLifterSPosition,"arm lift crservo");
+        setRobot.position(crArm,armPower,"arm crservo");
     }
 
     private void configTele() {

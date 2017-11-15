@@ -13,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class Map {
     // -------------------------- Objects ---------------------------
-    HardwareMap hardwareMap;
-    Telemetry telemetry;
+    HardwareMap hardwareMap = null;
+    Telemetry telemetry = null;
     // ------------------------ Constructor -------------------------
     public Map(final HardwareMap map, final Telemetry tele) {
         hardwareMap = map;
@@ -22,14 +22,26 @@ public class Map {
     }
     // ----------------------- Public Methods -----------------------
     // ---------------- DcMotors ----------------
-    public DcMotor motor(String name) {return m(name,false);}
-    public DcMotor revMotor(String name) {return m(name,true);}
+    public DcMotor motor(String name) {
+        return m(name,false);
+    }
+    public DcMotor revMotor(String name) {
+        return m(name,true);
+    }
     // ------------ Standard Servos -------------
-    public Servo servo(String name, double position) {return s(name,position,false);}
-    public Servo revServo(String name, double position) {return s(name,position,true);}
+    public Servo servo(String name, double position) {
+        return s(name,position,false);
+    }
+    public Servo revServo(String name, double position) {
+        return s(name,position,true);
+    }
     // ------- Continuous Rotation Servos -------
-    public CRServo crservo(String name) {return crs(name,false);}
-    public CRServo revCrservo(String name) {return crs(name,true);}
+    public CRServo crservo(String name) {
+        return crs(name,false);
+    }
+    public CRServo revCrservo(String name) {
+        return crs(name,true);
+    }
     // ---------------------- Private Methods -----------------------
     // ---------------- DcMotors ----------------
     private DcMotor m(String name, boolean ifReverse) {
@@ -38,7 +50,7 @@ public class Map {
             motor = hardwareMap.dcMotor.get(name);
             if (ifReverse)
                 motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        } catch (Exception opModeException) {
+        } catch (Exception e) {
             telemetry.addData("Can't map motor", name);
         }
         return motor;
@@ -51,7 +63,7 @@ public class Map {
             if (ifReverse)
                 servo.setDirection(Servo.Direction.REVERSE);
             servo.setPosition(position);
-        } catch (Exception opModeException) {
+        } catch (Exception e) {
             telemetry.addData("Can't map servo", name);
         }
         return servo;
@@ -63,7 +75,7 @@ public class Map {
             crservo = hardwareMap.crservo.get(name);
             if (ifReverse)
                 crservo.setDirection(DcMotorSimple.Direction.REVERSE);
-        } catch (Exception opModeException) {
+        } catch (Exception e) {
             telemetry.addData("Can't map crservo", name);
         }
         return crservo;
