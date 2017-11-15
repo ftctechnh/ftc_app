@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.systems.RackAndPinion;
+import org.chathamrobotics.common.utils.RGBAColor;
 import org.chathamrobotics.common.utils.hardware.HardwareListener;
 import org.chathamrobotics.common.utils.hardware.IsBusyException;
 import org.chathamrobotics.common.utils.robot.RobotLogger;
@@ -36,6 +37,14 @@ public class JewelDisplacer {
      * @param robot     the robot to get the logger and hardware from
      * @return          the built JewelDisplacer
      */
+    /**
+     * Builds a new JewelDisplacer using the standard hardware names.
+     * jewelArmServo -> "JewelArm"
+     * armShifterServo -> "ArmShifter"
+     * jewelColorSensor -> "JewelColor"
+     * @param robot     the robot to get the logger and hardware from
+     * @return              the built JewelDisplacer
+     */
     public static JewelDisplacer build(Robot robot) {
         return build(robot.getHardwareMap(), robot, robot.log);
     }
@@ -44,7 +53,7 @@ public class JewelDisplacer {
      * Builds a new JewelDisplacer using the standard hardware names.
      * jewelArmServo -> "JewelArm"
      * armShifterServo -> "ArmShifter"
-     * jewelColorSensor -> "JewelSensor"
+     * jewelColorSensor -> "JewelColor"
      * @param hardwareMap   the robot's hardware map
      * @param logger        the robot's logger
      * @return              the built JewelDisplacer
@@ -53,7 +62,7 @@ public class JewelDisplacer {
         return new JewelDisplacer(
                 hardwareMap.servo.get("JewelArm"),
                 RackAndPinion.build(hardwareMap, hardwareListener, logger),
-                hardwareMap.colorSensor.get("JewelSensor"),
+                hardwareMap.colorSensor.get("JewelColor"),
                 logger
         );
     }
@@ -79,6 +88,8 @@ public class JewelDisplacer {
      * Raises the jewel arm
      */
     public void raise() {
+        logger.debug("Raising Jewel Arm");
+
         if (! isArmUp) {
             jewelArmServo.setPosition(ARM_UP_POSITION);
             isArmUp = true;
@@ -89,25 +100,60 @@ public class JewelDisplacer {
      * Drops the jewel arm
      */
     public void drop() {
+        logger.debug("Dropping Jewel Arm");
+
         if (isArmUp) {
             jewelArmServo.setPosition(ARM_DOWN_POSITION);
             isArmUp = false;
         }
     }
 
+    /**
+     * Shifts the jewel arm to the left
+     * @throws IsBusyException  throw if the jewel displacer is already busy
+     */
     public void shiftLeft() throws IsBusyException {
+        logger.debug("Shifting the Jewel Arm to the left");
+
         rackAndPinion.moveToLower();
     }
 
+    /**
+     * Shifts the jewel arm to the left synchronously
+     * @throws IsBusyException  throw if the jewel displacer is already busy
+     */
     public void shiftLeftSync() throws InterruptedException, IsBusyException {
+        logger.debug("Shifting the Jewel Arm to the left");
+
         rackAndPinion.moveToLowerSync();
     }
 
+    /**
+     * Shifts the jewel arm to the right
+     * @throws IsBusyException  throw if the jewel displacer is already busy
+     */
     public void shiftRight() throws IsBusyException {
+        logger.debug("Shifting the Jewel Arm to the right");
+
         rackAndPinion.moveToUpper();
     }
 
+    /**
+     * Shifts the jewel arm to the right synchronously
+     * @throws IsBusyException  throw if the jewel displacer is already busy
+     */
     public void shiftRightSync() throws InterruptedException, IsBusyException {
+        logger.debug("Shifting the Jewel Arm to the left");
+
         rackAndPinion.moveToUpperSync();
+    }
+
+    public RGBAColor getColor() {
+        return new RGBAColor(
+                jewelColorSensor.red(),
+                jewelColorSensor.green(),
+                jewelColorSensor.blue(),
+                jewelColorSensor.alpha()
+        );
     }
 }

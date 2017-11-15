@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.chathamrobotics.common.Robot;
 import org.chathamrobotics.common.systems.HolonomicDriver;
+import org.chathamrobotics.common.utils.robot.RobotFace;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.team9853.systems.GlyphGripper;
 
@@ -48,8 +49,12 @@ public class Robot9853 extends Robot {
     }
 
     public void driveWithControls(Gamepad gp) {
-        double magnitude = Math.hypot(gp.left_stick_x, gp.left_stick_y);
-        double direction = Math.atan2(gp.left_stick_y, gp.left_stick_x);
+        double magnitude = Math.hypot(gp.left_stick_x, -gp.left_stick_y);
+        double direction = Math.atan2(-gp.left_stick_y, gp.left_stick_x);
+
+        if (gp.dpad_up) driver.setFront(RobotFace.FRONT);
+        if (gp.dpad_down) driver.setFront(RobotFace.BACK);
+        if (gp.dpad_left) driver.setFront(RobotFace.LEFT);
 
         driver.setDrivePower(direction, magnitude, gp.right_stick_x);
     }

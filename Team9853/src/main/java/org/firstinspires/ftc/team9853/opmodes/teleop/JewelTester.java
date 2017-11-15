@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.team9853.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.chathamrobotics.common.utils.hardware.Controller;
 import org.chathamrobotics.common.utils.hardware.IsBusyException;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
  * Created by carsonstorm on 11/1/2017.
  */
 
+@TeleOp(name = "Jewel Tester", group = "Test")
 public class JewelTester extends OpMode {
     private Robot9853 robot;
     private JewelDisplacer jewelDisplacer;
@@ -19,6 +21,7 @@ public class JewelTester extends OpMode {
     @Override
     public void init() {
         robot = Robot9853.build(this);
+        robot.init();
         jewelDisplacer = JewelDisplacer.build(robot);
         controller1 = new Controller(gamepad1);
     }
