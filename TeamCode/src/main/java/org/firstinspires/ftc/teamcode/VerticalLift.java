@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class VerticalLift {
 
     private Servo liftServo;
-    private boolean rbOn = false;
 
     public VerticalLift(Servo servo) {
 
@@ -17,19 +16,13 @@ public class VerticalLift {
 
     }
 
-    public void Lift(boolean gp1RightBumper, boolean gp2RightBumper,
-            boolean gp1LeftBumper, boolean gp2LeftBumper
+    public void Lift(boolean gp1LeftBumper, boolean gp2LeftBumper
             , double gp1Trigger, double gp2Trigger) {
-        if (gp1RightBumper || gp2RightBumper)
-            rbOn = !rbOn;
 
-        if ((gp1LeftBumper|| gp2LeftBumper)
-                && rbOn) {
+        if (gp1LeftBumper|| gp2LeftBumper) {
             liftServo.setPosition(0);
-        } else if ((gp1Trigger != 0 || gp2Trigger != 0)
-                && rbOn) {
+        } else if (gp1Trigger != 0 || gp2Trigger != 0) {
             liftServo.setPosition(1);
-
         } else {
             liftServo.setPosition(.5);
         }
