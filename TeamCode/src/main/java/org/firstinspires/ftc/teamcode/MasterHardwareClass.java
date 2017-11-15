@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -18,6 +19,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 //This class defines all the specific hardware for a the BACONbot robot.
 
 public class MasterHardwareClass {
@@ -34,6 +37,8 @@ public class MasterHardwareClass {
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
     public CRServo clawServo = null;
+    public BNO055IMU imu = null;
+
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;
@@ -70,6 +75,7 @@ public class MasterHardwareClass {
         backRightMotor = hwMap.dcMotor.get("BR");
         verticalArmMotor = hwMap.dcMotor.get("VAM");
         clawServo =  hwMap.crservo.get("CS");
+        imu = hwMap.get(BNO055IMU.class, "imu");
 
         // Set all hardware to default position
         // Set all hardware to default position

@@ -98,52 +98,55 @@ HolonomicHardwareClass robot = new HolonomicHardwareClass();
             double backRight;
 
 
-                if (gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
+            if (gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
 
-                    double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-                    r = r / 2; //Don't let rotation dominate movement
+                double GRX = gamepad1.right_stick_x;
 
-                    double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-                    double rightX = gamepad1.right_stick_x;
+                final double v1 = +GRX;
+                final double v2 = -GRX;
+                final double v3 = +GRX;
+                final double v4 = -GRX;
 
-                    double GLY = gamepad1.left_stick_y;
-                    double GRX = gamepad1.right_stick_x;
-                    double GLX = gamepad1.left_stick_x;
+                frontLeft = v1;
+                frontRight = v2;
+                backLeft = v3;
+                backRight = v4;
 
-                    final double v1 = +GRX;
-                    final double v2 = -GRX;
-                    final double v3 = +GRX;
-                    final double v4 = -GRX;
-
-                    frontLeft = v1;
-                    frontRight = v2;
-                    backLeft = v3;
-                    backRight = v4;
-
-                    if (robot.FrontLeftPower != frontLeft) {
-                        robot.frontLeftMotor.setPower(v1);
-                        robot.FrontLeftPower = frontLeft;
-                    }
-                    if (robot.FrontRightPower != frontRight) {
-                        robot.frontRightMotor.setPower(-v2);
-                        robot.FrontRightPower = frontRight;
-                    }
-                    if (robot.BackLeftPower != backLeft) {
-                        robot.backLeftMotor.setPower(v3);
-                        robot.BackLeftPower = backLeft;
-                    }
-                    if (robot.BackRightPower != backRight)
-                        robot.backRightMotor.setPower(-v4);
-                    robot.BackRightPower = backRight;
+                if (robot.FrontLeftPower != frontLeft) {
+                    robot.frontLeftMotor.setPower(v1);
+                    robot.FrontLeftPower = frontLeft;
                 }
-                //Hey there!
+                if (robot.FrontRightPower != frontRight) {
+                    robot.frontRightMotor.setPower(-v2);
+                    robot.FrontRightPower = frontRight;
+                }
+                if (robot.BackLeftPower != backLeft) {
+                    robot.backLeftMotor.setPower(v3);
+                    robot.BackLeftPower = backLeft;
+                }
+                if (robot.BackRightPower != backRight)
+                    robot.backRightMotor.setPower(-v4);
+                robot.BackRightPower = backRight;
+            }
+            //Hey there!
 
-                double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-                r = r / 2; //Don't let rotation dominate movement
+            if (gamepad1.left_bumper) {
+                double GLY = -gamepad1.left_stick_y / 5;
+                double GRX = gamepad1.right_stick_x / 5;
+                double GLX = gamepad1.left_stick_x / 5;
 
-                double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-                double rightX = gamepad1.right_stick_x;
+                final double v1 = GLY + GRX + GLX;
+                final double v2 = GLY - GRX - GLX;
+                final double v3 = GLY + GRX - GLX;
+                final double v4 = GLY - GRX + GLX;
 
+                frontLeft = v1;
+                frontRight = v2;
+                backLeft = v3;
+                backRight = v4;
+
+                setWheelPower(v1, v2, v3, v4);
+            } else {
                 double GLY = -gamepad1.left_stick_y;
                 double GRX = gamepad1.right_stick_x;
                 double GLX = gamepad1.left_stick_x;
@@ -158,28 +161,46 @@ HolonomicHardwareClass robot = new HolonomicHardwareClass();
                 backLeft = v3;
                 backRight = v4;
 
-                if (robot.FrontLeftPower != frontLeft) {
-                    robot.frontLeftMotor.setPower(-v1);
-                    robot.FrontLeftPower = frontLeft;
-                }
-                if (robot.FrontRightPower != frontRight) {
-                    robot.frontRightMotor.setPower(v2);
-                    robot.FrontRightPower = frontRight;
-                }
-                if (robot.BackLeftPower != backLeft) {
-                    robot.backLeftMotor.setPower(-v3);
-                    robot.BackLeftPower = backLeft;
-                }
-                if (robot.BackRightPower != backRight)
-                    robot.backRightMotor.setPower(v4);
-                    robot.BackRightPower = backRight;
-
+                setWheelPower(v1, v2, v3, v4);
             }
         }
-
+    }
 
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
+/* This method powers each wheel to whichever power is desired */
+    public void setWheelPower(double fl, double fr, double bl, double br) {
 
+        /* Create power variables */
+        double frontLeft;
+        double frontRight;
+        double backLeft;
+        double backRight;
+
+        /* Initialize the powers with the values input whenever this method is called */
+        frontLeft   =   fl;
+        frontRight  =   fr;
+        backLeft    =   bl;
+        backRight   =   br;
+
+        /* set each wheel to the power indicated whenever this method is called */
+        if (robot.FrontLeftPower != frontLeft) {
+            robot.frontLeftMotor.setPower(fl);
+            robot.FrontLeftPower = frontLeft;
+        }
+        if (robot.FrontRightPower != frontRight) {
+            robot.frontRightMotor.setPower(fr);
+            robot.FrontRightPower = frontRight;
+        }
+        if (robot.BackLeftPower != backLeft) {
+            robot.backLeftMotor.setPower(bl);
+            robot.BackLeftPower = backLeft;
+        }
+        if (robot.BackRightPower != backRight)
+            robot.backRightMotor.setPower(br);
+        robot.BackRightPower = backRight;
+    }
 }
+
+
