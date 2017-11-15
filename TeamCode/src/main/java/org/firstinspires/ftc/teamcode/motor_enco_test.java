@@ -89,7 +89,8 @@ public class motor_enco_test extends OpMode
      */
     @Override
     public void loop() {
-        if (gamepad1.a) { testMotor.setPower(.25); } else {testMotor.setPower(0);}
+        if (gamepad1.a) { testMotor.setPower(.25); } else if (gamepad1.b) { testMotor.setPower(-.25); }
+         else {testMotor.setPower(0);}
         telemetry.addData("pos:", testMotor.getCurrentPosition());
         telemetry.addData("tgt:", testMotor.getTargetPosition());
     }
