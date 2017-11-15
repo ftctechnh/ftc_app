@@ -11,12 +11,13 @@ import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
  */
 @TeleOp(name = "Relic Recovery",group = "TeleOp")
 public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
-
+    // --------------------- Private Variables ----------------------
     private int padCofig = 0;
     private boolean ifHold;
     private boolean RelicHold;
     private boolean slowDrive = false;
-
+    // ----------------------- Public Methods -----------------------
+    // ------------------ Init ------------------
     @Override
     public void init() {
         super.init();
@@ -26,7 +27,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         ifHold();
         ifHold = false;
     }
-
+    // ------------------ Loop ------------------
     @Override
     public void loop() {
         super.loop();
@@ -36,8 +37,8 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         configTele();
         padControls();
         setMotorPower();
-    }   //end loop
-
+    }
+    // ---------------------- Private Methods -----------------------
     private void padControls() {
         if(gamepad1.right_bumper) {
             ballPusherPosition = BALL_PUSHER_DOWN;

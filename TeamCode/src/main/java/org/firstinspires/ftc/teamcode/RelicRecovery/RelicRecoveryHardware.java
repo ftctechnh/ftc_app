@@ -67,15 +67,14 @@ public class RelicRecoveryHardware extends OpMode {
 
     protected String driveMode;
     // ----------------------- Public Methods -----------------------
+    // ------------------ Init ------------------
     @Override
     public void init() {
         hardwareInit();
     }
-
+    // ------------------ Loop ------------------
     @Override
-    public void loop() {
-
-    }
+    public void loop() {}
     // ---------------------- Private Methods -----------------------
     private void hardwareInit() {
         Map map = new Map(hardwareMap,telemetry);
