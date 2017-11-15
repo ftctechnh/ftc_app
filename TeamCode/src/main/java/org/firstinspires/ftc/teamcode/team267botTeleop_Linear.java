@@ -55,7 +55,7 @@ public class team267botTeleop_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     Hardware267Bot robot           = new Hardware267Bot();   // Use a Pushbot's hardware
-                                                               // could also use HardwarePushbotMatrix class.
+                                                // could also use HardwarePushbotMatrix class.
 
     @Override
     public void runOpMode() {
@@ -85,6 +85,21 @@ public class team267botTeleop_Linear extends LinearOpMode {
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
 
+            if (gamepad1.left_trigger >0) {
+                //If the left trigger is pressed, move block forward.
+                robot.leftBelt.setPower(-1.0);
+                robot.rightBelt.setPower(1.0);
+            }
+            else if (gamepad1.right_trigger >0) {
+                //If the right trigger is pressed, move block backwards.
+                robot.leftBelt.setPower(-1.0);
+                robot.rightBelt.setPower(1.0);
+            }
+            else {
+                //If neither trigger is pressed, do nothing.
+                robot.leftBelt.setPower(0.0);
+                robot.rightBelt.setPower(0.0);
+            }
 
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
