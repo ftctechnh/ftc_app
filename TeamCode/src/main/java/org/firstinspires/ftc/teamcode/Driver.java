@@ -1,8 +1,54 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by DiegoGutiDev on 11/15/17.
- */
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-public class Driver {
+/**
+ *Created by Pramodh on 10/27/2017.
+ */
+@TeleOp
+public class Driver extends LinearOpMode {
+    private DcMotor motor0;
+    private DcMotor motor1;
+    private Servo servo0;
+    private Servo servo1;
+
+    @Override
+    public void runOpMode() {
+
+        motor0 = hardwareMap.get(DcMotor.class, "motor0");
+        motor1 = hardwareMap.get(DcMotor.class, "motor1");
+        servo0 = hardwareMap.get(Servo.class, "servo0");
+        servo1 = hardwareMap.get(Servo.class, "servo1");
+
+        double leftMotorPower = 0;
+        double rightMotorPower = 0;
+
+        //sends tests data to dc phone
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        //Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        TankDriveTrain driveTrain = new TankDriveTrain(motor0, motor1);
+        Grabber grabber = new Grabber(servo0, servo1);
+
+        //run until the end of the match (driver presses STOP)
+        while (opModeIsActive()) {
+
+            driveTrain.move(this.gamepad1.left_stick_y, this.gamepad1.right_stick_y);
+            grabber.Grab(this.gamepad1.right_bumper);
+
+            telemetry.addData("Left Bumper", this.gamepad1.left_bumper);
+            telemetry.addData("Right Bumper", this.gamepad1.right_bumper);
+            telemetry.addData("Left Trigger", this.gamepad1.left_trigger);
+            telemetry.addData("Right Trigger", this.gamepad1.right_trigger);
+            telemetry.addData("Left Stick Y", this.gamepad1.left_stick_y);
+            telemetry.addData("Right Stick Y", this.gamepad1.right_stick_y);
+            telemetry.update();
+        }
+    }
 }

@@ -28,28 +28,30 @@ public class Grabber {
 
     }
 
-    public void Grab(boolean close) {
+    public void Grab(boolean change) {
 
         if (!isPressed) {
-            if (close) {
+
+            if (change) {
+                if (closed) {
+                    leftServo.setPosition(LEFT_OPEN_POSITION);
+                    rightServo.setPosition(RIGHT_OPEN_POSITION);
+
+                    closed = false;
+                } else {
+                    leftServo.setPosition(LEFT_CLOSED_POSITION);
+                    rightServo.setPosition(RIGHT_CLOSED_POSITION);
+
+                    closed = true;
+                }
 
                 isPressed = true;
-                leftServo.setPosition(LEFT_CLOSED_POSITION);
-                rightServo.setPosition(RIGHT_CLOSED_POSITION);
-
-                closed = true;
-                isPressed = false;
-
             } else {
 
-                isPressed = true;
-
-                leftServo.setPosition(LEFT_OPEN_POSITION);
-                rightServo.setPosition(RIGHT_OPEN_POSITION);
-
-                closed = false;
                 isPressed = false;
+
             }
+
         }
     }
 
