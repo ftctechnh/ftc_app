@@ -171,8 +171,12 @@ public class Vuforia_ColorRev extends LinearOpMode {
 //        telemetry.update();
 
         gromit.jewelsservo.setPosition(0.2);
-        gromit.leftlower.setPosition(0.9);
+//  clap the glyph
+        gromit.leftlower.setPosition(0);
         gromit.rightlower.setPosition(1);
+        sleep(2000);
+        gromit.leftlower.setPosition(0.5);
+        gromit.rightlower.setPosition(0.5);
  /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
@@ -207,11 +211,15 @@ public class Vuforia_ColorRev extends LinearOpMode {
         telemetry.addData(">", "Press Play to start");
         /** Wait for the game to start (driver presses PLAY)
          * ================================================================================================================================**/
+
         waitForStart();
+
             double error=.3;
             double power=0.5;
         resetStartTime();      // start timer
 
+        gromit.leftlower.setPosition(0.5);
+        gromit.rightlower.setPosition(0.5); //glyph clamp
 
 /**
  * See if any of the instances of {@link relicTemplate} are currently visible.
@@ -285,7 +293,7 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
 
-            while(gromit.left_front.getCurrentPosition() <= 1500){
+            while(gromit.left_front.getCurrentPosition() <= 2400-700){
                 idle();
             }
 
@@ -300,7 +308,7 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
 
-            while(gromit.left_front.getCurrentPosition() <= 1500+900){
+            while(gromit.left_front.getCurrentPosition() <= 2400){
                 idle();
             }
 
@@ -314,7 +322,7 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
 
-            while(gromit.left_front.getCurrentPosition() <= 1500+2*600){
+            while(gromit.left_front.getCurrentPosition() <= 2400+700){
                 idle();
             }
 
@@ -366,7 +374,7 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_front.setPower( power);
             gromit.right_back.setPower( power);
 
-            while(gromit.left_front.getCurrentPosition() <= 1500+2*600){
+            while(gromit.left_front.getCurrentPosition() <= 3000){
                 idle();
             }
 
@@ -374,6 +382,22 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.left_back.setPower(0);
             gromit.right_front.setPower(0);
             gromit.right_back.setPower(0);
+
+            //unclamp glyph and back up
+        gromit.leftlower.setPosition(0.0);
+        gromit.rightlower.setPosition(1);
+        sleep(500);
+        gromit.left_front.setPower(-power);
+        gromit.left_back.setPower(-power);
+        gromit.right_front.setPower(-power);
+        gromit.right_back.setPower(-power);
+        while(gromit.left_front.getCurrentPosition() >= 2000){
+            idle();
+        }
+        gromit.left_front.setPower(0);
+        gromit.left_back.setPower(0);
+        gromit.right_front.setPower(0);
+        gromit.right_back.setPower(0);
 
        // mecanumDriveGyro(1.0,0.0,0.0,0);
        while (opModeIsActive()) {
