@@ -3,6 +3,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Utilities.Map;
+
 /**
  * Created by jeppe on 17-10-2017.
  */
@@ -18,8 +20,9 @@ public class MyTesting extends OpMode{
     @Override
     public void init() {
 
-
-        test = hardwareMap.dcMotor.get("test");
+        Map map = new Map(hardwareMap,telemetry);
+        map.motor("test");
+        // test = hardwareMap.dcMotor.get("test");
         test2 = hardwareMap.dcMotor.get("test2");
 
         test.setDirection(DcMotorSimple.Direction.FORWARD);
