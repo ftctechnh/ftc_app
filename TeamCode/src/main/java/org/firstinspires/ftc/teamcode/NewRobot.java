@@ -82,9 +82,9 @@ public class NewRobot
     {
         float hue = getHueValue( in_ColorSens);
 
-        if (hue < 4 || hue > 330)
+        if (hue < 5 || hue > 330)
             return 'r';
-        else if (hue > 220 && hue < 240)
+        else if (hue > 219 && hue < 241)
             return 'b';
         else
             return '?';
