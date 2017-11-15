@@ -238,7 +238,7 @@ public class DriveAvoidImu extends LinearOpMode
         backLeftMotor.setPower(leftPower);
 
         frontRightMotor.setPower(rightPower);
-        frontRightMotor.setPower(rightPower);
+        backRightMotor.setPower(rightPower);
 
         // rotate until turn is completed.
         if (degrees < 0)
