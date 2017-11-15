@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
+ ☺ Hi! This is the perfect autonomous code for December 16, 2017! ☺
  */
 @Autonomous(name = "Arleth Auto Drive", group = "Concept")
 //@Disabled
@@ -59,14 +59,7 @@ public class ArlethAutonomousDrive extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
-           // goForwardTime(1, .5);
-
-//            goBackwardTime(1, .5);
-
-            goLeftTime(1, .5);
-
-  //          goRightTime(1, .5);
+            movebytime(1, .5, Forward);
 
         }
     }
@@ -76,65 +69,27 @@ public class ArlethAutonomousDrive extends LinearOpMode {
      ***********************************************************************************************/
 
 /* This method moves the robot forward for time and power indicated*/
-    public void goForwardTime (double time, double power) {
+    public void movebytime (double time, double power, String direction) {
     /* reset the "timer" to 0 */
         runtime.reset();
     /* This runs the wheel power so it moves forward, the powers for the left wheels
     are inversed so that it runs properly on the robot
      */
-        setWheelPower(-power, power, -power, power);
-    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
-        while (opModeIsActive() && runtime.seconds() < time) {
 
-        }
-    /* Once the while loop above finishes turn off the wheels */
-        wheelsOff();
+    switch (direction) {
+        case "Forward":
+            setWheelPower(-power, power, -power, power);
+            break;
+        case "Backward":
+            setWheelPower(power, power, -power, -power);
+            break;
+        case "Right":
+            setWheelPower(-power, -power, power, power);
+            break;
+        case "Left":
+            setWheelPower(power, power, -power, -power);
+            break;
     }
-
-
-    /* This method moves the robot backward for time and power indicated*/
-    public void goBackwardTime (double time, double power) {
-
-    /* reset the "timer" to 0 */
-        runtime.reset();
-    /* This runs the wheel power so it moves forward, the powers for the left wheels
-    are inversed so that it runs properly on the robot
-     */
-        setWheelPower(power, power, -power, -power);
-    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
-        while (opModeIsActive() && runtime.seconds() < time) {
-
-        }
-    /* Once the while loop above finishes turn off the wheels */
-        wheelsOff();
-    }
-
-
-    /* This method moves the robot right for time and power indicated*/
-    public void goRightTime (double time, double power) {
-    /* reset the "timer" to 0 */
-        runtime.reset();
-    /* This runs the wheel power so it moves forward, the powers for the left wheels
-    are inversed so that it runs properly on the robot
-     */
-        setWheelPower(-power, -power, power, power);
-    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
-        while (opModeIsActive() && runtime.seconds() < time) {
-
-        }
-    /* Once the while loop above finishes turn off the wheels */
-        wheelsOff();
-    }
-
-
-    /* This method moves the robot left for time and power indicated*/
-    public void goLeftTime (double time, double power) {
-    /* reset the "timer" to 0 */
-        runtime.reset();
-    /* This runs the wheel power so it moves forward, the powers for the left wheels
-    are inversed so that it runs properly on the robot
-     */
-        setWheelPower(power, power, -power, -power);
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
         while (opModeIsActive() && runtime.seconds() < time) {
 
