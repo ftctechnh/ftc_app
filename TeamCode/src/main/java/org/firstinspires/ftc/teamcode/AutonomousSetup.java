@@ -182,7 +182,7 @@ public class AutonomousSetup extends LinearOpMode {
         }
         else{
             telemetry.addData("somehow we got here",1);
-            telemetry.update()
+            telemetry.update();
             rotations(.125, .25);
             servo.setPosition(0.9);
             servo.setPosition(0.9);
