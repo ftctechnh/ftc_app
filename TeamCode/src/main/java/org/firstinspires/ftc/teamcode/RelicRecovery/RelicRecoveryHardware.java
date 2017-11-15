@@ -89,6 +89,7 @@ public class RelicRecoveryHardware extends OpMode {
         ssArm = map.servo("armS", armPosition);
         ssRelicGrabber = map.servo("hand", oneHandPosition);
         ssPoop = map.revServo("poop",poopPosition);
+        ssArm = map.revServo("arm", armPosition);
         // ------- Continuous Rotation Servos -------
         crHand = map.revCrservo("crh");
         crRelicGrabber = map.revCrservo("relic");
