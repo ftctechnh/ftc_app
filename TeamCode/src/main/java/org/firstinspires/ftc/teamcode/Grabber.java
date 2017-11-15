@@ -28,11 +28,11 @@ public class Grabber {
 
     }
 
-    public void Grab(boolean change) {
+    public void Grab(double change) {
 
         if (!isPressed) {
 
-            if (change) {
+            if (change != 0) {
                 if (closed) {
                     leftServo.setPosition(LEFT_OPEN_POSITION);
                     rightServo.setPosition(RIGHT_OPEN_POSITION);
@@ -49,7 +49,7 @@ public class Grabber {
             }
 
         }
-        if (!change) {
+        if (change == 0) {
             isPressed = false;
         }
     }
