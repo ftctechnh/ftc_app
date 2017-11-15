@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 //All imports go here, anything you will use, like motors or servos.
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import android.util.Log;
+
 //This makes the OpMode available in the Autonomous group under the name 'Autonomous', in the Driver Station
 //@Disabled //AUSTIN REMEMBER TO REMOVE THIS -Austin from 4:55 P. M. on 11/7/17 // remembered
 @Autonomous(name = "Autonomous", group = "Autonomous")
@@ -33,6 +35,7 @@ public class AutonomousSetup extends LinearOpMode {
     int Tw = 1; //The part of the gear ratio attached to the wheel
     double D = 4.0; //Diameter of wheels
     double C = D * Math.PI;//One rotation of tank gear/wheel
+
     public void runOpMode() throws InterruptedException {
         //Start with the basic declaration of variable strings that the phones will read
 
@@ -46,17 +49,16 @@ public class AutonomousSetup extends LinearOpMode {
             rightClaw.setPosition(clawPosition);
             leftClaw = hardwareMap.servo.get("s2");
             leftClaw.setPosition(clawPosition);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
 
         }
-        
+
         cS = hardwareMap.colorSensor.get("cs1");
         servo = hardwareMap.servo.get("s3");
         // Now do anything else you need to do in the initilazation phase, like calibrating the gyros, setting a color sensors lights off, etc.
 
-        FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        BackRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        FrontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        BackLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         cS.enableLed(true);
         telemetry.addData("it did the thing", 1);
@@ -66,13 +68,13 @@ public class AutonomousSetup extends LinearOpMode {
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            servo.setPosition(.39);
-            Thread.sleep(1000);
-            JewelFinder();
-            Thread.sleep(1000);
-            servo.setPosition(0.9);
-            servo.setPosition(0.9);
-            Thread.sleep(2000);
+        servo.setPosition(.39);
+        Thread.sleep(1000);
+        JewelFinder();
+        Thread.sleep(1000);
+        servo.setPosition(0.9);
+        servo.setPosition(0.9);
+        Thread.sleep(2000);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -84,11 +86,11 @@ public class AutonomousSetup extends LinearOpMode {
         }
         double start, now, goal;
         double distancePerClicks = numberOfRotations * CPR;
-        telemetry.addData("Total number of rotations: ", + numberOfRotations);
-        telemetry.addData("Total number of clicks: ", + distancePerClicks);
+        telemetry.addData("Total number of rotations: ", +numberOfRotations);
+        telemetry.addData("Total number of clicks: ", +distancePerClicks);
         start = encodervalue();
-        now = start;
-        goal = Math.abs(start + distancePerClicks);
+        now = Math.abs(start);
+        goal = Math.abs(now + distancePerClicks);
         if (isNegative) {
             forward(-power);
         } else {
@@ -96,15 +98,10 @@ public class AutonomousSetup extends LinearOpMode {
         }
         telemetry.addData("goal: ", goal);
         telemetry.update();
-        //clawPosition = clawHighEnd;
-        //rightClaw.setPosition(clawPosition);
-        //rightClaw.setPosition(clawPosition);
-        //leftClaw.setPosition(clawPosition);
-        //leftClaw.setPosition(clawPosition);
         while (now < goal) {
-        telemetry.addData("Current clicks: ", now);
-        now = encodervalue();
-        telemetry.update();
+            telemetry.addData("Current clicks: ", now);
+            now = encodervalue();
+            telemetry.update();
         }
 
         stopmoving();
@@ -146,14 +143,18 @@ public class AutonomousSetup extends LinearOpMode {
         return (m1 + m2 + m3 + m4) / 4;
 
     }
-    public void JewelFinder(){
+
+    public void JewelFinder() {
         while (cS.red() < 2 && cS.blue() < 2) {
             telemetry.addData("Red ", cS.red());
             telemetry.addData("Blue ", cS.blue());
             telemetry.addData("Green", cS.green());
             telemetry.update();
         }
-        try {Thread.sleep(10);} catch (InterruptedException e) {}
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+        }
         int timesRan = 0;
         int timesBlue = 0;
         int timesRed = 0;
@@ -167,38 +168,53 @@ public class AutonomousSetup extends LinearOpMode {
             timesRan += 1;
         }
         //closeClaw();
-        if (timesBlue > timesRed){
-            rotations(-.125, .25);
+        if (timesBlue > timesRed) {
+            telemetry.addData("about to go first way", 1);
+            telemetry.update();
+            rotations(.125, .25);
+            telemetry.addData("went first way", 1);
+            telemetry.update();
             servo.setPosition(0.9);
             servo.setPosition(0.9);
-            try {Thread.sleep(1000);} catch (InterruptedException e) {}
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
             telemetry.addData("about to go other way", 1);
             telemetry.update();
-            rotations(.125, .25);
+            rotations(-.125, .25);
             telemetry.addData("went other way", 1);
             telemetry.update();
-        }
-        else{
-            telemetry.addData("somehow we got here",1);
+        } else {
+            telemetry.addData("somehow we got here", 1);
             telemetry.update();
-            rotations(.125, .25);
-            servo.setPosition(0.9);
-            servo.setPosition(0.9);
-            try {Thread.sleep(1000);} catch (InterruptedException e) {}
             rotations(-.125, .25);
+            servo.setPosition(0.9);
+            servo.setPosition(0.9);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+            rotations(.125, .25);
 
         }
-        try {Thread.sleep(1000);} catch (InterruptedException e) {}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
     }
+
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
 
     }
+
     public void closeClaw() {
         rightClaw.setPosition(clawHighEnd);
         rightClaw.setPosition(clawHighEnd);
         leftClaw.setPosition(clawHighEnd);
         leftClaw.setPosition(clawHighEnd);
     }
+
     public void openClaw() {
         rightClaw.setPosition(clawLowEnd);
         rightClaw.setPosition(clawLowEnd);
