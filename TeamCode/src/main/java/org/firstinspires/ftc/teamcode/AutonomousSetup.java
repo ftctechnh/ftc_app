@@ -22,7 +22,6 @@ public class AutonomousSetup extends LinearOpMode {
     private double DrawerSlideLowEnd;
     private double DrawerSlideHighEnd;
     private double DrawerSlideSpeed = 0;
-
     //Jewel Arm
     Servo servo;
     DcMotor FrontLeftMotor, FrontRightMotor, BackLeftMotor, BackRightMotor;
