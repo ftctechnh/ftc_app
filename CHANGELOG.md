@@ -36,7 +36,7 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - REV IMU calibration status getter
 - REV IMU calibration test OpMode
 
-#### Fixed
+#### Changed
 - UtilPulsar is renamed to UtilClock- this is a more intuitive name
 - pulse() method in UtilPulsar is renamed to tick()
 - REV IMU initialization matches component initialization more closely- you no longer have to declare a new instance in the correct spot. Instead, just call the init method in the correct spot.
@@ -46,6 +46,8 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Old write() method in TelMet renamed to tagWrite() to reflect the fact that a tag is needed to output a message
 - OpenCVRunner requires an instance of FtcRobotController as opposed to any Activity
 - The glyph grabber is now using motors instead of servos- this is reflected
+
+#### Fixed
 - Drivetrain reverse+slow mode issue
 
 
