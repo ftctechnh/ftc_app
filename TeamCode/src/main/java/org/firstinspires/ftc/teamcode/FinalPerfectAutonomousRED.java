@@ -76,6 +76,8 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
 
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
+        double xPos;
+        xPos = 0;
 
         // make sure the imu gyro is calibrated before continuing.
         while (!isStopRequested() && !robot.imu.isGyroCalibrated())
@@ -115,9 +117,11 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
-            movebytime(1, .5, "Forward");
-
-            rotate(-90, .5);
+            xPos  =  .5;
+            robot.gemServo.setPosition(xPos);
+            // send the info back to driver station using telemetry function.
+            telemetry.addData("RedR  ", robot.sensorColorRight.red());
+            findColor();
 
         }
     }
@@ -312,7 +316,7 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
     //eyy
     public void findColor()
     {
-        if ((robot.sensorColorRight.blue()) < robot.sensorColorRight.red())
+        if ((robot.sensorColorRight.red()) < robot.sensorColorRight.blue())
         {
             rotate(90,.5);
         }

@@ -45,7 +45,7 @@ import java.util.Locale;
  * This is an example LinearOpMode that shows how to use boi
  * the REV Robotics Color-Distance Sensor.
  */
-@Autonomous(name = "Arleth&LenaFinalAutoCode", group = "Sensor")
+@Autonomous(name = "Arleth&LenaFinalAutoCode!", group = "Sensor")
 //@Disabled                            // Comment this out to add to the opmode list
 public class LenaArmColorSensor extends LinearOpMode {
     arlethlenahardwareclass robot = new arlethlenahardwareclass();

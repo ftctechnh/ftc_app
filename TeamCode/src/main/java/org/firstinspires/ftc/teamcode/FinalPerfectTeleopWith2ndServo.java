@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 /**
  ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
-@TeleOp(name = "♪ ♥ Perfect Teleop ♥  ♪", group = "Concept")
+@TeleOp(name = "♪ ♥ Perfect Teleop with second servo ♥  ♪", group = "Concept")
 //@Disabled
 public class FinalPerfectTeleopWith2ndServo extends LinearOpMode {
 
