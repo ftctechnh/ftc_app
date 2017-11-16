@@ -18,6 +18,9 @@ public class UniversalAudi extends LinearOpMode
         waitForStart();
         sleep(300);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
+        telemetry.addData("color = ", colorOfPlatform);
+        telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
+        sleep(1000);
         switch (colorOfPlatform)
         {
             case 'b':
@@ -85,6 +88,7 @@ public class UniversalAudi extends LinearOpMode
                 robot.stopAllMotors();
                 break;
             default:
+                break;
         }
     }
 }
