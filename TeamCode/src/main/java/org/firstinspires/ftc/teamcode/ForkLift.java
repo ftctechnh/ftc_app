@@ -16,11 +16,10 @@ public class ForkLift {
 	private double clawPosition = 0.0;
     private double clawHighEnd = 0.45;
     private double clawLowEnd = 0.1;
-    private double DrawerSlideSpeed = 0;
     private double up = 0;
     private double down = 0;
-    
-	public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor drawerSlide, DigitalChannel TopButton, DigitalChannel BottomButton) {
+
+	public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor drawerSlide, DigitalChannel topButton, DigitalChannel bottomButton) {
 		this.rightClaw = rightClaw;
 		this.leftClaw = leftClaw;
 		this.drawerSlide = drawerSlide;
@@ -28,23 +27,31 @@ public class ForkLift {
 		this.bottomButton = bottomButton;
 		this.rightClaw.setDirection(Servo.Direction.REVERSE);
 	}
+	public void setClawPosition(double position) {
+		rightClaw.setPosition(position);
+		rightClaw.setPosition(position);
+		leftClaw.setPosition(position);
+		leftClaw.setPosition(position);	
+	}
 	public void initClaw() {
-		rightClaw.setPosition(clawPosition);
-		rightClaw.setPosition(clawPosition);
-		leftClaw.setPosition(clawPosition);
-		leftClaw.setPosition(clawPosition);
+		setClawPosition(clawPosition);
 	}
 	public void closeClaw() {
-		rightClaw.setPosition(clawHighEnd);
-		rightClaw.setPosition(clawHighEnd);
-		leftClaw.setPosition(clawHighEnd);
-		leftClaw.setPosition(clawHighEnd);	
+		setClawPosition(clawHighEnd);
 	}
 	public void openClaw() {
-		rightClaw.setPosition(clawLowEnd);
-		rightClaw.setPosition(clawLowEnd);
-		leftClaw.setPosition(clawLowEnd);
-		leftClaw.setPosition(clawLowEnd);
+		setClawPosition(clawLowEnd);
+	}
+	public void moveDrawerSlide(double speed) {
+		if (!(topButton.getState()) && speed > 0) {
+			drawerSlide.setSpeed(speed);
+		}
+		else if (!(bottomButton.getState()) && speed < 0) {
+			drawerSlide.setSpeed(speed);
+		}
+		else {
+			drawerSlide.setSpeed(0);
+		}
 	}
 
 }
