@@ -15,7 +15,7 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - OpenCV Jewel detection
 
-### [0.10.1] - 2017-11-15
+### [0.10.0] - 2017-11-15
 #### Added
 - Some "constant holder" Kotlin files- they provide a central location to tweak values easily
 - Motor Ramping
