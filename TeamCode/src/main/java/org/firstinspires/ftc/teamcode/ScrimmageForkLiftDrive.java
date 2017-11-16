@@ -123,7 +123,7 @@ public class ScrimmageForkLiftDrive extends OpMode {
         }
         telemetry.addData("Current claw Position", rightClaw.getPosition());
     }
-
+    //sets the motors to be reversed so they all go the same way.
     public void reverseMotor(DcMotor motor) {
 
         motor.setDirection(DcMotor.Direction.REVERSE);
@@ -132,5 +132,4 @@ public class ScrimmageForkLiftDrive extends OpMode {
     public double clip(double value) {
         return Range.clip(value, -1,1);
     }
-
 }
