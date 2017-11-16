@@ -44,6 +44,7 @@ public class NewRobot
         //Comment out if you don't want camera view on robo phone
         //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
+        floorColorSens = hardwareMap.colorSensor.get("floorColorSens");
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
