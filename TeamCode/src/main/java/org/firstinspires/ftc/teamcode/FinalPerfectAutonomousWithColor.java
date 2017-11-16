@@ -309,6 +309,7 @@ public class FinalPerfectAutonomousWithColor extends LinearOpMode {
         // reset angle tracking on new heading.
         resetAngle();
     }
+    //eyy
     public void findColor()
     {
         if ((robot.sensorColorRight.red()) < robot.sensorColorRight.blue())
