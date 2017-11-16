@@ -70,13 +70,16 @@ HolonomicHardwareClass robot = new HolonomicHardwareClass();
         /* Servo Control */
          /*   if (gamepad1.x) {
                 robot.clawServo.setPower(robot.clawOpen);
+                robot.clawServo2.setPower(robot.clawClose);
             }
             if (gamepad1.y) {
                 robot.clawServo.setPower(robot.clawClose);
+                robot.clawServo2.setPower(robot.clawOpen);
             }
 
             if (gamepad1.y != true && gamepad1.x != true) {
                 robot.clawServo.setPower(robot.clawStill);
+                robot.clawServo2.setPower(robot.clawStill);
             }
 
         /* Vertical Arm Motor */
