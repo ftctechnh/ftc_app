@@ -42,9 +42,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 /**
  ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
-@Autonomous(name = "♪ ♥ Perfect Autonomous ♥  ♪", group = "Concept")
+@Autonomous(name = "♪ ♥ Perfect Autonomous with Color ♥  ♪", group = "Concept")
 //@Disabled
-public class FinalPerfectAutonomousWithColor extends LinearOpMode {
+public class FinalPerfectAutonomousRED extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
     MasterHardwareClass robot = new MasterHardwareClass();
@@ -312,7 +312,7 @@ public class FinalPerfectAutonomousWithColor extends LinearOpMode {
     //eyy
     public void findColor()
     {
-        if ((robot.sensorColorRight.red()) < robot.sensorColorRight.blue())
+        if ((robot.sensorColorRight.blue()) < robot.sensorColorRight.red())
         {
             rotate(90,.5);
         }
