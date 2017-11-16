@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class FinalPerfectTeleop extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
-HolonomicHardwareClass robot = new HolonomicHardwareClass();
+MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
 
     @Override
     public void runOpMode() {
@@ -116,7 +116,7 @@ HolonomicHardwareClass robot = new HolonomicHardwareClass();
                 backRight = v4;
 
                 if (robot.FrontLeftPower != frontLeft) {
-                    robot.frontLeftMotor.setPower(v1);
+                    robot.frontLeftMotor.setPower(-v1);
                     robot.FrontLeftPower = frontLeft;
                 }
                 if (robot.FrontRightPower != frontRight) {
@@ -124,7 +124,7 @@ HolonomicHardwareClass robot = new HolonomicHardwareClass();
                     robot.FrontRightPower = frontRight;
                 }
                 if (robot.BackLeftPower != backLeft) {
-                    robot.backLeftMotor.setPower(v3);
+                    robot.backLeftMotor.setPower(-v3);
                     robot.BackLeftPower = backLeft;
                 }
                 if (robot.BackRightPower != backRight)

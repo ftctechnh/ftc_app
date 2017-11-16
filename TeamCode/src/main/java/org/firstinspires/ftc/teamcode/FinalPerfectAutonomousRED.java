@@ -47,7 +47,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class FinalPerfectAutonomousRED extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
-    MasterHardwareClass robot = new MasterHardwareClass();
+    MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
 
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();

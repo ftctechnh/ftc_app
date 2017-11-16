@@ -47,7 +47,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class FinalPerfectAutonomous extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
-    MasterHardwareClass robot = new MasterHardwareClass();
+    MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
 
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
@@ -102,6 +102,12 @@ public class FinalPerfectAutonomous extends LinearOpMode {
 
         // Wait for the start button
         telemetry.addLine("!☻ Ready to Drive Autonomous ☻!");
+
+        telemetry.addData("1 imu heading", lastAngles.firstAngle);
+        telemetry.addData("2 global heading", globalAngle);
+        telemetry.addData("3 correction", correction);
+        telemetry.update();
+
         telemetry.update();
         waitForStart();
 
@@ -109,11 +115,6 @@ public class FinalPerfectAutonomous extends LinearOpMode {
 
             // Use gyro to drive in a straight line.
             correction = checkDirection();
-
-            telemetry.addData("1 imu heading", lastAngles.firstAngle);
-            telemetry.addData("2 global heading", globalAngle);
-            telemetry.addData("3 correction", correction);
-            telemetry.update();
 
             movebytime(1, .5, "Forward");
 
@@ -137,16 +138,16 @@ public class FinalPerfectAutonomous extends LinearOpMode {
 
         switch (direction) {
             case "Forward":
-                setWheelPower(-power, power, -power, power);
+                setWheelPower(power, power, power, power);
                 break;
             case "Backward":
-                setWheelPower(power, power, -power, -power);
+                setWheelPower(-power, -power, -power, -power);
                 break;
             case "Right":
-                setWheelPower(-power, -power, power, power);
+                setWheelPower(power, -power,-power, power);
                 break;
             case "Left":
-                setWheelPower(power, power, -power, -power);
+                setWheelPower(-power, power, power, -power);
                 break;
         }
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */

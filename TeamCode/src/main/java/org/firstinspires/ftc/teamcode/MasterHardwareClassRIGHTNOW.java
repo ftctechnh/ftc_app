@@ -2,41 +2,27 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 //This class defines all the specific hardware for a the BACONbot robot.
 
-public class MasterHardwareClass {
+public class MasterHardwareClassRIGHTNOW {
+    /* Public OpMode members. */
     /* Public OpMode members. */
     ColorSensor sensorColorRight;
-    DistanceSensor sensorDistanceRight;
     Servo gemServo;
-    ColorSensor sensorColorLeft;
-    DistanceSensor sensorDistanceLeft;
+
     /* local OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
-    public DcMotor verticalArmMotor = null;
-    public CRServo clawServo = null;
     public BNO055IMU imu = null;
 
 
@@ -45,14 +31,11 @@ public class MasterHardwareClass {
     double FrontRightPower = 0;
     double BackRightPower = 0;
     double BackLeftPower = 0;
-    double VerticalArmPower = 0;
 
     /* Define values used in commanding the claw */
     static double clawClose = .5;
     static double clawOpen = -.5;
     static double clawStill = 0;
-
-    /* Define values used in knocking the jewels */
     static double xPosUp = 0;
     static double xPosDown = .5;
 
@@ -61,7 +44,7 @@ public class MasterHardwareClass {
     private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public MasterHardwareClass() {
+    public MasterHardwareClassRIGHTNOW() {
 
     }
 
@@ -77,9 +60,9 @@ public class MasterHardwareClass {
         frontRightMotor = hwMap.dcMotor.get("FR");
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
-        verticalArmMotor = hwMap.dcMotor.get("VAM");
-        clawServo =  hwMap.crservo.get("CS");
         imu = hwMap.get(BNO055IMU.class, "imu");
+        gemServo = hwMap.servo.get("gemservo");
+        sensorColorRight = hwMap.colorSensor.get("colorsensor");
 
         // Set all hardware to default position
         // Set all hardware to default position
@@ -87,8 +70,8 @@ public class MasterHardwareClass {
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
-        verticalArmMotor.setPower(0);
-        clawServo.setPower(0);
+        gemServo.setPosition(xPosUp);
+
 
 
         // Set proper encoder state for all motor
@@ -96,21 +79,7 @@ public class MasterHardwareClass {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
-//        // Set proper encoder state for all motor
-//        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sensorColorRight = hwMap.get(ColorSensor.class, "colorsensor");
-        // get a reference to the distance sensor that shares the same name.
-        sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
-        //Second Color Sensor
-        sensorColorLeft = hwMap.get(ColorSensor.class,"othercolorsensor");
-        //Distance Sensor of the Second Color Sensor
-        sensorDistanceLeft = hwMap.get(DistanceSensor.class,"othercolorsensor");
-        gemServo = hwMap.get(Servo.class, "gemservo");
-
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 }
