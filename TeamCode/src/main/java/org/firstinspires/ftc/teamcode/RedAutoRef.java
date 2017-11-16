@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by Raghav on 10/20/2017.
+ * Created by Sahithi on 10/20/2017.
  */
 
 @Autonomous(name = "RedAutoRef", group = "Auto")
