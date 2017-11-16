@@ -29,6 +29,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -58,6 +62,19 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        robot.init(hardwareMap);
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        // values is a reference to the hsvValues array.
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
+        float hsvValues[] = {0F, 0F, 0F};
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
         /* Parameters for the gyro */
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -114,6 +131,35 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
             robot.gemServo.setPosition(robot.xPosDown);
             // send the info back to driver station using telemetry function.
             telemetry.addData("RedR  ", robot.sensorColorRight.red());
+            // change the background color to match the color detected by the RGB sensor.
+            // pass a reference to the hue, saturation, and value array as an argument
+            // to the HSVToColor method.
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+                }
+            });
+
+            telemetry.update();
+
+            /*xPos  =  gamepad1.right_stick_x;
+            robot.gemServo.setPosition(xPos);*/
+            // send the info back to driver station using telemetry function.
+            telemetry.addData("RedL  ", robot.sensorColorRight.red());
+
+            // change the background color to match the color detected by the RGB sensor.
+            // pass a reference to the hue, saturation, and value array as an argument
+            // to the HSVToColor method.
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+                }
+            });
+            relativeLayout.post(new Runnable() {
+                public void run() {
+                    relativeLayout.setBackgroundColor(Color.WHITE);
+                }
+            });
 
             telemetry.addData("1 imu heading", lastAngles.firstAngle);
             telemetry.addData("2 global heading", globalAngle);
