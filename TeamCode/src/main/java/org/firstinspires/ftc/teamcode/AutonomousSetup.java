@@ -84,7 +84,7 @@ public class AutonomousSetup extends LinearOpMode {
             isNegative = true;
         }
         double start, now, goal;
-        double distancePerClicks = numberOfRotations * CPR;
+        double distancePerClicks = Math.abs(numberOfRotations * CPR);
         telemetry.addData("Total number of rotations: ", +numberOfRotations);
         telemetry.addData("Total number of clicks: ", +distancePerClicks);
         start = encodervalue();
@@ -194,7 +194,7 @@ public class AutonomousSetup extends LinearOpMode {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
-            rotations(.125, .25);
+            rotations(.1, .2);
 
         }
         try {
