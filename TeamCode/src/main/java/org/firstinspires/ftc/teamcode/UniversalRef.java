@@ -21,6 +21,7 @@ public class UniversalRef extends LinearOpMode
         telemetry.addData("platform color = ", colorOfPlatform);
         telemetry.addData("hue platform = ", newRobot.getHueValue(newRobot.getFloorColorSens()));
         telemetry.update();
+        sleep(2000);
         switch (colorOfPlatform) {
             case 'b':
                 // Close doors

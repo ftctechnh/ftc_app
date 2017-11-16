@@ -20,7 +20,8 @@ public class UniversalAudi extends LinearOpMode
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
-        sleep(1000);
+        telemetry.update();
+        sleep(3000);
         switch (colorOfPlatform)
         {
             case 'b':
