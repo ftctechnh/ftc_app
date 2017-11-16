@@ -76,8 +76,7 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
 
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
-        double xPos;
-        xPos = 0;
+
 
         // make sure the imu gyro is calibrated before continuing.
         while (!isStopRequested() && !robot.imu.isGyroCalibrated())
@@ -112,15 +111,15 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
             // Use gyro to drive in a straight line.
             correction = checkDirection();
 
+            robot.gemServo.setPosition(robot.xPosDown);
+            // send the info back to driver station using telemetry function.
+            telemetry.addData("RedR  ", robot.sensorColorRight.red());
+
             telemetry.addData("1 imu heading", lastAngles.firstAngle);
             telemetry.addData("2 global heading", globalAngle);
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
-            xPos  =  .5;
-            robot.gemServo.setPosition(xPos);
-            // send the info back to driver station using telemetry function.
-            telemetry.addData("RedR  ", robot.sensorColorRight.red());
             findColor();
 
         }
