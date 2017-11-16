@@ -116,6 +116,19 @@ public class TankDrive extends LinearOpMode {
             telemetry.addData("Lt", Lt);
             telemetry.addData("Forward", Forward);
 
+            if (gamepad1.a) {
+
+                robot.armleft.setPosition(0);
+            }
+
+
+            if (gamepad1.b) {
+
+                robot.armleft.setPosition(0.75);
+            }
+
+
+
 
             if (time - lastClawToggle > 500 && gamepad2.right_bumper) {
                 // Toggles claw position by pressing of right bumper

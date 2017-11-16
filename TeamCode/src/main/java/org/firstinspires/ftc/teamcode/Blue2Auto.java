@@ -189,17 +189,16 @@ public class Blue2Auto extends LinearOpMode {
                 sleep(500);
                 robot.arm.setPower(0);
                 //actual auto start
-                robot.armleft.setPosition(0.75);
+
+            /*robot.armleft.setPosition(0.75);
                 robot.SideMotor.setPower(0.3);
-                sleep(500);
+                sleep(700); //this part of the code knocks ball off
                 robot.SideMotor.setPower(0);
-                sleep(100);
+              */
                 sleep(300);
-                encoderDrive(0.5, 24, 24, 1.0);// (Power, Distance Left, Distance Right (INCHES), timeout)
-                robot.armleft.setPosition(0);
                 robot.armleft.setPosition(0);
                 sleep(1000);     // pause for servos to move
-                encoderDrive(0.5, 48, 48, 1.9);// (Power, Distance Left, Distance Right (INCHES), timeout)
+                encoderDrive(0.5, 72, 72, 2.8);// (Power, Distance Left, Distance Right (INCHES), timeout)
                 encoderDrive(0.5, 48, -48, 1.5);  // (Power, Distance Left, Distance Right (INCHES), timeout)
 
 
