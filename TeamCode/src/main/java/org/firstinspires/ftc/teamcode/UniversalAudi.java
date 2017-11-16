@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by Jeremy on 11/12/2017.
+ * Created by Jeremy and Sahithi on 11/12/2017.
  */
 @Autonomous(name = "UniversalAudi", group = "Auto")
 public class UniversalAudi extends LinearOpMode
