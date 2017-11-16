@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ClassUtil;
 
@@ -54,7 +55,7 @@ public class AnnotationRegistry implements ClassFilter {
      *
      * @param manager       the opmode manager
      */
-//    @OpModeRegistrar
+    @OpModeRegistrar
     public static void register(OpModeManager manager) {
         AnnotationRegistry registry = getInstance();
 
@@ -217,6 +218,7 @@ public class AnnotationRegistry implements ClassFilter {
             if(clazz.isAnnotationPresent(opModeAnnotation.annotation)) opModeAnnotationCount ++;
         }
 
+        Log.d(TAG, opModeAnnotationCount + " " + clazz.getSimpleName());
         if (opModeAnnotationCount == 0 ){
             return;
         } else if (opModeAnnotationCount > 1) {

@@ -24,9 +24,12 @@ public class AutoTest extends AutonomousTemplate<Robot9853> {
     }
 
     @Override
-    public void run() throws StoppedException {
-        waitForStart();
+    public void initialize() {
+        robot = Robot9853.build(this);
+    }
 
+    @Override
+    public void run() throws StoppedException {
         while (opModeIsActive()) {
             robot.log.info("Hello, World! I am " + (isRedTeam ? "Red" : "Blue"));
             telemetry.update();

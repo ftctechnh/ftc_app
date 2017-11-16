@@ -44,10 +44,13 @@ public abstract class AutonomousTemplate<R extends Robot> extends LinearOpMode {
      */
     public abstract void run() throws InterruptedException, StoppedException;
 
+    public abstract void initialize();
+
     @Override
     public void runOpMode() throws InterruptedException {
         try {
-            robot.init();
+            initialize();
+            waitForStart();
             run();
         } catch (StoppedException | InterruptedException err) {
             // Do nothing

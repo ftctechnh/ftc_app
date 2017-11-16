@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.chathamrobotics.common.Controller;
 import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.systems.HolonomicDriver;
 import org.chathamrobotics.common.robot.RobotFace;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.team9853.systems.GlyphGripper;
+import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
 
 /**
  * FTC_APP_2018
@@ -26,6 +28,7 @@ public class Robot9853 extends Robot {
     public HolonomicDriver driver;
     public GlyphGripper glyphGripper;
     public DcMotor lift;
+    public JewelDisplacer jewelDisplacer;
 
     public static Robot9853 build(OpMode opMode) {
         return new Robot9853(opMode.hardwareMap, opMode.telemetry);
@@ -40,11 +43,14 @@ public class Robot9853 extends Robot {
         driver = HolonomicDriver.build(this);
         glyphGripper = GlyphGripper.build(this);
         lift = getHardwareMap().dcMotor.get("Lift");
+        jewelDisplacer = JewelDisplacer.build(this);
+
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
     public void start() {
+        jewelDisplacer.raise();
         glyphGripper.close();
     }
 
@@ -55,7 +61,23 @@ public class Robot9853 extends Robot {
         if (gp.dpad_up) driver.setFront(RobotFace.FRONT);
         if (gp.dpad_down) driver.setFront(RobotFace.BACK);
         if (gp.dpad_left) driver.setFront(RobotFace.LEFT);
+        if (gp.dpad_right) driver.setFront(RobotFace.RIGHT);
 
         driver.setDrivePower(direction, magnitude, gp.right_stick_x);
+    }
+
+    public void driveWithControls(Controller controller) {
+        float x = controller.left_stick_x, y = -controller.left_stick_y, rotation = controller.right_stick_x;
+        double magnitude = Math.hypot(x, y);
+        double direction = Math.atan2(y, x);
+
+        if (controller.padUpState == Controller.ButtonState.TAPPED);
+            driver.setFront(RobotFace.FRONT);
+        if (controller.padDownState == Controller.ButtonState.TAPPED);
+            driver.setFront(RobotFace.BACK);
+        if (controller.padLeftState == Controller.ButtonState.TAPPED);
+            driver.setFront(RobotFace.LEFT);
+        if (controller.padRightState == Controller.ButtonState.TAPPED);
+        driver.setFront(RobotFace.RIGHT);
     }
 }
