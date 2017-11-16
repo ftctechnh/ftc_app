@@ -74,11 +74,23 @@ public class AutonomousSetup extends LinearOpMode {
         Thread.sleep(1000);
         servo.setPosition(0.9);
         servo.setPosition(0.9);
-        Thread.sleep(2000);
+        Thread.sleep(10000);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     void rotations(double numberOfRotations, double power) {
+        FrontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FrontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        FrontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FrontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BackLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BackRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
+
+
         boolean isNegative = false;
         if (numberOfRotations < 0) {
             isNegative = true;
@@ -100,6 +112,9 @@ public class AutonomousSetup extends LinearOpMode {
         while (now < goal) {
             telemetry.addData("Current clicks: ", now);
             now = encodervalue();
+            telemetry.addData("Start: ", start);
+            telemetry.addData("Now: ", now);
+            telemetry.addData("Goal: ", goal);
             telemetry.update();
         }
 
@@ -168,33 +183,28 @@ public class AutonomousSetup extends LinearOpMode {
         }
         //closeClaw();
         if (timesBlue > timesRed) {
-            telemetry.addData("about to go first way", 1);
-            telemetry.update();
-            rotations(.125, .25);
-            telemetry.addData("went first way", 1);
-            telemetry.update();
+           rotations(1, .25);
+
             servo.setPosition(0.9);
             servo.setPosition(0.9);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
-            telemetry.addData("about to go other way", 1);
-            telemetry.update();
-            rotations(-.125, .25);
-            telemetry.addData("went other way", 1);
-            telemetry.update();
+
+            rotations(-1, .25);
+
+
         } else {
-            telemetry.addData("somehow we got here", 1);
-            telemetry.update();
-            rotations(-.125, .25);
+
+            rotations(-1, .25);
             servo.setPosition(0.9);
             servo.setPosition(0.9);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
-            rotations(.1, .2);
+            rotations(1, .2);
 
         }
         try {
