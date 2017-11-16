@@ -13,7 +13,42 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 ### [Unreleased]
 - Thorough documentation on the new system (teamcode.Core package)
 - Support for button actions such as double clicking and long clicks
-- Support for motor speed ramping
+- OpenCV Jewel detection
+
+### [0.10.1] - 2017-11-15
+#### Added
+- Some "constant holder" Kotlin files- they provide a central location to tweak values easily
+- Motor Ramping
+- Commands require implementation of an isBusy() method
+- Getters for several UI elements of the main activity
+- A new write() method in TelMet that doesn't require the use of a tag to print
+- Clear-cut enable and disable methods in OpenCVRunner- will allow OpModes to enable and disable OpenCV usage as it is very battery intensive and should be shut off when not in use
+- A RobotBase object in RobotComponent- code is updated so that it initializes properly
+- Ability to set encoder modes in drivetrain class
+- Forced lift encoder to always use encoders and the PID controller
+- Telemetry method for drivetrain, enabled or disabled based in constant in one of those Kotlin files
+- Second Controller
+- Glyph Grabber
+
+#### Removed
+- Implementation of runParallel() in RobotCommand- it's now an abstract method that has to be overwritten.
+- REV IMU file calibration
+- REV IMU calibration status getter
+- REV IMU calibration test OpMode
+
+#### Fixed
+- UtilPulsar is renamed to UtilClock- this is a more intuitive name
+- pulse() method in UtilPulsar is renamed to tick()
+- REV IMU initialization matches component initialization more closely- you no longer have to declare a new instance in the correct spot. Instead, just call the init method in the correct spot.
+- TelMet no longer takes in an entire OpMode instance- instead, it takes in a telemetry instance
+- OpenCV stuff, including UI, is moved to the OpenCVRunner class- this gives potential to bridge the gap between modules and sets up to allow use of OpenCV in OpModes.
+- App now starts with OpenCV disabled- this is due to OpenCV's tendency to kill batteries.
+- Old write() method in TelMet renamed to tagWrite() to reflect the fact that a tag is needed to output a message
+- OpenCVRunner requires an instance of FtcRobotController as opposed to any Activity
+- The glyph grabber is now using motors instead of servos- this is reflected
+- Drivetrain reverse+slow mode issue
+
+
 
 ### [0.9.1] - 2017-11-5
 #### Fixed
