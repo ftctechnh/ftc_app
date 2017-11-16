@@ -124,8 +124,8 @@ var activeTableTab = "activeTableTab";
 extends java.lang.Enum&lt;<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware">I2cDeviceSynch.ReadMode</a>&gt;</pre>
 <div class="block"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware"><code>I2cDeviceSynch.ReadMode</code></a> controls whether when asked to read we read only once or read multiple times.
 
- In all modes, it is guaranteed that a read() which follows a write() operation will
- see the state of the device <em>after</em> the write has had effect.</div>
+ In all modes, it is guaranteed that a read() which follows a tagWrite() operation will
+ see the state of the device <em>after</em> the tagWrite has had effect.</div>
 </li>
 </ul>
 </div>
@@ -146,7 +146,7 @@ extends java.lang.Enum&lt;<a href="../../../../com/qualcomm/robotcore/hardware/I
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#BALANCED">BALANCED</a></span></code>
 <div class="block">Continuously issue I2C reads as in REPEAT when we can, but do <em>not</em> automatically
- transition back to read-mode following a write operation in order to do so.</div>
+ transition back to read-mode following a tagWrite operation in order to do so.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -242,8 +242,8 @@ the order they are declared.</div>
 <h4>BALANCED</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware">I2cDeviceSynch.ReadMode</a> BALANCED</pre>
 <div class="block">Continuously issue I2C reads as in REPEAT when we can, but do <em>not</em> automatically
- transition back to read-mode following a write operation in order to do so. This mode is
- most useful in a device which has a balanced mix of read() and write() operations, such
+ transition back to read-mode following a tagWrite operation in order to do so. This mode is
+ most useful in a device which has a balanced mix of read() and tagWrite() operations, such
  as a motor controller. Like <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#REPEAT"><code>REPEAT</code></a>, this mode might return data that was
  previously read a short while ago.</div>
 </li>

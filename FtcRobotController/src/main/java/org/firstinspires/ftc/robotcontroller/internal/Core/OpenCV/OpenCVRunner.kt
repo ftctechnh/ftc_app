@@ -13,13 +13,14 @@
 @file:Suppress("PackageDirectoryMismatch", "ClassName")
 package org.directcurrent.opencv
 
-import android.app.Activity
+
 import android.util.Log
 import android.view.View
 import com.qualcomm.ftcrobotcontroller.R
 import org.directcurrent.opencv.visionprocessors.BrownGlyphFinder
 import org.directcurrent.opencv.visionprocessors.GrayGlyphFinder
 import org.directcurrent.opencv.visionprocessors.VisionProcessor
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
 import org.opencv.android.*
 import org.opencv.core.Mat
 
@@ -33,7 +34,9 @@ import org.opencv.core.Mat
  * Default Constructor:
  * Takes the main activity of the FTC App and implicitly uses the back camera
  */
-class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int) : CameraBridgeViewBase.CvCameraViewListener2
+@Suppress("FunctionName")
+class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
+                   private var _cameraIndex: Int): CameraBridgeViewBase.CvCameraViewListener2
 {
     private var _jCamView: JavaCameraView? = null       // Camera View in main activity
 
@@ -78,7 +81,7 @@ class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int
 
         mainActivity.runOnUiThread {
             _jCamView = mainActivity.findViewById(R.id.java_camera_view) as JavaCameraView
-            _jCamView!!.setCameraIndex(cameraIndex)
+            _jCamView!!.setCameraIndex(_cameraIndex)
             _jCamView!!.setCvCameraViewListener(this@OpenCVRunner)
         }
 
@@ -126,11 +129,53 @@ class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int
     }
 
 
+    fun analyze()
+    {
+        mainActivity.openCVRunner()._toggleAnalyze()
+
+        if (mainActivity.openCVRunner()._analysisEnabled())
+        {
+            mainActivity.analysisText().setText(R.string.analysis_enabled)
+        }
+        else
+        {
+            mainActivity.analysisText().setText(R.string.analysis_disabled)
+        }
+    }
+
+
+    fun toggleShowHide()
+    {
+        if (mainActivity.showHideButton().text === mainActivity.getString(R.string.hide))
+        {
+            mainActivity.openCVRunner()._disableCameraView()
+            mainActivity.showHideButton().setText(R.string.show)
+            mainActivity.layoutHeader().setText(R.string.OpenCvCameraViewDisabled)
+
+            if (mainActivity.openCVRunner()._analysisEnabled())
+            {
+                mainActivity.analysisText().setText(R.string.analysis_enabled)
+            }
+            else
+            {
+                mainActivity.analysisText().setText(R.string.analysis_disabled)
+            }
+        }
+        else
+        {
+            mainActivity.openCVRunner()._enableCameraView()
+            mainActivity.showHideButton().setText(R.string.hide)
+            mainActivity.layoutHeader().setText(R.string.opencv_camera_view_enabled)
+            mainActivity.analysisText().setText(R.string.analysis_disabled)
+        }
+    }
+
+
     /**
      * QOL function that shows the Java Camera View in your main activity layout. Also enables
      * the Java Camera View
      */
-    fun enableCameraView()
+    private fun _enableCameraView()
     {
         _jCamView?.visibility = View.VISIBLE
         enableView()
@@ -141,7 +186,7 @@ class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int
      * QOL function that hides the Java Camera View in your main activity layout. Also disables
      * the Java Camera View
      */
-    fun disableCameraView()
+    private fun _disableCameraView()
     {
         _jCamView?.visibility = View.GONE
         disableView()
@@ -151,7 +196,7 @@ class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int
     /**
      * Toggles whether to perform vision analysis on frame or not
      */
-    fun toggleAnalyze()
+    private fun _toggleAnalyze()
     {
         _analyze = !_analyze
     }
@@ -160,10 +205,8 @@ class OpenCVRunner constructor(var mainActivity: Activity , var cameraIndex: Int
     /**
      * Returns whether or not analysis in enabled
      */
-    fun analysisEnabled(): Boolean
-    {
-        return _analyze
-    }
+    private fun _analysisEnabled(): Boolean
+            = _analyze
 
 
     /**

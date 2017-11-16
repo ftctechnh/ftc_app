@@ -11,15 +11,13 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
 
 public class Base extends RobotBase
 {
-    REVIMU imu;
+    REVIMU imu = null;
 
 
     @Override
     public void init(HardwareMap HW , OpMode OPMODE)
     {
         super.init(HW , OPMODE);
-
-        imu = new REVIMU(this);
 
         BNO055IMU.Parameters params = new BNO055IMU.Parameters();
 
@@ -29,6 +27,6 @@ public class Base extends RobotBase
         params.loggingTag = "IMU";
         params.calibrationDataFile = "IMUCalibration.json";
 
-        imu.mapIMU("imu" , params);
+        imu.init(this , "imu" , params);
     }
 }

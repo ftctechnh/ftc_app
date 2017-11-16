@@ -23,6 +23,9 @@ public abstract class RobotComponent
     /** Hardware mapping object- declare a new instance in the child class to map */
     protected HardwareMapper mapper = null;
 
+    /** Base of the robot to which the component belongs */
+    protected RobotBase base = null;
+
 
     /**
      * Initializes the hardware mapping object by creating a new instance. When overriding this
@@ -34,6 +37,7 @@ public abstract class RobotComponent
      */
     protected void init(final RobotBase BASE)
     {
-        mapper  = new HardwareMapper(BASE);
+        base = BASE;
+        mapper  = new HardwareMapper(base);
     }
 }

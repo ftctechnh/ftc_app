@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.directcurrent.core.gamecontroller.Controller;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.GlyphGrabber.GlyphGrabber;
 
 
 /**
@@ -19,6 +20,7 @@ public class TeleOpMain extends LinearOpMode
     private Base _base = new Base();        // Robot base
 
     private Controller _controller1 = new Controller();
+    private Controller _controller2 = new Controller();
 
 
     /**
@@ -41,6 +43,8 @@ public class TeleOpMain extends LinearOpMode
 
             _runComponents();
 
+            _addTelem();
+
             telemetry.update();
         }
     }
@@ -52,6 +56,9 @@ public class TeleOpMain extends LinearOpMode
     private void _grabInput()
     {
         _controller1.read(gamepad1);
+        _controller2.read(gamepad2);
+
+        _base.imu.pull();
 
         if(_controller1.xClicked())
         {
@@ -63,6 +70,21 @@ public class TeleOpMain extends LinearOpMode
         {
             _base.drivetrain.flipSpeed();
         }
+
+
+        // Glyph Grabber state machine
+        if(_controller2.rightTrigger() >= 0.15)
+        {
+            _base.glyphGrabber.setState(GlyphGrabber.State.INPUT);
+        }
+        else if(_controller2.leftTrigger() >= 0.15)
+        {
+            _base.glyphGrabber.setState(GlyphGrabber.State.OUTPUT);
+        }
+        else
+        {
+            _base.glyphGrabber.setState(GlyphGrabber.State.STOP);
+        }
     }
 
 
@@ -72,9 +94,20 @@ public class TeleOpMain extends LinearOpMode
     private void _runComponents()
     {
         _base.drivetrain.run(-_controller1.leftY() , _controller1.rightX() , true);
-        _base.lift.run(-gamepad2.left_stick_y);
-        telemetry.addData("Controls, 1LY" , -gamepad1.left_stick_y);
-        telemetry.addData("Controls, 1RX" , gamepad1.right_stick_x);
-        telemetry.addData("Controls, 2LY" , -gamepad2.left_stick_y);
+        _base.lift.run(-_controller2.leftY());
+    }
+
+
+    /**
+     * Adds data to telemetry
+     */
+    private void _addTelem()
+    {
+        telemetry.addData("IMU XA" , _base.imu.xAngle());
+        telemetry.addData("IMU YA" , _base.imu.yAngle());
+        telemetry.addData("IMU ZA" , _base.imu.zAngle());
+
+        telemetry.addData("Left Drive Encoder" , _base.drivetrain.leftEncoderCount());
+        telemetry.addData("Right Drive Encoder" , _base.drivetrain.rightEncoderCount());
     }
 }

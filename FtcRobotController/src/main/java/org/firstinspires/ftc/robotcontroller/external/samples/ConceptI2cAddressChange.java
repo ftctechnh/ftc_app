@@ -143,7 +143,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
     }
 
     // Enable writes to the correct segment of the memory map.
-    performAction("write", port, currentAddress, ADDRESS_SET_NEW_I2C_ADDRESS, BUFFER_CHANGE_ADDRESS_LENGTH);
+    performAction("tagWrite", port, currentAddress, ADDRESS_SET_NEW_I2C_ADDRESS, BUFFER_CHANGE_ADDRESS_LENGTH);
 
     // Write out the trigger bytes, and the new desired address.
     writeNewAddress();
@@ -203,7 +203,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
 
   private void performAction(String actionName, int port, I2cAddr i2cAddress, int memAddress, int memLength) {
     if (actionName.equalsIgnoreCase("read")) dim.enableI2cReadMode(port, i2cAddress, memAddress, memLength);
-    if (actionName.equalsIgnoreCase("write")) dim.enableI2cWriteMode(port, i2cAddress, memAddress, memLength);
+    if (actionName.equalsIgnoreCase("tagWrite")) dim.enableI2cWriteMode(port, i2cAddress, memAddress, memLength);
 
     dim.setI2cPortActionFlag(port);
     dim.writeI2cCacheToController(port);

@@ -28,26 +28,29 @@ class CountCommand extends RobotCommand
             _running  = true;
             _stop = false;
 
-            t = new Thread(new Runnable()
+            t = new Thread(() ->
             {
-                @Override
-                public void run()
+                for(int i = 0; !_stop; i++)
                 {
-                    for(int i = 0; !_stop; i++)
-                    {
-                        Log.i("Command" , Integer.toString(i));
+                    Log.i("Command" , Integer.toString(i));
 
-                        try
-                        {
-                            Thread.sleep(1_000);
-                        }
-                        catch(Exception ignored){}
+                    try
+                    {
+                        Thread.sleep(1_000);
                     }
+                    catch(Exception ignored){}
                 }
             });
 
             t.start();
         }
+    }
+
+
+    @Override
+    public boolean isBusy()
+    {
+        return false;
     }
 
 

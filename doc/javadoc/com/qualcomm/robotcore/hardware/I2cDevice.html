@@ -157,7 +157,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#copyBufferIntoWriteBuffer-byte:A-">copyBufferIntoWriteBuffer</a></span>(byte[]&nbsp;buffer)</code>
-<div class="block">Atomically copies the provided buffer into the user portion of the write cache, beginning
+<div class="block">Atomically copies the provided buffer into the user portion of the tagWrite cache, beginning
  immediately following the four-byte header.</div>
 </td>
 </tr>
@@ -186,7 +186,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cWriteMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-">enableI2cWriteMode</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/I2cAddr.html" title="class in com.qualcomm.robotcore.hardware">I2cAddr</a>&nbsp;i2cAddr,
                   int&nbsp;register,
                   int&nbsp;count)</code>
-<div class="block">Enable write mode for this I2C device.</div>
+<div class="block">Enable tagWrite mode for this I2C device.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -215,7 +215,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getCopyOfWriteBuffer--">getCopyOfWriteBuffer</a></span>()</code>
-<div class="block">Atomically returns a copy that portion of the write-cache which does not include the
+<div class="block">Atomically returns a copy that portion of the tagWrite-cache which does not include the
  initial four-byte header section.</div>
 </td>
 </tr>
@@ -247,20 +247,20 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCache--">getI2cWriteCache</a></span>()</code>
-<div class="block">Returns access to the write-cache from which data is written to the controller.</div>
+<div class="block">Returns access to the tagWrite-cache from which data is written to the controller.</div>
 </td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>java.util.concurrent.locks.Lock</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCacheLock--">getI2cWriteCacheLock</a></span>()</code>
-<div class="block">Returns access to the lock controlling the write-cache.</div>
+<div class="block">Returns access to the lock controlling the tagWrite-cache.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getMaxI2cWriteLatency--">getMaxI2cWriteLatency</a></span>()</code>
-<div class="block">Returns the maximum interval, in milliseconds, from when the controller receives an I2c write
- transmission over USB to when that write is actually issued to the I2c device.</div>
+<div class="block">Returns the maximum interval, in milliseconds, from when the controller receives an I2c tagWrite
+ transmission over USB to when that tagWrite is actually issued to the I2c device.</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
@@ -294,7 +294,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#isI2cPortInWriteMode--">isI2cPortInWriteMode</a></span>()</code>
-<div class="block">Queries whether or not the controller has reported that it is in write mode.</div>
+<div class="block">Queries whether or not the controller has reported that it is in tagWrite mode.</div>
 </td>
 </tr>
 <tr id="i22" class="altColor">
@@ -337,14 +337,14 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#setI2cPortActionFlag--">setI2cPortActionFlag</a></span>()</code>
-<div class="block">Set the flag in the write cache that indicates that when the write cache is next transferred
+<div class="block">Set the flag in the tagWrite cache that indicates that when the tagWrite cache is next transferred
  to the controller an i2c transaction should take place.</div>
 </td>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#writeI2cCacheToController--">writeI2cCacheToController</a></span>()</code>
-<div class="block">Enqueue a request to the controller to write the current contents of the write cache
+<div class="block">Enqueue a request to the controller to tagWrite the current contents of the tagWrite cache
  to the HW device.</div>
 </td>
 </tr>
@@ -408,7 +408,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <pre>void&nbsp;enableI2cReadMode(<a href="../../../../com/qualcomm/robotcore/hardware/I2cAddr.html" title="class in com.qualcomm.robotcore.hardware">I2cAddr</a>&nbsp;i2cAddr,
                        int&nbsp;register,
                        int&nbsp;count)</pre>
-<div class="block">Enable read mode for this I2C device. This simply sets bytes in the header of the write-cache;
+<div class="block">Enable read mode for this I2C device. This simply sets bytes in the header of the tagWrite-cache;
  it does not enqueue or transmit any data.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -429,13 +429,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <pre>void&nbsp;enableI2cWriteMode(<a href="../../../../com/qualcomm/robotcore/hardware/I2cAddr.html" title="class in com.qualcomm.robotcore.hardware">I2cAddr</a>&nbsp;i2cAddr,
                         int&nbsp;register,
                         int&nbsp;count)</pre>
-<div class="block">Enable write mode for this I2C device. This simply sets bytes in the header of the write-cache;
+<div class="block">Enable tagWrite mode for this I2C device. This simply sets bytes in the header of the tagWrite-cache;
  it does not enqueue or transmit any data.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>i2cAddr</code> - the address of the device on the I2c bus which should be written</dd>
 <dd><code>register</code> - mem address at which to start writing</dd>
-<dd><code>count</code> - number of bytes to write</dd>
+<dd><code>count</code> - number of bytes to tagWrite</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#writeI2cCacheToController--"><code>writeI2cCacheToController()</code></a></dd>
 </dl>
@@ -462,10 +462,10 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <li class="blockList">
 <h4>isI2cPortInWriteMode</h4>
 <pre>boolean&nbsp;isI2cPortInWriteMode()</pre>
-<div class="block">Queries whether or not the controller has reported that it is in write mode.</div>
+<div class="block">Queries whether or not the controller has reported that it is in tagWrite mode.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether or not this port is in write mode</dd>
+<dd>whether or not this port is in tagWrite mode</dd>
 </dl>
 </li>
 </ul>
@@ -488,7 +488,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <li class="blockList">
 <h4>writeI2cCacheToController</h4>
 <pre>void&nbsp;writeI2cCacheToController()</pre>
-<div class="block">Enqueue a request to the controller to write the current contents of the write cache
+<div class="block">Enqueue a request to the controller to tagWrite the current contents of the tagWrite cache
  to the HW device.</div>
 </li>
 </ul>
@@ -509,9 +509,9 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <li class="blockList">
 <h4>setI2cPortActionFlag</h4>
 <pre>void&nbsp;setI2cPortActionFlag()</pre>
-<div class="block">Set the flag in the write cache that indicates that when the write cache is next transferred
+<div class="block">Set the flag in the tagWrite cache that indicates that when the tagWrite cache is next transferred
  to the controller an i2c transaction should take place. This will be either a read transaction
- or a write transaction according to whether the <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cReadMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cReadMode(I2cAddr, int, int)</code></a> or
+ or a tagWrite transaction according to whether the <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cReadMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cReadMode(I2cAddr, int, int)</code></a> or
  <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cWriteMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cWriteMode(I2cAddr, int, int)</code></a> has most recently been called.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -610,7 +610,7 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <li class="blockList">
 <h4>getI2cWriteCache</h4>
 <pre>byte[]&nbsp;getI2cWriteCache()</pre>
-<div class="block">Returns access to the write-cache from which data is written to the controller. The returned
+<div class="block">Returns access to the tagWrite-cache from which data is written to the controller. The returned
  byte array may be retained for repeated use; <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCache--"><code>getI2cWriteCache()</code></a> need not be repeatedly
  called. The lock returned by <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCacheLock--"><code>getI2cWriteCacheLock()</code></a> must be held whenever the data
  in the returned byte array is accessed or written. Note that the returned byte array contains
@@ -618,7 +618,7 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
  <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cReadMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cReadMode(I2cAddr, int, int)</code></a> and <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cWriteMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cWriteMode(I2cAddr, int, int)</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the write-cache of this I2cDevice</dd>
+<dd>the tagWrite-cache of this I2cDevice</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCacheLock--"><code>getI2cWriteCacheLock()</code></a>, 
 <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getCopyOfWriteBuffer--"><code>getCopyOfWriteBuffer()</code></a></dd>
@@ -632,11 +632,11 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <li class="blockList">
 <h4>getI2cWriteCacheLock</h4>
 <pre>java.util.concurrent.locks.Lock&nbsp;getI2cWriteCacheLock()</pre>
-<div class="block">Returns access to the lock controlling the write-cache. This lock must be held a while
+<div class="block">Returns access to the lock controlling the tagWrite-cache. This lock must be held a while
  the data accessible from <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCache--"><code>getI2cWriteCache()</code></a> is accessed</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the lock gating access to the write cache</dd>
+<dd>the lock gating access to the tagWrite cache</dd>
 </dl>
 </li>
 </ul>
@@ -665,12 +665,12 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <li class="blockList">
 <h4>getCopyOfWriteBuffer</h4>
 <pre>byte[]&nbsp;getCopyOfWriteBuffer()</pre>
-<div class="block">Atomically returns a copy that portion of the write-cache which does not include the
- initial four-byte header section. The write-cache lock need not be held to execute this
+<div class="block">Atomically returns a copy that portion of the tagWrite-cache which does not include the
+ initial four-byte header section. The tagWrite-cache lock need not be held to execute this
  method.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a copy of the user-data portion of the write-cache</dd>
+<dd>a copy of the user-data portion of the tagWrite-cache</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCache--"><code>getI2cWriteCache()</code></a></dd>
 </dl>
@@ -683,12 +683,12 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <li class="blockList">
 <h4>copyBufferIntoWriteBuffer</h4>
 <pre>void&nbsp;copyBufferIntoWriteBuffer(byte[]&nbsp;buffer)</pre>
-<div class="block">Atomically copies the provided buffer into the user portion of the write cache, beginning
- immediately following the four-byte header. The write-cache lock need not be held to execute this
+<div class="block">Atomically copies the provided buffer into the user portion of the tagWrite cache, beginning
+ immediately following the four-byte header. The tagWrite-cache lock need not be held to execute this
  method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>buffer</code> - the data to copy into the write cache</dd>
+<dd><code>buffer</code> - the data to copy into the tagWrite cache</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCache--"><code>getI2cWriteCache()</code></a></dd>
 </dl>
@@ -701,12 +701,12 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <li class="blockList">
 <h4>getMaxI2cWriteLatency</h4>
 <pre>int&nbsp;getMaxI2cWriteLatency()</pre>
-<div class="block">Returns the maximum interval, in milliseconds, from when the controller receives an I2c write
- transmission over USB to when that write is actually issued to the I2c device.</div>
+<div class="block">Returns the maximum interval, in milliseconds, from when the controller receives an I2c tagWrite
+ transmission over USB to when that tagWrite is actually issued to the I2c device.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the maximum interval, in milliseconds, from when the controller receives an I2c write
- transmission over USB to when that write is actually issued to the I2c device.</dd>
+<dd>the maximum interval, in milliseconds, from when the controller receives an I2c tagWrite
+ transmission over USB to when that tagWrite is actually issued to the I2c device.</dd>
 </dl>
 </li>
 </ul>

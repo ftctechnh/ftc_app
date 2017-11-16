@@ -64,15 +64,13 @@ public abstract class RobotCommand
     /**
      * Runs the command on a new thread
      */
-    public void runParallel()
-    {
-        if(t == null)
-        {
-            t = new Thread(this::runSequentially);
+    public abstract void runParallel();
 
-            t.start();
-        }
-    }
+
+    /**
+     * Returns whether the command is currently running or not
+     */
+    public abstract boolean isBusy();
 
 
     /**

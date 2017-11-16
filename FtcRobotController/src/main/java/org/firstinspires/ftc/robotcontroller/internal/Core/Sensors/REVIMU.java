@@ -13,9 +13,12 @@
 package org.firstinspires.ftc.robotcontroller.internal.Core.Sensors;
 
 
+import android.util.Log;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
+import org.directcurrent.core.TelMet;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -36,57 +39,25 @@ import java.io.File;
  */
 public class REVIMU
 {
-    private RobotBase _robot = null;
-
     private BNO055IMU _imu = null;
 
     private Orientation _orien = null;
     private Acceleration _accel = null;
 
 
-    /**
-     * Creates a new IMU
-     *
-     * @param myRobot The robot we're working with
-     */
-    public REVIMU(RobotBase myRobot)
-    {
-        _robot = myRobot;
-    }
-
 
     /**
      * Maps the Bosch BNO055 IMU given a name and parameters
      *
+     * @param BASE Robot base the IMU belongs to
      * @param NAME Name of the IMU as appears in the configuration file
      * @param PARAMETERS Fully initialized Parameters of the IMU
      */
-    public void mapIMU(final String NAME , BNO055IMU.Parameters PARAMETERS)
+    public void init(final RobotBase BASE , final String NAME , BNO055IMU.Parameters PARAMETERS)
     {
-        HardwareMapper mapHelper = new HardwareMapper(_robot);  // Helps with mapping
+        HardwareMapper mapHelper = new HardwareMapper(BASE);
 
         _imu = mapHelper.mapREVIMU(NAME , PARAMETERS);
-    }
-
-
-    /**
-     * Writes the calibration data to the file.
-     */
-    public void writeCalibrationFile()
-    {
-        BNO055IMU.CalibrationData calData = _imu.readCalibrationData();
-
-        File file = AppUtil.getInstance().getSettingsFile(_imu.getParameters().calibrationDataFile);
-        ReadWriteFile.writeFile(file , calData.serialize());
-    }
-
-
-    /**
-     * @return The calibration status as a String
-     */
-    public String calibrationStatus()
-    {
-        return _imu.getCalibrationStatus().toString();
     }
 
 

@@ -167,6 +167,38 @@ public class FtcRobotControllerActivity extends Activity
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
 
 
+  // Getters for UI elements
+  public OpenCVRunner openCVRunner()
+  {
+      return _openCVRunner;
+  }
+
+
+  public TextView layoutHeader()
+  {
+      return _layoutHeader;
+  }
+
+
+  public TextView analysisText()
+  {
+      return _analysisText;
+  }
+
+
+  public Button analyzeButton()
+  {
+      return _analyzeButton;
+  }
+
+
+  public Button showHideButton()
+  {
+      return _showHideButton;
+  }
+  ///////////////////////////////////////
+
+
   protected class RobotRestarter implements Restarter {
 
     public void requestRestart() {
@@ -330,44 +362,14 @@ public class FtcRobotControllerActivity extends Activity
     _layoutHeader = (TextView)findViewById(R.id.OpenCV_Layout_Header_Text);
     _analysisText = (TextView)findViewById(R.id.OpenCV_Analysis_Text);
 
+    // Start with it off
+    _openCVRunner.toggleShowHide();
+
     _analyzeButton.setOnClickListener(v ->
-    {
-        _openCVRunner.toggleAnalyze();
-        if(_openCVRunner.analysisEnabled())
-        {
-            _analysisText.setText(R.string.analysis_enabled);
-        }
-        else
-        {
-            _analysisText.setText(R.string.analysis_disabled);
-        }
-    });
+            _openCVRunner.analyze());
 
 
-    _showHideButton.setOnClickListener(v -> {
-      if(_showHideButton.getText() == getString(R.string.hide))
-      {
-        _openCVRunner.disableCameraView();
-        _showHideButton.setText(R.string.show);
-        _layoutHeader.setText(R.string.OpenCvCameraViewDisabled);
-
-        if(_openCVRunner.analysisEnabled())
-        {
-            _analysisText.setText(R.string.analysis_enabled);
-        }
-        else
-        {
-            _analysisText.setText(R.string.analysis_disabled);
-        }
-      }
-      else
-      {
-        _openCVRunner.enableCameraView();
-        _showHideButton.setText(R.string.hide);
-        _layoutHeader.setText(R.string.opencv_camera_view_enabled);
-        _analysisText.setText(R.string.analysis_disabled);
-      }
-    });
+    _showHideButton.setOnClickListener(v -> _openCVRunner.toggleShowHide());
     ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
@@ -398,12 +400,9 @@ public class FtcRobotControllerActivity extends Activity
 
     cfgFileMgr.getActiveConfigAndUpdateUI();
 
-    entireScreenLayout.setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        dimmer.handleDimTimer();
-        return false;
-      }
+    entireScreenLayout.setOnTouchListener((v, event) -> {
+      dimmer.handleDimTimer();
+      return false;
     });
   }
 

@@ -296,7 +296,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImplOnSimple.html#enableWriteCoalescing-boolean-">enableWriteCoalescing</a></span>(boolean&nbsp;enable)</code>
 <div class="block">Enables or disables an optimization wherein writes to two sets of adjacent register
- ranges may be coalesced into a single I2c transaction if the second write comes along
+ ranges may be coalesced into a single I2c transaction if the second tagWrite comes along
  while the first is still queued for writing.</div>
 </td>
 </tr>
@@ -428,7 +428,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImplOnSimple.html#isWriteCoalescingEnabled--">isWriteCoalescingEnabled</a></span>()</code>
-<div class="block">Answers as to whether write coalescing is currently enabled on this device.</div>
+<div class="block">Answers as to whether tagWrite coalescing is currently enabled on this device.</div>
 </td>
 </tr>
 <tr id="i28" class="altColor">
@@ -540,12 +540,12 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImplOnSimple.html#waitForWriteCompletions-com.qualcomm.robotcore.hardware.I2cWaitControl-">waitForWriteCompletions</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a>&nbsp;waitControl)</code>
-<div class="block">Waits for the most recent write to complete according to the behavior specified in writeControl.</div>
+<div class="block">Waits for the most recent tagWrite to complete according to the behavior specified in writeControl.</div>
 </td>
 </tr>
 <tr id="i46" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImplOnSimple.html#write-int-byte:A-">write</a></span>(int&nbsp;ireg,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImplOnSimple.html#tagWrite-int-byte:A-">tagWrite</a></span>(int&nbsp;ireg,
      byte[]&nbsp;data)</code>
 <div class="block">Writes data to a set of registers, beginning with the one indicated, using
  <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#ATOMIC"><code>I2cWaitControl.ATOMIC</code></a> semantics.</div>
@@ -553,7 +553,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImplOnSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">write</a></span>(int&nbsp;ireg,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImplOnSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">tagWrite</a></span>(int&nbsp;ireg,
      byte[]&nbsp;data,
      <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a>&nbsp;waitControl)</code>
 <div class="block">Writes data to a set of registers, beginning with the one indicated.</div>
@@ -1562,7 +1562,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 <dd><code>ireg</code> - the register number that is to be written</dd>
 <dd><code>bVal</code> - the byte which is to be written to that register</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.write(int, byte[], I2cWaitControl)</code></a></dd>
+<dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.tagWrite(int, byte[], I2cWaitControl)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1577,51 +1577,51 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
                    <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a>&nbsp;waitControl)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-com.qualcomm.robotcore.hardware.I2cWaitControl-">I2cDeviceSynchSimple</a></code></span></div>
 <div class="block">Writes a byte to the indicated register. See also
- <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.write(int, byte[], I2cWaitControl)</code></a>.</div>
+ <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.tagWrite(int, byte[], I2cWaitControl)</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-com.qualcomm.robotcore.hardware.I2cWaitControl-">write8</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ireg</code> - the register number that is to be written</dd>
 <dd><code>bVal</code> - the byte which is to be written to that register</dd>
-<dd><code>waitControl</code> - controls the behavior of waiting for the completion of the write</dd>
+<dd><code>waitControl</code> - controls the behavior of waiting for the completion of the tagWrite</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.write(int, byte[], I2cWaitControl)</code></a></dd>
+<dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.tagWrite(int, byte[], I2cWaitControl)</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="write-int-byte:A-">
+<a name="tagWrite-int-byte:A-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>write</h4>
-<pre>public&nbsp;void&nbsp;write(int&nbsp;ireg,
+<h4>tagWrite</h4>
+<pre>public&nbsp;void&nbsp;tagWrite(int&nbsp;ireg,
                   byte[]&nbsp;data)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-">I2cDeviceSynchSimple</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-">I2cDeviceSynchSimple</a></code></span></div>
 <div class="block">Writes data to a set of registers, beginning with the one indicated, using
  <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#ATOMIC"><code>I2cWaitControl.ATOMIC</code></a> semantics.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-">write</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
+<dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-">tagWrite</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ireg</code> - the first of the registers which is to be written</dd>
 <dd><code>data</code> - the data which is to be written to the registers</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.write(int, byte[], I2cWaitControl)</code></a></dd>
+<dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-"><code>I2cDeviceSynchSimple.tagWrite(int, byte[], I2cWaitControl)</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">
+<a name="tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>write</h4>
-<pre>public&nbsp;void&nbsp;write(int&nbsp;ireg,
+<h4>tagWrite</h4>
+<pre>public&nbsp;void&nbsp;tagWrite(int&nbsp;ireg,
                   byte[]&nbsp;data,
                   <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a>&nbsp;waitControl)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">I2cDeviceSynchSimple</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">I2cDeviceSynchSimple</a></code></span></div>
 <div class="block">Writes data to a set of registers, beginning with the one indicated. The data will be
  written to the I2C device in an expeditious manner. Once data is accepted by this API,
  it is guaranteed that (barring catastrophic failure) the data will be transmitted to the
@@ -1630,11 +1630,11 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
  parameter.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">write</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
+<dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">tagWrite</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ireg</code> - the first of the registers which is to be written</dd>
 <dd><code>data</code> - the data which is to be written to the registers</dd>
-<dd><code>waitControl</code> - controls the behavior of waiting for the completion of the write</dd>
+<dd><code>waitControl</code> - controls the behavior of waiting for the completion of the tagWrite</dd>
 </dl>
 </li>
 </ul>
@@ -1646,12 +1646,12 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 <h4>waitForWriteCompletions</h4>
 <pre>public&nbsp;void&nbsp;waitForWriteCompletions(<a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a>&nbsp;waitControl)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#waitForWriteCompletions-com.qualcomm.robotcore.hardware.I2cWaitControl-">I2cDeviceSynchSimple</a></code></span></div>
-<div class="block">Waits for the most recent write to complete according to the behavior specified in writeControl.</div>
+<div class="block">Waits for the most recent tagWrite to complete according to the behavior specified in writeControl.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#waitForWriteCompletions-com.qualcomm.robotcore.hardware.I2cWaitControl-">waitForWriteCompletions</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>waitControl</code> - controls the behavior of waiting for the completion of the write
+<dd><code>waitControl</code> - controls the behavior of waiting for the completion of the tagWrite
                               Note that a value of <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#NONE"><code>I2cWaitControl.NONE</code></a> is essentially a no-op.</dd>
 </dl>
 </li>
@@ -1665,13 +1665,13 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 <pre>public&nbsp;void&nbsp;enableWriteCoalescing(boolean&nbsp;enable)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#enableWriteCoalescing-boolean-">I2cDeviceSynchSimple</a></code></span></div>
 <div class="block">Enables or disables an optimization wherein writes to two sets of adjacent register
- ranges may be coalesced into a single I2c transaction if the second write comes along
- while the first is still queued for writing. By default, write coalescing is disabled.</div>
+ ranges may be coalesced into a single I2c transaction if the second tagWrite comes along
+ while the first is still queued for writing. By default, tagWrite coalescing is disabled.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#enableWriteCoalescing-boolean-">enableWriteCoalescing</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>enable</code> - whether to enable write coalescing or not</dd>
+<dd><code>enable</code> - whether to enable tagWrite coalescing or not</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#isWriteCoalescingEnabled--"><code>I2cDeviceSynchSimple.isWriteCoalescingEnabled()</code></a></dd>
 </dl>
@@ -1685,12 +1685,12 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.h
 <h4>isWriteCoalescingEnabled</h4>
 <pre>public&nbsp;boolean&nbsp;isWriteCoalescingEnabled()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#isWriteCoalescingEnabled--">I2cDeviceSynchSimple</a></code></span></div>
-<div class="block">Answers as to whether write coalescing is currently enabled on this device.</div>
+<div class="block">Answers as to whether tagWrite coalescing is currently enabled on this device.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#isWriteCoalescingEnabled--">isWriteCoalescingEnabled</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether write coalescing is currently enabled or not.</dd>
+<dd>whether tagWrite coalescing is currently enabled or not.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#enableWriteCoalescing-boolean-"><code>I2cDeviceSynchSimple.enableWriteCoalescing(boolean)</code></a></dd>
 </dl>

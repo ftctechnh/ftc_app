@@ -165,7 +165,7 @@ extends java.lang.Object</pre>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImpl.WriteCacheStatus.html#waitForIdle--">waitForIdle</a></span>()</code>
-<div class="block">Waits for the write cache to become idle.</div>
+<div class="block">Waits for the tagWrite cache to become idle.</div>
 </td>
 </tr>
 </table>
@@ -242,7 +242,7 @@ extends java.lang.Object</pre>
 <h4>waitForIdle</h4>
 <pre>public&nbsp;long&nbsp;waitForIdle()
                  throws java.lang.InterruptedException</pre>
-<div class="block">Waits for the write cache to become idle. But that doesn't come within a totally unreasonable
+<div class="block">Waits for the tagWrite cache to become idle. But that doesn't come within a totally unreasonable
  amount of time, we're going to assume that our ReadWriteRunnable thread is either stuck or
  is dead, and we're going to get out of here.</div>
 <dl>

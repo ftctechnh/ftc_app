@@ -13,14 +13,15 @@
 @file:Suppress("PackageDirectoryMismatch")
 package org.directcurrent.core
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
+
+import org.firstinspires.ftc.robotcore.external.Telemetry
 
 
 /**
  * Small Kotlin wrapper class for telemetry, allows non-OpMode classes to output telemetry
  */
 @Suppress("unused")
-class TelMet(private val _opMode: OpMode)
+class TelMet(private val _telMet: Telemetry)
 {
     /**
      * Writes message to OpMode telemetry with tag.
@@ -28,9 +29,18 @@ class TelMet(private val _opMode: OpMode)
      * Output looks like this:
      * tag: msg
      */
-    fun<T> write(tag: String , msg: T)
+    fun<T> tagWrite(tag: String, msg: T)
     {
-        _opMode.telemetry.addData(tag , msg)
+        _telMet.addData(tag , msg)
+    }
+
+
+    /**
+     * Writes message to OpMode telemetry and then appends newline
+     */
+    fun write(msg: String)
+    {
+        _telMet.addLine(msg)
     }
 
 
@@ -39,7 +49,7 @@ class TelMet(private val _opMode: OpMode)
      */
     fun newLine()
     {
-        _opMode.telemetry.addLine()
+        _telMet.addLine()
     }
 
 
@@ -48,7 +58,7 @@ class TelMet(private val _opMode: OpMode)
      */
     fun clear()
     {
-        _opMode.telemetry.clear()
+        _telMet.clear()
     }
 
 
@@ -60,6 +70,6 @@ class TelMet(private val _opMode: OpMode)
      */
     fun update()
     {
-        _opMode.telemetry.update()
+        _telMet.update()
     }
 }

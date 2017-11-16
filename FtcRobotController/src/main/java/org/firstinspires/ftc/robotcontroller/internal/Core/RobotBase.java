@@ -39,7 +39,7 @@ public abstract class RobotBase
      * sure to call this method with super.init()
      *
      * In your OpMode, call this before accessing any robot hardware or functions. Failure to do so
-     * will make your code go SKRRRRRRRRR AH KA KA KA KA KA SKIDDY YA PA PA
+     * will make your code go SKRRRAHH. PAP PAP KA KA KA. SKIDIKI PAP PAP. AND A PU PU PUDRRRR BOOM.
      *
      * JUST PLACE THIS WHERE IT NEEDS TO GO AND IT'LL BE FINE
      *
@@ -51,7 +51,7 @@ public abstract class RobotBase
     public void init(final HardwareMap HW , final OpMode OPMODE)
     {
         hardware = HW;
-        _telMet = new TelMet(OPMODE);
+        _telMet = new TelMet(OPMODE.telemetry);
     }
 
 

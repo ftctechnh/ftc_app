@@ -30,7 +30,7 @@ public abstract class UtilAuto extends LinearOpMode
     protected long startDelay = DEFAULT_START_DELAY;        // Start delay
     protected Color teamColor = DEFAULT_TEAM_COLOR;         // Team color
 
-    private UtilPulsar adjustPulsar = new UtilPulsar();     // Used to adjust period between
+    private UtilClock adjustPulsar = new UtilClock();     // Used to adjust period between
                                                             // adjustment of values
 
 
@@ -164,7 +164,7 @@ public abstract class UtilAuto extends LinearOpMode
         if(input != 0)
             period = (int)Math.abs(1 / input * MIN_PERIOD);
 
-        if(adjustPulsar.pulse(period ))
+        if(adjustPulsar.tick(period ))
         {
             buffer += JUMP * input / Math.abs(input);
             startingTime[0] = System.currentTimeMillis();

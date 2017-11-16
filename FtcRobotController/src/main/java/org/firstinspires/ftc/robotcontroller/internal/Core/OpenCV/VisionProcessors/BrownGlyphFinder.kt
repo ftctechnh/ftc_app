@@ -2,6 +2,8 @@
 package org.directcurrent.opencv.visionprocessors
 
 
+import org.directcurrent.opencv.BrownGlyphLower
+import org.directcurrent.opencv.BrownGlyphUpper
 import org.directcurrent.opencv.equalizeIntensity
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
@@ -45,8 +47,8 @@ class BrownGlyphFinder: VisionProcessor()
          * it through GRIP
          */
         Imgproc.cvtColor(processingMat , processingMat , Imgproc.COLOR_RGB2HSV)
-        Core.inRange(processingMat , Scalar(0.0 , 85.0 , 32.0) ,
-                Scalar(25.0 , 196.0 , 140.0) , processingMat)
+        Core.inRange(processingMat , BrownGlyphLower ,
+                BrownGlyphUpper , processingMat)
 
 
         Imgproc.erode(processingMat , processingMat , Imgproc.getStructuringElement
@@ -66,7 +68,7 @@ class BrownGlyphFinder: VisionProcessor()
         // Filter out some contours
         contours.filterTo(filteredContours)
         {
-            Imgproc.contourArea(it) >= 22_500
+            Imgproc.contourArea(it) >= 20_500
         }
 
         displayInfo(filteredContours)
@@ -81,9 +83,10 @@ class BrownGlyphFinder: VisionProcessor()
         {
             val rect = Imgproc.boundingRect(i)
 
-            // If it's roughly in the shape of a square
+            // If it's roughly in the shape of a square and large enough
             if(abs(rect.height - rect.width) <= 50 && rect.height >= 125 && rect.width >= 125)
             {
+                // If it's below a certain line (on the floor-ish)
                 if(rect.x >= 500)
                 {
                     Imgproc.rectangle(displayMat, Point(rect.x.toDouble() , rect.y.toDouble()) ,

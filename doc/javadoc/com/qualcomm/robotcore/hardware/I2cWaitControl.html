@@ -138,18 +138,18 @@ extends java.lang.Enum&lt;<a href="../../../../com/qualcomm/robotcore/hardware/I
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#ATOMIC">ATOMIC</a></span></code>
-<div class="block">The associated write is guaranteed to make it out to the I2c device.</div>
+<div class="block">The associated tagWrite is guaranteed to make it out to the I2c device.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#NONE">NONE</a></span></code>
-<div class="block">No write timing control is performed.</div>
+<div class="block">No tagWrite timing control is performed.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#WRITTEN">WRITTEN</a></span></code>
 <div class="block">The semantics of <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#ATOMIC"><code>ATOMIC</code></a> with the additional behavior that the wait of the
- write call will not return until the data has actually been written to the I2c device.</div>
+ tagWrite call will not return until the data has actually been written to the I2c device.</div>
 </td>
 </tr>
 </table>
@@ -216,8 +216,8 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>NONE</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a> NONE</pre>
-<div class="block">No write timing control is performed. The associated write might not actually
- make it out to the I2c device if a subsequent write updates the same locations with
+<div class="block">No tagWrite timing control is performed. The associated tagWrite might not actually
+ make it out to the I2c device if a subsequent tagWrite updates the same locations with
  different values.</div>
 </li>
 </ul>
@@ -228,9 +228,9 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>ATOMIC</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a> ATOMIC</pre>
-<div class="block">The associated write is guaranteed to make it out to the I2c device. Thus, two
- successive writes in the same location will result in two write transactions to the
- device. However, the wait on the write call may return before any write has actually
+<div class="block">The associated tagWrite is guaranteed to make it out to the I2c device. Thus, two
+ successive writes in the same location will result in two tagWrite transactions to the
+ device. However, the wait on the tagWrite call may return before any tagWrite has actually
  made it to the I2c device.</div>
 </li>
 </ul>
@@ -242,7 +242,7 @@ the order they are declared.</div>
 <h4>WRITTEN</h4>
 <pre>public static final&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html" title="enum in com.qualcomm.robotcore.hardware">I2cWaitControl</a> WRITTEN</pre>
 <div class="block">The semantics of <a href="../../../../com/qualcomm/robotcore/hardware/I2cWaitControl.html#ATOMIC"><code>ATOMIC</code></a> with the additional behavior that the wait of the
- write call will not return until the data has actually been written to the I2c device.
+ tagWrite call will not return until the data has actually been written to the I2c device.
  This is useful in situations where a certain quiescent delay is required after a
  particular I2c location has been updated.</div>
 </li>

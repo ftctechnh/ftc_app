@@ -113,10 +113,10 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimpl
  devices. Its methods are synchronous, in that they complete their action before returning to the
  caller.
 
- <p>Methods are provided to read and write data simply and straightforwardly. Singleton bytes
+ <p>Methods are provided to read and tagWrite data simply and straightforwardly. Singleton bytes
  or larger quantities of data can be read or written using <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read8-int-"><code>read8()</code></a> and
- <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-"><code>write8()</code></a> or <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-"><code>read()</code></a> and <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-"><code>write()</code></a>
- respectively. No attention to 'read mode' or 'write mode' is required. Simply call reads
+ <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-"><code>write8()</code></a> or <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-"><code>read()</code></a> and <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-"><code>tagWrite()</code></a>
+ respectively. No attention to 'read mode' or 'tagWrite mode' is required. Simply call reads
  and writes as you need them, and the right thing happens.
 
  <p>For devices that automatically shutdown if no communication is received within a certain
@@ -126,7 +126,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimpl
  worthy of mention. First, reads and writes are ultimately issued to the controller in the same
  chronological order they were received by the device client instance. Second, even more
  importantly, reads *always* see the effect of preceding writes on the controller. That is,
- a read that follows a write will ensure that, first, the write gets issued to the controller, and
+ a read that follows a tagWrite will ensure that, first, the tagWrite gets issued to the controller, and
  then, second, a read from the controller is subsequently issued. By contrast, absent such
  constraints, a read might quickly return freshly-read data already present without having to
  interact with the controller. Which brings us to...</p>
@@ -149,12 +149,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimpl
      <li><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#REPEAT"><code>REPEAT</code></a>. In this
      mode, background reads are always scheduled and cached data updated whenever there's no other
      (writing) work to do. This is the mode commonly used by sensors, who mostly execute reads
-     and only issue a write relatively infrequently.</li>
+     and only issue a tagWrite relatively infrequently.</li>
      <li><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#BALANCED"><code>BALANCED</code></a>. In this
      mode, background reads are also performed, but only if the user initiates a manual read first after
-     a write operation. The object does not automatically start background reads on its own, as the
+     a tagWrite operation. The object does not automatically start background reads on its own, as the
      transition from writing to reading can be a relatively expensive one. This mode can be useful
-     for objects like motor and servo controllers which exhibit a balanced mix of both write and
+     for objects like motor and servo controllers which exhibit a balanced mix of both tagWrite and
      read operations</li>
      <li><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#ONLY_ONCE"><code>ONLY_ONCE</code></a>. In this
      mode, no background reading is performed; data is always retrieved with a synchronous
@@ -298,7 +298,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimpl
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware">I2cDeviceSynchSimple</a></h3>
-<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#enableWriteCoalescing-boolean-">enableWriteCoalescing</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#getI2cAddr--">getI2cAddr</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#getLogging--">getLogging</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#getLoggingTag--">getLoggingTag</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#isArmed--">isArmed</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#isWriteCoalescingEnabled--">isWriteCoalescingEnabled</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-">read</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read8-int-">read8</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#readTimeStamped-int-int-">readTimeStamped</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#setI2cAddr-com.qualcomm.robotcore.hardware.I2cAddr-">setI2cAddr</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#setLogging-boolean-">setLogging</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#setLoggingTag-java.lang.String-">setLoggingTag</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#waitForWriteCompletions-com.qualcomm.robotcore.hardware.I2cWaitControl-">waitForWriteCompletions</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-">write</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">write</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-">write8</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-com.qualcomm.robotcore.hardware.I2cWaitControl-">write8</a></code></li>
+<code><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#enableWriteCoalescing-boolean-">enableWriteCoalescing</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#getI2cAddr--">getI2cAddr</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#getLogging--">getLogging</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#getLoggingTag--">getLoggingTag</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#isArmed--">isArmed</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#isWriteCoalescingEnabled--">isWriteCoalescingEnabled</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read-int-int-">read</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#read8-int-">read8</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#readTimeStamped-int-int-">readTimeStamped</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#setI2cAddr-com.qualcomm.robotcore.hardware.I2cAddr-">setI2cAddr</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#setLogging-boolean-">setLogging</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#setLoggingTag-java.lang.String-">setLoggingTag</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#waitForWriteCompletions-com.qualcomm.robotcore.hardware.I2cWaitControl-">waitForWriteCompletions</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-">tagWrite</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#tagWrite-int-byte:A-com.qualcomm.robotcore.hardware.I2cWaitControl-">tagWrite</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-">write8</a>, <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html#write8-int-int-com.qualcomm.robotcore.hardware.I2cWaitControl-">write8</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.qualcomm.robotcore.hardware.HardwareDeviceHealth">
