@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
  */
 
 @Autonomous (name = "Blake tryina code", group = "Competition OpModes")
-public class ThiccAuto extends LinearOpMode {
+public class MoveJewelAuto extends LinearOpMode {
 
     private Robot robot;
     private DcMotor raiser;
