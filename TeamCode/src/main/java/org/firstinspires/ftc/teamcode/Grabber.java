@@ -59,7 +59,7 @@ public class Grabber {
         double range = open - close;
 
         if (range < 0) {
-            return 0 - (range * angle) + open;
+            return open - (range * angle);
         } else {
             return range * angle + close;
         }
