@@ -235,6 +235,10 @@ public class Vuforia_ColorRev extends LinearOpMode {
         }
 
 
+        Boolean StoneisFront = false;
+
+
+
             gromit.jewelsservo.setPosition(0.85);
         sleep(500);
 
@@ -284,97 +288,101 @@ public class Vuforia_ColorRev extends LinearOpMode {
         gromit.left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gromit.right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // dirve forward some Left Center Right
-        //  vuMark
-        if (vuMark == RelicRecoveryVuMark.LEFT){
+        if (StoneisFront) {
+            // dirve forward some Left Center Right
 
-            gromit.left_front.setPower(power);
-            gromit.left_back.setPower(power);
-            gromit.right_front.setPower( power);
-            gromit.right_back.setPower( power);
+            //  vuMark
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
 
-            while(gromit.left_front.getCurrentPosition() <= 2400-700){
-                idle();
+                gromit.left_front.setPower(power);
+                gromit.left_back.setPower(power);
+                gromit.right_front.setPower(power);
+                gromit.right_back.setPower(power);
+
+                while (gromit.left_front.getCurrentPosition() <= 2400 - 700) {
+                    idle();
+                }
+
+                gromit.left_front.setPower(0);
+                gromit.left_back.setPower(0);
+                gromit.right_front.setPower(0);
+                gromit.right_back.setPower(0);
+
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                gromit.left_front.setPower(power);
+                gromit.left_back.setPower(power);
+                gromit.right_front.setPower(power);
+                gromit.right_back.setPower(power);
+
+                while (gromit.left_front.getCurrentPosition() <= 2400) {
+                    idle();
+                }
+
+                gromit.left_front.setPower(0);
+                gromit.left_back.setPower(0);
+                gromit.right_front.setPower(0);
+                gromit.right_back.setPower(0);
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                gromit.left_front.setPower(power);
+                gromit.left_back.setPower(power);
+                gromit.right_front.setPower(power);
+                gromit.right_back.setPower(power);
+
+                while (gromit.left_front.getCurrentPosition() <= 2400 + 700) {
+                    idle();
+                }
+
+                gromit.left_front.setPower(0);
+                gromit.left_back.setPower(0);
+                gromit.right_front.setPower(0);
+                gromit.right_back.setPower(0);
             }
 
-            gromit.left_front.setPower(0);
-            gromit.left_back.setPower(0);
-            gromit.right_front.setPower(0);
-            gromit.right_back.setPower(0);
-
-        }else if (vuMark == RelicRecoveryVuMark.CENTER){
-            gromit.left_front.setPower(power);
-            gromit.left_back.setPower(power);
-            gromit.right_front.setPower( power);
-            gromit.right_back.setPower( power);
-
-            while(gromit.left_front.getCurrentPosition() <= 2400){
-                idle();
-            }
-
-            gromit.left_front.setPower(0);
-            gromit.left_back.setPower(0);
-            gromit.right_front.setPower(0);
-            gromit.right_back.setPower(0);
-        }else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            gromit.left_front.setPower(power);
-            gromit.left_back.setPower(power);
-            gromit.right_front.setPower( power);
-            gromit.right_back.setPower( power);
-
-            while(gromit.left_front.getCurrentPosition() <= 2400+700){
-                idle();
-            }
-
-            gromit.left_front.setPower(0);
-            gromit.left_back.setPower(0);
-            gromit.right_front.setPower(0);
-            gromit.right_back.setPower(0);
-        }
-
-        // rotate 90 to deliver block
-        gromit.left_front.setPower(-power);
-        gromit.left_back.setPower(-power);
-        gromit.right_front.setPower( power);
-        gromit.right_back.setPower( power);
-        telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                });
-        telemetry.update();
-        while(angles.firstAngle < 88){
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            idle();
+            // rotate 90 to deliver block
+            gromit.left_front.setPower(-power);
+            gromit.left_back.setPower(-power);
+            gromit.right_front.setPower(power);
+            gromit.right_back.setPower(power);
             telemetry.addLine()
                     .addData("heading", new Func<String>() {
-                        @Override public String value() {
+                        @Override
+                        public String value() {
                             return formatAngle(angles.angleUnit, angles.firstAngle);
                         }
                     });
             telemetry.update();
-            power = (angles.firstAngle-90)/-180 +0.1;
-            gromit.left_front.setPower(-power);
-            gromit.left_back.setPower(-power);
-            gromit.right_front.setPower( power);
-            gromit.right_back.setPower( power);
+            while (angles.firstAngle < 88) {
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                idle();
+                telemetry.addLine()
+                        .addData("heading", new Func<String>() {
+                            @Override
+                            public String value() {
+                                return formatAngle(angles.angleUnit, angles.firstAngle);
+                            }
+                        });
+                telemetry.update();
+                power = (angles.firstAngle - 90) / -180 + 0.1;
+                gromit.left_front.setPower(-power);
+                gromit.left_back.setPower(-power);
+                gromit.right_front.setPower(power);
+                gromit.right_back.setPower(power);
 
 
-        }
+            }
             gromit.left_front.setPower(0);
             gromit.left_back.setPower(0);
             gromit.right_front.setPower(0);
             gromit.right_back.setPower(0);
 
             //Drive forward
-        power= 0.3;
+            power = 0.3;
             gromit.left_front.setPower(power);
             gromit.left_back.setPower(power);
-            gromit.right_front.setPower( power);
-            gromit.right_back.setPower( power);
+            gromit.right_front.setPower(power);
+            gromit.right_back.setPower(power);
 
-            while(gromit.left_front.getCurrentPosition() <= 3000){
+            while (gromit.left_front.getCurrentPosition() <= 3000) {
                 idle();
             }
 
@@ -384,20 +392,124 @@ public class Vuforia_ColorRev extends LinearOpMode {
             gromit.right_back.setPower(0);
 
             //unclamp glyph and back up
-        gromit.leftlower.setPosition(0.0);
-        gromit.rightlower.setPosition(1);
-        sleep(500);
-        gromit.left_front.setPower(-power);
-        gromit.left_back.setPower(-power);
-        gromit.right_front.setPower(-power);
-        gromit.right_back.setPower(-power);
-        while(gromit.left_front.getCurrentPosition() >= 2000){
-            idle();
+            gromit.leftlower.setPosition(0.0);
+            gromit.rightlower.setPosition(1);
+            sleep(500);
+            gromit.left_front.setPower(-power);
+            gromit.left_back.setPower(-power);
+            gromit.right_front.setPower(-power);
+            gromit.right_back.setPower(-power);
+            while (gromit.left_front.getCurrentPosition() >= 2000) {
+                idle();
+            }
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
+
+
+            /** drive instructions to deliver back glyph  */
+        } else {
+            //drive forward first
+            gromit.left_front.setPower(power);
+            gromit.left_back.setPower(power);
+            gromit.right_front.setPower(power);
+            gromit.right_back.setPower(power);
+
+            while (gromit.left_front.getCurrentPosition() <= 1800) {
+                idle();
+            }
+
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
+            sleep(1000);
+
+            // strafe sideways
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+
+                gromit.left_front.setPower(power/2);
+                gromit.left_back.setPower(-power/2);
+                gromit.right_front.setPower(-power/2);
+                gromit.right_back.setPower(power/2);
+
+                while (gromit.left_front.getCurrentPosition() <= 2400) {
+                    idle();
+                }
+
+                gromit.left_front.setPower(0);
+                gromit.left_back.setPower(0);
+                gromit.right_front.setPower(0);
+                gromit.right_back.setPower(0);
+
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                gromit.left_front.setPower(power/2);
+                gromit.left_back.setPower(-power/2);
+                gromit.right_front.setPower(-power/2);
+                gromit.right_back.setPower(power/2);
+
+                while (gromit.left_front.getCurrentPosition() <= 2400 + 700) {
+                    idle();
+                }
+
+                gromit.left_front.setPower(0);
+                gromit.left_back.setPower(0);
+                gromit.right_front.setPower(0);
+                gromit.right_back.setPower(0);
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                gromit.left_front.setPower(power/2);
+                gromit.left_back.setPower(-power/2);
+                gromit.right_front.setPower(-power/2);
+                gromit.right_back.setPower(power/2);
+
+                while (gromit.left_front.getCurrentPosition() <= 2400 + 2*700) {
+                    idle();
+                }
+
+                gromit.left_front.setPower(0);
+                gromit.left_back.setPower(0);
+                gromit.right_front.setPower(0);
+                gromit.right_back.setPower(0);
+            }
+            gromit.left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            gromit.right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            gromit.left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            gromit.right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //Drive forward
+            power = 0.3;
+            gromit.left_front.setPower(power);
+            gromit.left_back.setPower(power);
+            gromit.right_front.setPower(power);
+            gromit.right_back.setPower(power);
+
+            while (gromit.left_front.getCurrentPosition() <= 500) {
+                idle();
+            }
+
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
+
+            //unclamp glyph and back up
+            gromit.leftlower.setPosition(0.0);
+            gromit.rightlower.setPosition(1);
+            sleep(500);
+            gromit.left_front.setPower(-power);
+            gromit.left_back.setPower(-power);
+            gromit.right_front.setPower(-power);
+            gromit.right_back.setPower(-power);
+            while (gromit.left_front.getCurrentPosition() >= 0) {
+                idle();
+            }
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
         }
-        gromit.left_front.setPower(0);
-        gromit.left_back.setPower(0);
-        gromit.right_front.setPower(0);
-        gromit.right_back.setPower(0);
+
+
 
        // mecanumDriveGyro(1.0,0.0,0.0,0);
        while (opModeIsActive()) {
@@ -416,15 +528,27 @@ public class Vuforia_ColorRev extends LinearOpMode {
            telemetry.addData("Hue", hsvValues[0]);
            telemetry.addData("VuMark", "%s visible", vuMark);
 
-//            telemetry.update();
-//            error=(angles.firstAngle-0)/90;
-//            gromit.left_front.setPower(power + error/1.0);
-//            gromit.left_back.setPower(power + error/1.0);
-//            gromit.right_front.setPower(power - error/1.0);
-//            gromit.right_back.setPower(power - error/1.0);
-//
-//
-//
+           double forward;
+           double strafe;
+           double rotate;
+
+           // Run wheels in tank mode (note: The joystick goes negat when pushed forwards, so negate it)
+           forward = -gamepad1.right_stick_y;
+           strafe = -gamepad1.right_stick_x;
+           rotate = gamepad1.left_stick_x;
+
+
+           gromit.left_front.setPower ( forward/1.0 - strafe/1.0 + rotate/1.0 );
+           gromit.left_back.setPower  ( forward/1.0 + strafe/1.0 + rotate/1.0  );
+           gromit.right_front.setPower( forward/1.0 + strafe/1.0 - rotate/1.0 );
+           gromit.right_back.setPower ( forward/1.0 - strafe/1.0 - rotate/1.0 );
+
+           if (gamepad1.dpad_up) {
+               gromit.jewelsservo.setPosition(0.7);
+           }
+           if (gamepad1.dpad_down) {
+               gromit.jewelsservo.setPosition(0.2);
+           }
            telemetry.update();
        }
 
