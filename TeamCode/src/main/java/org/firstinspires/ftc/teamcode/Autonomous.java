@@ -29,13 +29,12 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  *Created by Pramodh and Diego and Ronit on 10/27/2017.
@@ -43,33 +42,41 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 @TeleOp
 public class Autonomous extends LinearOpMode {
     NormalizedColorSensor colorSensor;
-    private boolean bCurrState;
-    private boolean bPrevState;
-    private boolean colorOn = false;
+    private DcMotor motor0;
+    private Servo servo2;
+    private Servo servo3;
 
     @Override
     public void runOpMode() {
 
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
+        waitForStart();
+        motor0 = hardwareMap.get(DcMotor.class, "motor0");
+        servo2 = hardwareMap.get(Servo.class, "servo2");
+        servo3 = hardwareMap.get(Servo.class, "servo3");
+       colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
 
-        if (colorSensor instanceof SwitchableLight) {
-            ((SwitchableLight)colorSensor).enableLight(true);
-        }
+        VerticalLift lift = new VerticalLift(servo2);
+        Dropdown dropdown = new Dropdown(servo3, motor0, colorSensor);
+
+        int scale = 10000;
 
         //run until the end of the match (driver presses STOP)
         while(opModeIsActive()) {
+            dropdown.runDrop();
+
             // Read the sensor
             NormalizedRGBA colors = colorSensor.getNormalizedColors();
-            int color = colors.toColor();
-            telemetry.addLine("raw Android color: ")
-                    .addData("a", "%02x", Color.alpha(color))
-                    .addData("r", "%02x", Color.red(color))
-                    .addData("g", "%02x", Color.green(color))
-                    .addData("b", "%02x", Color.blue(color));
+           int color = colors.toColor();
 
-           // if (colors.red >= 100)
+            lift.Lift(this.gamepad1.left_bumper, this.gamepad2.left_bumper, this.gamepad1.left_trigger, this.gamepad2.left_trigger);
 
 
+            telemetry.addLine("raw Android color: ");
+            telemetry.addData("a", (int)(scale*colors.alpha));
+            telemetry.addData("r", (int)(scale*colors.red));
+            telemetry.addData("g", (int)(scale*colors.green));
+            telemetry.addData("b", (int)(scale*colors.blue));
+            telemetry.update();
 
         }
     }

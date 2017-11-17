@@ -44,8 +44,7 @@ public class Driver extends LinearOpMode {
 
             driveTrain.move(this.gamepad1.left_stick_y, this.gamepad1.right_stick_y);
             grabber.Grab(this.gamepad1.right_trigger);
-            lift.Lift(this.gamepad1.left_bumper, this.gamepad2.left_bumper,
-                    this.gamepad1.left_trigger, this.gamepad2.left_trigger);
+            lift.Lift(this.gamepad1.left_bumper, this.gamepad2.left_bumper, this.gamepad1.left_trigger, this.gamepad2.left_trigger);
 
             telemetry.addData("Left Bumper", this.gamepad1.left_bumper);
             telemetry.addData("Right Bumper", this.gamepad1.right_bumper);
