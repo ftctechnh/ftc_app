@@ -33,11 +33,11 @@ public class ForkliftDriveWithClass extends OpMode {
         RearLeft = hardwareMap.dcMotor.get("m3");
         RearRight = hardwareMap.dcMotor.get("m4");
         ForkLift = ForkLift(
-            hardwareMap.Servo.get("s1"), 
-            hardwareMap.Servo.get("s2"), 
-            hardwareMap.DcMotor.get("m5"), 
-            hardwareMap.get(DigitalChannel.class, "b1"),
-            hardwareMap.get(DigitalChannel.class, "b2"))
+            hardwareMap.Servo.get("s1"), //rightClaw
+            hardwareMap.Servo.get("s2"), //leftClaw
+            hardwareMap.DcMotor.get("m5"), //updown
+            hardwareMap.get(DigitalChannel.class, "b1"), //top button
+            hardwareMap.get(DigitalChannel.class, "b2")) //bottom button
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
         speed = 0.75;
@@ -80,22 +80,13 @@ public class ForkliftDriveWithClass extends OpMode {
         RearRight.setPower(speed*clip(rrSpeed));
 
         if (gamepad1.a) {
-            clawPosition = clawHighEnd;
-            //clawPosition = clawPosition + 0.001;
+            ForkLift.closeClaw();
 
         }
         if (gamepad1.b) {
-            clawPosition = clawLowEnd;
-            //clawPosition = clawPosition - 0.001;
+            ForkLift.openClaw();
         }
-        rightClaw.setPosition(clawPosition);
-        rightClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
-        up = gamepad1.right_trigger;
-        down = gamepad1.left_trigger;
-        DrawerSlideSpeed = up - down;
-        DrawerSlide.setPower(DrawerSlideSpeed);
+        ForkLift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
         telemetry.addData("Current rightClaw Position", rightClaw.getPosition());
     }
 
