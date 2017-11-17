@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
-@Autonomous(name="Preciousss: Autonomous6217Red 1547", group="Preciousss")
+@Autonomous(name="Preciousss: Autonomous6217Red", group="Preciousss")
 
 /*
  * Created by Ben on 11/4/16.
@@ -57,14 +57,12 @@ public class Auto6217Red extends LinearOpMode {
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
         servoTapper = hardwareMap.servo.get("tapper");
-        colorSensor = hardwareMap.colorSensor.get("sensor_color");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
         colorSensor.enableLed(true);
 
         waitForStart();
 
         servoTapper.setPosition(90);
-
-
 
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
@@ -78,14 +76,13 @@ public class Auto6217Red extends LinearOpMode {
 
 
         if  ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
-            move(0f, -.25f, 2);
+           // move(0f, -.25f, 2);
         }
         else {
-            move(0f,.25f,2);
+          //  move(0f,.25f,2);
             }
 
         servoTapper.setPosition(0);
-
 
     }
 
