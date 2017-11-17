@@ -29,8 +29,8 @@ public class RelicRecoveryHardware extends OpMode {
     protected static final double UP_ARM_LIFTER_S = 1;
     protected static final double DOWN_ARM_LIFTER_S = -1;
     protected static final double STOPPED_ARM_LIFTER_S = 0;
-    protected static final double ARM_IN = 0.1;
-    protected static final double ARM_OUT = 0.95;
+    protected static final double ARM_IN = 0;
+    protected static final double ARM_OUT = 0.75;
     protected static final double POOP_OPEN= .9;
     protected static final double POOP_CLOSED = 0.1;
     // ---------------------- Hardware Devices ----------------------
