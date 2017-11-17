@@ -7,9 +7,25 @@
 // the build definitions, you can place those customizations in this file, but
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
-
-
 // Custom definitions may go here
-
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+android {
+    compileSdkVersion 19
+    buildToolsVersion '25.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 19
+    }
+    productFlavors {
+    }
+}
+repositories {
+    flatDir { dirs '../libs' }
+}
+dependencies {
+}
