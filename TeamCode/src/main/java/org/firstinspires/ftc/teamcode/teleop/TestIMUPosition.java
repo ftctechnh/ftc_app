@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
@@ -38,9 +40,12 @@ public class TestIMUPosition extends OpMode {
 
         telemetry.addData("Acquisition Time:", imuWrapper.getIMU().getAcceleration().acquisitionTime);
 
-        telemetry.addData("X Position:", imuWrapper.getPosition().x);
-        telemetry.addData("Y Position:", imuWrapper.getPosition().y);
-        telemetry.addData("Z Position:", imuWrapper.getPosition().z);
+        telemetry.addData("Acceleration:", imuWrapper.getIMU().getAcceleration().toString());
+
+        telemetry.addData("Position?:", imuWrapper.getPosition().toString());
+        telemetry.addData("X Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).x);
+        telemetry.addData("Y Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y);
+        telemetry.addData("Z Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).z);
     }
 
     @Override
