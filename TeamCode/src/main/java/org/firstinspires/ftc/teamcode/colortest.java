@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @Autonomous(name = "colortest", group = "Concept")
 
-public class colortest extends AutonomousSetup {
+public class colortest extends RedRecovery {
 
     //Start with the basic declaration of variable strings that the phones will read
 

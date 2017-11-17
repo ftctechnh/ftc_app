@@ -14,7 +14,7 @@ import android.util.Log;
 //@Disabled //AUSTIN REMEMBER TO REMOVE THIS -Austin from 4:55 P. M. on 11/7/17 // remembered
 @Autonomous(name = "Autonomous", group = "Autonomous")
 //This is the basic class
-public class AutonomousSetup extends LinearOpMode {
+public class RedRecovery extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.
     //Forklift
     private Servo rightClaw;
