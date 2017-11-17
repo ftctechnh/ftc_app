@@ -53,13 +53,15 @@ import com.qualcomm.robotcore.util.Range;
 public class GrippyBoi_Test extends OpMode
 {
     // Declare OpMode members.
-    Hardware750 robot = new Hardware750();
+    DcMotor gripper = null;
+
+    //Hardware750 robot = new Hardware750();
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {
         telemetry.addData("Status", "Uninitialized...");
-        robot.init(hardwareMap);
+        //robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -70,18 +72,27 @@ public class GrippyBoi_Test extends OpMode
 
     @Override
     public void start() {
+        gripper = hardwareMap.get(DcMotor.class, "gripper");
         runtime.reset();
     }
 
     @Override
     public void loop() {
         if (gamepad1.a) {
-            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             telemetry.addData("ZPB", "FLOATING");
         }
         if (gamepad1.b) {
-            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             telemetry.addData("ZPB", "BRAKING");
+        }
+        if (gamepad1.x) {
+            gripper.setPower(0.5);
+        } else if (gamepad1.y){
+            gripper.setPower(-0.5);
+        }
+        else {
+            gripper.setPower(0);
         }
     }
 
