@@ -13,9 +13,11 @@ public class Grabber {
     public boolean closed = false;
     public boolean isPressed = false;
 
-    private final double LEFT_OPEN_POSITION = (174.0/180);
+    private final double LEFT_FULL_OPEN_POSITION = (174.0/180);
+    private final double LEFT_OPEN_POSITION = (129.0/180);
     private final double LEFT_CLOSED_POSITION = (84.0/180);
-    private final double RIGHT_OPEN_POSITION = (28.0/180);
+    private final double RIGHT_FULL_OPEN_POSITION = (28.0/180);
+    private final double RIGHT_OPEN_POSITION = (73.0/180);
     private final double RIGHT_CLOSED_POSITION = (118.0/180);
 
     public Grabber(Servo left, Servo right) {
@@ -23,7 +25,7 @@ public class Grabber {
         this.leftServo = left;
         this.rightServo = right;
 
-        leftServo.setPosition(Position(30/180, LEFT_OPEN_POSITION, LEFT_CLOSED_POSITION));
+        leftServo.setPosition(LEFT_OPEN_POSITION);
         rightServo.setPosition(RIGHT_OPEN_POSITION);
 
     }
@@ -54,6 +56,7 @@ public class Grabber {
         }
     }
 
+<<<<<<< HEAD
     private double Position(double angle, double open, double close) {
 
         double range = open - close;
@@ -64,6 +67,11 @@ public class Grabber {
             return range * angle + close;
         }
 
+=======
+    private void reset() {
+        leftServo.setPosition(LEFT_FULL_OPEN_POSITION);
+        rightServo.setPosition(RIGHT_FULL_OPEN_POSITION);
+>>>>>>> origin/develop
     }
 
 }
