@@ -29,6 +29,12 @@ public class NewJewel extends LinearOpMode {
 
     public boolean redLeft;
 
+    public boolean redAuto;
+
+    NewJewel(boolean red) {
+        redAuto = red;
+    }
+
     @Override
     public void runOpMode() {
         colorSensorL = hardwareMap.get(ColorSensor.class, "color sensor left");
