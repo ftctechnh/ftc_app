@@ -27,31 +27,37 @@ public class ForkLift {
 		this.bottomButton = bottomButton;
 		this.rightClaw.setDirection(Servo.Direction.REVERSE);
 	}
+	
+	
+	public void initClaw() {
+		setClawPosition(clawPosition);
+	}
+
+	public void closeClaw() {
+		setClawPosition(clawHighEnd);
+	}
+
+	public void openClaw() {
+		setClawPosition(clawLowEnd);
+	}
+
+	public void moveUpDown(double speed) {
+		if (!(topButton.getState()) && speed > 0) {
+			drawerSlide.setPower(speed);
+		}
+		else if (!(bottomButton.getState()) && speed < 0) {
+			drawerSlide.setPower(speed);
+		}
+		else {
+			drawerSlide.setPower(0.0);
+		}
+	}
 	public void setClawPosition(double position) {
 		rightClaw.setPosition(position);
 		rightClaw.setPosition(position);
 		leftClaw.setPosition(position);
 		leftClaw.setPosition(position);	
 	}
-	public void initClaw() {
-		setClawPosition(clawPosition);
-	}
-	public void closeClaw() {
-		setClawPosition(clawHighEnd);
-	}
-	public void openClaw() {
-		setClawPosition(clawLowEnd);
-	}
-	public void moveDrawerSlide(double speed) {
-		if (!(topButton.getState()) && speed > 0) {
-			drawerSlide.setSpeed(speed);
-		}
-		else if (!(bottomButton.getState()) && speed < 0) {
-			drawerSlide.setSpeed(speed);
-		}
-		else {
-			drawerSlide.setSpeed(0);
-		}
-	}
+
 
 }

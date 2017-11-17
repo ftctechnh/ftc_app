@@ -44,7 +44,7 @@ public class ForkliftDriveLimits extends OpMode {
         leftClaw = hardwareMap.servo.get("s2");
         leftClaw.setPosition(clawPosition);
         TopButton = hardwareMap.get(DigitalChannel.class, "b1");
-        TopButton = hardwareMap.get(DigitalChannel.class, "b2");
+        BottomButton = hardwareMap.get(DigitalChannel.class, "b2");
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
     }

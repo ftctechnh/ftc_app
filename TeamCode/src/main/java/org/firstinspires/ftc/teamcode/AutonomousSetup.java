@@ -183,7 +183,7 @@ public class AutonomousSetup extends LinearOpMode {
         }
         //closeClaw();
         if (timesBlue > timesRed) {
-           rotations(1, .25);
+           rotations(.125, .1);
 
             servo.setPosition(0.9);
             servo.setPosition(0.9);
@@ -192,19 +192,19 @@ public class AutonomousSetup extends LinearOpMode {
             } catch (InterruptedException e) {
             }
 
-            rotations(-1, .25);
+            rotations(-.125, .1);
 
 
         } else {
 
-            rotations(-1, .25);
+            rotations(-.125, .1);
             servo.setPosition(0.9);
             servo.setPosition(0.9);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
-            rotations(1, .2);
+            rotations(.125, .1);
 
         }
         try {
