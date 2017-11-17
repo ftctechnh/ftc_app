@@ -29,16 +29,16 @@ public class AutonomousEncoder extends LinearOpMode{
 
     public void drive(int leftPower, int rightPower, int inches) throws InterruptedException {
 
-        robot.leftDrive.setTargetPosition(robot.leftDrive.getCurrentPosition() + (int)(robot.COUNTS_PER_INCH) * inches);
-        robot.rightDrive.setTargetPosition((int)(robot.COUNTS_PER_INCH) * inches);
-
-        robot.encoderToPosition();
-        robot.leftDrive.setPower(leftPower);
-        robot.rightDrive.setPower(rightPower);
-
-        robot.leftDrive.setPower(0);
-        robot.rightDrive.setPower(0);
-
+//        robot.leftDrive.setTargetPosition(robot.leftDrive.getCurrentPosition() + (int)(robot.COUNTS_PER_INCH) * inches);
+//        robot.rightDrive.setTargetPosition((int)(robot.COUNTS_PER_INCH) * inches);
+//
+//        robot.encoderToPosition();
+//        robot.leftDrive.setPower(leftPower);
+//        robot.rightDrive.setPower(rightPower);
+//
+//        robot.leftDrive.setPower(0);
+//        robot.rightDrive.setPower(0);
+//
 
     }
 

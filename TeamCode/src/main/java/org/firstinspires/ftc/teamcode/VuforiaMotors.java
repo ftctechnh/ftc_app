@@ -69,13 +69,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Concept: VuMark Id", group ="Concept")
+@Autonomous(name="Vuforia Motors")
 //Disabled
-public class ConceptVuMarkIdentification extends LinearOpMode {
+public class VuforiaMotors extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
-//    DcMotor motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
+    //    DcMotor motorLeft = hardwareMap.get(DcMotor.class, "motorLeft");
 //    DcMotor motorRight = hardwareMap.get(DcMotor.class, "motorRight");
     HardwareRobot robot = new HardwareRobot();
     //HardwareRobot robot = new HardwareRobot();
