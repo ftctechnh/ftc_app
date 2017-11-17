@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import android.util.Log;
 
-//This makes the OpMode available in the Autonomous group under the name 'Autonomous', in the Driver Station
+//This makes the OpMode available in the Autonomouds group under the name 'Autonomous', in the Driver Station
 //@Disabled //AUSTIN REMEMBER TO REMOVE THIS -Austin from 4:55 P. M. on 11/7/17 // remembered
 @Autonomous(name = "Autonomous", group = "Autonomous")
 //This is the basic class
@@ -19,6 +19,7 @@ public class AutonomousSetup extends LinearOpMode {
     //Forklift
     private Servo rightClaw;
     private Servo leftClaw;
+    private GyroSensor gyroSensor;
     private double clawPosition = 0.0, clawHighEnd = 0.45, clawLowEnd = 0.2;
     private DcMotor DrawerSlide;
     private double DrawerSlideLowEnd;
@@ -35,7 +36,7 @@ public class AutonomousSetup extends LinearOpMode {
     int Tw = 1; //The part of the gear ratio attached to the wheel
     double D = 4.0; //Diameter of wheels
     double C = D * Math.PI;//One rotation of tank gear/wheel
-
+    int heading = 0;
     public void runOpMode() throws InterruptedException {
         //Start with the basic declaration of variable strings that the phones will read
 
@@ -43,12 +44,24 @@ public class AutonomousSetup extends LinearOpMode {
         FrontRightMotor = hardwareMap.dcMotor.get("m2");
         BackLeftMotor = hardwareMap.dcMotor.get("m3");
         BackRightMotor = hardwareMap.dcMotor.get("m4");
+
+
         try {
             rightClaw = hardwareMap.servo.get("s1");
             rightClaw.setDirection(Servo.Direction.REVERSE);
             rightClaw.setPosition(clawPosition);
             leftClaw = hardwareMap.servo.get("s2");
             leftClaw.setPosition(clawPosition);
+            gyroSensor = hardwareMap.gyroSensor.get("g1");
+            gyroSensor.calibrate();
+            while (gyroSensor.isCalibrating()) {
+                waitOneFullHardwareCycle();
+                Thread.sleep(50);
+            }
+            gyroSensor.resetZAxisIntegrator();
+            heading = gyroSensor.getHeading();
+            telemetry.addData("INITIAL GYRO", heading);
+
         } catch (IllegalArgumentException e) {
 
         }
@@ -68,13 +81,15 @@ public class AutonomousSetup extends LinearOpMode {
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        heading = 0;
         servo.setPosition(.39);
         Thread.sleep(1000);
         JewelFinder();
         Thread.sleep(1000);
         servo.setPosition(0.9);
         servo.setPosition(0.9);
-        Thread.sleep(10000);
+        Thread.sleep(1000);
+        rotations((47/4), .5);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -122,13 +137,57 @@ public class AutonomousSetup extends LinearOpMode {
 
     }
 
+    void turnLeftGyro(int degree, double Power)throws InterruptedException{
+        Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
+        int startHeading = getHeading();
+        int goal = (startHeading - degree);
+        turnLeft(Power);
+        while(heading > goal){
+            getHeading();
+            telemetry.addData("heading", heading);
+            telemetry.addData("goal", goal);
+
+
+            telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
+            waitOneFullHardwareCycle();
+        }
+        stopmoving();
+    }
+    void turnRightGyro(int degree, double Power)throws InterruptedException{
+        Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
+        int startHeading = getHeading();
+        int goal = (startHeading + degree);
+        turnRight(Power);
+        while(heading < goal){
+            getHeading();
+            telemetry.addData("heading", heading);
+            telemetry.addData("goal", goal);
+
+
+            telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
+            waitOneFullHardwareCycle();
+        }
+        stopmoving();
+    }
     void forward(double power) {
 
         FrontLeftMotor.setPower(power);
         FrontRightMotor.setPower(power);
         BackLeftMotor.setPower(power);
         BackRightMotor.setPower(power);
+    }
 
+    void turnLeft(double power){
+        FrontLeftMotor.setPower(-power);
+        FrontRightMotor.setPower(power);
+        BackLeftMotor.setPower(-power);
+        BackRightMotor.setPower(power);
+    }
+    void turnRight(double power){
+        FrontLeftMotor.setPower(power);
+        FrontRightMotor.setPower(-power);
+        BackLeftMotor.setPower(power);
+        BackRightMotor.setPower(-power);
     }
 
     void stopmoving() {
@@ -216,6 +275,40 @@ public class AutonomousSetup extends LinearOpMode {
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
 
     }
+    public int fixHeading(int target)throws InterruptedException{
+        int newheading = gyroSensor.getHeading();
+        int diff = Math.abs(target - newheading);
+        if(diff > 200) {
+            if(newheading > target){
+                while(diff > 200){
+                    newheading -=360;
+                    diff = Math.abs(target - newheading);
+                    waitOneFullHardwareCycle();
+                }
+
+
+            }
+            else{
+                while (diff > 200){
+                    newheading += 360;
+                    diff = Math.abs(target - newheading);
+                    waitOneFullHardwareCycle();
+                }
+            }
+        }
+        target = newheading;
+        return target;
+    }
+
+    public int getHeading ()throws InterruptedException {
+                int newHeading = gyroSensor.getHeading();
+                newHeading = fixHeading(heading);
+                heading = newHeading;
+
+                return heading;
+            }
+
+
 
     public void closeClaw() {
         rightClaw.setPosition(clawHighEnd);
