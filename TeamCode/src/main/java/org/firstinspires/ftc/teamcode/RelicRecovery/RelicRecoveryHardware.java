@@ -83,17 +83,16 @@ public class RelicRecoveryHardware extends OpMode {
         mLeft = map.motor("l");
         mLift = map.motor("lift");
         mArm = map.motor("arm");
-        mArmLift = map.motor("armlift");
+        mArmLift = map.motor("armLift");
         // ---------- Standard Servos -----------
-        ssBallPusher = map.servo("ball", ballPusherPosition);
-        ssArm = map.servo("armS", armPosition);
-        ssRelicGrabber = map.servo("hand", oneHandPosition);
-        ssPoop = map.revServo("poop",poopPosition);
-        ssArm = map.revServo("arm", armPosition);
+        ssBallPusher = map.servo("sBall", ballPusherPosition);
+        ssArm = map.revServo("sArm", armPosition);
+        ssRelicGrabber = map.servo("sGrabber", oneHandPosition);
+        ssPoop = map.revServo("sPoop",poopPosition);
         // ------- Continuous Rotation Servos -------
-        crHand = map.revCrservo("crh");
-        crRelicGrabber = map.revCrservo("relic");
-        crArmLift = map.revCrservo("armLifters");
-        crArm = map.crservo("armServo");
+        crHand = map.revCrservo("crHand");
+        crRelicGrabber = map.revCrservo("crRelic");
+        crArmLift = map.revCrservo("crArmLift");
+        crArm = map.crservo("crArm");
     }
 }
