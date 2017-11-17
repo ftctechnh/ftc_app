@@ -48,7 +48,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+<<<<<<< HEAD
 @TeleOp(name="Tank Drive X", group="Linear Opmode")
+=======
+//Testing
+@TeleOp(name="Basic: Linear OpMode Tele-Op", group="Linear Opmode")
+>>>>>>> 885c478f261c8e984000b63730e1f3f165acd6f8
 //@Disabled
 public class BasicTankDrive extends LinearOpMode {
 
