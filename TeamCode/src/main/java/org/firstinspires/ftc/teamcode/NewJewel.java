@@ -1,18 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Robot;
 
 @Autonomous(name = "NEW Jewel Color", group = "Sensor")
 public class NewJewel extends LinearOpMode {
@@ -21,22 +12,27 @@ public class NewJewel extends LinearOpMode {
     Servo loweringJewelServo;
     Servo turningJewelServo;
 
-    public double loweredPosition = 0.2;
-    public double upPosition = 0.7;
-    public double leftPosition = .5;
-    public double rightPosition = 1.0;
-    public double middlePos = .75;
+    public double downPos = 0.2;
+    public final double UP_POS = 0.7;
 
-    public boolean redLeft;
+    public final double LEFT_POS = .5;
+    public final double RIGHT_POS = 1.0;
 
-    public boolean redAuto;
+    public final double MIDDLE_POS = .75;
 
-    NewJewel(boolean red) {
-        redAuto = red;
+    public double increment = .07;
+
+    public placement myPlacement;
+
+    public alliance team;
+
+    NewJewel(alliance myTeam) {
+        team = myTeam;
     }
 
     @Override
     public void runOpMode() {
+
         colorSensorL = hardwareMap.get(ColorSensor.class, "color sensor left");
         loweringJewelServo = hardwareMap.get(Servo.class, "lowering servo" );
         turningJewelServo = hardwareMap.get(Servo.class, "turning servo");
@@ -47,24 +43,20 @@ public class NewJewel extends LinearOpMode {
 
         sleep(1000);
 
-        if (loweringJewelServo.getPosition() == loweredPosition) {
-            redLeft = isLeft();
-
-            telemetry.addLine("working");
-            telemetry.update();
+        if (loweringJewelServo.getPosition() == downPos) {
+            myPlacement = isLeft();
         }
 
         while (opModeIsActive()) {
-            if (redLeft) {
-                turn(rightPosition);
+            if (team == alliance.RED) {
+                red();
             } else {
-                turn(leftPosition);
+                blue();
             }
-            telemetry.update();
         }
     }
 
-    public boolean isLeft() {
+    public placement isLeft() {
         telemetry.addLine("Random");
 
         telemetry.addData("Red:", colorSensorL.red());
@@ -72,25 +64,55 @@ public class NewJewel extends LinearOpMode {
 
         telemetry.update();
 
+        while (colorSensorL.red() == 0 && colorSensorL.blue() == 0) {
+            downPos += increment;
+            lower();
+
+            sleep(100);
+        }
+
         if (colorSensorL.red() > colorSensorL.blue()) {
             telemetry.addLine("See Red");
 
-            return true;
+            return placement.LEFT;
         } else {
             telemetry.addLine("See Blue");
 
-            return false;
+            return placement.RIGHT;
         }
     }
 
     public void lower() {
-        loweringJewelServo.setPosition(loweredPosition);
+        loweringJewelServo.setPosition(downPos);
     }
 
     public void turn(double position) {
         turningJewelServo.setPosition(position);
     }
 
+    public void red() {
+        if (isLeft() == placement.LEFT) {
+            turn(RIGHT_POS);
+        } else {
+            turn(LEFT_POS);
+        }
+    }
+
+    public void blue() {
+        if (isLeft() == placement.LEFT) {
+            turn(LEFT_POS);
+        } else {
+            turn(RIGHT_POS);
+        }
+    }
+
+    public enum alliance {
+        RED, BLUE;
+    }
+
+    public enum placement {
+        LEFT, RIGHT, NONE;
+    }
 }
 
 /**

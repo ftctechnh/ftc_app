@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -20,44 +21,43 @@ public class SkipperTeleop extends LinearOpMode {
 
 
 
-    Servo rightTop;
     Servo leftTop;
-    Servo jewelservo;
+    Servo rightTop;
     Servo rightBottom;
     Servo leftBottom;
 
     //static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   75;     // period of each cycle
-    static final double DOWN_POS_SHOULDER     =  0.4;     // Minimum rotational position
-    static final double UP_POS_SHOULDER     =  0.7;
+    static final int    CYCLE_MS    =   75;
 
-    static final double OPEN_POS_ARM =  0.80;
-    static final double CLOSE_POS_ARM =  0.40 ;
+    static final double OPEN_BOTTOM_RIGHT =  0.75;
+    static final double OPEN_BOTTOM_LEFT = 0.1;
+    static final double CLOSE_BOTTOM_RIGHT     =  0.6;
+    static final double CLOSE_BOTTOM_LEFT     =  0.4;
 
-    static final double OPEN_BOTTOM_CLAW = 0.0;
-    static final double CLOSE_BOTTOM_CLAW = 0.53;
-
+    static final double CLOSE_TOP_LEFT = 0.38;
+    static final double CLOSE_TOP_RIGHT = 0.62;
+    static final double OPEN_TOP_LEFT     =  0.95;
+    static final double OPEN_TOP_RIGHT     =  0.05;
 
     // Define class members
     double strafepower = 1;
-    boolean upShoulder;
-    boolean upArm;
 
     //Starting claw positions
-//    double  topServoPosition = (UP_POS_SHOULDER);
-//    double  tServoPosition = (OPEN_POS_ARM);
+    double rightTopPos = OPEN_TOP_RIGHT;
+    double leftTopPos =  OPEN_TOP_LEFT;
+    double rightBottomPos = OPEN_BOTTOM_RIGHT;
+    double leftBottomPos = OPEN_BOTTOM_LEFT;
+
+
     controllerPos previousDrive = controllerPos.ZERO;
+
 
     @Override
     public void runOpMode() {
-        rightTop = hardwareMap.get(Servo.class, "right arm servo");
-        leftTop = hardwareMap.get(Servo.class, "left arm servo");
-
-        jewelservo = hardwareMap.get(Servo.class, "lowering servo");
-
+        rightTop = hardwareMap.get(Servo.class, "right top claw");
+        leftTop = hardwareMap.get(Servo.class, "left top claw");
         leftBottom = hardwareMap.get(Servo.class, "left bottom claw");
         rightBottom = hardwareMap.get(Servo.class, "right bottom claw");
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -83,62 +83,10 @@ public class SkipperTeleop extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-        // run until the end of the match (driver presses STOP)
-        boolean abuttonchanged = true;
-        boolean bbuttonchanged = true;
-        double sservopos = UP_POS_SHOULDER;
-        double aservopos = CLOSE_POS_ARM;
-
-        boolean rightBump = false;
-        boolean leftBump = false;
-
 
         while (opModeIsActive()) {
 
-            telemetry.addData("Right Top: ", rightTop.getPosition());
-            telemetry.addData("Left Top: ", leftTop.getPosition());
-            telemetry.addData("Right Bottom: ", rightBottom.getPosition());
-            telemetry.addData("Left Bottom: ", leftBottom.getPosition());
-
-            if(gamepad2.right_bumper) {
-                if (!rightBump) {
-                    rightBump = true;
-                } else {
-                    rightBump = false;
-                }
-            }
-
-            if (gamepad2.left_bumper) {
-                if (!leftBump) {
-                    leftBump = true;
-                } else {
-                    leftBump = false;
-                }
-            }
-
-            if (rightBump) {
-                rightTop.setPosition(OPEN_POS_ARM);
-                leftTop.setPosition(OPEN_POS_ARM);
-
-                telemetry.addLine("Openning Top");
-            } else {
-                rightTop.setPosition(CLOSE_POS_ARM);
-                leftTop.setPosition(CLOSE_POS_ARM);
-
-                telemetry.addLine("Closing Top");
-            }
-
-            if (leftBump) {
-                rightBottom.setPosition(OPEN_BOTTOM_CLAW);
-                leftBottom.setPosition(OPEN_BOTTOM_CLAW);
-
-                telemetry.addLine("Openning Bottom");
-            } else {
-                rightBottom.setPosition(CLOSE_BOTTOM_CLAW);
-                leftBottom.setPosition(CLOSE_BOTTOM_CLAW);
-
-                telemetry.addLine("Closing Bottom");
-            }
+            moveClaws();
 
             telemetry.update();
 
@@ -152,6 +100,37 @@ public class SkipperTeleop extends LinearOpMode {
     public enum controllerPos {
         STRAFE_RIGHT, STRAFE_LEFT, DRIVE_FOWARD, DRIVE_BACK, TURN_RIGHT, TURN_LEFT, ZERO;
     }
+    public void moveClaws() {
+        if(gamepad2.y) {
+            //Open top claws
+            rightTop.setPosition(OPEN_TOP_RIGHT);
+            leftTop.setPosition(OPEN_TOP_LEFT);
+        } else if(gamepad2.a) {
+            //Close top claws
+            rightTop.setPosition(CLOSE_TOP_RIGHT);
+            leftTop.setPosition(CLOSE_TOP_LEFT);
+        } else if(gamepad2.x) {
+            //open top left
+            leftTop.setPosition(OPEN_TOP_LEFT);
+        } else if(gamepad2.b) {
+            //open top right
+            rightTop.setPosition(OPEN_TOP_RIGHT);
+        } else if (gamepad2.dpad_up) {
+            //open bottom claw
+            rightBottom.setPosition(OPEN_BOTTOM_RIGHT);
+            leftBottom.setPosition(OPEN_BOTTOM_LEFT);
+        } else if (gamepad2.dpad_down) {
+            //close bottom claws
+            rightBottom.setPosition(CLOSE_BOTTOM_RIGHT);
+            leftBottom.setPosition(CLOSE_BOTTOM_LEFT);
+        } else if(gamepad2.dpad_left) {
+            //open bottom left
+            leftBottom.setPosition(OPEN_BOTTOM_LEFT);
+        } else if(gamepad2.dpad_right) {
+            //open bottom right
+            rightBottom.setPosition(OPEN_BOTTOM_RIGHT);
+        }
+    }
     //DRIVING CONTROL
     public void moveRobot() {
         double drive = gamepad1.left_stick_y;
@@ -162,10 +141,10 @@ public class SkipperTeleop extends LinearOpMode {
         } else if(drive < -0.3 && (previousDrive == controllerPos.DRIVE_BACK || previousDrive == controllerPos.ZERO)) {
             previousDrive = controllerPos.DRIVE_BACK;
             Drive(drive);
-        } else if(gamepad1.right_bumper && (previousDrive == controllerPos.STRAFE_RIGHT || previousDrive == controllerPos.ZERO)) {
+        } else if(gamepad1.dpad_right && (previousDrive == controllerPos.STRAFE_RIGHT || previousDrive == controllerPos.ZERO)) {
             previousDrive = controllerPos.STRAFE_RIGHT;
             Strafe(1);
-        } else if(gamepad1.left_bumper && (previousDrive == controllerPos.STRAFE_LEFT || previousDrive == controllerPos.ZERO)) {
+        } else if(gamepad1.dpad_left && (previousDrive == controllerPos.STRAFE_LEFT || previousDrive == controllerPos.ZERO)) {
             previousDrive = controllerPos.STRAFE_LEFT;
             Strafe(-1);
         }  else if(turn > 0.3 &&(previousDrive == controllerPos.TURN_RIGHT || previousDrive == controllerPos.ZERO)){
@@ -181,17 +160,17 @@ public class SkipperTeleop extends LinearOpMode {
             FrontRightDrive.setPower(0);
             BackRightDrive.setPower(0);
         }
-    }
 
+    }
     public enum clawPos {
         OPEN, CLOSE;
     }
     //LIFT MOTOR CONTROL
     public void moveLift() {
         double LiftPower;
-        if(gamepad2.left_stick_y > .3) {
+        if(gamepad2.left_bumper) {
             LiftPower = 0.5;
-        } else if (gamepad2.left_stick_y < -.3) {
+        } else if (gamepad2.right_bumper) {
             LiftPower = -0.5;
         } else {
             LiftPower = 0;
@@ -255,15 +234,6 @@ public class SkipperTeleop extends LinearOpMode {
         BackRightDrive.setPower(Rpower);
     }
 
-    public void grabBlock() {
-        rightTop.setPosition(DOWN_POS_SHOULDER);
-        leftTop.setPosition(OPEN_POS_ARM);
-    }
-
-    public void releaseBlock() {
-        rightTop.setPosition(UP_POS_SHOULDER);
-        leftTop.setPosition(CLOSE_POS_ARM);
-    }
 
     //KEEPS MOTORS FROM STALLING
     public double readjustMotorPower(double motorPower) {
@@ -275,3 +245,9 @@ public class SkipperTeleop extends LinearOpMode {
     }
 
 }
+
+
+
+
+
+
