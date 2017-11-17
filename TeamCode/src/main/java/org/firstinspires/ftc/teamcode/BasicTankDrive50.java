@@ -48,9 +48,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Tank Drive X", group="Linear Opmode")
+@TeleOp(name="Demo Tank Drive", group="Linear Opmode")
 //@Disabled
-public class BasicTankDrive extends LinearOpMode {
+public class BasicTankDrive50 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -84,6 +84,9 @@ public class BasicTankDrive extends LinearOpMode {
             double leftPower;
             double rightPower;
 
+            //Variable to Store Whether at 50 or 100
+            double speed = .5;
+
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
@@ -96,8 +99,28 @@ public class BasicTankDrive extends LinearOpMode {
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            leftPower  = -gamepad1.left_stick_y;
-            rightPower = -gamepad1.right_stick_y;
+            //leftPower  = -gamepad1.left_stick_y;
+            //rightPower = -gamepad1.right_stick_y;
+
+            if(gamepad1.dpad_up==true)
+                speed+=.1;
+            if(gamepad1.dpad_down==true)
+                speed-=.1;
+
+
+
+            if (gamepad1.left_stick_y<0)//Up
+                leftPower= speed;
+            else if (gamepad1.left_stick_y>0)//Down
+                leftPower= -speed;
+            else
+                leftPower=0;
+            if(gamepad1.right_stick_y<0)//Up
+                rightPower= speed;
+            else if (gamepad1.right_stick_y>0)//Down
+                rightPower= -speed;
+            else
+                rightPower=0;
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
