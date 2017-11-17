@@ -45,13 +45,13 @@ public class Robot9853 extends Robot {
         lift = getHardwareMap().dcMotor.get("Lift");
         jewelDisplacer = JewelDisplacer.build(this);
 
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        jewelDisplacer.raise();
+        glyphGripper.close();
     }
 
     @Override
     public void start() {
-        jewelDisplacer.raise();
-        glyphGripper.close();
+        glyphGripper.open();
     }
 
     public void driveWithControls(Gamepad gp) {

@@ -55,7 +55,7 @@ public abstract class AutonomousTemplate<R extends Robot> extends LinearOpMode {
         } catch (StoppedException | InterruptedException err) {
             // Do nothing
         } catch (Exception err) {
-            RobotErrors.reportGlobalError(this.getClass().getSimpleName(), err, "Encountered error while running opmode");
+            RobotErrors.reportGlobalError(this.getClass().getSimpleName(),"Encountered error while running opmode:" + err.getMessage());
         } finally {
             robot.stop();
             stop();

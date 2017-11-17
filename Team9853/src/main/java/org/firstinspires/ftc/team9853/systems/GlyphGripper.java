@@ -16,7 +16,7 @@ public class GlyphGripper {
     private static final int LEFT_INDEX = 1;
     private static final double[] CLOSED_POSITIONS = {1, 0};
     private static final double[] OPEN_POSITIONS = {0.4, 0.6};
-    private static final double[] GRIP_POSITIONS = {0.5, 0.5};
+    private static final double[] GRIP_POSITIONS = {0.55, 0.45};
 
     private Servo leftServo;
     private Servo rightServo;

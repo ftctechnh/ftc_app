@@ -2,6 +2,7 @@ package org.firstinspires.ftc.team9853.systems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.robot.Robot;
@@ -26,7 +27,6 @@ public class JewelDisplacer {
     private final ColorSensor jewelColorSensor;
     private final RobotLogger logger;
 
-    private boolean isArmUp;
     private boolean isShifting;
 
     /**
@@ -78,10 +78,10 @@ public class JewelDisplacer {
         this.jewelArmServo = jewelArmServo;
         this.rackAndPinion = rackAndPinion;
         this.jewelColorSensor = jewelColorSensor;
+        jewelColorSensor.enableLed(true);
+        logger.debug(Integer.toHexString(jewelColorSensor.getI2cAddress().get8Bit()));
 
         this.logger = logger;
-
-        this.isArmUp = Math.abs(jewelArmServo.getPosition() - ARM_UP_POSITION) <= 1e-10;
     }
 
     /**
@@ -90,10 +90,7 @@ public class JewelDisplacer {
     public void raise() {
         logger.debug("Raising Jewel Arm");
 
-        if (! isArmUp) {
-            jewelArmServo.setPosition(ARM_UP_POSITION);
-            isArmUp = true;
-        }
+        jewelArmServo.setPosition(ARM_UP_POSITION);
     }
 
     /**
@@ -102,10 +99,7 @@ public class JewelDisplacer {
     public void drop() {
         logger.debug("Dropping Jewel Arm");
 
-        if (isArmUp) {
-            jewelArmServo.setPosition(ARM_DOWN_POSITION);
-            isArmUp = false;
-        }
+        jewelArmServo.setPosition(ARM_DOWN_POSITION);
     }
 
     /**

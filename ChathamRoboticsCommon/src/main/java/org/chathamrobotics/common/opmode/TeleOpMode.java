@@ -43,12 +43,12 @@ public abstract class TeleOpMode<R extends Robot> extends OpMode {
     @Override
     public void start() {
         super.start();
-        robot.start();
+        if (robot != null) robot.start();
     }
 
     @Override
     public void stop() {
         super.stop();
-        robot.stop();
+        if (robot != null) robot.stop();
     }
 }
