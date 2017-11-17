@@ -204,6 +204,14 @@ public class HolonomicDriver implements Driver {
         backRight.setPower(calcMotorValue(false, false, direction, magnitude, rotation));
     }
 
+    /**
+     * Rotates the robot
+     * @param rotationPower the power to set the motors to
+     */
+    public void rotate(double rotationPower) {
+        setDrivePower(0 , 0, rotationPower);
+    }
+
     private double calcMotorValue(boolean isFront, boolean isLeft, double direction, double magnitude, double rotation) {
         return Range.clip(
                 (isFront ? 1 : -1) * ( // reverse motors in back

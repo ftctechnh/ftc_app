@@ -18,4 +18,10 @@ public interface Driver {
      * Stops the driving system
      */
     void stop();
+
+    /**
+     * Rotates the robot
+     * @param power the power to rotate by
+     */
+    void rotate(double power);
 }

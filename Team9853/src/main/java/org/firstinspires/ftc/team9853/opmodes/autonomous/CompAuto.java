@@ -5,6 +5,7 @@ import org.chathamrobotics.common.opmode.AutonomousTemplate;
 import org.chathamrobotics.common.opmode.exceptions.StoppedException;
 import org.chathamrobotics.common.robot.RobotFace;
 import org.chathamrobotics.common.utils.RGBAColor;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.team9853.Robot9853;
 
 /**
@@ -57,6 +58,11 @@ public class CompAuto extends AutonomousTemplate<Robot9853> {
         Thread.sleep(1000/4);
         robot.driver.stop();
 
-        robot.log.debug(result);
+        robot.jewelDisplacer.raise();
+        robot.gyroManager.rotate(90, robot.driver);
+        robot.driver.setDrivePower(0 , AngleUnit.DEGREES, 1, 0);
+
+        Thread.sleep(1000);
+        robot.driver.stop();
     }
 }

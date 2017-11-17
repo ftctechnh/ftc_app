@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.chathamrobotics.common.Controller;
 import org.chathamrobotics.common.robot.Robot;
+import org.chathamrobotics.common.systems.GyroManager;
 import org.chathamrobotics.common.systems.HolonomicDriver;
 import org.chathamrobotics.common.robot.RobotFace;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -29,6 +30,7 @@ public class Robot9853 extends Robot {
     public GlyphGripper glyphGripper;
     public DcMotor lift;
     public JewelDisplacer jewelDisplacer;
+    public GyroManager gyroManager;
 
     public static Robot9853 build(OpMode opMode) {
         return new Robot9853(opMode.hardwareMap, opMode.telemetry);
@@ -44,6 +46,7 @@ public class Robot9853 extends Robot {
         glyphGripper = GlyphGripper.build(this);
         lift = getHardwareMap().dcMotor.get("Lift");
         jewelDisplacer = JewelDisplacer.build(this);
+        gyroManager = new GyroManager(getHardwareMap().gyroSensor.get("Gyro"));
 
         jewelDisplacer.raise();
         glyphGripper.close();
