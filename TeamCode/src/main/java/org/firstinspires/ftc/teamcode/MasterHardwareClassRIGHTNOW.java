@@ -36,7 +36,7 @@ public class MasterHardwareClassRIGHTNOW {
     static double clawClose = .5;
     static double clawOpen = -.5;
     static double clawStill = 0;
-    static double xPosUp = 0;
+    static double xPosUp = 1;
     static double xPosDown = .5;
 
     /* local OpMode members. */
@@ -81,5 +81,8 @@ public class MasterHardwareClassRIGHTNOW {
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        gemServo = hwMap.get(Servo.class, "gemservo");
+
     }
 }

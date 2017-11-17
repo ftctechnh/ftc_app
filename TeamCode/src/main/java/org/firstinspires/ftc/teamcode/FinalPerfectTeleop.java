@@ -95,6 +95,14 @@ MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
             }
             /*These values are used for the drive*/
 
+            if (gamepad1.a){
+                robot.gemServo.setPosition(.5);
+            }
+
+            if (gamepad1.b){
+                robot.gemServo.setPosition(0);
+            }
+
             double frontLeft;
             double frontRight;
             double backLeft;

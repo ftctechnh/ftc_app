@@ -130,43 +130,43 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
 
             robot.gemServo.setPosition(robot.xPosDown);
             // send the info back to driver station using telemetry function.
-            telemetry.addData("RedR  ", robot.sensorColorRight.red());
-            // change the background color to match the color detected by the RGB sensor.
-            // pass a reference to the hue, saturation, and value array as an argument
-            // to the HSVToColor method.
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-                }
-            });
+//            telemetry.addData("RedR  ", robot.sensorColorRight.red());
+//            // change the background color to match the color detected by the RGB sensor.
+//            // pass a reference to the hue, saturation, and value array as an argument
+//            // to the HSVToColor method.
+//            relativeLayout.post(new Runnable() {
+//                public void run() {
+//                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+//                }
+//            });
+//
+//            telemetry.update();
+//
+//            /*xPos  =  gamepad1.right_stick_x;
+//            robot.gemServo.setPosition(xPos);*/
+//            // send the info back to driver station using telemetry function.
+//            telemetry.addData("RedL  ", robot.sensorColorRight.red());
+//
+//            // change the background color to match the color detected by the RGB sensor.
+//            // pass a reference to the hue, saturation, and value array as an argument
+//            // to the HSVToColor method.
+//            relativeLayout.post(new Runnable() {
+//                public void run() {
+//                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
+//                }
+//            });
+//            relativeLayout.post(new Runnable() {
+//                public void run() {
+//                    relativeLayout.setBackgroundColor(Color.WHITE);
+//                }
+//            });
 
-            telemetry.update();
-
-            /*xPos  =  gamepad1.right_stick_x;
-            robot.gemServo.setPosition(xPos);*/
-            // send the info back to driver station using telemetry function.
-            telemetry.addData("RedL  ", robot.sensorColorRight.red());
-
-            // change the background color to match the color detected by the RGB sensor.
-            // pass a reference to the hue, saturation, and value array as an argument
-            // to the HSVToColor method.
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-                }
-            });
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.WHITE);
-                }
-            });
-
+            findColor();
             telemetry.addData("1 imu heading", lastAngles.firstAngle);
             telemetry.addData("2 global heading", globalAngle);
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
-            findColor();
 
         }
     }
@@ -364,8 +364,10 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
         if ((robot.sensorColorRight.red()) < robot.sensorColorRight.blue())
         {
             rotate(90,.5);
+            wheelsOff();
         }
         else
             rotate(-90,.5);
+            wheelsOff();
     }
 }
