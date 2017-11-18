@@ -123,12 +123,12 @@ public class Blue2Auto extends LinearOpMode {
             Bitmap loadedImage = BitmapFactory.decodeByteArray(pixelArray, 0, pixelArray.length, opts);
 
             telemetry.addData("Success! Middle pixel color: ", loadedImage.getPixel(loadedImage.getWidth(), loadedImage.getHeight()));
-            telemetry.update();
+            //telemetry.update();
 
             return loadedImage;
         } catch (Exception e) {
             telemetry.addData("Error creating CloseableFrame: ", e);
-            telemetry.update();
+            //telemetry.update();
         }
         return null;
     }
