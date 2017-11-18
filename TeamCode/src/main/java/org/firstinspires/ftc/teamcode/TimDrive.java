@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Enumeration;
 
+import android.media.MediaPlayer;
+
 //@Disabled
 @TeleOp(name="TimDrive", group="Pushbot")
 public class TimDrive extends LinearOpMode {
@@ -172,7 +174,7 @@ public class TimDrive extends LinearOpMode {
     }
 
     public void updateClaw() {
-        if (gamepad2.y && timings.get("claw").needsUpdate()) {
+        if (gamepad2.a && timings.get("claw").needsUpdate()) {
             timings.get("claw").markUpdated();
 
             if (settings.get("claw") == Toggle.Inactive) {
@@ -221,6 +223,11 @@ public class TimDrive extends LinearOpMode {
         resetEncoders();
         resetSettings();
     }
+
+    /**public void playKazoo() {
+        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.combo);
+        mp.start();
+    }**/
 
     @Override
     public void runOpMode() {
