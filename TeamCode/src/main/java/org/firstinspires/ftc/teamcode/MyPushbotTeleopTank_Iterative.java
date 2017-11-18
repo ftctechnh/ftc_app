@@ -57,10 +57,14 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class MyPushbotTeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
-    HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    MyHardwarePushbot robot       = new MyHardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    int             target = 0;                          // lift motor target
+    int             maxlift = 7100;                     // maxiumum lift height
+    int             minlift = 0;                         // minimum lift height
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -73,7 +77,10 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         robot.init(hardwareMap);
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // Send telemetry message to signify robot waiting
         telemetry.addData("Say", "Hello Driver");
     }
@@ -110,9 +117,9 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
-            clawOffset = 0;
+            clawOffset = 0;                     // open claw
           //  clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
+        else if (gamepad1.left_bumper)          // close claw
             clawOffset = -0.30;
           //  clawOffset -= CLAW_SPEED;
 
@@ -124,17 +131,32 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
 
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
-            robot.leftArm.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
-            robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-        else
-            robot.leftArm.setPower(0.0);
+        // 556 motor rotations = 1 inch of lift
+        if (gamepad1.y  && (robot.lift.getCurrentPosition() < maxlift)) {
+            target = robot.lift.getCurrentPosition() + 3614;
+            robot.lift.setTargetPosition(target);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.45);
+            while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
+                }
+            robot.lift.setPower(0.0);
+        }
+        else if (gamepad1.a && (robot.lift.getCurrentPosition() > minlift)) {
+            target = robot.lift.getCurrentPosition() - 3614;
+            robot.lift.setTargetPosition(target);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.45);
+            while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
+           }
+            robot.lift.setPower(0.0);
+        }
+
 
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("lift",  "Running to:%7d", robot.lift.getCurrentPosition());
     }
 
     /*
