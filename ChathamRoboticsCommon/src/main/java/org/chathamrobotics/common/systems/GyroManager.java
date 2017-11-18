@@ -35,7 +35,7 @@ public class GyroManager {
     }
 
     public void rotate(double targetHeading, Driver driver) {
-        targetHeading %= 360;
+        targetHeading = (targetHeading + initialHeading) % 360;
         double currentHeading = gyro.getHeading();
 
         double diff = getAngleDiff(currentHeading, targetHeading);

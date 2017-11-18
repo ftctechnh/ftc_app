@@ -47,14 +47,19 @@ public class Robot9853 extends Robot {
         lift = getHardwareMap().dcMotor.get("Lift");
         jewelDisplacer = JewelDisplacer.build(this);
         gyroManager = new GyroManager(getHardwareMap().gyroSensor.get("Gyro"));
+        gyroManager.init();
 
         jewelDisplacer.raise();
         glyphGripper.close();
     }
 
     @Override
-    public void start() {
+    public void start(){
         glyphGripper.open();
+
+
+        try {gyroManager.start();}
+        catch (InterruptedException e) {return;}
     }
 
     public void driveWithControls(Gamepad gp) {

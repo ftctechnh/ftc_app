@@ -13,6 +13,8 @@ import org.firstinspires.ftc.team9853.Robot9853;
  */
 
 public class CompAuto extends AutonomousTemplate<Robot9853> {
+    protected boolean isHit;
+
     public CompAuto(boolean isRedTeam) {
         super(isRedTeam);
     }
@@ -25,7 +27,6 @@ public class CompAuto extends AutonomousTemplate<Robot9853> {
 
     @Override
     public void run() throws InterruptedException, StoppedException {
-        String result = "";
 
         robot.start();
         robot.driver.setFront(RobotFace.BACK);
@@ -39,30 +40,43 @@ public class CompAuto extends AutonomousTemplate<Robot9853> {
         robot.log.debug("Blue", color.blue());
         robot.log.debug("Green", color.green());
 
-        if (color.red() > color.blue()) result = "Red Left, Blue Right";
-        else if (color.blue() > color.red()) result = "Blue Left, Red Right";
-        else result = "Juul location unknown";
-
-//        if (color.red() > color.blue() && isRedTeam()) {
-//            robot.driver.setDrivePower(0, 0, -1);
-//        } else {
-//            robot.driver.setDrivePower(0, 0, 1);
-//        }
-
-        if ((color.red() > color.blue() && isRedTeam()) || (color.blue() > color.red() && ! isRedTeam()))
-            robot.driver.setDrivePower(0, 0, -1);
+        if (isTeamColor(color))
+            hitJewel(-1);
+        else if (color.red() == color.blue()) return;
         else
-            robot.driver.setDrivePower(0, 0, 1);
+            hitJewel(1);
+    }
+
+    private void hitJewel(double power) throws InterruptedException, StoppedException {
+        robot.driver.setDrivePower(0, 0, power);
         debug();
 
         Thread.sleep(1000/4);
         robot.driver.stop();
 
         robot.jewelDisplacer.raise();
-        robot.gyroManager.rotate(90, robot.driver);
-        robot.driver.setDrivePower(0 , AngleUnit.DEGREES, 1, 0);
-
         Thread.sleep(1000);
+
+        robot.driver.setDrivePower(0, 0, -power);
+        debug();
+
+        Thread.sleep(1000/4);
         robot.driver.stop();
+
+        isHit = true;
+    }
+
+    private boolean isRed(RGBAColor color) {
+        return color.red() > color.blue();
+    }
+
+    private boolean isBlue(RGBAColor color) {
+        return color.blue() > color.red();
+    }
+
+    private boolean isTeamColor(RGBAColor color) {
+        if (isRedTeam()) return isRed(color);
+
+        return isBlue(color);
     }
 }
