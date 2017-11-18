@@ -19,6 +19,7 @@ public class Redtestauto extends LinearOpMode {
         telemetry.addData("skatin fast,", "eatin' ass");
         encodeStraight(30, -0.3);
         encodeLat(30, 0.3);
+        encoderot(0.5, 100);
         encodeStraight(100, 0.5);
     }
 
@@ -89,6 +90,7 @@ public class Redtestauto extends LinearOpMode {
             robot.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
     }
 
     public void encodeLat(double distance, double speed) {
