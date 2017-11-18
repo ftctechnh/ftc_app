@@ -31,16 +31,22 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Jewel R2", group ="Jewel")
-public class JewelCode extends LinearOpMode {
+@Autonomous(name="2 Red Auto ", group ="Jewel")
+public class Red2Auto extends LinearOpMode {
 
     public ColorSensor colorSensorL;
     public Servo loweringJewelServo;
     public Servo turningJewelServo;
 
-    public double downPos = 1;
+    private DcMotor FrontLeftDrive = null;
+    private DcMotor FrontRightDrive = null;
+    private DcMotor BackLeftDrive = null;
+    private DcMotor BackRightDrive = null;
+
+    public double downPos = .9;
     public final double UP_POS = 0.3;
 
     public final double LEFT_POS = .30;
@@ -50,21 +56,37 @@ public class JewelCode extends LinearOpMode {
 
     public double increment = .07;
 
-    public placement myPlacement;
-
-    public alliance team;
-
-
     @Override public void runOpMode() {
         colorSensorL = hardwareMap.get(ColorSensor.class, "color sensor left");
         loweringJewelServo = hardwareMap.get(Servo.class, "lowering servo" );
         turningJewelServo = hardwareMap.get(Servo.class, "turning servo");
+
+        FrontLeftDrive = hardwareMap.get(DcMotor.class, "front_left");
+        FrontRightDrive = hardwareMap.get(DcMotor.class, "front_right");
+        BackLeftDrive = hardwareMap.get(DcMotor.class, "back_left");
+        BackRightDrive = hardwareMap.get(DcMotor.class, "back_right");
+
+        FrontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        FrontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        FrontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
 
         loweringJewelServo.setPosition(0);
         turningJewelServo.setPosition(.5);
+
+        FrontLeftDrive.setPower(0);
+        BackLeftDrive.setPower(0);
+        BackRightDrive.setPower(0);
+        FrontRightDrive.setPower(0);
+
         waitForStart();
 
         lower();
@@ -73,6 +95,23 @@ public class JewelCode extends LinearOpMode {
             telemetry.addData("Turing Servo:", turningJewelServo.getPosition());
             sleep(1000);
             red();
+
+            sleep(1500);
+
+            FrontLeftDrive.setPower(-.55);
+            BackLeftDrive.setPower(-.55);
+            BackRightDrive.setPower(-.5);
+            FrontRightDrive.setPower(-.5);
+
+            sleep(1000);
+
+            FrontLeftDrive.setPower(0);
+            BackLeftDrive.setPower(0);
+            BackRightDrive.setPower(0);
+            FrontRightDrive.setPower(0);
+
+            sleep(50000);
+
         }
         telemetry.addData("Running", "False");
         telemetry.update();
@@ -85,13 +124,13 @@ public class JewelCode extends LinearOpMode {
 
         telemetry.update();
 
-       if (colorSensorL.red() > colorSensorL.blue()) {
+        if (colorSensorL.red() > colorSensorL.blue()) {
             telemetry.addLine("See Red");
-           telemetry.update();
+            telemetry.update();
             return true;
         } else {
             telemetry.addLine("See Blue");
-           telemetry.update();
+            telemetry.update();
             return false;
         }
     }
@@ -115,45 +154,52 @@ public class JewelCode extends LinearOpMode {
             telemetry.addLine("Moving Right");
 
             sleep(1000);
-            loweringJewelServo.setPosition(0);
+
+            loweringJewelServo.setPosition(.4);
             turningJewelServo.setPosition(.5);
+            loweringJewelServo.setPosition(0);
         }
         else if (colorSensorL.red() < colorSensorL.blue()){
             turningJewelServo.setPosition(LEFT_POS);
             telemetry.addLine("Hitting Left");
 
             sleep(1000);
-            loweringJewelServo.setPosition(0);
+
+            loweringJewelServo.setPosition(.4);
             turningJewelServo.setPosition(.5);
+            loweringJewelServo.setPosition(0);
+        } else {
+
+            turningJewelServo.setPosition(.46);
+            loweringJewelServo.setPosition(.95);
+
+            sleep(1000);
+
+            if (colorSensorL.red() < colorSensorL.blue()) {
+                turningJewelServo.setPosition(RIGHT_POS);
+                telemetry.addLine("Moving Right");
+
+                sleep(1000);
+                loweringJewelServo.setPosition(0);
+                turningJewelServo.setPosition(.5);
+            }
+            else if (colorSensorL.red() > colorSensorL.blue()){
+                turningJewelServo.setPosition(LEFT_POS);
+                telemetry.addLine("Hitting Left");
+
+                sleep(1000);
+                loweringJewelServo.setPosition(0);
+                turningJewelServo.setPosition(.5);
+            }
+            else {
+                loweringJewelServo.setPosition(.4);
+                turningJewelServo.setPosition(.5);
+                loweringJewelServo.setPosition(0);
+            }
         }
-//        else {
-//            sleep(1000);
-//            if (colorSensorL.red() > colorSensorL.blue()) {
-//                turningJewelServo.setPosition(RIGHT_POS);
-//                telemetry.addLine("Moving Right");
-//            }
-//            else if (colorSensorL.red() < colorSensorL.blue()) {
-//                turningJewelServo.setPosition(LEFT_POS);
-//                telemetry.addLine("Hitting Left");
-//            }
-//        }
+
         telemetry.addData("Servo Pos", turningJewelServo.getPosition());
         telemetry.update();
     }
 
-    public void blue() {
-        if (isLeft()) {
-            turningJewelServo.setPosition(RIGHT_POS);
-        } else {
-            turningJewelServo.setPosition(LEFT_POS);
-        }
-    }
-
-    public enum alliance {
-        RED, BLUE;
-    }
-
-    public enum placement {
-        LEFT, RIGHT, NONE;
-    }
 }

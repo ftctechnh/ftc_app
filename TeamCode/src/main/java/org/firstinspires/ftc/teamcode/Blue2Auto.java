@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="1 Red Auto ", group ="Jewel")
-public class Red1Auto extends LinearOpMode {
+@Autonomous(name="2 Blue Auto ", group ="Jewel")
+public class Blue2Auto extends LinearOpMode {
 
     public ColorSensor colorSensorL;
     public Servo loweringJewelServo;
@@ -99,13 +99,13 @@ public class Red1Auto extends LinearOpMode {
         while(opModeIsActive()) {
             telemetry.addData("Turing Servo:", turningJewelServo.getPosition());
             sleep(1000);
-            red();
+            blue();
 
-            sleep(1000);
-            FrontLeftDrive.setPower(-.5);
-            BackLeftDrive.setPower(-.5);
-            BackRightDrive.setPower(-.55);
-            FrontRightDrive.setPower(-.55);
+            sleep(1500);
+            FrontLeftDrive.setPower(.55);
+            BackLeftDrive.setPower(.55);
+            BackRightDrive.setPower(.5);
+            FrontRightDrive.setPower(.5);
 
             sleep(1000);
 
@@ -113,12 +113,10 @@ public class Red1Auto extends LinearOpMode {
             BackLeftDrive.setPower(0);
             BackRightDrive.setPower(0);
             FrontRightDrive.setPower(0);
-            loweringJewelServo.setPosition(0);
 
             sleep(50000);
 
         }
-
         telemetry.addData("Running", "False");
         telemetry.update();
     }
@@ -149,44 +147,36 @@ public class Red1Auto extends LinearOpMode {
     }
 
 
-    public void red() {
+
+    public void blue() {
         telemetry.addData("Red:", colorSensorL.red());
         telemetry.addData("Blue:", colorSensorL.blue());
 
         telemetry.update();
 
-        if (colorSensorL.red() > colorSensorL.blue()) {
+        if (colorSensorL.red() < colorSensorL.blue()) {
             turningJewelServo.setPosition(RIGHT_POS);
             telemetry.addLine("Moving Right");
 
-            sleep(1500);
-
+            sleep(1000);
             loweringJewelServo.setPosition(.4);
             turningJewelServo.setPosition(.5);
             loweringJewelServo.setPosition(0);
         }
-        else if (colorSensorL.red() < colorSensorL.blue()){
+        else if (colorSensorL.red() > colorSensorL.blue()){
             turningJewelServo.setPosition(LEFT_POS);
             telemetry.addLine("Hitting Left");
 
             sleep(1000);
-
             loweringJewelServo.setPosition(.4);
             turningJewelServo.setPosition(.5);
             loweringJewelServo.setPosition(0);
-        }
-//        else {
-//            loweringJewelServo.setPosition(.4);
-//            turningJewelServo.setPosition(.5);
-//            loweringJewelServo.setPosition(0);
-//        }
-        else {
+        } else {
             turningJewelServo.setPosition(.46);
             loweringJewelServo.setPosition(.95);
-
             sleep(1000);
 
-            if (colorSensorL.red() < colorSensorL.blue()) {
+            if (colorSensorL.red() > colorSensorL.blue()) {
                 turningJewelServo.setPosition(RIGHT_POS);
                 telemetry.addLine("Moving Right");
 
@@ -194,7 +184,7 @@ public class Red1Auto extends LinearOpMode {
                 loweringJewelServo.setPosition(0);
                 turningJewelServo.setPosition(.5);
             }
-            else if (colorSensorL.red() > colorSensorL.blue()){
+            else if (colorSensorL.red() < colorSensorL.blue()){
                 turningJewelServo.setPosition(LEFT_POS);
                 telemetry.addLine("Hitting Left");
 
@@ -208,10 +198,10 @@ public class Red1Auto extends LinearOpMode {
                 loweringJewelServo.setPosition(0);
             }
         }
+//
         telemetry.addData("Servo Pos", turningJewelServo.getPosition());
         telemetry.update();
     }
-
 
     public enum alliance {
         RED, BLUE;

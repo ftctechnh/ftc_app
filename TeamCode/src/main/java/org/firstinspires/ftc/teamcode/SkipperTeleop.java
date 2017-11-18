@@ -19,6 +19,8 @@ public class SkipperTeleop extends LinearOpMode {
     private DcMotor BackRightDrive = null;
     private DcMotor LiftDrive = null;
 
+    public Servo loweringJewelServo;
+
 
 
     Servo leftTop;
@@ -38,6 +40,13 @@ public class SkipperTeleop extends LinearOpMode {
     static final double CLOSE_TOP_RIGHT = 0.62;
     static final double OPEN_TOP_LEFT     =  0.95;
     static final double OPEN_TOP_RIGHT     =  0.05;
+
+    static final double SEMI_OPEN_BOTTOM_RIGHT = 0.65;
+    static final double SEMI_OPEN_BOTTOM_LEFT = 0.3;
+    static final double SEMI_OPEN_TOP_RIGHT = 0.15;
+    static final double SEMI_OPEN_TOP_LEFT = 0.48;
+
+
 
     // Define class members
     double strafepower = 1;
@@ -67,6 +76,8 @@ public class SkipperTeleop extends LinearOpMode {
         BackRightDrive = hardwareMap.get(DcMotor.class, "back_right");
         LiftDrive = hardwareMap.get(DcMotor.class, "lift");
 
+        loweringJewelServo = hardwareMap.get(Servo.class, "lowering servo" );
+
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -88,6 +99,8 @@ public class SkipperTeleop extends LinearOpMode {
 
             moveClaws();
 
+            moveJewelArm();
+
             telemetry.update();
 
             moveRobot();
@@ -100,6 +113,13 @@ public class SkipperTeleop extends LinearOpMode {
     public enum controllerPos {
         STRAFE_RIGHT, STRAFE_LEFT, DRIVE_FOWARD, DRIVE_BACK, TURN_RIGHT, TURN_LEFT, ZERO;
     }
+
+    public void moveJewelArm() {
+        if(gamepad2.right_trigger > .1) {
+            loweringJewelServo.setPosition(0);
+        }
+    }
+
     public void moveClaws() {
         if(gamepad2.a) {
             //Open top claws
@@ -112,9 +132,11 @@ public class SkipperTeleop extends LinearOpMode {
         } else if(gamepad2.x) {
             //open top left
             leftTop.setPosition(OPEN_TOP_LEFT);
+            rightTop.setPosition(SEMI_OPEN_TOP_RIGHT);
         } else if(gamepad2.b) {
             //open top right
             rightTop.setPosition(OPEN_TOP_RIGHT);
+            leftTop.setPosition(SEMI_OPEN_TOP_LEFT);
         } else if (gamepad2.dpad_down) {
             //open bottom claw2
             rightBottom.setPosition(OPEN_BOTTOM_RIGHT);
@@ -126,9 +148,11 @@ public class SkipperTeleop extends LinearOpMode {
         } else if(gamepad2.dpad_left) {
             //open bottom left
             leftBottom.setPosition(OPEN_BOTTOM_LEFT);
+            rightBottom.setPosition(SEMI_OPEN_BOTTOM_RIGHT);
         } else if(gamepad2.dpad_right) {
             //open bottom right
             rightBottom.setPosition(OPEN_BOTTOM_RIGHT);
+            leftBottom.setPosition(SEMI_OPEN_BOTTOM_LEFT);
         }
     }
     //DRIVING CONTROL
