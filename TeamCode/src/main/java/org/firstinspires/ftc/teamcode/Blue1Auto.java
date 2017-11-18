@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -128,22 +127,6 @@ public class Blue1Auto extends LinearOpMode {
         robot.BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        while (!gamepad1.a) {
-
-            if (gamepad1.right_bumper) {
-
-                Dis = Dis + 50;
-                sleep(500);
-            }
-
-            if (gamepad1.left_bumper) {
-                Dis = Dis - 50;
-                sleep(500);
-            }
-            telemetry.addData("Dis",Dis);
-            telemetry.update();
-        }
-
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                 robot.FLMotor.getCurrentPosition(),
@@ -195,7 +178,10 @@ public class Blue1Auto extends LinearOpMode {
                     double rZ = rot.thirdAngle;
                 }
 
-
+//close the claw first thing after start
+                robot.clawleft.setPosition(0);
+                robot.clawright.setPosition(0.5);
+                //actual auto start
                 robot.armleft.setPosition(0); //your mother
                 sleep(300);
                 robot.SideMotor.setPower(0.3);

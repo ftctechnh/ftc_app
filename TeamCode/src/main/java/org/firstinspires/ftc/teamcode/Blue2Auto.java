@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -129,21 +128,6 @@ public class Blue2Auto extends LinearOpMode {
         robot.BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        while (!gamepad1.a) {
-
-            if (gamepad1.right_bumper) {
-
-                Dis = Dis + 50;
-                sleep(500);
-            }
-
-            if (gamepad1.left_bumper) {
-                Dis = Dis - 50;
-                sleep(500);
-            }
-            telemetry.addData("Dis",Dis);
-            telemetry.update();
-        }
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -198,43 +182,47 @@ public class Blue2Auto extends LinearOpMode {
 
 
 
+//close the claw first thing after start
+                robot.clawleft.setPosition(0.5);
+                robot.clawright.setPosition(0);
+                robot.arm.setPower(-0.2);
+                sleep(500);
+                robot.arm.setPower(0);
+                //actual auto start
 
-
-                robot.armleft.setPosition(0);
-                sleep(300);
+            /*robot.armleft.setPosition(0.75);
                 robot.SideMotor.setPower(0.3);
-                sleep(450);
+                sleep(700); //this part of the code knocks ball off
                 robot.SideMotor.setPower(0);
-                sleep(100);
-                robot.armleft.setPosition(0.75);
+              */
                 sleep(300);
-                encoderDrive(0.5, 48, 48, 1.0);  // (Power, Distance Left, Distance Right (INCHES), timeout)
                 robot.armleft.setPosition(0);
                 sleep(1000);     // pause for servos to move
-                //encoderDrive(0.5, 48, -48, 0.3);  // (Power, Distance Left, Distance Right (INCHES), timeout)
-                encoderDrive(0.5, 48, 48, 2.0);  // (Power, Distance Left, Distance Right (INCHES), timeout)
-                encoderDrive(1, 11.7, -11.7, 1.0);
+                encoderDrive(0.5, 72, 72, 2.8);// (Power, Distance Left, Distance Right (INCHES), timeout)
+                encoderDrive(0.5, 48, -48, 1.5);  // (Power, Distance Left, Distance Right (INCHES), timeout)
+
 
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT){
-                    encoderDrive(0.5, -10, 10, 0.3);
-                    encoderDrive(1, 5, 5, 0.3);
+
+                    encoderDrive(1, -5, -5, 0.5);
                     break;
                 }
                 if (vuMark == RelicRecoveryVuMark.CENTER){
-                    encoderDrive(0.5, -10, 10, 0.3);
-                    encoderDrive(1, 5, 5, 0.3);
+
                     robot.SideMotor.setPower(1);
-                    sleep(Dis);
+                    sleep(600);
                     robot.SideMotor.setPower(0);
+                    encoderDrive(1, -5, -5, 0.5);
                     Dis = 0;
+                    break;
                 }
                 if (vuMark == RelicRecoveryVuMark.LEFT){
-                    encoderDrive(0.5, -10, 10, 0.3);
-                    encoderDrive(1, 5, 5, 0.3);
                     robot.SideMotor.setPower(1);
-                    sleep(Dis);
+                    sleep(750);
                     robot.SideMotor.setPower(0);
+                    encoderDrive(1, -5, -5, 0.5);
+                    break;
                 }
             }
             else {
