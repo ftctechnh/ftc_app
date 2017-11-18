@@ -1,11 +1,19 @@
 package org.firstinspires.ftc.teamcode.opmodes.hardware;
 
+import android.hardware.Sensor;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.SensorLib;
+import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 
 /**
  * Created by Noah on 10/27/2017.
@@ -13,10 +21,6 @@ import org.firstinspires.ftc.teamcode.libraries.AutoLib;
  */
 
 public class BotHardware {
-    //names
-    private static final String MOTOR_NAMES[] = {"fr", "br", "fl", "bl"};
-    //motors, in order of front right, back right, front left, etc.
-    DcMotorEx[] motorRay = new DcMotorEx[4];
     //enums to make everything purty
     public enum Motor {
         frontRight("fr", true),
@@ -73,6 +77,10 @@ public class BotHardware {
     //opmode pointer
     private final OpMode mode;
 
+    //IMU pointer
+    private BNO055IMU imu;
+    private IMUHeading heading;
+
     public BotHardware(OpMode mode) {
         this.mode = mode;
     }
@@ -83,6 +91,13 @@ public class BotHardware {
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
+        //init IMU
+        BNO055IMU.Parameters par = new BNO055IMU.Parameters();
+        par.mode = BNO055IMU.SensorMode.IMU;
+        par.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu = mode.hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(par);
+        heading = new IMUHeading(imu);
     }
 
     public void setLeftDrive(double power) {
@@ -134,5 +149,22 @@ public class BotHardware {
 
     public DcMotorEx[] getMotorRay() {
         return new DcMotorEx[] { Motor.frontRight.motor, Motor.backRight.motor, Motor.frontLeft.motor, Motor.backLeft.motor };
+    }
+
+    private static class IMUHeading implements HeadingSensor {
+        private final BNO055IMU imu;
+
+        IMUHeading(BNO055IMU imu){
+            this.imu = imu;
+        }
+
+        @Override
+        public float getHeading() {
+            return SensorLib.Utils.wrapAngle(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle);
+        }
+    }
+
+    public HeadingSensor getHeadingSensor() {
+        return heading;
     }
 }

@@ -30,7 +30,7 @@ import java.util.Arrays;
  * Testing file for cryptobox pillar detection using camera
  */
 
-@Autonomous(name="Posterior")
+@Autonomous(name="Posterior", group="test")
 public class PillarFinder extends VuforiaBallLib {
     private static final double SAT_MIN = 0.5;
     private static final int LUM_THRESH = 50;
@@ -45,16 +45,13 @@ public class PillarFinder extends VuforiaBallLib {
     public void init() {
         initVuforia(true);
         bot.init();
-        mSeq.add(new PilliarTurnStep(bot.getMotorRay(), 0.2f, true, 15));
+        mSeq.add(new PilliarTurnStep(bot.getMotorRay(), 0.2f, true, 15, false));
     }
 
     @Override
     public void start() {
         //hmmm
     }
-
-    private int[] ray;
-    private double scale;
 
     @Override
     public void loop() {
@@ -66,13 +63,21 @@ public class PillarFinder extends VuforiaBallLib {
         private float power;
         private boolean turnLeft;
         private int error;
+        private boolean red;
 
-        PilliarTurnStep(DcMotorEx[] motors, float power, boolean turnLeft, int error) {
+        PilliarTurnStep(DcMotorEx[] motors, float power, boolean turnLeft, int error, boolean red) {
             this.motors = motors;
             this.power = power;
             this.turnLeft = turnLeft;
             this.error = error;
+            this.red = red;
         }
+
+        //cached values
+        private int[] ray;
+        private double histScale;
+        private double rowScale;
+        private double colScale;
 
         public boolean loop() {
             ArrayList<Integer> peaks = new ArrayList<>();
@@ -82,9 +87,15 @@ public class PillarFinder extends VuforiaBallLib {
                 //first algorithm: follow tape line
                 //step 0: reduce image by downsizing it with a gaussian pyramid
                 Imgproc.pyrDown(frame, frame);
+                //twice
+                Imgproc.pyrDown(frame, frame);
                 //intermission: instanciate list
                 data = new int[255];
-                if (scale == 0) scale = 255.0 / (double) frame.cols();
+                if (histScale == 0) {
+                    histScale = (double)data.length / (double)frame.cols();
+                    rowScale = (double)data.length / (double)frame.rows();
+                    colScale = (double) frame.cols() / (double) data.length;
+                }
                 //step 1: separate pixels into six color groups: r, g, b, black, white, grey
                 //upsize aray to 32bit signed
                 frame.convertTo(frame, CvType.CV_32S);
@@ -122,7 +133,7 @@ public class PillarFinder extends VuforiaBallLib {
                             ray[i + 1] = 0;
                             ray[i + 2] = 0;
                             //increment histogram!
-                            data[(int) (((i / 3) % frame.cols()) * scale)]++;
+                            if(red) data[(int) (((i / 3) % frame.cols()) * histScale)]++;
                         }
                         //green
                         else if (lum == g) {
@@ -135,17 +146,18 @@ public class PillarFinder extends VuforiaBallLib {
                             ray[i] = 0;
                             ray[i + 1] = 0;
                             ray[i + 2] = 255;
+                            if(!red) data[(int) (((i / 3) % frame.cols()) * histScale)]++;
                         }
                     }
                 }
                 //reinsert mat
                 frame.put(0, 0, ray);
                 //draw histogram
-                final double scalar = (double) frame.cols() / (double) data.length;
-                final double dataScale = 255.0 / (double) (frame.rows());
-                final Scalar color = new Scalar(255, 0, 0);
+                final Scalar color;
+                if(red) color = new Scalar(255, 0, 0);
+                else color = new Scalar(0, 0, 255);
                 for (int i = 0; i < data.length; i++)
-                    Imgproc.rectangle(frame, new Point(scalar * i, frame.rows() - 1), new Point(scalar * i + scalar, frame.rows() - 1 - data[i] * dataScale), color);
+                    Imgproc.rectangle(frame, new Point(colScale * i, frame.rows() - 1), new Point(colScale * i + colScale, frame.rows() - 1 - data[i] * rowScale), color);
                 Imgproc.drawMarker(frame, new Point(frame.cols() / 2, frame.rows() / 2), color);
                 //count pillars
                 //generate peaks
@@ -165,11 +177,9 @@ public class PillarFinder extends VuforiaBallLib {
                 //mark peaks with column
                 Scalar green = new Scalar(0, 255, 0);
                 for (Integer i : peaks)
-                    Imgproc.rectangle(frame, new Point(i * scalar, 0), new Point(i * scalar + scalar, frame.rows()), green);
+                    Imgproc.rectangle(frame, new Point(i * colScale, 0), new Point(i * colScale + colScale, frame.rows()), green);
                 //convert back to 8 bit
                 frame.convertTo(frame, CvType.CV_8U);
-                //step 2: pyrUp!
-                Imgproc.pyrUp(frame, frame);
                 //display
                 drawFrame(frame);
             } catch (InterruptedException e) {
@@ -198,15 +208,15 @@ public class PillarFinder extends VuforiaBallLib {
 
         private void turnLeft() {
             motors[0].setVelocity(-180, AngleUnit.DEGREES);
-            motors[1].setPower(motors[0].getPower());
+            motors[1].setPower(-power);
             motors[2].setVelocity(180, AngleUnit.DEGREES);
-            motors[3].setPower(motors[0].getPower());
+            motors[3].setPower(power);
         }
         private void turnRight() {
             motors[0].setVelocity(180, AngleUnit.DEGREES);
-            motors[1].setPower(motors[0].getPower());
+            motors[1].setPower(power);
             motors[2].setVelocity(-180, AngleUnit.DEGREES);
-            motors[3].setPower(motors[0].getPower());
+            motors[3].setPower(-power);
         }
         private void stopMotors() { for(DcMotorEx motor : motors ) motor.setPower(0); }
     }

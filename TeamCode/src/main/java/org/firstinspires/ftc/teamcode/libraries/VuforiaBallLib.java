@@ -61,6 +61,7 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
     protected Vec3F[] point;
     //output bitmap
     private Bitmap bm;
+    private boolean bmChanged = false;
     //output bitmap lock
     private static final Object bmLock = new Object();
 
@@ -123,9 +124,6 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
 
         //setup view
         if(displayData) {
-            float size[] = camCal.getSize().getData();
-            bm = Bitmap.createBitmap((int)size[0], (int)size[1], Bitmap.Config.ARGB_8888);
-
             mView = (ImageView)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.OpenCVOverlay);
             mView.setAlpha(1.0f);
             mView.post(new Runnable() {
@@ -270,13 +268,26 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
 
     protected void drawFrame(Mat frame) {
         //convert to bitmap, synchronized
-        synchronized (bmLock) { Utils.matToBitmap(frame, bm); }
+        synchronized (bmLock) {
+            if(bm == null || frame.rows() != bm.getHeight() && frame.cols() != bm.getWidth()){
+                if(bm != null) bm.recycle();
+                bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                bmChanged = true;
+            }
+            Utils.matToBitmap(frame, bm);
+        }
 
         //display!
         mView.getHandler().post(new Runnable() {
             @Override
             public void run() {
-                synchronized (bmLock) { mView.invalidate(); }
+                synchronized (bmLock) {
+                    if(bmChanged) {
+                        mView.setImageBitmap(bm);
+                        bmChanged = false;
+                    }
+                    mView.invalidate();
+                }
             }
         });
     }

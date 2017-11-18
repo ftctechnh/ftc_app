@@ -495,6 +495,7 @@ public class AutoLib {
         private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
         private DcMotor[] mMotors;            // the motor steps we're guiding - assumed order is right ... left ...
         private boolean mReversed;
+        private boolean mAddAngle;
 
         public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
                              DcMotor[] motors, float power, float error, boolean stop)

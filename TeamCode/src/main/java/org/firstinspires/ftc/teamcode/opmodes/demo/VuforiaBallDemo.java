@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
  * Created by Noah on 11/9/2017.
  */
 
-@Autonomous(name="Vuforia Ball Demo", group ="Demo")
+@Autonomous(name="Vuforia Ball Demo", group ="test")
 public class VuforiaBallDemo extends VuforiaBallLib {
 
     @Override

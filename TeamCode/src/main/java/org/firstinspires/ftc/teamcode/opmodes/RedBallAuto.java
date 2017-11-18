@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 
 /**
  * Created by Noah on 11/9/2017.
  */
-@Autonomous(name="Stick Test")
+@Autonomous(name="Red Ball")
 public class RedBallAuto extends VuforiaBallLib {
     BotHardware bot = new BotHardware(this);
     AutoLib.Sequence mLeftRedSeq = new AutoLib.LinearSequence();
@@ -17,33 +18,38 @@ public class RedBallAuto extends VuforiaBallLib {
 
     VuforiaBallLib.BallColor ballDetected;
 
+    protected boolean isRed = true;
+
     @Override
     public void init() {
         bot.init();
         initVuforia(true);
 
         AutoLib.Sequence mStart = new AutoLib.LinearSequence();
-        //half lower
-        mStart.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown - 0.1, 0.5, false));
-        //drive forward
-        mStart.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0.2, 0.2, true));
         //full lower
         mStart.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
 
         AutoLib.Sequence mEnd = new AutoLib.LinearSequence();
-        //back up
-        mEnd.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.2, 0.4, true));
+        //turn left
+        mEnd.add(new AutoLib.GyroTurnStep(this, -90, bot.getHeadingSensor(), bot.getMotorRay(), 0.2f, 3.0f, true));
+        //drive backwards
+        mEnd.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), -0.2f, 1.0f, true));
+        //turn back
+        mEnd.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorRay(), 0.2f, 3.0f, true));
+        //dump block
+        mEnd.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.garyDown, 0.5, false));
+
+        float power = 0.2f;
+        if(isRed) power = -power;
 
         mLeftRedSeq.add(mStart);
-        mLeftRedSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), -0.2, 0.2, 1.0, true));
+        mLeftRedSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), -power, power, 1.0, true));
         mLeftRedSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.5, false));
-        mLeftRedSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), 0.2, -0.2, 1.0, true));
         mLeftRedSeq.add(mEnd);
 
         mLeftBlueSeq.add(mStart);
-        mLeftBlueSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), 0.2, -0.2, 1.0, true));
+        mLeftBlueSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), power, -power, 1.0, true));
         mLeftBlueSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.5, false));
-        mLeftBlueSeq.add(new AutoLib.TurnByTimeStep(bot.getMotorRay(), -0.2, 0.2, 1.0, true));
         mLeftBlueSeq.add(mEnd);
     }
 
