@@ -143,6 +143,8 @@ public class MecanumRework extends OpMode {
         robot.frDrive.setPower(voltageMultiplier[1]);
         robot.rlDrive.setPower(voltageMultiplier[2]);
         robot.rrDrive.setPower(voltageMultiplier[3]);
+
+        telemetry.addData("s er v o", robot.arm.getPosition());
     }
 
     @Override
