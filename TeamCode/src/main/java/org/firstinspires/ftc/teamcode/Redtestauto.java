@@ -19,12 +19,11 @@ public class Redtestauto extends LinearOpMode {
         telemetry.addData("skatin fast,", "eatin' ass");
         encodeStraight(3, -0.3);
         encodeLat(3, 0.3);
-        encodeStraight(1000, 0.5);
+        encodeStraight(10, 0.5);
     }
 
     public void encodeLat(double distance, double speed) {
         speed = Math.abs(speed);
-        robot.arm.setPosition(50);
         robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
