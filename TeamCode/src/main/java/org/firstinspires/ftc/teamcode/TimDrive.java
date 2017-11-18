@@ -34,8 +34,8 @@ public class TimDrive extends LinearOpMode {
     }
 
     private class TimeTuple {
-        long last;
-        int delta;
+        long last = 0;
+        int delta = 0;
 
         public TimeTuple(int timeDelta) {
             delta = timeDelta;
@@ -215,6 +215,7 @@ public class TimDrive extends LinearOpMode {
     public void initSequence() {
         robot.init(hardwareMap);
         resetEncoders();
+        resetSettings();
     }
 
     @Override
@@ -225,6 +226,18 @@ public class TimDrive extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            if (gamepad1.right_bumper) {
+                settings.set("speed-modifier", 25);
+            } else {
+                settings.set("speed-modifier", 100);
+            }
+
+            if (gamepad1.left_bumper) {
+                settings.set("lock-modifier", Toggle.Active);
+            } else {
+                settings.set("lock-modifier", Toggle.Inactive);
+            }
+
             updateArm();
 
             updateMovement();
