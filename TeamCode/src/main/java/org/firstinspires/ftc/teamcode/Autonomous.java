@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Autonomous extends LinearOpMode {
     NormalizedColorSensor colorSensor;
     private DcMotor motor0;
+    private DcMotor motor1;
     private Servo servo2;
     private Servo servo3;
 
@@ -51,6 +52,7 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart();
         motor0 = hardwareMap.get(DcMotor.class, "motor0");
+        motor1 = hardwareMap.get(DcMotor.class, "motor1");
         servo2 = hardwareMap.get(Servo.class, "servo2");
         servo3 = hardwareMap.get(Servo.class, "servo3");
        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
@@ -66,7 +68,23 @@ public class Autonomous extends LinearOpMode {
 
             // Read the sensor
             NormalizedRGBA colors = colorSensor.getNormalizedColors();
-           int color = colors.toColor();
+
+            int x = 0;
+            while (x<1)
+            {
+                servo3.setPosition(129.0/180);
+                motor1.setPower(.5);
+                motor0.setPower(.5);
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                motor1.setPower(0);
+                motor0.setPower(0);
+                servo3.setPosition(84.0/180);
+                x++;
+            }
 
 //            lift.Lift(this.gamepad1.left_bumper, this.gamepad2.left_bumper, this.gamepad1.left_trigger, this.gamepad2.left_trigger);
 
