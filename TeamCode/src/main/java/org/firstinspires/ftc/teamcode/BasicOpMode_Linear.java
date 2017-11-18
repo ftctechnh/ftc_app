@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import Jama.Matrix;
@@ -24,6 +25,11 @@ public class BasicOpMode_Linear extends LinearOpMode {
 	private DcMotor CDrive;
 	private IntegratingGyroscope gyro;
   	private ModernRoboticsI2cGyro MRI2CGyro;
+	private DcMotor Shoulder;
+	private DcMotor Elbow;
+	private Servo RF;
+	private Servo LF;
+	private Servo Wrist;
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -35,11 +41,15 @@ public class BasicOpMode_Linear extends LinearOpMode {
         ADrive = hardwareMap.get(DcMotor.class, "A");
         BDrive = hardwareMap.get(DcMotor.class, "B");
 		CDrive = hardwareMap.get(DcMotor.class, "C");
+		Shoulder = hardwareMap.get(DcMotor.class, "shoulder");
+		Elbow = hardwareMap.get(DcMotor.class, "elbow");
+		RF = hardwareMap.get(Servo.class, "right finger");
+		LF = hardwareMap.get(Servo.class, "left finger");
+		Wrist = hardwareMap.get(Servo.class, "wrist");
 		MRI2CGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
     	gyro = (IntegratingGyroscope)MRI2CGyro;
         telemetry.log().add("Gyro Calibrating. Do Not Move!");
 	    MRI2CGyro.calibrate();
-
  		// Wait until the gyro calibration is complete
     	timer.reset();
    		while (!isStopRequested() && MRI2CGyro.isCalibrating())  {
@@ -67,6 +77,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
 		double APwr;
 		double BPwr;
 		double CPwr;
+		double Fingeroffset = 0;
+		double Wristoffset = 0;
+		boolean b = false;
+		boolean x = false;
+        boolean Rbumper = false;
+        boolean Lbumper = true;
 		while (opModeIsActive()) {
 			curResState = gamepad1.a && gamepad1.b;
 			if(LastResState && !curResState){
@@ -79,7 +95,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
             double turn =  gamepad1.right_stick_x;
             double time = getRuntime();
             //drivebase powers
-			theta += .18*.5*(time-previoustime)*turn;
+			theta += .01*.5*(time-previoustime)*turn;
             double θerr = angle-theta;
             double θderiv = (θerr-θpreverr)/(time-previoustime);
             double θinteg = .5*(time-previoustime)*(θerr+θpreverr);
@@ -104,7 +120,28 @@ public class BasicOpMode_Linear extends LinearOpMode {
             telemetry.addData("Data", "A (%.2f), B (%.2f), C (%.2f) angle (%.2f)", APwr, BPwr, CPwr, angle);
 			telemetry.addData("MEH too lazy to name this", "temp (%.2f) drvey (%.2f) drivey, drivex (%.2f)", temp, drivey, drivex);
             telemetry.update();
-			
+			//Shoddy last minute arm code
+			Elbow.setPower(.1*Range.clip(-1*gamepad2.left_stick_y,-1,1));
+            Shoulder.setPower(.1*Range.clip(-1*gamepad2.right_stick_y, -1,1));
+			if(gamepad2.b && !b){
+				Fingeroffset += .1;
+			}
+			if(gamepad2.x && !x){
+				Fingeroffset -= .1;
+			}
+            if(gamepad2.right_bumper && !Rbumper){
+                Wristoffset += .1;
+            }
+            if(gamepad2.left_bumper && !Lbumper){
+                Wristoffset -= .1;
+            }
+			RF.setPosition(Range.clip(0.5 - Fingeroffset, 0,1));
+			LF.setPosition(Range.clip(Fingeroffset + 0.5, 0,1));
+			Wrist.setPosition(Range.clip(Wristoffset + 0.5, 0,1));
+			x = gamepad2.x;
+			b = gamepad2.b;
+            Rbumper = gamepad2.right_bumper;
+            Lbumper = gamepad2.left_bumper;
         }
     }
 }
