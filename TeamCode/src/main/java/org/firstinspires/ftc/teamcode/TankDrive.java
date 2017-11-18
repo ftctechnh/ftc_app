@@ -79,38 +79,12 @@ public class TankDrive extends LinearOpMode {
             Side = -gamepad1.left_stick_x;
 
 
-            if (gamepad1.right_bumper) {
-                if (Rt > -1 && time - lastRRotationChange > 50) {
-                    Rt -= rotationFudge;
-                    lastRRotationChange = time;
-                }
-            } else {
-                if (Rt < 1 && time - lastRRotationChange > 50) {
-                    Rt += rotationFudge;
-                    lastRRotationChange = time;
-                }
-            }
+            robot.BLMotor.setPower(gamepad1.left_stick_y);
+            robot.FLMotor.setPower(gamepad1.left_stick_y);
+            robot.FRMotor.setPower(gamepad1.right_stick_y);
+            robot.BRMotor.setPower(gamepad1.right_stick_y);
 
-            if (gamepad1.left_bumper){
-                if (Lt > -1 && time - lastLRotationChange > 50) {
-                    Lt -= rotationFudge;
-                    lastLRotationChange = time;
-                }
-            } else {
-                if (Lt < 1 && time - lastLRotationChange > 50) {
-                    Lt += rotationFudge;
-                    lastLRotationChange = time;
-                }
-            }
-
-            robot.BLMotor.setPower(Forward * Lt);
-            robot.FLMotor.setPower(Forward * Lt);
-            robot.FRMotor.setPower(Forward * 0.65 * Rt);
-            robot.BRMotor.setPower(Forward * 0.65 * Rt);
-
-
-
-            robot.SideMotor.setPower(Side / 2);
+            robot.SideMotor.setPower(gamepad1.left_trigger-gamepad1.right_trigger);
 
             telemetry.addData("Rt", Rt);
             telemetry.addData("Lt", Lt);

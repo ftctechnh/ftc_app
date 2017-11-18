@@ -215,6 +215,7 @@ public class Blue2Auto extends LinearOpMode {
                 encoderDrive(0.5, 48, 48, 2.0);  // (Power, Distance Left, Distance Right (INCHES), timeout)
                 encoderDrive(1, 11.7, -11.7, 1.0);
 
+
                 if (vuMark == RelicRecoveryVuMark.RIGHT){
                     encoderDrive(0.5, -10, 10, 0.3);
                     encoderDrive(1, 5, 5, 0.3);
@@ -235,7 +236,6 @@ public class Blue2Auto extends LinearOpMode {
                     sleep(Dis);
                     robot.SideMotor.setPower(0);
                 }
-
             }
             else {
                 telemetry.addData("VuMark", "not visible");
