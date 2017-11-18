@@ -7,11 +7,6 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Enumeration;
 
-import android.media.MediaPlayer;
-import android.app.Activity;
-import android.os.Bundle;
-import android.content.Context;
-
 //@Disabled
 @TeleOp(name="TimDrive", group="Pushbot")
 public class TimDrive extends LinearOpMode {
@@ -103,10 +98,9 @@ public class TimDrive extends LinearOpMode {
     }
 
     State settings = new State();
-    State buttons = new State();
     Timing timings = new Timing();
 
-    double rightCorrection = 0.72;
+    double rightCorrection = 0.77;
 
     public void resetSettings() {
         settings.set("claw", Toggle.Inactive);
@@ -129,12 +123,12 @@ public class TimDrive extends LinearOpMode {
     }
 
     public void moveDirection(double x, double y) {
-        robot.BLMotor.setPower(y);
-        robot.FLMotor.setPower(y);
-        robot.FRMotor.setPower(rightCorrection * y);
-        robot.BRMotor.setPower(rightCorrection * y);
+        robot.BLMotor.setPower(-y);
+        robot.FLMotor.setPower(-y);
+        robot.FRMotor.setPower(-rightCorrection * y);
+        robot.BRMotor.setPower(-rightCorrection * y);
 
-        robot.SideMotor.setPower(-x);
+        robot.SideMotor.setPower(x);
     }
 
     public void moveCardinalDirection(double x, double y) {
@@ -156,7 +150,7 @@ public class TimDrive extends LinearOpMode {
 
     public boolean updateMovement() {
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) return false;
-        if (settings.get("lock-modifier") == Toggle.Active) {
+        if (settings.get("lock-modifier") == Toggle.Inactive) {
             moveDirection(gamepad1.left_stick_x * settings.get("speed-modifier") / 100,
                     gamepad1.left_stick_y * settings.get("speed-modifier") / 100);
         } else {
@@ -248,10 +242,8 @@ public class TimDrive extends LinearOpMode {
             }
 
             if (gamepad2.right_bumper) {
-                playKazoo();
                 settings.set("arm-modifier", 5);
             } else {
-                playKazoo();
                 settings.set("arm-modifier", 25);
             }
 
