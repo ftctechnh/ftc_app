@@ -36,8 +36,6 @@ public class Auto6217Red extends LinearOpMode {
     boolean iAmBlue = false ;
     boolean iAmRed = true;
 
-
-
     private ElapsedTime runtime = new ElapsedTime();
 
     //   public Auto6217Red() {
@@ -45,8 +43,6 @@ public class Auto6217Red extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
-
 
         motorFL = hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.FORWARD);
@@ -62,7 +58,13 @@ public class Auto6217Red extends LinearOpMode {
 
         waitForStart();
 
-        servoTapper.setPosition(90);
+        servoTapper.setPosition(0.0d);
+        double servoPosition = servoTapper.getPosition();
+        telemetry.addData("1","%f", servoPosition);
+
+        servoTapper.setPosition(1.d);
+        servoPosition = servoTapper.getPosition();
+        telemetry.addData("2","%f", servoPosition);
 
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
@@ -81,9 +83,9 @@ public class Auto6217Red extends LinearOpMode {
         else {
           //  move(0f,.25f,2);
             }
-
-        servoTapper.setPosition(0);
-
+        telemetry.addData("3","Going Down Again");
+        telemetry.update();
+        servoTapper.setPosition(0.0d);
     }
 
     void move(float posx, float posy, float waitTime) {
@@ -124,7 +126,7 @@ public class Auto6217Red extends LinearOpMode {
 
         // The gyro tends to overestimate the angle
         float fudgeFactor = 0.97f;
-        int initialHeading = 0 ;
+        int initialHeading = 0;
         angle = Math.round(angle * fudgeFactor);
         if (angle < 0) {
             // Counterclockwise for negative angle
