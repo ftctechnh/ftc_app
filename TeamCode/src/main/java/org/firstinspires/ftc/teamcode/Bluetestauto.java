@@ -79,7 +79,7 @@ public class Bluetestauto extends LinearOpMode {
                 i++;
                 telemetry.update();
             }
-            robot.setAllMotors(0);
+            robot.setAllDriveMotors(0);
             robot.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -135,7 +135,7 @@ public class Bluetestauto extends LinearOpMode {
                 i++;
                 telemetry.update();
             }
-            robot.setAllMotors(0);
+            robot.setAllDriveMotors(0);
             robot.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
