@@ -12,9 +12,9 @@ import android.util.Log;
 
 //This makes the OpMode available in the Autonomouds group under the name 'Autonomous', in the Driver Station
 //@Disabled //AUSTIN REMEMBER TO REMOVE THIS -Austin from 4:55 P. M. on 11/7/17 // remembered
-@Autonomous(name = "BAutonomousR", group = "Autonomous")
+@Autonomous(name = "BAutonomousA", group = "Autonomous")
 //This is the basic class
-public class BlueRecovery extends LinearOpMode {
+public class BlueAudience extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.
     //Forklift
     private Servo rightClaw;
@@ -89,7 +89,7 @@ public class BlueRecovery extends LinearOpMode {
         servo.setPosition(0.9);
         servo.setPosition(0.9);
         Thread.sleep(1000);
-        rotations((-32 / C), .5);
+        rotations((-27 / C), .5);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
