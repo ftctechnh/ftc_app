@@ -94,6 +94,8 @@ public class GrippyBoi_Test extends OpMode
         else {
             gripper.setPower(0);
         }
+
+        telemetry.addData("current grip loc", gripper.getCurrentPosition());
     }
 
     @Override
