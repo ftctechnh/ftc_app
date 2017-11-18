@@ -94,17 +94,8 @@ public class RedAudience extends LinearOpMode {
     }
 
     void rotations(double numberOfRotations, double power) {
-        FrontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FrontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BackLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BackRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        FrontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FrontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BackLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BackRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
+        stopAndReset();
+        runUsingEncoder();
 
         boolean isNegative = false;
         if (numberOfRotations < 0) {
@@ -138,36 +129,47 @@ public class RedAudience extends LinearOpMode {
     }
 
     void turnLeftGyro(int degree, double Power)throws InterruptedException{
-        Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
-        int startHeading = getHeading();
-        int goal = (startHeading - degree);
-        turnLeft(Power);
-        while(heading > goal){
-            getHeading();
-            telemetry.addData("heading", heading);
-            telemetry.addData("goal", goal);
+        try {
+            Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
+            int startHeading = getHeading();
+            int goal = (startHeading - degree);
+            turnLeft(Power);
+            while (heading > goal) {
+                getHeading();
+                telemetry.addData("heading", heading);
+                telemetry.addData("goal", goal);
 
 
-            telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
-            waitOneFullHardwareCycle();
+                telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
+                waitOneFullHardwareCycle();
+            }
+            stopmoving();
         }
-        stopmoving();
+        catch (InterruptedException e){
+
+        }
     }
     void turnRightGyro(int degree, double Power)throws InterruptedException{
-        Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
-        int startHeading = getHeading();
-        int goal = (startHeading + degree);
-        turnRight(Power);
-        while(heading < goal){
-            getHeading();
-            telemetry.addData("heading", heading);
-            telemetry.addData("goal", goal);
+        try {
 
 
-            telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
-            waitOneFullHardwareCycle();
+            Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
+            int startHeading = getHeading();
+            int goal = (startHeading + degree);
+            turnRight(Power);
+            while (heading < goal) {
+                getHeading();
+                telemetry.addData("heading", heading);
+                telemetry.addData("goal", goal);
+
+
+                telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
+                waitOneFullHardwareCycle();
+            }
+            stopmoving();
         }
-        stopmoving();
+        catch (InterruptedException e){
+        }
     }
     void forward(double power) {
 
@@ -276,7 +278,7 @@ public class RedAudience extends LinearOpMode {
 
     }
     public int fixHeading(int target)throws InterruptedException{
-        int newheading = gyroSensor.getHeading();
+        try{int newheading = gyroSensor.getHeading();
         int diff = Math.abs(target - newheading);
         if(diff > 200) {
             if(newheading > target){
@@ -297,14 +299,22 @@ public class RedAudience extends LinearOpMode {
             }
         }
         target = newheading;
+       }
+        catch (InterruptedException e){
+        }
         return target;
     }
 
     public int getHeading ()throws InterruptedException {
-        int newHeading = gyroSensor.getHeading();
-        newHeading = fixHeading(heading);
-        heading = newHeading;
+        try {
+            int newHeading = gyroSensor.getHeading();
+            newHeading = fixHeading(heading);
+            heading = newHeading;
 
+
+        }
+        catch (InterruptedException e) {
+        }
         return heading;
     }
 
@@ -322,5 +332,19 @@ public class RedAudience extends LinearOpMode {
         rightClaw.setPosition(clawLowEnd);
         leftClaw.setPosition(clawLowEnd);
         leftClaw.setPosition(clawLowEnd);
+    }
+    public void runUsingEncoder(){
+        FrontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FrontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BackLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BackRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+    public void stopAndReset(){
+        FrontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FrontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Kaden on 10/19/2017.
- */
+
 @TeleOp(name = "ForkliftDrive", group = "linear OpMode")
 public class ForkliftDriveWithClass extends OpMode {
     private DcMotor FrontLeft;
@@ -97,3 +97,4 @@ public class ForkliftDriveWithClass extends OpMode {
         return Range.clip(value, -1,1);
     }
 }
+*/
