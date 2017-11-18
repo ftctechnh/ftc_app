@@ -140,6 +140,13 @@ public class MecanumRework extends OpMode {
             }
         }
 
+        if(gamepad1.y){
+            robot.arm.setPosition(1);
+        }
+        if(gamepad1.x){
+            robot.arm.setPosition(0);
+        }
+
         robot.flDrive.setPower(voltageMultiplier[0]);
         robot.frDrive.setPower(voltageMultiplier[1]);
         robot.rlDrive.setPower(voltageMultiplier[2]);
