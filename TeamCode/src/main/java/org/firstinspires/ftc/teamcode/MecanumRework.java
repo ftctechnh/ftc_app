@@ -199,7 +199,7 @@ public class MecanumRework extends OpMode {
         }
         if (gamepad2.y) {
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //telemetry.addData("ZPB", "BRAKING");
+            //telemetry.addDa.ta("ZPB", "BRAKING");
         }
 
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
