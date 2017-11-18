@@ -19,7 +19,7 @@ public class okay extends OpMode {
     }
     @Override
     public void loop() {
-        if (gamepad1.a) {robot.setAllMotors(.25); } else {robot.setAllMotors(0);}
+        if (gamepad1.a) {robot.setAllDriveMotors(.25); } else {robot.setAllDriveMotors(0);}
         telemetry.addData("pos:", robot.rrDrive.getCurrentPosition());
         telemetry.addData("pos:", robot.rlDrive.getCurrentPosition());
         telemetry.addData("pos:", robot.frDrive.getCurrentPosition());
