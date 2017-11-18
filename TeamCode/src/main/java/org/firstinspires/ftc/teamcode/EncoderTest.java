@@ -30,7 +30,7 @@ public class EncoderTest extends LinearOpMode {
 
         //robot.encoderSwitch();
         int current = robot.rightDriveFront.getCurrentPosition();
-        int target = current + 10000;
+        int target = current + (int)(robot.COUNTS_PER_INCH * 10);
         telemetry.addData("run mode: ",robot.rightDriveFront.getMode());
         telemetry.addData("current pos", robot.rightDriveFront.getCurrentPosition());
         telemetry.update();
@@ -49,15 +49,20 @@ public class EncoderTest extends LinearOpMode {
 
 
         robot.rightDriveFront.setTargetPosition(target);
+        robot.rightDriveBack.setTargetPosition(target);
+        robot.leftDriveFront.setTargetPosition(target);
+        robot.leftDriveBack.setTargetPosition(target);
         telemetry.addData("target pos: ",robot.rightDriveFront.getTargetPosition());
 
-        robot.rightDriveFront.setPower(1);
+        robot.setAllLeftDrivePower(1);
+        robot.setAllRightDrivePower(1);
         while(Math.abs(target - robot.rightDriveFront.getCurrentPosition()) > 1)
         {
 
         }
         //robot.rightDriveFront.
-        robot.rightDriveFront.setPower(0);
+        robot.setAllLeftDrivePower(0);
+        robot.setAllRightDrivePower(0);
         telemetry.addData("current pos", robot.rightDriveFront.getCurrentPosition());
         telemetry.update();
         Thread.sleep(10000);

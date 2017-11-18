@@ -149,4 +149,47 @@ public class HardwareRobot {
         rightDriveBack.setPower(power);
 
     }
+
+    public void driveWithEncoder(DcMotor motor, double target, double power) {
+
+        int currentPos = motor.getCurrentPosition();
+        int targetPos = currentPos + (int)(COUNTS_PER_INCH * target);
+
+        motor.setTargetPosition(targetPos);
+
+        motor.setPower(power);
+
+        while (Math.abs(motor.getCurrentPosition() - targetPos) > 1) {
+
+        }
+
+        motor.setPower(0);
+    }
+
+    public void driveMotorsWithEncoder(DcMotor[] motor, double target, double power) {
+
+        int currentPos;
+        int targetPos;
+
+        for (int i = 0; i < motor.length; i += 1) {
+
+            currentPos = motor[i].getCurrentPosition();
+            targetPos = currentPos + (int)(COUNTS_PER_INCH * target);
+
+            motor[i].setTargetPosition(targetPos);
+
+            motor[i].setPower(power);
+
+        }
+        
+        while (motor[0].getCurrentPosition() > 1) {
+
+        }
+
+        for (int i = 0; i < motor.length; i += 1) {
+
+            motor[i].setPower(0);
+
+        }
+    }
 }
