@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="Auto Blue", group="Linear Auto")
+@Autonomous(name="Auto Red", group="Linear Auto")
 
-public class Bluetestauto extends LinearOpMode {
+public class Redtestauto extends LinearOpMode {
     final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
@@ -52,7 +49,7 @@ public class Bluetestauto extends LinearOpMode {
             robot.rlDrive.setTargetPosition(targetRL);
             robot.rrDrive.setTargetPosition(targetRR);
 
-            if (robot.color.red() > 5) {
+            if (robot.color.red() == 0) {
                 robot.flDrive.setPower(speed);
                 robot.frDrive.setPower(-1 * speed);
                 robot.rlDrive.setPower(-1 * speed);
