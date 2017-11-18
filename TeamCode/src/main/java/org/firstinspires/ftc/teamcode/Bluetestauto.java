@@ -46,6 +46,14 @@ public class Bluetestauto extends LinearOpMode {
             targetRL = robot.rlDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             targetRR = robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
 
+            if (robot.color.red() > 5) {
+                targetFR *= -1;
+                targetRL *= -1;
+            } else {
+                targetFL *= -1;
+                targetRR *= -1;
+            }
+
             robot.flDrive.setTargetPosition(targetFL);
             robot.frDrive.setTargetPosition(targetFR);
             robot.rlDrive.setTargetPosition(targetRL);
@@ -106,6 +114,13 @@ public class Bluetestauto extends LinearOpMode {
             targetFR = robot.frDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             targetRL = robot.rlDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             targetRR = robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
+
+            if (speed < 0) {
+                targetFL *= -1;
+                targetFR *= -1;
+                targetRL *= -1;
+                targetRR *= -1;
+            }
 
             robot.flDrive.setTargetPosition(targetFL);
             robot.frDrive.setTargetPosition(targetFR);
