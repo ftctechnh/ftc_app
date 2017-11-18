@@ -23,7 +23,8 @@ public class Redtestauto extends LinearOpMode {
         encodeStraight(100, 0.5);
     }
 
-    public void encoderot(double speed, double distance) {
+    //rotates the robot, 100 units is about 90 degrees
+    public void encoderot(double distance, double speed) {
         speed = Math.abs(speed);
         robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -46,7 +47,7 @@ public class Redtestauto extends LinearOpMode {
             targetRL = robot.rlDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
             targetRR = robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH);
 
-            if (speed > 1) {
+            if (speed > 0) {
                 targetFR *= -1;
                 targetRR *= -1;
             } else {
@@ -93,6 +94,7 @@ public class Redtestauto extends LinearOpMode {
         }
     }
 
+    //uses color arm to go sideways towards not red
     public void encodeLat(double distance, double speed) {
         speed = Math.abs(speed);
         robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -164,6 +166,7 @@ public class Redtestauto extends LinearOpMode {
         }
     }
 
+    //goes straight, negative goes backwards
     public void encodeStraight(double distance, double speed) {
         int targetFL;
         int targetFR;

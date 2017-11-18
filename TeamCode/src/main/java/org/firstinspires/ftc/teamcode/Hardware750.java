@@ -66,13 +66,21 @@ public class Hardware750 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        arm     = hwMap.get(Servo.class, "colorarm");
-        color   = hwMap.get(ColorSensor.class, "color");
-        flDrive = hwMap.get(DcMotor.class, "flDrive");
-        frDrive = hwMap.get(DcMotor.class, "frDrive");
-        rlDrive = hwMap.get(DcMotor.class, "rlDrive");
-        rrDrive = hwMap.get(DcMotor.class, "rrDrive");
-        gripper = hwMap.get(DcMotor.class, "gripper");
+        try {
+            gripper = hwMap.get(DcMotor.class, "gripper");
+            arm     = hwMap.get(Servo.class, "colorarm");
+            color   = hwMap.get(ColorSensor.class, "color");
+        } catch (Exception ex) {
+
+        }
+        try {
+            flDrive = hwMap.get(DcMotor.class, "flDrive");
+            frDrive = hwMap.get(DcMotor.class, "frDrive");
+            rlDrive = hwMap.get(DcMotor.class, "rlDrive");
+            rrDrive = hwMap.get(DcMotor.class, "rrDrive");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         flDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.REVERSE);
         rlDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
