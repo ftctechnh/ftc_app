@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import static java.lang.Double.NaN;
 
 /**
  * concept for reworked adv. mecanum drive
@@ -29,6 +28,9 @@ public class MecanumRework extends OpMode {
     double rotate = 0;
     double gp1y;
     double[] voltageMultiplier = {0,0,0,0};
+    boolean isGripped = true;
+    boolean lastGripState = true;
+    double lastRuntime;
 
     @Override
     public void init() {
@@ -147,6 +149,40 @@ public class MecanumRework extends OpMode {
             robot.arm.setPosition(0.2); // back up towards robot
         }
 
+        // TODO: gripper implementation and locking setup
+        if (gamepad2.a){
+            // toggle our grippy boy
+            if (runtime.seconds() > lastRuntime+1) {
+                toggleGrip();
+                lastRuntime = runtime.seconds();
+            }
+        }
+
+        if(isGripped != lastGripState){
+            if (isGripped){
+                // if we have now decided to G R I P
+                robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            } else {
+                // if we are now U N G R I P
+                robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.gripper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            }
+            lastGripState = isGripped;
+        }
+        if(gamepad2.right_trigger != 0){
+            robot.gripper.setPower(gamepad2.right_trigger);
+        }
+        if (gamepad2.x) {
+            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            telemetry.addData("ZPB", "FLOATING");
+        }
+        if (gamepad2.y) {
+            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            telemetry.addData("ZPB", "BRAKING");
+        }
+
         robot.flDrive.setPower(voltageMultiplier[0]);
         robot.frDrive.setPower(voltageMultiplier[1]);
         robot.rlDrive.setPower(voltageMultiplier[2]);
@@ -159,5 +195,9 @@ public class MecanumRework extends OpMode {
 
     @Override
     public void stop() {
+    }
+
+    public void toggleGrip(){
+        isGripped = !isGripped;
     }
 }
