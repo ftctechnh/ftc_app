@@ -32,6 +32,7 @@ public class MecanumRework extends OpMode {
 
     @Override
     public void init() {
+        //robot.arm.setPosition(50);
         telemetry.addData("Status", "Uninitialized...");
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
@@ -145,6 +146,8 @@ public class MecanumRework extends OpMode {
         robot.rrDrive.setPower(voltageMultiplier[3]);
 
         telemetry.addData("s er v o", robot.arm.getPosition());
+        telemetry.addData("asdfhasjkdfh", robot.color.red());
+
     }
 
     @Override

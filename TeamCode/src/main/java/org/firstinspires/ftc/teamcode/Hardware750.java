@@ -65,7 +65,7 @@ public class Hardware750 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        arm = hwMap.get(Servo.class, "colorarm");
+        arm = hwMap.servo.get("colorarm");
         color = hwMap.get(ColorSensor.class, "color");
         flDrive = hwMap.get(DcMotor.class, "flDrive");
         frDrive = hwMap.get(DcMotor.class, "frDrive");
