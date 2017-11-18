@@ -22,6 +22,7 @@ public class Bluetestauto extends LinearOpMode {
         encodeStraight(10, 0.5);
     }
 
+    //rotates the robot, 100 units is about 90 degrees
     public void encoderot(double speed, double distance) {
         speed = Math.abs(speed);
         robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -58,7 +59,7 @@ public class Bluetestauto extends LinearOpMode {
             robot.rlDrive.setTargetPosition(targetRL);
             robot.rrDrive.setTargetPosition(targetRR);
 
-            if (speed > 1) {
+            if (speed > 0) {
                 robot.flDrive.setPower(speed);
                 robot.frDrive.setPower(speed * -1);
                 robot.rlDrive.setPower(speed);
@@ -92,6 +93,7 @@ public class Bluetestauto extends LinearOpMode {
         }
     }
 
+    //uses arm and color sensor to knock ball off, goes towards red
     public void encodeLat(double distance, double speed) {
         robot.arm.setPosition(50);
         robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -163,6 +165,7 @@ public class Bluetestauto extends LinearOpMode {
     }
 
 
+    //goes straight, negative speed goes back
     public void encodeStraight(double distance, double speed) {
         int targetFL;
         int targetFR;
