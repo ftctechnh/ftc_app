@@ -20,7 +20,9 @@ public class Bluetestauto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeStraight(1000, 1);
+        encodeStraight(3, -0.3);
+        encodeLat(3, 0.3);
+        encodeStraight(10, 0.5);
     }
 
     public void encodeLat(double distance, double speed) {
