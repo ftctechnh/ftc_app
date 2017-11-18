@@ -85,6 +85,7 @@ public class Bluetestauto extends LinearOpMode {
         }
     }
 
+
     public void encodeStraight(double distance, double speed) {
         int targetFL;
         int targetFR;
@@ -113,10 +114,10 @@ public class Bluetestauto extends LinearOpMode {
             robot.rrDrive.setTargetPosition(targetRR);
 
             runtime.reset();
-            robot.flDrive.setPower(Math.abs(speed));
-            robot.frDrive.setPower(Math.abs(speed));
-            robot.rlDrive.setPower(Math.abs(speed));
-            robot.rrDrive.setPower(Math.abs(speed));
+            robot.flDrive.setPower(speed);
+            robot.frDrive.setPower(speed);
+            robot.rlDrive.setPower(speed);
+            robot.rrDrive.setPower(speed);
 
             while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rlDrive.isBusy() && robot.rrDrive.isBusy())) {
                 int i = 0;
