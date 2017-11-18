@@ -89,7 +89,7 @@ public class ImplMecanumDrive extends OpMode
             robot.rrDrive.setPower(VM20[3]);
         } catch (Exception ex) {
             ex.printStackTrace();
-            robot.setAllMotors(0);
+            robot.setAllDriveMotors(0);
         }
     }
     @Override

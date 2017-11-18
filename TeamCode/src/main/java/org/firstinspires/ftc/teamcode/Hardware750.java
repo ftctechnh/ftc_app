@@ -49,6 +49,7 @@ public class Hardware750 {
     public DcMotor rlDrive   = null;
     public DcMotor rrDrive   = null;
     public ColorSensor color = null;
+    public DcMotor gripper   = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -71,16 +72,19 @@ public class Hardware750 {
         frDrive = hwMap.get(DcMotor.class, "frDrive");
         rlDrive = hwMap.get(DcMotor.class, "rlDrive");
         rrDrive = hwMap.get(DcMotor.class, "rrDrive");
+        gripper = hwMap.get(DcMotor.class, "gripper");
         flDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.REVERSE);
         rlDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
         rrDrive.setDirection(DcMotor.Direction.REVERSE);
+        gripper.setDirection(DcMotor.Direction.FORWARD); // default this to forward, it might not matter.
 
         // Set all motors to zero power
         flDrive.setPower(0);
         rlDrive.setPower(0);
         frDrive.setPower(0);
         rrDrive.setPower(0);
+        gripper.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -88,9 +92,15 @@ public class Hardware750 {
         rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // braking setting
+        // FLOAT: do not actively resist external forces
+        // BRAKE: actively resist external forces
+        gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
-    public void setAllMotors(double requestedSpeed) {
+    public void setAllDriveMotors(double requestedSpeed) {
         flDrive.setPower(requestedSpeed);
         frDrive.setPower(requestedSpeed);
         rlDrive.setPower(requestedSpeed);
