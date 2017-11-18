@@ -56,22 +56,9 @@ public class Grabber {
         }
     }
 
-<<<<<<< HEAD
-    private double Position(double angle, double open, double close) {
-
-        double range = open - close;
-
-        if (range < 0) {
-            return open - (range * angle);
-        } else {
-            return range * angle + close;
-        }
-
-=======
-    private void reset() {
-        leftServo.setPosition(LEFT_FULL_OPEN_POSITION);
-        rightServo.setPosition(RIGHT_FULL_OPEN_POSITION);
->>>>>>> origin/develop
-    }
+//    public void reset() {
+//        leftServo.setPosition(LEFT_FULL_OPEN_POSITION);
+//        rightServo.setPosition(RIGHT_FULL_OPEN_POSITION);
+//    }
 
 }

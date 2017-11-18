@@ -6,8 +6,8 @@ public class TankDriveTrain {
 
     private DcMotor motorLeft, motorRight;
 
-    private final int MOTOR_0_DIRECTION = -1;
-    private final int MOTOR_1_DIRECTION = 1;
+    private final int MOTOR_0_DIRECTION = 1;
+    private final int MOTOR_1_DIRECTION = -1;
 
     public TankDriveTrain(DcMotor motor0, DcMotor motor1) {
 

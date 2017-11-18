@@ -55,7 +55,7 @@ public class Autonomous extends LinearOpMode {
         servo3 = hardwareMap.get(Servo.class, "servo3");
        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
 
-        VerticalLift lift = new VerticalLift(servo2);
+//        VerticalLift lift = new VerticalLift(servo2);
         Dropdown dropdown = new Dropdown(servo3, motor0, colorSensor);
 
         int scale = 10000;
@@ -68,7 +68,7 @@ public class Autonomous extends LinearOpMode {
             NormalizedRGBA colors = colorSensor.getNormalizedColors();
            int color = colors.toColor();
 
-            lift.Lift(this.gamepad1.left_bumper, this.gamepad2.left_bumper, this.gamepad1.left_trigger, this.gamepad2.left_trigger);
+//            lift.Lift(this.gamepad1.left_bumper, this.gamepad2.left_bumper, this.gamepad1.left_trigger, this.gamepad2.left_trigger);
 
 
             telemetry.addLine("raw Android color: ");
