@@ -105,8 +105,10 @@ public class TimDrive extends LinearOpMode {
     public void resetSettings() {
         settings.set("claw", Toggle.Inactive);
         settings.set("speed-modifier", 100);
+        settings.set("lock-modifier", Toggle.Active);
 
         timings.set("claw", new TimeTuple(500, 0));
+        timings.set("lmod", new TimeTuple(200, 0));
     }
 
     double clawClosedPosition = 0;
@@ -221,6 +223,15 @@ public class TimDrive extends LinearOpMode {
         resetSettings();
     }
 
+    public void settingsTelemetry() {
+        telemetry.addData("Claw Position: ",
+                (settings.get("claw") == Toggle.Inactive) ? "Open" : "Closed");
+        telemetry.addData("Cardinal Movement Lock: ",
+                ((settings.get("lock-modifier") == Toggle.Inactive) ? "Off" : "On"));
+        telemetry.addData("Speed Modifier: ", settings.get("speed-modifier"));
+        telemetry.update();
+    }
+
     @Override
     public void runOpMode() {
         initSequence();
@@ -235,10 +246,14 @@ public class TimDrive extends LinearOpMode {
                 settings.set("speed-modifier", 100);
             }
 
-            if (gamepad1.left_bumper) {
-                settings.set("lock-modifier", Toggle.Active);
-            } else {
-                settings.set("lock-modifier", Toggle.Inactive);
+            if (gamepad1.left_bumper && timings.get("lmod").needsUpdate()) {
+                timings.get("lmod").markUpdated();
+
+                if (settings.get("lock-modifier") == Toggle.Inactive) {
+                    settings.set("lock-modifier", Toggle.Active);
+                } else {
+                    settings.set("lock-modifier", Toggle.Inactive);
+                }
             }
 
             if (gamepad2.right_bumper) {
@@ -254,8 +269,9 @@ public class TimDrive extends LinearOpMode {
             }
 
             updateClaw();
-
             updateLeftArm();
+
+            settingsTelemetry();
         }
     }
 }
