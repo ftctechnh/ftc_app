@@ -40,11 +40,11 @@ public class JewelCode extends LinearOpMode {
     public Servo loweringJewelServo;
     public Servo turningJewelServo;
 
-    public double downPos = 0.7;
+    public double downPos = 1;
     public final double UP_POS = 0.3;
 
-    public final double LEFT_POS = .25;
-    public final double RIGHT_POS = .75;
+    public final double LEFT_POS = .30;
+    public final double RIGHT_POS = .70;
 
     public final double MIDDLE_POS = .5;
 
@@ -71,7 +71,7 @@ public class JewelCode extends LinearOpMode {
 
         while(opModeIsActive()) {
             telemetry.addData("Turing Servo:", turningJewelServo.getPosition());
-            sleep(3000);
+            sleep(1000);
             red();
         }
         telemetry.addData("Running", "False");
@@ -113,10 +113,30 @@ public class JewelCode extends LinearOpMode {
         if (colorSensorL.red() > colorSensorL.blue()) {
             turningJewelServo.setPosition(RIGHT_POS);
             telemetry.addLine("Moving Right");
-        } else {
+
+            sleep(1000);
+            loweringJewelServo.setPosition(0);
+            turningJewelServo.setPosition(.5);
+        }
+        else if (colorSensorL.red() < colorSensorL.blue()){
             turningJewelServo.setPosition(LEFT_POS);
             telemetry.addLine("Hitting Left");
+
+            sleep(1000);
+            loweringJewelServo.setPosition(0);
+            turningJewelServo.setPosition(.5);
         }
+//        else {
+//            sleep(1000);
+//            if (colorSensorL.red() > colorSensorL.blue()) {
+//                turningJewelServo.setPosition(RIGHT_POS);
+//                telemetry.addLine("Moving Right");
+//            }
+//            else if (colorSensorL.red() < colorSensorL.blue()) {
+//                turningJewelServo.setPosition(LEFT_POS);
+//                telemetry.addLine("Hitting Left");
+//            }
+//        }
         telemetry.addData("Servo Pos", turningJewelServo.getPosition());
         telemetry.update();
     }
