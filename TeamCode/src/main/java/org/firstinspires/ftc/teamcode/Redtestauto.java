@@ -24,7 +24,7 @@ public class Redtestauto extends LinearOpMode {
     }
 
     //rotates the robot, 100 units is about 90 degrees
-    public void encoderot(double speed, double distance) {
+    public void encoderot(double distance, double speed) {
         speed = Math.abs(speed);
         robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
