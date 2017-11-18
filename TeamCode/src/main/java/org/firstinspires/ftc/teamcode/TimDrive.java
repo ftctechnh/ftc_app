@@ -8,6 +8,9 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 import android.media.MediaPlayer;
+import android.app.Activity;
+import android.os.Bundle;
+import android.content.Context;
 
 //@Disabled
 @TeleOp(name="TimDrive", group="Pushbot")
@@ -224,10 +227,12 @@ public class TimDrive extends LinearOpMode {
         resetSettings();
     }
 
-    /**public void playKazoo() {
-        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.combo);
+    Activity activity = new Activity();
+
+    public void playKazoo() {
+        MediaPlayer mp = MediaPlayer.create(activity, R.raw.kazoo);
         mp.start();
-    }**/
+    }
 
     @Override
     public void runOpMode() {
@@ -250,8 +255,10 @@ public class TimDrive extends LinearOpMode {
             }
 
             if (gamepad2.right_bumper) {
+                playKazoo();
                 settings.set("arm-modifier", 5);
             } else {
+                playKazoo();
                 settings.set("arm-modifier", 25);
             }
 
