@@ -63,7 +63,7 @@ public class HardwarePushbot
     //Range of motion for right claw (0, 0.5)
     //Range of motion for left claw (0, 0.5) but reversed
 
-    public static final double MID_SERVO             =  0.5 ; // 0.25 is the middle of the servo position
+    public static final double MID_SERVO             =  0.45 ; // 0.25 is the middle of the servo position
     public static final double ARM_UP_POWER          = -0.45 ;
     public static final double ARM_DOWN_POWER        =  0.45 ;
 
