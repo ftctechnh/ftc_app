@@ -147,7 +147,7 @@ public class TimDrive extends LinearOpMode {
         }
     }
 
-    public void updateMovement() {
+    public boolean updateMovement() {
         if (settings.get("lock-modifier") == Toggle.Active) {
             moveDirection(gamepad1.left_stick_x * settings.get("speed-modifier") / 100,
                     gamepad1.left_stick_y * settings.get("speed-modifier") / 100);
@@ -155,6 +155,7 @@ public class TimDrive extends LinearOpMode {
             moveCardinalDirection(gamepad1.left_stick_x * settings.get("speed-modifier") / 100,
                     gamepad1.left_stick_y * settings.get("speed-modifier") / 100);
         }
+        return !(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0);
     }
 
     public void updateLeftArm() {
@@ -240,8 +241,9 @@ public class TimDrive extends LinearOpMode {
 
             updateArm();
 
-            updateMovement();
-            updateRotation();
+            if (!updateMovement()) {
+                updateRotation();
+            }
 
             updateClaw();
 
