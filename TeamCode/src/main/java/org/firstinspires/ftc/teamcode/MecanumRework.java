@@ -151,12 +151,13 @@ public class MecanumRework extends OpMode {
 
         // TODO: gripper implementation and locking setup
         if (gamepad2.a){
-            // toggle our grippy boy
+            // toggle our gloppy boy
             if (runtime.seconds() > lastRuntime+1) {
                 toggleGrip();
                 lastRuntime = runtime.seconds();
             }
         }
+
 
         if(isGripped != lastGripState){
             if (isGripped){
@@ -166,22 +167,42 @@ public class MecanumRework extends OpMode {
                 // if we are now U N G R I P
                 robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.gripper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
+                // target position vaguely determined with some light testing.
+                robot.gripper.setTargetPosition(1100);
+                /*
+                if(robot.gripper.isBusy()){
+                    robot.gripper.setPower(0.25);
+                } else {
+                    robot.gripper.setPower(0);
+                }
+                */
+                robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                toggleGrip();
             }
             lastGripState = isGripped;
         }
+
         if(gamepad2.right_trigger != 0){
             robot.gripper.setPower(gamepad2.right_trigger);
+        } else {
+            robot.gripper.setPower(0);
         }
+
+        if(gamepad2.x){
+            robot.gripper.setPower(0);
+        }
+
+
         if (gamepad2.x) {
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            telemetry.addData("ZPB", "FLOATING");
+            //telemetry.addData("ZPB", "FLOATING");
         }
         if (gamepad2.y) {
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            telemetry.addData("ZPB", "BRAKING");
+            //telemetry.addData("ZPB", "BRAKING");
         }
+
+        telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
 
         robot.flDrive.setPower(voltageMultiplier[0]);
         robot.frDrive.setPower(voltageMultiplier[1]);
@@ -189,7 +210,8 @@ public class MecanumRework extends OpMode {
         robot.rrDrive.setPower(voltageMultiplier[3]);
 
         telemetry.addData("s er v o", robot.arm.getPosition());
-        telemetry.addData("asdfhasjkdfh", robot.color.red());
+        telemetry.addData("pos of gripper", robot.gripper.getCurrentPosition());
+        telemetry.addData("isgripping", isGripped);
 
     }
 
@@ -197,7 +219,7 @@ public class MecanumRework extends OpMode {
     public void stop() {
     }
 
-    public void toggleGrip(){
+    private void toggleGrip(){
         isGripped = !isGripped;
     }
 }
