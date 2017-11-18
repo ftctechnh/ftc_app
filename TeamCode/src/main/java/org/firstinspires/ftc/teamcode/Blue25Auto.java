@@ -67,7 +67,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name="Blue2Auto", group ="Pushbot")
 //@Disabled
-public class Blue2Auto extends LinearOpMode {
+public class Blue25Auto extends LinearOpMode {
 
     HardwareDRive         robot   = new HardwareDRive();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
@@ -187,20 +187,10 @@ public class Blue2Auto extends LinearOpMode {
                 robot.clawright.setPosition(0);
                 robot.arm.setPower(-0.2);
                 sleep(500);
-
                 robot.arm.setPower(0);
                 //actual auto start
 
-                robot.armleft.setPosition(0.75);
-                robot.SideMotor.setPower(0.2);
-                sleep(590); //this part of the code knocks ball off
-                robot.SideMotor.setPower(0);
-                encoderDrive(0.5, 36, 36, 1.4);// (Power, Distance Left, Distance Right (INCHES), timeout)
-                sleep(300);
-                robot.armleft.setPosition(0);
-                sleep(1000);     // pause for servos to move
-                encoderDrive(0.5, 36, 36, 1.4);// (Power, Distance Left, Distance Right (INCHES), timeout)
-                encoderDrive(0.5, 48, -48, 1.4);  // (Power, Distance Left, Distance Right (INCHES), timeout)
+                encoderDrive(0.5,-20,-20,3);
 
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT){
@@ -224,7 +214,6 @@ public class Blue2Auto extends LinearOpMode {
                     encoderDrive(1, -5, -5, 0.5);
                     break;
                 }
-
             }
             else {
                 telemetry.addData("VuMark", "not visible");
