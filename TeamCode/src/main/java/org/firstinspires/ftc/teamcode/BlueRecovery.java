@@ -12,9 +12,9 @@ import android.util.Log;
 
 //This makes the OpMode available in the Autonomouds group under the name 'Autonomous', in the Driver Station
 //@Disabled //AUSTIN REMEMBER TO REMOVE THIS -Austin from 4:55 P. M. on 11/7/17 // remembered
-@Autonomous(name = "RAutonomousA", group = "Autonomous")
+@Autonomous(name = "BAutonomousR", group = "Autonomous")
 //This is the basic class
-public class RedAudience extends LinearOpMode {
+public class BlueRecovery extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.
     //Forklift
     private Servo rightClaw;
@@ -82,14 +82,14 @@ public class RedAudience extends LinearOpMode {
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         heading = 0;
-        servo.setPosition(.39);
+        servo.setPosition(.35);
         Thread.sleep(1000);
         JewelFinder();
         Thread.sleep(1000);
         servo.setPosition(0.9);
         servo.setPosition(0.9);
         Thread.sleep(1000);
-        rotations((27 / C), .5);
+        rotations((-32 / C), .5);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -244,7 +244,7 @@ public class RedAudience extends LinearOpMode {
         }
         //closeClaw();
         if (timesBlue > timesRed) {
-            rotations(.125, .1);
+            rotations(-.2, .1);
 
             servo.setPosition(0.9);
             servo.setPosition(0.9);
@@ -253,19 +253,19 @@ public class RedAudience extends LinearOpMode {
             } catch (InterruptedException e) {
             }
 
-            rotations(-.125, .1);
+            rotations(.2, .1);
 
 
         } else {
 
-            rotations(-.125, .1);
+            rotations(.2, .1);
             servo.setPosition(0.9);
             servo.setPosition(0.9);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
-            rotations(.125, .1);
+            rotations(-.2, .1);
 
         }
         try {
@@ -279,27 +279,27 @@ public class RedAudience extends LinearOpMode {
     }
     public int fixHeading(int target)throws InterruptedException{
         try{int newheading = gyroSensor.getHeading();
-        int diff = Math.abs(target - newheading);
-        if(diff > 200) {
-            if(newheading > target){
-                while(diff > 200){
-                    newheading -=360;
-                    diff = Math.abs(target - newheading);
-                    waitOneFullHardwareCycle();
-                }
+            int diff = Math.abs(target - newheading);
+            if(diff > 200) {
+                if(newheading > target){
+                    while(diff > 200){
+                        newheading -=360;
+                        diff = Math.abs(target - newheading);
+                        waitOneFullHardwareCycle();
+                    }
 
 
-            }
-            else{
-                while (diff > 200){
-                    newheading += 360;
-                    diff = Math.abs(target - newheading);
-                    waitOneFullHardwareCycle();
+                }
+                else{
+                    while (diff > 200){
+                        newheading += 360;
+                        diff = Math.abs(target - newheading);
+                        waitOneFullHardwareCycle();
+                    }
                 }
             }
+            target = newheading;
         }
-        target = newheading;
-       }
         catch (InterruptedException e){
         }
         return target;
