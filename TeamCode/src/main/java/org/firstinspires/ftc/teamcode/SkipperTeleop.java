@@ -101,11 +101,11 @@ public class SkipperTeleop extends LinearOpMode {
         STRAFE_RIGHT, STRAFE_LEFT, DRIVE_FOWARD, DRIVE_BACK, TURN_RIGHT, TURN_LEFT, ZERO;
     }
     public void moveClaws() {
-        if(gamepad2.y) {
+        if(gamepad2.a) {
             //Open top claws
             rightTop.setPosition(OPEN_TOP_RIGHT);
             leftTop.setPosition(OPEN_TOP_LEFT);
-        } else if(gamepad2.a) {
+        } else if(gamepad2.y) {
             //Close top claws
             rightTop.setPosition(CLOSE_TOP_RIGHT);
             leftTop.setPosition(CLOSE_TOP_LEFT);
@@ -115,11 +115,11 @@ public class SkipperTeleop extends LinearOpMode {
         } else if(gamepad2.b) {
             //open top right
             rightTop.setPosition(OPEN_TOP_RIGHT);
-        } else if (gamepad2.dpad_up) {
-            //open bottom claw
+        } else if (gamepad2.dpad_down) {
+            //open bottom claw2
             rightBottom.setPosition(OPEN_BOTTOM_RIGHT);
             leftBottom.setPosition(OPEN_BOTTOM_LEFT);
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_up) {
             //close bottom claws
             rightBottom.setPosition(CLOSE_BOTTOM_RIGHT);
             leftBottom.setPosition(CLOSE_BOTTOM_LEFT);

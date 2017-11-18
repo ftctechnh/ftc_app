@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name = "NEW Jewel Color", group = "Sensor")
-public class NewJewel extends LinearOpMode {
+public abstract class NewJewel extends LinearOpMode {
 
     ColorSensor colorSensorL;
     Servo loweringJewelServo;
@@ -18,7 +18,7 @@ public class NewJewel extends LinearOpMode {
     public final double LEFT_POS = .5;
     public final double RIGHT_POS = 1.0;
 
-    public final double MIDDLE_POS = .75;
+    public final double MIDDLE_POS = .5;
 
     public double increment = .07;
 
@@ -26,34 +26,32 @@ public class NewJewel extends LinearOpMode {
 
     public alliance team;
 
-    NewJewel(alliance myTeam) {
-        team = myTeam;
-    }
-
-    @Override
-    public void runOpMode() {
-
+    @Override public void runOpMode() {
         colorSensorL = hardwareMap.get(ColorSensor.class, "color sensor left");
         loweringJewelServo = hardwareMap.get(Servo.class, "lowering servo" );
         turningJewelServo = hardwareMap.get(Servo.class, "turning servo");
 
         waitForStart();
 
-        lower();
+        while(opModeIsActive()) {
 
-        sleep(1000);
+            lower();
 
-        if (loweringJewelServo.getPosition() == downPos) {
-            myPlacement = isLeft();
+            //turn(.75);
+
+            sleep(1000);
         }
 
-        while (opModeIsActive()) {
-            if (team == alliance.RED) {
-                red();
-            } else {
-                blue();
-            }
-        }
+    }
+
+        NewJewel(alliance myTeam) {
+        team = myTeam;
+    }
+
+    public void setUp() {
+
+
+
     }
 
     public placement isLeft() {
@@ -80,6 +78,7 @@ public class NewJewel extends LinearOpMode {
 
             return placement.RIGHT;
         }
+
     }
 
     public void lower() {
@@ -120,6 +119,3 @@ public class NewJewel extends LinearOpMode {
  *      Color Function - returns whether it's blue or red
  *      Servo move function - moves servo based on what color is where
  */
-
-
-
