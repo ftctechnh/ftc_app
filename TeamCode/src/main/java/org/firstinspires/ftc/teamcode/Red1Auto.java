@@ -160,7 +160,7 @@ public class Red1Auto extends LinearOpMode {
     }
 
     public void blue() {
-        if (!isLeft()) {
+        if (isLeft()) {
             turn(LEFT_POS);
         } else {
             turn(RIGHT_POS);

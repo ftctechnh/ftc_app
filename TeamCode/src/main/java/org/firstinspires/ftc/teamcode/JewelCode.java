@@ -77,7 +77,7 @@ public class JewelCode extends LinearOpMode {
         telemetry.update();
     }
 
-    public placement isLeft() {
+    public boolean isLeft() {
         telemetry.addLine("Random");
 
         telemetry.addData("Red:", colorSensorL.red());
@@ -88,11 +88,11 @@ public class JewelCode extends LinearOpMode {
        if (colorSensorL.red() > colorSensorL.blue()) {
             telemetry.addLine("See Red");
 
-            return placement.LEFT;
+            return true;
         } else {
             telemetry.addLine("See Blue");
 
-            return placement.RIGHT;
+            return false;
         }
 
     }
@@ -109,7 +109,7 @@ public class JewelCode extends LinearOpMode {
     }
 
     public void red() {
-        if (isLeft() == placement.LEFT) {
+        if (isLeft()) {
             turn(RIGHT_POS);
         } else {
             turn(LEFT_POS);
@@ -117,7 +117,7 @@ public class JewelCode extends LinearOpMode {
     }
 
     public void blue() {
-        if (isLeft() == placement.LEFT) {
+        if (isLeft()) {
             turn(LEFT_POS);
         } else {
             turn(RIGHT_POS);
