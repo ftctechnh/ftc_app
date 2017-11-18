@@ -17,8 +17,8 @@ public class Redtestauto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeStraight(100, -0.3);
-        encodeLat(100, 0.3);
+        encodeStraight(3, -0.3);
+        encodeLat(3, 0.3);
         encodeStraight(1000, 0.5);
     }
 
@@ -113,10 +113,10 @@ public class Redtestauto extends LinearOpMode {
             robot.rrDrive.setTargetPosition(targetRR);
 
             runtime.reset();
-            robot.flDrive.setPower(Math.abs(speed));
-            robot.frDrive.setPower(Math.abs(speed));
-            robot.rlDrive.setPower(Math.abs(speed));
-            robot.rrDrive.setPower(Math.abs(speed));
+            robot.flDrive.setPower(speed);
+            robot.frDrive.setPower(speed);
+            robot.rlDrive.setPower(speed);
+            robot.rrDrive.setPower(speed);
 
             while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rlDrive.isBusy() && robot.rrDrive.isBusy())) {
                 int i = 0;
