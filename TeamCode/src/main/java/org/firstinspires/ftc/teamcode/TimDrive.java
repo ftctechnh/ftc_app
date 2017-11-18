@@ -227,13 +227,6 @@ public class TimDrive extends LinearOpMode {
         resetSettings();
     }
 
-    Activity activity = new Activity();
-
-    public void playKazoo() {
-        MediaPlayer mp = MediaPlayer.create(activity, R.raw.kazoo);
-        mp.start();
-    }
-
     @Override
     public void runOpMode() {
         initSequence();

@@ -32,10 +32,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.Vuforia;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Image;
-import java.nio.ByteBuffer;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -49,9 +45,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CloseableFrame;
-import android.graphics.BitmapFactory;
-import android.graphics.Bitmap;
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -99,40 +92,6 @@ public class Blue2Auto extends LinearOpMode {
      */
     VuforiaLocalizer vuforia;
 
-    public Bitmap getFrame() {
-        try {
-            CloseableFrame frame = vuforia.getFrameQueue().take();
-
-            Image rgb = null;
-
-            long numImages = frame.getNumImages();
-
-            for (int i = 0; i < numImages; i++) {
-                if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
-                    rgb = frame.getImage(i);
-                    break;
-                }
-            }
-
-            ByteBuffer pixels = rgb.getPixels();
-            byte[] pixelArray = new byte[pixels.remaining()];
-            pixels.get(pixelArray, 0, pixelArray.length);
-
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inPreferredConfig = Bitmap.Config.RGB_565;
-            Bitmap loadedImage = BitmapFactory.decodeByteArray(pixelArray, 0, pixelArray.length, opts);
-
-            telemetry.addData("Success! Middle pixel color: ", loadedImage.getPixel(loadedImage.getWidth(), loadedImage.getHeight()));
-            //telemetry.update();
-
-            return loadedImage;
-        } catch (Exception e) {
-            telemetry.addData("Error creating CloseableFrame: ", e);
-            //telemetry.update();
-        }
-        return null;
-    }
-
     @Override public void runOpMode() {
 
         /*
@@ -147,12 +106,11 @@ public class Blue2Auto extends LinearOpMode {
         parameters.vuforiaLicenseKey = "ARjW6VD/////AAAAGbCMKpMCSEgSunPcA5cUQkuEKymuh9/mOQ5b+ngfYCdx3gPONkD3mscU39FUD7mRQRZSRZpjHZfohKwL2PYsVZrBcTlaY1JcJ9J5orZKqTxxy68irqEBuQkkfG72xEEPYuNq+yEJCNzYKhx3wFGqUV1H05Z1fFJa1ZiWfe4Tn9aO2Yf5AIkYCMz4K75LFU3ZM1wCgz9ubLhxZH2BWF9X0rhvnhZS2rnLHkxm+C+xzRbs2ZoGCOpDRb3Dy0iMG2y4Ve9/AApZQ+6sgSwlc9liA5jZ0QyT0dLqyfaoXwNxPqzBjhOj3FltEHxrWPdpOQm6B8BDC9Kv+BShnpi6g3yhf+msI3Qeqsns/nm6DrGF5zum";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        vuforia.setFrameQueueCapacity(1);
         VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true); //enables RGB565 format for the image
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -183,54 +141,56 @@ public class Blue2Auto extends LinearOpMode {
 
         relicTrackables.activate();
 
-        long lastImageTime = 0;
-        long time = 0;
-        int pictureDelta = 0;
-
         while (opModeIsActive()) {
 
-            time = System.currentTimeMillis();
-
-            if (time > lastImageTime + pictureDelta) {
-                getFrame();
-                lastImageTime = time;
-            }
-
+            /**
+             * See if any of the instances of {@link relicTemplate} are currently visible.
+             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
+             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
+             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
+             */
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
 
+                /* We further illustrate how to decompose the pose into useful rotational and
+                 * translational components */
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
+                    // Extract the X, Y, and Z components of the offset of the target relative to the robot
                     double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
 
+                    // Extract the rotational components of the target relative to the robot
                     double rX = rot.firstAngle;
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
                 }
 
+
+
+//close the claw first thing after start
                 robot.clawleft.setPosition(0.5);
                 robot.clawright.setPosition(0);
                 robot.arm.setPower(-0.2);
                 sleep(500);
 
                 robot.arm.setPower(0);
+                //actual auto start
 
-                sleep(300);
-                robot.armleft.setPosition(0);
-                sleep(1000);
-                encoderDrive(0.5, 72, 72, 2.8);
-                encoderDrive(0.5, 48, -48, 1.4);
-
-                /**
                 robot.armleft.setPosition(0.75);
                 robot.SideMotor.setPower(0.2);
                 sleep(590); //this part of the code knocks ball off
@@ -240,14 +200,16 @@ public class Blue2Auto extends LinearOpMode {
                 robot.armleft.setPosition(0);
                 sleep(1000);     // pause for servos to move
                 encoderDrive(0.5, 36, 36, 1.4);// (Power, Distance Left, Distance Right (INCHES), timeout)
-                encoderDrive(0.5, 48, -48, 1.4);  // (Power, Distance Left, Distance Right (INCHES), timeout)**/
+                encoderDrive(0.5, 48, -48, 1.4);  // (Power, Distance Left, Distance Right (INCHES), timeout)
+
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT){
+
                     encoderDrive(1, -5, -5, 0.5);
                     break;
                 }
-
                 if (vuMark == RelicRecoveryVuMark.CENTER){
+
                     robot.SideMotor.setPower(1);
                     sleep(600);
                     robot.SideMotor.setPower(0);
@@ -345,4 +307,3 @@ public class Blue2Auto extends LinearOpMode {
 
 
 }
-

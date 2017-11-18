@@ -65,7 +65,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Blue2Auto", group ="Pushbot")
+@Autonomous(name="Blue25Auto", group ="Pushbot")
 //@Disabled
 public class Blue25Auto extends LinearOpMode {
 
@@ -194,7 +194,8 @@ public class Blue25Auto extends LinearOpMode {
 
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT){
-
+                    robot.SideMotor.setPower(0.5);
+                    sleep(1750);
                     encoderDrive(1, -5, -5, 0.5);
                     break;
                 }
