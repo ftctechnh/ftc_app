@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @Autonomous(name="Go Forward", group="Linear Auto")
 
-public class testauto extends LinearOpMode {
+public class Bluetestauto extends LinearOpMode {
     final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
@@ -18,20 +18,45 @@ public class testauto extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        waitForStart();
+        telemetry.addData("skatin fast,", "eatin' ass");
+        encodeStraight(1000, 1);
+    }
+
+    public void encodeLat(double distance, double speed) {
         robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        waitForStart();
-        telemetry.addData("skatin fast,", "eatin' ass");
-        encode(1000, 1);
-    }
 
-    public void encode(double distance, double speed) {
         int targetFL;
         int targetFR;
         int targetRL;
         int targetRR;
+
+        if (robot.color.red() > 50) {
+            robot.flDrive.setPower(speed);
+            robot.frDrive.setPower(-1 * speed);
+            robot.rlDrive.setPower(-1 * speed);
+            robot.rrDrive.setPower(speed);
+        } else {
+            robot.flDrive.setPower(-1 * speed);
+            robot.frDrive.setPower(speed);
+            robot.rlDrive.setPower(speed);
+            robot.rrDrive.setPower(-1 * speed);
+        }
+    }
+
+    public void encodeStraight(double distance, double speed) {
+        int targetFL;
+        int targetFR;
+        int targetRL;
+        int targetRR;
+
+        robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if(opModeIsActive()) {
             robot.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
