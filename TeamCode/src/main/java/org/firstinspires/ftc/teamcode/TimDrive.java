@@ -101,6 +101,8 @@ public class TimDrive extends LinearOpMode {
     State buttons = new State();
     Timing timings = new Timing();
 
+    double rightCorrection = 0.72;
+
     public void resetSettings() {
         settings.set("claw", Toggle.Inactive);
         settings.set("speed-modifier", 100);
@@ -124,10 +126,10 @@ public class TimDrive extends LinearOpMode {
     public void moveDirection(double x, double y) {
         robot.BLMotor.setPower(y);
         robot.FLMotor.setPower(y);
-        robot.FRMotor.setPower(y);
-        robot.BRMotor.setPower(y);
+        robot.FRMotor.setPower(rightCorrection * y);
+        robot.BRMotor.setPower(rightCorrection * y);
 
-        robot.SideMotor.setPower(x);
+        robot.SideMotor.setPower(-x);
     }
 
     public void moveCardinalDirection(double x, double y) {
@@ -140,7 +142,7 @@ public class TimDrive extends LinearOpMode {
 
     public void updateArm() {
         if (gamepad2.right_stick_y != 0) {
-            double armPower = gamepad2.right_stick_y * settings.get("speed-modifier") / 100;
+            double armPower = gamepad2.right_stick_y * settings.get("arm-modifier") / 100;
             robot.arm.setPower(armPower);
         } else {
             robot.arm.setPower(0);
@@ -148,6 +150,7 @@ public class TimDrive extends LinearOpMode {
     }
 
     public boolean updateMovement() {
+        if (!(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0)) return true;
         if (settings.get("lock-modifier") == Toggle.Active) {
             moveDirection(gamepad1.left_stick_x * settings.get("speed-modifier") / 100,
                     gamepad1.left_stick_y * settings.get("speed-modifier") / 100);
@@ -155,7 +158,7 @@ public class TimDrive extends LinearOpMode {
             moveCardinalDirection(gamepad1.left_stick_x * settings.get("speed-modifier") / 100,
                     gamepad1.left_stick_y * settings.get("speed-modifier") / 100);
         }
-        return !(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0);
+        return false;
     }
 
     public void updateLeftArm() {
@@ -169,7 +172,7 @@ public class TimDrive extends LinearOpMode {
     }
 
     public void updateClaw() {
-        if (gamepad2.right_bumper && timings.get("claw").needsUpdate()) {
+        if (gamepad2.y && timings.get("claw").needsUpdate()) {
             timings.get("claw").markUpdated();
 
             if (settings.get("claw") == Toggle.Inactive) {
@@ -237,6 +240,12 @@ public class TimDrive extends LinearOpMode {
                 settings.set("lock-modifier", Toggle.Active);
             } else {
                 settings.set("lock-modifier", Toggle.Inactive);
+            }
+
+            if (gamepad2.right_stick_button) {
+                settings.set("arm-modifier", 25);
+            } else {
+                settings.set("arm-modifier", 100);
             }
 
             updateArm();
