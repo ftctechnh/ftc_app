@@ -77,7 +77,7 @@ public class MecanumRework extends OpMode {
         // rotation magnitude
         if (gamepad1.left_bumper){
             rotate = gamepad1.left_trigger * -1;
-        } else {
+        } else  {
             rotate = gamepad1.left_trigger;
         }
         // alternative rotation mag.

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="linear spinear 2.0", group="Linear Auto")
+@Autonomous(name="Go Forward", group="Linear Auto")
 
 public class testauto extends LinearOpMode {
     final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
@@ -24,7 +24,7 @@ public class testauto extends LinearOpMode {
         robot.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(48, .5);
+        encode(1000, 1);
     }
 
     public void encode(double distance, double speed) {
@@ -64,7 +64,7 @@ public class testauto extends LinearOpMode {
                 telemetry.addData("fl: ", targetFL);
                 telemetry.addData("fr: ", targetFR);
                 telemetry.addData("rl: ", targetRL);
-                //telemetry.addData("rr: ", targetRR);
+                telemetry.addData("rr: ", targetRR);
                 telemetry.addData("cool number: ", i);
                 i++;
                 telemetry.update();

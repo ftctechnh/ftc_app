@@ -46,6 +46,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Dirty Mecanum TeleOp", group="Iterative Opmode")
+@Disabled
 public class DirtyMecanum extends OpMode
 {
     // move that gear up
