@@ -54,12 +54,21 @@ public class ourhardware
     public DcMotor  rightfront  = null;
     public DcMotor  leftback  = null;
     public DcMotor  rightback   = null;
+    public DcMotor  armmotor    = null;
     public Servo    rightClaw   = null;
+    public Servo    lazysusan   = null;
 
+
+    static final double MIN_ARM_POSITION  = -400;
+    static final double MAX_ARM_POSITION  = 400;
+    static final int MULTIPLIER  = 2;
     public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
-
+    static final double ARM_UP_POWER    =  0 ;
+    static final double ARM_DOWN_POWER  = 1 ;
+    static final double jawsopen = 0.7;
+    static final double jawsclosed = 0;
+    static final double lazyleft = 0.4;
+    static final double lazyright = 0.7;
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -80,26 +89,79 @@ public class ourhardware
         rightfront = hwMap.get(DcMotor.class, "rightfront");
         leftback = hwMap.get(DcMotor.class, "leftback");
         rightback = hwMap.get(DcMotor.class, "rightback");
+        armmotor = hwMap.get(DcMotor.class, "armmotor");
         leftfront.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightfront.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftback.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightback.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        armmotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
         leftfront.setPower(0);
         rightfront.setPower(0);
         leftback.setPower(0);
         rightback.setPower(0);
+        armmotor.setPower(0);
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftfront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightfront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftback.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightback.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // Define and initialize ALL installed servos.
         rightClaw = hwMap.get(Servo.class, "jaws");
         rightClaw.setPosition(MID_SERVO);
+        lazysusan = hwMap.get(Servo.class, "lazysusan");
+        lazysusan.setPosition(ARM_DOWN_POWER);
+
+        //servo
+        rightClaw= hwMap.servo.get("jaws");
+        lazysusan= hwMap.servo.get("lazysusan");
+
+        armmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+    public void move_arm_function (float stick_y_value) {
+
+        int change_amount =((int)stick_y_value*10*MULTIPLIER);
+        int armPosition = ((int) armmotor.getCurrentPosition()+ change_amount);
+        int safePosition = ((int)Range.clip(armPosition,MIN_ARM_POSITION,MAX_ARM_POSITION));
+
+        armmotor.setTargetPosition(safePosition);
+        armmotor.setPower(.3);
+
+        while (armmotor.isBusy()){
+            try {
+                Thread.sleep(1);
+            }
+            catch (InterruptedException e){
+                System.out.print("got interrrupted");
+            }
+            break;
+        }
+        armmotor.setPower(0);
+    }
+
+      /*  public void waitForTick(long periodMs) {
+
+        long remaining = periodMs - (long) period.milliseconds();
+
+        // sleep for the remaining portion of the regular cycle period.
+        if (remaining > 0) {
+            try {
+                Thread.sleep(remaining);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        // Reset the cycle clock for the next pass.
+        period.reset();
+    }*/
 
     /* We stole this code from https://github.com/ftc-9773/ftc_app_9773/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/TeleOp.java */
     public void mecanumWheelDrive(float strafeDirection, float strafeThrottle, float turnDirection, float turnThrottle) {
