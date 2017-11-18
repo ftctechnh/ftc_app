@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.text.method.Touch;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by Kaden on 10/19/2017.
@@ -25,8 +28,8 @@ public class ScrimmageForkLiftDrive extends OpMode {
     private double DrawerSlideSpeed = 0;
     private double up = 0;
     private double down = 0;
-    private DigitalChannel TopButton;
-    private DigitalChannel BottomButton;
+    private TouchSensor TopButton;
+    private TouchSensor BottomButton;
     private DcMotor DrawerSlide;
     //Relic Recovery
     private Servo relicClaw;
@@ -63,6 +66,9 @@ public class ScrimmageForkLiftDrive extends OpMode {
         rightClaw.setPosition(clawPosition);
         leftClaw = hardwareMap.servo.get("s6");
         leftClaw.setPosition(clawPosition);
+        DrawerSlide = hardwareMap.dcMotor.get("m6");
+        TopButton = hardwareMap.get(TouchSensor.class, "b0");
+        BottomButton = hardwareMap.get(TouchSensor.class, "b1");
         //Relic Recovery
         relicClaw = hardwareMap.servo.get("s1");
         relicClaw.setPosition(servohighend);
@@ -74,7 +80,7 @@ public class ScrimmageForkLiftDrive extends OpMode {
         FrontRight = hardwareMap.dcMotor.get("m2");
         RearLeft = hardwareMap.dcMotor.get("m3");
         RearRight = hardwareMap.dcMotor.get("m4");
-        DrawerSlide = hardwareMap.dcMotor.get("m5");
+
 
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
@@ -130,7 +136,7 @@ public class ScrimmageForkLiftDrive extends OpMode {
         down = gamepad1.left_trigger;
         DrawerSlideSpeed = up - down;
         DrawerSlide.setPower(DrawerSlideSpeed);
-        if (!((!TopButton.getState() && DrawerSlideSpeed > 0) || (!BottomButton.getState() && DrawerSlideSpeed < 0))) {
+        if (!((!TopButton.isPressed() && DrawerSlideSpeed > 0) || (!(BottomButton.isPressed()) && DrawerSlideSpeed < 0))) {
             DrawerSlide.setPower(DrawerSlideSpeed);
         } else {
             DrawerSlide.setPower(0.0);
