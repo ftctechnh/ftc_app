@@ -17,9 +17,9 @@ package org.directcurrent.opencv
 import android.util.Log
 import android.view.View
 import com.qualcomm.ftcrobotcontroller.R
-import org.directcurrent.opencv.visionprocessors.BrownGlyphFinder
-import org.directcurrent.opencv.visionprocessors.GrayGlyphFinder
 import org.directcurrent.opencv.visionprocessors.VisionProcessor
+import org.directcurrent.opencv.visionprocessors.objectfinders.BlueJewelFinder
+import org.directcurrent.opencv.visionprocessors.objectfinders.RedJewelFinder
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
 import org.opencv.android.*
 import org.opencv.core.Mat
@@ -38,6 +38,18 @@ import org.opencv.core.Mat
 class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
                    private var _cameraIndex: Int): CameraBridgeViewBase.CvCameraViewListener2
 {
+    /**
+     * Used in the OpenCV state machine that determines whether the display is open/closed, etc.
+     */
+    private enum class _CVState
+    {
+        HIDDEN ,
+        SHOW_ANALYZE ,
+        SHOW
+    }
+
+    private var _state = _CVState.SHOW   // We start with SHOW because that's what it defaults to
+
     private var _jCamView: JavaCameraView? = null       // Camera View in main activity
 
     private var _loaderCallBack =                       // Used when activity state changes
@@ -86,8 +98,8 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
         }
 
         // Add our vision processors
-        _visionProcessors.add(GrayGlyphFinder())
-        _visionProcessors.add(BrownGlyphFinder())
+        _visionProcessors.add(RedJewelFinder())
+        _visionProcessors.add(BlueJewelFinder())
     }
 
 
@@ -103,12 +115,12 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
     {
         if (!OpenCVLoader.initDebug())
         {
-            Log.e(this.javaClass.simpleName, "  OpenCVLoader.initDebug(), not working.")
+            Log.e(this.javaClass.simpleName, "Initialization failed")
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, mainActivity, _loaderCallBack)
         }
         else
         {
-            Log.d(this.javaClass.simpleName, "  OpenCVLoader.initDebug(), working.")
+            Log.d(this.javaClass.simpleName, "Initialization successful")
             _loaderCallBack.onManagerConnected(LoaderCallbackInterface.SUCCESS)
         }
     }
@@ -129,84 +141,96 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
     }
 
 
-    fun analyze()
+    /**
+     * Toggles OpenCV analysis
+     */
+    fun toggleAnalyze()
     {
-        mainActivity.openCVRunner()._toggleAnalyze()
-
-        if (mainActivity.openCVRunner()._analysisEnabled())
+        if(_state == _CVState.SHOW)
         {
-            mainActivity.analysisText().setText(R.string.analysis_enabled)
+            _setState(_CVState.SHOW_ANALYZE)
         }
         else
         {
-            mainActivity.analysisText().setText(R.string.analysis_disabled)
+            _setState(_CVState.SHOW)
         }
     }
 
 
+    /**
+     * Toggles showing/hiding the OpenCV window
+     */
     fun toggleShowHide()
     {
-        if (mainActivity.showHideButton().text === mainActivity.getString(R.string.hide))
+        if(_state == _CVState.HIDDEN)
         {
-            mainActivity.openCVRunner()._disableCameraView()
-            mainActivity.showHideButton().setText(R.string.show)
-            mainActivity.layoutHeader().setText(R.string.OpenCvCameraViewDisabled)
-
-            if (mainActivity.openCVRunner()._analysisEnabled())
-            {
-                mainActivity.analysisText().setText(R.string.analysis_enabled)
-            }
-            else
-            {
-                mainActivity.analysisText().setText(R.string.analysis_disabled)
-            }
+            _setState(_CVState.SHOW)
         }
         else
         {
-            mainActivity.openCVRunner()._enableCameraView()
-            mainActivity.showHideButton().setText(R.string.hide)
-            mainActivity.layoutHeader().setText(R.string.opencv_camera_view_enabled)
-            mainActivity.analysisText().setText(R.string.analysis_disabled)
+            _setState(_CVState.HIDDEN)
         }
     }
 
 
     /**
-     * QOL function that shows the Java Camera View in your main activity layout. Also enables
-     * the Java Camera View
+     * OpenCV state machine
      */
-    private fun _enableCameraView()
+    private fun _setState(state: _CVState)
     {
-        _jCamView?.visibility = View.VISIBLE
-        enableView()
+        _state = state
+
+        when(state)
+        {
+            _CVState.HIDDEN          ->
+            {
+                _jCamView?.visibility = View.GONE
+                disableView()
+
+                mainActivity.analyzeButton().isEnabled = false
+                mainActivity.layoutHeader().setText(R.string.OpenCvCameraViewDisabled)
+                mainActivity.analysisText().setText(R.string.analysis_disabled)
+                mainActivity.showHideButton().setText(R.string.show)
+
+                _setAnalyze(false)
+            }
+
+            _CVState.SHOW            ->
+            {
+                _jCamView?.visibility = View.VISIBLE
+                enableView()
+
+                mainActivity.analyzeButton().isEnabled = true
+                mainActivity.layoutHeader().setText(R.string.opencv_camera_view_enabled)
+                mainActivity.analysisText().setText(R.string.analysis_disabled)
+                mainActivity.showHideButton().setText(R.string.hide)
+
+                _setAnalyze(false)
+            }
+
+            _CVState.SHOW_ANALYZE    ->
+            {
+                _jCamView?.visibility = View.VISIBLE
+                enableView()
+
+                mainActivity.analyzeButton().isEnabled = true
+                mainActivity.layoutHeader().setText(R.string.opencv_camera_view_enabled)
+                mainActivity.analysisText().setText(R.string.analysis_enabled)
+                mainActivity.showHideButton().setText(R.string.hide)
+
+                _setAnalyze(true)
+            }
+        }
     }
 
 
     /**
-     * QOL function that hides the Java Camera View in your main activity layout. Also disables
-     * the Java Camera View
+     * Sets whether or not to analyze to the Boolean value passed in
      */
-    private fun _disableCameraView()
+    private fun _setAnalyze(set: Boolean)
     {
-        _jCamView?.visibility = View.GONE
-        disableView()
+        _analyze = set
     }
-
-
-    /**
-     * Toggles whether to perform vision analysis on frame or not
-     */
-    private fun _toggleAnalyze()
-    {
-        _analyze = !_analyze
-    }
-
-
-    /**
-     * Returns whether or not analysis in enabled
-     */
-    private fun _analysisEnabled(): Boolean
-            = _analyze
 
 
     /**

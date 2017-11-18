@@ -62,6 +62,24 @@ public class Drivetrain extends RobotComponent
 
 
     /**
+     * @return The left motor of the drivetrain
+     */
+    public DcMotor leftMotor()
+    {
+        return _leftMotor;
+    }
+
+
+    /**
+     * @return The right motor of the drivetrain
+     */
+    public DcMotor rightMotor()
+    {
+        return _rightMotor;
+    }
+
+
+    /**
      * @return Returns the current state of the drivetrain
      */
     public State state()
