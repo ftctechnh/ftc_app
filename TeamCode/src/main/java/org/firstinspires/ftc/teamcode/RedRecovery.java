@@ -12,7 +12,7 @@ import android.util.Log;
 
 //This makes the OpMode available in the Autonomouds group under the name 'Autonomous', in the Driver Station
 //@Disabled //AUSTIN REMEMBER TO REMOVE THIS -Austin from 4:55 P. M. on 11/7/17 // remembered
-@Autonomous(name = "Autonomous", group = "Autonomous")
+@Autonomous(name = "RAutonomousR", group = "Autonomous")
 //This is the basic class
 public class RedRecovery extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.
@@ -89,7 +89,7 @@ public class RedRecovery extends LinearOpMode {
         servo.setPosition(0.9);
         servo.setPosition(0.9);
         Thread.sleep(1000);
-        rotations((47/4), .5);
+        rotations((32/ C), .5);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
