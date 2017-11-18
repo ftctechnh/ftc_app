@@ -2,12 +2,11 @@ package org.firstinspires.ftc.team9853.systems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.systems.RackAndPinion;
-import org.chathamrobotics.common.utils.RGBAColor;
+import org.chathamrobotics.common.RGBAColor;
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
 import org.chathamrobotics.common.IsBusyException;
 import org.chathamrobotics.common.robot.RobotLogger;

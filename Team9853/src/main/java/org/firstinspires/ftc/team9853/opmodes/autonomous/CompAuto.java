@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
-import org.chathamrobotics.common.opmode.AutonomousRnB;
 import org.chathamrobotics.common.opmode.AutonomousTemplate;
 import org.chathamrobotics.common.opmode.exceptions.StoppedException;
 import org.chathamrobotics.common.robot.RobotFace;
-import org.chathamrobotics.common.utils.RGBAColor;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.chathamrobotics.common.RGBAColor;
 import org.firstinspires.ftc.team9853.Robot9853;
 
 /**
