@@ -90,6 +90,8 @@ public class RedAudience extends LinearOpMode {
         servo.setPosition(0.9);
         Thread.sleep(1000);
         rotations((27 / C), .5);
+        turnLeftGyro(90, .25);
+        rotations(1, .5);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -129,7 +131,6 @@ public class RedAudience extends LinearOpMode {
     }
 
     void turnLeftGyro(int degree, double Power)throws InterruptedException{
-        try {
             Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
             int startHeading = getHeading();
             int goal = (startHeading - degree);
@@ -144,15 +145,9 @@ public class RedAudience extends LinearOpMode {
                 waitOneFullHardwareCycle();
             }
             stopmoving();
-        }
-        catch (InterruptedException e){
 
-        }
     }
     void turnRightGyro(int degree, double Power)throws InterruptedException{
-        try {
-
-
             Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
             int startHeading = getHeading();
             int goal = (startHeading + degree);
@@ -168,9 +163,6 @@ public class RedAudience extends LinearOpMode {
             }
             stopmoving();
         }
-        catch (InterruptedException e){
-        }
-    }
     void forward(double power) {
 
         FrontLeftMotor.setPower(power);
@@ -278,7 +270,7 @@ public class RedAudience extends LinearOpMode {
 
     }
     public int fixHeading(int target)throws InterruptedException{
-        try{int newheading = gyroSensor.getHeading();
+        int newheading = gyroSensor.getHeading();
         int diff = Math.abs(target - newheading);
         if(diff > 200) {
             if(newheading > target){
@@ -299,22 +291,18 @@ public class RedAudience extends LinearOpMode {
             }
         }
         target = newheading;
-       }
-        catch (InterruptedException e){
-        }
+
         return target;
     }
 
     public int getHeading ()throws InterruptedException {
-        try {
             int newHeading = gyroSensor.getHeading();
             newHeading = fixHeading(heading);
             heading = newHeading;
 
 
-        }
-        catch (InterruptedException e) {
-        }
+
+
         return heading;
     }
 

@@ -37,6 +37,7 @@ public class BlueAudience extends LinearOpMode {
     double D = 4.0; //Diameter of wheels
     double C = D * Math.PI;//One rotation of tank gear/wheel
     int heading = 0;
+
     public void runOpMode() throws InterruptedException {
         //Start with the basic declaration of variable strings that the phones will read
 
@@ -52,15 +53,6 @@ public class BlueAudience extends LinearOpMode {
             rightClaw.setPosition(clawPosition);
             leftClaw = hardwareMap.servo.get("s2");
             leftClaw.setPosition(clawPosition);
-            gyroSensor = hardwareMap.gyroSensor.get("g1");
-            gyroSensor.calibrate();
-            while (gyroSensor.isCalibrating()) {
-                waitOneFullHardwareCycle();
-                Thread.sleep(50);
-            }
-            gyroSensor.resetZAxisIntegrator();
-            heading = gyroSensor.getHeading();
-            telemetry.addData("INITIAL GYRO", heading);
 
         } catch (IllegalArgumentException e) {
 
@@ -68,14 +60,22 @@ public class BlueAudience extends LinearOpMode {
 
         cS = hardwareMap.colorSensor.get("cs1");
         servo = hardwareMap.servo.get("s3");
+        gyroSensor = hardwareMap.gyroSensor.get("g1");
         // Now do anything else you need to do in the initilazation phase, like calibrating the gyros, setting a color sensors lights off, etc.
 
         FrontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         BackLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         cS.enableLed(true);
-        telemetry.addData("it did the thing", 1);
-        telemetry.addData("Anything you need to know before starting", 1);
+        gyroSensor.calibrate();
+        while (gyroSensor.isCalibrating()) {
+            waitOneFullHardwareCycle();
+            Thread.sleep(50);
+        }
+        gyroSensor.resetZAxisIntegrator();
+        heading = gyroSensor.getHeading();
+        telemetry.addData("INITIAL GYRO", heading);
+        telemetry.update();
         telemetry.update();
         waitForStart();
         // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
@@ -128,49 +128,42 @@ public class BlueAudience extends LinearOpMode {
 
     }
 
-    void turnLeftGyro(int degree, double Power)throws InterruptedException{
-        try {
-            Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
-            int startHeading = getHeading();
-            int goal = (startHeading - degree);
-            turnLeft(Power);
-            while (heading > goal) {
-                getHeading();
-                telemetry.addData("heading", heading);
-                telemetry.addData("goal", goal);
+    void turnLeftGyro(int degree, double Power) throws InterruptedException {
+        Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
+        int startHeading = getHeading();
+        int goal = (startHeading - degree);
+        turnLeft(Power);
+        while (heading > goal) {
+            getHeading();
+            telemetry.addData("heading", heading);
+            telemetry.addData("goal", goal);
 
 
-                telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
-                waitOneFullHardwareCycle();
-            }
-            stopmoving();
+            telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
+            waitOneFullHardwareCycle();
         }
-        catch (InterruptedException e){
-
-        }
+        stopmoving();
     }
-    void turnRightGyro(int degree, double Power)throws InterruptedException{
-        try {
+
+    void turnRightGyro(int degree, double Power) throws InterruptedException {
 
 
-            Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
-            int startHeading = getHeading();
-            int goal = (startHeading + degree);
-            turnRight(Power);
-            while (heading < goal) {
-                getHeading();
-                telemetry.addData("heading", heading);
-                telemetry.addData("goal", goal);
+        Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
+        int startHeading = getHeading();
+        int goal = (startHeading + degree);
+        turnRight(Power);
+        while (heading < goal) {
+            getHeading();
+            telemetry.addData("heading", heading);
+            telemetry.addData("goal", goal);
 
 
-                telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
-                waitOneFullHardwareCycle();
-            }
-            stopmoving();
+            telemetry.addData("swarm", "Gyro Heading   " + heading + "   goal   " + goal);
+            waitOneFullHardwareCycle();
         }
-        catch (InterruptedException e){
-        }
+        stopmoving();
     }
+
     void forward(double power) {
 
         FrontLeftMotor.setPower(power);
@@ -179,13 +172,14 @@ public class BlueAudience extends LinearOpMode {
         BackRightMotor.setPower(power);
     }
 
-    void turnLeft(double power){
+    void turnLeft(double power) {
         FrontLeftMotor.setPower(-power);
         FrontRightMotor.setPower(power);
         BackLeftMotor.setPower(-power);
         BackRightMotor.setPower(power);
     }
-    void turnRight(double power){
+
+    void turnRight(double power) {
         FrontLeftMotor.setPower(power);
         FrontRightMotor.setPower(-power);
         BackLeftMotor.setPower(power);
@@ -277,44 +271,40 @@ public class BlueAudience extends LinearOpMode {
     public void driveMecanum(double forward, double sideways, double turn, double speed, double distance) {
 
     }
-    public int fixHeading(int target)throws InterruptedException{
-        try{int newheading = gyroSensor.getHeading();
-            int diff = Math.abs(target - newheading);
-            if(diff > 200) {
-                if(newheading > target){
-                    while(diff > 200){
-                        newheading -=360;
-                        diff = Math.abs(target - newheading);
-                        waitOneFullHardwareCycle();
-                    }
 
-
+    public int fixHeading(int target) throws InterruptedException {
+        int newheading = gyroSensor.getHeading();
+        int diff = Math.abs(target - newheading);
+        if (diff > 200) {
+            if (newheading > target) {
+                while (diff > 200) {
+                    newheading -= 360;
+                    diff = Math.abs(target - newheading);
+                    waitOneFullHardwareCycle();
                 }
-                else{
-                    while (diff > 200){
-                        newheading += 360;
-                        diff = Math.abs(target - newheading);
-                        waitOneFullHardwareCycle();
-                    }
+
+
+            } else {
+                while (diff > 200) {
+                    newheading += 360;
+                    diff = Math.abs(target - newheading);
+                    waitOneFullHardwareCycle();
                 }
             }
-            target = newheading;
         }
-        catch (InterruptedException e){
-        }
+        target = newheading;
+
+
         return target;
-    }
+}
 
     public int getHeading ()throws InterruptedException {
-        try {
-            int newHeading = gyroSensor.getHeading();
+        int newHeading = gyroSensor.getHeading();
             newHeading = fixHeading(heading);
             heading = newHeading;
 
 
-        }
-        catch (InterruptedException e) {
-        }
+
         return heading;
     }
 
