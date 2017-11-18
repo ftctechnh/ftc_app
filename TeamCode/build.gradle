@@ -13,5 +13,4 @@ apply from: '../build.common.gradle'
 dependencies {
     compile project(':openCVLibrary330')
     compile project(':MPChartLib')
-    compile project(':GraphView')
 }

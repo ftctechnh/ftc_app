@@ -20,9 +20,9 @@ public class BotHardware {
     //enums to make everything purty
     public enum Motor {
         frontRight("fr", true),
-        backRight("br", false),
+        backRight("br", true),
         frontLeft("fl", false),
-        backLeft("bl", true),
+        backLeft("bl", false),
         lift("l", false),
         lights("green", false);
 
@@ -56,7 +56,7 @@ public class BotHardware {
         public static final double stickUp = 0;
         public static final double stickDown = 0.95;
 
-        public static final double garyUp = 0.3;
+        public static final double garyUp = 0.27;
         public static final double garyDown = 0.75;
 
         private final String name;
