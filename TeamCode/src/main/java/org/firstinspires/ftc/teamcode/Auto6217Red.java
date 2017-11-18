@@ -61,11 +61,11 @@ public class Auto6217Red extends LinearOpMode {
         servoTapper.setPosition(0.0d);
         double servoPosition = servoTapper.getPosition();
         telemetry.addData("1","%f", servoPosition);
-
-        servoTapper.setPosition(1.d);
+        Wait(5);
+        servoTapper.setPosition(50.d);
         servoPosition = servoTapper.getPosition();
         telemetry.addData("2","%f", servoPosition);
-
+        Wait(5);
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
 
@@ -83,9 +83,9 @@ public class Auto6217Red extends LinearOpMode {
         else {
           //  move(0f,.25f,2);
             }
-        telemetry.addData("3","Going Down Again");
-        telemetry.update();
-        servoTapper.setPosition(0.0d);
+        //telemetry.addData("3","Going Down Again");
+        //telemetry.update();
+        //nservoTapper.setPosition(0.0d);
     }
 
     void move(float posx, float posy, float waitTime) {
