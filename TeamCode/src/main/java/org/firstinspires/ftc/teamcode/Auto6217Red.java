@@ -59,12 +59,8 @@ public class Auto6217Red extends LinearOpMode {
         waitForStart();
 
         servoTapper.setPosition(0.0d);
-        double servoPosition = servoTapper.getPosition();
-        telemetry.addData("1","%f", servoPosition);
         Wait(5);
-        servoTapper.setPosition(50.d);
-        servoPosition = servoTapper.getPosition();
-        telemetry.addData("2","%f", servoPosition);
+        servoTapper.setPosition(0.5d);
         Wait(5);
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
@@ -75,17 +71,19 @@ public class Auto6217Red extends LinearOpMode {
         redval = colorSensor.red();
         iSeeRed = (blueval == 0) && (redval > 2);
         iSeeBlue = (blueval > 3) && (redval == 0);
-
+        telemetry.addData("1", "red = %03d", redval);
+        telemetry.addData("2", "blue = %03d", blueval);
+        telemetry.update();
+        Wait(5);
 
         if  ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
-           // move(0f, -.25f, 2);
+           // move(0f, .25f, 2);
         }
         else {
-          //  move(0f,.25f,2);
+          //  move(0f,-.25f,2);
             }
-        //telemetry.addData("3","Going Down Again");
-        //telemetry.update();
-        //nservoTapper.setPosition(0.0d);
+        servoTapper.setPosition(0.1d);
+        Wait(5);
     }
 
     void move(float posx, float posy, float waitTime) {
@@ -239,8 +237,8 @@ public class Auto6217Red extends LinearOpMode {
     void Wait(double WaitTime) {
         runtime.reset();
         while (runtime.seconds() < WaitTime) {
-            telemetry.addData("5", " %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+            //telemetry.addData("5", " %2.5f S Elapsed", runtime.seconds());
+            //telemetry.update();
         }
     }
 
