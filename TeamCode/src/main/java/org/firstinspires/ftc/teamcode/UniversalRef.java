@@ -102,6 +102,8 @@ public class UniversalRef extends LinearOpMode
                 robot.stopAllMotors();
                 break;
             default:
+                robot.driveStraight_In(28, .4);
+                break;
         }
     }
 }

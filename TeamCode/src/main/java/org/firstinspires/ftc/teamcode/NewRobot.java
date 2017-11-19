@@ -56,8 +56,8 @@ public class NewRobot
         relicTrackables.activate();
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-        liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        zeroStuff();
+        //liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
+        //zeroStuff();
     }
 
     public char getGlyphCipher()
