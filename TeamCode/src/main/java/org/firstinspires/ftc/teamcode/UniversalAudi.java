@@ -91,6 +91,7 @@ public class UniversalAudi extends LinearOpMode
                 //INSERT CODE TO RAISE WING
                 break;
             default:
+                robot.driveStraight_In(30, .4);
                 break;
         }
     }
