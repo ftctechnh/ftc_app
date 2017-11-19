@@ -38,6 +38,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -66,7 +74,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Pushbot: Auto Potato By Encoder With Jewels", group="PushbotPotato")
-public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_RED_TEAM_TOWARDS_AUDIENCE extends LinearOpMode {
+public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_BLUE_TEAM_TOWARDS_AUDIENCE extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -83,8 +91,30 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_RED_TEAM_TOWARDS_
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
 
+    OpenGLMatrix lastLocation = null;
+
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
+    VuforiaLocalizer vuforia;
+
+
     @Override
     public void runOpMode() {
+
+        //do Euphoria set up
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "Ac91sD3/////AAAAGSPvdhZYS0r1sQZSgPIqSDw2+8qYbU3ItiAGMo3p6u968Veqoa+BQvQ9TCJcsympdrdBAg0Q/sk3ctnS1KMjB93g7FSSTmAIbCx58u4HkhnipznO/S1npXm/aw+9e1zvEuiWmC37k01vi6rcFQlGNpTf0wlvYLdDyYnXj1ZjWQahvgI71SVOnjUzUWiDqb5KqTC6y6tHy76fr0VUKNskaXMILMyFTtMa/cAT79d5pnrScfIKXruQ+iv763BnePgxHheNZSQplT0ospS5AXXnDOvfc7y9E08ec9RhE64Ld6hADeaLX0X8FbZ/N8BWP5zCZRIN741SlvU7KoqPjayk/P846lLAqmn9Mum2blZH9Fzz";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        relicTrackables.activate();
 
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
@@ -126,10 +156,11 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_RED_TEAM_TOWARDS_
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        for(double d = 0.675; d > 0.1; d-=0.025){
+        for(double d = 0.675; d > 0.1; d -= 0.025){
             robot.jewelAnnihilator.setPosition(d);
             sleep(50);
         }
@@ -145,11 +176,14 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_RED_TEAM_TOWARDS_
         telemetry.update();
 
         sleep(1000);
+        boolean z = true;
 
         if (sensorColor.blue() > 50){
             encoderDrive(DRIVE_SPEED, -1, -1, 0.5);
-        }else{
+            z = true;
+        }else {
             encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
+            z = false;
         }
 
         for(double d = 0.1; d < 0.675; d+=0.025){
@@ -157,18 +191,44 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_RED_TEAM_TOWARDS_
             sleep(50);
         }
 
+        if (z == true){
+            encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
+        }else{
+            encoderDrive(DRIVE_SPEED, -1, -1, 0.5);
+        }
+
+        for(double c = 0.0; c < 2.0; c += 0.1) {
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+                /* Found an instance of the template. In the actual game, you will probably
+                 * loop until this condition occurs, then move on to act accordingly depending
+                 * on which VuMark was visible. */
+                telemetry.addData("VuMark", "%s visible", vuMark);
+
+                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
+                 * it is perhaps unlikely that you will actually need to act on this pose information, but
+                 * we illustrate it nevertheless, for completeness. */
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                telemetry.addData("Pose", format(pose));
+            }
+        }
+
         sleep(1000);
 
-
-
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-
-        encoderDrive(DRIVE_SPEED,  7.5,  7.5, 5.0);
-
+        switch (vuMark) {
+            case LEFT:
+                break;
+            case CENTER:
+                break;
+            case RIGHT:
+                break;
+            case UNKNOWN:
+                break;
+        }
         telemetry.addData("Path", "Complete");
         telemetry.update();
         }
+
 
 
 
@@ -232,5 +292,8 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_RED_TEAM_TOWARDS_
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 }
