@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,6 +51,8 @@ public class Hardware750 {
     public DcMotor rrDrive   = null;
     public ColorSensor color = null;
     public DcMotor gripper   = null;
+    public DcMotor lift      = null;
+    public DigitalChannel limitTop = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -66,21 +69,17 @@ public class Hardware750 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        try {
-            gripper = hwMap.get(DcMotor.class, "gripper");
-            arm     = hwMap.get(Servo.class, "colorarm");
-            color   = hwMap.get(ColorSensor.class, "color");
-        } catch (Exception ex) {
+        gripper = hwMap.get(DcMotor.class, "gripper");
+        arm     = hwMap.get(Servo.class, "colorarm");
+        color   = hwMap.get(ColorSensor.class, "color");
+        lift    = hwMap.get(DcMotor.class, "lift");
+        limitTop = hwMap.get(DigitalChannel.class, "limitTop");
+        limitTop.setMode(DigitalChannel.Mode.INPUT);
 
-        }
-        try {
-            flDrive = hwMap.get(DcMotor.class, "flDrive");
-            frDrive = hwMap.get(DcMotor.class, "frDrive");
-            rlDrive = hwMap.get(DcMotor.class, "rlDrive");
-            rrDrive = hwMap.get(DcMotor.class, "rrDrive");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        flDrive = hwMap.get(DcMotor.class, "flDrive");
+        frDrive = hwMap.get(DcMotor.class, "frDrive");
+        rlDrive = hwMap.get(DcMotor.class, "rlDrive");
+        rrDrive = hwMap.get(DcMotor.class, "rrDrive");
         flDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.REVERSE);
         rlDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
@@ -93,6 +92,7 @@ public class Hardware750 {
         frDrive.setPower(0);
         rrDrive.setPower(0);
         gripper.setPower(0);
+        lift.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -101,11 +101,16 @@ public class Hardware750 {
         frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // rem: this <i>may</i> cause issues with how the motor's speed
+        // functions.
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // braking setting
         // FLOAT: do not actively resist external forces
         // BRAKE: actively resist external forces
         gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        // gravity-assisted. we want this to try and hold itself up.
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void setAllDriveMotors(double requestedSpeed) {
@@ -114,5 +119,7 @@ public class Hardware750 {
         rlDrive.setPower(requestedSpeed);
         rrDrive.setPower(requestedSpeed);
     }
+
+
 }
 
