@@ -88,10 +88,10 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             }
 
         }
-        if (gamepad2.dpad_right) {
+        if (gamepad2.a) {
             RelicHold = true;
             oneHandPosition = OPEN_ONE_HAND;
-        } else if (gamepad2.dpad_left) {
+        } else if (gamepad2.x) {
             RelicHold = false;
             relicPosition = OPEN_RELIC;
             oneHandPosition = CLOSED_ONE_HAND;
@@ -99,7 +99,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         if (RelicHold) {
             relicPosition = CLOSED_RELIC;
         } else {
-            if (gamepad2.dpad_left) {
+            if (gamepad2.b) {
                 relicPosition = OPEN_RELIC;
             } else {
                 relicPosition = STOPPED_RELIC;
@@ -137,6 +137,15 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             poopPosition = POOP_OPEN;
         } else {
             poopPosition = POOP_CLOSED;
+        }
+        if(gamepad2.dpad_down){
+            ballRotatorPosition = BALL_ROTATE_CENTER;
+        }
+        if(gamepad2.dpad_left){
+            ballRotatorPosition = BALL_PUSHER_DOWN;
+        }
+        if(gamepad2.dpad_right){
+            ballRotatorPosition = BALL_PUSHER_UP;
         }
     }
 

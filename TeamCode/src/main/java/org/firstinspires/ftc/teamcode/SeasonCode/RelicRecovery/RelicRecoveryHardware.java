@@ -33,6 +33,10 @@ public class  RelicRecoveryHardware extends OpMode {
     protected static final double ARM_OUT = 0.75;
     protected static final double POOP_OPEN= .9;
     protected static final double POOP_CLOSED = 0.1;
+    protected static final double BALL_ROTATE_RIGNT = 0.4;
+    protected static final double BALL_ROTATE_CENTER = 0.5;
+    protected static final double BALL_ROTATE_LEFT = 0.6;
+
     // ---------------------- Hardware Devices ----------------------
     // ---------------- DcMotors ----------------
     DcMotor mRight;
@@ -45,6 +49,7 @@ public class  RelicRecoveryHardware extends OpMode {
     Servo ssArm;
     Servo ssRelicGrabber;
     Servo ssPoop;
+    Servo ssBallRotator;
     // ------- Continuous Rotation Servos -------
     CRServo crHand;
     CRServo crRelicGrabber;
@@ -64,6 +69,7 @@ public class  RelicRecoveryHardware extends OpMode {
     protected double armLifterSPosition = STOPPED_ARM_LIFTER_S;
     protected double armPosition = ARM_IN;
     protected double poopPosition = POOP_CLOSED;
+    protected double ballRotatorPosition = BALL_ROTATE_CENTER;
 
     protected String driveMode;
     // ----------------------- Public Methods -----------------------
@@ -89,6 +95,7 @@ public class  RelicRecoveryHardware extends OpMode {
         ssArm = map.revServo("sArm", armPosition);
         ssRelicGrabber = map.servo("sGrabber", oneHandPosition);
         ssPoop = map.revServo("sPoop",poopPosition);
+        ssBallRotator = map.servo("sBallrotator", ballRotatorPosition)
         // ----- Continuous Rotation Servos -----
         crHand = map.revCrservo("crHand");
         crRelicGrabber = map.revCrservo("crRelic");
