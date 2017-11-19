@@ -182,7 +182,7 @@ public class MecanumRework extends OpMode {
         }
 
         //handle go-to-target motion
-        if(robot.gripper.getMode() == DcMotor.RunMode.RUN_TO_POSITION && robot.gripper.isBusy()){
+        if (robot.gripper.getMode() == DcMotor.RunMode.RUN_TO_POSITION && robot.gripper.isBusy()){
             if (robot.gripper.getCurrentPosition() >= robot.gripper.getTargetPosition()){
                 robot.gripper.setPower(0);
                 robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -199,6 +199,8 @@ public class MecanumRework extends OpMode {
             robot.gripper.setPower(0);
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+
+
 
         /*
         if(gamepad2.right_trigger != 0){
