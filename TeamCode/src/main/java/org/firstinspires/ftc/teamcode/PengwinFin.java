@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 public class PengwinFin {
-    static final double FIN_UP_POSITION = 1;
-    static final double FIN_DOWN_POSITION = 0.35;
+    static final double FIN_UP_POSITION = .7;
+    static final double FIN_DOWN_POSITION = 0.1;
     Servo fin;
     ColorSensor colorSensor;
 
@@ -21,15 +21,16 @@ public class PengwinFin {
     }
 
     public void moveFinDown(){
-        fin.setPosition(FIN_DOWN_POSITION);
+            fin.setPosition(FIN_DOWN_POSITION);
     }
 
     public void moveFinUp(){
-        fin.setPosition(FIN_UP_POSITION);
+            fin.setPosition(FIN_UP_POSITION);
     }
+
 
     public boolean doesColorSensorSeeBlueJewel(){
         return colorSensor.blue() > colorSensor.red();
     }
-
 }
+

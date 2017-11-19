@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by thund on 10/19/2017.
@@ -17,6 +19,7 @@ public class JeffThePengwin {
     static final double Pi = 3.141592653589793238462643383279502;
     static final double countify = 116.501;//Counts per inch
 
+
     //power variables
     DcMotor leftFrontMotor;
     DcMotor rightFrontMotor;
@@ -25,6 +28,8 @@ public class JeffThePengwin {
 
     double powerInput = 0;
     double degreeOfPower = 1;
+    DigitalChannel up;
+    DigitalChannel touchy;
 
 
     public JeffThePengwin(HardwareMap hardwareMap){
@@ -37,9 +42,23 @@ public class JeffThePengwin {
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
+        up = hardwareMap.digitalChannel.get("up");
+        touchy = hardwareMap.digitalChannel.get("touchy");
+        //positive direction is down, negative direction is up
     }
 
+    public double getTheFrontWheelPower(){
+        return powerInput*degreeOfPower;
+    }
+
+    public double getTheBackWheelPower(){
+        if(touchy.getState()){
+            return (powerInput *1.2 )* degreeOfPower;
+        }
+        else{
+            return (powerInput  *1.6)* degreeOfPower;
+        }
+    }
     //christine added, explain!
     public boolean isMoving(){
         return leftBackMotor.isBusy()&& leftFrontMotor.isBusy() && rightBackMotor.isBusy() && rightFrontMotor.isBusy();
@@ -70,9 +89,39 @@ public class JeffThePengwin {
     }
     public void rightToPosition(double inches, double speed){
         int move = (int)(Math.round(inches*countify));
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + -move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + -move);
+
+        //
+        switchify();//switch to rut to position
+        //
+        powerInput = speed;
+        bestowThePowerToAllMotors();
+        //
+    }
+
+    public void turnRightToPostion(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
         leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
-        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + -move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
         rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + -move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + -move);
+
+        //
+        switchify();//switch to run to position
+        //
+        powerInput = speed;
+        bestowThePowerToAllMotors();
+        //
+    }
+
+    public void turnLeftToPosition (double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + -move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + -move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
         rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
 
         //
@@ -86,22 +135,22 @@ public class JeffThePengwin {
     public void leftToPosition(double inches, double speed){
         int move = (int)(Math.round(inches*countify));
         //
-        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + -move);
-        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
-        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
-        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + -  move);
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + -move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + -move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
 
-        switchify();//switch to rut to position
+        switchify();//switch to run to position
         //
         powerInput = speed;
         bestowThePowerToAllMotors();
         //
     }
     public void bestowThePowerToAllMotors(){
-        leftBackMotor.setPower(powerInput*degreeOfPower);
-        leftFrontMotor.setPower(powerInput*degreeOfPower);
-        rightBackMotor.setPower(powerInput*degreeOfPower);
-        rightFrontMotor.setPower(powerInput*degreeOfPower);
+        leftBackMotor.setPower(getTheBackWheelPower());
+        leftFrontMotor.setPower(getTheFrontWheelPower());
+        rightBackMotor.setPower(getTheBackWheelPower());
+        rightFrontMotor.setPower(getTheFrontWheelPower());
     }
 
     public void moveAllMotorsSameDirectionAndDistance(int move){
@@ -139,17 +188,17 @@ public class JeffThePengwin {
     }
 
     public void strafeLeft(){
-        leftBackMotor.setPower(-powerInput*degreeOfPower);
-        leftFrontMotor.setPower(powerInput*degreeOfPower);
-        rightBackMotor.setPower(powerInput*degreeOfPower);
-        rightFrontMotor.setPower(-powerInput*degreeOfPower);
+        leftBackMotor.setPower(-getTheBackWheelPower());
+        leftFrontMotor.setPower(getTheFrontWheelPower());
+        rightBackMotor.setPower(getTheBackWheelPower());
+        rightFrontMotor.setPower(-getTheFrontWheelPower());
     }
 
     public void strafeRight(){
-        leftBackMotor.setPower(powerInput*degreeOfPower);
-        leftFrontMotor.setPower(-powerInput*degreeOfPower);
-        rightBackMotor.setPower(-powerInput*degreeOfPower);
-        rightFrontMotor.setPower(powerInput*degreeOfPower);
+        leftBackMotor.setPower(getTheBackWheelPower());
+        leftFrontMotor.setPower(-getTheFrontWheelPower());
+        rightBackMotor.setPower(-getTheBackWheelPower());
+        rightFrontMotor.setPower(getTheFrontWheelPower());
     }
 
     public void switchify(){

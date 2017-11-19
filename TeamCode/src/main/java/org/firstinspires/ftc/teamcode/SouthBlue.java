@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="SouthBlue ", group="Autonomisisisisis")
-public class SouthRight extends LinearOpMode {
+public class SouthBlue extends LinearOpMode {
     PengwinArm pengwinArm;
     PengwinFin pengwinFin;
     JeffThePengwin jeffThePengwin;
@@ -24,7 +24,12 @@ public class SouthRight extends LinearOpMode {
         pengwinFin = new PengwinFin(hardwareMap);
         //
         jeffThePengwin.startify();
+        pengwinArm.upMotor.setPower(-0.45);
         //For kids //for ages 3-1020000000078605400000123
+        while(!jeffThePengwin.touchy.getState()){
+            //do nothing
+        }
+        pengwinArm.upMotor.setPower(0);
         waitForStartify();
         //
         //woo hoo
@@ -32,33 +37,63 @@ public class SouthRight extends LinearOpMode {
         //Insert Code Here
         //12 went 9.5 inches, with a twist at the end?
         //
-        jeffThePengwin.leftToPosition(5, .4);
+        jeffThePengwin.rightToPosition(5, .4);
         //
         //jeffThePengwin.forwardToPosition(12, .4);
-        runtime.reset();
         waitify(15);
         jeffThePengwin.switcheroo();
 
         pengwinFin.moveFinDown();
+        runtime.reset();
+        while(runtime.seconds()<1){
+            //doNothing
+        }
+        //YAY
+        //WE LOVE DOING NOTHING
 
-        telemetry.addData("Color Blue Sensorify", pengwinFin.doesColorSensorSeeBlueJewel());
-        telemetry.addData("Color Red Sensorify", !pengwinFin.doesColorSensorSeeBlueJewel());
+        if (!pengwinFin.doesColorSensorSeeBlueJewel()){
+            jeffThePengwin.turnLeftToPosition(4,0.4);
+            waitify(2);
+            pengwinFin.moveFinUp();
+            waitify(1);
+            jeffThePengwin.turnRightToPostion(4,0.4);
+        }
+        else {
+            jeffThePengwin.turnRightToPostion(4,0.4);
+            waitify(2);
+            pengwinFin.moveFinUp();
+            waitify(1);
+            jeffThePengwin.turnLeftToPosition(4,0.4);
+        }
+        waitify(2);
+        gentlyPutTheMotorsToSleep();
+        jeffThePengwin.backToPosition(23, 0.4);
+        waitify(6);
+        gentlyPutTheMotorsToSleep();
+        jeffThePengwin.leftToPosition(10, 0.4);
+        waitify(2);
+        gentlyPutTheMotorsToSleep();
+
+        telemetry.addData("Color Blue Sensorify", pengwinFin.colorSensor.blue());
+        telemetry.addData("Color Red Sensorify", pengwinFin.colorSensor.red());
         telemetry.addData("telemetry test", Math.random());
         telemetry.update();
-        runtime.reset();
-        while(runtime.seconds() < 60){
+    }
 
-        }
+    private void gentlyPutTheMotorsToSleep() {
+        jeffThePengwin.powerInput = 0;
+        jeffThePengwin.bestowThePowerToAllMotors();
     }
     //
     //
     //
     private boolean isCompletingTask(double time) {
+        runtime.reset();
         return opModeIsActive() &&
                 (runtime.seconds() < time) &&
                 (jeffThePengwin.isMoving());
     }
-
+    //
     private void getTelemetry(double time) {
         telemetry.addData("lbm position", jeffThePengwin.leftBackMotor.getCurrentPosition());
         telemetry.addData("lfm position", jeffThePengwin.leftFrontMotor.getCurrentPosition());

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
@@ -17,10 +18,10 @@ public class JeffsRealRun extends LinearOpMode {
     //robot
     PengwinArm pengwinArm;
     JeffThePengwin jeffThePengwin;
+    PengwinFin pengwinFin;
 
     //sensors
-    DigitalChannel up;
-    DigitalChannel touchy;    double drive; //turn power
+   double drive; //turn power
 
 
     double turn; //turn direction
@@ -33,6 +34,7 @@ public class JeffsRealRun extends LinearOpMode {
     double servoPosition =.8;
     double directionOfArmMotor = 1;//change direction if needed (TODO is fun)
     double go;
+    double ready = 1;
     int armUpDirection;
     int extendDirection;
     boolean turningRight; //TODO This is not working right, it should be > but it is mixing up and left and righ
@@ -46,17 +48,15 @@ public class JeffsRealRun extends LinearOpMode {
         //
         jeffThePengwin = new JeffThePengwin(hardwareMap);
         pengwinArm = new PengwinArm(hardwareMap);
+        pengwinFin = new PengwinFin(hardwareMap);
         //
         //neat variables
         //true means not pushed false means is pushed
-        up = hardwareMap.digitalChannel.get("up");
-        touchy = hardwareMap.digitalChannel.get("touchy");
-        //positive direction is down, negative direction is up
         //
         waitForStartify();
         //
-        startify();//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
-        smartify();
+        //startify();//Startify: verb, The act of starting or calibrating code primarily written by Eric Patton or Nora Dixon ex. I will startify the code.
+        //smartify();
         //
         while (opModeIsActive()) {
             //variable
@@ -67,15 +67,20 @@ public class JeffsRealRun extends LinearOpMode {
             getThePowers();
             //
             if(gamepad2.x){
-                pengwinArm.goeyHomey();
+                startify();
             }
             if(gamepad2.y){
-                pengwinArm.goUp();
+                smartify();
             }
             //Change power
             //
-
-
+            if(gamepad2.b && ready == 1){
+                pengwinArm.resetify = pengwinArm.resetify * -1;
+                ready = 0;
+            }else if (!gamepad2.b && ready == 0){
+                ready = 1;
+            }
+            //
             getDegreeOfArmMotor();
             //TODO This is negative stuff in color
             armUpDirection = gamepad2.right_stick_y > 0 ? 1 : -1;
@@ -105,6 +110,7 @@ public class JeffsRealRun extends LinearOpMode {
 
         }
 
+
     }
 
     private void getDegreeOfArmMotor() {
@@ -128,6 +134,7 @@ public class JeffsRealRun extends LinearOpMode {
     private void moveTheArm(double degreeOfArmPower, int armUpDirection, int extendDirection) {
         setThePowerForMovingArmUpOrDown(degreeOfArmPower, armUpDirection);
         //
+        //if (!(extendDirection > 0 && pengwinArm.)&&)
         pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
     }
 
@@ -185,12 +192,14 @@ public class JeffsRealRun extends LinearOpMode {
         telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
         telemetry.addData("Right Stick X", gamepad1.right_stick_x);
         telemetry.addData("Right Stick y", gamepad1.right_stick_y);
-        telemetry.addData("touchy", touchy.getState());
-        telemetry.addData("up", up.getState());
-        telemetry.addData("Glyphy", pengwinArm.glyphy.getPosition());
+        telemetry.addData("touchy", jeffThePengwin.touchy.getState());
+        telemetry.addData("up", jeffThePengwin.touchy.getState());
+        telemetry.addData("Glyphy", pengwinArm.leftGlyphy.getPosition());
+        telemetry.addData("GlyphyRight", pengwinArm.rightGlyphy.getPosition());
         telemetry.addData("dpad right", gamepad2.dpad_right);
         telemetry.addData("dpad left", gamepad2.dpad_left);
-        telemetry.addData("glyphy directions", pengwinArm.glyphy.getDirection());
+        telemetry.addData("glyphy directions", pengwinArm.leftGlyphy.getDirection());
+        telemetry.addData("servo", pengwinArm.leftGlyphy.getPosition());
         if (gamepad2.dpad_up == true){
             //pengwinArm.upMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             telemetry.addData("position", pengwinArm.getCalibrate());
@@ -217,9 +226,9 @@ public class JeffsRealRun extends LinearOpMode {
     }
 
     private void startify() {
-        if(!touchy.getState()){
+        if(!jeffThePengwin.touchy.getState()){
             pengwinArm.setUpPower(-.4);
-            while (!touchy.getState()) {
+            while (!jeffThePengwin.touchy.getState()) {
                 //TODO Do nothing
             }
             pengwinArm.setUpPower(0);
@@ -231,11 +240,11 @@ public class JeffsRealRun extends LinearOpMode {
     }
 
     private boolean isRaised(){
-        return up.getState();
+        return jeffThePengwin.up.getState();
     }
 
     private boolean isFelled(){
-        return touchy.getState();
+        return jeffThePengwin.touchy.getState();
     }
 
     private double getPathagorus(double a, double b){//Define Pythagorean Theorem
@@ -247,7 +256,7 @@ public class JeffsRealRun extends LinearOpMode {
     //
     private void smartify(){//calibrate up position
         pengwinArm.upMotor.setPower(.4);//opposite of touchy
-        while(up.getState()){
+        while(jeffThePengwin.up.getState()){
             //TODO Wookie
         }
         pengwinArm.upMotor.setPower(0);//stop the motor
