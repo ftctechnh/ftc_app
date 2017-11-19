@@ -89,6 +89,7 @@ public class UniversalAudi extends LinearOpMode
                 robot.stopAllMotors();
                 break;
             default:
+                robot.driveStraight_In(30, .4);
                 break;
         }
     }
