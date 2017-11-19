@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -56,15 +56,19 @@ public class TestHardware
     public DcMotor  lift        = null;
     public int liftPosition = 0;
 
+
+    // lift constants
     public static final int COUNT_ONE_REV = 280;
 
+    public static final int MINIMUM_LIFT_POSITION;
     public static final int BASE_POSITION = 0;
-    public static final int ONE_INCH_POSITION = 280;
-    public static final int SEVEN_INCH_POSITION = 560;
-    public static final int THIRTEEN_INCH_POSITION = 840;
-    public static final int NINETEEN_INCH_POSITION = 1160;
+    public static final int ONE_INCH_POSITION = 2240;
+    public static final int SEVEN_INCH_POSITION = 4480;
+    public static final int THIRTEEN_INCH_POSITION = 6720;
+    public static final int NINETEEN_INCH_POSITION = 8960;
+    public static final int MAXIMUM_LIFT_POSITION;
 
-    public static final double LIFT_POWER = 0.1;
+    public static final double LIFT_POWER = 1.0;
 
 
     /* local OpMode members. */
@@ -96,10 +100,11 @@ public class TestHardware
         rightDrive.setPower(0);
         lift.setPower(0);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        // Drive motors set to run without encoder
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // lift is set to run to position
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
