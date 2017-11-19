@@ -192,9 +192,9 @@ public class MecanumRework extends OpMode {
             }
         }
 
-        if((twitchTime != runtime.seconds()) && (!isGripped)){
+        if((twitchTime > runtime.seconds()) && (isGripped)){
             robot.gripper.setPower(GRIPPER_POWER);
-        } else if (runtime.seconds() == twitchTime && (!isGripped)){
+        } else if (runtime.seconds() >= twitchTime && (isGripped)){
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.gripper.setPower(0);
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
