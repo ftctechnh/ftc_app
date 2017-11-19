@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -43,13 +44,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class Hardware750 {
     /* Public OpMode members. */
-    public Servo arm         = null;
-    public DcMotor flDrive   = null;
-    public DcMotor frDrive   = null;
-    public DcMotor rlDrive   = null;
-    public DcMotor rrDrive   = null;
-    public ColorSensor color = null;
-    public DcMotor gripper   = null;
+    public Servo arm                 = null;
+    public DcMotor flDrive           = null;
+    public DcMotor frDrive           = null;
+    public DcMotor rlDrive           = null;
+    public DcMotor rrDrive           = null;
+    public ColorSensor color         = null;
+    public DcMotor gripper           = null;
+    public DigitalChannel limitUpper = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -66,21 +68,17 @@ public class Hardware750 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        try {
-            gripper = hwMap.get(DcMotor.class, "gripper");
-            arm     = hwMap.get(Servo.class, "colorarm");
-            color   = hwMap.get(ColorSensor.class, "color");
-        } catch (Exception ex) {
+        gripper    = hwMap.get(DcMotor.class, "gripper");
+        arm        = hwMap.get(Servo.class, "colorarm");
+        color      = hwMap.get(ColorSensor.class, "color");
+        flDrive    = hwMap.get(DcMotor.class, "flDrive");
+        frDrive    = hwMap.get(DcMotor.class, "frDrive");
+        rlDrive    = hwMap.get(DcMotor.class, "rlDrive");
+        rrDrive    = hwMap.get(DcMotor.class, "rrDrive");
 
-        }
-        try {
-            flDrive = hwMap.get(DcMotor.class, "flDrive");
-            frDrive = hwMap.get(DcMotor.class, "frDrive");
-            rlDrive = hwMap.get(DcMotor.class, "rlDrive");
-            rrDrive = hwMap.get(DcMotor.class, "rrDrive");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        limitUpper = hwMap.get(DigitalChannel.class, "limitUpper");
+        limitUpper.setMode(DigitalChannel.Mode.INPUT);
+
         flDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         frDrive.setDirection(DcMotor.Direction.REVERSE);
         rlDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
