@@ -40,8 +40,6 @@ public class CompTeleFinal extends OpMode
             newRobot.moveLift(-1);
 
         newRobot.fineMoveLift(gamepad2.left_stick_y);
-
-
     }
 
 }
