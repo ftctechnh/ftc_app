@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sun.tools.javac.code.Symbol;
 
 /**
  * concept for reworked adv. mecanum drive
@@ -168,7 +169,7 @@ public class MecanumRework extends OpMode {
                 robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 robot.gripper.setTargetPosition(500);
                 robot.gripper.setPower(GRIPPER_POWER);
-                twitchTime = runtime.seconds() + 1;
+                twitchTime = runtime.seconds() + 2;
             } else {
                 // if we are now U N G R I P
                 robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -181,7 +182,7 @@ public class MecanumRework extends OpMode {
         }
 
         //handle go-to-target motion
-        if(robot.gripper.getMode() == DcMotor.RunMode.RUN_TO_POSITION && robot.gripper.isBusy() && isGripped){
+        if(robot.gripper.getMode() == DcMotor.RunMode.RUN_TO_POSITION && robot.gripper.isBusy()){
             if (robot.gripper.getCurrentPosition() >= robot.gripper.getTargetPosition()){
                 robot.gripper.setPower(0);
                 robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -194,6 +195,7 @@ public class MecanumRework extends OpMode {
         if((twitchTime != runtime.seconds()) && (!isGripped)){
             robot.gripper.setPower(GRIPPER_POWER);
         } else if (runtime.seconds() == twitchTime && (!isGripped)){
+            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.gripper.setPower(0);
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
@@ -223,6 +225,8 @@ public class MecanumRework extends OpMode {
 
         if (!(robot.limitTop.getState() && gamepad2.left_stick_y < 0)) {
             robot.lift.setPower(gamepad2.left_stick_y / 2);
+        } else if (robot.limitTop.getState()) {
+            robot.lift.setPower(0);
         }
 
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
