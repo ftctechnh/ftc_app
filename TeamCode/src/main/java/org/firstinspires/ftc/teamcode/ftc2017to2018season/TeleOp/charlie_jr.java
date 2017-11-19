@@ -31,11 +31,10 @@ public class charlie_jr extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
-    DcMotor slideMotor;
+    //DcMotor slideMotor;
 
     //Initial value for slide motor
-    int IVFSM = slideMotor.getCurrentPosition();
-
+    //public int IVFSM;
 
 
 
@@ -51,37 +50,39 @@ public class charlie_jr extends OpMode {
     ColorSensor bColorSensorLeft;    // Hardware Device Object
 
 
-
     /*
-     ----------------------------------------------------------------------------------------------
-    Declare global variables here
-    *
 
-    org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
-
-    //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
+         //----------------------------------------------------------------------------------------------
+        //Declare global variables here
 
 
-    //private ElapsedTime runtime = new ElapsedTime();
-    static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
-    static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
-    static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
-            (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
-    // Define class members
-    //   Servo right_servo;
+        org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
+
+        //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
 
 
-    /*---------------------------------------------------------------------------------------------
-            Get references to the hardware installed on the robot and name them here
-    */
+        //private ElapsedTime runtime = new ElapsedTime();
+        static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
+        static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
+        static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
+        static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
+                (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
+        // Define class members
+        //   Servo right_servo;
+
+
+        /*---------------------------------------------------------------------------------------------
+                Get references to the hardware installed on the robot and name them here
+        */
     @Override
     public void init() {
         leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
-            /* lets reverse the direction of the right wheel motor*/
+        //slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        //IVFSM = slideMotor.getCurrentPosition();
+
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
@@ -103,8 +104,8 @@ public class charlie_jr extends OpMode {
         rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-
     }
+
     /*
     ---------------------------------------------------------------------------------------------
 
@@ -121,7 +122,7 @@ public class charlie_jr extends OpMode {
 
     */
     @Override
-    public void start(){
+    public void start() {
 
     }
 
@@ -132,8 +133,8 @@ public class charlie_jr extends OpMode {
 
     @Override
     public void loop() {
-
-
+        FourWheelDriveEncoder();
+        //slideMove();
     }
 
     /* Code to run ONCE after the driver hits STOP
@@ -152,7 +153,7 @@ public class charlie_jr extends OpMode {
     Functions go here
  */
 
-    public void FourWheelDriveEncoder(){
+    public void FourWheelDriveEncoder() {
         /*
         read the gamepad values and put into variables
          */
@@ -162,32 +163,26 @@ public class charlie_jr extends OpMode {
         float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
 
-        if (Math.abs(strafeStickLeft) > 0){
+        if (Math.abs(strafeStickLeft) > 0) {
 
             leftWheelMotorFront.setPower(-strafeStickLeft);
             leftWheelMotorBack.setPower(strafeStickLeft);
             rightWheelMotorFront.setPower(strafeStickLeft);
             rightWheelMotorBack.setPower(-strafeStickLeft);
 
-        }
-
-        else if (Math.abs(strafeStickRight) > 0){
+        } else if (Math.abs(strafeStickRight) > 0) {
 
             leftWheelMotorFront.setPower(strafeStickRight);
             leftWheelMotorBack.setPower(-strafeStickRight);
             rightWheelMotorFront.setPower(-strafeStickRight);
             rightWheelMotorBack.setPower(strafeStickRight);
 
-        }
-
-        else {
+        } else {
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
         }
-    }
-
 
 
         //run the motors by setting power to the motors with the game pad values
@@ -196,17 +191,22 @@ public class charlie_jr extends OpMode {
         //rightWheelMotorFront.setPower(rightY_gp1);
         //rightWheelMotorBack.setPower(rightY_gp1);
 
-    public void slideMove(){
+    /*public void slideMove(){
 
-        if(slideMotor.getCurrentPosition()<= IVFSM)
-        {
+    if (gamepad2.right_stick_y > 0){
+       // slideMotor.setPower(gamepad2.right_stick_y);
 
+    }
+    else if (gamepad2.right_stick_y < 0 ){
+       // slideMotor.setPower(-1);
+    }
         }
     }
 
-    }
+
 /*---------------------------------------------------------------------------------------------
 */
 
 
-
+    }
+}
