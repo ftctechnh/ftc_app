@@ -17,7 +17,7 @@ public class Redtestauto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeStraight(250, 0.5);
+        encodeStraight(200, 0.5);
     }
 
     //rotates the robot, 100 units is about 90 degrees

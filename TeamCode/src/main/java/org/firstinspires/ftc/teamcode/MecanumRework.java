@@ -140,7 +140,7 @@ public class MecanumRework extends OpMode {
         telemetry.addData("VM4", voltageMultiplier[3]);
 
         if (gamepad1.b) {
-            for (int i = 1; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 voltageMultiplier[i] = 0;
             }
         }
@@ -210,7 +210,8 @@ public class MecanumRework extends OpMode {
         }
 
         /*
-        if(gamepad2.b){
+        if(gamepad2.b){4''
+
             robot.gripper.setPower(0);
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
