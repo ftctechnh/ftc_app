@@ -17,9 +17,6 @@ public class Redtestauto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeStraight(30, -0.3);
-        encodeLat(30, 0.3);
-        encoderot(0.5, 100);
         encodeStraight(100, 0.5);
     }
 
