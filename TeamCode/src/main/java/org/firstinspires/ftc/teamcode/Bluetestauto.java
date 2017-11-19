@@ -17,7 +17,7 @@ public class Bluetestauto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeStraight(100, 0.5);
+        encodeStraight(2500, 0.5);
     }
 
     //rotates the robot, 100 units is about 90 degrees
