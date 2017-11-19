@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
 /**
  * Created by Shane on 13-11-2017.
  */
-@TeleOp(name = "Relic Recovery",group = "TeleOp")
+@TeleOp(name = "Relic Recovery TeleOp",group = "TeleOp")
 public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
     // --------------------- Private Variables ----------------------
     private int padCofig = 0;
