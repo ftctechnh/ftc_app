@@ -26,8 +26,10 @@ public class Robot {
     private IntegratingGyroscope gyro;
 
     private DcMotor liftMotor;
-    private Servo leftGrab;
-    private Servo rightGrab;
+    private Servo topLeftGrab;
+    private Servo topRightGrab;
+    private Servo bottomLeftGrab;
+    private Servo bottomRightGrab;
 
     public Robot (HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -38,12 +40,14 @@ public class Robot {
         rightRear = hardwareMap.dcMotor.get("rightrear");
 
         liftMotor = hardwareMap.dcMotor.get("liftmotor");
-        leftGrab = hardwareMap.servo.get("leftgrab");
-        rightGrab = hardwareMap.servo.get("rightgrab");
+        topLeftGrab = hardwareMap.servo.get("topleftgrab");
+        topRightGrab = hardwareMap.servo.get("toprightgrab");
+        bottomLeftGrab = hardwareMap.servo.get("bottomleftgrab");
+        bottomRightGrab = hardwareMap.servo.get("bottomrightgrab");
 
         driveTrain = new DriveTrain(leftFront, rightFront, leftRear, rightRear, gyro, telemetry);
 
-        blockLift = new BlockLift(liftMotor, leftGrab, rightGrab);
+        blockLift = new BlockLift(liftMotor, topLeftGrab, topRightGrab, bottomLeftGrab, bottomRightGrab);
     }
 
 }
