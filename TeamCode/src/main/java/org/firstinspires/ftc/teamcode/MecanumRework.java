@@ -202,24 +202,25 @@ public class MecanumRework extends OpMode {
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         */
-        
+
         if(gamepad2.right_trigger != 0){
             robot.gripper.setPower(gamepad2.right_trigger);
         } else {
             robot.gripper.setPower(0);
         }
 
+        /*
         if(gamepad2.b){
             robot.gripper.setPower(0);
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+        */
 
-
-        if (gamepad2.x) {
+        if (gamepad2.a) {
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             //telemetry.addData("ZPB", "FLOATING");
         }
-        if (gamepad2.y) {
+        if (gamepad2.b) {
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             //telemetry.addData("ZPB", "BRAKING");
         }
