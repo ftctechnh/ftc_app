@@ -54,22 +54,30 @@ public class TestHardware
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor  lift        = null;
+    public Servo leftClaw = null;
+    public Servo rightClaw = null;
     public int liftPosition = 0;
 
 
     // lift constants
     public static final int COUNT_ONE_REV = 280;
 
-    public static final int MINIMUM_LIFT_POSITION;
-    public static final int BASE_POSITION = 0;
+    public static final int MINIMUM_LIFT_POSITION = 2240;
     public static final int ONE_INCH_POSITION = 2240;
     public static final int SEVEN_INCH_POSITION = 4480;
     public static final int THIRTEEN_INCH_POSITION = 6720;
     public static final int NINETEEN_INCH_POSITION = 8960;
-    public static final int MAXIMUM_LIFT_POSITION;
+    public static final int MAXIMUM_LIFT_POSITION = 8960;
 
     public static final double LIFT_POWER = 1.0;
 
+    // claw constants
+    public static final double LCLAW_START = 0;
+    public static final double LCLAW_DRIVE = .4;
+    public static final double LCLAW_CLOSED = 1;
+    public static final double RCLAW_START = 0;
+    public static final double RCLAW_DRIVE = .4;
+    public static final double RCLAW_CLOSED = 1;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -89,16 +97,23 @@ public class TestHardware
         leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         lift    = hwMap.get(DcMotor.class,    "lift");
+        // Define and initialize servos
+        leftClaw = hwMap.get(Servo.class,     "left_claw");
+        rightClaw = hwMap.get(Servo.class,    "right_claw");
 
         // Set Direction of motors
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         lift.setDirection(DcMotor.Direction.REVERSE);
 
+
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         lift.setPower(0);
+
+
+
 
         // Drive motors set to run without encoder
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -109,10 +124,9 @@ public class TestHardware
 
 
         // Define and initialize ALL installed servos.
-        //leftClaw  = hwMap.get(Servo.class, "left_hand");
-        //rightClaw = hwMap.get(Servo.class, "right_hand");
-        //leftClaw.setPosition(MID_SERVO);
-        //rightClaw.setPosition(MID_SERVO);
+        lift.setTargetPosition(ONE_INCH_POSITION);
+        leftClaw.setPosition(LCLAW_START);
+        rightClaw.setPosition(RCLAW_START);
     }
  }
 
