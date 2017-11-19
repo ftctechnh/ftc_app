@@ -53,7 +53,7 @@ public class blue_frontCorner extends Autonomous_General {
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
 
-        encoderMecanumDrive(0.5,60,60,5000,0);
+        encoderMecanumDrive(0.5,55,55,5000,0);
         sleep(1000);
         gyroTurn(0.3,-88);
         sleep(1000);
@@ -72,7 +72,7 @@ public class blue_frontCorner extends Autonomous_General {
 
         sleep(1000);
 
-        gyroTurn(0.3,88);
+        gyroTurn(0.3,0);
 
         sleep(750);
 

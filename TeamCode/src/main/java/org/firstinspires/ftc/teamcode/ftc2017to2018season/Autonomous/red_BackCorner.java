@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Autonomous Blue Test Back")
+@Autonomous(name="Autonomous Red Test Back")
 public class red_BackCorner extends Autonomous_General {
 
     DcMotor leftFront;
