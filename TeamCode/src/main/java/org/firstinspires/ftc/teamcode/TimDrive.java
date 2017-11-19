@@ -100,15 +100,17 @@ public class TimDrive extends LinearOpMode {
     State settings = new State();
     Timing timings = new Timing();
 
-    double rightCorrection = 0.77;
+    double rightCorrection = 0.63;
 
     public void resetSettings() {
         settings.set("claw", Toggle.Inactive);
         settings.set("speed-modifier", 100);
+        settings.set("s-modifier", Toggle.Inactive);
         settings.set("lock-modifier", Toggle.Active);
 
         timings.set("claw", new TimeTuple(500, 0));
         timings.set("lmod", new TimeTuple(200, 0));
+        timings.set("smod", new TimeTuple(100, 0));
     }
 
     double clawClosedPosition = 0;
@@ -228,7 +230,7 @@ public class TimDrive extends LinearOpMode {
                 (settings.get("claw") == Toggle.Inactive) ? "Open" : "Closed");
         telemetry.addData("Cardinal Movement Lock: ",
                 ((settings.get("lock-modifier") == Toggle.Inactive) ? "Off" : "On"));
-        telemetry.addData("Speed Modifier: ", settings.get("speed-modifier"));
+        telemetry.addData("Speed Modifier: ", settings.get("speed-modifier") + "%");
         telemetry.update();
     }
 
@@ -239,14 +241,23 @@ public class TimDrive extends LinearOpMode {
         // Wait for driver to press play
         waitForStart();
 
+        boolean lastLeftBumper = false;
+        boolean lastRightBumper = false;
+
         while (opModeIsActive()) {
-            if (gamepad1.right_bumper) {
-                settings.set("speed-modifier", 20);
-            } else {
-                settings.set("speed-modifier", 100);
+            if (gamepad1.right_bumper && !lastRightBumper && timings.get("smod").needsUpdate()) {
+                timings.get("smod").markUpdated();
+
+                if (settings.get("s-modifier") == Toggle.Inactive) {
+                    settings.set("s-modifier", Toggle.Active);
+                    settings.set("speed-modifier", 35);
+                } else {
+                    settings.set("s-modifier", Toggle.Inactive);
+                    settings.set("speed-modifier", 100);
+                }
             }
 
-            if (gamepad1.left_bumper && timings.get("lmod").needsUpdate()) {
+            if (gamepad1.left_bumper && !lastLeftBumper && !timings.get("lmod").needsUpdate()) {
                 timings.get("lmod").markUpdated();
 
                 if (settings.get("lock-modifier") == Toggle.Inactive) {
@@ -272,6 +283,8 @@ public class TimDrive extends LinearOpMode {
             updateLeftArm();
 
             settingsTelemetry();
+            lastLeftBumper = gamepad1.left_bumper;
+            lastRightBumper = gamepad1.right_bumper;
         }
     }
 }
