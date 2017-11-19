@@ -11,11 +11,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class BlockLift {
 
-    private DcMotor liftMotor;
+    public DcMotor liftMotor;
     public Servo topLeftGrab;
     public Servo topRightGrab;
     public Servo bottomLeftGrab;
     public Servo bottomRightGrab;
+
+    private int goalposition;
+    private double dynamicPower = 0;
 
     public BlockLift(DcMotor liftMotor, Servo topLeftGrab, Servo topRightGrab, Servo bottomLeftGrab, Servo bottomRightGrab) {
 
@@ -25,10 +28,25 @@ public class BlockLift {
         this.bottomLeftGrab = bottomLeftGrab;
         this.bottomRightGrab = bottomRightGrab;
 
-        topLeftGrab.setPosition(0.5);
-        topRightGrab.setPosition(0.5);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        topLeftGrab.setPosition(0.37);
+        topRightGrab.setPosition(0.26);
         bottomLeftGrab.setPosition(0.55);
         bottomRightGrab.setPosition(0.5);
+
+    }
+
+    public void holdMotor(int goalPosition) {
+
+        this.goalposition = goalPosition;
+        if (liftMotor.getCurrentPosition() < goalPosition) {
+            dynamicPower += 0.01;
+        } else {
+            dynamicPower = 0;
+        }
+        liftMotor.setPower(dynamicPower);
 
     }
 

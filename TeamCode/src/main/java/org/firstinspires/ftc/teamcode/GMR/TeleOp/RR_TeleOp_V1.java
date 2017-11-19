@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.GMR.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 
 /**
@@ -12,11 +14,13 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 @TeleOp(name = "Servo Test", group = "test")
 public class RR_TeleOp_V1 extends OpMode {
 
+    private int currentLiftPosition;
+
     private Robot robot;
-    private double topLeftPosition = 0.5;
-    private double topRightPosition = 0.5;
-    private double bottomLeftPosition = 0.55;
-    private double bottomRightPosition = 0.2;
+    private double topLeftPosition = 0.37;// Open 0.37, Close: 0
+    private double topRightPosition = 0.26;// Open: 0.26, Close: 0.65
+    private double bottomLeftPosition = 0.55;// Open: 0.55, Close: 0.117
+    private double bottomRightPosition = 0.2;// Open: 0.2, Close: 0.67
 
     @Override
     public void init() {
@@ -27,15 +31,11 @@ public class RR_TeleOp_V1 extends OpMode {
     public void loop() {
 
         if (gamepad1.a) {
-            topLeftPosition += 0.0008;
-        } else if (gamepad1.dpad_down) {
-            topLeftPosition -= 0.0008;
-        }
-
-        if (gamepad1.b) {
-            topRightPosition += 0.0008;
-        } else if (gamepad1.dpad_right) {
-            topRightPosition -= 0.0008;
+            topRightPosition = 0.26;
+            topLeftPosition = 0.37;
+        } else if (gamepad1.b) {
+            topRightPosition = 0.65;
+            topLeftPosition = 0;
         }
 
         if (gamepad1.y) {
@@ -45,6 +45,24 @@ public class RR_TeleOp_V1 extends OpMode {
             bottomLeftPosition = 0.117;
             bottomRightPosition = 0.67;
         }
+
+        if (gamepad1.right_bumper && robot.blockLift.liftMotor.getCurrentPosition() < 0) {
+            robot.blockLift.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.blockLift.liftMotor.setPower(.8);
+            currentLiftPosition = robot.blockLift.liftMotor.getCurrentPosition();
+        } else if (gamepad1.right_trigger > 0) {
+            robot.blockLift.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.blockLift.liftMotor.setPower(-.8);
+            currentLiftPosition = robot.blockLift.liftMotor.getCurrentPosition();
+        } else {
+            robot.blockLift.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.blockLift.liftMotor.setTargetPosition(currentLiftPosition);
+        }
+
+        robot.driveTrain.setMotorPower(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+        telemetry.addData("Current Lift Motor Power: ", robot.blockLift.liftMotor.getPower());
+        telemetry.addData("Current Lift Goal: ", currentLiftPosition);
 
         robot.blockLift.topLeftGrab.setPosition(topLeftPosition);
         robot.blockLift.topRightGrab.setPosition(topRightPosition);
