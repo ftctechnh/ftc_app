@@ -86,14 +86,6 @@ public class charlie_jr extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        /* get a reference to our ColorSensor object */
-        //colorSensor = hardwareMap.colorSensor.get("sensor_color");
-//        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
-
-        //lift_motor = hardwareMap.dcMotor.get("capBallMotor"); //config name
-        //lift_motor.setDirection(DcMotor.Direction.REVERSE);
-
-        //cap_ball_arm_state = cap_ball_arm_state_type.CAP_BALL_BALL_HOLD;
 
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
@@ -135,6 +127,8 @@ public class charlie_jr extends OpMode {
     public void loop() {
         FourWheelDriveEncoder();
         //slideMove();
+        
+
     }
 
     /* Code to run ONCE after the driver hits STOP
@@ -206,7 +200,7 @@ public class charlie_jr extends OpMode {
 
 /*---------------------------------------------------------------------------------------------
 */
-//
+
 
     }
 }
