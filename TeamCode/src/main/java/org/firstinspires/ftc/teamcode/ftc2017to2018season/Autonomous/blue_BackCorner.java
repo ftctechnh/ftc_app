@@ -70,7 +70,9 @@ public class blue_BackCorner extends Autonomous_General {
         }
 
 
-        sleep(10000);
+        sleep(750);
+
+        encoderMecanumDrive(0.65,45,45,1000,0);
 
 
 
