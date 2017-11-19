@@ -152,6 +152,7 @@ public class MecanumRework extends OpMode {
             robot.arm.setPosition(0.4); // back up towards robot
         }
 
+        /*
         // TODO: gripper implementation and locking setup
         if (gamepad2.a){
             // toggle our gloppy boy
@@ -165,17 +166,18 @@ public class MecanumRework extends OpMode {
         if(isGripped != lastGripState){
             if (isGripped){
                 // if we have now decided to G R I P
+                //robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.gripper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                robot.gripper.setTargetPosition(500);
-                robot.gripper.setPower(GRIPPER_POWER);
-                twitchTime = runtime.seconds() + 2;
+                //robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                robot.gripper.setTargetPosition(350);
+                robot.gripper.setPower(-1 * GRIPPER_POWER);
+                twitchTime = runtime.milliseconds() + 250;
             } else {
                 // if we are now U N G R I P
                 robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.gripper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 // target position vaguely determined with some light testing.
-                robot.gripper.setTargetPosition(650);
+                robot.gripper.setTargetPosition(700);
                 robot.gripper.setPower(GRIPPER_POWER);
             }
             lastGripState = isGripped;
@@ -192,23 +194,20 @@ public class MecanumRework extends OpMode {
             }
         }
 
-        if((twitchTime > runtime.seconds()) && (isGripped)){
-            robot.gripper.setPower(GRIPPER_POWER);
-        } else if (runtime.seconds() >= twitchTime && (isGripped)){
-            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        if((twitchTime > runtime.milliseconds()) && (isGripped)){
+            robot.gripper.setPower(-1 * GRIPPER_POWER);
+        } else if (runtime.milliseconds() >= twitchTime && (isGripped)){
+            //robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.gripper.setPower(0);
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
-
-
-        /*
+        */
         if(gamepad2.right_trigger != 0){
             robot.gripper.setPower(gamepad2.right_trigger);
         } else {
             robot.gripper.setPower(0);
         }
-        */
+0
 
         if(gamepad2.b){
             robot.gripper.setPower(0);
@@ -222,7 +221,7 @@ public class MecanumRework extends OpMode {
         }
         if (gamepad2.y) {
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //telemetry.addDa.ta("ZPB", "BRAKING");
+            //telemetry.addData("ZPB", "BRAKING");
         }
 
         if (!(robot.limitTop.getState() && gamepad2.left_stick_y < 0)) {
