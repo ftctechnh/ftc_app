@@ -51,6 +51,10 @@ public class RlcRcvryAutoSwitch extends OpMode{
 
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         //need code for gripping glyph and moving arm slightly up
+
+        gilgearmesh.clawPoss(0);
+        //wait needed?
+        gilgearmesh.armPoss(2);
         stateMachineFlow = 0;
         relicTrackables.activate();
     }
@@ -75,7 +79,7 @@ public class RlcRcvryAutoSwitch extends OpMode{
                 stateMachineFlow++;
                 break;
             case 2:
-                encoderDrive(TURN_SPEED);//90 degrees
+                encoderDrive(TURN_SPEED);//180 degrees
 
                 stateMachineFlow++;
                 break;
@@ -95,6 +99,8 @@ public class RlcRcvryAutoSwitch extends OpMode{
                 break;
             case 6:
                 //release glyph into box
+                gilgearmesh.clawPoss(1);
+                //if needed close claw and push the glyph in
                 stateMachineFlow++;
                 break;
             case 7:
