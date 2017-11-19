@@ -90,12 +90,15 @@ public class charlie_jr extends OpMode {
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
+       /*
         leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
+        */
+        for (; ; ) {
+            loop();
+        }
     }
 
     /*
@@ -103,7 +106,7 @@ public class charlie_jr extends OpMode {
 
           Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
     */
-    @Override
+
     public void init_loop() {
     }
 
@@ -125,7 +128,7 @@ public class charlie_jr extends OpMode {
 
     @Override
     public void loop() {
-        FourWheelDriveEncoder();
+        FourWheelDrive();
         //slideMove();
         
 
@@ -147,7 +150,7 @@ public class charlie_jr extends OpMode {
     Functions go here
  */
 
-    public void FourWheelDriveEncoder() {
+    public void FourWheelDrive() {
         /*
         read the gamepad values and put into variables
          */
