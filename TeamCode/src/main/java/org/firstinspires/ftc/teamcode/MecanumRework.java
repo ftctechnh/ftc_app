@@ -202,12 +202,12 @@ public class MecanumRework extends OpMode {
             robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         */
+        
         if(gamepad2.right_trigger != 0){
             robot.gripper.setPower(gamepad2.right_trigger);
         } else {
             robot.gripper.setPower(0);
         }
-0
 
         if(gamepad2.b){
             robot.gripper.setPower(0);
