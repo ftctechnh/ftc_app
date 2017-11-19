@@ -31,6 +31,7 @@ public class NewRobot
     private ColorSensor floorColorSens = null;
 
     private DcMotorImplEx liftMotor = null;
+    private DcMotorImplEx wingMotor = null;
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
 
@@ -56,8 +57,10 @@ public class NewRobot
         relicTrackables.activate();
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-        //liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        //zeroStuff();
+
+        liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
+        wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
+        zeroStuff();
     }
 
     public char getGlyphCipher()
@@ -103,10 +106,15 @@ public class NewRobot
     {
         liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setVelocity(0, AngleUnit.DEGREES);
+
+        wingMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        wingMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        wingMotor.setVelocity(0, AngleUnit.DEGREES);
     }
 
     public void moveLift(int adjLevels)
@@ -158,6 +166,27 @@ public class NewRobot
         }
     }
 
+    public void moveWing(boolean moveDown)
+    {
+        if(moveDown)
+        {
+            wingMotor.setPower(-.76);
+            while(wingMotor.getCurrentPosition() > -1696){}
+        }
+        else
+        {
+            wingMotor.setPower(.76);
+            while(wingMotor.getCurrentPosition() < 0){}
+        }
+
+        wingMotor.setPower(0);
+    }
+
+    public void moveWing(float pow)
+    {
+        wingMotor.setPower(pow);
+    }
+
     public ColorSensor getTopColorSens()
     {
         return topColorSens;
@@ -176,5 +205,10 @@ public class NewRobot
     public DcMotorImplEx getLiftMotor()
     {
         return liftMotor;
+    }
+
+    public DcMotorImplEx getWingMotor()
+    {
+        return wingMotor;
     }
 }
