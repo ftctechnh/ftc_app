@@ -32,10 +32,7 @@ public class BNO055 extends OpMode{
         par.mode = BNO055IMU.SensorMode.IMU;
         par.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(par);
-    }
 
-    @Override
-    public void loop() {
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
         telemetry.addAction(new Runnable() { @Override public void run()
@@ -91,6 +88,11 @@ public class BNO055 extends OpMode{
                                         + gravity.zAccel*gravity.zAccel));
                     }
                 });
+    }
+
+    @Override
+    public void loop() {
+
     }
 
     private String formatAngle(AngleUnit angleUnit, double angle) {

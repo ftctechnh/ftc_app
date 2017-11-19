@@ -40,6 +40,9 @@ public class Teleop extends OpMode {
         if((gamepad1.left_bumper || gamepad1.right_bumper) && !lastBumper) grabberClosed = !grabberClosed;
         lastBumper = gamepad1.left_bumper || gamepad1.right_bumper;
 
+        if(grabberClosed) bot.closeGrab();
+        else bot.openGrab();
+
         if(robotSlow) {
             bot.setLeftDrive(gamepad1.left_stick_y * slowFactor);
             bot.setRightDrive(gamepad1.right_stick_y * slowFactor);

@@ -74,6 +74,8 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
     protected VuforiaTrackable relicTemplate;
     protected CameraCalibration camCal;
 
+    protected RelicRecoveryVuMark tempMark;
+
     protected boolean displayData = false;
 
     //load vuforia libraries and configure
@@ -156,7 +158,10 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
             //get vuforia's real position matrix
             Matrix34F goodCodeWritten = ((VuforiaDefaultListenerShim) relicTemplate.getListener()).getRealPose();
 
+
             if(goodCodeWritten == null) return BallColor.Undefined;
+
+            this.tempMark = RelicRecoveryVuMark.from(relicTemplate);
 
             final float[][] ballPoints = new float[4][2];
             //the actual color determination
@@ -220,6 +225,10 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
             Log.e("OPENCV", e.getMessage());
             return BallColor.Undefined;
         }
+    }
+
+    protected RelicRecoveryVuMark getLastVuMark() {
+        return this.tempMark;
     }
 
     protected void stopTracking() {

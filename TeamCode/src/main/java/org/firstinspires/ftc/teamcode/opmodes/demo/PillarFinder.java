@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
+import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;

@@ -1,12 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmodes.hardware;
 
 import android.hardware.Sensor;
+import android.support.annotation.NonNull;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -14,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
+import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
 
 /**
  * Created by Noah on 10/27/2017.
@@ -49,19 +56,17 @@ public class BotHardware {
 
     public enum ServoE {
         stick("stick"),
-        gary("gary");
-
-        public static final double rightGrabOpen = 0.75;
-        public static final double rightGrabClose = 0.95;
+        gary("gary"),
+        grab("grab");
 
         public static final double leftGrabOpen = 0;
         public static final double leftGrabClose = 1.0;
 
-        public static final double stickUp = 0;
-        public static final double stickDown = 0.95;
+        public static final double stickUp = 0.2;
+        public static final double stickDown = 0.9;
 
-        public static final double garyUp = 0.27;
-        public static final double garyDown = 0.75;
+        public static final double garyUp = 0.1;
+        public static final double garyDown = 0.55;
 
         private final String name;
         public Servo servo;
@@ -134,6 +139,14 @@ public class BotHardware {
         ServoE.gary.servo.setPosition(ServoE.garyUp);
     }
 
+    public void openGrab() {
+        ServoE.grab.servo.setPosition(ServoE.leftGrabOpen);
+    }
+
+    public void closeGrab() {
+        ServoE.grab.servo.setPosition(ServoE.leftGrabClose);
+    }
+
     public Servo getStick() {
         return ServoE.stick.servo;
     }
@@ -151,6 +164,10 @@ public class BotHardware {
         return new DcMotorEx[] { Motor.frontRight.motor, Motor.backRight.motor, Motor.frontLeft.motor, Motor.backLeft.motor };
     }
 
+    public DcMotorWrap[] getMotorVelocityShimArray() {
+        return new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
+    }
+
     private static class IMUHeading implements HeadingSensor {
         private final BNO055IMU imu;
 
@@ -166,5 +183,16 @@ public class BotHardware {
 
     public HeadingSensor getHeadingSensor() {
         return heading;
+    }
+
+    private static class DcMotorWrap extends DcMotorImplEx {
+        public DcMotorWrap(DcMotorEx motor) {
+            super(motor.getController(), motor.getPortNumber(), motor.getDirection(), motor.getMotorType());
+        }
+
+        @Override
+        public void setPower(double power) {
+            super.setVelocity(power, AngleUnit.DEGREES);
+        }
     }
 }
