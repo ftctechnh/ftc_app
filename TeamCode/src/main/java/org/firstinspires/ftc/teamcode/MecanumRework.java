@@ -31,6 +31,7 @@ public class MecanumRework extends OpMode {
     boolean isGripped = true;
     boolean lastGripState = true;
     double lastRuntime;
+    final double GRIPPER_POWER = .5;
 
     @Override
     public void init() {
@@ -168,18 +169,21 @@ public class MecanumRework extends OpMode {
                 robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.gripper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 // target position vaguely determined with some light testing.
-                robot.gripper.setTargetPosition(1100);
-                /*
-                if(robot.gripper.isBusy()){
-                    robot.gripper.setPower(0.25);
-                } else {
-                    robot.gripper.setPower(0);
-                }
-                */
-                robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                toggleGrip();
+                robot.gripper.setTargetPosition(700);
+                robot.gripper.setPower(GRIPPER_POWER);
             }
             lastGripState = isGripped;
+        }
+
+        //handle go-to-target motion
+        if(robot.gripper.getMode() == DcMotor.RunMode.RUN_TO_POSITION && robot.gripper.isBusy()){
+            if (robot.gripper.getCurrentPosition() >= robot.gripper.getTargetPosition()){
+                robot.gripper.setPower(0);
+                robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            } else {
+                robot.gripper.setPower(GRIPPER_POWER);
+            }
         }
 
         if(gamepad2.right_trigger != 0){
@@ -188,8 +192,9 @@ public class MecanumRework extends OpMode {
             robot.gripper.setPower(0);
         }
 
-        if(gamepad2.x){
+        if(gamepad2.b){
             robot.gripper.setPower(0);
+            robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
 
@@ -211,7 +216,9 @@ public class MecanumRework extends OpMode {
 
         telemetry.addData("s er v o", robot.arm.getPosition());
         telemetry.addData("pos of gripper", robot.gripper.getCurrentPosition());
+        telemetry.addData("grippertgt", robot.gripper.getTargetPosition());
         telemetry.addData("isgripping", isGripped);
+        telemetry.addData("lastGripState", lastGripState);
 
     }
 
