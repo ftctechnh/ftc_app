@@ -51,11 +51,11 @@ public class charlie_jr extends OpMode {
     ColorSensor bColorSensorLeft;    // Hardware Device Object
 
 
+/*
 
-    /*
-     ----------------------------------------------------------------------------------------------
-    Declare global variables here
-    *
+     //----------------------------------------------------------------------------------------------
+    //Declare global variables here
+
 
     org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
 
@@ -198,13 +198,17 @@ public class charlie_jr extends OpMode {
 
     public void slideMove(){
 
-        if(slideMotor.getCurrentPosition()<= IVFSM)
-        {
+    if (gamepad2.right_stick_y > 0){
+        slideMotor.setPower(gamepad2.right_stick_y);
 
+    }
+    else if (gamepad2.right_stick_y < 0 ){
+        slideMotor.setPower(-1);
+    }
         }
     }
 
-    }
+
 /*---------------------------------------------------------------------------------------------
 */
 
