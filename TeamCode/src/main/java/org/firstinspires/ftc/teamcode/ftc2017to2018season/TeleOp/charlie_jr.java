@@ -7,13 +7,19 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
 /**
- * Created by inspirationteam on 11/5/2017.
+ * Created by pahel and rohan on 11/18/17.
  */
 
-@TeleOp(name = "Charlie_teleOP")
+
+/**
+ * Created by inspirationteam on 11/20/2016.
+ */
+
+@TeleOp(name = "charlie_jr")
 //@Disabled
-public class charlieTeleOp extends OpMode {
+public class charlie_jr extends OpMode {
 
 
     /*
@@ -25,6 +31,19 @@ public class charlieTeleOp extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
+    DcMotor ballCollectorMotor;
+    DcMotor ballShooterMotor;
+
+    Servo lift_servo;
+    DcMotor lift_motor;
+
+    public Servo autoBeaconPresser;
+    int servoCount = 0;
+    double shooterGearRatio = 2.333;
+    public String currentColorBeaconLeft = "blank";
+    double servoLeftPos = 0;
+    double servoRightPos = 1;
+//asdfasdf
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -33,26 +52,32 @@ public class charlieTeleOp extends OpMode {
 */
 
 
-    //ColorSensor bColorSensorLeft;    // Hardware Device Object
+    ColorSensor bColorSensorLeft;    // Hardware Device Object
+
 
 
     /*
      ----------------------------------------------------------------------------------------------
     Declare global variables here
     */public enum cap_ball_arm_state_type {
+        CAP_BALL_INIT_POS,
+        CAP_BALL_ARM_OPEN,
+        CAP_BALL_BALL_HOLD,
+        CAP_BALL_LIFT_BALL,
+        CAP_BALL_DROP_BALL;
     }
 
-    cap_ball_arm_state_type cap_ball_arm_state;
+    org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
 
     //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
 
 
     //private ElapsedTime runtime = new ElapsedTime();
-    static final double COUNTS_PER_MOTOR_REV = 757;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1;     // 56/24
-    static final double WHEEL_PERIMETER_CM = 9;     // For figuring circumference
-    static final double COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
-            (DRIVE_GEAR_REDUCTION * WHEEL_PERIMETER_CM);
+    static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
+    static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
+    static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
+            (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
     // Define class members
     //   Servo right_servo;
 
@@ -69,7 +94,8 @@ public class charlieTeleOp extends OpMode {
             /* lets reverse the direction of the right wheel motor*/
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
-
+        ballCollectorMotor = hardwareMap.dcMotor.get("ballCollectorMotor");
+        ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
 //        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
@@ -82,14 +108,15 @@ public class charlieTeleOp extends OpMode {
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
-        /*---------------------------------------------------------------------
-        //leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        -----------------------------------------------------------------------*/
-    }
+        leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
+        autoBeaconPresser = hardwareMap.servo.get("ServoPress");
+        bColorSensorLeft = hardwareMap.colorSensor.get("bColorSensorLeft");
+    }
     /*
     ---------------------------------------------------------------------------------------------
 
@@ -106,7 +133,7 @@ public class charlieTeleOp extends OpMode {
 
     */
     @Override
-    public void start() {
+    public void start(){
 
     }
 
@@ -117,8 +144,6 @@ public class charlieTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        FourWheelDriveEncoder();
-        //FourWheelDrive();
 
 
     }
@@ -139,7 +164,7 @@ public class charlieTeleOp extends OpMode {
     Functions go here
  */
 
-    public void FourWheelDriveEncoder() {
+    public void FourWheelDriveEncoder(){
         /*
         read the gamepad values and put into variables
          */
@@ -147,35 +172,9 @@ public class charlieTeleOp extends OpMode {
         float rightY_gp1 = (gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
         float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
         float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
-            }
         //run the motors by setting power to the motors with the game pad value
 
-                //run the motors by setting power to the motors with the game pad value
-                        if(( Math.abs(strafeStickRight) > 0) && (rightY_gp1 != 0)){
-                   if (strafeStickRight>0 && rightY_gp1>0){
-                            leftWheelMotorBack.setPower(1);
-                            rightWheelMotorFront.setPower(1);
-                        }
-                else if (strafeStickRight <0 && rightY_gp1 >0){
-                          leftWheelMotorFront.setPower(1);
-                       rightWheelMotorBack.setPower(1);
-                   }
-                 else if (strafeStickRight >0 && rightY_gp1 <0){
-                           leftWheelMotorBack.setPower(-1);
-                           rightWheelMotorFront.setPower(1);
-
-                               }
-                 else (strafeStickRight<0 && rightY_gp1<0){
-                         leftWheelMotorFront.setPower(-1);
-                         rightWheelMotorBack.setPower(-1);
-                        }
-                 }
-                    else if (Math.abs(strafeStickLeft) > 0) {
-
-
-
-
-        if (Math.abs(strafeStickLeft) > 0) {
+        if (Math.abs(strafeStickLeft) > 0){
 
             leftWheelMotorFront.setPower(-strafeStickLeft);
             leftWheelMotorBack.setPower(strafeStickLeft);
@@ -185,7 +184,8 @@ public class charlieTeleOp extends OpMode {
             telemetry.addData("right front encoder value", rightWheelMotorFront.getCurrentPosition());
             telemetry.update();
         }
-        else if (Math.abs(strafeStickRight) > 0) {
+
+        else if (Math.abs(strafeStickRight) > 0){
 
             leftWheelMotorFront.setPower(strafeStickRight);
             leftWheelMotorBack.setPower(-strafeStickRight);
@@ -194,18 +194,31 @@ public class charlieTeleOp extends OpMode {
             telemetry.addData("left front encoder value", leftWheelMotorFront.getCurrentPosition());
             telemetry.addData("right front encoder value", rightWheelMotorFront.getCurrentPosition());
             telemetry.update();
-
         }
-        else if {
+
+        else {
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
         }
+    }
+
+
+
+        //run the motors by setting power to the motors with the game pad values
+        //leftWheelMotorFront.setPower(leftY_gp1);
+        //leftWheelMotorBack.setPower(leftY_gp1);
+        //rightWheelMotorFront.setPower(rightY_gp1);
+        //rightWheelMotorBack.setPower(rightY_gp1);
+
 
 
     }
 
 
+/*---------------------------------------------------------------------------------------------
+*/
 
-}
+
+
