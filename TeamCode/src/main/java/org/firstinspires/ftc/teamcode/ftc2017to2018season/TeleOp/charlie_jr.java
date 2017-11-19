@@ -31,19 +31,15 @@ public class charlie_jr extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
-    DcMotor ballCollectorMotor;
-    DcMotor ballShooterMotor;
+    DcMotor slideMotor;
 
-    Servo lift_servo;
-    DcMotor lift_motor;
+    //Initial value for slide motor
+    int IVFSM = slideMotor.getCurrentPosition();
 
-    public Servo autoBeaconPresser;
-    int servoCount = 0;
-    double shooterGearRatio = 2.333;
-    public String currentColorBeaconLeft = "blank";
-    double servoLeftPos = 0;
-    double servoRightPos = 1;
-//asdfasdf
+
+
+
+
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -59,13 +55,7 @@ public class charlie_jr extends OpMode {
     /*
      ----------------------------------------------------------------------------------------------
     Declare global variables here
-    */public enum cap_ball_arm_state_type {
-        CAP_BALL_INIT_POS,
-        CAP_BALL_ARM_OPEN,
-        CAP_BALL_BALL_HOLD,
-        CAP_BALL_LIFT_BALL,
-        CAP_BALL_DROP_BALL;
-    }
+    *
 
     org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
 
@@ -94,8 +84,7 @@ public class charlie_jr extends OpMode {
             /* lets reverse the direction of the right wheel motor*/
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
-        ballCollectorMotor = hardwareMap.dcMotor.get("ballCollectorMotor");
-        ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
+
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
 //        lift_servo = hardwareMap.servo.get("capBallServo"); //config name
@@ -114,8 +103,7 @@ public class charlie_jr extends OpMode {
         rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        autoBeaconPresser = hardwareMap.servo.get("ServoPress");
-        bColorSensorLeft = hardwareMap.colorSensor.get("bColorSensorLeft");
+
     }
     /*
     ---------------------------------------------------------------------------------------------
@@ -180,9 +168,7 @@ public class charlie_jr extends OpMode {
             leftWheelMotorBack.setPower(strafeStickLeft);
             rightWheelMotorFront.setPower(strafeStickLeft);
             rightWheelMotorBack.setPower(-strafeStickLeft);
-            telemetry.addData("left front encoder value", leftWheelMotorFront.getCurrentPosition());
-            telemetry.addData("right front encoder value", rightWheelMotorFront.getCurrentPosition());
-            telemetry.update();
+
         }
 
         else if (Math.abs(strafeStickRight) > 0){
@@ -191,9 +177,7 @@ public class charlie_jr extends OpMode {
             leftWheelMotorBack.setPower(-strafeStickRight);
             rightWheelMotorFront.setPower(-strafeStickRight);
             rightWheelMotorBack.setPower(strafeStickRight);
-            telemetry.addData("left front encoder value", leftWheelMotorFront.getCurrentPosition());
-            telemetry.addData("right front encoder value", rightWheelMotorFront.getCurrentPosition());
-            telemetry.update();
+
         }
 
         else {
@@ -212,11 +196,15 @@ public class charlie_jr extends OpMode {
         //rightWheelMotorFront.setPower(rightY_gp1);
         //rightWheelMotorBack.setPower(rightY_gp1);
 
+    public void slideMove(){
 
+        if(slideMotor.getCurrentPosition()<= IVFSM)
+        {
 
+        }
     }
 
-
+    }
 /*---------------------------------------------------------------------------------------------
 */
 
