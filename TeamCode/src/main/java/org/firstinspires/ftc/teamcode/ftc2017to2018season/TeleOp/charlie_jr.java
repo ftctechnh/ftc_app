@@ -159,22 +159,20 @@ public class charlie_jr extends OpMode {
         float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.left_trigger > 0) {
+        if (gamepad1.left_bumper = true) {
 
-            leftWheelMotorFront.setPower(-strafeStickLeft);
-            leftWheelMotorBack.setPower(strafeStickLeft);
-            rightWheelMotorFront.setPower(strafeStickLeft);
-            rightWheelMotorBack.setPower(-strafeStickLeft);
-            
-        } else if (gamepad1.right_trigger > 0) {
+            leftWheelMotorFront.setPower(-1);
+            leftWheelMotorBack.setPower(1);
+            rightWheelMotorFront.setPower(1);
+            rightWheelMotorBack.setPower(-1);
 
         }
-        else if (Math.abs(strafeStickRight) > 0) {
+        else if (gamepad1.right_bumper = true) {
 
-            leftWheelMotorFront.setPower(strafeStickRight);
-            leftWheelMotorBack.setPower(-strafeStickRight);
-            rightWheelMotorFront.setPower(-strafeStickRight);
-            rightWheelMotorBack.setPower(strafeStickRight);
+            leftWheelMotorFront.setPower(1);
+            leftWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(-1);
+            rightWheelMotorBack.setPower(1);
 
         }
         else {
@@ -188,7 +186,10 @@ public class charlie_jr extends OpMode {
         telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
         telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
         telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        telemetry.update();
+
+        //telemetry.addData("",)
+        //telemetry.update();
+        //These were going to be used to find the values of triggers but we couldn't acomplish it
         //run the motors by setting power to the motors with the game pad values
         //leftWheelMotorFront.setPower(leftY_gp1);
         //leftWheelMotorBack.setPower(leftY_gp1);
