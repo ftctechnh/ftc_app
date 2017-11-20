@@ -85,8 +85,8 @@ public class PushbotAutoDriveByEncoder_IF_BLUE_1 extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     DRIVE_SPEED             = 0.1;
+    static final double     TURN_SPEED              = 0.1;
 
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
@@ -175,25 +175,26 @@ public class PushbotAutoDriveByEncoder_IF_BLUE_1 extends LinearOpMode {
         telemetry.addData("Blue ", sensorColor.blue());
         telemetry.update();
 
-        sleep(1000);
-        boolean z = true;
-        double p;
-        double v;
+        sleep(250);
         if (sensorColor.red() > 50){
-            encoderDrive(0.1, -0.75, -0.75, 0.5);
-            z = true;
+            encoderDrive(0.1, -0.5, 0.5, 2);
+            for(double d = 0.1; d < 0.675; d += 0.025){
+                robot.jewelAnnihilator.setPosition(d);
+                sleep(50);
+            }
+            sleep(10);
+            encoderDrive(0.1, 0.3, -0.3, 2);
         }else{
-            encoderDrive(0.1, 0.75, 0.75, 0.5);
-            z = false;
+            encoderDrive(0.1, 0.2, -0.2, 2);
+            for(double d = 0.1; d < 0.675; d += 0.025){
+                robot.jewelAnnihilator.setPosition(d);
+                sleep(50);
+            }
+            sleep(10);
+            encoderDrive(0.1, -0.5, 0.5, 2);
         }
 
-        if (z == true){
-            encoderDrive(0.1, 0.75, 0.75, 0.5);
-        }else{
-            encoderDrive(0.1, -0.75, -0.75, 0.5);
-        }
-
-        encoderDrive(0.1, -0.75, -0.75, 0.5);
+        encoderDrive(0.1, -1.125, -1.125, 2);
 
         for(double c = 0.0; c < 2.0; c += 0.1) {
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
@@ -208,28 +209,30 @@ public class PushbotAutoDriveByEncoder_IF_BLUE_1 extends LinearOpMode {
                  * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
-
+                telemetry.update();
                 sleep(50);
             }
         }
 
         sleep(1000);
 
+        encoderDrive(0.6, 7.125, 7.125,10);
+
         switch (vuMark) {
-            case LEFT: encoderDrive(DRIVE_SPEED, 7.875, 7.875, 0.5);
+            case LEFT: encoderDrive(DRIVE_SPEED, 1, 1, 3);
                 break;
-            case CENTER: encoderDrive(DRIVE_SPEED, 9.75, 9.75, 0.5);
+            case CENTER: encoderDrive(DRIVE_SPEED, 1.875, 1.875, 5);
                 break;
-            case RIGHT: encoderDrive(DRIVE_SPEED, 11.625, 11.625, 0.5);
+            case RIGHT: encoderDrive(DRIVE_SPEED, 4.75, 4.75, 10);
                 break;
-            case UNKNOWN: encoderDrive(DRIVE_SPEED, 9.75, 9.75, 0.5);
+            case UNKNOWN: encoderDrive(DRIVE_SPEED, 1.875, 1.875, 5);
                 break;
         }
 
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        encoderDrive(TURN_SPEED, -2.94, 2.94, 0.5);
-        encoderDrive(DRIVE_SPEED, 3, 3, 0.5);
+        encoderDrive(TURN_SPEED, -2.94/2, 2.94/2, 3);
+        encoderDrive(DRIVE_SPEED, 3, 3, 4);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
