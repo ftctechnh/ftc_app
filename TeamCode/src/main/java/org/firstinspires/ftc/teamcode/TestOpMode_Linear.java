@@ -125,6 +125,8 @@ public class TestOpMode_Linear extends LinearOpMode
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Lift", "Position" + robot.lift.getCurrentPosition());
+
             //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
