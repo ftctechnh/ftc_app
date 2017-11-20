@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.TestHardware;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -51,18 +53,17 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list (blah blah blah)
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="LiftTest", group="Linear Opmode")
 public class TestOpMode_Linear extends LinearOpMode
 {
 
     // Declare OpMode members.
-    TestHardware robot = new TestHardware();
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    @Override
     public void runOpMode()
     {
+        TestHardware robot = new TestHardware();
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
