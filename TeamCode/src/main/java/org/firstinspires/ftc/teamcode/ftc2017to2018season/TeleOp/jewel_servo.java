@@ -14,7 +14,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by pahel and rororohan on 11/19/17.
  */
 
+@Autonomous(name="jewel_servo", group ="Autonomous")
 public class jewel_servo extends LinearOpMode{
+
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
@@ -31,7 +33,7 @@ public class jewel_servo extends LinearOpMode{
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "left_hand");
+        servo = hardwareMap.get(Servo.class, "jewel_servo");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
