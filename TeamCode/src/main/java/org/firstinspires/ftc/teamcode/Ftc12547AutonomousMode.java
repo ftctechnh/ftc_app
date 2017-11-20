@@ -80,7 +80,7 @@ import java.util.Map;
 public class Ftc12547AutonomousMode extends LinearOpMode {
 
     /**
-     * Team 12547 VuMask variables
+     * Team 12547 VuMark variables
      */
     private OpenGLMatrix lastLocation = null;
     private VuforiaTrackables relicTrackables;
@@ -97,16 +97,12 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
      */
 
     /* Declare OpMode members. */
-    HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime runtime = new ElapsedTime();
+    private HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
 
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;
     private float hsvValues[] = {0F, 0F, 0F};
 
-    // sometimes it helps to multiply the raw RGB values with a scale factor
-    // to amplify/attentuate the measured values.
-    private final double SCALE_FACTOR = 255;
 
     @Override
     public void runOpMode() {
@@ -118,20 +114,17 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        RelicRecoveryVuMark vuMask = vuMaskIdentificationTask();
-        telemetry.addData("vuMask:", vuMask);
-        telemetry.update();
+        RelicRecoveryVuMark vuMark = vuMarkIdentificationTask();
+        telemetry.addData("vuMark:", vuMark);
+        // telemetry.update();
 
-        double final_distance = calcFinalDistance(vuMask);
+        double final_distance = calcFinalDistanceByVuMark(vuMark);
 
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Lower the servo that control the arm to move the JewelMovingArm
-        lowerJewelMovingArmServo(
-                JEWEL_ARM_VERTICAL_SERVO_POSITION,
-                JEWEL_ARM_HORIZONTAL_SERVO_POSITION,
-                JEWEL_ARM_SERVO_MOVING_STEP_CHANGE);
+        lowerJewelMovingArmServo();
         sleep(ONE_SECOND_IN_MIL);
 
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
@@ -140,53 +133,68 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                 hsvValues);
 
         telemetry.addData("Blue ", sensorColor.blue());
-        telemetry.update();
-
+        telemetry.addData("Red ", sensorColor.red());
+        // telemetry.update();
         sleep(ONE_SECOND_IN_MIL);
 
-        if (sensorColor.blue() > SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS){
-            encoderDrive(DRIVE_SPEED, -1, -1, 0.5);
-        }else{
-            encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
+        int jewelColor = (sensorColor.red() > COLOR_THRESHOLD) ? Color.RED : Color.BLUE;
+
+
+        // Disposition jewel of other color than team color.
+        if (jewelColor == TEAM_COLOR){
+            /**
+             * Move forward, because
+             * (1) Color sensor of team 12547 is mounted facing backward.
+             * (2) Team color jewel is on the back side in this condition.
+             */
+            MoveForwardForJewelDisposition();
+
+            // Raise the servo that control the arm to move the JewelMovingArm
+            raiseJewelMovingArmServo();
+            sleep(ONE_SECOND_IN_MIL);
+
+            MoveBackwardForJewelDisposition();
+
+        } else { // Move backward
+            MoveBackwardForJewelDisposition();
+
+            // Raise the servo that control the arm to move the JewelMovingArm
+            raiseJewelMovingArmServo();
+            sleep(ONE_SECOND_IN_MIL);
+
+            MoveForwardForJewelDisposition();
         }
-
-        telemetry.addData("To raise the arm", " of jewel arm");
-        telemetry.update();
-        sleep(ONE_SECOND_IN_MIL);
-        sleep(ONE_SECOND_IN_MIL);
-        telemetry.addData("Raising the arm", " of jewel arm");
-        telemetry.update();
-
-        // Raise the servo that control the arm to move the JewelMovingArm
-        for(double d = 0.1; d < 0.675; d+=0.025){
-            robot.jewelAnnihilator.setPosition(d);
-            sleep(50);
-        }
-        /*
-        raiseJewelMovingArmServo(
-                JEWEL_ARM_HORIZONTAL_SERVO_POSITION,
-                JEWEL_ARM_VERTICAL_SERVO_POSITION,
-                JEWEL_ARM_SERVO_MOVING_STEP_CHANGE);
-                */
-        sleep(ONE_SECOND_IN_MIL);
-        sleep(ONE_SECOND_IN_MIL);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
         telemetry.addData("Moving to the final destination", final_distance);
-        encoderDrive(DRIVE_SPEED,  final_distance,  final_distance, 5.0);
+        encoderDrive(AUTONOMOUS_DRIVE_SPEED,  final_distance,  final_distance, 5.0);
+
+        switch (vuMark) {
+            case LEFT: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1, 1, 3);
+                break;
+            case CENTER: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
+                break;
+            case RIGHT: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 4.75, 4.75, 10);
+                break;
+            case UNKNOWN: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
+                break;
+        }
+
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        encoderDrive(TURN_SPEED, -2.94/2, 2.94/2, 3);
+        encoderDrive(AUTONOMOUS_DRIVE_SPEED, 3, 3, 4);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-
-
     }
 
-    private double calcFinalDistance(RelicRecoveryVuMark vuMask) {
+    private double calcFinalDistanceByVuMark(RelicRecoveryVuMark vuMark) {
         //TODO: default to middle. Is this ideal?
-        if (vuMask == null) return START_TO_MIDDLE_DISTANCE_INCHES;
-        switch (vuMask) {
+        if (vuMark == null) return START_TO_MIDDLE_DISTANCE_INCHES;
+        switch (vuMark) {
             case CENTER:
                 return START_TO_MIDDLE_DISTANCE_INCHES;
             //TODO: THis may need flip
@@ -199,37 +207,59 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         }
     }
 
-    //TODO: refactor JewelMovingArmServo moves.
-    private void lowerJewelMovingArmServo(double fromJewelArmServoPosition, double toJewelArmServoPosition, double step) {
-        for(double d = fromJewelArmServoPosition; d > toJewelArmServoPosition; d-=step){
+
+    /**
+     * Move forward or backfard in order to disposition jewel or move back after
+     * disposition the jewel.
+     */
+    private void MoveBackwardForJewelDisposition() {
+        encoderDrive(AUTONOMOUS_DRIVE_SPEED,
+                -JEWEL_DISPOSITION_DISTANCE,
+                -JEWEL_DISPOSITION_DISTANCE,
+                JEWEL_DISPOSITION_TIMEOUT);
+    }
+
+    private void MoveForwardForJewelDisposition() {
+        encoderDrive(AUTONOMOUS_DRIVE_SPEED,
+                JEWEL_DISPOSITION_DISTANCE,
+                JEWEL_DISPOSITION_DISTANCE,
+                JEWEL_DISPOSITION_TIMEOUT);
+    }
+
+    /**
+     * Lower or raise arm servo that dispositions the jewel.
+     */
+    private void lowerJewelMovingArmServo() {
+        for(double d = JEWEL_ARM_VERTICAL_SERVO_POSITION; d > JEWEL_ARM_HORIZONTAL_SERVO_POSITION;
+            d-=JEWEL_ARM_SERVO_MOVING_STEP_CHANGE){
             robot.jewelAnnihilator.setPosition(d);
             sleep(SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS);
         }
     }
 
-    private void raiseJewelMovingArmServo(double fromJewelArmServoPosition, double toJewelArmServoPosition, double step) {
-        for(double d = fromJewelArmServoPosition; d > toJewelArmServoPosition; d+=step){
+    private void raiseJewelMovingArmServo() {
+        for(double d = JEWEL_ARM_HORIZONTAL_SERVO_POSITION; d < JEWEL_ARM_VERTICAL_SERVO_POSITION;
+            d+=JEWEL_ARM_SERVO_MOVING_STEP_CHANGE){
             robot.jewelAnnihilator.setPosition(d);
-//            sleep(SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS);
-            sleep(300);
+            sleep(SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS);
         }
     }
 
     /**
-     * VuMask Recoginization task
+     * VuMark recognition task
      * @return RelicRecoveryVuMark result
      */
-    private RelicRecoveryVuMark vuMaskIdentificationTask() {
+    private RelicRecoveryVuMark vuMarkIdentificationTask() {
 
-        Date startVuMask = new Date();
+        Date startVuMark = new Date();
 
-        Map VuMaskRecognizedTimes = new HashMap<RelicRecoveryVuMark, Integer>();
+        Map VuMarkRecognizedTimes = new HashMap<RelicRecoveryVuMark, Integer>();
 
         relicTrackables.activate();
         while (opModeIsActive()) {
 
             Date current = new Date();
-            if (current.getTime() - startVuMask.getTime() > FIVE_SECONDS_IN_MIL) {
+            if (current.getTime() - startVuMark.getTime() > FIVE_SECONDS_IN_MIL) {
                 telemetry.addData("VuMark time out at ", current);
                 telemetry.update();
                 return RelicRecoveryVuMark.UNKNOWN;
@@ -287,7 +317,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
-    void initRobot() {
+    private void initRobot() {
         initVuMark();
         initSensorsAndMotors();
     }
@@ -300,11 +330,13 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
+    private void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
+
+        ElapsedTime runtime = new ElapsedTime();
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -322,7 +354,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
             // reset the timeout time and start motion.
             runtime.reset();
             robot.leftDrive.setPower(Math.abs(speed));
-            robot.rightDrive.setPower(Math.abs(speed));
+            robot.rightDrive.setPower(Math.abs(speed) * AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR);
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -335,7 +367,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                // telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                         robot.leftDrive.getCurrentPosition(),
                         robot.rightDrive.getCurrentPosition());
@@ -415,7 +447,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
          * Here we chose the back (HiRes) camera (for greater range), but
          * for a competition robot, the front camera might be more convenient.
          */
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         /**
@@ -428,7 +460,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        telemetry.addData("VuMask identification", "Initialized");
+        telemetry.addData("VuMark identification", "Initialized");
         telemetry.update();
     }
 }

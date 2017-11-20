@@ -1,17 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 /**
  * Configurations for robot for team 12547
  */
 public class Ftc12547Config {
 
-    public static final int     ONE_SECOND_IN_MIL                    = 1000;
-    public static final int     FIVE_SECONDS_IN_MIL                  = 5 * 1000; // 5 seconds
+    public static final int     ONE_SECOND_IN_MIL                   = 1000;
+    public static final int     FIVE_SECONDS_IN_MIL                 = 5 * 1000; // 5 seconds
 
     /**
-     * VuMask configurations
+     * Set the team to the right color. BLUE or RED
      */
-    public static final int     THRESHOLD_RECOGNITION                = 3;
+    public static final int     TEAM_COLOR                          = Color.RED;
+
+    /**
+     * VuMark configurations
+     */
+    public static final int     THRESHOLD_RECOGNITION               = 3;
 
     // Do not update
     public static final String  TAG = "Vuforia VuMark Sample";
@@ -29,21 +36,34 @@ public class Ftc12547Config {
     public static final int     SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS = 50;
 
     /**
-     * Driving configurations
+     * Color sensor configuration
      */
-    public static final double  COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    public static final double  DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    public static final double  WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    public static final double  COUNTS_PER_INCH         =
-            (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    public static final double  DRIVE_SPEED             = 0.6;
-    public static final double  TURN_SPEED              = 0.5;
+    public static final int COLOR_THRESHOLD             = 50;
+
+    // sometimes it helps to multiply the raw RGB values with a scale factor
+    // to amplify/attentuate the measured values.
+    public static final double  SCALE_FACTOR            = 255;
 
     /**
      * Autonomous mode driving configurations
      */
-    public static final double START_TO_NEAREST_DISTANCE_INCHES = 7;
-    public static final double START_TO_MIDDLE_DISTANCE_INCHES  = 7.5;
-    public static final double START_TO_FARREST_DISTANCE_INCHES = 8;
+    // two motors do not move evenly. Apply the factor below to the right wheel.
+    public static final double AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR = 0.5;
+    public static final double AUTONOMOUS_DRIVE_SPEED           = 0.1;
+
+    public static final double JEWEL_DISPOSITION_DISTANCE       = 2;
+    public static final double JEWEL_DISPOSITION_TIMEOUT        = 3;
+
+    public static final double START_TO_NEAREST_DISTANCE_INCHES = 28.5;
+    public static final double START_TO_MIDDLE_DISTANCE_INCHES  = 36;
+    public static final double START_TO_FARREST_DISTANCE_INCHES = 43.5;
+
+    public static final double  COUNTS_PER_MOTOR_REV    = 1440;    // eg: TETRIX Motor Encoder
+    public static final double  DRIVE_GEAR_REDUCTION    = 0.5;     // This is < 1.0 if geared UP
+    public static final double  WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
+    public static final double  COUNTS_PER_INCH         =
+            (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+    public static final double  TURN_SPEED              = 0.5;
+
 
 }
