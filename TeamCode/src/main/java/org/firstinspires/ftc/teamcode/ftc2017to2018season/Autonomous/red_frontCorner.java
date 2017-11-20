@@ -60,11 +60,11 @@ public class red_frontCorner extends Autonomous_General {
         if (vuMark == RelicRecoveryVuMark.CENTER){
             simpleRangeDistance(88, 0.2, rsBuffer);
         }
-        else if (vuMark == RelicRecoveryVuMark.LEFT){
+        else if (vuMark == RelicRecoveryVuMark.RIGHT){
             simpleRangeDistance(71, 0.2, rsBuffer);
 
         }
-        else if (vuMark == RelicRecoveryVuMark.RIGHT){
+        else if (vuMark == RelicRecoveryVuMark.LEFT){
             simpleRangeDistance(108, 0.2, rsBuffer);
 
         }
@@ -72,7 +72,7 @@ public class red_frontCorner extends Autonomous_General {
 
         sleep(1000);
 
-        gyroTurn(0.3,88);
+        gyroTurn(0.3,-180);
 
         encoderMecanumDrive(0.65,45,45,1000,0);
 
