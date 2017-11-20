@@ -159,14 +159,14 @@ public class charlie_jr extends OpMode {
         float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
 
-        if (Math.abs(strafeStickLeft) > 0) {
+        if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(-strafeStickLeft);
             leftWheelMotorBack.setPower(strafeStickLeft);
             rightWheelMotorFront.setPower(strafeStickLeft);
             rightWheelMotorBack.setPower(-strafeStickLeft);
 
-        } else if (Math.abs(strafeStickRight) > 0) {
+        } else if (gamepad1.right_trigger > 0) {
 
             leftWheelMotorFront.setPower(strafeStickRight);
             leftWheelMotorBack.setPower(-strafeStickRight);
@@ -180,7 +180,11 @@ public class charlie_jr extends OpMode {
             rightWheelMotorBack.setPower(rightY_gp1);
         }
 
-
+        telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
+        telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
+        telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
+        telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
+        telemetry.update();
         //run the motors by setting power to the motors with the game pad values
         //leftWheelMotorFront.setPower(leftY_gp1);
         //leftWheelMotorBack.setPower(leftY_gp1);
