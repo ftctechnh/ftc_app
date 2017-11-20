@@ -13,7 +13,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Created by jmgu3 on 11/7/2016.
+ * Menu parameters are stored in a text file on the robot phone as viewable txt
+ * To add additiona entries:
+ *  you must inccreas the array sizes (nitems variable)
+ *  you must add a 'understandable' variable name to equate the new matrix entry too
+ *  set the initial parameters for the new variable  (initializeValues method)
+ *  set the transfer to the 'usable' name  (updateVariables method)
+ *
  */
 public class MenuFileHandler {
     private Gamepad gamepad;
@@ -32,13 +38,9 @@ public class MenuFileHandler {
 
 
     // all data here
-    public Integer teamIsRed;
-    public Integer startPosition;
-    public Integer mode;
-//    public Integer shooterForwardAfterShoot;
-//    public Integer driveSpeed;
-//    public Integer whiteColor;
-//    public Integer drivmBackTime;
+    public boolean teamIsRed;
+    public boolean startPositionIsFront;
+    public Integer mode,distance1,heading1,distance2,heading2;
 
 
 //    //Menu Variables
@@ -46,7 +48,8 @@ public class MenuFileHandler {
     //public String[]  menulabel = {"waitTime","shooterWait","shooterForwardTime","shooterForwardAfterShoot","driveSpeed","whiteColor","driveBackTime"};
     public String  menulabel[] = new String[nitems];
     public int     menuvalue[] = new int[nitems];
-    public int     menuvaluelimit[][] = new int[nitems][2];
+    public int     menulowerlimit[] = new int[nitems];
+    public int     menuupperlimit[] = new int[nitems];
     public String  menuvaluetoken[][] = new String[nitems][5];
 
 
@@ -57,119 +60,71 @@ public class MenuFileHandler {
 //    public boolean  TeamisBlue,PickUpPartnerBall, hitcapball;
 
 
-    public void testGamepad(){
-        telemetry.addData("x",gamepad.x);
-        telemetry.addData("Right Trigger",gamepad.right_trigger);
-        telemetry.update();
+    public void updateVariables() {
+        teamIsRed = (menuvalue[0] == 1);
+        startPositionIsFront = (menuvalue[1] == 1);
+        mode = menuvalue[2];
+        distance1 = menuvalue[3];
+        heading1  = menuvalue[4];
+        distance2 = menuvalue[5];
+        heading2  = menuvalue[6];
     }
-
     public void initializeValues() {
 
-//        waitTime = 0;
-//        shooterWait = 7;
-//        shooterForwardTime = 8;
-//        shooterForwardAfterShoot = 9;
-//        driveSpeed = 5;
-//        whiteColor = 5;
-//        driveBackTime = 750;
-
-        menulabel[0] = "teamIsRed";
+        menulabel[0] = "Team Color";
         menuvalue[0] = 1;
-        menuvaluelimit[0][0] = 0;
-        menuvaluelimit[0][1] = 1;
+        menulowerlimit[0] = 0;
+        menuupperlimit[0] = 1;
         menuvaluetoken[0][0] = "Blue";
         menuvaluetoken[0][1] = "Red";
-        teamIsRed = menuvalue[0];
+        teamIsRed = (menuvalue[0] == 1);
 
-        menulabel[1] = "Position";
+        menulabel[1] = "Start Position";
         menuvalue[1] = 1;
-        menuvaluelimit[1][0] = 0;
-        menuvaluelimit[1][1] = 1;
+        menulowerlimit[1] = 0;
+        menuupperlimit[1] = 1;
         menuvaluetoken[1][0] = "Back";
         menuvaluetoken[1][1] = "Front";
-        startPosition = menuvalue[1];
+        startPositionIsFront = (menuvalue[1] == 1);
 
         menulabel[2] = "Mode";
         menuvalue[2] = 0;
-        menuvaluelimit[2][0] = 0;
-        menuvaluelimit[2][1] = 3;
+        menulowerlimit[2] = 0;
+        menuupperlimit[2] = 3;
         menuvaluetoken[2][0] = "Glyph";
         menuvaluetoken[2][1] = "Relic";
-        menuvaluetoken[2][0] = "Test";
-        menuvaluetoken[2][1] = "Demo";
+        menuvaluetoken[2][2] = "Test";
+        menuvaluetoken[2][3] = "Demo";
         mode = menuvalue[2];
 
         menulabel[3] = "test3";
         menuvalue[3] = 13;
+        menulowerlimit[3] = 0;
+        menuupperlimit[3] = 100;
+
         menulabel[4] = "test4";
         menuvalue[4] = 14;
+        menulowerlimit[4] = 0;
+        menuupperlimit[4] = 100;
+
         menulabel[5] = "test5";
         menuvalue[5] = 15;
+        menulowerlimit[5] = 0;
+        menuupperlimit[5] = 100;
+
         menulabel[6] = "test6";
         menuvalue[6] = 16;
-
-
-
-//        String[] menulabel = {"waitTime","one","two","three","four","five","six"};
-//        int[]    menuvalue = {0,1,2,3,4,5,6};
-//        menulabel[1] = "shooterWait";
-//        menuvalue[1] = shooterWait;
-//        menulabel[2] = "shooterForwardTime";
-//        menuvalue[2] = shooterForwardTime;
-//        menulabel[3] = "shooterForwardAfterShoot";
-//        menuvalue[3] = shooterForwardAfterShoot;
-//        menulabel[4] = "driveSpeed";
-//        menuvalue[4] = driveSpeed;
-//        menulabel[5] = "whiteColor";
-//        menuvalue[5] = whiteColor;
-//        menulabel[6] = "driveBackTime";
-//        menuvalue[6] = driveBackTime;
-
+        menulowerlimit[6] = 0;
+        menuupperlimit[6] = 100;
     }
-
-//    public void readDataFromFile(Context context) {
-//        // setup initial configuration parameters here
-//        initializeValues();
-//
-//        // read configuration data from file
-//        try {
-//            InputStream inputStream = context.openFileInput(configFileName);
-//
-//            if (inputStream != null) {
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//
-//                // read data here
-//                waitTime = Integer.valueOf(bufferedReader.readLine());
-//                shooterWait = Double.valueOf(bufferedReader.readLine());
-//                shooterForwardTime = Double.valueOf(bufferedReader.readLine());
-//                shooterForwardAfterShoot = Double.valueOf(bufferedReader.readLine());
-//                driveSpeed = Double.valueOf(bufferedReader.readLine());
-//                whiteColor = Double.valueOf(bufferedReader.readLine());
-//                driveBackTime = Double.valueOf(bufferedReader.readLine());
-//                //shooterSpeed = Double.valueOf(bufferedReader.readLine());
-//
-//                inputStream.close();
-//            }
-//        } catch (Exception e) {
-//            // values here, for first time or in case there's a problem reading.
-//            initializeValues();
-//        }
-//
-//    }
 
 
     public void readDataFromTxtFile(Context context) {
         // setup initial configuration parameters here
-        initializeValues();
-//        telemetry.addData("x", gamepad.x);
-//        telemetry.addData("joyrx", gamepad.right_stick_x);
-//        telemetry.update();
+        //initializeValues();
 
-        // read configuration data from file
-//        String fileName = "test.txt";
-//        String directoryPath = "/sdcard/FIRST/";
-//        String filePath = directoryPath + fileName;
+        telemetry.addLine("Reading from file method");
+        telemetry.update();
 
         int i = 0;
         try {
@@ -178,76 +133,93 @@ public class MenuFileHandler {
             String s;
             while ((s = br.readLine()) != null && i < menuvalue.length) {                // read the label then the value they are on separate lines
                 menulabel[i] = s;                                   //Updates the label "string" of our array
-                s = br.readLine();
-                menuvalue[i] = Integer.parseInt(s);                //values is our integer array, converts string to integer
-                //System.out.println(s);
+                //s = br.readLine();
+                menuvalue[i] = Integer.parseInt(br.readLine());                //values is our integer array, converts string to integer
+
                 i += 1;                                         //Only to do with our array
             }
 
-//                waitTime = Integer.valueOf(br.readLine());
-//                shooterWait = Double.valueOf(br.readLine());
-//                shooterForwardTime = Double.valueOf(br.readLine());
-//                shooterForwardAfterShoot = Double.valueOf(br.readLine());
-//                driveSpeed = Double.valueOf(br.readLine());
-//                whiteColor = Double.valueOf(br.readLine());
-//                driveBackTime = Double.valueOf(br.readLine());
-
-
-
-            fr.close();
+            fr.close();                                            // close the file
 
         } catch (IOException ex) {
             System.err.println("Couldn't read this: " + filePath);//idk where this is printing
             initializeValues();
         }
 
-//        try {
-//            InputStream inputStream = context.openFileInput(configFileName);
-//
-//            if (inputStream != null) {
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//
-//                // read data here
-//                waitTime = Integer.valueOf(bufferedReader.readLine());
-//                shooterWait = Double.valueOf(bufferedReader.readLine());
-//                shooterForwardTime = Double.valueOf(bufferedReader.readLine());
-//                shooterForwardAfterShoot = Double.valueOf(bufferedReader.readLine());
-//                driveSpeed = Double.valueOf(bufferedReader.readLine());
-//                whiteColor = Double.valueOf(bufferedReader.readLine());
-//                driveBackTime = Double.valueOf(bufferedReader.readLine());
-//                //shooterSpeed = Double.valueOf(bufferedReader.readLine());
-//
-//                inputStream.close();
-//            }
-//        } catch (Exception e) {
-//            // values here, for first time or in case there's a problem reading.
-//            initializeValues();
-//        }
-
     }
 
-//    public boolean writeDataToFile(Context context) {
-//        // may want to write configuration parameters to a file here if they are needed for teleop too!
-//        try {
-//            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(configFileName, Context.MODE_PRIVATE));
-//
-//            // write data here, as a string on its own line. "\n" puts a new line at the end of the write, like hitting "enter"
-//
-//            outputStreamWriter.write(Integer.toString(waitTime) + "\n");
-//            outputStreamWriter.write(Double.toString(shooterWait) + "\n");
-//            outputStreamWriter.write(Double.toString(shooterForwardTime) + "\n");
-//            outputStreamWriter.write(Double.toString(shooterForwardAfterShoot) + "\n");
-//            outputStreamWriter.write(Double.toString(driveSpeed) + "\n");
-//            outputStreamWriter.write(Double.toString(whiteColor) + "\n");
-//            outputStreamWriter.write(Double.toString(driveBackTime) + "\n");
-//            outputStreamWriter.close();
-//            return true;
-//        } catch (IOException e) {
-//            return false;
-//        }
-//
-//    }
+    public void editParameters() {
+        int index = 0;
+        boolean aisreleased = true, yisreleased = true, bisreleased = true, xisreleased = true;
+
+        while ( !gamepad.right_stick_button ) {
+            telemetry.addLine("===> Press Joystick to exit MENU mode <===" );
+            telemetry.addLine("####    " + menuvaluetoken[0][menuvalue[0]]+" " +menuvaluetoken[1][menuvalue[1]]+" " +menuvaluetoken[2][menuvalue[2]] +"   ####");
+//            telemetry.addLine("#######    " + menuvaluetoken[0][menuvalue[0]] +"   " +  menuvaluetoken[1][menuvalue[1]] + "  " +  menuvaluetoken[3][menuvalue[3]] +"    ######");
+            telemetry.addLine("");
+            for ( int i=0; i < menulabel.length; i++){                     // write out the list of variables
+                if ( i == index ) {                                        // if the index, add an arrow
+                    if (menuupperlimit[i] < 5) {                           // menu items that need tokens should be less than 5
+                    telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][menuvalue[i]] + " <----" );
+                    }else{
+                    telemetry.addLine().addData(menulabel[i], menuvalue[i] + " <----");
+                    }
+                }else{
+                    if (menuupperlimit[i] < 5) {                           // menu items that need tokens should be less than 5
+                        telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][menuvalue[i]] );
+                    }else{
+                        telemetry.addLine().addData(menulabel[i], menuvalue[i]);
+                    }
+                }
+            }
+            if (gamepad.a) {                             // adjust the index for a & Y when button is released...
+                if (aisreleased) {
+                    aisreleased = false;
+                    index += 1;
+                }
+            } else {
+                aisreleased = true;
+            }
+            if (gamepad.y) {
+                if (yisreleased) {
+                    yisreleased = false;
+                    index -= 1;
+                }
+            } else {
+                yisreleased = true;
+            }
+            if (index >= menuvalue.length) index = 0;          // limit the bounds of index
+            if (index < 0) index = menuvalue.length - 1 ;
+
+            // increase or decrease the values
+            if (gamepad.b) {
+                if (bisreleased) {
+                    bisreleased = false;
+                    menuvalue[index] += 1;
+                }
+            } else {
+                bisreleased = true;
+            }
+            if (gamepad.x) {
+                if (xisreleased) {
+                    xisreleased = false;
+                    menuvalue[index] -= 1;
+                }
+            } else {
+                xisreleased = true;
+            }
+
+            // limit the values by the upper & lower limits:
+            if (menuvalue[index] >  menuupperlimit[index]) menuvalue[index] = menulowerlimit[index];
+            if (menuvalue[index] <  menulowerlimit[index]) menuvalue[index] = menuupperlimit[index];
+
+            telemetry.addLine("===> Press Joystick to exit EDIT mode <===" );
+            telemetry.update();
+        }
+        telemetry.clear();
+        telemetry.addLine("  *** Finished editing  ***");
+        telemetry.update();
+    }
 
 
     public boolean writeDataToTxtFile(Context context) {
@@ -292,11 +264,6 @@ public class MenuFileHandler {
         //sleep(500);
 
     }
-
-
-
-
-
 
 
 }

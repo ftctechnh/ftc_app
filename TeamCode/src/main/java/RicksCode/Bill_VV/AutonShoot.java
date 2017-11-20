@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-    @Autonomous(name="AUTOTEST")  // @Autonomous(...) is the other common choice
+    @Autonomous(name="AUTOTESTB")  // @Autonomous(...) is the other common choice
     @Disabled
     public class AutonShoot extends LinearOpMode {
 

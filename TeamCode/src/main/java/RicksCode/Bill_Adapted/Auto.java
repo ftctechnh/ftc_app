@@ -1,7 +1,7 @@
 package RicksCode.Bill_Adapted;
 
 /**
- * Created by ftc8045 on 10/22/2017.
+ *
  */
 
 
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Tele;
 
 
-@Autonomous(name="AUTOTEST",group="zRick")  // @Autonomous(...) is the other common choice
+@Autonomous(name="AUTOtest",group="zRick")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class Auto extends LinearOpMode {
 
@@ -32,26 +32,66 @@ public class Auto extends LinearOpMode {
 
         menuFile = new MenuFileHandler(telemetry, gamepad1);
 
+        /**********************************************************************************************\
+         |--------------------------------- Pre Init Loop ----------------------------------------------|
+         \**********************************************************************************************/
+        telemetry.addLine("Back Button reverts to code values");
+        telemetry.update();
+        sleep(1000);
+        menuFile.initializeValues();       // initialize variables & values
+
+        // update them from the file if the back button is not pressed
+
         if (!gamepad1.back) {
             menuFile.readDataFromTxtFile(hardwareMap.appContext);
-        } else{
-            menuFile.initializeValues();
+            telemetry.addLine("Reading Data from File" );
+            telemetry.update();
+            sleep(1000);
+        }else {
+            telemetry.addLine("Reverting to Initial Values");
+            telemetry.update();
+            sleep(1000);
         }
-        //sleep(5000);
-        //menuFile.writeDataToFile(hardwareMap.appContext);
-        menuFile.writeDataToTxtFile(hardwareMap.appContext);
 
-        int i=0;
+        sleep(3000);
+        menuFile.editParameters();                            // edit parameters
+        menuFile.writeDataToTxtFile(hardwareMap.appContext);  // write the current parameters to the file for next time
+        menuFile.updateVariables();   // transfer the array to variables with useable names
 
-        for ( i=0; i < menuFile.menulabel.length; i++){
-            telemetry.addData(menuFile.menulabel[i], menuFile.menuvalue[i]);
-        }
-        telemetry.update();
+
+
+
+
+
+        /**********************************************************************************************\
+         |--------------------------------------Init Loop-----------------------------------------------|
+         \**********************************************************************************************/
+        //while (!isStarted()) {  // could add a loop here if you might want to go back to edit mode...
+
+            telemetry.addLine("************** Ready to RUN **************" );
+            telemetry.addLine("####    " + menuFile.menuvaluetoken[0][menuFile.menuvalue[0]]+" " +menuFile.menuvaluetoken[1][menuFile.menuvalue[1]]+" " +menuFile.menuvaluetoken[2][menuFile.menuvalue[2]] +"   ####");
+            for ( int i=0; i < menuFile.menulabel.length; i++){
+                if (menuFile.menuupperlimit[i] < 5) {                           // menu items that need tokens should be less than 5
+                    telemetry.addLine().addData(menuFile.menulabel[i], menuFile.menuvalue[i] + "  " + menuFile.menuvaluetoken[i][menuFile.menuvalue[i]] );
+                }else{
+                    telemetry.addData(menuFile.menulabel[i], menuFile.menuvalue[i]);
+                }
+            }
+            telemetry.addLine("*************** Ready to RUN **************" );
+            telemetry.update();
+
+            idle();
+        //}
+
+        /**********************************************************************************************\
+         |----------------------------------- Run the Autonomous --------------------------------------|
+         \*********************************************************************************************/
+
 
         waitForStart();
         while (opModeIsActive()) {
             telemetry.update();
-            menuFile.testGamepad();
+            //menuFile.testGamepad();
         }
 
 //        gromit.driveTrain.drive(0,0,0);
