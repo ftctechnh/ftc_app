@@ -37,7 +37,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -129,6 +128,8 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
 
     @Override public void runOpMode() {
 
+        initRobot();
+
         telemetry.addData(">", "Press Play to start");
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -163,11 +164,21 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
         }
 
+        sleep(ONE_SECOND);
+        sleep(ONE_SECOND);
+
         // Raise the servo that control the arm to move the JewelMovingArm
+        for(double d = 0.1; d < 0.675; d+=0.025){
+            robot.jewelAnnihilator.setPosition(d);
+            sleep(50);
+        }
+        /*
         raiseJewelMovingArmServo(
                 JEWEL_ARM_HORIZONTAL_SERVO_POSITION,
                 JEWEL_ARM_VERTICAL_SERVO_POSITION,
                 JEWEL_ARM_SERVO_MOVING_STEP_CHANGE);
+                */
+        sleep(ONE_SECOND);
         sleep(ONE_SECOND);
 
         // Step through each leg of the path,
@@ -192,7 +203,8 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
     private void raiseJewelMovingArmServo(double fromJewelArmServoPosition, double toJewelArmServoPosition, double step) {
         for(double d = fromJewelArmServoPosition; d > toJewelArmServoPosition; d+=step){
             robot.jewelAnnihilator.setPosition(d);
-            sleep(SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS);
+//            sleep(SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS);
+            sleep(300);
         }
     }
 
@@ -393,7 +405,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
