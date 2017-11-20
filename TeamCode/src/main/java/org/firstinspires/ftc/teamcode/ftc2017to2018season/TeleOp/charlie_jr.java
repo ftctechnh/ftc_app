@@ -165,15 +165,19 @@ public class charlie_jr extends OpMode {
             leftWheelMotorBack.setPower(strafeStickLeft);
             rightWheelMotorFront.setPower(strafeStickLeft);
             rightWheelMotorBack.setPower(-strafeStickLeft);
-
+            
         } else if (gamepad1.right_trigger > 0) {
+
+        }
+        else if (Math.abs(strafeStickRight) > 0) {
 
             leftWheelMotorFront.setPower(strafeStickRight);
             leftWheelMotorBack.setPower(-strafeStickRight);
             rightWheelMotorFront.setPower(-strafeStickRight);
             rightWheelMotorBack.setPower(strafeStickRight);
 
-        } else {
+        }
+        else {
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
