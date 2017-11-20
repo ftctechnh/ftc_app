@@ -53,26 +53,26 @@ public class blue_BackCorner extends Autonomous_General {
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
 
-        encoderMecanumDrive(0.6, 55, 55, 1000, 0);
+        encoderMecanumDrive(0.4, 55, 55, 1000, 0);
         sleep(100);
 
-        gyroTurn(0.5,0);
+        gyroTurn(0.3,0);
 
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            RangeDistance(120,0.3,rsBuffer, false, false);
+            simpleRangeDistance(140,0.2,rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            RangeDistance(104,0.3,rsBuffer, false, false);
+            simpleRangeDistance(124,0.2,rsBuffer);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            RangeDistance(187,0.3,rsBuffer, false, false);
+            simpleRangeDistance(158,0.2,rsBuffer);
 
         }
 
-        gyroTurn(0.5,88);
+        gyroTurn(0.3,88);
         sleep(750);
 
         encoderMecanumDrive(0.65,45,45,1000,0);
