@@ -96,10 +96,9 @@ public class charlie_jr extends OpMode {
         rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         */
-        for (; ; ) {
             loop();
         }
-    }
+    
 
     /*
     ---------------------------------------------------------------------------------------------

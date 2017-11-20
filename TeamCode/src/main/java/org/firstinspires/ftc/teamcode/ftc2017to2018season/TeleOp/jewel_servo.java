@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 /**
- * Created by pahel and rororohan on 11/19/17.
+ * Created by Pahel and Rohan on 11/19/17.
  */
 
 @Autonomous(name="jewel_servo", group ="Autonomous")
