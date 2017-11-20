@@ -97,7 +97,7 @@ public class HardwarePushbot
 
         // Define and initialize ALL installed servos.
         leftClaw  = hwMap.get(Servo.class, "left_hand");
-       rightClaw = hwMap.get(Servo.class, "right_hand");
+        rightClaw = hwMap.get(Servo.class, "right_hand");
         leftClaw.setPosition(MID_SERVO);
         rightClaw.setPosition(MID_SERVO);
     }

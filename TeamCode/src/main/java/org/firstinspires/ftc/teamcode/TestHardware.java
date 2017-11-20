@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -55,8 +54,8 @@ public class TestHardware
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor  lift        = null;
-   // public Servo leftClaw = null;
-    //public Servo rightClaw = null;
+    public Servo leftClaw = null;
+    public Servo rightClaw = null;
     public int liftPosition = 0;
 
 
@@ -99,13 +98,13 @@ public class TestHardware
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         lift    = hwMap.get(DcMotor.class,    "lift");
         // Define and initialize servos
-       // leftClaw = hwMap.get(Servo.class,     "left_claw");
-       // rightClaw = hwMap.get(Servo.class,    "right_claw");
+        leftClaw = hwMap.get(Servo.class,     "left_claw");
+        rightClaw = hwMap.get(Servo.class,    "right_claw");
 
         // Set Direction of motors
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        lift.setDirection(DcMotor.Direction.FORWARD);
+        lift.setDirection(DcMotor.Direction.REVERSE);
 
 
         // Set all motors to zero power
@@ -125,11 +124,9 @@ public class TestHardware
 
 
         // Define and initialize ALL installed servos.
-        //lift.setTargetPosition(ONE_INCH_POSITION);
-
-      //  leftClaw.setPosition(LCLAW_START);
-      //
-        //  rightClaw.setPosition(RCLAW_START);
+        lift.setTargetPosition(ONE_INCH_POSITION);
+        leftClaw.setPosition(LCLAW_START);
+        rightClaw.setPosition(RCLAW_START);
     }
  }
 
