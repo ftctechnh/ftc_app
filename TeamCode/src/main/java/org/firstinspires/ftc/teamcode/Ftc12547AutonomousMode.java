@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -51,11 +50,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import static org.firstinspires.ftc.teamcode.Ftc12547Config.*;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.firstinspires.ftc.teamcode.Ftc12547Config.*;
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -98,6 +97,8 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
 
     /* Declare OpMode members. */
     private HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+
+    private EncoderDriver encoderDriver = new EncoderDriver(this, robot, telemetry);
 
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;
@@ -169,23 +170,23 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
         telemetry.addData("Moving to the final destination", final_distance);
-        encoderDrive(AUTONOMOUS_DRIVE_SPEED,  final_distance,  final_distance, 5.0);
+        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,  final_distance,  final_distance, 5.0);
 
         switch (vuMark) {
-            case LEFT: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1, 1, 3);
+            case LEFT: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1, 1, 3);
                 break;
-            case CENTER: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
+            case CENTER: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
                 break;
-            case RIGHT: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 4.75, 4.75, 10);
+            case RIGHT: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 4.75, 4.75, 10);
                 break;
-            case UNKNOWN: encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
+            case UNKNOWN: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
                 break;
         }
 
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        encoderDrive(TURN_SPEED, -2.94/2, 2.94/2, 3);
-        encoderDrive(AUTONOMOUS_DRIVE_SPEED, 3, 3, 4);
+        encoderDriver.encoderDrive(TURN_SPEED, -2.94/2, 2.94/2, 3);
+        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 3, 3, 4);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -213,14 +214,14 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
      * disposition the jewel.
      */
     private void MoveBackwardForJewelDisposition() {
-        encoderDrive(AUTONOMOUS_DRIVE_SPEED,
+        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,
                 -JEWEL_DISPOSITION_DISTANCE,
                 -JEWEL_DISPOSITION_DISTANCE,
                 JEWEL_DISPOSITION_TIMEOUT);
     }
 
     private void MoveForwardForJewelDisposition() {
-        encoderDrive(AUTONOMOUS_DRIVE_SPEED,
+        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,
                 JEWEL_DISPOSITION_DISTANCE,
                 JEWEL_DISPOSITION_DISTANCE,
                 JEWEL_DISPOSITION_TIMEOUT);
@@ -320,70 +321,6 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
     private void initRobot() {
         initVuMark();
         initSensorsAndMotors();
-    }
-
-    /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
-    private void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
-
-        ElapsedTime runtime = new ElapsedTime();
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.rightDrive.setTargetPosition(newRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.leftDrive.setPower(Math.abs(speed));
-            robot.rightDrive.setPower(Math.abs(speed) * AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR);
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
-
-                // Display it for the driver.
-                // telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            robot.leftDrive.setPower(0);
-            robot.rightDrive.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
-        }
     }
 
     private void initSensorsAndMotors() {
