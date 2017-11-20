@@ -22,6 +22,11 @@ public class jewel_servo extends LinearOpMode{
 
     // Define class members
     Servo servo;
+    DcMotor leftWheelMotorFront;
+    DcMotor leftWheelMotorBack;
+    DcMotor rightWheelMotorFront;
+    DcMotor rightWheelMotorBack;
+
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     boolean rampUp = true;
 
@@ -32,6 +37,10 @@ public class jewel_servo extends LinearOpMode{
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         servo = hardwareMap.get(Servo.class, "left_hand");
+        leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
+        leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
+        rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
+        rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
