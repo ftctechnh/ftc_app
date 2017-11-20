@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 import org.firstinspires.ftc.teamcode.Utilities.Map;
 
 /**
@@ -13,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Map;
 public class  RelicRecoveryHardware extends OpMode {
     // ------------------------- Constants --------------------------
     // constants for the servos
-    protected static final double BALL_PUSHER_UP = .5;
+    protected static final double BALL_PUSHER_UP = .51;
     protected static final double BALL_PUSHER_DOWN = 1;
     protected static final double OPEN_ONE_HAND = 1;
     protected static final double CLOSED_ONE_HAND = 0;
@@ -34,7 +36,7 @@ public class  RelicRecoveryHardware extends OpMode {
     protected static final double POOP_OPEN= .9;
     protected static final double POOP_CLOSED = 0.1;
     protected static final double BALL_ROTATE_RIGNT = 0.4;
-    protected static final double BALL_ROTATE_CENTER = 0.5;
+    protected static final double BALL_ROTATE_CENTER = 0.47;
     protected static final double BALL_ROTATE_LEFT = 0.6;
 
     // ---------------------- Hardware Devices ----------------------
@@ -55,6 +57,9 @@ public class  RelicRecoveryHardware extends OpMode {
     CRServo crRelicGrabber;
     CRServo crArmLift;
     CRServo crArm;
+    // ---------------- Sensors -----------------
+    ColorSensor color;
+
     // --------------------- Hardware Variables ---------------------
     protected double rightPower;
     protected double leftPower;
@@ -91,15 +96,22 @@ public class  RelicRecoveryHardware extends OpMode {
         mArm = map.motor("arm");
         mArmLift = map.motor("armLift");
         // ---------- Standard Servos -----------
-        ssBallPusher = map.servo("sBall", ballPusherPosition);
+        ssBallPusher = map.revServo("sBall", ballPusherPosition);
         ssArm = map.revServo("sArm", armPosition);
         ssRelicGrabber = map.servo("sGrabber", oneHandPosition);
         ssPoop = map.revServo("sPoop",poopPosition);
-        ssBallRotator = map.servo("sBallrotator", ballRotatorPosition)
+        ssBallRotator = map.servo("sBallRotator", ballRotatorPosition);
         // ----- Continuous Rotation Servos -----
         crHand = map.revCrservo("crHand");
         crRelicGrabber = map.revCrservo("crRelic");
         crArmLift = map.revCrservo("crArmLift");
         crArm = map.crservo("crArm");
+
+
+        try {
+            color = hardwareMap.get(ColorSensor.class, "cd");
+        } catch (Exception e) {
+            telemetry.addData("color-distance", "well I tried");
+        }
     }
 }

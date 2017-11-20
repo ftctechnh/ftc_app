@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDrive;
  * Created by team on 7/19/2017.
  */
 
-@TeleOp(name = "Stable TeleOp", group = "TeleOp")
+//@TeleOp(name = "Shane TeleOp", group = "TeleOp")
 public class StableTeleOp extends StableTelemetry {
 
     private int padCofig = 0;

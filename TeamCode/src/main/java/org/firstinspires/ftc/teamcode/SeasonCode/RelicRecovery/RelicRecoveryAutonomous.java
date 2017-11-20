@@ -28,5 +28,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryHardware {
         super.loop();
         ssBallPusher.setPosition(BALL_PUSHER_DOWN);
         v.run();
+        telemetry.addData("blue",color.blue());
+        telemetry.addData("red",color.red());
     }
 }
