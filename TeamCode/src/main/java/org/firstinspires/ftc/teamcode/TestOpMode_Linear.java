@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list (blah blah blah)
  */
 
-@TeleOp(name="LiftTest", group="Linear Opmode")
+@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 public class TestOpMode_Linear extends LinearOpMode
 {
 
@@ -60,6 +60,7 @@ public class TestOpMode_Linear extends LinearOpMode
 
     private ElapsedTime runtime = new ElapsedTime();
 
+    @Override
     public void runOpMode()
     {
         robot.init(hardwareMap);
@@ -86,26 +87,27 @@ public class TestOpMode_Linear extends LinearOpMode
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
-            // Single-stick movement
+            // POV Mode uses left stick to go forward, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
             //double leftPower = (gamepad1.left_stick_y + gamepad1.left_stick_x)/Math.sqrt(2);
             //double rightPower  =  (gamepad1.left_stick_y - gamepad1.left_stick_x)/Math.sqrt(2);
 
 
 
             //uses the a,b,x,y buttons to set the position
-            if(gamepad1.a) //down
+            if(gamepad1.a)
             {
                 robot.liftPosition = robot.ONE_INCH_POSITION;
             }
-            if(gamepad1.x) //left
+            if(gamepad1.x)
             {
                 robot.liftPosition = robot.SEVEN_INCH_POSITION;
             }
-            if(gamepad1.y) //up
+            if(gamepad1.y)
             {
                 robot.liftPosition = robot.THIRTEEN_INCH_POSITION;
             }
-            if(gamepad1.b) //right
+            if(gamepad1.b)
             {
                 robot.liftPosition = robot.NINETEEN_INCH_POSITION;
             }
