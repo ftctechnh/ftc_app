@@ -74,7 +74,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name="Pushbot: Auto Potato By Encoder With Jewels", group="PushbotPotato")
-public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_BLUE_TEAM_TOWARDS_AUDIENCE extends LinearOpMode {
+public class PushbotAutoDriveByEncoder_IF_BLUE_1_Without_forLoop extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -84,7 +84,7 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_BLUE_TEAM_TOWARDS
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
@@ -177,25 +177,23 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_BLUE_TEAM_TOWARDS
 
         sleep(1000);
         boolean z = true;
-
-        if (sensorColor.blue() > 50){
-            encoderDrive(DRIVE_SPEED, -1, -1, 0.5);
+        double p;
+        double v;
+        if (sensorColor.red() > 50){
+            encoderDrive(0.1, -0.75, -0.75, 0.5);
             z = true;
-        }else {
-            encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
+        }else{
+            encoderDrive(0.1, 0.75, 0.75, 0.5);
             z = false;
         }
 
-        for(double d = 0.1; d < 0.675; d+=0.025){
-            robot.jewelAnnihilator.setPosition(d);
-            sleep(50);
+        if (z == true){
+            encoderDrive(0.1, 0.75, 0.75, 0.5);
+        }else{
+            encoderDrive(0.1, -0.75, -0.75, 0.5);
         }
 
-        if (z == true){
-            encoderDrive(DRIVE_SPEED, 1, 1, 0.5);
-        }else{
-            encoderDrive(DRIVE_SPEED, -1, -1, 0.5);
-        }
+        encoderDrive(0.1, -0.75, -0.75, 0.5);
 
         for(double c = 0.0; c < 2.0; c += 0.1) {
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
@@ -210,27 +208,32 @@ public class PushbotAutoDriveByEncoder_LinearJewelDestroyer_IF_BLUE_TEAM_TOWARDS
                  * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
+
+                sleep(50);
             }
         }
 
         sleep(1000);
 
         switch (vuMark) {
-            case LEFT:
+            case LEFT: encoderDrive(DRIVE_SPEED, 7.875, 7.875, 0.5);
                 break;
-            case CENTER:
+            case CENTER: encoderDrive(DRIVE_SPEED, 9.75, 9.75, 0.5);
                 break;
-            case RIGHT:
+            case RIGHT: encoderDrive(DRIVE_SPEED, 11.625, 11.625, 0.5);
                 break;
-            case UNKNOWN:
+            case UNKNOWN: encoderDrive(DRIVE_SPEED, 9.75, 9.75, 0.5);
                 break;
         }
+
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        encoderDrive(TURN_SPEED, -2.94, 2.94, 0.5);
+        encoderDrive(DRIVE_SPEED, 3, 3, 0.5);
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        }
-
-
-
+    }
 
     /*
      *  Method to perform a relative move, based on encoder counts.
