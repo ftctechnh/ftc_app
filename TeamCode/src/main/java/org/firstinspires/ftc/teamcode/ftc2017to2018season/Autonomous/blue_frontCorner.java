@@ -9,10 +9,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 @Autonomous(name="Autonomous Blue Test")
 public class blue_frontCorner extends Autonomous_General {
 
-    DcMotor leftFront;
-    DcMotor rightFront;
-    DcMotor leftBack;
-    DcMotor rightBack;
     public double rsBuffer = 20.00;
 
 
