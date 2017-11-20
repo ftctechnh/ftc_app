@@ -28,42 +28,46 @@ public class Ftc12547Config {
     /**
      * Jewel arm servo configurations
      */
-    public static final double  JEWEL_ARM_VERTICAL_SERVO_POSITION    = 0.675;
-    public static final double  JEWEL_ARM_HORIZONTAL_SERVO_POSITION  = 0.1;
-    public static final double  JEWEL_ARM_SERVO_MOVING_STEP_CHANGE   = 0.025;
+    public static final double JEWEL_ARM_VERTICAL_SERVO_POSITION    = 0.675;
+    public static final double JEWEL_ARM_HORIZONTAL_SERVO_POSITION  = 0.1;
+    public static final double JEWEL_ARM_SERVO_MOVING_STEP_CHANGE   = 0.025;
 
     // 50 milli-seconds before each servo move, so that the servo does not move too fast and sudden.
-    public static final int     SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS = 50;
+    public static final int SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS   = 50;
 
     /**
      * Color sensor configuration
      */
-    public static final int COLOR_THRESHOLD             = 50;
+    public static final int COLOR_THRESHOLD                         = 50;
 
     // sometimes it helps to multiply the raw RGB values with a scale factor
     // to amplify/attentuate the measured values.
-    public static final double  SCALE_FACTOR            = 255;
+    public static final double SCALE_FACTOR                         = 255;
 
     /**
      * Autonomous mode driving configurations
      */
     // two motors do not move evenly. Apply the factor below to the right wheel.
     public static final double AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR = 0.5;
-    public static final double AUTONOMOUS_DRIVE_SPEED           = 0.1;
+    public static final double AUTONOMOUS_DRIVE_SPEED               = 0.1;
 
-    public static final double JEWEL_DISPOSITION_DISTANCE       = 2;
-    public static final double JEWEL_DISPOSITION_TIMEOUT        = 3;
+    public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 2;
+    public static final double JEWEL_DISPOSITION_TIMEOUT_SECONDS    = 3;
 
-    public static final double START_TO_NEAREST_DISTANCE_INCHES = 28.5;
-    public static final double START_TO_MIDDLE_DISTANCE_INCHES  = 36;
-    public static final double START_TO_FARREST_DISTANCE_INCHES = 43.5;
+    public static final double START_TO_NEAREST_DISTANCE_INCHES     = 28.5;
+    public static final double START_TO_MIDDLE_DISTANCE_INCHES      = 36;
+    public static final double START_TO_FARREST_DISTANCE_INCHES     = 43.5;
+    public static final double DESTINATION_TIMEOUT_SECONDS          = 50;
 
-    public static final double  COUNTS_PER_MOTOR_REV    = 1440;    // eg: TETRIX Motor Encoder
-    public static final double  DRIVE_GEAR_REDUCTION    = 0.5;     // This is < 1.0 if geared UP
-    public static final double  WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
-    public static final double  COUNTS_PER_INCH         =
-            (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    public static final double  TURN_SPEED              = 0.5;
+    public static final double DESTINATION_TURN_SPEED               = 0.1;
+    public static final double DESTINATION_TURN_TIMEOUT_SECONDS     = 5;
 
+    public static final double DISTANCE_TO_RACK_INCHES              = 12;
+    public static final double TO_RACK_TIMEOUT_SECONDS              = 12;
 
+    public static final double COUNTS_PER_MOTOR_REV    = 1440; // eg: TETRIX Motor Encoder
+    public static final double DRIVE_GEAR_REDUCTION    = 0.5;  // This is < 1.0 if geared UP
+    public static final double WHEEL_DIAMETER_INCHES   = 4.0;  // For figuring circumference
+    public static final double COUNTS_PER_INCH
+            = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415926);
 }

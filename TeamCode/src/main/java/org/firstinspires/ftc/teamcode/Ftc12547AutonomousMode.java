@@ -116,15 +116,16 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         waitForStart();
 
         RelicRecoveryVuMark vuMark = vuMarkIdentificationTask();
+
+        // Todo: debugging, keep all telemetry. This could be removed in competation.
+        telemetry.setAutoClear(false);
+
         telemetry.addData("vuMark:", vuMark);
-        // telemetry.update();
+        telemetry.update();
 
         double final_distance = calcFinalDistanceByVuMark(vuMark);
 
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Lower the servo that control the arm to move the JewelMovingArm
+        // (1) Lower the servo that control the arm to move the JewelMovingArm
         lowerJewelMovingArmServo();
         sleep(ONE_SECOND_IN_MIL);
 
@@ -133,20 +134,25 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                 (int) (sensorColor.blue() * SCALE_FACTOR),
                 hsvValues);
 
+        int jewelColor = (sensorColor.red() > COLOR_THRESHOLD) ? Color.RED : Color.BLUE;
         telemetry.addData("Blue ", sensorColor.blue());
         telemetry.addData("Red ", sensorColor.red());
-        // telemetry.update();
+        telemetry.addData("Jewel color: ", (jewelColor==Color.RED) ? "Red" : "Blue");
+        telemetry.update();
         sleep(ONE_SECOND_IN_MIL);
 
-        int jewelColor = (sensorColor.red() > COLOR_THRESHOLD) ? Color.RED : Color.BLUE;
 
-
-        // Disposition jewel of other color than team color.
+        /**
+         * (2) Disposition jewel of other color than team color.
+         * (3) Lift the arm
+         * (4) Move back to the original position.
+         * ****TODO: This step can be removed when calculate the final distance.
+         */
         if (jewelColor == TEAM_COLOR){
             /**
              * Move forward, because
-             * (1) Color sensor of team 12547 is mounted facing backward.
-             * (2) Team color jewel is on the back side in this condition.
+             * a. Color sensor of team 12547 is mounted facing backward.
+             * b. Team color jewel is on the back side in this condition.
              */
             MoveForwardForJewelDisposition();
 
@@ -165,30 +171,29 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
 
             MoveForwardForJewelDisposition();
         }
+        sleep(ONE_SECOND_IN_MIL);
 
-        // Step through each leg of the path,
+        // (5) Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
         telemetry.addData("Moving to the final destination", final_distance);
-        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,  final_distance,  final_distance, 5.0);
+        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,  final_distance,  final_distance, DESTINATION_TIMEOUT_SECONDS);
 
-        switch (vuMark) {
-            case LEFT: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1, 1, 3);
-                break;
-            case CENTER: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
-                break;
-            case RIGHT: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 4.75, 4.75, 10);
-                break;
-            case UNKNOWN: encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 1.875, 1.875, 5);
-                break;
-        }
+        stopMotors();
+        sleep(ONE_SECOND_IN_MIL);
 
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        encoderDriver.encoderDrive(TURN_SPEED, -2.94/2, 2.94/2, 3);
-        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED, 3, 3, 4);
+        // (6) turn
+        encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, 0, 5, DESTINATION_TURN_TIMEOUT_SECONDS);
+        stopMotors();
+        sleep(ONE_SECOND_IN_MIL);
 
-        telemetry.addData("Path", "Complete");
+        // (7) push the block into rack
+        encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,
+                DISTANCE_TO_RACK_INCHES,
+                DISTANCE_TO_RACK_INCHES,
+                TO_RACK_TIMEOUT_SECONDS);
+
+        telemetry.addData("Mission ", "Complete");
         telemetry.update();
     }
 
@@ -208,23 +213,31 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         }
     }
 
-
     /**
      * Move forward or backfard in order to disposition jewel or move back after
      * disposition the jewel.
      */
     private void MoveBackwardForJewelDisposition() {
         encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,
-                -JEWEL_DISPOSITION_DISTANCE,
-                -JEWEL_DISPOSITION_DISTANCE,
-                JEWEL_DISPOSITION_TIMEOUT);
+                -JEWEL_DISPOSITION_DISTANCE_INCHES,
+                -JEWEL_DISPOSITION_DISTANCE_INCHES,
+                JEWEL_DISPOSITION_TIMEOUT_SECONDS);
+        stopMotors();
+
     }
 
     private void MoveForwardForJewelDisposition() {
         encoderDriver.encoderDrive(AUTONOMOUS_DRIVE_SPEED,
-                JEWEL_DISPOSITION_DISTANCE,
-                JEWEL_DISPOSITION_DISTANCE,
-                JEWEL_DISPOSITION_TIMEOUT);
+                JEWEL_DISPOSITION_DISTANCE_INCHES,
+                JEWEL_DISPOSITION_DISTANCE_INCHES,
+                JEWEL_DISPOSITION_TIMEOUT_SECONDS);
+        stopMotors();
+    }
+
+    // Apply zero power to the motors to stop.
+    private void stopMotors() {
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     /**

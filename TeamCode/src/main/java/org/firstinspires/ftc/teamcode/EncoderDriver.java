@@ -36,9 +36,7 @@ class EncoderDriver {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    void encoderDrive(double speed,
-                              double leftInches, double rightInches,
-                              double timeoutS) {
+    void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -73,7 +71,7 @@ class EncoderDriver {
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
 
                 // Display it for the driver.
-                // telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                // constant value, not needed to see. telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                         robot.leftDrive.getCurrentPosition(),
                         robot.rightDrive.getCurrentPosition());
