@@ -1,14 +1,19 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.Range;
 import java.lang.Math;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,15 +36,12 @@ public class Auto6217Red extends LinearOpMode {
     DcMotor motorBL;
     Servo servoTapper;
 
-    ColorSensor colorSensor;
+    NormalizedColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
     boolean iAmBlue = false ;
     boolean iAmRed = true;
 
     private ElapsedTime runtime = new ElapsedTime();
-
-    //   public Auto6217Red() {
-    //  }
 
     @Override
     public void runOpMode() {
@@ -53,10 +55,15 @@ public class Auto6217Red extends LinearOpMode {
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
         servoTapper = hardwareMap.servo.get("tapper");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        colorSensor.enableLed(true);
 
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+        if (colorSensor instanceof SwitchableLight) {
+            ((SwitchableLight)colorSensor).enableLight(true);
+        }
         waitForStart();
+
+        boolean autoClear = false;
+        telemetry.setAutoClear(autoClear);
 
         servoTapper.setPosition(0.0d);
         Wait(5);
@@ -65,23 +72,35 @@ public class Auto6217Red extends LinearOpMode {
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
 
-        int blueval = 0;
-        int redval = 0;
-        blueval = colorSensor.blue();
-        redval = colorSensor.red();
-        iSeeRed = (blueval == 0) && (redval > 2);
-        iSeeBlue = (blueval > 3) && (redval == 0);
-        telemetry.addData("1", "red = %03d", redval);
-        telemetry.addData("2", "blue = %03d", blueval);
+        // Read the sensor
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();
+
+        telemetry.addLine()
+                .addData("r", "%.3f", colors.red)
+                .addData("b", "%.3f", colors.blue);
+
         telemetry.update();
+
+        if (colors.red > colors.blue) {
+            iSeeRed = true;
+            iSeeBlue = false;
+            }
+        else {
+            iSeeBlue = true;
+            iSeeRed = false;
+        }
+
         Wait(5);
 
         if  ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
-           // move(0f, .25f, 2);
+            telemetry.addData("1", "move right");
+            // move(0f, .25f, 2);
         }
         else {
+            telemetry.addData("1", "move left");
           //  move(0f,-.25f,2);
-            }
+        }
+        telemetry.update();
         servoTapper.setPosition(0.1d);
         Wait(5);
     }
@@ -237,6 +256,7 @@ public class Auto6217Red extends LinearOpMode {
     void Wait(double WaitTime) {
         runtime.reset();
         while (runtime.seconds() < WaitTime) {
+            //Comment this out to avoid it overwriting other telemetry
             //telemetry.addData("5", " %2.5f S Elapsed", runtime.seconds());
             //telemetry.update();
         }
