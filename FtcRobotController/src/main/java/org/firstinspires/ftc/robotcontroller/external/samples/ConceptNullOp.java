@@ -42,7 +42,8 @@ import java.util.Date;
  */
 @Autonomous(name = "Concept: NullOp", group = "Concept")
 @Disabled
-public class ConceptNullOp extends OpMode {
+public class ConceptNullOp extends OpMode
+{
 
   private ElapsedTime runtime = new ElapsedTime();
 
@@ -56,7 +57,8 @@ public class ConceptNullOp extends OpMode {
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
      */
   @Override
-  public void init_loop() {
+  public void init_loop()
+  {
   }
 
   /*
