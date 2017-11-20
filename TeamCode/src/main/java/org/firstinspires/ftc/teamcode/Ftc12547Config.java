@@ -47,9 +47,11 @@ public class Ftc12547Config {
     /**
      * Autonomous mode driving configurations
      */
-    // two motors do not move evenly. Apply the factor below to the right wheel.
+    // *** two motors do not move evenly. Apply the factor below to the right wheel. ***
     public static final double AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR = 0.5;
-    public static final double AUTONOMOUS_DRIVE_SPEED               = 0.1;
+
+    public static final double ENCODER_RUN_SPEED                    = 0.1;
+    public static final int REST_AFTER_ENCODER_RUN_MIL_SECONDS      = ONE_SECOND_IN_MIL / 4;
 
     public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 2;
     public static final double JEWEL_DISPOSITION_TIMEOUT_SECONDS    = 3;
