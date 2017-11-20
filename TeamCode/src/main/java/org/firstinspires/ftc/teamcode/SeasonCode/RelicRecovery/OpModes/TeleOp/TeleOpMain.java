@@ -5,9 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.directcurrent.core.gamecontroller.Controller;
+import org.directcurrent.opencv.CVBridge;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
-import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.GlyphGrabber.GlyphGrabber;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
 
 
 /**
@@ -109,5 +110,6 @@ public class TeleOpMain extends LinearOpMode
 
         telemetry.addData("Left Drive Encoder" , _base.drivetrain.leftEncoderCount());
         telemetry.addData("Right Drive Encoder" , _base.drivetrain.rightEncoderCount());
+
     }
 }

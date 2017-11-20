@@ -5,12 +5,11 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.directcurrent.core.TelMet;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Lift.Lift;
-import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.GlyphGrabber.GlyphGrabber;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
 
 
 /**

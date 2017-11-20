@@ -13,6 +13,7 @@
 @file:Suppress("PackageDirectoryMismatch", "ClassName", "FunctionName")
 package org.directcurrent.opencv.visionprocessors
 
+import org.directcurrent.opencv.CVBridge
 import org.directcurrent.opencv.Sweeper
 import org.opencv.core.Mat
 import org.opencv.core.MatOfPoint
@@ -21,7 +22,7 @@ import org.opencv.core.MatOfPoint
 /**
  * Kotlin abstract class for vision processing
  */
-abstract class VisionProcessor
+abstract class VisionProcessor()
 {
     protected val sweeper = Sweeper(20_000)
 

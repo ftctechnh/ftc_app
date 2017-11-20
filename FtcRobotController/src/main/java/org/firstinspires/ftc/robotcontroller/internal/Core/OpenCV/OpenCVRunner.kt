@@ -72,6 +72,7 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
 
     private var _analyze = false
 
+    var bridge = CVBridge()
 
     /**
      * Starts OpenCV- starting messages are displayed in Logcat. OpenCV likes to fail the first
