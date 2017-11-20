@@ -76,5 +76,3 @@ public class jewel_servo extends LinearOpMode{
         telemetry.update();
     }
 }
-
-}
