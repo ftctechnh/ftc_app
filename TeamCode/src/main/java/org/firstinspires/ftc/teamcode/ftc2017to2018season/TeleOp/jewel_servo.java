@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by pahel and rororohan on 11/19/17.
  */
-@Autonomous(name = "Concept: Scan Servo", group = "Concept")
-public class jewel_servo {
+
+public class jewel_servo extends LinearOpMode{
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
