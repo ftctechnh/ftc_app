@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Map;
 public class  RelicRecoveryHardware extends OpMode {
     // ------------------------- Constants --------------------------
     // constants for the servos
-    protected static final double BALL_PUSHER_UP = .51;
+    protected static final double BALL_PUSHER_UP = .44;
     protected static final double BALL_PUSHER_DOWN = 1;
     protected static final double OPEN_ONE_HAND = 1;
     protected static final double CLOSED_ONE_HAND = 0;
