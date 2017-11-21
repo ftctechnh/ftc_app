@@ -43,8 +43,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Enjoy responsibly.
  */
 
-@TeleOp(name="Dirty Mecanum TeleOp", group="Iterative Opmode")
-@Disabled
+@TeleOp(name="Sheel Test Thinger", group="Iterative Opmode")
+
 
 public class DirtyMecanum extends OpMode
 {
@@ -56,6 +56,7 @@ public class DirtyMecanum extends OpMode
     // setup runtime timer
     private ElapsedTime runtime = new ElapsedTime();
     static double SPEED = 1;
+    double speed = 0;
 
     @Override
     public void init() {
@@ -79,6 +80,9 @@ public class DirtyMecanum extends OpMode
     @Override
     public void loop() {
         // TODO: find a better way to do this
+
+        speed = gamepad1.right_trigger;
+
         dpadStates[0] = gamepad1.dpad_up;
         dpadStates[1] = gamepad1.dpad_right;
         dpadStates[2] = gamepad1.dpad_down;
@@ -87,37 +91,37 @@ public class DirtyMecanum extends OpMode
 
 
         if (dpadStates[0]){         // full forward
-            robot.setAllDriveMotors(SPEED);
+            robot.setAllDriveMotors(speed);
         } else if (dpadStates[1]) { // right strafe
-            robot.flDrive.setPower(SPEED);
-            robot.frDrive.setPower(-1 * SPEED);
-            robot.rlDrive.setPower(-1 * SPEED);
-            robot.rrDrive.setPower(SPEED);
+            robot.flDrive.setPower(speed);
+            robot.frDrive.setPower(-1 * speed);
+            robot.rlDrive.setPower(-1 * speed);
+            robot.rrDrive.setPower(speed);
         } else if (dpadStates[2]) { // full reverse
-            robot.setAllDriveMotors(-1 * SPEED);
+            robot.setAllDriveMotors(-1 * speed);
         } else if (dpadStates[3]) { // left strafe
-            robot.flDrive.setPower(-1 * SPEED);
-            robot.frDrive.setPower(SPEED);
-            robot.rlDrive.setPower(SPEED);
-            robot.rrDrive.setPower(-1 * SPEED);
+            robot.flDrive.setPower(-1 * speed);
+            robot.frDrive.setPower(speed);
+            robot.rlDrive.setPower(speed);
+            robot.rrDrive.setPower(-1 * speed);
         } else if (gamepad1.right_bumper) {
-            robot.flDrive.setPower(SPEED);
-            robot.frDrive.setPower(-1 * SPEED);
-            robot.rlDrive.setPower(SPEED);
-            robot.rrDrive.setPower(-1 * SPEED);
+            robot.flDrive.setPower(speed);
+            robot.frDrive.setPower(-1 * speed);
+            robot.rlDrive.setPower(speed);
+            robot.rrDrive.setPower(-1 * speed);
         } else if (gamepad1.left_bumper) {
-            robot.flDrive.setPower(-1 * SPEED);
-            robot.frDrive.setPower(SPEED);
-            robot.rlDrive.setPower(-1 * SPEED);
-            robot.rrDrive.setPower(SPEED);
+            robot.flDrive.setPower(-1 * speed);
+            robot.frDrive.setPower(speed);
+            robot.rlDrive.setPower(-1 * speed);
+            robot.rrDrive.setPower(speed);
         } else if (gamepad1.a){
-            robot.flDrive.setPower(SPEED);
+            robot.flDrive.setPower(speed);
         } else if (gamepad1.b){
-            robot.frDrive.setPower(SPEED);
+            robot.frDrive.setPower(speed);
         } else if (gamepad1.x){
-            robot.rlDrive.setPower(SPEED);
+            robot.rlDrive.setPower(speed);
         } else if (gamepad1.y){
-            robot.rrDrive.setPower(SPEED);
+            robot.rrDrive.setPower(speed);
         } else {
 
             robot.setAllDriveMotors(0);
