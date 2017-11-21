@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "runMotors")
 //@Disabled
-public class charlie_jr extends OpMode {
+public class runMotors extends OpMode {
 
 
     /*
@@ -85,12 +85,12 @@ public class charlie_jr extends OpMode {
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
-       /*
-        leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        */
+
+        leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
     }
 
