@@ -213,6 +213,9 @@ public class charlie_jr extends OpMode {
 
     public void glyphManipulator(){
 
+        if (gamepad2.left_trigger > 0){
+
+        }
     }
     }
 //---------------------------------------------------------------------------------------------
