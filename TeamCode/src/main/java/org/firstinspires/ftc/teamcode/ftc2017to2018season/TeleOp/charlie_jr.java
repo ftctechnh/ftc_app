@@ -93,12 +93,12 @@ public class charlie_jr extends OpMode {
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
-       /*
-        leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        */
+
+       // leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
 
     }
     
@@ -127,7 +127,7 @@ public class charlie_jr extends OpMode {
     public void loop() {
         FourWheelDrive();
         slideMove();
-       // glyphManipulator();
+       glyphManipulator();
 
 
     }
@@ -182,7 +182,7 @@ public class charlie_jr extends OpMode {
         telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
         telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
         telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-
+        telemetry.update();
         //telemetry.addData("",)
         //telemetry.update();
         //These were going to be used to find the values of triggers but we couldn't acomplish it
@@ -197,6 +197,8 @@ public class charlie_jr extends OpMode {
 
     public void slideMove() {
 
+        IVFSM = slideMotor.getCurrentPosition();
+
         if (gamepad2.right_stick_y > 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
 
@@ -207,16 +209,16 @@ public class charlie_jr extends OpMode {
         }
     }
 
-    //public void glyphManipulator() {
+    public void glyphManipulator() {
 
-      //  if (gamepad2.left_trigger > 0) {
-        //    glyphServo2.setPosition(1);
-          //  glyphServo1.setPosition(1);
-        //} else if (gamepad2.right_trigger > 0) {
-          //  glyphServo1.setPosition(0);
-            //glyphServo2.setPosition(0);
-        //} else {
-        //}
-    //}
+       if (gamepad2.left_trigger > 0) {
+            glyphServo2.setPosition(1);
+            glyphServo1.setPosition(1);
+        } else if (gamepad2.right_trigger > 0) {
+            glyphServo1.setPosition(0);
+            glyphServo2.setPosition(0);
+        } else {
+        }
+    }
 }
 //---------------------------------------------------------------------------------------------
