@@ -4,7 +4,6 @@ import android.text.method.Touch;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
@@ -19,9 +18,9 @@ public class ScrimmageForkLiftDrive extends OpMode {
     //Claw
     private Servo rightClaw;
     private Servo leftClaw;
-    private double clawPosition = 0.0;
-    private double clawHighEnd = 0.45;
-    private double clawLowEnd = 0.1;
+    private double clawPosition = 0.2;
+    private double clawHighEnd = 0.65;
+    private double clawLowEnd = 0.3;
     //Drawer Slide
     private double DrawerSlideLowEnd;
     private double DrawerSlideHighEnd;
@@ -34,8 +33,8 @@ public class ScrimmageForkLiftDrive extends OpMode {
     //Relic Recovery
     private Servo relicClaw;
     private DcMotor motor;
-    private double servolowend = 0.0;
-    private double servohighend = 0.8;
+    private double servolowend = 0.75;
+    private double servohighend = 0.25;
     private double motorSpeed;
     private Servo arm;
     private double armDir;
@@ -71,7 +70,7 @@ public class ScrimmageForkLiftDrive extends OpMode {
         BottomButton = hardwareMap.get(TouchSensor.class, "b1");
         //Relic Recovery
         relicClaw = hardwareMap.servo.get("s1");
-        relicClaw.setPosition(servohighend);
+        relicClaw.setPosition(0.5);
         motor = hardwareMap.dcMotor.get("m5");
         arm = hardwareMap.servo.get("s2");
         arm.setPosition(armlowend);
@@ -136,16 +135,10 @@ public class ScrimmageForkLiftDrive extends OpMode {
         down = gamepad1.left_trigger;
         DrawerSlideSpeed = up - down;
         DrawerSlide.setPower(DrawerSlideSpeed);
-        if (!((!TopButton.isPressed() && DrawerSlideSpeed > 0) || (!(BottomButton.isPressed()) && DrawerSlideSpeed < 0))) {
-            DrawerSlide.setPower(DrawerSlideSpeed);
-        } else {
-            DrawerSlide.setPower(0.0);
-        }
-        telemetry.addData("Current claw Position", rightClaw.getPosition());
 
         //Relic recovery
         if (gamepad2.a) {
-           // relicClaw.setPosition(Range.clip(relicClaw.getPosition() + 0.005, 0.0, 1.0));
+            //relicClaw.setPosition(Range.clip(relicClaw.getPosition() + 0.005, 0.0, 1.0));
             relicClaw.setPosition(servolowend);
         }
         if (gamepad2.b) {
@@ -157,6 +150,8 @@ public class ScrimmageForkLiftDrive extends OpMode {
         motor.setPower(motorSpeed);
         arm.setPosition(armDir);
         arm.setPosition(armDir);
+        telemetry.addData("relic claw pos: ", relicClaw.getPosition());
+        telemetry.update();
     }
 
     //sets the motors to be reversed so they all go the same way.

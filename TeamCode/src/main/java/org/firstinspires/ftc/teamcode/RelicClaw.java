@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-public class ForkLift {
+public class RelicClaw {
 	private Servo rightClaw;
 	private Servo leftClaw;
 	private DcMotor drawerSlide;
@@ -19,7 +19,7 @@ public class ForkLift {
     private double up = 0;
     private double down = 0;
 
-	public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor drawerSlide, TouchSensor topButton, TouchSensor bottomButton) {
+	public RelicClaw(Servo rightClaw, Servo leftClaw, DcMotor drawerSlide, TouchSensor topButton, TouchSensor bottomButton) {
 		this.rightClaw = rightClaw;
 		this.leftClaw = leftClaw;
 		this.drawerSlide = drawerSlide;

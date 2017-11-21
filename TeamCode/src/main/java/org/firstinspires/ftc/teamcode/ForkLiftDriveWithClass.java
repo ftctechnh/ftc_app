@@ -1,16 +1,16 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
-
-/**
+import com.qualcomm.robotcore.hardware.TouchSensor;
+/*
  * Created by Kaden on 10/19/2017.
-
-@TeleOp(name = "ForkliftDrive", group = "linear OpMode")
-public class ForkliftDriveWithClass extends OpMode {
+*/
+@TeleOp(name = "ForkliftDriveWithClass", group = "linear OpMode")
+public class ForkLiftDriveWithClass extends OpMode {
+    private ForkLift Forklift;
     private DcMotor FrontLeft;
     private double flSpeed = 0;
     private DcMotor FrontRight;
@@ -20,11 +20,10 @@ public class ForkliftDriveWithClass extends OpMode {
     private DcMotor RearRight;
     private double rrSpeed = 0;
     private double x;
+    private double x2;
     private double y;
-    private double z;
+    private double y2;
     private double speed;
-    private double up = 0;
-    private double down = 0;
 
     @Override
     public void init() {
@@ -32,36 +31,33 @@ public class ForkliftDriveWithClass extends OpMode {
         FrontRight = hardwareMap.dcMotor.get("m2");
         RearLeft = hardwareMap.dcMotor.get("m3");
         RearRight = hardwareMap.dcMotor.get("m4");
-        ForkLift = ForkLift(
-            hardwareMap.Servo.get("s1"), //rightClaw
-            hardwareMap.Servo.get("s2"), //leftClaw
-            hardwareMap.DcMotor.get("m5"), //updown
-            hardwareMap.get(DigitalChannel.class, "b1"), //top button
-            hardwareMap.get(DigitalChannel.class, "b2")) //bottom button
+        Forklift = new ForkLift(
+            hardwareMap.servo.get("s5"), //rightClaw
+            hardwareMap.servo.get("s6"), //leftClaw
+            hardwareMap.dcMotor.get("m6"), //updown
+            hardwareMap.get(TouchSensor.class, "b0"), //top button
+            hardwareMap.get(TouchSensor.class, "b1")); //bottom button
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
         speed = 0.75;
+        Forklift.initClaw();
 
     }
 
     @Override
     public void loop() {
+        //Drive
+        //Find x and y for each side
         x = gamepad1.left_stick_y;
         y = gamepad1.left_stick_x;
-        z = gamepad1.right_stick_x;
-        if (gamepad1.right_bumper) {
-            y = 0.75;
-            z = 0.5;
-        }
-        else if (gamepad1.left_bumper) {
-            y = -.75;
-            z = -.5;
-        }
+        x2 = gamepad1.right_stick_y;
+        y2 = gamepad1.right_stick_x;
+        //Do math to figure out relative speeds of each motor
+        flSpeed = -y + x;
+        frSpeed = y2 + x2;
+        rlSpeed = y + x;
+        rrSpeed = -y2 + x2;
 
-        flSpeed = -y+x-z;
-        frSpeed = y+x+z;
-        rlSpeed = y+x-z;
-        rrSpeed = -y+x+z;
         if (gamepad1.right_bumper) {
             flSpeed = 0;
             frSpeed = 0;
@@ -80,14 +76,13 @@ public class ForkliftDriveWithClass extends OpMode {
         RearRight.setPower(speed*clip(rrSpeed));
 
         if (gamepad1.a) {
-            ForkLift.closeClaw();
+            Forklift.closeClaw();
 
         }
         if (gamepad1.b) {
-            ForkLift.openClaw();
+            Forklift.openClaw();
         }
-        ForkLift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
-        telemetry.addData("Current rightClaw Position", rightClaw.getPosition());
+        Forklift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
     }
 
     public void reverseMotor(DcMotor motor) {
@@ -97,4 +92,3 @@ public class ForkliftDriveWithClass extends OpMode {
         return Range.clip(value, -1,1);
     }
 }
-*/
