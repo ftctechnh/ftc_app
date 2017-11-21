@@ -25,9 +25,9 @@ public class Bluetestauto extends LinearOpMode {
     }
 
     //Negative speed means:
-    //Counterclockwise for ROT
-    //Left for LATERALLY
-    //Backwards for STRAIGHT
+    //Counterclockwise for MoveType.ROT
+    //Left for MoveType.LATERALLY
+    //Backwards for MoveType.STRAIGHT
     public void encode(double distance, double speed, MoveType move) {
         int multFL = 1;
         int multFR = 1;
