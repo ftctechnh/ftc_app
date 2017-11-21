@@ -211,12 +211,12 @@ public class charlie_jr extends OpMode {
 
     public void glyphManipulator() {
 
-       if (gamepad2.left_trigger > 0) {
-            glyphServo2.setPosition(0.5);
-            glyphServo1.setPosition(0.5);
-        } else if (gamepad2.right_trigger > 0) {
-            glyphServo1.setPosition(-0.5);
+       if (gamepad1.left_bumper = true) {
             glyphServo2.setPosition(-0.5);
+            glyphServo1.setPosition(0.5);
+        } else if (gamepad1.right_bumper = true) {
+            glyphServo1.setPosition(-0.5);
+            glyphServo2.setPosition(0.5);
         } else {
         }
     }
