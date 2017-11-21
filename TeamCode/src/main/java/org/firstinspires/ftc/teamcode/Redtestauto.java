@@ -24,6 +24,10 @@ public class Redtestauto extends LinearOpMode {
         encode(200, 0.5, MoveType.STRAIGHT);
     }
 
+    //Negative speed means:
+    //Counterclockwise for ROT
+    //Left for LATERALLY
+    //Backwards for STRAIGHT
     public void encode(double distance, double speed, MoveType move) {
         int multFL = 1;
         int multFR = 1;
