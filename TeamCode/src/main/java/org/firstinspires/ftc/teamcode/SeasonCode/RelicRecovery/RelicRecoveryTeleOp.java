@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.LeftDrive;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDrive;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDrive;
 import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
@@ -12,16 +13,22 @@ import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
 @TeleOp(name = "Relic Recovery TeleOp",group = "TeleOp")
 public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
     // --------------------- Private Variables ----------------------
-    private int padCofig = 0;
+    private int pad1Config = 0;
+    private int driveConfig = 0;
     private boolean ifHold;
     private boolean RelicHold;
     private boolean slowDrive = false;
+    private boolean leftStick = true;
+    private boolean rightStick = true;
+    private boolean b = true;
+    private boolean defaultDrive = true;
     // ----------------------- Public Methods -----------------------
     // ------------------ Init ------------------
     @Override
     public void init() {
         super.init();
         driveMode = "Tank Drive Init";
+        ifDriveOverride();
         driveMode();
         slowDrive();
         ifHold();
@@ -31,44 +38,17 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
     @Override
     public void loop() {
         super.loop();
+        ifDriveOverride();
         driveMode();
         slowDrive();
         ifHold();
-        configTele();
         padControls();
         setMotorPower();
     }
     // ---------------------- Private Methods -----------------------
     private void padControls() {
-        if(gamepad1.right_bumper) {
-            ballPusherPosition = BALL_PUSHER_DOWN;
-        } else if (gamepad1.left_bumper){
-            ballPusherPosition = BALL_PUSHER_UP;
-        }
-        if (gamepad1.dpad_right) {
-            slowDrive = true;
-        } else if (gamepad1.dpad_left) {
-            slowDrive = false;
-        }
-        if (gamepad1.x) {
-            padCofig = 0;
-        }
-        if (gamepad1.y) {
-            padCofig = 1;
-        }
-        double drivePower[] = new double[2];
-        if (padCofig == 0) {
-            TankDrive tank = new TankDrive();
-            drivePower = tank.drive(gamepad1);
-            driveMode = "Tank Drive";
-        }
-        if (padCofig == 1) {
-            TurnDrive turn = new TurnDrive();
-            drivePower = turn.drive(gamepad1);
-            driveMode = "Turn Drive";
-        }
-        rightPower = drivePower[0];
-        leftPower = drivePower[1];
+        gamepad1Controls();
+        gamepad2Controls();
         armPower = gamepad2.right_trigger - gamepad2.left_trigger;
         liftPower = gamepad1.right_trigger - gamepad1.left_trigger;
         liftPower -= gamepad2.right_stick_y;
@@ -88,10 +68,10 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             }
 
         }
-        if (gamepad2.a) {
+        if (gamepad2.dpad_right) {
             RelicHold = true;
             oneHandPosition = OPEN_ONE_HAND;
-        } else if (gamepad2.x) {
+        } else if (gamepad2.dpad_left) {
             RelicHold = false;
             relicPosition = OPEN_RELIC;
             oneHandPosition = CLOSED_ONE_HAND;
@@ -99,7 +79,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         if (RelicHold) {
             relicPosition = CLOSED_RELIC;
         } else {
-            if (gamepad2.b) {
+            if (gamepad2.dpad_left) {
                 relicPosition = OPEN_RELIC;
             } else {
                 relicPosition = STOPPED_RELIC;
@@ -120,33 +100,99 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         } else {
             armLifterSPosition = STOPPED_ARM_LIFTER_S;
         }
-
-
         if (gamepad2.x) {
             armPosition = ARM_OUT;
         }
         if (gamepad2.y) {
             armPosition = ARM_IN;
         }
+        armPosition = gamepad2.right_trigger;
+    }
+
+    private void gamepad1Controls() {
+        if (gamepad1.left_stick_button) {
+            if (leftStick) {
+                if (pad1Config == 1) {
+                    pad1Config = 0;
+                } else {
+                    pad1Config = 1;
+                }
+                leftStick = false;
+            }
+        } else {
+            leftStick = true;
+        }
+        double drivePower[] = new double[2];
+        if (defaultDrive) {
+            if (gamepad1.b) {
+                if (b) {
+                    if (driveConfig == 1) {
+                        driveConfig = 0;
+                    } else {
+                        driveConfig = 1;
+                    }
+                    b = false;
+                }
+            } else {
+                b = true;
+            }
+            if (gamepad1.y) {
+                pad1Config++;
+                if (pad1Config == 2) {
+                    pad1Config = 0;
+                }
+            }
+            if (gamepad1.x) {
+                pad1Config--;
+                if (pad1Config == -1) {
+                    pad1Config = 1;
+                }
+            }
+            if (driveConfig == 0) {
+                TankDrive tank = new TankDrive();
+                drivePower = tank.drive(gamepad1);
+                driveMode = "Tank Drive";
+            }
+            if (driveConfig == 1) {
+                TurnDrive turn = new TurnDrive();
+                drivePower = turn.drive(gamepad1);
+                driveMode = "Turn Drive";
+            }
+        } else {
+            LeftDrive left = new LeftDrive();
+            drivePower = left.drive(gamepad1);
+            driveMode = "Left Drive";
+        }
+        rightPower = drivePower[0];
+        leftPower = drivePower[1];
+        if (gamepad1.right_stick_button) {
+            if (rightStick) {
+                slowDrive = !slowDrive;
+                rightStick = false;
+            }
+        } else {
+            rightStick = true;
+        }
         if (slowDrive) {
             rightPower /= 2;
             leftPower /= 2;
         }
-        armPosition = gamepad2.right_trigger;
-        if(gamepad2.right_stick_button) {
-            poopPosition = POOP_OPEN;
-        } else {
-            poopPosition = POOP_CLOSED;
+        if (gamepad1.dpad_up) {
+            ballPusherPosition = BALL_PUSHER_DOWN;
+        } else if (gamepad1.dpad_down){
+            ballPusherPosition = BALL_PUSHER_UP;
         }
-        if(gamepad2.dpad_down){
+        if (gamepad1.dpad_right) {
+            ballRotatorPosition = BALL_ROTATE_RIGHT;
+        } else if (gamepad1.dpad_left) {
+            ballRotatorPosition = BALL_ROTATE_LEFT;
+        } else {
             ballRotatorPosition = BALL_ROTATE_CENTER;
         }
-        if(gamepad2.dpad_left){
-            ballRotatorPosition = BALL_PUSHER_DOWN;
-        }
-        if(gamepad2.dpad_right){
-            ballRotatorPosition = BALL_PUSHER_UP;
-        }
+    }
+
+    private void gamepad2Controls() {
+
     }
 
     private void setMotorPower() {
@@ -169,8 +215,8 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         setRobot.position(crArm,armPower,"arm crservo");
     }
 
-    private void configTele() {
-        telemetry.addData("gamepad Configuration", padCofig);
+    private void ifDriveOverride() {
+        telemetry.addData("If default drive", defaultDrive);
     }
     private void driveMode() {
         telemetry.addData("Drive Mode", driveMode);
@@ -179,7 +225,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         telemetry.addData("If Slow Drive", slowDrive);
     }
     private void ifHold() {
-        telemetry.addData("If Hold", ifHold);
+        telemetry.addData("If Relic Held", ifHold);
     }
 }
 
