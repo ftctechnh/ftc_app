@@ -48,7 +48,7 @@ public class charlie_jr extends OpMode {
 */
 
 
-  //  ColorSensor bColorSensorLeft;    // Hardware Device Object
+    //  ColorSensor bColorSensorLeft;    // Hardware Device Object
 
 
     /*
@@ -100,7 +100,7 @@ public class charlie_jr extends OpMode {
         rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         */
 
-        }
+    }
     
 
     /*
@@ -127,8 +127,8 @@ public class charlie_jr extends OpMode {
     public void loop() {
         FourWheelDrive();
         slideMove();
-        glyphManipulator();
-        
+       // glyphManipulator();
+
 
     }
 
@@ -164,16 +164,14 @@ public class charlie_jr extends OpMode {
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
-        }
-        else if (gamepad1.left_trigger > 0) {
+        } else if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
 
-        }
-        else {
+        } else {
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
@@ -199,23 +197,26 @@ public class charlie_jr extends OpMode {
 
     public void slideMove() {
 
-        if (gamepad2.right_stick_y > 0){
+        if (gamepad2.right_stick_y > 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
 
-        }
-        else if (gamepad2.right_stick_y < 0 ) {
+        } else if (gamepad2.right_stick_y < 0) {
             slideMotor.setPower(-1);
-        }
-        else {
-        slideMotor.setPower(0);
-        }
-        }
-
-    public void glyphManipulator(){
-
-        if (gamepad2.left_trigger > 0){
-
+        } else {
+            slideMotor.setPower(0);
         }
     }
-    }
+
+    //public void glyphManipulator() {
+
+      //  if (gamepad2.left_trigger > 0) {
+        //    glyphServo2.setPosition(1);
+          //  glyphServo1.setPosition(1);
+        //} else if (gamepad2.right_trigger > 0) {
+          //  glyphServo1.setPosition(0);
+            //glyphServo2.setPosition(0);
+        //} else {
+        //}
+    //}
+}
 //---------------------------------------------------------------------------------------------
