@@ -17,12 +17,13 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
     private boolean ifHold;
     private boolean RelicHold;
     private boolean slowDrive = false;
-    private boolean leftStick = true;
-    private boolean rightStick = true;
-    private boolean x = true;
+    private boolean leftStick1 = true;
+    private boolean rightStick1 = true;
+    private boolean x1 = true;
+    private boolean y1 = true;
     private boolean defaultDrive = true;
     // ----------------------- Public Methods -----------------------
-    // ------------------ Init ------------------
+    // ----------------------- Init -----------------------
     @Override
     public void init() {
         super.init();
@@ -33,7 +34,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         ifHold();
         ifHold = false;
     }
-    // ------------------ Loop ------------------
+    // ----------------------- Loop -----------------------
     @Override
     public void loop() {
         super.loop();
@@ -45,12 +46,10 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         setMotorPower();
     }
     // ---------------------- Private Methods -----------------------
+    // ----------------------- Pads -----------------------
     private void padControls() {
         gamepad1Controls();
         gamepad2Controls();
-        armPower = gamepad2.right_trigger - gamepad2.left_trigger;
-        liftPower = gamepad1.right_trigger - gamepad1.left_trigger;
-        liftPower -= gamepad2.right_stick_y;
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             ifHold = true;
         } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
@@ -67,23 +66,6 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             }
 
         }
-        if (gamepad2.dpad_right) {
-            RelicHold = true;
-            oneHandPosition = OPEN_ONE_HAND;
-        } else if (gamepad2.dpad_left) {
-            RelicHold = false;
-            relicPosition = OPEN_RELIC;
-            oneHandPosition = CLOSED_ONE_HAND;
-        }
-        if (RelicHold) {
-            relicPosition = CLOSED_RELIC;
-        } else {
-            if (gamepad2.dpad_left) {
-                relicPosition = OPEN_RELIC;
-            } else {
-                relicPosition = STOPPED_RELIC;
-            }
-        }
 
         if (gamepad2.right_bumper) {
             armLifterPwr = UP_ARM_LIFTER;
@@ -99,23 +81,17 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         } else {
             armLifterSPosition = STOPPED_ARM_LIFTER_S;
         }
-        if (gamepad2.x) {
-            armPosition = ARM_OUT;
-        }
-        if (gamepad2.y) {
-            armPosition = ARM_IN;
-        }
-        armPosition = gamepad2.right_trigger;
     }
-
+    // ---------------------- Pad 1 -----------------------
     private void gamepad1Controls() {
+        // ------------ Drive Train -------------
         if (gamepad1.left_stick_button) {
-            if (leftStick) {
+            if (leftStick1) {
                 defaultDrive = !defaultDrive;
-                leftStick = false;
+                leftStick1 = false;
             }
         } else {
-            leftStick = true;
+            leftStick1 = true;
         }
         double drivePower[] = new double[2];
         if (defaultDrive) {
@@ -141,34 +117,61 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
                 drivePower = tank.drive(gamepad1);
                 driveMode = "Tank Drive";
             }
-        } else {
-
+            liftPower = 0;
+        } else { // for gamepad 1 controls override
+            // ---- relic override ----
+            if (gamepad1.y) {
+                if (y1) {
+                    if (oneHandPosition == OPEN_RELIC) {
+                        oneHandPosition = CLOSED_RELIC;
+                    } else {
+                        oneHandPosition = OPEN_RELIC;
+                    }
+                    y1 = false;
+                } else {
+                    y1 = true;
+                }
+            }
+            // ---- lift override -----
+            if (gamepad1.dpad_up) {
+                liftPower = 1;
+            } else if (gamepad1.dpad_down) {
+                liftPower = -1;
+            } else {
+                liftPower = 0;
+            }
+            // ----- arm override -----
+            if (gamepad1.right_bumper) {
+                armPosition += .02;
+            } else if (gamepad1.left_bumper) {
+                armPosition -=.02;
+            }
         }
         rightPower = drivePower[0];
         leftPower = drivePower[1];
         if (gamepad1.right_stick_button) {
-            if (rightStick) {
+            if (rightStick1) {
                 slowDrive = !slowDrive;
-                rightStick = false;
+                rightStick1 = false;
             }
         } else {
-            rightStick = true;
+            rightStick1 = true;
         }
         if (slowDrive) {
             rightPower /= 2;
             leftPower /= 2;
         }
-        // -------------------- Jewels --------------------
+        // --------------- Jewels ---------------
         if (gamepad1.x) {
-            if (x) {
+            if (x1) {
                 if (ballPusherPosition == BALL_PUSHER_UP) {
                     ballPusherPosition = BALL_PUSHER_DOWN;
                 } else {
                     ballPusherPosition = BALL_PUSHER_UP;
                 }
-                x = false;
+                x1 = false;
             } else {
-                x = true;
+                x1 = true;
             }
         }
         if (gamepad1.b) {
@@ -179,9 +182,34 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             ballRotatorPosition = BALL_ROTATE_CENTER;
         }
     }
-
+    // ---------------------- Pad 2 -----------------------
     private void gamepad2Controls() {
-
+        // ---------------- Lift ----------------
+        liftPower -= gamepad2.right_stick_y;
+        // -------------- Grabber ---------------
+        if (gamepad2.dpad_right) {
+            RelicHold = true;
+            oneHandPosition = OPEN_ONE_HAND;
+        } else if (gamepad2.dpad_left) {
+            RelicHold = false;
+            relicPosition = OPEN_RELIC;
+            oneHandPosition = CLOSED_ONE_HAND;
+        }
+        if (RelicHold) {
+            relicPosition = CLOSED_RELIC;
+        } else {
+            if (gamepad2.dpad_left) {
+                relicPosition = OPEN_RELIC;
+            } else {
+                relicPosition = STOPPED_RELIC;
+            }
+        }
+        // ---------------- Arm -----------------
+        if (gamepad2.right_bumper) {
+            armPosition += .02;
+        } else if (gamepad2.left_bumper) {
+            armPosition -=.02;
+        }
     }
 
     private void setMotorPower() {

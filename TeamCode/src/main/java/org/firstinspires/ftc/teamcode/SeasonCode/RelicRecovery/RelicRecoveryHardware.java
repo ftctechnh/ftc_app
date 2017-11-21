@@ -61,10 +61,10 @@ public class  RelicRecoveryHardware extends OpMode {
     ColorSensor color;
 
     // --------------------- Hardware Variables ---------------------
-    protected double rightPower;
-    protected double leftPower;
-    protected double liftPower;
-    protected double armPower;
+    protected double rightPower = 0;
+    protected double leftPower = 0;
+    protected double liftPower = 0;
+    protected double armPower = 0;
     protected double armLifterPwr = STOPPED_ARM_LIFTER;
 
     protected double ballPusherPosition = BALL_PUSHER_UP;
