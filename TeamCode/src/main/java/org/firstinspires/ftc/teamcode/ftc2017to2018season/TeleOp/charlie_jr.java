@@ -47,7 +47,7 @@ public class charlie_jr extends OpMode {
 */
 
 
-    ColorSensor bColorSensorLeft;    // Hardware Device Object
+  //  ColorSensor bColorSensorLeft;    // Hardware Device Object
 
 
     /*
@@ -96,7 +96,7 @@ public class charlie_jr extends OpMode {
         rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         */
-            loop();
+
         }
     
 
@@ -106,8 +106,7 @@ public class charlie_jr extends OpMode {
           Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
     */
 
-    public void init_loop() {
-    }
+
 
     /*
      ---------------------------------------------------------------------------------------------
@@ -115,10 +114,6 @@ public class charlie_jr extends OpMode {
           Code to run ONCE when the driver hits PLAY
 
     */
-    @Override
-    public void start() {
-
-    }
 
     /*
     Code to run REPEATEDLY after the driver hit PLAY
@@ -135,9 +130,7 @@ public class charlie_jr extends OpMode {
 
     /* Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop() {
-    }
+
 
 /*
 ---------------------------------------------------------------------------------------------
@@ -151,6 +144,7 @@ public class charlie_jr extends OpMode {
 
     public void FourWheelDrive() {
         /*
+
         read the gamepad values and put into variables
          */
         float leftY_gp1 = (-gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed();
@@ -159,7 +153,7 @@ public class charlie_jr extends OpMode {
         float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.left_bumper = true) {
+        if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
@@ -167,7 +161,7 @@ public class charlie_jr extends OpMode {
             rightWheelMotorBack.setPower(-1);
 
         }
-        else if (gamepad1.right_bumper = true) {
+        else if (gamepad1.right_trigger > 0) {
 
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
