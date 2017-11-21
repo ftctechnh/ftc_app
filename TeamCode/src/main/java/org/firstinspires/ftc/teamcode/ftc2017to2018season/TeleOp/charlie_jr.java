@@ -31,10 +31,10 @@ public class charlie_jr extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
-    //DcMotor slideMotor;
+    DcMotor slideMotor;
 
     //Initial value for slide motor
-    //public int IVFSM;
+    public int IVFSM;
 
 
 
@@ -80,8 +80,8 @@ public class charlie_jr extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
-        //slideMotor = hardwareMap.dcMotor.get("slideMotor");
-        //IVFSM = slideMotor.getCurrentPosition();
+        slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        IVFSM = slideMotor.getCurrentPosition();
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
@@ -123,7 +123,7 @@ public class charlie_jr extends OpMode {
     @Override
     public void loop() {
         FourWheelDrive();
-        //slideMove();
+        slideMove();
         
 
     }
@@ -153,7 +153,7 @@ public class charlie_jr extends OpMode {
         float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.left_trigger > 0) {
+        if (gamepad1.right_trigger > 0) {
 
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
@@ -161,7 +161,7 @@ public class charlie_jr extends OpMode {
             rightWheelMotorBack.setPower(-1);
 
         }
-        else if (gamepad1.right_trigger > 0) {
+        else if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
@@ -190,22 +190,21 @@ public class charlie_jr extends OpMode {
         //rightWheelMotorFront.setPower(rightY_gp1);
         //rightWheelMotorBack.setPower(rightY_gp1);
 
-    /*public void slideMove(){
-
-    if (gamepad2.right_stick_y > 0){
-       // slideMotor.setPower(gamepad2.right_stick_y);
 
     }
-    else if (gamepad2.right_stick_y < 0 ){
-       // slideMotor.setPower(-1);
-    }
+
+    public void slideMove() {
+
+        if (gamepad2.right_stick_y > 0){
+            slideMotor.setPower(gamepad2.right_stick_y);
+
+        }
+        else if (gamepad2.right_stick_y < 0 ){
+            slideMotor.setPower(-1);
         }
     }
-
-
 /*---------------------------------------------------------------------------------------------
 */
 
 
     }
-}
