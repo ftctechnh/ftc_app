@@ -199,12 +199,13 @@ public class charlie_jr extends OpMode {
             slideMotor.setPower(gamepad2.right_stick_y);
 
         }
-        else if (gamepad2.right_stick_y < 0 ){
+        else if (gamepad2.right_stick_y < 0 ) {
             slideMotor.setPower(-1);
         }
+        else {
+            
+        }
+        }
     }
-/*---------------------------------------------------------------------------------------------
-*/
-
-
+//---------------------------------------------------------------------------------------------
     }
