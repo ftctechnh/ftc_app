@@ -32,7 +32,8 @@ public class charlie_jr extends OpMode {
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
     DcMotor slideMotor;
-
+    Servo glyphServo1;
+    Servo glyphServo2;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -80,6 +81,8 @@ public class charlie_jr extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+        glyphServo1 = hardwareMap.servo.get("glyphServo1");
+        glyphServo2 = hardwareMap.servo.get("glyphServo2");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         IVFSM = slideMotor.getCurrentPosition();
 
@@ -124,6 +127,7 @@ public class charlie_jr extends OpMode {
     public void loop() {
         FourWheelDrive();
         slideMove();
+        glyphManipulator();
         
 
     }
@@ -199,12 +203,19 @@ public class charlie_jr extends OpMode {
             slideMotor.setPower(gamepad2.right_stick_y);
 
         }
-        else if (gamepad2.right_stick_y < 0 ){
+        else if (gamepad2.right_stick_y < 0 ) {
             slideMotor.setPower(-1);
         }
-    }
-/*---------------------------------------------------------------------------------------------
-*/
+        else {
+        slideMotor.setPower(0);
+        }
+        }
 
+    public void glyphManipulator(){
 
+        if (gamepad2.left_trigger > 0){
+
+        }
     }
+    }
+//---------------------------------------------------------------------------------------------
