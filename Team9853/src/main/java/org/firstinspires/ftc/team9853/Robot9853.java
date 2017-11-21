@@ -48,7 +48,6 @@ public class Robot9853 extends Robot {
         jewelDisplacer = JewelDisplacer.build(this);
         gyroManager = new GyroManager(getHardwareMap().gyroSensor.get("Gyro"));
         gyroManager.init();
-
         jewelDisplacer.raise();
         glyphGripper.close();
     }

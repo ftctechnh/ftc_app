@@ -30,6 +30,9 @@ public class CompAuto extends AutonomousTemplate<Robot9853> {
 
         robot.start();
         robot.driver.setFront(RobotFace.BACK);
+
+        Thread.sleep(2000); //TODO: added this act comp dunno the right tage but hey
+
         robot.jewelDisplacer.drop();
         debug();
 
