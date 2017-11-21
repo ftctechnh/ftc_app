@@ -50,36 +50,21 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
     private void padControls() {
         gamepad1Controls();
         gamepad2Controls();
-        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+        if (gamepad1.dpad_right || gamepad2.dpad_right) {
             ifHold = true;
-        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
+        } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
             ifHold = false;
             crHandPosition = OPEN_CR_HAND;
         }
         if (ifHold) {
             crHandPosition = CLOSED_CR_HAND;
         } else {
-            if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            if (gamepad1.dpad_left || gamepad2.dpad_left) {
                 crHandPosition = OPEN_CR_HAND;
             } else {
                 crHandPosition = STOPPED_CR_HAND;
             }
 
-        }
-
-        if (gamepad2.right_bumper) {
-            armLifterPwr = UP_ARM_LIFTER;
-        } else if (gamepad2.left_bumper) {
-            armLifterPwr = DOWN_ARM_LIFTER;
-        } else {
-            armLifterPwr = STOPPED_ARM_LIFTER;
-        }
-        if (gamepad2.right_bumper) {
-            armLifterSPosition = UP_ARM_LIFTER_S;
-        } else if (gamepad2.left_bumper) {
-            armLifterSPosition = DOWN_ARM_LIFTER_S;
-        } else {
-            armLifterSPosition = STOPPED_ARM_LIFTER_S;
         }
     }
     // ---------------------- Pad 1 -----------------------
@@ -146,6 +131,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             } else if (gamepad1.left_bumper) {
                 armPosition -=.02;
             }
+            armLifterPwr = gamepad1.right_trigger - gamepad1.left_trigger;
         }
         rightPower = drivePower[0];
         leftPower = drivePower[1];
@@ -210,6 +196,7 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         } else if (gamepad2.left_bumper) {
             armPosition -=.02;
         }
+        armLifterPwr = gamepad2.right_trigger - gamepad2.left_trigger;
     }
 
     private void setMotorPower() {
