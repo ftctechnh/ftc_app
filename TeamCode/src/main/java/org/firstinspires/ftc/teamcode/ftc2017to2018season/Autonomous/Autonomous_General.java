@@ -77,7 +77,7 @@ public class Autonomous_General extends LinearOpMode {
     public void initiate() {
         COUNTS_PER_MOTOR_REV = 1440;
         DRIVE_GEAR_REDUCTION = 1.5;
-        WHEEL_PERIMETER_CM = 4*2.54* Math.PI;
+        WHEEL_PERIMETER_CM = 2*4.4* Math.PI;
         COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
                 (WHEEL_PERIMETER_CM * DRIVE_GEAR_REDUCTION);
         /*
@@ -92,51 +92,10 @@ public class Autonomous_General extends LinearOpMode {
         idle();
 
 
-//        // Connect to motor (Assume standard left wheel)
-//        // Change the text in quotes to match any motor name on your robot.
-//        shooting_motor = hardwareMap.dcMotor.get("ballShooterMotor");
-//        intake_motor = hardwareMap.dcMotor.get("ballCollectorMotor");
-//        idle();
-//
-//        // gyro = hardwareMap.gyroSensor.get("gyro");
-//
-//        ODSBack = hardwareMap.opticalDistanceSensor.get("ODSBack");
-//        idle();
-//
-//        ODSFront = hardwareMap.opticalDistanceSensor.get("ODSFront");
-//        idle();
-//        //baseline1 = ODSFront.getRawLightDetected();
-//        baseline2 = ODSBack.getRawLightDetected();
-//        idle();
-//        baseline1 = ODSFront.getRawLightDetected();
-//        idle();
-//
-//        autoBeaconPresser = hardwareMap.servo.get("ServoPress");
-//
-//
-//        //Initiate sensors:
-//        if (operation_beacon_press == true) {
-//            gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-//
-//            rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
-//            bColorSensorLeft = hardwareMap.colorSensor.get("bColorSensorLeft");
-//            bColorSensorLeft.setI2cAddress(I2cAddr.create8bit(0x3c));
-//            bColorSensorLeft.enableLed(false);
-//            idle();
-//            if (initbColorSensorRight){
-//                bColorSensorRight = hardwareMap.colorSensor.get("bColorSensorRight");
-//                bColorSensorRight.setI2cAddress(I2cAddr.create8bit(0x70));
-//                bColorSensorRight.enableLed(false);
-//
-//            }
-//            idle();
-//        }
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
-        // Send telemetry message to signify robot waiting;
-//        telemetry.addData("Status", "Resetting Encoders");    //
-//        telemetry.update();
+
 
         idle();
 
@@ -147,8 +106,8 @@ public class Autonomous_General extends LinearOpMode {
         idle();
         sleep(100);
 
-        front_left_motor.setDirection(DcMotor.Direction.REVERSE);
-        back_left_motor.setDirection(DcMotor.Direction.REVERSE);
+        front_right_motor.setDirection(DcMotor.Direction.REVERSE);
+        back_right_motor.setDirection(DcMotor.Direction.REVERSE);
         idle();
         sleep(100);
 
@@ -158,16 +117,6 @@ public class Autonomous_General extends LinearOpMode {
         back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         idle();
         sleep(100);
-//        shooting_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        intake_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Send telemetry message to indicate successful Encoder reset
-//        telemetry.addData("Path0", "Starting at %7d :%7d : %7d :%7d",
-//                back_left_motor.getCurrentPosition(),
-//                back_right_motor.getCurrentPosition(),
-//                front_left_motor.getCurrentPosition(),
-//                front_right_motor.getCurrentPosition());
-//        telemetry.update();
 
     }
 
@@ -182,7 +131,7 @@ public class Autonomous_General extends LinearOpMode {
         front_right_motor.setPower(power);
     }
 
-    public void strafeRight(double speed){
+    public void strafeLeft(double speed){
 
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -194,7 +143,7 @@ public class Autonomous_General extends LinearOpMode {
         back_right_motor.setPower(speed);
     }
 
-    public void strafeLeft(double speed){
+    public void strafeRight(double speed){
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -242,7 +191,7 @@ public class Autonomous_General extends LinearOpMode {
     }
 
     public void encoderMecanumCrossDrive(double speed,
-                                         double leftInches, double rightInches,
+                                         double leftcm, double rightcm,
                                          double timeoutS, int direction) {
         int newLeftFrontTarget;
         int newRightFrontTarget;
@@ -258,10 +207,10 @@ public class Autonomous_General extends LinearOpMode {
         sleep(100);
 
         // Determine new target position, and pass to motor controller
-        newLeftFrontTarget = (int)(1.* (front_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm())));
-        newRightFrontTarget = (int)(1.*(front_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm())));
-        newLeftBackTarget = (int)(1.* (back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm())));
-        newRightBackTarget = (int)(1.*(back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm())));
+        newLeftFrontTarget = (int)(1.* (front_left_motor.getCurrentPosition() + (int) (leftcm * getCountsPerCm())));
+        newRightFrontTarget = (int)(1.*(front_right_motor.getCurrentPosition() + (int) (rightcm * getCountsPerCm())));
+        newLeftBackTarget = (int)(1.* (back_left_motor.getCurrentPosition() + (int) (leftcm * getCountsPerCm())));
+        newRightBackTarget = (int)(1.*(back_right_motor.getCurrentPosition() + (int) (rightcm * getCountsPerCm())));
 
         if(direction == 4) {
 
@@ -442,8 +391,17 @@ public class Autonomous_General extends LinearOpMode {
         stopMotors();
 
     }
+
+    /**
+     *
+     * @param speed
+     * @param rightcm
+     * @param leftcm
+     * @param timeoutS
+     * @param direction - -1 is strafe left, 1 is strafe right
+     */
     public void encoderMecanumDrive(double speed,
-                                    double rightInches, double leftInches,
+                                    double rightcm, double leftcm,
                                     double timeoutS, int direction) {
         int newLeftFrontTarget;
         int newRightFrontTarget;
@@ -464,10 +422,10 @@ public class Autonomous_General extends LinearOpMode {
         sleep(100);
 
         // Determine new target position, and pass to motor controller
-        newLeftFrontTarget = front_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
-        newRightFrontTarget = front_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm());
-        newLeftBackTarget = back_left_motor.getCurrentPosition() + (int) (leftInches * getCountsPerCm());
-        newRightBackTarget = back_right_motor.getCurrentPosition() + (int) (rightInches * getCountsPerCm());
+        newLeftFrontTarget = front_left_motor.getCurrentPosition() + (int) (leftcm * getCountsPerCm());
+        newRightFrontTarget = front_right_motor.getCurrentPosition() + (int) (rightcm * getCountsPerCm());
+        newLeftBackTarget = back_left_motor.getCurrentPosition() + (int) (leftcm * getCountsPerCm());
+        newRightBackTarget = back_right_motor.getCurrentPosition() + (int) (rightcm * getCountsPerCm());
 
         if(direction == 0) {
             back_left_motor.setTargetPosition(newLeftBackTarget);
@@ -480,7 +438,7 @@ public class Autonomous_General extends LinearOpMode {
             //idle();
 
         }
-        else if (direction == 1){
+        else if (direction == -1){
             back_left_motor.setTargetPosition(-newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(newRightBackTarget);
@@ -491,7 +449,7 @@ public class Autonomous_General extends LinearOpMode {
             //idle();
 
         }
-        else if(direction == -1){
+        else if(direction == 1){
             back_left_motor.setTargetPosition(newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(-newRightBackTarget);
@@ -505,12 +463,12 @@ public class Autonomous_General extends LinearOpMode {
         idle();
 
         // reset the timeout time and start motion.
-        if (Math.abs(leftInches) > Math.abs(rightInches)) {
+        if (Math.abs(leftcm) > Math.abs(rightcm)) {
             leftSpeed = speed;
-            rightSpeed = (speed * rightInches) / leftInches;
+            rightSpeed = (speed * rightcm) / leftcm;
         } else {
             rightSpeed = speed;
-            leftSpeed = (speed * leftInches) / rightInches;
+            leftSpeed = (speed * leftcm) / rightcm;
         }
 
         back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
