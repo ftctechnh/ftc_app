@@ -98,7 +98,7 @@ public class charlie_jr extends OpMode {
         //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        
+
 
     }
     
@@ -211,12 +211,12 @@ public class charlie_jr extends OpMode {
 
     public void glyphManipulator() {
 
-       if (gamepad2.left_trigger > 0) {
-            glyphServo2.setPosition(1);
-            glyphServo1.setPosition(1);
-        } else if (gamepad2.right_trigger > 0) {
-            glyphServo1.setPosition(0);
-            glyphServo2.setPosition(0);
+       if (gamepad1.left_bumper = false) {
+            glyphServo2.setPosition(-0.5);
+            glyphServo1.setPosition(0.5);
+        } else if (gamepad1.right_bumper = false) {
+            glyphServo1.setPosition(-0.5);
+            glyphServo2.setPosition(0.5);
         } else {
         }
     }

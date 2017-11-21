@@ -23,7 +23,7 @@ public class jewel_servo extends LinearOpMode{
     static final double MIN_POS     =  0.0;     // Minimum rotational position
 
     // Define class members
-    Servo servo;
+    Servo glyphServo1;
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     boolean rampUp = true;
 
@@ -33,7 +33,7 @@ public class jewel_servo extends LinearOpMode{
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "jewel_servo");
+        glyphServo1 = hardwareMap.get(Servo.class, "jewel_servo");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
@@ -68,7 +68,7 @@ public class jewel_servo extends LinearOpMode{
             telemetry.update();
 
             // Set the servo to the new position and pause;
-            servo.setPosition(position);
+            glyphServo1.setPosition(position);
             sleep(CYCLE_MS);
             idle();
         }
