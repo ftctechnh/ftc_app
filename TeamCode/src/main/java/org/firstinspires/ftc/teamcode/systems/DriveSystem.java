@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.systems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -16,8 +17,9 @@ public class DriveSystem {
     public DriveSystem (HardwareMap hardwareMap, Gamepad gamepad) {
         this.hardwareMap = hardwareMap;
         this.gamepad = gamepad;
-        this.rightMotor = hardwareMap.get(DcMotor.class, "left motor");
-        this.leftMotor = hardwareMap.get(DcMotor.class, "right motor");
+        this.rightMotor = hardwareMap.get(DcMotor.class, "right motor");
+        this.leftMotor = hardwareMap.get(DcMotor.class, "left motor");
+        this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void drive(double leftSpeed, double rightSpeed) {
