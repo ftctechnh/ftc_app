@@ -11,6 +11,7 @@ public class Redtestauto extends LinearOpMode {
     public enum MoveType {
         STRAIGHT, LATERALLY, ROT
     }
+
     final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
@@ -22,7 +23,6 @@ public class Redtestauto extends LinearOpMode {
         telemetry.addData("skatin fast,", "eatin' ass");
         encode(200, 0.5, MoveType.STRAIGHT);
     }
-
 
     public void encode(double distance, double speed, MoveType move) {
         int multFL = 1;
@@ -110,4 +110,3 @@ public class Redtestauto extends LinearOpMode {
         }
     }
 }
-
