@@ -32,7 +32,9 @@ public class AcutalAutonomousWithClass extends LinearOpMode
     /* Define hardware class*/
     RotationHardwareClass robot = new RotationHardwareClass();
 
-    /* Create a "timer" that begins once the OpMode begins */
+    /* Create a "timer" that begins once th
+    // called when init button is  pressed.
+    @Overridee OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
 
     BNO055IMU               imu;
@@ -40,8 +42,6 @@ public class AcutalAutonomousWithClass extends LinearOpMode
     double globalAngle, power = .30, correction;
     boolean                 aButton, bButton;
 
-    // called when init button is  pressed.
-    @Override
     public void runOpMode() throws InterruptedException
     {
 

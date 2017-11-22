@@ -51,9 +51,9 @@ public class RotationHardwareClass {
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap hardwareMap) {
         // Save reference to Hardware map
-        hardwareMap = ahwMap;
+        hardwareMap = hardwareMap;
 
         // Define and Initialize Hardware
 
