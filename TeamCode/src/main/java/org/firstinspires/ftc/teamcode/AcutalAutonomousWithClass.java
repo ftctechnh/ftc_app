@@ -189,7 +189,7 @@ public class AcutalAutonomousWithClass extends LinearOpMode
              FrontLeftPower = frontLeft;
         }
         if ( FrontRightPower != frontRight) {
-             robot.frontRightMotor.setPower(fr);
+             robot.frontRightMotor.setPower(-fr);
              FrontRightPower = frontRight;
         }
         if ( BackLeftPower != backLeft) {
@@ -197,7 +197,7 @@ public class AcutalAutonomousWithClass extends LinearOpMode
              BackLeftPower = backLeft;
         }
         if ( BackRightPower != backRight)
-             robot.backRightMotor.setPower(br);
+             robot.backRightMotor.setPower(-br);
              BackRightPower = backRight;
     }
 
