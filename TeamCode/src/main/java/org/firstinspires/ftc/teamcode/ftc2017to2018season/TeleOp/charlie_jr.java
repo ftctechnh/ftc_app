@@ -184,11 +184,11 @@ public class charlie_jr extends OpMode {
             rightWheelMotorBack.setPower(rightY_gp1);
         }
 
-        telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-        telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-        telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-        telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        telemetry.update();
+       // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
+      //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
+       // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
+      //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
+      //  telemetry.update();
         //telemetry.addData("",)
         //telemetry.update();
         //These were going to be used to find the values of triggers but we couldn't acomplish it
@@ -223,7 +223,7 @@ public class charlie_jr extends OpMode {
 //opening the claw
 
             // glyph servo 1 is the right claw
-            glyphServo1.setPosition(0.10);
+            glyphServo1.setPosition(0.25);
 
             // glyph servo 2 is the left claw
             glyphServo2.setPosition(0.25);
@@ -232,7 +232,7 @@ public class charlie_jr extends OpMode {
 // closes the claw
 
             // glyph servo 1 is the right claw
-            glyphServo1.setPosition(-0.25);
+            glyphServo1.setPosition(0);
 
             // glyph servo 2 is the left claw
             glyphServo2.setPosition(0.5);
