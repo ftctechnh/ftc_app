@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -110,10 +111,10 @@ public class HardwareGromit
         left_front = hwMap.get(DcMotor.class, "left_front");
         left_back = hwMap.get(DcMotor.class, "left_rear");
 
-        right_front.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        left_front.setDirection(DcMotor.Direction.REVERSE); // Set to Forward if using AndyMark motors
-        right_back.setDirection(DcMotor.Direction.FORWARD);
-        left_back.setDirection(DcMotor.Direction.REVERSE);
+        right_front.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        left_front.setDirection(DcMotor.Direction.FORWARD); // Set to Forward if using AndyMark motors
+        right_back.setDirection(DcMotor.Direction.REVERSE);
+        left_back.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         right_front.setPower(0.0);
