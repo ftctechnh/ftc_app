@@ -101,7 +101,7 @@ public class Autonomous extends LinearOpMode {
 //            telemetry.addData("b", (int)(scale*colors.blue));
 //            telemetry.update();
 
-                grab.Grab(1);
+               // grab.Grab(1);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -117,6 +117,7 @@ public class Autonomous extends LinearOpMode {
                 finally{
                     motor1.setPower(0);
                     motor1.setPower(0);
+                //    grab.Grab(1);
                     stop();
                 }
 
