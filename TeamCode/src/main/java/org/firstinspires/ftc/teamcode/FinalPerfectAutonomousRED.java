@@ -180,14 +180,15 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
                 setWheelPower(power, power, -power, -power);
                 break;
         }
+
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
         while (opModeIsActive() && runtime.seconds() < time) {
 
         }
+
     /* Once the while loop above finishes turn off the wheels */
         wheelsOff();
     }
-
 
     /* This method simply sets all motor to zero power*/
     public void wheelsOff() {

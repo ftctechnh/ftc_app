@@ -2,23 +2,28 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //This class defines all the specific hardware for a the BACONbot robot.
 
 public class RotationHardwareClass {
+
     /* Public OpMode members. */
-//    ColorSensor sensorColorRight;
-//    Servo gemServo;
-//    /* local OpMode members. */
+    ColorSensor  colorSensor;
+    Servo gemServo;
+
+    /* local OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
     public CRServo clawServo = null;
+
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;
@@ -88,10 +93,8 @@ public class RotationHardwareClass {
 //        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        sensorColorRight = hwMap.get(ColorSensor.class, "colorsensor");
-//        // get a reference to the distance sensor that shares the same name.
-//        sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
-//        gemServo = hwMap.get(Servo.class, "gemservo");
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorsensor");// get a reference to the distance sensor that shares the same name.
+        gemServo = hardwareMap.get(Servo.class, "gemservo");
 
     }
 }

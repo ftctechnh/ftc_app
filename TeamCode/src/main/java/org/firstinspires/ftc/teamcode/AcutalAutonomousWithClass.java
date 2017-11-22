@@ -11,6 +11,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.view.View;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -27,7 +30,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class AcutalAutonomousWithClass extends LinearOpMode
 {
     /* Define hardware class*/
-    MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
+    RotationHardwareClass robot = new RotationHardwareClass();
 
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
@@ -41,6 +44,15 @@ public class AcutalAutonomousWithClass extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
+        float hsvValues[] = {0F, 0F, 0F};
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -302,4 +314,19 @@ public class AcutalAutonomousWithClass extends LinearOpMode
         // reset angle tracking on new heading.
         resetAngle();
     }
+
+    public void findColor()
+    {
+        if ((robot.colorSensor.red()) < robot.colorSensor.blue())
+        {
+            resetAngle();
+            rotate(90,.5);
+            wheelsOff();
+        }
+        else
+            resetAngle();
+        rotate(-90,.5);
+        wheelsOff();
+    }
+
 }

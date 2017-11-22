@@ -14,6 +14,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,7 +32,7 @@ public class AcutalAutonomous extends LinearOpMode
     DcMotor                 backLeftMotor;
     DcMotor                 frontRightMotor;
     DcMotor                 backRightMotor;
-
+    ColorSensor             colorSensor;
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -111,7 +112,7 @@ public class AcutalAutonomous extends LinearOpMode
             movebytime(1,.3,"Backward");
             movebytime(1,.3,"Left");
             movebytime(1,.3,"Right");
-            
+
             rotate(90,.5);
 
         }
@@ -317,5 +318,18 @@ public class AcutalAutonomous extends LinearOpMode
 
         // reset angle tracking on new heading.
         resetAngle();
+    }
+    public void findColor()
+    {
+        if ((colorSensor.red()) < colorSensor.blue())
+        {
+            resetAngle();
+            rotate(90,.5);
+            wheelsOff();
+        }
+        else
+            resetAngle();
+        rotate(-90,.5);
+        wheelsOff();
     }
 }
