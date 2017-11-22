@@ -22,20 +22,20 @@ public class TeleOpCompetition extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
-    DcMotor ballCollectorMotor;
-    DcMotor ballShooterMotor;
+        leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
+        leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
+        rightWheelMotorFront = hardwareMap.dc
+        DcMotor ballCollectorMotor;
+        DcMotor ballShooterMotor;
 /*
  ----------------------------------------------------------------------------------------------
 
         Get references to the hardware installed on the robot and name them here
 */
-    @Override
-    public void init() {
-        leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
-        leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
-        rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
+        @Override
+        public void init() {Motor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
-        ballCollectorMotor = hardwareMap.dcMotor.get("ballCollectorMotor");
+        ballCollectorMotor = hardwareMap.dcMotor.get(ballCollectorMotor");
         ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
 
         /* lets reverse the direction of the right wheel motor*/
