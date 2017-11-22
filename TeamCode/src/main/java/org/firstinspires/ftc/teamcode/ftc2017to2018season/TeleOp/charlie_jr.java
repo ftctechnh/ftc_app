@@ -9,13 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
- * Created by pahel and rohan on 11/18/17.
+ * Created by Pahel and Rohan on 11/18/17.
  */
 
-
-/**
- * Created by inspirationteam on 11/20/2016.
- */
 
 @TeleOp(name = "charlie_jr")
 //@Disabled
