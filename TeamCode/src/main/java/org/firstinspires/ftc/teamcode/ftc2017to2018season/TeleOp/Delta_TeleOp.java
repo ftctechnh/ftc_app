@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "charlie_jr")
+@TeleOp(name = "DeltaTeleOp")
 //@Disabled
-public class charlie_jr extends OpMode {
+public class Delta_TeleOp extends OpMode {
 
 
     /*
@@ -96,14 +96,14 @@ public class charlie_jr extends OpMode {
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
 
-       // leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }
-    
+
 
     /*
     ---------------------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ public class charlie_jr extends OpMode {
     public void loop() {
         FourWheelDrive();
         slideMove();
-       glyphManipulator();
+        glyphManipulator();
 
 
     }
@@ -180,11 +180,11 @@ public class charlie_jr extends OpMode {
             rightWheelMotorBack.setPower(rightY_gp1);
         }
 
-       // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-      //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-       // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-      //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-      //  telemetry.update();
+        // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
+        //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
+        // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
+        //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
+        //  telemetry.update();
         //telemetry.addData("",)
         //telemetry.update();
         //These were going to be used to find the values of triggers but we couldn't acomplish it
@@ -232,11 +232,10 @@ public class charlie_jr extends OpMode {
             glyphServo2.setPosition(0.5);
         }
 
-     telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
-     telemetry.addData("The value of the left servo is", glyphServo2.getPosition());
-     telemetry.update();
+        telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
+        telemetry.addData("The value of the left servo is", glyphServo2.getPosition());
+        telemetry.update();
     }
-    }
+}
 
 //---------------------------------------------------------------------------------------------
-//TEST
