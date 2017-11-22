@@ -8,6 +8,7 @@ public class RelicClaw {
     private double clawClosePos = 0.25;
     private double clawOpenPos = 0.75;
     private Servo arm;
+    private double armInitPos = 1;
     private DcMotor motor;
 
 
@@ -17,7 +18,7 @@ public class RelicClaw {
         this.motor = motor;
     }
     public void init() {
-        setArmPosition(0.0);
+        setArmPosition(armInitPos);
         openClaw();
     }
     public void closeClaw() {
