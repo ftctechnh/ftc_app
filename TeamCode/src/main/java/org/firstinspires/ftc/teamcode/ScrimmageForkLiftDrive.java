@@ -14,27 +14,13 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  */
 @TeleOp(name = "ScrimmageForkliftDrive", group = "linear OpMode")
 public class ScrimmageForkLiftDrive extends OpMode {
-    //Forklift
-    //Claw
-    private Servo rightClaw;
-    private Servo leftClaw;
-    private double clawPosition = 0.2;
-    private double clawHighEnd = 0.65;
-    private double clawLowEnd = 0.3;
-    //Drawer Slide
-    private double DrawerSlideLowEnd;
-    private double DrawerSlideHighEnd;
-    private double DrawerSlideSpeed = 0;
-    private double up = 0;
-    private double down = 0;
-    private TouchSensor TopButton;
-    private TouchSensor BottomButton;
-    private DcMotor DrawerSlide;
+    ForkLift Forklift;
+    RelicClaw RelicClaw;
     //Relic Recovery
     private Servo relicClaw;
     private DcMotor motor;
-    private double servolowend = 0.75;
-    private double servohighend = 0.25;
+    private double servolowend = 0.25;
+    private double servohighend = 0.75;
     private double motorSpeed;
     private Servo arm;
     private double armDir;
@@ -58,22 +44,18 @@ public class ScrimmageForkLiftDrive extends OpMode {
 
     @Override
     public void init() {
-        //Forklift
-        // Right and Left claws are from back to front point of view
-        rightClaw = hardwareMap.servo.get("s5");
-        rightClaw.setDirection(Servo.Direction.REVERSE);
-        rightClaw.setPosition(clawPosition);
-        leftClaw = hardwareMap.servo.get("s6");
-        leftClaw.setPosition(clawPosition);
-        DrawerSlide = hardwareMap.dcMotor.get("m6");
-        TopButton = hardwareMap.get(TouchSensor.class, "b0");
-        BottomButton = hardwareMap.get(TouchSensor.class, "b1");
+        Forklift = new ForkLift(
+            hardwareMap.servo.get("s5"), //rightClaw
+            hardwareMap.servo.get("s6"), //leftClaw
+            hardwareMap.dcMotor.get("m6"), //updown
+            hardwareMap.get(TouchSensor.class, "b0"), //top button
+            hardwareMap.get(TouchSensor.class, "b1")); //bottom button
+        Forklift.initClaw();
         //Relic Recovery
-        relicClaw = hardwareMap.servo.get("s1");
-        relicClaw.setPosition(0.5);
-        motor = hardwareMap.dcMotor.get("m5");
-        arm = hardwareMap.servo.get("s2");
-        arm.setPosition(armlowend);
+        RelicClaw = new RelicClaw(
+            hardwareMap.servo.get("s1"), //claw
+            hardwareMap.servo.get("s2"), //arm
+            hardwareMap.dcMotor.get("m5")); //motor
         //Driving
         FrontLeft = hardwareMap.dcMotor.get("m1");
         FrontRight = hardwareMap.dcMotor.get("m2");
@@ -116,42 +98,25 @@ public class ScrimmageForkLiftDrive extends OpMode {
         RearLeft.setPower(speed * clip(rlSpeed));
         RearRight.setPower(speed * clip(rrSpeed));
 
-
-        //Claw close and open
+        //Forklift
         if (gamepad1.a) {
-            clawPosition = clawHighEnd;
-            //clawPosition = clawPosition + 0.001;
+            Forklift.closeClaw();
         }
         if (gamepad1.b) {
-            clawPosition = clawLowEnd;
-            //clawPosition = clawPosition - 0.001;
+            Forklift.openClaw();
         }
-        rightClaw.setPosition(clawPosition);
-        rightClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
-        leftClaw.setPosition(clawPosition);
-        //Drawer Slide
-        up = gamepad1.right_trigger;
-        down = gamepad1.left_trigger;
-        DrawerSlideSpeed = up - down;
-        DrawerSlide.setPower(DrawerSlideSpeed);
-
+        Forklift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
+        
         //Relic recovery
         if (gamepad2.a) {
-            //relicClaw.setPosition(Range.clip(relicClaw.getPosition() + 0.005, 0.0, 1.0));
-            relicClaw.setPosition(servolowend);
+            RelicClaw.closeClaw();
         }
         if (gamepad2.b) {
-            //relicClaw.setPosition(Range.clip(relicClaw.getPosition() - 0.005, 0.0, 1.0));
-            relicClaw.setPosition(servohighend);
+            RelicClaw.openClaw();
         }
-        armDir = Range.clip(gamepad2.right_stick_y / 250 + armDir, 0.0, 1.0);
-        motorSpeed = gamepad2.left_stick_y;
-        motor.setPower(motorSpeed);
-        arm.setPosition(armDir);
-        arm.setPosition(armDir);
-        telemetry.addData("relic claw pos: ", relicClaw.getPosition());
-        telemetry.update();
+        RelicClaw.setArmPosition(Range.clip(gamepad2.right_stick_y / 250 + RelicClaw.getArmPosition(), 0.0, 1.0));
+        RelicClaw.moveMotor(gamepad2.left_stick_y);
+
     }
 
     //sets the motors to be reversed so they all go the same way.

@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class ForkLift {
@@ -13,9 +10,9 @@ public class ForkLift {
 	private DcMotor drawerSlide;
 	private TouchSensor topButton;
 	private TouchSensor bottomButton;
-	private double clawPosition = 0.0;
-    private double clawHighEnd = 0.45;
-    private double clawLowEnd = 0.1;
+	private double clawPosition = 0.25;
+    private double clawHighEnd = 0.7;
+    private double clawLowEnd = 0.35;
     private double up = 0;
     private double down = 0;
 
@@ -36,15 +33,17 @@ public class ForkLift {
 	public void openClaw() {setClawPosition(clawLowEnd);}
 
 	public void moveUpDown(double speed) {
-		if (!(topButton.isPressed()) && speed > 0) {
-			drawerSlide.setPower(speed);
+		if (speed < 0) {
+			if (bottomButton.isPressed()) {
+				speed = 0;
+			}
 		}
-		else if (!(bottomButton.isPressed()) && speed < 0) {
-			drawerSlide.setPower(speed);
+		if (speed > 0) {
+			if (topButton.isPressed()) {
+				speed = 0;
+			}
 		}
-		else {
-			drawerSlide.setPower(0.0);
-		}
+		drawerSlide.setPower(speed);
 	}
 	public void setClawPosition(double position) {
 		rightClaw.setPosition(position);
