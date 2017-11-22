@@ -41,6 +41,8 @@ public class charlie_jr extends OpMode {
 
 
 
+
+
 /*
     ---------------------------------------------------------------------------------------------
 
@@ -86,8 +88,12 @@ public class charlie_jr extends OpMode {
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         IVFSM = slideMotor.getCurrentPosition();
 
+
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+
+        glyphServo2.setPosition(-0.5);
+        glyphServo1.setPosition(0.5);
 
 
 //This is closed-loop speed control. Encoders are required for this mode.
@@ -211,15 +217,30 @@ public class charlie_jr extends OpMode {
 
     public void glyphManipulator() {
         Boolean Right_Bumper = (gamepad1.right_bumper);
-        if (Right_Bumper = true) {
-            glyphServo2.setPosition(-0.5);
-            glyphServo1.setPosition(0.5);
-        } else if (Right_Bumper = false) {
-            glyphServo1.setPosition(-0.5);
+        Boolean Left_Bumper = (gamepad1.left_bumper);
+
+        if (Right_Bumper) {
+//opening the claw
+
+            // glyph servo 1 is the right claw
+            glyphServo1.setPosition(0.10);
+
+            // glyph servo 2 is the left claw
+            glyphServo2.setPosition(0.25);
+        }
+        else if (Left_Bumper) {
+// closes the claw
+
+            // glyph servo 1 is the right claw
+            glyphServo1.setPosition(-0.25);
+
+            // glyph servo 2 is the left claw
             glyphServo2.setPosition(0.5);
-        } else {
+
+        }
+
         }
     }
-}
+
 //---------------------------------------------------------------------------------------------
 //whyyyyyyyy?
