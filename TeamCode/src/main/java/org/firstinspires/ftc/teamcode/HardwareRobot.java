@@ -61,10 +61,10 @@ public class HardwareRobot {
     public DcMotor rightDriveBack = null;
 
     final static double COUNTS_PER_MOTOR_REV = 1760;
-    final static double DRIVE_GEAR_REDUCTION = 2;
+    final static double DRIVE_GEAR_REDUCTION = 0.5;
     final static double WHEEL_DIAMETER_INCHES = 4;
     public final static double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 //    public Servo    arm         = null;
 //    public Servo    claw        = null;
 //    public final static double ARM_HOME = 0.2;
@@ -89,12 +89,12 @@ public class HardwareRobot {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDriveFront = hwMap.get(DcMotor.class, "leftMotorFront");
-        rightDriveFront = hwMap.get(DcMotor.class, "rightMotorFront");
-        leftDriveBack = hwMap.get(DcMotor.class, "leftMotorBack");
-        rightDriveBack = hwMap.get(DcMotor.class, "rightMotorBack");
-        leftDriveFront.setDirection(DcMotor.Direction.REVERSE);
-        leftDriveBack.setDirection(DcMotor.Direction.REVERSE);
+        leftDriveFront = hwMap.get(DcMotor.class, "m1");
+        rightDriveFront = hwMap.get(DcMotor.class, "m2");
+        leftDriveBack = hwMap.get(DcMotor.class, "m3");
+        rightDriveBack = hwMap.get(DcMotor.class, "m4");
+        rightDriveFront.setDirection(DcMotor.Direction.REVERSE);
+        rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         setAllLeftDrivePower(0);
@@ -150,46 +150,7 @@ public class HardwareRobot {
 
     }
 
-    public void driveWithEncoder(DcMotor motor, double target, double power) {
 
-        int currentPos = motor.getCurrentPosition();
-        int targetPos = currentPos + (int)(COUNTS_PER_INCH * target);
 
-        motor.setTargetPosition(targetPos);
 
-        motor.setPower(power);
-
-        while (Math.abs(motor.getCurrentPosition() - targetPos) > 1) {
-
-        }
-
-        motor.setPower(0);
-    }
-
-    public void driveMotorsWithEncoder(DcMotor[] motor, double target, double power) {
-
-        int currentPos;
-        int targetPos;
-
-        for (int i = 0; i < motor.length; i += 1) {
-
-            currentPos = motor[i].getCurrentPosition();
-            targetPos = currentPos + (int)(COUNTS_PER_INCH * target);
-
-            motor[i].setTargetPosition(targetPos);
-
-            motor[i].setPower(power);
-
-        }
-        
-        while (motor[0].getCurrentPosition() > 1) {
-
-        }
-
-        for (int i = 0; i < motor.length; i += 1) {
-
-            motor[i].setPower(0);
-
-        }
-    }
 }
