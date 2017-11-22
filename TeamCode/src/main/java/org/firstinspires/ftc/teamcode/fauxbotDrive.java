@@ -10,15 +10,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by jodasue on 10/28/17.
  */
-@TeleOp(name = "fauxbot", group = "Testing")
-public class fauxbot extends LinearOpMode {
+@TeleOp(name = "fauxbotDrive", group = "Testing")
+public class fauxbotDrive extends LinearOpMode {
 
     DcMotor left;
     DcMotor right;
-    Servo glyph;
 
     public void runOpMode() {
-        Servo glyph = hardwareMap.servo.get("glyph");
 
         left = hardwareMap.dcMotor.get("left");
         left.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -46,7 +44,6 @@ public class fauxbot extends LinearOpMode {
             {
                 temp = 1;
             }
-            glyph.setPosition(temp);
 
             left.setPower(gamepad1.left_stick_y);
             right.setPower(gamepad1.right_stick_y);
