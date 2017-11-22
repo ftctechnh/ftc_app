@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class FinalPerfectTeleop extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
-MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
+MasterHardwareClass robot = new MasterHardwareClass();
 
     @Override
     public void runOpMode() {
@@ -68,22 +68,19 @@ MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
             telemetry.update();
 
         /* Servo Control */
-         /*   if (gamepad1.x) {
+            if (gamepad1.x) {
                 robot.clawServo.setPower(robot.clawOpen);
-                robot.clawServo2.setPower(robot.clawClose);
             }
             if (gamepad1.y) {
                 robot.clawServo.setPower(robot.clawClose);
-                robot.clawServo2.setPower(robot.clawOpen);
             }
 
             if (gamepad1.y != true && gamepad1.x != true) {
                 robot.clawServo.setPower(robot.clawStill);
-                robot.clawServo2.setPower(robot.clawStill);
             }
 
         /* Vertical Arm Motor */
-         /*   if (gamepad1.dpad_up) {
+            if (gamepad1.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
             } else {
                 robot.verticalArmMotor.setPower(0);
@@ -95,13 +92,6 @@ MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
             }
             /*These values are used for the drive*/
 
-            if (gamepad1.a){
-                robot.gemServo.setPosition(.5);
-            }
-
-            if (gamepad1.b){
-                robot.gemServo.setPosition(0);
-            }
 
             double frontLeft;
             double frontRight;

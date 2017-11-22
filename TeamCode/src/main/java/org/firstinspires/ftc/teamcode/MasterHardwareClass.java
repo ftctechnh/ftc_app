@@ -25,12 +25,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MasterHardwareClass {
     /* Public OpMode members. */
-    ColorSensor sensorColorRight;
-    DistanceSensor sensorDistanceRight;
-    Servo gemServo;
-    ColorSensor sensorColorLeft;
-    DistanceSensor sensorDistanceLeft;
-    /* local OpMode members. */
+//    ColorSensor sensorColorRight;
+//    Servo gemServo;
+//    /* local OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
@@ -103,14 +100,10 @@ public class MasterHardwareClass {
 //        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sensorColorRight = hwMap.get(ColorSensor.class, "colorsensor");
-        // get a reference to the distance sensor that shares the same name.
-        sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
-        //Second Color Sensor
-        sensorColorLeft = hwMap.get(ColorSensor.class,"othercolorsensor");
-        //Distance Sensor of the Second Color Sensor
-        sensorDistanceLeft = hwMap.get(DistanceSensor.class,"othercolorsensor");
-        gemServo = hwMap.get(Servo.class, "gemservo");
+//        sensorColorRight = hwMap.get(ColorSensor.class, "colorsensor");
+//        // get a reference to the distance sensor that shares the same name.
+//        sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
+//        gemServo = hwMap.get(Servo.class, "gemservo");
 
     }
 }

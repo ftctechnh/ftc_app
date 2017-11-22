@@ -13,18 +13,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //This class defines all the specific hardware for a the BACONbot robot.
 
 public class MasterHardwareClassRIGHTNOW {
+
     /* Public OpMode members. */
-    /* Public OpMode members. */
-    ColorSensor sensorColorRight;
-    Servo gemServo;
+    public ColorSensor sensorColorRight;
+    public Servo gemServo;
+    public BNO055IMU imu;
 
     /* local OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
-    public BNO055IMU imu = null;
-
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;
@@ -73,7 +72,6 @@ public class MasterHardwareClassRIGHTNOW {
         gemServo.setPosition(xPosUp);
 
 
-
         // Set proper encoder state for all motor
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -81,6 +79,12 @@ public class MasterHardwareClassRIGHTNOW {
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         gemServo = hwMap.get(Servo.class, "gemservo");
 

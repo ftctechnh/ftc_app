@@ -55,21 +55,21 @@ public class FinalPerfectAutonomous extends LinearOpMode {
     /* Variables for gyro */
     Orientation lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
+    boolean                 aButton, bButton;
 
     @Override
-    public void runOpMode() {
-
-        /* Parameters for the gyro */
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-
+    public void runOpMode() throws InterruptedException {
 
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
+
+                /* Parameters for the gyro */
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
 
 
         robot.imu.initialize(parameters);
@@ -78,8 +78,7 @@ public class FinalPerfectAutonomous extends LinearOpMode {
         telemetry.update();
 
         // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !robot.imu.isGyroCalibrated())
-        {
+        while (!isStopRequested() && !robot.imu.isGyroCalibrated()) {
             sleep(50);
             idle();
         }
@@ -118,24 +117,176 @@ public class FinalPerfectAutonomous extends LinearOpMode {
 
             movebytime(1, .5, "Forward");
 
-            rotate(-90, .5);
+            rotate(90, .5);
 
+            }
         }
-    }
 
     /***********************************************************************************************
      * These are all of the methods used in the Autonomous *
      ***********************************************************************************************/
+//
+///* I think this will enable us to move similar to motorPowerTime() with a ramp up, by calling it with
+//rampWheelPower(direction, rampUpSpeed, timeToRun). It needs to be tested though. Especially the timer,
+//I did my best, but it might be wrong. */
+//
+//    public void moveRampUp(String dir, double rampUpSpeed, double time) {
+//
+//        double frontLeft;
+//        double frontRight;
+//        double backLeft;
+//        double backRight;
+//        double max;
+//        double scaledVal = 0.1;
+//
+///* If the function is called with rampUpSpeed as 0, there motors start without ramp up */
+//        if (rampUpSpeed == 0) {
+//            scaledVal = 1;
+//        }
+//
+//        long rampUpDelay = 10;  /* Range: >0, the higher it is the slower the ramp up */
+//        boolean run = true;
+//
+//        dir = dir.toLowerCase();
+//
+//  /*calculate the power for each wheel */
+//        switch (dir) {
+//            case "forward":
+//                frontLeft = -1;
+//                frontRight = 1;
+//                backLeft = -1;
+//                backRight = 1;
+//                break;
+//            case "backward":
+//                frontLeft = 1;
+//                frontRight = -1;
+//                backLeft = 1;
+//                backRight = -1;
+//                break;
+//            case "left":
+//                frontLeft = 1;
+//                frontRight = 1;
+//                backLeft = -1;
+//                backRight = -1;
+//                break;
+//            case "right":
+//                frontLeft = -1;
+//                frontRight = -1;
+//                backLeft = 1;
+//                backRight = 1;
+//                break;
+//        }
+//
+//  /* Ramp values up until they are full input value*/
+//        while (run) { /* Run for a certain amount of time */
+//            while (scaledVal < 1) {
+//
+//      /* Set a scaled down power for each wheel */
+//                frontLeft = frontLeft * scaledVal;
+//                frontRight = frontRight * scaledVal;
+//                backLeft = backLeft * scaledVal;
+//                backRight = backRight * scaledVal;
+//
+//      /* Actually set the motor speeds */
+//                if (robot.FrontLeftPower != frontLeft) {
+//                    robot.frontLeftMotor.setPower(frontLeft);
+//                    robot.FrontLeftPower = frontLeft;
+//                }
+//                if (robot.FrontRightPower != frontRight) {
+//                    robot.frontRightMotor.setPower(frontRight);
+//                    robot.FrontRightPower = frontRight;
+//                }
+//                if (robot.BackLeftPower != backLeft) {
+//                    robot.backLeftMotor.setPower(backLeft);
+//                    robot.BackLeftPower = backLeft;
+//                }
+//                if (robot.BackRightPower != backRight) {
+//                    robot.backRightMotor.setPower(backRight);
+//                    robot.BackRightPower = backRight;
+//                }
+//                if (scaledVal < 1) {
+//                    scaledVal += rampUpSpeed; /* Add to scale so all set values increase */
+//                    sleep(rampUpDelay);  /* Small delay so it has some effect */
+//                } else {
+//                    scaledVal = 1;
+//                }
+//            }
+//    /* Once time is up, stop */
+//            if (ElapsedTime() > runtime + time) {
+//                robot.frontLeftMotor.setPower(0);
+//                robot.frontRightMotor.setPower(0);
+//                robot.backLeftMotor.setPower(0);
+//                robot.backRightMotor.setPower(0);
+//                run  = false;
+//            }
+//        }
+//    }
+//
+//    /* This method moves the robot forward for time and power indicated*/
+//    public void rampupmovebytime (double time, double rampUpSpeed,  double power, String direction) {
+//
+//        double frontLeft;
+//        double frontRight;
+//        double backLeft;
+//        double backRight;
+//        double scaledVal = 0.1;
+//
+//    /* reset the "timer" to 0 */
+//        runtime.reset();
+//
+//    /* If the function is called with rampUpSpeed as 0, there motors start without ramp up */
+//        if (rampUpSpeed == 0) {
+//            scaledVal = 1;
+//        }
+//
+//        long rampUpDelay = 10;  /* Range: >0, the higher it is the slower the ramp up */
+//        boolean run = true;
+//
+//  /*calculate the power for each wheel */
+//        switch (direction) {
+//            case "forward":
+//                frontLeft = -power;
+//                frontRight = power;
+//                backLeft = -power;
+//                backRight = power;
+//                break;
+//            case "backward":
+//                frontLeft = power;
+//                frontRight = -power;
+//                backLeft = power;
+//                backRight = -power;
+//                break;
+//            case "left":
+//                frontLeft = power;
+//                frontRight = power;
+//                backLeft = -power;
+//                backRight = -power;
+//                break;
+//            case "right":
+//                frontLeft = -power;
+//                frontRight = -power;
+//                backLeft = power;
+//                backRight = power;
+//                break;
+//        }
+//
+//    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+//        while (opModeIsActive() && runtime.seconds() < time) {
+//
+//        }
+//    /* Once the while loop above finishes turn off the wheels */
+//        wheelsOff();
+//    }
+//
 
-
-/* This method moves the robot forward for time and power indicated*/
+    /* This method moves the robot forward for time and power indicated*/
     public void movebytime (double time, double power, String direction) {
     /* reset the "timer" to 0 */
         runtime.reset();
-    /* This runs the wheel power so it moves forward, the powers for the left wheels
-    are inversed so that it runs properly on the robot
-     */
 
+    /* This powers the wheels properly in one of 4 directions, each direction is a different case in this
+    switch statement.
+     */
         switch (direction) {
             case "Forward":
                 setWheelPower(power, power, power, power);
@@ -157,7 +308,6 @@ public class FinalPerfectAutonomous extends LinearOpMode {
     /* Once the while loop above finishes turn off the wheels */
         wheelsOff();
     }
-
 
     /* This method simply sets all motor to zero power*/
     public void wheelsOff() {
@@ -258,7 +408,7 @@ public class FinalPerfectAutonomous extends LinearOpMode {
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
      */
-    private void rotate(int degrees, double power)
+    private void rotate(int degrees, double rotatepower)
     {
         double  leftPower, rightPower;
 
@@ -270,13 +420,13 @@ public class FinalPerfectAutonomous extends LinearOpMode {
 
         if (degrees < 0)
         {   // turn right.
-            leftPower = -power;
-            rightPower = power;
+            leftPower = -rotatepower;
+            rightPower = rotatepower;
         }
         else if (degrees > 0)
         {   // turn left.
-            leftPower = power;
-            rightPower = -power;
+            leftPower = rotatepower;
+            rightPower = -rotatepower;
         }
         else return;
 
