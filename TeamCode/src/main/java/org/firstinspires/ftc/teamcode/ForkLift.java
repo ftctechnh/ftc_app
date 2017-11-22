@@ -12,7 +12,7 @@ public class ForkLift {
 	private TouchSensor bottomButton;
 	private double clawPosition = 0.25;
     private double clawHighEnd = 0.7;
-    private double clawLowEnd = 0.35;
+    private double clawLowEnd = 0.3;
     private double up = 0;
     private double down = 0;
 

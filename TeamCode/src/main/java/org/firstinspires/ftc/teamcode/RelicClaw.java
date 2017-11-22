@@ -16,6 +16,10 @@ public class RelicClaw {
         this.arm = arm;
         this.motor = motor;
     }
+    public void init() {
+        setArmPosition(0.0);
+        openClaw();
+    }
     public void closeClaw() {
     	claw.setPosition(clawClosePos);
     }

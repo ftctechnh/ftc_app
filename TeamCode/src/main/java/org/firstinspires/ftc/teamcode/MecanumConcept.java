@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,70 +11,30 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name = "MecanumDriveConcept", group = "linear OpMode")
-//@Disabled
 public class MecanumConcept extends OpMode {
-    private DcMotor FrontLeft;
-    private double flSpeed = 0;
-    private DcMotor FrontRight;
-    private double frSpeed = 0;
-    private DcMotor RearLeft;
-    private double rlSpeed = 0;
-    private DcMotor RearRight;
-    private double rrSpeed = 0;
-    private double x;
-    private double y;
-    private double z;
-    private double speed;
+    private DriveMecanum drive;
 
 
     @Override
     public void init() {
-        FrontLeft = hardwareMap.dcMotor.get("m1");
-        FrontRight = hardwareMap.dcMotor.get("m2");
-        RearLeft = hardwareMap.dcMotor.get("m3");
-        RearRight = hardwareMap.dcMotor.get("m4");
-        reverseMotor(FrontRight);
-        reverseMotor(RearRight);
-        speed = 0.75;
+        drive = new DriveMecanum(
+            hardwareMap.dcMotor.get("m1"), //FrontLeft
+            hardwareMap.dcMotor.get("m2"), //FrontRight
+            hardwareMap.dcMotor.get("m3"), //RearLeft
+            hardwareMap.dcMotor.get("m4"), 1.0); //RearRight
+
     }
 
     @Override
     public void loop() {
-        //x is forward/backward
-        //y is side to side
-        //z is angle
-        x = gamepad1.left_stick_y;
-        y = gamepad1.left_stick_x;
-        z = gamepad1.right_stick_x;
+        drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         if (gamepad1.right_bumper) {
-            y = 0.75;
-            z = 0.5;
+            drive.swingRight();
         }
         else if (gamepad1.left_bumper) {
-            y = -.75;
-            z = -.5;
+            drive.swingLeft();
         }
-
-        flSpeed = -y+x-z;
-        frSpeed = y+x+z;
-        rlSpeed = y+x-z;
-        rrSpeed = -y+x+z;
-        if (gamepad1.right_bumper) {
-            flSpeed = 0;
-            frSpeed = 0;
-            rlSpeed = -1;
-            rrSpeed = 1;
-        }
-        else if (gamepad1.left_bumper) {
-            flSpeed = 0;
-            frSpeed = 0;
-            rlSpeed = 1;
-            rrSpeed = -1;
-        }
-        FrontLeft.setPower(speed*clip(flSpeed));
-        FrontRight.setPower(speed*clip(frSpeed));
-        RearLeft.setPower(speed*clip(rlSpeed));
-        RearRight.setPower(speed*clip(rrSpeed));
+        
 
     }
 
