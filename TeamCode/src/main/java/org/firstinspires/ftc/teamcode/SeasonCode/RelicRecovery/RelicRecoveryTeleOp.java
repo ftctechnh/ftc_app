@@ -192,9 +192,9 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         }
         // ---------------- Arm -----------------
         if (gamepad2.right_bumper) {
-            armPosition += .02;
+            armPosition += .0002;
         } else if (gamepad2.left_bumper) {
-            armPosition -=.02;
+            armPosition -=.0002;
         }
         armLifterPwr = gamepad2.right_trigger - gamepad2.left_trigger;
     }
