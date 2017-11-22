@@ -103,6 +103,8 @@ public class AcutalAutonomousWithClass extends LinearOpMode
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
+            robot.gemServo.setPosition(robot.xPosDown);
+
             movebytime(1,.3,"Forward");
             movebytime(1,.3,"Backward");
             movebytime(1,.3,"Left");
