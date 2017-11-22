@@ -153,7 +153,7 @@ public class MenuFileHandler {
         boolean aisreleased = true, yisreleased = true, bisreleased = true, xisreleased = true;
 
         while ( !gamepad.right_stick_button ) {
-            telemetry.addLine("===> Press Joystick to exit MENU mode <===" );
+            telemetry.addLine("===> EDIT mode <===" );
             telemetry.addLine("####    " + menuvaluetoken[0][menuvalue[0]]+" " +menuvaluetoken[1][menuvalue[1]]+" " +menuvaluetoken[2][menuvalue[2]] +"   ####");
 //            telemetry.addLine("#######    " + menuvaluetoken[0][menuvalue[0]] +"   " +  menuvaluetoken[1][menuvalue[1]] + "  " +  menuvaluetoken[3][menuvalue[3]] +"    ######");
             telemetry.addLine("");
@@ -213,7 +213,7 @@ public class MenuFileHandler {
             if (menuvalue[index] >  menuupperlimit[index]) menuvalue[index] = menulowerlimit[index];
             if (menuvalue[index] <  menulowerlimit[index]) menuvalue[index] = menuupperlimit[index];
 
-            telemetry.addLine("===> Press Joystick to exit EDIT mode <===" );
+            telemetry.addLine("===> Press Joystick to save parameters <===" );
             telemetry.update();
         }
         telemetry.clear();
