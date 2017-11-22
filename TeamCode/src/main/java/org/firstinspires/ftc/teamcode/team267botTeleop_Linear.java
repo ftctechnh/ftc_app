@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
@@ -55,13 +54,15 @@ public class team267botTeleop_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     Hardware267Bot robot           = new Hardware267Bot();   // Use a Pushbot's hardware
-                                                // could also use HardwarePushbotMatrix class.
+    public static final double TRIGGER_MIN = 0; //TODO: Find value
+    public static final double TRIGGER_MAX = 1; //TODO: Find value                                                 // could also use HardwarePushbotMatrix class.
 
     @Override
     public void runOpMode() {
         double left;
         double right;
-
+        double leftBeltPower = 0;
+        double rightBeltPower = 0;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -72,6 +73,7 @@ public class team267botTeleop_Linear extends LinearOpMode {
         telemetry.addData("Say", "Hello Driver");    //
         telemetry.update();
 
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -81,25 +83,32 @@ public class team267botTeleop_Linear extends LinearOpMode {
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
             left = -gamepad1.left_stick_y;
             right = -gamepad1.right_stick_y;
+
             // Output the safe vales to the motor drives.
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
 
             if (gamepad1.left_trigger >0) {
                 //If the left trigger is pressed, move block forward.
-                robot.leftBelt.setPower(-1.0);
-                robot.rightBelt.setPower(1.0);
+
+                //normalize to between 0 and 1
+                leftBeltPower= -(gamepad1.left_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
+                rightBeltPower= (gamepad1.right_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
+
             }
             else if (gamepad1.right_trigger >0) {
                 //If the right trigger is pressed, move block backwards.
-                robot.leftBelt.setPower(-1.0);
-                robot.rightBelt.setPower(1.0);
+                leftBeltPower= (gamepad1.left_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
+                rightBeltPower= -(gamepad1.right_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
             }
             else {
-                //If neither trigger is pressed, do nothing.
-                robot.leftBelt.setPower(0.0);
-                robot.rightBelt.setPower(0.0);
+                //If neither triggers are pressed, do nothing.
+                leftBeltPower= 0;
+                rightBeltPower= 0;
             }
+            robot.leftBelt.setPower(leftBeltPower);
+            robot.rightBelt.setPower(rightBeltPower);
+
 
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);
