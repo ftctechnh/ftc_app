@@ -53,13 +53,10 @@ public class MasterHardwareClassRIGHTNOW {
         hwMap = ahwMap;
 
         // Define and Initialize Hardware
-
-        // Define and Initialize Hardware
         frontLeftMotor = hwMap.dcMotor.get("FL");
         frontRightMotor = hwMap.dcMotor.get("FR");
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
-        imu = hwMap.get(BNO055IMU.class, "imu");
         gemServo = hwMap.servo.get("gemservo");
         sensorColorRight = hwMap.colorSensor.get("colorsensor");
 
@@ -70,7 +67,6 @@ public class MasterHardwareClassRIGHTNOW {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         gemServo.setPosition(xPosUp);
-
 
         // Set proper encoder state for all motor
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

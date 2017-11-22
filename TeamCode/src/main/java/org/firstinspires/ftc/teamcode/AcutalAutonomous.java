@@ -1,86 +1,62 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// Simple autonomous program that drives bot forward until end of period
+// or touch sensor is hit. If touched, backs up a bit and turns 90 degrees
+// right and keeps going. Demonstrates obstacle avoidance and use of the
+// REV Hub's built in IMU in place of a gyro. Also uses gamepad1 buttons to
+// simulate touch sensor press and supports left as well as right turn.
+//
+// Also uses IMU to drive in a straight line when not avoiding an obstacle.
+
+// from http://stemrobotics.cs.pdx.edu/node/7265
+//  removed touch sensor code
 
 package org.firstinspires.ftc.teamcode;
-
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-import java.util.Locale;
-
-/**
- ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
- */
-@Autonomous(name = "♪ ♥ Perfect Autonomous with Color ♥  ♪", group = "Concept")
+@Autonomous(name="Yes bishh", group="Exercises")
 //@Disabled
-public class FinalPerfectAutonomousRED extends LinearOpMode {
+public class AcutalAutonomous extends LinearOpMode
+{
 
-    BNO055IMU               imu;
-    Orientation             lastAngles = new Orientation();
-    double globalAngle, power = .30, correction;
-
-
-    /* this says use ArmHardwareClass */
-    MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
+    DcMotor                 frontLeftMotor;
+    DcMotor                 backLeftMotor;
+    DcMotor                 frontRightMotor;
+    DcMotor                 backRightMotor;
 
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
 
+
+    BNO055IMU               imu;
+    Orientation             lastAngles = new Orientation();
+    double globalAngle, power = .30, correction;
+    boolean                 aButton, bButton;
+
+    // called when init button is  pressed.
     @Override
-    public void runOpMode() {
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        // values is a reference to the hsvValues array.
+    public void runOpMode() throws InterruptedException
+    {
+        frontLeftMotor = hardwareMap.dcMotor.get("FL");
+        backLeftMotor = hardwareMap.dcMotor.get("BL");
+        frontRightMotor = hardwareMap.dcMotor.get("FR");
+        backRightMotor = hardwareMap.dcMotor.get("BR");
 
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
-        float hsvValues[] = {0F, 0F, 0F};
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        /* The init() method of the hardware class does all the work here*/
-        robot.init(hardwareMap);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -88,9 +64,6 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled      = false;
-
-        Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
@@ -124,14 +97,8 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
 
         // drive until end of period.
 
-
-        // Wait for the start button
-        telemetry.addLine("!☻ Ready to Drive Autonomous ☻!");
-        telemetry.update();
-        waitForStart();
-
-        while (opModeIsActive()) {
-
+        while (opModeIsActive())
+        {
             // Use gyro to drive in a straight line.
             correction = checkDirection();
 
@@ -140,23 +107,22 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
-            robot.gemServo.setPosition(robot.xPosDown);
-
-            sleep(1500);
-
-            findColor();
-            telemetry.addData("1 imu heading", lastAngles.firstAngle);
-            telemetry.addData("2 global heading", globalAngle);
-            telemetry.addData("3 correction", correction);
-            telemetry.update();
-
+            movebytime(1,.3,"Forward");
+            movebytime(1,.3,"Backward");
+            movebytime(1,.3,"Left");
+            movebytime(1,.3,"Right");
+            
+            rotate(90,.5);
 
         }
+
+        // turn the motors off.
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
     }
 
-    /***********************************************************************************************
-     * These are all of the methods used in the Autonomous *
-     ***********************************************************************************************/
 
     /* This method moves the robot forward for time and power indicated*/
     public void movebytime (double time, double power, String direction) {
@@ -168,10 +134,10 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
 
         switch (direction) {
             case "Forward":
-                setWheelPower(-power, power, -power, power);
+                setWheelPower(power, power, power, power);
                 break;
             case "Backward":
-                setWheelPower(power, power, -power, -power);
+                setWheelPower(-power, -power, -power, -power);
                 break;
             case "Right":
                 setWheelPower(-power, -power, power, power);
@@ -203,6 +169,16 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
         double backLeft;
         double backRight;
 
+        double FrontLeftPower;
+        double FrontRightPower;
+        double BackLeftPower;
+        double BackRightPower;
+
+        FrontLeftPower = 0;
+        FrontRightPower = 0;
+        BackLeftPower = 0;
+        BackRightPower = 0;
+
         /* Initialize the powers with the values input whenever this method is called */
         frontLeft   =   fl;
         frontRight  =   fr;
@@ -210,27 +186,28 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
         backRight   =   br;
 
         /* set each wheel to the power indicated whenever this method is called */
-        if (robot.FrontLeftPower != frontLeft) {
-            robot.frontLeftMotor.setPower(fl);
-            robot.FrontLeftPower = frontLeft;
+        if ( FrontLeftPower != frontLeft) {
+             frontLeftMotor.setPower(fl);
+             FrontLeftPower = frontLeft;
         }
-        if (robot.FrontRightPower != frontRight) {
-            robot.frontRightMotor.setPower(fr);
-            robot.FrontRightPower = frontRight;
+        if ( FrontRightPower != frontRight) {
+             frontRightMotor.setPower(fr);
+             FrontRightPower = frontRight;
         }
-        if (robot.BackLeftPower != backLeft) {
-            robot.backLeftMotor.setPower(bl);
-            robot.BackLeftPower = backLeft;
+        if ( BackLeftPower != backLeft) {
+             backLeftMotor.setPower(bl);
+             BackLeftPower = backLeft;
         }
-        if (robot.BackRightPower != backRight)
-            robot.backRightMotor.setPower(br);
-            robot.BackRightPower = backRight;
+        if ( BackRightPower != backRight)
+             backRightMotor.setPower(br);
+             BackRightPower = backRight;
     }
 
+
+    /* Resets the cumulative angle tracking to zero. */
     private void resetAngle()
     {
-        lastAngles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
 
@@ -240,12 +217,13 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
      */
     private double getAngle()
     {
+
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
         // We have to process the angle because the imu works in euler angles so the Z axis is
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
@@ -311,11 +289,11 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
         else return;
 
         // set power to rotate.
-        robot.frontLeftMotor.setPower(leftPower);
-        robot.backLeftMotor.setPower(leftPower);
+        frontLeftMotor.setPower(leftPower);
+        backLeftMotor.setPower(leftPower);
 
-        robot.frontRightMotor.setPower(rightPower);
-        robot.backRightMotor.setPower(rightPower);
+        frontRightMotor.setPower(rightPower);
+        backRightMotor.setPower(rightPower);
 
         // rotate until turn is completed.
         if (degrees < 0)
@@ -329,29 +307,15 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
             while (opModeIsActive() && getAngle() < degrees) {}
 
         // turn the motors off.
-        robot.frontLeftMotor.setPower(0);
-        robot.backLeftMotor.setPower(0);
-        robot.frontRightMotor.setPower(0);
-        robot.backRightMotor.setPower(0);
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
 
         // wait for rotation to stop.
         sleep(1000);
 
         // reset angle tracking on new heading.
         resetAngle();
-    }
-    //eyy
-    public void findColor()
-    {
-        if ((robot.sensorColorRight.red()) < robot.sensorColorRight.blue())
-        {
-            resetAngle();
-            rotate(90,.5);
-            wheelsOff();
-        }
-        else
-            resetAngle();
-            rotate(-90,.5);
-            wheelsOff();
     }
 }
