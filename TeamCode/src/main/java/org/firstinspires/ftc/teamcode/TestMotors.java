@@ -58,6 +58,8 @@ public class TestMotors extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private DcMotor clawMotor = null;
+    private float speedMultiplier = 1.0f;
 
     @Override
     public void runOpMode() {
@@ -69,6 +71,7 @@ public class TestMotors extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "leftDrive");
         rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
+        clawMotor = hardwareMap.get(DcMotor.class, "armHeight");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -85,6 +88,7 @@ public class TestMotors extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
+            double clawPower;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -98,16 +102,31 @@ public class TestMotors extends LinearOpMode {
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            leftPower  = -gamepad1.left_stick_y/2;
-            rightPower = -gamepad1.right_stick_y/2;
+            leftPower  = -gamepad1.left_stick_y * speedMultiplier;
+            rightPower = -gamepad1.right_stick_y * speedMultiplier;
+
+            if(gamepad1.a) {
+                speedMultiplier = 1.0f;
+            }
+            if(gamepad1.b) {
+                speedMultiplier = 0.5f;
+            }
+            if(gamepad1.x) {
+                speedMultiplier = 0.25f;
+            }
+
+            clawPower = (gamepad1.right_trigger - gamepad1.left_trigger) / 2;
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
+            clawMotor.setPower(clawPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f), claw (%.2f)",
+                    leftPower, rightPower, clawPower);
+            telemetry.addData("Speed", "%.2f", speedMultiplier);
             telemetry.update();
         }
     }
