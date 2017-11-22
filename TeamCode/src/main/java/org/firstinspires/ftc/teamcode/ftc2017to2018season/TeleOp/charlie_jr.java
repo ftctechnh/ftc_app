@@ -217,7 +217,11 @@ public class charlie_jr extends OpMode {
 
     public void glyphManipulator() {
         Boolean Right_Bumper = (gamepad1.right_bumper);
-        if (Right_Bumper) {
+        double right_claw = (glyphServo1.getPosition());
+        double left_claw = (glyphServo2.getPosition());
+
+        if (Right_Bumper && left_claw == 0.5 && right_claw == 0.0) {
+
 //opening the claw
 
             // glyph servo 1 is the right claw
@@ -226,7 +230,11 @@ public class charlie_jr extends OpMode {
             // glyph servo 2 is the left claw
             glyphServo2.setPosition(0.25);
         }
-        
+        else if (Right_Bumper && left_claw == 0.25 && right_claw == 0.25){
+
+            glyphServo1.setPosition(0.0);
+            glyphServo2.setPosition(0.5);
+        }
 
      telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
      telemetry.addData("The value of the left servo is", glyphServo2.getPosition());
