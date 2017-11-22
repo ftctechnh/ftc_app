@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Test Motors", group="Manual")
-@Disabled
+//@Disabled
 public class TestMotors extends LinearOpMode {
 
     // Declare OpMode members.
@@ -98,8 +98,8 @@ public class TestMotors extends LinearOpMode {
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            leftPower  = -gamepad1.left_stick_y ;
-            rightPower = -gamepad1.right_stick_y ;
+            leftPower  = -gamepad1.left_stick_y/2;
+            rightPower = -gamepad1.right_stick_y/2;
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
