@@ -52,9 +52,6 @@ public class Driver extends LinearOpMode {
         servo0 = hardwareMap.get(Servo.class, "servo0");
         servo1 = hardwareMap.get(Servo.class, "servo1");
 
-        double leftMotorPower = 0;
-        double rightMotorPower = 0;
-
         //sends tests data to dc phone
         telemetry.addData("Status", "Initialized");
         telemetry.update();
