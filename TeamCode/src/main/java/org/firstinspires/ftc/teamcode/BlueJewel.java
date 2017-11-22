@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package OldCode;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="2 Blue Auto ", group ="Jewel")
-public class Blue2Auto extends LinearOpMode {
+@Autonomous(name="Blue Jewel ", group ="Jewel")
+public class BlueJewel extends LinearOpMode {
 
     public ColorSensor colorSensorL;
     public Servo loweringJewelServo;
@@ -56,41 +56,17 @@ public class Blue2Auto extends LinearOpMode {
 
     public double increment = .07;
 
-    public placement myPlacement;
-
-    public alliance team;
-
-
     @Override public void runOpMode() {
         colorSensorL = hardwareMap.get(ColorSensor.class, "color sensor left");
         loweringJewelServo = hardwareMap.get(Servo.class, "lowering servo" );
         turningJewelServo = hardwareMap.get(Servo.class, "turning servo");
 
-        FrontLeftDrive = hardwareMap.get(DcMotor.class, "front_left");
-        FrontRightDrive = hardwareMap.get(DcMotor.class, "front_right");
-        BackLeftDrive = hardwareMap.get(DcMotor.class, "back_left");
-        BackRightDrive = hardwareMap.get(DcMotor.class, "back_right");
-
-        FrontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        FrontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        FrontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BackLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BackRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FrontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
 
         loweringJewelServo.setPosition(0);
         turningJewelServo.setPosition(.5);
-
-        FrontLeftDrive.setPower(0);
-        BackLeftDrive.setPower(0);
-        BackRightDrive.setPower(0);
-        FrontRightDrive.setPower(0);
 
         waitForStart();
 
@@ -100,22 +76,6 @@ public class Blue2Auto extends LinearOpMode {
             telemetry.addData("Turing Servo:", turningJewelServo.getPosition());
             sleep(1000);
             blue();
-
-            sleep(1500);
-            FrontLeftDrive.setPower(.55);
-            BackLeftDrive.setPower(.55);
-            BackRightDrive.setPower(.5);
-            FrontRightDrive.setPower(.5);
-
-            sleep(1000);
-
-            FrontLeftDrive.setPower(0);
-            BackLeftDrive.setPower(0);
-            BackRightDrive.setPower(0);
-            FrontRightDrive.setPower(0);
-
-            sleep(50000);
-
         }
         telemetry.addData("Running", "False");
         telemetry.update();
@@ -146,8 +106,6 @@ public class Blue2Auto extends LinearOpMode {
         telemetry.update();
     }
 
-
-
     public void blue() {
         telemetry.addData("Red:", colorSensorL.red());
         telemetry.addData("Blue:", colorSensorL.blue());
@@ -171,12 +129,10 @@ public class Blue2Auto extends LinearOpMode {
             loweringJewelServo.setPosition(.4);
             turningJewelServo.setPosition(.5);
             loweringJewelServo.setPosition(0);
-        } else {
-            turningJewelServo.setPosition(.46);
-            loweringJewelServo.setPosition(.95);
-            sleep(1000);
-
-            if (colorSensorL.red() > colorSensorL.blue()) {
+        }
+        else {
+            turningJewelServo.setPosition(.45);
+            if (colorSensorL.red() < colorSensorL.blue()) {
                 turningJewelServo.setPosition(RIGHT_POS);
                 telemetry.addLine("Moving Right");
 
@@ -184,7 +140,7 @@ public class Blue2Auto extends LinearOpMode {
                 loweringJewelServo.setPosition(0);
                 turningJewelServo.setPosition(.5);
             }
-            else if (colorSensorL.red() < colorSensorL.blue()){
+            else if (colorSensorL.red() > colorSensorL.blue()){
                 turningJewelServo.setPosition(LEFT_POS);
                 telemetry.addLine("Hitting Left");
 
@@ -198,16 +154,10 @@ public class Blue2Auto extends LinearOpMode {
                 loweringJewelServo.setPosition(0);
             }
         }
-//
+
         telemetry.addData("Servo Pos", turningJewelServo.getPosition());
         telemetry.update();
     }
 
-    public enum alliance {
-        RED, BLUE;
-    }
 
-    public enum placement {
-        LEFT, RIGHT, NONE;
-    }
 }

@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package OldCode;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -34,8 +34,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Blue Jewel ", group ="Jewel")
-public class BlueJewel extends LinearOpMode {
+@Autonomous(name="Red Jewel ", group ="Jewel")
+public class RedJewel extends LinearOpMode {
 
     public ColorSensor colorSensorL;
     public Servo loweringJewelServo;
@@ -75,7 +75,7 @@ public class BlueJewel extends LinearOpMode {
         while(opModeIsActive()) {
             telemetry.addData("Turing Servo:", turningJewelServo.getPosition());
             sleep(1000);
-            blue();
+            red();
         }
         telemetry.addData("Running", "False");
         telemetry.update();
@@ -106,31 +106,33 @@ public class BlueJewel extends LinearOpMode {
         telemetry.update();
     }
 
-    public void blue() {
+
+    public void red() {
         telemetry.addData("Red:", colorSensorL.red());
         telemetry.addData("Blue:", colorSensorL.blue());
 
         telemetry.update();
 
-        if (colorSensorL.red() < colorSensorL.blue()) {
+        if (colorSensorL.red() > colorSensorL.blue()) {
             turningJewelServo.setPosition(RIGHT_POS);
             telemetry.addLine("Moving Right");
 
             sleep(1000);
+
             loweringJewelServo.setPosition(.4);
             turningJewelServo.setPosition(.5);
             loweringJewelServo.setPosition(0);
         }
-        else if (colorSensorL.red() > colorSensorL.blue()){
+        else if (colorSensorL.red() < colorSensorL.blue()){
             turningJewelServo.setPosition(LEFT_POS);
             telemetry.addLine("Hitting Left");
 
             sleep(1000);
+
             loweringJewelServo.setPosition(.4);
             turningJewelServo.setPosition(.5);
             loweringJewelServo.setPosition(0);
-        }
-        else {
+        } else {
             turningJewelServo.setPosition(.45);
             if (colorSensorL.red() < colorSensorL.blue()) {
                 turningJewelServo.setPosition(RIGHT_POS);
@@ -154,7 +156,6 @@ public class BlueJewel extends LinearOpMode {
                 loweringJewelServo.setPosition(0);
             }
         }
-
         telemetry.addData("Servo Pos", turningJewelServo.getPosition());
         telemetry.update();
     }

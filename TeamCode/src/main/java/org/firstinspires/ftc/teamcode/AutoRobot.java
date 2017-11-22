@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 public class AutoRobot {
 
     public ColorSensor colorSensorL;
+
     public Servo loweringJewelServo;
     public Servo turningJewelServo;
 
@@ -27,15 +28,13 @@ public class AutoRobot {
     private DcMotor BackLeftDrive = null;
     private DcMotor BackRightDrive = null;
 
-    public double downPos = .9;
-    public final double UP_POS = 0.3;
+   // int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+   // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
+    public double downPos = .9;
+    public final double MID_UP_POS = 0;
     public final double LEFT_POS = .30;
     public final double RIGHT_POS = .70;
-
-    public final double MIDDLE_POS = .5;
-
-    public double increment = .07;
 
     // Telemetry
     public static Telemetry telemetry;
@@ -105,94 +104,43 @@ public class AutoRobot {
         telemetry.update();
     }
 
-
-
-    public void run() {
-        telemetry.addData("Red:", colorSensorL.red());
-        telemetry.addData("Blue:", colorSensorL.blue());
-
-        telemetry.update();
-
-        if (colorSensorL.red() < colorSensorL.blue()) {
-            turningJewelServo.setPosition(RIGHT_POS);
-            telemetry.addLine("Moving Right");
-
-            opMode.sleep(1000);
-            loweringJewelServo.setPosition(.4);
-            turningJewelServo.setPosition(.5);
-            loweringJewelServo.setPosition(0);
-        }
-        else if (colorSensorL.red() > colorSensorL.blue()){
-            turningJewelServo.setPosition(LEFT_POS);
-            telemetry.addLine("Hitting Left");
-
-            opMode.sleep(1000);
-            loweringJewelServo.setPosition(.4);
-            turningJewelServo.setPosition(.5);
-            loweringJewelServo.setPosition(0);
-        } else {
-            turningJewelServo.setPosition(.46);
-            loweringJewelServo.setPosition(.95);
-            opMode.sleep(1000);
-
-            if (colorSensorL.red() > colorSensorL.blue()) {
-                turningJewelServo.setPosition(RIGHT_POS);
-                telemetry.addLine("Moving Right");
-
-                opMode.sleep(1000);
-                loweringJewelServo.setPosition(0);
-                turningJewelServo.setPosition(.5);
-            }
-            else if (colorSensorL.red() < colorSensorL.blue()){
-                turningJewelServo.setPosition(LEFT_POS);
-                telemetry.addLine("Hitting Left");
-
-                opMode.sleep(1000);
-                loweringJewelServo.setPosition(0);
-                turningJewelServo.setPosition(.5);
-            }
-            else {
-                loweringJewelServo.setPosition(.4);
-                turningJewelServo.setPosition(.5);
-                loweringJewelServo.setPosition(0);
-            }
-        }
-//
-        telemetry.addData("Servo Pos", turningJewelServo.getPosition());
-        telemetry.update();
-    }
-
-    public void red() {
+    public void jewel(boolean isRed) {
         telemetry.addData("Red:", colorSensorL.red());
         telemetry.addData("Blue:", colorSensorL.blue());
 
         telemetry.update();
 
         if (colorSensorL.red() > colorSensorL.blue()) {
-            turningJewelServo.setPosition(RIGHT_POS);
-            telemetry.addLine("Moving Right");
 
+            if (isRed) {
+                turningJewelServo.setPosition(RIGHT_POS);
+                telemetry.addLine("Moving Right");
+            } else {
+                turningJewelServo.setPosition(LEFT_POS);
+                telemetry.addLine("Moving Left");
+            }
             opMode.sleep(1500);
 
-            loweringJewelServo.setPosition(.4);
+            loweringJewelServo.setPosition(MID_UP_POS);
             turningJewelServo.setPosition(.5);
             loweringJewelServo.setPosition(0);
         }
         else if (colorSensorL.red() < colorSensorL.blue()){
-            turningJewelServo.setPosition(LEFT_POS);
-            telemetry.addLine("Hitting Left");
 
-            opMode.sleep(1000);
+            if (isRed) {
+                turningJewelServo.setPosition(LEFT_POS);
+                telemetry.addLine("Moving Left");
+            } else {
+                turningJewelServo.setPosition(RIGHT_POS);
+                telemetry.addLine("Moving Right");
+            }
 
-            loweringJewelServo.setPosition(.4);
+            opMode.sleep(1500);
+
+            loweringJewelServo.setPosition(MID_UP_POS);
             turningJewelServo.setPosition(.5);
             loweringJewelServo.setPosition(0);
         }
-//        else {
-//            loweringJewelServo.setPosition(.4);
-//            turningJewelServo.setPosition(.5);
-//            loweringJewelServo.setPosition(0);
-//        }
         else {
             turningJewelServo.setPosition(.46);
             loweringJewelServo.setPosition(.95);
@@ -216,7 +164,7 @@ public class AutoRobot {
                 turningJewelServo.setPosition(.5);
             }
             else {
-                loweringJewelServo.setPosition(.4);
+                loweringJewelServo.setPosition(MID_UP_POS);
                 turningJewelServo.setPosition(.5);
                 loweringJewelServo.setPosition(0);
             }
