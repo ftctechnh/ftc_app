@@ -238,8 +238,10 @@ public class charlie_jr extends OpMode {
             glyphServo2.setPosition(0.5);
 
         }
-
-        }
+     telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
+     telemetry.addData("The value of the left servo is", glyphServo2.getPosition());
+     telemetry.update();
+    }
     }
 
 //---------------------------------------------------------------------------------------------
