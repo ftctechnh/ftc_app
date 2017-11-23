@@ -59,11 +59,11 @@ import static org.firstinspires.ftc.teamcode.Ftc12547Config.*;
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
  * the identity of Vuforia VuMarks encountered on the field. The code is structured as
- * a LinearOpMode. It shares much structure with {@link ConceptVuforiaNavigation}; we do not here
+ * a LinearOpMode. It shares much structure with {ConceptVuforiaNavigation}; we do not here
  * duplicate the core Vuforia documentation found there, but rather instead focus on the
  * differences between the use of Vuforia for navigation vs VuMark identification.
  *
- * @see ConceptVuforiaNavigation
+ * ConceptVuforiaNavigation
  * @see VuforiaLocalizer
  * @see VuforiaTrackableDefaultListener
  * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
@@ -72,7 +72,7 @@ import static org.firstinspires.ftc.teamcode.Ftc12547Config.*;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  *
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained in {@link ConceptVuforiaNavigation}.
+ * is explained in {ConceptVuforiaNavigation}.
  */
 
 @Autonomous(name="Team12547: Full Task", group ="Autonomous")
@@ -114,7 +114,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
-
+        // step (-1)
         RelicRecoveryVuMark vuMark = vuMarkIdentificationTask();
 
         // Todo: debugging, keep all telemetry. This could be removed in competation.
@@ -138,7 +138,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         int jewelColor = (sensorColor.red() > COLOR_THRESHOLD) ? Color.RED : Color.BLUE;
         telemetry.addData("Blue ", sensorColor.blue());
         telemetry.addData("Red ", sensorColor.red());
-        telemetry.addData("Jewel color: ", (jewelColor==Color.RED) ? "Red" : "Blue");
+        telemetry.addData("Jewel color: ", (jewelColor == Color.RED) ? "Red" : "Blue");
         telemetry.update();
         sleep(ONE_SECOND_IN_MIL);
 
@@ -154,66 +154,169 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
              * a. Color sensor of team 12547 is mounted facing backward.
              * b. Team color jewel is on the back side in this condition.
              */
-            MoveForwardForJewelDisposition();
+            if (TEAM_COLOR == Color.RED) {
+                MoveBackwardForJewelDisposition();
+            }else{
+                MoveForwardForJewelDisposition();
+            }
+
+            JEWEL_DISPOSITION_DISTANCE_INCHES -= 4;
 
             // (3) Raise the servo that control the arm to move the JewelMovingArm
             raiseJewelMovingArmServo();
             sleep(ONE_SECOND_IN_MIL);
 
-            // (4) Adjust distance to the rack by the driving distance to kick the jewel.
-            rack_distance -= JEWEL_DISPOSITION_DISTANCE_INCHES;
+            // (4a) Turn 180 degrees for red in order to face rack.
+            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -ONE_EIGHTY_DEGREE_TURN, ONE_EIGHTY_DEGREE_TURN, 5);
 
         } else {
             // (2) Move backward if the jewel is not in the team color
-            MoveBackwardForJewelDisposition();
+            if (TEAM_COLOR == Color.RED) {
+                MoveForwardForJewelDisposition();
+            }else{
+                MoveBackwardForJewelDisposition();
+            }
 
-            // Raise the servo that control the arm to move the JewelMovingArm
+            //  (3) Raise the servo that control the arm to move the JewelMovingArm
             raiseJewelMovingArmServo();
             sleep(ONE_SECOND_IN_MIL);
 
-            // (4) Adjust distance to the rack by the driving distance to kick the jewel.
-            rack_distance += JEWEL_DISPOSITION_DISTANCE_INCHES;
         }
         sleep(ONE_SECOND_IN_MIL);
 
         // (5) Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        // Note: IT IS DIFFERENT DEPENDING ON THE POSITION OF THE THING
 
-        telemetry.addData("Moving to the final destination", rack_distance);
-        encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
-                rack_distance,
-                rack_distance,
-                DESTINATION_TIMEOUT_SECONDS);
+        if (TEAM_COLOR == Color.BLUE) {
+            if (TOWARDS_AUDIENCE == true) {
+                telemetry.addData("Moving to the final destination", rack_distance);
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
+                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
+                        DESTINATION_TIMEOUT_SECONDS);
 
-        stopMotorsAndRestShortly();
+                stopMotorsAndRestShortly();
 
-        // (6) turn
-        encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, 0, 5, DESTINATION_TURN_TIMEOUT_SECONDS);
-        stopMotorsAndRestShortly();
+                // (6) turn left
+                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                stopMotorsAndRestShortly();
 
-        // (7) push the block into rack
-        encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
-                DISTANCE_TO_RACK_INCHES,
-                DISTANCE_TO_RACK_INCHES,
-                TO_RACK_TIMEOUT_SECONDS);
+                // (7) push the block into rack
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        DISTANCE_TO_RACK_INCHES,
+                        DISTANCE_TO_RACK_INCHES,
+                        TO_RACK_TIMEOUT_SECONDS);
+            }else{
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, DESTINATION_TIMEOUT_SECONDS);
+                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                telemetry.addData("Moving to the final destination", rack_distance);
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        rack_distance,
+                        rack_distance,
+                        DESTINATION_TIMEOUT_SECONDS);
 
+                stopMotorsAndRestShortly();
+
+                // (6) turn left
+                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                stopMotorsAndRestShortly();
+
+                // (7) push the block into rack
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        DISTANCE_TO_RACK_INCHES,
+                        DISTANCE_TO_RACK_INCHES,
+                        TO_RACK_TIMEOUT_SECONDS);
+            }
+        }else{
+            if (TOWARDS_AUDIENCE == true) {
+                telemetry.addData("Moving to the final destination", rack_distance);
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
+                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
+                        DESTINATION_TIMEOUT_SECONDS);
+
+                stopMotorsAndRestShortly();
+
+                // (6) turn right
+                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                stopMotorsAndRestShortly();
+
+                // (7) push the block into rack
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        DISTANCE_TO_RACK_INCHES,
+                        DISTANCE_TO_RACK_INCHES,
+                        TO_RACK_TIMEOUT_SECONDS);
+            }else{
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, DESTINATION_TIMEOUT_SECONDS);
+                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                telemetry.addData("Moving to the final destination", rack_distance);
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        rack_distance,
+                        rack_distance,
+                        DESTINATION_TIMEOUT_SECONDS);
+
+                stopMotorsAndRestShortly();
+
+                // (6) turn right
+                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                stopMotorsAndRestShortly();
+
+                // (7) push the block into rack
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
+                        DISTANCE_TO_RACK_INCHES,
+                        DISTANCE_TO_RACK_INCHES,
+                        TO_RACK_TIMEOUT_SECONDS);
+            }
+        }
         telemetry.addData("Mission ", "Complete");
         telemetry.update();
     }
 
     private double calcFinalDistanceByVuMark(RelicRecoveryVuMark vuMark) {
         //TODO: default to middle. Is this ideal?
-        if (vuMark == null) return START_TO_MIDDLE_DISTANCE_INCHES;
+        if (vuMark == RelicRecoveryVuMark.UNKNOWN) return START_TO_MIDDLE_DISTANCE_INCHES;
         switch (vuMark) {
             case CENTER:
-                return START_TO_MIDDLE_DISTANCE_INCHES;
-            //TODO: THis may need flip
+                if (TOWARDS_AUDIENCE == true) {
+                    return START_TO_MIDDLE_DISTANCE_INCHES;
+                }else{
+                    return START_TO_MIDDLE_DISTANCE_INCHES_2;
+                }
             case LEFT:
-                return START_TO_NEAREST_DISTANCE_INCHES;
+                if (TEAM_COLOR == Color.BLUE) {
+                    if (TOWARDS_AUDIENCE == true) {
+                        return START_TO_NEAREST_DISTANCE_INCHES;
+                    }else{
+                        return START_TO_NEAREST_DISTANCE_INCHES_2;
+                    }
+                }else{
+                    if (TOWARDS_AUDIENCE == true) {
+                        return START_TO_FURTHEST_DISTANCE_INCHES;
+                    }else{
+                        return START_TO_FURTHEST_DISTANCE_INCHES_2;
+                    }
+                }
             case RIGHT:
-                return START_TO_FARREST_DISTANCE_INCHES;
+                if (TEAM_COLOR == Color.BLUE) {
+                    if (TOWARDS_AUDIENCE == true) {
+                        return START_TO_FURTHEST_DISTANCE_INCHES;
+                    }else{
+                        return START_TO_FURTHEST_DISTANCE_INCHES_2;
+                    }
+                }else{
+                    if (TOWARDS_AUDIENCE == true) {
+                        return START_TO_NEAREST_DISTANCE_INCHES;
+                    }else{
+                        return START_TO_NEAREST_DISTANCE_INCHES_2;
+                    }
+                }
             default:
-                return START_TO_MIDDLE_DISTANCE_INCHES;
+                if (TOWARDS_AUDIENCE == true) {
+                    return START_TO_MIDDLE_DISTANCE_INCHES;
+                }else{
+                    return START_TO_MIDDLE_DISTANCE_INCHES_2;
+                }
         }
     }
 

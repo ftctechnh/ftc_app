@@ -14,7 +14,7 @@ public class Ftc12547Config {
      * Set the team to the right color. BLUE or RED
      */
     public static final int     TEAM_COLOR                          = Color.RED;
-
+    public static final boolean TOWARDS_AUDIENCE                    = true;
     /**
      * VuMark configurations
      */
@@ -38,7 +38,7 @@ public class Ftc12547Config {
     /**
      * Color sensor configuration
      */
-    public static final int COLOR_THRESHOLD                         = 50;
+    public static final int COLOR_THRESHOLD                         = 50/2;
 
     // sometimes it helps to multiply the raw RGB values with a scale factor
     // to amplify/attentuate the measured values.
@@ -53,16 +53,24 @@ public class Ftc12547Config {
     public static final double ENCODER_RUN_SPEED                    = 0.1;
     public static final int REST_AFTER_ENCODER_RUN_MIL_SECONDS      = ONE_SECOND_IN_MIL / 4;
 
-    public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 2;
+    public static double JEWEL_DISPOSITION_DISTANCE_INCHES          = 2;
     public static final double JEWEL_DISPOSITION_TIMEOUT_SECONDS    = 3;
+
+    public static final double TWO_FEET                             = 24;
 
     public static final double START_TO_NEAREST_DISTANCE_INCHES     = 28.5;
     public static final double START_TO_MIDDLE_DISTANCE_INCHES      = 36;
-    public static final double START_TO_FARREST_DISTANCE_INCHES     = 43.5;
+    public static final double START_TO_FURTHEST_DISTANCE_INCHES    = 43.5;
+    public static final double START_TO_NEAREST_DISTANCE_INCHES_2   = 2.5;
+    public static final double START_TO_MIDDLE_DISTANCE_INCHES_2    = 10;
+    public static final double START_TO_FURTHEST_DISTANCE_INCHES_2  = 17.5;
     public static final double DESTINATION_TIMEOUT_SECONDS          = 50;
 
     public static final double DESTINATION_TURN_SPEED               = 0.1;
     public static final double DESTINATION_TURN_TIMEOUT_SECONDS     = 5;
+
+    public static final double NINETY_DEGREE_TURN                   = 16 * 3.1415926 / 4;
+    public static final double ONE_EIGHTY_DEGREE_TURN               = 16 * 3.1415926 / 2;
 
     public static final double DISTANCE_TO_RACK_INCHES              = 12;
     public static final double TO_RACK_TIMEOUT_SECONDS              = 12;

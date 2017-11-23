@@ -39,11 +39,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
  * the identity of Vuforia VuMarks encountered on the field. The code is structured as
- * a LinearOpMode. It shares much structure with {@link ConceptVuforiaNavigation}; we do not here
+ * a LinearOpMode. It shares much structure with {ConceptVuforiaNavigation}; we do not here
  * duplicate the core Vuforia documentation found there, but rather instead focus on the
  * differences between the use of Vuforia for navigation vs VuMark identification.
  *
- * @see ConceptVuforiaNavigation
+ * ConceptVuforiaNavigation
  * @see VuforiaLocalizer
  * @see VuforiaTrackableDefaultListener
  * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
@@ -52,7 +52,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  *
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained in {@link ConceptVuforiaNavigation}.
+ * is explained in {ConceptVuforiaNavigation}.
  */
 
 @Autonomous(name="Team12547: Calibration Task", group ="Autonomous")
