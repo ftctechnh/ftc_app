@@ -48,7 +48,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class Autonomous_General extends LinearOpMode {
 
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
-    public static double DRIVE_GEAR_REDUCTION;     // 56/24
+    public static double WHEEL_REV_PER_MOTOR_REV;     // 56/24
     public static double WHEEL_PERIMETER_CM;     // For figuring circumference
     public static double COUNTS_PER_CM;
     double P_TURN_COEFF = 0.1;
@@ -76,10 +76,10 @@ public class Autonomous_General extends LinearOpMode {
 
     public void initiate() {
         COUNTS_PER_MOTOR_REV = 1440;
-        DRIVE_GEAR_REDUCTION = 1.5;
-        WHEEL_PERIMETER_CM = 2*4.4* Math.PI;
+        WHEEL_REV_PER_MOTOR_REV = 1.5;
+        WHEEL_PERIMETER_CM = 2*5.08* Math.PI;
         COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
-                (WHEEL_PERIMETER_CM * DRIVE_GEAR_REDUCTION);
+                (WHEEL_PERIMETER_CM * WHEEL_REV_PER_MOTOR_REV);
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
