@@ -88,7 +88,7 @@ public class Delta_TeleOp extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServo2.setPosition(-0.5);
+        glyphServo2.setPosition(0.0);
         glyphServo1.setPosition(0.5);
 
 
@@ -221,19 +221,19 @@ public class Delta_TeleOp extends OpMode {
 //opening the claw
 
             // glyph servo 1 is the right claw
-            glyphServo1.setPosition(0.25);
+            glyphServo1.setPosition(0.0);
 
             // glyph servo 2 is the left claw
-            glyphServo2.setPosition(0.25);
+            glyphServo2.setPosition(0.5);
         }
         else if (Right_Bumper && left_claw == 0.25 && right_claw == 0.25){
 
-            glyphServo1.setPosition(0.0);
-            glyphServo2.setPosition(0.5);
+            glyphServo1.setPosition(-0.25);
+            glyphServo2.setPosition(0.75);
         }
 
-        telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
-        telemetry.addData("The value of the left servo is", glyphServo2.getPosition());
+        telemetry.addData("The value of the right servo is", left_claw);
+        telemetry.addData("The value of the left servo is", right_claw);
         telemetry.update();
     }
 }
