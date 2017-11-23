@@ -40,8 +40,8 @@ public class Delta_Jr extends OpMode {
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServo2.setPosition(-0.5);
-        glyphServo1.setPosition(0.5);
+        glyphServo2.setPosition(0.25);
+        glyphServo1.setPosition(0.25);
 
     }
 
@@ -124,17 +124,19 @@ public class Delta_Jr extends OpMode {
         if (Right_Bumper && left_claw == 0.5 && right_claw == 0.0) {
 
 //opening the claw
-
+           telemetry.addData("Is the claw opening loop?", glyphServo1.getPosition());
+           telemetry.update();
             // glyph servo 1 is the right claw
-            glyphServo1.setPosition(0.25);
+            glyphServo1.setPosition(0.0);
 
             // glyph servo 2 is the left claw
-            glyphServo2.setPosition(0.25);
+            glyphServo2.setPosition(0.5);
         }
         else if (Right_Bumper && left_claw == 0.25 && right_claw == 0.25){
-
-            glyphServo1.setPosition(0.0);
-            glyphServo2.setPosition(0.5);
+            telemetry.addData("Is the claw closed?", glyphServo1.getPosition());
+            telemetry.update();
+            glyphServo1.setPosition(-0.25);
+            glyphServo2.setPosition(0.75);
         }
 
         telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
