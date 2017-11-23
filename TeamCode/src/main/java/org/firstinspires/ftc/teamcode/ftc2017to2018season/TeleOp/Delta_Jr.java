@@ -23,6 +23,8 @@ public class Delta_Jr extends OpMode {
     public int IVFSM;
     DcMotor slideMotor;
 
+    int servoPress = 0;
+
 
     @Override
     public void init() {
@@ -39,8 +41,9 @@ public class Delta_Jr extends OpMode {
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
-
-        glyphServo2.setPosition(0.25);
+        //left servo
+        glyphServo2.setPosition(0.75);
+        //right servo
         glyphServo1.setPosition(0.25);
 
     }
@@ -120,27 +123,32 @@ public class Delta_Jr extends OpMode {
         Boolean Right_Bumper = (gamepad1.right_bumper);
         double right_claw = (glyphServo1.getPosition());
         double left_claw = (glyphServo2.getPosition());
+        if (Right_Bumper) {
+            servoPress++;
 
-        if (Right_Bumper && left_claw == 0.75 && right_claw == -0.25) {
+            //open
+            if (servoPress % 2 == 0) {
 
 //opening the claw
-           telemetry.addData("Is the claw opening loop?", glyphServo1.getPosition());
-           telemetry.update();
-            // glyph servo 1 is the right claw
-            glyphServo1.setPosition(0.0);
+                telemetry.addData("Is the claw opening loop?", glyphServo1.getPosition());
+                telemetry.update();
+                // glyph servo 1 is the right claw
+                glyphServo1.setPosition(0.0);
 
-            // glyph servo 2 is the left claw
-            glyphServo2.setPosition(0.5);
-        }
-        else if (Right_Bumper && left_claw == 0.5 && right_claw == 0.0){
-            telemetry.addData("Is the claw closed?", glyphServo1.getPosition());
-            telemetry.update();
-            glyphServo1.setPosition(-0.25);
-            glyphServo2.setPosition(0.75);
+                // glyph servo 2 is the left claw
+                glyphServo2.setPosition(0.5);
+
+                //close
+            } else if (servoPress % 2 == 1) {
+                telemetry.addData("Is the claw closed?", glyphServo1.getPosition());
+                telemetry.update();
+                glyphServo1.setPosition(0.25);
+                glyphServo2.setPosition(0.75);
+            }
         }
 
-        telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
-        telemetry.addData("The value of the left servo is", glyphServo2.getPosition());
+        telemetry.addData("The value of the right servo is", right_claw);
+        telemetry.addData("The value of the left servo is", left_claw);
         telemetry.update();
     }
 }
