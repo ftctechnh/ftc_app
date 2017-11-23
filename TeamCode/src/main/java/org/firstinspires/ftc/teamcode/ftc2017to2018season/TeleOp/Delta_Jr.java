@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Pahel and Rohan on 11/22/2017.
@@ -16,6 +17,12 @@ public class Delta_Jr extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
+    Servo glyphServo1;
+    Servo glyphServo2;
+    //Initial value for slide motor
+    public int IVFSM;
+    DcMotor slideMotor;
+
 
     @Override
     public void init() {
@@ -24,17 +31,25 @@ public class Delta_Jr extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+        glyphServo1 = hardwareMap.servo.get("glyphServo1");
+        glyphServo2 = hardwareMap.servo.get("glyphServo2");
+        slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        IVFSM = slideMotor.getCurrentPosition();
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+
+        glyphServo2.setPosition(-0.5);
+        glyphServo1.setPosition(0.5);
 
     }
 
 
     @Override
     public void loop() {
-
         FourWheelDrive();
+        slideMove();
+        glyphManipulator();
     }
 
 
@@ -86,5 +101,43 @@ public class Delta_Jr extends OpMode {
 
 
     }
-    
+    public void slideMove() {
+
+        IVFSM = slideMotor.getCurrentPosition();
+
+        if (gamepad2.right_stick_y > 0) {
+            slideMotor.setPower(gamepad2.right_stick_y);
+
+        } else if (gamepad2.right_stick_y < 0) {
+            slideMotor.setPower(-1);
+        } else {
+            slideMotor.setPower(0);
+        }
+    }
+
+    public void glyphManipulator() {
+        Boolean Right_Bumper = (gamepad1.right_bumper);
+        double right_claw = (glyphServo1.getPosition());
+        double left_claw = (glyphServo2.getPosition());
+
+        if (Right_Bumper && left_claw == 0.5 && right_claw == 0.0) {
+
+//opening the claw
+
+            // glyph servo 1 is the right claw
+            glyphServo1.setPosition(0.25);
+
+            // glyph servo 2 is the left claw
+            glyphServo2.setPosition(0.25);
+        }
+        else if (Right_Bumper && left_claw == 0.25 && right_claw == 0.25){
+
+            glyphServo1.setPosition(0.0);
+            glyphServo2.setPosition(0.5);
+        }
+
+        telemetry.addData("The value of the right servo is", glyphServo1.getPosition());
+        telemetry.addData("The value of the left servo is", glyphServo2.getPosition());
+        telemetry.update();
+    }
 }
