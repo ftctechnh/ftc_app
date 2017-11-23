@@ -24,7 +24,13 @@ public class Delta_Jr extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+
+        leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+        leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+
     }
+
+
     @Override
     public void loop() {
 
@@ -43,25 +49,25 @@ public class Delta_Jr extends OpMode {
         float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.right_trigger > 0) {
-
+        if (gamepad1.left_trigger > 0) {
+//strafing
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
-        } else if (gamepad1.left_trigger > 0) {
-
+        } else if (gamepad1.right_trigger > 0) {
+//strafing
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
 
         } else {
-            leftWheelMotorFront.setPower(leftY_gp1);
-            leftWheelMotorBack.setPower(leftY_gp1);
-            rightWheelMotorFront.setPower(rightY_gp1);
-            rightWheelMotorBack.setPower(rightY_gp1);
+            leftWheelMotorFront.setPower(rightY_gp1);
+            leftWheelMotorBack.setPower(rightY_gp1);
+            rightWheelMotorFront.setPower(leftY_gp1);
+            rightWheelMotorBack.setPower(leftY_gp1);
         }
 
         telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
