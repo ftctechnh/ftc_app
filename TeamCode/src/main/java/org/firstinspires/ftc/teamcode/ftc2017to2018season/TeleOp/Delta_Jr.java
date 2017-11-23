@@ -31,6 +31,7 @@ public class Delta_Jr extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+
         glyphServo1 = hardwareMap.servo.get("glyphServo1");
         glyphServo2 = hardwareMap.servo.get("glyphServo2");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
@@ -85,11 +86,11 @@ public class Delta_Jr extends OpMode {
             rightWheelMotorBack.setPower(leftY_gp1);
         }
 
-        telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-        telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-        telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-        telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        telemetry.update();
+        //telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
+        //telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
+        //telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
+        //telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
+        //telemetry.update();
         //telemetry.addData("",)
        //telemetry.update();
         //These were going to be used to find the values of triggers but we couldn't acomplish it
