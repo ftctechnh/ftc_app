@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Pahel and Rohan on 11/22/2017.
@@ -16,6 +17,14 @@ public class Delta_Jr extends OpMode {
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
+    Servo glyphServo1;
+    Servo glyphServo2;
+    //Initial value for slide motor
+    public int IVFSM;
+    DcMotor slideMotor;
+
+    int servoPress = 0;
+
 
     @Override
     public void init() {
@@ -25,16 +34,26 @@ public class Delta_Jr extends OpMode {
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
 
+        glyphServo1 = hardwareMap.servo.get("glyphServo1");
+        glyphServo2 = hardwareMap.servo.get("glyphServo2");
+        slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        IVFSM = slideMotor.getCurrentPosition();
+
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        //left servo
+        glyphServo2.setPosition(0.75);
+        //right servo
+        glyphServo1.setPosition(0.25);
 
     }
 
 
     @Override
     public void loop() {
-
         FourWheelDrive();
+        slideMove();
+        glyphManipulator();
     }
 
 
@@ -70,11 +89,11 @@ public class Delta_Jr extends OpMode {
             rightWheelMotorBack.setPower(leftY_gp1);
         }
 
-        telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-        telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-        telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-        telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        telemetry.update();
+        //telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
+        //telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
+        //telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
+        //telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
+        //telemetry.update();
         //telemetry.addData("",)
        //telemetry.update();
         //These were going to be used to find the values of triggers but we couldn't acomplish it
@@ -86,5 +105,50 @@ public class Delta_Jr extends OpMode {
 
 
     }
-    
+    public void slideMove() {
+
+        IVFSM = slideMotor.getCurrentPosition();
+
+        if (gamepad2.right_stick_y > 0) {
+            slideMotor.setPower(gamepad2.right_stick_y);
+
+        } else if (gamepad2.right_stick_y < 0) {
+            slideMotor.setPower(-1);
+        } else {
+            slideMotor.setPower(0);
+        }
+    }
+
+    public void glyphManipulator() {
+        Boolean Right_Bumper = (gamepad1.right_bumper);
+        double right_claw = (glyphServo1.getPosition());
+        double left_claw = (glyphServo2.getPosition());
+        if (Right_Bumper) {
+            servoPress++;
+
+            //open
+            if (servoPress % 2 == 0) {
+
+//opening the claw
+                telemetry.addData("Is the claw opening loop?", glyphServo1.getPosition());
+                telemetry.update();
+                // glyph servo 1 is the right claw
+                glyphServo1.setPosition(0.0);
+
+                // glyph servo 2 is the left claw
+                glyphServo2.setPosition(0.5);
+
+                //close
+            } else if (servoPress % 2 == 1) {
+                telemetry.addData("Is the claw closed?", glyphServo1.getPosition());
+                telemetry.update();
+                glyphServo1.setPosition(0.25);
+                glyphServo2.setPosition(0.75);
+            }
+        }
+
+        telemetry.addData("The value of the right servo is", right_claw);
+        telemetry.addData("The value of the left servo is", left_claw);
+        telemetry.update();
+    }
 }
