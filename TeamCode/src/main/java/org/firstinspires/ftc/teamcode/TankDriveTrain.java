@@ -11,6 +11,8 @@ public class TankDriveTrain {
     private double x0;
     private double x1;
     private double powerScale = (1/1.3);
+    private int gear = 1;
+    public boolean isPressed = false;
 
     public TankDriveTrain(DcMotor motor0, DcMotor motor1) {
 
@@ -24,27 +26,39 @@ public class TankDriveTrain {
 
         switch(gear) {
             case 1:
-                powerScale = (1 / 1.7);
+                powerScale = (0.5);
                 break;
             case 2:
-                powerScale = (1 / 1.3);
+                powerScale = (1/1.7);
                 break;
             case 3:
-                powerScale = (1);
+                powerScale = (1/1.3);
+                break;
+            default:
+                powerScale = (1 / 1.3);
                 break;
         }
     }
 
     public void dpad(boolean up, boolean down)
     {
-        int gear = 1;
-        if (gear >= 1 && gear <= 3) {
-            if (up)
-                gear++;
-            else if (down)
-                gear--;
-            gearSwitch(gear);
+        if (up && gear < 3 && !isPressed) {
+
+            gear++;
+            isPressed = true;
+
+        } else if (down && gear > 1 && !isPressed) {
+
+            gear--;
+            isPressed = true;
+
         }
+
+        if (!up && !down) {
+            isPressed = false;
+        }
+
+        gearSwitch(gear);
     }
 
     public void move(double motor0Power, double motor1Power) {
@@ -61,5 +75,8 @@ public class TankDriveTrain {
             motorRight.setPower(MOTOR_1_DIRECTION * -x1);
         }
     }
+
+    public double getPowerScale() { return powerScale; }
+    public double getGear() { return gear; }
 
 }
