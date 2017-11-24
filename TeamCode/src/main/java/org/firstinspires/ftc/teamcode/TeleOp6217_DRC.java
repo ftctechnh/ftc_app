@@ -23,20 +23,14 @@ import java.lang.Math;
 
 public class TeleOp6217_DRC extends OpMode
 {
-/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel,
-BG = Ball Grabber, WBT = Wiffle Ball Thrower, BGL = Ball Grabber Lifter, BP = Blast Plate, CS1 = color sensor 1*/
+/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2 */
     DcMotor motorFR;
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-    DcMotor motorBG;
-//    DcMotor motorWBT1;
-//    DcMotor motorBGL;
-//    DcMotor motorWBT2;
-//    CRServo Conveyor1;
-//    CRServo Conveyor2;
-//    CRServo Sweeper1;
-//    CRServo Sweeper2;
+    DcMotor motorLift;
+    DcMotor motorCon1;
+    DcMotor motorCon2;
 
     IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;
