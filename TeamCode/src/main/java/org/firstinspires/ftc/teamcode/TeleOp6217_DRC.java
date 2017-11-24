@@ -23,7 +23,7 @@ import java.lang.Math;
 
 public class TeleOp6217_DRC extends OpMode
 {
-/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2 */
+/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2*/
     DcMotor motorFR;
     DcMotor motorFL;
     DcMotor motorBR;
@@ -60,23 +60,6 @@ public class TeleOp6217_DRC extends OpMode
 
         modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
-
-
-//        motorWBT1 = hardwareMap.dcMotor.get("c3_motor1");
-//        motorWBT2 = hardwareMap.dcMotor.get("c3_motor2");
-//        motorWBT2.setDirection(DcMotor.Direction.REVERSE);
-//        motorBGL = hardwareMap.dcMotor.get("c4_motor1");
-//        motorBG = hardwareMap.dcMotor.get("c4_motor2");
-//        Conveyor1 = hardwareMap.crservo.get("Servo1");
-//        Conveyor1.setDirection(CRServo.Direction.FORWARD);
-//        Sweeper1 = hardwareMap.crservo.get("Servo2");
-//        Sweeper2 = hardwareMap.crservo.get("Servo4");
-//        Conveyor2 = hardwareMap.crservo.get("Servo3");
-//        Conveyor2.setDirection(CRServo.Direction.REVERSE);
-
-
-
-
        /* telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
         telemetry.addData("WBG",  "Starting at %7d",
@@ -147,15 +130,15 @@ public class TeleOp6217_DRC extends OpMode
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-/*
+
         // use ball thrower
         if (a) {
-            Sweeper1.setPower(-1);
-            Conveyor1.setPower(1);
-            Conveyor2.setPower(1);
+            motorCon1.setPower(1);
+            motorCon2.setPower(1);
         }
 
 
+        /*
         else {
             Sweeper1.setPower(0);
 
@@ -201,16 +184,15 @@ public class TeleOp6217_DRC extends OpMode
             }
 
         }
+        */
         if (UP) {
-            motorBGL.setPower(1.0);
+            motorCon2.setPower(0);
         }
 
-        else if (DOWN)  {
-            motorBGL.setPower(-1.0);
+       /* else if (DOWN)  {
         }
 
         else {
-            motorBGL.setPower(0);
         }
 
         //ball Grabber
@@ -228,7 +210,6 @@ public class TeleOp6217_DRC extends OpMode
             motorBG.setPower(0);
         }
 
- */
 
         //  pivot left
 
@@ -240,6 +221,7 @@ public class TeleOp6217_DRC extends OpMode
             motorBR.setPower(-LT);
         }
 
+*/
         //
 
         //  pivot right
