@@ -18,32 +18,27 @@ public class AutonomousDrive_01_0 extends LinearOpMode
     double y = 0;
     DcMotor lift = hardwareMap.dcMotor.get("lift");
     Servo glyph = hardwareMap.servo.get("glyph");
-    DcMotor extend = hardwareMap.dcMotor.get("extend");
     double open = 0.7;
     double close = 0.05;
     ElapsedTime timer = new ElapsedTime();
 
-    double t1 = 4.5, t2 = 2.0, t3 = 3.0, t4 = 4.0;
+    double t1 = 4.5, t2 = 0, t3 = 0, t4 = 0;
     double time1 = t1, time2 = time1 + t2, time3 = time2 + t3, time4 = time3 + t4;
 
     @Override
     public void runOpMode()
     {
         engine = new DriveEngine(hardwareMap);
-        extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        extend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        extend.setDirection(DcMotor.Direction.FORWARD);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
 
-        extend.setTargetPosition(1); //how far out the arm will go
         while (opModeIsActive())
         {
             double time = timer.time();
             if(time < time1){
-                x = .5;
-                y = .5;
+                x = 0;
+                y = 1;
             }
             else if(time < time2){
                 x = 0;
@@ -51,8 +46,6 @@ public class AutonomousDrive_01_0 extends LinearOpMode
                 lift.setPower(-.5);
             }
             else if(time < time3){
-                lift.setPower(0);
-                glyph.setPosition(open);
             }
             else if(time < time4){
                 x = 1;
