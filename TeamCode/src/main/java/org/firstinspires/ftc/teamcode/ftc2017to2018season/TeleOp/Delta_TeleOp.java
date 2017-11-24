@@ -16,7 +16,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "DeltaTeleOp")
 //@Disabled
 public class Delta_TeleOp extends OpMode {
-
+/*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
+* This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
+* simple program and could work on a different robot with simple debugging and configuration.*/
 
     /*
         ---------------------------------------------------------------------------------------------
@@ -28,8 +30,8 @@ public class Delta_TeleOp extends OpMode {
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
     DcMotor slideMotor;
-    Servo glyphServo1;
-    Servo glyphServo2;
+    Servo glyphServoRight;
+    Servo glyphServoLeft;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -79,8 +81,8 @@ public class Delta_TeleOp extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
-        glyphServo1 = hardwareMap.servo.get("glyphServo1");
-        glyphServo2 = hardwareMap.servo.get("glyphServo2");
+        glyphServoRight = hardwareMap.servo.get("glyphServo1");
+        glyphServoLeft = hardwareMap.servo.get("glyphServo2");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         IVFSM = slideMotor.getCurrentPosition();
 
@@ -88,8 +90,8 @@ public class Delta_TeleOp extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServo2.setPosition(0.0);
-        glyphServo1.setPosition(0.5);
+        glyphServoLeft.setPosition(0.0);
+        glyphServoRight.setPosition(0.5);
 
 
 //This is closed-loop speed control. Encoders are required for this mode.
@@ -213,23 +215,23 @@ public class Delta_TeleOp extends OpMode {
 
     public void glyphManipulator() {
         Boolean Right_Bumper = (gamepad1.right_bumper);
-        double right_claw = (glyphServo1.getPosition());
-        double left_claw = (glyphServo2.getPosition());
+        double right_claw = (glyphServoRight.getPosition());
+        double left_claw = (glyphServoLeft.getPosition());
 
         if (Right_Bumper && left_claw == 0.5 && right_claw == 0.0) {
 
 //opening the claw
 
             // glyph servo 1 is the right claw
-            glyphServo1.setPosition(0.0);
+            glyphServoRight.setPosition(0.0);
 
             // glyph servo 2 is the left claw
-            glyphServo2.setPosition(0.5);
+            glyphServoLeft.setPosition(0.5);
         }
         else if (Right_Bumper && left_claw == 0.25 && right_claw == 0.25){
 
-            glyphServo1.setPosition(-0.25);
-            glyphServo2.setPosition(0.75);
+            glyphServoRight.setPosition(-0.25);
+            glyphServoLeft.setPosition(0.75);
         }
 
         telemetry.addData("The value of the right servo is", left_claw);

@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "Delta_Jr")
 
 public class Delta_Jr extends OpMode {
+    /*Delta_Jr is designed for the smaller robot with AndyMark Mecanum wheels. This robot consits of Tetrix beams and Tetrix screws.
+    This TeleOp is tested and run with this robot so if it is used with another robot it may not work.*/
 
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
