@@ -139,7 +139,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             target = robot.lift.getCurrentPosition() + 3614;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.45);
+            robot.lift.setPower(0.6);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
                 }
             robot.lift.setPower(0.0);
@@ -148,7 +148,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             target = robot.lift.getCurrentPosition() - 3614;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.45);
+            robot.lift.setPower(0.6);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
            }
             robot.lift.setPower(0.0);
