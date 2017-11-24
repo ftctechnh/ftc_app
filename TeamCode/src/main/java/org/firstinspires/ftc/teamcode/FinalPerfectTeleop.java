@@ -90,9 +90,8 @@ MasterHardwareClass robot = new MasterHardwareClass();
             } else {
                 robot.verticalArmMotor.setPower(0);
             }
+
             /*These values are used for the drive*/
-
-
             double frontLeft;
             double frontRight;
             double backLeft;
@@ -118,7 +117,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                     robot.FrontLeftPower = frontLeft;
                 }
                 if (robot.FrontRightPower != frontRight) {
-                    robot.frontRightMotor.setPower(-v2);
+                    robot.frontRightMotor.setPower(v2);
                     robot.FrontRightPower = frontRight;
                 }
                 if (robot.BackLeftPower != backLeft) {
@@ -126,10 +125,9 @@ MasterHardwareClass robot = new MasterHardwareClass();
                     robot.BackLeftPower = backLeft;
                 }
                 if (robot.BackRightPower != backRight)
-                    robot.backRightMotor.setPower(-v4);
-                robot.BackRightPower = backRight;
+                    robot.backRightMotor.setPower(v4);
+                    robot.BackRightPower = backRight;
             }
-            //Hey there!
 
             if (gamepad1.left_bumper) {
                 double GLY = -gamepad1.left_stick_y / 5;
@@ -146,7 +144,8 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 backLeft = v3;
                 backRight = v4;
 
-                setWheelPower(v1, v2, v3, v4);
+
+                setWheelPower(-v1, v2, -v3, v4);
             } else {
                 double GLY = -gamepad1.left_stick_y;
                 double GRX = gamepad1.right_stick_x;
@@ -162,7 +161,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 backLeft = v3;
                 backRight = v4;
 
-                setWheelPower(v1, v2, v3, v4);
+                setWheelPower(-v1, v2, -v3, v4);
             }
         }
     }
@@ -200,7 +199,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
         }
         if (robot.BackRightPower != backRight)
             robot.backRightMotor.setPower(br);
-        robot.BackRightPower = backRight;
+            robot.BackRightPower = backRight;
     }
 }
 

@@ -17,13 +17,12 @@ public class RotationHardwareClass {
     Servo gemServo;
 
     /* local OpMode members. */
-    public DcMotor frontLeftMotor = null;
-    public DcMotor frontRightMotor = null;
-    public DcMotor backLeftMotor = null;
-    public DcMotor backRightMotor = null;
-    public DcMotor verticalArmMotor = null;
-    public CRServo clawServo = null;
-
+    public DcMotor frontLeftMotor;
+    public DcMotor frontRightMotor;
+    public DcMotor backLeftMotor;
+    public DcMotor backRightMotor;
+    public DcMotor verticalArmMotor;
+    public CRServo clawServo;
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;
@@ -56,15 +55,10 @@ public class RotationHardwareClass {
         hardwareMap = hardwareMap;
 
         // Define and Initialize Hardware
-
-        // Define and Initialize Hardware
         frontLeftMotor = hardwareMap.dcMotor.get("FL");
         backLeftMotor = hardwareMap.dcMotor.get("BL");
         frontRightMotor = hardwareMap.dcMotor.get("FR");
         backRightMotor = hardwareMap.dcMotor.get("BR");
-
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

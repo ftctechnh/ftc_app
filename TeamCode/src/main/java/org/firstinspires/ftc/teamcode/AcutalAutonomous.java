@@ -22,8 +22,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-@Autonomous(name="Yes bishh", group="Exercises")
+//please work
+@Autonomous(name="nah", group="Exercises")
 //@Disabled
 public class AcutalAutonomous extends LinearOpMode
 {
@@ -36,11 +36,9 @@ public class AcutalAutonomous extends LinearOpMode
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
 
-
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
-    boolean                 aButton, bButton;
 
     // called when init button is  pressed.
     @Override
@@ -116,12 +114,6 @@ public class AcutalAutonomous extends LinearOpMode
             rotate(90,.5);
 
         }
-
-        // turn the motors off.
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backRightMotor.setPower(0);
     }
 
 
@@ -129,6 +121,7 @@ public class AcutalAutonomous extends LinearOpMode
     public void movebytime (double time, double power, String direction) {
     /* reset the "timer" to 0 */
         runtime.reset();
+
     /* This runs the wheel power so it moves forward, the powers for the left wheels
     are inversed so that it runs properly on the robot
      */

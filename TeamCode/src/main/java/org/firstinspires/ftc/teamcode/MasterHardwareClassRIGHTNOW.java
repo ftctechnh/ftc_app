@@ -81,7 +81,6 @@ public class MasterHardwareClassRIGHTNOW {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         gemServo = hwMap.get(Servo.class, "gemservo");
 
     }
