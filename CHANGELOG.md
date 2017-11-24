@@ -13,7 +13,26 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 ### [Unreleased]
 - Thorough documentation on the new system (teamcode.Core package)
 - Support for button actions such as double clicking and long clicks
-- OpenCV Jewel detection
+- TurnTo and DriveToDistance perfected
+
+### [0.11.0] - 2017-11-24
+#### Added
+- OpenCV Bridge class, allows OpenCV detection data to reach the TeamCode module easily
+- Jewel detection, both blue and red
+- Test code for jewel detection and OpenCV Bridge (It's quite neat!)
+- Based class called ObjectDetector- OpenCV stuff that detects stuff extends this class
+- Ability of Controller class to know if it's receiving input or not
+- Ability to "freeze" input to the drivetrain- this allows commands to have exclusive control over the component
+- IMU dependency to drivetrain
+- Old TurnTo function from last season- not quite tweaked yet :)
+
+#### Changed
+- OpenCV object detectors now extend the ObjectDetector class- everything is already written except for the final labeling and drawing step
+
+#### Fixed
+- GlyphGrabber class was in the wrong directory for some reason, that's fixed
+- Probably a bug or two, I can't remember
+
 
 ### [0.10.0] - 2017-11-15
 #### Added
