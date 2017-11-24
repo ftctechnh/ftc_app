@@ -15,6 +15,11 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - TurnTo and DriveToDistance perfected
 
+### [0.11.1] - 2017-11-24
+#### Fixed
+- Bug where the TurnTo command was dependant upon previous drivetrain state
+
+
 ### [0.11.0] - 2017-11-24
 #### Added
 - OpenCV Bridge class, allows OpenCV detection data to reach the TeamCode module easily
