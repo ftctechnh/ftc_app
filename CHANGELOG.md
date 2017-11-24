@@ -26,6 +26,9 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - IMU dependency to drivetrain
 - Old TurnTo function from last season- not quite tweaked yet :)
 
+#### Changed
+- OpenCV object detectors now extend the ObjectDetector class- everything is already written except for the final labeling and drawing step
+
 #### Fixed
 - GlyphGrabber class was in the wrong directory for some reason, that's fixed
 - Probably a bug or two, I can't remember
