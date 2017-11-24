@@ -129,7 +129,7 @@ public class Delta_Jr extends OpMode {
             servoPress++;
 
             //open
-            if (servoPress % 2 == 0) {
+            if (gamepad1.left_bumper) {
 
 //opening the claw
                 telemetry.addData("Is the claw opening loop?", glyphServoRight.getPosition());
