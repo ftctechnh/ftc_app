@@ -14,26 +14,26 @@ public class holonomicDrive_5_0 extends LinearOpMode
     DriveEngine engine;
     double x = 0;
     double y = 0;
-    DcMotor lift = hardwareMap.dcMotor.get("lift");
-    Servo pincherL = hardwareMap.servo.get("pincherL");
-    Servo pincherR = hardwareMap.servo.get("pincherR");
+    double z = 0;
 
-    DcMotor extend = hardwareMap.dcMotor.get("extend");
+    DcMotor lift;
+    Servo pincherR;
+    Servo pincherL;
+
     double open = 0.7;
     double close = 0.05;
     double pinch= 0;
     @Override
     public void runOpMode()
     {
-        engine = new DriveEngine(hardwareMap);
-        extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        extend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        extend.setDirection(DcMotor.Direction.FORWARD);
+        lift = hardwareMap.dcMotor.get("lift");
+        pincherL = hardwareMap.servo.get("pincherL");
+        pincherR = hardwareMap.servo.get("pincherR");
+        engine = new DriveEngine(hardwareMap);;
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
 
-        extend.setTargetPosition(1); //how far out the arm will go
         while (opModeIsActive())
         {
 
@@ -46,40 +46,49 @@ public class holonomicDrive_5_0 extends LinearOpMode
                 {
                     x = 0;
                     y = 1;
+                    z = 0;
                 }
                 else if(gamepad1.dpad_down)
                 {
                     x = 0;
                     y = -1;
+                    z = 0;
+
                 }
                 else if(gamepad1.dpad_left)
                 {
-                    x = -1;
+                    x = 1;
                     y = 0;
+                    z = 0;
+
                 }
                 else if(gamepad1.dpad_right)
                 {
-                    x = 1;
+                    x = -1;
                     y = 0;
+                    z = 0;
+
                 }
                 //Scissor lift arm
                 else if(gamepad1.left_bumper == true) {
-                    lift.setPower(1);
+                    z = 1;
                     x = 0;
                     y = 0;
                 }
                 else if(gamepad1.left_trigger > 0) {
-                    lift.setPower(-1);
+                    z = -1;
                     x = 0;
                     y = 0;
                 }
                 //Glyph Grabber
                 else if(gamepad1.right_bumper == true) {
                     pinch += .05;
-                    if (pinch > .5)
+                    if (pinch > .7)
                     {pinch = .5;}
                     x = 0;
                     y = 0;
+                    z = 0;
+
                 }
                 else if(gamepad1.right_trigger > 0) {
                     pinch -= .05;
@@ -87,15 +96,19 @@ public class holonomicDrive_5_0 extends LinearOpMode
                     {pinch = 0;}
                     x = 0;
                     y = 0;
+                    z = 0;
+
                 }
                 else
                 {
-                    x = gamepad1.left_stick_x;
-                    y = gamepad1.left_stick_y;
+                    x = -gamepad1.left_stick_x;
+                    y = -gamepad1.left_stick_y;
+                    z = 0;
                 }
                 engine.drive(x,y);
+                lift.setPower(z);
                 pincherL.setPosition(pinch);
-                pincherR.setPosition(1-pinch);
+                pincherR.setPosition(pinch);
             }
 
             telemetry.addData("leftx: ", gamepad1.left_stick_x);
