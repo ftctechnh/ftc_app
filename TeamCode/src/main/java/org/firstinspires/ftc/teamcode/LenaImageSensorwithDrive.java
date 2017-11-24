@@ -144,8 +144,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             double frontLeft;
             double frontRight;
-            Ndouble backLeft;.
-
+            double backLeft;
             double backRight;
 
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
