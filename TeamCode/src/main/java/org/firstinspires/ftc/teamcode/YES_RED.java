@@ -70,6 +70,15 @@ public class YES_RED extends LinearOpMode
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+        double xPosUp = 1;
+        double xPosDown = .5;
+
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        gemServo.setPosition(xPosUp);
+
         imu.initialize(parameters);
 
         telemetry.addData("Mode", "calibrating...");
@@ -96,10 +105,7 @@ public class YES_RED extends LinearOpMode
         sleep(1000);
 
         // drive until end of period.
-
-        while (opModeIsActive())
-        {
-            // Use gyro to drive in a straight line.
+   // Use gyro to drive in a straight line.
             correction = checkDirection();
 
             telemetry.addData("1 imu heading", lastAngles.firstAngle);
@@ -107,8 +113,13 @@ public class YES_RED extends LinearOpMode
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
+            movebytime(.5,.3,"Forward");
+            movebytime(.5,.3,"Backward");
+            movebytime(.5,.3,"Left");
+            movebytime(.5,.3,"Right");
 
-        }
+            rotate(10,.3);
+            rotate(-10,.3);
 
         // turn the motors off.
         frontLeftMotor.setPower(0);
