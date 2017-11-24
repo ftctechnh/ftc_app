@@ -11,9 +11,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-import android.view.View;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -25,61 +22,39 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="Yes bishh", group="Exercises")
+@Autonomous(name="El Autonomo Perfecto", group="Exercises")
 //@Disabled
-public class AcutalAutonomousWithClass extends LinearOpMode
+public class ElAutonomoPerfecto extends LinearOpMode
 {
-    /* Define hardware class*/
-    RotationHardwareClass robot = new RotationHardwareClass();
 
-    /* Create a "timer" that begins once th
-    // called when init button is  pressed.
-    @Overridee OpMode begins */
-    private ElapsedTime runtime = new ElapsedTime();
+    /* this says use ArmHardwareClass */
+    MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
 
-    BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
-    boolean                 aButton, bButton;
 
+
+    /* Create a "timer" that begins once the OpMode begins */
+    private ElapsedTime runtime = new ElapsedTime();
+
+
+    // called when init button is  pressed.
+    @Override
     public void runOpMode() throws InterruptedException
     {
-
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
-        float hsvValues[] = {0F, 0F, 0F};
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        imu.initialize(parameters);
 
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
         // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !imu.isGyroCalibrated())
+        while (!isStopRequested() && !robot.imu.isGyroCalibrated())
         {
             sleep(50);
             idle();
         }
 
         telemetry.addData("Mode", "waiting for start");
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        telemetry.addData("imu calib status", robot.imu.getCalibrationStatus().toString());
         telemetry.update();
 
         // wait for start button.
@@ -103,22 +78,16 @@ public class AcutalAutonomousWithClass extends LinearOpMode
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
-            robot.gemServo.setPosition(robot.xPosDown);
 
             movebytime(1,.3,"Forward");
             movebytime(1,.3,"Backward");
             movebytime(1,.3,"Left");
             movebytime(1,.3,"Right");
-            
+
             rotate(90,.5);
 
         }
-
-        // turn the motors off.
-        robot.frontLeftMotor.setPower(0);
-        robot.backLeftMotor.setPower(0);
-        robot.frontRightMotor.setPower(0);
-        robot.backRightMotor.setPower(0);
+        wheelsOff();
     }
 
 
@@ -126,22 +95,23 @@ public class AcutalAutonomousWithClass extends LinearOpMode
     public void movebytime (double time, double power, String direction) {
     /* reset the "timer" to 0 */
         runtime.reset();
+
     /* This runs the wheel power so it moves forward, the powers for the left wheels
     are inversed so that it runs properly on the robot
      */
 
         switch (direction) {
             case "Forward":
-                setWheelPower(power, power, power, power);
+                setWheelPower(power, -power, power, -power);
                 break;
             case "Backward":
-                setWheelPower(-power, -power, -power, -power);
+                setWheelPower(-power, power, -power, power);
                 break;
             case "Right":
-                setWheelPower(-power, -power, power, power);
+                setWheelPower(power, power, -power, -power);
                 break;
             case "Left":
-                setWheelPower(power, power, -power, -power);
+                setWheelPower(-power, -power, power, power);
                 break;
         }
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
@@ -185,27 +155,29 @@ public class AcutalAutonomousWithClass extends LinearOpMode
 
         /* set each wheel to the power indicated whenever this method is called */
         if ( FrontLeftPower != frontLeft) {
-             robot.frontLeftMotor.setPower(fl);
-             FrontLeftPower = frontLeft;
+            robot.frontLeftMotor.setPower(-fl);
+            FrontLeftPower = frontLeft;
         }
         if ( FrontRightPower != frontRight) {
-             robot.frontRightMotor.setPower(-fr);
-             FrontRightPower = frontRight;
+            robot.frontRightMotor.setPower(fr);
+            FrontRightPower = frontRight;
         }
         if ( BackLeftPower != backLeft) {
-             robot.backLeftMotor.setPower(bl);
-             BackLeftPower = backLeft;
+            robot.backLeftMotor.setPower(-bl);
+            BackLeftPower = backLeft;
         }
         if ( BackRightPower != backRight)
-             robot.backRightMotor.setPower(-br);
-             BackRightPower = backRight;
+            robot.backRightMotor.setPower(br);
+        BackRightPower = backRight;
     }
 
 
-    /* Resets the cumulative angle tracking to zero. */
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
     private void resetAngle()
     {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        lastAngles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
 
@@ -221,7 +193,7 @@ public class AcutalAutonomousWithClass extends LinearOpMode
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
@@ -304,11 +276,8 @@ public class AcutalAutonomousWithClass extends LinearOpMode
         else    // left turn.
             while (opModeIsActive() && getAngle() < degrees) {}
 
-        // turn the motors off.
-        robot.frontLeftMotor.setPower(0);
-        robot.backLeftMotor.setPower(0);
-        robot.frontRightMotor.setPower(0);
-        robot.backRightMotor.setPower(0);
+
+            wheelsOff();
 
         // wait for rotation to stop.
         sleep(1000);
@@ -316,19 +285,4 @@ public class AcutalAutonomousWithClass extends LinearOpMode
         // reset angle tracking on new heading.
         resetAngle();
     }
-
-    public void findColor()
-    {
-        if ((robot.colorSensor.red()) < robot.colorSensor.blue())
-        {
-            resetAngle();
-            rotate(90,.5);
-            wheelsOff();
-        }
-        else
-            resetAngle();
-        rotate(-90,.5);
-        wheelsOff();
-    }
-
 }

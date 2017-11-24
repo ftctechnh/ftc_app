@@ -14,7 +14,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -22,23 +21,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-//please workpleeeeease
-@Autonomous(name="nah", group="Exercises")
-//@Disabled
-public class AcutalAutonomous extends LinearOpMode
-{
 
+@Autonomous(name="YES", group="Exercises")
+//@Disabled
+public class YES extends LinearOpMode
+{
     DcMotor                 frontLeftMotor;
     DcMotor                 backLeftMotor;
     DcMotor                 frontRightMotor;
     DcMotor                 backRightMotor;
-    ColorSensor             colorSensor;
-    /* Create a "timer" that begins once the OpMode begins */
-    private ElapsedTime runtime = new ElapsedTime();
 
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
+    boolean                 aButton, bButton;
+
+    /* Create a "timer" that begins once the OpMode begins */
+    private ElapsedTime runtime = new ElapsedTime();
+
 
     // called when init button is  pressed.
     @Override
@@ -106,6 +106,7 @@ public class AcutalAutonomous extends LinearOpMode
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
+
             movebytime(1,.3,"Forward");
             movebytime(1,.3,"Backward");
             movebytime(1,.3,"Left");
@@ -114,6 +115,12 @@ public class AcutalAutonomous extends LinearOpMode
             rotate(90,.5);
 
         }
+
+        // turn the motors off.
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
     }
 
 
@@ -128,16 +135,16 @@ public class AcutalAutonomous extends LinearOpMode
 
         switch (direction) {
             case "Forward":
-                setWheelPower(power, power, power, power);
+                setWheelPower(power, -power, power, -power);
                 break;
             case "Backward":
-                setWheelPower(-power, -power, -power, -power);
+                setWheelPower(-power, power, -power, power);
                 break;
             case "Right":
-                setWheelPower(-power, -power, power, power);
+                setWheelPower(power, power, -power, -power);
                 break;
             case "Left":
-                setWheelPower(power, power, -power, -power);
+                setWheelPower(-power, -power, power, power);
                 break;
         }
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
@@ -181,24 +188,26 @@ public class AcutalAutonomous extends LinearOpMode
 
         /* set each wheel to the power indicated whenever this method is called */
         if ( FrontLeftPower != frontLeft) {
-             frontLeftMotor.setPower(fl);
-             FrontLeftPower = frontLeft;
+            frontLeftMotor.setPower(-fl);
+            FrontLeftPower = frontLeft;
         }
         if ( FrontRightPower != frontRight) {
-             frontRightMotor.setPower(fr);
-             FrontRightPower = frontRight;
+            frontRightMotor.setPower(fr);
+            FrontRightPower = frontRight;
         }
         if ( BackLeftPower != backLeft) {
-             backLeftMotor.setPower(bl);
-             BackLeftPower = backLeft;
+            backLeftMotor.setPower(-bl);
+            BackLeftPower = backLeft;
         }
         if ( BackRightPower != backRight)
-             backRightMotor.setPower(br);
-             BackRightPower = backRight;
+            backRightMotor.setPower(br);
+        BackRightPower = backRight;
     }
 
 
-    /* Resets the cumulative angle tracking to zero. */
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
     private void resetAngle()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -311,18 +320,5 @@ public class AcutalAutonomous extends LinearOpMode
 
         // reset angle tracking on new heading.
         resetAngle();
-    }
-    public void findColor()
-    {
-        if ((colorSensor.red()) < colorSensor.blue())
-        {
-            resetAngle();
-            rotate(90,.5);
-            wheelsOff();
-        }
-        else
-            resetAngle();
-        rotate(-90,.5);
-        wheelsOff();
     }
 }

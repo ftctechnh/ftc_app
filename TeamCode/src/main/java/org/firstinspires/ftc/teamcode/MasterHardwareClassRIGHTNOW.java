@@ -9,6 +9,11 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 //This class defines all the specific hardware for a the BACONbot robot.
 
@@ -17,7 +22,8 @@ public class MasterHardwareClassRIGHTNOW {
     /* Public OpMode members. */
     public ColorSensor sensorColorRight;
     public Servo gemServo;
-    public BNO055IMU imu;
+
+    public BNO055IMU               imu;
 
     /* local OpMode members. */
     public DcMotor frontLeftMotor = null;
@@ -60,6 +66,16 @@ public class MasterHardwareClassRIGHTNOW {
         gemServo = hwMap.servo.get("gemservo");
         sensorColorRight = hwMap.colorSensor.get("colorsensor");
 
+        imu = hwMap.get(BNO055IMU.class, "imu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled      = false;
+
+
         // Set all hardware to default position
         // Set all hardware to default position
         frontLeftMotor.setPower(0);
@@ -67,14 +83,10 @@ public class MasterHardwareClassRIGHTNOW {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         gemServo.setPosition(xPosUp);
+        imu.initialize(parameters);
 
-        // Set proper encoder state for all motor
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
