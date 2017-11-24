@@ -104,7 +104,6 @@ public class YES_RED extends LinearOpMode
 
         sleep(1000);
 
-        // drive until end of period.
    // Use gyro to drive in a straight line.
             correction = checkDirection();
 
