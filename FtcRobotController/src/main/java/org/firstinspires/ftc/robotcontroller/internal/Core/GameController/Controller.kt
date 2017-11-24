@@ -22,9 +22,11 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle
  * Wrapper class for the game pads in OpMode, packs in a bunch of additional functionality
  * such as detecting button presses
  */
-@Suppress("unused")
+@Suppress("unused", "PrivatePropertyName")
 class Controller
 {
+    private val _INPUT_BUFFER = .15
+
     private var _gamePad: Gamepad? = null
 
     // Button toggle variables
@@ -45,12 +47,15 @@ class Controller
     private var _dRightToggle = UtilToggle()
 
 
+    private var _receivingInput = false
+
     /**
      * Reads input from a game pad, call this in every iteration of your OpMode loop.
      */
     fun read(GAME_PAD: Gamepad)
     {
         _gamePad = GAME_PAD
+        _receivingInput = false     // Assume at first no input is sent to the controller
     }
 
 
@@ -59,6 +64,7 @@ class Controller
      */
     fun a(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.a
         return _gamePad?.a
     }
 
@@ -77,6 +83,7 @@ class Controller
      */
     fun b(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.b
         return _gamePad?.b
     }
 
@@ -95,6 +102,7 @@ class Controller
      */
     fun x(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.x
         return _gamePad?.x
     }
 
@@ -113,6 +121,7 @@ class Controller
      */
     fun y(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.y
         return _gamePad?.y
     }
 
@@ -131,6 +140,7 @@ class Controller
      */
     fun leftBumper(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.left_bumper
         return _gamePad?.left_bumper
     }
 
@@ -149,6 +159,7 @@ class Controller
      */
     fun rightBumper(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.right_bumper
         return _gamePad?.right_bumper
     }
 
@@ -167,6 +178,7 @@ class Controller
      */
     fun leftStickButton(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.left_stick_button
         return _gamePad?.left_stick_button
     }
 
@@ -185,6 +197,7 @@ class Controller
      */
     fun rightStickButton(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.right_stick_button
         return _gamePad?.right_stick_button
     }
 
@@ -203,6 +216,7 @@ class Controller
      */
     fun dUp(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.dpad_up
         return _gamePad!!.dpad_up
     }
 
@@ -221,6 +235,7 @@ class Controller
      */
     fun dDown(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.dpad_down
         return _gamePad!!.dpad_down
     }
 
@@ -239,6 +254,7 @@ class Controller
      */
     fun dLeft(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.dpad_left
         return _gamePad!!.dpad_left
     }
 
@@ -257,6 +273,7 @@ class Controller
      */
     fun dRight(): Boolean?
     {
+        _receivingInput = _receivingInput || _gamePad!!.dpad_right
         return _gamePad!!.dpad_right
     }
 
@@ -275,6 +292,9 @@ class Controller
      */
     fun leftX(): Double
     {
+        _receivingInput = _receivingInput ||
+                Math.abs(_gamePad?.left_stick_x!!.toDouble()) >= _INPUT_BUFFER
+
         return _gamePad?.left_stick_x!!.toDouble()
     }
 
@@ -284,6 +304,9 @@ class Controller
      */
     fun leftY(): Double
     {
+        _receivingInput = _receivingInput ||
+                Math.abs(_gamePad?.left_stick_y!!.toDouble()) >= _INPUT_BUFFER
+
         return _gamePad?.left_stick_y!!.toDouble()
     }
 
@@ -293,6 +316,9 @@ class Controller
      */
     fun rightX(): Double
     {
+        _receivingInput = _receivingInput ||
+                Math.abs(_gamePad?.right_stick_x!!.toDouble()) >= _INPUT_BUFFER
+
         return _gamePad?.right_stick_x!!.toDouble()
     }
 
@@ -302,6 +328,9 @@ class Controller
      */
     fun rightY(): Double
     {
+        _receivingInput = _receivingInput ||
+                Math.abs(_gamePad?.right_stick_y!!.toDouble()) >= _INPUT_BUFFER
+
         return _gamePad?.right_stick_y!!.toDouble()
     }
 
@@ -311,6 +340,9 @@ class Controller
      */
     fun leftTrigger(): Double
     {
+        _receivingInput = _receivingInput ||
+                Math.abs(_gamePad?.left_trigger!!.toDouble()) >= _INPUT_BUFFER
+
         return _gamePad?.left_trigger!!.toDouble()
     }
 
@@ -320,6 +352,15 @@ class Controller
      */
     fun rightTrigger(): Double
     {
+        _receivingInput = _receivingInput ||
+                Math.abs(_gamePad?.right_trigger!!.toDouble()) >= _INPUT_BUFFER
+
         return _gamePad?.right_trigger!!.toDouble()
     }
+
+
+    /**
+     * Returns whether or not the controller is receiving input
+     */
+    fun receivingInput(): Boolean = _receivingInput
 }

@@ -35,12 +35,14 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
      */
     override fun runSequentially()
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // Freeze input to the drivetrain so that only the command can control it
+        // Of course, the idea is that it can be overwritten
+        _drivetrain.freezeInput()
     }
 
 
     /**
-     * Drives to the defined distance on a seperate thread
+     * Drives to the defined distance on a separate thread
      */
     override fun runParallel()
     {

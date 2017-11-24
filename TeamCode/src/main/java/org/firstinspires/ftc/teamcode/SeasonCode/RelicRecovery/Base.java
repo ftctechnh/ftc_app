@@ -27,6 +27,7 @@ public class Base extends RobotBase
     /** Glyph grabber component of our Relic Recover robot */
     public GlyphGrabber glyphGrabber = new GlyphGrabber();
 
+    /** Built in IMU in the Rev module */
     public REVIMU imu = new REVIMU();
 
 
@@ -52,9 +53,13 @@ public class Base extends RobotBase
         params.loggingEnabled = true;
         params.loggingTag = "IMU";
 
+        // Basic component initialization
         drivetrain.init(this);
         lift.init(this);
         glyphGrabber.init(this);
         imu.init(this , "imu" , params);
+
+        // Dependency setting
+        drivetrain.setDependencies(imu);
     }
 }

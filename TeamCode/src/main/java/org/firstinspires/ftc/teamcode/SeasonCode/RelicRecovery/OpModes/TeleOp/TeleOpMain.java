@@ -59,6 +59,12 @@ public class TeleOpMain extends LinearOpMode
         _controller1.read(gamepad1);
         _controller2.read(gamepad2);
 
+        // Allow driver control when requested
+        if(_controller1.receivingInput())
+        {
+            _base.drivetrain.allowInput();
+        }
+
         _base.imu.pull();
 
         if(_controller1.xClicked())

@@ -4,8 +4,10 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drive
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.directcurrent.season.relicrecovery.drivetrain.TurnTo;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilBasic;
 
 import org.directcurrent.season.relicrecovery.ToggleTelMetKt;
@@ -24,13 +26,22 @@ public class Drivetrain extends RobotComponent
     private final double _SLOW_MULTIPLIER = .5;
     private final double _STOP_MULTIPLIER = 0;
 
+    private DcMotor _rightMotor;
     // Motors
     private DcMotor _leftMotor;
-    private DcMotor _rightMotor;
 
     // Drivetrain is stopped right now
     private double _powerMultiplier = _STOP_MULTIPLIER; // Current power multiplier
     private State _state = State.STOP;                  // State of the robot
+
+    // Whether the drivetrain is accepting input or not
+    boolean _inputFrozen = false;
+
+    // Dependencies
+    private REVIMU _imu;
+
+    // Commands
+    private TurnTo _turnTo;
 
 
     /**
@@ -62,6 +73,23 @@ public class Drivetrain extends RobotComponent
 
 
     /**
+     * Sets drivetrain dependencies and performs any additional initializations required
+     *
+     * Call this in your robot base.init(), after all other components have been initialized.
+     *
+     * If you don't, you'll get NullPointerException. How about we don't? Place this where it
+     * belongs
+     *
+     * @param IMU The IMU object in the base
+     */
+    public void setDependencies(final REVIMU IMU)
+    {
+        _imu = IMU;
+        _turnTo = new TurnTo(this , _imu);
+    }
+
+
+    /**
      * @return The left motor of the drivetrain
      */
     public DcMotor leftMotor()
@@ -85,6 +113,15 @@ public class Drivetrain extends RobotComponent
     public State state()
     {
         return _state;
+    }
+
+
+    /**
+     * @return Returns whether or not input to the drivetrain is frozen
+     */
+    public boolean inputIsFrozen()
+    {
+        return _inputFrozen;
     }
 
 
@@ -145,6 +182,24 @@ public class Drivetrain extends RobotComponent
 
 
     /**
+     * Freezes driver input
+     */
+    public void freezeInput()
+    {
+        _inputFrozen = true;
+    }
+
+
+    /**
+     * Allows driver input
+     */
+    public void allowInput()
+    {
+        _inputFrozen = false;
+    }
+
+
+    /**
      * Runs the drivetrain- operation is dependant upon current drivetrain state, powers passed in,
      * and whether to scale input or not. Scaling is applied after state multipliers are applied.
      *
@@ -154,6 +209,12 @@ public class Drivetrain extends RobotComponent
      */
     public void run(double drivePower , double rotatePower , boolean scale)
     {
+        // Don't do anything if input is frozen
+        if(_inputFrozen)
+        {
+            return;
+        }
+
         // Scale first- that way the multipliers don't reduce the power to like .1 or something
         if(scale)
         {
