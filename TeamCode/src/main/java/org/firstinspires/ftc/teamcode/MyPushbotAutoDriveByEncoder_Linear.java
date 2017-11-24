@@ -33,10 +33,21 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.ServoConfiguration;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -77,9 +88,11 @@ public class MyPushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
+    double          clawOffset  = 0.0 ; // starts claw closed on block L.A.S
     static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-
+    static final double     TURN_SPEED              = 0.25;
+    double          ballArm = 0.0 ; // makes ball Arm a variable L.A.S
+    NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor L.A.S
     @Override
     public void runOpMode() {
 
@@ -88,6 +101,8 @@ public class MyPushbotAutoDriveByEncoder_Linear extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -108,11 +123,33 @@ public class MyPushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  24,  24, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-       // encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color"); // Uses the phone to find the color sensor named sensor_color L.A.S
+
+        NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors L.A.S
+
+
+        // Numbers aren't tested yet team is blue L.A.S
+        ballArm = 1 ; // lowers ballArm all the way down L.A.S
+        if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
+            encoderDrive(TURN_SPEED,4, -4,.5 ); // turns right to knock blue ball L.A.S
+            ballArm = 0 ; //lifts up ball arm all the way up L.A.S
+            encoderDrive(TURN_SPEED,  -6, 6,.5 ); //It turns left to face the glyph bock L.A.S
+        }
+       else  { //The ball facing the color sensor is red  L.A.S
+            encoderDrive(TURN_SPEED, -2, 2,.5 ); //It turns left knocking the blue ball and turning to face glyph box L.A.S
+            ballArm = 0 ; // lifts up ball arm all the way up L.A.S
+            encoderDrive(TURN_SPEED,  -6, 6,.5 ); //It turns right to face the glyph bock L.A.S
+        }
+        encoderDrive(DRIVE_SPEED, 36, 36, .5); // It drives past glyph box and to the pictograph L.A.S
+        encoderDrive(TURN_SPEED, 4,-4, .5); // It turns towards pictograph L.A.S
+        encoderDrive(DRIVE_SPEED, 24, 24, .5); // It drives towards pictograph to allow phone to scan it L.A.S
+        encoderDrive(DRIVE_SPEED, -24, -24, .5); // It backs up from pictograph L.A.S
+        encoderDrive(TURN_SPEED, 4,-4, .5); // Turns towards balancing block L.A.S
+        encoderDrive(DRIVE_SPEED, 6, 6, .5); // Drives to align with glyph block L.A.S
+        encoderDrive(TURN_SPEED, -4,4, .5); //It turns toward the glyph box L.A.S
+        encoderDrive(DRIVE_SPEED, 24, 24, .5); //It drives toward the glyph box L.A.S
+        clawOffset = .03 ; // It drops the block L.A.S
+
 
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);

@@ -58,6 +58,7 @@ public class MyHardwarePushbot
     public DcMotor  lift        = null;
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
+    public Servo    ballArm     = null; //sets the servo ball arm to null L.A.S
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -91,6 +92,7 @@ public class MyHardwarePushbot
         rightDrive.setPower(0);
         lift.setPower(0);
 
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -100,8 +102,11 @@ public class MyHardwarePushbot
         // Define and initialize ALL installed servos.
         leftClaw  = hwMap.get(Servo.class, "left_hand");
         rightClaw = hwMap.get(Servo.class, "right_hand");
+        ballArm = hwMap.get(Servo.class, "ball_arm") ; // assigns ballArm to ball_arm
+
         leftClaw.setPosition(MID_SERVO);
         rightClaw.setPosition(MID_SERVO);
+        ballArm.setPosition(MID_SERVO); // sets position to mid servo or .5 of 180
     }
  }
 
