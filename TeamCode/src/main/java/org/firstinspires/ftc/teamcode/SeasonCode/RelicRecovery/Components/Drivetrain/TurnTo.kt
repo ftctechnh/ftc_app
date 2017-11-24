@@ -56,6 +56,8 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
 
         _busy = true
 
+        _drivetrain.setState(Drivetrain.State.FORWARD_FAST)
+
         while (Math.abs(error) > TOLERANCE && !_interrupted)
         {
             error = UtilBasic.angleError(_imu.xAngle().toInt(), _targetAngle.toInt()).toDouble()
