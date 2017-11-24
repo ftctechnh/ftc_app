@@ -14,7 +14,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -22,39 +24,66 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="El Autonomo Perfecto", group="Exercises")
+@Autonomous(name="YES RED", group="Exercises")
 //@Disabled
-public class ElAutonomoPerfecto extends LinearOpMode
+public class YES_RED extends LinearOpMode
 {
-
-    /* this says use ArmHardwareClass */
-    MasterHardwareClassRIGHTNOW robot = new MasterHardwareClassRIGHTNOW();
-
+    DcMotor                 frontLeftMotor;
+    DcMotor                 backLeftMotor;
+    DcMotor                 frontRightMotor;
+    DcMotor                 backRightMotor;
+    ColorSensor             colorSensor;
+    Servo                   gemServo;
+    BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
 
-
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
-
 
     // called when init button is  pressed.
     @Override
     public void runOpMode() throws InterruptedException
     {
+        frontLeftMotor = hardwareMap.dcMotor.get("FL");
+        backLeftMotor = hardwareMap.dcMotor.get("BL");
+        frontRightMotor = hardwareMap.dcMotor.get("FR");
+        backRightMotor = hardwareMap.dcMotor.get("BR");
+
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled      = false;
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        imu.initialize(parameters);
 
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
         // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !robot.imu.isGyroCalibrated())
+        while (!isStopRequested() && !imu.isGyroCalibrated())
         {
             sleep(50);
             idle();
         }
 
         telemetry.addData("Mode", "waiting for start");
-        telemetry.addData("imu calib status", robot.imu.getCalibrationStatus().toString());
+        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         // wait for start button.
@@ -79,15 +108,13 @@ public class ElAutonomoPerfecto extends LinearOpMode
             telemetry.update();
 
 
-            movebytime(1,.3,"Forward");
-            movebytime(1,.3,"Backward");
-            movebytime(1,.3,"Left");
-            movebytime(1,.3,"Right");
-
-            rotate(90,.5);
-
         }
-        wheelsOff();
+
+        // turn the motors off.
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
     }
 
 
@@ -155,20 +182,34 @@ public class ElAutonomoPerfecto extends LinearOpMode
 
         /* set each wheel to the power indicated whenever this method is called */
         if ( FrontLeftPower != frontLeft) {
-            robot.frontLeftMotor.setPower(-fl);
+            frontLeftMotor.setPower(-fl);
             FrontLeftPower = frontLeft;
         }
         if ( FrontRightPower != frontRight) {
-            robot.frontRightMotor.setPower(fr);
+            frontRightMotor.setPower(fr);
             FrontRightPower = frontRight;
         }
         if ( BackLeftPower != backLeft) {
-            robot.backLeftMotor.setPower(-bl);
+            backLeftMotor.setPower(-bl);
             BackLeftPower = backLeft;
         }
         if ( BackRightPower != backRight)
-            robot.backRightMotor.setPower(br);
-        BackRightPower = backRight;
+            backRightMotor.setPower(br);
+            BackRightPower = backRight;
+    }
+
+    public void findColor()
+    {
+        if ((colorSensor.red()) < colorSensor.blue())
+        {
+            resetAngle();
+            rotate(90,.5);
+            wheelsOff();
+        }
+        else
+            resetAngle();
+        rotate(-90,.5);
+        wheelsOff();
     }
 
 
@@ -177,7 +218,7 @@ public class ElAutonomoPerfecto extends LinearOpMode
      */
     private void resetAngle()
     {
-        lastAngles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
 
@@ -193,7 +234,7 @@ public class ElAutonomoPerfecto extends LinearOpMode
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
@@ -259,11 +300,11 @@ public class ElAutonomoPerfecto extends LinearOpMode
         else return;
 
         // set power to rotate.
-        robot.frontLeftMotor.setPower(leftPower);
-        robot.backLeftMotor.setPower(leftPower);
+        frontLeftMotor.setPower(leftPower);
+        backLeftMotor.setPower(leftPower);
 
-        robot.frontRightMotor.setPower(rightPower);
-        robot.backRightMotor.setPower(rightPower);
+        frontRightMotor.setPower(rightPower);
+        backRightMotor.setPower(rightPower);
 
         // rotate until turn is completed.
         if (degrees < 0)
@@ -276,8 +317,11 @@ public class ElAutonomoPerfecto extends LinearOpMode
         else    // left turn.
             while (opModeIsActive() && getAngle() < degrees) {}
 
-
-            wheelsOff();
+        // turn the motors off.
+        frontLeftMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
 
         // wait for rotation to stop.
         sleep(1000);
