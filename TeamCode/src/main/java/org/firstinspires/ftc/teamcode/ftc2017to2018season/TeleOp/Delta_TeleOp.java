@@ -227,13 +227,13 @@ public class Delta_TeleOp extends OpMode {
 
 //opening the claw
             //commented out so that it wouldnt ruin the old code
-           // glyphServoRight.setPosition(0.5);
-            try {
+            glyphServoRight.setPosition(0.5);
+            /*try {
                 glyphServoRight.setPosition(0.5);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+*/
             glyphServoLeft.setPosition(0.5);
         }
         else if (gamepad1.right_bumper){
