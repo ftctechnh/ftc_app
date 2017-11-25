@@ -82,7 +82,8 @@ public class UseVuforia {
 
     public void start() {relicTrackables.activate();}
 
-    public void run() {
+    public boolean run() {
+        boolean returnable = false;
         /**
          * See if any of the instances of {@link relicTemplate} are currently visible.
          * {@link RelicRecoveryVuMark} is an enum which can have the following values:
@@ -127,9 +128,11 @@ public class UseVuforia {
                 double rY = rot.secondAngle;
                 double rZ = rot.thirdAngle;
             }
+            returnable = true;
         } else {
             telemetry.addData("VuMark", "not visible");
         }
+        return returnable;
     }
     /**
      * A simple utility that extracts positioning information from a transformation matrix
@@ -138,4 +141,10 @@ public class UseVuforia {
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
+
+    public VuforiaLocalizer getVuforia() {
+        return vuforia;
+    }
+
+
 }
