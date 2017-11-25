@@ -204,6 +204,8 @@ public class Beta extends OpMode {
 
     public void slideMove() {
 
+        //lift motor
+
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y > 0) {
