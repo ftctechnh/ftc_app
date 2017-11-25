@@ -20,9 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class MasterHardwareClassRIGHTNOW {
 
     /* Public OpMode members. */
-    public ColorSensor sensorColorRight;
+    public ColorSensor colorSensor;
     public Servo gemServo;
-
     public BNO055IMU               imu;
 
     /* local OpMode members. */
@@ -64,7 +63,7 @@ public class MasterHardwareClassRIGHTNOW {
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
         gemServo = hwMap.servo.get("gemservo");
-        sensorColorRight = hwMap.colorSensor.get("colorsensor");
+        colorSensor = hwMap.colorSensor.get("colorsensor");
 
         imu = hwMap.get(BNO055IMU.class, "imu");
 

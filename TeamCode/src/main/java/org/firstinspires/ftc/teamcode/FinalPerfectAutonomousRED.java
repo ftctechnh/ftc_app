@@ -344,7 +344,7 @@ public class FinalPerfectAutonomousRED extends LinearOpMode {
     //eyy
     public void findColor()
     {
-        if ((robot.sensorColorRight.red()) < robot.sensorColorRight.blue())
+        if ((robot.colorSensor.red()) < robot.colorSensor.blue())
         {
             resetAngle();
             rotate(90,.5);
