@@ -251,14 +251,30 @@ public class Delta_TeleOp extends OpMode {
     public void slideIncrement() {
 
         if (gamepad2.a) {
-            
+
+        moveUpInch(2.54);
+        }
+        else if (gamepad2.y){
+            moveUpInch(-2.54);
         }
     }
 
     public void moveUpInch(double cm) {
-        int target_Position;
+        double target_Position;
+        double countsPerCM = 609.6;
+        double finalTarget = cm*countsPerCM;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
-        slideMotor.setTargetPosition();
+        slideMotor.setTargetPosition((int)target_Position);
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        slideMotor.setPower(0.6);
+
+        while (slideMotor.isBusy()){}
+
+        slideMotor.setPower(0);
+
     }
 }
 
