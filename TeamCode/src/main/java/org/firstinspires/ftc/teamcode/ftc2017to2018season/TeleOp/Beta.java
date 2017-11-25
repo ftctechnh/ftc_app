@@ -166,17 +166,17 @@ public class Beta extends OpMode {
 
         if (gamepad1.right_trigger > 0) {
 
-            leftWheelMotorFront.setPower(1);
-            leftWheelMotorBack.setPower(-1);
-            rightWheelMotorFront.setPower(-1);
-            rightWheelMotorBack.setPower(1);
-
-        } else if (gamepad1.left_trigger > 0) {
-
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
+
+        } else if (gamepad1.left_trigger > 0) {
+
+            leftWheelMotorFront.setPower(1);
+            leftWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(-1);
+            rightWheelMotorBack.setPower(1);
 
         } else {
             leftWheelMotorFront.setPower(leftY_gp1);
