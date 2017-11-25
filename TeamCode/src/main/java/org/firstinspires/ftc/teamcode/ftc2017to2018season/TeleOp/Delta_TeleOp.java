@@ -128,6 +128,7 @@ public class Delta_TeleOp extends OpMode {
         FourWheelDrive();
         slideMove();
         glyphManipulator();
+        slideIncrement();
 
 
     }
@@ -200,6 +201,7 @@ public class Delta_TeleOp extends OpMode {
 
     public void slideMove() {
 
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y > 0) {
@@ -236,9 +238,9 @@ public class Delta_TeleOp extends OpMode {
 
             glyphServoLeft.setPosition(0.8);
 
-            telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
+           /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
             telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
-            telemetry.update();
+            telemetry.update();    */
         }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
@@ -250,11 +252,13 @@ public class Delta_TeleOp extends OpMode {
 
     public void slideIncrement() {
 
-        if (gamepad2.a) {
+        if (gamepad2.a)
+        {
 
         moveUpInch(2.54);
         }
-        else if (gamepad2.y){
+        else if (gamepad2.y)
+        {
             moveUpInch(-2.54);
         }
     }
@@ -271,7 +275,33 @@ public class Delta_TeleOp extends OpMode {
 
         slideMotor.setPower(0.6);
 
-        while (slideMotor.isBusy()){}
+        while (slideMotor.isBusy()){
+            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
+            telemetry.update();
+
+        }
+
+        slideMotor.setPower(0);
+
+    }
+
+    public void moveDownInch(double cm) {
+        double target_Position;
+        double countsPerCM = 609.6;
+        double finalTarget = cm*countsPerCM;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+
+        slideMotor.setTargetPosition((int)target_Position);
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        slideMotor.setPower(-0.6);
+
+        while (slideMotor.isBusy()){
+            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+            telemetry.update();
+
+        }
 
         slideMotor.setPower(0);
 
