@@ -142,7 +142,6 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         telemetry.update();
         sleep(ONE_SECOND_IN_MIL);
 
-
         /**
          * (2) Disposition jewel of other color than team color.
          * (3) Lift the jewel arm
@@ -154,23 +153,25 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
              * a. Color sensor of team 12547 is mounted facing backward.
              * b. Team color jewel is on the back side in this condition.
              */
-                MoveForwardForJewelDisposition();
+            MoveForwardForJewelDisposition();
 
             // (3) Raise the servo that control the arm to move the JewelMovingArm
             raiseJewelMovingArmServo();
             sleep(ONE_SECOND_IN_MIL);
 
+            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -JEWEL_DISPOSITION_DISTANCE_INCHES, -JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
         } else {
             // (2) Move backward if the jewel is not in the team color
-                MoveBackwardForJewelDisposition();
+            MoveBackwardForJewelDisposition();
 
             //  (3) Raise the servo that control the arm to move the JewelMovingArm
             raiseJewelMovingArmServo();
             sleep(ONE_SECOND_IN_MIL);
 
+            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, JEWEL_DISPOSITION_DISTANCE_INCHES, JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
         }
         // (4) Move robot back to original place
-        encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -JEWEL_DISPOSITION_DISTANCE_INCHES, -JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
+
         sleep(ONE_SECOND_IN_MIL);
 
         // (5) Step through each leg of the path,
@@ -258,6 +259,8 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                         TO_RACK_TIMEOUT_SECONDS);
             }
         }
+        robot.leftClaw.setPosition(0.6);
+        robot.rightClaw.setPosition(0.6);
         telemetry.addData("Mission ", "Complete");
         telemetry.update();
     }
@@ -462,7 +465,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         telemetry.update();
 
     }
-    
+
     private void initVuMark() {
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
