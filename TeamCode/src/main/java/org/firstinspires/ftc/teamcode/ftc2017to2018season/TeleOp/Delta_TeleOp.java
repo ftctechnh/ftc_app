@@ -90,8 +90,8 @@ public class Delta_TeleOp extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServoLeft.setPosition(0.0);
-        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.1);
+        glyphServoRight.setPosition(0.6);
 
 
 //This is closed-loop speed control. Encoders are required for this mode.
@@ -155,11 +155,14 @@ public class Delta_TeleOp extends OpMode {
 
         read the gamepad values and put into variables
          */
-        float leftY_gp1 = (-gamepad1.left_stick_y);//*leftWheelMotorFront.getMaxSpeed();
-        float rightY_gp1 = (-gamepad1.right_stick_y);//*leftWheelMotorFront.getMaxSpeed();
-        float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
-        float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
-        //run the motors by setting power to the motors with the game pad value
+        float leftY_gp1 = (-gamepad1.left_stick_y);
+        float rightY_gp1 = (-gamepad1.right_stick_y);
+        //
+        //11/24/17 This edit was made by Colin Szeto. This was a test that we used to see if the triggers will work for the servos
+        // float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
+        // float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
+        //
+        // run the motors by setting power to the motors with the game pad value
 
         if (gamepad1.right_trigger > 0) {
 
@@ -214,30 +217,36 @@ public class Delta_TeleOp extends OpMode {
     }
 
     public void glyphManipulator() {
-        Boolean Right_Bumper = (gamepad1.right_bumper);
+       /* Boolean Right_Bumper = (gamepad1.right_bumper);
         Boolean Left_Bumper = (gamepad1.left_bumper);
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
+       */
 
-        if (Left_Bumper) {
+        if (gamepad1.left_bumper) {
 
 //opening the claw
 
-            // glyph servo 1 is the right claw
-            glyphServoRight.setPosition(0.0);
+            glyphServoRight.setPosition(0.1);
 
-            // glyph servo 2 is the left claw
-            glyphServoLeft.setPosition(0.5);
+            glyphServoLeft.setPosition(0.6);
         }
-        else if (Right_Bumper){
+        else if (gamepad1.right_bumper){
 
             glyphServoRight.setPosition(-0.25);
+
             glyphServoLeft.setPosition(0.75);
+
+            telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
+            telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
+            telemetry.update();
         }
 
-        telemetry.addData("The value of the right servo is", left_claw);
+/*        telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
         telemetry.update();
+
+        */
     }
 }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Pahel and Rohan on 11/19/17.
  */
 
-@Autonomous(name="glyph_servo", group ="Autonomous")
+@Autonomous(name="jewel_servo", group ="Autonomous")
 public class jewel_servo extends LinearOpMode{
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
