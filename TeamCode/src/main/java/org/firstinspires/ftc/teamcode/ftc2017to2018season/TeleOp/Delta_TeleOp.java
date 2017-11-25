@@ -81,8 +81,8 @@ public class Delta_TeleOp extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
-        glyphServoRight = hardwareMap.servo.get("glyphServo1");
-        glyphServoLeft = hardwareMap.servo.get("glyphServo2");
+        glyphServoRight = hardwareMap.servo.get("glyphServoRight");
+        glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         IVFSM = slideMotor.getCurrentPosition();
 
