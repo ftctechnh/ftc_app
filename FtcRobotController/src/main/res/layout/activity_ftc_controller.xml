@@ -176,7 +176,58 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:visibility="invisible"
       android:text="" />
 
+    <RelativeLayout
+        android:id="@+id/OpenCV_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textOpMode">
+
+      <TextView
+          android:id="@+id/OpenCV_Layout_Header_Text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/opencv_camera_view_enabled"
+          android:textStyle="bold"
+          android:layout_marginTop="10dp"
+          android:layout_marginBottom="5dp"
+          android:layout_alignParentTop="true"/>
+
+      <TextView
+          android:id = "@+id/OpenCV_Analysis_Text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text = "@string/analysis_disabled"
+          android:textStyle = "bold"
+          android:layout_marginBottom = "5dp"
+          android:layout_below = "@id/OpenCV_Layout_Header_Text"/>
+
+      <org.opencv.android.JavaCameraView
+          android:id="@+id/java_camera_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/OpenCV_Analysis_Text"/>
+
+      <Button
+          android:id="@+id/Analyze_OpenCV_Button"
+          style="@style/FtcButtonStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="50dp"
+          android:layout_alignParentBottom="true"
+          android:text="@string/analyze"/>
+
+      <Button
+          android:id="@+id/Show_Hide_Button"
+          style="@style/FtcButtonStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="50dp"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentEnd="true"
+          android:text="@string/hide"/>
+
+    </RelativeLayout>
+
   </RelativeLayout>
+
 
   <WebView
     android:id="@+id/webViewBlocksRuntime"

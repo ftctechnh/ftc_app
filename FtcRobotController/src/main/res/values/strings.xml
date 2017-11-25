@@ -67,5 +67,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </integer-array>
 
   <string name="packageName">@string/packageNameRobotController</string>
+    <string name="hide">Hide</string>
+    <string name="analyze">Analyze</string>
+    <string name="show">Show</string>
+    <string name="opencv_camera_view_enabled">OpenCV Camera View (enabled)</string>
+    <string name="OpenCvCameraViewDisabled">OpenCV Camera View (disabled)</string>
+    <string name="analysis_disabled">Analysis: Disabled</string>
+    <string name="analysis_enabled">Analysis: Enabled</string>
 
 </resources>
