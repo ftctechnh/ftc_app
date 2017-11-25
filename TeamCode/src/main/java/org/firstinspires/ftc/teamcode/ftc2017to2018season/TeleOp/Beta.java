@@ -8,19 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-/**
- * Created by Pahel and Rohan on 11/18/17.
- */
-
-
 @TeleOp(name = "Beta")
 //@Disabled
 public class Beta extends OpMode {
-/*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
-* This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
-* simple program and could work on a different robot with simple debugging and configuration.*/
 
-    /*
+    // Beta is the tester robot that Team Inspiration is using. This program is similar to Delta_TeleOp. It has a few changes.
+
         ---------------------------------------------------------------------------------------------
 
        Define the actuators we use in the robot here
