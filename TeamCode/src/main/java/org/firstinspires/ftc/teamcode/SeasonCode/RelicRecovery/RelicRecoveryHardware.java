@@ -35,9 +35,9 @@ public class  RelicRecoveryHardware extends OpMode {
     protected static final double ARM_OUT = 0.75;
     protected static final double POOP_OPEN= .9;
     protected static final double POOP_CLOSED = 0.1;
-    protected static final double BALL_ROTATE_RIGHT = 0.4;
-    protected static final double BALL_ROTATE_CENTER = 0.47;
-    protected static final double BALL_ROTATE_LEFT = 0.6;
+    protected static final double BALL_ROTATE_RIGHT = 0.3;
+    protected static final double BALL_ROTATE_CENTER = 0.45;
+    protected static final double BALL_ROTATE_LEFT = 0.60;
 
     // ---------------------- Hardware Devices ----------------------
     // ---------------- DcMotors ----------------

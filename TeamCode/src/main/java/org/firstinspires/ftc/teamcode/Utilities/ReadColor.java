@@ -12,8 +12,8 @@ public class ReadColor {
     // -------------------------- Objects ---------------------------
     ColorSensor colorSensor;
 
-    private static final int SENSOR_COMPARE_RED = 24;
-    private static final int SENSOR_COMPARE_BLUE = 18;
+    private static final int SENSOR_COMPARE_RED = 30;
+    private static final int SENSOR_COMPARE_BLUE = 30;
 
     private boolean ifColorFound = false;
 

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Utilities.ReadColor;
 import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
+import org.firstinspires.ftc.teamcode.Utilities.UseIMU;
 import org.firstinspires.ftc.teamcode.Utilities.UseVuforia;
 
 /**
@@ -26,6 +27,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
     UseVuforia useVuforia;
     ReadColor readColor;
     SetRobot setRobot;
+    UseIMU useIMU;
 
     private boolean ifBlue;
     private int state = 0;
@@ -44,12 +46,15 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
         useVuforia = new UseVuforia(hardwareMap,telemetry);
         readColor = new ReadColor(sColor);
         setRobot = new SetRobot(telemetry);
+        useIMU = new UseIMU(hardwareMap,telemetry);
 
         useVuforia.init();
+        useIMU.init();
     }
 
     public void start() {
         useVuforia.start();
+        useIMU.start();
     }
 
     enum States {
@@ -57,6 +62,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
         HIT_JEWEL,
         MOVE_OFF_PLATE,
         ROTATE,
+        WAIT,
         TO_BOX,
         STOP
     }
@@ -67,9 +73,8 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
     @Override
     public void loop() {
         super.loop();
-
-        switch(_state)
-        {
+        useIMU.run();
+        switch(_state) {
             case READING_VALUES:
                 ballPusherPosition = BALL_PUSHER_DOWN;
                 if(useVuforia.run() && readColor.readColor()) {
@@ -86,7 +91,7 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
                     telemetry.addData("Color", "neither, you messed up");
                 }
                 try {
-                    Thread.sleep(100); // .1 second
+                    Thread.sleep(250); // .1 second
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
@@ -97,25 +102,62 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
                 ballRotatorPosition = BALL_ROTATE_CENTER;
                 leftPower = 1;
                 rightPower = 1;
-                if (mRight.getCurrentPosition() > 20*COUNTS_PER_INCH) {
-                    _state = States.STOP;
+                if (mRight.getCurrentPosition() > 24*COUNTS_PER_INCH) {
+                    _state = States.ROTATE;
                 }
                 break;
             case ROTATE:
-                leftPower = .3;
-                rightPower = 1;
-                if (mRight.getCurrentPosition() > (20+40)*COUNTS_PER_INCH) {
-                    _state = States.TO_BOX;
+                /*Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        leftPower = -.4;
+                        rightPower = .4;
+                        while (useIMU.getHeading() < 90) {
+                            telemetry.addData("------HEADING------", useIMU.getHeading());
+                        }
+                        setRobot.power(mRight,0,"right motor");
+                        setRobot.power(mLeft,0,"left motor");
+                        _state = States.STOP;
+                    }
+                });
+                t.start();*/
+                telemetry.addData("------HEADING------", useIMU.getHeading());
+                leftPower = -.2;
+                rightPower = .2;
+                if (useIMU.getHeading() > 70) {
+                    leftPower = -.15;
+                    rightPower = .15;
+                    setRobot.power(mLeft,-.15,"left motor");
+                    setRobot.power(mRight,.15,"right motor");
                 }
+                if (useIMU.getHeading() > 80) {
+                    while (useIMU.getHeading() <= 90) {
+                        leftPower = -.08;
+                        rightPower = .08;
+                        setRobot.power(mLeft, -.08, "left motor");
+                        setRobot.power(mRight, .08, "right motor");
+                    }
+                    leftPower = 0;
+                    rightPower = 0;
+                    setRobot.power(mLeft, 0, "left motor");
+                    setRobot.power(mRight, 0, "right motor");
+                    _state = States.STOP;
+                }
+                //_state = States.WAIT;
+                break;
+            case WAIT:
+                telemetry.addData("Im waiting", "waiting");
                 break;
             case TO_BOX:
-                leftPower = 1;
-                rightPower = 1;
+                leftPower = .5;
+                rightPower = .5;
                 if (mRight.getCurrentPosition() > (20+40+30)*COUNTS_PER_INCH) {
                     _state = States.STOP;
                 }
                 break;
             case STOP:
+                telemetry.addData("------HEADING------", useIMU.getHeading());
                 leftPower = 0;
                 rightPower = 0;
             default:
