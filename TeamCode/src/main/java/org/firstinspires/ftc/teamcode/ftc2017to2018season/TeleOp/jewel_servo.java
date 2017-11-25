@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Pahel and Rohan on 11/19/17.
  */
 
-@Autonomous(name="jewel_servo", group ="Autonomous")
+@Autonomous(name="glyph_servo", group ="Autonomous")
 public class jewel_servo extends LinearOpMode{
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -23,7 +23,8 @@ public class jewel_servo extends LinearOpMode{
     static final double MIN_POS     =  0.0;     // Minimum rotational position
 
     // Define class members
-    Servo glyphServo1;
+    Servo glyphServoRight;
+    //Servo glyphServoLeft;
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     boolean rampUp = true;
 
@@ -33,7 +34,8 @@ public class jewel_servo extends LinearOpMode{
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        glyphServo1 = hardwareMap.get(Servo.class, "jewel_servo");
+        glyphServoRight = hardwareMap.get(Servo.class, "glyphServoRight");
+        //glyphServoLeft = hardwareMap.get(Servo.class, "glyphServoLeft");
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
@@ -63,12 +65,12 @@ public class jewel_servo extends LinearOpMode{
             }
 
             // Display the current value
-            telemetry.addData("Servo Position", "%5.2f", position);
-            telemetry.addData(">", "Press Stop to end test." );
+            telemetry.addData("The position of the right servo is", glyphServoRight.getPosition());
+            //telemetry.addData("The position of the left servo is", glyphServoLeft.getPosition());
             telemetry.update();
 
             // Set the servo to the new position and pause;
-            glyphServo1.setPosition(position);
+            glyphServoRight.setPosition(position);
             sleep(CYCLE_MS);
             idle();
         }
