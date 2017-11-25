@@ -119,21 +119,16 @@ public class RelicDrive
     }
     //encoder drive method
     void encoderDrive(double speed,
-                             double lMDis, double rMDis, double lBDis, double rBDis,
-                             double timeoutS) {
+                             double lMDis, double rMDis, double lBDis, double rBDis) {
         int newLMTarget;
         int newRMTarget;
         int newLBTarget;
         int newRBTarget;
-        telemetry.addData("Path", "before opmode is active");
-        telemetry.update();
-        sleep(500);
 
         // Ensure that the opmode is still active
         //if (opModeIsActive()) {
-        telemetry.addData("Path", "inside opmode: %7d :%7d",robot.leftDrive.getCurrentPosition(),robot.rightDrive.getCurrentPosition());
-        telemetry.update();
-        sleep(500);
+        /*telemetry.addData("Path", "inside opmode: %7d :%7d",robot.leftDrive.getCurrentPosition(),robot.rightDrive.getCurrentPosition());
+        telemetry.update();*/
 
         // Determine new target position, and pass to motor controller
         newLMTarget = leftMid.getCurrentPosition() + (int)(lMDis * COUNTS_PER_INCH);
@@ -145,9 +140,9 @@ public class RelicDrive
         rightMid.setTargetPosition(newRMTarget);
         rightBack.setTargetPosition(newRBTarget);
 
-        telemetry.addData("after new target set",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+        /*telemetry.addData("after new target set",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
         telemetry.update();
-        sleep(500);
+        sleep(500);*/
 
         // Turn On RUN_TO_POSITION
         leftMid.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -156,14 +151,13 @@ public class RelicDrive
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // reset the timeout time and start motion.
-        runtime.reset();
         leftMid.setPower(Math.abs(speed));
         rightMid.setPower(Math.abs(speed));
         leftBack.setPower(Math.abs(speed));
         rightBack.setPower(Math.abs(speed));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
-         while (opModeIsActive() &&
+        /* while (opModeIsActive() &&
         (runtime.seconds() < timeoutS) &&
                 (leftMid.isBusy() && rightMid.isBusy() && leftBack.isBusy() && rightBack.isBusy())) {
 
@@ -173,7 +167,7 @@ public class RelicDrive
                     robot.leftDrive.getCurrentPosition(),
                     robot.rightDrive.getCurrentPosition());
             telemetry.update();
-        }
+        }*/
 
         //Stop all motion;
         leftMid.setPower(0);
@@ -181,9 +175,9 @@ public class RelicDrive
         leftBack.setPower(0);
         rightBack.setPower(0);
 
-        telemetry.addData("PathJ", "inside opmode: %7d :%7d",robot.leftDrive.getCurrentPosition(),robot.rightDrive.getCurrentPosition());
+        /*telemetry.addData("PathJ", "inside opmode: %7d :%7d",robot.leftDrive.getCurrentPosition(),robot.rightDrive.getCurrentPosition());
         telemetry.update();
-        sleep(500);
+        sleep(500);*/
 
         // Turn off RUN_TO_POSITION
         leftMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -191,7 +185,38 @@ public class RelicDrive
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //  sleep(250);   // optional pause after each move
-    } //end of encoder drive code
+        //  sleep(250);   // all comments were from when this method was in an OpMode. These commands don't work in non OpModes.
+    } //end of encoder drive method
+    public void linearDrive (double distance, double speed){
+        encoderDrive(speed, distance, distance, distance,distance);
+    }
+    public void statTurn(double speed, double degrees){
+        double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
+        double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
+        encoderDrive(speed, midArc, -midArc, outArc, -outArc);
+    }
+    public void pivotTurn(double speed, double degrees, String direction){
+        if (direction == "right"){
+            double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
+            double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
+            encoderDrive(speed, midArc, 0, outArc, 0);
+        }else if (direction == "left"){
+            double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
+            double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
+            encoderDrive(speed, 0, midArc, 0, outArc);
+        }
+    }
+    public double getLMencoder(){
+        return leftMid.getCurrentPosition();
+    }
+    public double getRMencoder(){
+        return rightMid.getCurrentPosition();
+    }
+    public double getLBencoder(){
+        return leftBack.getCurrentPosition();
+    }
+    public double getRBencoder(){
+        return rightBack.getCurrentPosition();
+    }
  }
 

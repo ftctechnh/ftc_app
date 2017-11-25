@@ -92,15 +92,20 @@ public class GlyphArm
         clawServo  = hwMap.get(Servo.class, "the_claw");
         clawServo.setPosition(MID_SERVO);
     }
-    public void armPoss(int poss, double speed){
-        int i = (int) (poss/100*THROW);
+    public void armPos(int pos, double speed){
+        int i = (int) (pos/100*THROW);
         armMotor.setTargetPosition(i);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(Math.abs(speed));
     }
-    public void clawPoss(int poss){
-        int i = (int) (poss/100);
-        clawServo.setPosition(i);
+    public void clawPos(double pos){
+        clawServo.setPosition(pos);
+    }
+    public double getClawPosition(){
+        return clawServo.getPosition();
+    }
+    public double getArmPosition(){
+        return armMotor.getCurrentPosition();
     }
  }
 

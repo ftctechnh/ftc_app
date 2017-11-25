@@ -25,10 +25,11 @@ public class RlcRcvryAutoSwitch extends OpMode{
     RelicDrive robot       = new RelicDrive();
     private ElapsedTime     runtime = new ElapsedTime();
 
-    int glyph = 0;
+    RelicRecoveryVuMark glyph;
     GlyphArm gilgearmesh = new GlyphArm();
 
-
+    JewelSystem sensArm = new JewelSystem();
+    String jewelColor;
 
     VuforiaLocalizer vuforia;
     int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -46,9 +47,9 @@ public class RlcRcvryAutoSwitch extends OpMode{
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         //need code for gripping glyph and moving arm slightly up
 
-        gilgearmesh.clawPoss(0);
+        gilgearmesh.clawPos(0);
         //wait needed? Also... guessed parameters
-        gilgearmesh.armPoss(2, 1);
+        gilgearmesh.armPos(2, 1);
         stateMachineFlow = 0;
         relicTrackables.activate();
     }
@@ -66,28 +67,31 @@ public class RlcRcvryAutoSwitch extends OpMode{
                 while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
                     vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     //viewforia stuff goes here
-                    if (vuMark == center){glyph = 1;}
-                    else if (vuMark == left){glyph = 2;}
-                    else if (vuMark == right){glyph = 3;}
+                    if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;}
+                    else if (vuMark == RelicRecoveryVuMark.LEFT){glyph = RelicRecoveryVuMark.LEFT;}
+                    else if (vuMark == RelicRecoveryVuMark.RIGHT){glyph = RelicRecoveryVuMark.RIGHT;}
                 }
                 stateMachineFlow++;
                 break;
-            case 2:
-                if (sensor()) = x)
-                    jewelColor = blue;
-                else
-                    jewelColor = red;
+            case 2://look at this
+                sensArm.armPos(.444);
+                if (sensArm.colorSens() == "blue"){
+                    jewelColor = "blue";}
+                else if (sensArm.colorSens() == "red"){
+                    jewelColor = "red";}
+                stateMachineFlow++;
+                break;
             case 3:
                 //this might change depending on what arm attachment used for jewels
-                if (jewlColor() = blue){encoderDrive(TURN_SPEED, 10, -10, 5);}
-                else (jewelColor() = red){encoderDrive(DRIVE_SPEED, 10, 10, 5);}
+                if (jewelColor == "blue"){encoderDrive(TURN_SPEED, 10, -10, 5);}
+                else if (jewelColor == "red"){encoderDrive(DRIVE_SPEED, 10, 10, 5);}
 
                 //move forward towards jewel
                 //knock off correct jewel
 
-                if (glyph() = 1){encoderDrive(DRIVE_SPEED);}
-                else if (glyph() = 2) {encoderDrive(DRIVE_SPEED);}
-                else if (glyph() = 3) {encoderDrive(DRIVE_SPEED);}
+                if (glyph() == 1){encoderDrive(DRIVE_SPEED);}
+                else if (glyph() == 2) {encoderDrive(DRIVE_SPEED);}
+                else if (glyph() == 3) {encoderDrive(DRIVE_SPEED);}
                 stateMachineFlow++;
                 break;
             case 4:
