@@ -90,8 +90,8 @@ public class Delta_TeleOp extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServoLeft.setPosition(0.0);
-        glyphServoRight.setPosition(0.0);
+        glyphServoLeft.setPosition(0.5);
+        glyphServoRight.setPosition(0.35);
 
 
 //This is closed-loop speed control. Encoders are required for this mode.
@@ -164,14 +164,14 @@ public class Delta_TeleOp extends OpMode {
         //
         // run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.right_trigger > 0) {
+        if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
-        } else if (gamepad1.left_trigger > 0) {
+        } else if (gamepad1.right_trigger > 0) {
 
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
@@ -226,8 +226,7 @@ public class Delta_TeleOp extends OpMode {
         if (gamepad1.left_bumper) {
 
 //opening the claw
-            //commented out so that it wouldnt ruin the old code
-            glyphServoRight.setPosition(0.5);
+            glyphServoRight.setPosition(0.35);
             /*try {
                 glyphServoRight.setPosition(0.5);
             } catch (Exception e) {
