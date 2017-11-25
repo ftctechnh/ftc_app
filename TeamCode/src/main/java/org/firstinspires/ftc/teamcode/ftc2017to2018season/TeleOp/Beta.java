@@ -14,7 +14,7 @@ public class Beta extends OpMode {
 
     // Beta is the tester robot that Team Inspiration is using. This program is similar to Delta_TeleOp. It has a few changes.
 
-        ---------------------------------------------------------------------------------------------
+     /*   ---------------------------------------------------------------------------------------------
 
        Define the actuators we use in the robot here
     */

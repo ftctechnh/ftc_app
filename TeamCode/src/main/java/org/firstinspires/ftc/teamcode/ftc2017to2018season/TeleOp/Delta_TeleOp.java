@@ -259,7 +259,7 @@ public class Delta_TeleOp extends OpMode {
         }
         else if (gamepad2.y)
         {
-            moveUpInch(-2.54);
+            moveDownInch(2.54);
         }
     }
 
