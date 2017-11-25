@@ -90,8 +90,8 @@ public class Delta_TeleOp extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServoLeft.setPosition(0.1);
-        glyphServoRight.setPosition(0.6);
+        glyphServoLeft.setPosition(0.0);
+        glyphServoRight.setPosition(0.0);
 
 
 //This is closed-loop speed control. Encoders are required for this mode.
@@ -226,16 +226,21 @@ public class Delta_TeleOp extends OpMode {
         if (gamepad1.left_bumper) {
 
 //opening the claw
+            //commented out so that it wouldnt ruin the old code
+           // glyphServoRight.setPosition(0.5);
+            try {
+                glyphServoRight.setPosition(0.5);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            glyphServoRight.setPosition(0.1);
-
-            glyphServoLeft.setPosition(0.6);
+            glyphServoLeft.setPosition(0.5);
         }
         else if (gamepad1.right_bumper){
 
-            glyphServoRight.setPosition(-0.25);
+            glyphServoRight.setPosition(0.1);
 
-            glyphServoLeft.setPosition(0.75);
+            glyphServoLeft.setPosition(0.8);
 
             telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
             telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
@@ -249,5 +254,4 @@ public class Delta_TeleOp extends OpMode {
         */
     }
 }
-
-//---------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
