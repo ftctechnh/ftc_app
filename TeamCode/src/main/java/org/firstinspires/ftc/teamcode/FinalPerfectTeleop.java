@@ -67,6 +67,11 @@ MasterHardwareClass robot = new MasterHardwareClass();
 
             telemetry.update();
 
+        /* Set the arm up */
+            if(robot.gemServo.getPosition() != robot.xPosUp){
+                robot.gemServo.setPosition(robot.xPosUp);
+            }
+
         /* Servo Control */
             if (gamepad1.x) {
                 robot.clawServo.setPower(robot.clawOpen);

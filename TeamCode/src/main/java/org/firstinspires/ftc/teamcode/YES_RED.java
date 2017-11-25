@@ -49,7 +49,10 @@ public class YES_RED extends LinearOpMode
         backLeftMotor = hardwareMap.dcMotor.get("BL");
         frontRightMotor = hardwareMap.dcMotor.get("FR");
         backRightMotor = hardwareMap.dcMotor.get("BR");
-//yuh
+        gemServo = hardwareMap.servo.get("gemservo");
+        colorSensor = hardwareMap.colorSensor.get("colorsensor");
+
+        //yuh
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -112,20 +115,18 @@ public class YES_RED extends LinearOpMode
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
-            movebytime(.5,.3,"Forward");
-            movebytime(.5,.3,"Backward");
-            movebytime(.5,.3,"Left");
-            movebytime(.5,.3,"Right");
+        gemServo.setPosition(xPosDown);
+        sleep(1500);
+        findColor();
+        movebytime(2,.5,"Left");
 
-            rotate(10,.3);
-            rotate(-10,.3);
-
-        // turn the motors off.
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backRightMotor.setPower(0);
     }
+
+
+
+
+
+
 
 
     /* This method moves the robot forward for time and power indicated*/
@@ -210,16 +211,18 @@ public class YES_RED extends LinearOpMode
 
     public void findColor()
     {
-        if ((colorSensor.red()) < colorSensor.blue())
+        if (colorSensor.red() < colorSensor.blue())
         {
             resetAngle();
-            rotate(90,.5);
+            rotate(90,.2);
             wheelsOff();
         }
         else
-            resetAngle();
-        rotate(-90,.5);
+        resetAngle();
+        rotate(-90,.2);
         wheelsOff();
+        sleep(500);
+        rotate(180, .2);
     }
 
 

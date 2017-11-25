@@ -35,6 +35,7 @@ public class MasterHardwareClass {
     public DcMotor verticalArmMotor = null;
     public CRServo clawServo = null;
     public BNO055IMU imu = null;
+    public Servo gemServo;
 
 
     /* Give place holder values for the motors and the grabber servo */
@@ -77,6 +78,7 @@ public class MasterHardwareClass {
         verticalArmMotor = hwMap.dcMotor.get("VAM");
         clawServo =  hwMap.crservo.get("CS");
         imu = hwMap.get(BNO055IMU.class, "imu");
+        gemServo = hwMap.servo.get("gemservo");
 
         // Set all hardware to default position
         // Set all hardware to default position
@@ -94,16 +96,6 @@ public class MasterHardwareClass {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-//        // Set proper encoder state for all motor
-//        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        sensorColorRight = hwMap.get(ColorSensor.class, "colorsensor");
-//        // get a reference to the distance sensor that shares the same name.
-//        sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
-//        gemServo = hwMap.get(Servo.class, "gemservo");
 
     }
 }
