@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.teamcode.Ftc12547Config;
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -79,10 +80,12 @@ public class Ftc12547AutonomousCalib extends LinearOpMode {
         telemetry.setAutoClear(false);
         waitForStart();
 
-        encoderDriver.encoderDrive(0.1, 30, 30, 100);
+        //encoderDriver.encoderDrive(0.1, 30, 30, 100);
 
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        encoderDriver.encoderTurn(0.1, -Ftc12547Config.NINETY_DEGREE_TURN, Ftc12547Config.NINETY_DEGREE_TURN, 10);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

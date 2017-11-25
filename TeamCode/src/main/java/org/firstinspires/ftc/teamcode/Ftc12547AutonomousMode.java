@@ -135,7 +135,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                 (int) (sensorColor.blue() * SCALE_FACTOR),
                 hsvValues);
 
-        int jewelColor = (sensorColor.red() > COLOR_THRESHOLD) ? Color.RED : Color.BLUE;
+        int jewelColor = (sensorColor.red() > sensorColor.blue()) ? Color.RED : Color.BLUE;
         telemetry.addData("Blue ", sensorColor.blue());
         telemetry.addData("Red ", sensorColor.red());
         telemetry.addData("Jewel color: ", (jewelColor == Color.RED) ? "Red" : "Blue");
@@ -146,7 +146,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
         /**
          * (2) Disposition jewel of other color than team color.
          * (3) Lift the jewel arm
-         * (4) Adjust distance to the rack by the driving distance to kick the jewel.
+         * (4) Move robot back to original place to move to rack
          */
         if (jewelColor == TEAM_COLOR){
             /**
@@ -154,52 +154,41 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
              * a. Color sensor of team 12547 is mounted facing backward.
              * b. Team color jewel is on the back side in this condition.
              */
-            if (TEAM_COLOR == Color.RED) {
-                MoveBackwardForJewelDisposition();
-            }else{
                 MoveForwardForJewelDisposition();
-            }
-
-            JEWEL_DISPOSITION_DISTANCE_INCHES -= 4;
 
             // (3) Raise the servo that control the arm to move the JewelMovingArm
             raiseJewelMovingArmServo();
             sleep(ONE_SECOND_IN_MIL);
 
-            // (4a) Turn 180 degrees for red in order to face rack.
-            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -ONE_EIGHTY_DEGREE_TURN, ONE_EIGHTY_DEGREE_TURN, 5);
-
         } else {
             // (2) Move backward if the jewel is not in the team color
-            if (TEAM_COLOR == Color.RED) {
-                MoveForwardForJewelDisposition();
-            }else{
                 MoveBackwardForJewelDisposition();
-            }
 
             //  (3) Raise the servo that control the arm to move the JewelMovingArm
             raiseJewelMovingArmServo();
             sleep(ONE_SECOND_IN_MIL);
 
         }
+        // (4) Move robot back to original place
+        encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -JEWEL_DISPOSITION_DISTANCE_INCHES, -JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
         sleep(ONE_SECOND_IN_MIL);
 
         // (5) Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // Note: IT IS DIFFERENT DEPENDING ON THE POSITION OF THE THING
+        // Note: IT IS DIFFERENT DEPENDING ON THE FOUR STARTING POSITIONS
 
         if (TEAM_COLOR == Color.BLUE) {
             if (TOWARDS_AUDIENCE == true) {
                 telemetry.addData("Moving to the final destination", rack_distance);
                 encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
-                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
-                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
+                        rack_distance,
+                        rack_distance,
                         DESTINATION_TIMEOUT_SECONDS);
 
                 stopMotorsAndRestShortly();
 
                 // (6) turn left
-                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                encoderDriver.encoderTurn(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
                 stopMotorsAndRestShortly();
 
                 // (7) push the block into rack
@@ -208,8 +197,8 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                         DISTANCE_TO_RACK_INCHES,
                         TO_RACK_TIMEOUT_SECONDS);
             }else{
-                encoderDriver.encoderDrive(ENCODER_RUN_SPEED, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, DESTINATION_TIMEOUT_SECONDS);
-                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED, TWO_FEET, TWO_FEET, DESTINATION_TIMEOUT_SECONDS);
+                encoderDriver.encoderTurn(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
                 telemetry.addData("Moving to the final destination", rack_distance);
                 encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
                         rack_distance,
@@ -219,7 +208,7 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                 stopMotorsAndRestShortly();
 
                 // (6) turn left
-                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                encoderDriver.encoderTurn(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
                 stopMotorsAndRestShortly();
 
                 // (7) push the block into rack
@@ -232,14 +221,14 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
             if (TOWARDS_AUDIENCE == true) {
                 telemetry.addData("Moving to the final destination", rack_distance);
                 encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
-                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
-                        rack_distance + JEWEL_DISPOSITION_DISTANCE_INCHES,
+                        -rack_distance,
+                        -rack_distance,
                         DESTINATION_TIMEOUT_SECONDS);
 
                 stopMotorsAndRestShortly();
 
-                // (6) turn right
-                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                // (6) turn left
+                encoderDriver.encoderTurn(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
                 stopMotorsAndRestShortly();
 
                 // (7) push the block into rack
@@ -248,18 +237,18 @@ public class Ftc12547AutonomousMode extends LinearOpMode {
                         DISTANCE_TO_RACK_INCHES,
                         TO_RACK_TIMEOUT_SECONDS);
             }else{
-                encoderDriver.encoderDrive(ENCODER_RUN_SPEED, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, TWO_FEET + JEWEL_DISPOSITION_DISTANCE_INCHES, DESTINATION_TIMEOUT_SECONDS);
-                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, -NINETY_DEGREE_TURN, NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                encoderDriver.encoderDrive(ENCODER_RUN_SPEED, TWO_FEET, TWO_FEET, DESTINATION_TIMEOUT_SECONDS);
+                encoderDriver.encoderTurn(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
                 telemetry.addData("Moving to the final destination", rack_distance);
                 encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
-                        rack_distance,
-                        rack_distance,
+                        -rack_distance,
+                        -rack_distance,
                         DESTINATION_TIMEOUT_SECONDS);
 
                 stopMotorsAndRestShortly();
 
                 // (6) turn right
-                encoderDriver.encoderDrive(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
+                encoderDriver.encoderTurn(DESTINATION_TURN_SPEED, NINETY_DEGREE_TURN, -NINETY_DEGREE_TURN, DESTINATION_TURN_TIMEOUT_SECONDS);
                 stopMotorsAndRestShortly();
 
                 // (7) push the block into rack

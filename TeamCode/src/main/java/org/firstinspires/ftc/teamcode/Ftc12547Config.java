@@ -13,7 +13,7 @@ public class Ftc12547Config {
     /**
      * Set the team to the right color. BLUE or RED
      */
-    public static final int     TEAM_COLOR                          = Color.RED;
+    public static final int     TEAM_COLOR                          = Color.BLUE;
     public static final boolean TOWARDS_AUDIENCE                    = true;
     /**
      * VuMark configurations
@@ -48,12 +48,12 @@ public class Ftc12547Config {
      * Autonomous mode driving configurations
      */
     // *** two motors do not move evenly. Apply the factor below to the right wheel. ***
-    public static final double AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR = 0.5;
+    public static final double AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR = 0.27;
 
     public static final double ENCODER_RUN_SPEED                    = 0.1;
     public static final int REST_AFTER_ENCODER_RUN_MIL_SECONDS      = ONE_SECOND_IN_MIL / 4;
 
-    public static double JEWEL_DISPOSITION_DISTANCE_INCHES          = 2;
+    public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 2;
     public static final double JEWEL_DISPOSITION_TIMEOUT_SECONDS    = 3;
 
     public static final double TWO_FEET                             = 24;
@@ -69,8 +69,8 @@ public class Ftc12547Config {
     public static final double DESTINATION_TURN_SPEED               = 0.1;
     public static final double DESTINATION_TURN_TIMEOUT_SECONDS     = 5;
 
-    public static final double NINETY_DEGREE_TURN                   = 16 * 3.1415926 / 4;
-    public static final double ONE_EIGHTY_DEGREE_TURN               = 16 * 3.1415926 / 2;
+    public static final double NINETY_DEGREE_TURN                   = 12 * 3.14159265358979 / 4;
+    public static final double ONE_EIGHTY_DEGREE_TURN               = 12 * 3.14159265358979 / 2;
 
     public static final double DISTANCE_TO_RACK_INCHES              = 12;
     public static final double TO_RACK_TIMEOUT_SECONDS              = 12;
@@ -79,5 +79,5 @@ public class Ftc12547Config {
     public static final double DRIVE_GEAR_REDUCTION    = 0.5;  // This is < 1.0 if geared UP
     public static final double WHEEL_DIAMETER_INCHES   = 4.0;  // For figuring circumference
     public static final double COUNTS_PER_INCH
-            = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415926);
+            = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.14159265358979);
 }
