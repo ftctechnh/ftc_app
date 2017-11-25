@@ -17,7 +17,7 @@ public class  RelicRecoveryHardware extends OpMode {
     // constants for the servos
     protected static final double BALL_PUSHER_UP = .44;
     protected static final double BALL_PUSHER_DOWN = 1;
-    protected static final double OPEN_ONE_HAND = .3;
+    protected static final double OPEN_ONE_HAND = 1;
     protected static final double CLOSED_ONE_HAND = 0;
     protected static final double STOPPED_CR_HAND = 0;
     protected static final double OPEN_CR_HAND = 1;

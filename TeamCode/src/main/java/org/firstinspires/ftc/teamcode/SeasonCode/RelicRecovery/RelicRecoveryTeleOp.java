@@ -22,13 +22,6 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
     private boolean x1 = true;
     private boolean y1 = true;
     private boolean defaultDrive = true;
-
-    private boolean isPad1XPressed;
-    private boolean isPad1XReleased;
-    private boolean isPad2YPressed;
-    private boolean isPad2YReleased;
-
-
     // ----------------------- Public Methods -----------------------
     // ----------------------- Init -----------------------
     @Override
@@ -156,23 +149,17 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         }
         // --------------- Jewels ---------------
         if (gamepad1.x) {
-            isPad1XPressed = true;
-            isPad1XReleased = false;
-        }
-        if (isPad1XPressed) {
-            if (!gamepad1.x) {
-                isPad1XReleased = true;
-                isPad1XPressed = false;
-            }
-            if (isPad1XReleased) {
+            if (x1) {
                 if (ballPusherPosition == BALL_PUSHER_UP) {
                     ballPusherPosition = BALL_PUSHER_DOWN;
                 } else {
                     ballPusherPosition = BALL_PUSHER_UP;
                 }
+                x1 = false;
+            } else {
+                x1 = true;
             }
         }
-
         if (gamepad1.b) {
             ballRotatorPosition = BALL_ROTATE_RIGHT;
         } else if (gamepad1.a) {
@@ -186,31 +173,28 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         // ---------------- Lift ----------------
         liftPower -= gamepad2.right_stick_y;
         // -------------- Grabber ---------------
-
-        if (gamepad2.y) {
-            isPad2YPressed = true;
-            isPad2YReleased = false;
+        if (gamepad2.dpad_right) {
+            RelicHold = true;
+            oneHandPosition = OPEN_ONE_HAND;
+        } else if (gamepad2.dpad_left) {
+            RelicHold = false;
+            relicPosition = OPEN_RELIC;
+            oneHandPosition = CLOSED_ONE_HAND;
         }
-        if (isPad2YPressed) {
-            if (!gamepad2.y) {
-                isPad2YReleased = true;
-                isPad2YPressed = false;
-            }
-            if (isPad2YReleased) {
-                if (oneHandPosition == OPEN_ONE_HAND) {
-                    oneHandPosition = CLOSED_ONE_HAND;
-                } else {
-                    oneHandPosition = OPEN_ONE_HAND;
-                }
+        if (RelicHold) {
+            relicPosition = CLOSED_RELIC;
+        } else {
+            if (gamepad2.dpad_left) {
+                relicPosition = OPEN_RELIC;
+            } else {
+                relicPosition = STOPPED_RELIC;
             }
         }
         // ---------------- Arm -----------------
         if (gamepad2.right_bumper) {
-            armPosition += .0008;
+            armPosition += .0002;
         } else if (gamepad2.left_bumper) {
-            armPosition -=.0008;
-            if (armPosition < 0)
-                armPosition = 0;
+            armPosition -=.0002;
         }
         armLifterPwr = gamepad2.right_trigger - gamepad2.left_trigger;
     }
@@ -228,7 +212,6 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
         setRobot.position(ssArm,armPosition,"arm servo");
         setRobot.position(ssRelicGrabber,oneHandPosition,"relic grabber servo");
         setRobot.position(ssPoop,poopPosition,"poop");
-        setRobot.position(ssBallRotator, ballRotatorPosition,"ball rototor sero");
         // ----- Continuous Rotation Servos -----
         setRobot.position(crHand,crHandPosition,"hand crservo");
         setRobot.position(crRelicGrabber,relicPosition, "relic grabber crservo");
