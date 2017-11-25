@@ -13,8 +13,8 @@ public class RightDrive implements DriveTrain {
 
     @Override
     public double[] drive(Gamepad gamepad1) {
-        rightPower = gamepad1.right_stick_y;
-        leftPower = gamepad1.right_stick_y;
+        rightPower = -gamepad1.right_stick_y;
+        leftPower = -gamepad1.right_stick_y;
         rightPower += gamepad1.right_stick_x;
         leftPower -= gamepad1.right_stick_x;
         drivePower[0] = rightPower;

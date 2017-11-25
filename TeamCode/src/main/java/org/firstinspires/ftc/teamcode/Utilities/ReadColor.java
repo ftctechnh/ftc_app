@@ -12,11 +12,12 @@ public class ReadColor {
     // -------------------------- Objects ---------------------------
     ColorSensor colorSensor;
 
-    private static final int SENSOR_COMPARE_NUMBER = 30;
+    private static final int SENSOR_COMPARE_RED = 24;
+    private static final int SENSOR_COMPARE_BLUE = 18;
 
     private boolean ifColorFound = false;
 
-    enum Color {
+    public enum Color {
         NEITHER,
         RED,
         BLUE
@@ -29,10 +30,10 @@ public class ReadColor {
     }
     // ----------------------- Public Methods -----------------------
     public boolean readColor() {
-        if (colorSensor.blue() > SENSOR_COMPARE_NUMBER) {
+        if (colorSensor.blue() > SENSOR_COMPARE_BLUE) {
             ifColorFound = true;
             colorDetected = Color.BLUE;
-        } else if (colorSensor.red() > SENSOR_COMPARE_NUMBER) {
+        } else if (colorSensor.red() > SENSOR_COMPARE_RED) {
             ifColorFound = true;
             colorDetected = Color.RED;
         }

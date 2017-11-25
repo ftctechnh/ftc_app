@@ -58,7 +58,7 @@ public class  RelicRecoveryHardware extends OpMode {
     CRServo crArmLift;
     CRServo crArm;
     // ---------------- Sensors -----------------
-    ColorSensor color;
+    ColorSensor sColor;
 
     // --------------------- Hardware Variables ---------------------
     protected double rightPower = 0;
@@ -90,8 +90,8 @@ public class  RelicRecoveryHardware extends OpMode {
     private void hardwareInit() {
         Map map = new Map(hardwareMap,telemetry);
         // -------------- DcMotors --------------
-        mRight = map.revMotor("r");
-        mLeft = map.motor("l");
+        mRight = map.motor("r");
+        mLeft = map.revMotor("l");
         mLift = map.motor("lift");
         mArm = map.motor("arm");
         mArmLift = map.motor("armLift");
@@ -109,9 +109,9 @@ public class  RelicRecoveryHardware extends OpMode {
 
 
         try {
-            color = hardwareMap.get(ColorSensor.class, "cd");
+            sColor = hardwareMap.get(ColorSensor.class, "cd");
         } catch (Exception e) {
-            telemetry.addData("color-distance", "well I tried");
+            telemetry.addData("sColor-distance", "well I tried");
         }
     }
 }
