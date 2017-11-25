@@ -91,7 +91,7 @@ public class Delta_TeleOp extends OpMode {
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
         glyphServoLeft.setPosition(0.5);
-        glyphServoRight.setPosition(0.5);
+        glyphServoRight.setPosition(0.35);
 
 
 //This is closed-loop speed control. Encoders are required for this mode.
