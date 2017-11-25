@@ -59,6 +59,17 @@ public class RelicDrive
     public DcMotor  leftBack    = null;
     public DcMotor  rightBack   = null;
 
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.7;
+    static final double     TURN_SPEED              = 0.65;
+
+    //These are guesses
+    public static final double MID_RAD = 7;
+    public static final double OUT_RAD = 8;
 
     //public static final double ARM_UP_POWER    =  0.45 ;
     //public static final double ARM_DOWN_POWER  = -0.45 ;
@@ -100,6 +111,87 @@ public class RelicDrive
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        leftMid.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMid.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
+    //encoder drive method
+    void encoderDrive(double speed,
+                             double lMDis, double rMDis, double lBDis, double rBDis,
+                             double timeoutS) {
+        int newLMTarget;
+        int newRMTarget;
+        int newLBTarget;
+        int newRBTarget;
+        telemetry.addData("Path", "before opmode is active");
+        telemetry.update();
+        sleep(500);
+
+        // Ensure that the opmode is still active
+        //if (opModeIsActive()) {
+        telemetry.addData("Path", "inside opmode: %7d :%7d",robot.leftDrive.getCurrentPosition(),robot.rightDrive.getCurrentPosition());
+        telemetry.update();
+        sleep(500);
+
+        // Determine new target position, and pass to motor controller
+        newLMTarget = leftMid.getCurrentPosition() + (int)(lMDis * COUNTS_PER_INCH);
+        newRMTarget = rightMid.getCurrentPosition() + (int)(rMDis * COUNTS_PER_INCH);
+        newLBTarget = leftBack.getCurrentPosition() + (int)(lBDis * COUNTS_PER_INCH);
+        newRBTarget = rightBack.getCurrentPosition() + (int)(rBDis * COUNTS_PER_INCH);
+        leftMid.setTargetPosition(newLMTarget);
+        leftBack.setTargetPosition(newLBTarget);
+        rightMid.setTargetPosition(newRMTarget);
+        rightBack.setTargetPosition(newRBTarget);
+
+        telemetry.addData("after new target set",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+        telemetry.update();
+        sleep(500);
+
+        // Turn On RUN_TO_POSITION
+        leftMid.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMid.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // reset the timeout time and start motion.
+        runtime.reset();
+        leftMid.setPower(Math.abs(speed));
+        rightMid.setPower(Math.abs(speed));
+        leftBack.setPower(Math.abs(speed));
+        rightBack.setPower(Math.abs(speed));
+
+        // keep looping while we are still active, and there is time left, and both motors are running.
+         while (opModeIsActive() &&
+        (runtime.seconds() < timeoutS) &&
+                (leftMid.isBusy() && rightMid.isBusy() && leftBack.isBusy() && rightBack.isBusy())) {
+
+            // Display it for the driver.
+            telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+            telemetry.addData("Path2",  "Running at %7d :%7d",
+                    robot.leftDrive.getCurrentPosition(),
+                    robot.rightDrive.getCurrentPosition());
+            telemetry.update();
+        }
+
+        //Stop all motion;
+        leftMid.setPower(0);
+        rightMid.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+        telemetry.addData("PathJ", "inside opmode: %7d :%7d",robot.leftDrive.getCurrentPosition(),robot.rightDrive.getCurrentPosition());
+        telemetry.update();
+        sleep(500);
+
+        // Turn off RUN_TO_POSITION
+        leftMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //  sleep(250);   // optional pause after each move
+    } //end of encoder drive code
  }
 
