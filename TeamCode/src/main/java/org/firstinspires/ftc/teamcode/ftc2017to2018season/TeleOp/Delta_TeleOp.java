@@ -37,10 +37,6 @@ public class Delta_TeleOp extends OpMode {
 
 
 
-
-
-
-
 /*
     ---------------------------------------------------------------------------------------------
 
@@ -234,8 +230,7 @@ public class Delta_TeleOp extends OpMode {
             }
 */
             glyphServoLeft.setPosition(0.5);
-        }
-        else if (gamepad1.right_bumper){
+        } else if (gamepad1.right_bumper) {
 
             glyphServoRight.setPosition(0.1);
 
@@ -252,5 +247,19 @@ public class Delta_TeleOp extends OpMode {
 
         */
     }
+
+    public void slideIncrement() {
+
+        if (gamepad2.a) {
+            
+        }
+    }
+
+    public void moveUpInch(double cm) {
+        int target_Position;
+
+        slideMotor.setTargetPosition();
+    }
 }
+
 //--------------------------------------------------------------------------------------------
