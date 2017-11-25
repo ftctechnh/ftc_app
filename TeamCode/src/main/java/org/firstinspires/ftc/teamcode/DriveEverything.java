@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
-
 /**
  * Created by Kaden on 10/19/2017.
  */
@@ -12,8 +10,6 @@ public class DriveEverything extends OpMode {
     private ForkLift Forklift;
     private RelicClaw RelicClaw;
     private DriveMecanum drive;
-
-
     @Override
     public void init() {
         Forklift = new ForkLift(
@@ -37,7 +33,6 @@ public class DriveEverything extends OpMode {
                 hardwareMap.dcMotor.get("m4"), //RearRight
                 1.0); //top speed as a decimal
     }
-
     @Override
     public void loop() {
         //Drive
@@ -47,7 +42,6 @@ public class DriveEverything extends OpMode {
         } else if (gamepad1.left_bumper) {
             drive.swingLeft();
         }
-
         //Forklift
         if (gamepad1.a) {
             Forklift.closeClaw();
@@ -56,7 +50,6 @@ public class DriveEverything extends OpMode {
             Forklift.openClaw();
         }
         Forklift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
-
         //Relic recovery
         if (gamepad2.a) {
             RelicClaw.closeClaw();
@@ -66,7 +59,5 @@ public class DriveEverything extends OpMode {
         }
         RelicClaw.setArmPosition(Range.clip(gamepad2.right_stick_y / 250 + RelicClaw.getArmPosition(), 0.0, 1.0));
         RelicClaw.moveMotor(gamepad2.left_stick_y);
-
     }
-
 }
