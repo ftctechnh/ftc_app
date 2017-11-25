@@ -134,63 +134,39 @@ public class ourteleop extends OpMode{
             robot.rightClaw.setPosition(robot.jawsclosed);
             telemetry.addData("position", robot.jawsclosed);
             telemetry.update();
-        }
 
+            robot.leftClaw.setPosition(robot.jawsclosed);
+            telemetry.addData("position", robot.jawsclosed);
+            telemetry.update();
+
+        }
 
         if (gamepad2.left_bumper) {
 
             robot.rightClaw.setPosition(robot.jawsopen);
             telemetry.addData("position", robot.jawsopen);
             telemetry.update();
+
+            robot.leftClaw.setPosition(robot.jawsopen);
+            telemetry.addData("position", robot.jawsopen);
+            telemetry.update();
+
         }
 
         armmotor = gamepad2.right_stick_y;
-       if (armmotor!=0){
-            robot.move_arm_function(armmotor);
-       }
+        robot.move_arm_function(armmotor);
 
 
         lazysusan = gamepad2.left_stick_x;
+        robot.lazy_susan_function(lazysusan);
 
-      /*  if (gamepad2.dpad_left) {
-
-            robot.lazysusan.setPosition(robot.lazyleft);
-            telemetry.addData("position", robot.lazyleft);
-            telemetry.update();
-        }
-        */
-
-
-        // Use gamepad left & right Bumpers to open and close the claw
-      /*  if (gamepad2.right_bumper)
-            clawOffset += CLAW_SPEED;
-        else if (gamepad2.left_bumper)
-            clawOffset -= CLAW_SPEED;
-            */
-
-
-
-
-       /* // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
-            robot.leftArm.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
-            robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-        else
-            robot.leftArm.setPower(0.0);
-*/
         // Send telemetry message to signify robot running;
         telemetry.addData("armmotor",  "Offset = %.2f", armmotor);
         telemetry.addData("left_y",  "%.2f", strafeThrottle);
         telemetry.addData("left_x", "%.2f", strafeDirection);
         telemetry.addData("right_x",  "%.2f", turnDirection);
         telemetry.addData("right_y", "%.2f", turnThrottle);
-        telemetry.addData("lazysusan",  "Offset = %.2f", clawOffset);
+        telemetry.addData("lazysusan",  "Offset = %.2f", lazysusan);
     }
 
     /*

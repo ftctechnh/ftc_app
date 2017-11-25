@@ -47,34 +47,33 @@ import com.qualcomm.robotcore.util.Range;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  */
-public class ourhardware
-{
+public class ourhardware {
     /* Public OpMode members. */
-    public DcMotor  leftfront  = null;
-    public DcMotor  rightfront  = null;
-    public DcMotor  leftback  = null;
-    public DcMotor  rightback   = null;
-    public DcMotor  armmotor    = null;
-    public Servo    rightClaw   = null;
-    public Servo    lazysusan   = null;
+    public DcMotor leftfront = null;
+    public DcMotor rightfront = null;
+    public DcMotor leftback = null;
+    public DcMotor rightback = null;
+    public DcMotor armmotor = null;
+    public DcMotor lazysusan = null;
+    public Servo rightClaw = null;
+    public Servo leftClaw = null;
 
 
-    static final double MIN_ARM_POSITION  = -400;
-    static final double MAX_ARM_POSITION  = 400;
-    static final int MULTIPLIER  = 2;
-    public static final double MID_SERVO       =  0.5 ;
-    static final double ARM_UP_POWER    =  0 ;
-    static final double ARM_DOWN_POWER  = 1 ;
+
+    static final double MIN_ARM_POSITION = -400;
+    static final double MAX_ARM_POSITION = 600;
+    static final int MULTIPLIER = 2;
+    public static final double MID_SERVO = 0.5;
     static final double jawsopen = 0.7;
     static final double jawsclosed = 0;
-    static final double lazyleft = 0.4;
-    static final double lazyright = 0.7;
+    static final double lazyleft = -600;
+    static final double lazyright = 600;
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public ourhardware(){
+    public ourhardware() {
 
     }
 
@@ -85,16 +84,20 @@ public class ourhardware
 
 
         // Define and Initialize Motors
-        leftfront  = hwMap.get(DcMotor.class, "leftfront");
+        leftfront = hwMap.get(DcMotor.class, "leftfront");
         rightfront = hwMap.get(DcMotor.class, "rightfront");
         leftback = hwMap.get(DcMotor.class, "leftback");
         rightback = hwMap.get(DcMotor.class, "rightback");
         armmotor = hwMap.get(DcMotor.class, "armmotor");
+        lazysusan = hwMap.get(DcMotor.class, "lazysusan");
+
         leftfront.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightfront.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftback.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightback.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        armmotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        armmotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        lazysusan.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+
 
         // Set all motors to zero power
         leftfront.setPower(0);
@@ -102,6 +105,7 @@ public class ourhardware
         leftback.setPower(0);
         rightback.setPower(0);
         armmotor.setPower(0);
+        lazysusan.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -111,57 +115,97 @@ public class ourhardware
         rightback.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        rightClaw = hwMap.get(Servo.class, "jaws");
+        rightClaw = hwMap.get(Servo.class, "rightClaw");
         rightClaw.setPosition(MID_SERVO);
-        lazysusan = hwMap.get(Servo.class, "lazysusan");
-        lazysusan.setPosition(ARM_DOWN_POWER);
-
         //servo
-        rightClaw= hwMap.servo.get("jaws");
-        lazysusan= hwMap.servo.get("lazysusan");
+        rightClaw = hwMap.servo.get("rightClaw");
+
+        leftClaw = hwMap.get(Servo.class, "leftClaw");
+        leftClaw.setPosition(MID_SERVO);
+        //servo
+        leftClaw = hwMap.servo.get("leftClaw");
 
         armmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        lazysusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lazysusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lazysusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void move_arm_function (float stick_y_value) {
+    public void move_arm_function(float stick_y_value) {
 
-        int change_amount =((int)stick_y_value*10*MULTIPLIER);
-        int armPosition = ((int) armmotor.getCurrentPosition()+ change_amount);
-        int safePosition = ((int)Range.clip(armPosition,MIN_ARM_POSITION,MAX_ARM_POSITION));
-
-        armmotor.setTargetPosition(safePosition);
-        armmotor.setPower(.3);
-
-        while (armmotor.isBusy()){
-            try {
-                Thread.sleep(1);
-            }
-            catch (InterruptedException e){
-                System.out.print("got interrrupted");
-            }
-            break;
+        int stick = (int) stick_y_value;
+        // If stick is > 0 set an up variable
+        Boolean up = false;
+        if (stick > 0) {
+            up = true;
         }
-        armmotor.setPower(0);
+
+        if (stick == 0) {
+            armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armmotor.setPower(0);
+            return;
+        }
+
+        int change_amount = (stick * 10 * MULTIPLIER);
+        int armPosition = (armmotor.getCurrentPosition() + change_amount);
+
+        float armPower = (Range.clip(stick, -1, 1));
+
+        if (armPosition >= MAX_ARM_POSITION && up) {
+            armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armmotor.setPower(0);
+            return;
+        }
+
+        if (armPosition <= MIN_ARM_POSITION && !up) {
+            armmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armmotor.setPower(0);
+            return;
+        }
+
+        // armmotor.setTargetPosition(safePosition);
+        armmotor.setPower(armPower / 4);
     }
 
-      /*  public void waitForTick(long periodMs) {
+    public void lazy_susan_function(float stick_x_value) {
 
-        long remaining = periodMs - (long) period.milliseconds();
-
-        // sleep for the remaining portion of the regular cycle period.
-        if (remaining > 0) {
-            try {
-                Thread.sleep(remaining);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+        int stick = (int) stick_x_value;
+        // If stick is > 0 set an up variable
+        Boolean up = false;
+        if (stick > 0) {
+            up = true;
         }
 
-        // Reset the cycle clock for the next pass.
-        period.reset();
-    }*/
+        if (stick == 0) {
+            lazysusan.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            lazysusan.setPower(0);
+            return;
+        }
+
+        int change_amount = (stick * 10 * MULTIPLIER);
+        int lazySusanPosition = (lazysusan.getCurrentPosition() + change_amount);
+        // int safePosition = (Range.clip(armPosition,MIN_ARM_POSITION,MAX_ARM_POSITION));
+
+        float lazySusanPower = (Range.clip(stick, -1, 1));
+
+        if (lazySusanPosition >= lazyright && up) {
+            lazysusan.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            lazysusan.setPower(0);
+            return;
+        }
+
+        if (lazySusanPosition <= lazyleft && !up) {
+            lazysusan.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            lazysusan.setPower(0);
+            return;
+        }
+
+        // armmotor.setTargetPosition(safePosition);
+        lazysusan.setPower(lazySusanPower / 4);
+    }
 
     /* We stole this code from https://github.com/ftc-9773/ftc_app_9773/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/TeleOp.java */
     public void mecanumWheelDrive(float strafeDirection, float strafeThrottle, float turnDirection, float turnThrottle) {
@@ -180,5 +224,85 @@ public class ourhardware
         rightfront.setPower(Range.clip(frontRightPwr, -1, 1));
         leftback.setPower(Range.clip(rearLeftPwr, -1, 1));
     }
- }
 
+    public void driveForward(double speed) {
+        // Do driving forward stuff
+        leftfront.setPower(speed);
+        rightfront.setPower(speed);
+        leftback.setPower(speed);
+        rightback.setPower(speed);
+    }
+
+    public void driveBackward(double speed) {
+        //Do driving backward stuff
+        leftfront.setPower(-speed);
+        rightfront.setPower(-speed);
+        leftback.setPower(-speed);
+        rightback.setPower(-speed);
+    }
+
+    public void driveRight(double speed) {
+        // Do driving right stuff
+        leftfront.setPower(speed);
+        rightfront.setPower(-speed);
+        leftback.setPower(-speed);
+        rightback.setPower(speed);
+    }
+
+    public void driveLeft(double speed) {
+        // Do driving left stuff
+        leftfront.setPower(-speed);
+        rightfront.setPower(speed);
+        leftback.setPower(speed);
+        rightback.setPower(-speed);
+    }
+
+    public void turnRight(double speed) {
+        // Do turning right stuff
+        leftfront.setPower(speed);
+        rightfront.setPower(-speed);
+        leftback.setPower(speed);
+        rightback.setPower(-speed);
+    }
+
+    public void turnLeft(double speed) {
+        // Do turning left stuff
+        leftfront.setPower(-speed);
+        rightfront.setPower(speed);
+        leftback.setPower(-speed);
+        rightback.setPower(speed);
+    }
+
+    public void diagonalForwardRight(double speed) {
+        // Do driving diagonal forward right stuff
+        leftfront.setPower(speed);
+        rightback.setPower(speed);
+    }
+
+    public void diagonalForwardLeft(double speed) {
+        // Do driving diagonal forward left stuff
+        rightfront.setPower(speed);
+        leftback.setPower(speed);
+    }
+
+    public void diagonalBackwardRight(double speed) {
+        // Do driving diagonal backward right stuff
+        rightfront.setPower(-speed);
+        leftback.setPower(-speed);
+    }
+
+    public void diagonalBackwardLeft(double speed) {
+        // Do driving diagonal backward left stuff
+        leftfront.setPower(-speed);
+        rightback.setPower(-speed);
+    }
+
+
+    public void motorStop(double speed) {
+        // Do stopping stuff
+        leftfront.setPower(0);
+        rightfront.setPower(0);
+        leftback.setPower(0);
+        rightback.setPower(0);
+    }
+}
