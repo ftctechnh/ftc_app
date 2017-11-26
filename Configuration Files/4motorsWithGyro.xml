@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot type="FirstInspires-FTC">
+    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ16OY71" parentModuleAddress="2">
+        <LynxModule name="ExpansionHub2" port="2">
+            <NeveRest40Gearmotor name="rightfront" port="0" />
+            <NeveRest40Gearmotor name="leftfront" port="1" />
+            <NeveRest40Gearmotor name="rightrear" port="2" />
+            <NeveRest40Gearmotor name="leftrear" port="3" />
+            <Servo name="leftArm" port="0" />
+            <KauaiLabsNavxMicro name="navx" port="0" bus="0" />
+            <LynxColorSensor name="colorDistanceLeft" port="0" bus="1" />
+        </LynxModule>
+        <LynxModule name="Expansion Hub 3" port="3">
+            <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+        </LynxModule>
+    </LynxUsbDevice>
+</Robot>
