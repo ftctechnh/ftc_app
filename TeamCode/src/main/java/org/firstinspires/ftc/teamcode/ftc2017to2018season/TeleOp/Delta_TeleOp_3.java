@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "Delta_TeleOp_2")
+@TeleOp(name = "Delta_TeleOp_3")
 //@Disabled
-public class Delta_TeleOp_2 extends OpMode {
+public class Delta_TeleOp_3 extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -30,8 +30,11 @@ public class Delta_TeleOp_2 extends OpMode {
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
     DcMotor slideMotor;
+    DcMotor relicMotor;
     Servo glyphServoRight;
     Servo glyphServoLeft;
+    Servo clawServo;
+    Servo mainServo;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -80,6 +83,9 @@ public class Delta_TeleOp_2 extends OpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        relicMotor = hardwareMap.dcMotor.get("relicMotor");
+        clawServo = hardwareMap.servo.get("clawServo");
+        mainServo = hardwareMap.servo.get("mainServo");
         IVFSM = slideMotor.getCurrentPosition();
 
 
@@ -127,6 +133,7 @@ public class Delta_TeleOp_2 extends OpMode {
         slideMove();
         glyphManipulator();
         slideIncrement();
+        relicSlides();
 
 
     }
@@ -206,7 +213,7 @@ public class Delta_TeleOp_2 extends OpMode {
             slideMotor.setPower(gamepad2.right_stick_y);
 
         } else if (gamepad2.right_stick_y < 0) {
-            slideMotor.setPower(-1);
+            slideMotor.setPower(gamepad2.right_stick_y);
         } else {
             slideMotor.setPower(0);
         }
@@ -256,7 +263,7 @@ public class Delta_TeleOp_2 extends OpMode {
             moveUpInch(2.54);
 
         }*/
-    if (gamepad2.dpad_up)
+        if (gamepad2.dpad_up)
         {
             moveUpInch(-2.54);
         }
@@ -288,7 +295,7 @@ public class Delta_TeleOp_2 extends OpMode {
 
     }*/
 
-   public void moveUpInch(double cm) {
+    public void moveUpInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
@@ -311,7 +318,20 @@ public class Delta_TeleOp_2 extends OpMode {
 
     }
 
+    public void relicSlides() {
+      double g2lsx = gamepad2.left_stick_x;
 
-}
+        if (g2lsx != 0) {
+            relicMotor.setPower(g2lsx);
+        }
+    }
+
+    public void relicManipulatorClawServo() {
+
+
+    }
+
+    }
+
 
 //--------------------------------------------------------------------------------------------
