@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 public class Delta_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
-* This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
+* This is specifically made for the Tile Runner and not another pushbot or competition robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
 
     /*
@@ -55,7 +55,7 @@ public class Delta_TeleOp extends OpMode {
 
         org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
 
-        //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
+        //static final int CYCLE_MS = 5000;     // period of each cycle(milliseconds)
 
 
         //private ElapsedTime runtime = new ElapsedTime();
@@ -124,12 +124,13 @@ public class Delta_TeleOp extends OpMode {
      */
 
     @Override
-    public void loop() {
+    public void loop()
+    {
+
         FourWheelDrive();
         slideMove();
         glyphManipulator();
         slideIncrement();
-
 
     }
 
@@ -254,13 +255,9 @@ public class Delta_TeleOp extends OpMode {
 
         if (gamepad2.a)
         {
-
         moveUpInch(2.54);
         }
-        else if (gamepad2.y)
-        {
-            moveDownInch(2.54);
-        }
+
     }
 
     public void moveUpInch(double cm) {
@@ -285,27 +282,6 @@ public class Delta_TeleOp extends OpMode {
 
     }
 
-    public void moveDownInch(double cm) {
-        double target_Position;
-        double countsPerCM = 609.6;
-        double finalTarget = cm*countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
-
-        slideMotor.setTargetPosition((int)target_Position);
-
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        slideMotor.setPower(-0.6);
-
-        while (slideMotor.isBusy()){
-            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
-            telemetry.update();
-
-        }
-
-        slideMotor.setPower(0);
-
-    }
 }
 
 //--------------------------------------------------------------------------------------------
