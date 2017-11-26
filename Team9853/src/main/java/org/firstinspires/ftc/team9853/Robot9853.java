@@ -7,9 +7,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.chathamrobotics.common.Controller;
 import org.chathamrobotics.common.robot.Robot;
+import org.chathamrobotics.common.systems.GyroHandler;
 import org.chathamrobotics.common.systems.HolonomicDriver;
 import org.chathamrobotics.common.robot.RobotFace;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.team9853.systems.GlyphGripper;
 import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
 
@@ -28,6 +30,7 @@ public class Robot9853 extends Robot {
     public GlyphGripper glyphGripper;
     public DcMotor lift;
     public JewelDisplacer jewelDisplacer;
+    private GyroHandler gyroHandler;
 
     public static Robot9853 build(OpMode opMode) {
         return new Robot9853(opMode.hardwareMap, opMode.telemetry);
@@ -43,6 +46,8 @@ public class Robot9853 extends Robot {
         glyphGripper = GlyphGripper.build(this);
         lift = getHardwareMap().dcMotor.get("Lift");
         jewelDisplacer = JewelDisplacer.build(this);
+        gyroHandler = GyroHandler.build(this);
+
         jewelDisplacer.raise();
         glyphGripper.close();
     }
@@ -50,6 +55,32 @@ public class Robot9853 extends Robot {
     @Override
     public void start(){
         glyphGripper.open();
+    }
+
+    public void rotate(double target) {
+        gyroHandler.untilAtTarget(target, (double diff) ->
+                        driver.rotate(diff / Math.PI),
+                () ->
+                        driver.stop()
+        );
+    }
+
+    public void rotate(double target, AngleUnit angleUnit) {
+        gyroHandler.untilAtTarget(target, angleUnit, (double diff) ->
+                        driver.rotate(diff / angleUnit.fromDegrees(180)),
+                () ->
+                        driver.stop()
+        );
+    }
+
+    public void rotateSync(double target) throws InterruptedException {
+        gyroHandler.untilAtTargetSync(target, (double diff) -> driver.rotate(diff / Math.PI));
+        driver.stop();
+    }
+
+    public void rotateSync(double target, AngleUnit angleUnit) throws InterruptedException {
+        gyroHandler.untilAtTargetSync(target, angleUnit, (double diff) -> driver.rotate(diff / angleUnit.fromDegrees(180)));
+        driver.stop();
     }
 
     public void driveWithControls(Gamepad gp) {
