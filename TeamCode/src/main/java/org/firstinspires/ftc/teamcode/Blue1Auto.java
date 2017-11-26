@@ -1,31 +1,4 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -46,24 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-/**
- * This OpMode illustrates the basics of using the Vuforia engine to determine
- * the identity of Vuforia VuMarks encountered on the field. The code is structured as
- * a LinearOpMode. It shares much structure with {@link ConceptVuforiaNavigation}; we do not here
- * duplicate the core Vuforia documentation found there, but rather instead focus on the
- * differences between the use of Vuforia for navigation vs VuMark identification.
- *
- * @see ConceptVuforiaNavigation
- * @see VuforiaLocalizer
- * @see VuforiaTrackableDefaultListener
- * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained in {@link ConceptVuforiaNavigation}.
- */
+
 
 @Autonomous(name="Blue1Auto", group ="Pushbot")
 //@Disabled
@@ -179,49 +135,66 @@ public class Blue1Auto extends LinearOpMode {
                 }
 
 //close the claw first thing after start
-                robot.clawleft.setPosition(0);
-                robot.clawright.setPosition(0.5);
+                robot.clawleft.setPosition(0.5);
+                robot.clawright.setPosition(0);
                 //actual auto start
-                robot.armleft.setPosition(0); //your mother
-                sleep(300);
-                robot.SideMotor.setPower(0.3);
-                sleep(238);
-                robot.SideMotor.setPower(0);
-                sleep(100);
-                robot.armleft.setPosition(0.75);
-                sleep(300);
-                encoderDrive(0.5, -48, -48, 1.0);  // (Power, Distance Left, Distance Right (INCHES), timeout)
-                robot.armleft.setPosition(0);
-                sleep(1000);     // pause for servos to move
-                //encoderDrive(0.5, 48, -48, 0.3);  // (Power, Distance Left, Distance Right (INCHES), timeout)
-                encoderDrive(0.5, -48, -48, 2.0);// (Power, Distance Left, Distance Right (INCHES), timeout)
-                robot.SideMotor.setPower(-0.5);
-                sleep(200);
-                robot.SideMotor.setPower(0);
-                encoderDrive(0.5, 20.0, -20.0, 1.0);
+                robot.arm.setPower(-0.2);
+                sleep(500);
+                robot.arm.setPower(0);
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT){
-                    //encoderDrive(0.5, -11, 11, 0.4);
-                    encoderDrive(1, 5, 5, 0.3);
+                    encoderDrive(0.5,17.1,17.1,5);
+                    encoderDrive(0.5, 8.3, -8.3, 5);
+                    robot.SideMotor.setPower(0.5);
+                    sleep(1030);
+                    robot.SideMotor.setPower(0);
+                    encoderDrive(0.5,10,10,1);
+                    //open claw
+                    robot.clawleft.setPosition(0);
+                    robot.clawright.setPosition(0.5);
+                    sleep(300);
+                    //drive back
+                /*
+                encoderDrive(0.5, -8, -8, 5);
+                encoderDrive(0.5, 16.6, -16.6, 10);
+                */
                     break;
                 }
                 if (vuMark == RelicRecoveryVuMark.CENTER){
-                    //encoderDrive(0.5, -11, 11, 0.4);
-                    encoderDrive(1, 5, 5, 0.3);
-                    robot.SideMotor.setPower(-1);
-                    sleep(600);
+                    encoderDrive(0.5,17.15,17.15,5);
+                    encoderDrive(0.5, 8.3, -8.3, 5);
+                    robot.SideMotor.setPower(0.5);
+                    sleep(750);
                     robot.SideMotor.setPower(0);
-                    encoderDrive(0.2, 10, 10, 5);
-                    Dis = 0;
+                    encoderDrive(0.5,10,10,1);
+                    //open claw
+                    robot.clawleft.setPosition(0);
+                    robot.clawright.setPosition(0.5);
+                    //drive back
+                /*
+                sleep(300);
+                encoderDrive(0.5, -8, -8, 5);
+                encoderDrive(0.5, 16.6, -16.6, 10);
+                */
                     break;
                 }
                 if (vuMark == RelicRecoveryVuMark.LEFT){
-                    //encoderDrive(0.5, 10, -10, 0.3);
-                    encoderDrive(1, 5, 5, 0.3);
-                    robot.SideMotor.setPower(-1);
-                    sleep(750);
+                    encoderDrive(0.5,17.1,17.1,5);
+                    encoderDrive(0.5, 8.3, -8.3, 5);
+                    robot.SideMotor.setPower(0.5);
+                    sleep(250);
                     robot.SideMotor.setPower(0);
-                    encoderDrive(0.2, 20, 20, 5);
+                    encoderDrive(0.5,10,10,1);
+
+                    //open claw
+                    sleep(300);
+                /*
+                robot.clawleft.setPosition(0);
+                robot.clawright.setPosition(0.5);
+                //drive back
+                encoderDrive(0.5, -8, -8, 5);
+                encoderDrive(0.5, 16.6, -16.6, 10);
+                */
                     break;
                 }
 

@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -148,31 +148,83 @@ public class Blue2Auto extends LinearOpMode {
 
 
                 if (vuMark == RelicRecoveryVuMark.RIGHT){
-                    encoderDrive(0.5,-10,-10,2);
-
-                    robot.SideMotor.setPower(0.5);
-                    sleep(1000);
+                    encoderDrive(0.5,-15,-15,2.5);
+                    robot.SideMotor.setPower(1);
+                    sleep(1100);
                     robot.SideMotor.setPower(0);
-                    encoderDrive(0.4, -10, -10, 3);
-
+                    encoderDrive(1, -5, -5, 0.5);
+                    sleep(100);
+                    //open claw
+                    robot.clawleft.setPosition(0);
+                    robot.clawright.setPosition(0.5);
+                    sleep(300);
+                    encoderDrive(0.2,10,10,2);
+                    robot.clawleft.setPosition(0.5);
+                    robot.clawright.setPosition(0);
+                    encoderDrive(0.5,-10,-10,2);
+                    //open claw
+                /*robot.clawleft.setPosition(0.1);
+                robot.clawright.setPosition(0.4);
+                sleep(300);
+                encoderDrive(0.5,5,5,5);//drive back
+                robot.SideMotor.setPower(0.5);//drive to the right
+                sleep(600);
+                robot.SideMotor.setPower(0);
+                encoderDrive(0.5,13,13,10);
+                encoderDrive(0.5, 9, -9, 5);//turn 90 degrees
+                */
                     break;
                 }
                 if (vuMark == RelicRecoveryVuMark.CENTER){
+                    encoderDrive(0.5,-15,-15,2.5);
+                    robot.SideMotor.setPower(1);
+                    sleep(720);
+                    robot.SideMotor.setPower(0);
+                    encoderDrive(1, -5, -5, 0.5);
+                    sleep(100);
+                    //open claw
+                    robot.clawleft.setPosition(0);
+                    robot.clawright.setPosition(0.5);
+                    sleep(300);
+                    encoderDrive(0.2,10,10,2);
+                    robot.clawleft.setPosition(0.5);
+                    robot.clawright.setPosition(0);
                     encoderDrive(0.5,-10,-10,2);
 
-                    robot.SideMotor.setPower(0.5);
-                    sleep(640);
-                    robot.SideMotor.setPower(0);
-                    encoderDrive(0.4, -10, -10, 3);
-
+                /*
+                encoderDrive(0.5,5,5,5);//drive back
+                robot.SideMotor.setPower(0.5);//drive to the right
+                sleep(500);
+                robot.SideMotor.setPower(0);
+                encoderDrive(0.5,15,15,10);
+                encoderDrive(0.5, 8.3, -8.3, 5);//turn 90 degrees
+                */
                     break;
                 }
                 if (vuMark == RelicRecoveryVuMark.LEFT){
-                    encoderDrive(0.5,-20,-20,3);
+                    encoderDrive(0.5,-15,-15,2.5);
                     robot.SideMotor.setPower(1);
-                    sleep(100);
+                    sleep(280);
                     robot.SideMotor.setPower(0);
                     encoderDrive(1, -5, -5, 0.5);
+                    sleep(100);
+                    //open claw
+                    robot.clawleft.setPosition(0);
+                    robot.clawright.setPosition(0.5);
+                    sleep(300);
+                    encoderDrive(0.2,10,10,2);
+                    robot.clawleft.setPosition(0.5);
+                    robot.clawright.setPosition(0);
+                    encoderDrive(0.8,-10,-10,2);
+
+                /*
+                encoderDrive(0.5,5,5,5);//drive back
+                robot.SideMotor.setPower(0.5);//drive to the right
+                sleep(1400);
+                robot.SideMotor.setPower(0);
+                encoderDrive(0.5,15,15,10);
+                encoderDrive(0.5, 8.3, -8.3, 5);//turn 90 degrees
+*/
                     break;
                 }
             }
