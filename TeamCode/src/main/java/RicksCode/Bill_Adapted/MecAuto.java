@@ -88,12 +88,12 @@ public class MecAuto extends LinearOpMode {
         sleep(20);
         gromit.driveTrain.runUsingEncoders();
         //gromit.driveTrain.mecanumTurn(1,45);
-        gromit.driveTrain.mecanumDrive90(0.85, -35, 0);
-       // gromit.driveTrain.resetencoders();
-       // sleep(20);
-        //gromit.driveTrain.runUsingEncoders();
+        gromit.driveTrain.mecanumDrive(0.5, 20, 0,0);
+        gromit.driveTrain.mecanumDrive(0.85, -10, 0,-90);
         sleep(800);
-        gromit.driveTrain.mecanumDrive90(0.85, 35, 0);
+        gromit.driveTrain.mecanumDrive(0.85, 10, 0, -90);
+        gromit.driveTrain.mecanumDrive(0.5, -20, 0,0);
+        gromit.driveTrain.mecanumDrive(0.5, 10, 0,-45);
         gromit.driveTrain.stopMotors();
         while (opModeIsActive()) {
             telemetry.addData("", "Heading: %4.2f ", gromit.driveTrain.getheading());
