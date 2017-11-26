@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicExtender;
 
-import android.widget.Switch;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,17 +7,17 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
 
-/**
- * Created by AlexPC on 11/25/2017.
- */
 
+/**
+ * Relic Extender for our Relic Recovery robot (it's the cascading slides)
+ */
 public class RelicExtender extends RobotComponent
 {
-    private final double OutSpeed = 1;
-    private final double InSpeed = -1;
-    private final double Still = 0;
+    private final double _outSpeed = 1;
+    private final double _inSpeed = -1;
+    private final double _idleSpeed = 0;
 
-    private DcMotor ExtenderMotor;
+    private DcMotor _extenderMotor;
 
 
     public enum State
@@ -32,24 +31,26 @@ public class RelicExtender extends RobotComponent
     public void init(final RobotBase BASE)
     {
         super.init(BASE);
-        ExtenderMotor = mapper.mapMotor("ExtenderMotor" , DcMotorSimple.Direction.REVERSE);
+        _extenderMotor = mapper.mapMotor("ExtenderMotor" , DcMotorSimple.Direction.REVERSE);
     }
 
 
+    /**
+     * Sets the state of the relic extender arm
+     * @param STATE
+     */
     public void setState(final State STATE)
     {
         switch(STATE)
         {
             case RInOut:
-            ExtenderMotor.setPower(InSpeed);
-
-            break;
+                _extenderMotor.setPower(_inSpeed);
+                break;
 
             case Still:
-            ExtenderMotor.setPower(Still);
+                _extenderMotor.setPower(_idleSpeed);
+                break;
         }
 
     }
-
-
 }

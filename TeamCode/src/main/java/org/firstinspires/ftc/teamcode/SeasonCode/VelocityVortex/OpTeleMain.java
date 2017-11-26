@@ -120,7 +120,7 @@ final class OpTeleMain extends LinearOpMode
 
         telemetry.addLine();
 
-        telemetry.addData("Shooter State\t" , _robot.shooter.state().asString());
+        telemetry.addData("Shooter GrabState\t" , _robot.shooter.state().asString());
         telemetry.addData("Shooter Power\t" , _robot.shooter.motorPower());
         telemetry.addData("Shooter Speed\t" , _robot.shooter.speed());
     }

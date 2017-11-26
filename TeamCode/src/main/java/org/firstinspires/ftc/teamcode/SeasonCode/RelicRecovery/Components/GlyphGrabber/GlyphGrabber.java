@@ -53,7 +53,7 @@ public class GlyphGrabber extends RobotComponent
     /**
      * Sets the state of the glyph grabber
      *
-     * @param STATE State to set the glyph grabber to
+     * @param STATE GrabState to set the glyph grabber to
      */
     public void setState(final State STATE)
     {

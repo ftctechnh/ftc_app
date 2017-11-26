@@ -32,7 +32,7 @@ public class Drivetrain extends RobotComponent
 
     // Drivetrain is stopped right now
     private double _powerMultiplier = _STOP_MULTIPLIER; // Current power multiplier
-    private State _state = State.STOP;                  // State of the robot
+    private State _state = State.STOP;                  // GrabState of the robot
 
     // Whether the drivetrain is accepting input or not
     boolean _inputFrozen = false;
@@ -144,9 +144,9 @@ public class Drivetrain extends RobotComponent
 
 
     /**
-     * State machine- sets the state of the drivetrain
+     * GrabState machine- sets the state of the drivetrain
      *
-     * @param STATE State to set to the drivetrain
+     * @param STATE GrabState to set to the drivetrain
      */
     public void setState(final State STATE)
     {

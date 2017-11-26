@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery;
 
 
-import android.util.Log;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,7 +13,6 @@ import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Lift.L
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicExtender.RelicExtender;
 
-import static com.sun.tools.doclint.HtmlTag.Attr.AXIS;
 import static java.lang.Thread.sleep;
 
 
@@ -34,12 +31,14 @@ public class Base extends RobotBase
     /** Glyph grabber component of our Relic Recover robot */
     public GlyphGrabber glyphGrabber = new GlyphGrabber();
 
+    /** Relic Extender component of our Relic Recovery robot */
+    public RelicExtender relicExtender = new  RelicExtender();
+
+    /** Relic Grabber component of our Relic Recovery robot */
+    public RelicGrabber relicGrabber = new RelicGrabber();
+
     /** Built in IMU in the Rev module */
     public REVIMU imu = new REVIMU();
-
-    public RelicExtender RelicExtender = new  RelicExtender();
-
-    public RelicGrabber RelicGrabber = new RelicGrabber();
 
 
     /**
@@ -65,15 +64,13 @@ public class Base extends RobotBase
         params.loggingTag = "IMU";
 
 
-
-
         // Basic component initialization
         drivetrain.init(this);
         lift.init(this);
         glyphGrabber.init(this);
         imu.init(this , "imu" , params);
-        RelicExtender.init(this);
-        RelicGrabber.init(this);
+        relicExtender.init(this);
+        relicGrabber.init(this);
 
 
         // Flipping IMU axis
@@ -104,6 +101,7 @@ public class Base extends RobotBase
         {
             e.printStackTrace();
         }
+
 
         // Dependency setting
         drivetrain.setDependencies(imu);

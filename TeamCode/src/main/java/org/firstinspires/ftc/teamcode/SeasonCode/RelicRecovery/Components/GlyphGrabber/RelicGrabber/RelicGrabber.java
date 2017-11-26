@@ -1,95 +1,107 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.RelicGrabber;
-import android.widget.Switch;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
-import org.directcurrent.core.gamecontroller.Controller;
-import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
+
 
 /**
- * Created by AlexPC on 11/25/2017.
+ * Relic Grabber for our Relic Recovery robot
  */
-
 public class RelicGrabber extends RobotComponent
 {
-     private Controller _controller1 = new Controller();
-    private Controller _controller2 = new Controller();
-
-    private CRServo Grabber;
-    private CRServo Twister;
+    private CRServo _grabber;
+    private CRServo _twister;
 
 
-    public enum State
+    /**
+     * Holds the states of the grabber servo
+     */
+    public enum GrabState
     {
-        InG,
-        Out,
-        StopG
+        IN,
+        OUT,
+        STOP
     }
 
-    public enum State2
+
+    /**
+     * Holds the states of the rotating servo
+     */
+    public enum RotateState
     {
-        TUp,
-        TDown,
-        TStill
+        UP,
+        DOWN,
+        STILL
     }
 
+
+    /**
+     * Initializes the Relic Grabber and hardware maps it
+     *
+     * @param BASE The robot base used to create the hardware mapper
+     */
     @Override
-    public void init(final RobotBase BASE) {
+    public void init(final RobotBase BASE)
+    {
         super.init(BASE);
 
-        Grabber = mapper.mapCRServo("RelicGrabber", CRServo.Direction.FORWARD);
-        Twister = mapper.mapCRServo("Twister", CRServo.Direction.FORWARD);
+        _grabber = mapper.mapCRServo("RelicGrabber", CRServo.Direction.FORWARD);
+        _twister = mapper.mapCRServo("Twister", CRServo.Direction.FORWARD);
     }
 
-    public void setState(final State STATE)
+
+    /**
+     * Sets the state of the grabbing servo
+     *
+     * @param STATE State to set the servo to
+     */
+    public void setGrabState(final GrabState STATE)
     {
         switch (STATE)
         {
-            case InG:
-                Grabber.setPower(1);
+            case IN:
+                _grabber.setPower(1);
 
                 break;
 
-            case Out:
-            Grabber.setPower(-1);
+            case OUT:
+                _grabber.setPower(-1);
+                break;
 
-            break;
-
-            case StopG:
-                Grabber.setPower(0);
+            case STOP:
+                _grabber.setPower(0);
+                break;
         }
     }
 
 
-
-
-    public void setState(final State2 STATE2)
+    /**
+     * Sets the state of the rotating servo
+     *
+     * @param STATE2 State to set the servo to
+     */
+    public void setRotateState(final RotateState STATE2)
     {
         switch(STATE2)
         {
-            case TUp:
-            Twister.setPower(1);
+            case UP:
+            _twister.setPower(1);
 
             break;
 
-            case TDown:
-            Twister.setPower(-1);
+            case DOWN:
+            _twister.setPower(-1);
 
             break;
 
-            case TStill:
-            Twister.setPower(0);
+            case STILL:
+            _twister.setPower(0);
 
         }
-
     }
-
 }
 
 

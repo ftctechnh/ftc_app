@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.directcurrent.core.gamecontroller.Controller;
-import org.directcurrent.opencv.CVBridge;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
@@ -44,8 +43,6 @@ public class TeleOpMain extends LinearOpMode
         {
             _grabInput();
 
-            _runComponents();
-
             _addTelem();
 
             telemetry.update();
@@ -58,8 +55,12 @@ public class TeleOpMain extends LinearOpMode
      */
     private void _grabInput()
     {
+        // Read data
         _controller1.read(gamepad1);
         _controller2.read(gamepad2);
+
+        _base.imu.pull();
+
 
         // Allow driver control when requested
         if(_controller1.receivingInput())
@@ -67,19 +68,22 @@ public class TeleOpMain extends LinearOpMode
             _base.drivetrain.allowInput();
         }
 
-        _base.imu.pull();
 
+        // Define controls
+        _base.drivetrain.run(-_controller1.leftY() , _controller1.rightX() , true);
+        _base.lift.run(-_controller2.leftY());
+
+        // Toggle drivetrain reversal
         if(_controller1.xClicked())
         {
             _base.drivetrain.flipDirection();
         }
 
-
+        // Toggle drivetrain slow/fast mode
         if(_controller1.aClicked())
         {
             _base.drivetrain.flipSpeed();
         }
-
 
         // Glyph Grabber state machine
         if(_controller2.rightBumper())
@@ -95,49 +99,45 @@ public class TeleOpMain extends LinearOpMode
             _base.glyphGrabber.setState(GlyphGrabber.State.STOP);
         }
 
-        //State machine for RelicExtender
+        // State machine for relic extender
         if (_controller2.leftY() > .1 || _controller2.leftY() < -.1 )
         {
-            _base.RelicExtender.setState(RelicExtender.State.RInOut);
+            _base.relicExtender.setState(RelicExtender.State.RInOut);
         }
         else
         {
-            _base.RelicExtender.setState(RelicExtender.State.Still);
+            _base.relicExtender.setState(RelicExtender.State.Still);
         }
 
-        //state machine for Relic grabber grabber
+        // State machine for relic grabber grabber
         if (_controller2.rightTrigger() >= .15)
         {
-            _base.RelicGrabber.setState(RelicGrabber.State.InG);
+            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.IN);
         }
         else
         {
-            _base.RelicGrabber.setState(RelicGrabber.State.StopG);
+            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.STOP);
         }
 
-        //state machine for relic grabber turning
+        // State machine for relic grabber turning
         if (_controller2.xClicked())
         {
-            _base.RelicGrabber.setState(RelicGrabber.State2.TUp);
+            _base.relicGrabber.setRotateState(RelicGrabber.RotateState.UP);
         }
         else if (_controller2.aClicked())
         {
-            _base.RelicGrabber.setState(RelicGrabber.State2.TDown);
+            _base.relicGrabber.setRotateState(RelicGrabber.RotateState.DOWN);
         }
         else
         {
-            _base.RelicGrabber.setState(RelicGrabber.State2.TStill);
+            _base.relicGrabber.setRotateState(RelicGrabber.RotateState.STILL);
         }
-    }
 
-
-    /**
-     * Runs components based on input given
-     */
-    private void _runComponents()
-    {
-        _base.drivetrain.run(-_controller1.leftY() , _controller1.rightX() , true);
-        _base.lift.run(-_controller2.leftY());
+        // IMU fast calibration
+        if(_controller1.leftStickButtonClicked())
+        {
+            _base.imu.fastCalibrate();
+        }
     }
 
 
@@ -152,6 +152,5 @@ public class TeleOpMain extends LinearOpMode
 
         telemetry.addData("Left Drive Encoder" , _base.drivetrain.leftEncoderCount());
         telemetry.addData("Right Drive Encoder" , _base.drivetrain.rightEncoderCount());
-
     }
 }
