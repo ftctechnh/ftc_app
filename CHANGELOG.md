@@ -15,6 +15,13 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - TurnTo and DriveToDistance perfected
 
+### [0.11.2] - 2017-11-25
+#### Fixed
+- IMU can now get angles when placed vertically, use the z axis
+- Bug where drivetrain would initially run in reverse direction
+- Mapped glyph grabber controls to the bumpers on controller 2- the layout controls would eventually result in controller 1 controlling the drivetrain and controller 2 controlling just about everything else
+
+
 ### [0.11.1] - 2017-11-24
 #### Fixed
 - Bug where the TurnTo command was dependant upon previous drivetrain state
