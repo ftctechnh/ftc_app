@@ -1,18 +1,20 @@
-package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery;
+package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.LeftDrive;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDrive;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDrive;
-import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
+
+import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.*;
 
 /**
  * Created by Shane on 13-11-2017.
  */
-@TeleOp(name = "Relic Recovery TeleOp",group = "TeleOp")
-public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Relic Recovery TeleOp Beta",group = "TeleOp")
+public class TeleOp extends OpMode {
     // --------------------- Private Variables ----------------------
+    private RobotHardware robot;
+    private String driveMode;
     private int driveConfig = 0;
     private boolean ifHold;
     private boolean RelicHold;
@@ -28,29 +30,22 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
     private boolean isPad2YPressed;
     private boolean isPad2YReleased;
 
-
     // ----------------------- Public Methods -----------------------
     // ----------------------- Init -----------------------
     @Override
     public void init() {
-        super.init();
+        robot = new RobotHardware(hardwareMap,telemetry);
+        robot.init();
         driveMode = "Turn Drive Init";
-        ifDriveOverride();
-        driveMode();
-        slowDrive();
-        ifHold();
         ifHold = false;
+        tele();
     }
     // ----------------------- Loop -----------------------
     @Override
     public void loop() {
-        super.loop();
-        ifDriveOverride();
-        driveMode();
-        slowDrive();
-        ifHold();
         padControls();
-        setMotorPower();
+        tele();
+        robot.setHardwarePower();
     }
     // ---------------------- Private Methods -----------------------
     // ----------------------- Pads -----------------------
@@ -61,15 +56,15 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             ifHold = true;
         } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
             ifHold = false;
-            crHandPosition = OPEN_CR_HAND;
+            robot.crHandPosition = HAND_OPEN;
         }
         if (ifHold) {
-            crHandPosition = CLOSED_CR_HAND;
+            robot.crHandPosition = HAND_CLOSED;
         } else {
             if (gamepad1.dpad_left || gamepad2.dpad_left) {
-                crHandPosition = OPEN_CR_HAND;
+                robot.crHandPosition = HAND_OPEN;
             } else {
-                crHandPosition = STOPPED_CR_HAND;
+                robot.crHandPosition = HAND_STOPPED;
             }
 
         }
@@ -109,15 +104,15 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
                 drivePower = tank.drive(gamepad1);
                 driveMode = "Tank Drive";
             }
-            liftPower = 0;
+            robot.liftPower = 0;
         } else { // for gamepad 1 controls override
             // ---- relic override ----
             if (gamepad1.y) {
                 if (y1) {
-                    if (oneHandPosition == OPEN_RELIC) {
-                        oneHandPosition = CLOSED_RELIC;
+                    if (robot.grabberPosition == GRABBER_OPEN) {
+                        robot.grabberPosition = GRABBER_CLOSED;
                     } else {
-                        oneHandPosition = OPEN_RELIC;
+                        robot.grabberPosition = GRABBER_OPEN;
                     }
                     y1 = false;
                 } else {
@@ -126,22 +121,22 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             }
             // ---- lift override -----
             if (gamepad1.dpad_up) {
-                liftPower = 1;
+                robot.liftPower = 1;
             } else if (gamepad1.dpad_down) {
-                liftPower = -1;
+                robot.liftPower = -1;
             } else {
-                liftPower = 0;
+                robot.liftPower = 0;
             }
             // ----- arm override -----
             if (gamepad1.right_bumper) {
-                armPosition += .02;
+                robot.armPosition += .02;
             } else if (gamepad1.left_bumper) {
-                armPosition -=.02;
+                robot.armPosition -=.02;
             }
-            armLifterPwr = gamepad1.right_trigger - gamepad1.left_trigger;
+            robot.armLiftPower = gamepad1.right_trigger - gamepad1.left_trigger;
         }
-        rightPower = drivePower[0];
-        leftPower = drivePower[1];
+        robot.rightPower = drivePower[0];
+        robot.leftPower = drivePower[1];
         if (gamepad1.right_stick_button) {
             if (rightStick1) {
                 slowDrive = !slowDrive;
@@ -151,8 +146,8 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
             rightStick1 = true;
         }
         if (slowDrive) {
-            rightPower /= 2;
-            leftPower /= 2;
+            robot.rightPower /= 2;
+            robot.leftPower /= 2;
         }
         // --------------- Jewels ---------------
         if (gamepad1.x) {
@@ -165,26 +160,26 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
                 isPad1XPressed = false;
             }
             if (isPad1XReleased) {
-                if (ballPusherPosition == BALL_PUSHER_UP) {
-                    ballPusherPosition = BALL_PUSHER_DOWN;
+                if (robot.ballPusherPosition == BALL_PUSHER_UP) {
+                    robot.ballPusherPosition = BALL_PUSHER_DOWN;
                 } else {
-                    ballPusherPosition = BALL_PUSHER_UP;
+                    robot.ballPusherPosition = BALL_PUSHER_UP;
                 }
             }
         }
 
         if (gamepad1.b) {
-            ballRotatorPosition = BALL_ROTATE_RIGHT;
+            robot.ballRotatorPosition = BALL_ROTATOR_RIGHT;
         } else if (gamepad1.a) {
-            ballRotatorPosition = BALL_ROTATE_LEFT;
+            robot.ballRotatorPosition = BALL_ROTATOR_LEFT;
         } else {
-            ballRotatorPosition = BALL_ROTATE_CENTER;
+            robot.ballRotatorPosition = BALL_ROTATOR_CENTER;
         }
     }
     // ---------------------- Pad 2 -----------------------
     private void gamepad2Controls() {
         // ---------------- Lift ----------------
-        liftPower -= gamepad2.right_stick_y;
+        robot.liftPower -= gamepad2.right_stick_y;
         // -------------- Grabber ---------------
 
         if (gamepad2.y) {
@@ -197,45 +192,30 @@ public class RelicRecoveryTeleOp extends RelicRecoveryHardware {
                 isPad2YPressed = false;
             }
             if (isPad2YReleased) {
-                if (oneHandPosition == OPEN_ONE_HAND) {
-                    oneHandPosition = CLOSED_ONE_HAND;
+                if (robot.grabberPosition == HAND_OPEN) {
+                    robot.grabberPosition = HAND_CLOSED;
                 } else {
-                    oneHandPosition = OPEN_ONE_HAND;
+                    robot.grabberPosition = HAND_OPEN;
                 }
             }
         }
         // ---------------- Arm -----------------
         if (gamepad2.right_bumper) {
-            armPosition += .0008;
+            robot.armPosition += .0008;
         } else if (gamepad2.left_bumper) {
-            armPosition -=.0008;
-            if (armPosition < 0)
-                armPosition = 0;
+            robot.armPosition -=.0008;
+            if (robot.armPosition < 0)
+                robot.armPosition = 0;
         }
-        armLifterPwr = gamepad2.right_trigger - gamepad2.left_trigger;
+        robot.armLiftPower = gamepad2.right_trigger - gamepad2.left_trigger;
     }
 
-    private void setMotorPower() {
-        SetRobot setRobot = new SetRobot(telemetry);
-        // -------------- DcMotors --------------
-        setRobot.power(mRight,rightPower,"right motor");
-        setRobot.power(mLeft,leftPower,"left motor");
-        setRobot.power(mLift,liftPower,"lift motor");
-        setRobot.power(mArm,armPower,"arm motor");
-        setRobot.power(mArmLift,armLifterPwr,"arm lift motor");
-        // ---------- Standard Servos -----------
-        setRobot.position(ssBallPusher,ballPusherPosition,"ball pusher servo");
-        setRobot.position(ssArm,armPosition,"arm servo");
-        setRobot.position(ssRelicGrabber,oneHandPosition,"relic grabber servo");
-        setRobot.position(ssPoop,poopPosition,"poop");
-        setRobot.position(ssBallRotator, ballRotatorPosition,"ball rototor sero");
-        // ----- Continuous Rotation Servos -----
-        setRobot.position(crHand,crHandPosition,"hand crservo");
-        setRobot.position(crRelicGrabber,relicPosition, "relic grabber crservo");
-        setRobot.position(crArmLift,armLifterSPosition,"arm lift crservo");
-        setRobot.position(crArm,armPower,"arm crservo");
+    private void tele() {
+        ifDriveOverride();
+        driveMode();
+        slowDrive();
+        ifHold();
     }
-
     private void ifDriveOverride() {
         telemetry.addData("If default drive", defaultDrive);
     }

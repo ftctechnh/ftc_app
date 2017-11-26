@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 import org.firstinspires.ftc.teamcode.Utilities.Map;
 
 /**
@@ -17,7 +16,7 @@ public class  RelicRecoveryHardware extends OpMode {
     // constants for the servos
     protected static final double BALL_PUSHER_UP = .44;
     protected static final double BALL_PUSHER_DOWN = 1;
-    protected static final double OPEN_ONE_HAND = 1;
+    protected static final double OPEN_ONE_HAND = .3;
     protected static final double CLOSED_ONE_HAND = 0;
     protected static final double STOPPED_CR_HAND = 0;
     protected static final double OPEN_CR_HAND = 1;
@@ -35,9 +34,9 @@ public class  RelicRecoveryHardware extends OpMode {
     protected static final double ARM_OUT = 0.75;
     protected static final double POOP_OPEN= .9;
     protected static final double POOP_CLOSED = 0.1;
-    protected static final double BALL_ROTATE_RIGHT = 0.4;
-    protected static final double BALL_ROTATE_CENTER = 0.47;
-    protected static final double BALL_ROTATE_LEFT = 0.6;
+    protected static final double BALL_ROTATE_RIGHT = 0.3;
+    protected static final double BALL_ROTATE_CENTER = 0.45;
+    protected static final double BALL_ROTATE_LEFT = 0.60;
 
     // ---------------------- Hardware Devices ----------------------
     // ---------------- DcMotors ----------------
@@ -58,7 +57,7 @@ public class  RelicRecoveryHardware extends OpMode {
     CRServo crArmLift;
     CRServo crArm;
     // ---------------- Sensors -----------------
-    ColorSensor color;
+    ColorSensor sColor;
 
     // --------------------- Hardware Variables ---------------------
     protected double rightPower = 0;
@@ -90,8 +89,8 @@ public class  RelicRecoveryHardware extends OpMode {
     private void hardwareInit() {
         Map map = new Map(hardwareMap,telemetry);
         // -------------- DcMotors --------------
-        mRight = map.revMotor("r");
-        mLeft = map.motor("l");
+        mRight = map.motor("r");
+        mLeft = map.revMotor("l");
         mLift = map.motor("lift");
         mArm = map.motor("arm");
         mArmLift = map.motor("armLift");
@@ -109,9 +108,9 @@ public class  RelicRecoveryHardware extends OpMode {
 
 
         try {
-            color = hardwareMap.get(ColorSensor.class, "cd");
+            sColor = hardwareMap.get(ColorSensor.class, "cd");
         } catch (Exception e) {
-            telemetry.addData("color-distance", "well I tried");
+            telemetry.addData("sColor-distance", "well I tried");
         }
     }
 }

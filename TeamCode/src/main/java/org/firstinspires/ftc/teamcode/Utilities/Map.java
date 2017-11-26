@@ -50,6 +50,7 @@ public class Map {
             motor = hardwareMap.dcMotor.get(name);
             if (ifReverse)
                 motor.setDirection(DcMotorSimple.Direction.REVERSE);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         } catch (Exception e) {
             telemetry.addData("Can't map motor", name);
         }

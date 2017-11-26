@@ -14,8 +14,8 @@ public class TankDrive implements DriveTrain {
 
     @Override
     public double[] drive(Gamepad gamepad1) {
-        rightPower = gamepad1.right_stick_y;
-        leftPower = gamepad1.left_stick_y;
+        rightPower = -gamepad1.right_stick_y;
+        leftPower = -gamepad1.left_stick_y;
         drivePower[0] = rightPower;
         drivePower[1] = leftPower;
         return drivePower;
