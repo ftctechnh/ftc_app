@@ -6,89 +6,43 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import android.hardware.Camera;
-import android.graphics.BitmapFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CloseableFrame;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import com.vuforia.*;
+import java.nio.ByteBuffer;
 import android.graphics.Bitmap;
-import android.view.SurfaceView;
-import android.view.SurfaceHolder;
-import android.content.Context;
-import android.app.Activity;
+import android.graphics.BitmapFactory;
 
 public class BallDetection extends LinearOpMode {
 
-    Bitmap cameraData;
-    Camera camera;
-    boolean bitmapReady = false;
-    boolean inPreview = false;
+    private Image getPicture() {
+
+        CloseableFrame frame = null; //takes the frame at the head of the queue
+        try {
+            frame = locale.getFrameQueue().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Image rgb = null;
+
+        long numImages = frame.getNumImages();
+
+        for (int i = 0; i < numImages; i++) {
+            if (frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565) {
+                rgb = frame.getImage(i);
+                break;
+            }
+        }
+
+        return rgb;
+    }
+
+    VuforiaLocalizer.Parameters params;
+    VuforiaLocalizer locale;
 
     int pictureDelta = 500; // Time in milliseconds between picture captures
-
-    private class CameraJPGCallback implements Camera.PictureCallback {
-        // callback from Camera.takePicture(null, null, null, CameraJPGCallback)
-        public void onPictureTaken(byte[] data, Camera v) {
-            cameraData = BitmapFactory.decodeByteArray(data, 0, data.length);
-            bitmapReady = true;
-        }
-    }
-
-    private Camera getCamera() {
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
-            ;
-        }
-        return c;
-    }
-
-    public class CameraActivity extends Activity {
-
-    }
-
-    public void initializeCamera() {
-        // Initialize the camera to be used
-        camera = getCamera();
-        return;
-    }
-
-    public void releaseCamera() {
-        // Release the camera so that other applications can use it
-        camera.release();
-        return;
-    }
-
-    public void stopPreview() {
-        // Stop the camera preview
-        camera.stopPreview();
-        inPreview = false;
-        return;
-    }
-
-    public void startPreview() {
-        // Start the camera preview
-        camera.startPreview();
-        inPreview = true;
-        return;
-    }
-
-    public void takePicture() {
-        // Take a picture async
-        if (inPreview) {
-            camera.takePicture(null, null, null, new CameraJPGCallback());
-            inPreview = false;
-        }
-        return;
-    }
-
-    public void processBitmap() {
-        // Process the bitmap
-        telemetry.addData("Middle Pixel: ", cameraData.getPixel(cameraData.getWidth() / 2,
-                cameraData.getHeight() / 2));
-        telemetry.update();
-    }
 
     HardwareDRive robot = new HardwareDRive();
 
@@ -99,25 +53,25 @@ public class BallDetection extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-        initializeCamera();
-        startPreview();
+        params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+        params.vuforiaLicenseKey = "ARjW6VD/////AAAAGbCMKpMCSEgSunPcA5cUQkuEKymuh9/mOQ5b+ngfYCdx3gPONkD3mscU39FUD7mRQRZSRZpjHZfohKwL2PYsVZrBcTlaY1JcJ9J5orZKqTxxy68irqEBuQkkfG72xEEPYuNq+yEJCNzYKhx3wFGqUV1H05Z1fFJa1ZiWfe4Tn9aO2Yf5AIkYCMz4K75LFU3ZM1wCgz9ubLhxZH2BWF9X0rhvnhZS2rnLHkxm+C+xzRbs2ZoGCOpDRb3Dy0iMG2y4Ve9/AApZQ+6sgSwlc9liA5jZ0QyT0dLqyfaoXwNxPqzBjhOj3FltEHxrWPdpOQm6B8BDC9Kv+BShnpi6g3yhf+msI3Qeqsns/nm6DrGF5zum";
+        params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        locale = ClassFactory.createVuforiaLocalizer(params);
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true); //enables RGB565 format for the image
+        locale.setFrameQueueCapacity(1); //tells VuforiaLocalizer to only store one frame at a time
 
         while (opModeIsActive()) {
-            if (bitmapReady) {
-                bitmapReady = false;
-
-                processBitmap();
-                startPreview();
-            }
 
             time = System.currentTimeMillis();
 
             if (time > lastPictureTime + pictureDelta) {
-                takePicture();
                 lastPictureTime = time;
+                byte[] p = getPicture().getPixels().array();
+                Bitmap c = BitmapFactory.decodeByteArray(p, 0, p.length);
+
+                telemetry.addData("Middle Pixel: ", c.getPixel(c.getWidth() / 2, c.getHeight() / 2));
             }
         }
-
-        releaseCamera();
     }
 }
