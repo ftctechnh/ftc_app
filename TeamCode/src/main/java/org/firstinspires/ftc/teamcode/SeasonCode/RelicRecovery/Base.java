@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery;
 
 
+import android.util.Log;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,6 +12,9 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Lift.Lift;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
+
+import static com.sun.tools.doclint.HtmlTag.Attr.AXIS;
+import static java.lang.Thread.sleep;
 
 
 /**
@@ -53,11 +58,44 @@ public class Base extends RobotBase
         params.loggingEnabled = true;
         params.loggingTag = "IMU";
 
+
+
+
         // Basic component initialization
         drivetrain.init(this);
         lift.init(this);
         glyphGrabber.init(this);
         imu.init(this , "imu" , params);
+
+
+        // Flipping IMU axis
+        byte AXIS_MAP_CONFIG_BYTE = 0x6;
+        byte AXIS_MAP_SIGN_BYTE = 0x1;
+
+        imu.write8(BNO055IMU.Register.OPR_MODE ,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
+
+        try
+        {
+            sleep(100);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+
+        imu.write8(BNO055IMU.Register.AXIS_MAP_CONFIG ,AXIS_MAP_CONFIG_BYTE & 0x0F);
+        imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN ,AXIS_MAP_SIGN_BYTE & 0x0F);
+        imu.write8(BNO055IMU.Register.OPR_MODE , BNO055IMU.SensorMode.IMU.bVal &0x0F);
+
+        try
+        {
+            sleep(100);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
 
         // Dependency setting
         drivetrain.setDependencies(imu);

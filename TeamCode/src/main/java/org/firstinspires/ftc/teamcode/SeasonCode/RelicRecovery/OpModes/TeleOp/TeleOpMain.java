@@ -80,11 +80,11 @@ public class TeleOpMain extends LinearOpMode
 
 
         // Glyph Grabber state machine
-        if(_controller2.rightTrigger() >= 0.15)
+        if(_controller2.rightBumper())
         {
             _base.glyphGrabber.setState(GlyphGrabber.State.INPUT);
         }
-        else if(_controller2.leftTrigger() >= 0.15)
+        else if(_controller2.leftBumper())
         {
             _base.glyphGrabber.setState(GlyphGrabber.State.OUTPUT);
         }

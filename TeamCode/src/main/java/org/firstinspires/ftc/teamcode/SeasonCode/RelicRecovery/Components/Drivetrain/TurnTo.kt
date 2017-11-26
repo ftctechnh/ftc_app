@@ -46,7 +46,7 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
         val MIN_SPEED = .06                               // Minimum speed to rotate at
         val SPEED_MULTIPLIER = 10.0                         // Constant to adjust speed
 
-        val initHeading = _imu.xAngle()
+        val initHeading = _imu.zAngle()
         var speed: Double                                               // Speed of rotation
         var error = UtilBasic.angleError(initHeading.toInt(), _targetAngle.toInt()).toDouble()
         val initError = error                                   // Initial error
@@ -60,7 +60,7 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
 
         while (Math.abs(error) > TOLERANCE && !_interrupted)
         {
-            error = UtilBasic.angleError(_imu.xAngle().toInt(), _targetAngle.toInt()).toDouble()
+            error = UtilBasic.angleError(_imu.zAngle().toInt(), _targetAngle.toInt()).toDouble()
 
             speed = error / initError * SPEED_MULTIPLIER * distanceModifier
 

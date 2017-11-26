@@ -13,12 +13,8 @@
 package org.firstinspires.ftc.robotcontroller.internal.Core.Sensors;
 
 
-import android.util.Log;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.util.ReadWriteFile;
 
-import org.directcurrent.core.TelMet;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -26,11 +22,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.robotcontroller.internal.Core.HardwareMapper;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
-
-import java.io.File;
 
 
 /**
@@ -67,6 +60,18 @@ public class REVIMU
     public void startAccelMeasurement()
     {
         _imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+    }
+
+
+    /**
+     * Writes to the IMU
+     *
+     * @param REGISTER Register value
+     * @param BYTE Value that is written in
+     */
+    public void write8(final BNO055IMU.Register REGISTER , final int BYTE)
+    {
+        _imu.write8(REGISTER , BYTE);
     }
 
 

@@ -67,8 +67,8 @@ public class Drivetrain extends RobotComponent
     {
         super.init(BASE);
 
-        _leftMotor = mapper.mapMotor("leftDrive" , DcMotorSimple.Direction.REVERSE);
-        _rightMotor = mapper.mapMotor("rightDrive" , DcMotorSimple.Direction.FORWARD);
+        _leftMotor = mapper.mapMotor("leftDrive" , DcMotorSimple.Direction.FORWARD);
+        _rightMotor = mapper.mapMotor("rightDrive" , DcMotorSimple.Direction.REVERSE);
     }
 
 
@@ -232,8 +232,8 @@ public class Drivetrain extends RobotComponent
         }
 
 
-        _leftMotor.setPower(drivePower + rotatePower);
-        _rightMotor.setPower(drivePower - rotatePower);
+        _leftMotor.setPower(drivePower - rotatePower);
+        _rightMotor.setPower(drivePower + rotatePower);
 
 
         if(ToggleTelMetKt.outputDrivetrain)

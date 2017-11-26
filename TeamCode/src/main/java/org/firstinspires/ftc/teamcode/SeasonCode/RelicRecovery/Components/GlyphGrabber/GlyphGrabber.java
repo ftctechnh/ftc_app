@@ -44,7 +44,7 @@ public class GlyphGrabber extends RobotComponent
     {
         super.init(BASE);
 
-        leftWheelMotor = mapper.mapMotor("lInMotor" , DcMotorSimple.Direction.FORWARD);
+        leftWheelMotor = mapper.mapMotor("lInMotor" , DcMotorSimple.Direction.REVERSE);
         rightWheelMotor = mapper.mapMotor("rInMotor" , DcMotorSimple.Direction.REVERSE);
         conveyorMotor = mapper.mapMotor("convMotor" , DcMotorSimple.Direction.FORWARD);
     }
