@@ -135,8 +135,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         slideIncrement();
         relicSlides();
         relicManipulatorClawServo();
-
-
+        relicManipulatorMainServo();
     }
 
     /* Code to run ONCE after the driver hits STOP
@@ -337,6 +336,12 @@ public class Delta_TeleOp_Relic extends OpMode {
     }
 
     public void relicManipulatorMainServo(){
+        if (gamepad2.x){
+            mainServo.setPosition(1);
+        }
+        else if (gamepad2.y){
+            mainServo.setPosition(0.2);
+        }
 
     }
 
