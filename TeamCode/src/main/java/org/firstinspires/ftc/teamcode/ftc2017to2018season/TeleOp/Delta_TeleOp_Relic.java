@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "Delta_TeleOp_3")
+@TeleOp(name = "Delta_TeleOp_relic")
 //@Disabled
-public class Delta_TeleOp_3 extends OpMode {
+public class Delta_TeleOp_Relic extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -134,6 +134,7 @@ public class Delta_TeleOp_3 extends OpMode {
         glyphManipulator();
         slideIncrement();
         relicSlides();
+        relicManipulatorClawServo();
 
 
     }
@@ -327,7 +328,15 @@ public class Delta_TeleOp_3 extends OpMode {
     }
 
     public void relicManipulatorClawServo() {
+      if (gamepad2.left_bumper){
+          clawServo.setPosition(0);
+      }
+      else if (gamepad2.right_bumper){
+          clawServo.setPosition(0.5);
+      }
+    }
 
+    public void relicManipulatorMainServo(){
 
     }
 
