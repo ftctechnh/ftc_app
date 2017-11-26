@@ -15,6 +15,12 @@ import org.firstinspires.ftc.teamcode.Utilities.UseVuforia;
 @Autonomous(name = "Relic Recovery Autonomous", group = "Autonomous")
 public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
 
+    /**
+     * Encoders:
+     * 60:1 1680
+     * 40:1 1120
+     * 20:1 560
+     */
     private final static double COUNTS_PER_REVOLUTION = 1120.0; // 40:1 motor
     private final static double GEAR_ONE = 3.0;
     private final static double GEAR_TWO = 2.0;
@@ -29,19 +35,9 @@ public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
     SetRobot setRobot;
     UseIMU useIMU;
 
-<<<<<<< HEAD
-    /**
-     * Encoders:
-     * 60:1 1680
-     * 40:1 1120
-     * 20:1 560
-     */
-    UseVuforia v;
-=======
     private boolean ifBlue;
     private int state = 0;
     private boolean ifDone = false;
->>>>>>> origin/master
 
     @Override
     public void init() {
