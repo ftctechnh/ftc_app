@@ -34,9 +34,13 @@ public class Delta_TeleOp_Relic extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo clawServo;
-    Servo mainServo;
+    Servo moveRelicManipulatorServo;
     //Initial value for slide motor
     public int IVFSM;
+    public double openClaw = 0;
+    public double closeClaw = 0.5;
+    public double upClaw = 1;
+    public double downClaw = 0.2;
 
 
 
@@ -85,7 +89,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         relicMotor = hardwareMap.dcMotor.get("relicMotor");
         clawServo = hardwareMap.servo.get("clawServo");
-        mainServo = hardwareMap.servo.get("mainServo");
+        moveRelicManipulatorServo = hardwareMap.servo.get("mainServo");
         IVFSM = slideMotor.getCurrentPosition();
 
 
@@ -135,7 +139,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         slideIncrement();
         relicSlides();
         relicManipulatorClawServo();
-        relicManipulatorMainServo();
+        relicManipulatorMovementServo();
     }
 
     /* Code to run ONCE after the driver hits STOP
@@ -328,19 +332,19 @@ public class Delta_TeleOp_Relic extends OpMode {
 
     public void relicManipulatorClawServo() {
       if (gamepad2.left_bumper){
-          clawServo.setPosition(0);
+          clawServo.setPosition(openClaw);
       }
       else if (gamepad2.right_bumper){
-          clawServo.setPosition(0.5);
+          clawServo.setPosition(closeClaw);
       }
     }
 
-    public void relicManipulatorMainServo(){
+    public void relicManipulatorMovementServo(){
         if (gamepad2.x){
-            mainServo.setPosition(1);
+            moveRelicManipulatorServo.setPosition(upClaw);
         }
         else if (gamepad2.y){
-            mainServo.setPosition(0.2);
+            moveRelicManipulatorServo.setPosition(downClaw);
         }
 
     }
