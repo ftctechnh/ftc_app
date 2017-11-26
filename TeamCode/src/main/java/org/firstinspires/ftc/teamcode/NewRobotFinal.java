@@ -25,13 +25,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * Created by Jeremy and Raghav on 10/18/2017.
+ * Created by Jeremy on 11/19/17.
+ * Basically the BIG ROBOT CLASS
  */
 
 public class NewRobotFinal
 {
-    private int liftLevels[] = {0, 1696,2696,3696}; //Currently not levels or stops
-    private int liftDeadzone = 169;
+    private int liftLevels[] = {0, 400,800,1200}; //Currently not levels or stops
+    private int liftDeadzone = 76;
     private short currentLvl;
 
     private ColorSensor topColorSens = null;
@@ -41,6 +42,7 @@ public class NewRobotFinal
     private DcMotorImplEx liftMotor = null;
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
+    private DcMotorImplEx wingMotor = null;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
     private VuforiaLocalizer vuforia = null;
@@ -52,10 +54,11 @@ public class NewRobotFinal
     Orientation angles;
     Acceleration gravity;
 
+    //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
-    private float roboDiameterCm = (float)(45.7*Math.PI); // can be adjusted
-    private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
-    private float wheelCircCm = (float)(9.8* Math.PI);
+    private float roboDiameterCm = (float)(38.1*Math.PI); // can be adjusted
+    private float wheelCircIn = (float)(Math.PI * 4) ; //Circumference of wheels used
+    private float wheelCircCm = (float)(10.168* Math.PI);
 
     public NewRobotFinal(HardwareMap hardwareMap)
     {
@@ -80,8 +83,8 @@ public class NewRobotFinal
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
-
-        resetEncoders();
+        wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
+        zeroStuff();
         stopAllMotors();
         updateIMUValues();
     }
@@ -103,6 +106,24 @@ public class NewRobotFinal
     {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gravity  = imu.getGravity();
+    }
+
+    public float getYaw()
+    {
+        updateIMUValues();
+        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+    }
+
+    public double anglePerpToGrav()
+    {
+        updateIMUValues();
+        return Math.atan(gravity.yAccel/gravity.zAccel);
+    }
+
+    public String getGravToString()
+    {
+        updateIMUValues();
+        return gravity.toString();
     }
 
     public char getGlyphCipher()
@@ -140,18 +161,24 @@ public class NewRobotFinal
 
     public void zeroStuff() //Methods sets motors at low power to put the motors to their resting positions
     {                       //basically sets up lift's step counts starting at its bottom position
-        currentLvl = 0;
-        resetEncoders();
-    }
-
-    private void resetEncoders()//sets encoders to 0 for motors
-    {
         liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setVelocity(0, AngleUnit.DEGREES);
 
+        wingMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        wingMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        wingMotor.setVelocity(0, AngleUnit.DEGREES);
+
+        currentLvl = 0;
+        resetDriveEncoders();
+    }
+
+    private void resetDriveEncoders()//sets encoders to 0 for motors
+    {
         driveRightOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         driveRightOne.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -163,7 +190,224 @@ public class NewRobotFinal
         driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
         driveLeftOne.setVelocity(0, AngleUnit.DEGREES);
+    }
 
+    public void driveStraight_In(float inches, double pow)
+    {
+        float encTarget;
+        if(inches > 1)
+            encTarget = encCountsPerRev / wheelCircIn * (inches-1);
+        else if (inches < -1)
+            encTarget = encCountsPerRev / wheelCircIn * (inches+1);
+        else
+            encTarget = encCountsPerRev / wheelCircCm * inches;
+        //You get the number of encoder counts per unit and multiply it by how far you want to go
+
+        resetDriveEncoders();
+        //Notes: We are using Andymark Neverrest 40
+        // 1120 counts per rev
+
+        if(inches < 0)
+        {
+            driveRightOne.setPower(-Math.abs(pow));
+            driveLeftOne.setPower(Math.abs(pow));
+
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
+        }
+        else
+        {
+            driveRightOne.setPower(Math.abs(pow));
+            driveLeftOne.setPower(-Math.abs(pow));
+
+            while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
+        }
+
+        stopAllMotors();
+    }
+
+    public void spin_Right(float degrees)
+    {
+        spin_Right(degrees, 1);
+    }
+
+    public void spin_Right(float degrees, double pow)// Right Motor only moves!
+    {
+        double degToRad = degrees * Math.PI / 180.0f; // converts it to Radians
+
+        double encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
+        //second set gets encoder counts per centimeter
+
+        resetDriveEncoders();
+
+        if (degrees < 0) //spins clockwise
+        {
+            driveRightOne.setPower(-Math.abs(pow));
+
+            while(driveRightOne.getCurrentPosition() > encTarget){}
+        }
+        else //spins cc
+        {
+            driveRightOne.setPower(Math.abs(pow));
+
+            while(driveRightOne.getCurrentPosition() < encTarget){}
+        }
+
+        stopAllMotors();
+    }
+
+    public void spin_Right_IMU(float degrees, double pow)
+    {
+        while (degrees > 180)
+        {
+            degrees -= 360;
+        }
+        while (degrees <-180)
+        {
+            degrees += 360;
+        }
+
+        initIMU();
+        if (degrees < 0)
+        {
+            driveRightOne.setPower(-Math.abs(pow));
+            while(getYaw() > degrees) {}
+        }
+        else
+        {
+            driveRightOne.setPower(Math.abs(pow));
+            while(getYaw() < degrees) {}
+        }
+
+        stopAllMotors();
+    }
+
+    public void spin_Left(float degrees)
+    {
+        spin_Left(degrees, 1);
+    }
+
+    public void spin_Left(float degrees, double pow)//Left Motor only moves!!!!!!!
+    {
+        double degToRad = degrees * Math.PI / 180.0f; // converts it to Radians
+
+        double encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
+        //second set gets encoder counts per centimeter
+
+        resetDriveEncoders();
+
+        if (degrees > 0) //This spins the robot counterclockwise
+        {
+            driveLeftOne.setPower(Math.abs(pow));
+
+            while(driveLeftOne.getCurrentPosition() < encTarget){}
+
+        }
+        else //spins clockwise
+        {
+            driveLeftOne.setPower(-Math.abs(pow));
+
+            while(driveLeftOne.getCurrentPosition() > encTarget){}
+        }
+
+        stopAllMotors();
+    }
+
+    public void spin_Left_IMU(float deg, double pow)
+    {
+        float degrees = deg;
+        if (deg > 0)
+        {
+            degrees -= 5.2f;
+        }
+        else
+        {
+            degrees += 5.2f;
+        }
+
+        while (degrees > 180)
+        {
+            degrees -= 360;
+        }
+        while (degrees <-180)
+        {
+            degrees += 360;
+        }
+
+        initIMU();
+        if (degrees < 0)
+        {
+            driveLeftOne.setPower(-Math.abs(pow));
+            while(getYaw() > degrees) {}
+        }
+        else
+        {
+            driveLeftOne.setPower(Math.abs(pow));
+            while(getYaw() < degrees) {}
+        }
+
+        stopAllMotors();
+    }
+
+    public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
+    {
+        float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
+
+        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm)/2;
+        //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
+        //second set gets encoder counts per centimeter
+        //we divide it by two at the end to compensate for using two motors
+
+        resetDriveEncoders();
+
+        //It pivots in the direction of how to unit circle spins
+        if (degrees < 0) //Pivot Clockwise
+        {
+            driveRightOne.setPower(-Math.abs(pow));
+            driveLeftOne.setPower(-Math.abs(pow));
+
+            while (driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
+
+        }
+        else //CounterClockwise
+        {
+            driveRightOne.setPower(Math.abs(pow));
+            driveLeftOne.setPower(Math.abs(pow));
+
+            while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) {}
+        }
+
+        stopAllMotors();
+    }
+
+    public void pivot_IMU(float degrees, double pow)
+    {
+        while (degrees > 180)
+        {
+            degrees -= 360;
+        }
+        while (degrees <-180)
+        {
+            degrees += 360;
+        }
+
+        initIMU();
+
+        if (degrees < 0)
+        {
+            driveRightOne.setPower(-Math.abs(pow));
+            driveLeftOne.setPower(-Math.abs(pow));
+            while(getYaw() > degrees) {}
+        }
+        else
+        {
+            driveRightOne.setPower(Math.abs(pow));
+            driveLeftOne.setPower(Math.abs(pow));
+            while(getYaw() < degrees) {}
+        }
+
+        stopAllMotors();
     }
 
     public void moveLift(int adjLevels)
@@ -222,6 +466,27 @@ public class NewRobotFinal
         driveRightOne.setPower(0);
     }
 
+    public void moveWing(float pow)
+    {
+        wingMotor.setPower(pow);
+    }
+
+    public void moveWing(boolean moveDown)
+    {
+        if(moveDown)
+        {
+            wingMotor.setPower(-.76);
+            while(wingMotor.getCurrentPosition() > -1696){}
+        }
+        else
+        {
+            wingMotor.setPower(.76);
+            while(wingMotor.getCurrentPosition() < 0){}
+        }
+
+        wingMotor.setPower(0);
+    }
+
     public ColorSensor getTopColorSens()
     {
         return topColorSens;
@@ -237,8 +502,20 @@ public class NewRobotFinal
         return floorColorSens;
     }
 
+    public DcMotorImplEx getDriveLeftOne()
+    {
+        return driveLeftOne;
+    }
+
+    public DcMotorImplEx getDriveRightOne() {return driveRightOne;}
+
     public DcMotorImplEx getLiftMotor()
     {
         return liftMotor;
+    }
+
+    public DcMotorImplEx getWingMotor()
+    {
+        return wingMotor;
     }
 }
