@@ -39,8 +39,8 @@ public class Delta_TeleOp_Relic extends OpMode {
     public int IVFSM;
 
     public double openClaw = 0;
-    public double closeClaw = 0.5;
-    public double upClaw = 1;
+    public double closeClaw = 0.3;
+    public double upClaw = 0;
     public double downClaw = 0.2;
 
 
@@ -266,6 +266,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         }*/
         if (gamepad2.dpad_up)
         {
+            //Makes a nice function for the other long function moveUpInch()
             moveUpInch(-2.54);
         }
         else {
@@ -301,14 +302,14 @@ public class Delta_TeleOp_Relic extends OpMode {
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
-
+//This is the math that is used to determine how much to move the motor
 
         slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         slideMotor.setPower(-0.6);
-
+//This part sets power to the motor and stops it when the motor is done running
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
             telemetry.update();
@@ -316,12 +317,12 @@ public class Delta_TeleOp_Relic extends OpMode {
         }
 
         slideMotor.setPower(0);
-
+//This stops the motor
     }
 
     public void relicSlides() {
       double g2lsx = gamepad2.left_stick_x;
-
+//If there is movement on the x-axis then move the motor proportionally to the amount of movement on the joystick
         if (g2lsx != 0) {
             relicMotor.setPower(g2lsx);
         }
@@ -336,6 +337,7 @@ public class Delta_TeleOp_Relic extends OpMode {
       }
       else if (gamepad2.right_bumper){
           clawServo.setPosition(closeClaw);
+          //This says that if you press a bumper open or close the claw
       }
       telemetry.addData("In the function relicManipulatorClawServo and the value of that servo is", clawServo.getPosition());
       telemetry.update();
@@ -347,6 +349,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         }
         else if (gamepad2.y){
             moveRelicManipulatorServo.setPosition(downClaw);
+            //This controls the overall movement of the claw
         }
 
     }
