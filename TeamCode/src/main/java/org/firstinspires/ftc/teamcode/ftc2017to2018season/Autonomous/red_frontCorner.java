@@ -57,6 +57,7 @@ public class red_frontCorner extends Autonomous_General {
         sleep(1000);
         gyroTurn(0.3,-88);
         sleep(1000);
+
         if (vuMark == RelicRecoveryVuMark.CENTER){
             simpleRangeDistance(88, 0.2, rsBuffer);
         }
