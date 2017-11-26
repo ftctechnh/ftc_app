@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
@@ -7,7 +8,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 /**
  * Created by inspirationteam on 11/20/17.
  */
-
+@Autonomous(name = "testAutoMethods")
 public class testAutoMethods extends Autonomous_General {
 
     public void runOpMode(){
@@ -30,8 +31,11 @@ public class testAutoMethods extends Autonomous_General {
 
         gyro.resetZAxisIntegrator();
 
+        encoderMecanumDrive(0.5,63.5,63.5,5000,0);
+        /*double  position = 0.5;
+        jewelServo.setPosition(position);
         //test Straight Drive
-        telemetry.addData("Testing Straight Drive","");
+        /*telemetry.addData("Testing Straight Drive","");
         telemetry.update();
         straightDrive(0.5);
         sleep(2000);
@@ -65,14 +69,20 @@ public class testAutoMethods extends Autonomous_General {
         strafeLeft(0.5);
         sleep(2000);
         stopMotors();
-        sleep(3000);
+        sleep(3000);*/
 
-        //gyro turn
-        telemetry.addData("Testing gyro turn", "90 degrees");
+       //gyro turn
+        /*telemetry.addData("Testing gyro turn", "90 degrees");
         telemetry.update();
         gyroTurn(0.3,90);
         sleep(1000);
-        gyroTurn(0.3,0);
+        gyroTurn(0.3,0);*/
+
+        sleep(10000);
+
+        //jewelServo.setPosition(0.8);
+        //telemetry.addData("Position",jewelServo.getPosition());
+        sleep(1000);
     }
 
 }

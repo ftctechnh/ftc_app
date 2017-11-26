@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
@@ -57,9 +58,12 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
+
+    public Servo jewelServo;
+
     public ModernRoboticsI2cGyro gyro;
     public ModernRoboticsI2cRangeSensor rangeSensor;
-    public ModernRoboticsI2cRangeSensor rangeSensor2;
+    //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -75,8 +79,8 @@ public class Autonomous_General extends LinearOpMode {
     RelicRecoveryVuMark vuMark;
 
     public void initiate() {
-        COUNTS_PER_MOTOR_REV = 1440;
-        WHEEL_REV_PER_MOTOR_REV = 1.5;
+        COUNTS_PER_MOTOR_REV = 1120;
+        WHEEL_REV_PER_MOTOR_REV = 1.3;
         WHEEL_PERIMETER_CM = 2*5.08* Math.PI;
         COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
                 (WHEEL_PERIMETER_CM * WHEEL_REV_PER_MOTOR_REV);
@@ -91,10 +95,11 @@ public class Autonomous_General extends LinearOpMode {
         back_right_motor = hardwareMap.dcMotor.get("rightWheelMotorBack");
         idle();
 
+        jewelServo = hardwareMap.servo.get("jewelServo");
 
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
-        rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
+        //rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
 
 
         idle();
@@ -117,6 +122,8 @@ public class Autonomous_General extends LinearOpMode {
         back_right_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         idle();
         sleep(100);
+        telemetry.addData("motors initiated","");
+        telemetry.update();
 
     }
 
@@ -131,7 +138,7 @@ public class Autonomous_General extends LinearOpMode {
         front_right_motor.setPower(power);
     }
 
-    public void strafeLeft(double speed){
+    public void strafeRight(double speed){
 
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -143,7 +150,7 @@ public class Autonomous_General extends LinearOpMode {
         back_right_motor.setPower(speed);
     }
 
-    public void strafeRight(double speed){
+    public void strafeLeft(double speed){
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -155,6 +162,11 @@ public class Autonomous_General extends LinearOpMode {
     }
 
     public void turnLeft(double speed) {
+        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         front_left_motor.setPower(-speed);
         back_left_motor.setPower(-speed);
 
@@ -163,6 +175,11 @@ public class Autonomous_General extends LinearOpMode {
     }
 
     public void turnRight(double speed) {
+        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         front_right_motor.setPower(-speed);
         back_right_motor.setPower(-speed);
 
@@ -438,7 +455,7 @@ public class Autonomous_General extends LinearOpMode {
             //idle();
 
         }
-        else if (direction == -1){
+        else if (direction == 1){//right
             back_left_motor.setTargetPosition(-newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(newRightBackTarget);
@@ -449,7 +466,7 @@ public class Autonomous_General extends LinearOpMode {
             //idle();
 
         }
-        else if(direction == 1){
+        else if(direction == -1){//left
             back_left_motor.setTargetPosition(newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(-newRightBackTarget);
@@ -719,7 +736,7 @@ public class Autonomous_General extends LinearOpMode {
     /**
      * Uses the range sensor in a while loop, you can choose whether it strafes or drives
      */
-    public void RangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
+    /*public void RangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
     if(strafe) {
         if (!dorangeSensor2) {
             while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
@@ -779,7 +796,7 @@ public class Autonomous_General extends LinearOpMode {
             telemetry.update();
 
         }
-    }
+    }*/
 
     /**
      * uses range sensor by reading distance and then driving that distance

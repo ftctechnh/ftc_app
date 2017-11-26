@@ -58,14 +58,14 @@ public class red_BackCorner extends Autonomous_General {
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            RangeDistance(140,0.2,rsBuffer, false, false);
+            simpleRangeDistance(140,0.2,rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            RangeDistance(124,0.2,rsBuffer, false, false);
+            simpleRangeDistance(124,0.2,rsBuffer);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            RangeDistance(158,0.2,rsBuffer, false, false);
+            simpleRangeDistance(158,0.2,rsBuffer);
 
         }
 
