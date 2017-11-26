@@ -258,7 +258,7 @@ public class Delta_TeleOp_2 extends OpMode {
         }*/
     if (gamepad2.dpad_up)
         {
-            moveDownInch(-2.54);
+            moveUpInch(-2.54);
         }
         else {
 
@@ -288,7 +288,7 @@ public class Delta_TeleOp_2 extends OpMode {
 
     }*/
 
-   public void moveDownInch(double cm) {
+   public void moveUpInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
