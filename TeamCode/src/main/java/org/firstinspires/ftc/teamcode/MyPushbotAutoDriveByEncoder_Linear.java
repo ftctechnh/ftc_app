@@ -80,7 +80,7 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 public class MyPushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    MyHardwarePushbot         robot   = new MyHardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 835;    // eg: Neverest 40
