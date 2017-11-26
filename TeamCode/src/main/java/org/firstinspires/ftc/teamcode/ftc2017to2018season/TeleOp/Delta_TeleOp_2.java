@@ -232,9 +232,9 @@ public class Delta_TeleOp_2 extends OpMode {
             glyphServoLeft.setPosition(0.5);
         } else if (gamepad1.right_bumper) {
 
-            glyphServoRight.setPosition(0.1);
+            glyphServoRight.setPosition(0.05);
 
-            glyphServoLeft.setPosition(0.8);
+            glyphServoLeft.setPosition(0.85);
 
            /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
             telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
