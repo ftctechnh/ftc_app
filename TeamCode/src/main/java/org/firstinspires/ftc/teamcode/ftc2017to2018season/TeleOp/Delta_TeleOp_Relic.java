@@ -39,9 +39,9 @@ public class Delta_TeleOp_Relic extends OpMode {
     public int IVFSM;
 
     public double openClaw = 0;
-    public double closeClaw = 0.3;
+    public double closeClaw = 0.45;
     public double upClaw = 0;
-    public double downClaw = 0.2;
+    public double downClaw = 0.5;
 
 
 
@@ -267,7 +267,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         if (gamepad2.dpad_up)
         {
             //Makes a nice function for the other long function moveUpInch()
-            moveUpInch(-2.54);
+            moveUpInch(-2);
         }
         else {
 
