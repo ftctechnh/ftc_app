@@ -40,7 +40,6 @@ public class TeleOp6217_DRC extends OpMode
     private boolean RunLauncher = false;
     private int DelayCounter = 0;
     private int DelayTimer = 400 ;
-
     public TeleOp6217_DRC() {}
 
     @Override
@@ -110,6 +109,8 @@ public class TeleOp6217_DRC extends OpMode
         boolean Open = gamepad1.dpad_left;
         boolean UP = gamepad1.dpad_up;
         boolean DOWN = gamepad1.dpad_down;
+        double ls;
+        //I put the light sensor varible definition within the method. Is this okay?//
 
          /* ~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Limit x and y values and adjust to power curve
@@ -132,13 +133,11 @@ public class TeleOp6217_DRC extends OpMode
 
 
         // use ball thrower
-        if (a) {
-            motorCon1.setPower(1);
-            motorCon2.setPower(1);
+        /*if (a) {
         }
 
 
-        /*
+
         else {
             Sweeper1.setPower(0);
 
@@ -148,6 +147,7 @@ public class TeleOp6217_DRC extends OpMode
             }
         }
 
+        ls = lightLevel(odsSensor.getRawLightDetected());
         if ( y ) {
             if (!RunLauncher) {
                 RunLauncher = true;
@@ -183,14 +183,16 @@ public class TeleOp6217_DRC extends OpMode
                 Conveyor2.setPower(0);
             }
 
-        }
-        */
+        }*/
+
         if (UP) {
-            motorCon2.setPower(0);
+            motorCon1.setPower(1);
         }
 
-       /* else if (DOWN)  {
+        else if (DOWN)  {
+            motorCon2.setPower(1);
         }
+        /*
 
         else {
         }
