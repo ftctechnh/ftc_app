@@ -126,65 +126,6 @@ public class TeleOp6217_DRC extends OpMode
         RT = (float) powerCurve(RT);
 
 
-        /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            Write power to wheels
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-        // use ball thrower
-        /*if (a) {
-        }
-
-
-
-        else {
-            Sweeper1.setPower(0);
-
-            if (!RunLauncher)  {
-                Conveyor1.setPower(0);
-                Conveyor2.setPower(0);
-            }
-        }
-
-        ls = lightLevel(odsSensor.getRawLightDetected());
-        if ( y ) {
-            if (!RunLauncher) {
-                RunLauncher = true;
-                motorWBT1.setPower(-1);
-                motorWBT2.setPower(-1);
-                DelayCounter = 0;
-            } else {
-                RunLauncher = false;
-            }
-        }
-
-        telemetry.addData("5", "RunLauncher:" + " " +
-                String.format("%b", RunLauncher));
-
-        if (RunLauncher) {
-            DelayCounter++;
-
-            if (DelayCounter >= DelayTimer) {
-                Sweeper2.setPower(
-                        1);
-                Conveyor1.setPower(1);
-                Conveyor2.setPower(1);
-            }
-        }
-
-        else {
-            motorWBT1.setPower(0);
-            motorWBT2.setPower(0);
-            Sweeper2.setPower(0);
-
-            if (!a)  {
-                Conveyor1.setPower(0);
-                Conveyor2.setPower(0);
-            }
-
-        }*/
-
         if (UP) {
             motorCon1.setPower(1);
         }
@@ -192,53 +133,16 @@ public class TeleOp6217_DRC extends OpMode
         else if (DOWN)  {
             motorCon2.setPower(1);
         }
-        /*
 
         else {
+            motorCon1.setPower(0);
+            motorCon2.setPower(0);
         }
 
-        //ball Grabber
-        if (Open) {
-            motorBG.setPower(0.5);
-
-        }
-
-            else if (Close)  {
-            motorBG.setPower(-1);
-
-        }
-
-            else {
-            motorBG.setPower(0);
-        }
-
-
-        //  pivot left
-
-            if (LT != 0)  {
-
-            motorFL.setPower(LT);
-            motorBL.setPower(LT);
-            motorFR.setPower(-LT);
-            motorBR.setPower(-LT);
-        }
-
-*/
-        //
-
-        //  pivot right
-
-            else if (RT != 0)  {
-
-            motorFL.setPower(-RT);
-            motorBL.setPower(-RT);
-            motorFR.setPower(RT);
-            motorBR.setPower(RT);
-        }
 
         //  Driving
 
-            else if ( ( posy != 0) || ( posx != 0 ) ) {
+            if ( ( posy != 0) || ( posx != 0 ) ) {
 
                 FRBLPower = posy - posx;
                 FLBRPower = posy + posx;
