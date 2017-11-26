@@ -11,12 +11,12 @@ public class JewelArm {
     public Servo jewelFlickerServo;
 
     public void init(HardwareMap hardwareMap) {
-        jewelArmServo = hardwareMap.servo.get("jewelarm");
-        jewelFlickerServo = hardwareMap.servo.get("jewelflicker");
+        jewelArmServo = hardwareMap.servo.get("jewel_arm");
+        //jewelFlickerServo = hardwareMap.servo.get("jewelflicker");
 
         jewelArmUp();
 
-        jewelflickerCenter();
+        //jewelflickerCenter();
 
         //leftIn();
     }
@@ -29,7 +29,7 @@ public class JewelArm {
         jewelArmServo.setPosition(0.85);
     }
 
-    public void jewelflickerBack() {
+   /* public void jewelflickerBack() {
         jewelFlickerServo.setPosition(0.0);
     }
     public void jewelflickerCenter() {
@@ -37,7 +37,7 @@ public class JewelArm {
     }
     public void jewelflickerForward() {
         jewelArmServo.setPosition(1.0);
-    }
+    }*/
 
 
 }

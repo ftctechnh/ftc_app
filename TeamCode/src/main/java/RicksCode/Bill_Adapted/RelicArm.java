@@ -12,19 +12,19 @@ public class RelicArm {
 
 
     public void init(HardwareMap hardwareMap) {
-        relicServo = hardwareMap.servo.get("relicjaw");
+       // relicServo = hardwareMap.servo.get("relicjaw");
 
-        jawOpen();
-        jawClosed();
+        //jawOpen();
+        //jawClosed();
     }
 
-    public void jawOpen() {
+    /*public void jawOpen() {
         relicServo.setPosition(0.2);
     }
 
     public void jawClosed() {
         relicServo.setPosition(0.8);
-    }
+    }*/
 
 
 
