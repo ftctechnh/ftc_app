@@ -40,7 +40,7 @@ public class blue_BackCorner extends Autonomous_General {
         telemetry.update();
 
         waitForStart();
-
+//reseting gyro sensor
         gyro.resetZAxisIntegrator();
 
         startTracking();
