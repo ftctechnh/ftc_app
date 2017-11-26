@@ -19,7 +19,7 @@ public class red_frontCorner extends Autonomous_General {
     @Override
     public void runOpMode() {
 
-
+//Before start is pressed?
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
@@ -27,7 +27,6 @@ public class red_frontCorner extends Autonomous_General {
         telemetry.addData("--->", "Gyro Calibrating");
         telemetry.update();
         gyro.calibrate();
-
 
         while(gyro.isCalibrating()){
             sleep(50);
@@ -39,7 +38,7 @@ public class red_frontCorner extends Autonomous_General {
         telemetry.update();
 
         waitForStart();
-
+//reset the gyro sensor
         gyro.resetZAxisIntegrator();
 
         startTracking();
