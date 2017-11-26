@@ -20,6 +20,9 @@ public class BlockLift {
     private int goalposition;
     private double dynamicPower = 0;
 
+    private int slidePosition = 1;
+    private boolean buttonPressed = false;
+
     public BlockLift(DcMotor liftMotor, Servo topLeftGrab, Servo topRightGrab, Servo bottomLeftGrab, Servo bottomRightGrab) {
 
         this.liftMotor = liftMotor;
@@ -38,18 +41,6 @@ public class BlockLift {
 
     }
 
-    public void holdMotor(int goalPosition) {
-
-        this.goalposition = goalPosition;
-        if (liftMotor.getCurrentPosition() < goalPosition) {
-            dynamicPower += 0.01;
-        } else {
-            dynamicPower = 0;
-        }
-        liftMotor.setPower(dynamicPower);
-
-    }
-
     public void currentServoPositions(Telemetry telemetry) {
         telemetry.addData("Top Left Servo Position", topLeftGrab.getPosition());
         telemetry.addData("Top Right Servo Position", topRightGrab.getPosition());
@@ -57,4 +48,27 @@ public class BlockLift {
         telemetry.addData("Bottom Right Servo Position", bottomRightGrab.getPosition());
     }
 
+    public void slideHeight(boolean dpadUp, boolean dpadDown, Telemetry telemetry) {
+
+        if ((dpadUp || dpadDown) && ((dpadUp || dpadDown) != buttonPressed)) {
+            if (dpadUp && !(slidePosition > 4)) {
+                slidePosition++;
+            } else if (!(slidePosition < 1)) {
+                slidePosition--;
+            }
+        }
+
+        buttonPressed = (dpadUp || dpadDown);
+
+        if (slidePosition == 1) {
+            telemetry.addData("Current Position", slidePosition);
+        } else if (slidePosition == 2) {
+            telemetry.addData("Current Position", slidePosition);
+        } else if (slidePosition == 3) {
+            telemetry.addData("Current Position", slidePosition);
+        } else if (slidePosition == 4) {
+            telemetry.addData("Current Position", slidePosition);
+        }
+    }
 }
+

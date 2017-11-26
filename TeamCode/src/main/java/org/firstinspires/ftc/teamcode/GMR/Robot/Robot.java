@@ -31,6 +31,10 @@ public class Robot {
     private Servo bottomLeftGrab;
     private Servo bottomRightGrab;
 
+    private Servo rightColor;
+    private Servo leftColor;
+
+
     public Robot (HardwareMap hardwareMap, Telemetry telemetry) {
 
         gyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
@@ -44,6 +48,12 @@ public class Robot {
         topRightGrab = hardwareMap.servo.get("toprightgrab");
         bottomLeftGrab = hardwareMap.servo.get("bottomleftgrab");
         bottomRightGrab = hardwareMap.servo.get("bottomrightgrab");
+
+        rightColor = hardwareMap.servo.get("rightArm");
+        leftColor = hardwareMap.servo.get("leftArm");
+
+        rightColor.setPosition(0);
+        leftColor.setPosition(.85);
 
         driveTrain = new DriveTrain(leftFront, rightFront, leftRear, rightRear, gyro, telemetry);
 

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
  * Created by pston on 11/18/2017
  */
 
-@TeleOp(name = "Servo Test", group = "test")
+@TeleOp(name = "Relic Recovery TeleOp V1", group = "test")
 public class RR_TeleOp_V1 extends OpMode {
 
     private int currentLiftPosition;
@@ -22,6 +22,8 @@ public class RR_TeleOp_V1 extends OpMode {
     private double bottomLeftPosition = 0.55;// Open: 0.55, Close: 0.117
     private double bottomRightPosition = 0.2;// Open: 0.2, Close: 0.67
 
+    private boolean letterButton = false;
+
     @Override
     public void init() {
         robot = new Robot(hardwareMap, telemetry);
@@ -31,35 +33,49 @@ public class RR_TeleOp_V1 extends OpMode {
     public void loop() {
 
         if (gamepad1.a) {
-            topRightPosition = 0.26;
-            topLeftPosition = 0.37;
-        } else if (gamepad1.b) {
-            topRightPosition = 0.65;
-            topLeftPosition = 0;
+            bottomRightPosition = 0.2;
+            bottomLeftPosition = 0.55;
+//            if (!letterButton) {
+//                currentLiftPosition += 15;
+//            }
+        } else if (gamepad1.x) {
+            bottomRightPosition = 0.67;
+            bottomLeftPosition = 0.117;
+//            if (!letterButton) {
+//                currentLiftPosition -= 15;
+//            }
         }
 
         if (gamepad1.y) {
-            bottomLeftPosition = 0.55;
-            bottomRightPosition = 0.2;
-        } else if (gamepad1.x) {
-            bottomLeftPosition = 0.117;
-            bottomRightPosition = 0.67;
+            topLeftPosition = 0.37;
+            topRightPosition = 0.26;
+//            if (!letterButton) {
+//                currentLiftPosition -= 15;
+//            }
+        } else if (gamepad1.b) {
+            topLeftPosition = 0;
+            topRightPosition = 0.65;
+//            if (!letterButton) {
+//                currentLiftPosition += 15;
+//            }
         }
+
+        letterButton = (gamepad1.a || gamepad1.b || gamepad1.x || gamepad1.y);
 
         if (gamepad1.right_bumper && robot.blockLift.liftMotor.getCurrentPosition() < 0) {
             robot.blockLift.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.blockLift.liftMotor.setPower(.8);
+            robot.blockLift.liftMotor.setPower(1);
             currentLiftPosition = robot.blockLift.liftMotor.getCurrentPosition();
         } else if (gamepad1.right_trigger > 0) {
             robot.blockLift.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.blockLift.liftMotor.setPower(-.8);
+            robot.blockLift.liftMotor.setPower(-1);
             currentLiftPosition = robot.blockLift.liftMotor.getCurrentPosition();
         } else {
             robot.blockLift.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.blockLift.liftMotor.setTargetPosition(currentLiftPosition);
         }
 
-        robot.driveTrain.setMotorPower(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        robot.driveTrain.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         telemetry.addData("Current Lift Motor Power: ", robot.blockLift.liftMotor.getPower());
         telemetry.addData("Current Lift Goal: ", currentLiftPosition);
