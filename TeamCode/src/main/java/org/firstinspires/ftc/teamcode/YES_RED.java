@@ -73,6 +73,7 @@ public class YES_RED extends LinearOpMode
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+
         double xPosUp = 1;
         double xPosDown = .5;
 
@@ -211,18 +212,24 @@ public class YES_RED extends LinearOpMode
 
     public void findColor()
     {
+
+        double xPosUp = 1;
+        double xPosDown = .5;
         if (colorSensor.red() < colorSensor.blue())
         {
             resetAngle();
-            rotate(90,.2);
+            rotate(90,.4);
             wheelsOff();
+            sleep(500);
+            gemServo.setPosition(xPosUp);
         }
         else
         resetAngle();
-        rotate(-90,.2);
+        rotate(-90,.4);
         wheelsOff();
         sleep(500);
-        rotate(180, .2);
+        gemServo.setPosition(xPosUp);
+        rotate(180, .4);
     }
 
 
