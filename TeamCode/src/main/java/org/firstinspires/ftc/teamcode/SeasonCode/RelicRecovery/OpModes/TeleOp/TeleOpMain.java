@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.directcurrent.core.gamecontroller.Controller;
-import org.directcurrent.opencv.CVBridge;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
@@ -91,6 +90,13 @@ public class TeleOpMain extends LinearOpMode
         else
         {
             _base.glyphGrabber.setState(GlyphGrabber.State.STOP);
+        }
+
+
+        // IMU fast calibration
+        if(_controller1.leftStickButtonClicked())
+        {
+            _base.imu.fastCalibrate();
         }
     }
 

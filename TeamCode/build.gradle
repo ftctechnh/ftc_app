@@ -17,6 +17,11 @@ apply plugin: 'kotlin-android'
 
 android {
     buildToolsVersion '26.0.2'
+    compileSdkVersion 23
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 repositories {
     mavenCentral()

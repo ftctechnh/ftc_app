@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 
 
 /**
@@ -15,6 +16,8 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
 public class Lift extends RobotComponent
 {
     public DcMotor _liftMotor;
+
+    private UtilToggle _powered = new UtilToggle();
 
 
     /**
@@ -51,13 +54,19 @@ public class Lift extends RobotComponent
     }
 
 
+    /**
+     * Initializes the lift- lift motor is set to RUN_T0_POSITION. This is to keep it staying up
+     * when we let go of the controls
+     *
+     * @param BASE The robot base used to create the hardware mapper
+     */
     @Override
     public void init(final RobotBase BASE)
     {
         super.init(BASE);
 
         _liftMotor = mapper.mapMotor("liftMotor" , DcMotorSimple.Direction.REVERSE);
-        _liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 
@@ -76,8 +85,33 @@ public class Lift extends RobotComponent
      *
      * @param POWER_VALUE Power value to set to the lift
      */
-    public void run(final double POWER_VALUE)
+    public void run(double POWER_VALUE)
     {
-        _liftMotor.setPower(POWER_VALUE);
+        final int CLOSE_ENOUGH = 20;
+
+        // Set target position the moment the joystick isn't moved. But only once!
+        if(_powered.isPressed(POWER_VALUE != 0))
+        {
+            _liftMotor.setTargetPosition(_liftMotor.getCurrentPosition());
+        }
+
+
+        if(POWER_VALUE == 0)
+        {
+            // If we're not quite at the target
+            if(Math.abs(_liftMotor.getTargetPosition() - _liftMotor.getCurrentPosition()) >
+                    CLOSE_ENOUGH)
+            {
+                _liftMotor.setPower(1);
+            }
+            else
+            {
+                _liftMotor.setPower(0);
+            }
+        }
+        else                        // Manual override always takes priority :)
+        {
+            _liftMotor.setPower(POWER_VALUE);
+        }
     }
 }
