@@ -22,15 +22,15 @@ val BrownGlyphUpper = Scalar(25.0 , 260.0 , 125.0)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** Lower HSV bound for the red jewel */
-val RedJewelLower = Scalar(155.0 , 130.0 , 90.0)
+val RedJewelLower = Scalar(-20.0 , 90.0 , 90.0)     // Still don't know if this works
 
 /** Upper HSV bound for the red jewel */
-val RedJewelUpper = Scalar(180.0 , 255.0 , 255.0)
+val RedJewelUpper = Scalar(20.0 , 255.0 , 255.0)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** Lower HSV bound for the blue jewel */
-val BlueJewelLower = Scalar(70.0 , 130.0 , 90.0)
+val BlueJewelLower = Scalar(100.0 , 90.0 , 90.0)
 
 /** Upper HSV bound for the blue jewel */
-val BlueJewelUpper = Scalar(110.0 , 255.0 , 255.0)
+val BlueJewelUpper = Scalar(130.0 , 255.0 , 255.0)
