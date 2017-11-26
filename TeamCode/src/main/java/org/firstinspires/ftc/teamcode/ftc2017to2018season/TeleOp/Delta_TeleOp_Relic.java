@@ -325,6 +325,9 @@ public class Delta_TeleOp_Relic extends OpMode {
         if (g2lsx != 0) {
             relicMotor.setPower(g2lsx);
         }
+        else{
+            relicMotor.setPower(0);
+        }
     }
 
     public void relicManipulatorClawServo() {
