@@ -131,20 +131,21 @@ public class MyPushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Numbers aren't tested yet team is blue L.A.S
         ballArm = 1 ; // lowers ballArm all the way down L.A.S
         if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
-            encoderDrive(TURN_SPEED,4, -4,.5 ); // turns right to knock blue ball L.A.S
+           //
+            // encoderDrive(TURN_SPEED,4, -4,.5 ); // turns right to knock blue ball L.A.S
            // ballArm = 0 ; //lifts up ball arm all the way up L.A.S
         }
        else  { //The ball facing the color sensor is red  L.A.S
-            encoderDrive(TURN_SPEED, -2, 2,.5 ); //It turns left knocking the blue ball and turning to face glyph box L.A.S
+           // encoderDrive(TURN_SPEED, -2, 2,.5 ); //It turns left knocking the blue ball and turning to face glyph box L.A.S
            // ballArm = 0 ; // lifts up ball arm all the way up L.A.S
-            encoderDrive(TURN_SPEED,  -6, 6,.5 ); //It turns right to face the glyph bock L.A.S
+           // encoderDrive(TURN_SPEED,  -6, 6,.5 ); //It turns right to face the glyph bock L.A.S
         }
-        encoderDrive(DRIVE_SPEED, 20, 20, .5); // It drives past glyph box and to the pictograph L.A.S
-        encoderDrive(TURN_SPEED, -4,4, .5); // It turns towards pictograph L.A.S
-        encoderDrive(DRIVE_SPEED, -21, -21, .5); // It drives towards pictograph to allow phone to scan it L.A.S
-        encoderDrive(DRIVE_SPEED, 35, 35, .5); // It backs up from pictograph L.A.S
-        encoderDrive(TURN_SPEED, 4,-4, .5); // Turns towards balancing block L.A.S
-        encoderDrive(DRIVE_SPEED, 25, 25, .5); // Drives to align with glyph block L.A.S
+        encoderDrive(DRIVE_SPEED, -20, -20, .5); // It drives past glyph box and to the pictograph L.A.S
+        encoderDrive(TURN_SPEED, 4,-4, .5); // It turns towards pictograph L.A.S
+        encoderDrive(DRIVE_SPEED, 21, 21, .5); // It drives towards pictograph to allow phone to scan it L.A.S
+        encoderDrive(DRIVE_SPEED, -35, -35, .5); // It backs up from pictograph L.A.S
+        encoderDrive(TURN_SPEED, -4,4, .5); // Turns towards balancing block L.A.S
+        encoderDrive(DRIVE_SPEED, -25, -25, .5); // Drives to align with glyph block L.A.S
         clawOffset = .03 ; // It drops the block L.A.S
 
 
