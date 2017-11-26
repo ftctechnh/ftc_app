@@ -9,6 +9,7 @@ package org.chathamrobotics.common.hardware.utils;
  * @Last Modified time: 10/28/2017
  */
 
+import android.telecom.Call;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
@@ -48,8 +49,9 @@ public class HardwareListener {
         private final Runnable callback;
         private final HardwareCondition<H> condition;
 
-        private final int maxCalls;
-        private int callCount = 0;
+        private int maxCalls;
+        private int callCount;
+        private long endTime;
 
         /**
          * Creates a new instance of {@link HardwareListenerFunc}
@@ -57,19 +59,16 @@ public class HardwareListener {
          * @param callback  the callback to call when the condition is met
          */
         public HardwareListenerFunc(HardwareCondition<H> condition, Runnable callback) {
-            this(condition, callback, 0);
-        }
-
-        /**
-         * Creates a new instance of {@link HardwareListenerFunc}
-         * @param condition the condition for the hardware device to meet
-         * @param callback  the callback to call when the condition is met
-         * @param maxCalls  the maximum number of times the callback can be called
-         */
-        public HardwareListenerFunc(HardwareCondition<H> condition, Runnable callback, int maxCalls) {
             this.condition = condition;
             this.callback = callback;
+        }
+
+        public void setMaxCalls(int maxCalls) {
             this.maxCalls = maxCalls;
+        }
+
+        public void setTimeout(long timeout) {
+            endTime = System.currentTimeMillis() + timeout;
         }
 
         /**
@@ -87,10 +86,11 @@ public class HardwareListener {
          */
         public void run() throws CallsMaxedException {
             if (maxCalls != 0 && callCount == maxCalls) throw new CallsMaxedException();
+            if (endTime != 0 && System.currentTimeMillis() > endTime) throw  new CallsMaxedException();
 
             this.callback.run();
 
-            if (maxCalls != 0) callCount++;
+            callCount++;
         }
     }
 
@@ -161,6 +161,21 @@ public class HardwareListener {
     }
 
     /**
+     * Sets a new listener on the given device
+     * @param device    the device to listen on
+     * @param condition the condition that must be met in order to call the callback
+     * @param callback  the callback to call when the condition is met
+     * @param timeout   the timeout on the listener
+     * @param <H>       the hardware device type
+     */
+    public <H extends HardwareDevice> void on(H device, HardwareCondition<H> condition, Runnable callback, long timeout) {
+        final HardwareListenerFunc<H> func = new HardwareListenerFunc<>(condition, callback);
+        func.setTimeout(timeout);
+
+        on(device, new HardwareListenerFunc<>(condition, callback));
+    }
+
+    /**
      * Sets a listener on the given device
      * @param device    the device to listen on
      * @param listener  the listener to use
@@ -190,13 +205,40 @@ public class HardwareListener {
     }
 
     /**
+     * Sets a listener on the given device
+     * @param device    the device to listen on
+     * @param listener  the listener to use
+     * @param timeout   the timeout on the listener
+     * @param <H>       the hardware device type
+     */
+    public <H extends HardwareDevice> void on(H device, HardwareListenerFunc<H> listener, long timeout) {
+        listener.setTimeout(timeout);
+        on(device, listener);
+    }
+
+    /**
      * Sets a listener on the given device that can only be called once
      * @param device    the device to listen on
      * @param listener  the listener to use
      * @param <H>       the hardware device type
      */
     public <H extends HardwareDevice> void once(H device, HardwareListenerFunc<H> listener) {
-        on(device, new HardwareListenerFunc<>(listener.condition, listener.callback, 1));
+        listener.setMaxCalls(1);
+        on(device, listener);
+    }
+
+    /**
+     * Sets a listener on the given device that can only be called once
+     * @param device    the device to listen on
+     * @param listener  the listener to use
+     * @param timeout   the timeout on the listener
+     * @param <H>       the hardware device type
+     */
+    public <H extends HardwareDevice> void once(H device, HardwareListenerFunc<H> listener, long timeout) {
+        listener.setMaxCalls(1);
+        listener.setTimeout(timeout);
+
+        on(device, listener);
     }
 
     /**
@@ -207,7 +249,26 @@ public class HardwareListener {
      * @param <H>       the hardware device type
      */
     public <H extends HardwareDevice> void once(H device, HardwareCondition<H> condition, Runnable callback) {
-        on(device, new HardwareListenerFunc<>(condition, callback, 1));
+        HardwareListenerFunc<H> func = new HardwareListenerFunc<H>(condition, callback);
+        func.setMaxCalls(1);
+
+        on(device, func);
+    }
+
+    /**
+     * Sets a new listener on the given device that can only be called once
+     * @param device    the device to listen on
+     * @param condition the condition that must be met in order to call the callback
+     * @param callback  the callback to call when the condition is met
+     * @param timeout   the timeout on the listener
+     * @param <H>       the hardware device type
+     */
+    public <H extends HardwareDevice> void once(H device, HardwareCondition<H> condition, Runnable callback, long timeout) {
+        HardwareListenerFunc<H> func = new HardwareListenerFunc<H>(condition, callback);
+        func.setMaxCalls(1);
+        func.setTimeout(timeout);
+
+        on(device, func);
     }
 
     /**

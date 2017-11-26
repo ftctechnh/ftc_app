@@ -24,7 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * Handles gyro operations
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class GyroHandler {
+public class GyroHandler implements System {
     /**
      * The default tolerance for differences in angles
      */
@@ -88,6 +88,7 @@ public class GyroHandler {
     private boolean isCalibrated = false;
     private boolean isInitialized = false;
     private volatile double initialHeading = 0;
+    private double tolerance = DEFAULT_TOLERANCE;
 
     public GyroHandler(GyroSensor gyro, HardwareListener listener, RobotLogger logger) {
         this.gyro = gyro;
@@ -193,6 +194,12 @@ public class GyroHandler {
     public boolean isInitialized() {return isInitialized;}
 
     /**
+     * Sets the tolerance for differences in angles
+     * @param tolerance the tolerance for differences in angles
+     */
+    public void setTolerance(double tolerance) {this.tolerance = tolerance;}
+
+    /**
      * Returns the gyro's current heading in radians
      * @return  the gyro's current heading in radians
      */
@@ -253,7 +260,7 @@ public class GyroHandler {
      * @return          whether or not the gyro heading is at the target heading
      */
     public boolean isAtTarget(double target) {
-        return calcAngleDiff(gyro.getHeading(), Math.toDegrees(target)) < DEFAULT_TOLERANCE;
+        return calcAngleDiff(gyro.getHeading(), Math.toDegrees(target)) < tolerance;
     }
 
     /**
@@ -263,7 +270,7 @@ public class GyroHandler {
      * @return          whether or not the gyro heading is at the target heading
      */
     public boolean isAtTarget(double target, AngleUnit angleUnit) {
-        return calcAngleDiff(gyro.getHeading(), angleUnit.toDegrees(target)) < DEFAULT_TOLERANCE;
+        return calcAngleDiff(gyro.getHeading(), angleUnit.toDegrees(target)) < tolerance;
     }
 
     /**
@@ -329,7 +336,7 @@ public class GyroHandler {
 
             updateCallback.run(Math.toRadians(diff));
 
-            return diff < DEFAULT_TOLERANCE;
+            return diff < tolerance;
         }, () -> {});
     }
 
@@ -346,7 +353,7 @@ public class GyroHandler {
 
             updateCallback.run(angleUnit.fromDegrees(diff));
 
-            return diff < DEFAULT_TOLERANCE;
+            return diff < tolerance;
         }, () -> {});
     }
 
@@ -400,7 +407,7 @@ public class GyroHandler {
 
             updateCallback.run(Math.toRadians(diff));
 
-            return diff < DEFAULT_TOLERANCE;
+            return diff < tolerance;
         }, callback);
     }
 
@@ -418,7 +425,7 @@ public class GyroHandler {
 
             updateCallback.run(angleUnit.fromDegrees(diff));
 
-            return diff < DEFAULT_TOLERANCE;
+            return diff < tolerance;
         }, callback);
     }
 
@@ -470,7 +477,7 @@ public class GyroHandler {
         target = Math.toDegrees(target);
         double diff = calcAngleDiff(getRelativeHeading(AngleUnit.DEGREES), target);
 
-        while (diff > DEFAULT_TOLERANCE) {
+        while (diff > tolerance) {
             updateCallback.run(Math.toRadians(diff));
 
             Thread.sleep(10);
@@ -489,7 +496,7 @@ public class GyroHandler {
         target = angleUnit.toDegrees(target);
         double diff = calcAngleDiff(getRelativeHeading(AngleUnit.DEGREES), target);
 
-        while (diff > DEFAULT_TOLERANCE) {
+        while (diff > tolerance) {
             updateCallback.run(angleUnit.fromDegrees(diff));
 
             Thread.sleep(10);
@@ -539,6 +546,11 @@ public class GyroHandler {
 
             diff = calcAngleDiff(getRelativeHeading(AngleUnit.DEGREES), target);
         }
+    }
+
+    @Override
+    public void stop() {
+        listener.removeAllListeners(gyro);
     }
 
     private double calcAngleDiff(double current, double target) {

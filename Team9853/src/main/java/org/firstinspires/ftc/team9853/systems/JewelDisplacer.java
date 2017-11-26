@@ -8,7 +8,7 @@ import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.systems.RackAndPinion;
 import org.chathamrobotics.common.RGBAColor;
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
-import org.chathamrobotics.common.IsBusyException;
+import org.chathamrobotics.common.systems.IsBusyException;
 import org.chathamrobotics.common.robot.RobotLogger;
 
 import java.util.Timer;

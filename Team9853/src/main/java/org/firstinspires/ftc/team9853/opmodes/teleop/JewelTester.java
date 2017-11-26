@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.chathamrobotics.common.Controller;
-import org.chathamrobotics.common.IsBusyException;
+import org.chathamrobotics.common.systems.IsBusyException;
 import org.firstinspires.ftc.team9853.Robot9853;
 import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
 
