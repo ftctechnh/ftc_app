@@ -23,15 +23,15 @@ public class RelicExtender extends RobotComponent
 
     public enum State
     {
-        RIn,
-        ROut,
+        RInOut,
         Still
-
     }
 
-    public void init(final RobotBase base)
+
+    @Override
+    public void init(final RobotBase BASE)
     {
-        super.init(base);
+        super.init(BASE);
         ExtenderMotor = mapper.mapMotor("ExtenderMotor" , DcMotorSimple.Direction.REVERSE);
     }
 
@@ -40,13 +40,8 @@ public class RelicExtender extends RobotComponent
     {
         switch(STATE)
         {
-            case RIn:
+            case RInOut:
             ExtenderMotor.setPower(InSpeed);
-
-            break;
-
-            case ROut:
-            ExtenderMotor.setPower(OutSpeed);
 
             break;
 

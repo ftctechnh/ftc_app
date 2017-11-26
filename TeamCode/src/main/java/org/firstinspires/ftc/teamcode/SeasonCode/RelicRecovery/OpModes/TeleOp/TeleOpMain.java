@@ -9,6 +9,7 @@ import org.directcurrent.opencv.CVBridge;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.RelicGrabber.RelicGrabber;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicExtender.RelicExtender;
 
 
@@ -94,22 +95,39 @@ public class TeleOpMain extends LinearOpMode
             _base.glyphGrabber.setState(GlyphGrabber.State.STOP);
         }
 
-        //controls for RelicExtender
-        if (_controller2.aClicked())
+        //State machine for RelicExtender
+        if (_controller2.leftY() > .1 || _controller2.leftY() < -.1 )
         {
-            _base.RelicExtender.setState(RelicExtender.State.RIn);
-        }
-        else if (_controller2.xClicked() )
-        {
-            _base.RelicExtender.setState(RelicExtender.State.ROut);
+            _base.RelicExtender.setState(RelicExtender.State.RInOut);
         }
         else
         {
             _base.RelicExtender.setState(RelicExtender.State.Still);
         }
 
+        //state machine for Relic grabber grabber
+        if (_controller2.rightTrigger() >= .15)
+        {
+            _base.RelicGrabber.setState(RelicGrabber.State.InG);
+        }
+        else
+        {
+            _base.RelicGrabber.setState(RelicGrabber.State.StopG);
+        }
 
-
+        //state machine for relic grabber turning
+        if (_controller2.xClicked())
+        {
+            _base.RelicGrabber.setState(RelicGrabber.State2.TUp);
+        }
+        else if (_controller2.aClicked())
+        {
+            _base.RelicGrabber.setState(RelicGrabber.State2.TDown);
+        }
+        else
+        {
+            _base.RelicGrabber.setState(RelicGrabber.State2.TStill);
+        }
     }
 
 
