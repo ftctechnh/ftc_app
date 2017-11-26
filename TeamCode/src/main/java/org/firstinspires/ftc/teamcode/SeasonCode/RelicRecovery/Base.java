@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Lift.Lift;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicExtender.RelicExtender;
 
 import static com.sun.tools.doclint.HtmlTag.Attr.AXIS;
 import static java.lang.Thread.sleep;
@@ -34,6 +35,8 @@ public class Base extends RobotBase
 
     /** Built in IMU in the Rev module */
     public REVIMU imu = new REVIMU();
+
+    public RelicExtender RelicExtender = new  RelicExtender();
 
 
     /**
@@ -66,6 +69,7 @@ public class Base extends RobotBase
         lift.init(this);
         glyphGrabber.init(this);
         imu.init(this , "imu" , params);
+        RelicExtender.init(this);
 
 
         // Flipping IMU axis

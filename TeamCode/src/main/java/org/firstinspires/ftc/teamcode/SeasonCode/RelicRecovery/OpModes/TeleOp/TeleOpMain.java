@@ -9,6 +9,7 @@ import org.directcurrent.opencv.CVBridge;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicExtender.RelicExtender;
 
 
 /**
@@ -92,6 +93,23 @@ public class TeleOpMain extends LinearOpMode
         {
             _base.glyphGrabber.setState(GlyphGrabber.State.STOP);
         }
+
+        //controls for RelicExtender
+        if (_controller2.aClicked())
+        {
+            _base.RelicExtender.setState(RelicExtender.State.RIn);
+        }
+        else if (_controller2.xClicked() )
+        {
+            _base.RelicExtender.setState(RelicExtender.State.ROut);
+        }
+        else
+        {
+            _base.RelicExtender.setState(RelicExtender.State.Still);
+        }
+
+
+
     }
 
 
