@@ -10,6 +10,12 @@ import org.firstinspires.ftc.teamcode.Utilities.UseVuforia;
 @Autonomous(name = "Relic Recovery Autonomous", group = "Autonomous")
 public class RelicRecoveryAutonomous extends RelicRecoveryHardware {
 
+    /**
+     * Encoders:
+     * 60:1 1680
+     * 40:1 1120
+     * 20:1 560
+     */
     UseVuforia v;
 
     @Override
