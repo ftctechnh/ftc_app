@@ -37,6 +37,7 @@ public class Delta_TeleOp_Relic extends OpMode {
     Servo moveRelicManipulatorServo;
     //Initial value for slide motor
     public int IVFSM;
+
     public double openClaw = 0;
     public double closeClaw = 0.5;
     public double upClaw = 1;
@@ -89,7 +90,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         relicMotor = hardwareMap.dcMotor.get("relicMotor");
         clawServo = hardwareMap.servo.get("clawServo");
-        moveRelicManipulatorServo = hardwareMap.servo.get("mainServo");
+        moveRelicManipulatorServo = hardwareMap.servo.get("moveRelicManipulatorServo");
         IVFSM = slideMotor.getCurrentPosition();
 
 
@@ -133,6 +134,8 @@ public class Delta_TeleOp_Relic extends OpMode {
 
     @Override
     public void loop() {
+        //This is what runs when the play button is hit
+
         FourWheelDrive();
         slideMove();
         glyphManipulator();
@@ -171,14 +174,14 @@ public class Delta_TeleOp_Relic extends OpMode {
         // run the motors by setting power to the motors with the game pad value
 
         if (gamepad1.left_trigger > 0) {
-
+//Used for strafing to the left
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
         } else if (gamepad1.right_trigger > 0) {
-
+//Used for strafing to the right
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
@@ -189,6 +192,11 @@ public class Delta_TeleOp_Relic extends OpMode {
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
+            //run the motors by setting power to the motors with the game pad values
+            //leftWheelMotorFront.setPower(leftY_gp1);
+            //leftWheelMotorBack.setPower(leftY_gp1);
+            //rightWheelMotorFront.setPower(rightY_gp1);
+            //rightWheelMotorBack.setPower(rightY_gp1);
         }
 
         // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
@@ -196,55 +204,44 @@ public class Delta_TeleOp_Relic extends OpMode {
         // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
         //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
         //  telemetry.update();
-        //telemetry.addData("",)
-        //telemetry.update();
-        //These were going to be used to find the values of triggers but we couldn't acomplish it
-        //run the motors by setting power to the motors with the game pad values
-        //leftWheelMotorFront.setPower(leftY_gp1);
-        //leftWheelMotorBack.setPower(leftY_gp1);
-        //rightWheelMotorFront.setPower(rightY_gp1);
-        //rightWheelMotorBack.setPower(rightY_gp1);
+
 
 
     }
 
     public void slideMove() {
-
+//This moves the glyph manipulator slides up and down.
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y > 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
-
+            //If the right stick is pushed up move the slides up
         } else if (gamepad2.right_stick_y < 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
+            //If the right stick is pushed down move the slides down
         } else {
             slideMotor.setPower(0);
+            //Otherwise do nothing
         }
     }
 
     public void glyphManipulator() {
-       /* Boolean Right_Bumper = (gamepad1.right_bumper);
+       /*
+        Boolean Right_Bumper = (gamepad1.right_bumper);
         Boolean Left_Bumper = (gamepad1.left_bumper);
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
        */
 
         if (gamepad1.left_bumper) {
-
+//If the left bumper is hit then move the servos to these values or open the claw
 //opening the claw
             glyphServoRight.setPosition(0.35);
-            /*try {
-                glyphServoRight.setPosition(0.5);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-*/
             glyphServoLeft.setPosition(0.5);
         } else if (gamepad1.right_bumper) {
-
+//If the right bumper is hit move the servos the the below positions or close the claw
             glyphServoRight.setPosition(0.05);
-
             glyphServoLeft.setPosition(0.85);
 
            /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
@@ -252,7 +249,7 @@ public class Delta_TeleOp_Relic extends OpMode {
             telemetry.update();    */
         }
 
-/*        telemetry.addData("The value of the right servo is", left_claw);
+/*      telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
         telemetry.update();
 
@@ -337,6 +334,8 @@ public class Delta_TeleOp_Relic extends OpMode {
       else if (gamepad2.right_bumper){
           clawServo.setPosition(closeClaw);
       }
+      telemetry.addData("In the function relicManipulatorClawServo and the value of that servo is", clawServo.getPosition());
+      telemetry.update();
     }
 
     public void relicManipulatorMovementServo(){
