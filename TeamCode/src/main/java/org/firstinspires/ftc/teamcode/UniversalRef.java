@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Sahithi on 11/15/2017.
  */
-@Autonomous(name = "!UniRefSide", group = "Auto")
+@Autonomous(name = "!UniversalRef", group = "Auto")
 public class UniversalRef extends LinearOpMode
 {
     NewRobot newRobot;
