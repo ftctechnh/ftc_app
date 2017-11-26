@@ -82,42 +82,41 @@ public class RlcRcvryAutoSwitch extends OpMode{
                 stateMachineFlow++;
                 break;
             case 3:
-                //this might change depending on what arm attachment used for jewels
-                if (jewelColor == "blue"){encoderDrive(TURN_SPEED, 10, -10, 5);}
-                else if (jewelColor == "red"){encoderDrive(DRIVE_SPEED, 10, 10, 5);}
-
-                //move forward towards jewel
                 //knock off correct jewel
-
-                if (glyph() == 1){encoderDrive(DRIVE_SPEED);}
-                else if (glyph() == 2) {encoderDrive(DRIVE_SPEED);}
-                else if (glyph() == 3) {encoderDrive(DRIVE_SPEED);}
+                if (jewelColor == "blue"){robot.statTurn(.5,8);
+                    robot.statTurn(.5,-8);}
+                else if (jewelColor == "red"){robot.statTurn(.5,-8);
+                    robot.statTurn(.5,8);}
+                //move arm up
+                sensArm.armPos(1);
                 stateMachineFlow++;
                 break;
             case 4:
                 //move off balancing stone and move towards box
-                if (glyph == 2) {
-                encoderDrive(TURN_SPEED,-24.35, 24.35, 5);//face box
-                encoderDrive(DRIVE_SPEED,30, 30, 5); //in position to place glyph
-            }
-    else if (glyph == 3) {
-                encoderDrive(TURN_SPEED, -12.175, 12.175, 5); //turn to face middle
-                encoderDrive(DRIVE_SPEED, 18, 18, 5);
-                encoderDrive(TURN_SPEED, -12.175, 12.175, 5); //turn to face box
-                encoderDrive(DRIVE_SPEED, 30, 3, 5); //in position to place glyph
-            }
-            else if (glyph == 1) {
-                encoderDrive(TURN_SPEED, -24.35, 24.35, 5);//face box
-                encoderDrive(DRIVE_SPEED, 20, 20, 5);
-                encoderDrive(TURN_SPEED, 12.175, -12.175, 5);//face wall
-                encoderDrive(DRIVE_SPEED, 7.63, 7.63, 5);
-                encoderDrive(TURN_SPEED, -12.175, 12.175, 5);//face box
-                encoderDrive(DRIVE_SPEED, 10, 10, 5); //in position to place glyph
-            }
+                if (glyph == RelicRecoveryVuMark.LEFT) {
+                    robot.statTurn(.7,180);//face direction of box
+                    robot.linearDrive(30,1); //in position to place glyph
+                    robot.statTurn(.7,-90);//face box
+                }
+                else if (glyph == RelicRecoveryVuMark.CENTER) {
+                    robot.statTurn(.7,180); //turn to face box
+                    robot.linearDrive(36,1); //drive to middle of box
+                    robot.statTurn(.7,-90); //turn to face box
+                }
+                else if (glyph == RelicRecoveryVuMark.RIGHT) {
+                    robot.statTurn(.7,180);//face box
+                    robot.linearDrive(42,1);//move to box
+                    robot.statTurn(.7,-90);//face box
+                }
             stateMachineFlow++;
                 break;
             case 5:
-                gilgearmesh.clawPoss(1);
+                //not sure if the move needs to before or after we let go of glyph
+                gilgearmesh.clawPos(1);
+                robot.linearDrive(-1,1);
+                gilgearmesh.clawPos(0);
+                robot.linearDrive(2,1);
+
                 stateMachineFlow++;
                 break;
             case 6:
@@ -125,6 +124,5 @@ public class RlcRcvryAutoSwitch extends OpMode{
                 break;
         }
     }
-
-    }//end of class
+}//end of class
 
