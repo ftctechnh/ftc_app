@@ -25,6 +25,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class HardwareListener {
     private static final String TAG = HardwareListener.class.getSimpleName();
+    private static final int SAMPLE_RATE = 10;
 
     /**
      * A condition for a hardware device to meet. Returns true if the condition is met.
@@ -133,6 +134,12 @@ public class HardwareListener {
                     break;
             } finally {
                 hardwareListenersLock.readLock().unlock();
+            }
+
+            try {
+                Thread.sleep(SAMPLE_RATE);
+            } catch (InterruptedException e) {
+                break;
             }
         }
 
