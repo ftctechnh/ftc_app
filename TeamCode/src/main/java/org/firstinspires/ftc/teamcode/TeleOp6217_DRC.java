@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.Range;
@@ -28,9 +29,10 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-    DcMotor motorLift;
     DcMotor motorCon1;
     DcMotor motorCon2;
+    DcMotor motorRocker;
+    Servo   servoJack;
 
     IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;
@@ -56,6 +58,14 @@ public class TeleOp6217_DRC extends OpMode
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
+        motorCon1 = hardwareMap.dcMotor.get("motorCon1");
+        motorCon1.setDirection(DcMotor.Direction.FORWARD);
+        motorCon2 = hardwareMap.dcMotor.get("motorCon2");
+        motorCon2.setDirection(DcMotor.Direction.FORWARD);
+        motorRocker = hardwareMap.dcMotor.get("motorRocker");
+        motorRocker.setDirection(DcMotor.Direction.FORWARD);
+        servoJack = hardwareMap.servo.get ("servoJack");
+
 
         modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
@@ -92,26 +102,25 @@ public class TeleOp6217_DRC extends OpMode
         // Stick values range from -1 to 1, where -1 is full up, and 1 is full down
         // Trigger values range from 0 to 1
 
-        /* posx = Position X, posy = Position Y, LT = Left Trigger, RT = Right Trigger,
-         a = Button a, y = Button y, x = Button x, b = Button b, UP = BGL Going Up, DOWN = BGL Going Down,
-         AA = Arm Angle, Close = BG closing, Open = BG opening, BPD = Blast Protector Down, BPU = Blast Protector Up,
-         GP = Grab Particles, PPIWBT = Put Partciles Into Wiffle Ball Thrower,Beacon = Push Beacons. */
+        /* posx = Position X on Left Joystick, posy = Position Y on Left Joystick, posxR = Position X on Right Joystick,
+        posyR = Position Y on Right Joystick, LT = Left Trigger, RT = Right Trigger, a = Button a, y = Button y, x = Button x,
+         b = Button b, UP = on Dpad Loads Glyph, DOWN = on Dpad Shoots Glyph, rightPad = Right on Dpad, leftPad = Left on Dpad */
         float FLBRPower = 0.f;
         float FRBLPower = 0.f;
         float posx = gamepad1.left_stick_x;
         float posy = gamepad1.left_stick_y;
+        float posxR = gamepad1.right_stick_x;
+        float posyR = gamepad1.right_stick_y;
         float LT = gamepad1.left_trigger;
         float RT = gamepad1.right_trigger;
         boolean a = gamepad1.a;
+        boolean b = gamepad1.b;
         boolean y = gamepad1.y;
         boolean x = gamepad1.x;
-        boolean Close = gamepad1.dpad_right;
-        boolean Open = gamepad1.dpad_left;
+        boolean rightPad = gamepad1.dpad_right;
+        boolean leftPad = gamepad1.dpad_left;
         boolean UP = gamepad1.dpad_up;
         boolean DOWN = gamepad1.dpad_down;
-        double ls;
-        //I put the light sensor varible definition within the method. Is this okay?//
-
          /* ~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Limit x and y values and adjust to power curve
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -122,10 +131,13 @@ public class TeleOp6217_DRC extends OpMode
         posx = (float) powerCurve(posx);
         posy = (float) powerCurve(posy);
 
+        posxR = (float) powerCurve(posxR);
+        posyR = (float) powerCurve(posyR);
+
         LT = (float) powerCurve(LT);
         RT = (float) powerCurve(RT);
 
-
+        //  Loading Glyphs
         if (UP) {
             motorCon1.setPower(1);
         }
@@ -139,6 +151,24 @@ public class TeleOp6217_DRC extends OpMode
             motorCon2.setPower(0);
         }
 
+        // Rocker
+        if (posyR > 0) {
+            motorRocker.setPower(1);
+        }
+        else if (posyR < 0){
+            motorRocker.setPower(-1);
+        }
+        else {
+            motorRocker.setPower(0);
+        }
+
+        // Jack
+        if(a) {
+            servoJack.setPosition(.5);
+        }
+        else if(b) {
+            servoJack.setPosition(0);
+        }
 
         //  Driving
 

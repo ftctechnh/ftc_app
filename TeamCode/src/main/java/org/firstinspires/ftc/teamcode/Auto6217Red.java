@@ -24,7 +24,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 @Autonomous(name="Preciousss: Autonomous6217Red", group="Preciousss")
 
 /*
- * Created by Ben on 11/4/16.
+ * Created by Josie and Ben on 11/4/16.
  *
  */
 public class Auto6217Red extends LinearOpMode {
