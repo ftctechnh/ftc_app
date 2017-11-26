@@ -88,8 +88,6 @@ public class Delta_TeleOp_2 extends OpMode {
 
         glyphServoLeft.setPosition(0.5);
         glyphServoRight.setPosition(0.35);
-
-
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
@@ -252,13 +250,13 @@ public class Delta_TeleOp_2 extends OpMode {
 
     public void slideIncrement() {
 
-        if (gamepad2.dpad_down)
+       /* if (gamepad2.dpad_down)
         {
 
-            moveUpInch(-2.54);
+            moveUpInch(2.54);
 
-        }
-        else if (gamepad2.dpad_up)
+        }*/
+    if (gamepad2.dpad_up)
         {
             moveDownInch(-2.54);
         }
@@ -267,17 +265,18 @@ public class Delta_TeleOp_2 extends OpMode {
         }
     }
 
-    public void moveUpInch(double cm) {
+   /*  public void moveUpInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
+
         slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(-0.6);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -287,13 +286,14 @@ public class Delta_TeleOp_2 extends OpMode {
 
         slideMotor.setPower(0);
 
-    }
+    }*/
 
-    public void moveDownInch(double cm) {
+   public void moveDownInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
+
 
         slideMotor.setTargetPosition((int)target_Position);
 
