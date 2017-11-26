@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Jeremy and Sahithi on 11/12/2017.
  */
-@Autonomous(name = "UniversalAudi", group = "Auto")
+@Autonomous(name = "!UniversalAudi", group = "Auto")
 public class UniversalAudi extends LinearOpMode
 {
     NewRobot newRobot;
@@ -56,6 +56,7 @@ public class UniversalAudi extends LinearOpMode
                 //open door to release glyph
                 robot.driveStraight_In(-2);
                 robot.stopAllMotors();
+                //INSERT CODE TO RAISE
                 break;
             case'r':
                 // Close doors
@@ -87,6 +88,7 @@ public class UniversalAudi extends LinearOpMode
                 //open door to release glyph
                 robot.driveStraight_In(-2);
                 robot.stopAllMotors();
+                //INSERT CODE TO RAISE WING
                 break;
             default:
                 robot.driveStraight_In(30, .4);
