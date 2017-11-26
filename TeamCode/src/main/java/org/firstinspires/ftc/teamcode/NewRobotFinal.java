@@ -284,7 +284,7 @@ public class NewRobotFinal
 
     public void spin_Left(float degrees)
     {
-        spin_Left(degrees, 1);
+        spin_Left(degrees, .5);
     }
 
     public void spin_Left(float degrees, double pow)//Left Motor only moves!!!!!!!
@@ -379,6 +379,11 @@ public class NewRobotFinal
         }
 
         stopAllMotors();
+    }
+
+    public void pivot_IMU(float degrees)
+    {
+        pivot_IMU(degrees, .23);
     }
 
     public void pivot_IMU(float degrees, double pow)

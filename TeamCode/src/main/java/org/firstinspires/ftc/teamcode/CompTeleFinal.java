@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class CompTeleFinal extends OpMode
 {
     NewRobotFinal newRobot;
+    boolean isWingUp = true;
+
     public void init()
     {
         newRobot = new NewRobotFinal(hardwareMap);
@@ -30,16 +32,29 @@ public class CompTeleFinal extends OpMode
         telemetry.update();
 
         if(gamepad2.dpad_up && gamepad2.a)
-            newRobot.moveLift(1, .5f);
+            newRobot.moveLift(1, .76f);
         else if (gamepad2.dpad_up)
             newRobot.moveLift(1);
 
         if(gamepad2.dpad_down && gamepad2.a)
-            newRobot.moveLift(-1, .5f);
+            newRobot.moveLift(-1, .76f);
         else if (gamepad2.dpad_down)
             newRobot.moveLift(-1);
 
         newRobot.fineMoveLift(gamepad2.left_stick_y);
+
+        telemetry.addData("ARM ENCODER= ", newRobot.getWingMotor().getCurrentPosition());
+
+        if (gamepad1.y)
+            newRobot.getWingMotor().setPower(.75);
+        else if (gamepad1.b)
+        {
+            isWingUp = !isWingUp;
+            newRobot.moveWing(isWingUp);
+        }
+        else
+            newRobot.getWingMotor().setPower(0);
+
     }
 
 }
