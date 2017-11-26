@@ -60,6 +60,8 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor back_left_motor;
 
     public Servo jewelServo;
+    public Servo glyphServoRight;
+    public Servo glyphServoLeft;
 
     public ModernRoboticsI2cGyro gyro;
     public ModernRoboticsI2cRangeSensor rangeSensor;
@@ -80,7 +82,7 @@ public class Autonomous_General extends LinearOpMode {
 
     public void initiate() {
         COUNTS_PER_MOTOR_REV = 1120;
-        WHEEL_REV_PER_MOTOR_REV = 1.3;
+        WHEEL_REV_PER_MOTOR_REV = 1.3;//figured this out by rotating the motor once and measuring how much the wheel rotated (may not be completely accurate)
         WHEEL_PERIMETER_CM = 2*5.08* Math.PI;
         COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
                 (WHEEL_PERIMETER_CM * WHEEL_REV_PER_MOTOR_REV);
@@ -96,6 +98,8 @@ public class Autonomous_General extends LinearOpMode {
         idle();
 
         jewelServo = hardwareMap.servo.get("jewelServo");
+        glyphServoRight = hardwareMap.servo.get("glyphServoRight");
+        glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
 
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
@@ -798,13 +802,26 @@ public class Autonomous_General extends LinearOpMode {
         }
     }*/
 
+    public void openGlyphManipulator(){
+        glyphServoRight.setPosition(0.35);
+        glyphServoLeft.setPosition(0.5);
+    }
+
+    public void closeGlyphManipulator(){
+        glyphServoRight.setPosition(0.1);
+        glyphServoLeft.setPosition(0.8);
+
+    }
     /**
      * uses range sensor by reading distance and then driving that distance
      * @param distInCM
      * @param speed
      * @param rsBufffer
      */
+
+
     public void simpleRangeDistance(double distInCM, double speed, double rsBufffer) {
+
 
             double distancetoDrive = (distInCM-rsBufffer) - rangeSensor.getDistance(DistanceUnit.CM);
             encoderMecanumDrive(speed,distancetoDrive,distancetoDrive,500,0);

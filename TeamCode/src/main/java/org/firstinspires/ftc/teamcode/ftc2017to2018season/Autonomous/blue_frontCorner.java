@@ -24,13 +24,13 @@ public class blue_frontCorner extends Autonomous_General {
         telemetry.update();
         gyro.calibrate();
 
-
         while(gyro.isCalibrating()){
             sleep(50);
             idle();
 
         }
 
+        jewelServo.setPosition(0);
         telemetry.addData("---->","Gyro Calibrated. Good to go...");
         telemetry.update();
 
@@ -38,9 +38,11 @@ public class blue_frontCorner extends Autonomous_General {
 
         gyro.resetZAxisIntegrator();
 
+
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
+
 
         while(!vuMarkFound()){
 
@@ -48,6 +50,7 @@ public class blue_frontCorner extends Autonomous_General {
         //returnImage();
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
+        closeGlyphManipulator();
 
         encoderMecanumDrive(0.5,55,55,5000,0);
         sleep(1000);
