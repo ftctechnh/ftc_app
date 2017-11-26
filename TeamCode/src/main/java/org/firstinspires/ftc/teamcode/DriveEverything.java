@@ -7,18 +7,18 @@ import com.qualcomm.robotcore.util.Range;
  */
 @TeleOp(name = "DriveEverything", group = "linear OpMode")
 public class DriveEverything extends OpMode {
-    private ForkLift Forklift;
+    private ForkLift ForkLift;
     private RelicClaw RelicClaw;
     private DriveMecanum drive;
     @Override
     public void init() {
-        Forklift = new ForkLift(
+        ForkLift = new ForkLift(
                 hardwareMap.servo.get("s5"), //rightClaw
                 hardwareMap.servo.get("s6"), //leftClaw
                 hardwareMap.dcMotor.get("m6"), //updown
                 hardwareMap.touchSensor.get("b0"), //top button
                 hardwareMap.touchSensor.get("b1")); //bottom button
-        Forklift.init();
+        ForkLift.init();
         //Relic Recovery
         RelicClaw = new RelicClaw(
                 hardwareMap.servo.get("s1"), //claw
@@ -39,25 +39,26 @@ public class DriveEverything extends OpMode {
         drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         if (gamepad1.right_bumper) {
             drive.swingRight();
-        } else if (gamepad1.left_bumper) {
+        }
+        else if (gamepad1.left_bumper) {
             drive.swingLeft();
         }
-        //Forklift
+        //ForkLift
         if (gamepad1.a) {
-            Forklift.closeClaw();
+            ForkLift.closeClaw();
         }
         if (gamepad1.b) {
-            Forklift.openClaw();
+            ForkLift.openClaw();
         }
-        Forklift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
-        //Relic recovery
+        ForkLift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
+        //Relic arm
         if (gamepad2.a) {
             RelicClaw.closeClaw();
         }
         if (gamepad2.b) {
             RelicClaw.openClaw();
         }
-        RelicClaw.setArmPosition(Range.clip(gamepad2.right_stick_y / 250 + RelicClaw.getArmPosition(), 0.0, 1.0));
-        RelicClaw.moveMotor(gamepad2.left_stick_y);
+        RelicClaw.setArmPosition(Range.clip(gamepad2.right_stick_y/250 + RelicClaw.getArmPosition(), 0.0, 1.0));
+        RelicClaw.moveMotor(-gamepad2.left_stick_y);
     }
 }

@@ -40,7 +40,7 @@ public class ForkLiftDriveWithClass extends OpMode {
         reverseMotor(FrontRight);
         reverseMotor(RearRight);
         speed = 0.75;
-        Forklift.initClaw();
+        Forklift.init();
 
     }
 
