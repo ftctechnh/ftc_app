@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -81,8 +82,10 @@ MasterHardwareClass robot = new MasterHardwareClass();
      * localization engine.
      */
     VuforiaLocalizer vuforia;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override public void runOpMode() {
+
 
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
@@ -131,7 +134,9 @@ MasterHardwareClass robot = new MasterHardwareClass();
         telemetry.update();
         waitForStart();
 
-        relicTrackables.activate();
+
+    /* reset the "timer" to 0 */
+
 
         while (opModeIsActive()) {
 
@@ -153,6 +158,17 @@ MasterHardwareClass robot = new MasterHardwareClass();
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
+
+                if (vuMark == RelicRecoveryVuMark.CENTER) {
+                    movebytime(4,.5,"Left");
+
+                }
+                if (vuMark == RelicRecoveryVuMark.LEFT) {
+                    movebytime(6,.5,"Left");
+                }
+                if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                    movebytime(2,.5,"Left");
+                }
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
@@ -191,9 +207,46 @@ MasterHardwareClass robot = new MasterHardwareClass();
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
+    /* This method moves the robot forward for time and power indicated*/
+    public void movebytime (double time, double power, String direction) {
+    /* reset the "timer" to 0 */
+        runtime.reset();
+
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
+
+        switch (direction) {
+            case "Forward":
+                setWheelPower(power, -power, power, -power);
+                break;
+            case "Backward":
+                setWheelPower(-power, power, -power, power);
+                break;
+            case "Right":
+                setWheelPower(power, power, -power, -power);
+                break;
+            case "Left":
+                setWheelPower(-power, -power, power, power);
+                break;
+        }
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+        }
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+    public void wheelsOff() {
+        setWheelPower(0,0,0,0);
+    }
+
+
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
+
+
     public void setWheelPower(double fl, double fr, double bl, double br) {
 
         /* Create power variables */
