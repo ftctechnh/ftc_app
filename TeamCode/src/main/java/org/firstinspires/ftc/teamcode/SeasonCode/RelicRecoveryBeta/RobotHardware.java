@@ -61,12 +61,12 @@ public class RobotHardware {
     }
     // ----------------------- Public Methods -----------------------
     // ----------------------- Init -----------------------
-    public void init() {
+    void init() {
         mapMotors();
         mapServos();
         mapCRServos();
     }
-    public void setHardwarePower() {
+    void setHardwarePower() {
         setMotorPowers();
         setServoPositions();
         setCRServoPowers();
