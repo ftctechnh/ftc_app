@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDrive;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDriveMethods;
 
 /**
  * Created by spmce on 11/28/2016.
@@ -20,7 +20,7 @@ public class VelocityVortexAutoMeth extends VelocityVortexHardware {
     private String messageForTel = null;
     protected int count;
 
-    OmniWheelDrive drive = new OmniWheelDrive();
+    OmniWheelDriveMethods drive = new OmniWheelDriveMethods();
     private double[] power;
     protected int state = 0;
 

@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.Utilities.UseVuforia;
 /**
  * Created by Shane on 7/19/2017.
  */
-
 @Autonomous(name = "Relic Recovery Autonomous", group = "Autonomous")
 public class RelicRecoveryAutonomous extends RelicRecoveryAutoMeth {
 
