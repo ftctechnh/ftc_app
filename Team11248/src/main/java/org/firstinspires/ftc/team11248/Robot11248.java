@@ -4,6 +4,7 @@ package org.firstinspires.ftc.team11248;
  * Created by tonytesoriero on 9/11/17.
  */
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
@@ -31,23 +32,23 @@ public class Robot11248 extends HolonomicDriver_11248 {
     private final int RED_LOW_THRESHOLD = 10;
     private final int RED_HIGH_THRESHOLD = 11;
 
-    private final byte COLOR_SENSOR_BEACON_ADDR = 0x3E;
+    private final byte COLOR_SENSOR_BEACON_ADDR = 0x36;
 
      /*
      * CLAW DECLARATIONS
      */
 
     public Claw frontClaw, backClaw;
-    private final String[] frontServoNames = {"servo1", "servo2", "servo3", "servo4"};
-    private final String[] backServoNames = {"servo7", "servo8", "servo9", "servo10"};
+    private final String[] frontServoNames = {"servo1", "servo9", "servo2", "servo8"};
+    private final String[] backServoNames = {"servo10", "servo3", "servo11", "servo4"};
 
-    private final double[] frontOpen = {0, 0, 0, 0};
-    private final double[] frontRelease = {0, 0, 0, 0};
-    private final double[] frontClose = {0, 0, 0, 0};
+    private final double[] frontClose = {0, .95, .425, .9};
+    private final double[] frontGrab = {.375, .525, .825, .45};
+    private final double[] frontOpen = {.6, .25, 1, .225};
 
-    private final double[] backOpen = {0, 0, 0, 0};
-    private final double[] backRelease = {0, 0, 0, 0};
-    private final double[] backClose = {0, 0, 0, 0};
+    private final double[] backOpen = {.6, .15, .725, .15};
+    private final double[] backRelease = {.4, .35, .55, .35};
+    private final double[] backClose = {0, .85, .2, .85};
 
     /*
      * SERVO DECLARATIONS
@@ -55,8 +56,8 @@ public class Robot11248 extends HolonomicDriver_11248 {
 
     private ServoController servoController1, servoController2;
     private Servo jewelArm;
-    private final double jewelDown = 0.0;
-    private final double jewelUp = 0.0;
+    private final double jewelDown = 0.0; // servo7
+    private final double jewelUp = .775;
 
 
     /*
@@ -68,7 +69,7 @@ public class Robot11248 extends HolonomicDriver_11248 {
     /*
      * SENSOR DECLARATIONS
      */
-    private MRColorSensorV3 jewelColor;
+    private ColorSensor jewelColor;
     private DeviceInterfaceModule dim;
     private Telemetry telemetry;
 
@@ -90,8 +91,8 @@ public class Robot11248 extends HolonomicDriver_11248 {
         /*
          * SERVO INITS
          */
-        this.jewelArm = hardwareMap.servo.get("servo5");
-        this.frontClaw = new Claw(hardwareMap, frontServoNames, frontOpen, frontRelease, frontClose);
+        this.jewelArm = hardwareMap.servo.get("servo7");
+        this.frontClaw = new Claw(hardwareMap, frontServoNames, frontOpen, frontGrab, frontClose);
         this.backClaw = new Claw(hardwareMap, backServoNames, backOpen, backRelease, backClose);
         this.servoController1 = hardwareMap.servoController.get("Servo Controller 0");
         this.servoController2 = hardwareMap.servoController.get("Servo Controller 1");
@@ -100,17 +101,17 @@ public class Robot11248 extends HolonomicDriver_11248 {
          * SENSOR INITS
          */
 
-        I2cDevice colorBeacon = hardwareMap.i2cDevice.get("color");
-        this.jewelColor = new MRColorSensorV3(colorBeacon, COLOR_SENSOR_BEACON_ADDR);
+        this.jewelColor = hardwareMap.colorSensor.get("color");
+        //this.jewelColor = new MRColorSensorV3(colorBeacon, COLOR_SENSOR_BEACON_ADDR);
 
         this.telemetry = telemetry;
         this.dim = hardwareMap.get(DeviceInterfaceModule.class, "Device Interface Module 1");
     }
 
     public void init(){
-        frontClaw.open();
-        backClaw.open();
-        lowerJewelArm();
+        frontClaw.close();
+        backClaw.close();
+        raiseJewelArm();
         setDimLed(true, true);
     }
 
@@ -119,25 +120,16 @@ public class Robot11248 extends HolonomicDriver_11248 {
      * COLOR SENSOR METHODS
      */
     public void activateColorSensors(){
-        jewelColor.setPassiveMode();
+        jewelColor.enableLed(true);
     }
 
     public void deactivateColorSensors(){
-        jewelColor.setPassiveMode();
+        jewelColor.enableLed(false);
     }
 
-    public int getColorBeacon(){
-        return jewelColor.getColorNumber();
-    }
+    public boolean isJewelBlue(){
 
-    public boolean isBeaconBlue(){
-        int color = jewelColor.getColorNumber();
-        return (BLUE_LOW_THRESHOLD <= color && color <= BLUE_HIGH_THRESHOLD);
-    }
-
-    public boolean isBeaconRed(){
-        int color = jewelColor.getColorNumber();
-        return (RED_LOW_THRESHOLD <= color && color <= RED_HIGH_THRESHOLD);
+        return (jewelColor.blue()>jewelColor.red());
     }
 
 

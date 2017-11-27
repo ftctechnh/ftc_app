@@ -77,4 +77,19 @@ public class MRColorSensorV3 {
         this.update();
         return colorNumber;
     }
+
+    public double red(){
+        byte[] color = colorSynch.read(0x05, 1);
+        return (color[0] & 0XFF);
+    }
+
+    public double green(){
+        byte[] color = colorSynch.read(0x06, 1);
+        return (color[0] & 0XFF);
+    }
+
+    public double blue(){
+        byte[] color = colorSynch.read(0x07, 1);
+        return (color[0] & 0XFF);
+    }
 }

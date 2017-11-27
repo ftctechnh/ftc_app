@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Claw {
 
 
-    private double[] open, release, close;
+    private double[] open, grab, close;
 
     private Servo tl, tr, bl, br;
 
@@ -19,13 +19,13 @@ public class Claw {
      * @param hardwareMap robot's hardwaremap
      * @param servoNames String array of 4 Servonames of one claw in order of {top_left, top_right, bottom_left, bottom_right}
      * @param open Double array of 4 open values of the servos {top_left, top_right, bottom_left, bottom_right}
-     * @param release Double array of 4 release values of the servos {top_left, top_right, bottom_left, bottom_right}
+     * @param grab Double array of 4 grabbing values of the servos {top_left, top_right, bottom_left, bottom_right}
      * @param close Double array of 4 closed values of the servos {top_left, top_right, bottom_left, bottom_right}
      */
-    public Claw(HardwareMap hardwareMap, String[] servoNames, double[] open, double[] release, double[] close){
+    public Claw(HardwareMap hardwareMap, String[] servoNames, double[] open, double[] grab, double[] close){
 
         this.open = open;
-        this.release = release;
+        this.grab = grab;
         this.close = close;
 
         this.tl = hardwareMap.servo.get(servoNames[0]);
@@ -42,10 +42,10 @@ public class Claw {
     }
 
     public void release(){
-        tl.setPosition(release[0]);
-        tr.setPosition(release[1]);
-        bl.setPosition(release[2]);
-        br.setPosition(release[3]);
+        tl.setPosition(grab[0]);
+        tr.setPosition(grab[1]);
+        bl.setPosition(grab[2]);
+        br.setPosition(grab[3]);
     }
 
     public void close(){

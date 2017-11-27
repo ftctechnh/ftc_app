@@ -26,8 +26,8 @@ public class HolonomicDriver_11248 {
 
 
     // TODO: 12/11/2016 oz add some comments about this stuff. Also u might want to make is slow public for simplicities sake
-    public static double MAX_TURN = .3;
-    public static double MAX_SPEED = .7;
+    public static double MAX_TURN = .4;
+    public static double MAX_SPEED = .6;
     public static final double SLOW_SPEED = .4;
     private boolean isSlow = false;
     private boolean isDrift = false;
@@ -92,14 +92,14 @@ public class HolonomicDriver_11248 {
          * If rotation is being used, a ratio is induced to prevent a value greater than 1
          */
 
-        if (smooth) {
+//        if (smooth) {
             MAX_TURN = Math.abs(rotate) * HolonomicDriver_11248.MAX_TURN;
             MAX_SPEED = 1 - MAX_TURN;
 
-        } else {
-            MAX_SPEED = HolonomicDriver_11248.MAX_SPEED;
-            MAX_TURN = HolonomicDriver_11248.MAX_TURN;
-        }
+//        } else {
+//            MAX_SPEED = HolonomicDriver_11248.MAX_SPEED;
+//            MAX_TURN = HolonomicDriver_11248.MAX_TURN;
+//        }
 
         //Using a function on variable rotate will smooth out the slow values but still give full range
         if((smooth || isSlow) && rotate !=0) rotate = rotate * rotate * rotate/Math.abs(rotate);
@@ -164,17 +164,17 @@ public class HolonomicDriver_11248 {
          */
 
 
-        if (!silent) {
-            telemetry.addData("OMNI_DRIVER: ", "radius: " + r);
-            telemetry.addData("OMNI_DRIVER: ", "x: " + x);
-            telemetry.addData("OMNI_DRIVER: ", "y: " + y);
-            telemetry.addData("OMNI_DRIVER: ", "rotate: " + rotate);
-            telemetry.addData("OMNI_DRIVER: ", "FL: " + frontLeft.getPower());
-            telemetry.addData("OMNI_DRIVER: ", "FR: " + frontRight.getPower());
-            telemetry.addData("OMNI_DRIVER: ", "BR: " + backRight.getPower());
-            telemetry.addData("OMNI_DRIVER: ", "BL: " + backLeft.getPower());
-            telemetry.update();
-        }
+//        if (!silent) {
+//            telemetry.addData("OMNI_DRIVER: ", "radius: " + r);
+//            telemetry.addData("OMNI_DRIVER: ", "x: " + x);
+//            telemetry.addData("OMNI_DRIVER: ", "y: " + y);
+//            telemetry.addData("OMNI_DRIVER: ", "rotate: " + rotate);
+//            telemetry.addData("OMNI_DRIVER: ", "FL: " + frontLeft.getPower());
+//            telemetry.addData("OMNI_DRIVER: ", "FR: " + frontRight.getPower());
+//            telemetry.addData("OMNI_DRIVER: ", "BR: " + backRight.getPower());
+//            telemetry.addData("OMNI_DRIVER: ", "BL: " + backLeft.getPower());
+//            telemetry.update();
+//        }
 
 
 
@@ -252,6 +252,10 @@ public class HolonomicDriver_11248 {
      */
     public void setOffsetAngle(double angle) {
         offsetAngle = angle;
+    }
+
+    public double getOffsetAngle() {
+        return offsetAngle;
     }
 
     public void setDirectionAngle(double angle){
