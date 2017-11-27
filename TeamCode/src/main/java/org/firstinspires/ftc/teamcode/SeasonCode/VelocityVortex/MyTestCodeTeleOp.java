@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TankDriveMethods;
-import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TurnDriveMethods;
+import org.firstinspires.ftc.teamcode.Metheds.DriveTrainMethods.TankDriveMethods;
+import org.firstinspires.ftc.teamcode.Metheds.DriveTrainMethods.TurnDriveMethods;
 
 /**
  * Created by team on 7/19/2017.

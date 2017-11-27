@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utilities;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -42,6 +43,17 @@ public class Map {
     public CRServo revCrservo(String name) {
         return crs(name,true);
     }
+
+    public ColorSensor colorSensor(String name) {
+        ColorSensor colorSensor = null;
+        try {
+            colorSensor = hardwareMap.get(ColorSensor.class,name);
+        } catch (Exception e) {
+            telemetry.addData("sColor-distance", "well I tried");
+        }
+        return colorSensor;
+    }
+
     // ---------------------- Private Methods -----------------------
     // ---------------- DcMotors ----------------
     private DcMotor m(String name, boolean ifReverse) {

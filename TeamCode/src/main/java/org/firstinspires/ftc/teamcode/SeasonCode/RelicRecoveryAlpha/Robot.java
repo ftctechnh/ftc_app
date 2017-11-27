@@ -29,6 +29,7 @@ public abstract class Robot {
         mapMotors();
         mapServos();
         mapCRServos();
+        mapSensors();
     }
     public void setHardwarePower() {
         driveTrain.runHardware();
@@ -41,6 +42,7 @@ public abstract class Robot {
     abstract void mapMotors();
     abstract void mapServos();
     abstract void mapCRServos();
+    abstract void mapSensors();
     // ---------------- Set Hardware Power ----------------
     abstract void setMotorPowers();
     abstract void setServoPositions();

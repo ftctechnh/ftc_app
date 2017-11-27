@@ -25,11 +25,11 @@ public abstract class DriveTrainHardware implements DriveTrain {
     /**
      * left motor
      */
-    DcMotor mLeft;
+    public DcMotor mLeft;
     /**
      * right motor
      */
-    DcMotor mRight;
+    public DcMotor mRight;
     // --------------------- Hardware Variables ---------------------
     /**
      * this variable is used to set power the left motor

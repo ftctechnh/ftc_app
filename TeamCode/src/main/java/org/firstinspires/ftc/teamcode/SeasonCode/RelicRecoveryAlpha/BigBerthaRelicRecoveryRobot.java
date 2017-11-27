@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryAlpha;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,8 +20,8 @@ import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.HAND_STOPP
 public class BigBerthaRelicRecoveryRobot extends Robot {
     // ---------------------- Hardware Devices ----------------------
     // ---------------- DcMotors ----------------
-    private DcMotor mLift        = null;
-    private DcMotor mArmLift     = null;
+    protected DcMotor mLift        = null;
+    protected DcMotor mArmLift     = null;
     // ------------ Standard Servos -------------
     private Servo ssArm          = null;
     private Servo ssRelicGrabber = null;
@@ -28,6 +29,8 @@ public class BigBerthaRelicRecoveryRobot extends Robot {
     private Servo ssBallRotator  = null;
     // ------- Continuous Rotation Servos -------
     private CRServo crHand       = null;
+    // ---------------- Sensors -----------------
+    public ColorSensor sColor;
     // --------------------- Hardware Variables ---------------------
     // ---------------- DcMotors ----------------
     public double liftPower;
@@ -66,6 +69,10 @@ public class BigBerthaRelicRecoveryRobot extends Robot {
     void mapCRServos() {
         // ----- Continuous Rotation Servos -----
         crHand         = map.revCrservo("crHand");
+    }
+    void mapSensors() {
+        // -------------- Sensors ---------------
+        sColor         = map.colorSensor("cd");
     }
     // --------------------- Set Hardware Power ---------------------
     void setMotorPowers() {

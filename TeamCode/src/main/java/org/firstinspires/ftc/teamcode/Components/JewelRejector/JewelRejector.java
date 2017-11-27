@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.Components.Jewel;
+package org.firstinspires.ftc.teamcode.Components.JewelRejector;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by spmce on 11/18/2017.
  */
-public class Jewel {
+public class JewelRejector {
     // ------------------------- Constants --------------------------
     private static final double BALL_PUSHER_UP = .5;
     private static final double BALL_PUSHER_DOWN = 1;
@@ -20,7 +20,7 @@ public class Jewel {
     private double ballPusherPosition;
     private double ballRotatorPosition;
 
-    public Jewel() {
+    public JewelRejector() {
          ballPusherPosition = BALL_PUSHER_UP;
          ballRotatorPosition = BALL_ROTATER_CENTER;
     }
