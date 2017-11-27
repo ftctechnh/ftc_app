@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestCode.Shane;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDrive;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDrive;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDriveMethods;
 
 /**
  * Created by team on 7/19/2017.
@@ -58,12 +56,12 @@ public class StableTeleOp extends StableTelemetry {
         }
         double drivePower[] = new double[2];
         if (padCofig == 0) {
-            TankDrive tank = new TankDrive();
+            TankDriveMethods tank = new TankDriveMethods();
             drivePower = tank.drive(gamepad1);
             driveMode = "Tank Drive";
         }
         if (padCofig == 1) {
-            TurnDrive turn = new TurnDrive();
+            TurnDriveMethods turn = new TurnDriveMethods();
             drivePower = turn.drive(gamepad1);
             driveMode = "Turn Drive";
         }

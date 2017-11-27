@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDrive;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDriveMethods;
 
 /**
  * Created by spmce on 11/3/2016.
@@ -40,7 +40,7 @@ public class VelocityVortexTeleOp extends VelocityVortexHardware {
         /*ElapsedTime time = new ElapsedTime();
         time.startTime();*/
         checkConfig();
-        OmniWheelDrive omniWheels = new OmniWheelDrive();
+        OmniWheelDriveMethods omniWheels = new OmniWheelDriveMethods();
         double[] wheels = new double[4];
         if (pad1Config == 0 || pad1Config == 3) {
             wheels = omniWheels.drive(gamepad1);

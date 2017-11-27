@@ -62,7 +62,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register ("PushBotAuto", PushBotAuto.class);
     //manager.register ("PushBotManual", PushBotManual.class);
     //manager.register ("Test6168", Test6168.class);
-    //manager.register("DriveTrain", DriveTrain.class);
+    //manager.register("DriveTrainHardware", DriveTrainHardware.class);
     //manager.register("Big Bertha TeleOp", BigBerthaTeleOp.class);
     manager.register("Big Bertha Autonomous Blue", BigBerthaAutonomousBlue.class);
     manager.register("Big Bertha Autonomous Red", BigBerthaAutonomousRed.class);

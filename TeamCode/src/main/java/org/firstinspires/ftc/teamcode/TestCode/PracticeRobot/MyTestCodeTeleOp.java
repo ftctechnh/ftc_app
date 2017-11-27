@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestCode.PracticeRobot;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDrive;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDrive;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDriveMethods;
 
 /**
  * Created by team on 7/19/2017.
@@ -35,11 +35,11 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         }
         double drivePower[] = new double[2];
         if (padCofig == 0) {
-            TurnDrive turn = new TurnDrive();
+            TurnDriveMethods turn = new TurnDriveMethods();
             drivePower = turn.drive(gamepad1);
         }
         if (padCofig == 1) {
-            TankDrive tank = new TankDrive();
+            TankDriveMethods tank = new TankDriveMethods();
             drivePower = tank.drive(gamepad1);
         }
         rightPower = drivePower[0];
