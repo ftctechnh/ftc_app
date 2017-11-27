@@ -11,21 +11,32 @@ import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
  * Abstract class for drive train Hardware
  * Contains left and right motors and variables
  */
-
 public abstract class DriveTrainHardware implements DriveTrain {
     // ---------------------- Hardware Objects ----------------------
-    Map      map;
+    /**
+     * object used to map hardware
+     */
+    Map map;
+    /**
+     * object used to set drive train power
+     */
     SetRobot setRobot;
     // ---------------------- Hardware Devices ----------------------
-    DcMotor  mLeft;
-    DcMotor  mRight;
+    /**
+     * left motor
+     */
+    DcMotor mLeft;
+    /**
+     * right motor
+     */
+    DcMotor mRight;
     // --------------------- Hardware Variables ---------------------
     /**
-     * this variable is used to set power to left motor
+     * this variable is used to set power the left motor
      */
     public double leftPower;
     /**
-     * this variable is used to set power to right motor
+     * this variable is used to set power the right motor
      */
     public double rightPower;
     // ------------------------ Constructor -------------------------
