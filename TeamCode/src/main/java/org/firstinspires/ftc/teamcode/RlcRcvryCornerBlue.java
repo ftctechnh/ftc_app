@@ -17,9 +17,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Joseph Liang on 10/30/2017.
  */
 
-@Autonomous(name="Relic Recovery: State Machine", group="Pushbot")
+@Autonomous(name="Relic Recovery: Blue Corner", group="Pushbot")
 //@Disabled
-public class RlcRcvryAutoSwitch extends OpMode{
+public class RlcRcvryCornerBlue extends OpMode{
 
     private int stateMachineFlow;
     RelicDrive robot       = new RelicDrive();
@@ -41,12 +41,12 @@ public class RlcRcvryAutoSwitch extends OpMode{
     public void init() {
         robot.init(hardwareMap);
         parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        //need code for gripping glyph and moving arm slightly up
 
+        //code for gripping glyph and moving arm slightly up
         gilgearmesh.clawPos(0);
         //wait needed? Also... guessed parameters
         gilgearmesh.armPos(2, 1);
@@ -95,17 +95,17 @@ public class RlcRcvryAutoSwitch extends OpMode{
                 //move off balancing stone and move towards box
                 if (glyph == RelicRecoveryVuMark.LEFT) {
                     robot.statTurn(.7,180);//face direction of box
-                    robot.linearDrive(1,30); //in position to place glyph
+                    robot.linearDrive(1,20); //in position to place glyph
                     robot.statTurn(.7,-90);//face box
                 }
                 else if (glyph == RelicRecoveryVuMark.CENTER) {
                     robot.statTurn(.7,180); //turn to face box
-                    robot.linearDrive(1,36); //drive to middle of box
+                    robot.linearDrive(1,27.4); //drive to middle of box
                     robot.statTurn(.7,-90); //turn to face box
                 }
                 else if (glyph == RelicRecoveryVuMark.RIGHT) {
                     robot.statTurn(.7,180);//face box
-                    robot.linearDrive(1,42);//move to box
+                    robot.linearDrive(1,35);//move to box
                     robot.statTurn(.7,-90);//face box
                 }
             stateMachineFlow++;
@@ -113,9 +113,9 @@ public class RlcRcvryAutoSwitch extends OpMode{
             case 5:
                 //not sure if the move needs to before or after we let go of glyph
                 gilgearmesh.clawPos(1);
-                robot.linearDrive(1,-1);
+                robot.linearDrive(1,-3.5);
                 gilgearmesh.clawPos(0);
-                robot.linearDrive(1,2);
+                robot.linearDrive(1,6);
 
                 stateMachineFlow++;
                 break;

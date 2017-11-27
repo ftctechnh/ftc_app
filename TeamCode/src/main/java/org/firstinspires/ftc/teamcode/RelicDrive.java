@@ -68,8 +68,8 @@ public class RelicDrive
     static final double     TURN_SPEED              = 0.65;
 
     //These are guesses
-    public static final double MID_RAD = 7;
-    public static final double OUT_RAD = 8;
+    public static final double MID_RAD = 7.8125;
+    public static final double OUT_RAD = 9.85;
 
     //public static final double ARM_UP_POWER    =  0.45 ;
     //public static final double ARM_DOWN_POWER  = -0.45 ;
@@ -93,10 +93,11 @@ public class RelicDrive
         rightMid = hwMap.get(DcMotor.class, "right_mid");
         leftBack    = hwMap.get(DcMotor.class, "left_back");
         rightBack = hwMap.get(DcMotor.class, "right_back");
-        leftMid.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightMid.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        leftBack.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightBack.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        //We have AndyMark motors, but our direction of drive is opposite of what is suggested in the below comments
+        leftMid.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightMid.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftBack.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightBack.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
         leftMid.setPower(0);
