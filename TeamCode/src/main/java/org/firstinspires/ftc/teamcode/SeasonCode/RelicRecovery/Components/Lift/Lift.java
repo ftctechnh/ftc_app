@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Toggle;
 
 
 /**
@@ -17,7 +17,7 @@ public class Lift extends RobotComponent
 {
     public DcMotor _liftMotor;
 
-    private UtilToggle _powered = new UtilToggle();
+    private Toggle _powered = new Toggle();
 
 
     /**
@@ -113,5 +113,15 @@ public class Lift extends RobotComponent
         {
             _liftMotor.setPower(POWER_VALUE);
         }
+    }
+
+
+    /**
+     * Stops the lift
+     */
+    @Override
+    public void stop()
+    {
+        // Nothing :)
     }
 }

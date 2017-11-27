@@ -16,4 +16,10 @@ class Base: RobotBase()
 
         motors.init(this)
     }
+
+
+    override fun stop()
+    {
+        // Nothing :)
+    }
 }

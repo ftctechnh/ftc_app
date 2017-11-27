@@ -8,7 +8,7 @@ import org.directcurrent.season.relicrecovery.drivetrain.TurnTo;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
 import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilBasic;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Util;
 
 import org.directcurrent.season.relicrecovery.ToggleTelMetKt;
 
@@ -218,8 +218,8 @@ public class Drivetrain extends RobotComponent
         // Scale first- that way the multipliers don't reduce the power to like .1 or something
         if(scale)
         {
-            drivePower = UtilBasic.scaleValue(drivePower);
-            rotatePower = UtilBasic.scaleValue(rotatePower);
+            drivePower = Util.scaleValue(drivePower);
+            rotatePower = Util.scaleValue(rotatePower);
         }
 
         drivePower *= _powerMultiplier;
@@ -348,5 +348,17 @@ public class Drivetrain extends RobotComponent
         base.telMet().write("------------------");
         base.telMet().newLine();
         base.telMet().newLine();
+    }
+
+
+    /**
+     * Stops all drivetrain commands and sets the state to STOP
+     */
+    @Override
+    public void stop()
+    {
+        setState(State.STOP);
+
+        _turnTo.stop();
     }
 }

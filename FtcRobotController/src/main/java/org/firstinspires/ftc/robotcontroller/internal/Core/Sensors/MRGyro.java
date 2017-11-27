@@ -18,8 +18,8 @@ import android.util.Log;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
-import org.firstinspires.ftc.robotcontroller.internal.Core.HardwareMapper;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilBasic;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.HardwareMapper;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Util;
 
 
 /**
@@ -76,7 +76,7 @@ public final class MRGyro
         {
             // Do something with the offset here
             if(_gyro.getHeadingMode() == ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN)
-                heading = UtilBasic.trimAngle(_gyro.getHeading() + 90 - offset);
+                heading = Util.trimAngle(_gyro.getHeading() + 90 - offset);
 
             else
                 heading = _gyro.getHeading();

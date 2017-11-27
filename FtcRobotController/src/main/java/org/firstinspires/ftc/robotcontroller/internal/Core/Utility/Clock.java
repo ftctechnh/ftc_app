@@ -17,7 +17,7 @@ package org.firstinspires.ftc.robotcontroller.internal.Core.Utility;
  * Utility class used to manage pulses in a continuous loop. A tick is defined by a single true
  * value emitted during a loop per set period of time- think of this as a timer.
  */
-public final class UtilClock
+public final class Clock
 {
     private long startTime = System.currentTimeMillis();            // Start time of the tick
 

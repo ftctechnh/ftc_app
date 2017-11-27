@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Toggle;
 
 
 @TeleOp(name = "Bulldozer" , group = "Prototypes")
@@ -14,8 +14,8 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 @SuppressWarnings({"unused" , "WeakerAccess"})
 public final class BulldozerBot extends LinearOpMode
 {
-    UtilToggle toggleReverse = new UtilToggle();
-    UtilToggle toggleSlow = new UtilToggle();
+    Toggle toggleReverse = new Toggle();
+    Toggle toggleSlow = new Toggle();
 
 
     @Override

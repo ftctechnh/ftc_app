@@ -15,4 +15,11 @@ public class Base extends RobotBase
 
         spools.init(this);
     }
+
+
+    @Override
+    public void stop()
+    {
+        // Nothing :)
+    }
 }

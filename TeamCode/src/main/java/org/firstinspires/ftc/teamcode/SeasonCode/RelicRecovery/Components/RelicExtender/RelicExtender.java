@@ -38,4 +38,14 @@ public class RelicExtender extends RobotComponent
     {
         _extenderMotor.setPower(POWER);
     }
+
+
+    /**
+     * Stops the relic extender
+     */
+    @Override
+    public void stop()
+    {
+        // Do nothing :)
+    }
 }

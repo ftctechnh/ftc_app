@@ -78,4 +78,14 @@ public class GlyphGrabber extends RobotComponent
                 break;
         }
     }
+
+
+    /**
+     * Stops the Glyph Grabber
+     */
+    @Override
+    public void stop()
+    {
+        setState(State.STOP);
+    }
 }

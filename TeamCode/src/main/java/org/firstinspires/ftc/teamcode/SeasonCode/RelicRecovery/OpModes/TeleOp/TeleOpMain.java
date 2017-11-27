@@ -46,6 +46,8 @@ public class TeleOpMain extends LinearOpMode
 
             telemetry.update();
         }
+
+        _base.stop();
     }
 
 
@@ -54,21 +56,21 @@ public class TeleOpMain extends LinearOpMode
      */
     private void _grabInput()
     {
-        // Read data
+        // Read data ///////////////////////////////////////////////////////////////////////////////
         _controller1.read(gamepad1);
         _controller2.read(gamepad2);
 
         _base.imu.pull();
 
 
-        // Allow driver control when requested
+        // Allow driver control when requested /////////////////////////////////////////////////////
         if(_controller1.receivingInput())
         {
             _base.drivetrain.allowInput();
         }
 
 
-        // Define controls
+        // Define controls /////////////////////////////////////////////////////////////////////////
         _base.drivetrain.run(-_controller1.leftY() , _controller1.rightX() , true);
         _base.lift.run(-_controller2.leftY());
 

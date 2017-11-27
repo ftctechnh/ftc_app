@@ -4,7 +4,7 @@ package org.directcurrent.season.relicrecovery.drivetrain
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
 import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilBasic
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Util
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain
 
 
@@ -48,7 +48,7 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
 
         val initHeading = _imu.zAngle()
         var speed: Double                                               // Speed of rotation
-        var error = UtilBasic.angleError(initHeading.toInt(), _targetAngle.toInt()).toDouble()
+        var error = Util.angleError(initHeading.toInt(), _targetAngle.toInt()).toDouble()
         val initError = error                                   // Initial error
         val distanceModifier = Math.abs(error) / 180            // Distance modifier, turning
         // should be slower when there's
@@ -60,7 +60,7 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
 
         while (Math.abs(error) > TOLERANCE && !_interrupted)
         {
-            error = UtilBasic.angleError(_imu.zAngle().toInt(), _targetAngle.toInt()).toDouble()
+            error = Util.angleError(_imu.zAngle().toInt(), _targetAngle.toInt()).toDouble()
 
             speed = error / initError * SPEED_MULTIPLIER * distanceModifier
 

@@ -17,7 +17,7 @@ package org.firstinspires.ftc.robotcontroller.internal.Core.Utility;
  * Basic utility functions (mostly mathematical) that are sprinkled across the code base.
  */
 @SuppressWarnings({"unused" , "WeakerAccess"})
-public final class UtilBasic
+public final class Util
 {
     /**
      * Scales a value. Useful for joysticks so that a "soft zone" is created for more accurate

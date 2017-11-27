@@ -2,7 +2,7 @@
 package org.directcurrent.opencv
 
 
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilPoint
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.CPPoint
 
 
 /**
@@ -25,9 +25,9 @@ class CVBridge
     companion object Data
     {
         @JvmField
-        var redJewelPoints = ArrayList<UtilPoint>()
+        var redJewelPoints = ArrayList<CPPoint>()
 
         @JvmField
-        var blueJewelPoints = ArrayList<UtilPoint>()
+        var blueJewelPoints = ArrayList<CPPoint>()
     }
 }

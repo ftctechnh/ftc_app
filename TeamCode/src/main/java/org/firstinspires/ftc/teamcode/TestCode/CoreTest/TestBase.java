@@ -17,4 +17,11 @@ class TestBase extends RobotBase
 
         component.init(this);
     }
+
+
+    @Override
+    public void stop()
+    {
+        // Nothing :)
+    }
 }

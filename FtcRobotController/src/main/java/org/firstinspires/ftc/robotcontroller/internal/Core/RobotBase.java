@@ -28,7 +28,7 @@ import org.directcurrent.core.TelMet;
 public abstract class RobotBase
 {
     /** HardwareMap object used for mapping robot hardware. */
-    protected HardwareMap hardware = null;
+    public HardwareMap hardware = null;
 
     /** TelMet object for outputting messages to Telemetry */
     private TelMet _telMet = null;
@@ -62,4 +62,10 @@ public abstract class RobotBase
     {
         return _telMet;
     }
+
+
+    /**
+     * Stops the robot
+     */
+    public abstract void stop();
 }

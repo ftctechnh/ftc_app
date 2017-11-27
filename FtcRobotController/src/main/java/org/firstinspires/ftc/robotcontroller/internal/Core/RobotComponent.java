@@ -13,6 +13,8 @@
 package org.firstinspires.ftc.robotcontroller.internal.Core;
 
 
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.HardwareMapper;
+
 /**
  * Base class for robot components (drivetrain, shooter, etc.) The class implements Runnable
  * to allow for parallel command execution instead of creating a new Runnable class for every
@@ -40,4 +42,10 @@ public abstract class RobotComponent
         base = BASE;
         mapper  = new HardwareMapper(base);
     }
+
+
+    /**
+     * Stops the component
+     */
+    public abstract void stop();
 }

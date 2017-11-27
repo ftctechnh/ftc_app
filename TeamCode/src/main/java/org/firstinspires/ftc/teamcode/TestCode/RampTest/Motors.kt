@@ -36,4 +36,10 @@ class Motors: RobotComponent()
         ramp1?.runParallel()
         ramp2?.runParallel()
     }
+
+
+    override fun stop()
+    {
+        // Nothing :)
+    }
 }

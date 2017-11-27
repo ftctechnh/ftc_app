@@ -5,7 +5,7 @@ package org.directcurrent.opencv.visionprocessors.objectfinders
 import org.directcurrent.opencv.CVBridge
 import org.directcurrent.opencv.RedJewelLower
 import org.directcurrent.opencv.RedJewelUpper
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilPoint
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.CPPoint
 import org.opencv.core.Core
 import org.opencv.core.MatOfPoint
 import org.opencv.core.Point
@@ -54,7 +54,7 @@ class RedJewelFinder: ObjectFinder(RedJewelLower , RedJewelUpper)
                             (rect.y + rect.height + 130).toDouble()) , Core.FONT_HERSHEY_COMPLEX , 1.0 ,
                             Scalar(0.0 , 255.0 , 0.0) , 3)
 
-                    CVBridge.redJewelPoints.add(UtilPoint(rect.x.toDouble() , rect.y.toDouble() , UtilPoint.Type.CARTESIAN))
+                    CVBridge.redJewelPoints.add(CPPoint(rect.x.toDouble(), rect.y.toDouble(), CPPoint.Type.CARTESIAN))
                 }
             }
         }

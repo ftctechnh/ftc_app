@@ -17,7 +17,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
-import org.firstinspires.ftc.robotcontroller.internal.Core.HardwareMapper;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.HardwareMapper;
 
 
 /**

@@ -16,8 +16,8 @@ package org.firstinspires.ftc.robotcontroller.internal.Core.Sensors;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
-import org.firstinspires.ftc.robotcontroller.internal.Core.HardwareMapper;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilColor.Color;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.HardwareMapper;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Color.ColorID;
 
 
 /**
@@ -66,21 +66,21 @@ public final class MRColor
      *
      * @return The color detected by the sensor
      */
-    Color getColor()
+    ColorID getColor()
     {
         final int BUFFER = 2;       // Minimum difference between RBG values before it matters
 
         if(_color.red() > _color.blue() + BUFFER)
-            return Color.RED;
+            return ColorID.RED;
 
         else if(_color.blue() > _color.red() + BUFFER)
-            return Color.BLUE;
+            return ColorID.BLUE;
 
         else if(_color.alpha() > 10)
-            return Color.WHITE;
+            return ColorID.WHITE;
 
         else
-            return Color.UNKNOWN;
+            return ColorID.UNKNOWN;
     }
 
 
