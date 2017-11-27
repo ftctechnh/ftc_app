@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Aus on 11/2/2017.
  */
 @TeleOp(name = "DoubleArm2ServoDrive", group = "linear OpMode")
+@Disabled
 public class DoubleArmDrivebut2bigservo extends OpMode {
     private Servo Claw;
     private Servo UpDown;

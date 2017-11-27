@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name = "MecanumDriveExpo", group = "linear OpMode")
-//@Disabled
+@Disabled
 public class MecanumDriveExpo extends OpMode {
     private DcMotor FrontLeft;
     private DcMotor FrontRight;

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -8,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Kaden on 11/25/2017.
  */
 
-public class AutoDrive extends OpMode {
+public class AutoDrive {
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;

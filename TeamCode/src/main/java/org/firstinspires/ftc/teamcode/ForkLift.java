@@ -13,8 +13,6 @@ public class ForkLift {
     private double clawPosition = 0.25;
     private double clawHighEnd = 0.7;
     private double clawLowEnd = 0.3;
-    private double up = 0;
-    private double down = 0;
 
     public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, TouchSensor topButton, TouchSensor bottomButton) {
         this.rightClaw = rightClaw;
@@ -23,8 +21,6 @@ public class ForkLift {
         this.topButton = topButton;
         this.bottomButton = bottomButton;
         this.rightClaw.setDirection(Servo.Direction.REVERSE);
-        this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         resetEncoder();
     }
 

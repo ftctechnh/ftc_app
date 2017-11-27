@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
  * Created by Aus on 10/24/2017.
  */
 @TeleOp(name = "jewelarm", group = "linear OpMode")
+@Disabled
 public class jewelarm extends OpMode {
     private Servo claw;
     private double servolowend = 0.0;

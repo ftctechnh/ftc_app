@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 //ok so this is the program that confirmed that the color sensors don't actually suck. this is just a basic program so don't use it until i do some things to make it so it doesn't crash the robot controller it stops
 
 @Autonomous(name = "colortest", group = "Concept")
-
+@Disabled
 public class colortest extends RedRecovery {
 
     //Start with the basic declaration of variable strings that the phones will read
