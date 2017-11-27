@@ -194,13 +194,7 @@ public class NewRobotFinal
 
     public void driveStraight_In(float inches, double pow)
     {
-        float encTarget;
-        if(inches > 1)
-            encTarget = encCountsPerRev / wheelCircIn * (inches-1);
-        else if (inches < -1)
-            encTarget = encCountsPerRev / wheelCircIn * (inches+1);
-        else
-            encTarget = encCountsPerRev / wheelCircCm * inches;
+        float encTarget = encCountsPerRev / wheelCircCm * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         resetDriveEncoders();
@@ -225,9 +219,15 @@ public class NewRobotFinal
         stopAllMotors();
     }
 
+    public void driveStraight_In(float inches)
+    {
+        driveStraight_In(inches, .75);
+    }
+
+
     public void spin_Right(float degrees)
     {
-        spin_Right(degrees, 1);
+        spin_Right(degrees, .5);
     }
 
     public void spin_Right(float degrees, double pow)// Right Motor only moves!
@@ -282,6 +282,11 @@ public class NewRobotFinal
         stopAllMotors();
     }
 
+    public void spin_Right_IMU(float degrees)
+    {
+        spin_Right_IMU(degrees, .5);
+    }
+
     public void spin_Left(float degrees)
     {
         spin_Left(degrees, .5);
@@ -314,18 +319,13 @@ public class NewRobotFinal
         stopAllMotors();
     }
 
-    public void spin_Left_IMU(float deg, double pow)
+    public void spin_Left_IMU(float degrees)
     {
-        float degrees = deg;
-        if (deg > 0)
-        {
-            degrees -= 5.2f;
-        }
-        else
-        {
-            degrees += 5.2f;
-        }
+        spin_Left_IMU(degrees, .5);
+    }
 
+    public void spin_Left_IMU(float degrees, double pow)
+    {
         while (degrees > 180)
         {
             degrees -= 360;
@@ -379,6 +379,11 @@ public class NewRobotFinal
         }
 
         stopAllMotors();
+    }
+
+    public void pivot(float degrees)
+    {
+        pivot(degrees, .23);
     }
 
     public void pivot_IMU(float degrees)
