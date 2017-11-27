@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.Red;
+package org.firstinspires.ftc.teamcode.GMR.Autonomous.Red;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,15 +11,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.DriveTrain;
+import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 
 /**
- * Created by FTC 4316 on 11/11/2017.
+ * Created by FTC 4316 on 11/11/2017
  */
 @Autonomous(name = "Auto R2", group = "Red")
 public class Auto_R2 extends OpMode {
 
-    private DriveTrain drive;
+    private Robot robot;
 
     DcMotor leftFront;
     DcMotor rightFront;
@@ -76,7 +77,7 @@ public class Auto_R2 extends OpMode {
 
         //relicTemplate.setName("relicVuMarkTemplate");
 
-        drive = new DriveTrain(leftFront, rightFront, leftRear, rightRear, gyroscope, telemetry);
+        robot = new Robot(hardwareMap, telemetry);
 
         goalPosition = 0.5;
         position = 0;
@@ -138,7 +139,7 @@ public class Auto_R2 extends OpMode {
                 case LEFTKNOCK:
                     //Knocks the left ball off of the pedestal WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
                     } else{
                         isFinished = false;
                         state = RedStates.LEFTARMUP;
@@ -148,7 +149,7 @@ public class Auto_R2 extends OpMode {
                 case RIGHTKNOCK:
                     //Knocks the right ball off of the pedestal WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.S, 0.25, 0.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.25, 0.5);
                     } else{
                         isFinished = false;
                         state = RedStates.RIGHTARMUP;
@@ -172,7 +173,7 @@ public class Auto_R2 extends OpMode {
                 case LEFTZONE:
                     //Returns to original position from knocking left ball WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
                     } else{
                         isFinished = false;
                         state = RedStates.STRAFE;
@@ -182,7 +183,7 @@ public class Auto_R2 extends OpMode {
                 case RIGHTZONE:
                     //Returns to original position from knocking right ball WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 7.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 7.5);
                     } else{
                         isFinished = false;
                         state = RedStates.STRAFE;
@@ -209,7 +210,7 @@ public class Auto_R2 extends OpMode {
                 case STRAFE:
                     //Strafes left to face CryptoBox. UNTESTED/DEACTIVATED
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.W, 0.25, 2);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.25, 2);
                     } else{
                         isFinished = false;
                         state = RedStates.DRIVEBOX;
@@ -218,14 +219,14 @@ public class Auto_R2 extends OpMode {
                 case DRIVEBOX:
                     //Drives into CryptoBox
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
                     } else{
                         isFinished = false;
                         state = RedStates.END;
                     } break;
 
                 case END:
-                    drive.stop();
+                    robot.driveTrain.stop();
                     break;
             }
 

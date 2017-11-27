@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.Blue;
+package org.firstinspires.ftc.teamcode.GMR.Autonomous.Blue;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,15 +11,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.DriveTrain;
+import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 
 /**
- * Created by FTC 4316 on 11/11/2017.
+ * Created by FTC 4316 on 11/11/2017
  */
 @Autonomous(name = "Auto B2", group = "Blue")
 public class Auto_B2 extends OpMode {
 
-    private DriveTrain drive;
+    private Robot robot;
 
     DcMotor leftFront;
     DcMotor rightFront;
@@ -75,7 +76,7 @@ public class Auto_B2 extends OpMode {
 
         //relicTemplate.setName("relicVuMarkTemplate");
 
-        drive = new DriveTrain(leftFront, rightFront, leftRear, rightRear, gyroscope, telemetry);
+        robot = new Robot(hardwareMap, telemetry);
 
         goalPosition = 0.35;
         position = 0.85;
@@ -91,7 +92,7 @@ public class Auto_B2 extends OpMode {
     }
         @Override
         public void loop(){
-            //telemetry.addData("Pitch:", drive.getPitch());
+            //telemetry.addData("Pitch:", robot.getPitch());
             //telemetry.update();
             switch(state){
                 /*case SCAN:
@@ -135,7 +136,7 @@ public class Auto_B2 extends OpMode {
                 case LEFTKNOCK:
                     //Knocks the left ball off of the pedestal WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.S, 0.25, 0.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.25, 0.5);
                     } else{
                         isFinished = false;
                         state = BlueStates.LEFTARMUP;
@@ -145,7 +146,7 @@ public class Auto_B2 extends OpMode {
                 case RIGHTKNOCK:
                     //Knocks the right ball off of the pedestal WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
                     } else{
                         isFinished = false;
                         state = BlueStates.RIGHTARMUP;
@@ -169,7 +170,7 @@ public class Auto_B2 extends OpMode {
                 case LEFTZONE:
                     //Returns to original position from knocking left ball WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 6.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 6.5);
                     } else{
                         isFinished = false;
                         state = BlueStates.STRAFE;
@@ -179,7 +180,7 @@ public class Auto_B2 extends OpMode {
                 case RIGHTZONE:
                     //Returns to original position from knocking right ball WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
                     } else{
                         isFinished = false;
                         state = BlueStates.STRAFE;
@@ -188,16 +189,16 @@ public class Auto_B2 extends OpMode {
 
                 /*case DRIVEOFF:
                     //Drives until robot is off balance stone. UNTESTED
-                    drive.drive(DriveTrain.Direction.N, 0.25);
-                    if(drive.getPitch() >= -1 && drive.getPitch() <= 1 && time.seconds() >= 0.1){
-                        drive.stop();
+                    robot.robot(DriveTrain.Direction.N, 0.25);
+                    if(robot.getPitch() >= -1 && robot.getPitch() <= 1 && time.seconds() >= 0.1){
+                        robot.stop();
                         state = States.END; //DRIVEZONE
                     } break;*/
 
                 /*case DRIVEZONE:
                     //Drives into the parking zone. UNTESTED/DEACTIVATED
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.S, 0.25, 15);
+                        isFinished = robot.encoderDrive(DriveTrain.Direction.S, 0.25, 15);
                     } else{
                         isFinished = false;
                         state = States.END; //TURNBOX
@@ -206,7 +207,7 @@ public class Auto_B2 extends OpMode {
                 case STRAFE:
                     //Turns left to face CryptoBox. WORKING
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.E, 0.25, 3);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.25, 3);
                     } else{
                         isFinished = false;
                         state = BlueStates.DRIVEBOX;
@@ -215,14 +216,14 @@ public class Auto_B2 extends OpMode {
                 case DRIVEBOX:
                     //Drives into CryptoBox
                     if(!isFinished){
-                        isFinished = drive.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
                     } else{
                         isFinished = false;
                         state = BlueStates.END;
                     } break;
 
                 case END:
-                    drive.stop();
+                    robot.driveTrain.stop();
                     break;
             }
 
