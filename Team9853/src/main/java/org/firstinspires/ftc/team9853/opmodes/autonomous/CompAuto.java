@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
+import org.chathamrobotics.common.opmode.AutonomousRnB;
 import org.chathamrobotics.common.opmode.AutonomousTemplate;
 import org.chathamrobotics.common.opmode.exceptions.StoppedException;
 import org.chathamrobotics.common.robot.RobotFace;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.team9853.Robot9853;
  * Created by carsonstorm on 11/16/2017.
  */
 
+@AutonomousRnB(name = "Comp Auto")
 public class CompAuto extends AutonomousTemplate<Robot9853> {
     protected boolean isHit;
 

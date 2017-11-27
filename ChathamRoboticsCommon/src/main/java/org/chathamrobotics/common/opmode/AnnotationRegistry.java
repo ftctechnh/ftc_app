@@ -55,7 +55,7 @@ public class AnnotationRegistry implements ClassFilter {
      *
      * @param manager       the opmode manager
      */
-//    @OpModeRegistrar
+    @OpModeRegistrar
     public static void register(OpModeManager manager) {
         AnnotationRegistry registry = getInstance();
 
@@ -218,10 +218,10 @@ public class AnnotationRegistry implements ClassFilter {
             if(clazz.isAnnotationPresent(opModeAnnotation.annotation)) opModeAnnotationCount ++;
         }
 
-        Log.d(TAG, opModeAnnotationCount + " " + clazz.getSimpleName());
         if (opModeAnnotationCount == 0 ){
             return;
         } else if (opModeAnnotationCount > 1) {
+            Log.wtf(TAG, clazz.getAnnotations().toString());
             RobotErrors.reportGlobalError(TAG,"'%s' class is annotated by multiple opmode annotations", clazz.getSimpleName());
             return;
         }
