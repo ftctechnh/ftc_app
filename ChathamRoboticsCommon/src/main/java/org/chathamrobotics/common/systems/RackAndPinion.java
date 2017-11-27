@@ -110,7 +110,7 @@ public class RackAndPinion implements System {
         logger.debug("moving to upper limit");
         move(1);
 
-        listener.on(upperLimit, LimitSwitch::isPressed, () -> {
+        listener.once(upperLimit, LimitSwitch::isPressed, () -> {
             stopMovement();
 
             logger.debug("reached upper limit");
@@ -144,7 +144,7 @@ public class RackAndPinion implements System {
 
         move(-1);
 
-        listener.on(lowerLimit, LimitSwitch::isPressed, () -> {
+        listener.once(lowerLimit, LimitSwitch::isPressed, () -> {
             stopMovement();
 
             logger.debug("reached lower limit");

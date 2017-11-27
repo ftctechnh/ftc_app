@@ -215,7 +215,8 @@ public class HolonomicDriver implements Driver {
     private double calcMotorValue(boolean isFront, boolean isLeft, double direction, double magnitude, double rotation) {
         return Range.clip(
                 (isFront ? 1 : -1) * ( // reverse motors in back
-                        magnitude * (isFront == isLeft ? Math.sin(direction) : Math.cos(direction)) // get value for motor
+                        // get value for motor
+                        magnitude * (isFront == isLeft ? Math.sin(direction) : Math.cos(direction))
                         + (isFront ? -rotation : rotation) // add or subtract the rotation
                 ),
                 -1,

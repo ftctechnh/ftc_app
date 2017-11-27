@@ -39,14 +39,11 @@ public class CompAuto extends Autonomous9853 {
 
         Thread.sleep(1000);
 
-        RGBAColor color = robot.jewelDisplacer.getColor();
-        robot.log.debug("Red", color.red());
-        robot.log.debug("Blue", color.blue());
-        robot.log.debug("Green", color.green());
+        int color = robot.jewelDisplacer.getColor();
 
         if (isTeamColor(color))
             hitJewel(-1);
-        else if (color.red() != color.blue())
+        else
             hitJewel(1);
     }
 
@@ -69,15 +66,15 @@ public class CompAuto extends Autonomous9853 {
         isHit = true;
     }
 
-    private boolean isRed(RGBAColor color) {
-        return color.red() > color.blue();
+    private boolean isRed(int color) {
+        return color > 9;
     }
 
-    private boolean isBlue(RGBAColor color) {
-        return color.blue() > color.red();
+    private boolean isBlue(int color) {
+        return color < 4;
     }
 
-    private boolean isTeamColor(RGBAColor color) {
+    private boolean isTeamColor(int color) {
         if (isRedTeam()) return isRed(color);
 
         return isBlue(color);

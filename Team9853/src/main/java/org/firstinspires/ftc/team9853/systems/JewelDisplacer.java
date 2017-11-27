@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team9853.systems;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -23,7 +24,7 @@ public class JewelDisplacer {
 
     private final Servo jewelArmServo;
     private final RackAndPinion rackAndPinion;
-    private final ColorSensor jewelColorSensor;
+    private final ModernRoboticsI2cColorSensor jewelColorSensor;
     private final RobotLogger logger;
 
     private boolean isShifting;
@@ -61,7 +62,7 @@ public class JewelDisplacer {
         return new JewelDisplacer(
                 hardwareMap.servo.get("JewelArm"),
                 RackAndPinion.build(hardwareMap, hardwareListener, logger),
-                hardwareMap.colorSensor.get("JewelColor"),
+                (ModernRoboticsI2cColorSensor) hardwareMap.colorSensor.get("JewelColor"),
                 logger
         );
     }
@@ -73,7 +74,7 @@ public class JewelDisplacer {
      * @param jewelColorSensor  the color sensor used to identify the jewel on the right
      * @param logger            the logger to use for debugging
      */
-    public JewelDisplacer(Servo jewelArmServo, RackAndPinion rackAndPinion, ColorSensor jewelColorSensor, RobotLogger logger) {
+    public JewelDisplacer(Servo jewelArmServo, RackAndPinion rackAndPinion, ModernRoboticsI2cColorSensor jewelColorSensor, RobotLogger logger) {
         this.jewelArmServo = jewelArmServo;
         this.rackAndPinion = rackAndPinion;
         this.jewelColorSensor = jewelColorSensor;
@@ -141,12 +142,7 @@ public class JewelDisplacer {
         rackAndPinion.moveToUpperSync();
     }
 
-    public RGBAColor getColor() {
-        return new RGBAColor(
-                jewelColorSensor.red(),
-                jewelColorSensor.green(),
-                jewelColorSensor.blue(),
-                jewelColorSensor.alpha()
-        );
+    public int getColor() {
+        return jewelColorSensor.readUnsignedByte(ModernRoboticsI2cColorSensor.Register.COLOR_NUMBER);
     }
 }

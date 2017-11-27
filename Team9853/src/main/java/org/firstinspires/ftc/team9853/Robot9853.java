@@ -1,5 +1,14 @@
 package org.firstinspires.ftc.team9853;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ *
+ * @Last Modified by: storm
+ * @Last Modified time: 9/17/2017
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -16,12 +25,7 @@ import org.firstinspires.ftc.team9853.systems.GlyphGripper;
 import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
 
 /**
- * FTC_APP_2018
- * Copyright (c) 2017 Chatham Robotics
- * MIT License
- *
- * @Last Modified by: storm
- * @Last Modified time: 9/17/2017
+ * Team 9853's robot
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Robot9853 extends Robot {
