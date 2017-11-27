@@ -15,6 +15,20 @@ Markdown [cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Che
 - Support for button actions such as double clicking and long clicks
 - TurnTo and DriveToDistance perfected
 
+### [0.12.0] - 2017-11-26
+#### Added
+- Abstract stop() method in RobotBase and RobotComponent
+- Code for Relic Extender and Relic Grabber
+- AutoStopper class for stopping autos built in LinearOpMode
+
+#### Changed
+- Added in implementations of the stop() method where necessary
+- Changed the utility class names to be a bit less tacky
+
+#### Fixed
+- Main TeleOp now uses stop function after runtime loop to stop things properly
+
+
 ### [0.11.2] - 2017-11-25
 #### Fixed
 - IMU can now get angles when placed vertically, use the z axis
