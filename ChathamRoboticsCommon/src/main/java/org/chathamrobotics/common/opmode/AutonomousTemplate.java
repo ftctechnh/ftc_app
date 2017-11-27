@@ -10,14 +10,10 @@ package org.chathamrobotics.common.opmode;
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.chathamrobotics.common.opmode.exceptions.StoppedException;
 import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.robot.RobotErrors;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.lang.reflect.ParameterizedType;
 
 /**
  * A template for a autonomous opmode
@@ -44,12 +40,15 @@ public abstract class AutonomousTemplate<R extends Robot> extends LinearOpMode {
      */
     public abstract void run() throws InterruptedException, StoppedException;
 
-    public abstract void initialize();
+    /**
+     * Sets up the robot
+     */
+    public abstract void setup();
 
     @Override
     public void runOpMode() throws InterruptedException {
         try {
-            initialize();
+            setup();
             waitForStart();
             run();
         } catch (StoppedException | InterruptedException err) {
@@ -57,7 +56,7 @@ public abstract class AutonomousTemplate<R extends Robot> extends LinearOpMode {
         } catch (Exception err) {
             RobotErrors.reportGlobalError(this.getClass().getSimpleName(),"Encountered error while running opmode:" + err.getMessage());
         } finally {
-            robot.stop();
+            if (robot != null) robot.stop();
             stop();
         }
     }
@@ -75,7 +74,7 @@ public abstract class AutonomousTemplate<R extends Robot> extends LinearOpMode {
      * @throws StoppedException throw if the opmode is no longer active
      */
     public void debug() throws StoppedException {
-        this.robot.debugHardware();
+        if (robot != null) this.robot.debugHardware();
         this.checkActivity();
     }
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
+import org.chathamrobotics.common.opmode.AutonomousRnB;
 import org.chathamrobotics.common.opmode.exceptions.StoppedException;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * Created by carsonstorm on 11/18/2017.
  */
 
+@AutonomousRnB
 public class CompAutoPark extends CompAuto {
     public CompAutoPark(boolean isRedTeam) {super(isRedTeam);}
 

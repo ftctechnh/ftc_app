@@ -1,28 +1,31 @@
 package org.firstinspires.ftc.team9853.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 11/26/2017
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.chathamrobotics.common.Controller;
+import org.chathamrobotics.common.opmode.TeleOpTemplate;
 import org.chathamrobotics.common.robot.RobotLogger;
 
 import java.util.Map;
 
 /**
- * Created by carsonstorm on 10/25/2017.
+ * Tests servo values
  */
-
+@SuppressWarnings("unused")
 @TeleOp(name = "ServoTester", group = "TEST")
-public class ServoTester extends OpMode {
+public class ServoTester extends TeleOpTemplate {
     private double position = 0;
     private double power = 0;
-    private long lastPressA;
-    private long lastPressB;
-    private long lastPressX;
-    private long lastPressY;
-    private long pressBuffer = 500;
     private RobotLogger logger;
 
     @Override
@@ -38,19 +41,19 @@ public class ServoTester extends OpMode {
 
     @Override
     public void loop() {
-        if (isA(gamepad1) && !(Math.abs(position - 1) <= 1e-10)) {
+        if (controller1.aState == Controller.ButtonState.TAPPED && !(Math.abs(position - 1) <= 1e-10)) {
             position += 0.1;
         }
 
-        if (isB(gamepad1) && !(Math.abs(position) <= 1e-10)) {
+        if (controller1.bState == Controller.ButtonState.TAPPED && !(Math.abs(position) <= 1e-10)) {
             position -= 0.1;
         }
 
-        if (isX(gamepad1) && !(Math.abs(power - 1) <= 1e-10)) {
+        if (controller1.xState == Controller.ButtonState.TAPPED && !(Math.abs(power - 1) <= 1e-10)) {
             power += 0.1;
         }
 
-        if (isY(gamepad1) && !(Math.abs(power + 1) <= 1e-10)) {
+        if (controller1.yState == Controller.ButtonState.TAPPED && !(Math.abs(power + 1) <= 1e-10)) {
             power -= 0.1;
         }
 
@@ -71,41 +74,5 @@ public class ServoTester extends OpMode {
         for (Map.Entry<String, CRServo> servoEntry : hardwareMap.crservo.entrySet()) {
             servoEntry.getValue().setPower(pow);
         }
-    }
-
-    private boolean isA(Gamepad gp) {
-        if (gp.a && System.currentTimeMillis() - pressBuffer >= lastPressA) {
-            lastPressA = System.currentTimeMillis();
-            return true;
-        };
-
-        return false;
-    }
-
-    private boolean isB(Gamepad gp) {
-        if (gp.b && System.currentTimeMillis() - pressBuffer >= lastPressB) {
-            lastPressB = System.currentTimeMillis();
-            return true;
-        };
-
-        return false;
-    }
-
-    private boolean isX(Gamepad gp) {
-        if (gp.x && System.currentTimeMillis() - pressBuffer >= lastPressX) {
-            lastPressX = System.currentTimeMillis();
-            return true;
-        };
-
-        return false;
-    }
-
-    private boolean isY(Gamepad gp) {
-        if (gp.y && System.currentTimeMillis() - pressBuffer >= lastPressY) {
-            lastPressY = System.currentTimeMillis();
-            return true;
-        };
-
-        return false;
     }
 }

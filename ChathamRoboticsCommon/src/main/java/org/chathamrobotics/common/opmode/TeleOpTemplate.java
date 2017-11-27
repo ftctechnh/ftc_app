@@ -10,34 +10,32 @@ package org.chathamrobotics.common.opmode;
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.chathamrobotics.common.Controller;
 import org.chathamrobotics.common.robot.Robot;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.lang.reflect.ParameterizedType;
 
 /**
  * A template for a teleop opmode
  * @param <R>   the robot class
  */
-@SuppressWarnings("unused")
-public abstract class TeleOpMode<R extends Robot> extends OpMode {
+@SuppressWarnings({"unused", "WeakerAccess"})
+public abstract class TeleOpTemplate<R extends Robot> extends OpMode {
     /**
      * The robot object
      */
     public R robot;
 
-    /**
-     * Creates an instance of TeleOpMode
-     */
-    public TeleOpMode() {
+    protected Controller controller1 = new Controller(gamepad1);
+    protected Controller controller2 = new Controller(gamepad2);
 
-    }
 
     @Override
-    public void loop() {
-        this.robot.debugHardware();
+    public void internalPostLoop() {
+        controller1.update();
+        controller2.update();
+        if (robot != null) this.robot.debugHardware();
+
+        super.internalPostLoop();
     }
 
     @Override

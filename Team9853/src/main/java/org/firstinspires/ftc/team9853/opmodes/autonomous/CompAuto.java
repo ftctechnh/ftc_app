@@ -11,7 +11,7 @@ import org.firstinspires.ftc.team9853.Robot9853;
  * Created by carsonstorm on 11/16/2017.
  */
 
-@AutonomousRnB(name = "Comp Auto")
+@AutonomousRnB
 public class CompAuto extends AutonomousTemplate<Robot9853> {
     protected boolean isHit;
 
@@ -20,7 +20,7 @@ public class CompAuto extends AutonomousTemplate<Robot9853> {
     }
 
     @Override
-    public void initialize() {
+    public void setup() {
         robot = Robot9853.build(this);
         robot.init();
     }
