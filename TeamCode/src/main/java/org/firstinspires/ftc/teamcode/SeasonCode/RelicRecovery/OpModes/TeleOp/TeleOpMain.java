@@ -8,8 +8,7 @@ import org.directcurrent.core.gamecontroller.Controller;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
-import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.RelicGrabber.RelicGrabber;
-import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicExtender.RelicExtender;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicGrabber.RelicGrabber;
 
 
 /**
@@ -99,20 +98,17 @@ public class TeleOpMain extends LinearOpMode
             _base.glyphGrabber.setState(GlyphGrabber.State.STOP);
         }
 
-        // State machine for relic extender
-        if (_controller2.leftY() > .1 || _controller2.leftY() < -.1 )
-        {
-            _base.relicExtender.setState(RelicExtender.State.RInOut);
-        }
-        else
-        {
-            _base.relicExtender.setState(RelicExtender.State.Still);
-        }
+        // Runs relic extender
+        _base.relicExtender.run(_controller2.rightY());
 
         // State machine for relic grabber grabber
         if (_controller2.rightTrigger() >= .15)
         {
             _base.relicGrabber.setGrabState(RelicGrabber.GrabState.IN);
+        }
+        else if(_controller2.leftTrigger() >= .15)
+        {
+            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.OUT);
         }
         else
         {
@@ -120,11 +116,11 @@ public class TeleOpMain extends LinearOpMode
         }
 
         // State machine for relic grabber turning
-        if (_controller2.xClicked())
+        if (_controller2.x())
         {
             _base.relicGrabber.setRotateState(RelicGrabber.RotateState.UP);
         }
-        else if (_controller2.aClicked())
+        else if (_controller2.a())
         {
             _base.relicGrabber.setRotateState(RelicGrabber.RotateState.DOWN);
         }

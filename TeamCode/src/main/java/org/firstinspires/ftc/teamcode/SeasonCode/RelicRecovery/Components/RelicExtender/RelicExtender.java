@@ -13,44 +13,29 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
  */
 public class RelicExtender extends RobotComponent
 {
-    private final double _outSpeed = 1;
-    private final double _inSpeed = -1;
-    private final double _idleSpeed = 0;
-
     private DcMotor _extenderMotor;
 
 
-    public enum State
-    {
-        RInOut,
-        Still
-    }
-
-
+    /**
+     * Initializes Relic Extender and hardware maps it
+     *
+     * @param BASE The robot base used to create the hardware mapper
+     */
     @Override
     public void init(final RobotBase BASE)
     {
         super.init(BASE);
-        _extenderMotor = mapper.mapMotor("ExtenderMotor" , DcMotorSimple.Direction.REVERSE);
+        _extenderMotor = mapper.mapMotor("extMotor" , DcMotorSimple.Direction.REVERSE);
     }
 
 
     /**
-     * Sets the state of the relic extender arm
-     * @param STATE
+     * Runs the Relic Extender
+     *
+     * @param POWER Power to set the extender to
      */
-    public void setState(final State STATE)
+    public void run(final double POWER)
     {
-        switch(STATE)
-        {
-            case RInOut:
-                _extenderMotor.setPower(_inSpeed);
-                break;
-
-            case Still:
-                _extenderMotor.setPower(_idleSpeed);
-                break;
-        }
-
+        _extenderMotor.setPower(POWER);
     }
 }

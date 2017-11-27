@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.RelicGrabber;
+package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicGrabber;
 
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
@@ -48,8 +49,8 @@ public class RelicGrabber extends RobotComponent
     {
         super.init(BASE);
 
-        _grabber = mapper.mapCRServo("RelicGrabber", CRServo.Direction.FORWARD);
-        _twister = mapper.mapCRServo("Twister", CRServo.Direction.FORWARD);
+        _grabber = mapper.mapCRServo("grabServo", CRServo.Direction.REVERSE);
+        _twister = mapper.mapCRServo("rotateServo", CRServo.Direction.FORWARD);
     }
 
 
