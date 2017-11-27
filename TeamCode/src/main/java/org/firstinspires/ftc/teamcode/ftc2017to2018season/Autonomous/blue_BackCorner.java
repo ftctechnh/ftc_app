@@ -2,17 +2,19 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Autonomous Blue Test")
-public class Vuforia_test extends Autonomous_General {
+@Autonomous(name="Autonomous Blue Test Back")
+public class blue_BackCorner extends Autonomous_General {
 
     DcMotor leftFront;
     DcMotor rightFront;
     DcMotor leftBack;
     DcMotor rightBack;
+    public double rsBuffer = 20.00;
 
 
     @Override
@@ -38,7 +40,7 @@ public class Vuforia_test extends Autonomous_General {
         telemetry.update();
 
         waitForStart();
-
+//reseting gyro sensor
         gyro.resetZAxisIntegrator();
 
         startTracking();
@@ -52,25 +54,29 @@ public class Vuforia_test extends Autonomous_General {
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
 
-        encoderMecanumDrive(0.5,65,65,1000,0);
-        sleep(1000);
-        gyroTurn(0.3,89);
-        sleep(1000);
-        encoderMecanumDrive(0.75,45,45,1000,0);
+        encoderMecanumDrive(0.4, 55, 55, 1000, 0);
+        sleep(100);
+
+        gyroTurn(0.3,0);
+
+        sleep(250);
+
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            strafeRangeDistance(88, 0.3);
+            simpleRangeDistance(140,0.2,rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            strafeRangeDistance(71, 0.8);
+            simpleRangeDistance(124,0.2,rsBuffer);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            strafeRangeDistance(108, 0.8);
+            simpleRangeDistance(158,0.2,rsBuffer);
 
         }
 
+        gyroTurn(0.3,88);
+        sleep(750);
 
-        sleep(1000);
+        encoderMecanumDrive(0.65,45,45,1000,0);
 
 
 
