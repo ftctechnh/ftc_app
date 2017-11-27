@@ -95,17 +95,17 @@ public class RlcRcvryAutoSwitch extends OpMode{
                 //move off balancing stone and move towards box
                 if (glyph == RelicRecoveryVuMark.LEFT) {
                     robot.statTurn(.7,180);//face direction of box
-                    robot.linearDrive(30,1); //in position to place glyph
+                    robot.linearDrive(1,30); //in position to place glyph
                     robot.statTurn(.7,-90);//face box
                 }
                 else if (glyph == RelicRecoveryVuMark.CENTER) {
                     robot.statTurn(.7,180); //turn to face box
-                    robot.linearDrive(36,1); //drive to middle of box
+                    robot.linearDrive(1,36); //drive to middle of box
                     robot.statTurn(.7,-90); //turn to face box
                 }
                 else if (glyph == RelicRecoveryVuMark.RIGHT) {
                     robot.statTurn(.7,180);//face box
-                    robot.linearDrive(42,1);//move to box
+                    robot.linearDrive(1,42);//move to box
                     robot.statTurn(.7,-90);//face box
                 }
             stateMachineFlow++;
@@ -113,9 +113,9 @@ public class RlcRcvryAutoSwitch extends OpMode{
             case 5:
                 //not sure if the move needs to before or after we let go of glyph
                 gilgearmesh.clawPos(1);
-                robot.linearDrive(-1,1);
+                robot.linearDrive(1,-1);
                 gilgearmesh.clawPos(0);
-                robot.linearDrive(2,1);
+                robot.linearDrive(1,2);
 
                 stateMachineFlow++;
                 break;

@@ -187,7 +187,7 @@ public class RelicDrive
 
         //  sleep(250);   // all comments were from when this method was in an OpMode. These commands don't work in non OpModes.
     } //end of encoder drive method
-    public void linearDrive (double distance, double speed){
+    public void linearDrive (double speed, double distance){
         encoderDrive(speed, distance, distance, distance,distance);
     }
     public void statTurn(double speed, double degrees){
