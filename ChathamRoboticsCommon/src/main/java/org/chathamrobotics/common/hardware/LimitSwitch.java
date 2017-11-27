@@ -10,7 +10,6 @@ package org.chathamrobotics.common.hardware;
  */
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 /**
  * {@link LimitSwitch} models a limit switch

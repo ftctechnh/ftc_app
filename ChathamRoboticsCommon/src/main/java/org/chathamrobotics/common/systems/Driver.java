@@ -13,12 +13,7 @@ package org.chathamrobotics.common.systems;
  * A driving system
  */
 @SuppressWarnings("unused")
-public interface Driver {
-    /**
-     * Stops the driving system
-     */
-    void stop();
-
+public interface Driver extends System{
     /**
      * Rotates the robot
      * @param power the power to rotate by

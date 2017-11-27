@@ -11,28 +11,23 @@ package org.chathamrobotics.common.systems;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.hardware.LimitSwitch;
 import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
-import org.chathamrobotics.common.IsBusyException;
+import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.robot.RobotLogger;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.util.Timer;
 
 /**
  * The representation of a rack and pinion with limit switches
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class RackAndPinion {
-    private static final Timer TIMER = new Timer();
+public class RackAndPinion implements System {
     private static final String TAG = "RackAndPinion";
 
     private final CRServo crServo;
     private final LimitSwitch upperLimit;
     private final LimitSwitch lowerLimit;
-    private final HardwareListener hardwareListener;
+    private final HardwareListener listener;
     private final RobotLogger logger;
 
     private boolean isBusy = false;
@@ -43,17 +38,7 @@ public class RackAndPinion {
      * @return          the built rack and pinion system
      */
     public static RackAndPinion build(Robot robot) {
-        return build(robot.getHardwareMap(), robot, robot.log);
-    }
-
-    /**
-     * Builds a new rack and pinion system using CRServo as the name for the continuous servo
-     * @param hardwareMap   the robot's hardware mape
-     * @param telemetry     the opmode's telemetry
-     * @return              the built rack and pinion system
-     */
-    public static RackAndPinion build(HardwareMap hardwareMap, HardwareListener hardwareListener, Telemetry telemetry) {
-        return build(hardwareMap, hardwareListener, new RobotLogger("RackAndPinion", telemetry));
+        return build(robot.getHardwareMap(), robot, robot.log.systemLogger(TAG));
     }
 
     /**
@@ -81,13 +66,13 @@ public class RackAndPinion {
             CRServo crServo,
             LimitSwitch upperLimit,
             LimitSwitch lowerLimit,
-            HardwareListener hardwareListener,
+            HardwareListener listener,
             RobotLogger logger
     ) {
         this.crServo = crServo;
         this.upperLimit = upperLimit;
         this.lowerLimit = lowerLimit;
-        this.hardwareListener = hardwareListener;
+        this.listener = listener;
         this.logger = logger;
     }
 
@@ -107,13 +92,13 @@ public class RackAndPinion {
      * @throws InterruptedException thrown if the thread is interrupted while waiting
      */
     public void moveToUpperSync() throws IsBusyException, InterruptedException {
-        debug("Moving to upper limit");
-        start(1);
+        logger.debug("moving to upper limit");
+        move(1);
 
         while (! upperLimit.isPressed()) Thread.sleep(10);
 
-        stop();
-        debug("Reached upper limit");
+        stopMovement();
+        logger.debug("reached upper limit");
     }
 
     /**
@@ -122,13 +107,13 @@ public class RackAndPinion {
      * @throws IsBusyException  thrown if the system is busy when called
      */
     public void moveToUpper() throws IsBusyException {
-        debug("Moving to upper limit");
-        start(1);
+        logger.debug("moving to upper limit");
+        move(1);
 
-        hardwareListener.on(upperLimit, LimitSwitch::isPressed, () -> {
-            stop();
+        listener.on(upperLimit, LimitSwitch::isPressed, () -> {
+            stopMovement();
 
-            debug("Reached upper limit");
+            logger.debug("reached upper limit");
         });
     }
 
@@ -140,13 +125,13 @@ public class RackAndPinion {
      * @throws InterruptedException thrown if the thread is interrupted while waiting
      */
     public void moveToLowerSync() throws IsBusyException, InterruptedException {
-        debug("Moving to lower limit");
-        start(-1);
+        logger.debug("moving to lower limit");
+        move(-1);
 
         while (! lowerLimit.isPressed()) Thread.sleep(10);
 
-        stop();
-        debug("Reached lower limit");
+        stopMovement();
+        logger.debug("reached lower limit");
     }
 
     /**
@@ -155,37 +140,41 @@ public class RackAndPinion {
      * @throws IsBusyException  thrown if the system is busy when called
      */
     public void moveToLower() throws IsBusyException {
-        debug("Moving to lower limit");
+        logger.debug("moving to lower limit");
 
-        start(-1);
+        move(-1);
 
-        hardwareListener.on(lowerLimit, LimitSwitch::isPressed, () -> {
-            stop();
+        listener.on(lowerLimit, LimitSwitch::isPressed, () -> {
+            stopMovement();
 
-            debug("Reached lower limit");
+            logger.debug("reached lower limit");
         });
     }
 
-    private void debug(String line) {
-        synchronized (logger) {
-            logger.debug(line);
-        }
+    /**
+     * Stops the rack and pinion system
+     */
+    public void stop() {
+        stopMovement();
+
+        listener.removeAllListeners(lowerLimit);
+        listener.removeAllListeners(upperLimit);
     }
 
-    private void start(double power) throws IsBusyException {
+    private void stopMovement() {
+        synchronized (crServo) {
+            crServo.setPower(0);
+        }
+
+        isBusy = false;
+    }
+
+    private void move(double power) throws IsBusyException {
         if (isBusy) throw new IsBusyException("RackAndPinion is busy");
 
         synchronized (crServo) {
             crServo.setPower(power);
         }
         isBusy = true;
-    }
-
-    private void stop() {
-        synchronized (crServo) {
-            crServo.setPower(0);
-        }
-
-        isBusy = false;
     }
 }

@@ -1,36 +1,31 @@
 package org.firstinspires.ftc.team9853.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 11/26/2017
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.chathamrobotics.common.Controller;
-import org.chathamrobotics.common.IsBusyException;
-import org.firstinspires.ftc.team9853.Robot9853;
-import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
+import org.chathamrobotics.common.systems.IsBusyException;
+import org.firstinspires.ftc.team9853.opmodes.Tele9853;
 
 /**
- * Created by carsonstorm on 11/1/2017.
+ * Tests the jewel displacer
  */
-
+@SuppressWarnings("unused")
 @TeleOp(name = "Jewel Tester", group = "Test")
-public class JewelTester extends OpMode {
-    private Robot9853 robot;
-    private JewelDisplacer jewelDisplacer;
-    private Controller controller1;
-
-    @Override
-    public void init() {
-        robot = Robot9853.build(this);
-        robot.init();
-        jewelDisplacer = JewelDisplacer.build(robot);
-        controller1 = new Controller(gamepad1);
-    }
+public class JewelTester extends Tele9853 {
 
     @Override
     public void start() {
         super.start();
         robot.start();
-        jewelDisplacer.raise();
+        robot.jewelDisplacer.raise();
     }
 
     @Override
@@ -39,20 +34,22 @@ public class JewelTester extends OpMode {
 
         try {
             if (controller1.aState == Controller.ButtonState.TAPPED) {
-                jewelDisplacer.shiftLeft();
+                robot.jewelDisplacer.shiftLeft();
             }
 
             if (controller1.bState == Controller.ButtonState.TAPPED) {
-                jewelDisplacer.shiftRight();
+                robot.jewelDisplacer.shiftRight();
             }
 
             if (controller1.xState == Controller.ButtonState.TAPPED) {
-                jewelDisplacer.raise();
+                robot.jewelDisplacer.raise();
             }
             
             if (controller1.yState == Controller.ButtonState.TAPPED) {
-                jewelDisplacer.drop();
+                robot.jewelDisplacer.drop();
             }
-        } catch (IsBusyException e) {}
+        } catch (IsBusyException e) {
+            // Do Nothing
+        }
     }
 }

@@ -1,39 +1,26 @@
 package org.firstinspires.ftc.team9853.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 11/26/2017
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.chathamrobotics.common.Controller;
-import org.firstinspires.ftc.team9853.Robot9853;
+import org.firstinspires.ftc.team9853.opmodes.Tele9853;
 
 /**
- * Created by carsonstorm on 11/3/2017.
+ *
  */
+@SuppressWarnings("unused")
 @TeleOp(name = "CompDrive")
-public class CompDrive extends OpMode {
-    private Robot9853 robot;
-    private Controller controller1;
-    private Controller controller2;
-
-    @Override
-    public void init() {
-        robot = Robot9853.build(this);
-        controller1 = new Controller(gamepad1);
-        controller2 = new Controller(gamepad2);
-
-        robot.init();
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        robot.start();
-    }
-
+public class CompDrive extends Tele9853 {
     @Override
     public void loop() {
-        controller1.update(); controller2.update();
-
         if (controller1.right_trigger > 0)
             robot.lift.setPower(controller1.right_trigger);
         else

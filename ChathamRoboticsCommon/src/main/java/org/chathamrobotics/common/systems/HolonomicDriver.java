@@ -47,7 +47,7 @@ public class HolonomicDriver implements Driver {
      * @return          the built {@link HolonomicDriver}
      */
     public static HolonomicDriver build(Robot robot) {
-        return build(robot.getHardwareMap(), robot.log);
+        return build(robot.getHardwareMap(), robot.log.systemLogger(TAG));
     }
 
     /**

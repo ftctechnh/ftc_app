@@ -3,7 +3,7 @@ package org.firstinspires.ftc.team9853.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-import org.chathamrobotics.common.opmode.TeleOpMode;
+import org.chathamrobotics.common.opmode.TeleOpTemplate;
 import org.firstinspires.ftc.team9853.Robot9853;
 
 /**
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.team9853.Robot9853;
  */
 
 @TeleOp(name = "Color Test", group = "Test")
-public class ColorTest extends TeleOpMode<Robot9853> {
+public class ColorTest extends TeleOpTemplate<Robot9853> {
     private ColorSensor color;
 
     @Override

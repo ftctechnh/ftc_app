@@ -1,28 +1,29 @@
 package org.firstinspires.ftc.team9853.opmodes.autonomous;
 
-import org.chathamrobotics.common.opmode.AutonomousRnB;
-import org.chathamrobotics.common.opmode.AutonomousTemplate;
-import org.chathamrobotics.common.opmode.exceptions.StoppedException;
-import org.chathamrobotics.common.robot.RobotFace;
-import org.chathamrobotics.common.utils.RGBAColor;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.team9853.Robot9853;
-
-/**
- * Created by carsonstorm on 11/16/2017.
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 11/26/2017
  */
 
-public class CompAuto extends AutonomousTemplate<Robot9853> {
+import org.chathamrobotics.common.RGBAColor;
+import org.chathamrobotics.common.opmode.AutonomousRnB;
+import org.chathamrobotics.common.opmode.exceptions.StoppedException;
+import org.chathamrobotics.common.robot.RobotFace;
+import org.firstinspires.ftc.team9853.opmodes.Autonomous9853;
+
+/**
+ * Hits the jewel
+ */
+@SuppressWarnings("WeakerAccess")
+@AutonomousRnB
+public class CompAuto extends Autonomous9853 {
     protected boolean isHit;
 
     public CompAuto(boolean isRedTeam) {
         super(isRedTeam);
-    }
-
-    @Override
-    public void initialize() {
-        robot = Robot9853.build(this);
-        robot.init();
     }
 
     @Override
@@ -45,8 +46,7 @@ public class CompAuto extends AutonomousTemplate<Robot9853> {
 
         if (isTeamColor(color))
             hitJewel(-1);
-        else if (color.red() == color.blue()) return;
-        else
+        else if (color.red() != color.blue())
             hitJewel(1);
     }
 
