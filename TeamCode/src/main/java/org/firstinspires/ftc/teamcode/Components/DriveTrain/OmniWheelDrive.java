@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Created by lsatt on 7/20/2017.
  */
 
-public class OmniWheelDriveMethods implements DriveTrainMethods {
+public class OmniWheelDrive implements DriveTrain {
     private double angle; //cosine angle zero to PI (it is still zero to PI when y is positive)
     //private double ref;   //reference angle
     private double power; //power of robot form -1 to 1
@@ -15,9 +15,9 @@ public class OmniWheelDriveMethods implements DriveTrainMethods {
     private double x;     //right stick x
 
     /**
-     * OmniWheelDriveMethods Constructor
+     * OmniWheelDrive Constructor
      */
-    public OmniWheelDriveMethods() {
+    public OmniWheelDrive() {
         angle = 0;
         //ref = 0;
         power = 0;
@@ -26,11 +26,11 @@ public class OmniWheelDriveMethods implements DriveTrainMethods {
     }
 
     /**
-     * OmniWheelDriveMethods Constructor
+     * OmniWheelDrive Constructor
      * @param angle angle
      * @param power
      */
-    OmniWheelDriveMethods(double angle, double power) {
+    OmniWheelDrive(double angle, double power) {
         if (angle < 0) {
             this.angle = -angle;
             ifPositive = false;
@@ -48,7 +48,7 @@ public class OmniWheelDriveMethods implements DriveTrainMethods {
      * @param power
      * @param x
      */
-    OmniWheelDriveMethods(double angle, double power, double x) {
+    OmniWheelDrive(double angle, double power, double x) {
         if (angle < 0) {
             this.angle = -angle;
             ifPositive = false;
@@ -65,7 +65,7 @@ public class OmniWheelDriveMethods implements DriveTrainMethods {
      * @param power
      * @param ifPositive
      */
-    OmniWheelDriveMethods(double angle, double power, boolean ifPositive) {
+    OmniWheelDrive(double angle, double power, boolean ifPositive) {
         this.angle = angle;
         this.power = power;
         //ref = 0;
@@ -79,7 +79,7 @@ public class OmniWheelDriveMethods implements DriveTrainMethods {
      * @param ifPositive
      * @param x
      */
-    OmniWheelDriveMethods(double angle, double power, boolean ifPositive, double x) {
+    OmniWheelDrive(double angle, double power, boolean ifPositive, double x) {
         this.angle = angle;
         this.power = power;
         //ref = 0;

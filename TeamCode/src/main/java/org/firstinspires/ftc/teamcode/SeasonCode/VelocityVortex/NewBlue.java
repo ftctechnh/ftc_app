@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDrive;
 
 /**
  * Created by spmce on 12/10/2016.
@@ -16,7 +16,7 @@ public class NewBlue extends VelocityVortexHardware {
     //@Override
     public void loop() {
         super.loop();
-        OmniWheelDriveMethods drive = new OmniWheelDriveMethods();
+        OmniWheelDrive drive = new OmniWheelDrive();
         double wheels[] = drive.drive(Math.PI/2,1);
         leftDrivePower  = wheels[0];
         rightDrivePower = wheels[1];

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDriveMethods;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDrive;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDrive;
 
 /**
  * Created by team on 7/19/2017.
@@ -37,11 +37,11 @@ public class MyTestCodeTeleOp extends MyTestCodeTelemetry {
         }
         double drivePower[] = new double[2];
         if (padCofig == 0) {
-            TurnDriveMethods turn = new TurnDriveMethods();
+            TurnDrive turn = new TurnDrive();
             drivePower = turn.drive(gamepad1);
         }
         if (padCofig == 1) {
-            TankDriveMethods tank = new TankDriveMethods();
+            TankDrive tank = new TankDrive();
             drivePower = tank.drive(gamepad1);
         }
         rightPower = drivePower[0];

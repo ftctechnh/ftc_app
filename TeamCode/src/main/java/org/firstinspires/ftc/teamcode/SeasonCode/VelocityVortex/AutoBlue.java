@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDrive;
 
 /**
  * Created by spmce on 11/18/2016.
@@ -57,7 +57,7 @@ public class AutoBlue extends VelocityVortexHardware {
     //@Override
     public void loop() {
         super.loop();
-        OmniWheelDriveMethods drive = new OmniWheelDriveMethods();
+        OmniWheelDrive drive = new OmniWheelDrive();
         double[] power;
         switch (state) {
             case 0: // nothing

@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDriveMethods;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDrive;
+import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDrive;
 
 import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.*;
 
@@ -95,12 +95,12 @@ public class TeleOp extends OpMode {
                 }
             }
             if (driveConfig == 0) {
-                TurnDriveMethods turn = new TurnDriveMethods();
+                TurnDrive turn = new TurnDrive();
                 drivePower = turn.drive(gamepad1);
                 driveMode = "Turn Drive";
             }
             if (driveConfig == 1) {
-                TankDriveMethods tank = new TankDriveMethods();
+                TankDrive tank = new TankDrive();
                 drivePower = tank.drive(gamepad1);
                 driveMode = "Tank Drive";
             }
