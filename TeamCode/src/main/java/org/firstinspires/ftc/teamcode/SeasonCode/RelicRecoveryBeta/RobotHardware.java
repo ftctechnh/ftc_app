@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Utilities.Map;
 import org.firstinspires.ftc.teamcode.Utilities.SetRobot;
 
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.*;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.*;
 
 /**
  * Created by Shane on 13-11-2017.

@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDriveMethods;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TankDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TurnDriveMethods;
 
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.*;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.*;
 
 /**
  * Created by Shane on 13-11-2017.

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.VelocityVortex;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.OmniWheelDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.OmniWheelDriveMethods;
 
 /**
  * Created by spmce on 11/3/2016.

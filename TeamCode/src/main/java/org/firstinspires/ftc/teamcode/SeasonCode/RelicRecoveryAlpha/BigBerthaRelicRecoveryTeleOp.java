@@ -1,22 +1,22 @@
-package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta;
+package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryAlpha;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDriveMethods;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TankDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TurnDriveMethods;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.BALL_PUSHER_DOWN;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.BALL_PUSHER_UP;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.BALL_ROTATOR_CENTER;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.BALL_ROTATOR_LEFT;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.BALL_ROTATOR_RIGHT;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.GRABBER_CLOSED;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.GRABBER_OPEN;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.HAND_CLOSED;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.HAND_OPEN;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.HAND_STOPPED;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.BALL_PUSHER_DOWN;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.BALL_PUSHER_UP;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.BALL_ROTATOR_CENTER;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.BALL_ROTATOR_LEFT;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.BALL_ROTATOR_RIGHT;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.GRABBER_CLOSED;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.GRABBER_OPEN;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.HAND_CLOSED;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.HAND_OPEN;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.HAND_STOPPED;
 
 /**
  * Created by Shane on 26-11-2017.
@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoP
 @TeleOp(name = "Relic Recovery TeleOp Alpha",group = "TeleOp")
 public class BigBerthaRelicRecoveryTeleOp extends OpMode {
     // --------------------- Private Variables ----------------------
-    private RobotHardware robot;
+    private BigBerthaRelicRecoveryRobot robot;
     private String driveMode;
     private int driveConfig = 0;
     private boolean ifHold;
@@ -45,7 +45,7 @@ public class BigBerthaRelicRecoveryTeleOp extends OpMode {
     // ----------------------- Init -----------------------
     @Override
     public void init() {
-        robot = new RobotHardware(hardwareMap,telemetry);
+        robot = new BigBerthaRelicRecoveryRobot(hardwareMap,telemetry);
         robot.init();
         driveMode = "Turn Drive Init";
         ifHold = false;
@@ -146,10 +146,10 @@ public class BigBerthaRelicRecoveryTeleOp extends OpMode {
             }
             robot.armLiftPower = gamepad1.right_trigger - gamepad1.left_trigger;
         }
-        robot.rightPower = drivePower[0];
-        robot.leftPower = drivePower[1];
-        //robot.driveTrain.rightPower = drivePower[0];
-        //robot.driveTrain.leftPower = drivePower[1];
+        //robot.rightPower = drivePower[0];
+        //robot.leftPower = drivePower[1];
+        robot.driveTrain.rightPower = drivePower[0];
+        robot.driveTrain.leftPower = drivePower[1];
         if (gamepad1.right_stick_button) {
             if (rightStick1) {
                 slowDrive = !slowDrive;
@@ -159,10 +159,10 @@ public class BigBerthaRelicRecoveryTeleOp extends OpMode {
             rightStick1 = true;
         }
         if (slowDrive) {
-            robot.rightPower /= 2;
-            robot.leftPower /= 2;
-            //robot.driveTrain.rightPower /= 2;
-            //robot.driveTrain.leftPower /= 2;
+            //robot.rightPower /= 2;
+            //robot.leftPower /= 2;
+            robot.driveTrain.rightPower /= 2;
+            robot.driveTrain.leftPower /= 2;
         }
         // --------------- Jewels ---------------
         if (gamepad1.x) {

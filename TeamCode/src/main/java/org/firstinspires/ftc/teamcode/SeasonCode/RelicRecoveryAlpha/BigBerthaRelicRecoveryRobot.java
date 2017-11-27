@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta;
+package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryAlpha;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.ARM_IN;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.BALL_PUSHER_UP;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.BALL_ROTATOR_CENTER;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.GRABBER_CLOSED;
-import static org.firstinspires.ftc.teamcode.SeasonCode.RelicRecoveryBeta.ServoPositions.HAND_STOPPED;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.ARM_IN;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.BALL_PUSHER_UP;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.BALL_ROTATOR_CENTER;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.GRABBER_CLOSED;
+import static org.firstinspires.ftc.teamcode.Utilities.ServoPositions.HAND_STOPPED;
 
 /**
  * Created by Shane on 26-11-2017.

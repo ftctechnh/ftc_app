@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestCode.Shane;
 
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TankDriveMethods;
-import org.firstinspires.ftc.teamcode.Components.DriveTrain.TurnDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TankDriveMethods;
+import org.firstinspires.ftc.teamcode.Components.DriveTrainMethods.TurnDriveMethods;
 
 /**
  * Created by team on 7/19/2017.
