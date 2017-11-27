@@ -177,6 +177,7 @@ public class AnnotationRegistry implements ClassFilter {
 
         for (AnnotationHandler handler : ANNOTATION_HANDLERS)
             if (handler.hasAnnotation(clazz)) opModeCount++;
+        if (opModeCount == 0) return;
 
         if (clazz.isAnnotationPresent(Autonomous.class)) opModeCount++;
         if (clazz.isAnnotationPresent(TeleOp.class)) opModeCount++;
