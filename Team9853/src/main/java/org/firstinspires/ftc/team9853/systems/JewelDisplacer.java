@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.chathamrobotics.common.robot.Robot;
-import org.chathamrobotics.common.systems.RackAndPinion;
 import org.chathamrobotics.common.RGBAColor;
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
-import org.chathamrobotics.common.systems.IsBusyException;
+import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.robot.RobotLogger;
+import org.chathamrobotics.common.systems.IsBusyException;
+import org.chathamrobotics.common.systems.RackAndPinion;
 
 import java.util.Timer;
 

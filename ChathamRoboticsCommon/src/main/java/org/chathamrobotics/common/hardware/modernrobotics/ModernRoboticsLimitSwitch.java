@@ -13,7 +13,6 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
-import com.qualcomm.robotcore.hardware.configuration.I2cSensor;
 
 import org.chathamrobotics.common.hardware.LimitSwitch;
 

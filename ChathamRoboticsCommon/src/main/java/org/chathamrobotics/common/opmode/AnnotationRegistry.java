@@ -1,5 +1,13 @@
 package org.chathamrobotics.common.opmode;
 
+/*!
+ * FTC_APP_2018
+ * Copyright (c) 2017 Chatham Robotics
+ * MIT License
+ * @Last Modified by: storm
+ * @Last Modified time: 11/26/2017
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -19,12 +27,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
-/*!
- * FTC_APP_2018
- * Copyright (c) 2017 Chatham Robotics
- * MIT License
- * @Last Modified by: storm
- * @Last Modified time: 11/26/2017
+/**
+ * Registers custom opmode annotations
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class AnnotationRegistry implements ClassFilter {

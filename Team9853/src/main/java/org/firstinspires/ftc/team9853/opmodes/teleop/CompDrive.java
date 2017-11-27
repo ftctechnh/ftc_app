@@ -8,11 +8,9 @@ package org.firstinspires.ftc.team9853.opmodes.teleop;
  * @Last Modified time: 11/26/2017
  */
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.chathamrobotics.common.Controller;
-import org.firstinspires.ftc.team9853.Robot9853;
 import org.firstinspires.ftc.team9853.opmodes.Tele9853;
 
 /**

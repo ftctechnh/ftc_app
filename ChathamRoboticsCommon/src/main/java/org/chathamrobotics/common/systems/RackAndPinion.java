@@ -11,10 +11,10 @@ package org.chathamrobotics.common.systems;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.hardware.LimitSwitch;
 import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
+import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.robot.RobotLogger;
 
 /**
