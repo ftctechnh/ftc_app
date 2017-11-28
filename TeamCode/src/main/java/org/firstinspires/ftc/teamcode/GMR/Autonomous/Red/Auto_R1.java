@@ -52,6 +52,9 @@ public class Auto_R1 extends OpMode {
 
     private ElapsedTime time = new ElapsedTime();
 
+    private double currentSeconds;
+    private double goalSeconds;
+
     @Override
     public void init() {
         rightFront = hardwareMap.dcMotor.get("rightfront");
@@ -88,11 +91,15 @@ public class Auto_R1 extends OpMode {
         state = States.TIME;
         isFinished = false;
 
+        //Starts the timer WORKING
+        time.reset();
+
         //relicTrackables.activate();
 
     }
         @Override
         public void loop(){
+        currentSeconds = time.seconds();
             //telemetry.addData("Pitch:", drive.getPitch());
             //telemetry.update();
             telemetry.addData("State:", state);
@@ -107,14 +114,25 @@ public class Auto_R1 extends OpMode {
                         state = States.TIME;
                     } break;*/
                 case TIME:
-                    //Starts the timer WORKING
-                    time.reset();
-                    state = States.ARMDOWN;
+                    state = States.GRAB;
+                    robot.blockLift.clamp(false,true, true, false);
+                    break;
+                case GRAB:
+                    robot.blockLift.clamp(false,false, false, true);
+                    state = States.LIFT;
+                    goalSeconds = currentSeconds + 0.4;
+                    break;
+                case LIFT:
+                    if (currentSeconds >= goalSeconds) {
+                        robot.blockLift.setLift(400);
+                        state = States.ARMDOWN;
+                        goalSeconds = currentSeconds += 1.0;
+                    }
                     break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
-                    if(time.seconds() >= 1.0){
+                    if(currentSeconds >= goalSeconds){
                         state = States.READ; //READ
                     } break;
 
@@ -173,7 +191,7 @@ public class Auto_R1 extends OpMode {
                 case LEFTZONE:
                     //Returns to original position from knocking left ball WORKING
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 3);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 7);
                     } else{
                         isFinished = false;
                         state = States.TURNBOX;
@@ -183,7 +201,7 @@ public class Auto_R1 extends OpMode {
                 case RIGHTZONE:
                     //Returns to original position from knocking right ball WORKING
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 10.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 12);
                     } else{
                         isFinished = false;
                         state = States.TURNBOX;
@@ -219,12 +237,23 @@ public class Auto_R1 extends OpMode {
                 case DRIVEBOX:
                     //Drives into the CryptoBox
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 3);
+                    } else{
+                        isFinished = false;
+                        state = States.DROP;
+                    } break;
+
+                case DROP:
+                    robot.blockLift.clamp(false, false,true, false);
+                    state = States.DRIVEBACK;
+                    break;
+                case DRIVEBACK:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
                     } else{
                         isFinished = false;
                         state = States.END;
                     } break;
-
                 case END:
                     robot.driveTrain.stop();
                     break;
@@ -249,6 +278,11 @@ enum States {
     DRIVEZONE,
     TURNBOX,
     DRIVEBOX,
-    END
+    DRIVEBACK,
+    END,
+
+    GRAB,
+    DROP,
+    LIFT
 }
 
