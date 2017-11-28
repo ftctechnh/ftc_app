@@ -67,18 +67,18 @@ public class BallDetection extends LinearOpMode {
     }
 
     private boolean isBlue(float[] pix) {
-        return (pix[0] < 128);
+        return (Math.abs((pix[0] / 256.) - .59091) < 0.3);
     }
 
     private void processBitmap(Bitmap bm) {
         int width = bm.getWidth();
         int height = bm.getHeight();
 
-        int coarseness = 40;
+        int coarseness = 31;
         int pixelCount = 0;
         float[] pix = {0, 0, 0};
 
-        boolean[][] pixels = new boolean[width / coarseness][height / coarseness];
+        boolean[][] pixels = new boolean[width / coarseness + 1][height / coarseness + 1];
 
         for (int i = 0; i < width; i += coarseness) {
             for (int j = 0; j < height; j += coarseness) {
@@ -98,7 +98,7 @@ public class BallDetection extends LinearOpMode {
         for (int i = 0; i < width; i++) {
             String p = "";
             for (int j = 0; j < height; j++) {
-                p = p + (pixels[i][j] ? "##" : "..");
+                p = p + (pixels[i][j] ? "#" : "_");
             }
             telemetry.addData("",p);
         }
