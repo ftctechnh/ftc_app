@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet/less" type="text/css" href="/css/manage.less">
+    <script type="text/javascript" src="/js/less.min.js"></script>
+</head>
+<body>
+<div class="bordered-text-block">
+    <div>
+        <h1>Robot Controller Name</h1>
+        <p>Change the name of the robot controller.</p>
+        <p>
+            <input id="id_rc_name" class="centered-feedback" type="text" value="(name)"><button id="id_change_name_button" class="aligned-select-button" onclick="onRenameRC()">Change Name</button>
+        </p>
+    </div>
+    <div id="id_download_logs">
+        <h1>Download Robot Controller Logs</h1>
+        <p>Examination of activity logs from the robot controller can sometimes help diagnose problems and bugs.</p>
+        <p><button onclick="javascript:onDownloadLogsClicked()">Download Logs<span id="id_log_count"></span></button></p>
+    </div>
+    <div id="id_upload_firmware">
+        <h1>Upload Expansion Hub Firmware</h1>
+        <p>Upload firmware for the REV Expansion Hub to the robot controller. Once uploaded, the firmware can be 
+        installed on Expansion Hubs using the Advanced Settings menu on the robot controller or driver station.</p>
+        <div>
+            <p>
+                <input id="id_input_file_firmware" type="file" class="hidden hidden-input-file">
+                <input id="id_firmware_feedback" readonly class="upload-feedback" type="text" value="(firmware)"><button id="id_firmware_button" class="aligned-select-button" >Select Firmware...</button>
+                <button id="id_action_firmware" class="aligned-action-button" onclick="uploadFirmware();">Upload</button>
+            </p>
+            <p id="id_firmware_upload_complete" class="text-ok"></p>
+            <div class="progress hidden">
+                <div id="id_firmware_progress" class="progress-bar" role="progressbar"
+                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="70" style="width:70%">
+                    70%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="id_update_robot_controller_application">
+        <h1>Update Robot Controller App &amp; Reboot</h1>
+        <p>Upload and install a new Robot Controller App to the REV Control Hub. Once the
+            upload completes, the Control Hub will be rebooted to allow the new app to complete installation.</p>
+        <div>
+            <p>
+                <input id="id_input_file_apk" type="file" class="hidden hidden-input-file">
+                <input id="id_apk_feedback" readonly class="upload-feedback" type="text" value="(apk)"><button id="id_apk_button" class="aligned-select-button">Select App...</button>
+                <button id="id_action_apk" class="aligned-action-button" onclick="updateApk();">Update &amp; Reboot</button>
+            </p>
+            <div class="progress hidden">
+                <div id="id_apk_progress" class="progress-bar" role="progressbar"
+                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" style="width:30%">
+                    30%
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/rc_config.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+<script type="text/javascript">
+
+    var barOfProgress = function(progress) {
+        return progress ? progress.parentElement : null;
+    }
+
+    var initUpload = function (idInput, idFeedback, idButton, ext, idAction, idProgress) {
+        var input = document.getElementById(idInput);
+        var feedback = document.getElementById(idFeedback);
+        var button = document.getElementById(idButton);
+        var action = document.getElementById(idAction);
+        var progress = idProgress ? document.getElementById(idProgress) : null;
+
+        feedback.value = "";
+        feedback.onclick = function () { input.click(); };
+        button.onclick = function () { input.click(); };
+        input.accept = ext;
+        input.onchange = function () { fileInputChange(input, feedback, ext, action); };
+        hideElement(action, true);
+        if (progress) hideElement(barOfProgress(progress), true);
+    }
+
+    var fileInputChange = function(input, feedback, ext, action) {
+        if (input.files && input.files.length > 0) {
+            var file = input.files[0];
+            console.log("fileInputChange() ext=" + ext + " file=" + file);
+            if (endsWith(file.name, ext)) {
+                feedback.value = file.name;
+                feedback.dataFile = file;
+                hideElement(action, false);
+            } else {
+                alert("Please choose a file with extension: " + ext);
+            }
+        } else {
+            console.log("input files empty");
+        }
+    }
+
+    $('#id_firmware_upload_complete').hide();
+    initUpload('id_input_file_firmware', 'id_firmware_feedback', 'id_firmware_button', '.bin', 'id_action_firmware', null /* 'id_firmware_progress' */);
+    initUpload('id_input_file_apk',      'id_apk_feedback',      'id_apk_button',      '.apk', 'id_action_apk',      'id_apk_progress');
+
+    var uploadProgress = function(file, progress, xhr, e) {
+        if (e.lengthComputable) {
+            var loaded = Math.round(100 * (e.loaded / e.total));
+            var percent = loaded + "%";
+            console.log("loaded: " + percent);
+            if (progress) {
+                hideElement(barOfProgress(progress), false);
+                progress.style.width = percent;
+                progress.innerHTML = percent;
+                progress.setAttribute("aria-valuenow", loaded);
+            }
+        }
+    }
+
+    var uploadSuccess = function(file, progress, xhr, e) {
+        if (progress) {
+            hideElement(barOfProgress(progress), true);
+        }
+    }
+
+    var uploadFailure = function(file, progress, xhr, e) {
+        if (progress) {
+            hideElement(barOfProgress(progress), true);
+        }
+        alert("Failed to upload file: " + file.name);
+    }
+
+    var uploadFirmware = function () {
+        var feedback = document.getElementById('id_firmware_feedback');
+        var progress = null // hasFunctionalProgress() ? document.getElementById('id_firmware_progress') : null;
+        var file = feedback.dataFile;
+        console.log("uploadFirmware() name=" + file.name);
+        var url = URI_UPLOAD_EXPANSION_HUB_FIRMWARE;
+        uploadFile(file, url,
+            function(xhr, e) { uploadProgress(file, progress, xhr, e); },
+            function(xhr, e) {
+                uploadSuccess(file, progress, xhr, e);
+                showToast('id_firmware_upload_complete', 'Firmware upload complete');
+            },
+            function(xhr, e) { uploadFailure(file, progress, xhr, e); });
+    }
+
+    var updateApk = function() {
+        var feedback = document.getElementById('id_apk_feedback');
+        var progress = hasFunctionalProgress() ? document.getElementById('id_apk_progress') : null;
+        var file = feedback.dataFile;
+        console.log("updateApk() name=" + file.name);
+        var url = URI_UPDATE_CONTROL_HUB_APK;
+        uploadFile(file, url,
+            function(xhr, e) { uploadProgress(file, progress, xhr, e); },
+            function(xhr, e) { uploadSuccess(file, progress, xhr, e); reboot(); },
+            function(xhr, e) { uploadFailure(file, progress, xhr, e); });
+    }
+
+    var reboot = function() {
+        console.log("reboot()");
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // nothing to do
+                } else {
+                    alert("Robot controller failed to reboot");
+                }
+            }
+        };
+        xhr.open("POST", URI_REBOOT);
+        xhr.send();
+    }
+
+    var onRenameRC = function () {
+        console.log("onRenameRC()");
+        var newName = document.getElementById("id_rc_name").value;
+        console.log("newName=" + newName);
+        var xhr = new XMLHttpRequest();
+        var params = PARAM_NAME + '=' + encodeURIComponent(newName);
+        xhr.open('POST', URI_RENAME_RC, true /*async*/);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                refreshRCInfo();
+            }
+        };
+        xhr.send(params);
+    }
+
+    var refreshRCInfo = function () {
+        loadRcInfo(function (rcInfo) {
+            if (rcInfo) {
+                scaleTextInDocumentBody(rcInfo);
+
+                document.getElementById("id_rc_name").value = rcInfo.deviceName;
+                var uaIsRobotController = rcInfo.ftcUserAgentCategory === "ROBOT_CONTROLLER";
+                hideElement(document.getElementById("id_download_logs"), uaIsRobotController);
+                hideElement(document.getElementById("id_upload_firmware"), uaIsRobotController);
+                hideElement(document.getElementById("id_update_robot_controller_application"), uaIsRobotController || !rcInfo.isREVControlHub);
+            } else {
+                document.getElementById("id_rc_name").value = '(name)';
+            }
+        });
+    };
+    refreshRCInfo();
+    
+    loadJsonObject(URI_LIST_LOG_FILES, function (logFileList) {
+        if (logFileList) {
+            document.getElementById("id_log_count").innerHTML = " (" + logFileList.length + ")";
+        }
+    });
+
+    onDownloadLogsClicked = function() {
+        loadJsonObject(URI_LIST_LOG_FILES, function (logFileList) {
+            if (logFileList) {
+                var i = 0;
+                if (isInternetExplorer()) {
+                    // the short delay allows IE to download the multiple files
+                    var interval = setInterval(function() {
+                        if (i < logFileList.length) {
+                            var logFileName = logFileList[i++];
+                            downloadFile(logFileName);
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, 100);
+                } else {
+                    for (i = 0; i < logFileList.length; i++) {
+                        downloadFile(logFileList[i]);
+                    }
+                }
+            } else {
+                alert('unable to list robot controller log files');
+            }
+        });
+    }
+
+    downloadFile = function(fileName) {
+        console.log("downloadFile(" + fileName + ")");
+        var url = URI_DOWNLOAD_FILE + "?" + PARAM_NAME + "=" + encodeURIComponent(fileName);
+        var anchor = document.createElement("A");
+        document.body.appendChild(anchor);  // firefox needs the anchor to be in the body
+        anchor.style.display = "none";
+        anchor.href = url;
+        anchor.download = fileName;
+        anchor.click();
+        document.body.removeChild(anchor);
+    }
+
+</script>
+
+</body>
+</html>

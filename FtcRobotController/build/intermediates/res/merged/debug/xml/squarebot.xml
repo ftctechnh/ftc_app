@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot name="SquareBot" type="FirstInspires-FTC-template">
+    <MotorController name="wheels" serialNumber="N/A">
+        <Motor name="left_drive" port="1" />
+        <Motor name="right_drive" port="2" />
+    </MotorController>
+    <DeviceInterfaceModule name="dim" serialNumber="N/A">
+        <OpticalDistanceSensor name="sensor_ods" port="0" />
+        <TouchSensor name="sensor_touch" port="0" />
+    </DeviceInterfaceModule>
+</Robot>

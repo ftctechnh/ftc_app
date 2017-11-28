@@ -1,0 +1,42 @@
+<category name="Time">
+  <block type="system_nanoTime"></block>
+  <category name="ElapsedTime">
+    <block type="elapsedTime2_create"></block>
+    <block type="elapsedTime2_create_withStartTime">
+      <value name="START_TIME"><shadow type="system_nanoTime"></shadow></value>
+    </block>
+    <block type="elapsedTime2_create_withResolution">
+      <value name="RESOLUTION"><shadow type="elapsedTime2_typedEnum_resolution"></shadow></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">StartTime</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">Time</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">Seconds</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">Milliseconds</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Resolution">
+      <field name="PROP">Resolution</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_reset">
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_log">
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+      <value name="LABEL"><shadow type="text"><field name="TEXT">label</field></shadow></value>
+    </block>
+    <block type="elapsedTime2_toText">
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+  </category>
+</category>

@@ -1,0 +1,529 @@
+﻿<!DOCTYPE html>
+<html>
+<!--
+  Author: lizlooney@google.com (Liz Looney)
+-->
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
+
+  <!-- Bootstrap -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+  <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="toolbox/images.css">
+  <link rel="stylesheet/less" type="text/css" href="/css/FtcBlocks.less">
+
+  <script type="text/javascript" src="/js/rc_config.js"></script>
+  <script type="text/javascript" src="/js/util.js"></script>
+
+  <!-- http://lesscss.org/usage/#using-less-in-the-browser-setting-options -->
+  <script type="text/javascript">
+  less = {
+  };
+  </script>
+  <script type="text/javascript" src="/js/less.min.js"></script>
+
+  <script type="text/javascript">
+
+  /* A note: during the inital integration of less, errors were encountered if the blockly
+     scripts here were loaded before less had completed its work; loading them manually as is
+     done below remedied that immediate problem. In hindsight, it's not clear that's truly
+     necessary: the problem may have been a side effect of something else. Perhaps, then, we could
+     go back to the use of <script> blocks. But that would require more work and more testing for
+     a change to something that now seems to be working robustly. So we leave as is, for now. */
+
+  var loadBlocklyScripts = function(callback) {
+
+    var syncScripts = [
+      "blockly/blockly_compressed.js",
+      "blockly/msg/messages.js",
+      "blockly/blocks_compressed.js",
+      "blockly/javascript_compressed.js",
+
+      "server"
+    ];
+
+    var asyncScripts = [
+      "blocks/acceleration.js",
+      "blocks/acceleration_sensor.js", 
+      "blocks/analog_input.js", 
+      "blocks/analog_output.js", 
+      "blocks/android_accelerometer.js", 
+      "blocks/android_gyroscope.js", 
+      "blocks/android_orientation.js", 
+      "blocks/android_sound_pool.js", 
+      "blocks/android_text_to_speech.js", 
+      "blocks/angular_velocity.js", 
+      "blocks/bno055imu.js", 
+      "blocks/bno055imu_parameters.js", 
+      "blocks/clipboard_util.js", 
+      "blocks/color.js", 
+      "blocks/color_sensor.js", 
+      "blocks/compass_sensor.js", 
+      "blocks/cr_servo.js", 
+      "blocks/dbg_log.js", 
+      "blocks/dc_motor.js", 
+      "blocks/digital_channel.js", 
+      "blocks/elapsed_time.js", 
+      "blocks/elapsed_time2.js", 
+      "blocks/gamepad.js", 
+      "blocks/gyro_sensor.js", 
+      "blocks/hardware_util.js", 
+      "blocks/ir_seeker_sensor.js", 
+      "blocks/led.js", 
+      "blocks/light_sensor.js", 
+      "blocks/linear_op_mode.js", 
+      "blocks/lynx_i2c_color_range_sensor.js", 
+      "blocks/magnetic_flux.js", 
+      "blocks/matrix_f.js", 
+      "blocks/misc.js", 
+      "blocks/mr_i2c_compass_sensor.js", 
+      "blocks/mr_i2c_range_sensor.js", 
+      "blocks/navigation.js", 
+      "blocks/open_gl_matrix.js", 
+      "blocks/optical_distance_sensor.js", 
+      "blocks/orientation.js", 
+      "blocks/position.js", 
+      "blocks/project_util.js", 
+      "blocks/quaternion.js", 
+      "blocks/range.js", 
+      "blocks/servo.js", 
+      "blocks/servo_controller.js", 
+      "blocks/system.js", 
+      "blocks/telemetry.js", 
+      "blocks/temperature.js", 
+      "blocks/toolbox_util.js", 
+      "blocks/touch_sensor.js", 
+      "blocks/ultrasonic_sensor.js", 
+      "blocks/vars.js", 
+      "blocks/vector_f.js", 
+      "blocks/velocity.js", 
+      "blocks/voltage_sensor.js", 
+      "blocks/vuforia.js", 
+      "blocks/vuforia_localizer.js", 
+      "blocks/vuforia_localizer_parameters.js", 
+      "blocks/vuforia_trackable.js", 
+      "blocks/vuforia_trackable_default_listener.js", 
+      "blocks/vuforia_trackables.js"
+    ];
+
+    syncLoadScripts(syncScripts, function() {
+      asyncLoadScripts(asyncScripts, callback);
+    });
+  }
+  </script>
+
+  <meta charset="utf-8">
+  <title>FTC</title>
+
+
+</head>
+<body>
+<table class="top" width="100%" height="100%">
+  <tr>
+    <td class="blank_td" colspan="2"></td>
+  </tr>
+  <tr>
+    <td class="buttons_td" colspan="2">
+      <table width="100%">
+        <tr>
+          <td>
+            <button onclick="saveButtonClicked()">Save Op Mode</button>
+            <button onclick="downloadButtonClicked()">Download Op Mode</button>
+            <a id="download_link"></a>
+            <span id="saveSuccess"></span>
+            <span id="saveFailure"></span>
+          </td>
+          <td align="right">
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="blank_td" colspan="2"></td>
+  </tr>
+  <tr>
+    <td class="project_name_td">Op Mode Name:&nbsp;<span id="project_name"></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <select id="flavor" class="project_flavor">
+        <option value="teleop">TeleOp</option>
+        <option value="autonomous">Autonomous</option>
+      </select>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Group:&nbsp;<input type="text" id="group" class="project_group"><br>
+    </td>
+    <td class="project_enabled_td" align="right">
+      <input type="checkbox" id="project_enabled" onclick="projectEnabledChanged()" checked>Enabled<br>
+    </td>
+  </tr>
+  <tr>
+    <td class="blank_td" colspan="2"></td>
+  </tr>
+  <tr>
+    <td id="blocklyArea" colspan="2"></td>
+  </tr>
+</table>
+<div id="blocklyDiv" style="position: absolute"></div>
+
+<xml id="toolbox" style="display: none">
+  <category name="Miscellaneous">
+    <block type="comment">
+        <field name="COMMENT">Enter your comment here!</field>
+    </block>
+  </category>
+</xml>
+
+<!-- https://developers.google.com/blockly/guides/configure/web/resizable -->
+<script type="text/javascript">
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('keydown', onKeyDown);
+
+  // Declare necessary blockly global variables
+  // var currentProjectName is defined in vars.js.
+  var isDirty;
+  var mouseX, mouseY;
+  var previousClipboardXml;
+  var savedClipboardContent;
+  var blocklyArea;
+  var blocklyDiv;
+  var workspace;
+  var projectEnabled = true;
+
+  // Initialize global variables & blockly itself
+  var initializeBlockly = function() {
+    isDirty = false;
+    blocklyArea = document.getElementById('blocklyArea');
+    blocklyDiv = document.getElementById('blocklyDiv');
+    workspace = Blockly.inject(blocklyDiv, {
+      media: 'blockly/media/',
+      zoom: {
+        controls: true,
+        wheel: true,
+        startScale: 1.2,
+        maxScale: 5,
+        minScale: 0.3,
+        scaleSpeed: 1.2},
+      trashcan: false,
+      toolbox: document.getElementById('toolbox')
+    });
+
+    window.addEventListener('resize', onresize, false /*false==execute in bubbling phase, true==capture phase*/);
+    onresize();
+    Blockly.svgResize(workspace);
+    window.addEventListener('beforeunload', function(e) {
+      if (!isDirty) {
+        return undefined;
+      }
+      // It doesn't matter what string we return here. The browser will always use a standard message
+      // for security reasons.
+      (e || window.event).returnValue = ''; // Gecko + IE
+      return ''; // Gecko + Webkit, Safari, Chrome etc.
+    });
+    workspace.addChangeListener(function(e) {
+      isDirty = true;
+    });
+  }
+
+  var onresize = function(e) {
+    // Compute the absolute coordinates and dimensions of blocklyArea.
+    var x = 0;
+    var y = 0;
+    var w = blocklyArea.offsetWidth;
+    var h = blocklyArea.offsetHeight;
+    var element = blocklyArea;
+    do {
+      x += element.offsetLeft;
+      y += element.offsetTop;
+      element = element.offsetParent;
+    } while (element);
+    // Position blocklyDiv over blocklyArea.
+    blocklyDiv.style.left = x + 'px';
+    blocklyDiv.style.top = y + 'px';
+    blocklyDiv.style.width = w + 'px';
+    blocklyDiv.style.height = h + 'px';
+    Blockly.svgResize(workspace);
+  };
+
+  // We can't seem to actually initialize blockly successfully until less is finished making the css
+  // sheets for us. Otherwise, blocklyArea appears incorrectly sized. So, simply, we wait.
+  less.pageLoadFinished.then(function() {
+    loadBlocklyScripts(function() {
+      initializeBlockly();
+      initialize();
+    });
+  });
+
+  function initialize() {
+    fetchJavaScriptForHardware(function(jsHardware, errorMessage) {
+      if (jsHardware) {
+        var newScript = document.createElement('script');
+        newScript.setAttribute('type', 'text/javascript');
+        newScript.innerHTML = jsHardware;
+        document.getElementsByTagName('head')[0].appendChild(newScript);
+        initializeToolbox();
+        initializeBlocks();
+      } else  {
+        alert(errorMessage);
+      }
+    });
+  }
+
+  function initializeToolbox() {
+    fetchToolbox(function(xmlToolbox, errorMessage) {
+      if (xmlToolbox) {
+        workspace.updateToolbox(xmlToolbox);
+        addToolboxIcons(workspace);
+      } else  {
+        alert(errorMessage);
+      }
+    });
+  }
+
+  function initializeBlocks() {
+    var projectParameterValue = getParameterByName('project');
+    if (isValidProjectName(projectParameterValue)) {
+      fetchBlkFileContent(projectParameterValue, function(blkFileContent, errorMessage) {
+        if (blkFileContent) {
+          // The blocks content is up to and including the first </xml>.
+          var i = blkFileContent.indexOf('</xml>');
+          var blocksContent = blkFileContent.substring(0, i + 6);
+          loadBlocksIntoWorkspace(projectParameterValue, blocksContent);
+
+          // The extra xml content is after the first </xml>.
+          // Set OpModeMeta and Enabled UI components.
+          var extraXml = blkFileContent.substring(i + 6); // 6 is length of </xml>
+          if (extraXml.length > 0) {
+            // The code that formats the extra xml is formatExtraXml()- in
+            // lib/Blocks/src/main/java/com/google/blocks/ftcrobotcontroller/util/ProjectsUtil.java.
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(extraXml, 'text/xml');
+            var opModeMeta = xmlDoc.getElementsByTagName('OpModeMeta');
+            if (opModeMeta.length >= 1) {
+              var flavor = opModeMeta[0].getAttribute('flavor');
+              if (flavor) {
+                var select = document.getElementById('flavor');
+                for (var i = 0; i < select.options.length; i++) {
+                  if (select.options[i].value == flavor) {
+                    select.selectedIndex = i;
+                    break;
+                  }
+                }
+              }
+              var group = opModeMeta[0].getAttribute('group');
+              if (group) {
+                document.getElementById('group').value = group;
+              }
+            }
+            var extra = xmlDoc.getElementsByTagName('Enabled');
+            if (extra.length >= 1) {
+              var enabledString = extra[0].getAttribute('value');
+              if (enabledString) {
+                projectEnabled = (enabledString == 'true');
+                document.getElementById('project_enabled').checked = projectEnabled;
+              }
+            }
+          }
+        } else {
+          alert(errorMessage);
+        }
+      });
+    } else {
+      alert('Error: The specified project name is not valid.');
+    }
+  }
+
+  /**
+   * Get a URL parameter by name.
+   * From http://stackoverflow.com/a/901144
+   */
+  function getParameterByName(name) {
+    url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  /**
+   * Loads the given blocksContent into the workspace.
+   */
+  function loadBlocksIntoWorkspace(projectParameterValue, blocksContent) {
+    currentProjectName = projectParameterValue;
+    document.title = 'FTC - ' + currentProjectName;
+    var escapedProjectName = currentProjectName.replace(/&/g,'&amp;');
+    document.getElementById('project_name').innerHTML = escapedProjectName;
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(blocksContent), workspace);
+    // Use a timeout so we clear isDirty after the changeevent comes through.
+    setTimeout(function() {
+      isDirty = false;
+    }, 1);
+  }
+
+  function onMouseMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  }
+
+  function onKeyDown(e) {
+    if (Blockly.mainWorkspace.options.readOnly || Blockly.utils.isTargetInput(e)) {
+      // No key actions on readonly workspaces.
+      // When focused on an HTML text input widget, don't trap any keys.
+      return;
+    }
+    if (e.altKey || e.ctrlKey || e.metaKey) {
+      if (Blockly.selected &&
+          Blockly.selected.isDeletable() && Blockly.selected.isMovable()) {
+        if (e.keyCode == 67 || // 'c' for copy.
+            e.keyCode == 88) { // 'x' for cut.
+          // Use a timeout so we can capture the blockly clipboard.
+          setTimeout(function() {
+            captureBlocklyClipboard();
+          }, 1);
+        }
+      }
+
+      if (e.keyCode == 86) { // 'v' for paste.
+        // Override blockly's default paste behavior.
+        paste();
+        e.stopImmediatePropagation();
+      }
+    }
+  }
+
+  function captureBlocklyClipboard() {
+    if (Blockly.clipboardXml_) {
+      if (previousClipboardXml != Blockly.clipboardXml_) {
+        previousClipboardXml = Blockly.clipboardXml_;
+
+        // Convert to text.
+        var xml = goog.dom.createDom('xml');
+        xml.appendChild(Blockly.clipboardXml_);
+        var serializer = new XMLSerializer();
+        var clipboardContent = serializer.serializeToString(xml);
+        xml.removeChild(Blockly.clipboardXml_);
+
+        // Save clipboard content.
+        savedClipboardContent = clipboardContent;
+        saveClipboardContent(clipboardContent, function(success, errorMessage) {
+          if (! success) {
+            console.log(errorMessage);
+          }
+        });
+      }
+    }
+  }
+
+  function paste() {
+    // Fetch clipboard text
+    fetchClipboardContent(function(clipboardContent, errorMessage) {
+      if (!clipboardContent) {
+        // If we failed to fetch the clipboard, use the saved clipboard content.
+        clipboardContent = savedClipboardContent;
+      }
+      if (!clipboardContent) {
+        return;
+      }
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(clipboardContent, 'text/xml');
+      var blocks = xmlDoc.getElementsByTagName('block');
+      if (blocks.length > 0) {
+        var block = blocks[0];
+        // Place the pasted block near mouse.
+        var svg = workspace.getParentSvg();
+        var point = svg.createSVGPoint();
+        point.x = mouseX;
+        point.y = mouseY;
+        point = point.matrixTransform(svg.getScreenCTM().inverse());
+        point = point.matrixTransform(workspace.getCanvas().getCTM().inverse());
+        block.setAttribute('x', point.x);
+        block.setAttribute('y', point.y);
+        workspace.paste(block);
+      }
+    });
+  }
+
+  function projectEnabledChanged() {
+    var enabledCheckbox = document.getElementById('project_enabled');
+    var isChecked = enabledCheckbox.checked;
+    enableProject(currentProjectName, isChecked, function(success, errorMessage) {
+      if (success) {
+        projectEnabled = isChecked;
+      } else {
+        // Undo the checkbox change in the UI.
+        enabledCheckbox.checked = projectEnabled;
+        console.log(errorMessage);
+      }
+    });
+  }
+
+  /**
+   * Saves the workspace blocks (including OpMode flavor, group, enable) and generated javascript.
+   * Called from Save button onclick.
+   */
+  function saveButtonClicked() {
+    saveProjectNow();
+  }
+
+  function saveProjectNow(opt_success_callback) {
+    if (currentProjectName) {
+      // Get the blocks as xml (text).
+      var blocksContent = Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
+      // Don't bother saving if there are no blocks.
+      if (blocksContent.indexOf('<block') > -1) {
+        // Generate JavaScript code.
+        Blockly.JavaScript.addReservedWords('callRunOpMode');
+        addReservedWordsForHardware();
+        var jsFileContent = Blockly.JavaScript.workspaceToCode(workspace);
+        var select = document.getElementById('flavor');
+        var flavor = select.options[select.selectedIndex].value;
+        var group = document.getElementById('group').value;
+        saveProject(currentProjectName, blocksContent, jsFileContent, flavor, group, projectEnabled,
+            function(success, errorMessage) {
+          if (success) {
+            isDirty = false;
+            document.getElementById('saveSuccess').innerHTML = 'Save completed successfully.';
+            document.getElementById('saveFailure').innerHTML = '';
+            window.setTimeout(function() {
+              document.getElementById('saveSuccess').innerHTML = '';
+            }, 3000);
+            if (opt_success_callback) {
+              opt_success_callback();
+            }
+          } else {
+            document.getElementById('saveSuccess').innerHTML = '';
+            document.getElementById('saveFailure').innerHTML = errorMessage;
+          }
+        });
+      }
+    } else {
+      alert('The specified project name is not valid');
+    }
+  }
+
+  /**
+   * After saving the project, downloads the blk file.
+   * Called from Download button onclick.
+   */
+  function downloadButtonClicked() {
+    saveProjectNow(function() {
+      fetchBlkFileContent(currentProjectName, function(blkFileContent, errorMessage) {
+        if (blkFileContent) {
+          var a = document.getElementById('download_link');
+          a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(blkFileContent);
+          a.download = currentProjectName + '.blk';
+          a.click();
+        } else {
+          alert(errorMessage);
+        }
+      });
+    });
+  }
+</script>
+</body>
+</html>

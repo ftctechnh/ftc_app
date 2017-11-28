@@ -1,0 +1,38 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="procedures_defnoreturn" deletable="false" editable="false" x="50" y="50">
+    <field name="NAME">runOpMode</field>
+    <comment pinned="true" h="80" w="160">This function is executed when this Op Mode is selected from the Driver Station.</comment>
+    <statement name="STACK">
+      <block type="comment">
+        <field name="COMMENT">Put initialization blocks here.</field>
+        <next>
+          <block type="linearOpMode_waitForStart">
+            <next>
+              <block type="comment">
+                <field name="COMMENT">Put run blocks here.</field>
+                <next>
+                  <block type="controls_whileUntil">
+                    <field name="MODE">WHILE</field>
+                    <value name="BOOL">
+                      <block type="linearOpMode_opModeIsActive">
+                      </block>
+                    </value>
+                    <statement name="DO">
+                      <block type="comment">
+                        <field name="COMMENT">Put loop blocks here.</field>
+                        <next>
+                          <block type="telemetry_update">
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</xml>

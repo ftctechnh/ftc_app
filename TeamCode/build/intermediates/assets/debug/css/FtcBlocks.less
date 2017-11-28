@@ -1,0 +1,80 @@
+@import "/css/core.less";
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: sans-serif;
+  overflow: hidden;
+  margin: 0px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+button {
+  font-size: small;
+  cursor: pointer;
+}
+
+.top {
+  background-color: @backgroundMedium;
+}
+
+.logo_td {
+  padding: 5px;
+}
+
+.buttons_td {
+  padding: 5px;
+}
+
+a.help {
+  color: white;
+}
+
+.blank_td {
+  background-color: white;
+  padding: 3px;
+}
+
+.project_name_td {
+  background-color: @backgroundMediumLight;
+  color: white;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.project_flavor {
+  color: @textMediumDark;
+}
+
+.project_group {
+  color: @textMediumDark;
+}
+
+.project_enabled_td {
+  background-color: @backgroundMediumLight;
+  color: white;
+  padding: 5px;
+  font-weight: bold;
+}
+
+#saveSuccess {
+  color: @textOkay;
+}
+
+#saveFailure {
+  color: @textError;
+}
+
+#blocklyArea {
+  height: 99%;
+  background: white;
+}
+svg.blocklyWsDragSurface {
+  overflow: visible;
+}

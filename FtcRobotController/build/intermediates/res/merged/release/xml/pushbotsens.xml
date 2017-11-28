@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot name="PushBotSens" type="FirstInspires-FTC-template">
+    <MotorController name="wheels" serialNumber="N/A">
+        <Motor name="left_drive" port="1" />
+        <Motor name="right_drive" port="2" />
+    </MotorController>
+    <MotorController name="tools" serialNumber="N/A">
+        <Motor name="left_arm" port="1" />
+    </MotorController>
+    <ServoController name="servos" serialNumber="N/A">
+        <Servo name="left_hand" port="1" />
+        <Servo name="right_hand" port="2" />
+    </ServoController>
+    <DeviceInterfaceModule name="dim" serialNumber="N/A">
+        <IrSeekerV3 name="sensor_ir" port="0"/>
+        <TouchSensor name="sensor_touch" port="0"/>
+        <OpticalDistanceSensor name="sensor_ods" port="0" />
+    </DeviceInterfaceModule>
+</Robot>

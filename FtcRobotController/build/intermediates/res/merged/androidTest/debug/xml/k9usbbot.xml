@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot name="K9USBBot" type="FirstInspires-FTC-template">
+    <MotorController name="wheels" serialNumber="N/A">
+        <Motor name="left_drive" port="1"/>
+        <Motor name="right_drive" port="2"/>
+    </MotorController>
+    <ServoController name="servos" serialNumber="N/A">
+        <Servo name="arm" port="1"/>
+        <Servo name="claw" port="6"/>
+    </ServoController>
+    <LegacyModuleController name="legacy module" serialNumber="N/A">
+        <IrSeeker name="sensor_ir" port="2"/>
+        <TouchSensor name="sensor_touch" port="3"/>
+        <LightSensor name="sensor_light" port="4"/>
+    </LegacyModuleController>
+</Robot>

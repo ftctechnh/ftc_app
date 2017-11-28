@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".configuration.EditSwapUsbDevices"
+              android:orientation="vertical">
+
+    <include layout="@layout/header"
+        android:id="@+id/included_header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <include layout="@layout/button_list"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/gray_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/swapCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="(replaced at runtime)"/>
+
+        <!-- an anchor for pop-up feedback text when we need same -->
+        <LinearLayout
+            android:id="@+id/feedbackAnchor"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <include layout="@layout/red_line"/>
+
+        <RelativeLayout
+            android:id="@+id/devices_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="@string/captionAvailableSwapDevices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- the ListView is intrinsically scrollable; we need not wrap it in a ScrollView -->
+            <ListView
+              android:id="@+id/controllersList"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"/>
+
+            <!-- also used for orange text placement -->
+            <LinearLayout
+                android:id="@+id/orange_end_of_list_anchor"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

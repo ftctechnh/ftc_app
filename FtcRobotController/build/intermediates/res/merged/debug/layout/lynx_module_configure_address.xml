@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="0dp"
+              tools:context=".FtcLynxModuleAddressUpdateActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        >
+
+        <TextView
+            android:id="@+id/moduleSerialText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="200"
+            android:text="SerialNumber"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/moduleAddressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/moduleSerialText"
+            android:text="current address: 3">
+        </TextView>
+
+    </RelativeLayout>
+
+    <Spinner
+        android:id="@+id/spinnerChooseAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:prompt="@string/choice_prompt_module_address"
+        >
+    </Spinner>
+
+</LinearLayout>

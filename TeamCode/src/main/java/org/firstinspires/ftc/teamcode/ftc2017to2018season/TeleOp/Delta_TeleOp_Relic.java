@@ -39,7 +39,7 @@ public class Delta_TeleOp_Relic extends OpMode {
     public int IVFSM;
 
     public double openClaw = 0;
-    public double closeClaw = 0.45;
+    public double closeClaw = 0.6;
     public double upClaw = 0;
     public double downClaw = 0.5;
 

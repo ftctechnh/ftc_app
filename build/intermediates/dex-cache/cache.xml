@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\Documents\ftc_app\FtcRobotController\build\intermediates\bundles\default\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6fb416af0f833ab5ec388e04278ca39a6af40d9e">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_9382586dfc51456e52a2a7f86e27a2ca6abd8321.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\support-annotations-23.4.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="5a214d3b1b12e72f4fb0d5d5d8d0ec43c96de2b5">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\support-annotations-23.4.0_cd6c9f8764555184ee54f927341403d7f7db0deb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\09c6cfd272716912eb37968af23a9f13439fd02a\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="9403be210676ed196cdcc64c7391b9ae2361c174">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_175dcaf4c8aeacc62cd8ad664340450e56731d97.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\292b598549a9fec4e96480e120f674ec29a5e7ef\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="75bdc736b17d8f39d246beac357cb3a0e007fcfa">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_aa03c2cd62b571e34db328852a983502122670a3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="e259d01a014f392930432e85cc1ac9bf807a92df">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_37a62634f40bc34757b3ef9629692087adc16a41.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\Vuforia.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="91b46366eb9f8203073ee2935087c097c888c0ed">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\Vuforia_be65a46df1c7ef831dc69771e67925aabd0186bc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\29325961a035b7868c964b9bde345f55d72ecf6e\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="9dafed45e330aec14abcce05bdb7bbdb2a2d7092">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_ab13d4a7de45a66b51119b041917ee17d3c85538.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\292b598549a9fec4e96480e120f674ec29a5e7ef\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="75bdc736b17d8f39d246beac357cb3a0e007fcfa">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_aa03c2cd62b571e34db328852a983502122670a3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c2abba0621a5319232804767218216568263aa37">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_7592faefd86596912b5d4b6af2fd945326ffbb46.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="c2abba0621a5319232804767218216568263aa37">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_7592faefd86596912b5d4b6af2fd945326ffbb46.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\09c6cfd272716912eb37968af23a9f13439fd02a\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9403be210676ed196cdcc64c7391b9ae2361c174">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_175dcaf4c8aeacc62cd8ad664340450e56731d97.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\gson-2.8.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="e118dd0900e4a18fb928ebb8df2d9fbda78f2b5d">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\gson-2.8.0_648a94154fe7fbe1d9e5b4820cb1c50212301d32.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\Vuforia.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="91b46366eb9f8203073ee2935087c097c888c0ed">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\Vuforia_be65a46df1c7ef831dc69771e67925aabd0186bc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\support-annotations-23.4.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="5a214d3b1b12e72f4fb0d5d5d8d0ec43c96de2b5">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\support-annotations-23.4.0_cd6c9f8764555184ee54f927341403d7f7db0deb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e259d01a014f392930432e85cc1ac9bf807a92df">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_37a62634f40bc34757b3ef9629692087adc16a41.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\29325961a035b7868c964b9bde345f55d72ecf6e\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9dafed45e330aec14abcce05bdb7bbdb2a2d7092">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_ab13d4a7de45a66b51119b041917ee17d3c85538.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\gson-extras-0.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b30c2655badcc7ce97f84e49f777b7dd154bad57">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\gson-extras-0.2.1_e1c59679816795de1bdf57aeb0e5f1119a6503a2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\gson-extras-0.2.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="b30c2655badcc7ce97f84e49f777b7dd154bad57">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\gson-extras-0.2.1_e1c59679816795de1bdf57aeb0e5f1119a6503a2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\27b740de9ca7ce67993c43310000cb9cdb00382e\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="96cbbea552fe9bf3c56540c7e4912eb5cf72301e">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_90fb5054e6db496766f08ed2f1204c793d205a33.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\javac.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c576121aac49e547b39aedfb1daa29782db4166c">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\javac_5827e6c81825e435a38d32177460eca5a2ffebaf.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\gson-2.8.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e118dd0900e4a18fb928ebb8df2d9fbda78f2b5d">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\gson-2.8.0_648a94154fe7fbe1d9e5b4820cb1c50212301d32.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\2972a3a7686b3ccc2edc1753d40ec562772c9c99\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9da82f9829b6cafb8407989729481220ca06c905">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_2f5fa8e665830a313301a68aba152198669f195c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\27b740de9ca7ce67993c43310000cb9cdb00382e\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="96cbbea552fe9bf3c56540c7e4912eb5cf72301e">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_90fb5054e6db496766f08ed2f1204c793d205a33.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\Documents\ftc_app\FtcRobotController\build\intermediates\bundles\default\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="63096d280a6d0792ddbe5601216c3bc2bb685e8c">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_9382586dfc51456e52a2a7f86e27a2ca6abd8321.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\2972a3a7686b3ccc2edc1753d40ec562772c9c99\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="9da82f9829b6cafb8407989729481220ca06c905">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_2f5fa8e665830a313301a68aba152198669f195c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\boswo\.android\build-cache\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\output\jars\libs\javac.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="c576121aac49e547b39aedfb1daa29782db4166c">
+        <dex dex="C:\Users\boswo\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\javac_5827e6c81825e435a38d32177460eca5a2ffebaf.jar" />
+    </item>
+
+</items>

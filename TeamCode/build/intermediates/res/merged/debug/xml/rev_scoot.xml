@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot name="Rev Scoot" type="FirstInspires-FTC-template">
+    <LynxUsbDevice name="REV Hub" serialNumber="" parentModuleAddress="2">
+        <LynxModule name="Expansion Hub" port="2">
+            <RevRoboticsCoreHexMotor name="left_drive" port="0" />
+            <RevRoboticsCoreHexMotor name="right_drive" port="1" />
+            <RevRoboticsCoreHexMotor name="left_arm" port="2" />
+            <RevRoboticsCoreHexMotor name="collector" port="3" />
+            <Servo name="left_hand" port="0" />
+            <Servo name="right_hand" port="1" />
+            <DigitalDevice name="sensor_digital" port="0" />
+            <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+        </LynxModule>
+    </LynxUsbDevice>
+</Robot>
