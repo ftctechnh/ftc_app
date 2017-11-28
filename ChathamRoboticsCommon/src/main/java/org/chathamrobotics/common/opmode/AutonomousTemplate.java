@@ -49,8 +49,10 @@ public abstract class AutonomousTemplate<R extends Robot> extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         try {
             setup();
+            telemetry.update();
             waitForStart();
             run();
+            debug();
         } catch (StoppedException | InterruptedException err) {
             // Do nothing
         } catch (Exception err) {

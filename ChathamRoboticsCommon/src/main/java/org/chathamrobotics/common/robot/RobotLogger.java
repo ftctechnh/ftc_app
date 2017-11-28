@@ -359,6 +359,13 @@ public class RobotLogger {
         fatal(String.format(Locale.US, format, args));
     }
 
+    /**
+     * Updates the telemetry
+     */
+    public void update() {
+        telemetry.update();
+    }
+
     protected void logTele(Level level, String line) {
         if(level == Level.FATAL) {
             RobotLog.setGlobalErrorMsg(line);

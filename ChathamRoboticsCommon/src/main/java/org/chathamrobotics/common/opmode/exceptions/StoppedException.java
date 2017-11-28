@@ -13,7 +13,7 @@ package org.chathamrobotics.common.opmode.exceptions;
  * Thrown when a opmode is no longer active
  */
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class StoppedException extends Exception {
+public class StoppedException extends RuntimeException {
     /**
      * Creates a new instance of StoppedException
      */

@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.chathamrobotics.common.Controller;
 import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.robot.RobotFace;
-import org.chathamrobotics.common.systems.GyroHandler;
+import org.chathamrobotics.common.systems.GyroHandlerF;
 import org.chathamrobotics.common.systems.HolonomicDriver;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -42,7 +42,7 @@ public class Robot9853 extends Robot {
     public DcMotor leftLift;
     public DcMotor rightLift;
     public JewelDisplacer jewelDisplacer;
-    private GyroHandler gyroHandler;
+    private GyroHandlerF gyroHandler;
 
     public static Robot9853 build(OpMode opMode) {
         return new Robot9853(opMode.hardwareMap, opMode.telemetry);
@@ -59,7 +59,7 @@ public class Robot9853 extends Robot {
         leftLift = getHardwareMap().dcMotor.get("LeftLift");
         rightLift = getHardwareMap().dcMotor.get("RightLift");
         jewelDisplacer = JewelDisplacer.build(this);
-        gyroHandler = GyroHandler.build(this);
+        gyroHandler = GyroHandlerF.build(this);
 
         leftLift.setDirection(DcMotorSimple.Direction.REVERSE);
         jewelDisplacer.raise();
@@ -94,6 +94,13 @@ public class Robot9853 extends Robot {
         );
     }
 
+    public void rotate(double target, Runnable callback) {
+        gyroHandler.untilAtTarget(-target, GYRO_TOERANCE_RAD, diff -> {
+            driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / Math.PI, 1, -1));
+            callback.run();
+        }, () -> driver.stop());
+    }
+
     public void rotate(double target, AngleUnit angleUnit) {
         gyroHandler.untilAtTarget(-target, GYRO_TOERANCE, angleUnit, (double diff) -> {
                     driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / angleUnit.fromDegrees(180), 1, -1));
@@ -103,14 +110,39 @@ public class Robot9853 extends Robot {
         );
     }
 
+    public void rotate(double target, AngleUnit angleUnit, Runnable callback) {
+        gyroHandler.untilAtTarget(-target, GYRO_TOERANCE, angleUnit, diff -> {
+            driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / angleUnit.fromDegrees(180), 1, -1));
+            callback.run();
+        }, () -> driver.stop());
+    }
+
     public void rotateSync(double target) throws InterruptedException {
         gyroHandler.untilAtTargetSync(-target, (double diff) ->
                 driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / Math.PI, 1, -1)));
         driver.stop();
     }
 
+    public void rotateSync(double taget, Runnable callback) throws  InterruptedException {
+        gyroHandler.untilAtTargetSync(-taget, diff -> {
+            driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / Math.PI, 1, -1));
+            callback.run();
+        });
+
+        driver.stop();
+    }
+
     public void rotateSync(double target, AngleUnit angleUnit) throws InterruptedException {
         gyroHandler.untilAtTargetSync(-target, angleUnit, (double diff) -> driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / angleUnit.fromDegrees(180), 1, -1)));
+        driver.stop();
+    }
+
+    public void rotateSync(double target, AngleUnit angleUnit, Runnable callback) throws InterruptedException {
+        gyroHandler.untilAtTargetSync(-target, angleUnit, diff -> {
+            driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / angleUnit.fromDegrees(180), 1, -1));
+            callback.run();
+        });
+
         driver.stop();
     }
 
