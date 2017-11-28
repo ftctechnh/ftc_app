@@ -43,9 +43,6 @@ public class AutoDrive {
         stopMotors();
     }
 
-    public void driveLeftRight(double xLeft, double xRight, double yLeft, double yRight) {
-        driveSpeeds(xLeft - yLeft, yRight + xRight, yLeft + xLeft, xRight - yRight);
-    }
 
     public void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
         FrontLeft.setPower(clip(flSpeed));
@@ -116,7 +113,7 @@ public class AutoDrive {
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
         driveSpeeds(fl, fr, rl, rr);
-        while (heading < degrees) {
+        while (heading > degrees) {
             heading = gyro.getHeading();
         }
         stopMotors();
