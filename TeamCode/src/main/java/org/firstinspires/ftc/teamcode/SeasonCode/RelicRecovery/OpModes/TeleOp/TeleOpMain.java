@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.directcurrent.core.gamecontroller.Controller;
+import org.directcurrent.season.relicrecovery.jewelarm.JewelArm;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
+import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Lift.Lift;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.RelicGrabber.RelicGrabber;
 
 
@@ -130,6 +132,34 @@ public class TeleOpMain extends LinearOpMode
         {
             _base.relicGrabber.setRotateState(RelicGrabber.RotateState.STILL);
         }
+
+
+        if(_controller2.leftStickButtonClicked())
+        {
+            _base.lift.resetEncoder();
+        }
+
+
+        if(_controller2.dDown())
+        {
+            _base.lift.toPos(Lift.Position.LOW);
+        }
+
+        if(_controller2.dLeft())
+        {
+            _base.lift.toPos(Lift.Position.MID_LOW);
+        }
+
+        if(_controller2.dRight())
+        {
+            _base.lift.toPos(Lift.Position.MID_HIGH);
+        }
+
+        if(_controller2.dUp())
+        {
+            _base.lift.toPos(Lift.Position.HIGH);
+        }
+
 
         // IMU fast calibration
         if(_controller1.leftStickButtonClicked())

@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.directcurrent.season.relicrecovery.jewelarm.JewelArm;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain;
@@ -36,6 +37,9 @@ public class Base extends RobotBase
 
     /** Relic Grabber component of our Relic Recovery robot */
     public RelicGrabber relicGrabber = new RelicGrabber();
+
+    /** Jewel Arm component of our Relic Recovery robot */
+    public JewelArm jewelArm = new JewelArm();
 
     /** Built in IMU in the Rev module */
     public REVIMU imu = new REVIMU();
@@ -70,6 +74,7 @@ public class Base extends RobotBase
         glyphGrabber.init(this);
         relicExtender.init(this);
         relicGrabber.init(this);
+        jewelArm.init(this);
         imu.init(this , "imu" , params);
 
 
@@ -124,5 +129,6 @@ public class Base extends RobotBase
         glyphGrabber.stop();
         relicExtender.stop();
         relicGrabber.stop();
+        jewelArm.stop();
     }
 }

@@ -28,7 +28,7 @@ class JewelArm: RobotComponent()
     /**
      * Initializes the Jewel Arm
      */
-    override fun init(BASE: RobotBase?)
+    override public fun init(BASE: RobotBase?)
     {
         super.init(BASE)
 
@@ -41,13 +41,22 @@ class JewelArm: RobotComponent()
      */
     fun setState(state: State)
     {
-//        when(state)
-//        {
-//            State.DOWN -> _armServo?.position = 1.0
-//
-//            State.UP -> _armServo?.position = 0.0
-//        }
+        when(state)
+        {
+            State.DOWN -> _armServo?.position = 0.2
+
+            State.UP -> _armServo?.position = 0.7
+        }
 
         base.telMet().tagWrite("Arm Pos" , _armServo?.position)
+    }
+
+
+    /**
+     * Stops the Jewel Arm
+     */
+    override fun stop()
+    {
+        // Nothing :)
     }
 }

@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Toggle;
+
+import static org.directcurrent.season.relicrecovery.ToggleTelMetKt.outputLift;
 
 
 /**
@@ -15,21 +17,21 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 @SuppressWarnings("WeakerAccess")
 public class Lift extends RobotComponent
 {
-    public DcMotor _liftMotor;
+    private DcMotor _liftMotor;
 
-    private UtilToggle _powered = new UtilToggle();
+    private Toggle _powered = new Toggle();
 
 
     /**
      * Position to lift to
      */
     @SuppressWarnings("unused")
-    enum Position
+    public enum Position
     {
         LOW(0) ,
-        MID_LOW(200) ,
-        MID_HIGH(400) ,
-        HIGH(600);
+        MID_LOW(1500) ,
+        MID_HIGH(3000) ,
+        HIGH(4500);
 
         private int _encoderPos;
 
@@ -87,11 +89,15 @@ public class Lift extends RobotComponent
      */
     public void run(double POWER_VALUE)
     {
-        final int CLOSE_ENOUGH = 20;
+        final int CLOSE_ENOUGH = 2;
+        final int LOW_BOUND = -20;
+
+        POWER_VALUE *= .5;
 
         // Set target position the moment the joystick isn't moved. But only once!
         if(_powered.isPressed(POWER_VALUE != 0))
         {
+            _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             _liftMotor.setTargetPosition(_liftMotor.getCurrentPosition());
         }
 
@@ -102,7 +108,7 @@ public class Lift extends RobotComponent
             if(Math.abs(_liftMotor.getTargetPosition() - _liftMotor.getCurrentPosition()) >
                     CLOSE_ENOUGH)
             {
-                _liftMotor.setPower(1);
+                _liftMotor.setPower(.5);
             }
             else
             {
@@ -111,7 +117,52 @@ public class Lift extends RobotComponent
         }
         else                        // Manual override always takes priority :)
         {
+            _liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             _liftMotor.setPower(POWER_VALUE);
         }
+
+        if(_liftMotor.getCurrentPosition() <= LOW_BOUND && POWER_VALUE <= 0)
+        {
+            _liftMotor.setPower(0);
+        }
+
+        if(outputLift)
+        {
+            _outputTelMet();
+        }
+    }
+
+
+    /**
+     * Resets the lift encoder count- be *very* careful when using this
+     */
+    public void resetEncoder()
+    {
+        _liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+
+    /**
+     * Outputs telemetry to current OpMode
+     */
+    private void _outputTelMet()
+    {
+        base.telMet().write("--- Lift ---");
+        base.telMet().tagWrite("Power" , _liftMotor.getPower());
+        base.telMet().tagWrite("Position" , _liftMotor.getCurrentPosition());
+        base.telMet().tagWrite("Target" , _liftMotor.getTargetPosition());
+        base.telMet().newLine();
+        base.telMet().newLine();
+    }
+
+
+    /**
+     * Stops the lift
+     */
+    @Override
+    public void stop()
+    {
+        _liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _liftMotor.setPower(0);
     }
 }
