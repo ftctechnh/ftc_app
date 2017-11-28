@@ -41,9 +41,9 @@ public class CompAuto extends Autonomous9853 {
 
         int color = robot.jewelDisplacer.getColor();
 
-        if (isTeamColor(color))
+        if ((isRedTeam() && isRed(color)) || (! isRedTeam() && isBlue(color)))
             hitJewel(-1);
-        else
+        else if ((isRedTeam() && isBlue(color)) || (! isRedTeam() && isRed(color)))
             hitJewel(1);
     }
 

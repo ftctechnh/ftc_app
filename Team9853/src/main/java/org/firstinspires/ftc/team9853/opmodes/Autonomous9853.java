@@ -22,5 +22,6 @@ public abstract class Autonomous9853 extends AutonomousTemplate<Robot9853> {
     @Override
     public void setup() {
         robot = Robot9853.build(this);
+        robot.init();
     }
 }

@@ -9,10 +9,13 @@ package org.firstinspires.ftc.team9853;
  * @Last Modified time: 9/17/2017
  */
 
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 import org.chathamrobotics.common.Controller;
 import org.chathamrobotics.common.robot.Robot;
@@ -30,9 +33,14 @@ import org.firstinspires.ftc.team9853.systems.JewelDisplacer;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Robot9853 extends Robot {
 
+    private static final int GYRO_TOERANCE = 15;
+    private static final double GYRO_TOERANCE_RAD = Math.toRadians(25);
+    private static final int GYRO_SCALE_FACTOR = 2;
+
     public HolonomicDriver driver;
     public GlyphGripper glyphGripper;
-    public DcMotor lift;
+    public DcMotor leftLift;
+    public DcMotor rightLift;
     public JewelDisplacer jewelDisplacer;
     private GyroHandler gyroHandler;
 
@@ -48,42 +56,61 @@ public class Robot9853 extends Robot {
     public void init() {
         driver = HolonomicDriver.build(this);
         glyphGripper = GlyphGripper.build(this);
-        lift = getHardwareMap().dcMotor.get("Lift");
+        leftLift = getHardwareMap().dcMotor.get("LeftLift");
+        rightLift = getHardwareMap().dcMotor.get("RightLift");
         jewelDisplacer = JewelDisplacer.build(this);
         gyroHandler = GyroHandler.build(this);
 
+        leftLift.setDirection(DcMotorSimple.Direction.REVERSE);
         jewelDisplacer.raise();
         glyphGripper.close();
+        gyroHandler.init();
     }
 
     @Override
-    public void start(){
+    public void start() {
         glyphGripper.open();
+
+        while (! gyroHandler.isInitialized());
+    }
+
+    @Override
+    public void stop() {
+        jewelDisplacer.raise();
+
+        super.stop();
+    }
+
+    public void setLiftPower(double power) {
+        leftLift.setPower(power);
+        rightLift.setPower(power);
     }
 
     public void rotate(double target) {
-        gyroHandler.untilAtTarget(target, (double diff) ->
-                        driver.rotate(diff / Math.PI),
+        gyroHandler.untilAtTarget(-target, GYRO_TOERANCE_RAD, (double diff) ->
+                        driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / Math.PI, 1, -1)),
                 () ->
                         driver.stop()
         );
     }
 
     public void rotate(double target, AngleUnit angleUnit) {
-        gyroHandler.untilAtTarget(target, angleUnit, (double diff) ->
-                        driver.rotate(diff / angleUnit.fromDegrees(180)),
+        gyroHandler.untilAtTarget(-target, GYRO_TOERANCE, angleUnit, (double diff) -> {
+                    driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / angleUnit.fromDegrees(180), 1, -1));
+                },
                 () ->
                         driver.stop()
         );
     }
 
     public void rotateSync(double target) throws InterruptedException {
-        gyroHandler.untilAtTargetSync(target, (double diff) -> driver.rotate(diff / Math.PI));
+        gyroHandler.untilAtTargetSync(-target, (double diff) ->
+                driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / Math.PI, 1, -1)));
         driver.stop();
     }
 
     public void rotateSync(double target, AngleUnit angleUnit) throws InterruptedException {
-        gyroHandler.untilAtTargetSync(target, angleUnit, (double diff) -> driver.rotate(diff / angleUnit.fromDegrees(180)));
+        gyroHandler.untilAtTargetSync(-target, angleUnit, (double diff) -> driver.rotate(Range.clip(diff * GYRO_SCALE_FACTOR / angleUnit.fromDegrees(180), 1, -1)));
         driver.stop();
     }
 

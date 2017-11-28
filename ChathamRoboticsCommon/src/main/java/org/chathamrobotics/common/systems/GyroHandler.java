@@ -336,7 +336,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(Math.toRadians(diff));
 
-            return diff < tolerance;
+            return diff > tolerance;
         }, () -> {});
     }
 
@@ -353,7 +353,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(angleUnit.fromDegrees(diff));
 
-            return diff < tolerance;
+            return diff > tolerance;
         }, () -> {});
     }
 
@@ -371,7 +371,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(Math.toRadians(diff));
 
-            return diff < tol;
+            return diff > tol;
         }, () -> {});
     }
 
@@ -390,7 +390,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(angleUnit.fromDegrees(diff));
 
-            return diff < tol;
+            return diff > tol;
         }, () -> {});
     }
 
@@ -407,7 +407,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(Math.toRadians(diff));
 
-            return diff < tolerance;
+            return diff > tolerance;
         }, callback);
     }
 
@@ -425,7 +425,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(angleUnit.fromDegrees(diff));
 
-            return diff < tolerance;
+            return diff > tolerance;
         }, callback);
     }
 
@@ -444,7 +444,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(Math.toRadians(diff));
 
-            return diff < tol;
+            return diff > tol;
         }, callback);
     }
 
@@ -464,7 +464,7 @@ public class GyroHandler implements System {
 
             updateCallback.run(angleUnit.fromDegrees(diff));
 
-            return diff < tol;
+            return diff > tol;
         }, callback);
     }
 

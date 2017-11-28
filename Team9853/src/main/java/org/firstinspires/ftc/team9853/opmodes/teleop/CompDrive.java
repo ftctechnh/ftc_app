@@ -22,10 +22,10 @@ public class CompDrive extends Tele9853 {
     @Override
     public void loop() {
         if (controller1.right_trigger > 0)
-            robot.lift.setPower(controller1.right_trigger);
+            robot.setLiftPower(controller1.right_trigger);
         else
-            robot.lift.setPower(
-                    controller2.invert(controller1.left_trigger)
+            robot.setLiftPower(
+                    -controller1.left_trigger
             );
 
         if (controller1.aState == Controller.ButtonState.TAPPED)

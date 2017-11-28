@@ -15,7 +15,7 @@ public class GlyphGripper {
     private static final int RIGHT_INDEX = 0;
     private static final int LEFT_INDEX = 1;
     private static final double[] CLOSED_POSITIONS = {1, 0};
-    private static final double[] OPEN_POSITIONS = {0.4, 0.6};
+    private static final double[] OPEN_POSITIONS = {0.2, 0.8};
     private static final double[] GRIP_POSITIONS = {0.55, 0.45};
 
     private Servo leftServo;
@@ -28,8 +28,8 @@ public class GlyphGripper {
 
     public static GlyphGripper build(HardwareMap hardwareMap, RobotLogger logger) {
         return new GlyphGripper(
-                hardwareMap.servo.get("LeftGripper"),
-                hardwareMap.servo.get("RightGripper"),
+                hardwareMap.servo.get("LeftGripperArm"),
+                hardwareMap.servo.get("RightGripperArm"),
                 logger
         );
     }

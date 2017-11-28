@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.chathamrobotics.common.RGBAColor;
+import org.chathamrobotics.common.hardware.modernrobotics.ModernRoboticsLimitSwitch;
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
 import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.robot.RobotLogger;
@@ -61,7 +62,13 @@ public class JewelDisplacer {
     public static JewelDisplacer build(HardwareMap hardwareMap, HardwareListener hardwareListener, RobotLogger logger) {
         return new JewelDisplacer(
                 hardwareMap.servo.get("JewelArm"),
-                RackAndPinion.build(hardwareMap, hardwareListener, logger),
+                new RackAndPinion(
+                        hardwareMap.crservo.get("JewelArmShifter"),
+                        new ModernRoboticsLimitSwitch(hardwareMap.digitalChannel.get("UpperLimit")),
+                        new ModernRoboticsLimitSwitch(hardwareMap.digitalChannel.get("LowerLimit")),
+                        hardwareListener,
+                        logger
+                ),
                 (ModernRoboticsI2cColorSensor) hardwareMap.colorSensor.get("JewelColor"),
                 logger
         );

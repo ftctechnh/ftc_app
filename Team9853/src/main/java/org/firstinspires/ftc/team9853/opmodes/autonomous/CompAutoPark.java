@@ -25,7 +25,10 @@ public class CompAutoPark extends CompAuto {
         super.run();
         if (! isHit) return;
 
-        robot.driver.setDrivePower(isRedTeam() ? 0 : 180 , AngleUnit.DEGREES, 1, 0);
+        robot.driver.setDrivePower(90, AngleUnit.DEGREES, 1, 0);
+        Thread.sleep(750);
+
+        robot.rotateSync( 180, AngleUnit.DEGREES);
 
         Thread.sleep(1000);
         robot.driver.stop();

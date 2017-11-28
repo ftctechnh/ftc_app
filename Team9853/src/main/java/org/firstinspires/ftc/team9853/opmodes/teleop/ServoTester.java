@@ -30,6 +30,7 @@ public class ServoTester extends TeleOpTemplate {
 
     @Override
     public void init() {
+        super.init();
         logger = new RobotLogger("ServoTester", telemetry);
     }
 

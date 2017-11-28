@@ -25,9 +25,14 @@ public abstract class TeleOpTemplate<R extends Robot> extends OpMode {
      */
     public R robot;
 
-    protected Controller controller1 = new Controller(gamepad1);
-    protected Controller controller2 = new Controller(gamepad2);
+    protected Controller controller1;
+    protected Controller controller2;
 
+    @Override
+    public void init() {
+        controller1 = new Controller(gamepad1);
+        controller2 = new Controller(gamepad2);
+    }
 
     @Override
     public void internalPostLoop() {

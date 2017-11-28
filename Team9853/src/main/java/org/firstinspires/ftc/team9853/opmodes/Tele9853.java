@@ -18,6 +18,8 @@ import org.firstinspires.ftc.team9853.Robot9853;
 public abstract class Tele9853 extends TeleOpTemplate<Robot9853> {
     @Override
     public void init() {
+        super.init();
+
         robot = Robot9853.build(this);
         robot.init();
     }
