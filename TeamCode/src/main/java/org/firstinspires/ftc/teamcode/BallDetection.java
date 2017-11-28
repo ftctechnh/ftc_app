@@ -85,7 +85,7 @@ public class BallDetection extends LinearOpMode {
                 Color.colorToHSV(bm.getPixel(i, j), pix);
                 // pix[0] = H, pix[1] = S, pix[2] = V
 
-                pixels[i][j] = isBlue(pix);
+                pixels[i / coarseness][j / coarseness] = isBlue(pix);
                 pixelCount += 1;
             }
         }
