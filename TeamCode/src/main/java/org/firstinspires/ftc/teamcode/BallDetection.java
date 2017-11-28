@@ -9,20 +9,28 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CloseableFrame;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.vuforia.*;
-import java.nio.ByteBuffer;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import java.nio.ByteBuffer;
+import android.graphics.Color;
 
+@TeleOp(name="BallGay", group="Pushbot")
 public class BallDetection extends LinearOpMode {
 
     private Image getPicture() {
 
-        CloseableFrame frame = null; //takes the frame at the head of the queue
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true); //enables RGB565 format for the image
+        locale.setFrameQueueCapacity(1);
+
+        CloseableFrame frame; //takes the frame at the head of the queue
         try {
             frame = locale.getFrameQueue().take();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            telemetry.addData("e",e.getMessage());
+            return null;
         }
 
         Image rgb = null;
@@ -46,6 +54,56 @@ public class BallDetection extends LinearOpMode {
 
     HardwareDRive robot = new HardwareDRive();
 
+    int extractR(int a) {
+        return Color.red(a);
+    }
+
+    int extractG(int a) {
+        return Color.green(a);
+    }
+
+    int extractB(int a) {
+        return Color.blue(a);
+    }
+
+    private boolean isBlue(float[] pix) {
+        return (pix[0] < 128);
+    }
+
+    private void processBitmap(Bitmap bm) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        int coarseness = 40;
+        int pixelCount = 0;
+        float[] pix = {0, 0, 0};
+
+        boolean[][] pixels = new boolean[width / coarseness][height / coarseness];
+
+        for (int i = 0; i < width; i += coarseness) {
+            for (int j = 0; j < height; j += coarseness) {
+                Color.colorToHSV(bm.getPixel(i, j), pix);
+                // pix[0] = H, pix[1] = S, pix[2] = V
+
+                pixels[i][j] = isBlue(pix);
+                pixelCount += 1;
+            }
+        }
+
+        telemetry.addData("PixCount",pixelCount);
+
+        width /= coarseness;
+        height /= coarseness;
+
+        for (int i = 0; i < width; i++) {
+            String p = "";
+            for (int j = 0; j < height; j++) {
+                p = p + (pixels[i][j] ? "##" : "..");
+            }
+            telemetry.addData("",p);
+        }
+    }
+
     @Override
     public void runOpMode() {
         long lastPictureTime = 0;
@@ -61,16 +119,74 @@ public class BallDetection extends LinearOpMode {
         Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true); //enables RGB565 format for the image
         locale.setFrameQueueCapacity(1); //tells VuforiaLocalizer to only store one frame at a time
 
+        while (!opModeIsActive()) {
+            sleep(250);
+        }
+
         while (opModeIsActive()) {
 
             time = System.currentTimeMillis();
+            Bitmap b = null;
+            ByteBuffer l;
 
             if (time > lastPictureTime + pictureDelta) {
                 lastPictureTime = time;
-                byte[] p = getPicture().getPixels().array();
-                Bitmap c = BitmapFactory.decodeByteArray(p, 0, p.length);
+                Image k = getPicture();
 
-                telemetry.addData("Middle Pixel: ", c.getPixel(c.getWidth() / 2, c.getHeight() / 2));
+                if (k != null) {
+                    if (b == null) {
+                        b = Bitmap.createBitmap(k.getHeight(), k.getWidth(), Bitmap.Config.RGB_565);
+                    }
+
+                    l = k.getPixels();
+                    b.copyPixelsFromBuffer(l);
+
+                    telemetry.addData("BufferHeight", k.getHeight());
+                    telemetry.addData("BufferWidth", k.getWidth());
+
+                    telemetry.addData("BitmapHeight", b.getHeight());
+                    telemetry.addData("BitmapWidth", b.getWidth());
+
+                    int width = b.getWidth();
+                    int height = b.getHeight();
+
+                    int pixel0 = b.getPixel(0, 0);
+                    int pixel1 = b.getPixel(0, height - 1);
+                    int pixel2 = b.getPixel(width - 1, height - 1);
+                    int pixel3 = b.getPixel(width - 1, 0);
+
+                    processBitmap(b);
+
+                    float[] pix = new float[3];
+                    Color.colorToHSV(pixel0, pix);
+
+                    telemetry.addData("HSV", pix[0]);
+                    telemetry.addData("HSV", pix[1]);
+                    telemetry.addData("HSV", pix[2]);
+
+                    telemetry.addData("Red", Color.red(pixel0));
+                    telemetry.addData("Blue", Color.blue(pixel0));
+                    telemetry.addData("Green", Color.green(pixel0));
+
+                    // Top right
+
+                    telemetry.addData("Red", Color.red(pixel1));
+                    telemetry.addData("Blue", Color.blue(pixel1));
+                    telemetry.addData("Green", Color.green(pixel1));
+
+                    telemetry.addData("Red", Color.red(pixel2));
+                    telemetry.addData("Blue", Color.blue(pixel2));
+                    telemetry.addData("Green", Color.green(pixel2));
+
+                    telemetry.addData("Red", Color.red(pixel3));
+                    telemetry.addData("Blue", Color.blue(pixel3));
+                    telemetry.addData("Green", Color.green(pixel3));
+
+                    // Bottom right
+
+                    telemetry.addData("time", time);
+                    telemetry.update();
+                }
             }
         }
     }
