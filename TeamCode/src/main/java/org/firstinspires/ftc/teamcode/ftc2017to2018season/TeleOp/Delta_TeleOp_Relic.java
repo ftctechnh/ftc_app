@@ -43,8 +43,6 @@ public class Delta_TeleOp_Relic extends OpMode {
     public double upClaw = 0;
     public double downClaw = 0.5;
 
-
-
     
 
 /*
