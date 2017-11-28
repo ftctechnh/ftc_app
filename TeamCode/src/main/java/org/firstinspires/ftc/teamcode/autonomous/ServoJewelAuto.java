@@ -31,23 +31,22 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
  * Created by BAbel on 11/2/2017.
  */
 
-@Disabled
+//@Disabled
 @Autonomous(name = "Blake tryina code (servo)", group = "Competition OpModes")
 public class ServoJewelAuto extends LinearOpMode {
 
     private Robot robot;
     private DcMotor raiser;
-    private Servo grabber;
+    private DcMotor grabber;
     private MecanumDrive drivetrain;
     private IMUWrapper imuWrapper;
     private VuforiaWrapper vuforiaWrapper;
 
-    private Servo colorRod;
+    private Servo armExtender;
+    private Servo armRotator;
     private ColorSensorWrapper colorSensorWrapper;
 
     private RelicRecoveryVuMark relicRecoveryVuMark;
-
-    //do a sevro
 
     @Override
     public void runOpMode(){
@@ -56,13 +55,15 @@ public class ServoJewelAuto extends LinearOpMode {
         robot = new Robot(hardwareMap);
         drivetrain = (MecanumDrive)robot.getDrivetrain();
         raiser = hardwareMap.dcMotor.get("raiser");
-        grabber = hardwareMap.servo.get("grabber");
+        grabber = hardwareMap.dcMotor.get("grabber");
         imuWrapper = new IMUWrapper(hardwareMap);
         vuforiaWrapper = new VuforiaWrapper(hardwareMap);
 
         //Assuming other hardware not yet on the robot
-        colorRod = hardwareMap.servo.get("rod");
-        colorRod.setPosition(0); // up position
+        armRotator = hardwareMap.servo.get("armRotator");
+        armExtender = hardwareMap.servo.get("armExtender");
+        armExtender.setPosition(1.0);
+        armRotator.setPosition(0.5);
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
         vuforiaWrapper.getLoader().getTrackables().activate();
@@ -77,20 +78,25 @@ public class ServoJewelAuto extends LinearOpMode {
         }
 
         //STEP 2: Hitting the jewel
-        colorRod.setPosition(0.5); //servo in 'out' position
+        armExtender.setPosition(0.5); //servo in 'out' position
 
-        while (Math.abs(imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y) < 4) {
-            //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
-            if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
-                drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.2, 0);
-
-            } else {
-                drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 0.2, 0);
-            }
+        //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
+        if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
+            armRotator.setPosition(0.7);
+        } else {
+            armRotator.setPosition(0.3);
         }
 
+        sleep(5000);
+
+        armExtender.setPosition(1.0);
+        armRotator.setPosition(0.5);
+
+        sleep(10000);
+
         //STEP 3: Get to center tape thing
-        while (imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y < 36 || colorSensorWrapper.getRGBValues()[2] > 0.5) {
+        while (//imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y < 36 ||
+                colorSensorWrapper.getRGBValues()[2] < 0.5) {
             drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.5, 0);
         }
 
