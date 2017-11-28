@@ -78,7 +78,6 @@ public class RedRecovery extends LinearOpMode {
         telemetry.addData("Anything you need to know before starting", 1);
         telemetry.update();
         waitForStart();
-        // This line just says that anything after this point runs after you hit start, which is kind of important to make sure the robot doesn't run during the initilization phas
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         heading = 0;
@@ -89,7 +88,9 @@ public class RedRecovery extends LinearOpMode {
         servo.setPosition(0.9);
         servo.setPosition(0.9);
         Thread.sleep(1000);
-        rotations((32/ C), .5);
+        inches(32, .5);
+        turnRightGyro(90, .5);
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -136,7 +137,9 @@ public class RedRecovery extends LinearOpMode {
         stopmoving();
 
     }
-
+    void inches(float inches, double power){
+        rotations((inches/ C), power);
+    }
     void turnLeftGyro(int degree, double Power)throws InterruptedException{
         Log.d("swarm", "turnLeftGyro()   degree " + degree + "   Power " + Power);
         int startHeading = getHeading();
