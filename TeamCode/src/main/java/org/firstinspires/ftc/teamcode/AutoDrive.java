@@ -12,6 +12,7 @@ public class AutoDrive {
     private DcMotor FrontRight;
     private DcMotor RearLeft;
     private DcMotor RearRight;
+    private double cir = 3.937 * Math.PI;
     private int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight) {
@@ -25,7 +26,7 @@ public class AutoDrive {
 
     public void driveTranslateRotate(double x, double y, double z, double distance, double speed) {
         resetEncoders();
-        double clicks = Math.abs(distance * CPR);
+        double clicks = Math.abs(distance * CPR/cir);
         double fl = clip(y + -x + z);
         double fr = clip(y + x - z);
         double rl = clip(y + x + z);
