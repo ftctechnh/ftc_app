@@ -10,7 +10,7 @@
     Distance: Centimeters
     Angle: Degrees (mathematical orientation)
  */
-package org.firstinspires.ftc.robotcontroller.internal.Core;
+package org.firstinspires.ftc.robotcontroller.internal.Core.Utility;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -25,6 +25,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
+import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 
 
 /**

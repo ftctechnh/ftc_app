@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Toggle;
 
 
 @TeleOp(name = "Parallel Command Test" , group = "Prototypes")
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 @SuppressWarnings("unused")
 public class OpTest extends LinearOpMode
 {
-    private UtilToggle toggleCommand = new UtilToggle();
+    private Toggle toggleCommand = new Toggle();
 
     private CountCommand command = new CountCommand();
 

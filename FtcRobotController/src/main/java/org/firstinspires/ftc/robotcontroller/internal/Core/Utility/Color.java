@@ -20,12 +20,12 @@ import org.opencv.core.Scalar;
  * alliance color.
  */
 @SuppressWarnings("unused")
-public class UtilColor
+public class Color
 {
     /**
      * Enumeration that stores colors
      */
-    public enum Color
+    public enum ColorID
     {
         // Scalars are done in BGR (blue, green, red)
         RED("RED"     , new Scalar(0   , 0   , 255)) ,
@@ -44,7 +44,7 @@ public class UtilColor
          *
          * @param NAME String name to set to the color
          */
-        Color(final String NAME)
+        ColorID(final String NAME)
         {
             _name = NAME;
         }
@@ -56,7 +56,7 @@ public class UtilColor
          * @param NAME String name to set to the color
          * @param SCALAR Scalar color values
          */
-        Color(final String NAME , final Scalar SCALAR)
+        ColorID(final String NAME , final Scalar SCALAR)
         {
             _name = NAME;
             _scalar = SCALAR;

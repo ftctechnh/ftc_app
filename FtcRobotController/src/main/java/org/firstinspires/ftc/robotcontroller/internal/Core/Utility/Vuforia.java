@@ -33,7 +33,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * simplified retrieval of data.
  */
 @SuppressWarnings({"FieldCanBeLocal", "WeakerAccess"})
-public class UtilVuforia
+public class Vuforia
 {
     // You're not going to guess this :)
     private final String _KEY = "AVL5SH7/////AAAAGQHMTrmZFkVaqLgyIFXlUot8Bj4E0gdKiux+X0Pw/1vkCO02" +

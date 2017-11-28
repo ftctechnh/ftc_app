@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Relic
 
 
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
@@ -102,6 +101,17 @@ public class RelicGrabber extends RobotComponent
             _twister.setPower(0.05);
 
         }
+    }
+
+
+    /**
+     * Stops the relic grabber
+     */
+    @Override
+    public void stop()
+    {
+        setGrabState(GrabState.STOP);
+        setRotateState(RotateState.STILL);
     }
 }
 

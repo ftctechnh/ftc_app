@@ -68,9 +68,9 @@ public class Base extends RobotBase
         drivetrain.init(this);
         lift.init(this);
         glyphGrabber.init(this);
-        imu.init(this , "imu" , params);
         relicExtender.init(this);
         relicGrabber.init(this);
+        imu.init(this , "imu" , params);
 
 
         // Flipping IMU axis
@@ -105,5 +105,24 @@ public class Base extends RobotBase
 
         // Dependency setting
         drivetrain.setDependencies(imu);
+    }
+
+
+    /**
+     * Stops the Relic Recovery robot.
+     *
+     * So imaging you're going down the interstate when suddenly a brick wall materializes in front
+     * of you. That's basically what this is supposed to do, except with no injuries.
+     *
+     * Remember, safety FIRST ;)
+     */
+    @Override
+    public void stop()
+    {
+        drivetrain.stop();
+        lift.stop();
+        glyphGrabber.stop();
+        relicExtender.stop();
+        relicGrabber.stop();
     }
 }

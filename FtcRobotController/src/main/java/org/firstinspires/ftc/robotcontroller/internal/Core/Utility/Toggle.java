@@ -17,7 +17,7 @@ package org.firstinspires.ftc.robotcontroller.internal.Core.Utility;
  * Utility class used to manage events on button presses in a runtime loop
  */
 @SuppressWarnings({"unused" , "WeakerAccess"})
-public final class UtilToggle
+public final class Toggle
 {
     /**
      * Holds all the states that a toggle can be in. When pressing a button, there are 3 states:

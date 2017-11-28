@@ -15,22 +15,22 @@ package org.firstinspires.ftc.robotcontroller.internal.Core.Utility;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilColor.Color;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Color.ColorID;
 
 
 /**
  * Utility for autonomous-specific functionality, including the autonomous pre-run initializer
  */
 @SuppressWarnings({"unused" , "WeakerAccess"})
-public abstract class UtilAuto extends LinearOpMode
+public abstract class AutoMenu extends LinearOpMode
 {
     private final long DEFAULT_START_DELAY = 0;             // Default delay before auto executes
-    private final Color DEFAULT_TEAM_COLOR = Color.RED;     // Default team color
+    private final ColorID DEFAULT_TEAM_COLOR = ColorID.RED;     // Default team color
 
     protected long startDelay = DEFAULT_START_DELAY;        // Start delay
-    protected Color teamColor = DEFAULT_TEAM_COLOR;         // Team color
+    protected ColorID teamColor = DEFAULT_TEAM_COLOR;         // Team color
 
-    private UtilClock adjustPulsar = new UtilClock();     // Used to adjust period between
+    private Clock adjustPulsar = new Clock();     // Used to adjust period between
                                                             // adjustment of values
 
 
@@ -42,9 +42,9 @@ public abstract class UtilAuto extends LinearOpMode
         final int SMALL_JUMP = 50;
         final int LARGE_JUMP = 500;
 
-        UtilToggle switchAlliance = new UtilToggle();
-        UtilToggle restoreDefaults = new UtilToggle();
-        UtilToggle quitSetup = new UtilToggle();
+        Toggle switchAlliance = new Toggle();
+        Toggle restoreDefaults = new Toggle();
+        Toggle quitSetup = new Toggle();
 
         // Create an array of 1 element because I want pass-by-reference
         long[] startingTime = new long[1];
@@ -135,11 +135,11 @@ public abstract class UtilAuto extends LinearOpMode
         switch(teamColor)
         {
             case RED:
-                teamColor = Color.BLUE;
+                teamColor = ColorID.BLUE;
                 break;
 
             default:
-                teamColor = Color.RED;
+                teamColor = ColorID.RED;
         }
     }
 
@@ -159,7 +159,7 @@ public abstract class UtilAuto extends LinearOpMode
         final int MIN_PERIOD = 100;
         int period;
 
-        period = (int) UtilBasic.scaleValue(input);
+        period = (int) Util.scaleValue(input);
 
         if(input != 0)
             period = (int)Math.abs(1 / input * MIN_PERIOD);

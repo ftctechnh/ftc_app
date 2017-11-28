@@ -29,4 +29,11 @@ public class Base extends RobotBase
 
         imu.init(this , "imu" , params);
     }
+
+
+    @Override
+    public void stop()
+    {
+        // Nothing :)
+    }
 }

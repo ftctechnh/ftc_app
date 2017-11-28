@@ -15,7 +15,7 @@ package org.directcurrent.core.gamecontroller
 
 
 import com.qualcomm.robotcore.hardware.Gamepad
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Toggle
 
 
 /**
@@ -30,21 +30,21 @@ class Controller
     private var _gamePad: Gamepad? = null
 
     // Button toggle variables
-    private var _aToggle = UtilToggle()
-    private var _bToggle = UtilToggle()
-    private var _xToggle = UtilToggle()
-    private var _yToggle = UtilToggle()
+    private var _aToggle = Toggle()
+    private var _bToggle = Toggle()
+    private var _xToggle = Toggle()
+    private var _yToggle = Toggle()
 
-    private var _leftBumperToggle = UtilToggle()
-    private var _rightBumperToggle = UtilToggle()
+    private var _leftBumperToggle = Toggle()
+    private var _rightBumperToggle = Toggle()
 
-    private var _leftStickButtonToggle = UtilToggle()
-    private var _rightStickButtonToggle = UtilToggle()
+    private var _leftStickButtonToggle = Toggle()
+    private var _rightStickButtonToggle = Toggle()
 
-    private var _dUpToggle = UtilToggle()
-    private var _dDownToggle = UtilToggle()
-    private var _dLeftToggle = UtilToggle()
-    private var _dRightToggle = UtilToggle()
+    private var _dUpToggle = Toggle()
+    private var _dDownToggle = Toggle()
+    private var _dLeftToggle = Toggle()
+    private var _dRightToggle = Toggle()
 
 
     private var _receivingInput = false

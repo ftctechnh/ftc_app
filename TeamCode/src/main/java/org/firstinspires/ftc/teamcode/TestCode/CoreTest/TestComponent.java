@@ -25,4 +25,11 @@ class TestComponent extends RobotComponent
     {
         motor.setPower(POWER);
     }
+
+
+    @Override
+    public void stop()
+    {
+        // Nothing :)
+    }
 }

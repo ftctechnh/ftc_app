@@ -5,3 +5,9 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase
 
 
 class Base: RobotBase()
+{
+    override fun stop()
+    {
+        // Nothing :)
+    }
+}

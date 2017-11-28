@@ -73,4 +73,11 @@ class Spools extends RobotComponent
                 break;
         }
     }
+
+
+    @Override
+    public void stop()
+    {
+        // Nothing :)
+    }
 }

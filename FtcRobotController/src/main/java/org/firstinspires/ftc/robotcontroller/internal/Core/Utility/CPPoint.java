@@ -22,7 +22,7 @@ package org.firstinspires.ftc.robotcontroller.internal.Core.Utility;
  * need to be calculated. Once you call the constructor, the coordinate type does not matter.
  */
 @SuppressWarnings("unused")
-public final class UtilPoint
+public final class CPPoint
 {
     // Polar coordinates (radius , angle)
     private double _r;
@@ -51,7 +51,7 @@ public final class UtilPoint
      * @param RIGHT The right side of the coordinate
      * @param TYPE The type of coordinate, Polar or Cartesian
      */
-    public UtilPoint(final double LEFT , final double RIGHT , final Type TYPE)
+    public CPPoint(final double LEFT , final double RIGHT , final Type TYPE)
     {
         setCoordinates(LEFT , RIGHT , TYPE);
     }
@@ -86,7 +86,7 @@ public final class UtilPoint
         }
 
         // Constricts angle between 0 and 360
-        _theta = UtilBasic.trimAngle((int)_theta);
+        _theta = Util.trimAngle((int)_theta);
     }
 
 

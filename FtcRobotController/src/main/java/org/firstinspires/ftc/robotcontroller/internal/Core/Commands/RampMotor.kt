@@ -4,7 +4,7 @@ package org.directcurrent.core.commands
 
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilClock
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Clock
 
 
 /**
@@ -50,7 +50,7 @@ class RampMotor(private var _motor: DcMotor): RobotCommand()
      */
     override fun runSequentially()
     {
-        val clock = UtilClock()
+        val clock = Clock()
         val startTime = System.currentTimeMillis()
 
         var motorPower = _startPower
