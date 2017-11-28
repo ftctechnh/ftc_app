@@ -23,7 +23,6 @@ import org.firstinspires.ftc.team11248.Robot11248;
 public class Vuforia_V2 {
 
     HardwareMap hardwareMap;
-
     public static final String vuforiaKey = "AeTwV0H/////AAAAGfe7ayWmjE9+nI9k65aoO+NQIIujZBIX8AxeoVDf9bwLLNvQ6QwvM+Clc3CE/8Pumv5guDuXMxkERpyJTzSb50PcrH9y/lJC9Zfh0FlPVkkvDnZVNsPEIEsg0Ta5oDlz1jIZmSB/Oxu2qRAyo4jXIsWSmDMdQdpNrwkyKbLfl/CT7PWe23RAdF8oQf5XqnSbKoapQali8MH4+HPOR8r13/k+cZv9eKqUvknmxZPiyJbp4oFzqrWDJSUqwTGQLEdbp76Hjrkuxu3Pa/I4jQSt3RRRbAUrZeV1Z79cLKg+22SvrhUKKzwxeEMcgp4rQzrMXhTL+wE+6sBczuguHmPtWA5w/NsUlevRaLbEionbyXYN";
 
     VuforiaLocalizer vuforia;
@@ -40,7 +39,15 @@ public class Vuforia_V2 {
         this.hardwareMap = hardwareMap;
     }
 
+    public void init(){
+        init(true, false);
+    }
+
     public void init(boolean debug){
+        init (true, debug);
+    }
+
+    public void init(boolean frontCamera, boolean debug){
 
         VuforiaLocalizer.Parameters parameters;
 
@@ -54,16 +61,12 @@ public class Vuforia_V2 {
 
         parameters.vuforiaLicenseKey = Robot11248.vuforiaKey;
 
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = frontCamera?VuforiaLocalizer.CameraDirection.FRONT:VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         this.relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         this.relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
-    }
-
-    public void init(){
-        init(false);
     }
 
     public void activateTracking(){
@@ -74,7 +77,7 @@ public class Vuforia_V2 {
         this.relicTrackables.deactivate();
     }
 
-    public RelicRecoveryVuMark getImage(){
+    public RelicRecoveryVuMark getLastImage(){
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(this.relicTemplate);
 

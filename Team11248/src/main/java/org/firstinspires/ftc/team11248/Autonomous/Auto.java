@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.team11248;
+package org.firstinspires.ftc.team11248.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.chathamrobotics.common.robot.Robot;
+import org.firstinspires.ftc.team11248.Robot11248;
 
 /**
  * Created by Tony_Air on 11/18/17.
@@ -24,21 +25,6 @@ public class Auto extends LinearOpMode{
         robot.drive(0,-1,0);
         sleep(1100);
         robot.drive(0,0,0);
-
-
-//        robot.lowerJewelArm();
-
-//        boolean isBlue = robot.isJewelBlue();
-//
-//        robot.drive(0,0, isBlue?-1:1);
-//        sleep(1000);
-//        robot.drive(0,0, isBlue?1:-1);
-//        sleep(1000);
-//        robot.drive(0,0, 0);
-
-//        robot.raiseJewelArm();
-
-
 
 
 

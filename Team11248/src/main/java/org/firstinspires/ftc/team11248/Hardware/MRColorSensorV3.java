@@ -12,9 +12,8 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 public class MRColorSensorV3 {
 
     private I2cDeviceSynch colorSynch;
-    private byte[] colorCache;
 
-    private int colorNumber;
+    private final int COLOR_THRESHOLD = 5;
 
 
         /**
@@ -24,6 +23,32 @@ public class MRColorSensorV3 {
          * @param COLOR_SENSOR_ADDR - the I2C address of the color sensor
          */
 
+        /*
+            Address	Function
+            0x00 Sensor Firmware Revision
+            0x01 Manufacturer Code
+            0x02 Sensor ID Code
+            0x03 Command
+            0x04 Color Number
+            0x05 Red Value
+            0x06 Green Value
+            0x07 Blue Value
+            0x08 White Value
+            0x09 Color Index Number
+            0x0A Red Index
+            0x0B Green Index
+            0x0C Blue Index
+            0x0D Undefined
+            0x0E/0x0F Red Reading (lsb/msb)
+            0x10/0x11 Green Reading (lsb/msb)
+            0x12/0x13 Blue Reading (lsb/msb)
+            0x14/0x15 White Reading (lsb/msb)
+            0x16/0x17 Normalized Red Reading (lsb/msb)
+            0x18/0x19 Normalized Green Reading (lsb/msb)
+            0x1A/0x1B Normalized Blue Reading (lsb/msb)
+            0x1C/0x1D Normalized White Reading (lsb/msb)
+         */
+
     public MRColorSensorV3(I2cDevice color_sensor, byte COLOR_SENSOR_ADDR){
 
         this.colorSynch = new I2cDeviceSynchImpl(color_sensor, I2cAddr.create8bit(COLOR_SENSOR_ADDR), false);
@@ -31,65 +56,62 @@ public class MRColorSensorV3 {
 
     }
 
-    public void update(){
-        colorCache = colorSynch.read(0x04, 1);
-        colorNumber = (colorCache[0] & 0XFF);
-    }
-
-    public void writeData(int ireg, int bVal){
-        colorSynch.write8(ireg, bVal);
-
-          /*
-            Address	Function
-            0x03	Command
-            0x04	Color Number
-            0x05	Red Value
-            0x06	Green Value
-            0x07	Blue Value
-            0x08	White Value
-         */
+    /**
+     * Writes data to command register 0x03
+     * 0x00 Active Mode (LED ON)
+     * 0x01 Passive Mode (LED OFF)
+     * 0x35 50Hz Operating Frequency
+     * 0x36 60Hz Operating Frequency
+     * 0x42 Black Level Calibration
+     * 0x43 White Balance Calibration
+     * @param bVal - value being written to command register
+     */
+    public void writeData(int bVal){
+        colorSynch.write8(3, bVal);
     }
 
         /*
-         * Activates colorSensor (Active mode senses color of static non light emmiting object)
-         * aka. turns colorSensor led on
+         * Activates/ deactivates colorSensor
+         * (Active mode senses color of static non light emmiting object)
+         * (Passive mode senses color of light emmiting object)
+         * aka. turns colorSensor led on/off
          */
 
-    public void setActiveMode(){ //Senses color
-        colorSynch.write8(3,0);
+    public void enableLed(boolean on){ //Senses color
+        writeData(on?0:1);
     }
 
 
-        /*
-         * Turns the colorSensor passive (Passive mode senses color of light emmiting from objects i.e. beacons)
-         * aka. turns colorSensor led off
-         */
-
-    public void setPassiveMode(){ //Senses light
-        colorSynch.write8(3,1);
-    }
 
         /**
          * @return and int corresponding to the color being seen by the colorSensor
          * http://modernroboticsinc.com/color-sensor
          */
     public int getColorNumber(){
-        this.update();
-        return colorNumber;
+        byte[] val = colorSynch.read(0x04, 1);
+        return (val[0] & 0XFF);
     }
 
     public double red(){
-        byte[] color = colorSynch.read(0x05, 1);
+        byte[] color = colorSynch.read(0x16, 1);
         return (color[0] & 0XFF);
     }
 
     public double green(){
-        byte[] color = colorSynch.read(0x06, 1);
+        byte[] color = colorSynch.read(0x18, 1);
         return (color[0] & 0XFF);
     }
 
     public double blue(){
-        byte[] color = colorSynch.read(0x07, 1);
+        byte[] color = colorSynch.read(0x1A, 1);
         return (color[0] & 0XFF);
+    }
+
+    public boolean isBlue(){
+        return (blue() > (red() + COLOR_THRESHOLD));
+    }
+
+    public boolean isRed(){
+        return ((blue() + COLOR_THRESHOLD) < red());
     }
 }

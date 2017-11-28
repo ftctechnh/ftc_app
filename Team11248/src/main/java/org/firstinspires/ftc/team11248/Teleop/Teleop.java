@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.team11248;
+package org.firstinspires.ftc.team11248.Teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.team11248.Hardware.HolonomicDriver_11248;
+import org.firstinspires.ftc.team11248.Robot11248;
 
 /**
  * Created by Tony_Air on 11/6/17.
@@ -35,14 +37,16 @@ public class Teleop extends OpMode {
             e.printStackTrace();
         }
 
+        robot.setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.setOffsetAngle(0);
-        robot.turnTelemetryOn(true);
+        robot.turnTelemetryOn(false);
+        robot.deactivateColorSensors();
     }
 
     @Override
     public void loop() {
 
-        //Controls Wheels
+        //Direction Contron
         if (gamepad1.dpad_up) {
             robot.setOffsetAngle(0);
             robot.backClaw.close();
@@ -56,15 +60,9 @@ public class Teleop extends OpMode {
         }
 
 
-        robot.drive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        robot.drive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, true);
 
         robot.setFastMode(gamepad1.right_bumper);
-
-        if (gamepad1.y && !prevGP1.y)
-            robot.toggleSlow();
-
-        telemetry.addData("", (robot.getIsSlow() ? "SLOW" : "FAST"));
-
 
         if(robot.getOffsetAngle() == HolonomicDriver_11248.BACK_OFFSET){
             if (gamepad1.a && !prevGP1.a){
@@ -81,9 +79,9 @@ public class Teleop extends OpMode {
 
             //Sets arm motor to whatever right trigger is
             if (gamepad1.right_trigger > 0)
-                robot.setBackLiftPower(-gamepad1.right_trigger);
+                robot.setBackLiftPower(gamepad1.right_trigger);
             else if (gamepad1.left_trigger > 0)
-                robot.setBackLiftPower(gamepad1.left_trigger);
+                robot.setBackLiftPower(-gamepad1.left_trigger);
             else
                 robot.setBackLiftPower(0);
 
@@ -103,9 +101,9 @@ public class Teleop extends OpMode {
 
             //Sets arm motor to whatever right trigger is
             if (gamepad1.right_trigger > 0)
-                robot.setFrontLiftPower(-gamepad1.right_trigger);
+                robot.setFrontLiftPower(gamepad1.right_trigger);
             else if (gamepad1.left_trigger > 0)
-                robot.setFrontLiftPower(gamepad1.left_trigger);
+                robot.setFrontLiftPower(-gamepad1.left_trigger);
             else
                 robot.setFrontLiftPower(0);
 
