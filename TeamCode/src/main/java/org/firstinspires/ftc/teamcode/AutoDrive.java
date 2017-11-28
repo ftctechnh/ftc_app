@@ -24,7 +24,7 @@ public class AutoDrive {
         this.RearRight = RearRight;
     }
 
-    public void driveTranslateRotate(double x, double y, double z, double distance, double speed) {
+    public void driveTranslateRotate(double x, double y, double z, double distance) {
         resetEncoders();
         double clicks = Math.abs(distance * CPR/cir);
         double fl = clip(y + -x + z);
@@ -33,7 +33,7 @@ public class AutoDrive {
         double rr = clip(y + -x - z);
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
-        driveSpeeds(speed * fl, speed * fr, speed * rl, speed * rr);
+        driveSpeeds(fl, fr, rl, rr);
         while (!(isMotorAtTarget(FrontLeft, fl / high * clicks)) && (!(isMotorAtTarget(FrontRight, fr / high * clicks))) && (!(isMotorAtTarget(RearLeft, rl / high * clicks))) && (!(isMotorAtTarget(RearRight, rr / high * clicks)))) {
 
         }
@@ -90,10 +90,10 @@ public class AutoDrive {
     public boolean isMotorAtTarget(DcMotor motor, double target) {
         return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);
     }
+    public void rightGyro () {
 
-    public void init() {
     }
+    public void leftGyro () {
 
-    public void loop() {
     }
 }
