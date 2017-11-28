@@ -26,10 +26,10 @@ public class AutoDrive {
     public void driveTranslateRotate(double x, double y, double z, double distance, double speed) {
         resetEncoders();
         double clicks = Math.abs(distance * CPR);
-        double fl = -y + x + z;
-        double fr = y + x - z;
-        double rl = y + x + z;
-        double rr = -y + x - z;
+        double fl = clip(y + -x + z);
+        double fr = clip(y + x - z);
+        double rl = clip(y + x + z);
+        double rr = clip(y + -x - z);
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
         driveSpeeds(speed * fl, speed * fr, speed * rl, speed * rr);
