@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -12,16 +13,18 @@ public class AutoDrive {
     private DcMotor FrontRight;
     private DcMotor RearLeft;
     private DcMotor RearRight;
+    private GyroSensor gyro;
     private double cir = 3.937 * Math.PI;
     private int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
 
-    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight) {
+    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, GyroSensor gyro) {
         this.FrontLeft = FrontLeft;
         this.FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.FrontRight = FrontRight;
         this.RearLeft = RearLeft;
         this.RearLeft.setDirection(DcMotor.Direction.REVERSE);
         this.RearRight = RearRight;
+        this.gyro = gyro;
     }
 
     public void driveTranslateRotate(double x, double y, double z, double distance) {
@@ -90,10 +93,32 @@ public class AutoDrive {
     public boolean isMotorAtTarget(DcMotor motor, double target) {
         return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);
     }
-    public void rightGyro () {
-
+    public void rightGyro (double x, double y, double z, double degrees) {
+        double heading = gyro.getHeading();
+        double fl = clip(y + -x + z);
+        double fr = clip(y + x - z);
+        double rl = clip(y + x + z);
+        double rr = clip(y + -x - z);
+        double[] list = {fl, fr, rl, rr};
+        double high = findHigh(list);
+        driveSpeeds(fl, fr, rl, rr);
+        while (heading < degrees) {
+            heading = gyro.getHeading();
+        }
+        stopMotors();
     }
-    public void leftGyro () {
-
+    public void leftGyro (double x, double y, double z, double degrees) {
+        double heading = gyro.getHeading();
+        double fl = clip(y + -x + z);
+        double fr = clip(y + x - z);
+        double rl = clip(y + x + z);
+        double rr = clip(y + -x - z);
+        double[] list = {fl, fr, rl, rr};
+        double high = findHigh(list);
+        driveSpeeds(fl, fr, rl, rr);
+        while (heading < degrees) {
+            heading = gyro.getHeading();
+        }
+        stopMotors();
     }
 }
