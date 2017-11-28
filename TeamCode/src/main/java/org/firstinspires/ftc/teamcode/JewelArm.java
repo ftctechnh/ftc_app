@@ -14,7 +14,7 @@ public class JewelArm {
     private double servoUpPos = 0.9;
     public enum Color {Red, Blue}
 
-    public void JewelArm(Servo servo, ColorSensor cs) {
+    public JewelArm(Servo servo, ColorSensor cs) {
         this.servo = servo;
         this.cs = cs;
     }

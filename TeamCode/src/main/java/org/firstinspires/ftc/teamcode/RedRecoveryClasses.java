@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "RAutonomousRC", group = "Autonomous")
 public class RedRecoveryClasses extends LinearOpMode {
     AutoDrive drive;
+    JewelArm jewelArm;
     public void runOpMode() throws InterruptedException {
         drive = new AutoDrive(
                 hardwareMap.dcMotor.get("m1"), //fl motor
@@ -17,6 +18,9 @@ public class RedRecoveryClasses extends LinearOpMode {
                 hardwareMap.dcMotor.get("m4"),
                 hardwareMap.gyroSensor.get("g1"));
                 waitForStart();
+        jewelArm = new JewelArm(
+                hardwareMap.servo.get("s4"), //Servo
+                hardwareMap.colorSensor.get("cs1")); //Color Sensor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         drive.driveTranslateRotate(0, .5, 0, 32);
