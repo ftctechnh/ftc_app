@@ -99,7 +99,7 @@ public class RelicGrabber extends RobotComponent
             break;
 
             case STILL:
-            _twister.setPower(0);
+            _twister.setPower(0.05);
 
         }
     }

@@ -2,6 +2,7 @@
 package org.directcurrent.season.relicrecovery.drivetrain
 
 
+import com.vuforia.CameraDevice
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain
 
@@ -16,6 +17,10 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
     private var _interrupt = false
     private var _busy = false
 
+    private var _distance = 0.0
+
+    private var _CLOSE_ENOUGH = 10
+
 
     /**
      * Sets the destination to drive to. Call this before running the command.
@@ -26,7 +31,7 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
      */
     fun setDestination(distance: Double)
     {
-        _drivetrain.leftMotor().targetPosition = (distance / _COUNTS_PER_INCH).toInt()
+        _distance = distance
     }
 
 
@@ -38,6 +43,24 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
         // Freeze input to the drivetrain so that only the command can control it
         // Of course, the idea is that it can be overwritten
         _drivetrain.freezeInput()
+
+        _drivetrain.encoderStopReset()
+        _drivetrain.encoderOn()
+
+        _drivetrain.leftMotor().targetPosition = (_distance / _COUNTS_PER_INCH).toInt()
+        _drivetrain.rightMotor().targetPosition = (_distance / _COUNTS_PER_INCH).toInt()
+
+        _busy = true
+        while(Math.abs(_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
+                Math.abs(_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2 >
+                _CLOSE_ENOUGH && !_interrupt)
+        {
+            _drivetrain.leftMotor().power = 1.0
+            _drivetrain.rightMotor().power = 1.0
+        }
+
+        _busy = false
+        _drivetrain.allowInput()
     }
 
 

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drive
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.directcurrent.season.relicrecovery.drivetrain.DriveToDistance;
 import org.directcurrent.season.relicrecovery.drivetrain.TurnTo;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
@@ -41,7 +42,8 @@ public class Drivetrain extends RobotComponent
     private REVIMU _imu;
 
     // Commands
-    private TurnTo _turnTo;
+    public TurnTo turnTo;
+    public DriveToDistance driveTo;
 
 
     /**
@@ -85,7 +87,7 @@ public class Drivetrain extends RobotComponent
     public void setDependencies(final REVIMU IMU)
     {
         _imu = IMU;
-        _turnTo = new TurnTo(this , _imu);
+        turnTo = new TurnTo(this , _imu);
     }
 
 
@@ -144,6 +146,24 @@ public class Drivetrain extends RobotComponent
 
 
     /**
+     * @return Returns the target encoder count of the left motor
+     */
+    public long leftEncoderTarget()
+    {
+        return _leftMotor.getTargetPosition();
+    }
+
+
+    /**
+     * @return Returns the target encoder count of the right motor
+     */
+    public long rightEncoderTarget()
+    {
+        return _rightMotor.getTargetPosition();
+    }
+
+
+    /**
      * GrabState machine- sets the state of the drivetrain
      *
      * @param STATE GrabState to set to the drivetrain
@@ -154,27 +174,27 @@ public class Drivetrain extends RobotComponent
         {
             case FORWARD_FAST:
                 _powerMultiplier = _FORWARD_MULTIPLIER * _FAST_MULTIPLIER;
-                _encoderOff();
+                encoderOff();
                 break;
 
             case FORWARD_SLOW:
                 _powerMultiplier = _FORWARD_MULTIPLIER * _SLOW_MULTIPLIER;
-                _encoderOff();
+                encoderOff();
                 break;
 
             case REVERSE_FAST:
                 _powerMultiplier = _REVERSE_MULTIPLIER * _FAST_MULTIPLIER;
-                _encoderOff();
+                encoderOff();
                 break;
 
             case REVERSE_SLOW:
                 _powerMultiplier = _REVERSE_MULTIPLIER * _SLOW_MULTIPLIER;
-                _encoderOff();
+                encoderOff();
                 break;
 
             case STOP:
                 _powerMultiplier = _STOP_MULTIPLIER;
-                _encoderStopReset();
+                encoderStopReset();
         }
 
         _state = STATE;
@@ -300,7 +320,7 @@ public class Drivetrain extends RobotComponent
      *
      * Turns on the PID conroller and will hold positions
      */
-    private void _encoderOn()
+    public void encoderOn()
     {
         _leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         _rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -312,7 +332,7 @@ public class Drivetrain extends RobotComponent
      *
      * This means that positions can still be set, but positions won't be held
      */
-    private void _encoderOff()
+    public void encoderOff()
     {
         _leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -324,7 +344,7 @@ public class Drivetrain extends RobotComponent
      *
      * Stops all encoder shenanigans and resets counts to 0
      */
-    private void _encoderStopReset()
+    public void encoderStopReset()
     {
         _leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

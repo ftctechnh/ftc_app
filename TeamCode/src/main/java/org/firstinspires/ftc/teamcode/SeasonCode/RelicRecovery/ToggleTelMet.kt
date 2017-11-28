@@ -2,10 +2,10 @@
 package org.directcurrent.season.relicrecovery
 
 @JvmField
-val outputDrivetrain = false
+val outputDrivetrain = true
 
 @JvmField
-val outputLift = false
+val outputLift = true
 
 @JvmField
 val outputGlyphGrabber = false

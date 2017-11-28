@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.UtilToggle;
 
+import static org.directcurrent.season.relicrecovery.ToggleTelMetKt.outputLift;
+
 
 /**
  * Lift for the Relic Recovery robot
@@ -76,6 +78,7 @@ public class Lift extends RobotComponent
     @SuppressWarnings("unused")
     public void toPos(final Position POSITION)
     {
+        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         _liftMotor.setTargetPosition(POSITION.encoderCount());
     }
 
@@ -87,11 +90,13 @@ public class Lift extends RobotComponent
      */
     public void run(double POWER_VALUE)
     {
-        final int CLOSE_ENOUGH = 20;
+        final int CLOSE_ENOUGH = 2;
+        final int LOW_BOUND = -20;
 
         // Set target position the moment the joystick isn't moved. But only once!
         if(_powered.isPressed(POWER_VALUE != 0))
         {
+            _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             _liftMotor.setTargetPosition(_liftMotor.getCurrentPosition());
         }
 
@@ -111,7 +116,45 @@ public class Lift extends RobotComponent
         }
         else                        // Manual override always takes priority :)
         {
-            _liftMotor.setPower(POWER_VALUE);
+            if(_liftMotor.getCurrentPosition() <= LOW_BOUND)
+            {
+                _liftMotor.setPower(0);
+            }
+            else
+            {
+                _liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                _liftMotor.setPower(POWER_VALUE);
+            }
         }
+
+        if(outputLift)
+        {
+            _outputTelmet();
+        }
+    }
+
+
+    /**
+     * Resets encoder counts. Be *very* careful when using this!
+     */
+    public void resetEncoder()
+    {
+        _liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+
+    /**
+     * Outputs telemetry to current OpMode
+     */
+    private void _outputTelmet()
+    {
+        base.telMet().write("--- Lift ---");
+        base.telMet().tagWrite("Power" , _liftMotor.getPower());
+        base.telMet().newLine();
+        base.telMet().tagWrite("Position" , _liftMotor.getCurrentPosition());
+        base.telMet().newLine();
+        base.telMet().tagWrite("Target" , _liftMotor.getTargetPosition());
+        base.telMet().newLine();
+        base.telMet().newLine();
     }
 }
