@@ -23,7 +23,7 @@ public class VuforiaRelicOpMode extends OpMode {
         robot.init();
 
         vuforia = new Vuforia_V2(hardwareMap);
-        vuforia.init(true);
+        vuforia.init(true,true);
 
         vuforia.activateTracking();
     }
@@ -34,7 +34,7 @@ public class VuforiaRelicOpMode extends OpMode {
         double[] pos = vuforia.getPosition();
         double[] rot = vuforia.getRotation();
 
-        telemetry.addData("Column", vuforia.getImage().toString());
+        telemetry.addData("Column", vuforia.getLastImage().toString());
         telemetry.addData("Position", "{" + pos[0] + ", " + pos[1] + ", " + pos[2] +"}");
         telemetry.addData("Rotation", "{" + rot[0] + ", " + rot[1] + ", " + rot[2] +"}" );
 

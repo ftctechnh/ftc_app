@@ -24,6 +24,8 @@ public class HolonomicDriver_11248 {
     private Telemetry telemetry;
     private DcMotor frontLeft, frontRight, backLeft, backRight;
 
+    int frontLeftRotations, frontRightRotations, backLeftRotations, backRightRotations;
+
 
     // TODO: 12/11/2016 oz add some comments about this stuff. Also u might want to make is slow public for simplicities sake
     public static double MAX_TURN = .4;
@@ -58,6 +60,10 @@ public class HolonomicDriver_11248 {
         this.backLeft = backLeft;
         this.backRight = backRight;
         this.telemetry = telemetry;
+
+        resetDriveEncoders();
+        recordPosition();
+        setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
@@ -92,17 +98,17 @@ public class HolonomicDriver_11248 {
          * If rotation is being used, a ratio is induced to prevent a value greater than 1
          */
 
-//        if (smooth) {
+        if (smooth) {
             MAX_TURN = Math.abs(rotate) * HolonomicDriver_11248.MAX_TURN;
             MAX_SPEED = 1 - MAX_TURN;
 
-//        } else {
-//            MAX_SPEED = HolonomicDriver_11248.MAX_SPEED;
-//            MAX_TURN = HolonomicDriver_11248.MAX_TURN;
-//        }
+        } else {
+            MAX_SPEED = HolonomicDriver_11248.MAX_SPEED;
+            MAX_TURN = HolonomicDriver_11248.MAX_TURN;
+        }
 
         //Using a function on variable rotate will smooth out the slow values but still give full range
-        if((smooth || isSlow) && rotate !=0) rotate = rotate * rotate * rotate/Math.abs(rotate);
+//        if((smooth || isSlow) && rotate !=0) rotate = rotate * rotate * rotate/Math.abs(rotate);
 
         rotate *= MAX_TURN;
 
@@ -148,6 +154,7 @@ public class HolonomicDriver_11248 {
         backLeft.setPower( Range.clip(BL * SPEED, -1, 1)); // +
         backRight.setPower( Range.clip(BR * SPEED, -1, 1)); //+
 
+        recordPosition();
 
 
         /*
@@ -193,6 +200,33 @@ public class HolonomicDriver_11248 {
     public void drive(double x, double y,double rotate){
         this.drive(x, y, rotate, false);
     }
+
+
+    /*
+       ENCODER METHODS
+     */
+
+    public void resetDriveEncoders(){
+       setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       recordPosition();
+    }
+
+    public void setDriveMode(DcMotor.RunMode runMode){
+        frontLeft.setMode(runMode);
+        frontRight.setMode(runMode);
+        backLeft.setMode(runMode);
+        backRight.setMode(runMode);
+    }
+
+
+    public void recordPosition(){
+
+        frontLeftRotations = frontLeft.getCurrentPosition();
+        frontRightRotations = frontRight.getCurrentPosition();
+        backLeftRotations = backLeft.getCurrentPosition();
+        backRightRotations = backRight.getCurrentPosition();
+    }
+
 
     /*
      * returns the value for isSlow
