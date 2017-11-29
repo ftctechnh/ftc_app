@@ -29,12 +29,7 @@ public class TestIMUPosition extends OpMode {
 
     @Override
     public void loop() {
-        if(robot.getDrivetrain() instanceof MecanumDrive){
-            ((MecanumDrive) robot.getDrivetrain()).complexDrive(gamepad1, telemetry);
-        } else if (robot.getDrivetrain() instanceof TankDrive){
-            ((TankDrive) robot.getDrivetrain()).getLeftMotors().setPowers(gamepad1.left_stick_y);
-            ((TankDrive) robot.getDrivetrain()).getRightMotors().setPowers(gamepad1.right_stick_y);
-        }
+        robot.getDrivetrain().defaultDrive(gamepad1, telemetry);
 
         telemetry.addData("Calibration:", imuWrapper.getIMU().getCalibrationStatus().toString());
 
@@ -42,10 +37,10 @@ public class TestIMUPosition extends OpMode {
 
         telemetry.addData("Acceleration:", imuWrapper.getIMU().getAcceleration().toString());
 
-        telemetry.addData("Position?:", imuWrapper.getPosition().toString());
-        telemetry.addData("X Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).x);
-        telemetry.addData("Y Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y);
-        telemetry.addData("Z Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).z);
+        telemetry.addData("Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).toString());
+        telemetry.addData("\tX Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).x);
+        telemetry.addData("\tY Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y);
+        telemetry.addData("\tZ Position:", imuWrapper.getPosition().toUnit(DistanceUnit.INCH).z);
     }
 
     @Override

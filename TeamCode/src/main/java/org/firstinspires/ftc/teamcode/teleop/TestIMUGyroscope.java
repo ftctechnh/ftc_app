@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
@@ -27,18 +28,15 @@ public class TestIMUGyroscope extends OpMode {
 
     @Override
     public void loop() {
-        if(robot.getDrivetrain() instanceof MecanumDrive){
-            ((MecanumDrive) robot.getDrivetrain()).complexDrive(gamepad1, telemetry);
-        } else if (robot.getDrivetrain() instanceof TankDrive){
-            ((TankDrive) robot.getDrivetrain()).getLeftMotors().setPowers(gamepad1.left_stick_y);
-            ((TankDrive) robot.getDrivetrain()).getRightMotors().setPowers(gamepad1.right_stick_y);
-        }
+        robot.getDrivetrain().defaultDrive(gamepad1, telemetry);
 
         telemetry.addData("Calibration:", imuWrapper.getIMU().getCalibrationStatus().toString());
 
-        telemetry.addData("First Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).firstAngle);
-        telemetry.addData("Second Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).secondAngle);
-        telemetry.addData("Third Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).thirdAngle);
+        telemetry.addData("Orientation:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).toString());
+
+        telemetry.addData("\tFirst Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).firstAngle);
+        telemetry.addData("\tSecond Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).secondAngle);
+        telemetry.addData("\tThird Angle:", imuWrapper.getOrientation().toAngleUnit(AngleUnit.RADIANS).thirdAngle);
     }
 
     @Override
