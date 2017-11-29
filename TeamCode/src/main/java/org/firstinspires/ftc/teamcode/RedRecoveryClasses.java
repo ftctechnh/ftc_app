@@ -24,15 +24,23 @@ public class RedRecoveryClasses extends LinearOpMode {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         drive.init();
+        jewelArm.down();
         if (jewelArm.findJewel() == "Red") { //if the arm sees red
             drive.driveTranslateRotate(0,.125,0,0.25);
         }
         else { //if the arm sees blue
             drive.driveTranslateRotate(0,-.125,0,0.25);
         }
+        jewelArm.up();
+        wait(500);
         drive.driveTranslateRotate(0, -.5, 0, 32);
         Thread.sleep(500);
         drive.rightGyro(0, 0, .5, 90);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+    public void wait(Long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e){}
     }
 }
