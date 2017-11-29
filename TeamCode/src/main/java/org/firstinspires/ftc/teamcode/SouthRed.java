@@ -1,20 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Eric on 11/9/2017.
  */
 
-@Autonomous(name="NorthBlue", group="Autonomisisisisis")
-public class NorthBlue extends LinearOpMode {
+@Autonomous(name="SouthRed", group="Autonomisisisisis")
+public class SouthRed extends LinearOpMode {
     PengwinArm pengwinArm;
     PengwinFin pengwinFin;
     JeffThePengwin jeffThePengwin;
@@ -52,7 +47,7 @@ public class NorthBlue extends LinearOpMode {
             //Do Nothing
         }
         //
-        if (!pengwinFin.doesColorSensorSeeBlueJewel()){
+        if (pengwinFin.doesColorSensorSeeBlueJewel()){
             jeffThePengwin.turnLeftToPosition(4,0.4);
             runtime.reset();
             while(runtime.seconds()<1 && opModeIsActive()){
@@ -75,31 +70,25 @@ public class NorthBlue extends LinearOpMode {
             while(runtime.seconds()<1 && opModeIsActive()){
                 //Do Nothing
             }
-            jeffThePengwin.turnLeftToPosition(4,0.4);
+            jeffThePengwin.turnLeftToPosition(4., 0.4);
         }
         runtime.reset();
         while(runtime.seconds()<2 && opModeIsActive()){
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
-        jeffThePengwin.backToPosition(27.5,0.4);
+        jeffThePengwin.forwardToPosition(27.5,0.4);
         runtime.reset();
         while(runtime.seconds()<5 && opModeIsActive()){
             //Do Nothing
         }
         //
-        jeffThePengwin.turnRightToPostion(22, .4);
+        jeffThePengwin.leftToPosition(18,0.75);
         runtime.reset();
         while(runtime.seconds()<4 && opModeIsActive()){
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
-        //
-        jeffThePengwin.backToPosition(3, .4);
-        runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
-            //Do Nothing
-        }
         //
         smartify();
         runtime.reset();
@@ -118,6 +107,8 @@ public class NorthBlue extends LinearOpMode {
         while(runtime.seconds()<1 && opModeIsActive()){
             //Do Nothing
         }
+        //
+        pengwinArm.setUpPower(-0.4);
     }
     //
     //

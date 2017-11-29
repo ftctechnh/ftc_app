@@ -106,6 +106,7 @@ public class JeffsRealRun extends LinearOpMode {
                 pengwinArm.open();
             }
             //
+            pengwinFin.moveFinUp();
             telemetryJazz();
 
         }
@@ -228,7 +229,7 @@ public class JeffsRealRun extends LinearOpMode {
     private void startify() {
         if(!jeffThePengwin.touchy.getState()){
             pengwinArm.setUpPower(-.4);
-            while (!jeffThePengwin.touchy.getState()) {
+            while (!jeffThePengwin.touchy.getState() && opModeIsActive()) {
                 //TODO Do nothing
             }
             pengwinArm.setUpPower(0);
@@ -256,7 +257,7 @@ public class JeffsRealRun extends LinearOpMode {
     //
     private void smartify(){//calibrate up position
         pengwinArm.upMotor.setPower(.4);//opposite of touchy
-        while(jeffThePengwin.up.getState()){
+        while(jeffThePengwin.up.getState() && opModeIsActive()){
             //TODO Wookie
         }
         pengwinArm.upMotor.setPower(0);//stop the motor

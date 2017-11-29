@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 public class PengwinFin {
-    static final double FIN_UP_POSITION = .7;
-    static final double FIN_DOWN_POSITION = 0.1;
+    static final double FIN_UP_POSITION = .71;
+    static final double FIN_DOWN_POSITION = 0.09;
     Servo fin;
     ColorSensor colorSensor;
 
