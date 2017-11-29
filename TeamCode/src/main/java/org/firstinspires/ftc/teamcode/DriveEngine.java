@@ -49,10 +49,10 @@ public class DriveEngine {
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        front.setDirection(DcMotor.Direction.FORWARD);
-        back.setDirection(DcMotor.Direction.REVERSE);
-        left.setDirection(DcMotor.Direction.REVERSE);
-        right.setDirection(DcMotor.Direction.FORWARD);
+        front.setDirection(DcMotor.Direction.REVERSE);
+        back.setDirection(DcMotor.Direction.FORWARD);
+        left.setDirection(DcMotor.Direction.FORWARD);
+        right.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public double smoothX(double x)
