@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Preston on 10/28/17.
  */
-@TeleOp(name = "fauxbot", group = "Testing")
+@TeleOp(name = "fauxbotGlyphTwoServos", group = "Testing")
 public class fauxbotGlyphTwoServos extends LinearOpMode {
 
     DcMotor left;
