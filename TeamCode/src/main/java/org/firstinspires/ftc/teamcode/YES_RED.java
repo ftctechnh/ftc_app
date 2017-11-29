@@ -37,6 +37,9 @@ public class YES_RED extends LinearOpMode
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
+    double xPosUp = 0;
+    double xPosDown = .5;
+
 
     /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
@@ -52,7 +55,7 @@ public class YES_RED extends LinearOpMode
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
 
-        //yuh
+        //yuhojoj
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -72,10 +75,6 @@ public class YES_RED extends LinearOpMode
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-
-        double xPosUp = 1;
-        double xPosDown = .5;
 
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
@@ -210,28 +209,23 @@ public class YES_RED extends LinearOpMode
             BackRightPower = backRight;
     }
 
-    public void findColor()
-    {
+    public void findColor() {
 
-        double xPosUp = 1;
-        double xPosDown = .5;
-        if (colorSensor.red() < colorSensor.blue())
-        {
+        if (colorSensor.red() < colorSensor.blue()) {
             resetAngle();
-            rotate(90,.4);
+            rotate(90, .4);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
+        } else {
+            resetAngle();
+            rotate(-90, .4);
+            wheelsOff();
+            sleep(500);
+            gemServo.setPosition(xPosUp);
+            rotate(180, .4);
         }
-        else
-        resetAngle();
-        rotate(-90,.4);
-        wheelsOff();
-        sleep(500);
-        gemServo.setPosition(xPosUp);
-        rotate(180, .4);
     }
-
 
     /**
      * Resets the cumulative angle tracking to zero.
