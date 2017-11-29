@@ -12,7 +12,6 @@ public class JewelArm {
     private ColorSensor cs;
     private double servoDownPos = 0.39;
     private double servoUpPos = 0.9;
-    public enum Color {Red, Blue}
 
     public JewelArm(Servo servo, ColorSensor cs) {
         this.servo = servo;
@@ -26,7 +25,7 @@ public class JewelArm {
         servo.setPosition(servoUpPos);
         servo.setPosition(servoUpPos);
     }
-    public Color findJewel() {
+    public String findJewel() {
         while (cs.red() < 2 && cs.blue() < 2) {
 
         }
@@ -40,9 +39,9 @@ public class JewelArm {
             }
         }
         if (blue > red) {
-            return Color.Red;
+            return "Red";
         } else {
-            return Color.Blue;
+            return "Blue";
         }
     }
 }
