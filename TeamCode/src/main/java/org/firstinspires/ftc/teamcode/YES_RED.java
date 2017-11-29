@@ -14,29 +14,35 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@Autonomous(name="Drive Avoid Imu", group="Exercises")
+@Autonomous(name="YES RED", group="Exercises")
 //@Disabled
-public class DriveAvoidImu extends LinearOpMode
+public class YES_RED extends LinearOpMode
 {
     DcMotor                 frontLeftMotor;
     DcMotor                 backLeftMotor;
     DcMotor                 frontRightMotor;
     DcMotor                 backRightMotor;
-
+    ColorSensor             colorSensor;
+    Servo                   gemServo;
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
-    boolean                 aButton, bButton;
+    double xPosUp = 1;
+    double xPosDown = .5;
+
+
+    /* Create a "timer" that begins once the OpMode begins */
+    private ElapsedTime runtime = new ElapsedTime();
 
     // called when init button is  pressed.
     @Override
@@ -46,7 +52,10 @@ public class DriveAvoidImu extends LinearOpMode
         backLeftMotor = hardwareMap.dcMotor.get("BL");
         frontRightMotor = hardwareMap.dcMotor.get("FR");
         backRightMotor = hardwareMap.dcMotor.get("BR");
+        gemServo = hardwareMap.servo.get("gemservo");
+        colorSensor = hardwareMap.colorSensor.get("colorsensor");
 
+        //blarg
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -66,6 +75,12 @@ public class DriveAvoidImu extends LinearOpMode
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+        backRightMotor.setPower(0);
+        gemServo.setPosition(xPosUp);
 
         imu.initialize(parameters);
 
@@ -92,11 +107,7 @@ public class DriveAvoidImu extends LinearOpMode
 
         sleep(1000);
 
-        // drive until end of period.
-
-        while (opModeIsActive())
-        {
-            // Use gyro to drive in a straight line.
+   // Use gyro to drive in a straight line.
             correction = checkDirection();
 
             telemetry.addData("1 imu heading", lastAngles.firstAngle);
@@ -104,47 +115,114 @@ public class DriveAvoidImu extends LinearOpMode
             telemetry.addData("3 correction", correction);
             telemetry.update();
 
-            frontLeftMotor.setPower(-power + correction);
-            backLeftMotor.setPower(-power + correction);
-            frontRightMotor.setPower(-power);
-            backRightMotor.setPower(-power);
+        gemServo.setPosition(xPosDown);
+        sleep(1500);
+        knockJewel();
+        movebytime(2,.5,"Right");
 
-            // We record the sensor values because we will test them in more than
-            // one place with time passing between those places. See the lesson on
-            // Timing Considerations to know why.
+    }
 
-            aButton = gamepad1.a;
-            bButton = gamepad1.b;
+    /* This method moves the robot forward for time and power indicated*/
+    public void movebytime (double time, double power, String direction) {
+    /* reset the "timer" to 0 */
+        runtime.reset();
 
-            if (aButton || bButton)
-            {
-                // backup.
-                frontLeftMotor.setPower(power);
-                backLeftMotor.setPower(power);
-                frontRightMotor.setPower(power);
-                backRightMotor.setPower(power);
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
 
-                sleep(500);
-
-                // stop.
-                frontLeftMotor.setPower(0);
-                backLeftMotor.setPower(0);
-                frontRightMotor.setPower(0);
-                backRightMotor.setPower(0);
-
-                // turn 90 degrees right.
-                if (aButton) rotate(-90, power);
-
-                // turn 90 degrees left.
-                if (bButton) rotate(90, power);
-            }
+        switch (direction) {
+            case "Forward":
+                setWheelPower(power, -power, power, -power);
+                break;
+            case "Backward":
+                setWheelPower(-power, power, -power, power);
+                break;
+            case "Right":
+                setWheelPower(power, power, -power, -power);
+                break;
+            case "Left":
+                setWheelPower(-power, -power, power, power);
+                break;
         }
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
 
-        // turn the motors off.
-        frontLeftMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backRightMotor.setPower(0);
+        }
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+
+
+    /* This method simply sets all motor to zero power*/
+    public void wheelsOff() {
+        setWheelPower(0,0,0,0);
+    }
+
+    /* This method powers each wheel to whichever power is desired */
+    public void setWheelPower(double fl, double fr, double bl, double br) {
+
+        /* Create power variables */
+        double frontLeft;
+        double frontRight;
+        double backLeft;
+        double backRight;
+
+        double FrontLeftPower;
+        double FrontRightPower;
+        double BackLeftPower;
+        double BackRightPower;
+
+        FrontLeftPower = 0;
+        FrontRightPower = 0;
+        BackLeftPower = 0;
+        BackRightPower = 0;
+
+        /* Initialize the powers with the values input whenever this method is called */
+        frontLeft   =   fl;
+        frontRight  =   fr;
+        backLeft    =   bl;
+        backRight   =   br;
+
+        /* set each wheel to the power indicated whenever this method is called */
+        if ( FrontLeftPower != frontLeft) {
+            frontLeftMotor.setPower(-fl);
+            FrontLeftPower = frontLeft;
+        }
+        if ( FrontRightPower != frontRight) {
+            frontRightMotor.setPower(fr);
+            FrontRightPower = frontRight;
+        }
+        if ( BackLeftPower != backLeft) {
+            backLeftMotor.setPower(-bl);
+            BackLeftPower = backLeft;
+        }
+        if ( BackRightPower != backRight)
+            backRightMotor.setPower(br);
+            BackRightPower = backRight;
+    }
+
+    public void knockJewel() {
+
+        if (colorSensor.red() < colorSensor.blue()) {
+            resetAngle();
+            rotate(5, .3);
+            wheelsOff();
+            sleep(500);
+            gemServo.setPosition(xPosUp);
+            rotate(-5,.3);
+        } else {
+            resetAngle();
+            rotate(-5, .3);
+            wheelsOff();
+            sleep(500);
+            gemServo.setPosition(xPosUp);
+            rotate(5,.3);
+        }
+    }
+
+    public void returnJewel(){
+
     }
 
     /**

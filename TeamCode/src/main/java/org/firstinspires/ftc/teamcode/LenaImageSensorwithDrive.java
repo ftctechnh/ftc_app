@@ -29,8 +29,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -66,33 +67,64 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="BACON vumark", group ="Concept")
+@Autonomous(name="Lena Vumark", group ="Concept")
 //@Disabled
-public class BACONImageSensor extends LinearOpMode {
+public class LenaImageSensorwithDrive extends LinearOpMode {
 
+MasterHardwareClass robot = new MasterHardwareClass();
     public static final String TAG = "Vuforia VuMark Sample";
+
 
     OpenGLMatrix lastLocation = null;
 
-    /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
     VuforiaLocalizer vuforia;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override public void runOpMode() {
 
-        /* To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);*/
+
+        /*
+         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
+         * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
+         */
+        robot.init(hardwareMap);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        /* Our vurforia license key */
+        // OR...  Do Not Activate the Camera Monitor View, to save power
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        /*
+         * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+         * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+         * web site at https://developer.vuforia.com/license-manager.
+         *
+         * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+         * random data. As an example, here is a example of a fragment of a valid key:
+         *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+         * Once you've obtained a license key, copy the string from the Vuforia web site
+         * and paste it in to your code onthe next line, between the double quotes.
+         */
         parameters.vuforiaLicenseKey = "AbWq5Uv/////AAAAGcM6elMmVUOogS1JXLiPuvxUPJgstfq86yvjnKb87ZG0oftSUkO7FUXo+LPZdGe3ytBqkwQmXV6b0hiAMotK9TAX//BaE8tYQe0cJQzMPk5jjMAmLbZgZ1p3V9EQzp59pYvYvBMYzoNw7YzlpMNC3GzmXd40NyecOmx8Q6lp/tQikXO0yKGQLIoJpKtGfoVkxpmyCx/u4/6FYBAGyvZt8I8mz3UtGl/Yf366XKgNXq26uglpVfeurmB/cV5RzMVdVDTdyE/2yLqjalrAKgL2CZFv3iY/MnxW+pIyJUHbXUQVCUoB8SqULq7u948Vx+5w5ObesVFNzZ3jbBTBHwUWbpaJAZFGjmD1dRaVdS/GK74x";
 
-        /*We also indicate which camera on the RC that we wish to use. Here we chose the back (HiRes) camera (for greater range)*/
+        /*
+         * We also indicate which camera on the RC that we wish to use.
+         * Here we chose the back (HiRes) camera (for greater range), but
+         * for a competition robot, the front camera might be more convenient.
+         */
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        /* Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+        /**
+         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
          * in this data set: all three of the VuMarks in the game were created from this one template,
          * but differ in their instance id information.
+         * @see VuMarkInstanceId
          */
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
@@ -102,7 +134,9 @@ public class BACONImageSensor extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        relicTrackables.activate();
+
+    /* reset the "timer" to 0 */
+
 
         while (opModeIsActive()) {
 
@@ -113,12 +147,28 @@ public class BACONImageSensor extends LinearOpMode {
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            double frontLeft;
+            double frontRight;
+            double backLeft;
+            double backRight;
+
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
+
+                if (vuMark == RelicRecoveryVuMark.CENTER) {
+                    movebytime(4,.5,"Left");
+
+                }
+                if (vuMark == RelicRecoveryVuMark.LEFT) {
+                    movebytime(6,.5,"Left");
+                }
+                if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                    movebytime(2,.5,"Left");
+                }
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
@@ -142,7 +192,9 @@ public class BACONImageSensor extends LinearOpMode {
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
                 }
+
             }
+
             else {
                 telemetry.addData("VuMark", "not visible");
             }
@@ -155,6 +207,80 @@ public class BACONImageSensor extends LinearOpMode {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
+    /* This method moves the robot forward for time and power indicated*/
+    public void movebytime (double time, double power, String direction) {
+    /* reset the "timer" to 0 */
+        runtime.reset();
+
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
+
+        switch (direction) {
+            case "Forward":
+                setWheelPower(power, -power, power, -power);
+                break;
+            case "Backward":
+                setWheelPower(-power, power, -power, power);
+                break;
+            case "Right":
+                setWheelPower(power, power, -power, -power);
+                break;
+            case "Left":
+                setWheelPower(-power, -power, power, power);
+                break;
+        }
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+        }
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+    public void wheelsOff() {
+        setWheelPower(0,0,0,0);
+    }
 
 
+    /***********************************************************************************************
+     * These are all of the methods used in the Teleop*
+     ***********************************************************************************************/
+
+
+    public void setWheelPower(double fl, double fr, double bl, double br) {
+
+        /* Create power variables */
+        double frontLeft;
+        double frontRight;
+        double backLeft;
+        double backRight;
+
+        /* Initialize the powers with the values input whenever this method is called */
+        frontLeft   =   fl;
+        frontRight  =   fr;
+        backLeft    =   bl;
+        backRight   =   br;
+
+        /* set each wheel to the power indicated whenever this method is called */
+        if (robot.FrontLeftPower != frontLeft) {
+            robot.frontLeftMotor.setPower(fl);
+            robot.FrontLeftPower = frontLeft;
+        }
+        if (robot.FrontRightPower != frontRight) {
+            robot.frontRightMotor.setPower(fr);
+            robot.FrontRightPower = frontRight;
+        }
+        if (robot.BackLeftPower != backLeft) {
+            robot.backLeftMotor.setPower(bl);
+            robot.BackLeftPower = backLeft;
+        }
+        if (robot.BackRightPower != backRight)
+            robot.backRightMotor.setPower(br);
+        robot.BackRightPower = backRight;
+    }
 }
+
+
+
+
+
