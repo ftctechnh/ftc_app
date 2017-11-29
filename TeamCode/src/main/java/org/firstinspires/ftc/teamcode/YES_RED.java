@@ -206,16 +206,18 @@ public class YES_RED extends LinearOpMode
 
         if (colorSensor.red() < colorSensor.blue()) {
             resetAngle();
-            rotate(20, .4);
+            rotate(5, .3);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
+            rotate(-5,.3);
         } else {
             resetAngle();
-            rotate(-20, .4);
+            rotate(-5, .3);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
+            rotate(5,.3);
         }
     }
 
