@@ -61,8 +61,8 @@ public class team267botTeleop_Linear extends LinearOpMode {
     public void runOpMode() {
         double left;
         double right;
-        double leftBeltPower = 0;
-        double rightBeltPower = 0;
+        double leftBeltPower;
+        double rightBeltPower;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -92,14 +92,14 @@ public class team267botTeleop_Linear extends LinearOpMode {
                 //If the left trigger is pressed, move block forward.
 
                 //normalize to between 0 and 1
-                leftBeltPower= -(gamepad1.left_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
-                rightBeltPower= (gamepad1.right_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
+                leftBeltPower=  gamepad1.left_trigger;
+                rightBeltPower= gamepad1.left_trigger;
 
             }
             else if (gamepad1.right_trigger >0) {
                 //If the right trigger is pressed, move block backwards.
-                leftBeltPower= (gamepad1.left_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
-                rightBeltPower= -(gamepad1.right_trigger/(TRIGGER_MAX-TRIGGER_MIN) + TRIGGER_MIN);
+                leftBeltPower= -gamepad1.right_trigger;
+                rightBeltPower= -gamepad1.right_trigger;
             }
             else {
                 //If neither triggers are pressed, do nothing.
@@ -111,8 +111,13 @@ public class team267botTeleop_Linear extends LinearOpMode {
 
 
             // Send telemetry message to signify robot running;
+
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
+            telemetry.addData("leftBelt", "%.2f", leftBeltPower);
+            telemetry.addData("rightBelt","%.2f", rightBeltPower);
+            telemetry.addData("leftTrigger", "%.2f", gamepad1.left_trigger);
+            telemetry.addData("rightTrigger","%.2f", gamepad1.right_trigger);
             telemetry.update();
 
             // Pace this loop so jaw action is reasonable speed.

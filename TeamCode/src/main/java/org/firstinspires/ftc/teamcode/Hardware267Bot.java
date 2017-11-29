@@ -72,6 +72,8 @@ public class Hardware267Bot
         //lineviewer = hwMap.opticalDistanceSensor.get("lightveiwer");
         leftMotor   = hwMap.dcMotor.get("leftMotor");
         rightMotor  = hwMap.dcMotor.get("rightMotor");
+        leftBelt  = hwMap.dcMotor.get("leftBelt");
+        rightBelt  = hwMap.dcMotor.get("rightBelt");
         //color = hwMap.colorSensor.get("color");
         //color.enableLed(false);
         //armMotor = hwMap.dcMotor.get("arm");
@@ -85,11 +87,15 @@ public class Hardware267Bot
         //armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftBelt.setDirection(DcMotor.Direction.REVERSE);
+        rightBelt.setDirection(DcMotor.Direction.FORWARD);
         //belt = hwMap.dcMotor.get("belt");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
+        leftBelt.setPower(0);
+        rightBelt.setPower(0);
 
         //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
