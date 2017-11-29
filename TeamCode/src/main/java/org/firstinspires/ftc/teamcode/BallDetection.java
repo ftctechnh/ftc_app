@@ -123,13 +123,45 @@ public class BallDetection extends LinearOpMode {
             sleep(250);
         }
 
+        int x1 = 0, y1 = 0;
+
         while (opModeIsActive()) {
 
             time = System.currentTimeMillis();
             Bitmap b = null;
             ByteBuffer l;
 
+            int width = 0, height = 0;
+
             if (time > lastPictureTime + pictureDelta) {
+                if (gamepad1.dpad_down) {
+                    y1 += 1;
+                    if (y1 >= height) {
+                        y1 -= 1;
+                    }
+                }
+
+                if (gamepad1.dpad_up) {
+                    y1 -= 1;
+                    if (y1 < 0) {
+                        y1 += 1;
+                    }
+                }
+
+                if (gamepad1.dpad_right) {
+                    x1 += 1;
+                    if (x1 >= width) {
+                        x1 -= 1;
+                    }
+                }
+
+                if (gamepad1.dpad_left) {
+                    x1 -= 1;
+                    if (x1 >= width) {
+                        x1 += 1;
+                    }
+                }
+
                 lastPictureTime = time;
                 Image k = getPicture();
 
@@ -147,40 +179,19 @@ public class BallDetection extends LinearOpMode {
                     telemetry.addData("BitmapHeight", b.getHeight());
                     telemetry.addData("BitmapWidth", b.getWidth());
 
-                    int width = b.getWidth();
-                    int height = b.getHeight();
+                    width = b.getWidth();
+                    height = b.getHeight();
 
-                    int pixel0 = b.getPixel(0, 0);
-                    int pixel1 = b.getPixel(0, height - 1);
-                    int pixel2 = b.getPixel(width - 1, height - 1);
-                    int pixel3 = b.getPixel(width - 1, 0);
+                    int pixel = b.getPixel(x1, y1);
 
                     processBitmap(b);
 
                     float[] pix = new float[3];
-                    Color.colorToHSV(pixel0, pix);
+                    Color.colorToHSV(pixel, pix);
 
                     telemetry.addData("HSV", pix[0]);
                     telemetry.addData("HSV", pix[1]);
                     telemetry.addData("HSV", pix[2]);
-
-                    telemetry.addData("Red", Color.red(pixel0));
-                    telemetry.addData("Blue", Color.blue(pixel0));
-                    telemetry.addData("Green", Color.green(pixel0));
-
-                    // Top right
-
-                    telemetry.addData("Red", Color.red(pixel1));
-                    telemetry.addData("Blue", Color.blue(pixel1));
-                    telemetry.addData("Green", Color.green(pixel1));
-
-                    telemetry.addData("Red", Color.red(pixel2));
-                    telemetry.addData("Blue", Color.blue(pixel2));
-                    telemetry.addData("Green", Color.green(pixel2));
-
-                    telemetry.addData("Red", Color.red(pixel3));
-                    telemetry.addData("Blue", Color.blue(pixel3));
-                    telemetry.addData("Green", Color.green(pixel3));
 
                     // Bottom right
 
