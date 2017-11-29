@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import android.os.Environment;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -17,8 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestInterface;
 import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestMashupPID;
 
@@ -75,6 +72,7 @@ public class NullbotHardware {
     OutputStreamWriter oW;
     LinearOpMode opMode;
     ScheduledExecutorService loggerThread;
+    AccelerationIntegrator integrator;
 
     // Utility mechanisms
     public DcMotor[] motorArr;
@@ -131,8 +129,8 @@ public class NullbotHardware {
             raiseWhipSnake();
             openBlockClaw();
             flattenRelicClaw();
-            relicFipperPosition = 61;
-            relicClawFlipper.setPosition(61.0/255.0);
+            relicFipperPosition = 80;
+            retractFlipper();
         }
 
         //gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -183,28 +181,32 @@ public class NullbotHardware {
         // Calibration
         ElapsedTime calibrationTimer = new ElapsedTime();
 
-        tel.log().add("Gyro Calibrating. Do Not Move!");
+        tel.log().add("Gyro Calibrating. Do Not Move!!");
         //gyro.calibrate();
 
-        updateReadings();
         for (DcMotor motor : motorArr) {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu.initialize(parameters);
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
-
         if (!isTestChassis) {
             setLiftMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             zType.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
-        sleep(500);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+
+        integrator = new AccelerationIntegrator();
+
+        parameters.accelerationIntegrationAlgorithm = integrator;
+
+        imu.initialize(parameters);
+
+        //imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
+
+        updateReadings();
+
+        //sleep(500);
 
         tel.log().add("Gyro calibration complete");
         //initialCompassHeading = Math.toRadians(compass.getDirection());
@@ -290,6 +292,7 @@ public class NullbotHardware {
     }
 
     public void updateReadings() {
+        //integrator.update(imu.getLinearAcceleration());
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
 
@@ -415,8 +418,8 @@ public class NullbotHardware {
     public void lowerWhipSnake() {
         lowerLeftWhipSnake();
     }
-    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(214.0/255.0);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(36.0/255.0);}
+    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(255.0/255.0);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(100.0/255.0);}
 
     public void crunchBlockClaw() {
         leftBlockClaw.setPosition(200.0/255.0);
@@ -424,26 +427,21 @@ public class NullbotHardware {
     }
 
     public void openBlockClaw() {
-        //leftBlockClaw.setPosition(0.35);
-        //rightBlockClaw.setPosition(0.55);
         leftBlockClaw.setPosition(0.25);
         rightBlockClaw.setPosition(0.75);
     }
 
     public void closeBlockClaw() {
-        //leftBlockClaw.setPosition(0.5);
-        //rightBlockClaw.setPosition(0.7);
-
         leftBlockClaw.setPosition(0.43);
         rightBlockClaw.setPosition(0.57);
 
     }
 
-    public final double RELIC_CLAW_OPEN_POSITION = 255.0/255.0;
-    public final double RELIC_CLAW_CLOSED_POSITION = 0.0/255.0;
+    public final double RELIC_CLAW_OPEN_POSITION = 0.4;
+    public final double RELIC_CLAW_CLOSED_POSITION = 0.85;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
-    public void flattenRelicClaw() {relicClaw.setPosition(135.0/255.0); RELIC_CLAW_IS_OPEN = true;}
+    public void flattenRelicClaw() {relicClaw.setPosition(0.0/255.0); RELIC_CLAW_IS_OPEN = true;}
 
     public void openRelicClaw() {relicClaw.setPosition(RELIC_CLAW_OPEN_POSITION); RELIC_CLAW_IS_OPEN = true;}
     public void closeRelicClaw() {relicClaw.setPosition(RELIC_CLAW_CLOSED_POSITION); RELIC_CLAW_IS_OPEN = false;}
@@ -457,7 +455,7 @@ public class NullbotHardware {
     }
 
     public double relicFipperPosition = 80;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 96.0/255.0;
+    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 84.0/255.0;
     public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;
 
     public void extendFlipper() {
@@ -498,6 +496,15 @@ public class NullbotHardware {
         if (m.getMode() != mode) {
             m.setMode(mode);
         }
+    }
+
+    public double[] getDrivePowersFromAngle(double angle) {
+        double[] unscaledPowers = new double[4];
+        unscaledPowers[0] = Math.sin(angle + Math.PI / 4);
+        unscaledPowers[1] = Math.cos(angle + Math.PI / 4);
+        unscaledPowers[2] = unscaledPowers[1];
+        unscaledPowers[3] = unscaledPowers[0];
+        return unscaledPowers;
     }
 
 }

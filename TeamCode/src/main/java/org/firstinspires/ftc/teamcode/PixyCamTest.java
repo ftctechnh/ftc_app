@@ -24,14 +24,16 @@ public class PixyCamTest extends OpMode
     @Override
     public void loop()
     {
-        if (elapsedTime.milliseconds() > 50) // Update every twentieth of a second.
-        {
-            elapsedTime.reset();
-            red1Block = leftPixyCam.GetBiggestBlock(1);
-            telemetry.addData("Left red ball:", red1Block.toString());
-            blue1Block = leftPixyCam.GetBiggestBlock(2);
-            telemetry.addData("Left blue ball:", blue1Block.toString());
+        while (true) {
+            if (elapsedTime.milliseconds() > 50) // Update every twentieth of a second.
+            {
+                elapsedTime.reset();
+                red1Block = leftPixyCam.GetBiggestBlock(1);
+                telemetry.addData("Left red ball:", red1Block.toString());
+                blue1Block = leftPixyCam.GetBiggestBlock(2);
+                telemetry.addData("Left blue ball:", blue1Block.toString());
+            }
+            telemetry.update();
         }
-        telemetry.update();
     }
 }

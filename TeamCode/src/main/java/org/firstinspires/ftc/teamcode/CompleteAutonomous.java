@@ -45,13 +45,14 @@ public class CompleteAutonomous extends LinearOpMode {
 
         robot.init(hardwareMap, this, gamepad1, gamepad2);
 
-        robot.color = Alliance.RED;
+        robot.color = Alliance.BLUE;
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        pixyCam = hardwareMap.get(PixyCam.class, "leftPixyCam");
+        pixyCam = robot.leftPixyCam;
+        robot.crunchBlockClaw();
 
         telemetry.clearAll();
 
@@ -87,7 +88,7 @@ public class CompleteAutonomous extends LinearOpMode {
         int pictograph = 1;
 
         ElapsedTime timeUntilGuess = new ElapsedTime();
-        while (opModeIsActive() && timeUntilGuess.seconds() < 5) {
+        while (opModeIsActive() && timeUntilGuess.seconds() < 30 ) {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
@@ -128,23 +129,30 @@ public class CompleteAutonomous extends LinearOpMode {
             knockOffBalls();
         }
 
-        // Drive backwards off the pad
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 2000);
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - 2000);
         robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - 2000);
         robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - 2000);
-        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 2000);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - 2000);
+        waitUntilMovementsComplete();
+
+        // Drive backwards off the pad
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 3500);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - 3500);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - 3500);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 3500);
 
         log("Finished setting motors to drive sideways");
         waitUntilMovementsComplete();
 
-        turnToPos(0);
-        for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
+        //turnToPos(INITIAL_DESIRED_HEADING);
+        //turnToPos(0);
+        //for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
         log("Corrected heading");
 
-        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 1600);
-        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + 1600);
-        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + 1600);
-        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 1600);
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 3600);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + 3600);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + 3600);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 3600);
 
         log("Moving forward...");
 
@@ -156,7 +164,7 @@ public class CompleteAutonomous extends LinearOpMode {
 
         waitUntilMovementsComplete();
 
-        turnToPos(0);
+        //turnToPos(0);
         for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
 
         robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - 800);
@@ -167,22 +175,35 @@ public class CompleteAutonomous extends LinearOpMode {
         waitUntilMovementsComplete();
         // Move into corner
 
-        robot.backLeft.setPower(0.6);
+        robot.backLeft.setPower(0.75);
         robot.backRight.setPower(0);
         robot.frontLeft.setPower(0);
-        robot.frontRight.setPower(0.6);
+        robot.frontRight.setPower(0.75);
 
         // Up and right five wheel rotations
-        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + (int) (ROTATION * 2.5));
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + (int) (ROTATION * 3.5));
         robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition());
         robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition());
-        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + (int) (ROTATION * 2.5));
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + (int) (ROTATION * 3.5));
 
         log("Ramming corner...");
 
         waitUntilMovementsComplete();
 
-        turnToPos(0);
+        // Drive left until we are turned by hitting wall
+
+        //robot.frontLeft.setPower(-0.35);
+        //robot.backRight.setPower(-0.35);
+
+
+        /*robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - 500);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + 500);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + 500);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - 500);*/
+
+        //waitUntilMovementsComplete();
+
+        //turnToPos(0);
         for (DcMotor m : robot.motorArr) { m.setPower(0.35); }
 
         robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - ROTATION);
@@ -193,8 +214,11 @@ public class CompleteAutonomous extends LinearOpMode {
 
         waitUntilMovementsComplete();
 
-        int driveDist = 1000 + pictograph * 630;
+        int driveDist = 1520 + pictograph * 0/*630*/;
 
+        // 1000 ticks left equals roughly 25 CM
+        // We need 13 more CM than where 1000 ticks puts us
+        // So our initial position will be 1520 ticks
         robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - driveDist);
         robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + driveDist);
         robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + driveDist);
@@ -276,19 +300,28 @@ public class CompleteAutonomous extends LinearOpMode {
         for (DcMotor m : robot.motorArr) {
             m.setTargetPosition(0);
         }
+        robot.sleep(2000);
     }
+
     public void turnToPos(double pos) {
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double difference = Double.MAX_VALUE;
+        ElapsedTime timeHeadingAcceptable = new ElapsedTime();
 
-
-        while(Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION && opModeIsActive()) {
+        while(Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION && timeHeadingAcceptable.milliseconds() < 500 && opModeIsActive()) {
+            robot.updateReadings();
             telemetry.addData("Heading difference", difference);
             double heading = robot.getGyroHeading();
 
             difference = getAngleDifference(pos, heading);
             double turnSpeed = difference;
-            turnSpeed = Math.max(-0.5, Math.min(0.5, turnSpeed));
+            turnSpeed = Math.max(-0.75, Math.min(0.75, turnSpeed));
+
+            // Don't go below 0.2
+
+            if (Math.abs(turnSpeed) < 0.2) {
+                turnSpeed = 0.2 * Math.signum(turnSpeed);
+            }
 
             double[] unscaledMotorPowers = new double[4];
             telemetry.addData("Turnspeed", turnSpeed);
@@ -307,8 +340,17 @@ public class CompleteAutonomous extends LinearOpMode {
 
             telemetry.update();
 
-            robot.setMotorSpeeds(unscaledMotorPowers);
+            robot.motorArr[0].setPower(unscaledMotorPowers[0]);
+            robot.motorArr[1].setPower(unscaledMotorPowers[1]);
+            robot.motorArr[2].setPower(unscaledMotorPowers[2]);
+            robot.motorArr[3].setPower(unscaledMotorPowers[3]);
+
+            if (Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION) {
+                timeHeadingAcceptable.reset();
+            }
+            //robot.setMotorSpeeds(unscaledMotorPowers);
         }
+
         robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
         stopMoving();
     }

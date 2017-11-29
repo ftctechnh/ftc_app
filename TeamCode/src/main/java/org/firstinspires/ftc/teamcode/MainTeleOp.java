@@ -36,6 +36,7 @@ public class MainTeleOp extends LinearOpMode {
     boolean wasGP2RightBumperPressed;
     boolean wasRightTriggerPressed;
     boolean wasLeftTriggerPressed;
+    boolean wasGP2LeftTriggerPressed;
     boolean flashMode;
     boolean nonrelativeDriveModeEnabled;
     boolean scale;
@@ -46,12 +47,14 @@ public class MainTeleOp extends LinearOpMode {
     ConstrainedPIDMotor zType;
 
     ElapsedTime timeSinceDriveModeToggle;
-    ElapsedTime timeSinceSlowModeToggle;
+    //ElapsedTime timeSinceSlowModeToggle;
+    ElapsedTime timeSinceZTypeSlowModeToggle;
 
     ElapsedTime totalElapsedTime;
 
     boolean wasBackPressed;
     boolean slowMode;
+    boolean zTypeSlowMode;
 
     @Override
     public void runOpMode() {
@@ -72,14 +75,17 @@ public class MainTeleOp extends LinearOpMode {
 
         flashMode = false;
         timeTillHeadingLock = new ElapsedTime();
-
         timeSinceDriveModeToggle = new ElapsedTime();
-        timeSinceSlowModeToggle = new ElapsedTime();
+        timeSinceZTypeSlowModeToggle = new ElapsedTime();
+
+        //timeSinceSlowModeToggle = new ElapsedTime();
         totalElapsedTime = new ElapsedTime();
         wasRightTriggerPressed = false;
         wasLeftTriggerPressed = false;
+        wasGP2LeftTriggerPressed = false;
         wasBackPressed = false;
         slowMode = false;
+        zTypeSlowMode = false;
 
         while (opModeIsActive()) {
             robot.updateReadings();
@@ -89,6 +95,20 @@ public class MainTeleOp extends LinearOpMode {
                 nonrelativeDriveModeEnabled = !nonrelativeDriveModeEnabled;
                 timeSinceDriveModeToggle.reset();
             }
+
+            if (gamepad2.left_trigger > triggerThreshold && !wasGP2LeftTriggerPressed &&
+                    timeSinceDriveModeToggle.milliseconds() > 100) {
+                zTypeSlowMode = !zTypeSlowMode;
+                timeSinceZTypeSlowModeToggle.reset();
+                if (zTypeSlowMode) {
+                    zType.forwardRunSpeed = 0.1;
+                    zType.backwardRunSpeed = 0.1;
+                } else {
+                    zType.forwardRunSpeed = 0.4;
+                    zType.backwardRunSpeed = 0.3;
+                }
+            }
+
             wasRightTriggerPressed = gamepad1.right_trigger > triggerThreshold;
 
             scale = true;
@@ -105,7 +125,7 @@ public class MainTeleOp extends LinearOpMode {
 
             if (true) {
 
-                setOverride((gamepad1.a && !gamepad1.start));
+                setOverride((gamepad1.a || gamepad2.a) && !gamepad1.start);
 
                 if (gamepad1.start && !gamepad1.back && !gamepad1.a) { // Back coasts all motors
                     lift.setDirection(ConstrainedPIDMotor.Direction.COAST);
@@ -134,8 +154,9 @@ public class MainTeleOp extends LinearOpMode {
                         robot.closeBlockClaw();
                     }
 
-                    if ((gamepad1.left_bumper && !wasLeftBumperPressed) || (gamepad2.left_bumper && !wasGP2LeftBumperPressed)) {
+                    if ((gamepad1.left_bumper && !wasLeftBumperPressed)|| (gamepad2.left_bumper && !wasGP2LeftBumperPressed)) {
                         robot.toggleRelicClaw();
+
                     }
 
                     if (gamepad1.right_bumper || gamepad2.right_bumper) {
@@ -158,7 +179,7 @@ public class MainTeleOp extends LinearOpMode {
                     wasGP2RightBumperPressed = gamepad2.right_bumper;
 
                     // Taunt code
-                    if (!gamepad1.y) {
+                    if (!gamepad1.y && !gamepad2.y) {
                         robot.raiseWhipSnake();
                     } else {
                         robot.lowerWhipSnake();
@@ -278,12 +299,7 @@ public class MainTeleOp extends LinearOpMode {
             robotAngle = controllerAngle;
         }
 
-        double[] unscaledPowers = new double[4];
-        unscaledPowers[0] = Math.sin(robotAngle + Math.PI/4);
-        unscaledPowers[1] = Math.cos(robotAngle + Math.PI/4);
-        unscaledPowers[2] = unscaledPowers[1];
-        unscaledPowers[3] = unscaledPowers[0];
-        return unscaledPowers;
+        return robot.getDrivePowersFromAngle(robotAngle);
     }
 
     public void setOverride (boolean b) {
