@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.relicrecovery.JeffThePengwin;
+
 import static java.lang.Math.abs;
 
 /**
@@ -74,8 +76,8 @@ public class base_mecanum_test extends LinearOpMode {
                 degreePower = 0.25;
             }
 
-            jeffThePengwin.degreeOfPower = degreePower;
-            jeffThePengwin.powerInput = power;
+            jeffThePengwin.setDegreeOfPower(degreePower);
+            jeffThePengwin.setPowerInput(power);
             boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
             boolean notTurning = turn == 0;
             boolean movingVertical = Math.abs(drive) > Math.abs(leftX);

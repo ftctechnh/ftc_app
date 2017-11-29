@@ -1,12 +1,8 @@
 //TODO Dis i' da wight 1
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by thad on 10/24/2017.

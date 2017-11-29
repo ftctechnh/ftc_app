@@ -1,6 +1,6 @@
 //File: PengwinFin.java
 //Class to control the pengwin fin, which has a color sensor and can be use to knock of the jewel in ftc run
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;

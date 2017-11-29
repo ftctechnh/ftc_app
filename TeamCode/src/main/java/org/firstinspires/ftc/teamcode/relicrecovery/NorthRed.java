@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Eric on 11/9/2017.
  */
 
-@Autonomous(name="SouthRed", group="Autonomisisisisis")
-public class SouthRed extends LinearOpMode {
+@Autonomous(name="NorthRed", group="Autonomisisisisis")
+public class NorthRed extends LinearOpMode {
     PengwinArm pengwinArm;
     PengwinFin pengwinFin;
     JeffThePengwin jeffThePengwin;
@@ -83,12 +83,18 @@ public class SouthRed extends LinearOpMode {
             //Do Nothing
         }
         //
-        jeffThePengwin.leftToPosition(18,0.75);
+        jeffThePengwin.turnRightToPostion(22, .4);
         runtime.reset();
         while(runtime.seconds()<4 && opModeIsActive()){
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
+        //
+        jeffThePengwin.backToPosition(3, .4);
+        runtime.reset();
+        while(runtime.seconds()<1 && opModeIsActive()){
+            //Do Nothing
+        }
         //
         smartify();
         runtime.reset();
@@ -107,8 +113,6 @@ public class SouthRed extends LinearOpMode {
         while(runtime.seconds()<1 && opModeIsActive()){
             //Do Nothing
         }
-        //
-        pengwinArm.setUpPower(-0.4);
     }
     //
     //

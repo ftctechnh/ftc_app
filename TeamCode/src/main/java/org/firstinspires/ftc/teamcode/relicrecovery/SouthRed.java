@@ -1,15 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
 /**
  * Created by Eric on 11/9/2017.
  */
 
-@Autonomous(name="NorthRed", group="Autonomisisisisis")
-public class NorthRed extends LinearOpMode {
+@Autonomous(name="SouthRed", group="Autonomisisisisis")
+public class SouthRed extends LinearOpMode {
     PengwinArm pengwinArm;
     PengwinFin pengwinFin;
     JeffThePengwin jeffThePengwin;
@@ -29,90 +30,47 @@ public class NorthRed extends LinearOpMode {
         waitForStartify();
         //
         pengwinArm.open();//close
-        runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(1);
         //
         jeffThePengwin.rightToPosition(5, .4);
-        runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(1);
         jeffThePengwin.switcheroo();
         //
         pengwinFin.moveFinDown();
-        runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(1);
         //
         if (pengwinFin.doesColorSensorSeeBlueJewel()){
             jeffThePengwin.turnLeftToPosition(4,0.4);
-            runtime.reset();
-            while(runtime.seconds()<1 && opModeIsActive()){
-                //Do Nothing
-            }
+            hurryUpAndWait(1);
             pengwinFin.moveFinUp();
-            runtime.reset();
-            while(runtime.seconds()<1 && opModeIsActive()){
-                //Do Nothing
-            }
+            hurryUpAndWait(1);
             jeffThePengwin.turnRightToPostion(4,0.4);
         }else{
             jeffThePengwin.turnRightToPostion(4,0.4);
-            runtime.reset();
-            while(runtime.seconds()<1 && opModeIsActive()){
-                //Do Nothing
-            }
+            hurryUpAndWait(1);
             pengwinFin.moveFinUp();
-            runtime.reset();
-            while(runtime.seconds()<1 && opModeIsActive()){
-                //Do Nothing
-            }
+            hurryUpAndWait(1);
             jeffThePengwin.turnLeftToPosition(4., 0.4);
         }
-        runtime.reset();
-        while(runtime.seconds()<2 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(2);
         gentlyPutTheMotorsToSleep();
         jeffThePengwin.forwardToPosition(27.5,0.4);
-        runtime.reset();
-        while(runtime.seconds()<5 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(5);
         //
-        jeffThePengwin.turnRightToPostion(22, .4);
-        runtime.reset();
-        while(runtime.seconds()<4 && opModeIsActive()){
-            //Do Nothing
-        }
+        jeffThePengwin.leftToPosition(18,0.75);
+        hurryUpAndWait(4);
         gentlyPutTheMotorsToSleep();
         //
-        jeffThePengwin.backToPosition(3, .4);
-        runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
-            //Do Nothing
-        }
-        //
         smartify();
-        runtime.reset();
-        while(runtime.seconds()<3 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(3);
         //
         pengwinArm.close();//open
-        runtime.reset();
-        while(runtime.seconds()<.5 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(.5);
         //
         jeffThePengwin.forwardToPosition(1,.4);
-        runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
-            //Do Nothing
-        }
+        hurryUpAndWait(1);
+        //
+        pengwinArm.setUpPower(-0.4);
     }
     //
     //
@@ -122,6 +80,13 @@ public class NorthRed extends LinearOpMode {
         return opModeIsActive() &&
                 (runtime.seconds() < time) &&
                 (jeffThePengwin.isMoving());
+    }
+
+    private void hurryUpAndWait(double time){
+        runtime.reset();
+        while(runtime.seconds()<time && opModeIsActive()){
+            //Do Nothing
+        }
     }
 
     private void getTelemetry(double time) {

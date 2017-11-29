@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -25,6 +25,22 @@ public class JeffThePengwin {
     DcMotor rightFrontMotor;
     DcMotor leftBackMotor;
     DcMotor rightBackMotor;
+
+    public double getPowerInput() {
+        return powerInput;
+    }
+
+    public void setPowerInput(double powerInput) {
+        this.powerInput = powerInput;
+    }
+
+    public double getDegreeOfPower() {
+        return degreeOfPower;
+    }
+
+    public void setDegreeOfPower(double degreeOfPower) {
+        this.degreeOfPower = degreeOfPower;
+    }
 
     double powerInput = 0;
     double degreeOfPower = 1;

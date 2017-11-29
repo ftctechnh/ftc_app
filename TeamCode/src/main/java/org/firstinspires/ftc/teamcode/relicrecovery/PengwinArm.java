@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -29,15 +27,12 @@ public class PengwinArm {
     public PengwinArm(HardwareMap hardwareMap){
         //get motors
         upMotor = hardwareMap.dcMotor.get("arm"); //left back
-        //upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         acrossMotor = hardwareMap.dcMotor.get("extend"); //right back
         leftGlyphy = hardwareMap.servo.get("glyphy");
         rightGlyphy = hardwareMap.servo.get("rightglyphy");
         leftGlyphy.setDirection(Servo.Direction.FORWARD);
         leftGlyphy.setDirection(Servo.Direction.REVERSE);
-        //upMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //acrossMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void setAcrossPower(double power){
         acrossPower = power;
@@ -51,26 +46,9 @@ public class PengwinArm {
     public double getAcrossPower(){return acrossPower;}
     public double getUpPower(){return upPower;}
 
-    public void setHome(){
-        upMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 
     public double getCalibrate(){
        return upMotor.getCurrentPosition();
-    }
-    public void goeyHomey(){
-       // upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        upMotor.setTargetPosition(0);
-        upMotor.setPower(.4);
-       // upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    //
-    public void goUp(){
-       // upMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        upMotor.setTargetPosition(upPosition);
-        upMotor.setPower(.4);
-       // upMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     //
     public void close(){
@@ -80,10 +58,6 @@ public class PengwinArm {
     public void open(){
         leftGlyphy.setPosition(open);
         rightGlyphy.setPosition(rightOpen);
-    }
-
-    public void setpositionto(double position){
-        leftGlyphy.setPosition(position);
     }
 }
 /*
