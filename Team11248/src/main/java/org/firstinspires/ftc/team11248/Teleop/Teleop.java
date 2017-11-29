@@ -64,8 +64,9 @@ public class Teleop extends OpMode {
 
         robot.setFastMode(gamepad1.right_bumper);
 
-        if(robot.getOffsetAngle() == HolonomicDriver_11248.BACK_OFFSET){
-            if (gamepad1.a && !prevGP1.a){
+
+        if (robot.getOffsetAngle() == HolonomicDriver_11248.BACK_OFFSET) {
+            if (gamepad1.a && !prevGP1.a) {
                 if (toggleOpen)
                     robot.backClaw.open();
                 else
@@ -99,23 +100,17 @@ public class Teleop extends OpMode {
             if (gamepad1.x && !prevGP1.x)
                 robot.frontClaw.close();
 
-            //Sets arm motor to whatever right trigger is
-            if (gamepad1.right_trigger > 0)
-                robot.setFrontLiftPower(gamepad1.right_trigger);
-            else if (gamepad1.left_trigger > 0)
-                robot.setFrontLiftPower(-gamepad1.left_trigger);
-            else
-                robot.setFrontLiftPower(0);
 
         }
 
 
-
-            //Recaptures all previous values of Gampad 1 for debouncing
-            try {
-                prevGP1.copy(gamepad1);
-            } catch (RobotCoreException e) {
-                e.printStackTrace();
+        //Recaptures all previous values of Gampad 1 for debouncing
+        try {
+            prevGP1.copy(gamepad1);
+        } catch (RobotCoreException e) {
+            e.printStackTrace();
         }
     }
 }
+
+

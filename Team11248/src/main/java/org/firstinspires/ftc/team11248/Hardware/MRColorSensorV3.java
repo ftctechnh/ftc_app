@@ -13,7 +13,7 @@ public class MRColorSensorV3 {
 
     private I2cDeviceSynch colorSynch;
 
-    private final int COLOR_THRESHOLD = 5;
+    private final int COLOR_THRESHOLD = 10;
 
 
         /**
