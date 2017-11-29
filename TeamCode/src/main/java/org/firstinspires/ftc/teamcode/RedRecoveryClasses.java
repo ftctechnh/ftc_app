@@ -17,10 +17,11 @@ public class RedRecoveryClasses extends LinearOpMode {
                 hardwareMap.dcMotor.get("m3"), //rl motor
                 hardwareMap.dcMotor.get("m4"),
                 hardwareMap.gyroSensor.get("g1"));
-                waitForStart();
         jewelArm = new JewelArm(
                 hardwareMap.servo.get("s4"), //Servo
                 hardwareMap.colorSensor.get("cs1")); //Color Sensor
+                waitForStart();
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         drive.init();
         if (jewelArm.findJewel() == JewelArm.Color.Red) { //if the arm sees red
