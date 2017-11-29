@@ -51,7 +51,7 @@ public class MasterHardwareClass {
     static double clawStill = 0;
 
     /* Define values used in knocking the jewels */
-    static double xPosUp = 0;
+    static double xPosUp = 1;
     static double xPosDown = .5;
 
     /* local OpMode members. */

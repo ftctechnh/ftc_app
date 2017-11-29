@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @Autonomous(name = "arg", group = "Concept")
 //@Disabled
-public class AutonomousDrive extends LinearOpMode {
+public class ArlethAutonomousDrive extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
 MasterHardwareClass robot = new MasterHardwareClass();

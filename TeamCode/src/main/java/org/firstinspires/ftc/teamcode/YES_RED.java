@@ -38,7 +38,7 @@ public class YES_RED extends LinearOpMode
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
     double xPosUp = 1;
-    double xPosDown = .5;
+    double xPosDown = .45;
 
 
     /* Create a "timer" that begins once the OpMode begins */
@@ -107,13 +107,7 @@ public class YES_RED extends LinearOpMode
 
         sleep(1000);
 
-   // Use gyro to drive in a straight line.
-            correction = checkDirection();
 
-            telemetry.addData("1 imu heading", lastAngles.firstAngle);
-            telemetry.addData("2 global heading", globalAngle);
-            telemetry.addData("3 correction", correction);
-            telemetry.update();
 
         gemServo.setPosition(xPosDown);
         sleep(1500);
@@ -206,24 +200,21 @@ public class YES_RED extends LinearOpMode
 
         if (colorSensor.red() < colorSensor.blue()) {
             resetAngle();
-            rotate(5, .3);
+            rotate(10, .3);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
-            rotate(-5,.3);
+            rotate(-10,.3);
         } else {
             resetAngle();
-            rotate(-5, .3);
+            rotate(-10, .3);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
-            rotate(5,.3);
+            rotate(10,.3);
         }
     }
 
-    public void returnJewel(){
-
-    }
 
     /**
      * Resets the cumulative angle tracking to zero.
