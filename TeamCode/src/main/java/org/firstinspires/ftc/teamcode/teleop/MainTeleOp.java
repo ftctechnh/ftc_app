@@ -29,14 +29,12 @@
 
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robotplus.gamepadwrapper.ControllerWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
@@ -56,9 +54,9 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Test Robot Hardware", group="Test")
+@TeleOp(name="Drive Robot", group="Competition OpModes")
 //@Disabled
-public class TestRobotHardware extends OpMode
+public class MainTeleOp extends OpMode
 {
 
     private ElapsedTime runtime = new ElapsedTime();

@@ -92,9 +92,6 @@ public class TestRobotHardware extends OpMode
         armExtender = hardwareMap.servo.get("armExtender");
 
         raiser.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //armRotator.setPosition(0);
-        //armExtender.setPosition(0);
     }
 
     /*
@@ -130,8 +127,9 @@ public class TestRobotHardware extends OpMode
         } else {
             raiser.setPower(0);
         }
+        telemetry.addData("Raiser Power", raiser.getPower());
 
-        //Increment servos by small amounts when bumper is held.
+        //Move grabber when bumpers are pressed.
         if(gamepad1.left_bumper){
             grabber.setPower(-0.5);
         } else if (gamepad1.right_bumper){
@@ -139,44 +137,23 @@ public class TestRobotHardware extends OpMode
         } else {
             grabber.setPower(0);
         }
+        telemetry.addData("Grabber Power", grabber.getPower());
 
-        //Set rotation servo positions
+        //Increment/Decrement rotation servo positions
         if(gamepad1.dpad_left){
             armRotator.setPosition(Math.min(1, armRotator.getPosition() + 0.01));
         } else if (gamepad1.dpad_right){
             armRotator.setPosition(Math.max(0, armRotator.getPosition() - 0.01));
         }
+        telemetry.addData("ArmRotator Position", armRotator.getPosition());
 
-        //Set extender servo positions
+        //Increment/Decrement extender servo positions
         if(gamepad1.dpad_up){
             armExtender.setPosition(Math.min(1, armExtender.getPosition() + 0.01));
         } else if(gamepad1.dpad_down){
             armExtender.setPosition(Math.max(0, armExtender.getPosition() - 0.01));
         }
-
-        telemetry.addData("Grabber Power", grabber.getPower());
-
-        telemetry.addData("ArmRotator Position", armRotator.getPosition());
         telemetry.addData("ArmExtender Position", armExtender.getPosition());
-
-
-        /*
-        if (gamepad1.a) {
-            // cache the gamepad a button
-            game1.getLetterInterface().getAButton().setPress(true);
-        }
-        else if (game1.getLetterInterface().getAButton().isPressed()) {
-            // do something
-            // set the interface back
-            game1.getLetterInterface().getAButton().setPress(false);
-        }
-        */
-
-        telemetry.addData("Main1", drivetrain.getmajorDiagonal().getMotor1().getPower());
-        telemetry.addData("Minor1", drivetrain.getMinorDiagonal().getMotor1().getPower());
-        telemetry.addData("Minor2", drivetrain.getMinorDiagonal().getMotor2().getPower());
-        telemetry.addData("Main2", drivetrain.getmajorDiagonal().getMotor2().getPower());
-
 
     }
 
@@ -185,6 +162,9 @@ public class TestRobotHardware extends OpMode
      */
     @Override
     public void stop() {
+        robot.stopMoving();
+        drivetrain.stopMoving();
+        grabber.setPower(0);
     }
 
 }
