@@ -3,24 +3,32 @@ package org.chathamrobotics.common.systems;
 import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.chathamrobotics.common.hardware.utils.HardwareListener;
+import org.chathamrobotics.common.robot.Robot;
 import org.chathamrobotics.common.robot.RobotLogger;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-/**
- * Created by carsonstorm on 11/28/2017.
- */
-
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public class GyroHandler implements System {
     // CONSTANTS
     public static final double DEFAULT_TOLERANCE = 15;
 
     private static final HardwareListener.HardwareCondition<GyroSensor> FINISHED_CALIBRATING =
             gyro -> ! gyro.isCalibrating();
+    private static final String TAG = GyroHandler.class.getSimpleName();
 
     // CLASS METHODS & FIELDS
+
+    public enum GyroOrientation {
+        UPSIDE_UP,
+        UPSIDE_DOWN
+    }
+
+    public interface Update<T> {
+        void update(T value);
+    }
 
     /**
      * Finds the angle relative to the reference angle
@@ -45,14 +53,61 @@ public class GyroHandler implements System {
         return Math.abs(angle - referenceAngle + angleUnit.fromDegrees(360)) % angleUnit.fromDegrees(360);
     }
 
+    /**
+     * Finds the angular displacement (the signed shortest distance between two angles. negative for clockwise)
+     * @param initialAngle  the initial angle in radians
+     * @param finalAngle    the final angle in radians
+     * @return              the angular displacement in radians
+     */
+    public static double angularDisplacement(double initialAngle, double finalAngle) {
+        return  angularDisplacement(initialAngle, finalAngle, AngleUnit.RADIANS);
+    }
+
+    /**
+     * Finds the angular displacement (the signed shortest distance between two angles. negative for clockwise)
+     * @param initialAngle  the initial angle
+     * @param finalAngle    the final angle
+     * @param angleUnit     the unit of measure for the angles
+     * @return              the angular displacement
+     */
+    public static double angularDisplacement(double initialAngle, double finalAngle, @NonNull AngleUnit angleUnit) {
+        return Math.abs(finalAngle - initialAngle + angleUnit.fromDegrees(180)) % angleUnit.fromDegrees(360) - angleUnit.fromDegrees(180);
+    }
+
+    /**
+     * Builds a new  instance of {@link GyroHandler}
+     * @param robot the robot to build the {@link GyroHandler} from
+     * @return      a built {@link GyroHandler}
+     */
+    public static GyroHandler build(Robot robot) {
+        return build(robot.getHardwareMap(), robot, robot.log.systemLogger(TAG));
+    }
+
+    /**
+     * Builds a new  instance of {@link GyroHandler}
+     * @param hardwareMap   the hardware map for the robot
+     * @param listener      the hardware listener
+     * @param logger        the robot logger
+     * @return              a built {@link GyroHandler}
+     */
+    public static GyroHandler build(HardwareMap hardwareMap, HardwareListener listener, RobotLogger logger) {
+        return new GyroHandler(
+                hardwareMap.gyroSensor.get("Gyro"),
+                listener,
+                logger
+        );
+    }
+
     // INSTANCE
 
     private final GyroSensor gyro;
     private final HardwareListener listener;
     private final RobotLogger logger;
 
+    // state
+    private GyroOrientation orientation = GyroOrientation.UPSIDE_UP;
     private double tolerance = DEFAULT_TOLERANCE;
-    private int initialHeading;
+    private double referenceHeading;
 
     private boolean isCalibrated;
     private boolean isInitialized;
@@ -74,16 +129,80 @@ public class GyroHandler implements System {
     // Getters and Setters
 
     /**
-     * Sets the gyro handler's tolerance to differences in angles
-     * @param tolerance the tolerance to set
+     * Returns the gyro used by the gyro handler
+     * @return the gyro used by the gyro handler
      */
-    public void setTolerance(double tolerance) {this.tolerance = tolerance;}
+    public GyroSensor getGyro() {return gyro;}
+
+    /**
+     * Sets the gyro's orientation
+     * @param orientation   the orientation to be set
+     */
+    public void setOrientation(@NonNull GyroOrientation orientation) {this.orientation = orientation;}
+
+    /**
+     * Returns the gyro's orientation
+     * @return  the gyro's orientation
+     */
+    public GyroOrientation getOrientation() {return this.orientation;}
+
+    /**
+     * Sets the gyro handler's tolerance to differences in angles
+     * @param tolerance the tolerance to be set in radians
+     */
+    public void setTolerance(double tolerance) {setTolerance(tolerance, AngleUnit.DEGREES);}
+
+    /**
+     * Sets the gyro handler's tolerance to differences in angles
+     * @param tolerance the tolerance to be set
+     * @param angleUnit the unit of measure for the angles
+     */
+    public void setTolerance(double tolerance, @NonNull AngleUnit angleUnit) {
+        this.tolerance = angleUnit.toDegrees(tolerance);
+    }
+
+    /**
+     * Returns the gyro handler's current tolerance in radians
+     * @return the gyro handler's current tolerance in radians
+     */
+    public double getTolerance() {return getTolerance(AngleUnit.RADIANS);}
 
     /**
      * Returns the gyro handler's current tolerance
      * @return the gyro handler's current tolerance
      */
-    public double getTolerance() {return  this.tolerance;}
+    public double getTolerance(AngleUnit angleUnit) {
+        return angleUnit.fromDegrees(tolerance);
+    }
+
+    /**
+     * Sets the reference heading
+     * @param referenceHeading  the reference heading to set in radians
+     */
+    public void setReferenceHeading(double referenceHeading) {setReferenceHeading(referenceHeading, AngleUnit.RADIANS);}
+
+    /**
+     * Sets the reference heading
+     * @param referenceHeading  the reference heading to set
+     * @param angleUnit         the unit of measure to use for the angle
+     */
+    public void setReferenceHeading(double referenceHeading, AngleUnit angleUnit) {
+        this.referenceHeading = angleUnit.toDegrees(referenceHeading);
+    }
+
+    /**
+     * Returns the reference heading in radians
+     * @return  the reference heading in radians
+     */
+    public double getReferenceHeading() {return getReferenceHeading(AngleUnit.RADIANS);}
+
+    /**
+     * Returns the reference heading
+     * @return  the reference heading
+     */
+    public double getReferenceHeading(AngleUnit angleUnit) {
+        return angleUnit.fromDegrees(referenceHeading);
+    }
 
     /**
      * Gets the gyro's heading in radians
@@ -98,22 +217,25 @@ public class GyroHandler implements System {
      * @param angleUnit the angle unit to give the heading in
      * @return          the gyro's heading
      */
-    public double getHeading(AngleUnit angleUnit) {
-        return angleUnit.fromDegrees(gyro.getHeading());
+    public double getHeading(@NonNull AngleUnit angleUnit) {
+        if (orientation == GyroOrientation.UPSIDE_UP)
+            return angleUnit.fromDegrees(gyro.getHeading());
+
+        return angleUnit.fromDegrees(Math.abs(gyro.getHeading() - 360));
     }
 
     /**
-     * Gets the heading relative to the initial heading
+     * Gets the heading relative to the reference heading
      * @return          the relative heading in radians
      */
-    public double getRelativeHeading() {return getRelativeHeading(initialHeading, AngleUnit.RADIANS);}
+    public double getRelativeHeading() {return getRelativeHeading(referenceHeading, AngleUnit.RADIANS);}
 
     /**
-     * Gets the heading relative to the initial heading
+     * Gets the heading relative to the reference heading
      * @param angleUnit the unit of measure for angles
      * @return          the relative heading
      */
-    public double getRelativeHeading(AngleUnit angleUnit) {return  getRelativeHeading(initialHeading, angleUnit);}
+    public double getRelativeHeading(@NonNull AngleUnit angleUnit) {return  getRelativeHeading(referenceHeading, angleUnit);}
 
     /**
      * Gets the heading relative to the reference heading
@@ -128,8 +250,8 @@ public class GyroHandler implements System {
      * @param angleUnit the unit of measure for angles
      * @return          the relative heading
      */
-    public double getRelativeHeading(double reference, AngleUnit angleUnit) {
-        return relativeAngle(reference, angleUnit.fromDegrees(gyro.getHeading()), angleUnit);
+    public double getRelativeHeading(double reference, @NonNull AngleUnit angleUnit) {
+        return relativeAngle(reference, getHeading(angleUnit), angleUnit);
     }
 
     // Behavior
@@ -211,7 +333,7 @@ public class GyroHandler implements System {
         logger.debug("Starting Initialization");
 
         calibrate(() -> {
-            initialHeading = gyro.getHeading();
+            referenceHeading = getHeading(AngleUnit.DEGREES);
             isInitialized = true;
             isInitializing = false;
             logger.debug("Finished Initialization");
@@ -235,7 +357,7 @@ public class GyroHandler implements System {
 
         calibrateSync();
 
-        initialHeading = gyro.getHeading();
+        referenceHeading = getHeading(AngleUnit.DEGREES);
         isInitialized = true;
         isInitializing = false;
         logger.debug("Finished Initialization");
@@ -261,8 +383,277 @@ public class GyroHandler implements System {
      */
     public boolean isInitialized() {return isInitialized;}
 
+    /**
+     * Returns true if the difference between the target heading and current heading is within the tolerance
+     * @param targetHeading the desired heading in radians
+     * @return              whether or not the current heading is approximately equal to the target heading
+     */
+    public boolean isAtHeading(double targetHeading) {
+        return isAtHeading(targetHeading, Math.toRadians(tolerance), AngleUnit.RADIANS);
+    }
+
+    /**
+     * Returns true if the difference between the target heading and current heading is within the tolerance
+     * @param targetHeading the desired heading in radians
+     * @param tolerance     the tolerance to allow for in differences between angles in radians
+     * @return              whether or not the current heading is approximately equal to the target heading
+     */
+    public boolean isAtHeading(double targetHeading, double tolerance) {
+        return isAtHeading(targetHeading, tolerance, AngleUnit.RADIANS);
+    }
+
+    /**
+     * Returns true if the difference between the target heading and current heading is within the tolerance
+     * @param targetHeading the desired heading
+     * @param angleUnit     the unit of measure to use for the angles
+     * @return              whether or not the current heading is approximately equal to the target heading
+     */
+    public boolean isAtHeading(double targetHeading, @NonNull AngleUnit angleUnit) {
+        return isAtHeading(targetHeading, angleUnit.fromDegrees(tolerance), angleUnit);
+    }
+
+    /**
+     * Returns true if the difference between the target heading and current heading is within the tolerance
+     * @param targetHeading the desired heading
+     * @param tolerance     the tolerance to allow for in differences between angles
+     * @param angleUnit     the unit of measure to use for the angles
+     * @return              whether or not the current heading is approximately equal to the target heading
+     */
+    public boolean isAtHeading(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit) {
+        return angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit) <= tolerance;
+    }
+
+    /**
+     * Calls the callback once the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading in radians
+     * @param callback      the callback
+     */
+    public void onceAtHeading(double targetHeading, Runnable callback) {
+        onceAtHeading(targetHeading, Math.toRadians(tolerance), AngleUnit.RADIANS, callback);
+    }
+
+    /**
+     * Calls the callback once the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading in radians
+     * @param tolerance     the tolerance to allow for in differences between angles in radians
+     * @param callback      the callback
+     */
+    public void onceAtHeading(double targetHeading, double tolerance, @NonNull Runnable callback) {
+        onceAtHeading(targetHeading, tolerance, AngleUnit.RADIANS, callback);
+    }
+
+    /**
+     * Calls the callback once the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading
+     * @param angleUnit     the unit of measure to use for the angles
+     * @param callback      the callback
+     */
+    public void onceAtHeading(double targetHeading, @NonNull AngleUnit angleUnit, @NonNull Runnable callback) {
+        onceAtHeading(targetHeading, angleUnit.fromDegrees(tolerance), angleUnit, callback);
+    }
+
+    /**
+     * Calls the callback once the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading
+     * @param tolerance     the tolerance to allow for in differences between angles
+     * @param angleUnit     the unit of measure to use for the angles
+     * @param callback      the callback
+     */
+    public void onceAtHeading(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit, @NonNull Runnable callback) {
+        listener.once(gyro, gyro -> isAtHeading(targetHeading, tolerance, angleUnit), callback);
+    }
+
+    /**
+     * Calls the callback whenever the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading in radians
+     * @param callback      the callback
+     */
+    public void onAtHeading(double targetHeading, @NonNull Runnable callback) {
+        onAtHeading(targetHeading, Math.toRadians(tolerance), AngleUnit.RADIANS, callback);
+    }
+
+    /**
+     * Calls the callback whenever the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading in radians
+     * @param tolerance     the tolerance to allow for in differences between angles in radians
+     * @param callback      the callback
+     */
+    public void onAtHeading(double targetHeading, double tolerance, @NonNull Runnable callback) {
+        onAtHeading(targetHeading, tolerance, AngleUnit.RADIANS, callback);
+    }
+
+    /**
+     * Calls the callback whenever the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading
+     * @param angleUnit     the tolerance to allow for in differences between angles
+     * @param callback      the callback
+     */
+    public void onAtHeading(double targetHeading, @NonNull AngleUnit angleUnit, @NonNull Runnable callback) {
+        onAtHeading(targetHeading, angleUnit.fromDegrees(tolerance), angleUnit, callback);
+    }
+
+    /**
+     * Calls the callback whenever the gyro heading is approximately equal to the target heading
+     * @param targetHeading the target heading
+     * @param tolerance     the tolerance to allow for in differences between angles
+     * @param angleUnit     the unit of measure to use for the angles
+     * @param callback      the callback
+     */
+    public void onAtHeading(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit, @NonNull Runnable callback) {
+        listener.on(gyro, gyro -> isAtHeading(targetHeading, tolerance, angleUnit), callback);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement in radians.
+     * @param targetHeading the target heading in radians
+     * @param update        the update function
+     */
+    public void untilAtHeading(double targetHeading, @NonNull Update<Double> update) {
+        untilAtHeading(targetHeading, update, null);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement in radians and calls the
+     * callback when the target heading is reached.
+     * @param targetHeading the target heading in radians
+     * @param update        the update function
+     * @param callback      the callback
+     */
+    public void untilAtHeading(double targetHeading, @NonNull Update<Double> update, Runnable callback) {
+        untilAtHeading(targetHeading, Math.toRadians(tolerance), AngleUnit.RADIANS, update, callback);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement in radians.
+     * @param targetHeading the target heading in radians
+     * @param tolerance     the tolerance to allow for in differences between angles in radians
+     * @param update        the update function
+     */
+    public void untilAtHeading(double targetHeading, double tolerance, @NonNull Update<Double> update) {
+        untilAtHeading(targetHeading, tolerance, update, null);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement in radians and calls the
+     * callback when the target heading is reached.
+     * @param targetHeading the target heading in radians
+     * @param tolerance     the tolerance to allow for in differences between angles in radians
+     * @param update        the update function
+     * @param callback      the callback
+     */
+    public void untilAtHeading(double targetHeading, double tolerance, @NonNull Update<Double> update, Runnable callback) {
+        untilAtHeading(targetHeading, tolerance, AngleUnit.RADIANS, update, callback);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement.
+     * @param targetHeading the target heading
+     * @param angleUnit     the tolerance to allow for in differences between angles
+     * @param update        the update function
+     */
+    public void untilAtHeading(double targetHeading, @NonNull AngleUnit angleUnit, @NonNull Update<Double> update) {
+        untilAtHeading(targetHeading, angleUnit, update, null);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement and calls the
+     * callback when the target heading is reached.
+     * @param targetHeading the target heading
+     * @param angleUnit     the tolerance to allow for in differences between angles
+     * @param update        the update function
+     * @param callback      the callback
+     */
+    public void untilAtHeading(double targetHeading, @NonNull AngleUnit angleUnit, @NonNull Update<Double> update, Runnable callback) {
+        untilAtHeading(targetHeading, angleUnit.fromDegrees(tolerance), angleUnit, update, callback);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement.
+     * @param targetHeading the target heading
+     * @param tolerance     the tolerance to allow for in differences between angles
+     * @param angleUnit     the tolerance to allow for in differences between angles
+     * @param update        the update function
+     */
+    public void untilAtHeading(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit, @NonNull Update<Double> update) {
+        untilAtHeading(targetHeading, tolerance, angleUnit, update, null);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement and calls the
+     * callback when the target heading is reached.
+     * @param targetHeading the target heading
+     * @param tolerance     the tolerance to allow for in differences between angles
+     * @param angleUnit     the tolerance to allow for in differences between angles
+     * @param update        the update function
+     * @param callback      the callback
+     */
+    public void untilAtHeading(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit, @NonNull Update<Double> update, Runnable callback) {
+        listener.once(gyro, gyro -> {
+          double dis = angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit);
+
+          update.update(dis);
+
+          return dis <= tolerance;
+        }, () -> {
+            if (callback != null) callback.run();
+        });
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement in radians synchronously
+     * (blocks thread) until the target heading is reached
+     * @param targetHeading the target heading in radians
+     * @param update        the update function
+     */
+    public void untilAtHeadingSync(double targetHeading, @NonNull Update<Double> update) throws InterruptedException {
+        untilAtHeadingSync(targetHeading, Math.toRadians(tolerance), AngleUnit.RADIANS, update);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement in radians synchronously
+     * (blocks thread) until the target heading is reached
+     * @param targetHeading the target heading in radians
+     * @param tolerance     the tolerance to allow for in differences between angles in radians
+     * @param update        the update function
+     */
+    public void untilAtHeadingSync(double targetHeading, double tolerance, @NonNull Update<Double> update) throws InterruptedException {
+        untilAtHeadingSync(targetHeading, tolerance, AngleUnit.RADIANS, update);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement synchronously
+     * (blocks thread) until the target heading is reached
+     * @param targetHeading the target heading
+     * @param angleUnit     the tolerance to allow for in differences between angles
+     * @param update        the update function
+     */
+    public void untilAtHeadingSync(double targetHeading, @NonNull AngleUnit angleUnit, @NonNull Update<Double> update) throws InterruptedException {
+        untilAtHeadingSync(targetHeading, angleUnit.fromDegrees(tolerance), angleUnit, update);
+    }
+
+    /**
+     * Calls the update function repeatedly with the current angular displacement synchronously
+     * (blocks thread) until the target heading is reached
+     * @param targetHeading the target heading
+     * @param tolerance     the tolerance to allow for in differences between angles
+     * @param angleUnit     the tolerance to allow for in differences between angles
+     * @param update        the update function
+     */
+    public void untilAtHeadingSync(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit, @NonNull Update<Double> update) throws InterruptedException {
+        double dis = angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit);
+
+        while (dis > tolerance) {
+            update.update(dis);
+            Thread.sleep(10);
+            dis = angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit);
+        }
+    }
+
+    /**
+     * Stops the gyro handler
+     */
     @Override
     public void stop() {
-
+        listener.removeAllListeners(gyro);
     }
 }
