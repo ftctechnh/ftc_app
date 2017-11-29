@@ -16,6 +16,7 @@ public class AutoDrive {
     private GyroSensor gyro;
     private double cir = 3.937 * Math.PI;
     private int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
+    private double heading;
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, GyroSensor gyro) {
         this.FrontLeft = FrontLeft;
@@ -117,5 +118,12 @@ public class AutoDrive {
             heading = gyro.getHeading();
         }
         stopMotors();
+    }
+    public void init() {
+        gyro.calibrate();
+        while (gyro.isCalibrating()) {
+
+        }
+        heading = gyro.getHeading();
     }
 }

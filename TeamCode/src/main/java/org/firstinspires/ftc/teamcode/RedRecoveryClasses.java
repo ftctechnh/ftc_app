@@ -22,7 +22,13 @@ public class RedRecoveryClasses extends LinearOpMode {
                 hardwareMap.servo.get("s4"), //Servo
                 hardwareMap.colorSensor.get("cs1")); //Color Sensor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+        drive.init();
+        if (jewelArm.findJewel() == JewelArm.Color.Red) { //if the arm sees red
+            drive.driveTranslateRotate(0,.125,0,0.25);
+        }
+        else { //if the arm sees blue
+            drive.driveTranslateRotate(0,-.125,0,0.25);
+        }
         drive.driveTranslateRotate(0, .5, 0, 32);
         Thread.sleep(500);
         drive.rightGyro(0, 0, .5, 90);
