@@ -125,6 +125,7 @@ public class Robot9853 extends Robot {
     public void rotate(double angle, @NonNull AngleUnit angleUnit, Runnable callback) {
         final double targetD = (angleUnit.toDegrees(angle) + gyroHandler.getRelativeHeading(AngleUnit.DEGREES)) % 360;
         final double target = angleUnit.fromDegrees(targetD);
+        log.debug(targetD + " " + target);
         final String unitName = angleUnit == AngleUnit.DEGREES ? "degrees" : "radians";
 
         log.debugf("Rotating by %.2f %s to a heading of %.2f", angle, unitName, target);
@@ -158,6 +159,8 @@ public class Robot9853 extends Robot {
     public void rotateSync(double angle, @NonNull AngleUnit angleUnit) throws InterruptedException {
         final double targetD = (angleUnit.toDegrees(angle) + gyroHandler.getRelativeHeading(AngleUnit.DEGREES)) % 360;
         final double target = angleUnit.fromDegrees(targetD);
+        log.debug(targetD + " " + target);
+
         final String unitName = angleUnit == AngleUnit.DEGREES ? "degrees" : "radians";
 
         log.debugf("Rotating by %.2f %s to a heading of %.2f", angle, unitName, target);

@@ -18,11 +18,11 @@ public class GyroTest extends Autonomous9853 {
     public void run() throws InterruptedException, StoppedException {
         robot.rotateSync(180, AngleUnit.DEGREES);
 
-        wait(1000);
+        Thread.sleep(1000);
 
         robot.rotateSync(90, AngleUnit.DEGREES);
 
-        wait(1000);
+        Thread.sleep(1000);
 
         robot.rotateSync(270, AngleUnit.DEGREES);
     }

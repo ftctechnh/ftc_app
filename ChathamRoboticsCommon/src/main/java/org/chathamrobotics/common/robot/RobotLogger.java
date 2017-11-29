@@ -229,7 +229,7 @@ public class RobotLogger {
      * @param args      the arguments to replace the format specifiers
      */
     public void errorf(String format, Object ...args) {
-        fatal(String.format(Locale.US, format, args));
+        error(String.format(Locale.US, format, args));
     }
     
     /**
@@ -269,7 +269,7 @@ public class RobotLogger {
      * @param args      the arguments to replace the format specifiers
      */
     public void warnf(String format, Object ...args) {
-        fatal(String.format(Locale.US, format, args));
+        warn(String.format(Locale.US, format, args));
     }
     
     /**
@@ -298,7 +298,7 @@ public class RobotLogger {
      * @param args      the arguments to replace the format specifiers
      */
     public void infof(String format, Object ...args) {
-        fatal(String.format(Locale.US, format, args));
+        info(String.format(Locale.US, format, args));
     }
     
     /**
@@ -327,7 +327,7 @@ public class RobotLogger {
      * @param args      the arguments to replace the format specifiers
      */
     public void debugf(String format, Object ...args) {
-        fatal(String.format(Locale.US, format, args));
+        debug(String.format(Locale.US, format, args));
     }
     
     /**
@@ -356,7 +356,7 @@ public class RobotLogger {
      * @param args      the arguments to replace the format specifiers
      */
     public void verbosef(String format, Object ...args) {
-        fatal(String.format(Locale.US, format, args));
+        verbose(String.format(Locale.US, format, args));
     }
 
     /**

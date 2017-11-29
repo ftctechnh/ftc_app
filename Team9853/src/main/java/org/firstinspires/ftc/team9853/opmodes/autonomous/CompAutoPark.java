@@ -28,10 +28,10 @@ public class CompAutoPark extends CompAuto {
         robot.driver.setDrivePower(90, AngleUnit.DEGREES, 1, 0);
         Thread.sleep(600);
 
-        robot.rotateSync( 180, AngleUnit.DEGREES);
+        robot.rotateSync( 135, AngleUnit.DEGREES);
         robot.driver.setDrivePower(90, AngleUnit.DEGREES, 1, 0);
 
-        Thread.sleep(1000);
+        Thread.sleep(1250);
         robot.driver.stop();
     }
 }
