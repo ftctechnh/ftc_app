@@ -49,6 +49,9 @@ public class AutonomousDrive_02_0 extends LinearOpMode
         pincherL = hardwareMap.servo.get("pincherL");
         pincherR = hardwareMap.servo.get("pincherR");
 
+        pincherL.setPosition(1);
+        pincherR.setPosition(1);
+
         double counter = 0;
 
         while (opModeIsActive())
@@ -85,10 +88,14 @@ public class AutonomousDrive_02_0 extends LinearOpMode
             }else if(timer.time() < counter + 1.5) {
                 x = 0;
                 y = .5;
-            }else if(timer.time() < counter + 3){
+            }else if(timer.time() < counter + 2.5){
+                x = 0;
+                y = 0;
+                pincherL.setPosition(0);
+                pincherR.setPosition(0);
+            }else if(timer.time() < counter + 4){
                 x = 0;
                 y = -.5;
-
             }else{
                 x = 0;
                 y = 0;
