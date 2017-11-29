@@ -10,22 +10,39 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class RedRecoveryClasses extends LinearOpMode {
     AutoDrive drive;
     JewelArm jewelArm;
+    ForkLift ForkLift;
+    RelicClaw RelicClaw;
     String color;
 
+
     public void runOpMode() throws InterruptedException {
+
         drive = new AutoDrive(
                 hardwareMap.dcMotor.get("m1"), //fl motor
                 hardwareMap.dcMotor.get("m2"), //fr motor
                 hardwareMap.dcMotor.get("m3"), //rl motor
                 hardwareMap.dcMotor.get("m4"),
                 hardwareMap.gyroSensor.get("g1"));
+        drive.init(); //Calibrates gyro
         jewelArm = new JewelArm(
                 hardwareMap.servo.get("s4"), //Servo
                 hardwareMap.colorSensor.get("cs1"), // Color sensor
                 telemetry); //telemetry for debugging
+        ForkLift = new ForkLift(
+                hardwareMap.servo.get("s5"), //rightClaw
+                hardwareMap.servo.get("s6"), //leftClaw
+                hardwareMap.dcMotor.get("m6"), //updown
+                hardwareMap.touchSensor.get("b0"), //top button
+                hardwareMap.touchSensor.get("b1")); //bottom button
+        RelicClaw = new RelicClaw(
+                hardwareMap.servo.get("s1"), //claw
+                hardwareMap.servo.get("s2"), //arm
+                hardwareMap.dcMotor.get("m5")); //motor
+
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        drive.init();
+        //ForkLift.closeClaw();
+        //RelicClaw.init();
         jewelArm.down();
         color = jewelArm.findJewel();
         if (color == "Red") { //if the arm sees red
