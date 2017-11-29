@@ -60,6 +60,7 @@ public class TestMotors extends LinearOpMode {
     private DcMotor rightDrive = null;
     private DcMotor clawMotor = null;
     private float speedMultiplier = 1.0f;
+    int updatesPerSecond;
 
     @Override
     public void runOpMode() {
@@ -84,6 +85,7 @@ public class TestMotors extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            updatesPerSecond++;
 
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
@@ -102,17 +104,13 @@ public class TestMotors extends LinearOpMode {
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            leftPower  = -gamepad1.left_stick_y * speedMultiplier;
-            rightPower = -gamepad1.right_stick_y * speedMultiplier;
+            leftPower  = gamepad1.left_stick_y * speedMultiplier;
+            rightPower = gamepad1.right_stick_y * speedMultiplier;
 
-            if(gamepad1.a) {
-                speedMultiplier = 1.0f;
-            }
-            if(gamepad1.b) {
-                speedMultiplier = 0.5f;
-            }
-            if(gamepad1.x) {
-                speedMultiplier = 0.25f;
+            if(gamepad1.dpad_up && speedMultiplier + 0.0001 <= 1) {
+                speedMultiplier += 0.0001;
+            } else if(gamepad1.dpad_down&& speedMultiplier - 0.0001 >= 0) {
+                speedMultiplier -= 0.0001;
             }
 
             clawPower = (gamepad1.right_trigger - gamepad1.left_trigger) / 2;
@@ -127,6 +125,7 @@ public class TestMotors extends LinearOpMode {
             telemetry.addData("Motors", "left (%.2f), right (%.2f), claw (%.2f)",
                     leftPower, rightPower, clawPower);
             telemetry.addData("Speed", "%.2f", speedMultiplier);
+            telemetry.addData("Updates Per Second", (updatesPerSecond / runtime.seconds()));
             telemetry.update();
         }
     }
