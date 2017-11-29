@@ -36,10 +36,10 @@ public class SkipperTeleop extends LinearOpMode {
     static final double CLOSE_BOTTOM_RIGHT     =  0.6;
     static final double CLOSE_BOTTOM_LEFT     =  0.4;
 
-    static final double CLOSE_TOP_LEFT = 0.38;
-    static final double CLOSE_TOP_RIGHT = 0.62;
-    static final double OPEN_TOP_LEFT     =  0.95;
-    static final double OPEN_TOP_RIGHT     =  0.05;
+    static final double CLOSE_TOP_LEFT = 0.28;
+    static final double CLOSE_TOP_RIGHT = 0.52;
+    static final double OPEN_TOP_LEFT     =  0.52;
+    static final double OPEN_TOP_RIGHT     =  0.35;
 
     static final double SEMI_OPEN_BOTTOM_RIGHT = 0.65;
     static final double SEMI_OPEN_BOTTOM_LEFT = 0.3;
