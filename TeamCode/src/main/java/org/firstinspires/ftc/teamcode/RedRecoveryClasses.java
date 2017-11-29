@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class RedRecoveryClasses extends LinearOpMode {
     AutoDrive drive;
     JewelArm jewelArm;
+    String color;
+
     public void runOpMode() throws InterruptedException {
         drive = new AutoDrive(
                 hardwareMap.dcMotor.get("m1"), //fl motor
@@ -19,28 +21,27 @@ public class RedRecoveryClasses extends LinearOpMode {
                 hardwareMap.gyroSensor.get("g1"));
         jewelArm = new JewelArm(
                 hardwareMap.servo.get("s4"), //Servo
-                hardwareMap.colorSensor.get("cs1")); //Color Sensor
-                waitForStart();
-
+                hardwareMap.colorSensor.get("cs1"), // Color sensor
+                telemetry); //telemetry for debugging
+        waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         drive.init();
         jewelArm.down();
-        if (jewelArm.findJewel() == "Red") { //if the arm sees red
-            drive.driveTranslateRotate(0,.125,0,0.25);
+        color = jewelArm.findJewel();
+        if (color == "Red") { //if the arm sees red
+            drive.driveTranslateRotate(0, .125, 0, 2);
+            drive.driveTranslateRotate(0, -.125, 0, 2);
+        } else if (color == "Blue") { //if the arm sees blue
+            drive.driveTranslateRotate(0, -.125, 0, 2);
+            drive.driveTranslateRotate(0, .125, 0, 2);
+        } else {
         }
-        else { //if the arm sees blue
-            drive.driveTranslateRotate(0,-.125,0,0.25);
-        }
+        Thread.sleep(500);
         jewelArm.up();
-        wait(500);
+        Thread.sleep(500);
         drive.driveTranslateRotate(0, -.5, 0, 32);
         Thread.sleep(500);
         drive.rightGyro(0, 0, .5, 90);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }
-    public void wait(Long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e){}
     }
 }
