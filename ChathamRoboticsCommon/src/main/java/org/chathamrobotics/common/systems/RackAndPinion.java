@@ -76,6 +76,8 @@ public class RackAndPinion implements System {
         this.logger = logger;
     }
 
+
+
     /**
      * Check whether or not the servo is currently moving
      * @return  whether or not the servo is currently moving
