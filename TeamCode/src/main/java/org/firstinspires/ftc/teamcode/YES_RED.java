@@ -37,7 +37,7 @@ public class YES_RED extends LinearOpMode
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
-    double xPosUp = 0;
+    double xPosUp = 1;
     double xPosDown = .5;
 
 
@@ -55,7 +55,7 @@ public class YES_RED extends LinearOpMode
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
 
-        //yuhojoj
+        //blarg
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -117,17 +117,10 @@ public class YES_RED extends LinearOpMode
 
         gemServo.setPosition(xPosDown);
         sleep(1500);
-        findColor();
-        movebytime(2,.5,"Left");
+        knockJewel();
+        movebytime(2,.5,"Right");
 
     }
-
-
-
-
-
-
-
 
     /* This method moves the robot forward for time and power indicated*/
     public void movebytime (double time, double power, String direction) {
@@ -209,22 +202,25 @@ public class YES_RED extends LinearOpMode
             BackRightPower = backRight;
     }
 
-    public void findColor() {
+    public void knockJewel() {
 
         if (colorSensor.red() < colorSensor.blue()) {
             resetAngle();
-            rotate(90, .4);
+            rotate(20, .4);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
         } else {
             resetAngle();
-            rotate(-90, .4);
+            rotate(-20, .4);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
-            rotate(180, .4);
         }
+    }
+
+    public void returnJewel(){
+
     }
 
     /**
