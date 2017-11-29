@@ -30,7 +30,7 @@ public class GyroHandler implements System {
      * @return                  the relative angle in radians
      */
     public static double relativeAngle(double referenceAngle, double angle) {
-        return relativeAngle(referenceAngle, angle, AngleUnit.RADIANS)
+        return relativeAngle(referenceAngle, angle, AngleUnit.RADIANS);
     }
 
     /**
@@ -42,10 +42,8 @@ public class GyroHandler implements System {
      * @return                  the relative angle
      */
     public static double relativeAngle(double referenceAngle, double angle, AngleUnit angleUnit) {
-        return (angle - referenceAngle + angleUnit.fromDegrees(360)) % angleUnit.fromDegrees(360);
+        return Math.abs(angle - referenceAngle + angleUnit.fromDegrees(360)) % angleUnit.fromDegrees(360);
     }
-
-    public static double
 
     // INSTANCE
 
@@ -262,4 +260,9 @@ public class GyroHandler implements System {
      * @return  true if the gyro handler has been initialized
      */
     public boolean isInitialized() {return isInitialized;}
+
+    @Override
+    public void stop() {
+
+    }
 }
