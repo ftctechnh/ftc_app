@@ -28,11 +28,8 @@ public class CompAuto extends Autonomous9853 {
 
     @Override
     public void run() throws InterruptedException, StoppedException {
-
         robot.start();
         robot.driver.setFront(RobotFace.BACK);
-
-        Thread.sleep(2000); //TODO: added this act comp dunno the right tage but hey
 
         robot.jewelDisplacer.drop();
         debug();
@@ -71,7 +68,7 @@ public class CompAuto extends Autonomous9853 {
     }
 
     private boolean isBlue(int color) {
-        return color < 4;
+        return color < 4 && color > 1;
     }
 
     private boolean isTeamColor(int color) {

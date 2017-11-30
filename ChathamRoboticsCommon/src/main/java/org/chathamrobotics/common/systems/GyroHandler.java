@@ -18,6 +18,7 @@ public class GyroHandler implements System {
     private static final HardwareListener.HardwareCondition<GyroSensor> FINISHED_CALIBRATING =
             gyro -> ! gyro.isCalibrating();
     private static final String TAG = GyroHandler.class.getSimpleName();
+    private static final double TWO_PIE = 2 * Math.PI;
 
     // CLASS METHODS & FIELDS
 
@@ -50,7 +51,8 @@ public class GyroHandler implements System {
      * @return                  the relative angle
      */
     public static double relativeAngle(double referenceAngle, double angle, AngleUnit angleUnit) {
-        return Math.abs(angle - referenceAngle + angleUnit.fromDegrees(360)) % angleUnit.fromDegrees(360);
+        double fullCircle = angleUnit == AngleUnit.DEGREES ? 360 : TWO_PIE;
+        return Math.abs(angle - referenceAngle + fullCircle) % fullCircle;
     }
 
     /**
@@ -71,7 +73,9 @@ public class GyroHandler implements System {
      * @return              the angular displacement
      */
     public static double angularDisplacement(double initialAngle, double finalAngle, @NonNull AngleUnit angleUnit) {
-        return Math.abs(finalAngle - initialAngle + angleUnit.fromDegrees(180)) % angleUnit.fromDegrees(360) - angleUnit.fromDegrees(180);
+        double fullCircle = angleUnit == AngleUnit.DEGREES ? 360 : TWO_PIE;
+        double displacement = Math.abs(finalAngle - initialAngle + fullCircle / 2) % fullCircle - fullCircle / 2;
+        return displacement == -fullCircle/2 ? fullCircle / 2 : displacement;
     }
 
     /**
@@ -420,7 +424,7 @@ public class GyroHandler implements System {
      * @return              whether or not the current heading is approximately equal to the target heading
      */
     public boolean isAtHeading(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit) {
-        return angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit) <= tolerance;
+        return Math.abs(angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit)) <= tolerance;
     }
 
     /**
@@ -593,7 +597,7 @@ public class GyroHandler implements System {
 
           update.update(dis);
 
-          return dis <= tolerance;
+          return Math.abs(dis) <= tolerance;
         }, () -> {
             if (callback != null) callback.run();
         });
@@ -642,7 +646,7 @@ public class GyroHandler implements System {
     public void untilAtHeadingSync(double targetHeading, double tolerance, @NonNull AngleUnit angleUnit, @NonNull Update<Double> update) throws InterruptedException {
         double dis = angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit);
 
-        while (dis > tolerance) {
+        while (Math.abs(dis) > tolerance) {
             update.update(dis);
             Thread.sleep(10);
             dis = angularDisplacement(getRelativeHeading(angleUnit), targetHeading, angleUnit);

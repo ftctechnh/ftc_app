@@ -16,6 +16,7 @@ public class GlyphGripper {
     private static final int LEFT_INDEX = 1;
     private static final double[] CLOSED_POSITIONS = {1, 0};
     private static final double[] OPEN_POSITIONS = {0.2, 0.8};
+    private static final double[] MIN_OPEN_POSITIONS = {0.3, 0.7};
     private static final double[] GRIP_POSITIONS = {0.55, 0.45};
 
     private Servo leftServo;
@@ -52,6 +53,13 @@ public class GlyphGripper {
 
         leftServo.setPosition(OPEN_POSITIONS[LEFT_INDEX]);
         rightServo.setPosition(OPEN_POSITIONS[RIGHT_INDEX]);
+    }
+
+    public void minOpen() {
+        logger.info("Opening Glyph Gripper");
+
+        leftServo.setPosition(MIN_OPEN_POSITIONS[LEFT_INDEX]);
+        rightServo.setPosition(MIN_OPEN_POSITIONS[RIGHT_INDEX]);
     }
 
     public void grip() {

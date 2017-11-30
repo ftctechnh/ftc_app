@@ -34,6 +34,9 @@ public class CompDrive extends Tele9853 {
         if (controller1.xState == Controller.ButtonState.TAPPED)
             robot.glyphGripper.grip();
 
+        if (controller1.yState == Controller.ButtonState.TAPPED)
+            robot.glyphGripper.minOpen();
+
         robot.driveWithControls(gamepad1);
     }
 }

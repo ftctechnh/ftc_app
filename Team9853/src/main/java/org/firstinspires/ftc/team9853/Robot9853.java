@@ -75,7 +75,7 @@ public class Robot9853 extends Robot {
     public void start() {
         glyphGripper.open();
 
-        while (! gyroHandler.isInitialized());
+        while (! gyroHandler.isInitialized()) log.update();
     }
 
     @Override
@@ -133,6 +133,7 @@ public class Robot9853 extends Robot {
         gyroHandler.untilAtHeading(targetD, GYRO_TOERANCE, AngleUnit.DEGREES, dis -> {
             log.debugf("%.2f %s away from the target heading of %.2f", angleUnit.fromDegrees(dis), unitName, target);
             driver.rotate(Range.clip(dis * GYRO_SCALE_FACTOR / 180, 1, -1));
+            log.update();
         }, () -> {
             log.debug("Finished rotating");
             driver.stop();
@@ -159,15 +160,14 @@ public class Robot9853 extends Robot {
     public void rotateSync(double angle, @NonNull AngleUnit angleUnit) throws InterruptedException {
         final double targetD = (angleUnit.toDegrees(angle) + gyroHandler.getRelativeHeading(AngleUnit.DEGREES)) % 360;
         final double target = angleUnit.fromDegrees(targetD);
-        log.debug(targetD + " " + target);
-
         final String unitName = angleUnit == AngleUnit.DEGREES ? "degrees" : "radians";
 
         log.debugf("Rotating by %.2f %s to a heading of %.2f", angle, unitName, target);
 
         gyroHandler.untilAtHeadingSync(targetD, GYRO_TOERANCE, AngleUnit.DEGREES, dis -> {
             log.debugf("%.2f %s away from the target heading of %.2f", angleUnit.fromDegrees(dis), unitName, target);
-            driver.rotate(Range.clip(dis * GYRO_SCALE_FACTOR / 180, 1, -1));
+            driver.rotate(Range.clip(dis * GYRO_SCALE_FACTOR / -180, 1, -1));
+            log.update();
         });
 
         log.debug("Finished rotating");
