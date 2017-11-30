@@ -27,23 +27,23 @@ public class holonomicDrive_4_0 extends LinearOpMode
 
                 if(gamepad1.dpad_up)
                 {
-                    x = 0;
+                    x = 1;
                     y = 1;
                 }
                 else if(gamepad1.dpad_down)
                 {
-                    x = 0;
+                    x = -1;
                     y = -1;
                 }
                 else if(gamepad1.dpad_left)
                 {
                     x = -1;
-                    y = 0;
+                    y = 1;
                 }
                 else if(gamepad1.dpad_right)
                 {
                     x = 1;
-                    y = 0;
+                    y = -1;
                 }
                 else
                 {

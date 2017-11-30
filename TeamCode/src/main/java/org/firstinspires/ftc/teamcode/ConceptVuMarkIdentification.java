@@ -26,12 +26,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -66,7 +67,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
-@Disabled
 public class ConceptVuMarkIdentification extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
@@ -103,7 +103,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = "AeK79PT/////AAAAGYMP+m+Sp0GCrTeVYiw67ZEjlVRNwJmoG6h9Ac4i1ddDDPbBx6S0SHQ1dXRYFu4HXlCIi9FVHsIo+6cd/DAOAq1E2zH4V58OW6xgbcOqINqdE3fMsYq57cYyPsGddW4Ugyuo/t/kAP/KmpqEuDN21/Y/DeMGecQatlhS7gG5uqzWF0ieE39V50RfLCCeEU4X+9+fcVDJLZkKPQB+HPgE/w2or9i/6ZCV5xsdvx70d5m7DqgvNGCbMWgbqcjZHA3O8MUq6M327jGni/Hx+KOmg1mGRfLEC8mpdz20SWfTFeWILyVhP0yCEQompnraWRxbj1u+2mG47HKenZ4XpphJTEICifzFaMzEE4JpAM4kCWZZ";
+        parameters.vuforiaLicenseKey = "Acm47W//////AAAAGenX5eoF4kiIjafAW3MpjnZ57moOjffX6IMOnB2KhmPJRAmPGqDUdQ6lgFbgurJWybQphBxaKkA+oOvvu+4Dmer+KI5FVLcswHpJZhOIKc0ytY675YBxZf4nw/5xgE1/u6hEBgQBbISBAejFdfPvU8g9lZthU2BKNkGvYXSUncestev+lPHKL/cyLb8UWsru2Uh7Pudx6FtKG0eAhxuh24S0NHVAmKbBDkjyWzJkFqfw/xr5ttsAnhmxdamnLzTbrunRa/EdcRik1gFswDSEyfG7QKf+kPagZeuFtoXM3A2h0Yp6l28RaEIGZSr5yGqa8pA6OQ/xXFiL/MkOhT7q1isFNJTCkSortBAQV1aGowSO";
         /*
          * We also indicate which camera on the RC that we wish to use.
          * Here we chose the back (HiRes) camera (for greater range), but
