@@ -59,7 +59,9 @@ public class RedRecoveryClasses extends LinearOpMode {
         Thread.sleep(500);
         drive.driveTranslateRotate(0, -.5, 0, 32);
         Thread.sleep(500);
-        drive.rightGyro(0, 0, .5, 90);
+        drive.leftGyro(0, 0, .05, 90);
+        //aye right is clockwise
+        //and left is counterclockwise (obviously)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

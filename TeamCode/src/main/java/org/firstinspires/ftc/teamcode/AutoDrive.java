@@ -134,4 +134,7 @@ public class AutoDrive {
         }
         heading = gyro.getHeading();
     }
+    public double getHeading() {
+        return gyro.getHeading();
+    }
 }
