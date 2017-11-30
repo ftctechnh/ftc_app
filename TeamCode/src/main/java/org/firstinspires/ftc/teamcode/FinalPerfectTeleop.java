@@ -74,13 +74,13 @@ MasterHardwareClass robot = new MasterHardwareClass();
 
         /* Servo Control */
             if (gamepad1.x) {
-                robot.clawServo.setPower(robot.clawOpen);
-            }
-            if (gamepad1.y) {
                 robot.clawServo.setPower(robot.clawClose);
             }
+            if (gamepad1.b) {
+                robot.clawServo.setPower(robot.clawOpen);
+            }
 
-            if (gamepad1.y != true && gamepad1.x != true) {
+            if (gamepad1.b != true && gamepad1.x != true) {
                 robot.clawServo.setPower(robot.clawStill);
             }
 
@@ -103,6 +103,23 @@ MasterHardwareClass robot = new MasterHardwareClass();
             double backRight;
 
 
+            if(gamepad1.left_bumper){
+
+                double GRX = gamepad1.right_stick_x;
+
+                final double v1 = +GRX;
+                final double v2 = -GRX;
+                final double v3 = +GRX;
+                final double v4 = -GRX;
+
+                frontLeft = -v1/5;
+                frontRight = v2/5;
+                backLeft = -v3/5;
+                backRight = v4/5;
+
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            }
+
             if (gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
 
                 double GRX = gamepad1.right_stick_x;
@@ -112,26 +129,12 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 final double v3 = +GRX;
                 final double v4 = -GRX;
 
-                frontLeft = v1;
+                frontLeft = -v1;
                 frontRight = v2;
-                backLeft = v3;
+                backLeft = -v3;
                 backRight = v4;
 
-                if (robot.FrontLeftPower != frontLeft) {
-                    robot.frontLeftMotor.setPower(-v1);
-                    robot.FrontLeftPower = frontLeft;
-                }
-                if (robot.FrontRightPower != frontRight) {
-                    robot.frontRightMotor.setPower(v2);
-                    robot.FrontRightPower = frontRight;
-                }
-                if (robot.BackLeftPower != backLeft) {
-                    robot.backLeftMotor.setPower(-v3);
-                    robot.BackLeftPower = backLeft;
-                }
-                if (robot.BackRightPower != backRight)
-                    robot.backRightMotor.setPower(v4);
-                    robot.BackRightPower = backRight;
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
             }
 
             if (gamepad1.left_bumper) {
@@ -161,12 +164,12 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 final double v3 = GLY + GRX - GLX;
                 final double v4 = GLY - GRX + GLX;
 
-                frontLeft = v1;
+                frontLeft = -v1;
                 frontRight = v2;
-                backLeft = v3;
+                backLeft = -v3;
                 backRight = v4;
 
-               setWheelPower(-v1, v2, -v3, v4);
+               setWheelPower(frontLeft, frontRight, backLeft, backRight);
             }
         }
     }
