@@ -12,7 +12,8 @@ public class TestAuto extends LinearOpMode {
 				hardwareMap.dcMotor.get("m2"), //fr motor
 				hardwareMap.dcMotor.get("m3"), //rl motor
 				hardwareMap.dcMotor.get("m4"), //rr motor
-				hardwareMap.gyroSensor.get("g1")); // gyro
+				hardwareMap.gyroSensor.get("g1"),
+				telemetry); // gyro
 		waitForStart();
 		drive.driveTranslateRotate(0.5,0,0,1); // Forward
 		Thread.sleep(2000);

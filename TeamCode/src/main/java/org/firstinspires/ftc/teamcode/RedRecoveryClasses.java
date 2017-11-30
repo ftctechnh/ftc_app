@@ -22,7 +22,8 @@ public class RedRecoveryClasses extends LinearOpMode {
                 hardwareMap.dcMotor.get("m2"), //fr motor
                 hardwareMap.dcMotor.get("m3"), //rl motor
                 hardwareMap.dcMotor.get("m4"),
-                hardwareMap.gyroSensor.get("g1"));
+                hardwareMap.gyroSensor.get("g1"),
+                telemetry);
         drive.init(); //Calibrates gyro
         jewelArm = new JewelArm(
                 hardwareMap.servo.get("s4"), //Servo

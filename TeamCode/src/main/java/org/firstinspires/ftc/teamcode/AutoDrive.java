@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * Created by Kaden on 11/25/2017.
  */
@@ -17,8 +19,9 @@ public class AutoDrive {
     private double cir = 3.937 * Math.PI;
     private int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
     private double heading;
+    private Telemetry telemetry;
 
-    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, GyroSensor gyro) {
+    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, GyroSensor gyro, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
         this.FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.FrontRight = FrontRight;
@@ -26,6 +29,7 @@ public class AutoDrive {
         this.RearLeft.setDirection(DcMotor.Direction.REVERSE);
         this.RearRight = RearRight;
         this.gyro = gyro;
+        this.telemetry = telemetry;
     }
 
     public void driveTranslateRotate(double x, double y, double z, double distance) {
@@ -102,6 +106,8 @@ public class AutoDrive {
         driveSpeeds(fl, fr, rl, rr);
         while (heading < degrees) {
             heading = gyro.getHeading();
+            telemetry.addData("Current Gyro: ", heading);
+            telemetry.update();
         }
         stopMotors();
     }
@@ -116,6 +122,8 @@ public class AutoDrive {
         driveSpeeds(fl, fr, rl, rr);
         while (heading > degrees) {
             heading = gyro.getHeading();
+            telemetry.addData("Current Gyro: ", heading);
+            telemetry.update();
         }
         stopMotors();
     }
