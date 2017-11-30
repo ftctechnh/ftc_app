@@ -31,16 +31,20 @@ public class Team7519Teleop extends LinearOpMode{
         {
 
             //Include commands to run on controller presses here
-
             //Manual Lift Control w/Trigger
-            if (gamepad1.left_trigger > 0){
+            while (gamepad1.right_bumper== false && gamepad1.left_bumper==false ) {
+                motorLift.setPower(0);
+            }
+            while (gamepad1.left_bumper==true){
                 motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
-                motorLift.setPower (gamepad1.left_trigger);
-            }//end if
-            if (gamepad1.right_trigger > 0){
+                motorLift.setPower(1);
+            }
+
+            //end if
+            while (gamepad1.right_bumper==true) {
                 motorLift.setDirection(DcMotorSimple.Direction.FORWARD);
-                motorLift.setPower (gamepad1.right_trigger);
-            }//end if
+                motorLift.setPower(1);
+            }
 
             //Claw Control (A-Move Claw, B-Switch Direction)
             while (gamepad1.a==false){
