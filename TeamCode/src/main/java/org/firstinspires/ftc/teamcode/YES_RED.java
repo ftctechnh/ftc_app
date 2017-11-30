@@ -111,7 +111,7 @@ public class YES_RED extends LinearOpMode
 
         gemServo.setPosition(xPosDown);
         sleep(1500);
-        knockJewel();
+        knockjewelRed();
         movebytime(2,.5,"Right");
 
     }
