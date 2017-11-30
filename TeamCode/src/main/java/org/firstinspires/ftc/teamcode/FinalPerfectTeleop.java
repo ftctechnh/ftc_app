@@ -188,6 +188,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
 
         /* Initialize the powers with the values input whenever this method is called */
         frontLeft   =   fl;
+
         frontRight  =   fr;
         backLeft    =   bl;
         backRight   =   br;
