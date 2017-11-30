@@ -196,7 +196,7 @@ public class YES_RED extends LinearOpMode
             BackRightPower = backRight;
     }
 
-    public void knockJewel() {
+    public void knockjewelRed() {
 
         if (colorSensor.red() < colorSensor.blue()) {
             resetAngle();
@@ -215,6 +215,25 @@ public class YES_RED extends LinearOpMode
         }
     }
 
+    public void knockjewelBlue(){
+
+        if (colorSensor.red() > colorSensor.blue()) {
+            resetAngle();
+            rotate(10, .3);
+            wheelsOff();
+            sleep(500);
+            gemServo.setPosition(xPosUp);
+            rotate(-10,.3);
+        } else {
+            resetAngle();
+            rotate(-10, .3);
+            wheelsOff();
+            sleep(500);
+            gemServo.setPosition(xPosUp);
+            rotate(10,.3);
+        }
+
+    }
 
     /**
      * Resets the cumulative angle tracking to zero.
