@@ -73,24 +73,24 @@ MasterHardwareClass robot = new MasterHardwareClass();
             }
 
         /* Servo Control */
-            if (gamepad1.x) {
+            if (gamepad2.x) {
                 robot.clawServo.setPower(robot.clawClose);
             }
-            if (gamepad1.b) {
+            if (gamepad2.b) {
                 robot.clawServo.setPower(robot.clawOpen);
             }
 
-            if (gamepad1.b != true && gamepad1.x != true) {
+            if (gamepad2.b != true && gamepad2.x != true) {
                 robot.clawServo.setPower(robot.clawStill);
             }
 
         /* Vertical Arm Motor */
-            if (gamepad1.dpad_up) {
+            if (gamepad2.dpad_up) {
                 robot.verticalArmMotor.setPower(1);
             } else {
                 robot.verticalArmMotor.setPower(0);
             }
-            if (gamepad1.dpad_down) {
+            if (gamepad2.dpad_down) {
                 robot.verticalArmMotor.setPower(-1);
             } else {
                 robot.verticalArmMotor.setPower(0);
