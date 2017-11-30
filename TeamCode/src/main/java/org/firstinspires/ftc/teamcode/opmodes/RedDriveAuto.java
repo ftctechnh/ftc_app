@@ -23,12 +23,12 @@ public class RedDriveAuto extends OpMode {
         bot.init();
 
         //drive backwards
-        mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 180.0f, 1500, true));
+        //mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 180.0f, 1500, true));
         //turn back
-        mSeq.add(new AutoLib.GyroTurnStep(this, isRed ? -90 : 90, bot.getHeadingSensor(), bot.getMotorRay(), 0.125f, 3.0f, true));
-        mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 180.0f, 100, true));
+        mSeq.add(new AutoLib.GyroTurnStep(this, isRed ? -90 : 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 270, 3.0f, true));
+        //mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 180.0f, 100, true));
         //dump block
-        mSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.garyDown, 0.5, false));
+        //mSeq.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.garyDown, 0.5, false));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class RedDriveAuto extends OpMode {
     @Override
     public void loop() {
         if(mSeq.loop()) {
-            bot.dropGary();
+            //bot.dropGary();
             //ZcrequestOpModeStop();
         }
     }

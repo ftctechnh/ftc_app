@@ -558,7 +558,7 @@ public class AutoLib {
                 return true;
             }
 
-            float power = Range.clip(dist / 2.0f, -mPower, mPower);//Range.clip(dist / 30.0f, -mPower, mPower);
+            float power = dist > 0 ? mPower : -mPower;//Range.clip(dist / 30.0f, -mPower, mPower);
 
             // compute new right/left motor powers
             float rightPower;
@@ -847,6 +847,20 @@ public class AutoLib {
                 this.add(new EncoderMotorStep(fl, leftPower, leftCount, stop));
             if (bl != null)
                 this.add(new EncoderMotorStep(bl, leftPower, leftCount, stop));
+        }
+
+    }
+
+    public static class RunUntilStopStep extends Step {
+        private Step[] test;
+        public RunUntilStopStep(Step... testers) {
+            this.test = testers;
+        }
+
+        public boolean loop() {
+            boolean thing = false;
+            for(Step t : test) thing |= t.loop();
+            return thing;
         }
 
     }

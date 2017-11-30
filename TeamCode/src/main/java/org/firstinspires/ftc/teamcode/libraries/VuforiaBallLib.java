@@ -127,10 +127,10 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
         //setup view
         if(displayData) {
             mView = (ImageView)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.OpenCVOverlay);
-            mView.setAlpha(1.0f);
             mView.post(new Runnable() {
                 @Override
                 public void run() {
+                    mView.setAlpha(1.0f);
                     mView.setImageBitmap(bm);
                 }
             });
