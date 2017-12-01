@@ -1,13 +1,12 @@
-package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.OpModes.Autonomous
+@file:Suppress("PackageDirectoryMismatch", "unused")
+package org.directcurrent.season.relicrecovery.autonomous
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.directcurrent.opencv.CVBridge
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base
-import android.app.Activity
-import android.app.ActivityManager
-import android.content.Context
+import org.directcurrent.core.AutoStopper
 import org.directcurrent.season.relicrecovery.jewelarm.JewelArm
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Color
 
@@ -17,8 +16,9 @@ class AutoTest: LinearOpMode()
 {
     private val _base = Base()
 
-    val teamColor = Color.ColorID.RED
+    private val _teamColor = Color.ColorID.RED
 
+    private val _autoStopper = AutoStopper(this , _base)
 
     /**
      * Status of jewel detection
@@ -41,6 +41,8 @@ class AutoTest: LinearOpMode()
         _base.imu.fastCalibrate()
 
         waitForStart()
+
+        _autoStopper.startChecking()
 
         telemetry.addLine("Waiting for OpenCV...")
         telemetry.update()
@@ -86,25 +88,25 @@ class AutoTest: LinearOpMode()
             {
                 telemetry.addData("Decision" , "Red on left")
 
-                if(teamColor == Color.ColorID.RED)
+                jewelStatus = if(_teamColor == Color.ColorID.RED)
                 {
-                    jewelStatus = JewelStatus.GO_BACKWARD
+                    JewelStatus.GO_BACKWARD
                 }
                 else
                 {
-                    jewelStatus = JewelStatus.GO_FORWARD
+                    JewelStatus.GO_FORWARD
                 }
             }
             else
             {
                 telemetry.addData("Decision" , "Blue on left")
-                if(teamColor == Color.ColorID.RED)
+                jewelStatus = if(_teamColor == Color.ColorID.RED)
                 {
-                    jewelStatus = JewelStatus.GO_FORWARD
+                    JewelStatus.GO_FORWARD
                 }
                 else
                 {
-                    jewelStatus = JewelStatus.GO_BACKWARD
+                    JewelStatus.GO_BACKWARD
                 }
             }
         }

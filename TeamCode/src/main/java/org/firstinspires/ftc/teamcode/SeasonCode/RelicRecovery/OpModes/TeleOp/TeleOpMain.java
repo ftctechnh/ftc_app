@@ -28,7 +28,7 @@ public class TeleOpMain extends LinearOpMode
 
     /**
      * Runs the main TeleOp
-     *
+     *z
      * @throws InterruptedException Exception when OpMode is interrupted
      */
     @Override
@@ -39,6 +39,8 @@ public class TeleOpMain extends LinearOpMode
         waitForStart();
 
         _base.drivetrain.setState(Drivetrain.State.FORWARD_FAST);
+
+        _base.jewelArm.setState(JewelArm.State.UP);
 
         while(opModeIsActive())
         {

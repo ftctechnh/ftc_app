@@ -14,7 +14,6 @@
 package org.directcurrent.opencv
 
 
-import android.hardware.Camera
 import android.util.Log
 import android.view.View
 import com.qualcomm.ftcrobotcontroller.R
@@ -178,28 +177,10 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
             if(_state == _CVState.HIDDEN)
             {
                 _setState(_CVState.SHOW)
-
-                try
-                {
-                    mainActivity.cameraManager.setTorchMode(mainActivity.cameraManager.cameraIdList[0] , true)
-                }
-                catch (e: Exception)
-                {
-                    e.printStackTrace()
-                }
             }
             else
             {
                 _setState(_CVState.HIDDEN)
-
-                try
-                {
-                    mainActivity.cameraManager.setTorchMode(mainActivity.cameraManager.cameraIdList[0] , false)
-                }
-                catch (e: Exception)
-                {
-                    e.printStackTrace()
-                }
             }
         }
     }

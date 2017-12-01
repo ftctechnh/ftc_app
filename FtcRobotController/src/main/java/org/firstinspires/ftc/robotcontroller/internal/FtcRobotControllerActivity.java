@@ -112,8 +112,6 @@ public class FtcRobotControllerActivity extends Activity
   private TextView _analysisText;
   private Button _analyzeButton;
   private Button _showHideButton;
-
-  public CameraManager cameraManager;
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
   public static final String TAG = "RCActivity";
@@ -336,8 +334,6 @@ public class FtcRobotControllerActivity extends Activity
 
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
-    cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
-
     _openCVRunner = new OpenCVRunner(this , 0);
 
     _openCVRunner.start();

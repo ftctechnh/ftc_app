@@ -381,5 +381,6 @@ public class Drivetrain extends RobotComponent
         setState(State.STOP);
 
         turnTo.stop();
+        driveTo.stop();
     }
 }
