@@ -46,6 +46,7 @@ public class Beta extends OpMode {
 
     /*
 
+
          //----------------------------------------------------------------------------------------------
         //Declare global variables here
 
@@ -68,7 +69,7 @@ public class Beta extends OpMode {
         /*---------------------------------------------------------------------------------------------
                 Get references to the hardware installed on the robot and name them here
         */
-    @Overridek
+    @Override
     public void init() {
         leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");

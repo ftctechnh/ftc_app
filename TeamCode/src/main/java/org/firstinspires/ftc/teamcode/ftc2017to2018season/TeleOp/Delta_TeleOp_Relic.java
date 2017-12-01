@@ -142,9 +142,9 @@ public class Delta_TeleOp_Relic extends OpMode {
         slideMove();
         glyphManipulator();
         slideIncrement();
-        relicSlides();
-        relicManipulatorClawServo();
-        relicManipulatorMovementServo();
+        //relicSlides();
+        //relicManipulatorClawServo();
+        //relicManipulatorMovementServo();
     }
 
     /* Code to run ONCE after the driver hits STOP
