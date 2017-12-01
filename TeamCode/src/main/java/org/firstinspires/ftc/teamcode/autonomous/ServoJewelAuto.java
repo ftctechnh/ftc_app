@@ -68,6 +68,8 @@ public class ServoJewelAuto extends LinearOpMode {
 
         vuforiaWrapper.getLoader().getTrackables().activate();
 
+        waitForStart();
+
         //STEP 1: Scan vuforia pattern
         relicRecoveryVuMark = RelicRecoveryVuMark.from(vuforiaWrapper.getLoader().getRelicTemplate());
 
@@ -76,15 +78,18 @@ public class ServoJewelAuto extends LinearOpMode {
         } else {
             telemetry.addData("VuMark Column", "borked");
         }
+        telemetry.update();
 
         //STEP 2: Hitting the jewel
-        armExtender.setPosition(0.5); //servo in 'out' position
+        armExtender.setPosition(0.4); //servo in 'out' position
+
+        sleep(2000);
 
         //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
         if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
-            armRotator.setPosition(0.7);
+            armRotator.setPosition(0.75);
         } else {
-            armRotator.setPosition(0.3);
+            armRotator.setPosition(0.25);
         }
 
         sleep(5000);
