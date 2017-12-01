@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * Created by Kaden on 11/25/2017.
- */
+**/
 
 public class AutoDrive {
     private DcMotor FrontLeft;
@@ -34,7 +34,7 @@ public class AutoDrive {
 
     public void driveTranslateRotate(double x, double y, double z, double distance) {
         resetEncoders();
-        double clicks = Math.abs(distance * CPR/cir);
+        double clicks = Math.abs(distance * CPR / cir);
         double fl = clip(y + -x + z);
         double fr = clip(y + x - z);
         double rl = clip(y + x + z);
@@ -43,7 +43,7 @@ public class AutoDrive {
         double high = findHigh(list);
         driveSpeeds(fl, fr, rl, rr);
         while (!(isMotorAtTarget(FrontLeft, fl / high * clicks)) && (!(isMotorAtTarget(FrontRight, fr / high * clicks))) && (!(isMotorAtTarget(RearLeft, rl / high * clicks))) && (!(isMotorAtTarget(RearRight, rr / high * clicks)))) {
-
+          
         }
         stopMotors();
     }
@@ -81,7 +81,6 @@ public class AutoDrive {
         FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 
     public void stopMotors() {
@@ -95,8 +94,10 @@ public class AutoDrive {
     public boolean isMotorAtTarget(DcMotor motor, double target) {
         return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);
     }
-    public void rightGyro (double x, double y, double z, double degrees) {
-        double heading = gyro.getHeading();
+
+    public void rightGyro(double x, double y, double z, double target) {
+        heading = getHeading();
+        double change = 0;
         double fl = clip(y + -x + z);
         double fr = clip(y + x - z);
         double rl = clip(y + x + z);
@@ -104,15 +105,23 @@ public class AutoDrive {
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
         driveSpeeds(fl, fr, rl, rr);
-        while (heading < degrees) {
-            heading = gyro.getHeading();
+        if (heading > target) {
+            while (change <= 0) {
+                change = getHeading() - heading;
+                heading = getHeading();
+            }
+        }
+        while (heading <= target) {
+            heading = getHeading();
             telemetry.addData("Current Gyro: ", heading);
             telemetry.update();
         }
         stopMotors();
     }
-    public void leftGyro (double x, double y, double z, double degrees) {
-        double heading = gyro.getHeading();
+
+    public void leftGyro(double x, double y, double z, double target) {
+        heading = getHeading();
+        double change = 0;
         double fl = clip(y + -x + z);
         double fr = clip(y + x - z);
         double rl = clip(y + x + z);
@@ -120,20 +129,28 @@ public class AutoDrive {
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
         driveSpeeds(fl, fr, rl, rr);
-        while (heading > degrees) {
-            heading = gyro.getHeading();
+        if (target < heading) {
+          while(change <= 0) {
+            change = heading - getHeading();
+            heading = getHeading();
+          }
+        }
+        while (heading >= target) {
+            heading = getHeading();
             telemetry.addData("Current Gyro: ", heading);
             telemetry.update();
         }
         stopMotors();
     }
+
     public void init() {
         gyro.calibrate();
         while (gyro.isCalibrating()) {
 
         }
-        heading = gyro.getHeading();
+        heading = getHeading();
     }
+
     public double getHeading() {
         return gyro.getHeading();
     }
