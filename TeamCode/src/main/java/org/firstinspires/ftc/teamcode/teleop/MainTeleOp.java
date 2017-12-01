@@ -72,6 +72,9 @@ public class MainTeleOp extends OpMode
     private Servo armRotator;
     private Servo armExtender;
 
+    private boolean locking;
+    private boolean returning;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -90,6 +93,8 @@ public class MainTeleOp extends OpMode
         armExtender = hardwareMap.servo.get("armExtender");
 
         raiser.setDirection(DcMotorSimple.Direction.REVERSE);
+        locking = false;
+        returning = false;
     }
 
     /*
@@ -118,15 +123,15 @@ public class MainTeleOp extends OpMode
         drivetrain.complexDrive(gamepad1, telemetry);
 
         //Raise arm while the y button is held, lower it when a it held
-        if(gamepad1.y){
+        if(gamepad1.a){
             raiser.setPower(1);
-        } else if (gamepad1.a) {
+        } else if (gamepad1.b) {
             raiser.setPower(-1);
         } else {
             raiser.setPower(0);
         }
 
-        //Increment servos by small amounts when bumper is held.
+        //Increment servos by small amounts when bumper is held. [NO SERVOS NOW]
         /*if(gamepad1.left_bumper){
             grabber.setPower(-0.5);
         } else if (gamepad1.right_bumper){
@@ -135,7 +140,27 @@ public class MainTeleOp extends OpMode
             grabber.setPower(0);
         }*/
 
-        if (gamepad1.right_bumper) {
+        if(gamepad1.right_trigger == 0 && !locking){
+            if(gamepad1.left_bumper){
+                grabber.setPower(-0.5);
+            } else if (gamepad1.right_bumper){
+                grabber.setPower(0.5);
+            } else {
+                grabber.setPower(0);
+            }
+            returning = false;
+        } else if (gamepad1.right_trigger > 0 && !locking && !returning){
+            locking = true;
+        } else if (gamepad1.right_trigger == 1 && locking){
+            locking = false;
+            returning = true;
+        }
+
+        if(locking && gamepad1.right_trigger == 1){
+            locking = false;
+        }
+
+        /*if (gamepad1.right_bumper) {
             grabber.setPower(0.5);
         }
 
@@ -148,7 +173,7 @@ public class MainTeleOp extends OpMode
             robot.stopMoving();
             drivetrain.stopMoving();
             grabber.setPower(0);
-        }
+        }*/
 
         //Set rotation servo positions
         if(gamepad1.dpad_left){
@@ -168,25 +193,6 @@ public class MainTeleOp extends OpMode
 
         telemetry.addData("ArmRotator Position", armRotator.getPosition());
         telemetry.addData("ArmExtender Position", armExtender.getPosition());
-
-
-        /*
-        if (gamepad1.a) {
-            // cache the gamepad a button
-            game1.getLetterInterface().getAButton().setPress(true);
-        }
-        else if (game1.getLetterInterface().getAButton().isPressed()) {
-            // do something
-            // set the interface back
-            game1.getLetterInterface().getAButton().setPress(false);
-        }
-        */
-
-        telemetry.addData("Main1", drivetrain.getmajorDiagonal().getMotor1().getPower());
-        telemetry.addData("Minor1", drivetrain.getMinorDiagonal().getMotor1().getPower());
-        telemetry.addData("Minor2", drivetrain.getMinorDiagonal().getMotor2().getPower());
-        telemetry.addData("Main2", drivetrain.getmajorDiagonal().getMotor2().getPower());
-
 
     }
 
