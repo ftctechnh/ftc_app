@@ -1,5 +1,17 @@
 [
     {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_menu.png",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\b9147850d351115ebc38046bb96e44851360c9eb\\output\\res\\drawable\\icon_menu.png"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\feedback_shape_orange.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\7f626b9117bb31f2e4cb5728056971878222ffd1\\output\\res\\drawable\\feedback_shape_orange.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\black_border.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\3a8f6631f26407d83cd9de65f62d99e55e5acd72\\output\\res\\drawable\\black_border.xml"
+    },
+    {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\drawable\\button_shape.xml"
     },
@@ -16,7 +28,15 @@
         "source": "C:\\Users\\boswo\\.android\\build-cache\\b4ca22e01e8141ee1df58acca12fce8d1e55fb24\\output\\res\\drawable\\feedback_shape_orange.xml"
     },
     {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_robotcontroller.png",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\b9147850d351115ebc38046bb96e44851360c9eb\\output\\res\\drawable\\icon_robotcontroller.png"
+    },
+    {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_robotcontroller.png",
         "source": "C:\\Users\\boswo\\.android\\build-cache\\2972a3a7686b3ccc2edc1753d40ec562772c9c99\\output\\res\\drawable\\icon_robotcontroller.png"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\drawable\\button_shape.xml"
     }
 ]

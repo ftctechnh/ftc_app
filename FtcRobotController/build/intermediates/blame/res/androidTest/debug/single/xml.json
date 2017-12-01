@@ -1,11 +1,23 @@
 [
     {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\rev_scoot.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\rev_scoot.xml"
+    },
+    {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\pushbotsens.xml",
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\xml\\pushbotsens.xml"
     },
     {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\k9legacybot.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\k9legacybot.xml"
+    },
+    {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\maxmodules.xml",
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\xml\\maxmodules.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\advanced_rc_settings.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\advanced_rc_settings.xml"
     },
     {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\rev_scoot.xml",
@@ -24,6 +36,14 @@
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\xml\\pushbot.xml"
     },
     {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\pushbotsens.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\pushbotsens.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\k9usbbot.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\k9usbbot.xml"
+    },
+    {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\squarebot.xml",
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\xml\\squarebot.xml"
     },
@@ -32,11 +52,31 @@
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\xml\\k9usbbot.xml"
     },
     {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\maxmodules.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\maxmodules.xml"
+    },
+    {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\k9legacybot.xml",
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\xml\\k9legacybot.xml"
     },
     {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\app_settings.xml",
+        "source": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\debug\\res\\xml\\app_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\pushbot.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\pushbot.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\device_filter.xml",
+        "source": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\debug\\res\\xml\\device_filter.xml"
+    },
+    {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\app_settings.xml",
         "source": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\debug\\res\\xml\\app_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\squarebot.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\xml\\squarebot.xml"
     }
 ]
