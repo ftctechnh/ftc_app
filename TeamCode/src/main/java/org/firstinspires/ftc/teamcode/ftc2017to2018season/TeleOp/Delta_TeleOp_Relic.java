@@ -37,13 +37,13 @@ public class Delta_TeleOp_Relic extends OpMode {
     Servo moveRelicManipulatorServo;
     //Initial value for slide motor
     public int IVFSM;
-
+/*
     public double openClaw = 0;
     public double closeClaw = 0.6;
     public double upClaw = 0;
     public double downClaw = 0.5;
 
-
+*/
 
     
 
@@ -78,7 +78,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         //   Servo right_servo;
 
 
-        /*---------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------
                 Get references to the hardware installed on the robot and name them here
         */
     @Override
@@ -322,7 +322,7 @@ public class Delta_TeleOp_Relic extends OpMode {
 //This stops the motor
     }
 
-    public void relicSlides() {
+   /* public void relicSlides() {
       double g2lsx = gamepad2.left_stick_x;
 //If there is movement on the x-axis then move the motor proportionally to the amount of movement on the joystick
         if (g2lsx != 0) {
@@ -331,9 +331,9 @@ public class Delta_TeleOp_Relic extends OpMode {
         else{
             relicMotor.setPower(0);
         }
-    }
+    }*/
 
-    public void relicManipulatorClawServo() {
+  /*  public void relicManipulatorClawServo() {
       if (gamepad2.left_bumper){
           clawServo.setPosition(openClaw);
       }
@@ -344,8 +344,8 @@ public class Delta_TeleOp_Relic extends OpMode {
       telemetry.addData("In the function relicManipulatorClawServo and the value of that servo is", clawServo.getPosition());
       telemetry.update();
     }
-
-    public void relicManipulatorMovementServo(){
+*/
+  /*  public void relicManipulatorMovementServo(){
         if (gamepad2.x){
             moveRelicManipulatorServo.setPosition(upClaw);
         }
@@ -355,7 +355,7 @@ public class Delta_TeleOp_Relic extends OpMode {
         }
 
     }
-
+*/
     }
 
 
