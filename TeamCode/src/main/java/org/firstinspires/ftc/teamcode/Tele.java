@@ -149,10 +149,10 @@ public class Tele extends OpMode{
 
        // servo
         if (gamepad1.dpad_up) {
-            gromit.jewelsservo.setPosition(0.7);
+            gromit.jewelsservo.setPosition(0.0);
         }
         if (gamepad1.dpad_down) {
-            gromit.jewelsservo.setPosition(0.2);
+            gromit.jewelsservo.setPosition(0.45);
         }
 
         //Parallel Or Perp. Orientation
