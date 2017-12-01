@@ -29,5 +29,8 @@ class CVBridge
 
         @JvmField
         var blueJewelPoints = ArrayList<CPPoint>()
+
+        @JvmField
+        var openCvRunner: OpenCVRunner? = null
     }
 }

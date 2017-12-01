@@ -78,6 +78,7 @@ public class Lift extends RobotComponent
     @SuppressWarnings("unused")
     public void toPos(final Position POSITION)
     {
+        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         _liftMotor.setTargetPosition(POSITION.encoderCount());
     }
 
@@ -92,7 +93,7 @@ public class Lift extends RobotComponent
         final int CLOSE_ENOUGH = 2;
         final int LOW_BOUND = -20;
 
-        POWER_VALUE *= .5;
+        POWER_VALUE *= .50;
 
         // Set target position the moment the joystick isn't moved. But only once!
         if(_powered.isPressed(POWER_VALUE != 0))
@@ -121,10 +122,6 @@ public class Lift extends RobotComponent
             _liftMotor.setPower(POWER_VALUE);
         }
 
-        if(_liftMotor.getCurrentPosition() <= LOW_BOUND && POWER_VALUE <= 0)
-        {
-            _liftMotor.setPower(0);
-        }
 
         if(outputLift)
         {
@@ -139,6 +136,8 @@ public class Lift extends RobotComponent
     public void resetEncoder()
     {
         _liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        _liftMotor.setTargetPosition(0);
     }
 
 

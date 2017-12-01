@@ -45,6 +45,15 @@ public abstract class RobotComponent
 
 
     /**
+     * @return Returns the base object of the component
+     */
+    public final RobotBase base()
+    {
+        return base;
+    }
+
+
+    /**
      * Stops the component
      */
     public abstract void stop();

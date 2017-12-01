@@ -36,7 +36,7 @@ public class RelicExtender extends RobotComponent
      */
     public void run(final double POWER)
     {
-        _extenderMotor.setPower(POWER);
+        _extenderMotor.setPower(POWER * .5);
     }
 
 

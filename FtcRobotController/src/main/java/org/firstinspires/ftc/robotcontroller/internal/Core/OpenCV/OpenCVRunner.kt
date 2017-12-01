@@ -14,6 +14,7 @@
 package org.directcurrent.opencv
 
 
+import android.hardware.Camera
 import android.util.Log
 import android.view.View
 import com.qualcomm.ftcrobotcontroller.R
@@ -38,6 +39,15 @@ import org.opencv.core.Mat
 class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
                    private var _cameraIndex: Int): CameraBridgeViewBase.CvCameraViewListener2
 {
+    /**
+     * Constructor, initializes the bridge
+     */
+    init
+    {
+        CVBridge.openCvRunner = this
+    }
+
+
     /**
      * Used in the OpenCV state machine that determines whether the display is open/closed, etc.
      */
@@ -72,7 +82,6 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
 
     private var _analyze = false
 
-    var bridge = CVBridge()
 
     /**
      * Starts OpenCV- starting messages are displayed in Logcat. OpenCV likes to fail the first
@@ -147,14 +156,16 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
      */
     fun toggleAnalyze()
     {
-        if(_state == _CVState.SHOW)
-        {
-            _setState(_CVState.SHOW_ANALYZE)
-        }
-        else
-        {
-            _setState(_CVState.SHOW)
-        }
+        mainActivity.runOnUiThread({
+            if(_state == _CVState.SHOW)
+            {
+                _setState(_CVState.SHOW_ANALYZE)
+            }
+            else
+            {
+                _setState(_CVState.SHOW)
+            }
+        })
     }
 
 
@@ -163,13 +174,33 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
      */
     fun toggleShowHide()
     {
-        if(_state == _CVState.HIDDEN)
-        {
-            _setState(_CVState.SHOW)
-        }
-        else
-        {
-            _setState(_CVState.HIDDEN)
+        mainActivity.runOnUiThread {
+            if(_state == _CVState.HIDDEN)
+            {
+                _setState(_CVState.SHOW)
+
+                try
+                {
+                    mainActivity.cameraManager.setTorchMode(mainActivity.cameraManager.cameraIdList[0] , true)
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+            }
+            else
+            {
+                _setState(_CVState.HIDDEN)
+
+                try
+                {
+                    mainActivity.cameraManager.setTorchMode(mainActivity.cameraManager.cameraIdList[0] , false)
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+            }
         }
     }
 

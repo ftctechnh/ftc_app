@@ -42,9 +42,11 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
      */
     override fun runSequentially()
     {
-        val TOLERANCE = 2                                    // "Close enough" amount
-        val MIN_SPEED = .06                               // Minimum speed to rotate at
-        val SPEED_MULTIPLIER = 10.0                         // Constant to adjust speed
+        _imu.pull()
+
+        val TOLERANCE = 5                                   // "Close enough" amount
+        val MIN_SPEED = .05                                 // Minimum speed to rotate at
+        val SPEED_MULTIPLIER = 3.0                          // Constant to adjust speed
 
         val initHeading = _imu.zAngle()
         var speed: Double                                               // Speed of rotation
@@ -60,6 +62,8 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
 
         while (Math.abs(error) > TOLERANCE && !_interrupted)
         {
+            _imu.pull()
+
             error = Util.angleError(_imu.zAngle().toInt(), _targetAngle.toInt()).toDouble()
 
             speed = error / initError * SPEED_MULTIPLIER * distanceModifier
@@ -72,9 +76,16 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
                 speed = _maxSpeed
             }
 
+            _drivetrain.base().telMet().tagWrite("Current Heading" , _imu.zAngle())
+            _drivetrain.base().telMet().tagWrite("Current Error" , error)
+            _drivetrain.base().telMet().update()
 
-            _drivetrain.run(0.0 , Math.abs(error) / error * -1.0 * speed , false)
+
+            _drivetrain.run(0.0 , Math.abs(error) / -error * speed , false)
         }
+
+        _drivetrain.leftMotor().power = 0.0
+        _drivetrain.rightMotor().power = 0.0
 
         _busy = false
     }

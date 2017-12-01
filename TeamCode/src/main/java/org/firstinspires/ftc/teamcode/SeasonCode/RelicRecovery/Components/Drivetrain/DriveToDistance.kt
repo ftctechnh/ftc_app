@@ -2,7 +2,6 @@
 package org.directcurrent.season.relicrecovery.drivetrain
 
 
-import com.vuforia.CameraDevice
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain
 
@@ -47,17 +46,46 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
         _drivetrain.encoderStopReset()
         _drivetrain.encoderOn()
 
-        _drivetrain.leftMotor().targetPosition = (_distance / _COUNTS_PER_INCH).toInt()
-        _drivetrain.rightMotor().targetPosition = (_distance / _COUNTS_PER_INCH).toInt()
+        _drivetrain.leftMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt()
+        _drivetrain.rightMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt()
+
+        var eta = Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
+                (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2)
 
         _busy = true
-        while(Math.abs(_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
-                Math.abs(_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2 >
-                _CLOSE_ENOUGH && !_interrupt)
+        while(eta > _CLOSE_ENOUGH && !_interrupt)
         {
-            _drivetrain.leftMotor().power = 1.0
-            _drivetrain.rightMotor().power = 1.0
+            if(_distance > 0)
+            {
+                _drivetrain.leftMotor().power = .5
+                _drivetrain.rightMotor().power = .5
+            }
+            else
+            {
+                _drivetrain.leftMotor().power = -.5
+                _drivetrain.rightMotor().power = -.5
+            }
+
+            _drivetrain.base().telMet().tagWrite("Left Target" , _drivetrain.leftEncoderTarget())
+            _drivetrain.base().telMet().tagWrite("Right Target" , _drivetrain.rightEncoderTarget())
+            _drivetrain.base().telMet().tagWrite("Left Pos" , _drivetrain.leftEncoderCount())
+            _drivetrain.base().telMet().tagWrite("Right Pos" , _drivetrain.rightEncoderCount())
+            _drivetrain.base().telMet().tagWrite("Avg Distance" , eta)
+            _drivetrain.base().telMet().update()
+
+            // We've missed our stop
+            if(Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
+                    (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2) > eta)
+            {
+                break;
+            }
+
+            eta = Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
+                    (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2)
         }
+
+        _drivetrain.leftMotor().power = 0.0
+        _drivetrain.rightMotor().power = 0.0
 
         _busy = false
         _drivetrain.allowInput()

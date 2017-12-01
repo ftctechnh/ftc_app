@@ -34,7 +34,7 @@ class BlueJewelFinder: ObjectFinder(BlueJewelLower , BlueJewelUpper)
             if(Math.abs(rect.height - rect.width) <= 5000 && rect.height >= 70 && rect.width >= 70)
             {
                 // If it's below a certain line (on the floor-ish)
-                if(rect.x >= 300)
+                if(rect.x <= 100 && rect.area() < 50_000)
                 {
                     Imgproc.rectangle(displayMat, Point(rect.x.toDouble() , rect.y.toDouble()) ,
                             Point((rect.x + rect.width).toDouble() , (rect.y + rect.height).toDouble()) ,

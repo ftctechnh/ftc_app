@@ -88,6 +88,7 @@ public class Drivetrain extends RobotComponent
     {
         _imu = IMU;
         turnTo = new TurnTo(this , _imu);
+        driveTo = new DriveToDistance(this);
     }
 
 

@@ -40,6 +40,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.hardware.camera2.CameraManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
@@ -111,6 +112,8 @@ public class FtcRobotControllerActivity extends Activity
   private TextView _analysisText;
   private Button _analyzeButton;
   private Button _showHideButton;
+
+  public CameraManager cameraManager;
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
   public static final String TAG = "RCActivity";
@@ -333,6 +336,8 @@ public class FtcRobotControllerActivity extends Activity
 
 
     // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
+    cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
     _openCVRunner = new OpenCVRunner(this , 0);
 
     _openCVRunner.start();
