@@ -1,4 +1,4 @@
-#Sun Nov 26 17:05:37 PST 2017
+#Thu Nov 30 18:57:21 PST 2017
 base.0=C\:\\Users\\boswo\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\1f\\main
 renamed.0=classes.dex
 file.0=C\:\\Users\\boswo\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\1f\\main\\classes.dex

@@ -32,12 +32,12 @@
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\red_line.xml"
     },
     {
-        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\analog_input_device.xml",
-        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\analog_input_device.xml"
-    },
-    {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device.xml",
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\digital_device.xml"
+    },
+    {
+        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\analog_input_device.xml",
+        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\analog_input_device.xml"
     },
     {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\servo.xml",
@@ -68,24 +68,24 @@
         "source": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\src\\main\\res\\layout\\activity_ftc_controller.xml"
     },
     {
-        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\motor_controller_banner.xml",
-        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\motor_controller_banner.xml"
-    },
-    {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\gray_line.xml",
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\gray_line.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\motor_controller_banner.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\motor_controller_banner.xml"
     },
     {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\header.xml",
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\header.xml"
     },
     {
-        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_usb_device.xml",
-        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\lynx_usb_device.xml"
-    },
-    {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\activity_about.xml"
+    },
+    {
+        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_usb_device.xml",
+        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\lynx_usb_device.xml"
     },
     {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\debug\\layout\\i2c_device.xml",

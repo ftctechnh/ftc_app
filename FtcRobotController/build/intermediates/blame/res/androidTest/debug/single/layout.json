@@ -84,12 +84,12 @@
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\gray_line.xml"
     },
     {
-        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\analog_inputs.xml",
-        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\analog_inputs.xml"
-    },
-    {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\port_attached_row.xml",
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\port_attached_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\analog_inputs.xml",
+        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\analog_inputs.xml"
     },
     {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\feedback.xml",
@@ -148,12 +148,12 @@
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\activity_configure_from_template.xml"
     },
     {
-        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\activity_ftc_lynx_address_update.xml",
-        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
-    },
-    {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\matrices.xml",
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\matrices.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\activity_ftc_lynx_address_update.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
     },
     {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\file_info.xml",

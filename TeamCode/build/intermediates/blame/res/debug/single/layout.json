@@ -40,20 +40,20 @@
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\motor_list.xml"
     },
     {
-        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
-        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\template_info.xml"
-    },
-    {
-        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
-        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\servo_list.xml"
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_program_and_manage.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\activity_program_and_manage.xml"
     },
     {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\port_attached_row.xml",
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\port_attached_row.xml"
     },
     {
-        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_program_and_manage.xml",
-        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\activity_program_and_manage.xml"
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\servo_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
+        "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\template_info.xml"
     },
     {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\device_interface_module.xml",
@@ -176,12 +176,12 @@
         "source": "C:\\Users\\boswo\\.android\\build-cache\\9bea70b9b3bda271dda786ac4f9f25a208c7e5ee\\output\\res\\layout\\pwm_device.xml"
     },
     {
-        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
-        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\activity_load.xml"
-    },
-    {
         "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\info_button.xml",
         "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\info_button.xml"
+    },
+    {
+        "merged": "C:\\Users\\Inspiration Team\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
+        "source": "C:\\Users\\Inspiration Team\\.android\\build-cache\\17b41fe474b7ac03d622f903c4fd14fe811cc9f5\\output\\res\\layout\\activity_load.xml"
     },
     {
         "merged": "C:\\Users\\boswo\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
