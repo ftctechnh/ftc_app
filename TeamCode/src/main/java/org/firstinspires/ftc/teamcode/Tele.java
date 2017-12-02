@@ -113,8 +113,7 @@ public class Tele extends OpMode{
     @Override
     public void init_loop() {
     }
-
-    /*
+     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
@@ -145,7 +144,14 @@ public class Tele extends OpMode{
         gromit.right_back.setPower ( forward/1.0 - strafe/1.0 - rotate/1.0 );
 
 
-
+// glyph clamp
+        if (gamepad1.dpad_left) {
+            gromit.leftlower.setPosition(0.6);
+            gromit.rightlower.setPosition(0.4); //glyph open
+        } else if (gamepad1.dpad_right ){
+            gromit.leftlower.setPosition(0.85);
+            gromit.rightlower.setPosition(0.15); //glyph closed
+        }
 
        // servo
         if (gamepad1.dpad_up) {
