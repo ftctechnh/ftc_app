@@ -61,13 +61,13 @@ public class AutonomousDrive_02_0 extends LinearOpMode
                 if (mark != RelicRecoveryVuMark.UNKNOWN) {
                     switch (mark) {
                         case LEFT:
-                            counter = 2.0;
+                            counter = timeFromDistance(36.0 + 7.63);
                             break;
                         case CENTER:
-                            counter = 2.3;
+                            counter = timeFromDistance(36.0);
                             break;
                         case RIGHT:
-                            counter = 2.5;
+                            counter = timeFromDistance(36.0 - 7.63);
                             break;
                         default:
                             counter = 0;
@@ -85,15 +85,10 @@ public class AutonomousDrive_02_0 extends LinearOpMode
             else if(timer.time() < counter + .5){
                 x = 0;
                 y = 0;
-            }else if(timer.time() < counter + 1.5) {
+            }else if(timer.time() < counter+.5 + timeFromDistance(11)) {
                 x = 0;
                 y = .5;
-            }else if(timer.time() < counter + 2.5){
-                x = 0;
-                y = 0;
-                pincherL.setPosition(0);
-                pincherR.setPosition(0);
-            }else if(timer.time() < counter + 4){
+            }else if(timer.time() < counter+.5+timeFromDistance(11) + timeFromDistance(7)){
                 x = 0;
                 y = -.5;
             }else{
