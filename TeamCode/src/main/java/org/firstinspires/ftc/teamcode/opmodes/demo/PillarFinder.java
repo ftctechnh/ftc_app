@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import android.app.Activity;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
+import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 import org.opencv.core.Core;
@@ -41,7 +44,7 @@ public class PillarFinder extends VuforiaBallLib {
     private static final int PEAK_HEIGHT_MIN = 110;
     private static final int PEAK_FIND_WINDOW = 40;
     private static final int PEAK_FRAME_COUNT = 3;
-    private static final boolean red = true;
+    protected boolean red = true;
     private int[] data;
     private BotHardware bot = new BotHardware(this);
 
@@ -55,14 +58,14 @@ public class PillarFinder extends VuforiaBallLib {
         mSeq.add(
             new AutoLib.RunUntilStopStep(
                 new AutoLib.AzimuthTimedDriveStep(
-                        this, 0, bot.getHeadingSensor(), new SensorLib.PID(1.0f, 0, 0, 0), bot.getMotorVelocityShimArray(), 180.0f, 5.0f, true
+                        this, 0, bot.getHeadingSensor(), new SensorLib.PID(1.0f, 0, 0, 0), bot.getMotorVelocityShimArray(), 180.0f, 500.0f, true
                 ),
                 new PeakFindStep(
                         PEAK_FIND_WINDOW, PEAK_FRAME_COUNT
                 )
             )
         );
-        mSeq.add(new AutoLib.MoveByTimeStep(bot.getMotorRay(), 0, 0.1, true));
+        mSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), false, 180.0f, 3, this));
     }
 
     @Override
@@ -72,10 +75,16 @@ public class PillarFinder extends VuforiaBallLib {
 
     @Override
     public void loop() {
-
+        if(mSeq.loop()) requestOpModeStop();
     }
 
-   private class PeakFindStep extends AutoLib.Step {
+    private class DebugHeading implements HeadingSensor {
+        public float getHeading() {
+            return 0;
+        }
+    }
+
+    private class PeakFindStep extends AutoLib.Step {
         private int peakFrameCount = 0;
         private int count;
         private int centerWindow;
@@ -98,6 +107,59 @@ public class PillarFinder extends VuforiaBallLib {
             if(i == peaks.size()) peakFrameCount = 0;
 
             return peakFrameCount > this.count;
+        }
+   }
+
+   private class PeakHoneStep extends  AutoLib.Step {
+        private final int error;
+        private final float power;
+        private final DcMotor[] motorRay;
+        private final boolean reversed;
+        private final OpMode mode;
+
+        private int lastPeakPos = -1;
+        private int lostPeaksCount = 0;
+        private int foundPeakCount = 0;
+
+        private static final int PEAK_LOST_BREAK = 10;
+        private static final int PEAK_DIST_THRESH = 15;
+        private static final int PEAK_FOUND_COUNT = 10;
+
+        PeakHoneStep(DcMotor[] motors, boolean revesed, float power, int error, OpMode mode) {
+            this.motorRay = motors;
+            this.power = power;
+            this.error = error;
+            this.reversed = revesed;
+            this.mode = mode;
+        }
+
+        public boolean loop() {
+            //if first run, get the peak we want to center on.
+            //in this case, the one farthest left in the frame
+            ArrayList<Integer> peaks = getPeaks();
+            //if we have no peaks, ty again next time
+            if(peaks.size() <= 0) return ++lostPeaksCount >= PEAK_LOST_BREAK;
+            //else if the distance of the peaks is greater than reasonable, break
+            if(lastPeakPos != -1 && Math.abs(peaks.get(peaks.size() - 1) - lastPeakPos) >= PEAK_DIST_THRESH) return ++lostPeaksCount >= PEAK_LOST_BREAK;
+            //if the peak is within stopping margin, stop
+            telemetry.addData("Peak dist", Math.abs(peaks.get(peaks.size() - 1) - 127));
+            if(Math.abs(peaks.get(peaks.size() - 1) - 127) <= error) {
+                setMotors(0);
+                return ++foundPeakCount >= 10;
+            }
+            //save the last peak
+            lastPeakPos = peaks.get(peaks.size() - 1);
+            //reset lost peaks counter
+            lostPeaksCount = 0;
+            foundPeakCount = 0;
+            //adjust motors
+            if(peaks.get(0) > 127) setMotors(reversed ? -power : power);
+            else setMotors(reversed ? power : -power);
+            return false;
+        }
+
+        private void setMotors(float power) {
+            for(DcMotor motor : motorRay) motor.setPower(power);
         }
    }
 

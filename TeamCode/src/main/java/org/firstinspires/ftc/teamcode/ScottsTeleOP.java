@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.opmodes.HardwareRatbot;
  */
 
 @TeleOp(name="ratbot2017", group="Ratbot")
+@Disabled
 public class ScottsTeleOP extends OpMode {
 
     HardwareRatbot robot       = new HardwareRatbot();

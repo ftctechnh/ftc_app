@@ -32,7 +32,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.LinkedList;
 
 @TeleOp(name = "RatBot", group = "Misc.")
-//@Disabled
+@Disabled
 public class RatBot extends OpMode {
 
     private static final int DATA_MAX = 100;
