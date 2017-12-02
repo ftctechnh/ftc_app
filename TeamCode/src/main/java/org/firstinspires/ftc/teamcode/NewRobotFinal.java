@@ -346,7 +346,6 @@ public class NewRobotFinal
             driveLeftOne.setPower(Math.abs(pow));
             while(getYaw() < degrees) {}
         }
-
         stopAllMotors();
     }
 

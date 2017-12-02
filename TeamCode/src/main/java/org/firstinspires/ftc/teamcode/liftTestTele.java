@@ -24,24 +24,24 @@ public class liftTestTele extends OpMode
 
     public void loop()
     {
-        telemetry.addData("Lift enc",newRobot.getLiftMotor().getCurrentPosition());
-        telemetry.update();
+        //telemetry.addData("Lift enc",newRobot.getLiftMotor().getCurrentPosition());
+        //telemetry.update();
 
         if(gamepad1.dpad_up && gamepad1.a)
-            newRobot.moveLift(1, .78f);
+            newRobot.moveLift(1, .4f);
         else if (gamepad1.dpad_up)
             newRobot.moveLift(1);
 
         if(gamepad1.dpad_down && gamepad1.a)
-            newRobot.moveLift(-1, .78f);
+            newRobot.moveLift(-1, .4f);
         else if (gamepad1.dpad_down)
             newRobot.moveLift(-1);
 
         newRobot.fineMoveLift(gamepad1.left_stick_y);
 //test wi gs
-        telemetry.addData("ARM ENCODER= ", newRobot.getWingMotor().getCurrentPosition());
+        //telemetry.addData("ARM ENCODER= ", newRobot.getWingMotor().getCurrentPosition());
         if (gamepad1.y)
-            newRobot.getWingMotor().setPower(.75);
+            newRobot.getWingMotor().setPower(.3);
         else if (gamepad1.b)
         {
             isWingUp = !isWingUp;
