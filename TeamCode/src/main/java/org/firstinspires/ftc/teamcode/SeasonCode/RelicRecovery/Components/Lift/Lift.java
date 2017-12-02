@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Toggle;
 
 import static org.directcurrent.season.relicrecovery.ToggleTelMetKt.outputLift;
 
@@ -18,8 +17,6 @@ import static org.directcurrent.season.relicrecovery.ToggleTelMetKt.outputLift;
 public class Lift extends RobotComponent
 {
     private DcMotor _liftMotor;
-
-    private Toggle _powered = new Toggle();
 
 
     /**
@@ -68,7 +65,6 @@ public class Lift extends RobotComponent
         super.init(BASE);
 
         _liftMotor = mapper.mapMotor("liftMotor" , DcMotorSimple.Direction.REVERSE);
-        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 
@@ -78,7 +74,6 @@ public class Lift extends RobotComponent
     @SuppressWarnings("unused")
     public void toPos(final Position POSITION)
     {
-        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         _liftMotor.setTargetPosition(POSITION.encoderCount());
     }
 
@@ -90,37 +85,8 @@ public class Lift extends RobotComponent
      */
     public void run(double POWER_VALUE)
     {
-        final int CLOSE_ENOUGH = 2;
-        final int LOW_BOUND = -20;
-
-        POWER_VALUE *= .50;
-
-        // Set target position the moment the joystick isn't moved. But only once!
-        if(_powered.isPressed(POWER_VALUE != 0))
-        {
-            _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            _liftMotor.setTargetPosition(_liftMotor.getCurrentPosition());
-        }
-
-
-        if(POWER_VALUE == 0)
-        {
-            // If we're not quite at the target
-            if(Math.abs(_liftMotor.getTargetPosition() - _liftMotor.getCurrentPosition()) >
-                    CLOSE_ENOUGH)
-            {
-                _liftMotor.setPower(.5);
-            }
-            else
-            {
-                _liftMotor.setPower(0);
-            }
-        }
-        else                        // Manual override always takes priority :)
-        {
-            _liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            _liftMotor.setPower(POWER_VALUE);
-        }
+        _liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        _liftMotor.setPower(POWER_VALUE);
 
 
         if(outputLift)
@@ -136,7 +102,6 @@ public class Lift extends RobotComponent
     public void resetEncoder()
     {
         _liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         _liftMotor.setTargetPosition(0);
     }
 

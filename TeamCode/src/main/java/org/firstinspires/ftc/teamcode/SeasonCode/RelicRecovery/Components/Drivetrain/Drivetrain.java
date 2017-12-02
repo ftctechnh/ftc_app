@@ -24,7 +24,7 @@ public class Drivetrain extends RobotComponent
     private final double _FORWARD_MULTIPLIER = 1;
     private final double _REVERSE_MULTIPLIER = -1;
     private final double _FAST_MULTIPLIER = .95;        // Different motors have different maxes
-    private final double _SLOW_MULTIPLIER = .5;
+    private final double _SLOW_MULTIPLIER = .75;
     private final double _STOP_MULTIPLIER = 0;
 
     private DcMotor _rightMotor;

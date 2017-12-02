@@ -32,10 +32,10 @@ class RedJewelFinder: ObjectFinder(RedJewelLower , RedJewelUpper)
             val rect = Imgproc.boundingRect(i)
 
             // If it's roughly in the shape of a square and large enough
-            if(Math.abs(rect.height - rect.width) <= 5000 && rect.height >= 70 && rect.width >= 70)
+            if(rect.height >= 30 && rect.width >= 30)
             {
                 // If it's below a certain line (on the floor-ish)
-                if(rect.x <= 100 && rect.area() < 50_000)
+                if(rect.x <= 200 && rect.area() < 50_000)
                 {
                     Imgproc.rectangle(displayMat, Point(rect.x.toDouble() , rect.y.toDouble()) ,
                             Point((rect.x + rect.width).toDouble() , (rect.y + rect.height).toDouble()) ,

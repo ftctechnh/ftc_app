@@ -3,22 +3,21 @@ package org.directcurrent.season.relicrecovery.autonomous
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.directcurrent.opencv.CVBridge
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base
 import org.directcurrent.core.AutoStopper
 import org.directcurrent.season.relicrecovery.jewelarm.JewelArm
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.AutoMenu
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Color
 
 
 @Autonomous(name = "test")
-class AutoTest: LinearOpMode()
+class AutoTest: AutoMenu()
 {
     private val _base = Base()
 
-    private val _teamColor = Color.ColorID.RED
-
     private val _autoStopper = AutoStopper(this , _base)
+
 
     /**
      * Status of jewel detection
@@ -39,6 +38,8 @@ class AutoTest: LinearOpMode()
         _base.init(hardwareMap , this)
 
         _base.imu.fastCalibrate()
+
+        preRunInit()
 
         waitForStart()
 
@@ -88,7 +89,7 @@ class AutoTest: LinearOpMode()
             {
                 telemetry.addData("Decision" , "Red on left")
 
-                jewelStatus = if(_teamColor == Color.ColorID.RED)
+                jewelStatus = if(teamColor == Color.ColorID.RED)
                 {
                     JewelStatus.GO_BACKWARD
                 }
@@ -100,7 +101,7 @@ class AutoTest: LinearOpMode()
             else
             {
                 telemetry.addData("Decision" , "Blue on left")
-                jewelStatus = if(_teamColor == Color.ColorID.RED)
+                jewelStatus = if(teamColor == Color.ColorID.RED)
                 {
                     JewelStatus.GO_FORWARD
                 }
@@ -136,7 +137,7 @@ class AutoTest: LinearOpMode()
                 _base.jewelArm.setState(JewelArm.State.DOWN)
                 sleep(750)
 
-                _base.drivetrain.driveTo.setDestination(1.5)
+                _base.drivetrain.driveTo.setDestination(3.0)
                 _base.drivetrain.driveTo.runSequentially()
 
                 sleep(100)
@@ -151,7 +152,7 @@ class AutoTest: LinearOpMode()
             {
                 _base.jewelArm.setState(JewelArm.State.DOWN)
                 sleep(750)
-                _base.drivetrain.driveTo.setDestination(-1.2)
+                _base.drivetrain.driveTo.setDestination(-3.0)
                 _base.drivetrain.driveTo.runSequentially()
 
                 sleep(100)
