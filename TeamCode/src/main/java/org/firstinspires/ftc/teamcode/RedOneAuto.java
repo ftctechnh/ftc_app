@@ -33,7 +33,7 @@ public class RedOneAuto extends LinearOpMode {
         robot.arm.setPosition(0);
         encode(15, 0.5, MoveType.STRAIGHT);
         encode(20, 0.5, MoveType.ROT);
-        encode(30, 0.5, MoveType.STRAIGHT);
+        encode(35, 0.5, MoveType.STRAIGHT);
     }
 
     //Negative speed means:
