@@ -222,9 +222,10 @@ public class Beta extends OpMode {
         if (gamepad1.left_bumper) {
 
 //opening the claw
-            //commented out so that it wouldnt ruin the old code
+            //commented out so that it wouldn't ruin the old code
             glyphServoRight.setPosition(0.5);
-            /*try {
+            /*
+            try {
                 glyphServoRight.setPosition(0.5);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -238,8 +239,8 @@ public class Beta extends OpMode {
 
             glyphServoLeft.setPosition(0.8);
 
-            telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
-            telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
+            telemetry.addData("The value of the right servo is", glyphServoRight.getPortNumber());
+            telemetry.addData("The value of the left servo is", glyphServoLeft.getPortNumber());
             telemetry.update();
         }
 
