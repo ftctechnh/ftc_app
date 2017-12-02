@@ -29,7 +29,7 @@ public class DriveEngine {
     double offset = Math.PI / 4;
     double theta = offset;
 
-    double alpha = .5;
+    double alpha = .2;
     double xAve = 0;
     double yAve = 0;
 
