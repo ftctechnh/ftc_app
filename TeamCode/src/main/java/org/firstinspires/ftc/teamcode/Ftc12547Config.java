@@ -13,8 +13,8 @@ public class Ftc12547Config {
     /**
      * Set the team to the right color. BLUE or RED
      */
-    public static final int     TEAM_COLOR                          = Color.RED;
-    public static final boolean TOWARDS_AUDIENCE                    = true;
+    public static final int     TEAM_COLOR                          = Color.BLUE;
+    public static final boolean TOWARDS_AUDIENCE                    = false;
     /**
      * VuMark configurations
      */
@@ -70,18 +70,30 @@ public class Ftc12547Config {
     public static final double START_TO_FURTHEST_DISTANCE_INCHES_2  = 17.5;
     public static final double DESTINATION_TIMEOUT_SECONDS          = 50;
 
-    public static final double START_TO_NEAREST_ANGLE               = ONE_DEGREE_TURN * 60;
-    public static final double START_TO_MIDDLE_ANGLE                = ONE_DEGREE_TURN * 45;
-    public static final double START_TO_FURTHEST_ANGLE              = ONE_DEGREE_TURN * 35;
-    public static final double START_TO_NEAREST_ANGLE_2             = ONE_DEGREE_TURN * 5;
-    public static final double START_TO_MIDDLE_ANGLE_2              = ONE_DEGREE_TURN * 20;
-    public static final double START_TO_FURTHEST_ANGLE_2            = ONE_DEGREE_TURN * 35;
-    public static final double DISTANCE_TO_RACK_WITH_EXTRA_INSURANCE= 48;
-    public static final double EIGHTEEN_INCHES                      = 26;
-    public static final double HALF_FOOT                            = 12;
-    public static final double THREE_INCHES                         = 6;
+    //1=red close
+    //2=blue far
+    //3=red far
+    //4=blue close
 
-    public static final double DESTINATION_TURN_SPEED               = 0.1;
+    public static final double START_TO_NEAREST_ANGLE               = ONE_DEGREE_TURN * 145;
+    public static final double START_TO_MIDDLE_ANGLE                = ONE_DEGREE_TURN * 160;
+    public static final double START_TO_FURTHEST_ANGLE              = ONE_DEGREE_TURN * 185;
+    public static final double START_TO_NEAREST_ANGLE_3             = ONE_DEGREE_TURN * 210;
+    public static final double START_TO_MIDDLE_ANGLE_3              = ONE_DEGREE_TURN * 190;
+    public static final double START_TO_FURTHEST_ANGLE_3            = ONE_DEGREE_TURN * 180;
+    public static final double START_TO_NEAREST_ANGLE_2             = ONE_DEGREE_TURN * 15;
+    public static final double START_TO_MIDDLE_ANGLE_2              = ONE_DEGREE_TURN * 75;
+    public static final double START_TO_FURTHEST_ANGLE_2            = ONE_DEGREE_TURN * 100;
+    public static final double START_TO_NEAREST_ANGLE_4             = ONE_DEGREE_TURN * 70;
+    public static final double START_TO_MIDDLE_ANGLE_4              = ONE_DEGREE_TURN * 55;
+    public static final double START_TO_FURTHEST_ANGLE_4            = ONE_DEGREE_TURN * 35;
+
+    public static final double DISTANCE_TO_RACK_WITH_EXTRA_INSURANCE        = 30;
+    public static final double EIGHTEEN_INCHES                              = 23;
+    public static final double HALF_FOOT                                    = 12;
+    public static final double THREE_INCHES                                 = 6;
+
+    public static final double DESTINATION_TURN_SPEED               = 0.6;
     public static final double DESTINATION_TURN_TIMEOUT_SECONDS     = 5;
 
     public static final double DISTANCE_TO_RACK_INCHES              = 12 * 2;

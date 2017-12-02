@@ -150,6 +150,8 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
          * (3) Lift the jewel arm
          * (4) Move robot back to original place to move to rack
          */
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if (jewelColor == TEAM_COLOR){
             /**
              * (2) Move forward, because
@@ -173,6 +175,9 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
 
             encoderDriver.encoderDrive(ENCODER_RUN_SPEED, JEWEL_DISPOSITION_DISTANCE_INCHES, JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
         }
+
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         // (4) Move robot back to original place
 
         sleep(ONE_SECOND_IN_MIL);
@@ -225,8 +230,8 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
 
                 telemetry.addData("Moving to the final destination", rack_angle);
                 encoderDriver.encoderTurn(DESTINATION_TURN_SPEED,
-                        -ONE_EIGHTY_DEGREE_TURN + rack_angle,
-                        ONE_EIGHTY_DEGREE_TURN - rack_angle,
+                        -rack_angle,
+                        rack_angle,
                         DESTINATION_TURN_TIMEOUT_SECONDS);
 
                 stopMotorsAndRestShortly();
@@ -243,8 +248,8 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
 
                 telemetry.addData("Moving to the final destination", rack_angle);
                 encoderDriver.encoderTurn(DESTINATION_TURN_SPEED,
-                        ONE_EIGHTY_DEGREE_TURN - rack_angle,
-                        -ONE_EIGHTY_DEGREE_TURN + rack_angle,
+                        rack_angle,
+                        -rack_angle,
                         DESTINATION_TURN_TIMEOUT_SECONDS);
 
                 stopMotorsAndRestShortly();
@@ -256,8 +261,11 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
                         TO_RACK_TIMEOUT_SECONDS);
             }
         }
-        robot.leftClaw.setPosition(0.6);
-        robot.rightClaw.setPosition(0.6);
+        sleep(250);
+        robot.leftClaw.setPosition(0.8);
+        robot.rightClaw.setPosition(0.2);
+        sleep(250);
+        encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -4, -4, TO_RACK_TIMEOUT_SECONDS);
         telemetry.addData("Mission ", "Complete");
         telemetry.update();
     }
@@ -268,14 +276,22 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
         switch (vuMark) {
             case CENTER:
                 if (TOWARDS_AUDIENCE == true) {
-                    return START_TO_MIDDLE_ANGLE;
+                    if (TEAM_COLOR == Color.RED) {
+                        return START_TO_MIDDLE_ANGLE;
+                    }else{
+                        return START_TO_MIDDLE_ANGLE_4;
+                    }
                 }else{
-                    return START_TO_MIDDLE_ANGLE_2;
+                    if (TEAM_COLOR == Color.BLUE) {
+                        return START_TO_MIDDLE_ANGLE_2;
+                    }else{
+                        return START_TO_MIDDLE_ANGLE_3;
+                    }
                 }
             case LEFT:
                 if (TEAM_COLOR == Color.BLUE) {
                     if (TOWARDS_AUDIENCE == true) {
-                        return START_TO_NEAREST_ANGLE;
+                        return START_TO_NEAREST_ANGLE_4;
                     }else{
                         return START_TO_NEAREST_ANGLE_2;
                     }
@@ -283,13 +299,13 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
                     if (TOWARDS_AUDIENCE == true) {
                         return START_TO_FURTHEST_ANGLE;
                     }else{
-                        return START_TO_FURTHEST_ANGLE_2;
+                        return START_TO_FURTHEST_ANGLE_3;
                     }
                 }
             case RIGHT:
                 if (TEAM_COLOR == Color.BLUE) {
                     if (TOWARDS_AUDIENCE == true) {
-                        return START_TO_FURTHEST_ANGLE;
+                        return START_TO_FURTHEST_ANGLE_4;
                     }else{
                         return START_TO_FURTHEST_ANGLE_2;
                     }
@@ -297,14 +313,22 @@ public class Ftc12547AutonomousMode2 extends LinearOpMode {
                     if (TOWARDS_AUDIENCE == true) {
                         return START_TO_NEAREST_ANGLE;
                     }else{
-                        return START_TO_NEAREST_ANGLE_2;
+                        return START_TO_NEAREST_ANGLE_3;
                     }
                 }
             default:
                 if (TOWARDS_AUDIENCE == true) {
-                    return START_TO_MIDDLE_ANGLE;
+                    if (TEAM_COLOR == Color.RED) {
+                        return START_TO_MIDDLE_ANGLE;
+                    }else{
+                        return START_TO_MIDDLE_ANGLE_4;
+                    }
                 }else{
-                    return START_TO_MIDDLE_ANGLE_2;
+                    if (TEAM_COLOR == Color.BLUE) {
+                        return START_TO_MIDDLE_ANGLE_2;
+                    }else{
+                        return START_TO_MIDDLE_ANGLE_3;
+                    }
                 }
         }
     }
