@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -63,6 +64,10 @@ public class DirtyMecanum extends OpMode
         telemetry.addData("Status", "Uninitialized...");
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
+        //robot.rlDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     /*
@@ -126,6 +131,8 @@ public class DirtyMecanum extends OpMode
 
             robot.setAllDriveMotors(0);
         }
+
+
 
         telemetry.addData("D-Pad up", dpadStates[0]);
         telemetry.addData("D-Pad right", dpadStates[1]);

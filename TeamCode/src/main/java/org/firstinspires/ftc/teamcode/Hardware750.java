@@ -87,15 +87,15 @@ public class Hardware750 {
         frDrive.setDirection(DcMotor.Direction.REVERSE);
         rlDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
         rrDrive.setDirection(DcMotor.Direction.REVERSE);
-        gripper.setDirection(DcMotor.Direction.FORWARD); // default this to forward, it might not matter.
+        //gripper.setDirection(DcMotor.Direction.FORWARD); // default this to forward, it might not matter.
 
         // Set all motors to zero power
         flDrive.setPower(0);
         rlDrive.setPower(0);
         frDrive.setPower(0);
         rrDrive.setPower(0);
-        gripper.setPower(0);
-        lift.setPower(0);
+        //gripper.setPower(0);
+        //lift.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.

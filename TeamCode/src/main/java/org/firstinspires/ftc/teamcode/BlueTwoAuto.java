@@ -5,14 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Auto Red", group="Linear Auto")
+@Autonomous(name="Auto Blue", group="Linear Auto")
 
-public class Redtestauto extends LinearOpMode {
+public class BlueTwoAuto extends LinearOpMode {
     public enum MoveType {
         STRAIGHT, LATERALLY, ROT
     }
 
-    final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
+    final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
+    final static double ADJ_CONST = PULSES_PER_INCH * 2.2;
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
 
@@ -21,7 +22,16 @@ public class Redtestauto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(200, 0.5, MoveType.STRAIGHT);
+        robot.arm.setPosition(1);
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {}
+        if (robot.color.red() > 1 ) {
+            encode(20, 0.5, MoveType.LATERALLY);
+        } else {
+            encode(20, -0.5, MoveType.LATERALLY);
+        }
+        encode(30, 0.5, MoveType.STRAIGHT);
     }
 
     //Negative speed means:

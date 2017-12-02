@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Auto Blue", group="Linear Auto")
+@Autonomous(name="Auto Red", group="Linear Auto")
 
-public class Bluetestauto extends LinearOpMode {
+public class RedOneAuto extends LinearOpMode {
     public enum MoveType {
         STRAIGHT, LATERALLY, ROT
     }
 
-    final static double PULSES_PER_INCH = (583.333 / (4 * Math.PI));
+    final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
 
