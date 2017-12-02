@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -65,8 +66,10 @@ public class Autonomous_General extends LinearOpMode {
 
     public ModernRoboticsI2cGyro gyro;
     public ModernRoboticsI2cRangeSensor rangeSensor;
+    public ModernRoboticsI2cColorSensor colorSensor;
     //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
+    public String ballColor = "blank";
     public static final String TAG = "Vuforia VuMark Sample";
 
     OpenGLMatrix lastLocation = null;
@@ -103,7 +106,9 @@ public class Autonomous_General extends LinearOpMode {
 
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colorSensor");
         //rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
+
 
 
         idle();
@@ -128,6 +133,10 @@ public class Autonomous_General extends LinearOpMode {
         sleep(100);
         telemetry.addData("motors initiated","");
         telemetry.update();
+
+        jewelServo.setPosition(1);
+        glyphServoRight.setPosition(0.35);
+        glyphServoLeft.setPosition(0.5);
 
     }
 
@@ -823,12 +832,30 @@ public class Autonomous_General extends LinearOpMode {
     public void simpleRangeDistance(double distInCM, double speed, double rsBufffer) {
 
 
-            double distancetoDrive = (distInCM-rsBufffer) - rangeSensor.getDistance(DistanceUnit.CM);
+            double distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
             encoderMecanumDrive(speed,distancetoDrive,distancetoDrive,500,0);
             sleep(400);
-            distancetoDrive = (distInCM-rsBufffer) - rangeSensor.getDistance(DistanceUnit.CM);
+            distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
             encoderMecanumDrive(0.1,distancetoDrive,distancetoDrive,500,0);
 
+    }
+
+    public void readColor() {
+
+        ballColor = "blank";
+
+        if (colorSensor.red() > colorSensor.blue()) {
+            ballColor = "red";
+            /*telemetry.addData("current color is red", bColorSensorLeft.red());
+            telemetry.update();*/
+        } else if (colorSensor.red() < colorSensor.blue()) {
+            ballColor = "blue";
+            /*telemetry.addData("current color is blue", bColorSensorLeft.blue());
+            telemetry.update();*/
+        } else {
+            ballColor = "blank";
+        }
+        //sleep(5000);
     }
 
     public Enum<RelicRecoveryVuMark> returnImage() {

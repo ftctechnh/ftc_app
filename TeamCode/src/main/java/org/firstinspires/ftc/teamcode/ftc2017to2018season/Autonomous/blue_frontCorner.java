@@ -30,7 +30,6 @@ public class blue_frontCorner extends Autonomous_General {
 
         }
 
-        jewelServo.setPosition(0);
         telemetry.addData("---->","Gyro Calibrated. Good to go...");
         telemetry.update();
 
@@ -44,27 +43,49 @@ public class blue_frontCorner extends Autonomous_General {
         telemetry.update();
 
 
-        while(!vuMarkFound()){
+        /*while(!vuMarkFound()){
 
         }
         //returnImage();
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
-        closeGlyphManipulator();
+        closeGlyphManipulator();*/
 
-        encoderMecanumDrive(0.5,55,55,5000,0);
+        jewelServo.setPosition(0);
+        telemetry.addData("jewelServo Position", jewelServo.getPosition());
+        telemetry.update();
         sleep(1000);
+        readColor();
+        if(ballColor.equals("blue")){
+            encoderMecanumDrive(0.7, -10,-10,5000,0);
+            jewelServo.setPosition(1);
+            sleep(1000);
+            encoderMecanumDrive(0.7,65,65,5000,0);
+            sleep(1000);
+        }
+        else if(ballColor.equals("red")){
+            encoderMecanumDrive(0.7,65,65,5000,0);
+            jewelServo.setPosition(1);
+            sleep(1000);
+        }
+        else{
+            jewelServo.setPosition(1);
+            sleep(1000);
+            encoderMecanumDrive(0.7,65,65,5000,0);
+        }
+/*
+
         gyroTurn(0.3,-88);
         sleep(1000);
+
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            simpleRangeDistance(88, 0.2, rsBuffer);
+            simpleRangeDistance(64, 0.4, rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            simpleRangeDistance(71, 0.2, rsBuffer);
-
+            simpleRangeDistance(46, 0.4, rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            simpleRangeDistance(108, 0.2, rsBuffer);
+            simpleRangeDistance(82, 0.4, rsBuffer);
 
         }
 
@@ -75,7 +96,9 @@ public class blue_frontCorner extends Autonomous_General {
 
         sleep(750);
 
-        encoderMecanumDrive(0.65,45,45,1000,0);
+        openGlyphManipulator();
+
+        encoderMecanumDrive(0.65,45,45,1000,0);*/
     }
 
 
