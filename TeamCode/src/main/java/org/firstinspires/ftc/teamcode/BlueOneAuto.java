@@ -33,7 +33,7 @@ public class BlueOneAuto extends LinearOpMode {
         }
         robot.arm.setPosition(0);
         encode(15, 0.5, MoveType.STRAIGHT);
-        encode(20, 0.5, MoveType.ROT);
+        encode(-19, 0.5, MoveType.ROT);
         encode(35, 0.5, MoveType.STRAIGHT);
     }
 

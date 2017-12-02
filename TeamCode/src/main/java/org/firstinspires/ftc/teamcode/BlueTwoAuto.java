@@ -32,10 +32,10 @@ public class  BlueTwoAuto extends LinearOpMode {
             encode(5, -0.25, MoveType.LATERALLY);
         }
         robot.arm.setPosition(0);
+        encode(25, 0.5, MoveType.STRAIGHT);
+        encode(-20, 0.5, MoveType.ROT);
         encode(30, 0.5, MoveType.STRAIGHT);
-        encode(20, 0.5, MoveType.ROT);
-        encode(30, 0.5, MoveType.STRAIGHT);
-        encode(19, 0.5, MoveType.ROT);
+        encode(-19, 0.5, MoveType.ROT);
         encode(30, 0.5, MoveType.STRAIGHT);
     }
 
