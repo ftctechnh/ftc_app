@@ -12,7 +12,7 @@ public class Thing extends LinearOpMode {
         STRAIGHT, LATERALLY, ROT
     }
 
-    final static double PULSES_PER_INCH = (280 / (4 * Math.PI));
+    final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
     final static double ADJ_CONST = PULSES_PER_INCH * 2.2;
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();

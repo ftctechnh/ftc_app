@@ -5,13 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Auto Blue", group="Linear Auto")
+@Autonomous(name="Auto Blue Two", group="Linear Auto")
 
 public class BlueTwoAuto extends LinearOpMode {
     public enum MoveType {
         STRAIGHT, LATERALLY, ROT
     }
 
+    //280
     final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
     final static double ADJ_CONST = PULSES_PER_INCH * 2.2;
     private ElapsedTime runtime = new ElapsedTime();
@@ -22,16 +23,20 @@ public class BlueTwoAuto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
+        encode(-15, 0.5, MoveType.STRAIGHT);
         robot.arm.setPosition(1);
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {}
+        wait(1000);
         if (robot.color.red() > 1 ) {
-            encode(20, 0.5, MoveType.LATERALLY);
+            encode(5, 0.25, MoveType.LATERALLY);
         } else {
-            encode(20, -0.5, MoveType.LATERALLY);
+            encode(5, -0.25, MoveType.LATERALLY);
         }
+        robot.arm.setPosition(0);
         encode(30, 0.5, MoveType.STRAIGHT);
+        encode(20, 0.5, MoveType.ROT);
+        encode(30, 0.5, MoveType.STRAIGHT);
+        encode(20, 0.5, MoveType.ROT);
+        encode(5, 0.5, MoveType.STRAIGHT);
     }
 
     //Negative speed means:
@@ -121,6 +126,13 @@ public class BlueTwoAuto extends LinearOpMode {
             robot.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+    public void wait(int t) {
+        try {
+            Thread.sleep(t);
+        } catch (Exception e) {
+
         }
     }
 }
