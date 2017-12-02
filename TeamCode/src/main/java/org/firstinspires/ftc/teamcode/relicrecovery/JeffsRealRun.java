@@ -27,13 +27,10 @@ public class JeffsRealRun extends LinearOpMode {
     double stretch;
     double degreeOfArmPower = 1;
     double degreeOfRobotPower = 1;
-    double servoPosition =.8;
-    double directionOfArmMotor = 1;//change direction if needed (TODO is fun)
-    double go;
     double ready = 1;
     int armUpDirection;
     int extendDirection;
-    boolean turningRight; //TODO This is not working right, it should be > but it is mixing up and left and righ
+    boolean turningRight;
     boolean notTurning;
     boolean movingVertical;
     boolean strafingRight;
@@ -83,7 +80,9 @@ public class JeffsRealRun extends LinearOpMode {
             extendDirection = gamepad2.left_stick_y > 0 ? 1 : -1;
             //
             //Set the power
-            moveTheArm(degreeOfArmPower, armUpDirection, extendDirection);
+            setThePowerForMovingArmUpOrDown(degreeOfArmPower, armUpDirection);
+            //
+            pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
             //
             //Set power stuff
             setDegreePower();
@@ -128,12 +127,6 @@ public class JeffsRealRun extends LinearOpMode {
         strafingRight = leftX < 0;
     }
 
-    private void moveTheArm(double degreeOfArmPower, int armUpDirection, int extendDirection) {
-        setThePowerForMovingArmUpOrDown(degreeOfArmPower, armUpDirection);
-        //
-        //if (!(extendDirection > 0 && pengwinArm.)&&)
-        pengwinArm.setAcrossPower(extendDirection*degreeOfArmPower*stretch);
-    }
 
     private void getThePowers() {
         power = getPathagorus(leftX, drive); //the current joystick position

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.relicrecovery;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 /**
  * Created by thund on 10/19/2017.
@@ -14,6 +15,7 @@ public class PengwinArm {
     DcMotor acrossMotor; //motor that goes horizontally
     Servo leftGlyphy;
     Servo rightGlyphy;
+    DigitalChannel stopify;
     //hmmm
     double acrossPower;
     double upPower;
@@ -35,8 +37,10 @@ public class PengwinArm {
         leftGlyphy.setDirection(Servo.Direction.REVERSE);
     }
     public void setAcrossPower(double power){
-        acrossPower = power;
-        acrossMotor.setPower(acrossPower * resetify);
+        if(!stopify.getState() || power*resetify  > 0){
+            acrossPower = power;
+            acrossMotor.setPower(acrossPower * resetify);
+        }
     }
     public void setUpPower(double power){
         upPower = power;

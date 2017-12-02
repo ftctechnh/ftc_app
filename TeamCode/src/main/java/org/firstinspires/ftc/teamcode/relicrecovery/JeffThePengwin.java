@@ -1,24 +1,16 @@
 package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by thund on 10/19/2017.
  */
 
 public class JeffThePengwin {
-    //diameter stuff
-    static final double WHEEL_DIAMETER_INCHEYS = 4.0;
-
-    static final double countsPerRevolution = 1220 ;//TODO Add gear reduction if needed
-    static final double Pi = 3.141592653589793238462643383279502;
     static final double countify = 116.501;//Counts per inch
-
 
     //power variables
     DcMotor leftFrontMotor;
@@ -26,16 +18,8 @@ public class JeffThePengwin {
     DcMotor leftBackMotor;
     DcMotor rightBackMotor;
 
-    public double getPowerInput() {
-        return powerInput;
-    }
-
     public void setPowerInput(double powerInput) {
         this.powerInput = powerInput;
-    }
-
-    public double getDegreeOfPower() {
-        return degreeOfPower;
     }
 
     public void setDegreeOfPower(double degreeOfPower) {
@@ -46,8 +30,7 @@ public class JeffThePengwin {
     double degreeOfPower = 1;
     DigitalChannel up;
     DigitalChannel touchy;
-
-
+    //Make it blue!
     public JeffThePengwin(HardwareMap hardwareMap){
         //get motors
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
@@ -69,7 +52,7 @@ public class JeffThePengwin {
 
     public double getTheBackWheelPower(){
         if(touchy.getState()){
-            return (powerInput *1.2 )* degreeOfPower;
+            return (powerInput *1.6 )* degreeOfPower;
         }
         else{
             return (powerInput  *1.6)* degreeOfPower;
@@ -204,10 +187,17 @@ public class JeffThePengwin {
     }
 
     public void strafeLeft(){
-        leftBackMotor.setPower(-getTheBackWheelPower());
-        leftFrontMotor.setPower(getTheFrontWheelPower());
-        rightBackMotor.setPower(getTheBackWheelPower());
-        rightFrontMotor.setPower(-getTheFrontWheelPower());
+        if(touchy.getState()){
+            leftBackMotor.setPower(-getTheBackWheelPower());
+            leftFrontMotor.setPower(getTheFrontWheelPower());
+            rightBackMotor.setPower(getTheBackWheelPower());
+            rightFrontMotor.setPower(-getTheFrontWheelPower());
+        }else{
+            leftBackMotor.setPower(-getTheBackWheelPower());
+            leftFrontMotor.setPower(getTheFrontWheelPower()*.6);
+            rightBackMotor.setPower(getTheBackWheelPower()*.6);
+            rightFrontMotor.setPower(-getTheFrontWheelPower());
+        }
     }
 
     public void strafeRight(){

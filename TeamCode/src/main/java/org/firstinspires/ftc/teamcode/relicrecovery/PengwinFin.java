@@ -20,7 +20,7 @@ public class PengwinFin {
     /**
      * The position for the servo to be for the fin to be in a place to move the jewel
      */
-    public static final double FIN_DOWN_POSITION = 0.35;
+    public static final double FIN_DOWN_POSITION = 0.09;
     Servo fin;
     ColorSensor colorSensor;
 
@@ -50,6 +50,9 @@ public class PengwinFin {
     /**
      * The command to move the fun up to the position {@value #FIN_UP_POSITION}
      * on the servo
+     * and the narwhal is Barney
+     * and Unicorn Crossings
+     * yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay-
      */
     public void moveFinUp(){
             fin.setPosition(FIN_UP_POSITION);

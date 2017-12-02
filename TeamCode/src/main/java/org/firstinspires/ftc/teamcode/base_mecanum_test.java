@@ -27,15 +27,6 @@ public class base_mecanum_test extends LinearOpMode {
 
         JeffThePengwin jeffThePengwin = new JeffThePengwin(hardwareMap);
 
-        /*
-        //get motors
-        leftBackMotor = hardwareMap.dcMotor.get("m0"); //left back
-        rightBackMotor = hardwareMap.dcMotor.get("m1"); //right back
-        leftFrontMotor = hardwareMap.dcMotor.get("m2"); //left front
-        rightFrontMotor = hardwareMap.dcMotor.get("m3"); //right front
-        turnyThing = hardwareMap.dcMotor.get("m4");
-        */
-
         //neat variables
         double drive; //turn power
         double turn; //turn direction
@@ -62,9 +53,7 @@ public class base_mecanum_test extends LinearOpMode {
                 }else{
                     findPosition(position);
                 }
-
             }
-
             //
             double power = getPathagorus(leftX, drive); //the current joystick position
 
@@ -78,7 +67,7 @@ public class base_mecanum_test extends LinearOpMode {
 
             jeffThePengwin.setDegreeOfPower(degreePower);
             jeffThePengwin.setPowerInput(power);
-            boolean turningRight = turn < 0; //TODO This is not working right, it should be > but it is mixing up and left and righ
+            boolean turningRight = turn < 0;
             boolean notTurning = turn == 0;
             boolean movingVertical = Math.abs(drive) > Math.abs(leftX);
             boolean strafingRight = leftX > 0;
@@ -88,29 +77,23 @@ public class base_mecanum_test extends LinearOpMode {
                 //start of driving section
                 if (movingVertical) { //forward/back or left/right?
                     if (drive > 0) { //forward
-                        telemetry.addData("I say ", "go foward");
                       jeffThePengwin.driveForward();
                     } else { //back
-                        telemetry.addData("I say ", "go backward");
                         jeffThePengwin.driveBackward();
                     }
                 } else {
                     if (strafingRight) { //right
-                        telemetry.addData("I say ", "strafe right");
                         jeffThePengwin.strafeRight();
                     } else { //left
-                        telemetry.addData("I say ", "strafe left");
                         jeffThePengwin.strafeLeft();
                     }
                 }
             } else if (turningRight) {
                 //pushing right joystick to the right
                 //turn right by left wheels going forward and right going backwards
-                telemetry.addData("I say ", "turn right");
                 jeffThePengwin.turnRight();
             } else {
                 //turn left
-                telemetry.addData("I say ", "turn left");
                 jeffThePengwin.turnLeft();
             }
 
@@ -122,49 +105,6 @@ public class base_mecanum_test extends LinearOpMode {
             telemetry.update();
         }
     }
-    /*
-    private void turnRight(double power){
-        leftBackMotor.setPower(power);
-        leftFrontMotor.setPower(power);
-        rightBackMotor.setPower(-power);
-        rightFrontMotor.setPower(-power);
-    }
-
-    private void turnLeft(double power){
-        leftBackMotor.setPower(-power);
-        leftFrontMotor.setPower(-power);
-        rightBackMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-    }
-
-    private void driveForward(double power){
-        leftBackMotor.setPower(power);
-        leftFrontMotor.setPower(power);
-        rightBackMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-    }
-
-    private void driveBackward(double power){
-        leftBackMotor.setPower(-power);
-        leftFrontMotor.setPower(-power);
-        rightBackMotor.setPower(-power);
-        rightFrontMotor.setPower(-power);
-    }
-
-    private void strafeLeft(double power){
-        leftBackMotor.setPower(-power);
-        leftFrontMotor.setPower(power);
-        rightBackMotor.setPower(power);
-        rightFrontMotor.setPower(-power);
-    }
-
-    private void strafeRight(double power){
-        leftBackMotor.setPower(power);
-        leftFrontMotor.setPower(-power);
-        rightBackMotor.setPower(-power);
-        rightFrontMotor.setPower(power);
-    }
-    */
 
     private void findPosition( double position){
         turnyThing.setPower(90 - position);
