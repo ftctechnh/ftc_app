@@ -99,7 +99,7 @@ public class Ftc12547Config {
     public static final double DISTANCE_TO_RACK_INCHES              = 12 * 2;
     public static final double TO_RACK_TIMEOUT_SECONDS              = 12;
 
-    public static final double COUNTS_PER_MOTOR_REV    = 1440; // eg: TETRIX Motor Encoder
+    public static final double COUNTS_PER_MOTOR_REV    = 1440; // if using neverest motors, set number to 1120 eg: TETRIX Motor Encoder
     public static final double DRIVE_GEAR_REDUCTION    = 0.5;  // This is < 1.0 if geared UP
     public static final double WHEEL_DIAMETER_INCHES   = 4.0;  // For figuring circumference
     public static final double COUNTS_PER_INCH
