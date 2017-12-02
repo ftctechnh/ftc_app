@@ -48,15 +48,19 @@ public class Ftc12547Config {
      * Autonomous mode driving configurations
      */
     // *** two motors do not move evenly. Apply the factor below to the right wheel. ***
-    public static final double AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR = 0.4;
+    public static final double AUTONOMOUSE_RIGHT_WHEEL_POWER_FACTOR = 0.27;
+    // use 0.4 for the tournaments. 0.27 is for the floor
 
     public static final double ENCODER_RUN_SPEED                    = 0.1;
     public static final int REST_AFTER_ENCODER_RUN_MIL_SECONDS      = ONE_SECOND_IN_MIL / 4;
 
-    public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 2;
+    public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 1.75;
     public static final double JEWEL_DISPOSITION_TIMEOUT_SECONDS    = 3;
 
     public static final double TWO_FEET                             = 24;
+    public static final double NINETY_DEGREE_TURN                   = 18 * 3.14159265358979 / 4;
+    public static final double ONE_EIGHTY_DEGREE_TURN               = 18 * 3.14159265358979 / 2;
+    public static final double ONE_DEGREE_TURN                      = NINETY_DEGREE_TURN / 90;
 
     public static final double START_TO_NEAREST_DISTANCE_INCHES     = 27.5;
     public static final double START_TO_MIDDLE_DISTANCE_INCHES      = 35;
@@ -66,11 +70,19 @@ public class Ftc12547Config {
     public static final double START_TO_FURTHEST_DISTANCE_INCHES_2  = 17.5;
     public static final double DESTINATION_TIMEOUT_SECONDS          = 50;
 
+    public static final double START_TO_NEAREST_ANGLE               = ONE_DEGREE_TURN * 60;
+    public static final double START_TO_MIDDLE_ANGLE                = ONE_DEGREE_TURN * 45;
+    public static final double START_TO_FURTHEST_ANGLE              = ONE_DEGREE_TURN * 35;
+    public static final double START_TO_NEAREST_ANGLE_2             = ONE_DEGREE_TURN * 5;
+    public static final double START_TO_MIDDLE_ANGLE_2              = ONE_DEGREE_TURN * 20;
+    public static final double START_TO_FURTHEST_ANGLE_2            = ONE_DEGREE_TURN * 35;
+    public static final double DISTANCE_TO_RACK_WITH_EXTRA_INSURANCE= 48;
+    public static final double EIGHTEEN_INCHES                      = 26;
+    public static final double HALF_FOOT                            = 12;
+    public static final double THREE_INCHES                         = 6;
+
     public static final double DESTINATION_TURN_SPEED               = 0.1;
     public static final double DESTINATION_TURN_TIMEOUT_SECONDS     = 5;
-
-    public static final double NINETY_DEGREE_TURN                   = 18 * 3.14159265358979 / 4;
-    public static final double ONE_EIGHTY_DEGREE_TURN               = 18 * 3.14159265358979 / 2;
 
     public static final double DISTANCE_TO_RACK_INCHES              = 12 * 2;
     public static final double TO_RACK_TIMEOUT_SECONDS              = 12;

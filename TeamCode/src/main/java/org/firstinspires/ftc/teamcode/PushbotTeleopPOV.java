@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="PushbotPotato: Servo calibration", group="PushbotPotato")
-public class PushbotTeleopPOV_Servo_calibration extends LinearOpMode {
+public class PushbotTeleopPOV extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware

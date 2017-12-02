@@ -55,6 +55,8 @@ public class HardwarePushbot
     /* Public OpMode members. */
     public DcMotor  leftDrive           = null;
     public DcMotor  rightDrive          = null;
+    public DcMotor  leftRearDrive       = null;
+    public DcMotor  rightRearDrive      = null;
     public DcMotor  armDrive            = null;
     public Servo    leftClaw            = null;
     public Servo    rightClaw           = null;
