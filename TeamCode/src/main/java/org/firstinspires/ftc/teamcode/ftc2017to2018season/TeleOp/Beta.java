@@ -46,6 +46,7 @@ public class Beta extends OpMode {
 
     /*
 
+
          //----------------------------------------------------------------------------------------------
         //Declare global variables here
 
