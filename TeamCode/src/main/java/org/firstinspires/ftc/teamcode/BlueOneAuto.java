@@ -23,7 +23,7 @@ public class BlueOneAuto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(15, -0.5, MoveType.STRAIGHT);
+        encode(5, -0.5, MoveType.STRAIGHT);
         robot.arm.setPosition(1);
         wait(1000);
         if (robot.color.red() > 1 ) {
@@ -31,6 +31,7 @@ public class BlueOneAuto extends LinearOpMode {
         } else {
             encode(5, -0.25, MoveType.LATERALLY);
         }
+        robot.arm.setPosition(0);
         encode(15, 0.5, MoveType.STRAIGHT);
         encode(20, 0.5, MoveType.ROT);
         encode(30, 0.5, MoveType.STRAIGHT);

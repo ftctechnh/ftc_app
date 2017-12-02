@@ -22,9 +22,13 @@ public class Thing extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(222, 0.5, MoveType.STRAIGHT);
+        //encode(19, 0.5, MoveType.ROT);
         //robot.arm.setPosition(1);
         //robot.arm.close();
+        while(true) {
+            telemetry.addData("lskdjf", robot.color.red());
+            telemetry.update();
+        }
     }
 
     //Negative speed means:
@@ -79,10 +83,10 @@ public class Thing extends LinearOpMode {
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            targetFL = multFL * (robot.flDrive.getCurrentPosition() + 280);
-            targetFR = multFR * (robot.frDrive.getCurrentPosition() + 280);
-            targetRL = multRL * (robot.rlDrive.getCurrentPosition() + 300);
-            targetRR = multRR * (robot.rrDrive.getCurrentPosition() + 300);
+            targetFL = multFL * (robot.flDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH));
+            targetFR = multFR * (robot.frDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH));
+            targetRL = multRL * (robot.rlDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH));
+            targetRR = multRR * (robot.rrDrive.getCurrentPosition() + (int) (distance * PULSES_PER_INCH));
 
             robot.flDrive.setTargetPosition(targetFL);
             robot.frDrive.setTargetPosition(targetFR);
