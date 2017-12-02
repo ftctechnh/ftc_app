@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 import org.firstinspires.ftc.teamcode.DriveEngine;
@@ -41,10 +42,12 @@ public class holonomicDrive_5_0 extends LinearOpMode
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        pincherL.setPosition(1);
+        for(ElapsedTime timer = new ElapsedTime(); timer.time()< 1.0; ){
+        }
+        pincherR.setPosition(1);
 
         waitForStart();
-        pincherL.setPosition(1);
-        pincherR.setPosition(1);
 
         while (opModeIsActive())
         {
@@ -57,32 +60,32 @@ public class holonomicDrive_5_0 extends LinearOpMode
                 if(gamepad1.dpad_up)
                 {
                     x = 0;
-                    y = 1;
+                    y = .5;
                     z = 0;
                 }
                 else if(gamepad1.dpad_down)
                 {
                     x = 0;
-                    y = -1;
+                    y = -.5;
                     z = 0;
 
                 }
                 else if(gamepad1.dpad_left)
                 {
-                    x = 1;
+                    x = .5;
                     y = 0;
                     z = 0;
 
                 }
                 else if(gamepad1.dpad_right)
                 {
-                    x = -1;
+                    x = -.5;
                     y = 0;
                     z = 0;
 
                 }
                 //Scissor lift arm
-                else if(gamepad1.left_bumper == true) {
+                else if(gamepad1.left_trigger > 0) {
                     if(!touchTop.isPressed()){
                         z = 1;
                     }
@@ -93,7 +96,7 @@ public class holonomicDrive_5_0 extends LinearOpMode
                     x = 0;
                     y = 0;
                 }
-                else if(gamepad1.left_trigger > 0) {
+                else if(gamepad1.left_bumper == true) {
                     if(!touchBottom.isPressed()){
                         z = -1;
                     }
@@ -104,18 +107,18 @@ public class holonomicDrive_5_0 extends LinearOpMode
                     y = 0;
                 }
                 //Glyph Grabber
-                else if(gamepad1.right_bumper == true) {
-                    pinch += .05;
-                    if (pinch > .7) {
-                        pinch = .7;
+                else if(gamepad1.right_bumper == true) { //open
+                    pinch += .02;
+                    if (pinch > .5) {
+                        pinch = .5;
                     }
                     pincherL.setPosition(pinch);
                     pincherR.setPosition(pinch);
                 }
                 else if(gamepad1.right_trigger > 0) {
-                    pinch -= .05;
-                    if (pinch < 0){
-                        pinch = 0;
+                    pinch -= .04;
+                    if (pinch < .1){
+                        pinch = .1;
                     }
                     pincherL.setPosition(pinch);
                     pincherR.setPosition(pinch);
