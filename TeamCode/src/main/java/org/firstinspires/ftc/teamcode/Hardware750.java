@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -44,15 +43,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class Hardware750 {
     /* Public OpMode members. */
-    public Servo arm         = null;
-    public DcMotor flDrive   = null;
-    public DcMotor frDrive   = null;
-    public DcMotor rlDrive   = null;
-    public DcMotor rrDrive   = null;
-    public ColorSensor color = null;
-    public DcMotor gripper   = null;
-    public DcMotor lift      = null;
-    public DigitalChannel limitTop = null;
+    public Servo          arm          = null;
+    public DcMotor        flDrive      = null;
+    public DcMotor        frDrive      = null;
+    public DcMotor        rlDrive      = null;
+    public DcMotor        rrDrive      = null;
+    public ColorSensor    color        = null;
+    public DcMotor        gripper      = null;
+    public DcMotor        lift         = null;
+    public DigitalChannel limitTop     = null;
+    public DigitalChannel limitGripper = null; // limit open switch for gripper
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -75,6 +75,8 @@ public class Hardware750 {
         lift    = hwMap.get(DcMotor.class, "lift");
         limitTop = hwMap.get(DigitalChannel.class, "limitTop");
         limitTop.setMode(DigitalChannel.Mode.INPUT);
+        limitGripper = hwMap.get(DigitalChannel.class, "limitGripper");
+        limitGripper.setMode(DigitalChannel.Mode.INPUT);
 
         flDrive = hwMap.get(DcMotor.class, "flDrive");
         frDrive = hwMap.get(DcMotor.class, "frDrive");

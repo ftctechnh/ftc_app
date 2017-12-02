@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Enjoy responsibly.
  */
 
-@TeleOp(name="Sheel Test Thinger", group="Iterative Opmode")
+@TeleOp(name="Sheel Test Thinger", group="Opmode")
 
 
 public class DirtyMecanum extends OpMode

@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sun.tools.javac.code.Symbol;
 
 /**
  * concept for reworked adv. mecanum drive
@@ -151,85 +150,26 @@ public class MecanumRework extends OpMode {
         if(gamepad1.x){
             robot.arm.setPosition(0.4); // back up towards robot
         }
-
-        /*
         // TODO: gripper implementation and locking setup
-        if (gamepad2.a){
-            // toggle our gloppy boy
-            if (runtime.seconds() > lastRuntime+1) {
-                toggleGrip();
-                lastRuntime = runtime.seconds();
-            }
-        }
-
-
-        if(isGripped != lastGripState){
-            if (isGripped){
-                // if we have now decided to G R I P
-                //robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.gripper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                //robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                robot.gripper.setTargetPosition(350);
-                robot.gripper.setPower(-1 * GRIPPER_POWER);
-                twitchTime = runtime.milliseconds() + 250;
-            } else {
-                // if we are now U N G R I P
-                robot.gripper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.gripper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                // target position vaguely determined with some light testing.
-                robot.gripper.setTargetPosition(700);
-                robot.gripper.setPower(GRIPPER_POWER);
-            }
-            lastGripState = isGripped;
-        }
-
-        //handle go-to-target motion
-        if (robot.gripper.getMode() == DcMotor.RunMode.RUN_TO_POSITION && robot.gripper.isBusy()){
-            if (robot.gripper.getCurrentPosition() >= robot.gripper.getTargetPosition()){
-                robot.gripper.setPower(0);
-                robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            } else {
-                robot.gripper.setPower(GRIPPER_POWER);
-            }
-        }
-
-        if((twitchTime > runtime.milliseconds()) && (isGripped)){
-            robot.gripper.setPower(-1 * GRIPPER_POWER);
-        } else if (runtime.milliseconds() >= twitchTime && (isGripped)){
-            //robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.gripper.setPower(0);
-            robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-        */
-
-        if(gamepad2.right_trigger != 0){
-            robot.gripper.setPower(gamepad2.right_trigger);
-        } else {
-            robot.gripper.setPower(0);
-        }
-
-        /*
-        if(gamepad2.b){4''
-
-            robot.gripper.setPower(0);
-            robot.gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-        */
-
-        if (gamepad2.a) {
-            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            //telemetry.addData("ZPB", "FLOATING");
-        }
-        if (gamepad2.b) {
-            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //telemetry.addData("ZPB", "BRAKING");
-        }
 
         if (!(robot.limitTop.getState() && gamepad2.left_stick_y < 0)) {
             robot.lift.setPower(gamepad2.left_stick_y / 2);
         } else if (robot.limitTop.getState()) {
             robot.lift.setPower(0);
+        }
+
+        // hold a to open gripper to limit.
+        // press b to unlock
+        if (gamepad2.a && !robot.limitGripper.getState()){
+            robot.gripper.setPower(GRIPPER_POWER);
+        } else if (gamepad2.a && robot.limitGripper.getState()){
+            robot.gripper.setPower(0);
+            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        } else if (gamepad2.b){
+            robot.gripper.setPower(-GRIPPER_POWER);
+            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        } else {
+            robot.gripper.setPower(0);
         }
 
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
