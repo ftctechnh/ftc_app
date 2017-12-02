@@ -107,5 +107,27 @@ public class AutonomousDrive_02_0 extends LinearOpMode
         }
 
     }
+
+    /**
+     *
+     * @param x
+     * @return inverse hyperbolic cosine of x
+     */
+    private double acosh(double x){
+        return Math.log(x + Math.sqrt(x*x-1));
+    }
+
+    double vMax = 25; //inches per second
+    double dragConstant = 44.7;
+
+    /**
+     * Time Bogg needs to go a distance at .5 power
+     * @param distance
+     * @return time
+     */
+    public double timeFromDistance(double distance){
+        double t = vMax/dragConstant * acosh(Math.exp(dragConstant/(vMax*vMax)));
+        return t;
+    }
 }
 
