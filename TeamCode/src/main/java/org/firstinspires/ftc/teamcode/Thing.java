@@ -25,7 +25,6 @@ public class Thing extends LinearOpMode {
         robot.gripper.setPower(0.25);
         wait(1000);
         robot.gripper.setPower(0);
-        encode(-1, 0.5, MoveType.STRAIGHT);
     }
 
     //Negative speed means:
