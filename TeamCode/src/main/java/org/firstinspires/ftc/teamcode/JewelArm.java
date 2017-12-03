@@ -11,10 +11,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 
 public class JewelArm {
-    private Servo servo;
+    public Servo servo;
     private ColorSensor cs;
-    private double servoDownPos = 0.39;
-    private double servoUpPos = 0.9;
+    private double servoDownPos = 0;
+    private double servoUpPos = 0.6;
     private Telemetry telemetry;
 
     public JewelArm(Servo servo, ColorSensor cs, Telemetry telemetry) {
@@ -24,13 +24,11 @@ public class JewelArm {
     }
 
     public void down() {
-        servo.setPosition(servoDownPos);
-        servo.setPosition(servoDownPos);
+        setPostion(servoDownPos);
     }
 
     public void up() {
-        servo.setPosition(servoUpPos);
-        servo.setPosition(servoUpPos);
+        setPostion(servoUpPos);
     }
 
     public String findJewel() {
@@ -60,8 +58,14 @@ public class JewelArm {
     }
 
     public void init() {
+        up();
+        cs.enableLed(true);
     }
 
     public void loop() {
+    }
+    public void setPostion(double postion) {
+        servo.setPosition(postion);
+        servo.setPosition(postion);
     }
 }

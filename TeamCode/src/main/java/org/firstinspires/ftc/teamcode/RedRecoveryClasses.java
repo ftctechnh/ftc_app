@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.res.Resources;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -40,10 +42,14 @@ public class RedRecoveryClasses extends LinearOpMode {
                 hardwareMap.servo.get("s2"), //arm
                 hardwareMap.dcMotor.get("m5")); //motor
 
+        telemetry.addData("ready to start", null);
+        telemetry.update();
         waitForStart();
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //ForkLift.closeClaw();
         //RelicClaw.init();
+        jewelArm.init();
         jewelArm.down();
         color = jewelArm.findJewel();
         if (color == "Red") { //if the arm sees red
@@ -59,9 +65,10 @@ public class RedRecoveryClasses extends LinearOpMode {
         Thread.sleep(500);
         drive.driveTranslateRotate(0, -.5, 0, 32);
         Thread.sleep(500);
+        drive.driveTranslateRotate(0,0, 0.5, 20);
+        Thread.sleep(2000);
         drive.leftGyro(0, 0, .05, 90);
-        //aye right is clockwise
-        //and left is counterclockwise (obviously)
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

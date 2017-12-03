@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @Autonomous(name = "TestingAutoWithClass", group = "Autonomous")
 public class TestAuto extends LinearOpMode {
 	AutoDrive drive;
@@ -14,17 +16,29 @@ public class TestAuto extends LinearOpMode {
 				hardwareMap.dcMotor.get("m4"), //rr motor
 				hardwareMap.gyroSensor.get("g1"),
 				telemetry); // gyro
+		drive.init();
+		telemetry.addLine("Ready to start");
+		telemetry.update();
 		waitForStart();
-		drive.driveTranslateRotate(0.5,0,0,1); // Forward
+		drive.driveTranslateRotate(0,0.5,0,10); // Forward
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(-.5,0,0,1); // Backward
+		drive.driveTranslateRotate(0,-0.5,0,10); // Backward
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0,0.5,0,1); // Move right
+		drive.driveTranslateRotate(0.5,0,0,10); // Move right
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0,-0.5,0,1); // Move left
+		drive.driveTranslateRotate(-0.5,0,0,10); // Move left
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0,0,0.5,1); // Spin right
+		drive.driveTranslateRotate(0,0,0.5,10); // Spin right
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0,0,-0.5,1); // Spin left
+		drive.driveTranslateRotate(0,0,-0.5,10); // Spin left
+		Thread.sleep(2000);
+		drive.rightGyro(0,0,0.125,270);
+		Thread.sleep(2000);
+		drive.leftGyro(0,0,-0.125,90);
+		Thread.sleep(2000);
+		drive.rightGyro(0,0,0.125,270);
+		Thread.sleep(2000);
+		drive.leftGyro(0,0,-0.125,350);
+
 	}
 }

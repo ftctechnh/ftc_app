@@ -36,11 +36,8 @@ public class DriveEverything extends OpMode {
     @Override
     public void loop() {
         //Drive
-        if (gamepad1.right_bumper) {
-            drive.swingRight();
-        }
-        else if (gamepad1.left_bumper) {
-            drive.swingLeft();
+        if (gamepad1.right_bumper || gamepad1.left_bumper) {
+            drive.driveLeftRight(gamepad1.left_stick_y/4, gamepad1.right_stick_y/4, gamepad1.left_stick_x/4, gamepad1.right_stick_x/4);
         }
         else {
             drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);

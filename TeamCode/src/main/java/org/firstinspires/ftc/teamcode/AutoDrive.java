@@ -18,16 +18,16 @@ public class AutoDrive {
     private GyroSensor gyro;
     private double cir = 3.937 * Math.PI;
     private int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
-    private double heading;
+    public int heading;
     private Telemetry telemetry;
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, GyroSensor gyro, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
-        this.FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.FrontRight = FrontRight;
+        this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
         this.RearLeft = RearLeft;
-        this.RearLeft.setDirection(DcMotor.Direction.REVERSE);
         this.RearRight = RearRight;
+        this.RearRight.setDirection(DcMotor.Direction.REVERSE);
         this.gyro = gyro;
         this.telemetry = telemetry;
     }
@@ -35,10 +35,10 @@ public class AutoDrive {
     public void driveTranslateRotate(double x, double y, double z, double distance) {
         resetEncoders();
         double clicks = Math.abs(distance * CPR / cir);
-        double fl = clip(y + -x + z);
-        double fr = clip(y + x - z);
-        double rl = clip(y + x + z);
-        double rr = clip(y + -x - z);
+        double fl = clip(-y + -x - z);
+        double fr = clip(-y + x + z);
+        double rl = clip(-y + x - z);
+        double rr = clip(-y + -x + z);
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
         driveSpeeds(fl, fr, rl, rr);
@@ -98,23 +98,21 @@ public class AutoDrive {
     public void rightGyro(double x, double y, double z, double target) {
         heading = getHeading();
         double change = 0;
-        double fl = clip(y + -x + z);
-        double fr = clip(y + x - z);
-        double rl = clip(y + x + z);
-        double rr = clip(y + -x - z);
-        double[] list = {fl, fr, rl, rr};
-        double high = findHigh(list);
+        double fl = clip(-y + -x - z);
+        double fr = clip(-y + x + z);
+        double rl = clip(-y + x - z);
+        double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
-        if (heading > target) {
-            while (change <= 0) {
+        if(heading < target) {
+            while(change <= 0) {
                 change = getHeading() - heading;
                 heading = getHeading();
+                telemetrizeGyro();
             }
         }
-        while (heading <= target) {
+        while(heading >= target) {
             heading = getHeading();
-            telemetry.addData("Current Gyro: ", heading);
-            telemetry.update();
+            telemetrizeGyro();
         }
         stopMotors();
     }
@@ -122,23 +120,21 @@ public class AutoDrive {
     public void leftGyro(double x, double y, double z, double target) {
         heading = getHeading();
         double change = 0;
-        double fl = clip(y + -x + z);
-        double fr = clip(y + x - z);
-        double rl = clip(y + x + z);
-        double rr = clip(y + -x - z);
-        double[] list = {fl, fr, rl, rr};
-        double high = findHigh(list);
+        double fl = clip(-y + -x - z);
+        double fr = clip(-y + x + z);
+        double rl = clip(-y + x - z);
+        double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
         if (target < heading) {
-          while(change <= 0) {
-            change = heading - getHeading();
+          while(change >= 0) {
+            change = getHeading() - heading;
             heading = getHeading();
+            telemetrizeGyro();
           }
         }
-        while (heading >= target) {
+        while(heading <= target) {
             heading = getHeading();
-            telemetry.addData("Current Gyro: ", heading);
-            telemetry.update();
+            telemetrizeGyro();
         }
         stopMotors();
     }
@@ -151,7 +147,11 @@ public class AutoDrive {
         heading = getHeading();
     }
 
-    public double getHeading() {
+    public int getHeading() {
         return gyro.getHeading();
+    }
+    public void telemetrizeGyro() {
+        telemetry.addData("Current heading: ", getHeading());
+        telemetry.update();
     }
 }
