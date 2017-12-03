@@ -14,12 +14,18 @@ public class liftTestTele extends OpMode
     boolean isWingUp = true;
     Servo leftDoorWall = null;
     Servo rightDoorWall = null;
+
     public void init()
     {
         leftDoorWall = hardwareMap.get(Servo.class, "leftDoorWall");
         rightDoorWall = hardwareMap.get(Servo.class, "rightDoorWall");
         newRobot = new NewRobot(hardwareMap);
         gamepad1.setJoystickDeadzone(.15f);
+        rightDoorWall.scaleRange(-Math.PI/2, 0);
+        leftDoorWall.scaleRange(-Math.PI/2, 0);
+        rightDoorWall.setDirection(Servo.Direction.FORWARD);
+        leftDoorWall.setDirection(Servo.Direction.REVERSE);
+        gamepad2.setJoystickDeadzone(.14f);
     }
 
     public void start()
