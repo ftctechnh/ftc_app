@@ -207,6 +207,12 @@ public class RelicDrive
             encoderDrive(speed, 0, midArc, 0, outArc);
         }
     }
+    public void controlDrive(double left, double right){
+        leftMid.setPower(left);
+        leftBack.setPower(left);
+        rightMid.setPower(right);
+        rightBack.setPower(right);
+    }
     public double getLMencoder(){
         return leftMid.getCurrentPosition();
     }

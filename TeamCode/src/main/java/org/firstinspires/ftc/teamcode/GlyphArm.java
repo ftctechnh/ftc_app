@@ -98,6 +98,9 @@ public class GlyphArm
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(Math.abs(speed));
     }
+    public void armPower (double power){
+        armMotor.setPower(power);
+    }
     public void clawPos(double pos){
         clawServo.setPosition(pos);
     }
