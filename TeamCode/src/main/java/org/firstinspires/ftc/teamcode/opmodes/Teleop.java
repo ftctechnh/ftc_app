@@ -21,6 +21,9 @@ public class Teleop extends OpMode {
     private boolean robotSlow = false;
     private boolean lastBumper = false;
 
+    private boolean lastBumper2 = false;
+    private boolean dropperDown = false;
+
     public void init() {
         bot.init();
     }
@@ -36,18 +39,21 @@ public class Teleop extends OpMode {
         if((gamepad1.left_bumper || gamepad1.right_bumper) && !lastBumper) suckerDown = !suckerDown;
         lastBumper = gamepad1.left_bumper || gamepad1.right_bumper;
 
-        if(gamepad1.left_trigger > 0) bot.setSuck(gamepad1.left_trigger);
-        else if(gamepad1.right_trigger > 0) bot.setSuck(-gamepad1.right_trigger);
-        else bot.setSuck(0);
+        if(gamepad1.left_trigger > 0) bot.setDropPos(BotHardware.ServoE.backDropUp + (gamepad1.left_trigger * (BotHardware.ServoE.backDropDown - BotHardware.ServoE.backDropUp)));
+        else bot.setDropPos(BotHardware.ServoE.backDropUp);
 
-        if(suckerDown) bot.dropFront();
-        else bot.raiseFront();
+        //if(suckerDown) bot.dropFront();
+        //else bot.raiseFront();
 
         if(gamepad2.left_trigger > 0) bot.setLift(gamepad2.left_trigger);
         else if (gamepad2.right_trigger > 0) bot.setLift(-gamepad2.right_trigger);
         else bot.setLift(0);
 
-        //TODO: servo drop
+        if((gamepad2.left_bumper || gamepad2.right_bumper) && !lastBumper2) dropperDown = !dropperDown;
+        lastBumper2 = gamepad2.left_bumper || gamepad2.right_bumper;
+
+        //if(dropperDown) bot.dropBack();
+        //else bot.raiseBack();
 
         if(robotSlow) {
             bot.setLeftDrive(gamepad1.left_stick_y * slowFactor);
@@ -59,9 +65,10 @@ public class Teleop extends OpMode {
         }
 
 
+        //if(gamepad1.b) bot.dropStick();
+        //else bot.liftStick();
 
-        if(gamepad1.b) bot.dropStick();
-        else bot.liftStick();
+        bot.getStickBase().setPosition(BotHardware.ServoE.stickBaseHidden);
 
         telemetry.addData("Front Drop", suckerDown);
         telemetry.addData("Robot Slow", robotSlow);

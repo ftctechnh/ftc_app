@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.demo;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import android.app.Activity;
 import android.provider.ContactsContract;
@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
+import org.firstinspires.ftc.teamcode.opmodes.diagnostic.GyroTurnDemo;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -36,8 +37,8 @@ import java.util.LinkedList;
  * Testing file for cryptobox pillar detection using camera
  */
 
-@Autonomous(name="Posterior", group="test")
-public class PillarFinder extends VuforiaBallLib {
+@Autonomous(name="Red Drive", group="test")
+public class RedPilliar extends VuforiaBallLib {
     private static final double SAT_MIN = 0.5;
     private static final int LUM_THRESH = 50;
     private static final int PEAK_WIDTH_MIN = 4;
@@ -50,22 +51,41 @@ public class PillarFinder extends VuforiaBallLib {
 
     private AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
 
+    //parameters for gyro PID, but cranked up
+    float Kp5 = 0.1f;        // degree heading proportional term correction per degree of deviation
+    float Ki5 = 0.05f;         // ... integrator term
+    float Kd5 = 0;             // ... derivative term
+    float Ki5Cutoff = 3.0f;    // maximum angle error for which we update integrator
+
+    SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
+
     @Override
     public void init() {
         initVuforia(true);
         bot.init();
 
+        int mul = red ? 1 : -1;
+
+
         mSeq.add(
             new AutoLib.RunUntilStopStep(
-                new AutoLib.AzimuthTimedDriveStep(
-                        this, 0, bot.getHeadingSensor(), new SensorLib.PID(1.0f, 0, 0, 0), bot.getMotorVelocityShimArray(), 180.0f, 500.0f, true
-                ),
+                new AutoLib.MoveByTimeStep(bot.getMotorVelocityShimArray(), -180.0f * mul, 5.0f, true),
                 new PeakFindStep(
                         PEAK_FIND_WINDOW, PEAK_FRAME_COUNT
                 )
             )
         );
-        mSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), false, 180.0f, 3, this));
+        mSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), false, 45.0f * mul, 3, this));
+        int count = 400;
+        if(!red) count += 600;
+        mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f * mul, count, true));
+        mSeq.add(new AutoLib.RunUntilStopStep(
+                new AutoLib.AzimuthTimedDriveStep(this, 90 * mul, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 180.0f, 10, true),
+                new GyroStopStep(bot.getHeadingSensor(), 90 * mul, 3)
+        ));
+        mSeq.add(bot.getDropStep());
+
+        //mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f, 1600, true));
     }
 
     @Override
@@ -110,7 +130,23 @@ public class PillarFinder extends VuforiaBallLib {
         }
    }
 
-   private class PeakHoneStep extends  AutoLib.Step {
+    private static class GyroStopStep extends AutoLib.Step {
+        private final HeadingSensor gyro;
+        private final float heading;
+        private final int error;
+        GyroStopStep(HeadingSensor gyro, float heading, int error) {
+            this.gyro = gyro;
+            this.heading = heading;
+            this.error = error;
+        }
+
+        public boolean loop() {
+            return Math.abs(gyro.getHeading() - heading) <= error;
+        }
+    }
+
+
+    private class PeakHoneStep extends  AutoLib.Step {
         private final int error;
         private final float power;
         private final DcMotor[] motorRay;
@@ -123,7 +159,7 @@ public class PillarFinder extends VuforiaBallLib {
 
         private static final int PEAK_LOST_BREAK = 10;
         private static final int PEAK_DIST_THRESH = 15;
-        private static final int PEAK_FOUND_COUNT = 10;
+        private static final int PEAK_FOUND_COUNT = 3;
 
         PeakHoneStep(DcMotor[] motors, boolean revesed, float power, int error, OpMode mode) {
             this.motorRay = motors;
@@ -134,6 +170,7 @@ public class PillarFinder extends VuforiaBallLib {
         }
 
         public boolean loop() {
+            mode.telemetry.addData("Home!", true);
             //if first run, get the peak we want to center on.
             //in this case, the one farthest left in the frame
             ArrayList<Integer> peaks = getPeaks();

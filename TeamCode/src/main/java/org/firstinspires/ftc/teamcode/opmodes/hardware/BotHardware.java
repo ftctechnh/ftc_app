@@ -34,8 +34,8 @@ public class BotHardware {
         backRight("br", true),
         frontLeft("fl", false),
         backLeft("bl", false),
-        suckLeft("sl", false),
-        suckRight("sr", true),
+        //suckLeft("sl", false),
+        //suckRight("sr", true),
         lift("l", false);
 
         private final String name;
@@ -63,16 +63,16 @@ public class BotHardware {
     public enum ServoE {
         stick("stick"),
         stickBase("sb"),
-        dropLeft("dl"),
-        dropRight("dr"),
+        //dropLeft("dl"),
+        //dropRight("dr"),
         backDropLeft("bdl"),
-        backDropRight("bdr");
+        backDropRight("bdr", true);
 
         public static final double leftGrabOpen = 0;
         public static final double leftGrabClose = 1.0;
 
         public static final double stickUp = 0.2;
-        public static final double stickDown = 0.9;
+        public static final double stickDown = 1.0;
 
         public static final double stickBaseCenter = 0.5;
         public static final double stickBaseHidden = 0.0;
@@ -80,27 +80,31 @@ public class BotHardware {
         public static final double garyUp = 0.1;
         public static final double garyDown = 0.55;
 
-        public static final double dropLeftDown = 0.0;
-        public static final double dropLeftUp = 0.0;
+        public static final double dropLeftDown = 0.8;
+        public static final double dropLeftUp = 0.1;
 
-        public static final double dropRightDown = 0.0;
-        public static final double dropRightUp = 0.0;
+        public static final double dropRightDown = 0.2;
+        public static final double dropRightUp = 0.7;
 
-        public static final double backDropLeftDown = 0.0;
-        public static final double backDropLeftUp = 0.0;
-
-        public static final double backDropRightDown = 0.0;
-        public static final double backDropRightUp = 0.0;
+        public static final double backDropDown = 0.8;
+        public static final double backDropUp = 0.1;
 
         private final String name;
         public Servo servo;
-        ServoE(String name) {
+        private boolean reversed;
+        ServoE(String name, boolean reversed) {
+            this.reversed = reversed;
             this.name = name;
+        }
+
+        ServoE(String name) {
+            this(name, false);
         }
 
         void initServo(OpMode mode) {
             try{
                 this.servo = mode.hardwareMap.get(Servo.class, this.name);
+                if(this.reversed) this.servo.setDirection(Servo.Direction.REVERSE);
             }
             catch (Exception e) {
                 mode.telemetry.addData(this.name, "Failed to find");
@@ -144,11 +148,6 @@ public class BotHardware {
         Motor.frontRight.motor.setPower(power);
     }
 
-    public void setSuck(double power) {
-        Motor.suckLeft.motor.setPower(power);
-        Motor.suckRight.motor.setPower(power);
-    }
-
     public void setLift(double power) {
         Motor.lift.motor.setPower(power);
     }
@@ -171,24 +170,26 @@ public class BotHardware {
 
     public Servo getStickBase() { return ServoE.stickBase.servo; }
 
-    public void dropFront() {
-        ServoE.dropLeft.servo.setPosition(ServoE.dropLeftDown);
-        ServoE.dropRight.servo.setPosition(ServoE.dropRightDown);
-    }
-
-    public void raiseFront() {
-        ServoE.dropLeft.servo.setPosition(ServoE.dropLeftUp);
-        ServoE.dropRight.servo.setPosition(ServoE.dropRightUp);
-    }
-
     public void dropBack() {
-        ServoE.backDropLeft.servo.setPosition(ServoE.backDropLeftDown);
-        ServoE.backDropRight.servo.setPosition(ServoE.backDropRightDown);
+        ServoE.backDropLeft.servo.setPosition(ServoE.backDropDown);
+        ServoE.backDropRight.servo.setPosition(ServoE.backDropDown);
     }
 
     public void raiseBack() {
-        ServoE.backDropLeft.servo.setPosition(ServoE.backDropLeftUp);
-        ServoE.backDropRight.servo.setPosition(ServoE.backDropRightUp);
+        ServoE.backDropLeft.servo.setPosition(ServoE.backDropUp);
+        ServoE.backDropRight.servo.setPosition(ServoE.backDropUp);
+    }
+
+    public void setDropPos(double pos) {
+        ServoE.backDropLeft.servo.setPosition(pos);
+        ServoE.backDropRight.servo.setPosition(pos);
+    }
+
+    public AutoLib.ConcurrentSequence getDropStep() {
+        AutoLib.ConcurrentSequence mSeq = new AutoLib.ConcurrentSequence();
+        mSeq.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 0.5, true));
+        mSeq.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 0.5, true));
+        return mSeq;
     }
 
     public DcMotorEx getMotor(String name) {
