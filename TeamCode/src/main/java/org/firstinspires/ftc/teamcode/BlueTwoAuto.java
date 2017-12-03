@@ -37,6 +37,11 @@ public class  BlueTwoAuto extends LinearOpMode {
         encode(30, 0.5, MoveType.STRAIGHT);
         encode(-19, 0.5, MoveType.ROT);
         encode(30, 0.5, MoveType.STRAIGHT);
+        wait(500);
+        robot.gripper.setPower(0.25);
+        wait(1000);
+        robot.gripper.setPower(0);
+        encode(-1, 0.5, MoveType.STRAIGHT);
     }
 
     //Negative speed means:
