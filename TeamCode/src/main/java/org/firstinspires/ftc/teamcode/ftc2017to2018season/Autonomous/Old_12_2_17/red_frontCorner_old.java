@@ -1,14 +1,17 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_12_2_17;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
 
 //10-28-17
-@Autonomous(name="Autonomous Blue Test Back")
-public class blue_BackCorner extends Autonomous_General {
+@Autonomous(name="Autonomous Red Test")
+@Disabled
+
+public class red_frontCorner_old extends Autonomous_General_old {
 
     DcMotor leftFront;
     DcMotor rightFront;
@@ -20,7 +23,7 @@ public class blue_BackCorner extends Autonomous_General {
     @Override
     public void runOpMode() {
 
-
+//Before start is pressed?
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
@@ -28,7 +31,6 @@ public class blue_BackCorner extends Autonomous_General {
         telemetry.addData("--->", "Gyro Calibrating");
         telemetry.update();
         gyro.calibrate();
-
 
         while(gyro.isCalibrating()){
             sleep(50);
@@ -40,7 +42,7 @@ public class blue_BackCorner extends Autonomous_General {
         telemetry.update();
 
         waitForStart();
-//reseting gyro sensor
+//reset the gyro sensor
         gyro.resetZAxisIntegrator();
 
         startTracking();
@@ -54,30 +56,29 @@ public class blue_BackCorner extends Autonomous_General {
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
 
-        encoderMecanumDrive(0.4, 55, 55, 1000, 0);
-        sleep(100);
-
-        gyroTurn(0.3,0);
-
-        sleep(250);
+        encoderMecanumDrive(0.5,-55,-55,5000,0);
+        sleep(1000);
+        gyroTurn(0.3,-88);
+        sleep(1000);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            simpleRangeDistance(140,0.2,rsBuffer);
-        }
-        else if (vuMark == RelicRecoveryVuMark.LEFT){
-            simpleRangeDistance(124,0.2,rsBuffer);
-
+            simpleRangeDistance(88, 0.2, rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            simpleRangeDistance(158,0.2,rsBuffer);
+            simpleRangeDistance(71, 0.2, rsBuffer);
+
+        }
+        else if (vuMark == RelicRecoveryVuMark.LEFT){
+            simpleRangeDistance(108, 0.2, rsBuffer);
 
         }
 
-        gyroTurn(0.3,88);
-        sleep(750);
+
+        sleep(1000);
+
+        gyroTurn(0.3,-180);
 
         encoderMecanumDrive(0.65,45,45,1000,0);
-
 
 
     }

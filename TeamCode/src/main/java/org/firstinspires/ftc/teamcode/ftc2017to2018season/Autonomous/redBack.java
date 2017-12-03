@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
 @Autonomous(name="Autonomous Red Test Back")
-public class red_BackCorner extends Autonomous_General {
+public class redBack extends Autonomous_General {
 
     DcMotor leftFront;
     DcMotor rightFront;
@@ -69,7 +69,7 @@ public class red_BackCorner extends Autonomous_General {
 
         }
 
-        gyroTurn(0.3,88);
+        gyroTurn(0.3,90);
 
         sleep(750);
 

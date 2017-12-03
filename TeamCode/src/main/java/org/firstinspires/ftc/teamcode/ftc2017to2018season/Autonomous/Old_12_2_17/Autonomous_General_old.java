@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Final;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_12_2_17;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -46,14 +46,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 @Disabled
-public class Autonomous_General_final extends LinearOpMode {
+public class Autonomous_General_old extends LinearOpMode {
 
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
     public static double WHEEL_REV_PER_MOTOR_REV;     // 56/24
     public static double WHEEL_PERIMETER_CM;     // For figuring circumference
     public static double COUNTS_PER_CM;
     double P_TURN_COEFF = 0.1;
-    double TURN_THRESHOLD = 1;
+    double TURN_THRESHOLD = 2.5;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;

@@ -32,6 +32,7 @@ public class Delta_TeleOp extends OpMode {
     DcMotor slideMotor;
     Servo glyphServoRight;
     Servo glyphServoLeft;
+    Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -80,6 +81,7 @@ public class Delta_TeleOp extends OpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
 
 
@@ -88,6 +90,9 @@ public class Delta_TeleOp extends OpMode {
 
         glyphServoLeft.setPosition(0.5);
         glyphServoRight.setPosition(0.35);
+
+        jewel_servo.setPosition(0.9);
+
 
 
 //This is closed-loop speed control. Encoders are required for this mode.

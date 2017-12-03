@@ -54,11 +54,12 @@ public class Autonomous_General extends LinearOpMode {
     public static double WHEEL_PERIMETER_CM;     // For figuring circumference
     public static double COUNTS_PER_CM;
     double P_TURN_COEFF = 0.1;
-    double TURN_THRESHOLD = 1;
+    double TURN_THRESHOLD = 2.5;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
+    public DcMotor slideMotor;
 
     public Servo jewelServo;
     public Servo glyphServoRight;
@@ -98,6 +99,7 @@ public class Autonomous_General extends LinearOpMode {
         front_right_motor = hardwareMap.dcMotor.get("rightWheelMotorFront");
         back_left_motor = hardwareMap.dcMotor.get("leftWheelMotorBack");
         back_right_motor = hardwareMap.dcMotor.get("rightWheelMotorBack");
+        slideMotor = hardwareMap.dcMotor.get("slideMotor");
         idle();
 
         jewelServo = hardwareMap.servo.get("jewelServo");
@@ -135,8 +137,8 @@ public class Autonomous_General extends LinearOpMode {
         telemetry.update();
 
         jewelServo.setPosition(1);
-        glyphServoRight.setPosition(0.35);
-        glyphServoLeft.setPosition(0.5);
+        glyphServoRight.setPosition(1);
+        glyphServoLeft.setPosition(0);
 
     }
 
@@ -867,5 +869,30 @@ public class Autonomous_General extends LinearOpMode {
 
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
+    public void moveUpGlyph(double cm) {
+        double target_Position;
+        double countsPerCM = 609.6;
+        double finalTarget = cm*countsPerCM;
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        target_Position = slideMotor.getCurrentPosition() - finalTarget;
+
+        slideMotor.setTargetPosition((int)target_Position);
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        slideMotor.setPower(-0.6);
+
+        while (slideMotor.isBusy() && opModeIsActive()){
+            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
+            telemetry.addData("power", slideMotor.getPower());
+            telemetry.addData("Target Position", slideMotor.getTargetPosition());
+            telemetry.update();
+
+        }
+
+        slideMotor.setPower(0);
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 }
