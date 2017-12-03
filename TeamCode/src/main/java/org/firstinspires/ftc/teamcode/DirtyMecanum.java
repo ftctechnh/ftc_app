@@ -53,7 +53,7 @@ public class DirtyMecanum extends OpMode
     Hardware750 robot = new Hardware750();
     // setup our cute little dpad array
     // according to language spec, these should all default to false anyway.
-    boolean[] dpadStates = new boolean[4];
+    boolean[] dpadStates     = new boolean[4];
     // setup runtime timer
     private ElapsedTime runtime = new ElapsedTime();
     static double SPEED = 1;
