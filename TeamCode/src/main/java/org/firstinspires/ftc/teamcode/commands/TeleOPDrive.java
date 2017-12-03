@@ -28,9 +28,13 @@ public class TeleOPDrive extends OpMode {
 
     @Override
     public void loop() {
-        this.driveSystem.teleOPDrive();
+        this.driveSystem.rcCarDrive();
+        telemetry.addData("left speed", driveSystem.getLeftSpeed());
+        telemetry.addData("right speed", driveSystem.getRightSpeed());
     }
 
     @Override
-    public void stop() {}
+    public void stop() {
+        driveSystem.stop();
+    }
 }

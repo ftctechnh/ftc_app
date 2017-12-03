@@ -27,7 +27,34 @@ public class DriveSystem {
         this.leftMotor.setPower(leftSpeed);
     }
 
-    public void teleOPDrive() {
+    public void rcCarDrive() {
+        double forwardLeftSpeed = gamepad.left_stick_y + gamepad.right_stick_x;
+        double forwardRightSpeed = gamepad.left_stick_y - gamepad.right_stick_x;
+        double backwardLeftSpeed = gamepad.left_stick_y - gamepad.right_stick_x;
+        double backwardRightSpeed = gamepad.left_stick_y + gamepad.right_stick_x;
+
+        if (gamepad.left_stick_y > 0) {
+            drive(forwardLeftSpeed, forwardRightSpeed);
+        } else if (gamepad.left_stick_y < 0) {
+            drive(backwardLeftSpeed, backwardRightSpeed);
+        } else {
+            stop();
+        }
+    }
+
+    public void stop() {
+        drive(0.0,0.0);
+    }
+
+    public void tankDrive() {
         drive(gamepad.left_stick_y, gamepad.right_stick_y);
+    }
+
+    public double getRightSpeed(){
+        return this.rightMotor.getPower();
+    }
+
+    public double getLeftSpeed() {
+        return this.leftMotor.getPower();
     }
 }
