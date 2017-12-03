@@ -19,15 +19,14 @@ class EncoderDriver {
     private HardwarePushbot robot;
     private Telemetry telemetry;
 
-    EncoderDriver(LinearOpMode autonomousMode, HardwarePushbot robot, Telemetry telemetry) {
+    EncoderDriver(JewelDestroyer autonomousMode, HardwarePushbot robot, Telemetry telemetry) {
         this.autonomousMode = autonomousMode;
         this.robot = robot;
         this.telemetry = telemetry;
     }
 
-    // Block any code that calls the default constructor;
-    private EncoderDriver() {
-    }
+
+
 
     /*
      *  Method to perform a relative move, based on encoder counts.
@@ -87,7 +86,7 @@ class EncoderDriver {
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
+            // sleep(250);   // optional pause after each move
         }
     }
 
