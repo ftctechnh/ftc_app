@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:title="Disconnect from WiFi Direct"
-        android:id="@+id/disconnect_from_wifidirect"
-        android:orderInCategory="102"
-        android:showAsAction="never" />
-</menu>
