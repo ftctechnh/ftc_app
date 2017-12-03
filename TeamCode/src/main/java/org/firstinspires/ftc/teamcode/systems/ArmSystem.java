@@ -14,24 +14,36 @@ public class ArmSystem {
     private DcMotor armMotor;
     private Servo leftClaw, rightClaw;
     private HardwareMap hardwareMap;
-    private Gamepad gamepad;
 
-    public ArmSystem (HardwareMap hardwareMap, Gamepad gamepad) {
+    public ArmSystem (HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
-        this.gamepad = gamepad;
         this.armMotor = hardwareMap.get(DcMotor.class, "arm motor");
         this.leftClaw = hardwareMap.get(Servo.class, "left servo");
         this.rightClaw = hardwareMap.get(Servo.class, "right servo");
     }
-    public void armDown() {
-        this.armMotor.setPower(-1.0);
+
+    public void goUp() {
+        this.armMotor.setPower(1.0);
     }
 
-    public void armUp() {
-        this.armMotor.setPower(1.0);
+    public void goDown() {
+        this.armMotor.setPower(-1.0);
     }
 
     public void setClaw(float position) {
         this.rightClaw.setPosition(position);
+        this.leftClaw.setPosition(-position);
+    }
+
+    public double getArmMotorSpeed() {
+        return this.armMotor.getPower();
+    }
+
+    public double getleftServoPosition() {
+        return this.leftClaw.getPosition();
+    }
+
+    public double getRightServoPosition() {
+        return this.rightClaw.getPosition();
     }
 }

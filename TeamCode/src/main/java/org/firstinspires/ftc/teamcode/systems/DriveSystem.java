@@ -19,7 +19,7 @@ public class DriveSystem {
         this.gamepad = gamepad;
         this.rightMotor = hardwareMap.get(DcMotor.class, "right motor");
         this.leftMotor = hardwareMap.get(DcMotor.class, "left motor");
-        this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void drive(double leftSpeed, double rightSpeed) {
@@ -38,7 +38,7 @@ public class DriveSystem {
         } else if (gamepad.left_stick_y < 0) {
             drive(backwardLeftSpeed, backwardRightSpeed);
         } else {
-            stop();
+            drive(gamepad.right_stick_x, -gamepad.right_stick_x);
         }
     }
 
