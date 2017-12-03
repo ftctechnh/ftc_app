@@ -22,13 +22,10 @@ public class Thing extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        //encode(19, 0.5, MoveType.ROT);
-        //robot.arm.setPosition(1);
-        //robot.arm.close();
-        while(true) {
-            telemetry.addData("lskdjf", robot.color.red());
-            telemetry.update();
-        }
+        robot.gripper.setPower(0.25);
+        wait(1000);
+        robot.gripper.setPower(0);
+        encode(-1, 0.5, MoveType.STRAIGHT);
     }
 
     //Negative speed means:
@@ -118,6 +115,13 @@ public class Thing extends LinearOpMode {
             robot.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+    public void wait(int t) {
+        try {
+            Thread.sleep(t);
+        } catch (Exception e) {
+
         }
     }
 }
