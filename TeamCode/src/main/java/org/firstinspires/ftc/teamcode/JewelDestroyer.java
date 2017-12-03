@@ -38,7 +38,6 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.
 import static org.firstinspires.ftc.teamcode.Ftc12547Config.ENCODER_RUN_SPEED;
 import static org.firstinspires.ftc.teamcode.Ftc12547Config.JEWEL_ARM_HORIZONTAL_SERVO_POSITION;
 import static org.firstinspires.ftc.teamcode.Ftc12547Config.JEWEL_ARM_SERVO_MOVING_STEP_CHANGE;
@@ -60,7 +59,7 @@ class JewelDestroyer {
     /* Declare OpMode members. */
     private HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
 
-    private EncoderDriver encoderDriver = new EncoderDriver(this, robot, telemetry);
+    private EncoderDriver encoderDriver = new EncoderDriver(robot, telemetry);
 
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;

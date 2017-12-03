@@ -19,14 +19,17 @@ class EncoderDriver {
     private HardwarePushbot robot;
     private Telemetry telemetry;
 
-    EncoderDriver(JewelDestroyer autonomousMode, HardwarePushbot robot, Telemetry telemetry) {
-        this.autonomousMode = autonomousMode;
+    // legacy code only for the JewelDestroyer that does not work
+    EncoderDriver(HardwarePushbot robot, Telemetry telemetry) {
         this.robot = robot;
         this.telemetry = telemetry;
     }
 
-
-
+    EncoderDriver(LinearOpMode autonomousMode, HardwarePushbot robot, Telemetry telemetry) {
+        this.autonomousMode = autonomousMode;
+        this.robot = robot;
+        this.telemetry = telemetry;
+    }
 
     /*
      *  Method to perform a relative move, based on encoder counts.
