@@ -35,7 +35,7 @@ public class RedTwoAuto extends LinearOpMode {
         encode(19, 0.5, MoveType.ROT);
         encode(30, 0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
-        encode(28, 0.5, MoveType.STRAIGHT);
+        encode(35, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
@@ -139,4 +139,5 @@ public class RedTwoAuto extends LinearOpMode {
 
         }
     }
+
 }
