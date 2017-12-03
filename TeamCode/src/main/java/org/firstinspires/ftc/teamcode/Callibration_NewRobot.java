@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by Jeremy on 12/1/2017.
- */
-
-
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
