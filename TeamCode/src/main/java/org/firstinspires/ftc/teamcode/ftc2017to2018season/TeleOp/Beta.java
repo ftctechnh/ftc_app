@@ -149,12 +149,12 @@ public class Beta extends OpMode {
 
         read the gamepad values and put into variables
          */
-        float leftY_gp1 = (-gamepad1.left_stick_y);
-        float rightY_gp1 = (-gamepad1.right_stick_y);
+        float leftY_gp1 = (gamepad1.left_stick_y);
+        float rightY_gp1 = (gamepad1.right_stick_y);
         //
         //11/24/17 This edit was made by Colin Szeto. This was a test that we used to see if the triggers will work for the servos
-        // float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
-        // float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
+        // float strafeStickLeft = (gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
+        // float strafeStickRight = (gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //
         // run the motors by setting power to the motors with the game pad value
 
