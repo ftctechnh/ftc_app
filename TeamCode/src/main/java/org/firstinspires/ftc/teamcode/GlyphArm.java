@@ -107,8 +107,6 @@ public class GlyphArm
     public double getClawPosition(){
         return clawServo.getPosition();
     }
-    public double getArmPosition(){
-        return armMotor.getCurrentPosition();
-    }
+    public int getArmPosition() {return armMotor.getCurrentPosition();}
  }
 

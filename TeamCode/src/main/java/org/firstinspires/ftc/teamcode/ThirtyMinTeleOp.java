@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Joseph Liang on 12/3/2017.
@@ -14,10 +16,21 @@ public class ThirtyMinTeleOp extends OpMode{
 
     GlyphArm gilgearmesh = new GlyphArm();
     RelicDrive robot       = new RelicDrive();
+    private ElapsedTime     runtime = new ElapsedTime();
+    JewelSystem sensArm = new JewelSystem();
 
     @Override
     public void init() {
         robot.init(hardwareMap);
+        gilgearmesh.init(hardwareMap);
+        sensArm.init(hardwareMap);
+
+        robot.leftMid.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightMid.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        gilgearmesh.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
@@ -44,18 +57,26 @@ public class ThirtyMinTeleOp extends OpMode{
         } else {
             left = gamepad1.left_stick_y/2;
             right = gamepad1.right_stick_y/2;}
+
         robot.controlDrive(left, right);
 
-        armPower = gamepad2.left_stick_y;
+        armPower = -gamepad2.left_stick_y;
 
-        gilgearmesh.armPower(-armPower);
+        gilgearmesh.armPower(armPower);
 
         if (gamepad2.right_bumper) {
             gilgearmesh.clawPos(1);
         } else if (gamepad2.left_bumper) {
             gilgearmesh.clawPos(0);
         }
+        if (gamepad2.dpad_down == true){sensArm.armPos(.444);}
+        if (gamepad2.dpad_up ==true){sensArm.armPos(1);}
 
-        telemetry.addData("Arm Pos",gilgearmesh.getArmPosition());
+        telemetry.addData("Arm Pos","%7d",gilgearmesh.getArmPosition());
+        telemetry.addData("Left Mid","%7d",robot.getLMencoder());
+        telemetry.addData("Right Mid","%7d",robot.getRMencoder());
+        telemetry.addData("Left Back","%7d",robot.getLBencoder());
+        telemetry.addData("Right Back","%7d",robot.getRBencoder());
+        telemetry.update();
     }
 }

@@ -213,16 +213,16 @@ public class RelicDrive
         rightMid.setPower(right);
         rightBack.setPower(right);
     }
-    public double getLMencoder(){
+    public int getLMencoder(){
         return leftMid.getCurrentPosition();
     }
-    public double getRMencoder(){
+    public int getRMencoder(){
         return rightMid.getCurrentPosition();
     }
-    public double getLBencoder(){
+    public int getLBencoder(){
         return leftBack.getCurrentPosition();
     }
-    public double getRBencoder(){
+    public int getRBencoder(){
         return rightBack.getCurrentPosition();
     }
  }

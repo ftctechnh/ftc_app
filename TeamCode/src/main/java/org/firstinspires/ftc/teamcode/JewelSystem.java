@@ -39,9 +39,10 @@ public class JewelSystem {
 
         // Define and initialize ALL installed servos.
         jewelArm  = hwMap.get(Servo.class,"jewel_arm");
+        //colorSensor = hwMap.get(ColorSensor.class, "color_sensor");
         jewelArm.setPosition(TOP_SERVO);
 
-        colorSensor.enableLed(false);
+        //colorSensor.enableLed(false);
     }
     public void armPos(double pos){
         if (pos < BOTTOM_SERVO)
