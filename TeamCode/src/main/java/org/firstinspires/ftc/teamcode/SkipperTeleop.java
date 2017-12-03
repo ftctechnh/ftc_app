@@ -18,34 +18,43 @@ public class SkipperTeleop extends LinearOpMode {
     private DcMotor BackLeftDrive = null;
     private DcMotor BackRightDrive = null;
     private DcMotor LiftDrive = null;
+    private DcMotor RelicDrive = null;
 
     public Servo loweringJewelServo;
-
+    public Servo turningJewelServo;
 
 
     Servo leftTop;
     Servo rightTop;
     Servo rightBottom;
     Servo leftBottom;
+    Servo arm;
+    Servo hand;
 
     //static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   75;
 
-    static final double OPEN_BOTTOM_RIGHT =  0.75;
-    static final double OPEN_BOTTOM_LEFT = 0.1;
-    static final double CLOSE_BOTTOM_RIGHT     =  0.6;
+    static final double OPEN_BOTTOM_RIGHT =  0.65;
+    static final double OPEN_BOTTOM_LEFT = 0.2;
+    static final double CLOSE_BOTTOM_RIGHT     =  0.55;
     static final double CLOSE_BOTTOM_LEFT     =  0.4;
 
     static final double CLOSE_TOP_LEFT = 0.28;
     static final double CLOSE_TOP_RIGHT = 0.52;
-    static final double OPEN_TOP_LEFT     =  0.52;
-    static final double OPEN_TOP_RIGHT     =  0.35;
+    static final double OPEN_TOP_LEFT     =  0.55;
+    static final double OPEN_TOP_RIGHT     =  0.25;
 
     static final double SEMI_OPEN_BOTTOM_RIGHT = 0.65;
     static final double SEMI_OPEN_BOTTOM_LEFT = 0.3;
-    static final double SEMI_OPEN_TOP_RIGHT = 0.15;
-    static final double SEMI_OPEN_TOP_LEFT = 0.48;
+    static final double SEMI_OPEN_TOP_RIGHT = 0.35;
+    static final double SEMI_OPEN_TOP_LEFT = 0.4;
 
+    static final double OPEN_ARM = 1;
+    static final double CLOSE_ARM = 0.2;
+    static final double OPEN_HAND = 1;
+    static final double CLOSE_HAND = 0.3;
+
+    static final double TURNING_SERVO_RESET = 0.5;
 
 
     // Define class members
@@ -67,6 +76,10 @@ public class SkipperTeleop extends LinearOpMode {
         leftTop = hardwareMap.get(Servo.class, "left top claw");
         leftBottom = hardwareMap.get(Servo.class, "left bottom claw");
         rightBottom = hardwareMap.get(Servo.class, "right bottom claw");
+        arm = hardwareMap.get(Servo.class, "arm servo");
+        hand = hardwareMap.get(Servo.class, "hand servo");
+        loweringJewelServo = hardwareMap.get(Servo.class, "lowering servo" );
+        turningJewelServo = hardwareMap.get(Servo.class, "turning servo");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -75,20 +88,21 @@ public class SkipperTeleop extends LinearOpMode {
         BackLeftDrive = hardwareMap.get(DcMotor.class, "back_left");
         BackRightDrive = hardwareMap.get(DcMotor.class, "back_right");
         LiftDrive = hardwareMap.get(DcMotor.class, "lift");
-
-        loweringJewelServo = hardwareMap.get(Servo.class, "lowering servo" );
+        RelicDrive = hardwareMap.get(DcMotor.class, "relic");
 
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         LiftDrive.setDirection(DcMotor.Direction.FORWARD);
+        RelicDrive.setDirection(DcMotor.Direction.FORWARD);
 
         FrontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RelicDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -100,6 +114,8 @@ public class SkipperTeleop extends LinearOpMode {
             moveClaws();
 
             moveJewelArm();
+
+            moveRelic();
 
             telemetry.update();
 
@@ -115,8 +131,11 @@ public class SkipperTeleop extends LinearOpMode {
     }
 
     public void moveJewelArm() {
-        if(gamepad2.right_trigger > .1) {
+        double triggerJewelServo = gamepad2.left_stick_y;
+
+        if(triggerJewelServo > -0.2 && triggerJewelServo < 0.2) { //change to right joystick
             loweringJewelServo.setPosition(0);
+            turningJewelServo.setPosition(TURNING_SERVO_RESET);
         }
     }
 
@@ -268,6 +287,32 @@ public class SkipperTeleop extends LinearOpMode {
         }
     }
 
+    public void moveRelic() {
+        double drivePower = 0.6;
+
+        if(gamepad2.left_trigger > .1) {
+            arm.setPosition(CLOSE_ARM);
+        } else {
+            arm.setPosition(OPEN_ARM);
+        }
+
+        if(gamepad2.right_trigger > .1) {
+            hand.setPosition(CLOSE_HAND);
+        } else {
+            hand.setPosition(OPEN_HAND);
+        }
+
+        double relicDrive = gamepad2.right_stick_y;
+
+        if(relicDrive > 0.2) {
+            RelicDrive.setPower(-drivePower);
+        } else if(relicDrive < -0.2) {
+            RelicDrive.setPower(drivePower);
+        } else {
+            RelicDrive.setPower(0);
+        }
+
+    }
 }
 
 
