@@ -67,6 +67,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
     int             target = 0;                          // lift motor target
     int             maxlift = 7100;                     // maxiumum lift height
     int             minlift = 0;                         // minimum lift height
+    double          BallArmUp = .1 ;
 
 
     /*

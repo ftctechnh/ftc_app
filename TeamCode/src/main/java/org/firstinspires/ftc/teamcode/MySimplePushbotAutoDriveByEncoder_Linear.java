@@ -83,8 +83,11 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     double          clawOffset  = - 0.30 ; // starts claw closed on block L.A.S
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.25;
-    double          ballArm = 0.0 ; // makes ball Arm a variable L.A.S
+    double          ballArmUp = .1; // makes ball Arm a variable L.A.S
+    double          ballArmDown = -1;
+
     NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor L.A.S
+
     @Override
     public void runOpMode() {
 
@@ -116,7 +119,8 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color"); // Uses the phone to find the color sensor named sensor_color L.A.S
 
-        NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors L.A.S
+        robot.ballArm.setPosition(ballArmDown);// lowers ballArm all the way down L.A.S
+
         clawOffset =-.3;
         clawOffset = Range.clip(clawOffset, -0.5, 0.5);
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
@@ -124,6 +128,22 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
+
+        NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors L.A.S
+
+        //if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
+
+            encoderDrive(TURN_SPEED, -2, 2,5 ); // turns right to knock blue ball L.A.S
+            robot.ballArm.setPosition(ballArmUp - ballArmDown);
+            encoderDrive(TURN_SPEED, 2, -2,5 );
+
+        //}
+        //else  { //The ball facing the color sensor is red  L.A.S
+            //encoderDrive(TURN_SPEED, 2, -2, 5 ); //It turns left knocking the blue ball and turning to face glyph box L.A.S
+            //robot.ballArm.setPosition(ballArmUp - BallArmUp);
+            //encoderDrive(TURN_SPEED,  -2, 2,.5 ); //It turns right to face the glyph bock L.A.S
+        //}
+
         target = robot.lift.getCurrentPosition() + 550;
         robot.lift.setTargetPosition(target);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);

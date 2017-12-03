@@ -63,6 +63,9 @@ public class MyHardwarePushbot
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double ballArmUp = .1; //defines starting position of ball arm
+    public static final double ballArmDown = -1;
+
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -106,7 +109,7 @@ public class MyHardwarePushbot
 
         leftClaw.setPosition(MID_SERVO);
         rightClaw.setPosition(MID_SERVO);
-        ballArm.setPosition(MID_SERVO); // sets position to mid servo or .5 of 180
+        ballArm.setPosition(ballArmUp); // sets position to mid servo or .5 of 180
     }
  }
 
