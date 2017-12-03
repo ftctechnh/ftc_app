@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -35,14 +37,22 @@ public class NewRobotFinal
     private int liftDeadzone = 76;
     private short currentLvl;
 
-    private ColorSensor topColorSens = null;
-    private ColorSensor forwardColorSens = null;
     private ColorSensor floorColorSens = null;
+    private ColorSensor rightWingColorSens = null;
+    private ColorSensor leftWingColorSens = null;
 
-    private DcMotorImplEx liftMotor = null;
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
     private DcMotorImplEx wingMotor = null;
+
+    private Servo leftDoorWall = null;
+    private Servo rightDoorWall = null;
+    private DcMotorImplEx liftMotor = null;
+    //private DcMotorImplEx shiftLiftMotor = null;
+
+    private DcMotorImplEx tailRelease = null;
+    private Servo grabber = null;
+    private Servo grabberRotator = null;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
     private VuforiaLocalizer vuforia = null;
@@ -67,6 +77,8 @@ public class NewRobotFinal
         //Comment out if you don't want camera view on robo phone
         //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         floorColorSens = hardwareMap.colorSensor.get("floorColorSens");
+        rightWingColorSens = hardwareMap.colorSensor.get("rightWingColorSens");
+        leftWingColorSens = hardwareMap.colorSensor.get("leftWingColorSens");
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -77,16 +89,64 @@ public class NewRobotFinal
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        zeroStuff();
         imu = (hardwareMap.get(BNO055IMU.class, "imu"));
         initIMU();
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
         wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
+
+        leftDoorWall = hardwareMap.get(Servo.class, "leftDoorWall");
+        rightDoorWall = hardwareMap.get(Servo.class, "rightDoorWall");
+
+
+        grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
+        grabber = hardwareMap.get(Servo.class, "grabber");
+        tailRelease = hardwareMap.get(DcMotorImplEx.class, "tailRelease");
+
         zeroStuff();
         stopAllMotors();
         updateIMUValues();
+    }
+
+    public void zeroStuff() //Methods sets motors at low power to put the motors to their resting positions
+    {                       //basically sets up lift's step counts starting at its bottom position
+        liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setVelocity(0, AngleUnit.DEGREES);
+
+        wingMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        wingMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        wingMotor.setVelocity(0, AngleUnit.DEGREES);
+
+        currentLvl = 0;
+
+        driveRightOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveRightOne.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveRightOne.setVelocity(0, AngleUnit.DEGREES);
+        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveLeftOne.setVelocity(0, AngleUnit.DEGREES);
+        driveLeftOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        resetDriveEncoders();
+
+        rightDoorWall.scaleRange(-Math.PI/2, 0);
+        leftDoorWall.scaleRange(-Math.PI/2, 0);
+        rightDoorWall.setDirection(Servo.Direction.FORWARD);
+        leftDoorWall.setDirection(Servo.Direction.REVERSE);
+
+        grabberRotator.scaleRange(0, Math.PI/2);
+        grabber.scaleRange(0, Math.PI/2);
+        tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        tailRelease.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
+        tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
+        tailRelease.setVelocity(0, AngleUnit.RADIANS);
+        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void initIMU()
@@ -159,37 +219,10 @@ public class NewRobotFinal
             return '?';
     }
 
-    public void zeroStuff() //Methods sets motors at low power to put the motors to their resting positions
-    {                       //basically sets up lift's step counts starting at its bottom position
-        liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        liftMotor.setVelocity(0, AngleUnit.DEGREES);
-
-        wingMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        wingMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        wingMotor.setVelocity(0, AngleUnit.DEGREES);
-
-        currentLvl = 0;
-        resetDriveEncoders();
-    }
-
     private void resetDriveEncoders()//sets encoders to 0 for motors
     {
-        driveRightOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         driveRightOne.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveRightOne.setDirection(DcMotorSimple.Direction.REVERSE);
-        driveRightOne.setVelocity(0, AngleUnit.DEGREES);
-
-        driveLeftOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         driveLeftOne.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
-        driveLeftOne.setVelocity(0, AngleUnit.DEGREES);
     }
 
     public void driveStraight_In(float inches, double pow)
@@ -223,7 +256,6 @@ public class NewRobotFinal
     {
         driveStraight_In(inches, .75);
     }
-
 
     public void spin_Right(float degrees)
     {
@@ -496,14 +528,34 @@ public class NewRobotFinal
         wingMotor.setPower(0);
     }
 
-    public ColorSensor getTopColorSens()
+    public void openOrCloseDoor(boolean close)
     {
-        return topColorSens;
+        if (!close)
+        {
+            leftDoorWall.setPosition(-Math.PI/4);
+            rightDoorWall.setPosition(-Math.PI/4);
+        }
+        else
+        {
+            leftDoorWall.setPosition(Math.PI/4);
+            rightDoorWall.setPosition(Math.PI/4);
+        }
+    }
+    
+    public void fineAdjDoors(double in)
+    {
+        leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
+        rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
     }
 
-    public ColorSensor getForwardColorSens()
+    public ColorSensor getleftWingColorSens()
     {
-        return forwardColorSens;
+        return leftWingColorSens;
+    }
+
+    public ColorSensor getrightWingColorSens()
+    {
+        return rightWingColorSens;
     }
 
     public ColorSensor getFloorColorSens()
@@ -527,4 +579,23 @@ public class NewRobotFinal
     {
         return wingMotor;
     }
+
+    public Servo getLeftDoorWall()
+    {
+        return leftDoorWall;
+    }
+
+    public Servo getRightDoorWall()
+    {
+        return rightDoorWall;
+    }
+
+    public Servo getGrabber()
+    {
+        return grabber;
+    }
+
+    public Servo getGrabberRotator(){return grabberRotator;}
+
+    public DcMotorImplEx getTailRelease(){return tailRelease;}
 }
