@@ -36,7 +36,7 @@ public class BlueOneAuto extends LinearOpMode {
         encode(-19, 0.5, MoveType.ROT);
         encode(35, 0.5, MoveType.STRAIGHT);
         wait(500);
-        robot.gripper.setPower(0.25);
+        robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
         encode(-1, 0.5, MoveType.STRAIGHT);
