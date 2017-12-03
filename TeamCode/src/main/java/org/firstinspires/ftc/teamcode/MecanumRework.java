@@ -165,10 +165,10 @@ public class MecanumRework extends OpMode {
         // hold a to open gripper to limit.
         // press b to unlock
         if (gamepad2.a){
-            robot.gripper.setPower(GRIPPER_POWER);
+            robot.gripper.setPower(-GRIPPER_POWER);
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         } else if (gamepad2.b){
-            robot.gripper.setPower(-GRIPPER_POWER);
+            robot.gripper.setPower(GRIPPER_POWER);
             robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         } else {
             robot.gripper.setPower(0);
