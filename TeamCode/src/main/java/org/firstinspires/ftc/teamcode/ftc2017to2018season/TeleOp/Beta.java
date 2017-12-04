@@ -88,6 +88,7 @@ public class Beta extends OpMode {
         glyphServoRight.setPosition(0.0);
 
 
+
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
@@ -223,7 +224,7 @@ public class Beta extends OpMode {
 
 //opening the claw
             //commented out so that it wouldn't ruin the old code
-            glyphServoRight.setPosition(0.5);
+            glyphServoRight.setPosition(0.7);
             /*
             try {
                 glyphServoRight.setPosition(0.5);
@@ -231,13 +232,13 @@ public class Beta extends OpMode {
                 e.printStackTrace();
             }
 */
-            glyphServoLeft.setPosition(0.5);
+            glyphServoLeft.setPosition(0.6);
         }
         else if (gamepad1.right_bumper){
 
-            glyphServoRight.setPosition(0.1);
+            glyphServoRight.setPosition(0.9);
 
-            glyphServoLeft.setPosition(0.8);
+            glyphServoLeft.setPosition(0.2);
 
             telemetry.addData("The value of the right servo is", glyphServoRight.getPortNumber());
             telemetry.addData("The value of the left servo is", glyphServoLeft.getPortNumber());
