@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
  * Created by E-6420 on 11/28/2017.
@@ -31,39 +30,35 @@ public class Team7519Teleop extends LinearOpMode{
         {
 
             //Include commands to run on controller presses here
-            //Manual Lift Control w/Trigger
-            while (gamepad1.right_bumper== false && gamepad1.left_bumper==false ) {
-                motorLift.setPower(0);
-            }
-            while (gamepad1.left_bumper==true){
-                motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
-                motorLift.setPower(1);
-            }
 
-            //end if
-            while (gamepad1.right_bumper==true) {
-                motorLift.setDirection(DcMotorSimple.Direction.FORWARD);
-                motorLift.setPower(1);
-            }
+            //Manual Lift Control w/Trigger
+            motorLift.setPower(gamepad1.right_trigger);
+            motorLift.setPower(-gamepad1.left_trigger);
 
             //Claw Control (A-Move Claw, B-Switch Direction)
-            while (gamepad1.a==false){
-                testServo.setPower(0);
-                if (gamepad1.b==true) {
-                    if (clawPosition == 0) {
-                        testServo.setDirection(CRServo.Direction.REVERSE);
-                        clawPosition++;
-                        sleep(300);
-                    }
-                    else  {
-                        testServo.setDirection(CRServo.Direction.FORWARD);
-                        clawPosition--;
-                        sleep(300);
-                    }
-                }//end if
-            }//end loop
-            while (gamepad1.a) {
+            if (gamepad1.a)
                 testServo.setPower(1);
+            if (gamepad1.b)
+                testServo.setPower(-1);
+            testServo.setPower(0);
+
+//            while (gamepad1.a==false){
+//                testServo.setPower(0);
+//                if (gamepad1.b==true) {
+//                    if (clawPosition == 0) {
+//                        testServo.setDirection(CRServo.Direction.REVERSE);
+//                        clawPosition++;
+//                        sleep(300);
+//                    }
+//                    else  {
+//                        testServo.setDirection(CRServo.Direction.FORWARD);
+//                        clawPosition--;
+//                        sleep(300);
+//                    }
+//                }//end if
+//            }//end loop
+//            while (gamepad1.a) {
+//                testServo.setPower(1);
 
             }//end loop
 
