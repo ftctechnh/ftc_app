@@ -83,13 +83,14 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     double          clawOffset  = - 0.40 ; // starts claw closed on block L.A.S
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.25;
-    double          ballArmUp = .1; // makes ball Arm a variable L.A.S
-    double          ballArmDown = -.4;
+    double          ballArmUp = .7; // makes ball Arm a variable L.A.S
+    double          ballArmDown = 0.075;
 
     NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor L.A.S
 
     @Override
     public void runOpMode() {
+
 
         /*
          * Initialize the drive system variables.
@@ -107,6 +108,8 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -128,13 +131,20 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
+        target = robot.lift.getCurrentPosition() + 550;
+        robot.lift.setTargetPosition(target);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setPower(0.6);
+        while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
+        robot.lift.setPower(0.0);
+
 
         NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors L.A.S
 
         //if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
 
             encoderDrive(TURN_SPEED, -2, 2,5 ); // turns right to knock blue ball L.A.S
-            robot.ballArm.setPosition(ballArmUp - ballArmDown);
+            robot.ballArm.setPosition(ballArmUp);
             encoderDrive(TURN_SPEED, 2, -2,5 );
 
         //}
@@ -144,15 +154,12 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             //encoderDrive(TURN_SPEED,  -2, 2,.5 ); //It turns right to face the glyph bock L.A.S
         //}
 
-        target = robot.lift.getCurrentPosition() + 550;
-        robot.lift.setTargetPosition(target);
-        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.lift.setPower(0.6);
-        while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
-        robot.lift.setPower(0.0);
-        encoderDrive(DRIVE_SPEED, 2, 2, 5);
-        encoderDrive(TURN_SPEED, -8.98, 8.9, 5);
-        encoderDrive(DRIVE_SPEED, -32, -32, 5);
+        //encoderDrive(DRIVE_SPEED, 2, 2, 5);
+        //encoderDrive(TURN_SPEED, -8.6, 8.5, 5);
+        //encoderDrive(DRIVE_SPEED, -32, -32, 5);
+        encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5);
+        encoderDrive(TURN_SPEED, -15, 15, 5); //13.5 tank turn went to scond one
+        encoderDrive(DRIVE_SPEED, -41, -41, 5);
         clawOffset = .0;
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);

@@ -85,6 +85,8 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        robot.ballArm.setPosition(.7);
+
         // Send telemetry message to signify robot waiting
         telemetry.addData("Say", "Hello Driver");
     }
@@ -218,7 +220,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
         }
         robot.lift.setPower(0.0);
-        robot.ballArm.setPosition(.1);
+
         //wait(5000);
         //Thread.sleep(5000);
         //robot.ballArm.setPosition(.3);
