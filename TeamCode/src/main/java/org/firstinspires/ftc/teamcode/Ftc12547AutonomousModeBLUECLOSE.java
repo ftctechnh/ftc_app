@@ -89,6 +89,7 @@ import static org.firstinspires.ftc.teamcode.Ftc12547Config.THREE_INCHES;
 import static org.firstinspires.ftc.teamcode.Ftc12547Config.TOWARDS_AUDIENCE;
 import static org.firstinspires.ftc.teamcode.Ftc12547Config.TO_RACK_TIMEOUT_SECONDS;
 import static org.firstinspires.ftc.teamcode.Ftc12547Config.VUFORIA_LICENSE_KEY;
+import static org.firstinspires.ftc.teamcode.JewelDestroyer;
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -164,59 +165,7 @@ public class Ftc12547AutonomousModeBLUECLOSE extends LinearOpMode {
         // (0) Calculate the distance based on the vuMark cypher.
         double rack_angle = calcFinalDistanceByVuMark(vuMark);
 
-        // (1) Lower the arm controlled by a servo
-        lowerJewelMovingArmServo();
-        sleep(ONE_SECOND_IN_MIL);
-
-        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                (int) (sensorColor.green() * SCALE_FACTOR),
-                (int) (sensorColor.blue() * SCALE_FACTOR),
-                hsvValues);
-
-        int jewelColor = (sensorColor.red() > sensorColor.blue()) ? Color.RED : Color.BLUE;
-        telemetry.addData("Blue ", sensorColor.blue());
-        telemetry.addData("Red ", sensorColor.red());
-        telemetry.addData("Jewel color: ", (jewelColor == Color.RED) ? "Red" : "Blue");
-        telemetry.update();
-        sleep(ONE_SECOND_IN_MIL);
-
-        /**
-         * (2) Disposition jewel of other color than team color.
-         * (3) Lift the jewel arm
-         * (4) Move robot back to original place to move to rack
-         */
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        if (jewelColor == TEAM_COLOR){
-            /**
-             * (2) Move forward, because
-             * a. Color sensor of team 12547 is mounted facing backward.
-             * b. Team color jewel is on the back side in this condition.
-             */
-            MoveForwardForJewelDisposition();
-
-            // (3) Raise the servo that control the arm to move the JewelMovingArm
-            raiseJewelMovingArmServo();
-            sleep(ONE_SECOND_IN_MIL);
-
-            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -JEWEL_DISPOSITION_DISTANCE_INCHES, -JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
-        } else {
-            // (2) Move backward if the jewel is not in the team color
-            MoveBackwardForJewelDisposition();
-
-            //  (3) Raise the servo that control the arm to move the JewelMovingArm
-            raiseJewelMovingArmServo();
-            sleep(ONE_SECOND_IN_MIL);
-
-            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, JEWEL_DISPOSITION_DISTANCE_INCHES, JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
-        }
-
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        // (4) Move robot back to original place
-
-        sleep(ONE_SECOND_IN_MIL);
-
+        JewelDestroy();
         // (5) Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Note: IT IS DIFFERENT DEPENDING ON THE FOUR STARTING POSITIONS

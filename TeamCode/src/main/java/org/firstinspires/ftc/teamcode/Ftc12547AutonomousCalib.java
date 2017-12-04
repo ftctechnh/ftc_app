@@ -37,6 +37,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.teamcode.Ftc12547Config;
 
+import static org.firstinspires.ftc.teamcode.Ftc12547Config.NINETY_DEGREE_TURN;
+
 /**
 This OpMode is used to calibrate and test basic robot functions so it can be calibrated.
  */
@@ -65,12 +67,13 @@ public class Ftc12547AutonomousCalib extends LinearOpMode {
         telemetry.setAutoClear(false);
         waitForStart();
 
-        //encoderDriver.encoderDrive(0.1, 30, 30, 100);
+        encoderDriver.encoderDrive(0.1, 36, 36, 100);
+        // sleep (3000 * 1000);
 
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        encoderDriver.encoderTurn(0.1, -Ftc12547Config.NINETY_DEGREE_TURN, Ftc12547Config.NINETY_DEGREE_TURN, 10);
+        sleep(1000);
+        encoderDriver.encoderTurn(0.1, 20, -NINETY_DEGREE_TURN*2, 100);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -105,5 +108,5 @@ public class Ftc12547AutonomousCalib extends LinearOpMode {
         telemetry.update();
 
     }
-    
+
 }
