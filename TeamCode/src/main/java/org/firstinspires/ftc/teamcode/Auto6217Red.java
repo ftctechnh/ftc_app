@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
@@ -49,6 +51,7 @@ public class Auto6217Red extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     VuforiaLocalizer vuforia;
+    ModernRoboticsI2cRangeSensor rangeSensor;
 
     @Override
     public void runOpMode() {
@@ -84,7 +87,7 @@ public class Auto6217Red extends LinearOpMode {
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
         servoTapper = hardwareMap.servo.get("tapper");
-
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
         if (colorSensor instanceof SwitchableLight) {
             ((SwitchableLight) colorSensor).enableLight(true);
@@ -159,6 +162,11 @@ public class Auto6217Red extends LinearOpMode {
         else {
             telemetry.addData("1", "UNKNOWN");
         }
+        
+        telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
+        telemetry.addData("raw optical", rangeSensor.rawOptical());
+        telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
+        telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
     }
 
