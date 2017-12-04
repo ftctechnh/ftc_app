@@ -288,7 +288,7 @@ public class SkipperTeleop extends LinearOpMode {
     }
 
     public void moveRelic() {
-        double drivePower = 0.6;
+        double relicPower = 0.6;
 
         if(gamepad2.left_trigger > .1) {
             arm.setPosition(CLOSE_ARM);
@@ -305,18 +305,12 @@ public class SkipperTeleop extends LinearOpMode {
         double relicDrive = gamepad2.right_stick_y;
 
         if(relicDrive > 0.2) {
-            RelicDrive.setPower(-drivePower);
+            RelicDrive.setPower(-relicPower);
         } else if(relicDrive < -0.2) {
-            RelicDrive.setPower(drivePower);
+            RelicDrive.setPower(relicPower);
         } else {
             RelicDrive.setPower(0);
         }
 
     }
 }
-
-
-
-
-
-
