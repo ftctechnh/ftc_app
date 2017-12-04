@@ -12,28 +12,35 @@ import static org.firstinspires.ftc.teamcode.Ftc12547Config.*;
 
 
 class JewelDestroyer {
-
-    private LinearOpMode autonomousMode;
-    private Telemetry telemetry;
-
-    /* Declare OpMode members. */
-    private HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-
-    private EncoderDriver encoderDriver = new EncoderDriver(robot, telemetry);
-
-    private ColorSensor sensorColor;
-    private DistanceSensor sensorDistance;
     private float hsvValues[] = {0F, 0F, 0F};
 
+    private LinearOpMode autonomousMode;
+    private HardwarePushbot robot;
+    private Telemetry telemetry;
+    private EncoderDriver encoderDriver;
+    private ColorSensor sensorColor;
 
-    public void JewelDestroy() {
+    JewelDestroyer(LinearOpMode autonomousMode, HardwarePushbot robot, EncoderDriver encoderDriver, Telemetry telemetry) {
+        this.autonomousMode = autonomousMode;
+        this.robot = robot;
+        this.encoderDriver = encoderDriver;
+        this.telemetry = telemetry;
+    }
+
+    public void init() {
+        // get a reference to the color sensor.
+        sensorColor = autonomousMode.hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+    }
+
+    /**
+     * @return inches that moved when kicking the jewel
+     */
+    public double jewelDestroy() {
+        double movedInches = 0;
+
         // (1) Lower the arm controlled by a servo
         lowerJewelMovingArmServo();
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        autonomousMode.sleep(1);
 
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
@@ -69,7 +76,7 @@ class JewelDestroyer {
                 e.printStackTrace();
             }
 
-            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, -JEWEL_DISPOSITION_DISTANCE_INCHES, -JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
+            movedInches = JEWEL_DISPOSITION_DISTANCE_INCHES;
         } else {
             // (2) Move backward if the jewel is not in the team color
             MoveBackwardForJewelDisposition();
@@ -82,11 +89,14 @@ class JewelDestroyer {
                 e.printStackTrace();
             }
 
-            encoderDriver.encoderDrive(ENCODER_RUN_SPEED, JEWEL_DISPOSITION_DISTANCE_INCHES, JEWEL_DISPOSITION_DISTANCE_INCHES, 5);
+            movedInches = -JEWEL_DISPOSITION_DISTANCE_INCHES;
         }
-    robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-    robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        return movedInches;
     }
+
     private void MoveBackwardForJewelDisposition() {
         encoderDriver.encoderDrive(ENCODER_RUN_SPEED,
                 -JEWEL_DISPOSITION_DISTANCE_INCHES,
@@ -115,11 +125,7 @@ class JewelDestroyer {
         for(double d = JEWEL_ARM_VERTICAL_SERVO_POSITION; d > JEWEL_ARM_HORIZONTAL_SERVO_POSITION;
             d-=JEWEL_ARM_SERVO_MOVING_STEP_CHANGE){
             robot.jewelAnnihilator.setPosition(d);
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            autonomousMode.sleep(SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS);
         }
     }
 
@@ -127,11 +133,7 @@ class JewelDestroyer {
         for(double d = JEWEL_ARM_HORIZONTAL_SERVO_POSITION; d < JEWEL_ARM_VERTICAL_SERVO_POSITION;
             d+=JEWEL_ARM_SERVO_MOVING_STEP_CHANGE){
             robot.jewelAnnihilator.setPosition(d);
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            autonomousMode.sleep(SLEEP_INTERVAL_BETWEEN_SERVO_MOVES_MS);
         }
     }
 }
