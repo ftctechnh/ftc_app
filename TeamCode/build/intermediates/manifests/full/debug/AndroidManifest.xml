@@ -7,8 +7,8 @@
 <!-- The package name here determines the package for your R class and your BuildConfig class -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qualcomm.ftcrobotcontroller"
-    android:versionCode="24"
-    android:versionName="3.4" >
+    android:versionCode="25"
+    android:versionName="3.5" >
 
     <uses-sdk
         android:minSdkVersion="19"
