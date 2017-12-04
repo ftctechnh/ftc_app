@@ -80,11 +80,11 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     int             target = 0;
     int             maxlift = 7100;                     // maxiumum lift height
-    double          clawOffset  = - 0.30 ; // starts claw closed on block L.A.S
+    double          clawOffset  = - 0.40 ; // starts claw closed on block L.A.S
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.25;
     double          ballArmUp = .1; // makes ball Arm a variable L.A.S
-    double          ballArmDown = -1;
+    double          ballArmDown = -.4;
 
     NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor L.A.S
 
@@ -121,7 +121,7 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         robot.ballArm.setPosition(ballArmDown);// lowers ballArm all the way down L.A.S
 
-        clawOffset =-.3;
+        clawOffset =-.4;
         clawOffset = Range.clip(clawOffset, -0.5, 0.5);
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);
@@ -150,7 +150,8 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.lift.setPower(0.6);
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
         robot.lift.setPower(0.0);
-        encoderDrive(TURN_SPEED, -8.5, 8.5, 5);
+        encoderDrive(DRIVE_SPEED, 2, 2, 5);
+        encoderDrive(TURN_SPEED, -8.98, 8.9, 5);
         encoderDrive(DRIVE_SPEED, -32, -32, 5);
         clawOffset = .0;
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);

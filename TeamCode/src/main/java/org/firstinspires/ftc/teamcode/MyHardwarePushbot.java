@@ -109,7 +109,7 @@ public class MyHardwarePushbot
 
         leftClaw.setPosition(MID_SERVO);
         rightClaw.setPosition(MID_SERVO);
-        ballArm.setPosition(ballArmUp); // sets position to mid servo or .5 of 180
+        ballArm.setPosition(MID_SERVO); // sets position to mid servo or .5 of 180
     }
  }
 

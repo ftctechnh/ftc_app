@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -67,7 +68,6 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
     int             target = 0;                          // lift motor target
     int             maxlift = 7100;                     // maxiumum lift height
     int             minlift = 0;                         // minimum lift height
-    double          BallArmUp = .1 ;
 
 
     /*
@@ -126,8 +126,8 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         // 0 is open, -0.30 is closed
         if (gamepad1.right_bumper) {
             if (clawOffset == 0)            //if opened, close
-                clawOffset = -0.30;
-            else if (clawOffset == -0.30)    // if closed, open
+                clawOffset = -0.4;
+            else if (clawOffset == -0.40)    // if closed, open
                 clawOffset = 0;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
@@ -140,7 +140,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             }
 
             // every time the claw closes the lift rises by half an inch
-            if (clawOffset == -0.3){
+            if (clawOffset == -0.4){
                 target = robot.lift.getCurrentPosition() + 500;
                 robot.lift.setTargetPosition(target);
                 robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -166,16 +166,34 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             target = robot.lift.getCurrentPosition() + 3614;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.6);
-            while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
+            robot.lift.setPower(0.7);
+            while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
+                left = gamepad1.left_stick_y;
+                right = gamepad1.right_stick_y;
+
+                //robot.leftDrive.setPower(left);
+                //robot.rightDrive.setPower(right);
+                // when you click R2 it goes double the speed
+                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
+                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2);
+            }   //wait for lift to stop
             robot.lift.setPower(0.0);
         }
         else if (gamepad1.a && (robot.lift.getCurrentPosition() > minlift)) {
             target = robot.lift.getCurrentPosition() - 3614;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.6);
-            while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {}   // wait for lift to stop
+            robot.lift.setPower(0.7);
+            while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
+                left = gamepad1.left_stick_y;
+                right = gamepad1.right_stick_y;
+
+                //robot.leftDrive.setPower(left);
+                //robot.rightDrive.setPower(right);
+                // when you click R2 it goes double the speed
+                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
+                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2);
+            }   // wait for lift to stop
             robot.lift.setPower(0.0);
         }
 
@@ -191,5 +209,20 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void stop() {
+        //This lowers the arm after you stop it so thw spool isn't to loose.
+
+        target = minlift;
+        robot.lift.setTargetPosition(target);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setPower(0.7);
+        while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
+        }
+        robot.lift.setPower(0.0);
+        robot.ballArm.setPosition(.1);
+        //wait(5000);
+        //Thread.sleep(5000);
+        //robot.ballArm.setPosition(.3);
+        //wait(5000);
+        //robot.ballArm.setPosition(-.3);
     }
 }
