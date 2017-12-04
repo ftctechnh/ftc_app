@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -43,16 +44,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class Hardware750 {
     /* Public OpMode members. */
-    public Servo          arm          = null;
-    public DcMotor        flDrive      = null;
-    public DcMotor        frDrive      = null;
-    public DcMotor        rlDrive      = null;
-    public DcMotor        rrDrive      = null;
-    public ColorSensor    color        = null;
-    public DcMotor        gripper      = null;
-    public DcMotor        lift         = null;
-    public DigitalChannel limitTop     = null;
-    public DigitalChannel limitGripper = null; // limit open switch for gripper
+    public ModernRoboticsI2cRangeSensor rangeSensor  = null;
+    public Servo                        arm          = null;
+    public DcMotor                      flDrive      = null;
+    public DcMotor                      frDrive      = null;
+    public DcMotor                      rlDrive      = null;
+    public DcMotor                      rrDrive      = null;
+    public ColorSensor                  color        = null;
+    public DcMotor                      gripper      = null;
+    public DcMotor                      lift         = null;
+    public DigitalChannel               limitTop     = null;
+    public DigitalChannel               limitGripper = null; // limit open switch for gripper
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -69,6 +71,7 @@ public class Hardware750 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
         gripper = hwMap.get(DcMotor.class, "gripper");
         arm     = hwMap.get(Servo.class, "colorarm");
         color   = hwMap.get(ColorSensor.class, "color");
