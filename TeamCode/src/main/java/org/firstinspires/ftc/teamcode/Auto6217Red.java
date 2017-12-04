@@ -1,30 +1,35 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
-import com.qualcomm.robotcore.util.Range;
-import java.lang.Math;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 
 @Autonomous(name="Preciousss: Autonomous6217Red", group="Preciousss")
 
 /*
- * Created by Josie and Ben on 11/4/16.
+ * Created by Josie and Ben on 11/4/17.
  *
  */
 public class Auto6217Red extends LinearOpMode {
@@ -38,13 +43,37 @@ public class Auto6217Red extends LinearOpMode {
 
     NormalizedColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
-    boolean iAmBlue = false ;
+    boolean iAmBlue = false;
     boolean iAmRed = true;
 
     private ElapsedTime runtime = new ElapsedTime();
 
+    VuforiaLocalizer vuforia;
+
     @Override
     public void runOpMode() {
+
+        // V u f o r i a  s e t u p
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "Ac+mNz7/////AAAAGarZm7vF6EvSku/Zvonu0Dtf199jWYNFXcXymm3KQ4XngzMBntb" +
+                "NeMXt0qCPqACXugivtrYvwDU3VhMDRJwlwdMi4C2F6Su/8LZBrPIFtxUtr7MMagebQM/+4CSUIOQQdKNpdBttrX8yWM" +
+                "SrdyfnkNhh/vhXpQd7pXWwJ02UcnEVT1CiLeyTcl+bJUo1+xNonNaNEs8861zxmtO2TBtf9gyXhunlM6lpBJjC6nYWQ3" +
+                "BM2DOODFNz2EU3F3N1WxnOvCERQ+c934JKPajgCrNs5dquSo1wpcr0Kkf3u29hzK0DornR8s9j03g8Ea7q5cYN8WLn/e" +
+                "q1dUOFznng+6y2/7/fvw9wrzokOP9nP1QujkUN";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        relicTrackables.activate();
+
+        // H a r d w a r e   M a p p i n g
 
         motorFL = hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.FORWARD);
@@ -58,21 +87,25 @@ public class Auto6217Red extends LinearOpMode {
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
         if (colorSensor instanceof SwitchableLight) {
-            ((SwitchableLight)colorSensor).enableLight(true);
+            ((SwitchableLight) colorSensor).enableLight(true);
         }
+
+        // S t a r t
+
         waitForStart();
+
+        // J e w e l s
 
         boolean autoClear = false;
         telemetry.setAutoClear(autoClear);
 
         servoTapper.setPosition(0.0d);
-        Wait(5);
-        servoTapper.setPosition(0.5d);
-        Wait(5);
+        Wait(1);
+        servoTapper.setPosition(0.6d);
+        Wait(1);
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
 
-        // Read the sensor
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
         telemetry.addLine()
@@ -84,25 +117,49 @@ public class Auto6217Red extends LinearOpMode {
         if (colors.red > colors.blue) {
             iSeeRed = true;
             iSeeBlue = false;
-            }
-        else {
+        } else {
             iSeeBlue = true;
             iSeeRed = false;
         }
 
-        Wait(5);
+        Wait(2.5f);
 
-        if  ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
+        if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            // move(0f, .25f, 2);
-        }
-        else {
+            move(0f, .2f, .25f);
+            Wait(1);
+            move(0f, -.2f, .25f);
+        } else {
             telemetry.addData("1", "move left");
-          //  move(0f,-.25f,2);
+            move(0f, -.2f, .25f);
+            Wait(1);
+            move(0f, .2f, .25f);
         }
         telemetry.update();
         servoTapper.setPosition(0.1d);
-        Wait(5);
+        Wait(2.5f);
+
+        move(0f, .25f, 1f);
+
+        move(.25f, 0f, 1f);
+
+        // R e a d   V u M a r k
+
+        RelicRecoveryVuMark currentVumark = ReadPicto(relicTemplate);
+
+        if (currentVumark == RelicRecoveryVuMark.LEFT) {
+            telemetry.addData("1", "LEFT");
+        }
+        else if (currentVumark == RelicRecoveryVuMark.CENTER) {
+            telemetry.addData("1", "CENTER");
+        }
+        else if (currentVumark == RelicRecoveryVuMark.RIGHT) {
+            telemetry.addData("1", "RIGHT");
+        }
+        else {
+            telemetry.addData("1", "UNKNOWN");
+        }
+        telemetry.update();
     }
 
     void move(float posx, float posy, float waitTime) {
@@ -163,7 +220,7 @@ public class Auto6217Red extends LinearOpMode {
         int curHeading = 0;
         int iCount = 0;
         while (curHeading < angle) {
-            iCount = iCount+1;
+            iCount = iCount + 1;
             curHeading = Math.abs(gyro.getHeading() - initialHeading);
             telemetry.addData("1", "%03d", curHeading);
             telemetry.addData("2", "%03d", gyro.getIntegratedZValue());
@@ -171,6 +228,13 @@ public class Auto6217Red extends LinearOpMode {
             telemetry.update();
         }
         sR();
+    }
+
+    RelicRecoveryVuMark ReadPicto(VuforiaTrackable relicTemplate) {
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        return vuMark;
+
     }
 
     void pivotByZ(int angle) {
@@ -206,8 +270,13 @@ public class Auto6217Red extends LinearOpMode {
             telemetry.addData("3", "%03d", iCount);
             telemetry.update();
         }
+
+
+
         sR();
     }
+
+
 
     void pivotTo(int heading) {
 
