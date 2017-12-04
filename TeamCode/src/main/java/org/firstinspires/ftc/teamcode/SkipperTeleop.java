@@ -34,15 +34,15 @@ public class SkipperTeleop extends LinearOpMode {
     //static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   75;
 
-    static final double OPEN_BOTTOM_RIGHT =  0.65;
-    static final double OPEN_BOTTOM_LEFT = 0.2;
+    static final double OPEN_BOTTOM_RIGHT =  0.70;
+    static final double OPEN_BOTTOM_LEFT = 0.15;
     static final double CLOSE_BOTTOM_RIGHT     =  0.55;
     static final double CLOSE_BOTTOM_LEFT     =  0.4;
 
     static final double CLOSE_TOP_LEFT = 0.28;
-    static final double CLOSE_TOP_RIGHT = 0.52;
+    static final double CLOSE_TOP_RIGHT = 0.55;
     static final double OPEN_TOP_LEFT     =  0.55;
-    static final double OPEN_TOP_RIGHT     =  0.25;
+    static final double OPEN_TOP_RIGHT     =  0.28;
 
     static final double SEMI_OPEN_BOTTOM_RIGHT = 0.65;
     static final double SEMI_OPEN_BOTTOM_LEFT = 0.3;
@@ -131,9 +131,9 @@ public class SkipperTeleop extends LinearOpMode {
     }
 
     public void moveJewelArm() {
-        double triggerJewelServo = gamepad2.right_stick_y;
+        double triggerJewelServo = gamepad2.left_stick_y;
 
-        if(triggerJewelServo > -0.2 && triggerJewelServo < 0.2) {
+        if(triggerJewelServo > -0.2 && triggerJewelServo < 0.2) { //change to right joystick
             loweringJewelServo.setPosition(0);
             turningJewelServo.setPosition(TURNING_SERVO_RESET);
         }
@@ -288,7 +288,7 @@ public class SkipperTeleop extends LinearOpMode {
     }
 
     public void moveRelic() {
-        double relicPower = 0.6;
+        double drivePower = 0.6;
 
         if(gamepad2.left_trigger > .1) {
             arm.setPosition(CLOSE_ARM);
@@ -302,15 +302,23 @@ public class SkipperTeleop extends LinearOpMode {
             hand.setPosition(OPEN_HAND);
         }
 
-        double relicDrive = gamepad2.left_stick_y;
+        double relicDrive = gamepad2.right_stick_y;
 
         if(relicDrive > 0.2) {
-            RelicDrive.setPower(-relicPower);
+            RelicDrive.setPower(-drivePower);
         } else if(relicDrive < -0.2) {
-            RelicDrive.setPower(relicPower);
+            RelicDrive.setPower(drivePower);
         } else {
             RelicDrive.setPower(0);
         }
 
     }
 }
+
+
+
+
+
+
+
+
