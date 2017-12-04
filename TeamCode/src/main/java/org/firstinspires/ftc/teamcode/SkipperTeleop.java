@@ -131,9 +131,9 @@ public class SkipperTeleop extends LinearOpMode {
     }
 
     public void moveJewelArm() {
-        double triggerJewelServo = gamepad2.left_stick_y;
+        double triggerJewelServo = gamepad2.right_stick_y;
 
-        if(triggerJewelServo > -0.2 && triggerJewelServo < 0.2) { //change to right joystick
+        if(triggerJewelServo > -0.2 && triggerJewelServo < 0.2) {
             loweringJewelServo.setPosition(0);
             turningJewelServo.setPosition(TURNING_SERVO_RESET);
         }
@@ -302,7 +302,7 @@ public class SkipperTeleop extends LinearOpMode {
             hand.setPosition(OPEN_HAND);
         }
 
-        double relicDrive = gamepad2.right_stick_y;
+        double relicDrive = gamepad2.left_stick_y;
 
         if(relicDrive > 0.2) {
             RelicDrive.setPower(-relicPower);
