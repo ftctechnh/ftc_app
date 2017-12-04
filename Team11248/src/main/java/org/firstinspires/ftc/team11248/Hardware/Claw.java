@@ -9,8 +9,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
 
+    public enum Position {
+        OPEN,
+        GRAB,
+        CLOSE,
+        OPEN_MAX
+    }
 
-    private double[] open, grab, close;
+    public Position state;
+
+    private double[] open, grab, close, open_max;
 
     private Servo tl, tr, bl, br;
 
@@ -22,7 +30,7 @@ public class Claw {
      * @param grab Double array of 4 grabbing values of the servos {top_left, top_right, bottom_left, bottom_right}
      * @param close Double array of 4 closed values of the servos {top_left, top_right, bottom_left, bottom_right}
      */
-    public Claw(HardwareMap hardwareMap, String[] servoNames, double[] open, double[] grab, double[] close){
+    public Claw(HardwareMap hardwareMap, String[] servoNames, double[] open, double[] grab, double[] close  ){
 
         this.open = open;
         this.grab = grab;
@@ -32,6 +40,21 @@ public class Claw {
         this.tr = hardwareMap.servo.get(servoNames[1]);
         this.bl = hardwareMap.servo.get(servoNames[2]);
         this.br = hardwareMap.servo.get(servoNames[3]);
+
+//       `
+
+    }
+
+    public void open_max(){
+
+        tl.setPosition(open_max[0]);
+        tr.setPosition(open_max[1]);
+        bl.setPosition(open_max[2]);
+        br.setPosition(open_max[3]);
+
+        state = Position.OPEN_MAX;
+
+
     }
 
     public void open(){
@@ -39,20 +62,30 @@ public class Claw {
         tr.setPosition(open[1]);
         bl.setPosition(open[2]);
         br.setPosition(open[3]);
+
+        state = Position.OPEN;
     }
 
-    public void release(){
+    public void grab(){
         tl.setPosition(grab[0]);
         tr.setPosition(grab[1]);
         bl.setPosition(grab[2]);
         br.setPosition(grab[3]);
+
+        state = Position.GRAB;
     }
 
-    public void close(){
-        tl.setPosition(close[0]);
+    public void close() throws InterruptedException {
+
         tr.setPosition(close[1]);
-        bl.setPosition(close[2]);
         br.setPosition(close[3]);
+
+        Thread.sleep(100);
+
+        tl.setPosition(close[0]);
+        bl.setPosition(close[2]);
+
+        state = Position.CLOSE;
     }
 
 }

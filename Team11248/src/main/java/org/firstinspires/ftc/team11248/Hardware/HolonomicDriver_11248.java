@@ -209,6 +209,7 @@ public class HolonomicDriver_11248 {
     public void resetDriveEncoders(){
        setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        recordPosition();
+       setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void setDriveMode(DcMotor.RunMode runMode){
@@ -227,6 +228,12 @@ public class HolonomicDriver_11248 {
         backRightRotations = backRight.getCurrentPosition();
     }
 
+    public void printDriveRotations(){
+        telemetry.addData("HOLONOMIC", "FL: " + frontLeftRotations);
+        telemetry.addData("HOLONOMIC", "FR: " + frontRightRotations);
+        telemetry.addData("HOLONOMIC", "BL: " + backLeftRotations);
+        telemetry.addData("HOLONOMIC", "BR: " + backRightRotations);
+    }
 
     /*
      * returns the value for isSlow

@@ -11,8 +11,8 @@ import org.firstinspires.ftc.team11248.Robot11248;
  * Created by Tony_Air on 11/18/17.
  */
 
-@Autonomous(name = "drive")
-public class Auto extends LinearOpMode{
+@Autonomous(name = "Park")
+public class Park extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 

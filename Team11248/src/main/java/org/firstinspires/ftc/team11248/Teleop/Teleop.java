@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.team11248.Hardware.Claw;
 import org.firstinspires.ftc.team11248.Hardware.HolonomicDriver_11248;
 import org.firstinspires.ftc.team11248.Robot11248;
 
@@ -46,16 +47,31 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
 
-        //Direction Contron
-        if (gamepad1.dpad_up) {
-            robot.setOffsetAngle(0);
-            robot.backClaw.close();
-            robot.frontClaw.open();
+        //DIRECTION SWAP
 
-        } else if (gamepad1.dpad_down) {
+        if ( (gamepad1.b && !prevGP1.b) || (gamepad2.b && !prevGP2.b) ) {
+
+            if(robot.getOffsetAngle() == 0){
+
+                robot.setOffsetAngle(HolonomicDriver_11248.BACK_OFFSET);
+                robot.backClaw.open();
+
+            } else {
+                robot.setOffsetAngle(0);
+                robot.frontClaw.open();
+            }
+
+        }
+
+        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            robot.setOffsetAngle(0);
+            robot.frontClaw.open();
+            robot.backClaw.open();
+
+        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
             robot.setOffsetAngle(HolonomicDriver_11248.BACK_OFFSET);
             robot.backClaw.open();
-            robot.frontClaw.close();
+            robot.frontClaw.open();
 
         }
 
@@ -65,50 +81,105 @@ public class Teleop extends OpMode {
         robot.setFastMode(gamepad1.right_bumper);
 
 
-        if (robot.getOffsetAngle() == HolonomicDriver_11248.BACK_OFFSET) {
-            if (gamepad1.a && !prevGP1.a) {
-                if (toggleOpen)
-                    robot.backClaw.open();
-                else
-                    robot.backClaw.release();
-
-                toggleOpen = !toggleOpen;
-            }
-
-            if (gamepad1.x && !prevGP1.x)
-                robot.backClaw.close();
-
-            //Sets arm motor to whatever right trigger is
-            if (gamepad1.right_trigger > 0)
-                robot.setBackLiftPower(gamepad1.right_trigger);
-            else if (gamepad1.left_trigger > 0)
-                robot.setBackLiftPower(-gamepad1.left_trigger);
-            else
-                robot.setBackLiftPower(0);
-
-        } else {
-
-            if (gamepad1.a && !prevGP1.a) {
-                if (toggleOpen)
-                    robot.frontClaw.open();
-                else
-                    robot.frontClaw.release();
-
-                toggleOpen = !toggleOpen;
-            }
-
-            if (gamepad1.x && !prevGP1.x)
-                robot.frontClaw.close();
 
 
+        //LIFTS
+
+        Gamepad frontLiftGamepad = (robot.getOffsetAngle() == 0) ? gamepad1 : gamepad2;
+        Gamepad backLiftGamepad = (robot.getOffsetAngle() == 0) ? gamepad2 : gamepad1;
+
+        Gamepad frontLiftGamepadPrev = (robot.getOffsetAngle() == 0) ? prevGP1 : prevGP2;
+        Gamepad backLiftGamepadPrev = (robot.getOffsetAngle() == 0) ? prevGP2 : prevGP1;
+
+
+
+        // Front lift controls
+
+        if (frontLiftGamepad.a && !frontLiftGamepadPrev.a) {
+
+            if (robot.frontClaw.state == Claw.Position.OPEN) // Grab if open (Can go from closed to grab)
+                robot.frontClaw.grab();
+
+            else  // if claw is closed or grabbed then open
+                robot.frontClaw.open();
         }
 
+        if (frontLiftGamepad.x && !frontLiftGamepadPrev.x)
+            if (robot.frontClaw.state == Claw.Position.CLOSE) {
+                robot.frontClaw.open();
 
-        //Recaptures all previous values of Gampad 1 for debouncing
+            } else {  // if claw is open or grabbed then close
+                try {
+                    robot.frontClaw.close();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        //Sets arm motor to whatever right trigger is
+        if (frontLiftGamepad.right_trigger > 0)
+            robot.setFrontLiftPower(frontLiftGamepad.right_trigger);
+        else if (frontLiftGamepad.left_trigger > 0)
+            robot.setFrontLiftPower(-frontLiftGamepad.left_trigger);
+        else
+            robot.setFrontLiftPower(0);
+
+
+
+
+
+
+
+        // Back lift controls
+
+        if (backLiftGamepad.a && !backLiftGamepadPrev.a) {
+
+            if (robot.backClaw.state == Claw.Position.OPEN) // Grab if open (Can go from closed to grab)
+                robot.backClaw.grab();
+
+            else  // if claw is closed or grabbed then open
+                robot.backClaw.open();
+        }
+
+        if (backLiftGamepad.x && !backLiftGamepadPrev.x)
+            if (robot.backClaw.state == Claw.Position.CLOSE) {
+                robot.backClaw.open();
+
+            } else {  // if claw is open or grabbed then close
+                try {
+                    robot.backClaw.close();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        //Sets arm motor to whatever right trigger is
+        if (backLiftGamepad.right_trigger > 0)
+            robot.setBackLiftPower(backLiftGamepad.right_trigger);
+        else if (backLiftGamepad.left_trigger > 0)
+            robot.setBackLiftPower(-backLiftGamepad.left_trigger);
+        else
+            robot.setBackLiftPower(0);
+
+
+
+
+
+
+
+
+
+            //Recaptures all previous values of Gamepad 1 for debouncing
         try {
             prevGP1.copy(gamepad1);
-        } catch (RobotCoreException e) {
-            e.printStackTrace();
+        } catch (RobotCoreException e1) {
+            e1.printStackTrace();
+        }
+
+        try {
+            prevGP2.copy(gamepad2);
+        } catch (RobotCoreException e1) {
+            e1.printStackTrace();
         }
     }
 }
