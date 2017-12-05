@@ -141,22 +141,27 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors L.A.S
 
-        //if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
+        if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
 
-            encoderDrive(TURN_SPEED, -2, 2,5 ); // turns right to knock blue ball L.A.S
-            robot.ballArm.setPosition(ballArmUp);
+            telemetry.addData("Status", "Sensed Blue ");    //
+            telemetry.update();
+
             encoderDrive(TURN_SPEED, 2, -2,5 );
+            robot.ballArm.setPosition(ballArmUp);
+            encoderDrive(TURN_SPEED, -2, 2,5 );
 
-        //}
-        //else  { //The ball facing the color sensor is red  L.A.S
-            //encoderDrive(TURN_SPEED, 2, -2, 5 ); //It turns left knocking the blue ball and turning to face glyph box L.A.S
-            //robot.ballArm.setPosition(ballArmUp - BallArmUp);
-            //encoderDrive(TURN_SPEED,  -2, 2,.5 ); //It turns right to face the glyph bock L.A.S
-        //}
+        }
+        else  { //The ball facing the color sensor is red  L.A.S
+            telemetry.addData("Status", "Sensed Red ");
+            encoderDrive(TURN_SPEED, -2, 2, 5 );
+            robot.ballArm.setPosition(ballArmUp);
+            encoderDrive(TURN_SPEED,  2, -2,.5 ); 
+        }
 
         //encoderDrive(DRIVE_SPEED, 2, 2, 5);
         //encoderDrive(TURN_SPEED, -8.6, 8.5, 5);
         //encoderDrive(DRIVE_SPEED, -32, -32, 5);
+
         encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5);
         encoderDrive(TURN_SPEED, -15, 15, 5); //13.5 tank turn went to scond one
         encoderDrive(DRIVE_SPEED, -41, -41, 5);
