@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
+import android.os.SystemClock;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -34,7 +35,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class NewRobotFinal
 {
     private int liftLevels[] = {0, 400,800,1200}; //Currently not levels or stops
-    private int liftDeadzone = 76;
+    private int liftDeadzone = 34;
     private short currentLvl;
 
     private ColorSensor floorColorSens = null;
@@ -99,14 +100,14 @@ public class NewRobotFinal
         leftDoorWall = hardwareMap.get(Servo.class, "leftDoorWall");
         rightDoorWall = hardwareMap.get(Servo.class, "rightDoorWall");
 
-
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
         grabber = hardwareMap.get(Servo.class, "grabber");
         tailRelease = hardwareMap.get(DcMotorImplEx.class, "tailRelease");
 
         zeroStuff();
-        stopAllMotors();
+        stopDriveMotors();
         updateIMUValues();
+        stopAllMotors();
     }
 
     public void zeroStuff() //Methods sets motors at low power to put the motors to their resting positions
@@ -249,7 +250,7 @@ public class NewRobotFinal
             while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
         }
 
-        stopAllMotors();
+        stopDriveMotors();
     }
 
     public void driveStraight_In(float inches)
@@ -285,7 +286,7 @@ public class NewRobotFinal
             while(driveRightOne.getCurrentPosition() < encTarget){}
         }
 
-        stopAllMotors();
+        stopDriveMotors();
     }
 
     public void spin_Right_IMU(float degrees, double pow)
@@ -311,7 +312,7 @@ public class NewRobotFinal
             while(getYaw() < degrees) {}
         }
 
-        stopAllMotors();
+        stopDriveMotors();
     }
 
     public void spin_Right_IMU(float degrees)
@@ -348,7 +349,7 @@ public class NewRobotFinal
             while(driveLeftOne.getCurrentPosition() > encTarget){}
         }
 
-        stopAllMotors();
+        stopDriveMotors();
     }
 
     public void spin_Left_IMU(float degrees)
@@ -378,7 +379,7 @@ public class NewRobotFinal
             driveLeftOne.setPower(Math.abs(pow));
             while(getYaw() < degrees) {}
         }
-        stopAllMotors();
+        stopDriveMotors();
     }
 
     public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
@@ -409,7 +410,7 @@ public class NewRobotFinal
             while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) {}
         }
 
-        stopAllMotors();
+        stopDriveMotors();
     }
 
     public void pivot(float degrees)
@@ -448,7 +449,7 @@ public class NewRobotFinal
             while(getYaw() < degrees) {}
         }
 
-        stopAllMotors();
+        stopDriveMotors();
     }
 
     public void moveLift(int adjLevels)
@@ -500,13 +501,6 @@ public class NewRobotFinal
         }
     }
 
-    public void stopAllMotors()
-    {
-        liftMotor.setPower(0);
-        driveLeftOne.setPower(0);
-        driveRightOne.setPower(0);
-    }
-
     public void moveWing(float pow)
     {
         wingMotor.setPower(pow);
@@ -542,10 +536,66 @@ public class NewRobotFinal
         }
     }
     
-    public void fineAdjDoors(double in)
+    public void fineAdjDoors(double in, double factor)
     {
-        leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
+        leftDoorWall.setPosition(leftDoorWall.getPosition() + in*factor);
+        rightDoorWall.setPosition(rightDoorWall.getPosition() + in*factor);
+    }
+
+    public void autoPark(double seconds)
+    {
+        long startTimeAutopark = SystemClock.elapsedRealtime();
+        double angle = anglePerpToGrav();
+        while (SystemClock.elapsedRealtime() - startTimeAutopark >= seconds * 1000)
+        {
+            if (angle > 5)
+            {
+                driveLeftOne.setPower(.5);
+                driveRightOne.setPower(-.5);
+            }
+            else if (angle < -5)
+            {
+                driveLeftOne.setPower(-.5);
+                driveRightOne.setPower(.5);
+            }
+            else
+            {
+                stopDriveMotors();
+                return;
+            }
+        }
+    }
+
+    public void OpenCloseGrabber(boolean close)
+    {
+        if(close)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
+    public void fineAdjGrabberRotator(float in, float factor)
+    {
+
+    }
+
+    public void stopAllMotors()
+    {
+        stopDriveMotors();
+        liftMotor.setPower(0);
+        wingMotor.setPower(0);
+        tailRelease.setPower(0);
+
+    }
+
+    public void stopDriveMotors()
+    {
+        driveLeftOne.setPower(0);
+        driveRightOne.setPower(0);
     }
 
     public ColorSensor getleftWingColorSens()
