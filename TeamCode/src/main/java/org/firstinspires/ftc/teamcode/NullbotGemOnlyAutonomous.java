@@ -15,7 +15,7 @@ import static org.firstinspires.ftc.teamcode.Alliance.RED;
 @Disabled
 public class NullbotGemOnlyAutonomous extends LinearOpMode {
 
-    NullbotHardware robot   = new NullbotHardware();
+    public NullbotHardware robot   = new NullbotHardware();
 
     final int DISTANCE_TO_DRIVE = 400;
     int directionMultiplier;
@@ -23,6 +23,8 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
     PixyCam pixyCam;
     PixyCam.Block redBall;
     PixyCam.Block blueBall;
+
+    Alliance rightMostBall; // Which alliance the rightmost ball belongs to, from robot POV
 
     @Override
     public void runOpMode() {
@@ -55,8 +57,6 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
 
         updateBlocks();
 
-        Alliance rightMostBall; // Which alliance the rightmost ball belongs to, from robot POV
-
         // Higher x-values are on the right
 
         if (redBall.averageX() > blueBall.averageX()) {
@@ -83,7 +83,7 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
         robot.closeBlockClaw();
         robot.setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.5);
-        robot.lift.setTargetPosition(-1000);
+        robot.lift.setTargetPosition(-500);
         robot.sleep(2000);
 
         for (DcMotor m : robot.motorArr) {
@@ -103,6 +103,9 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
             m.setTargetPosition(0);
         }
         robot.sleep(1000);
+
+        robot.lift.setTargetPosition(0);
+        robot.sleep(2000);
     }
 
     public void updateBlocks() {
