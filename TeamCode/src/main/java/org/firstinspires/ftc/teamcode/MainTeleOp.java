@@ -36,7 +36,7 @@ public class MainTeleOp extends LinearOpMode {
     boolean wasGP2RightBumperPressed;
     boolean wasRightTriggerPressed;
     boolean wasLeftTriggerPressed;
-    boolean wasGP2LeftTriggerPressed;
+    boolean wasGP2APressed;
     boolean flashMode;
     boolean nonrelativeDriveModeEnabled;
     boolean scale;
@@ -82,7 +82,7 @@ public class MainTeleOp extends LinearOpMode {
         totalElapsedTime = new ElapsedTime();
         wasRightTriggerPressed = false;
         wasLeftTriggerPressed = false;
-        wasGP2LeftTriggerPressed = false;
+        wasGP2APressed = false;
         wasBackPressed = false;
         slowMode = false;
         zTypeSlowMode = false;
@@ -96,7 +96,7 @@ public class MainTeleOp extends LinearOpMode {
                 timeSinceDriveModeToggle.reset();
             }
 
-            if (gamepad2.left_trigger > triggerThreshold && !wasGP2LeftTriggerPressed &&
+            if (gamepad2.a && !wasGP2APressed &&
                     timeSinceDriveModeToggle.milliseconds() > 100) {
                 zTypeSlowMode = !zTypeSlowMode;
                 timeSinceZTypeSlowModeToggle.reset();
@@ -177,6 +177,7 @@ public class MainTeleOp extends LinearOpMode {
                     wasRightBumperPressed = gamepad1.right_bumper;
                     wasGP2LeftBumperPressed = gamepad2.left_bumper;
                     wasGP2RightBumperPressed = gamepad2.right_bumper;
+                    wasGP2APressed = gamepad2.a;
 
                     // Taunt code
                     if (!gamepad1.y && !gamepad2.y) {
