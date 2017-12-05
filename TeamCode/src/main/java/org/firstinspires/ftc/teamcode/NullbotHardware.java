@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NullbotHardware {
     // Alliance
-    Alliance color;
+    public Alliance color;
     boolean isTestChassis;
 
     // Motors

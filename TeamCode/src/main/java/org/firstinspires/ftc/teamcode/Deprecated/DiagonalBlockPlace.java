@@ -1,9 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Alliance;
+import org.firstinspires.ftc.teamcode.NullbotHardware;
 
 import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 
@@ -35,27 +38,58 @@ public class DiagonalBlockPlace extends LinearOpMode {
         waitForStart();
 
         log("Lifting lift");
-        robot.lift.setTargetPosition(500);
+        robot.setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setTargetPosition(-500);
         robot.lift.setPower(0.5);
         robot.sleep(1000);
 
         log("Driving off pad");
         robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
         for (DcMotor m : robot.motorArr) {
-            m.setTargetPosition(800);
-            m.setPower(0.5);
+            m.setPower(0.4);
+            m.setTargetPosition(m.getCurrentPosition() + 2400);
         }
-        robot.sleep(3000);
-        //waitUntilMovementsComplete();
+
+        waitUntilMovementsComplete();
+        log("Driving sideways");
+
+        for (DcMotor m : robot.motorArr) {
+            m.setPower(0.4);
+        }
+
+        /*
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - 500);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() + 500);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() + 500);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - 500);*/
+
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + 250);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - 250);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - 250);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() + 250);
+
+        waitUntilMovementsComplete();
 
         log("Turning to position");
-        turnToPos(Math.PI/6);
+        turnToPos(-Math.PI/6);
         robot.sleep(1000);
 
         log("Driving at our correct angle");
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.setMotorSpeeds(robot.getDrivePowersFromAngle(Math.PI/6));
+        robot.setMotorSpeeds(robot.getDrivePowersFromAngle(0));
         robot.sleep(1000);
+
+        robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
+        for (DcMotor m : robot.motorArr) {
+            m.setPower(0.4);
+        }
+
+        robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() - 200);
+        robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - 200);
+        robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - 200);
+        robot.backRight.setTargetPosition(robot.backRight.getCurrentPosition() - 200);
+        waitUntilMovementsComplete();
+        stopMoving();
 
         robot.lift.setTargetPosition(0);
         robot.sleep(1000);
@@ -131,12 +165,15 @@ public class DiagonalBlockPlace extends LinearOpMode {
             done = true;
             for (DcMotor m : robot.motorArr) {
                 if (Math.abs(m.getTargetPosition() - m.getCurrentPosition()) > 75) {
+                    telemetry.addData(m.getDeviceName(), Math.abs(m.getTargetPosition() - m.getCurrentPosition()));
                     done = false;
                     break;
                 }
             }
+            telemetry.update();
 
         }
+        stopMoving();
         robot.sleep(500);
     }
 }
