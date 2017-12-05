@@ -37,7 +37,7 @@ public class ServoJewelAuto extends LinearOpMode {
 
     private Robot robot;
     private DcMotor raiser;
-    private DcMotor grabber;
+    private Servo grabber;
     private MecanumDrive drivetrain;
     private IMUWrapper imuWrapper;
     private VuforiaWrapper vuforiaWrapper;
@@ -55,7 +55,7 @@ public class ServoJewelAuto extends LinearOpMode {
         robot = new Robot(hardwareMap);
         drivetrain = (MecanumDrive)robot.getDrivetrain();
         raiser = hardwareMap.dcMotor.get("raiser");
-        grabber = hardwareMap.dcMotor.get("grabber");
+        grabber = hardwareMap.servo.get("grabber");
         imuWrapper = new IMUWrapper(hardwareMap);
         vuforiaWrapper = new VuforiaWrapper(hardwareMap);
 

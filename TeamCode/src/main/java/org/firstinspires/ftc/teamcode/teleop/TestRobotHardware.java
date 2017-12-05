@@ -70,7 +70,7 @@ public class TestRobotHardware extends OpMode
     private MecanumDrive drivetrain;
 
     private DcMotor raiser;
-    private DcMotor grabber;
+    private Servo grabber;
     private Servo armRotator;
     private Servo armExtender;
 
@@ -86,7 +86,7 @@ public class TestRobotHardware extends OpMode
         drivetrain = (MecanumDrive) robot.getDrivetrain();
 
         raiser = hardwareMap.dcMotor.get("raiser");
-        grabber = hardwareMap.dcMotor.get("grabber");
+        grabber = hardwareMap.servo.get("grabber");
 
         armRotator = hardwareMap.servo.get("armRotator");
         armExtender = hardwareMap.servo.get("armExtender");
@@ -131,13 +131,11 @@ public class TestRobotHardware extends OpMode
 
         //Move grabber when bumpers are pressed.
         if(gamepad1.left_bumper){
-            grabber.setPower(-0.5);
+            armRotator.setPosition(Math.max(0, armRotator.getPosition() - 0.01));
         } else if (gamepad1.right_bumper){
-            grabber.setPower(0.5);
-        } else {
-            grabber.setPower(0);
+            armRotator.setPosition(Math.min(1, armRotator.getPosition() + 0.01));
         }
-        telemetry.addData("Grabber Power", grabber.getPower());
+        telemetry.addData("Grabber Position", grabber.getPosition());
 
         //Increment/Decrement rotation servo positions
         if(gamepad1.dpad_left){
@@ -164,7 +162,6 @@ public class TestRobotHardware extends OpMode
     public void stop() {
         robot.stopMoving();
         drivetrain.stopMoving();
-        grabber.setPower(0);
     }
 
 }

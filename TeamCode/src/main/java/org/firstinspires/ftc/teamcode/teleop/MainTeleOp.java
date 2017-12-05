@@ -68,7 +68,7 @@ public class MainTeleOp extends OpMode
     private MecanumDrive drivetrain;
 
     private DcMotor raiser;
-    private DcMotor grabber;
+    private Servo grabber;
     private Servo armRotator;
     private Servo armExtender;
 
@@ -87,14 +87,16 @@ public class MainTeleOp extends OpMode
         drivetrain = (MecanumDrive) robot.getDrivetrain();
 
         raiser = hardwareMap.dcMotor.get("raiser");
-        grabber = hardwareMap.dcMotor.get("grabber");
+        grabber = hardwareMap.servo.get("grabber");
 
         armRotator = hardwareMap.servo.get("armRotator");
         armExtender = hardwareMap.servo.get("armExtender");
 
         raiser.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        /* Used with motor grabber code
         locking = false;
-        returning = false;
+        returning = false; */
     }
 
     /*
@@ -131,15 +133,15 @@ public class MainTeleOp extends OpMode
             raiser.setPower(0);
         }
 
-        //Increment servos by small amounts when bumper is held. [NO SERVOS NOW]
-        /*if(gamepad1.left_bumper){
-            grabber.setPower(-0.5);
+        //Move grabber when bumpers are pressed.
+        if(gamepad1.left_bumper){
+            armRotator.setPosition(Math.max(0, armRotator.getPosition() - 0.01));
         } else if (gamepad1.right_bumper){
-            grabber.setPower(0.5);
-        } else {
-            grabber.setPower(0);
-        }*/
+            armRotator.setPosition(Math.min(1, armRotator.getPosition() + 0.01));
+        }
+        telemetry.addData("Grabber Position", grabber.getPosition());
 
+        /* Grabber code w/ lock using a motor
         if(gamepad1.right_trigger == 0 && !locking){
             if(gamepad1.left_bumper){
                 grabber.setPower(-0.5);
@@ -159,21 +161,8 @@ public class MainTeleOp extends OpMode
         if(locking && gamepad1.right_trigger == 1){
             locking = false;
         }
+        */
 
-        /*if (gamepad1.right_bumper) {
-            grabber.setPower(0.5);
-        }
-
-        // lock grabber
-        if(gamepad1.left_trigger > 0) {
-            grabber.setPower(-0.5);
-        }
-
-        if (gamepad1.right_bumper) {
-            robot.stopMoving();
-            drivetrain.stopMoving();
-            grabber.setPower(0);
-        }*/
 
         //Set rotation servo positions
         if(gamepad1.dpad_left){
@@ -189,7 +178,7 @@ public class MainTeleOp extends OpMode
             armExtender.setPosition(Math.max(0, armExtender.getPosition() - 0.01));
         }
 
-        telemetry.addData("Grabber Power", grabber.getPower());
+        telemetry.addData("Grabber Position", grabber.getPosition());
 
         telemetry.addData("ArmRotator Position", armRotator.getPosition());
         telemetry.addData("ArmExtender Position", armExtender.getPosition());
