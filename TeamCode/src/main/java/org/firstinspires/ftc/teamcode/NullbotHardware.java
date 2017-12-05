@@ -133,16 +133,6 @@ public class NullbotHardware {
             retractFlipper();
         }
 
-        //gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
-        //compass = hwMap.get(ModernRoboticsI2cCompassSensor.class, "acc");
-
-        // Set color
-
-        //color = Alliance.BLUE;
-
-
-        //compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
-
         headingAdjuster = new ManualHeadingAdjustmentController(gp2);
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -418,7 +408,7 @@ public class NullbotHardware {
     public void lowerWhipSnake() {
         lowerLeftWhipSnake();
     }
-    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(255.0/255.0);}
+    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(250.0/255.0);}
     public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(100.0/255.0);}
 
     public void crunchBlockClaw() {
@@ -437,7 +427,7 @@ public class NullbotHardware {
 
     }
 
-    public final double RELIC_CLAW_OPEN_POSITION = 0.4;
+    public final double RELIC_CLAW_OPEN_POSITION = 0.6;
     public final double RELIC_CLAW_CLOSED_POSITION = 0.85;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
@@ -485,11 +475,11 @@ public class NullbotHardware {
     }
 
     public void setDriveMode(DcMotor.RunMode mode) {
-        /*for (DcMotor motor : motorArr) {
+        for (DcMotor motor : motorArr) {
             if (motor.getMode() != mode) {
                 motor.setMode(mode);
             }
-        }*/
+        }
     }
 
     public void setMotorMode(DcMotor m, DcMotor.RunMode mode) {
