@@ -5,13 +5,13 @@ package org.firstinspires.ftc.teamcode;
  */
 
 public enum Alliance {
-    RED, BLUE;
+    RED, BLUE, UNKNOWN;
 
     public int getColorCode() {
         if (this == Alliance.BLUE) {
-            return 2;
-        } else if (this == Alliance.RED) {
             return 1;
+        } else if (this == Alliance.RED) {
+            return -1;
         } else {
             return 0;
         }
