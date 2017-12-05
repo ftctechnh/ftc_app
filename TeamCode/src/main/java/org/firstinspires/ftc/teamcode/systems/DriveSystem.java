@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
- * Created by Urid on 11/4/2017.
+ * Created by Mahim on 11/4/2017.
  */
 
 public class DriveSystem {
