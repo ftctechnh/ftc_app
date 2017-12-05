@@ -71,7 +71,7 @@ public class Hardware750 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "rangesensor");
         gripper = hwMap.get(DcMotor.class, "gripper");
         arm     = hwMap.get(Servo.class, "colorarm");
         color   = hwMap.get(ColorSensor.class, "color");
