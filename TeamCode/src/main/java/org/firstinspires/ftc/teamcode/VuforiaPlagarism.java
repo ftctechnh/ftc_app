@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -24,11 +25,19 @@ public class VuforiaPlagarism extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
+    Hardware750 robot = new Hardware750();
+
     OpenGLMatrix lastLocation = null;
 
     VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() {
+    public enum type {
+        LEFT, CENTER, RIGHT, ERROR
+    }
+
+    public type getVuf() {
+
+        robot.init(hardwareMap);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -38,12 +47,7 @@ public class VuforiaPlagarism extends LinearOpMode {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        /**
-         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
-         * in this data set: all three of the VuMarks in the game were created from this one template,
-         * but differ in their instance id information.
-         * @see VuMarkInstanceId
-         */
+
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
@@ -54,20 +58,26 @@ public class VuforiaPlagarism extends LinearOpMode {
 
         relicTrackables.activate();
 
-        while (opModeIsActive()) {
+        boolean bool = true;
+        String string = "error";
+        while (bool) {
 
-            /**
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                if (vuMark == vuMark.CENTER) {
+                    bool = false;
+                    string = "CENTER";
+                } else if (vuMark == vuMark.LEFT) {
+                    bool = false;
+                    string = "LEFT";
+                } else if (vuMark == vuMark.RIGHT) {
+                    bool = false;
+                    string = "RIGHT";
+                }
 
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
 
                 if (pose != null) {
@@ -90,17 +100,27 @@ public class VuforiaPlagarism extends LinearOpMode {
                     telemetry.addData("rX", rX);
                     telemetry.addData("rY", rY);
                     telemetry.addData("rZ", rZ);
+
                 }
-            }
-            else {
+            } else {
                 telemetry.addData("VuMark", "not visible");
             }
-
-            telemetry.update();
+        }
+        if (string.equals("LEFT")) {
+            return type.LEFT;
+        } else if (string.equals("RIGHT")) {
+            return type.RIGHT;
+        } else if (string.equals("CENTER")) {
+            return type.CENTER;
+        } else {
+            return type.ERROR;
         }
     }
+        String format (OpenGLMatrix transformationMatrix){
+            return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+        }
 
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    public void runOpMode() {
+
     }
 }
