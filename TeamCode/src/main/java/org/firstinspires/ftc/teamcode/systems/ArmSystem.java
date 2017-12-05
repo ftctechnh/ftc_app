@@ -20,6 +20,7 @@ public class ArmSystem {
         this.armMotor = hardwareMap.get(DcMotor.class, "arm motor");
         this.leftClaw = hardwareMap.get(Servo.class, "left servo");
         this.rightClaw = hardwareMap.get(Servo.class, "right servo");
+        this.rightClaw.setDirection(Servo.Direction.REVERSE);
     }
 
     public void goUp() {
@@ -32,14 +33,18 @@ public class ArmSystem {
 
     public void setClaw(float position) {
         this.rightClaw.setPosition(position);
-        this.leftClaw.setPosition(-position);
+        this.leftClaw.setPosition(position);
     }
 
     public double getArmMotorSpeed() {
         return this.armMotor.getPower();
     }
 
-    public double getleftServoPosition() {
+    public void stopArm() {
+        this.armMotor.setPower(0.0);
+    }
+
+    public double getLeftServoPosition() {
         return this.leftClaw.getPosition();
     }
 

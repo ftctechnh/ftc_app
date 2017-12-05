@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
- * Created by Mahim on 11/4/2017.
+ * Created by Urid on 11/4/2017.
  */
 
 public class DriveSystem {
@@ -19,7 +19,7 @@ public class DriveSystem {
         this.gamepad = gamepad;
         this.rightMotor = hardwareMap.get(DcMotor.class, "right motor");
         this.leftMotor = hardwareMap.get(DcMotor.class, "left motor");
-//        this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void drive(double leftSpeed, double rightSpeed) {
@@ -28,17 +28,12 @@ public class DriveSystem {
     }
 
     public void rcCarDrive() {
-        double forwardLeftSpeed = gamepad.left_stick_y + gamepad.right_stick_x;
-        double forwardRightSpeed = gamepad.left_stick_y - gamepad.right_stick_x;
-        double backwardLeftSpeed = gamepad.left_stick_y - gamepad.right_stick_x;
-        double backwardRightSpeed = gamepad.left_stick_y + gamepad.right_stick_x;
-
         if (gamepad.left_stick_y > 0) {
-            drive(forwardLeftSpeed, forwardRightSpeed);
+            drive(gamepad.left_stick_y + gamepad.right_stick_x, gamepad.left_stick_y - gamepad.right_stick_x);
         } else if (gamepad.left_stick_y < 0) {
-            drive(backwardLeftSpeed, backwardRightSpeed);
+            drive(gamepad.left_stick_y - gamepad.right_stick_x, gamepad.left_stick_y + gamepad.right_stick_x);
         } else {
-            drive(gamepad.right_stick_x, -gamepad.right_stick_x);
+            drive(-gamepad.right_stick_x, gamepad.right_stick_x);
         }
     }
 

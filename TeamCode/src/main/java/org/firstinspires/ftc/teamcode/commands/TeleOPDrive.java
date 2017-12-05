@@ -31,17 +31,22 @@ public class TeleOPDrive extends OpMode {
 
     @Override
     public void loop() {
+            this.armSystem.setClaw(gamepad2.right_trigger);
+            if (gamepad2.dpad_up) {
+                this.armSystem.goUp();
+            } else {
+                armSystem.stopArm();
+            }
+            if (gamepad2.dpad_down) {
+                this.armSystem.goDown();
+            } else {
+                this.armSystem.stopArm();
+            }
         this.driveSystem.rcCarDrive();
-        this.armSystem.setClaw(gamepad2.right_trigger);
-        if (gamepad2.dpad_up) {
-            this.armSystem.goUp();
-        } else if (gamepad2.dpad_down) {
-            this.armSystem.goDown();
-        }
 
         telemetry.addData("left speed", driveSystem.getLeftSpeed());
         telemetry.addData("right speed", driveSystem.getRightSpeed());
-        telemetry.addData("left servo position", armSystem.getleftServoPosition());
+        telemetry.addData("left servo position", armSystem.getLeftServoPosition());
         telemetry.addData("right servo position", armSystem.getRightServoPosition());
         telemetry.addData("arm motor", armSystem.getArmMotorSpeed());
     }
