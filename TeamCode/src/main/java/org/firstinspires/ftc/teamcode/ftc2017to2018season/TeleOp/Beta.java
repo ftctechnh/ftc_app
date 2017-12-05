@@ -85,7 +85,7 @@ public class Beta extends OpMode {
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
         glyphServoLeft.setPosition(0.0);
-        glyphServoRight.setPosition(0.0);
+        glyphServoRight.setPosition(1.0);
 
 
 
@@ -232,13 +232,13 @@ public class Beta extends OpMode {
                 e.printStackTrace();
             }
 */
-            glyphServoLeft.setPosition(0.6);
+            glyphServoLeft.setPosition(0.2);
         }
         else if (gamepad1.right_bumper){
 
             glyphServoRight.setPosition(0.9);
 
-            glyphServoLeft.setPosition(0.2);
+            glyphServoLeft.setPosition(0.0);
 
             telemetry.addData("The value of the right servo is", glyphServoRight.getPortNumber());
             telemetry.addData("The value of the left servo is", glyphServoLeft.getPortNumber());
