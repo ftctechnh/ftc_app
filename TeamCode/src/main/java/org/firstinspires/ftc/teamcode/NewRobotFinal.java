@@ -22,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -115,34 +116,30 @@ public class NewRobotFinal
         liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotor.setVelocity(0, AngleUnit.DEGREES);
 
         wingMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        wingMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         wingMotor.setVelocity(0, AngleUnit.DEGREES);
 
         currentLvl = 0;
 
         driveRightOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveRightOne.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveRightOne.setVelocity(0, AngleUnit.DEGREES);
         driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
+        driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setVelocity(0, AngleUnit.DEGREES);
         driveLeftOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         resetDriveEncoders();
-
-        rightDoorWall.scaleRange(-Math.PI/2, 0);
-        leftDoorWall.scaleRange(-Math.PI/2, 0);
+        
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
         leftDoorWall.setDirection(Servo.Direction.REVERSE);
 
-        grabberRotator.scaleRange(0, Math.PI/2);
-        grabber.scaleRange(0, Math.PI/2);
         tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         tailRelease.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
         tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
@@ -210,7 +207,7 @@ public class NewRobotFinal
 
     public char getColor(ColorSensor in_ColorSens)
     {
-        float hue = getHueValue( in_ColorSens);
+        float hue = getHueValue(in_ColorSens);
 
         if (hue < 5 || hue > 330)
             return 'r';
@@ -258,7 +255,7 @@ public class NewRobotFinal
         driveStraight_In(inches, .75);
     }
 
-    public void spin_Right(float degrees)
+    /*public void spin_Right(float degrees)
     {
         spin_Right(degrees, .5);
     }
@@ -287,7 +284,7 @@ public class NewRobotFinal
         }
 
         stopDriveMotors();
-    }
+    }*/
 
     public void spin_Right_IMU(float degrees, double pow)
     {
@@ -319,7 +316,7 @@ public class NewRobotFinal
     {
         spin_Right_IMU(degrees, .5);
     }
-
+/*
     public void spin_Left(float degrees)
     {
         spin_Left(degrees, .5);
@@ -350,7 +347,7 @@ public class NewRobotFinal
         }
 
         stopDriveMotors();
-    }
+    }*/
 
     public void spin_Left_IMU(float degrees)
     {
@@ -381,7 +378,7 @@ public class NewRobotFinal
         }
         stopDriveMotors();
     }
-
+/*
     public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
         float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
@@ -417,7 +414,7 @@ public class NewRobotFinal
     {
         pivot(degrees, .23);
     }
-
+*/
     public void pivot_IMU(float degrees)
     {
         pivot_IMU(degrees, .23);
@@ -454,7 +451,7 @@ public class NewRobotFinal
 
     public void moveLift(int adjLevels)
     {
-        moveLift(adjLevels, .4f);
+        moveLift(adjLevels, .24f);
     }
 
     public void moveLift(int adjLevels, float pow) //For the lift, I'll use levels or encoders points that stop
@@ -468,13 +465,13 @@ public class NewRobotFinal
 
         if (adjLevels > 0)
         {
-            liftMotor.setPower(Math.abs(pow));
-            while (liftMotor.getCurrentPosition() < liftLevels[currentLvl] - liftDeadzone){}
+            liftMotor.setPower(-Math.abs(pow));
+            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl] - liftDeadzone){}
         }
         else
         {
-            liftMotor.setPower(-Math.abs(pow));
-            while (liftMotor.getCurrentPosition() > liftLevels[currentLvl] + liftDeadzone){}
+            liftMotor.setPower(Math.abs(pow));
+            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl] + liftDeadzone){}
         }
 
         liftMotor.setPower(0);
@@ -501,21 +498,16 @@ public class NewRobotFinal
         }
     }
 
-    public void moveWing(float pow)
-    {
-        wingMotor.setPower(pow);
-    }
-
     public void moveWing(boolean moveDown)
     {
         if(moveDown)
         {
-            wingMotor.setPower(-.76);
-            while(wingMotor.getCurrentPosition() > -1696){}
+            wingMotor.setPower(-.3);
+            while(wingMotor.getCurrentPosition() > -300){}
         }
         else
         {
-            wingMotor.setPower(.76);
+            wingMotor.setPower(.3);
             while(wingMotor.getCurrentPosition() < 0){}
         }
 
@@ -526,61 +518,55 @@ public class NewRobotFinal
     {
         if (!close)
         {
-            leftDoorWall.setPosition(-Math.PI/4);
-            rightDoorWall.setPosition(-Math.PI/4);
+            leftDoorWall.setPosition(-.5);
+            rightDoorWall.setPosition(-.5);
         }
         else
         {
-            leftDoorWall.setPosition(Math.PI/4);
-            rightDoorWall.setPosition(Math.PI/4);
+            leftDoorWall.setPosition(.5);
+            rightDoorWall.setPosition(.5);
         }
     }
     
-    public void fineAdjDoors(double in, double factor)
+    public void fineAdjDoors(double in)
     {
-        leftDoorWall.setPosition(leftDoorWall.getPosition() + in*factor);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() + in*factor);
+        leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
+        rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
     }
 
-    public void autoPark(double seconds)
+    public void autoPark()
     {
         long startTimeAutopark = SystemClock.elapsedRealtime();
         double angle = anglePerpToGrav();
-        while (SystemClock.elapsedRealtime() - startTimeAutopark >= seconds * 1000)
+        if (angle > 5)
         {
-            if (angle > 5)
-            {
-                driveLeftOne.setPower(.5);
-                driveRightOne.setPower(-.5);
-            }
-            else if (angle < -5)
-            {
-                driveLeftOne.setPower(-.5);
-                driveRightOne.setPower(.5);
-            }
-            else
-            {
-                stopDriveMotors();
-                return;
-            }
+            driveLeftOne.setPower(.5);
+            driveRightOne.setPower(-.5);
         }
+        else if (angle < -5)
+        {
+            driveLeftOne.setPower(-.5);
+            driveRightOne.setPower(.5);
+        }
+        else
+            return;
     }
 
     public void OpenCloseGrabber(boolean close)
     {
         if(close)
         {
-
+            grabber.setPosition(0);
         }
         else
         {
-
+            grabberRotator.setPosition(.52);
         }
     }
 
-    public void fineAdjGrabberRotator(float in, float factor)
+    public void fineAdjGrabberRotator(float in)
     {
-
+        grabberRotator.setPosition(grabberRotator.getPosition() + in);
     }
 
     public void stopAllMotors()
@@ -589,7 +575,6 @@ public class NewRobotFinal
         liftMotor.setPower(0);
         wingMotor.setPower(0);
         tailRelease.setPower(0);
-
     }
 
     public void stopDriveMotors()
@@ -598,54 +583,46 @@ public class NewRobotFinal
         driveRightOne.setPower(0);
     }
 
-    public ColorSensor getleftWingColorSens()
+    public void kill()
     {
-        return leftWingColorSens;
+        leftDoorWall.close();
+        rightDoorWall.close();
+        floorColorSens.close();
+        driveRightOne.close();
+        driveLeftOne.close();
+        liftMotor.close();
+        grabberRotator.close();
+        imu.close();
+        grabber.close();
+        tailRelease.close();
+        wingMotor.close();
+        leftWingColorSens.close();
+        rightWingColorSens.close();
     }
 
-    public ColorSensor getrightWingColorSens()
-    {
-        return rightWingColorSens;
-    }
+    public ColorSensor getleftWingColorSens() { return leftWingColorSens; }
 
-    public ColorSensor getFloorColorSens()
-    {
-        return floorColorSens;
-    }
+    public ColorSensor getrightWingColorSens() { return rightWingColorSens; }
 
-    public DcMotorImplEx getDriveLeftOne()
-    {
-        return driveLeftOne;
-    }
+    public ColorSensor getFloorColorSens() { return floorColorSens; }
+
+    public DcMotorImplEx getDriveLeftOne() { return driveLeftOne; }
 
     public DcMotorImplEx getDriveRightOne() {return driveRightOne;}
 
-    public DcMotorImplEx getLiftMotor()
-    {
-        return liftMotor;
-    }
+    public DcMotorImplEx getLiftMotor() { return liftMotor; }
 
-    public DcMotorImplEx getWingMotor()
-    {
-        return wingMotor;
-    }
+    public DcMotorImplEx getWingMotor() { return wingMotor; }
 
-    public Servo getLeftDoorWall()
-    {
-        return leftDoorWall;
-    }
+    public Servo getLeftDoorWall() { return leftDoorWall; }
 
-    public Servo getRightDoorWall()
-    {
-        return rightDoorWall;
-    }
+    public Servo getRightDoorWall() { return rightDoorWall; }
 
-    public Servo getGrabber()
-    {
-        return grabber;
-    }
+    public Servo getGrabber() { return grabber; }
 
     public Servo getGrabberRotator(){return grabberRotator;}
 
     public DcMotorImplEx getTailRelease(){return tailRelease;}
+
+    public BNO055IMU getImu(){return imu;}
 }
