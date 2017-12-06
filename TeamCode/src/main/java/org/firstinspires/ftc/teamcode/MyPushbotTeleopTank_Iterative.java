@@ -128,8 +128,8 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         // 0 is open, -0.30 is closed
         if (gamepad1.right_bumper) {
             if (clawOffset == 0)            //if opened, close
-                clawOffset = -0.4;
-            else if (clawOffset == -0.40)    // if closed, open
+                clawOffset = -0.5;
+            else if (clawOffset == -0.50)    // if closed, open
                 clawOffset = 0;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
@@ -142,7 +142,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             }
 
             // every time the claw closes the lift rises by half an inch
-            if (clawOffset == -0.4){
+            if (clawOffset == -0.5){
                 target = robot.lift.getCurrentPosition() + 500;
                 robot.lift.setTargetPosition(target);
                 robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -168,7 +168,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             target = robot.lift.getCurrentPosition() + 3614;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.7);
+            robot.lift.setPower(0.8);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
                 left = gamepad1.left_stick_y;
                 right = gamepad1.right_stick_y;
@@ -185,7 +185,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             target = robot.lift.getCurrentPosition() - 3614;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.7);
+            robot.lift.setPower(0.8);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
                 left = gamepad1.left_stick_y;
                 right = gamepad1.right_stick_y;
