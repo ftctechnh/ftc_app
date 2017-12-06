@@ -68,7 +68,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
             telemetry.update();
 
         /* Set the arm up */
-            if(robot.gemServo.getPosition() != robot.xPosUp){
+            if (robot.gemServo.getPosition() != robot.xPosUp) {
                 robot.gemServo.setPosition(robot.xPosUp);
             }
 
@@ -102,27 +102,9 @@ MasterHardwareClass robot = new MasterHardwareClass();
             double backLeft;
             double backRight;
 
+            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
 
-            if(gamepad1.left_bumper){
-
-                double GRX = gamepad1.right_stick_x;
-
-                final double v1 = +GRX;
-                final double v2 = -GRX;
-                final double v3 = +GRX;
-                final double v4 = -GRX;
-
-                frontLeft = -v1/5;
-                frontRight = v2/5;
-                backLeft = -v3/5;
-                backRight = v4/5;
-
-                setWheelPower(frontLeft, frontRight, backLeft, backRight);
-            }
-
-            if (gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
-
-                double GRX = gamepad1.right_stick_x;
+                double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
 
                 final double v1 = +GRX;
                 final double v2 = -GRX;
@@ -135,8 +117,22 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 backRight = v4;
 
                 setWheelPower(frontLeft, frontRight, backLeft, backRight);
-            }
+            } else {
 
+                    double GRX = gamepad1.right_stick_x / robot.nobumper;
+
+                    final double v1 = +GRX;
+                    final double v2 = -GRX;
+                    final double v3 = +GRX;
+                    final double v4 = -GRX;
+
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
+
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                }
             if (gamepad1.left_bumper) {
                 double GLY = -gamepad1.left_stick_y / 5;
                 double GRX = gamepad1.right_stick_x / 5;
@@ -147,37 +143,60 @@ MasterHardwareClass robot = new MasterHardwareClass();
                 final double v3 = GLY + GRX - GLX;
                 final double v4 = GLY - GRX + GLX;
 
-                frontLeft = v1;
-                frontRight = v2;
-                backLeft = v3;
-                backRight = v4;
-
-
-                setWheelPower(-v1, v2, -v3, v4);
-            } else {
-                double GLY = -gamepad1.left_stick_y;
-                double GRX = gamepad1.right_stick_x;
-                double GLX = gamepad1.left_stick_x;
-
-                final double v1 = GLY + GRX + GLX;
-                final double v2 = GLY - GRX - GLX;
-                final double v3 = GLY + GRX - GLX;
-                final double v4 = GLY - GRX + GLX;
-
                 frontLeft = -v1;
                 frontRight = v2;
                 backLeft = -v3;
                 backRight = v4;
 
-               setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            } else {
+                if (gamepad1.right_bumper) {
+                    double GLY = -gamepad1.left_stick_y / 3;
+                    double GRX = gamepad1.right_stick_x / 3;
+                    double GLX = gamepad1.left_stick_x / 3;
+
+                    final double v1 = GLY + GRX + GLX;
+                    final double v2 = GLY - GRX - GLX;
+                    final double v3 = GLY + GRX - GLX;
+                    final double v4 = GLY - GRX + GLX;
+
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
+
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
+                } else {
+                    double GLY = -gamepad1.left_stick_y / 2;
+                    double GRX = gamepad1.right_stick_x / 2;
+                    double GLX = gamepad1.left_stick_x / 2;
+
+                    final double v1 = GLY + GRX + GLX;
+                    final double v2 = GLY - GRX - GLX;
+                    final double v3 = GLY + GRX - GLX;
+                    final double v4 = GLY - GRX + GLX;
+
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
+
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                }
             }
         }
     }
-
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
-/* This method powers each wheel to whichever power is desired */
+/* This method is used to determine the slowdown value to use when holding a certain bumper */
+
+    public void bumperSlower(){
+
+    }
+
+    /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
 
         /* Create power variables */

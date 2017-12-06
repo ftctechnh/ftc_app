@@ -50,8 +50,12 @@ public class MasterHardwareClass {
     static double clawOpen = -.5;
     static double clawStill = 0;
 
+    /* Define values for teleop bumper control */
+    static double nobumper = .6;
+    static double bumperSlowest = 2;
+
     /* Define values used in knocking the jewels */
-    static double xPosUp = 1;
+    static double xPosUp = 0;
     static double xPosDown = .5;
 
     /* local OpMode members. */
@@ -67,8 +71,6 @@ public class MasterHardwareClass {
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-
-        // Define and Initialize Hardware
 
         // Define and Initialize Hardware
         frontLeftMotor = hwMap.dcMotor.get("FL");
@@ -89,13 +91,11 @@ public class MasterHardwareClass {
         verticalArmMotor.setPower(0);
         clawServo.setPower(0);
 
-
         // Set proper encoder state for all motor
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
 
     }
 }

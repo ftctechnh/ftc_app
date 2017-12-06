@@ -99,7 +99,6 @@ public class YES_RED extends LinearOpMode
         telemetry.update();
 
         // wait for start button.
-
         waitForStart();
 
         telemetry.addData("Mode", "running");
@@ -107,12 +106,10 @@ public class YES_RED extends LinearOpMode
 
         sleep(1000);
 
-
-
         gemServo.setPosition(xPosDown);
         sleep(1500);
         knockjewelRed();
-        movebytime(2,.5,"Right");
+        movebytime(2,.5,"Forward");
 
     }
 
