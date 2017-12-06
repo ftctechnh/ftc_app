@@ -28,7 +28,9 @@ public class JewelArm {
     }
 
     public void up() {
+        telemetrize("going up");
         setPostion(servoUpPos);
+        telemetrize("went up");
     }
 
     public String findJewel() {
@@ -67,5 +69,9 @@ public class JewelArm {
     public void setPostion(double postion) {
         servo.setPosition(postion);
         servo.setPosition(postion);
+    }
+    public void telemetrize(String message) {
+        telemetry.addData(message, null);
+        telemetry.update();
     }
 }
