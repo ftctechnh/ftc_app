@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -21,9 +22,11 @@ public class AutonomousDrive_02_0 extends LinearOpMode
     double x = 0;
     double y = 0;
     double pinch = .7;
+    DcMotor lift;
+    TouchSensor touchBottom;
 
     Servo pincherL;
-    Servo pincherR;
+    //Servo pincherR;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -44,13 +47,18 @@ public class AutonomousDrive_02_0 extends LinearOpMode
         engine = new DriveEngine(hardwareMap);
         camera = new Camera(hardwareMap, telemetry);
         mark = RelicRecoveryVuMark.UNKNOWN;
+        touchBottom = hardwareMap.touchSensor.get("touchBottom");
+
+        lift = hardwareMap.dcMotor.get("lift");
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
 
         pincherL = hardwareMap.servo.get("pincherL");
-        pincherR = hardwareMap.servo.get("pincherR");
+        //pincherR = hardwareMap.servo.get("pincherR");
 
-        pincherL.setPosition(1);
-        pincherR.setPosition(1);
+        close();
+        //pincherR.setPosition(1);
 
         double counter = 0;
 
@@ -61,13 +69,13 @@ public class AutonomousDrive_02_0 extends LinearOpMode
                 if (mark != RelicRecoveryVuMark.UNKNOWN) {
                     switch (mark) {
                         case LEFT:
-                            counter = timeFromDistance(36.0 + 7.63);
+                            counter = 2.13;
                             break;
                         case CENTER:
-                            counter = timeFromDistance(36.0);
+                            counter = 1.82;
                             break;
                         case RIGHT:
-                            counter = timeFromDistance(36.0 - 7.63);
+                            counter = 1.52;
                             break;
                         default:
                             counter = 0;
@@ -85,15 +93,26 @@ public class AutonomousDrive_02_0 extends LinearOpMode
             else if(timer.time() < counter + .5){
                 x = 0;
                 y = 0;
-            }else if(timer.time() < counter+.5 + timeFromDistance(11)) {
-                x = 0;
-                y = .5;
-            }else if(timer.time() < counter+.5+timeFromDistance(11) + timeFromDistance(7)){
+            }else if(timer.time() < counter+.5 + .79) {
                 x = 0;
                 y = -.5;
+            }else if(timer.time() < counter+.5+.79 + 4){
+                x = 0;
+                y = 0;
+                open();
+                if(!touchBottom.isPressed()){
+                     lift.setPower(-1);
+                }
+                else{
+                    lift.setPower(0);
+                }
+            }else if(timer.time() < counter+.5+ .79+4+ .61 ){
+                x = 0;
+                y = .5;
             }else{
                 x = 0;
                 y = 0;
+                lift.setPower(0);
             }
 
             engine.drive(x,y);
@@ -101,6 +120,18 @@ public class AutonomousDrive_02_0 extends LinearOpMode
 
         }
 
+    }
+
+    private void open()
+    {
+        pincherL.setPosition(0);
+//        pincherR.setPosition(1);
+    }
+
+    private void close()
+    {
+        pincherL.setPosition(1);
+//        pincherR.setPosition(0);
     }
 
     /**
