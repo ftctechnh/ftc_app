@@ -48,7 +48,7 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         rightDrive = hWMap.dcMotor.get("r");
         middleDrive = hWMap.dcMotor.get("m");
 
-        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -8,23 +9,20 @@ import com.qualcomm.robotcore.hardware.Gamepad;
  *
  * Created by daniel on 11/12/17.
  */
-
+@TeleOp(name = "Teleopp", group = "teleop")
 public class TrainingTeleOp extends LinearOpMode {
 
-    private DcMotor fLeft;
-    private DcMotor bLeft;
-    private DcMotor fRight;
-    private DcMotor bRight;
+    private DcMotor right;
+    private DcMotor left;
     @Override
     public void runOpMode() throws InterruptedException {
         //set deadzones
         gamepad1.setJoystickDeadzone(.02f);
 
         //initiate motors
-        fLeft = hardwareMap.dcMotor.get("fl");
-        fRight = hardwareMap.dcMotor.get("fr");
-        bLeft = hardwareMap.dcMotor.get("bl");
-        bRight = hardwareMap.dcMotor.get("bl");
+
+      left = hardwareMap.dcMotor.get("l");
+      right = hardwareMap.dcMotor.get("r");
 
         waitForStart();
         double speedLeft;
@@ -34,10 +32,8 @@ public class TrainingTeleOp extends LinearOpMode {
             speedLeft = gamepad1.left_stick_x;
             speedRight = gamepad1.right_stick_x;
 
-            fLeft.setPower(speedLeft);
-            bLeft.setPower(speedLeft);
-            fRight.setPower(speedRight);
-            bRight.setPower(speedRight);
+            left.setPower(speedLeft);
+            right.setPower(speedRight);
 
         }
 

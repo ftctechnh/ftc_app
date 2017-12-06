@@ -180,7 +180,7 @@ public abstract class LinearOpModeBase extends LinearOpMode {
         intakeMotor.setPower(0);
         stopRobot();
 
-        // reset gyro heading
+        // reset gyro pos
         gyroSensor.resetZAxisIntegrator();
 
         telemetry.addData("status","end of init");

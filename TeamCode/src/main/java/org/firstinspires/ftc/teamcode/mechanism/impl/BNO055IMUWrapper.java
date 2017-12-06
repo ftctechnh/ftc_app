@@ -73,7 +73,7 @@ public class BNO055IMUWrapper implements IMechanism {
     }
 
     /**
-     * Get the IMU heading (Z axis) in degrees.
+     * Get the IMU pos (Z axis) in degrees.
      * The value returned in degrees is within a range of +180 and -180.
      *
      * @return the Z axis of the IMU in degrees

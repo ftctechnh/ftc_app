@@ -92,7 +92,7 @@ public class Kickoff2017 extends OpMode {
         telemetry.addData("compass", toData(compassSensor));
         telemetry.addData("gyro", toData(gyroSensor));
         telemetry.addData("color:","RGB "+red+" , "+green+" , "+blue);
-        telemetry.addData("heading Converted: " , headingVal);
+        telemetry.addData("pos Converted: " , headingVal);
         telemetry.addData("motor power: " , demoMotor.getPower());
 
 
@@ -105,7 +105,7 @@ public class Kickoff2017 extends OpMode {
         }
 
 
-        //set gyro to read -180 to 180 degree heading.
+        //set gyro to read -180 to 180 degree pos.
          if (gyroSensor.getHeading() > 179){
             headingVal = ((gyroSensor.getHeading()) - 360 );
         }
@@ -133,7 +133,7 @@ public class Kickoff2017 extends OpMode {
             }
         }
 
-         //set motor to move based on gyro heading.
+         //set motor to move based on gyro pos.
 
         if (headingVal > 5){
             demoMotor.setPower(.007 * (headingVal));
