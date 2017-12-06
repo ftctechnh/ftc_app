@@ -60,9 +60,11 @@ public class JeffsRealRun extends LinearOpMode {
             getThePowers();
             //
             if(gamepad2.x){
+                pengwinArm.open();
                 startify();
             }
             if(gamepad2.y){
+                pengwinArm.open();
                 smartify();
             }
             //Change power

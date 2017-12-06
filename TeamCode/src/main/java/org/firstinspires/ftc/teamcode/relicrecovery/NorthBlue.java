@@ -15,7 +15,6 @@ public class NorthBlue extends LinearOpMode {
     JeffThePengwin jeffThePengwin;
     private ElapsedTime runtime = new ElapsedTime();
     //
-
     //
     //Push
     @Override
@@ -36,7 +35,7 @@ public class NorthBlue extends LinearOpMode {
         //
         jeffThePengwin.rightToPosition(5, .4);
         runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
+        while(runtime.seconds()<1 && opModeIsActive() && jeffThePengwin.isMoving()){
             //Do Nothing
         }
         jeffThePengwin.switcheroo();

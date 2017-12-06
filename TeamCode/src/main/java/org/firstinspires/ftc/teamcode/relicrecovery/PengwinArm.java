@@ -15,15 +15,15 @@ public class PengwinArm {
     DcMotor acrossMotor; //motor that goes horizontally
     Servo leftGlyphy;
     Servo rightGlyphy;
-    DigitalChannel stopify;
+     //DigitalChannel stopify;
     //hmmm
     double acrossPower;
     double upPower;
     double resetify = -1;
-    static double open = .8;
-    static double rightOpen = .8;
-    static double closed = -.8;
-    static double rightClosed = -.8;
+    static double open = -.8;
+    static double rightOpen = open;
+    static double closed = .8;
+    static double rightClosed = closed;
     int upPosition; //Set to the encoder value that is the up position
 
     public PengwinArm(HardwareMap hardwareMap){
@@ -37,10 +37,10 @@ public class PengwinArm {
         leftGlyphy.setDirection(Servo.Direction.REVERSE);
     }
     public void setAcrossPower(double power){
-        if(!stopify.getState() || power*resetify  > 0){
+       // if(!stopify.getState() || power*resetify  > 0){
             acrossPower = power;
             acrossMotor.setPower(acrossPower * resetify);
-        }
+        //}
     }
     public void setUpPower(double power){
         upPower = power;
