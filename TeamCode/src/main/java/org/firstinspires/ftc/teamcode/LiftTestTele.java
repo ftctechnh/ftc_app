@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Jeremy on 11/17/2017.
  */
 @TeleOp(name = "liftTestTele", group = "Tele")
-public class liftTestTele extends OpMode
+public class LiftTestTele extends OpMode
 {
     NewRobot newRobot;
     boolean isWingUp = true;
