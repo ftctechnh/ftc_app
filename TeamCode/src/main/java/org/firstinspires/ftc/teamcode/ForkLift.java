@@ -34,6 +34,7 @@ public class ForkLift {
         this.rightClaw.setDirection(Servo.Direction.REVERSE);
         resetEncoder();
         this.telemetry = telemetry;
+        telemetry.addData("hai", topButton.getManufacturer());
 
     }
 
