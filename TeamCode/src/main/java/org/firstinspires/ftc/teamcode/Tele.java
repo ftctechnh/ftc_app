@@ -58,7 +58,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleKE", group="Pushbot")
+@TeleOp(name="Tele", group="TELE")
 //@Disabled
 public class Tele extends OpMode{
 
