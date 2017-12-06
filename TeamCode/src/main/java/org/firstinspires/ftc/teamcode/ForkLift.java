@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.HardwareDevice.Manufacturer;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 
 public class ForkLift {
     private Servo rightClaw;
@@ -10,11 +14,18 @@ public class ForkLift {
     private DcMotor motor;
     private TouchSensor topButton;
     private TouchSensor bottomButton;
-    private double clawPosition = 0.25;
-    private double clawHighEnd = 0.7;
-    private double clawLowEnd = 0.3;
+    private double clawPosition = 0.25; //0.25
+    private double clawHighEnd = 1; //0.7
+    private double clawLowEnd = 0; //0.3
+    private Telemetry telemetry;
+    private HardwareDevice.Manufacturer manufacturer;
 
     public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, TouchSensor topButton, TouchSensor bottomButton) {
+        if(topButton.getManufacturer().equals("ModernRobotics")){
+            clawPosition=0.25;
+            clawHighEnd=0.7;
+            clawLowEnd=0.3;
+        }
         this.rightClaw = rightClaw;
         this.leftClaw = leftClaw;
         this.motor = motor;
@@ -22,6 +33,8 @@ public class ForkLift {
         this.bottomButton = bottomButton;
         this.rightClaw.setDirection(Servo.Direction.REVERSE);
         resetEncoder();
+        this.telemetry = telemetry;
+
     }
 
 
