@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareDevice.Manufacturer;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
@@ -20,7 +21,7 @@ public class ForkLift {
     private Telemetry telemetry;
     private HardwareDevice.Manufacturer manufacturer;
 
-    public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, TouchSensor topButton, TouchSensor bottomButton) {
+    public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, TouchSensor topButton, TouchSensor bottomButton, Telemetry telemetry) {
         if(topButton.getManufacturer().equals("ModernRobotics")){
             clawPosition=0.25;
             clawHighEnd=0.7;
