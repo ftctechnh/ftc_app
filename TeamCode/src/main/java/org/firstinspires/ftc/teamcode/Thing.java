@@ -45,7 +45,7 @@ public class Thing extends LinearOpMode {
         telemetry.addData("skatin fast,", "eatin' ass");
        // initVuforia();
         while (true) {
-            if (vu.getVuf() == VuforiaPlagarism.type.CENTER) {
+            if (vu.getVuf(hardwareMap) == VuforiaPlagarism.type.CENTER) {
                 encode(10, 0.5, MoveType.STRAIGHT);
             }
         }
