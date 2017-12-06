@@ -16,36 +16,15 @@ public class RedRecoveryClasses extends LinearOpMode {
     RelicClaw RelicClaw;
     String color;
 
-
     public void runOpMode() throws InterruptedException {
-
-        drive = new AutoDrive(
-                hardwareMap.dcMotor.get("m1"), //fl motor
-                hardwareMap.dcMotor.get("m2"), //fr motor
-                hardwareMap.dcMotor.get("m3"), //rl motor
-                hardwareMap.dcMotor.get("m4"),
-                hardwareMap.gyroSensor.get("g1"),
-                telemetry);
+        drive = new AutoDrive(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), hardwareMap.gyroSensor.get("g1"), telemetry);
         drive.init(); //Calibrates gyro
-        jewelArm = new JewelArm(
-                hardwareMap.servo.get("s4"), //Servo
-                hardwareMap.colorSensor.get("cs1"), // Color sensor
-                telemetry); //telemetry for debugging
-        ForkLift = new ForkLift(
-                hardwareMap.servo.get("s5"), //rightClaw
-                hardwareMap.servo.get("s6"), //leftClaw
-                hardwareMap.dcMotor.get("m6"), //updown
-                hardwareMap.touchSensor.get("b0"), //top button
-                hardwareMap.touchSensor.get("b1")); //bottom button
-        RelicClaw = new RelicClaw(
-                hardwareMap.servo.get("s1"), //claw
-                hardwareMap.servo.get("s2"), //arm
-                hardwareMap.dcMotor.get("m5")); //motor
-
+        jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
+        ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.touchSensor.get("b0"), hardwareMap.touchSensor.get("b1"));
+        RelicClaw = new RelicClaw(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"));
         telemetry.addData("ready to start", null);
         telemetry.update();
         waitForStart();
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //ForkLift.closeClaw();
         //RelicClaw.init();
@@ -58,17 +37,13 @@ public class RedRecoveryClasses extends LinearOpMode {
         } else if (color == "Blue") { //if the arm sees blue
             drive.driveTranslateRotate(0, -.125, 0, 2);
             drive.driveTranslateRotate(0, .125, 0, 2);
-        } else {
-        }
+        } else {}
         Thread.sleep(500);
         jewelArm.up();
         Thread.sleep(500);
         drive.driveTranslateRotate(0, -.5, 0, 32);
-        Thread.sleep(500);
-        drive.driveTranslateRotate(0,0, 0.5, 20);
         Thread.sleep(2000);
         drive.leftGyro(0, 0, .05, 90);
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
