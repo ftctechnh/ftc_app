@@ -64,10 +64,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: My Simple" +
-        " Auto Drive By Encoder", group="Pushbot")
+@Autonomous(name="Pushbot: Red Left" , group="Pushbot")
 //@Disabled
-public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class RedLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     MyHardwarePushbot         robot   = new MyHardwarePushbot();   // Use a Pushbot's hardware
@@ -155,16 +154,16 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             telemetry.addData("Status", "Sensed Red ");
             encoderDrive(TURN_SPEED, -2, 2, 5 );
             robot.ballArm.setPosition(ballArmUp);
-            encoderDrive(TURN_SPEED,  2, -2,.5 );
+            encoderDrive(TURN_SPEED,  2, -2,.5 ); 
         }
 
         //encoderDrive(DRIVE_SPEED, 2, 2, 5);
         //encoderDrive(TURN_SPEED, -8.6, 8.5, 5);
         //encoderDrive(DRIVE_SPEED, -32, -32, 5);
 
-        encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5);
-        encoderDrive(TURN_SPEED, -15, 15, 5); //13.5 tank turn went to scond one
-        encoderDrive(DRIVE_SPEED, -41, -41, 5);
+        encoderDrive(DRIVE_SPEED, -35, -35, 5);
+        encoderDrive(TURN_SPEED, -16.5, 16.5, 5); //13.5 tank turn went to second one
+        encoderDrive(DRIVE_SPEED, -57, -57, 5);
         clawOffset = .0;
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);
@@ -184,7 +183,7 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     }
 
     /*
-     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
