@@ -24,7 +24,8 @@ public class ForkliftDrive extends OpMode {
                 hardwareMap.servo.get("s2"), //leftClaw
                 hardwareMap.dcMotor.get("m5"), //updown
                 hardwareMap.touchSensor.get("b0"), //top button
-                hardwareMap.touchSensor.get("b1")); //bottom button
+                hardwareMap.touchSensor.get("b1"),
+                telemetry); //bottom button
         ForkLift.init();
     }
     @Override

@@ -17,7 +17,8 @@ public class DriveEverything extends OpMode {
                 hardwareMap.servo.get("s6"), //leftClaw
                 hardwareMap.dcMotor.get("m6"), //updown
                 hardwareMap.touchSensor.get("b0"), //top button
-                hardwareMap.touchSensor.get("b1")); //bottom button
+                hardwareMap.touchSensor.get("b1"), //bottom button
+                telemetry); //stuff that most likely will be removed.
         ForkLift.init();
         //Relic Recovery
         RelicClaw = new RelicClaw(

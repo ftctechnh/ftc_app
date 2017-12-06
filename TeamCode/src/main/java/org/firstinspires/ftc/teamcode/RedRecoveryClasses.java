@@ -30,6 +30,7 @@ public class RedRecoveryClasses extends LinearOpMode {
         //RelicClaw.init();
         jewelArm.init();
         jewelArm.down();
+        ForkLift.closeClaw();
         color = jewelArm.findJewel();
         if (color == "Red") { //if the arm sees red
             drive.driveTranslateRotate(0, .125, 0, 2);
