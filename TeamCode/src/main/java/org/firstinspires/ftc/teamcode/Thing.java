@@ -43,7 +43,7 @@ public class Thing extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        initVuforia();
+       // initVuforia();
         while (true) {
             if (vu.getVuf() == VuforiaPlagarism.type.CENTER) {
                 encode(10, 0.5, MoveType.STRAIGHT);
@@ -147,7 +147,7 @@ public class Thing extends LinearOpMode {
 
         }
     }
-    public void initVuforia() {
+   /* public void initVuforia() {
         VuforiaLocalizer vuforia;
         RelicRecoveryVuMark vuMark;
         OpenGLMatrix pose;
@@ -195,5 +195,5 @@ public class Thing extends LinearOpMode {
                 telemetry.addData("rY", rY);
                 telemetry.addData("rZ", rZ);
         }
-    }
+    }*/
 }
