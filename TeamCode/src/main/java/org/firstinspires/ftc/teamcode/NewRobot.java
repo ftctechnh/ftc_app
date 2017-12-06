@@ -20,10 +20,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Jeremy and Raghav on 10/18/2017.
  */
 
+//! NOTE -1 is FORWARD ON JOYSTICK
 public class NewRobot
 {
-    private int liftLevels[] = {0, 1696,2696,3696}; //Currently not levels or stops
-    private int liftDeadzone = 169;
+    private int liftLevels[] = {0,72,144,288}; //Currently not levels or stops
+    private int liftDeadzone = 10;
     private short currentLvl;
 
     private ColorSensor topColorSens = null;
@@ -31,6 +32,7 @@ public class NewRobot
     private ColorSensor floorColorSens = null;
 
     private DcMotorImplEx liftMotor = null;
+    private DcMotorImplEx wingMotor = null;
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
 
@@ -46,7 +48,8 @@ public class NewRobot
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //Comment out if you don't want camera view on robo phone
         //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        floorColorSens = hardwareMap.colorSensor.get("floorColorSens");
+
+        //floorColorSens = hardwareMap.colorSensor.get("floorColorSens");
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -56,8 +59,9 @@ public class NewRobot
         relicTrackables.activate();
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
-        //liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        //zeroStuff();
+        liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
+        wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
+        zeroStuff();
     }
 
     public char getGlyphCipher()
@@ -103,15 +107,20 @@ public class NewRobot
     {
         liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotor.setVelocity(0, AngleUnit.DEGREES);
+
+        wingMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        wingMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wingMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        wingMotor.setVelocity(0, AngleUnit.DEGREES);
     }
 
     public void moveLift(int adjLevels)
     {
-        moveLift(adjLevels, .4f);
+        moveLift(adjLevels, .24f);
     }
 
     public void moveLift(int adjLevels, float pow) //For the lift, I'll use levels or encoders points that stop
@@ -125,13 +134,13 @@ public class NewRobot
 
         if (adjLevels > 0)
         {
-            liftMotor.setPower(Math.abs(pow));
-            while (liftMotor.getCurrentPosition() < liftLevels[currentLvl] - liftDeadzone){}
+            liftMotor.setPower(-Math.abs(pow));
+            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl] - liftDeadzone){}
         }
         else
         {
-            liftMotor.setPower(-Math.abs(pow));
-            while (liftMotor.getCurrentPosition() > liftLevels[currentLvl] + liftDeadzone){}
+            liftMotor.setPower(Math.abs(pow));
+            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl] + liftDeadzone){}
         }
 
         liftMotor.setPower(0);
@@ -158,6 +167,27 @@ public class NewRobot
         }
     }
 
+    public void moveWing(boolean moveDown)
+    {
+        if(moveDown)
+        {
+            wingMotor.setPower(-.3);
+            while(wingMotor.getCurrentPosition() > -300){}
+        }
+        else
+        {
+            wingMotor.setPower(.3);
+            while(wingMotor.getCurrentPosition() < 0){}
+        }
+
+        wingMotor.setPower(0);
+    }
+
+    public void moveWing(float pow)
+    {
+        wingMotor.setPower(pow);
+    }
+
     public ColorSensor getTopColorSens()
     {
         return topColorSens;
@@ -176,5 +206,10 @@ public class NewRobot
     public DcMotorImplEx getLiftMotor()
     {
         return liftMotor;
+    }
+
+    public DcMotorImplEx getWingMotor()
+    {
+        return wingMotor;
     }
 }

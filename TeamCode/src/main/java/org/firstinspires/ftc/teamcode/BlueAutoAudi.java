@@ -8,9 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Created by Sahithi and Harshini on 11/1/17.
  */
 @Autonomous (name = "BlueAutoAudi", group = "Auto")
-
 public class BlueAutoAudi extends LinearOpMode
-
 {
     private TankBase robot;
     private NewRobot newRobot;
