@@ -44,11 +44,10 @@ public class TeleOPDrive extends OpMode {
             }
         this.driveSystem.rcCarDrive();
 
-        telemetry.addData("left speed", driveSystem.getLeftSpeed());
-        telemetry.addData("right speed", driveSystem.getRightSpeed());
-        telemetry.addData("left servo position", armSystem.getLeftServoPosition());
-        telemetry.addData("right servo position", armSystem.getRightServoPosition());
-        telemetry.addData("arm motor", armSystem.getArmMotorSpeed());
+        telemetry.addData("red", this.armSystem.getRed());
+        telemetry.addData("blue", this.armSystem.getBlue());
+        telemetry.addData("green", this.armSystem.getGreen());
+
     }
 
     @Override

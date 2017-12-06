@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.systems;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -12,7 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class ArmSystem {
     private DcMotor armMotor;
-    private Servo leftClaw, rightClaw;
+    private Servo leftClaw, rightClaw, jewelArmServo;
+    private ColorSensor colorSensor;
     private HardwareMap hardwareMap;
 
     public ArmSystem (HardwareMap hardwareMap) {
@@ -20,6 +22,8 @@ public class ArmSystem {
         this.armMotor = hardwareMap.get(DcMotor.class, "arm motor");
         this.leftClaw = hardwareMap.get(Servo.class, "left servo");
         this.rightClaw = hardwareMap.get(Servo.class, "right servo");
+        this.jewelArmServo = hardwareMap.get(Servo.class, "jewel arm servo");
+        this.colorSensor = hardwareMap.colorSensor.get("color sensor");
         this.rightClaw.setDirection(Servo.Direction.REVERSE);
     }
 
@@ -50,5 +54,17 @@ public class ArmSystem {
 
     public double getRightServoPosition() {
         return this.rightClaw.getPosition();
+    }
+
+    public int getRed() {
+        return colorSensor.red();
+    }
+
+    public int getBlue() {
+        return colorSensor.blue();
+    }
+
+    public int getGreen() {
+        return colorSensor.green();
     }
 }
