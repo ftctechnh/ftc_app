@@ -44,6 +44,7 @@ public class MasterHardwareClass {
     double BackRightPower = 0;
     double BackLeftPower = 0;
     double VerticalArmPower = 0;
+    double ClawPower = 0;
 
     /* Define values used in commanding the claw */
     static double clawClose = .5;

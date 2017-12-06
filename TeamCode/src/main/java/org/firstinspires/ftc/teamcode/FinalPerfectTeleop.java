@@ -43,6 +43,13 @@ public class FinalPerfectTeleop extends LinearOpMode {
     /* this says use ArmHardwareClass */
 MasterHardwareClass robot = new MasterHardwareClass();
 
+    /*These values are used for the drive*/
+    double frontLeft;
+    double frontRight;
+    double backLeft;
+    double backRight;
+
+
     @Override
     public void runOpMode() {
 
@@ -57,8 +64,8 @@ MasterHardwareClass robot = new MasterHardwareClass();
         while (opModeIsActive()) {
 
             // Display the current value
-            telemetry.addData("Servo Controls", "X is OPEN, Y is CLOSE");
-            telemetry.addData("Motor Controls", "Use the D-Pad ↑ & ↓ buttons!");
+            telemetry.addData("Claw Opening Controls", "X is Close, B is Open");
+            telemetry.addData("Claw Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
 
             telemetry.addData("Front Left Power", robot.frontLeftMotor.getPower());
             telemetry.addData("Front Right Power", robot.frontRightMotor.getPower());
@@ -74,127 +81,141 @@ MasterHardwareClass robot = new MasterHardwareClass();
 
         /* Servo Control */
             if (gamepad2.x) {
-                robot.clawServo.setPower(robot.clawClose);
-            }
-            if (gamepad2.b) {
-                robot.clawServo.setPower(robot.clawOpen);
+                if (robot.ClawPower != robot.clawClose) {
+                    robot.clawServo.setPower(robot.clawClose);
+                    robot.ClawPower = robot.clawClose;
+                }
             }
 
-            if (gamepad2.b != true && gamepad2.x != true) {
-                robot.clawServo.setPower(robot.clawStill);
+            if (gamepad2.b) {
+                if (robot.ClawPower != robot.clawOpen) {
+                    robot.clawServo.setPower(robot.clawOpen);
+                    robot.ClawPower = robot.clawOpen;
+                }
+            }
+
+            if (!gamepad2.b && !gamepad2.x) {
+                if(robot.ClawPower != robot.clawStill){
+                    robot.clawServo.setPower(robot.clawStill);
+                    robot.ClawPower = robot.clawStill;
+                }
             }
 
         /* Vertical Arm Motor */
             if (gamepad2.dpad_up) {
-                robot.verticalArmMotor.setPower(1);
-            } else {
-                robot.verticalArmMotor.setPower(0);
-            }
-            if (gamepad2.dpad_down) {
-                robot.verticalArmMotor.setPower(-1);
-            } else {
-                robot.verticalArmMotor.setPower(0);
-            }
-
-            /*These values are used for the drive*/
-            double frontLeft;
-            double frontRight;
-            double backLeft;
-            double backRight;
-
-            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
-
-                double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
-
-                final double v1 = +GRX;
-                final double v2 = -GRX;
-                final double v3 = +GRX;
-                final double v4 = -GRX;
-
-                frontLeft = -v1;
-                frontRight = v2;
-                backLeft = -v3;
-                backRight = v4;
-
-                setWheelPower(frontLeft, frontRight, backLeft, backRight);
-            } else {
-
-                    double GRX = gamepad1.right_stick_x / robot.nobumper;
-
-                    final double v1 = +GRX;
-                    final double v2 = -GRX;
-                    final double v3 = +GRX;
-                    final double v4 = -GRX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
-                }
-            if (gamepad1.left_bumper) {
-                double GLY = -gamepad1.left_stick_y / 5;
-                double GRX = gamepad1.right_stick_x / 5;
-                double GLX = gamepad1.left_stick_x / 5;
-
-                final double v1 = GLY + GRX + GLX;
-                final double v2 = GLY - GRX - GLX;
-                final double v3 = GLY + GRX - GLX;
-                final double v4 = GLY - GRX + GLX;
-
-                frontLeft = -v1;
-                frontRight = v2;
-                backLeft = -v3;
-                backRight = v4;
-
-                setWheelPower(frontLeft, frontRight, backLeft, backRight);
-            } else {
-                if (gamepad1.right_bumper) {
-                    double GLY = -gamepad1.left_stick_y / 3;
-                    double GRX = gamepad1.right_stick_x / 3;
-                    double GLX = gamepad1.left_stick_x / 3;
-
-                    final double v1 = GLY + GRX + GLX;
-                    final double v2 = GLY - GRX - GLX;
-                    final double v3 = GLY + GRX - GLX;
-                    final double v4 = GLY - GRX + GLX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
-
-                } else {
-                    double GLY = -gamepad1.left_stick_y / 2;
-                    double GRX = gamepad1.right_stick_x / 2;
-                    double GLX = gamepad1.left_stick_x / 2;
-
-                    final double v1 = GLY + GRX + GLX;
-                    final double v2 = GLY - GRX - GLX;
-                    final double v3 = GLY + GRX - GLX;
-                    final double v4 = GLY - GRX + GLX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                if (robot.VerticalArmPower != 1) {
+                    robot.verticalArmMotor.setPower(1);
+                    robot.VerticalArmPower = 1;
                 }
             }
-        }
-    }
+            else {
+                if (robot.VerticalArmPower != 0) {
+                    robot.verticalArmMotor.setPower(0);
+                    robot.VerticalArmPower = 0;
+                }
+
+                if (gamepad2.dpad_down) {
+                    if (robot.VerticalArmPower != -1) {
+                        robot.verticalArmMotor.setPower(-1);
+                        robot.VerticalArmPower = -1;
+                    }
+                }
+                    else{
+                    if (robot.VerticalArmPower != 0) {
+                        robot.verticalArmMotor.setPower(0);
+                        robot.VerticalArmPower = 0;
+                    }
+                }
+
+                        if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
+
+                            double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
+
+                            final double v1 = +GRX;
+                            final double v2 = -GRX;
+                            final double v3 = +GRX;
+                            final double v4 = -GRX;
+
+                            frontLeft = -v1;
+                            frontRight = v2;
+                            backLeft = -v3;
+                            backRight = v4;
+
+                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                        } else {
+
+                            double GRX = gamepad1.right_stick_x / robot.nobumper;
+
+                            final double v1 = +GRX;
+                            final double v2 = -GRX;
+                            final double v3 = +GRX;
+                            final double v4 = -GRX;
+
+                            frontLeft = -v1;
+                            frontRight = v2;
+                            backLeft = -v3;
+                            backRight = v4;
+
+                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                        }
+                        if (gamepad1.left_bumper) {
+                            double GLY = -gamepad1.left_stick_y / 5;
+                            double GRX = gamepad1.right_stick_x / 5;
+                            double GLX = gamepad1.left_stick_x / 5;
+
+                            final double v1 = GLY + GRX + GLX;
+                            final double v2 = GLY - GRX - GLX;
+                            final double v3 = GLY + GRX - GLX;
+                            final double v4 = GLY - GRX + GLX;
+
+                            frontLeft = -v1;
+                            frontRight = v2;
+                            backLeft = -v3;
+                            backRight = v4;
+
+                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                        } else {
+                            if (gamepad1.right_bumper) {
+                                double GLY = -gamepad1.left_stick_y / 3;
+                                double GRX = gamepad1.right_stick_x / 3;
+                                double GLX = gamepad1.left_stick_x / 3;
+
+                                final double v1 = GLY + GRX + GLX;
+                                final double v2 = GLY - GRX - GLX;
+                                final double v3 = GLY + GRX - GLX;
+                                final double v4 = GLY - GRX + GLX;
+
+                                frontLeft = -v1;
+                                frontRight = v2;
+                                backLeft = -v3;
+                                backRight = v4;
+
+                                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
+                            } else {
+                                double GLY = -gamepad1.left_stick_y / 2;
+                                double GRX = gamepad1.right_stick_x / 2;
+                                double GLX = gamepad1.left_stick_x / 2;
+
+                                final double v1 = GLY + GRX + GLX;
+                                final double v2 = GLY - GRX - GLX;
+                                final double v3 = GLY + GRX - GLX;
+                                final double v4 = GLY - GRX + GLX;
+
+                                frontLeft = -v1;
+                                frontRight = v2;
+                                backLeft = -v3;
+                                backRight = v4;
+
+                                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                            }
+                        }
+                    }
+                }
+
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
-/* This method is used to determine the slowdown value to use when holding a certain bumper */
-
-    public void bumperSlower(){
-
-    }
 
     /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
@@ -207,7 +228,6 @@ MasterHardwareClass robot = new MasterHardwareClass();
 
         /* Initialize the powers with the values input whenever this method is called */
         frontLeft   =   fl;
-
         frontRight  =   fr;
         backLeft    =   bl;
         backRight   =   br;
