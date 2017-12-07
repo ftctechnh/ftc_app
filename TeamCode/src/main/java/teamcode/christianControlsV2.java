@@ -66,6 +66,10 @@ public class christianControlsV2 extends LinearOpMode {
                 drive(0,-.5);
             } else if(gamepad1.right_trigger > .5 && gamepad1.left_bumper) {
                 drive(0, .5);
+            }else if(gamepad1.left_stick_x != 0 && gamepad1.left_bumper) {
+                turn(gamepad1.left_stick_x/2);
+            }else if(gamepad1.right_stick_x != 0 && gamepad1.left_bumper) {
+                drive(gamepad1.right_stick_x/2,0);
             }else if(gamepad1.right_trigger > .5) {
                 drive(0, 1);
             }else if(gamepad1.left_trigger > .5) {
