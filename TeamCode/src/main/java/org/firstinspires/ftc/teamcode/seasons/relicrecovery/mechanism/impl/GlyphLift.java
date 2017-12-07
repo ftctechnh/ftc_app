@@ -43,10 +43,10 @@ public class GlyphLift implements IMechanism {
     public enum RotationMotorPosition {
         UP(0), DOWN(1650), LEFT(825), RIGHT(-825), UNDEFINED(-1);
 
-        public int pos;
+        public int encoderPosition;
 
         RotationMotorPosition(int pos) {
-            this.pos = pos;
+            this.encoderPosition = pos;
         }
     }
 
@@ -105,9 +105,16 @@ public class GlyphLift implements IMechanism {
      */
     public RotationMotorPosition getCurrentRotationMotorPosition() {
         int currentPos = rotationMotor.getCurrentPosition();
+        int encoderPos;
+
         for (RotationMotorPosition pos : RotationMotorPosition.values()) {
-            // if rotation motor position is within 5 degrees of pos
-            if (Math.abs(pos.pos - currentPos) < ROTATION_MOTOR_POSITION_THRESHOLD) {
+            encoderPos = pos.encoderPosition;
+
+            if(pos == DOWN) {
+                encoderPos = Math.abs(encoderPos);
+            }
+
+            if (Math.abs(encoderPos - currentPos) < ROTATION_MOTOR_POSITION_THRESHOLD) {
                 return pos;
             }
         }
@@ -120,21 +127,17 @@ public class GlyphLift implements IMechanism {
      * @param requestedPosition
      */
     public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
-        int headingDiff = Math.abs(requestedPosition.pos - rotationMotor.getCurrentPosition());
-
         // only update current position if it's not undefined
         RotationMotorPosition tempPos = getCurrentRotationMotorPosition();
         if(tempPos != UNDEFINED) {
             this.currentRotationPosition = tempPos;
         }
 
-        opMode.telemetry.addData("current encoder pos", rotationMotor.getCurrentPosition());
-        opMode.telemetry.addData("pos diff", headingDiff);
+        opMode.telemetry.addData("current encoder position", rotationMotor.getCurrentPosition());
         opMode.telemetry.addData("current rotation position", currentRotationPosition);
         opMode.telemetry.update();
 
-        if(headingDiff > ROTATION_MOTOR_POSITION_THRESHOLD
-                && currentRotationPosition != requestedPosition) {
+        if(currentRotationPosition != requestedPosition) {
             switch (requestedPosition) {
                 case UP:
                     // always use negative motor power when requested position is up
