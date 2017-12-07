@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Auto Blue Two", group="Linear Auto")
-
-public class BlueTwoAuto extends LinearOpMode {
+abstract public class AutoMaster extends LinearOpMode {
     public enum MoveType {
         STRAIGHT, LATERALLY, ROT
     }
@@ -15,32 +12,6 @@ public class BlueTwoAuto extends LinearOpMode {
     final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
-
-    @Override
-    public void runOpMode() {
-        robot.init(hardwareMap);
-        waitForStart();
-        telemetry.addData("skatin fast,", "eatin' ass");
-        encode(-5, 0.5, MoveType.STRAIGHT);
-        robot.arm.setPosition(1);
-        wait(1000);
-        if (robot.color.red() > 1 ) {
-            encode(5, 0.25, MoveType.LATERALLY);
-        } else {
-            encode(5, -0.25, MoveType.LATERALLY);
-        }
-        robot.arm.setPosition(0);
-        encode(25, 0.5, MoveType.STRAIGHT);
-        encode(-20, 0.5, MoveType.ROT);
-        encode(30, 0.5, MoveType.STRAIGHT);
-        encode(-19, 0.5, MoveType.ROT);
-        encode(40, 0.5, MoveType.STRAIGHT);
-        wait(500);
-        robot.gripper.setPower(-0.25);
-        wait(1000);
-        robot.gripper.setPower(0);
-        encode(2, -0.25, MoveType.STRAIGHT);
-    }
 
     //Negative speed means:
     //Counterclockwise for MoveType.ROT

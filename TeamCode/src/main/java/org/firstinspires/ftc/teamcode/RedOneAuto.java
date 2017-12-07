@@ -12,7 +12,6 @@ public class RedOneAuto extends LinearOpMode {
         STRAIGHT, LATERALLY, ROT
     }
 
-    //280
     final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
