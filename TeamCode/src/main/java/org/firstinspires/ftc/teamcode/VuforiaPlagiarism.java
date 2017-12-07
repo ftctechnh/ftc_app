@@ -31,6 +31,7 @@ public class VuforiaPlagiarism {
     public enum type {
         LEFT, CENTER, RIGHT, ERROR
     }
+    
     public type getVuf(HardwareMap hardwareMap) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
