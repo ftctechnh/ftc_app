@@ -26,7 +26,7 @@ public class Thing extends LinearOpMode {
     /*VuforiaLocalizer vuforia;
     RelicRecoveryVuMark vuMark;
     OpenGLMatrix pose;*/
-    VuforiaPlagarism vu = new VuforiaPlagarism();
+    VuforiaPlagiarism vu = new VuforiaPlagiarism();
 
     public enum MoveType {
         STRAIGHT, LATERALLY, ROT
@@ -45,7 +45,7 @@ public class Thing extends LinearOpMode {
         telemetry.addData("skatin fast,", "eatin' ass");
        // initVuforia();
         while (true) {
-            if (vu.getVuf(hardwareMap) == VuforiaPlagarism.type.CENTER) {
+            if (vu.getVuf(hardwareMap) == VuforiaPlagiarism.type.CENTER) {
                 encode(10, 0.5, MoveType.STRAIGHT);
             }
         }
