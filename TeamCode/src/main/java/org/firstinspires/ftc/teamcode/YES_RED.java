@@ -28,6 +28,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 //@Disabled
 public class YES_RED extends LinearOpMode
 {
+  /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
     DcMotor                 backLeftMotor;
     DcMotor                 frontRightMotor;
@@ -36,19 +37,19 @@ public class YES_RED extends LinearOpMode
     ColorSensor             colorSensor;
     Servo                   gemServo;
     BNO055IMU               imu;
+  /* Set up and init all variables */
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
     double xPosUp = 0;
     double xPosDown = .55;
 
-
-    /* Create a "timer" that begins once the OpMode begins */
+  /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
 
-    // called when init button is  pressed.
     @Override
     public void runOpMode() throws InterruptedException
     {
+    /* Find all hardware in configuration */
         frontLeftMotor = hardwareMap.dcMotor.get("FL");
         backLeftMotor = hardwareMap.dcMotor.get("BL");
         frontRightMotor = hardwareMap.dcMotor.get("FR");
@@ -57,14 +58,17 @@ public class YES_RED extends LinearOpMode
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
 
+    /* Reverse the direction of the front right and back right motors */
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
+    /* When robot is off remove the brake on the wheel motors */
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+    /* Set parameters for the gyro */
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode                = BNO055IMU.SensorMode.IMU;
@@ -77,36 +81,40 @@ public class YES_RED extends LinearOpMode
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+    /* Initialize all motors and servoes to their starting positions */
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         gemServo.setPosition(xPosUp);
 
-
+    /* Initialize the gyro with the parameters above */
         imu.initialize(parameters);
 
+    /* Tell driver the gyro is calibrating */
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
-        // make sure the imu gyro is calibrated before continuing.
+    /* Make sure the imu gyro is calibrated before continuing */
         while (!isStopRequested() && !imu.isGyroCalibrated())
         {
             sleep(50);
             idle();
         }
 
-        telemetry.addData("Mode", "waiting for start");
-        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        telemetry.addData("Um...", "waiting for start");
+        telemetry.addData("Imu calibration?", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         // wait for start button.
         waitForStart();
 
-        telemetry.addData("Mode", "running");
+        telemetry.addData("Ayy", "I'm running");
         telemetry.update();
 
-        sleep(1000);
+//        sleep(1000);
+
+        moveclawbytime(1,.3,"Up");
 
         gemServo.setPosition(xPosDown);
         sleep(1500);
@@ -116,7 +124,36 @@ public class YES_RED extends LinearOpMode
         movebytime(.6, .3, "Forward");
     }
 
-    /* This method moves the robot forward for time and power indicated*/
+/***********************************************************************************************
+ * These are all of the methods used in the Autonomous*
+ ***********************************************************************************************/
+
+/* This method moves the claw up or down for a certain amount of time either up or down */
+    public void moveclawbytime(double time, double power, String direction) {
+    /* reset the "timer" to 0 */
+        runtime.reset();
+
+    /* This runs the wheel power so it moves forward, the powers for the left wheels
+    are inversed so that it runs properly on the robot
+     */
+        switch (direction) {
+            case "Up":
+                verticalArmMotor.setPower(.3);
+                break;
+            case "Down":
+                verticalArmMotor.setPower(.3);
+                break;
+        }
+
+    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
+        while (opModeIsActive() && runtime.seconds() < time) {
+
+            /* Once the while loop above finishes turn off the wheels */
+            verticalArmMotor.setPower(0);
+        }
+    }
+
+/* This method moves the robot forward for time and power indicated*/
     public void movebytime (double time, double power, String direction) {
     /* reset the "timer" to 0 */
         runtime.reset();
@@ -148,12 +185,12 @@ public class YES_RED extends LinearOpMode
     }
 
 
-    /* This method simply sets all motor to zero power*/
+/* This method simply sets all wheel motors to zero power */
     public void wheelsOff() {
         setWheelPower(0,0,0,0);
     }
 
-    /* This method powers each wheel to whichever power is desired */
+/* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
 
         /* Create power variables */
@@ -196,6 +233,8 @@ public class YES_RED extends LinearOpMode
             BackRightPower = backRight;
     }
 
+/* This method is tells the color sensor to read color, then rotate to knock off the blue
+jewel and then return the color sensor arm back up */
     public void knockjewelRed() {
 
         if (colorSensor.red() < colorSensor.blue()) {
@@ -215,6 +254,8 @@ public class YES_RED extends LinearOpMode
         }
     }
 
+/* This method is tells the color sensor to read color, then rotate to knock off the red
+jewel and then return the color sensor arm back up */
     public void knockjewelBlue(){
 
         if (colorSensor.red() > colorSensor.blue()) {

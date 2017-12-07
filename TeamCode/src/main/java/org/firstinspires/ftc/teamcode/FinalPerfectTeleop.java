@@ -64,6 +64,7 @@ MasterHardwareClass robot = new MasterHardwareClass();
         while (opModeIsActive()) {
 
             // Display the current value
+            telemetry.addLine("Hi~♪");
             telemetry.addData("Claw Opening Controls", "X is Close, B is Open");
             telemetry.addData("Claw Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
 
@@ -71,7 +72,6 @@ MasterHardwareClass robot = new MasterHardwareClass();
             telemetry.addData("Front Right Power", robot.frontRightMotor.getPower());
             telemetry.addData("Back Left Power", robot.backLeftMotor.getPower());
             telemetry.addData("Back Right Power", robot.backRightMotor.getPower());
-
             telemetry.update();
 
         /* Set the arm up */
