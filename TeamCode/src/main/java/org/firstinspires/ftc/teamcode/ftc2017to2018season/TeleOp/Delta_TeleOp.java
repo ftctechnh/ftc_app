@@ -276,7 +276,7 @@ public class Delta_TeleOp extends OpMode {
 
         slideMotor.setTargetPosition((int)target_Position);
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(0.6);
 
@@ -298,7 +298,7 @@ public class Delta_TeleOp extends OpMode {
 
         slideMotor.setTargetPosition((int)target_Position);
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-0.6);
 

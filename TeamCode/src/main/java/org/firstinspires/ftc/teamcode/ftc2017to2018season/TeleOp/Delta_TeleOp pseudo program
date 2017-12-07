@@ -156,38 +156,32 @@ public class Delta_TeleOp_2 extends OpMode {
     public void glyphManipulator() {
 
 
-        if (gamepad1.left_bumper) {
-
+        if (gamepad1.left_bumper   the left bumper is a boolean so we don't need a <0 or>0) {
+If on gamepad1 the left bumper is clicked open the claw by setting the servos to the below positions
 //opening the claw
             glyphServoRight.setPosition(0.35);
 
             glyphServoLeft.setPosition(0.5);
-        } else if (gamepad1.right_bumper) {
-
+        } else if (gamepad1.right_bumper     the right bumper is a boolean so we don't need a <0 or>0) {
+If on gamepad1 the Right bumper is clicked open the claw by setting the servos to the below positions
             glyphServoRight.setPosition(0.05);
 
             glyphServoLeft.setPosition(0.85);
 
-           /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
-            telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
-            telemetry.update();    */
+
         }
 
-/*        telemetry.addData("The value of the right servo is", left_claw);
-        telemetry.addData("The value of the left servo is", right_claw);
-        telemetry.update();
-
-        */
     }
 
     public void slideIncrement() {
-
-       /* if (gamepad2.dpad_down)
+We have the cleaned function here for slide increment to keep the program clean
+The functions moveUpInch and moveDownInch are programed below
+       if (gamepad2.dpad_down)
         {
-
+If on the dpad the up or down arrow is clicked the linear slides move up or down 2.54 cm.
             moveUpInch(2.54);
 
-        }*/
+        }
     if (gamepad2.dpad_up)
         {
             moveUpInch(-2.54);
@@ -197,53 +191,67 @@ public class Delta_TeleOp_2 extends OpMode {
         }
     }
 
-   /*  public void moveUpInch(double cm) {
+     public void moveUpInch(double cm     Here we say we need input on how many cm to move) {
+
         double target_Position;
+        This double is defined below
+
         double countsPerCM = 609.6;
+        The motor down't understand cm. so we have to translate it into something it understands or ticks/counts
+
         double finalTarget = cm*countsPerCM;
+        This is the final stage where we convert the amount of cm. inputted to what the motor understands
+
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
+        Here we say add to the current position of the motor how many more ticks we want to move and store it in a variable
 
 
         slideMotor.setTargetPosition((int)target_Position);
+        This is where we tell the motor what position it is going to move to.
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION));
+        This is where we tell the motor to keep running until a certain position
 
         slideMotor.setPower(-0.6);
+        We set power to the motor here
 
         while (slideMotor.isBusy()){
-            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
-            telemetry.update();
+            This loop says while motor is busy wait or otherwise known as while the motor still has to move wait for it to reach the final target position
+        }
+
+        slideMotor.setPower(0);
+        Once the motor has reached the target position we turn it off.
+
+    }
+
+   ppublic void moveUpInch(double cm) {
+        double target_Position;
+        This double is defined below
+
+        double countsPerCM = 609.6;
+         The motor down't understand cm. so we have to translate it into something it understands or ticks/counts
+
+        double finalTarget = cm*countsPerCM;
+        This is the final stage where we convert the amount of cm. inputted to what the motor understands
+
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+  Here we say add to the current position of the motor how many more ticks we want to move and store it in a variable
+
+        slideMotor.setTargetPosition((int)target_Position);
+ This is where we tell the motor what poition it is going to move to.
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+This is where we tell the motor to keep running until a certain position
+        slideMotor.setPower(-0.6);
+We set power to the motor here
+        while (slideMotor.isBusy()){
+            This loop says while motor is busy wait or otherwise known as while the motor still has to move wait for it to reach the final target position
 
         }
 
         slideMotor.setPower(0);
-
-    }*/
-
-   public void moveUpInch(double cm) {
-        double target_Position;
-        double countsPerCM = 609.6;
-        double finalTarget = cm*countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
-
-
-        slideMotor.setTargetPosition((int)target_Position);
-
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        slideMotor.setPower(-0.6);
-
-        while (slideMotor.isBusy()){
-            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
-            telemetry.update();
-
-        }
-
-        slideMotor.setPower(0);
-
+Once the motor has reached the target position we turn it off.
     }
 
 
 }
-
-//--------------------------------------------------------------------------------------------
+This is the end of the program
