@@ -209,13 +209,9 @@ public class Delta_TeleOp extends OpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IVFSM = slideMotor.getCurrentPosition();
 
-        if (gamepad2.right_stick_y > 0) {
+        if (gamepad2.right_stick_y != 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
 
-        } else if (gamepad2.right_stick_y < 0) {
-            slideMotor.setPower(-1);
-        } else {
-            slideMotor.setPower(0);
         }
     }
 

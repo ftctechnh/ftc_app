@@ -25,122 +25,78 @@ public class Delta_TeleOp_2 extends OpMode {
 
        Define the actuators we use in the robot here
     */
+    to declare = to tell the program what is on the robot
+
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
+    These four motors are the ones used for movement and they are declared here
+
     DcMotor slideMotor;
+    This is the motor used to move the linear slide carrying the glyph manipulator which is declared here
+
     Servo glyphServoRight;
     Servo glyphServoLeft;
-    //Initial value for slide motor
+    These two servos are used to open and close the glyph manipulator
+
+    Initial value for slide motor. This is used further down in the program for incremental movement.
     public int IVFSM;
 
-
-
-/*
-    ---------------------------------------------------------------------------------------------
-
-   Define the sensors we use in the robot here
-*/
-
-
-    //  ColorSensor bColorSensorLeft;    // Hardware Device Object
-
-
-    /*
-
-         //----------------------------------------------------------------------------------------------
-        //Declare global variables here
-
-
-        org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
-
-        //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
-
-
-        //private ElapsedTime runtime = new ElapsedTime();
-        static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
-        static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
-        static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
-        static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
-                (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
-        // Define class members
-        //   Servo right_servo;
-
-
-        /*---------------------------------------------------------------------------------------------
-                Get references to the hardware installed on the robot and name them here
-        */
     @Override
     public void init() {
         leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+        In this we tell the program or Android Studios that the things we named above are peices of harware on the robot.
+        These four wheels are the ones used for movement.
+
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
+        In this we tell the program or Android Studios that the things we named above are peices of harware on the robot.
+        These are the servos used for opening and closing the claw
+
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        In this we tell the program or Android Studios that the things we named above are peices of harware on the robot.
+        This is the motor used for the linear slides attached to the glyph manipulator
+
         IVFSM = slideMotor.getCurrentPosition();
+        In this we define what the variable we created above is valued at.
+
 
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        In the mechanical design of the robot the right wheels turn the opposite direction than the left wheels when the same power value is given to them
+        We reverse the right wheels to avoid confusion later in the program
+
 
         glyphServoLeft.setPosition(0.5);
         glyphServoRight.setPosition(0.35);
-//This is closed-loop speed control. Encoders are required for this mode.
-// SetPower() in this mode is actually requesting a certain speed, based on the top speed of
-// encoder 4000 pulses per second.
+        Here we set the glyph manipulator to the open position by moving a servo to the shown values.
+        Servos are moved by setting a value to them ranging from 1-0. You have to guess and check with servos.
 
-        // leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
 
     }
 
-
-    /*
-    ---------------------------------------------------------------------------------------------
-
-          Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-    */
-
-
-
-    /*
-     ---------------------------------------------------------------------------------------------
-
-          Code to run ONCE when the driver hits PLAY
-
-    */
-
-    /*
-    Code to run REPEATEDLY after the driver hit PLAY
-    Main code loop goes here
-     */
-
     @Override
     public void loop() {
+    This public void or loop() is what runs after the init is completed and the play button is selected.
+    This is an automatic part of TeleOp program
         FourWheelDrive();
         slideMove();
         glyphManipulator();
         slideIncrement();
+        These are functions or different sets of instructions that all control different parts of the robot.
+        Functions are used to keep a program organized.
 
 
     }
 
-    /* Code to run ONCE after the driver hits STOP
-     */
-
-
-/*
----------------------------------------------------------------------------------------------
- */
-
-/*
----------------------------------------------------------------------------------------------
 
     Functions go here
  */
@@ -148,18 +104,15 @@ public class Delta_TeleOp_2 extends OpMode {
     public void FourWheelDrive() {
         /*
 
-        read the gamepad values and put into variables
+        read the gamepad values and put them into variables
          */
         float leftY_gp1 = (-gamepad1.left_stick_y);
         float rightY_gp1 = (-gamepad1.right_stick_y);
-        //
-        //11/24/17 This edit was made by Colin Szeto. This was a test that we used to see if the triggers will work for the servos
-        // float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
-        // float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
-        //
-        // run the motors by setting power to the motors with the game pad value
+     floats are decimals but less precise. A precise decimal is a double. A less precise decimal is a float
+     the gamepad1.left/right_stick_y are the values of the joysticks on the gamepads on the y axis or up and down.
 
         if (gamepad1.left_trigger > 0) {
+        Here we say if the left trigger is hit strafe to the left by setting power to the motors to turn the mecanum wheels in the right way.
 
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
@@ -167,32 +120,21 @@ public class Delta_TeleOp_2 extends OpMode {
             rightWheelMotorBack.setPower(-1);
 
         } else if (gamepad1.right_trigger > 0) {
-
+        Here we say if the right trigger is hit strafe to the right by setting power to the motors to turn the mecanum wheels in the right way.
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
 
         } else {
+        Otherwise we put the robot in tank drive where we say if the left joystcik is pushed up or down move the left wheels forward or backward.
+        The same goes for the right wheels.
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
         }
 
-        // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-        //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-        // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-        //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        //  telemetry.update();
-        //telemetry.addData("",)
-        //telemetry.update();
-        //These were going to be used to find the values of triggers but we couldn't acomplish it
-        //run the motors by setting power to the motors with the game pad values
-        //leftWheelMotorFront.setPower(leftY_gp1);
-        //leftWheelMotorBack.setPower(leftY_gp1);
-        //rightWheelMotorFront.setPower(rightY_gp1);
-        //rightWheelMotorBack.setPower(rightY_gp1);
 
 
     }
@@ -202,33 +144,23 @@ public class Delta_TeleOp_2 extends OpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IVFSM = slideMotor.getCurrentPosition();
 
-        if (gamepad2.right_stick_y > 0) {
+        if (gamepad2.right_stick_y != 0) {
+        Here we say if on the second gamepad the right stick isn't equal to 0 move the linear slides proportionally to the amount of movement
+        on the joystick.
+
             slideMotor.setPower(gamepad2.right_stick_y);
 
-        } else if (gamepad2.right_stick_y < 0) {
-            slideMotor.setPower(-1);
-        } else {
-            slideMotor.setPower(0);
         }
     }
 
     public void glyphManipulator() {
-       /* Boolean Right_Bumper = (gamepad1.right_bumper);
-        Boolean Left_Bumper = (gamepad1.left_bumper);
-        double right_claw = (glyphServoRight.getPosition());
-        double left_claw = (glyphServoLeft.getPosition());
-       */
+
 
         if (gamepad1.left_bumper) {
 
 //opening the claw
             glyphServoRight.setPosition(0.35);
-            /*try {
-                glyphServoRight.setPosition(0.5);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-*/
+
             glyphServoLeft.setPosition(0.5);
         } else if (gamepad1.right_bumper) {
 
