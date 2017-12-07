@@ -130,7 +130,7 @@ public class RedLeft extends LinearOpMode {
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
-        target = robot.lift.getCurrentPosition() + 550;
+        target = robot.lift.getCurrentPosition() + 650;
         robot.lift.setTargetPosition(target);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.6);
@@ -162,15 +162,17 @@ public class RedLeft extends LinearOpMode {
         //encoderDrive(DRIVE_SPEED, -32, -32, 5);
 
         encoderDrive(DRIVE_SPEED, -35, -35, 5);
-        encoderDrive(TURN_SPEED, -16.5, 16.5, 5); //13.5 tank turn went to second one
-        encoderDrive(DRIVE_SPEED, -57, -57, 5);
+        encoderDrive(TURN_SPEED, -12, 12, 5);
+        encoderDrive(DRIVE_SPEED, -9,  -9, 5);// this is the straight drive that clears the plate
+        encoderDrive(TURN_SPEED, -5.5,5.5,5);
+        encoderDrive(DRIVE_SPEED, -51, -51, 5);
         clawOffset = .0;
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
-        target = robot.lift.getCurrentPosition() + -550;
+        target = robot.lift.getCurrentPosition()  -650;
         robot.lift.setTargetPosition(target);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.6);

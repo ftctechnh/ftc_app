@@ -135,7 +135,9 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.lift.setTargetPosition(target);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.6);
-        while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
+        while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
+            telemetry.addData("lift", "%7d", target);
+        }   //wait for lift to stop
         robot.lift.setPower(0.0);
 
 
@@ -175,7 +177,9 @@ public class MySimplePushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.lift.setTargetPosition(target);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.6);
-        while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
+        while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
+            telemetry.addData("lift", "%7d", target);
+        }   //wait for lift to stop
         robot.lift.setPower(0.0);
         encoderDrive(DRIVE_SPEED, 2, 2, 5);
 
