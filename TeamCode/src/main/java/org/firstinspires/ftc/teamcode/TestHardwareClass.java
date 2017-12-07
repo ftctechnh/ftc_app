@@ -35,9 +35,9 @@ public class TestHardwareClass {
         // get a reference to the distance sensor that shares the same name.
         sensorDistanceRight= hwMap.get(DistanceSensor.class, "colorsensor");
         //Second Color Sensor
-        sensorColorLeft = hwMap.get(ColorSensor.class,"othercolorsensor");
+        //sensorColorLeft = hwMap.get(ColorSensor.class,"othercolorsensor");
         //Distance Sensor of the Second Color Sensor
-        sensorDistanceLeft = hwMap.get(DistanceSensor.class,"othercolorsensor");
+        //sensorDistanceLeft = hwMap.get(DistanceSensor.class,"othercolorsensor");
         gemServo = hwMap.get(Servo.class, "gemservo");
 
     }
