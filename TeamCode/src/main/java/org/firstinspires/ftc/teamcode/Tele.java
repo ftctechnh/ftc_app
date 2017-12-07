@@ -58,7 +58,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Tele", group="Pushbot")
+@TeleOp(name="Tele", group="TELE")
 //@Disabled
 public class Tele extends OpMode{
 
@@ -113,8 +113,7 @@ public class Tele extends OpMode{
     @Override
     public void init_loop() {
     }
-
-    /*
+     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
@@ -126,6 +125,8 @@ public class Tele extends OpMode{
      */
     @Override
     public void loop() {
+        double target = 0;
+        double direction;
         double forward;
         double strafe;
         double rotate;
@@ -142,14 +143,82 @@ public class Tele extends OpMode{
         gromit.right_front.setPower( forward/1.0 + strafe/1.0 - rotate/1.0 );
         gromit.right_back.setPower ( forward/1.0 - strafe/1.0 - rotate/1.0 );
 
+
+// glyph clamp
+        if (gamepad1.dpad_left) {
+            gromit.leftlower.setPosition(0.6);
+            gromit.rightlower.setPosition(0.4); //glyph open
+        } else if (gamepad1.dpad_right ){
+            gromit.leftlower.setPosition(0.85);
+            gromit.rightlower.setPosition(0.15); //glyph closed
+        }
+
        // servo
         if (gamepad1.dpad_up) {
-            gromit.jewelsservo.setPosition(0.7);
+            gromit.jewelsservo.setPosition(0.0);
         }
         if (gamepad1.dpad_down) {
-            gromit.jewelsservo.setPosition(0.2);
+            gromit.jewelsservo.setPosition(0.45);
         }
-//gyroturn
+
+        //Parallel Or Perp. Orientation
+        if ((gamepad1.x) || (gamepad1.left_bumper)) {
+//            gromit.left_front.setPower(-power);
+//            gromit.left_back.setPower(-power);
+//            gromit.right_front.setPower(power);
+//            gromit.right_back.setPower(power);
+//            telemetry.addLine()
+//                    .addData("heading", new Func<String>() {
+//                        @Override
+//                        public String value() {
+//                            return formatAngle(angles.angleUnit, angles.firstAngle);
+//                        }
+//                    });
+//            telemetry.update();
+
+            if ((angles.firstAngle > -45.0) && (angles.firstAngle < 45.0)) {
+                target = 0.0;
+            } else if ((angles.firstAngle < -45.0) && (angles.firstAngle > -135.0)) {
+                target = -90.0;
+            } else if ((angles.firstAngle > 45.0) && (angles.firstAngle < 135.0)) {
+                target = 90.0;
+            } else {
+                target = 180.0;
+            }
+            direction = -(target - angles.firstAngle) / Math.abs(target - angles.firstAngle);
+            while (Math.abs(angles.firstAngle - target) > 5.0) {
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                telemetry.addData("heading", angles.firstAngle);
+                telemetry.addData("target", target);
+                telemetry.update();
+                //idle();
+//                telemetry.addLine()
+//                        .addData("heading", new Func<String>() {
+//                            @Override
+//                            public String value() {
+//                                return formatAngle(angles.angleUnit, angles.firstAngle);
+//                            }
+//                        });
+//                telemetry.update();
+
+//                power = (angles.firstAngle - 90) / -180 + 0.1;
+                power = 0.2;
+
+                gromit.left_front.setPower(-power*direction);
+                gromit.left_back.setPower(-power*direction);
+                gromit.right_front.setPower(power*direction);
+                gromit.right_back.setPower(power*direction);
+
+
+            }
+            gromit.left_front.setPower(0);
+            gromit.left_back.setPower(0);
+            gromit.right_front.setPower(0);
+            gromit.right_back.setPower(0);
+        }
+
+
+        //gyroturn
         if (gamepad1.y) {
             gromit.left_front.setPower(-power);
             gromit.left_back.setPower(-power);
@@ -166,14 +235,14 @@ public class Tele extends OpMode{
             while (angles.firstAngle < 88) {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 //idle();
-                telemetry.addLine()
-                        .addData("heading", new Func<String>() {
-                            @Override
-                            public String value() {
-                                return formatAngle(angles.angleUnit, angles.firstAngle);
-                            }
-                        });
-                telemetry.update();
+//                telemetry.addLine()
+//                        .addData("heading", new Func<String>() {
+//                            @Override
+//                            public String value() {
+//                                return formatAngle(angles.angleUnit, angles.firstAngle);
+//                            }
+//                        });
+//                telemetry.update();
                 power = (angles.firstAngle - 90) / -180 + 0.1;
                 gromit.left_front.setPower(-power);
                 gromit.left_back.setPower(-power);

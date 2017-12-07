@@ -8,8 +8,7 @@ package RicksCode.Bill_Adapted;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import static RicksCode.Bill_Adapted.DriveTrain.BrakeSetting.Brake;
-import static RicksCode.Bill_Adapted.DriveTrain.BrakeSetting.Float;
+
 
 @Autonomous(name = "Nathanauto", group = "zRick")  // @Autonomous(...) is the other common choice
 //@Disabled
@@ -89,14 +88,12 @@ public class MecAuto extends LinearOpMode {
         sleep(20);
         gromit.driveTrain.runUsingEncoders();
         //gromit.driveTrain.mecanumTurn(1,45);
-        gromit.driveTrain.setDriveBreak(Brake);
         gromit.driveTrain.mecanumDrive(0.5, 20, 0,0);
         gromit.driveTrain.mecanumDrive(0.85, -10, 0,-90);
         sleep(800);
         gromit.driveTrain.mecanumDrive(0.85, 10, 0, -90);
         gromit.driveTrain.mecanumDrive(0.5, -20, 0,0);
         gromit.driveTrain.mecanumDrive(0.5, 10, 0,-45);
-
         gromit.driveTrain.stopMotors();
         while (opModeIsActive()) {
             telemetry.addData("", "Heading: %4.2f ", gromit.driveTrain.getheading());
