@@ -16,6 +16,7 @@ public class RelicRecoveryRobot extends Robot {
     protected HDriveTrain hDriveTrain;
     protected GlyphLift glyphLift;
     protected Intake intake;
+    protected VisionHelper visionHelper;
 
     /**
      * Construct a new Relic Recovery robot, with an op-mode that is using this robot.
@@ -28,10 +29,8 @@ public class RelicRecoveryRobot extends Robot {
         this.hDriveTrain = new HDriveTrain(this);
         this.glyphLift = new GlyphLift(this);
         this.intake = new Intake(this);
+        this.visionHelper = new VisionHelper(this);
 
-//        this.visionHelper = new VisionHelper(this);
-
-//        visionHelper.initializeVuforia(VuforiaLocalizer.CameraDirection.BACK);
-//        visionHelper.initializeOpenCV();
+        visionHelper.initializeVuforia(VuforiaLocalizer.CameraDirection.BACK);
     }
 }
