@@ -499,12 +499,12 @@ public class NewRobotFinal
         int initPos = liftMotor.getCurrentPosition();
         if(up)
         {
-            liftMotor.setPower(-Math.abs(-1));
+            liftMotor.setPower(-Math.abs(pow));
             while(-liftMotor.getCurrentPosition() < -initPos + xEnc){}
         }
         else
         {
-            liftMotor.setPower(1);
+            liftMotor.setPower(Math.abs(pow));
             while(-liftMotor.getCurrentPosition() > -initPos - xEnc){}
         }
         liftMotor.setPower(0);
