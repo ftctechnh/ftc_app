@@ -23,9 +23,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name="FJSKLADFSDKLJFKLSDGHZSDJKLG bgk;hasd;j", group="Linear Auto")
 
 public class Thing extends LinearOpMode {
-    /*VuforiaLocalizer vuforia;
-    RelicRecoveryVuMark vuMark;
-    OpenGLMatrix pose;*/
     VuforiaPlagiarism vu = new VuforiaPlagiarism();
 
     public enum MoveType {
@@ -140,6 +137,40 @@ public class Thing extends LinearOpMode {
             robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+    void encodeInd(double speed, MoveType move) {
+        int multFL = 1;
+        int multFR = 1;
+        int multRL = 1;
+        int multRR = 1;
+        if (move == MoveType.ROT) {
+            if (speed > 0) {
+                multFR *= -1;
+                multRR *= -1;
+            } else {
+                multFL *= -1;
+                multRL *= -1;
+            }
+        } else if (move == MoveType.LATERALLY) {
+            if (speed > 0) {
+                multFR *= -1;
+                multRL *= -1;
+            } else {
+                multFL *= -1;
+                multRR *= -1;
+            }
+        } else if (move == MoveType.STRAIGHT) {
+            if (speed < 0) {
+                multFL *= -1;
+                multFR *= -1;
+                multRL *= -1;
+                multRR *= -1;
+            }
+        }
+        robot.flDrive.setPower(speed * multFL);
+        robot.frDrive.setPower(speed * multFR);
+        robot.rlDrive.setPower(speed * multRL);
+        robot.rrDrive.setPower(speed * multRR);
+    }
     public void wait(int t) {
         try {
             Thread.sleep(t);
@@ -147,53 +178,4 @@ public class Thing extends LinearOpMode {
 
         }
     }
-   /* public void initVuforia() {
-        VuforiaLocalizer vuforia;
-        RelicRecoveryVuMark vuMark;
-        OpenGLMatrix pose;
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
-        parameters.vuforiaLicenseKey = "AbQfkoj/////AAAAGURTD1LwoUjKk6qgxygb/6QTHah6F5/HMfF99SDO7C7wnhjBctp6i+bm/mX4El1OTHR8wW0gGjoM4qNsfM3cgFiMDHE4/IBhgpc2siB6nwrgEVZbo3PwJ0xImdXvTSEfWn8Fc6g+svSUFb97VAyjVAEsOvMC+sSqpjIKEQLoCdbCpLRmnX+9socxkX5qix9OVb0xREGbTtddp2fwtLleMXMHxUwhsTc3q7vqD5LDK7Q8GxOaV9jyB6/3Y3T65qaWOGjlGo39Ts394+WTp4hqwqvuu0Gkztlk2e6IeJbN9sN1+8xb2XQllnrHeBhIXxaoES1MRkyjMHliwQxbRJv8kwPeY9q/AsOA/dUy1x87iZLp";
-
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-
-        VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate");
-        vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
-
-        while (opModeIsActive()) {
-            //telemetry.addData("sadf", vuMark);
-            //telemetry.update();
-            if (vuMark == vuMark.CENTER) {
-                encode(10, 0.5, MoveType.STRAIGHT);
-                break;
-            }
-
-            //telemetry.addData("slkdjf", "asldkfjsld");
-                VectorF trans = pose.getTranslation();
-                Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                // Extract the X, Y, and Z components of the offset of the target relative to the robot
-                double tX = trans.get(0);
-                double tY = trans.get(1);
-                double tZ = trans.get(2);
-
-                // Extract the rotational components of the target relative to the robot
-                double rX = rot.firstAngle;
-                double rY = rot.secondAngle;
-                double rZ = rot.thirdAngle;
-
-                telemetry.addData("tX", tX);
-                telemetry.addData("tY", tY);
-                telemetry.addData("tZ", tZ);
-                telemetry.addData("rX", rX);
-                telemetry.addData("rY", rY);
-                telemetry.addData("rZ", rZ);
-        }
-    }*/
 }

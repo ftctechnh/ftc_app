@@ -133,6 +133,40 @@ public class  BlueTwoAuto extends LinearOpMode {
             robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+    void encodeInd(double speed, MoveType move) {
+        int multFL = 1;
+        int multFR = 1;
+        int multRL = 1;
+        int multRR = 1;
+        if (move == MoveType.ROT) {
+            if (speed > 0) {
+                multFR *= -1;
+                multRR *= -1;
+            } else {
+                multFL *= -1;
+                multRL *= -1;
+            }
+        } else if (move == MoveType.LATERALLY) {
+            if (speed > 0) {
+                multFR *= -1;
+                multRL *= -1;
+            } else {
+                multFL *= -1;
+                multRR *= -1;
+            }
+        } else if (move == MoveType.STRAIGHT) {
+            if (speed < 0) {
+                multFL *= -1;
+                multFR *= -1;
+                multRL *= -1;
+                multRR *= -1;
+            }
+        }
+        robot.flDrive.setPower(speed * multFL);
+        robot.frDrive.setPower(speed * multFR);
+        robot.rlDrive.setPower(speed * multRL);
+        robot.rrDrive.setPower(speed * multRR);
+    }
     public void wait(int t) {
         try {
             Thread.sleep(t);
