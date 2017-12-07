@@ -601,9 +601,17 @@ public class AutoLib {
         private SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
         private double mPrevTime;                           // time of previous loop() call
         private ArrayList<SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
+        private float powerMin;
+        private float powerMax;
 
         public GyroGuideStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
                              ArrayList<SetPower> motorsteps, float power)
+        {
+            this(mode, heading, gyro, pid, motorsteps, power, -1, 1);
+        }
+
+        public GyroGuideStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                             ArrayList<SetPower> motorsteps, float power, float powerMin, float powerMax)
         {
             mOpMode = mode;
             mHeading = heading;
@@ -611,6 +619,8 @@ public class AutoLib {
             mPid = pid;
             mMotorSteps = motorsteps;
             mPower = power;
+            this.powerMin = powerMin;
+            this.powerMax = powerMax;
         }
 
         public boolean loop()
@@ -636,8 +646,8 @@ public class AutoLib {
             float correction = -mPid.loop(error, (float)dt);
 
             // compute new right/left motor powers
-            float rightPower = Range.clip(mPower + correction, -1, 1);
-            float leftPower = Range.clip(mPower - correction, -1, 1);
+            float rightPower = Range.clip(mPower + correction, this.powerMin, this.powerMax);
+            float leftPower = Range.clip(mPower - correction, this.powerMin, this.powerMax);
 
             // set the motor powers -- handle both time-based and encoder-based motor Steps
             // assumed order is right motors followed by an equal number of left motors
@@ -704,7 +714,7 @@ public class AutoLib {
     static public class AzimuthTimedDriveStep extends ConcurrentSequence {
 
         public AzimuthTimedDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
-                                     DcMotor motors[], float power, float time, boolean stop)
+                                     DcMotor motors[], float power, float time, boolean stop, float powerMin, float powerMax)
         {
             // add a concurrent Step to control each motor
             ArrayList<SetPower> steps = new ArrayList<SetPower>();
@@ -716,8 +726,14 @@ public class AutoLib {
                 }
 
             // add a concurrent Step to control the motor steps based on gyro input
-            this.preAdd(new GyroGuideStep(mode, heading, gyro, pid, steps, power));
+            this.preAdd(new GyroGuideStep(mode, heading, gyro, pid, steps, power, powerMin, powerMax));
 
+        }
+
+        public AzimuthTimedDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                     DcMotor motors[], float power, float time, boolean stop)
+        {
+            this(mode, heading, gyro, pid, motors, power, time, stop, -1, 1);
         }
 
         // the base class loop function does all we need -- it will return "done" when
@@ -731,7 +747,7 @@ public class AutoLib {
     static public class AzimuthCountedDriveStep extends ConcurrentSequence {
 
         public AzimuthCountedDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
-                                       DcMotor motors[], float power, int count, boolean stop)
+                                       DcMotor motors[], float power, int count, boolean stop, float powerMin, float powerMax)
         {
             // add a concurrent Step to control each motor
             ArrayList<SetPower> steps = new ArrayList<SetPower>();
@@ -743,8 +759,14 @@ public class AutoLib {
                 }
 
             // add a concurrent Step to control the motor steps based on gyro input
-            this.preAdd(new GyroGuideStep(mode, heading, gyro, pid, steps, power));
+            this.preAdd(new GyroGuideStep(mode, heading, gyro, pid, steps, power, powerMin, powerMax));
 
+        }
+
+        public AzimuthCountedDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                       DcMotor motors[], float power, int count, boolean stop)
+        {
+            this(mode, heading, gyro, pid, motors, power, count, stop, -1, 1);
         }
 
         // the base class loop function does all we need -- it will return "done" when

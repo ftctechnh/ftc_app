@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
@@ -47,7 +48,7 @@ public class RedPilliar extends VuforiaBallLib {
     private static final int PEAK_FRAME_COUNT = 3;
     protected boolean red = true;
     private int[] data;
-    private BotHardware bot = new BotHardware(this);
+   // private BotHardware bot = new BotHardware(this);
 
     private AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
 
@@ -59,23 +60,28 @@ public class RedPilliar extends VuforiaBallLib {
 
     SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
 
+    final DcMotor[] motors = new DcMotor[] {
+            new AutoLib.TestMotor("fr", this),
+            new AutoLib.TestMotor("br", this),
+            new AutoLib.TestMotor("fl", this),
+            new AutoLib.TestMotor("br", this)
+    };
+
     @Override
     public void init() {
         initVuforia(true);
-        bot.init();
+        //bot.init();
 
-        int mul = red ? 1 : -1;
-
+        int mul = red ? -1 : 1;
 
         mSeq.add(
             new AutoLib.RunUntilStopStep(
-                new AutoLib.MoveByTimeStep(bot.getMotorVelocityShimArray(), -180.0f * mul, 5.0f, true),
-                new PeakFindStep(
-                        PEAK_FIND_WINDOW, PEAK_FRAME_COUNT
-                )
+                new AutoLib.MoveByTimeStep(motors, 180.0f * mul, 5.0f, true),
+                new PeakFindStep(PEAK_FIND_WINDOW, PEAK_FRAME_COUNT)
             )
         );
-        mSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), false, 45.0f * mul, 3, this));
+        mSeq.add(new PeakHoneStep(motors, red, new SensorLib.PID(0.15f, 0.05f, 0, 15), 25.0f, 105.0f, 3, this));
+        /*
         int count = 400;
         if(!red) count += 600;
         mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f * mul, count, true));
@@ -86,6 +92,7 @@ public class RedPilliar extends VuforiaBallLib {
         mSeq.add(bot.getDropStep());
 
         //mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f, 1600, true));
+        */
     }
 
     @Override
@@ -148,50 +155,71 @@ public class RedPilliar extends VuforiaBallLib {
 
     private class PeakHoneStep extends  AutoLib.Step {
         private final int error;
-        private final float power;
         private final DcMotor[] motorRay;
-        private final boolean reversed;
         private final OpMode mode;
+        SensorLib.PID errorPid;
+        float minPower;
+        float maxPower;
+        double lastTime = 0;
 
         private int lastPeakPos = -1;
         private int lostPeaksCount = 0;
         private int foundPeakCount = 0;
+        private boolean fromLeft;
 
         private static final int PEAK_LOST_BREAK = 10;
         private static final int PEAK_DIST_THRESH = 15;
-        private static final int PEAK_FOUND_COUNT = 3;
+        private static final int PEAK_FOUND_COUNT = 10;
 
-        PeakHoneStep(DcMotor[] motors, boolean revesed, float power, int error, OpMode mode) {
+        PeakHoneStep(DcMotor[] motors, boolean fromLeft, SensorLib.PID errorPid, float minPower, float maxPower, int error, OpMode mode) {
             this.motorRay = motors;
-            this.power = power;
+            this.errorPid = errorPid;
+            this.minPower = minPower;
+            this.maxPower = maxPower;
             this.error = error;
-            this.reversed = revesed;
+            this.fromLeft = fromLeft;
             this.mode = mode;
         }
 
         public boolean loop() {
             mode.telemetry.addData("Home!", true);
+            if(lastTime == 0) lastTime = mode.getRuntime();
             //if first run, get the peak we want to center on.
             //in this case, the one farthest left in the frame
             ArrayList<Integer> peaks = getPeaks();
             //if we have no peaks, ty again next time
             if(peaks.size() <= 0) return ++lostPeaksCount >= PEAK_LOST_BREAK;
+            //get the peak according to whether it's coming to the left or right
+            int peak;
+            if(!fromLeft) peak = peaks.get(0);
+            else peak = peaks.get(peaks.size() - 1);
+            if(lastPeakPos == -1) lastPeakPos = peak;
             //else if the distance of the peaks is greater than reasonable, break
-            if(lastPeakPos != -1 && Math.abs(peaks.get(peaks.size() - 1) - lastPeakPos) >= PEAK_DIST_THRESH) return ++lostPeaksCount >= PEAK_LOST_BREAK;
+            if(lastPeakPos != -1 && Math.abs(peak - lastPeakPos) >= PEAK_DIST_THRESH) return ++lostPeaksCount >= PEAK_LOST_BREAK;
             //if the peak is within stopping margin, stop
-            telemetry.addData("Peak dist", Math.abs(peaks.get(peaks.size() - 1) - 127));
-            if(Math.abs(peaks.get(peaks.size() - 1) - 127) <= error) {
+            if(Math.abs(peak - 127) <= error) {
                 setMotors(0);
-                return ++foundPeakCount >= 10;
+                return ++foundPeakCount >= PEAK_FOUND_COUNT;
             }
             //save the last peak
-            lastPeakPos = peaks.get(peaks.size() - 1);
+            lastPeakPos = peak;
             //reset lost peaks counter
             lostPeaksCount = 0;
             foundPeakCount = 0;
             //adjust motors
-            if(peaks.get(0) > 127) setMotors(reversed ? -power : power);
-            else setMotors(reversed ? power : -power);
+            int error = 127 - peak;
+            double time = getRuntime();
+            float pError = errorPid.loop(error, (float)(time - lastTime));
+            lastTime = time;
+            mode.telemetry.addData("power error", pError);
+            //cut out a middle range, but handle positive and negative
+            float power;
+            if(pError >= 0) power = Range.clip(minPower + pError, minPower, maxPower);
+            else power = Range.clip(pError - minPower, -maxPower, -minPower);
+            setMotors(-power);
+            //telem
+            telemetry.addData("Peak dist", error);
+            //return
             return false;
         }
 

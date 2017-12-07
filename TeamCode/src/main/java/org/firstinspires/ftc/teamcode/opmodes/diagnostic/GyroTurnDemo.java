@@ -28,11 +28,11 @@ public class GyroTurnDemo extends OpMode {
 
     public void init() {
         mSeq.add(new AutoLib.RunUntilStopStep(
-                new AutoLib.AzimuthTimedDriveStep(this, 90, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 270.0f, 10, true),
+                new AutoLib.AzimuthTimedDriveStep(this, 90, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 270.0f, 10, true, -450.0f, 450.0f),
                 new GyroStopStep(bot.getHeadingSensor(), 90, 3)
         ));
 
-        mSeq.add(new AutoLib.AzimuthTimedDriveStep(this, 90, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 270.0f, 2.0f, true));
+        mSeq.add(new AutoLib.AzimuthTimedDriveStep(this, 90, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 270.0f, 2.0f, true, -450.0f, 450.0f));
 
         bot.init();
 
