@@ -160,15 +160,13 @@ public class holonomicDrive_6_0 extends LinearOpMode
 
                 engine.drive(x,y);
                 lift.setPower(z);
+                servo1.setPosition(position1);
+                servo2.setPosition(position2);
             }
 
             // Display the current value
             telemetry.addData("Servo Position 1", "%5.2f", position1);
             telemetry.addData("Servo Position 2", "%5.2f", position2);
-            telemetry.update();
-
-            servo1.setPosition(position1);
-            servo2.setPosition(position2);
 
             telemetry.addData("pinch: ", pinch);
             telemetry.addData("servo2 Position: ", servo2.getPosition());
