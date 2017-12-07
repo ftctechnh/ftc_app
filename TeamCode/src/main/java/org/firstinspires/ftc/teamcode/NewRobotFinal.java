@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
-import android.os.SystemClock;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -12,7 +11,6 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -22,7 +20,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -67,10 +64,10 @@ public class NewRobotFinal
     Acceleration gravity;
 
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
-    private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
-    private float roboDiameterCm = (float)(38.1*Math.PI); // can be adjusted
-    private float wheelCircIn = (float)(Math.PI * 4) ; //Circumference of wheels used
-    private float wheelCircCm = (float)(10.168* Math.PI);
+    public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
+    public final float roboDiameterCm = (float)(38.1*Math.PI); // can be adjusted
+    public final float wheelCircIn = (float)(Math.PI * 4) ; //Circumference of wheels used
+    public final float wheelCircCm = (float)(10.168* Math.PI);
 
     public NewRobotFinal(HardwareMap hardwareMap)
     {
@@ -225,7 +222,7 @@ public class NewRobotFinal
 
     public void driveStraight_In(float inches, double pow)
     {
-        float encTarget = encCountsPerRev / wheelCircCm * inches;
+        float encTarget = neverrestEncCountsPerRev / wheelCircCm * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         resetDriveEncoders();
@@ -264,7 +261,7 @@ public class NewRobotFinal
     {
         double degToRad = degrees * Math.PI / 180.0f; // converts it to Radians
 
-        double encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        double encTarget = (roboDiameterCm / 2 * degToRad) * (neverrestEncCountsPerRev / wheelCircCm);
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
 
@@ -326,7 +323,7 @@ public class NewRobotFinal
     {
         double degToRad = degrees * Math.PI / 180.0f; // converts it to Radians
 
-        double encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm);
+        double encTarget = (roboDiameterCm / 2 * degToRad) * (neverrestEncCountsPerRev / wheelCircCm);
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
 
@@ -383,7 +380,7 @@ public class NewRobotFinal
     {
         float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm)/2;
+        float encTarget = (roboDiameterCm / 2 * degToRad) * (neverrestEncCountsPerRev / wheelCircCm)/2;
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
         //we divide it by two at the end to compensate for using two motors
@@ -430,7 +427,6 @@ public class NewRobotFinal
         {
             degrees += 360;
         }
-
         initIMU();
 
         if (degrees < 0)
@@ -498,6 +494,22 @@ public class NewRobotFinal
         }
     }
 
+    public void moveXEncoderCounts(int xEnc, float pow, boolean up)
+    {
+        int initPos = liftMotor.getCurrentPosition();
+        if(up)
+        {
+            liftMotor.setPower(-Math.abs(-1));
+            while(-liftMotor.getCurrentPosition() < -initPos + xEnc){}
+        }
+        else
+        {
+            liftMotor.setPower(1);
+            while(-liftMotor.getCurrentPosition() > -initPos - xEnc){}
+        }
+        liftMotor.setPower(0);
+    }
+
     public void moveWing(boolean moveDown)
     {
         if(moveDown)
@@ -518,25 +530,24 @@ public class NewRobotFinal
     {
         if (!close)
         {
-            leftDoorWall.setPosition(-.5);
-            rightDoorWall.setPosition(-.5);
+            leftDoorWall.setPosition(.5);
+            rightDoorWall.setPosition(.5);
         }
         else
         {
-            leftDoorWall.setPosition(.5);
-            rightDoorWall.setPosition(.5);
+            leftDoorWall.setPosition(-.5);
+            rightDoorWall.setPosition(-.5);
         }
     }
     
     public void fineAdjDoors(double in)
     {
         leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
+        rightDoorWall.setPosition(rightDoorWall.getPosition() - in);
     }
 
     public void autoPark()
     {
-        long startTimeAutopark = SystemClock.elapsedRealtime();
         double angle = anglePerpToGrav();
         if (angle > 5)
         {
@@ -563,10 +574,22 @@ public class NewRobotFinal
             grabberRotator.setPosition(.52);
         }
     }
-
+    
+    public void fineAdjGrabber(float in)
+    {
+        grabber.setPosition(grabber.getPosition() + in);
+    }
     public void fineAdjGrabberRotator(float in)
     {
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
+    }
+    
+    public void tiltGrabberRotator(boolean goUp)
+    {
+        if (goUp)
+            grabberRotator.setPosition(0);
+        else
+            grabberRotator.setPosition(.5);
     }
 
     public void stopAllMotors()

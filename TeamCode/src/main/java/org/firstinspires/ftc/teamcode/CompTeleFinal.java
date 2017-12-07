@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -48,14 +47,14 @@ public class CompTeleFinal extends OpMode
         newRobot.fineMoveLift(gamepad2.left_stick_y);
 
         if(gamepad2.left_bumper)
-            newRobot.fineAdjDoors(-1/180);
-        else if(gamepad2.left_trigger > .5)
             newRobot.fineAdjDoors(1/180);
+        else if(gamepad2.left_trigger > .5)
+            newRobot.fineAdjDoors(-1/180);
 
         if(gamepad2.right_bumper)
-            newRobot.getTailRelease().setPower(-.4f);
+            newRobot.getTailRelease().setPower(-.4f);//release
         else if (gamepad2.right_trigger > .5)
-            newRobot.getTailRelease().setPower(.4f);
+            newRobot.getTailRelease().setPower(.4f);//retract
         else
             newRobot.getTailRelease().setPower(0);
 
@@ -84,7 +83,7 @@ public class CompTeleFinal extends OpMode
         }
 
         if (gamepad1.y)
-            newRobot.getWingMotor().setPower(.3);
+            newRobot.getWingMotor().setPower(.3);//lift wing
         else if (gamepad1.b)
         {
             isWingUp = !isWingUp;
