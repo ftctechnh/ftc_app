@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -83,7 +82,6 @@ public class NullbotHardware {
 
     // State used for updating telemetry
     Orientation angles;
-    Acceleration gravity;
 
     public boolean initialized = false;
 
@@ -409,7 +407,8 @@ public class NullbotHardware {
         lowerLeftWhipSnake();
     }
     public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(250.0/255.0);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(100.0/255.0);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(90.0/255.0);}
+    public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(120.0/255.0);}
 
     public void crunchBlockClaw() {
         leftBlockClaw.setPosition(200.0/255.0);

@@ -24,6 +24,8 @@ public class ConstrainedPIDMotor {
     int encoderOffset;
     public boolean override;
     Telemetry logging;
+    boolean seekingPosition;
+    Integer targetPos;
 
     public ConstrainedPIDMotor(DcMotor m, int t, double forwardRunSpeed, double backwardRunSpeed,
                                int min, int max, Telemetry tel) {
@@ -38,11 +40,34 @@ public class ConstrainedPIDMotor {
         lockPos = 0;
         encoderOffset = 0;
         logging = tel;
+        seekingPosition = false;
+        targetPos = null;
     }
 
     public void setDirection(Direction d) {
+        setDirection(d, true);
+    }
+    public void setDirection(Direction d, boolean stopPositionSeeking) {
         if (d != HOLD) {
             timer.reset();
+        }
+
+        if (stopPositionSeeking && seekingPosition) {
+            seekingPosition = false;
+            targetPos = null;
+
+        } else if (seekingPosition) {
+
+            int ticksToGo = targetPos - m.getCurrentPosition();
+
+            if (Math.abs(ticksToGo) < 100) { // Doesn't work if encoder position jumps for some reason
+                seekingPosition = false;
+                targetPos = null;
+
+            } else {
+                goToPos(targetPos, 1, false, (int) Math.signum(ticksToGo));
+                return;
+            }
         }
 
         switch (d) {
@@ -71,6 +96,12 @@ public class ConstrainedPIDMotor {
                 goToPos(min, backwardRunSpeed, true, -1);
                 break;
         }
+    }
+
+    public void setTargetToSeek(int targetEncoderPos) {
+        targetPos = targetEncoderPos;
+        seekingPosition = true;
+        setDirection(HOLD, false);
     }
 
     private void releaseMotor() {

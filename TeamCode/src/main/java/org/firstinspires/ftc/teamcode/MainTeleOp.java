@@ -48,20 +48,18 @@ public class MainTeleOp extends LinearOpMode {
 
     ElapsedTime timeSinceDriveModeToggle;
     //ElapsedTime timeSinceSlowModeToggle;
-    ElapsedTime timeSinceZTypeSlowModeToggle;
 
     ElapsedTime totalElapsedTime;
 
     boolean wasBackPressed;
     boolean slowMode;
-    boolean zTypeSlowMode;
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap, this, gamepad1, gamepad2);
 
         lift = new ConstrainedPIDMotor(robot.lift, 100, 0.6, 0.6, 0, -2500, telemetry);
-        zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.3, 0, 12288, telemetry);
+        zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.4, 0, 12288, telemetry);
 
         waitForStart();
 
@@ -76,7 +74,6 @@ public class MainTeleOp extends LinearOpMode {
         flashMode = false;
         timeTillHeadingLock = new ElapsedTime();
         timeSinceDriveModeToggle = new ElapsedTime();
-        timeSinceZTypeSlowModeToggle = new ElapsedTime();
 
         //timeSinceSlowModeToggle = new ElapsedTime();
         totalElapsedTime = new ElapsedTime();
@@ -85,7 +82,6 @@ public class MainTeleOp extends LinearOpMode {
         wasGP2APressed = false;
         wasBackPressed = false;
         slowMode = false;
-        zTypeSlowMode = false;
 
         while (opModeIsActive()) {
             robot.updateReadings();
@@ -96,18 +92,8 @@ public class MainTeleOp extends LinearOpMode {
                 timeSinceDriveModeToggle.reset();
             }
 
-            if (gamepad2.a && !wasGP2APressed &&
-                    timeSinceDriveModeToggle.milliseconds() > 100) {
-                zTypeSlowMode = !zTypeSlowMode;
-                timeSinceZTypeSlowModeToggle.reset();
-                if (zTypeSlowMode) {
-                    zType.forwardRunSpeed = 0.1;
-                    zType.backwardRunSpeed = 0.1;
-                } else {
-                    zType.forwardRunSpeed = 0.4;
-                    zType.backwardRunSpeed = 0.3;
-                }
-            }
+            zType.forwardRunSpeed = (1 - gamepad2.left_trigger) * 0.35 + 0.05;
+            zType.backwardRunSpeed = zType.forwardRunSpeed;
 
             wasRightTriggerPressed = gamepad1.right_trigger > triggerThreshold;
 
@@ -144,13 +130,17 @@ public class MainTeleOp extends LinearOpMode {
                         zType.setDirection(ConstrainedPIDMotor.Direction.FORWARD);
                     } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                         zType.setDirection(ConstrainedPIDMotor.Direction.BACKWARD);
-                    } else {
-                        zType.setDirection(ConstrainedPIDMotor.Direction.HOLD);
+                    } else if (gamepad2.b){
+                        zType.setTargetToSeek(2500);
+                    } else if (gamepad2.x){
+                        zType.setTargetToSeek(0);
+                    } else if (!zType.seekingPosition){
+                        zType.setDirection(ConstrainedPIDMotor.Direction.HOLD, false);
                     }
 
-                    if (gamepad1.b || gamepad2.b) {
+                    if (gamepad1.b) {
                         robot.openBlockClaw();
-                    } else if (gamepad1.x || gamepad2.x) {
+                    } else if (gamepad1.x) {
                         robot.closeBlockClaw();
                     }
 
@@ -181,7 +171,15 @@ public class MainTeleOp extends LinearOpMode {
 
                     // Taunt code
                     if (!gamepad1.y && !gamepad2.y) {
-                        robot.raiseWhipSnake();
+                        if (zType.seekingPosition) {
+                            if (zType.targetPos == 0) {
+                                robot.almostRaiseWhipSnake();
+                            } else {
+                                robot.raiseWhipSnake();
+                            }
+                        } else {
+                            robot.raiseWhipSnake();
+                        }
                     } else {
                         robot.lowerWhipSnake();
                     }
