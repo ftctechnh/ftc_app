@@ -16,7 +16,7 @@ import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.imp
 import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.UP;
 
 /**
- *
+ * The glyph lift mechanism collects glyphs with two grippers and is able to place them in the cryptobox.
  */
 
 public class GlyphLift implements IMechanism {
@@ -38,12 +38,24 @@ public class GlyphLift implements IMechanism {
     private RotationMotorPosition currentRotationPosition = UNDEFINED;
 
     /**
+     * This enumeration type represents the rotation position of the rotation motor,
+     * which can be one of four values:
+     * <ul>
+     *   <li>UP (with the blue gripper on the top)</li>
+     *   <li>DOWN (with the blue gripper on the bottom)</li>
+     *   <li>LEFT (with the red gripper to the right)</li>
+     *   <li>RIGHT (with the red gripper to the left)</li>
+     * </ul>
+     *
+     * The additional value UNDEFINED is implementation specific and should never be passed to
+     * {@link #setRotationMotorPosition(RotationMotorPosition)} and will never be
+     * returned by {@link #getCurrentRotationMotorPosition()}.
      *
      */
     public enum RotationMotorPosition {
         UP(0), DOWN(1650), LEFT(825), RIGHT(-825), UNDEFINED(-1);
 
-        public int encoderPosition;
+        private int encoderPosition;
 
         RotationMotorPosition(int pos) {
             this.encoderPosition = pos;
@@ -51,8 +63,9 @@ public class GlyphLift implements IMechanism {
     }
 
     /**
+     * Construct a new {@link GlyphLift} with a reference to the utilizing robot.
      *
-     * @param robot
+     * @param robot the robot using this glyph lift
      */
     public GlyphLift(Robot robot) {
         this.opMode = robot.getCurrentOpMode();
@@ -78,43 +91,45 @@ public class GlyphLift implements IMechanism {
     }
 
     /**
+     * This method sets the power of the lift motor.
+     * The lift motor is the motor that raises and lowers the linear slides.
      *
-     * @param power
+     * @param power the power to run the lift motor in a range of 1.0 to -1.0.
+     *              Negative values lower the lift and, likewise, positive values raise the lift.
      */
     public void setLiftMotorPower(double power) {
-        if(power < 0) {
-            power *= MAX_LIFT_MOTOR_POWER_UP;
-        } else {
-            power *= MAX_LIFT_MOTOR_POWER_DOWN;
-        }
-
-        liftMotor.setPower(power);
+        liftMotor.setPower(power * (power < 0 ? MAX_LIFT_MOTOR_POWER_UP : MAX_LIFT_MOTOR_POWER_DOWN));
     }
 
     /**
+     * Set the power of the rotation motor. The rotation motor is the motor that rotates the glyph grippers.
      *
-     * @param power
+     * @param power the power to run the rotation motor in a range of 1.0 to -1.0.
+     *              Negative values run the rotation motor in the counterclockwise direction, and
+     *              likewise, positive values run the rotation motor clockwise.
      */
     public void setRotationMotorPower(double power) {
         rotationMotor.setPower(power * MAX_LIFT_ROTATION_MOTOR_POWER);
     }
 
     /**
+     * Get the current position of the rotation motor.
      *
-     * @return
+     * @see RotationMotorPosition for what this enumeration type represents
+     * @return the current rotation position of the rotation motor
      */
     public RotationMotorPosition getCurrentRotationMotorPosition() {
-        int currentPos = rotationMotor.getCurrentPosition();
-        int encoderPos;
+        int currentEncoderPos = rotationMotor.getCurrentPosition();
+        int rotationEncoderPos;
 
         for (RotationMotorPosition pos : RotationMotorPosition.values()) {
-            encoderPos = pos.encoderPosition;
+            rotationEncoderPos = pos.encoderPosition;
 
             if(pos == DOWN) {
-                encoderPos = Math.abs(encoderPos);
+                rotationEncoderPos = Math.abs(rotationEncoderPos);
             }
 
-            if (Math.abs(encoderPos - currentPos) < ROTATION_MOTOR_POSITION_THRESHOLD) {
+            if (Math.abs(rotationEncoderPos - currentEncoderPos) < ROTATION_MOTOR_POSITION_THRESHOLD) {
                 return pos;
             }
         }
@@ -123,8 +138,11 @@ public class GlyphLift implements IMechanism {
     }
 
     /**
+     * Rotate the rotation motor to the requested rotation position.
+     * This method is implemented so as not to tangle or over-wrap the I2c cable around the motor shaft.
      *
-     * @param requestedPosition
+     * @see RotationMotorPosition
+     * @param requestedPosition the desired rotation position
      */
     public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
         // only update current position if it's not undefined
@@ -171,30 +189,46 @@ public class GlyphLift implements IMechanism {
         }
     }
 
-    public void closeRedGripper() {
-        redLeftServo.setPosition(0.35);
-        redRightServo.setPosition(0.65);
-    }
-
-    public void closeBlueGripper() {
-        blueLeftServo.setPosition(0.65);
-        blueRightServo.setPosition(0.35);
-    }
-
-    public void openRedGripper() {
-        redRightServo.setPosition(0.8);
-        redLeftServo.setPosition(0.2);
-    }
-
-    public void openBlueGripper() {
-        blueLeftServo.setPosition(0.8);
-        blueRightServo.setPosition(0.2);
-    }
-
+    /**
+     * Set the grippers to their initialized positions.
+     * This method should be called during initialization.
+     */
     public void initializeGrippers() {
         blueLeftServo.setPosition(1.0);
         blueRightServo.setPosition(0);
         redRightServo.setPosition(1.0);
         redLeftServo.setPosition(0);
+    }
+
+    /**
+     * Close the red gripper.
+     */
+    public void closeRedGripper() {
+        redLeftServo.setPosition(0.35);
+        redRightServo.setPosition(0.65);
+    }
+
+    /**
+     * Close the blue gripper.
+     */
+    public void closeBlueGripper() {
+        blueLeftServo.setPosition(0.65);
+        blueRightServo.setPosition(0.35);
+    }
+
+    /**
+     * Open the red gripper.
+     */
+    public void openRedGripper() {
+        redRightServo.setPosition(0.8);
+        redLeftServo.setPosition(0.2);
+    }
+
+    /**
+     * Open the blue gripper.
+     */
+    public void openBlueGripper() {
+        blueLeftServo.setPosition(0.8);
+        blueRightServo.setPosition(0.2);
     }
 }

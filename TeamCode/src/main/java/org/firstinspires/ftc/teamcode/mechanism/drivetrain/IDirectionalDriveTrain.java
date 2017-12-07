@@ -14,17 +14,16 @@ public interface IDirectionalDriveTrain extends IDriveTrain {
     /**
      * Drive in the direction specified as an angle in degrees at the specified speed for the set
      * distance. The sign of the target distance determines the direction of movement. For example,
-     * a negative target distance results in backward movement. Depending on the concrete class
-     * of the OpMode passed to {@link IMechanism#initialize(Robot)}, either the a blocking or non-
-     * blocking implementation will be called. The latter indicates completion of the drive movement
-     * with {@link #isDriveTrainBusy()}.
+     * a negative target distance results in backward movement. Depending on the op-mode implementation,
+     * either the a blocking or non-blocking implementation will be called.
+     * The latter indicates completion of the drive movement with {@link #isDriveTrainBusy()}.
      *
      * @param angleDegrees the angle to drive at in relation to the robot. This must be within
-     *                     a range of +90 to -90 degrees, where 0 deg is forward/backward,
-     *                     90 deg is right, and -90 deg is left.
-     * @param speed speed at which to drive within a range of 0.0 - 1.0
-     * @param targetDistance the distance the robot should drive <b>in inches</b>. The sign of this
-     *                       parameter determines the direction to drive in.
+     *                     a range of +90 to -90 degrees, where 0 degrees is forward/backward,
+     *                     90 degrees is right, and -90 degrees is left.
+     * @param speed speed to drive within a range of 1.0 to 0
+     * @param targetDistance the distance the robot should drive <b>in inches</b>.
+     *                       The sign (+/-) of this parameter determines the direction to drive in.
      * @param nonBlocking whether this method should block. If this method is called by a
      *                    non-{@link LinearOpMode}, this method will always be non-blocking, regardless
      *                    of the value for this parameter, due to the nature of non-{@link LinearOpMode}.

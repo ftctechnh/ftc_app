@@ -33,7 +33,7 @@ public interface IDriveTrain extends IMechanism {
     void drive(double speedY, int targetDistance);
 
     /**
-     * Stop the every motor utilized as part of this drive train.
+     * Stop every motor utilized as part of this drive train.
      * This will cause the robot to come to a complete stop.
      */
     void stopDriveMotors();

@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.IDirectionalDriveTrain;
 
 /**
- * This class implements control of an "H" drive train, which has four wheels parallel to the
- * sides of the robot and one wheel middle perpendicular to the sides of the robot. These
- * wheels are driven by three motors.
+ * This class implements control of an H-drive train, which has four wheels parallel to the
+ * sides of the robot and one (or sometimes two) wheels in the middle perpendicular to the sides of the robot.
+ * These wheels are driven by three motors.
  */
 
 public class HDriveTrain implements IDirectionalDriveTrain {
