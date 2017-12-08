@@ -34,8 +34,8 @@ public class KiwiRobot {
             this.resetEncoders();
         }
 
-        double f2 = 1000/12;
-        double f3 = 1000/12;
+        double f2 = 850/12;
+        double f3 = 860/12;
 
         int y2_start = this.Motor2.getCurrentPosition();
         int y3_start = this.Motor3.getCurrentPosition();
