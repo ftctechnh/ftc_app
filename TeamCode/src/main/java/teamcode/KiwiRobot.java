@@ -29,13 +29,19 @@ public class KiwiRobot {
         this.Motor3.setPower(power3);
     }
     
-    public void driveForward(double power, double distance, boolean resetEncoders) {
+    public void driveForward(double power, double distanceInches, boolean resetEncoders) {
         if (resetEncoders) {
             this.resetEncoders();
         }
+
+        double f2 = 1000/12;
+        double f3 = 1000/12;
+
+        int y2_start = this.Motor2.getCurrentPosition();
+        int y3_start = this.Motor3.getCurrentPosition();
         
-        int y2 = (int)(-2 * power / SQRT_3);
-        int y3 = (int)(2 * power / SQRT_3);
+        int y2 = (int)(f2 * -2 * distanceInches / SQRT_3) + y2_start;
+        int y3 = (int)(f3 * 2 * distanceInches / SQRT_3) + y3_start;
         
         this.Motor2.setTargetPosition(y2);
         this.Motor3.setTargetPosition(y3);
@@ -55,6 +61,7 @@ public class KiwiRobot {
     }
     
     public void turnDegrees(double power, double degrees) {
+        this.resetEncoders();
         double f1 = 3681 / 360;
         double f2 = 3866 / 360;
         double f3 = 3832 / 360;
