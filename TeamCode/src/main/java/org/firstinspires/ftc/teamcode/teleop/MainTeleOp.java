@@ -135,9 +135,9 @@ public class MainTeleOp extends OpMode
 
         //Move grabber when bumpers are pressed.
         if(gamepad1.left_bumper){
-            armRotator.setPosition(Math.max(0, armRotator.getPosition() - 0.01));
+            grabber.setPosition(Math.max(0, armRotator.getPosition() - 0.01));
         } else if (gamepad1.right_bumper){
-            armRotator.setPosition(Math.min(1, armRotator.getPosition() + 0.01));
+            grabber.setPosition(Math.min(1, armRotator.getPosition() + 0.01));
         }
         telemetry.addData("Grabber Position", grabber.getPosition());
 
