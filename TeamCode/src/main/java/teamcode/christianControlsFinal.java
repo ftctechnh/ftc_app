@@ -63,28 +63,11 @@ public class christianControlsFinal extends LinearOpMode {
             elapsedTime = runtime.time();
             // on gamepad movement (controls robot wheel movment)
 
-            if(gamepad1.right_stick_x != )
-
-            if (gamepad1.left_trigger > .5 && gamepad1.left_bumper) {
-                drive(0,-.5);
-            } else if(gamepad1.right_trigger > .5 && gamepad1.left_bumper) {
-                drive(0, .5);
-            }else if(gamepad1.left_stick_x != 0 && gamepad1.left_bumper) {
-                turn(gamepad1.left_stick_x/2);
-            }else if(gamepad1.right_stick_x != 0 && gamepad1.left_bumper) {
-                drive(gamepad1.right_stick_x/2,0);
-            }else if(gamepad1.right_trigger > .5) {
-                drive(0, 1);
-            }else if(gamepad1.left_trigger > .5) {
-                drive(0, -1);
-            } else if(gamepad1.left_stick_x != 0) {
-                turn(gamepad1.left_stick_x);
-            }else if(gamepad1.right_stick_x != 0) {
-                drive(gamepad1.right_stick_x,0);
-            }else
+            if(gamepad1.right_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad1.left_stick_x != 0)
             {
-                turnOffMotors();
+                drive(gamepad1.right_stick_x,gamepad1.right_stick_y,gamepad1.left_stick_x);
             }
+            
 
             //Arm Height
             if (gamepad1.a) {
