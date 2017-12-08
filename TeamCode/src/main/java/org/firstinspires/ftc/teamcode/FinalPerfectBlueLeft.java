@@ -26,7 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name="YES RED", group="Exercises")
 //@Disabled
-public class YES_RED extends LinearOpMode
+public class FinalPerfectBlueLeft extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -92,7 +92,7 @@ public class YES_RED extends LinearOpMode
         imu.initialize(parameters);
 
     /* Tell driver the gyro is calibrating */
-        telemetry.addData("Mode", "calibrating...");
+        telemetry.addData("I am...", "calibrating...");
         telemetry.update();
 
     /* Make sure the imu gyro is calibrated before continuing */
@@ -102,26 +102,42 @@ public class YES_RED extends LinearOpMode
             idle();
         }
 
-        telemetry.addData("Um...", "waiting for start");
+        telemetry.addLine("Um...waiting for start");
         telemetry.addData("Imu calibration?", imu.getCalibrationStatus().toString());
         telemetry.update();
 
         // wait for start button.
         waitForStart();
 
-        telemetry.addData("Ayy", "I'm running");
+        /* Let the team know wassup */
+        telemetry.addLine("Ayyy, I'm running");
         telemetry.update();
 
-//        sleep(1000);
+        /* Move the claw up so it doesn't dig into the ground coming off the balance board */
+        moveclawbytime(1,.5,"Up");
 
-        moveclawbytime(1,.3,"Up");
-
+        /* Put the servo color arm down */
         gemServo.setPosition(xPosDown);
         sleep(1500);
+
+        /* Knock of the Red jewel */
         knockjewelRed();
+
+        //////////////////* THIS WILL VARY BETWEEN THE 4 DIFFERENT CASES *\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
+
+        /* Drive forward into the triangle */
         movebytime(1.25,.5,"Forward");
+
+        /* This is really a 90 degree rotation, it is set to 87 to account for the slight slippage after powering
+        off the wheels */
         rotate(87, .35);
-        movebytime(.6, .3, "Forward");
+
+        /* Move forward slightly so the block is in the space */
+        movebytime(.4, .3, "Forward");
+
+        /* Move the claw down slightly */
+        moveclawbytime(.5,.3,"Down");
     }
 
 /***********************************************************************************************
@@ -133,24 +149,22 @@ public class YES_RED extends LinearOpMode
     /* reset the "timer" to 0 */
         runtime.reset();
 
-    /* This runs the wheel power so it moves forward, the powers for the left wheels
-    are inversed so that it runs properly on the robot
-     */
+    /* This switch case is determined by the String indicated above */
         switch (direction) {
             case "Up":
-                verticalArmMotor.setPower(.3);
+                verticalArmMotor.setPower(power);
                 break;
             case "Down":
-                verticalArmMotor.setPower(.3);
+                verticalArmMotor.setPower(power);
                 break;
         }
 
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
         while (opModeIsActive() && runtime.seconds() < time) {
-
-            /* Once the while loop above finishes turn off the wheels */
-            verticalArmMotor.setPower(0);
         }
+
+    /* Once the while loop above finishes turn off claw motor */
+        verticalArmMotor.setPower(0);
     }
 
 /* This method moves the robot forward for time and power indicated*/
@@ -158,9 +172,7 @@ public class YES_RED extends LinearOpMode
     /* reset the "timer" to 0 */
         runtime.reset();
 
-    /* This runs the wheel power so it moves forward, the powers for the left wheels
-    are inversed so that it runs properly on the robot
-     */
+    /* This switch case is determined by the String direction indicated above */
 
         switch (direction) {
             case "Forward":

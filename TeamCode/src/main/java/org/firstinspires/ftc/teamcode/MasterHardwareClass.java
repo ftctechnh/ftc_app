@@ -52,7 +52,7 @@ public class MasterHardwareClass {
     static double clawStill = 0;
 
     /* Define values for teleop bumper control */
-    static double nobumper = .6;
+    static double nobumper = 1.5;
     static double bumperSlowest = 2;
 
     /* Define values used in knocking the jewels */
