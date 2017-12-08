@@ -1,13 +1,17 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.CompRedGemOnlyAutonomous;
 
 /**
  * Created by guberti on 11/4/2017.
  */
 
 @Autonomous(name="BACK RED parking", group="Autonomous")
+@Disabled
 public class CompRedBackParking extends CompRedGemOnlyAutonomous {
     @Override
     public void runOpMode() {

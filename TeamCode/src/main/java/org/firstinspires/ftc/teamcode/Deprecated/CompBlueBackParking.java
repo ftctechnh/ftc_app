@@ -1,14 +1,17 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.CompBlueGemOnlyAutonomous;
 
 import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 
 /**
  * Created by guberti on 11/4/2017.
  */
-
+@Disabled
 @Autonomous(name="BACK BLUE parking", group="Autonomous")
 public class CompBlueBackParking extends CompBlueGemOnlyAutonomous {
 

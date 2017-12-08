@@ -55,14 +55,17 @@ public class ConstrainedPIDMotor {
         if (stopPositionSeeking && seekingPosition) {
             seekingPosition = false;
             targetPos = null;
+            logging.addLine("Was commanded to break out of seek");
 
         } else if (seekingPosition) {
 
             int ticksToGo = targetPos - m.getCurrentPosition();
+            logging.addData("Ticks to go", ticksToGo);
 
             if (Math.abs(ticksToGo) < 100) { // Doesn't work if encoder position jumps for some reason
                 seekingPosition = false;
                 targetPos = null;
+                logging.addLine("Automatically broke out of seek");
 
             } else {
                 goToPos(targetPos, 1, false, (int) Math.signum(ticksToGo));

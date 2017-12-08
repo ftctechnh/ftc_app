@@ -30,8 +30,6 @@ public class MainTeleOp extends LinearOpMode {
     double desiredMax;
     double heading;
 
-    boolean wasLeftBumperPressed;
-    boolean wasRightBumperPressed;
     boolean wasGP2LeftBumperPressed;
     boolean wasGP2RightBumperPressed;
     boolean wasRightTriggerPressed;
@@ -66,8 +64,6 @@ public class MainTeleOp extends LinearOpMode {
         initialHeading = robot.getGyroHeading();
         desiredHeading = initialHeading;
 
-        wasLeftBumperPressed = false;
-        wasRightBumperPressed = false;
         wasGP2LeftBumperPressed = false;
         wasGP2RightBumperPressed = false;
 
@@ -111,7 +107,7 @@ public class MainTeleOp extends LinearOpMode {
 
             if (true) {
 
-                setOverride((gamepad1.a || gamepad2.a) && !gamepad1.start);
+                setOverride((gamepad1.a || gamepad2.b) && !gamepad1.start && !gamepad2.start);
 
                 if (gamepad1.start && !gamepad1.back && !gamepad1.a) { // Back coasts all motors
                     lift.setDirection(ConstrainedPIDMotor.Direction.COAST);
@@ -130,7 +126,7 @@ public class MainTeleOp extends LinearOpMode {
                         zType.setDirection(ConstrainedPIDMotor.Direction.FORWARD);
                     } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                         zType.setDirection(ConstrainedPIDMotor.Direction.BACKWARD);
-                    } else if (gamepad2.b){
+                    } else if (gamepad2.a){
                         zType.setTargetToSeek(2500);
                     } else if (gamepad2.x){
                         zType.setTargetToSeek(0);
@@ -144,7 +140,7 @@ public class MainTeleOp extends LinearOpMode {
                         robot.closeBlockClaw();
                     }
 
-                    if ((gamepad1.left_bumper && !wasLeftBumperPressed)|| (gamepad2.left_bumper && !wasGP2LeftBumperPressed)) {
+                    if (gamepad2.left_bumper && !wasGP2LeftBumperPressed) {
                         robot.toggleRelicClaw();
 
                     }
@@ -158,13 +154,10 @@ public class MainTeleOp extends LinearOpMode {
                             robot.relicFipperPosition += 0.02;
                             robot.updateFlipperPos();
 
-                        } else if ((gamepad1.right_bumper && !wasRightBumperPressed) || (gamepad2.right_bumper && !wasGP2RightBumperPressed)) {
+                        } else if (gamepad2.right_bumper && !wasGP2RightBumperPressed) {
                             robot.toggleRelicClawFlipper();
                         }
                     }
-
-                    wasLeftBumperPressed = gamepad1.left_bumper;
-                    wasRightBumperPressed = gamepad1.right_bumper;
                     wasGP2LeftBumperPressed = gamepad2.left_bumper;
                     wasGP2RightBumperPressed = gamepad2.right_bumper;
                     wasGP2APressed = gamepad2.a;
@@ -183,10 +176,6 @@ public class MainTeleOp extends LinearOpMode {
                     } else {
                         robot.lowerWhipSnake();
                     }
-                    /*if (gamepad1.start && gamepad1.back) {
-
-                        robot.gyroError = robot.getGyroHeadingRaw();
-                    }*/
 
                     if ((gamepad1.start && gamepad1.a) || gamepad2.start && gamepad2.a) {
                         lift.encoderOffset = robot.lift.getCurrentPosition();
@@ -207,14 +196,18 @@ public class MainTeleOp extends LinearOpMode {
             heading = robot.getGyroHeading();
 
 
-            if (turnRelevant || timeTillHeadingLock.milliseconds() < headingLockMS){
+            if (gamepad1.left_bumper && !gamepad1.right_bumper) {
+                turnSpeed = 0.35;
+            } else if (gamepad1.right_bumper && !gamepad1.left_bumper) {
+                turnSpeed = -0.35;
+            } else if (turnRelevant || timeTillHeadingLock.milliseconds() < headingLockMS){
                 desiredHeading = heading;
                 turnSpeed = 0;
 
                 if (turnRelevant) {
                     turnSpeed = gamepad1.right_stick_x;
                     if (gamepad1.left_trigger > triggerThreshold) {
-                        turnSpeed *= 0.6;
+                        turnSpeed *= 0.2;
                     }
                     timeTillHeadingLock.reset();
                 }
