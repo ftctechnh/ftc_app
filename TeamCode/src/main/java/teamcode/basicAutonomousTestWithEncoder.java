@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package uselessCode;
+package teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -59,7 +59,7 @@ import static java.lang.Math.sqrt;
  */
 
 @Autonomous(name="basicAutonomousTestWithEncoder", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
+//@Disabled
 public class basicAutonomousTestWithEncoder extends LinearOpMode {
 
     // Declare OpMode members.
