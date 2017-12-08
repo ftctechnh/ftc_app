@@ -21,6 +21,7 @@ public class TeleOPDrive extends OpMode {
     public void init() {
         this.driveSystem = new DriveSystem(hardwareMap, gamepad1);
         this.armSystem = new ArmSystem(hardwareMap);
+        this.armSystem.init();
     }
 
     @Override
@@ -43,11 +44,10 @@ public class TeleOPDrive extends OpMode {
                 this.armSystem.stopArm();
             }
         this.driveSystem.rcCarDrive();
-
-        telemetry.addData("red", this.armSystem.getRed());
-        telemetry.addData("blue", this.armSystem.getBlue());
-        telemetry.addData("green", this.armSystem.getGreen());
-
+        telemetry.addData("left wheel", this.driveSystem.getLeftSpeed());
+        telemetry.addData("right wheel", this.driveSystem.getRightSpeed());
+        telemetry.addData("jewel arm position", this.armSystem.getJewelArmPosition());
+        telemetry.addData("arm speed", this.armSystem.getArmMotorSpeed());
     }
 
     @Override

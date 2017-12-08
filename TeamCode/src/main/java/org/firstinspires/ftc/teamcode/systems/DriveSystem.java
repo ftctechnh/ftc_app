@@ -52,4 +52,11 @@ public class DriveSystem {
     public double getLeftSpeed() {
         return this.leftMotor.getPower();
     }
+
+    public void driveByTime (double startTime, double period, double speed) {
+        double endTime = startTime + period;
+        while (startTime < endTime) {
+            drive(speed, speed);
+        }
+    }
 }

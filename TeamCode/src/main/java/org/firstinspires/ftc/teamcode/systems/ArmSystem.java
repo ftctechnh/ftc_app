@@ -16,6 +16,9 @@ public class ArmSystem {
     private Servo leftClaw, rightClaw, jewelArmServo;
     private ColorSensor colorSensor;
     private HardwareMap hardwareMap;
+    private double intitialPosition;
+    private double downPosition;
+
 
     public ArmSystem (HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -25,6 +28,11 @@ public class ArmSystem {
         this.jewelArmServo = hardwareMap.get(Servo.class, "jewel arm servo");
         this.colorSensor = hardwareMap.colorSensor.get("color sensor");
         this.rightClaw.setDirection(Servo.Direction.REVERSE);
+        this.jewelArmServo.setDirection(Servo.Direction.REVERSE);
+    }
+
+    public void init() {
+        this.jewelArmServo.setPosition(intitialPosition);
     }
 
     public void goUp() {
@@ -38,6 +46,10 @@ public class ArmSystem {
     public void setClaw(float position) {
         this.rightClaw.setPosition(position);
         this.leftClaw.setPosition(position);
+    }
+
+    public void setJewelArmServo(float position) {
+        this.jewelArmServo.setPosition(position);
     }
 
     public double getArmMotorSpeed() {
@@ -56,6 +68,10 @@ public class ArmSystem {
         return this.rightClaw.getPosition();
     }
 
+    public double getJewelArmPosition() {
+        return this.jewelArmServo.getPosition();
+    }
+
     public int getRed() {
         return colorSensor.red();
     }
@@ -66,5 +82,15 @@ public class ArmSystem {
 
     public int getGreen() {
         return colorSensor.green();
+    }
+
+    public int getAlpha() { return colorSensor.alpha(); }
+
+    public boolean isBlue() {
+        return (getBlue() > getRed()) && (getBlue() > getGreen());
+    }
+
+    public boolean isRed() {
+        return (getRed() > getBlue()) && (getRed() > getGreen());
     }
 }
