@@ -1,16 +1,20 @@
 package teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import static java.lang.Math.sqrt;
 
 public class KiwiRobot {
     private double SQRT_3 = sqrt(3);
-    
+    private HardwareMap hardwareMap;
+
     public DcMotor  Motor1 = null; // Back wheel
     public DcMotor  Motor2 = null; // Left front wheel
     public DcMotor  Motor3 = null; // Right front wheel
     
-    public KiwiRobot() {
+    public KiwiRobot(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
         this.init();
     }
     
@@ -25,13 +29,13 @@ public class KiwiRobot {
         this.Motor3.setPower(power3);
     }
     
-    public void driveForward(double power, double distance, boolean resetEncoders = false) {
+    public void driveForward(double power, double distance, boolean resetEncoders) {
         if (resetEncoders) {
-            this.resetEncoders()
+            this.resetEncoders();
         }
         
-        double y2 = -2 * power / SQRT_3;
-        double y3 = 2 * power / SQRT_3;
+        int y2 = (int)(-2 * power / SQRT_3);
+        int y3 = (int)(2 * power / SQRT_3);
         
         this.Motor2.setTargetPosition(y2);
         this.Motor3.setTargetPosition(y3);
@@ -54,9 +58,9 @@ public class KiwiRobot {
         double f1 = 3681 / 360;
         double f2 = 3866 / 360;
         double f3 = 3832 / 360;
-        double p1 = f1 * degrees;
-        double p2 = f2 * degrees;
-        double p3 = f3 * degrees;
+        int p1 = (int)(f1 * degrees);
+        int p2 = (int)(f2 * degrees);
+        int p3 = (int)(f3 * degrees);
         this.Motor1.setTargetPosition(p1);
         this.Motor2.setTargetPosition(p2);
         this.Motor3.setTargetPosition(p3);
@@ -95,13 +99,9 @@ public class KiwiRobot {
     }
     
     private void init() {
-        this.Motor1 = hardwareMap.get(DcMotor.class, "motor1");
-        this.Motor2 = hardwareMap.get(DcMotor.class, "motor2");
-        this.Motor3 = hardwareMap.get(DcMotor.class, "motor3");
-        
-        this.Motor1 = hardwareMap.get(DcMotor.class, "motor1");
-        this.Motor2 = hardwareMap.get(DcMotor.class, "motor2");
-        this.Motor3 = hardwareMap.get(DcMotor.class, "motor3");
+        this.Motor1 = this.hardwareMap.get(DcMotor.class, "motor1");
+        this.Motor2 = this.hardwareMap.get(DcMotor.class, "motor2");
+        this.Motor3 = this.hardwareMap.get(DcMotor.class, "motor3");
         
         this.Motor1.setDirection(DcMotor.Direction.FORWARD);
         this.Motor2.setDirection(DcMotor.Direction.FORWARD);
