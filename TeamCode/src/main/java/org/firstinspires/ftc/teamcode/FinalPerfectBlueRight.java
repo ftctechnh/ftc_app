@@ -123,7 +123,8 @@ public class FinalPerfectBlueRight extends LinearOpMode
         /* Knock of the Red jewel */
         knockjewelRed();
 
-        //////////////////* THIS WILL VARY BETWEEN THE 4 DIFFERENT CASES *\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
         /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Drive forward into the triangle */
@@ -135,6 +136,9 @@ public class FinalPerfectBlueRight extends LinearOpMode
 
         /* Move forward slightly so the block is in the space */
         movebytime(.4, .3, "Forward");
+
+
+        /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Move the claw down slightly */
         moveclawbytime(.5,.3,"Down");
