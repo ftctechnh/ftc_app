@@ -132,12 +132,8 @@ public class vuforiaImageTrackingTest extends LinearOpMode {
         parameters.vuforiaLicenseKey = "AY5Y5vL/////AAAAGX2e2w6Jc0ethIktT/zzRE1khe+fR9Mt2fiD8nQZ5KNecPTwAiKX5OZSAAZD/AeeaQbXrhx/NUL0ItyuFDzn5tzYDrVFnhryOQMyuK6RZsw0qG60IbzEffXP+ppGpWRvx/Owr+hJJpNcrIo6otnFFZ79vGiQQiDohkAAsHNIXymC8/xgHDk0XXhtU+UYA8yyhzIFOVNgwBRmYmNhomE/wmShZK69EOLfpfRVvjwE8dj2vlhwTChJ1r/4GUyXB7yZ092c19r345QEx511Nhl+Oo3PSolBWO2hn43uRZ5IB4e+cvR/O6KMV25ylM1toRR98TM06NmmGlbR3+19NBA9Ej7T2aOvCf3dSa0ZTpT+haT7";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         parameters.cameraMonitorFeedback = parameters.cameraMonitorFeedback.AXES;
-        telemetry.addLine("spot 3");
-        telemetry.update();
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        telemetry.addLine("spot 4");
-        telemetry.update();
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 1);
 
