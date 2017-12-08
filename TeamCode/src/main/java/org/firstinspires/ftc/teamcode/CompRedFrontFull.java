@@ -11,6 +11,7 @@ public class CompRedFrontFull extends CompleteAutonomous {
     @Override
     public void runOpMode() {
         robot.color = Alliance.RED;
+        robot.startingPad = StartingPosition.FRONT;
 
         super.runOpMode();
 

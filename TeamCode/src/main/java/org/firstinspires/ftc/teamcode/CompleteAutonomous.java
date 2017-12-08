@@ -139,13 +139,25 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
             m.setTargetPosition(m.getCurrentPosition() + (2400 * robot.color.getColorCode()));
         }
 
+        // Code to raise the whipsnake early when on the back
+        if (robot.startingPad == StartingPosition.BACK) {
+            robot.sleep(1000);
+            robot.raiseLeftWhipSnake();
+        }
+
         waitUntilMovementsComplete();
         robot.raiseLeftWhipSnake();
+        robot.sleep(400);
 
-        if (robot.color == Alliance.RED) {
-            turnToPos(Math.PI);
+        if (robot.startingPad == StartingPosition.BACK) {
+            turnToPos(Math.PI/2);
         } else {
-            turnToPos(0);
+            if (robot.color == Alliance.RED) {
+                turnToPos(Math.PI);
+            } else {
+
+                turnToPos(0);
+            }
         }
 
         log("Driving sideways");
@@ -160,7 +172,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
             driveTicks += 100;
         } else if (robot.color == Alliance.RED) {
             driveTicks += 150;
-        } else { // For bllue
+        } else { // For blue
             driveTicks -= 75;
         }
 
@@ -172,11 +184,21 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         waitUntilMovementsComplete();
 
         log("Turning to position");
+
+        double desiredPosition;
         if (robot.color == Alliance.BLUE) {
-            turnToPos((-Math.PI / 6));
+            desiredPosition = -Math.PI/6;
         } else {
-            turnToPos(Math.PI + (Math.PI/6));
+            desiredPosition = Math.PI + Math.PI/6;
         }
+
+
+
+        if (robot.startingPad == StartingPosition.BACK) {
+            desiredPosition += Math.PI/2;
+        }
+
+        turnToPos(desiredPosition);
 
         robot.sleep(1000);
 
