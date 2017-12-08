@@ -130,7 +130,7 @@ public class RedRight extends LinearOpMode {
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
-        target = robot.lift.getCurrentPosition() + 550;
+        target = robot.lift.getCurrentPosition() + 650;
         robot.lift.setTargetPosition(target);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.6);
@@ -165,13 +165,17 @@ public class RedRight extends LinearOpMode {
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
-        target = robot.lift.getCurrentPosition() + -550;
-        robot.lift.setTargetPosition(target);
+
+//        target = robot.lift.getCurrentPosition()  -500;
+        robot.lift.setTargetPosition(50);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.lift.setPower(0.6);
+        robot.lift.setPower(0.3);
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
         robot.lift.setPower(0.0);
         encoderDrive(DRIVE_SPEED, 2, 2, 5);
+        encoderDrive(TURN_SPEED, 3, -3, 5 );
+        encoderDrive(DRIVE_SPEED, 2,2,5); //Robot cannot touch the glyph
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

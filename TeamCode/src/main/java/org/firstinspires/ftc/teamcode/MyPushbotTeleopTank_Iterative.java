@@ -66,7 +66,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
     int             target = 0;                          // lift motor target
-    int             maxlift = 7100;                     // maxiumum lift height
+    int             maxlift = 7500;                     // maxiumum lift height
     int             minlift = 0;                         // minimum lift height
 
 
@@ -82,7 +82,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+     //   robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.ballArm.setPosition(.7);

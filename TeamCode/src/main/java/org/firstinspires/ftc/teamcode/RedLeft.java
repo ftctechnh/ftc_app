@@ -157,28 +157,29 @@ public class RedLeft extends LinearOpMode {
             encoderDrive(TURN_SPEED,  2, -2,.5 ); 
         }
 
-        //encoderDrive(DRIVE_SPEED, 2, 2, 5);
-        //encoderDrive(TURN_SPEED, -8.6, 8.5, 5);
-        //encoderDrive(DRIVE_SPEED, -32, -32, 5);
 
         encoderDrive(DRIVE_SPEED, -35, -35, 5);
         encoderDrive(TURN_SPEED, -12, 12, 5);
-        encoderDrive(DRIVE_SPEED, -9,  -9, 5);// this is the straight drive that clears the plate
-        encoderDrive(TURN_SPEED, -5.5,5.5,5);
+        encoderDrive(DRIVE_SPEED, -8,  -8, 5);// this is the straight drive that clears the plate
+        encoderDrive(TURN_SPEED, -6.5,6.5,5);
         encoderDrive(DRIVE_SPEED, -51, -51, 5);
+
         clawOffset = .0;
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
-        target = robot.lift.getCurrentPosition()  -650;
-        robot.lift.setTargetPosition(target);
+      //  target = robot.lift.getCurrentPosition()  -500;
+        robot.lift.setTargetPosition(50);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.lift.setPower(0.6);
+        robot.lift.setPower(0.3);
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
         robot.lift.setPower(0.0);
-        encoderDrive(DRIVE_SPEED, 2, 2, 5);
+
+        encoderDrive(DRIVE_SPEED,2,2,5); //this is to back up
+        encoderDrive(TURN_SPEED, -3, 3, 5 );
+        encoderDrive(DRIVE_SPEED, 2,2,5); //Robot cannot touch the glyph
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
