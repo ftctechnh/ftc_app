@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -15,18 +16,18 @@ public class ForkLift {
     private DcMotor motor;
     private TouchSensor topButton;
     private TouchSensor bottomButton;
-    private double clawPosition = 0.25; //0.25
-    private double clawHighEnd = 1; //0.7
-    private double clawLowEnd = 0; //0.3
+    private double clawPosition = 0.25; //0.25 on the other robot
+    private double clawHighEnd = 0.7; //0.7
+    private double clawLowEnd = 0.3; //0.3
     private Telemetry telemetry;
     private HardwareDevice.Manufacturer manufacturer;
 
     public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, TouchSensor topButton, TouchSensor bottomButton, Telemetry telemetry) {
-        if(topButton.getManufacturer().equals("ModernRobotics")){
-            clawPosition=0.25;
-            clawHighEnd=0.7;
-            clawLowEnd=0.3;
-        }
+        //if(topButton.getManufacturer().equals("ModernRobotics")){
+        //    clawPosition=0.25;
+        //    clawHighEnd=0.7;
+        //    clawLowEnd=0.3;
+        //}
         this.rightClaw = rightClaw;
         this.leftClaw = leftClaw;
         this.motor = motor;
@@ -36,7 +37,16 @@ public class ForkLift {
         resetEncoder();
         this.telemetry = telemetry;
         telemetry.addData("hai", topButton.getManufacturer());
+    }
 
+    public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, Telemetry telemetry) {
+        this.rightClaw = rightClaw;
+        this.leftClaw = leftClaw;
+        this.motor = motor;
+        this.topButton = null;
+        this.bottomButton = null;
+        this.telemetry = telemetry;
+        resetEncoder();
     }
 
 
@@ -59,14 +69,16 @@ public class ForkLift {
     }
 
     public void moveUpDown(double speed) {
-        if (speed < 0) {
-            if (bottomButton.isPressed()) {
-                speed = 0;
+        if (bottomButton != null) {
+            if (speed < 0) {
+                if (bottomButton.isPressed()) {
+                    speed = 0;
+                }
             }
-        }
-        if (speed > 0) {
-            if (topButton.isPressed()) {
-                speed = 0;
+            if (speed > 0) {
+                if (topButton.isPressed()) {
+                    speed = 0;
+                }
             }
         }
         motor.setPower(speed);
@@ -78,8 +90,9 @@ public class ForkLift {
         leftClaw.setPosition(position);
         leftClaw.setPosition(position);
     }
+
     private void resetEncoder() {
-    	motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 

@@ -42,8 +42,8 @@ public class RedRecoveryClasses extends LinearOpMode {
         jewelArm.up();
         Thread.sleep(500);
         drive.driveTranslateRotate(0, -.5, 0, 32);
-        Thread.sleep(2000);
-        drive.leftGyro(0, 0, .05, 90);
+        drive.leftGyro(0, 0, -0.05, 90);
+        drive.driveTranslateRotate(0,0.5,0, 5);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
