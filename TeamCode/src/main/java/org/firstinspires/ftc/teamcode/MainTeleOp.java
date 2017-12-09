@@ -49,9 +49,6 @@ public class MainTeleOp extends LinearOpMode {
 
     ElapsedTime totalElapsedTime;
 
-    boolean wasBackPressed;
-    boolean slowMode;
-
     @Override
     public void runOpMode() {
         robot.init(hardwareMap, this, gamepad1, gamepad2);
@@ -76,8 +73,6 @@ public class MainTeleOp extends LinearOpMode {
         wasRightTriggerPressed = false;
         wasLeftTriggerPressed = false;
         wasGP2APressed = false;
-        wasBackPressed = false;
-        slowMode = false;
 
         while (opModeIsActive()) {
             robot.updateReadings();
@@ -109,7 +104,7 @@ public class MainTeleOp extends LinearOpMode {
 
                 setOverride((gamepad1.a || gamepad2.b) && !gamepad1.start && !gamepad2.start);
 
-                if (gamepad1.start && !gamepad1.back && !gamepad1.a) { // Back coasts all motors
+                if (gamepad1.start && !gamepad1.back && !gamepad1.a) { // Start coasts all motors
                     lift.setDirection(ConstrainedPIDMotor.Direction.COAST);
                     zType.setDirection(ConstrainedPIDMotor.Direction.COAST);
                 } else {
@@ -174,10 +169,10 @@ public class MainTeleOp extends LinearOpMode {
                             robot.raiseWhipSnake();
                         }
                     } else {
-                        robot.lowerWhipSnake();
+                        robot.almostRaiseWhipSnake();
                     }
 
-                    if ((gamepad1.start && gamepad1.a) || gamepad2.start && gamepad2.a) {
+                    if ((gamepad1.start && gamepad1.a) || (gamepad2.start && gamepad2.a)) {
                         lift.encoderOffset = robot.lift.getCurrentPosition();
                     }
 
@@ -185,8 +180,6 @@ public class MainTeleOp extends LinearOpMode {
                         robot.relicFipperPosition += gamepad1.left_stick_x * 0.01;
                         robot.relicClawFlipper.setPosition(robot.relicFipperPosition);
                     }
-
-                    wasBackPressed = gamepad1.back;
                 }
             }
 
