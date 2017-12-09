@@ -9,12 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.DOWN;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.LEFT;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.RIGHT;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.UNDEFINED;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.UP;
-
 /**
  * The glyph lift mechanism collects glyphs with two grippers and is able to place them in the cryptobox.
  */
@@ -25,7 +19,8 @@ public class GlyphLift implements IMechanism {
     private static final double MAX_LIFT_MOTOR_POWER_UP = 0.9;
     private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.4;
 
-    private static final double ROTATION_MOTOR_GYRO_POWER = 0.1;
+    private static final double ROTATION_MOTOR_POWER_AUTOMATIC = 0.8;
+    private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
     private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
 
     private OpMode opMode;
@@ -35,7 +30,11 @@ public class GlyphLift implements IMechanism {
 
     private Servo redLeftServo, redRightServo, blueLeftServo, blueRightServo;
 
-    private RotationMotorPosition currentRotationPosition = UNDEFINED;
+    private boolean isRunningToPosition;
+
+    private RotationMotorPosition previousPosition;
+
+//    private RotationMotorPosition currentRotationPosition = UNDEFINED;
 
     /**
      * This enumeration type represents the rotation position of the rotation motor,
@@ -47,13 +46,9 @@ public class GlyphLift implements IMechanism {
      *   <li>RIGHT (with the red gripper to the left)</li>
      * </ul>
      *
-     * The additional value UNDEFINED is implementation specific and should never be passed to
-     * {@link #setRotationMotorPosition(RotationMotorPosition)} and will never be
-     * returned by {@link #getCurrentRotationMotorPosition()}.
-     *
      */
     public enum RotationMotorPosition {
-        UP(0), DOWN(1650), LEFT(825), RIGHT(-825), UNDEFINED(-1);
+        UP(0), DOWN(1700), LEFT(850), RIGHT(-850);
 
         private int encoderPosition;
 
@@ -87,6 +82,7 @@ public class GlyphLift implements IMechanism {
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // run using encoders
+        rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -109,32 +105,7 @@ public class GlyphLift implements IMechanism {
      *              likewise, positive values run the rotation motor clockwise.
      */
     public void setRotationMotorPower(double power) {
-        rotationMotor.setPower(power * MAX_LIFT_ROTATION_MOTOR_POWER);
-    }
-
-    /**
-     * Get the current position of the rotation motor.
-     *
-     * @see RotationMotorPosition for what this enumeration type represents
-     * @return the current rotation position of the rotation motor
-     */
-    public RotationMotorPosition getCurrentRotationMotorPosition() {
-        int currentEncoderPos = rotationMotor.getCurrentPosition();
-        int rotationEncoderPos;
-
-        for (RotationMotorPosition pos : RotationMotorPosition.values()) {
-            rotationEncoderPos = pos.encoderPosition;
-
-            if(pos == DOWN) {
-                rotationEncoderPos = Math.abs(rotationEncoderPos);
-            }
-
-            if (Math.abs(rotationEncoderPos - currentEncoderPos) < ROTATION_MOTOR_POSITION_THRESHOLD) {
-                return pos;
-            }
-        }
-        // just return undefined if rotation motor not at any of the positions
-        return RotationMotorPosition.UNDEFINED;
+        rotationMotor.setPower(power * ROTATION_MOTOR_POWER_MANUAL);
     }
 
     /**
@@ -144,50 +115,24 @@ public class GlyphLift implements IMechanism {
      * @see RotationMotorPosition
      * @param requestedPosition the desired rotation position
      */
-    public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
-        // only update current position if it's not undefined
-        RotationMotorPosition tempPos = getCurrentRotationMotorPosition();
-        if(tempPos != UNDEFINED) {
-            this.currentRotationPosition = tempPos;
-        }
+      public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
+          opMode.telemetry.addData("previous Position", previousPosition);
+          opMode.telemetry.update();
 
-        opMode.telemetry.addData("current encoder position", rotationMotor.getCurrentPosition());
-        opMode.telemetry.addData("current rotation position", currentRotationPosition);
-        opMode.telemetry.update();
-
-        if(currentRotationPosition != requestedPosition) {
-            switch (requestedPosition) {
-                case UP:
-                    // always use negative motor power when requested position is up
-                    rotationMotor.setPower(-ROTATION_MOTOR_GYRO_POWER);
-                    break;
-                case DOWN:
-                    // always use positive motor power when requested position is down
-                    rotationMotor.setPower(ROTATION_MOTOR_GYRO_POWER);
-                    break;
-                case LEFT:
-                    if (currentRotationPosition == DOWN || currentRotationPosition == RIGHT) {
-                        // positive motor power
-                        //rotationMotor.setPower(ROTATION_MOTOR_GYRO_POWER);
-                    } else if (currentRotationPosition == UP) {
-                        // negative motor power
-                        rotationMotor.setPower(-ROTATION_MOTOR_GYRO_POWER);
-                    }
-                    break;
-                case RIGHT:
-                    if (currentRotationPosition == DOWN || currentRotationPosition == LEFT) {
-                        // negative motor power
-                        rotationMotor.setPower(-ROTATION_MOTOR_GYRO_POWER);
-                    } else if (currentRotationPosition == UP) {
-                        // positive motor power
-                        rotationMotor.setPower(ROTATION_MOTOR_GYRO_POWER);
-                    }
-                    break;
-            }
-        } else {
-            rotationMotor.setPower(0);
-        }
-    }
+          if(previousPosition != requestedPosition) {
+              if (!isRunningToPosition) {
+                  rotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                  rotationMotor.setTargetPosition(requestedPosition.encoderPosition);
+                  rotationMotor.setPower(ROTATION_MOTOR_POWER_AUTOMATIC);
+                  isRunningToPosition = true;
+              } else if (!rotationMotor.isBusy()) {
+                  this.previousPosition = requestedPosition;
+                  isRunningToPosition = false;
+                  rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                  rotationMotor.setPower(0);
+              }
+          }
+      }
 
     /**
      * Set the grippers to their initialized positions.

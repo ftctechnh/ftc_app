@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift;
 
@@ -13,6 +14,7 @@ public class RobotTeleOp extends LinearOpMode {
     private RelicRecoveryRobot robot;
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
+    private ElapsedTime timer;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -23,6 +25,8 @@ public class RobotTeleOp extends LinearOpMode {
 
         robot.glyphLift.initializeGrippers();
         robot.intake.raiseIntake();
+
+        this.timer = new ElapsedTime();
 
         waitForStart();
 
@@ -83,16 +87,9 @@ public class RobotTeleOp extends LinearOpMode {
                 robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.UP);
             } else if(gamepad2.dpad_down) {
                 robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.DOWN);
-            } else if(gamepad2.dpad_left) {
-                robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.LEFT);
-            } else if(gamepad2.dpad_right) {
-                robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.RIGHT);
             } else {
                 robot.glyphLift.setRotationMotorPower(liftRotationMotorPower);
             }
-
-//            telemetry.addData("encoder position", robot.glyphLift.rotationMotor.getCurrentPosition());
-//            telemetry.update();
 
             robot.hDriveTrain.pivot(pivot);
             robot.hDriveTrain.drive(speedX, speedY);
