@@ -14,7 +14,6 @@ public class RobotTeleOp extends LinearOpMode {
     private RelicRecoveryRobot robot;
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
-    private ElapsedTime timer;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,8 +25,6 @@ public class RobotTeleOp extends LinearOpMode {
         robot.glyphLift.initializeGrippers();
         robot.intake.raiseIntake();
 
-        this.timer = new ElapsedTime();
-
         waitForStart();
 
         double speedX;
@@ -36,26 +33,14 @@ public class RobotTeleOp extends LinearOpMode {
 
         double liftMotorPower;
         double liftRotationMotorPower;
-        double blueAlpha;
-        double redAlpha;
 
         while (opModeIsActive()) {
             speedX = -gamepad1.right_stick_x;
             speedY = gamepad1.right_stick_y;
             pivot = -gamepad1.left_stick_x;
 
-            blueAlpha = robot.glyphLift.getColorSensorBlue().alpha();
-            redAlpha = robot.glyphLift.getColorSensorRed().alpha();
-
             liftMotorPower = gamepad2.right_stick_y;
             liftRotationMotorPower = -gamepad2.left_stick_x;
-
-
-
-                telemetry.addData("blueAlpha",blueAlpha);
-                telemetry.addData("redAlpha",redAlpha);
-
-            telemetry.update();
 
             // slow down robot with right trigger
             if(gamepad1.right_trigger > 0) {

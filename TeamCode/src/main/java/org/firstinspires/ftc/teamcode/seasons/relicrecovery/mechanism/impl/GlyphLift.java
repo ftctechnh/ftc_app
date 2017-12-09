@@ -37,18 +37,6 @@ public class GlyphLift implements IMechanism {
     private boolean isRunningToPositionRotationMotor;
     private boolean isRunningToPositionLiftMotor;
 
-    private ColorSensor colorSensorBlue;
-
-    public ColorSensor getColorSensorBlue() {
-        return colorSensorBlue;
-    }
-
-    public ColorSensor getColorSensorRed() {
-        return colorSensorRed;
-    }
-
-    private ColorSensor colorSensorRed;
-
     private RotationMotorPosition previousPosition;
 
 //    private RotationMotorPosition currentRotationPosition = UNDEFINED;
