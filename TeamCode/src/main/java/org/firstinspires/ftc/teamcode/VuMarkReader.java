@@ -160,69 +160,6 @@ public class VuMarkReader {
         return RelicRecoveryVuMark.UNKNOWN;
     }
 
-    double calcFinalDistanceByVuMark(RelicRecoveryVuMark vuMark) {
-        //TODO: default to middle. Is this ideal?
-        if (vuMark == RelicRecoveryVuMark.UNKNOWN) return START_TO_MIDDLE_DISTANCE_INCHES;
-        switch (vuMark) {
-            case CENTER:
-                if (TOWARDS_AUDIENCE == true) {
-                    if (TEAM_COLOR == Color.RED) {
-                        return START_TO_MIDDLE_ANGLE;
-                    }else{
-                        return START_TO_MIDDLE_ANGLE_4;
-                    }
-                }else{
-                    if (TEAM_COLOR == Color.BLUE) {
-                        return START_TO_MIDDLE_ANGLE_2;
-                    }else{
-                        return START_TO_MIDDLE_ANGLE_3;
-                    }
-                }
-            case LEFT:
-                if (TEAM_COLOR == Color.BLUE) {
-                    if (TOWARDS_AUDIENCE == true) {
-                        return START_TO_NEAREST_ANGLE_4;
-                    }else{
-                        return START_TO_NEAREST_ANGLE_2;
-                    }
-                }else{
-                    if (TOWARDS_AUDIENCE == true) {
-                        return START_TO_FURTHEST_ANGLE;
-                    }else{
-                        return START_TO_FURTHEST_ANGLE_3;
-                    }
-                }
-            case RIGHT:
-                if (TEAM_COLOR == Color.BLUE) {
-                    if (TOWARDS_AUDIENCE == true) {
-                        return START_TO_FURTHEST_ANGLE_4;
-                    }else{
-                        return START_TO_FURTHEST_ANGLE_2;
-                    }
-                }else{
-                    if (TOWARDS_AUDIENCE == true) {
-                        return START_TO_NEAREST_ANGLE;
-                    }else{
-                        return START_TO_NEAREST_ANGLE_3;
-                    }
-                }
-            default:
-                if (TOWARDS_AUDIENCE == true) {
-                    if (TEAM_COLOR == Color.RED) {
-                        return START_TO_MIDDLE_ANGLE;
-                    }else{
-                        return START_TO_MIDDLE_ANGLE_4;
-                    }
-                }else{
-                    if (TEAM_COLOR == Color.BLUE) {
-                        return START_TO_MIDDLE_ANGLE_2;
-                    }else{
-                        return START_TO_MIDDLE_ANGLE_3;
-                    }
-                }
-        }
-    }
-
     private String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }

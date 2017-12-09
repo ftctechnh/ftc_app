@@ -13,12 +13,10 @@ public class Ftc12547Config {
     /**
      * Set the team to the right color. BLUE or RED
      */
-    public static final int     TEAM_COLOR                          = Color.BLUE;
-    public static final boolean TOWARDS_AUDIENCE                    = false;
+    public static int           TEAM_COLOR;
     /**
      * VuMark configurations
      */
-    public static final int     THRESHOLD_RECOGNITION               = 3;
 
     // Do not update
     public static final String  TAG = "Vuforia VuMark Sample";
@@ -38,7 +36,6 @@ public class Ftc12547Config {
     /**
      * Color sensor configuration
      */
-    public static final int COLOR_THRESHOLD                         = 50/2;
 
     // sometimes it helps to multiply the raw RGB values with a scale factor
     // to amplify/attentuate the measured values.
@@ -57,17 +54,10 @@ public class Ftc12547Config {
     public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 1.75;
     public static final double JEWEL_DISPOSITION_TIMEOUT_SECONDS    = 3;
 
-    public static final double TWO_FEET                             = 24;
     public static final double NINETY_DEGREE_TURN                   = 18 * 3.14159265358979 / 4;
-    public static final double ONE_EIGHTY_DEGREE_TURN               = 18 * 3.14159265358979 / 2;
     public static final double ONE_DEGREE_TURN                      = NINETY_DEGREE_TURN / 90;
 
-    public static final double START_TO_NEAREST_DISTANCE_INCHES     = 27.5;
     public static final double START_TO_MIDDLE_DISTANCE_INCHES      = 35;
-    public static final double START_TO_FURTHEST_DISTANCE_INCHES    = 42.5;
-    public static final double START_TO_NEAREST_DISTANCE_INCHES_2   = 2.5;
-    public static final double START_TO_MIDDLE_DISTANCE_INCHES_2    = 10;
-    public static final double START_TO_FURTHEST_DISTANCE_INCHES_2  = 17.5;
     public static final double DESTINATION_TIMEOUT_SECONDS          = 50;
 
     //1=red close
@@ -96,7 +86,6 @@ public class Ftc12547Config {
     public static final double DESTINATION_TURN_SPEED               = 0.6;
     public static final double DESTINATION_TURN_TIMEOUT_SECONDS     = 5;
 
-    public static final double DISTANCE_TO_RACK_INCHES              = 12 * 2;
     public static final double TO_RACK_TIMEOUT_SECONDS              = 12;
 
     public static final double COUNTS_PER_MOTOR_REV    = 1120; // if using tetrix motors, set number to 1440 eg: TETRIX Motor Encoder

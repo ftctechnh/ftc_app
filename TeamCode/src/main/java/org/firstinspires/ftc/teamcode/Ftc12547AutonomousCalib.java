@@ -67,13 +67,13 @@ public class Ftc12547AutonomousCalib extends LinearOpMode {
         telemetry.setAutoClear(false);
         waitForStart();
 
-        encoderDriver.encoderDrive(0.1, 36, 36, 100);
+        //encoderDriver.encoderDrive(0.1, 36, 36, 100);
         // sleep (3000 * 1000);
 
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         sleep(1000);
-        encoderDriver.encoderTurn(0.1, 20, -NINETY_DEGREE_TURN*2, 100);
+        encoderDriver.encoderTurn(0.3, NINETY_DEGREE_TURN * 3, -NINETY_DEGREE_TURN * 3, 100);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
