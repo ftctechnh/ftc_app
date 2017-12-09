@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -23,6 +24,9 @@ public class GlyphLift implements IMechanism {
     private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
     private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
 
+    public static final int LIFT_RAISE_TARGET_POSITION = 850;
+    public static final int LIFT_LOWER_TARGET_POSITION = -850;
+
     private OpMode opMode;
 
     private DcMotor liftMotor;
@@ -30,7 +34,20 @@ public class GlyphLift implements IMechanism {
 
     private Servo redLeftServo, redRightServo, blueLeftServo, blueRightServo;
 
-    private boolean isRunningToPosition;
+    private boolean isRunningToPositionRotationMotor;
+    private boolean isRunningToPositionLiftMotor;
+
+    private ColorSensor colorSensorBlue;
+
+    public ColorSensor getColorSensorBlue() {
+        return colorSensorBlue;
+    }
+
+    public ColorSensor getColorSensorRed() {
+        return colorSensorRed;
+    }
+
+    private ColorSensor colorSensorRed;
 
     private RotationMotorPosition previousPosition;
 
@@ -105,6 +122,8 @@ public class GlyphLift implements IMechanism {
      *              likewise, positive values run the rotation motor clockwise.
      */
     public void setRotationMotorPower(double power) {
+        rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        isRunningToPositionRotationMotor = false;
         rotationMotor.setPower(power * ROTATION_MOTOR_POWER_MANUAL);
     }
 
@@ -115,24 +134,40 @@ public class GlyphLift implements IMechanism {
      * @see RotationMotorPosition
      * @param requestedPosition the desired rotation position
      */
-      public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
+      public boolean setRotationMotorPosition(RotationMotorPosition requestedPosition) {
           opMode.telemetry.addData("previous Position", previousPosition);
           opMode.telemetry.update();
 
           if(previousPosition != requestedPosition) {
-              if (!isRunningToPosition) {
+              if (!isRunningToPositionRotationMotor) {
                   rotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                   rotationMotor.setTargetPosition(requestedPosition.encoderPosition);
                   rotationMotor.setPower(ROTATION_MOTOR_POWER_AUTOMATIC);
-                  isRunningToPosition = true;
+                  isRunningToPositionRotationMotor = true;
               } else if (!rotationMotor.isBusy()) {
                   this.previousPosition = requestedPosition;
-                  isRunningToPosition = false;
+                  isRunningToPositionRotationMotor = false;
                   rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                   rotationMotor.setPower(0);
               }
           }
+        return rotationMotor.isBusy();
       }
+
+      public boolean setLiftPosition(int targetPosition) {
+          if (!isRunningToPositionLiftMotor) {
+              liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+              liftMotor.setTargetPosition(targetPosition);
+              liftMotor.setPower(MAX_LIFT_MOTOR_POWER_DOWN );
+              isRunningToPositionLiftMotor = true;
+          } else if (!liftMotor.isBusy()) {
+              isRunningToPositionLiftMotor = false;
+              liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+              liftMotor.setPower(0);
+          }
+          return liftMotor.isBusy();
+      }
+
 
     /**
      * Set the grippers to their initialized positions.

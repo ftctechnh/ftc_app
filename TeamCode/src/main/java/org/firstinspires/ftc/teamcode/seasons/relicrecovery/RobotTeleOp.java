@@ -36,14 +36,26 @@ public class RobotTeleOp extends LinearOpMode {
 
         double liftMotorPower;
         double liftRotationMotorPower;
+        double blueAlpha;
+        double redAlpha;
 
         while (opModeIsActive()) {
             speedX = -gamepad1.right_stick_x;
             speedY = gamepad1.right_stick_y;
             pivot = -gamepad1.left_stick_x;
 
+            blueAlpha = robot.glyphLift.getColorSensorBlue().alpha();
+            redAlpha = robot.glyphLift.getColorSensorRed().alpha();
+
             liftMotorPower = gamepad2.right_stick_y;
             liftRotationMotorPower = -gamepad2.left_stick_x;
+
+
+
+                telemetry.addData("blueAlpha",blueAlpha);
+                telemetry.addData("redAlpha",redAlpha);
+
+            telemetry.update();
 
             // slow down robot with right trigger
             if(gamepad1.right_trigger > 0) {
@@ -62,9 +74,9 @@ public class RobotTeleOp extends LinearOpMode {
             // intake control
             if(gamepad1.dpad_up) {
                 robot.intake.setIntakePower(1.0);
-            } else if(gamepad1.dpad_down) {
+            } else if(gamepad1.dpad_down||gamepad1.left_trigger>0) {
                 robot.intake.setIntakePower(-1.0);
-            } else {
+            } else{
                 robot.intake.setIntakePower(0);
             }
 
