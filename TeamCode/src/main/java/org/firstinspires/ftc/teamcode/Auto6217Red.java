@@ -152,17 +152,33 @@ public class Auto6217Red extends LinearOpMode {
 
         if (currentVumark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("1", "LEFT");
+
+            move(0f, .25f, 3f);
+            Wait(1);
+            pivotByZ(90);
+
         }
         else if (currentVumark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("1", "CENTER");
+
+            move(0f, .25f, 2f);
+            Wait(1);
+            pivotByZ(90);
         }
         else if (currentVumark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("1", "RIGHT");
+
+            move(0f, .25f, 1f);
+            Wait(1);
+            pivotByZ(90);
         }
         else {
             telemetry.addData("1", "UNKNOWN");
+            move(0f, .25f, 02f);
+            Wait(1);
+            pivotByZ(90);
         }
-        
+
         telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
         telemetry.addData("raw optical", rangeSensor.rawOptical());
         telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
