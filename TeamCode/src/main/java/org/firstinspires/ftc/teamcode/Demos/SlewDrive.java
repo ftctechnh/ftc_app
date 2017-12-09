@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.NullbotHardware;
  */
 @TeleOp(name="DEMO Slew drive", group="Demo")
 public class SlewDrive extends MainTeleOp {
-    NullbotHardware robot;
+    NullbotHardware robot = new NullbotHardware();
 
     @Override
     public void runOpMode() {
