@@ -21,12 +21,11 @@ public class AutonomousDrive_02_0 extends LinearOpMode
     Camera camera;
     double x = 0;
     double y = 0;
-    double pinch = .7;
     DcMotor lift;
     TouchSensor touchBottom;
 
-    Servo pincherL;
-    //Servo pincherR;
+    Servo servo1;
+    Servo servo2;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -49,13 +48,14 @@ public class AutonomousDrive_02_0 extends LinearOpMode
         mark = RelicRecoveryVuMark.UNKNOWN;
         touchBottom = hardwareMap.touchSensor.get("touchBottom");
 
+        servo2 = hardwareMap.servo.get("servo2");
+        servo1 = hardwareMap.servo.get("servo1");
+
         lift = hardwareMap.dcMotor.get("lift");
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
 
-        pincherL = hardwareMap.servo.get("pincherL");
-        //pincherR = hardwareMap.servo.get("pincherR");
 
         close();
         //pincherR.setPosition(1);
@@ -124,14 +124,14 @@ public class AutonomousDrive_02_0 extends LinearOpMode
 
     private void open()
     {
-        pincherL.setPosition(0);
-//        pincherR.setPosition(1);
+        servo2.setPosition(1);
+        servo1.setPosition(1);
     }
 
     private void close()
     {
-        pincherL.setPosition(1);
-//        pincherR.setPosition(0);
+        servo2.setPosition(0.2);
+        servo1.setPosition(0.2);
     }
 
     /**
