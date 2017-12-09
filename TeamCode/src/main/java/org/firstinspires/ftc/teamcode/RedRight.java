@@ -174,7 +174,7 @@ public class RedRight extends LinearOpMode {
         robot.lift.setPower(0.0);
         encoderDrive(DRIVE_SPEED, 2, 2, 5);
         encoderDrive(TURN_SPEED, 3, -3, 5 );
-        encoderDrive(DRIVE_SPEED, 2,2,5); //Robot cannot touch the glyph
+        encoderDrive(DRIVE_SPEED, 3.5,3.5,5); //Robot cannot touch the glyph
 
 
         telemetry.addData("Path", "Complete");

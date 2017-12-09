@@ -64,9 +64,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Red Left" , group="Pushbot")
+@Autonomous(name="Pushbot: Blue Right" , group="Pushbot")
 //@Disabled
-public class RedLeft extends LinearOpMode {
+public class BlueRight extends LinearOpMode {
 
     /* Declare OpMode members. */
     MyHardwarePushbot         robot   = new MyHardwarePushbot();   // Use a Pushbot's hardware
@@ -140,7 +140,7 @@ public class RedLeft extends LinearOpMode {
 
         NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors L.A.S
 
-        if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
+        if (colors.red > colors.blue){ //It checks if the ball is blue L.A.S
 
             telemetry.addData("Status", "Sensed Blue ");    //
             telemetry.update();
@@ -159,9 +159,9 @@ public class RedLeft extends LinearOpMode {
 
 
         encoderDrive(DRIVE_SPEED, -35, -35, 5);
-        encoderDrive(TURN_SPEED, -12, 12, 5);
+        encoderDrive(TURN_SPEED, 12, -12, 5);
         encoderDrive(DRIVE_SPEED, -10,  -10, 5);// this is the straight drive that clears the plate
-        encoderDrive(TURN_SPEED, -6.5,6.5,5);
+        encoderDrive(TURN_SPEED, 6.5,-6.5,5);
         encoderDrive(DRIVE_SPEED, -50,-50,5);
 
         clawOffset = .0;
@@ -178,7 +178,7 @@ public class RedLeft extends LinearOpMode {
         robot.lift.setPower(0.0);
 
         encoderDrive(DRIVE_SPEED,2,2,5); //this is to back up
-        encoderDrive(TURN_SPEED, -3, 3, 5 );
+        encoderDrive(TURN_SPEED, 3, -3, 5 );
         encoderDrive(DRIVE_SPEED, 3.5,3.5,5); //Robot cannot touch the glyph
 
         telemetry.addData("Path", "Complete");
