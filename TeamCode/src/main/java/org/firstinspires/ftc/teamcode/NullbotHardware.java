@@ -407,8 +407,8 @@ public class NullbotHardware {
     public void lowerWhipSnake() {
         lowerLeftWhipSnake();
     }
-    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(250.0/255.0);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(90.0/255.0);}
+    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(240.0/255.0);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(40.0/255.0);}
     public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(120.0/255.0);}
 
     public void crunchBlockClaw() {
@@ -428,7 +428,7 @@ public class NullbotHardware {
     }
 
     public final double RELIC_CLAW_OPEN_POSITION = 0.6;
-    public final double RELIC_CLAW_CLOSED_POSITION = 0.88;
+    public final double RELIC_CLAW_CLOSED_POSITION = 0.92;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
     public void flattenRelicClaw() {relicClaw.setPosition(0.0/255.0); RELIC_CLAW_IS_OPEN = true;}
@@ -445,7 +445,7 @@ public class NullbotHardware {
     }
 
     public double relicFipperPosition = 80;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 84.0/255.0;
+    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 83.0/255.0;
     public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;
 
     public void extendFlipper() {
