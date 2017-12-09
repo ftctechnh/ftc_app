@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -136,7 +137,7 @@ public class Autonomous_General extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(1);
+        jewelServo.setPosition(0.9);
         glyphServoRight.setPosition(1);
         glyphServoLeft.setPosition(0);
 
@@ -669,6 +670,10 @@ public class Autonomous_General extends LinearOpMode {
         setTargets();
     }
 
+    public void toggleLight(boolean onoroff){
+        CameraDevice.getInstance().setFlashTorchMode(onoroff) ;
+    }
+
     public void setTargets(){
         relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
@@ -819,8 +824,8 @@ public class Autonomous_General extends LinearOpMode {
     }
 
     public void closeGlyphManipulator(){
-        glyphServoRight.setPosition(0.1);
-        glyphServoLeft.setPosition(0.8);
+        glyphServoRight.setPosition(0.05);
+        glyphServoLeft.setPosition(0.85);
 
     }
     /**
@@ -879,9 +884,34 @@ public class Autonomous_General extends LinearOpMode {
 
         slideMotor.setTargetPosition((int)target_Position);
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-0.6);
+
+        while (slideMotor.isBusy() && opModeIsActive()){
+            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
+            telemetry.addData("power", slideMotor.getPower());
+            telemetry.addData("Target Position", slideMotor.getTargetPosition());
+            telemetry.update();
+
+        }
+
+        slideMotor.setPower(0);
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+    }
+    public void moveDownGlyph(double cm) {
+        double target_Position;
+        double countsPerCM = 609.6;
+        double finalTarget = cm*countsPerCM;
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+
+        slideMotor.setTargetPosition((int)target_Position);
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        slideMotor.setPower(0.6);
 
         while (slideMotor.isBusy() && opModeIsActive()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());

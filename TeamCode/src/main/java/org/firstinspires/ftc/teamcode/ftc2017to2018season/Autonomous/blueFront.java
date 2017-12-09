@@ -39,6 +39,7 @@ public class blueFront extends Autonomous_General {
         gyro.resetZAxisIntegrator();
 
 
+        toggleLight(true);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
@@ -47,6 +48,7 @@ public class blueFront extends Autonomous_General {
         while(!vuMarkFound()){
 
         }
+        toggleLight(false);
 
         jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
@@ -63,18 +65,18 @@ public class blueFront extends Autonomous_General {
 
         if(ballColor.equals("red")){
             encoderMecanumDrive(0.9, -10,-10,5000,0);
-            jewelServo.setPosition(1);
+            jewelServo.setPosition(0.9);
             sleep(1000);
             encoderMecanumDrive(0.9,65,65,5000,0);
             sleep(1000);
         }
         else if(ballColor.equals("blue")){
             encoderMecanumDrive(0.9,65,65,5000,0);
-            jewelServo.setPosition(1);
+            jewelServo.setPosition(0.9);
             sleep(1000);
         }
         else{
-            jewelServo.setPosition(1);
+            jewelServo.setPosition(0.9);
             sleep(1000);
             encoderMecanumDrive(0.9,65,65,5000,0);
         }
