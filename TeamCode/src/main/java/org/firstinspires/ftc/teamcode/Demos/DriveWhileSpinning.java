@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.NullbotHardware;
  */
 @TeleOp(name="DEMO Drive while spinning", group="Demo")
 public class DriveWhileSpinning extends MainTeleOp {
-    NullbotHardware robot;
+    NullbotHardware robot = new NullbotHardware();
 
     @Override
     public void runOpMode() {
@@ -24,9 +24,9 @@ public class DriveWhileSpinning extends MainTeleOp {
 
             double turnSpeed = 0;
             if (gamepad1.left_bumper && !gamepad1.right_bumper) {
-                turnSpeed = 0.2;
+                turnSpeed = 0.3;
             } else if (gamepad1.right_bumper && !gamepad1.left_bumper) {
-                turnSpeed = -0.2;
+                turnSpeed = -0.3;
             }
 
             double[] driveSpeeds;
@@ -34,6 +34,7 @@ public class DriveWhileSpinning extends MainTeleOp {
             if (getLeftStickDist(gamepad1) > 0.15) {
                 double controllerAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI / 2;
                 controllerAngle = robot.normAngle(controllerAngle);
+                robot.updateReadings();
                 double robotAngle = robot.normAngle(controllerAngle + robot.getGyroHeading());
                 driveSpeeds = robot.getDrivePowersFromAngle(robotAngle);
 
@@ -50,7 +51,7 @@ public class DriveWhileSpinning extends MainTeleOp {
                     fTS = -turnSpeed;
                 }
 
-                robot.motorArr[i].setPower(driveSpeeds[i] * 0.8 + fTS);
+                robot.motorArr[i].setPower(driveSpeeds[i] * 0.7 + fTS);
             }
         }
     }
