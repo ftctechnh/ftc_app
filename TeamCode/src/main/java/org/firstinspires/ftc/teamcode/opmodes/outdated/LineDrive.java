@@ -152,7 +152,7 @@ public class LineDrive extends OpenCVLib {
             turnPower = 0.3f;
         }
 
-        mDrive.add(new AutoLib.GyroTurnStep(modePointer, heading, robot.getNavXHeadingSensor(), robot.getMotorArray(), turnPower, 3.0f, true));
+        //mDrive.add(new AutoLib.GyroTurnStep(modePointer, heading, robot.getNavXHeadingSensor(), robot.getMotorArray(), turnPower, 3.0f, true));
         mDrive.add(new AutoLib.LogTimeStep(modePointer, "Yay!", 0.1));
 
         mDrive.add(new AutoLib.RunCodeStep(new FunctionCall() {

@@ -487,7 +487,8 @@ public class AutoLib {
     // assumes an even number of concurrent drive motor steps in order right ..., left ...
     // this step tries to turn the to a given angle by adjusting the left vs. right motors to change the robot's heading.
     static public class GyroTurnStep extends Step {
-        private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private float mPowerMin;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private float mPowerMax;
         private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
         private float mError;
         private boolean mStop;
@@ -495,32 +496,31 @@ public class AutoLib {
         private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
         private DcMotor[] mMotors;            // the motor steps we're guiding - assumed order is right ... left ...
         private boolean mReversed;
-        private boolean mAddAngle;
+        private final int mRightCount;
+        private final SensorLib.PID errorPid;
+        private double lastTime = 0;
+        private int rightCount = 0;
 
         public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
-                             DcMotor[] motors, float power, float error, boolean stop)
+                            DcMotor[] motors, float powerMin, float powerMax, SensorLib.PID errorPID, float error, int count, boolean stop, boolean reversed)
         {
             mOpMode = mode;
             mHeading = heading;
             mGyro = gyro;
             mMotors = motors;
-            mPower = power;
+            mPowerMin = powerMin;
+            mPowerMax = powerMax;
             mError = error;
             mStop = stop;
-            mReversed = false;
+            mRightCount = count;
+            mReversed = reversed;
+            this.errorPid = errorPID;
         }
 
         public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
-                            DcMotor[] motors, float power, float error, boolean stop, boolean reversed)
+                            DcMotor[] motors, float powerMin, float powerMax, SensorLib.PID errorPID, float error, int count, boolean stop)
         {
-            mOpMode = mode;
-            mHeading = heading;
-            mGyro = gyro;
-            mMotors = motors;
-            mPower = power;
-            mError = error;
-            mStop = stop;
-            mReversed = reversed;
+            this(mode, heading, gyro, motors,powerMin, powerMax, errorPID, error, count, stop, false);
         }
 
         public boolean loop()
@@ -546,19 +546,27 @@ public class AutoLib {
                 return false;       // not done
             }
 
-            float dist = SensorLib.Utils.wrapAngle(heading-mHeading);   // deviation from desired heading
+            float error = SensorLib.Utils.wrapAngle(heading-mHeading);   // deviation from desired heading
             // deviations to left are positive, to right are negative
 
             //check if turning has finshed
-            if(Math.abs(dist) < mError){
-                if(mStop) {
+            if(Math.abs(error) < mError){
+                if(mStop)
                     for(DcMotor em : mMotors)
                         em.setPower(0.0);
-                }
-                return true;
+                if(++rightCount > mRightCount) return true;
             }
+            else rightCount = 0;
 
-            float power = dist > 0 ? mPower : -mPower;//Range.clip(dist / 30.0f, -mPower, mPower);
+            if(lastTime == 0) lastTime = mOpMode.getRuntime();
+            double time = mOpMode.getRuntime();
+            float pError = errorPid.loop(error, (float)(time - lastTime));
+            lastTime = time;
+            mOpMode.telemetry.addData("power error", pError);
+            //cut out a middle range, but handle positive and negative
+            float power;
+            if(pError >= 0) power = Range.clip(mPowerMin + pError, mPowerMin, mPowerMax);
+            else power = Range.clip(pError - mPowerMin, -mPowerMax, -mPowerMin);
 
             // compute new right/left motor powers
             float rightPower;
@@ -644,6 +652,8 @@ public class AutoLib {
 
             // feed error through PID to get motor power correction value
             float correction = -mPid.loop(error, (float)dt);
+
+            mOpMode.telemetry.addData("Correction", correction);
 
             // compute new right/left motor powers
             float rightPower = Range.clip(mPower + correction, this.powerMin, this.powerMax);

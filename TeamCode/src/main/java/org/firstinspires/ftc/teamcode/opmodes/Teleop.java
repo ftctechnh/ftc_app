@@ -42,12 +42,14 @@ public class Teleop extends OpMode {
         if(gamepad1.left_trigger > 0) bot.setDropPos(BotHardware.ServoE.backDropUp + (gamepad1.left_trigger * (BotHardware.ServoE.backDropDown - BotHardware.ServoE.backDropUp)));
         else bot.setDropPos(BotHardware.ServoE.backDropUp);
 
+        telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
+
         //if(suckerDown) bot.dropFront();
         //else bot.raiseFront();
 
-        if(gamepad2.left_trigger > 0) bot.setLift(gamepad2.left_trigger);
-        else if (gamepad2.right_trigger > 0) bot.setLift(-gamepad2.right_trigger);
-        else bot.setLift(0);
+        //if(gamepad2.left_trigger > 0) bot.setLift(gamepad2.left_trigger);
+        //else if (gamepad2.right_trigger > 0) bot.setLift(-gamepad2.right_trigger);
+        //else bot.setLift(0);
 
         if((gamepad2.left_bumper || gamepad2.right_bumper) && !lastBumper2) dropperDown = !dropperDown;
         lastBumper2 = gamepad2.left_bumper || gamepad2.right_bumper;
@@ -65,8 +67,8 @@ public class Teleop extends OpMode {
         }
 
 
-        //if(gamepad1.b) bot.dropStick();
-        //else bot.liftStick();
+        if(gamepad1.b) bot.dropStick();
+        else bot.liftStick();
 
         bot.getStickBase().setPosition(BotHardware.ServoE.stickBaseHidden);
 

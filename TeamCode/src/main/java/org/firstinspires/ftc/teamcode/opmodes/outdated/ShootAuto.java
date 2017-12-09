@@ -87,7 +87,7 @@ public class ShootAuto extends OpMode {
         if(redColor) direction = -50;
         else direction = 50;
 
-        mShoot.add(new AutoLib.GyroTurnStep(modePointer, direction, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.4f, 3.0f, true));
+        //mShoot.add(new AutoLib.GyroTurnStep(modePointer, direction, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.4f, 3.0f, true));
         mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.5f, 2750, true));
     }
 

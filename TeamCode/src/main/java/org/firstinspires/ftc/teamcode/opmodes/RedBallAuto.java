@@ -59,7 +59,6 @@ public class RedBallAuto extends VuforiaBallLib {
                 mEnd.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 1.0, false));
                 //drive forward into parking zone
                 final int mult = isRed ? -1 : 1;
-                mEnd.add(new AutoLib.TimedMotorStep(BotHardware.Motor.lift.motor, 1.0f, -1.0f, true));
                 mEnd.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 180.0f * mult, 1600, true));
                 mEnd.add(new AutoLib.RunUntilStopStep(
                         new AutoLib.TurnByTimeStep(bot.getMotorVelocityShimArray(), 180.0f * mult, -180.0f * mult, 3.0, true),

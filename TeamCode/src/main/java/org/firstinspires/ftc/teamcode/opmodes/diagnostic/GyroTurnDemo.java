@@ -19,22 +19,19 @@ public class GyroTurnDemo extends OpMode {
     AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
 
     //parameters for gyro PID, but cranked up
-    float Kp5 = 0.1f;        // degree heading proportional term correction per degree of deviation
-    float Ki5 = 0.05f;         // ... integrator term
+    float Kp5 = 3.0f;        // degree heading proportional term correction per degree of deviation
+    float Ki5 = 0.0f;         // ... integrator term
     float Kd5 = 0;             // ... derivative term
-    float Ki5Cutoff = 3.0f;    // maximum angle error for which we update integrator
+    float Ki5Cutoff = 0.0f;    // maximum angle error for which we update integrator
 
     SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
 
     public void init() {
-        mSeq.add(new AutoLib.RunUntilStopStep(
-                new AutoLib.AzimuthTimedDriveStep(this, 90, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 270.0f, 10, true, -450.0f, 450.0f),
-                new GyroStopStep(bot.getHeadingSensor(), 90, 3)
-        ));
-
-        mSeq.add(new AutoLib.AzimuthTimedDriveStep(this, 90, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 270.0f, 2.0f, true, -450.0f, 450.0f));
-
         bot.init();
+
+        mSeq.add(new AutoLib.GyroTurnStep(this, 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 1.0f, 3, true));
+
+        //mSeq.add(new AutoLib.AzimuthTimedDriveStep(this, 90, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 270.0f, 2.0f, true, -450.0f, 450.0f));
 
     }
 

@@ -59,7 +59,7 @@ public class BlockAuto extends OpMode {
         if(redColor) direction = 25;
         else direction = -25;
 
-        mShoot.add(new AutoLib.GyroTurnStep(modePointer, direction, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.4f, 3.0f, true));
+        //mShoot.add(new AutoLib.GyroTurnStep(modePointer, direction, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.4f, 3.0f, true));
         mShoot.add(new AutoLib.MoveByEncoderStep(robot.getMotorArray(), 0.5f, 2000, true));
     }
 

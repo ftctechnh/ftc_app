@@ -1,28 +1,19 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import android.app.Activity;
-import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
+import org.firstinspires.ftc.teamcode.libraries.SquirrelyLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
-import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
-import org.firstinspires.ftc.teamcode.opmodes.diagnostic.GyroTurnDemo;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -30,8 +21,6 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  * Created by Noah on 11/13/2017.
@@ -46,63 +35,99 @@ public class RedPilliar extends VuforiaBallLib {
     private static final int PEAK_HEIGHT_MIN = 110;
     private static final int PEAK_FIND_WINDOW = 40;
     private static final int PEAK_FRAME_COUNT = 3;
+    private static final double BALL_WAIT_SEC = 10.0;
+    private static final int PILLIAR_COUNT_INC = 350;
+    private static final int PILLIAR_COUNT_START_BLUE = 40;
+    private static final int PILLIAR_COUNT_START_RED = 200;
+
     protected boolean red = true;
     private int[] data;
-   // private BotHardware bot = new BotHardware(this);
+    private BotHardware bot = new BotHardware(this);
 
-    private AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
+    private BallColor color = BallColor.Undefined;
+    private double startLoop = 0;
+    private boolean firstLoop = false;
+
+    private AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
 
     //parameters for gyro PID, but cranked up
-    float Kp5 = 0.1f;        // degree heading proportional term correction per degree of deviation
-    float Ki5 = 0.05f;         // ... integrator term
+    float Kp5 = 3.0f;        // degree heading proportional term correction per degree of deviation
+    float Ki5 = 0.0f;         // ... integrator term
     float Kd5 = 0;             // ... derivative term
-    float Ki5Cutoff = 3.0f;    // maximum angle error for which we update integrator
+    float Ki5Cutoff = 0.0f;    // maximum angle error for which we update integrator
 
     SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
-
-    final DcMotor[] motors = new DcMotor[] {
-            new AutoLib.TestMotor("fr", this),
-            new AutoLib.TestMotor("br", this),
-            new AutoLib.TestMotor("fl", this),
-            new AutoLib.TestMotor("br", this)
-    };
 
     @Override
     public void init() {
         initVuforia(true);
-        //bot.init();
-
-        int mul = red ? -1 : 1;
-
-        mSeq.add(
-            new AutoLib.RunUntilStopStep(
-                new AutoLib.MoveByTimeStep(motors, 180.0f * mul, 5.0f, true),
-                new PeakFindStep(PEAK_FIND_WINDOW, PEAK_FRAME_COUNT)
-            )
-        );
-        mSeq.add(new PeakHoneStep(motors, red, new SensorLib.PID(0.15f, 0.05f, 0, 15), 25.0f, 105.0f, 3, this));
-        /*
-        int count = 400;
-        if(!red) count += 600;
-        mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f * mul, count, true));
-        mSeq.add(new AutoLib.RunUntilStopStep(
-                new AutoLib.AzimuthTimedDriveStep(this, 90 * mul, bot.getHeadingSensor(), motorPID, bot.getMotorVelocityShimArray(), 180.0f, 10, true),
-                new GyroStopStep(bot.getHeadingSensor(), 90 * mul, 3)
-        ));
-        mSeq.add(bot.getDropStep());
-
-        //mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f, 1600, true));
-        */
+        bot.init();
     }
 
     @Override
     public void start() {
         //hmmm
+        startTracking();
     }
 
     @Override
     public void loop() {
-        if(mSeq.loop()) requestOpModeStop();
+        if(startLoop == 0) startLoop = getRuntime();
+        if(getRuntime() - startLoop < BALL_WAIT_SEC && (color == BallColor.Indeterminate || color == BallColor.Undefined)) color = getBallColor();
+        else if(!firstLoop){
+            //init vars
+            int count;
+            if(red) count = PILLIAR_COUNT_START_RED;
+            else count = PILLIAR_COUNT_START_BLUE;
+            final int mul = red ? -1 : 1;
+            //init whacky stick code here
+            AutoLib.Sequence whack = new AutoLib.LinearSequence();
+            //check detection
+            if(color != BallColor.Indeterminate && color != BallColor.Undefined) {
+                //hmmmmm
+
+            }
+
+            if(getLastVuMark() != null) {
+                RelicRecoveryVuMark thing = getLastVuMark();
+                //if we're on red it's the far one, else it's the close one
+                if(thing == RelicRecoveryVuMark.LEFT && red) count += PILLIAR_COUNT_INC * 2;
+                //if it's center, always increment
+                if(thing == RelicRecoveryVuMark.CENTER) count += PILLIAR_COUNT_INC;
+                //if its' on the right and we're on blue, go twice
+                if(thing == RelicRecoveryVuMark.RIGHT && !red) count += PILLIAR_COUNT_INC * 2;
+                //telemetry
+                telemetry.addData("Mark", thing.toString());
+            }
+
+            //contruct the block placing seq
+            AutoLib.LinearSequence blockSeq = new AutoLib.LinearSequence();
+
+            blockSeq.add(
+                    new AutoLib.RunUntilStopStep(
+                            new AutoLib.MoveByTimeStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 5.0f, true),
+                            new PeakFindStep(PEAK_FIND_WINDOW, PEAK_FRAME_COUNT)
+                    )
+            );
+            blockSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), !red, new SensorLib.PID(-0.15f, -0.05f, 0, 15), 35.0f, 105.0f, 5, this));
+
+            blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, count, true));
+            blockSeq.add(new AutoLib.GyroTurnStep(this, 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 2.0f, 3, true));
+            blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 100, true));
+            blockSeq.add(bot.getDropStep());
+            blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 250, true));
+            blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 150, true));
+            //blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f * mul, 100, true));
+            //blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f, 1600, true));
+
+            //smash it all together
+            mSeq.add(whack);
+            mSeq.add(blockSeq);
+
+            firstLoop = true;
+        }
+
+        if(firstLoop && mSeq.loop()) requestOpModeStop();
     }
 
     private class DebugHeading implements HeadingSensor {
