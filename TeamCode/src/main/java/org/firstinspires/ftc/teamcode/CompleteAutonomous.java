@@ -136,7 +136,16 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
         for (DcMotor m : robot.motorArr) {
             m.setPower(0.4);
-            m.setTargetPosition(m.getCurrentPosition() + (2400 * robot.color.getColorCode()));
+
+            int driveTicks;
+            if (robot.startingPad == StartingPosition.FRONT) {
+                driveTicks = 2400;
+            } else {
+                driveTicks = 2000;
+            }
+
+            m.setTargetPosition(m.getCurrentPosition() + (driveTicks * robot.color.getColorCode()));
+
         }
 
         // Code to raise the whipsnake early when on the back
