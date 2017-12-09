@@ -41,7 +41,7 @@ public class RlcRcvryCornerBlue extends OpMode{
     public void init() {
         robot.init(hardwareMap);
         gilgearmesh.init(hardwareMap);
-        //sensArm.init(hardwareMap);
+        sensArm.init(hardwareMap);
         parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -54,6 +54,10 @@ public class RlcRcvryCornerBlue extends OpMode{
         gilgearmesh.armPos(2, 1);
         stateMachineFlow = 0;
         relicTrackables.activate();
+
+        telemetry.addData("Key",glyph);
+        telemetry.addData("Color",jewelColor);
+        telemetry.update();
     }
 
 
@@ -62,6 +66,9 @@ public class RlcRcvryCornerBlue extends OpMode{
         switch(stateMachineFlow){
             case 0:
                 runtime.reset();
+                telemetry.addData("Key",glyph);
+                telemetry.addData("Color",jewelColor);
+                telemetry.update();
                 stateMachineFlow++;
                 break;
             case 1:
@@ -69,18 +76,36 @@ public class RlcRcvryCornerBlue extends OpMode{
                 while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
                     vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     //viewforia stuff goes here
-                    if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;}
-                    else if (vuMark == RelicRecoveryVuMark.LEFT){glyph = RelicRecoveryVuMark.LEFT;}
-                    else if (vuMark == RelicRecoveryVuMark.RIGHT){glyph = RelicRecoveryVuMark.RIGHT;}
+                    if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;
+                        telemetry.addData("Key",glyph);
+                        telemetry.addData("Color",jewelColor);
+                        telemetry.update();}
+                    else if (vuMark == RelicRecoveryVuMark.LEFT){glyph = RelicRecoveryVuMark.LEFT;
+                        telemetry.addData("Key",glyph);
+                        telemetry.addData("Color",jewelColor);
+                        telemetry.update();}
+                    else if (vuMark == RelicRecoveryVuMark.RIGHT){glyph = RelicRecoveryVuMark.RIGHT;
+                        telemetry.addData("Key",glyph);
+                        telemetry.addData("Color",jewelColor);
+                        telemetry.update();}
                 }
                 stateMachineFlow++;
                 break;
             case 2://look at this
                 sensArm.armPos(.444);
+                sensArm.colorLED(true);
                 if (sensArm.colorSens() == "blue"){
-                    jewelColor = "blue";}
+                    jewelColor = "blue";
+                    telemetry.addData("Key",glyph);
+                    telemetry.addData("Color",jewelColor);
+                    telemetry.update();}
                 else if (sensArm.colorSens() == "red"){
-                    jewelColor = "red";}
+                    jewelColor = "red";
+                    telemetry.addData("Key",glyph);
+                    telemetry.addData("Color",jewelColor);
+                    telemetry.update();}
+
+                sensArm.colorLED(false);
                 stateMachineFlow++;
                 break;
             case 3:
