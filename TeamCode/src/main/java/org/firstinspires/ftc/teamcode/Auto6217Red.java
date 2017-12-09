@@ -304,6 +304,7 @@ public class Auto6217Red extends LinearOpMode {
 
     void pivotTo(int heading) {
 
+
         // Positive angle turns clockwise with power given
 
         // Any faster than this and the gyro is far less accurate
