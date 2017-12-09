@@ -211,20 +211,15 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void stop() {
-        //This lowers the arm after you stop it so thw spool isn't to loose.
+        //This lowers the lift after you stop it so thw spool isn't to loose.
 
-        target = minlift;
+  /*      target = minlift;
         robot.lift.setTargetPosition(target);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.7);
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
         }
-        robot.lift.setPower(0.0);
+        robot.lift.setPower(0.0); */
 
-        //wait(5000);
-        //Thread.sleep(5000);
-        //robot.ballArm.setPosition(.3);
-        //wait(5000);
-        //robot.ballArm.setPosition(-.3);
     }
 }
