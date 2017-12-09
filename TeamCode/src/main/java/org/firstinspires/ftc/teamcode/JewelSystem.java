@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -48,6 +49,10 @@ public class JewelSystem {
         if (pos < BOTTOM_SERVO)
             pos = (BOTTOM_SERVO);
         jewelArm.setPosition(pos);
+    }
+    public void colorLED(boolean onOff){
+        if (onOff == true){colorSensor.enableLed(true);
+        }else if (onOff == false){colorSensor.enableLed(false);}
     }
     public String colorSens() {
         colorSensor.enableLed(true);

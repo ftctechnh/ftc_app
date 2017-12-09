@@ -64,13 +64,19 @@ public class ThirtyMinTeleOp extends OpMode{
 
         gilgearmesh.armPower(armPower);
 
+        if (gamepad2.a){gilgearmesh.armPos(25,.4);}
+        else if (gamepad2.x){gilgearmesh.armPos(50,.4);}
+        else if (gamepad2.y){gilgearmesh.armPos(75,.4);}
+        else if (gamepad2.b){gilgearmesh.armPos(100,.4);}
+        else if (gamepad2.right_stick_button){gilgearmesh.armPos(0,.4);}
+
         if (gamepad2.right_bumper) {
             gilgearmesh.clawPos(1);
         } else if (gamepad2.left_bumper) {
             gilgearmesh.clawPos(0);
         }
         if (gamepad2.dpad_down == true){sensArm.armPos(.444);}
-        if (gamepad2.dpad_up ==true){sensArm.armPos(1);}
+        else if (gamepad2.dpad_up ==true){sensArm.armPos(1);}
 
         telemetry.addData("Arm Pos","%7d",gilgearmesh.getArmPosition());
         telemetry.addData("Left Mid","%7d",robot.getLMencoder());
