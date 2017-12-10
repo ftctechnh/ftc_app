@@ -91,8 +91,10 @@ public class RobotTeleOp extends LinearOpMode {
                 robot.glyphLift.setRotationMotorPower(liftRotationMotorPower);
             }
 
-//            telemetry.addData("encoder position", robot.glyphLift.rotationMotor.getCurrentPosition());
-//            telemetry.update();
+            telemetry.addData("Red Level", robot.jewelKnocker.getRed());
+            telemetry.addData("Blue Level", robot.jewelKnocker.getBlue());
+            telemetry.update();
+
 
             robot.hDriveTrain.pivot(pivot);
             robot.hDriveTrain.drive(speedX, speedY);

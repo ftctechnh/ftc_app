@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -22,51 +25,76 @@ import org.firstinspires.ftc.teamcode.mechanism.impl.VisionHelper;
  */
 
 public class Autonomous extends LinearOpMode {
-   private RelicRecoveryRobot robot;
+
+    private RelicRecoveryRobot robot;
+
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new RelicRecoveryRobot(this);
 
-        //detect color of stone
-        boolean isStoneRed;
-        if(robot.balancingStoneSensor.red() > 0){
-            isStoneRed = true;
-            telemetry.addData(">", "Red stone detected.");
-        } else {
-            isStoneRed = false;
-            telemetry.addData(">", "Blue stone detected.");
-        }
+//        //detect color of stone
+          boolean isStoneRed = true;
+//        if(robot.balancingStoneSensor.red() > 0){
+//            isStoneRed = true;
+//            telemetry.addData(">", "Red stone detected.");
+//        } else {
+//            isStoneRed = false;
+//            telemetry.addData(">", "Blue stone detected.");
+//        }
 
 
 
         // get side L/R
         boolean isLeftStone = true;
-        telemetry.addData(">", "Press LB for Left Stone or RB for Right Stone");
+        telemetry.addData(">", "LB = Left, RB = Right, LT = Red, RT = Blue");
+        telemetry.update();
 
         while(!isStarted() && opModeIsActive()){
             if(gamepad1.left_bumper){
                 telemetry.addData(">", "Left stone Selected.");
+                telemetry.update();
                 isLeftStone = true;
             } else if (gamepad1.right_bumper){
                 telemetry.addData(">", "Right stone Selected.");
+                telemetry.update();
                 isLeftStone = false;
             }
+            if(gamepad1.left_trigger > 0){
+                // red team
+                telemetry.addData(">", "Red Alliance Selected.");
+                telemetry.update();
+                isStoneRed = true;
+            } else if(gamepad1.right_trigger > 0){
+                // blue team
+                telemetry.addData(">", "Blue Alliance Selected.");
+                telemetry.update();
+                isStoneRed = false;
+            }
         }
-        // TODO impliment different programs for each position
 
         waitForStart();
 
         //decide which program to run
         if(isStoneRed){
             if(isLeftStone){
+                telemetry.addData(">", "Running Red Alliance Left Stone Program.");
+                telemetry.update();
                 redLeft(robot);
             } else {
+                telemetry.addData(">", "Running Red Alliance Right Stone Program.");
+                telemetry.update();
                 redRight(robot);
             }
         } else {
             if(isLeftStone){
+                telemetry.addData(">", "Running Blue Alliance Left Stone Program.");
+                telemetry.update();
+                waitForStart();
                 blueLeft(robot);
             } else {
+                telemetry.addData(">", "Running Blue Alliance Right Stone Program.");
+                telemetry.update();
+                waitForStart();
                 blueRight(robot);
             }
         }
@@ -79,42 +107,50 @@ public class Autonomous extends LinearOpMode {
         robot.glyphLift.setLiftMotorPower(1);
         sleep(5);
 
-        //TODO add code for jewels
+        // Lower Jewel Mechinism
+        robot.jewelKnocker.extendArm();
 
-        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
-        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
+        //get color of ball
 
-        keyColumn = scanPicto();
 
-        // dist: 4 for right, 5 for middle, and 6 for left.
-        int distToKeyColumn = 0;
 
-        switch(keyColumn) {
-            case LEFT:
-                distToKeyColumn = 4;
-                break;
-            case CENTER:
-                distToKeyColumn = 5;
-                break;
-            case RIGHT:
-                distToKeyColumn = 6;
-                break;
-            default:
-                distToKeyColumn = 5;
-                break;
-        }
-        // drive to key column
-        robot.hDriveTrain.directionalDrive(-90, 1, distToKeyColumn, false);
 
-        // turn to cryptobox
-        robot.hDriveTrain.pivot(1);
-        sleep(1000);
 
-        //drive to cryptobox
-        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
 
-        //release preloaded glyph
-        robot.glyphLift.openRedGripper();
+//        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
+//        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
+//
+//        keyColumn = scanPicto();
+//
+//        // dist: 4 for right, 5 for middle, and 6 for left.
+//        int distToKeyColumn = 0;
+//
+//        switch(keyColumn) {
+//            case LEFT:
+//                distToKeyColumn = 4;
+//                break;
+//            case CENTER:
+//                distToKeyColumn = 5;
+//                break;
+//            case RIGHT:
+//                distToKeyColumn = 6;
+//                break;
+//            default:
+//                distToKeyColumn = 5;
+//                break;
+//        }
+//        // drive to key column
+//        robot.hDriveTrain.directionalDrive(-90, 1, distToKeyColumn, false);
+//
+//        // turn to cryptobox
+//        robot.hDriveTrain.pivot(1);
+//        sleep(1000);
+//
+//        //drive to cryptobox
+//        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
+//
+//        //release preloaded glyph
+//        robot.glyphLift.openRedGripper();
     }
 
     public void redRight(RelicRecoveryRobot robot){
