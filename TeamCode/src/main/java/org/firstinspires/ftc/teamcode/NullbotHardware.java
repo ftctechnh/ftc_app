@@ -428,7 +428,7 @@ public class NullbotHardware {
     }
 
     public final double RELIC_CLAW_OPEN_POSITION = 0.6;
-    public final double RELIC_CLAW_CLOSED_POSITION = 0.92;
+    public final double RELIC_CLAW_CLOSED_POSITION = 0.88;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
     public void flattenRelicClaw() {relicClaw.setPosition(0.0/255.0); RELIC_CLAW_IS_OPEN = true;}
