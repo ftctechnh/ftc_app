@@ -28,6 +28,5 @@ public class Thing extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        
         }
 }
