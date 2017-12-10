@@ -29,9 +29,12 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-    DcMotor motorCon1;
-    DcMotor motorCon2;
-    DcMotor motorRocker;
+    DcMotor motorConL;
+    DcMotor motorConR;
+    CRServo servoConL;
+    CRServo servoConR;
+    DcMotor motorRocker1;
+    DcMotor motorRocker2;
     Servo   servoJack;
 
     IntegratingGyroscope gyro;
@@ -58,14 +61,24 @@ public class TeleOp6217_DRC extends OpMode
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
-        motorCon1 = hardwareMap.dcMotor.get("motorCon1");
-        motorCon1.setDirection(DcMotor.Direction.FORWARD);
-        motorCon2 = hardwareMap.dcMotor.get("motorCon2");
-        motorCon2.setDirection(DcMotor.Direction.FORWARD);
-        motorRocker = hardwareMap.dcMotor.get("motorRocker");
-        motorRocker.setDirection(DcMotor.Direction.FORWARD);
-        servoJack = hardwareMap.servo.get ("servoJack");
 
+        // Conveyor
+
+        motorConL = hardwareMap.dcMotor.get("motorConL");
+        motorConL.setDirection(DcMotor.Direction.FORWARD);
+        motorConR = hardwareMap.dcMotor.get("motorConR");
+        motorConR.setDirection(DcMotor.Direction.FORWARD);
+        servoConL = hardwareMap.crservo.get("servoConL");
+        servoConR = hardwareMap.crservo.get("servoConR");
+
+        // Rocker
+
+        motorConR.setDirection(DcMotor.Direction.FORWARD);
+        motorRocker1 = hardwareMap.dcMotor.get("motorRocker1");
+        motorRocker1.setDirection(DcMotor.Direction.FORWARD);
+        motorRocker2 = hardwareMap.dcMotor.get("motorRocker2");
+        motorRocker2.setDirection(DcMotor.Direction.FORWARD);
+        servoJack = hardwareMap.servo.get ("servoJack");
 
         modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
@@ -74,7 +87,6 @@ public class TeleOp6217_DRC extends OpMode
         telemetry.addData("WBG",  "Starting at %7d",
                // motorWBT1.getCurrentPosition());
         telemetry.update());*/
-
     }
 
     /*
@@ -119,8 +131,8 @@ public class TeleOp6217_DRC extends OpMode
         boolean x = gamepad1.x;
         boolean rightPad = gamepad1.dpad_right;
         boolean leftPad = gamepad1.dpad_left;
-        boolean UP = gamepad1.dpad_up;
-        boolean DOWN = gamepad1.dpad_down;
+        boolean dpad_up = gamepad1.dpad_up;
+        boolean dpad_down = gamepad1.dpad_down;
          /* ~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Limit x and y values and adjust to power curve
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -138,28 +150,38 @@ public class TeleOp6217_DRC extends OpMode
         RT = (float) powerCurve(RT);
 
         //  Loading Glyphs
-        if (UP) {
-            motorCon1.setPower(1);
+        // Directions will require testing
+        if (dpad_up) {
+            motorConL.setPower(1);
+            motorConR.setPower(-1);
+            servoConL.setPower(-1);
+            servoConR.setPower(1);
         }
-
-        else if (DOWN)  {
-            motorCon2.setPower(1);
+        else if (dpad_down)  {
+            motorConL.setPower(-1);
+            motorConR.setPower(1);
+            servoConL.setPower(1);
+            servoConR.setPower(-1);
         }
-
         else {
-            motorCon1.setPower(0);
-            motorCon2.setPower(0);
+            motorConL.setPower(0);
+            motorConR.setPower(0);
+            servoConL.setPower(0);
+            servoConR.setPower(0);
         }
 
         // Rocker
         if (posyR > 0) {
-            motorRocker.setPower(1);
+            motorRocker1.setPower(1);
+            motorRocker2.setPower(1);
         }
         else if (posyR < 0){
-            motorRocker.setPower(-1);
+            motorRocker1.setPower(-1);
+            motorRocker2.setPower(-1);
         }
         else {
-            motorRocker.setPower(0);
+            motorRocker1.setPower(0);
+            motorRocker2.setPower(0);
         }
 
         // Jack
@@ -223,15 +245,6 @@ public class TeleOp6217_DRC extends OpMode
 
 
     }
-
-
-
-
-
-
-
-
-
     /*
      * Code to run when the op mode is first disabled goes here
      *
@@ -240,13 +253,6 @@ public class TeleOp6217_DRC extends OpMode
     @Override
     public void stop() {
     }
-
-
-
-
-
-
-
 
    double powerCurve ( float dVal ) {
     /*
