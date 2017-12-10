@@ -75,6 +75,7 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.moveXEncoderCounts(100,1,false);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
+                newRobot.driveStraight_In(3,.2);
                 newRobot.stopAllMotors();
             case 'r':
                 waitForStart();
@@ -130,6 +131,7 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.moveXEncoderCounts(100,1,false);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
+                newRobot.driveStraight_In(3,.2);
                 newRobot.stopAllMotors();
         }
     }
