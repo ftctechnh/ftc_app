@@ -11,8 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImpl;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -36,28 +39,28 @@ public class NewRobotFinal
     private int liftDeadzone = 34;
     private short currentLvl;
 
-    private ColorSensor floorColorSens = null;
-    private ColorSensor rightWingColorSens = null;
-    private ColorSensor leftWingColorSens = null;
+    private ColorSensor floorColorSens;
+    private ColorSensor rightWingColorSens ;
+    private ColorSensor leftWingColorSens ;
 
-    private DcMotorImplEx driveLeftOne = null;
-    private DcMotorImplEx driveRightOne = null;
-    private DcMotorImplEx wingMotor = null;
+    private DcMotorImplEx driveLeftOne ;
+    private DcMotorImplEx driveRightOne ;
+    private DcMotorImplEx wingMotor ;
 
-    private Servo leftDoorWall = null;
-    private Servo rightDoorWall = null;
-    private DcMotorImplEx liftMotor = null;
-    //private DcMotorImplEx shiftLiftMotor = null;
+    private Servo leftDoorWall ;
+    private Servo rightDoorWall ;
+    private DcMotorImplEx liftMotor ;
+    //private DcMotorImplEx shiftLiftMotor ;
 
-    private DcMotorImplEx tailRelease = null;
-    private Servo grabber = null;
-    private Servo grabberRotator = null;
+    private DcMotorImplEx tailRelease ;
+    private Servo grabber ;
+    private Servo grabberRotator ;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
-    private VuforiaLocalizer vuforia = null;
-    private RelicRecoveryVuMark vuMark = null;
-    private VuforiaTrackables relicTrackables = null;
-    private VuforiaTrackable relicTemplate = null;
+    private VuforiaLocalizer vuforia ;
+    private RelicRecoveryVuMark vuMark ;
+    private VuforiaTrackables relicTrackables ;
+    private VuforiaTrackable relicTemplate ;
 
     private BNO055IMU imu;
     Orientation angles;
@@ -70,6 +73,43 @@ public class NewRobotFinal
     public final float wheelCircCm = (float)(10.168* Math.PI);
 
     public NewRobotFinal(HardwareMap hardwareMap)
+    {
+        liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
+
+        imu = (hardwareMap.get(BNO055IMU.class, "imu"));
+
+        driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
+        driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
+
+        wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
+
+     //   leftDoorWall = hardwareMap.get(Servo.class, "leftDoorWall");
+       // rightDoorWall = hardwareMap.get(Servo.class, "rightDoorWall");
+
+        leftDoorWall = hardwareMap.servo.get("leftDoorWall");
+        rightDoorWall = hardwareMap.servo.get("rightDoorWall");
+
+        initEndGame(hardwareMap);
+
+        zeroStuff();
+        initIMU();
+        updateIMUValues();
+    }
+
+    public void initEndGame(HardwareMap hardwareMap)
+    {
+        tailRelease = hardwareMap.get(DcMotorImplEx.class, "tailRelease");
+        tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        tailRelease.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
+        tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
+        tailRelease.setVelocity(0, AngleUnit.RADIANS);
+        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
+        grabber = hardwareMap.get(Servo.class, "grabber");
+    }
+
+    public void initVuforia(HardwareMap hardwareMap)
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -86,26 +126,6 @@ public class NewRobotFinal
         relicTemplate.setName("relicVuMarkTemplate");
         relicTrackables.activate();
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-        liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        imu = (hardwareMap.get(BNO055IMU.class, "imu"));
-        initIMU();
-
-        driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
-        driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
-        wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
-
-        leftDoorWall = hardwareMap.get(Servo.class, "leftDoorWall");
-        rightDoorWall = hardwareMap.get(Servo.class, "rightDoorWall");
-
-        grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
-        grabber = hardwareMap.get(Servo.class, "grabber");
-        tailRelease = hardwareMap.get(DcMotorImplEx.class, "tailRelease");
-
-        zeroStuff();
-        stopDriveMotors();
-        updateIMUValues();
-        stopAllMotors();
     }
 
     public void zeroStuff() //Methods sets motors at low power to put the motors to their resting positions
@@ -119,7 +139,7 @@ public class NewRobotFinal
         wingMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wingMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         wingMotor.setVelocity(0, AngleUnit.DEGREES);
 
         currentLvl = 0;
@@ -133,15 +153,9 @@ public class NewRobotFinal
         driveLeftOne.setVelocity(0, AngleUnit.DEGREES);
         driveLeftOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         resetDriveEncoders();
-        
+
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
         leftDoorWall.setDirection(Servo.Direction.REVERSE);
-
-        tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
-        tailRelease.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
-        tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
-        tailRelease.setVelocity(0, AngleUnit.RADIANS);
-        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void initIMU()
@@ -212,6 +226,12 @@ public class NewRobotFinal
             return 'b';
         else
             return '?';
+    }
+
+    public void driveMotors(float lPow, float rPow)
+    {
+        driveLeftOne.setPower(lPow);
+        driveRightOne.setPower(rPow);
     }
 
     private void resetDriveEncoders()//sets encoders to 0 for motors
@@ -515,7 +535,7 @@ public class NewRobotFinal
         if(moveDown)
         {
             wingMotor.setPower(-.3);
-            while(wingMotor.getCurrentPosition() > -300){}
+            while(wingMotor.getCurrentPosition() > -2500){}
         }
         else
         {
@@ -539,7 +559,7 @@ public class NewRobotFinal
             rightDoorWall.setPosition(-.5);
         }
     }
-    
+
     public void fineAdjDoors(double in)
     {
         leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
@@ -574,7 +594,7 @@ public class NewRobotFinal
             grabberRotator.setPosition(.52);
         }
     }
-    
+
     public void fineAdjGrabber(float in)
     {
         grabber.setPosition(grabber.getPosition() + in);
@@ -583,7 +603,7 @@ public class NewRobotFinal
     {
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
     }
-    
+
     public void tiltGrabberRotator(boolean goUp)
     {
         if (goUp)
@@ -597,7 +617,6 @@ public class NewRobotFinal
         stopDriveMotors();
         liftMotor.setPower(0);
         wingMotor.setPower(0);
-        tailRelease.setPower(0);
     }
 
     public void stopDriveMotors()
