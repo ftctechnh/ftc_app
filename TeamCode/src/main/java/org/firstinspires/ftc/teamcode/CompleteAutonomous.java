@@ -185,6 +185,14 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
             driveTicks -= 75;
         }
 
+        if (robot.color == Alliance.BLUE && robot.startingPad == StartingPosition.BACK) {
+            if (pictograph == 0) {
+                driveTicks -= 75;
+            } else if (pictograph == 1) {
+                driveTicks -= 150;
+            }
+        }
+
         robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + driveTicks);
         robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - driveTicks);
         robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - driveTicks);
@@ -204,7 +212,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
 
 
         if (robot.startingPad == StartingPosition.BACK) {
-            desiredPosition += Math.PI/2;
+            desiredPosition += (Math.PI/2) * robot.color.getColorCode();
         }
 
         turnToPos(desiredPosition);
