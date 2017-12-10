@@ -82,7 +82,7 @@ public class blueStrightAutonomousFinal extends LinearOpMode {
     private double row3Position = 0.6;
     private BNO055IMU gyro;
     final private double OPENCLAMPPOSITION = 0;
-    final private double CLOSECLAMPPOSITION = .5;
+    final private double CLOSECLAMPPOSITION = 1;
     final private double LIFTEDARMPOSITION = .55;
     final private double DOWNARMPOSITION = .8;
 
