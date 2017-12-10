@@ -53,14 +53,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  armDrive    = null;
-    public Servo claw           = null;
+    public DcMotor  leftDrive           = null;
+    public DcMotor  rightDrive          = null;
+    public DcMotor  leftRearDrive       = null;
+    public DcMotor  rightRearDrive      = null;
+    public DcMotor  armDrive            = null;
+    public Servo    leftClaw            = null;
+    public Servo    rightClaw           = null;
+    public Servo    jewelAnnihilator    = null;
 
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER          = -0.45 ;
-    public static final double ARM_DOWN_POWER        =  0.45 ;
+    //Range of motion for right claw (0, 0.5)
+    //Range of motion for left claw (0, 0.5) but reversed
+
+    public static final double MID_SERVO             =  0.45 ; // 0.25 is the middle of the servo position
+    public static final double ARM_UP_POWER          = -0.65 ;
+    public static final double ARM_DOWN_POWER        =  0.65 ;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -95,8 +102,11 @@ public class HardwarePushbot
         armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Define and initialize ALL installed servos.
-        claw = hwMap.get(Servo.class, "claw_servo");
-        claw.setPosition(MID_SERVO);
+        leftClaw = hwMap.get(Servo.class, "left_claw_servo");
+        leftClaw.setPosition(MID_SERVO);
+        rightClaw = hwMap.get(Servo.class, "right_claw_servo");
+        rightClaw.setPosition(MID_SERVO);
+        jewelAnnihilator = hwMap.get(Servo.class, "jewel_servo");
     }
- }
+}
 
