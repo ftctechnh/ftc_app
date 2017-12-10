@@ -143,4 +143,14 @@ abstract public class AutoMaster extends LinearOpMode {
 
         }
     }
+    public void findBox(int box, int dir) {
+        int curBox = 0;
+        encodeInd((0.1 * (dir / Math.abs(dir)), MoveType.LATERALLY);
+        while (curBox < box) {
+            if (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 40) {
+                curBox++;
+            }
+        }
+        robot.setAllDriveMotors(0);
+    }    
 }
