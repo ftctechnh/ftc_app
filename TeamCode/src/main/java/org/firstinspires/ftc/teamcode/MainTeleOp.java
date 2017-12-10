@@ -242,6 +242,7 @@ public class MainTeleOp extends LinearOpMode {
 
             telemetry.addLine()
                     .addData("Current tick", totalElapsedTime.milliseconds());
+            telemetry.addLine().addData("Seeking?", zType.seekingPosition);
             telemetry.update(); // Send telemetry data to driver station
 
             // Run above code at 1Khz
