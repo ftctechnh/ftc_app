@@ -69,15 +69,19 @@ import static java.lang.Math.sqrt;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="blueNintyV2", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@Autonomous(name="redNintyV2", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 
-public class blueNintyV2 extends LinearOpMode {
+public class redNintyV2 extends LinearOpMode {
+
+    // Declare OpMode members.
     private VuforiaLocalizer vuforia;
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable trackable;
     private KiwiRobot robot;
-    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
 
     int cooldown = 1000;
     private boolean isClamped = true;
@@ -96,20 +100,18 @@ public class blueNintyV2 extends LinearOpMode {
     final private double SPINTOWIN = JEWELARMRAISE + .1; // turn to knock off jewel
     final private double JEWELSHEATHARM = SPINTOWIN + 2; // raise arm to sheath
     final private double JEWELSTOREARM = JEWELSHEATHARM + .5; // store arm
-    final private double JEWELSPINBACK = JEWELSTOREARM + .1; // turn b
-    // ack to compensate for knock off jewel turn
+    final private double JEWELSPINBACK = JEWELSTOREARM + .1; // turn back to compensate for knock off jewel turn
 
     final private double LIFTARM = JEWELSPINBACK + 2; //lift arm
-    final private double TURNTOLINEUPWITHCOLUMNS = LIFTARM + 1.3; // turn 180
-    final private double PHASETHREE = TURNTOLINEUPWITHCOLUMNS + 1.8; // drive forward
+    final private double PHASETHREE = LIFTARM + 1.8; // drive forward
     final private double PHASETHREEHALF = PHASETHREE + .1; // turn off motors
     final private double PHASEFOUR = PHASETHREEHALF + .5; // lowerarm
-    final private double PHASEFIVE = PHASEFOUR + 1; // turn to face columns
-    final private double PHASESIX = PHASEFIVE + 2.2; // drive stright
+    final private double PHASEFIVE = PHASEFOUR + .6; // turn to face columns
+    final private double PHASESIX = PHASEFIVE + 2; // drive stright
     final private double PHASESIXHALF = PHASESIX + .1; // turn off motors
     final private double PHASESEVEN = PHASESIXHALF + .5; // open clamp
-    final private double PHASEEIGHT = PHASESEVEN + .4; // turn
-    final private double PHASENINE = PHASEEIGHT + .4; // back up
+    final private double PHASEEIGHT = PHASESEVEN + .5; // turn
+    final private double PHASENINE = PHASEEIGHT + .2; // back up
     final private double PHASENINEHALF = PHASENINE + .1; // turn off motors
 
     final private double TURNTOWARDSGLYPHPIT = PHASENINEHALF + .6; // turn towards glyph pit
@@ -122,9 +124,8 @@ public class blueNintyV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot = new KiwiRobot(hardwareMap);
+        KiwiRobot robot = new KiwiRobot(hardwareMap);
         this.initVuforia();
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -147,16 +148,14 @@ public class blueNintyV2 extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        /** Start tracking the data sets we care about. */
-        relicTrackables.activate();
         runtime.reset();
         double elapsedTime;
 
         // run until the end of the match (driver presses STOP)
         boolean test = true;
         double speed = .8;
-        double jewelDegrees = 10;
         Boolean isDetected = false;
+        double jewelDegrees = 10;
         while (opModeIsActive())
         {
             elapsedTime = runtime.time();
@@ -171,19 +170,19 @@ public class blueNintyV2 extends LinearOpMode {
             else if (elapsedTime < JEWELARMRAISE)
             {
                 robot.armServo.setPosition(.9);
-
             }
             else if (elapsedTime < SPINTOWIN)
             {
-                if (robot.isJewelRed()&& !isDetected) {
+                if (!robot.isJewelRed()&& !isDetected) {
                     // the red jewel is on the left of sensor
                     jewelDegrees = -jewelDegrees;
                     isDetected = !isDetected;
                 }
-                robot.turnDegrees(speed, jewelDegrees);
+                robot.turnDegrees(speed,jewelDegrees);
             }
             else if (elapsedTime < JEWELSHEATHARM)
             {
+                robot.turnOffMotors();
                 robot.jewelServo.setPosition(.65);
             }
             else if (elapsedTime < JEWELSTOREARM)
@@ -192,15 +191,11 @@ public class blueNintyV2 extends LinearOpMode {
             }
             else if (elapsedTime < JEWELSPINBACK)
             {
-                robot.turnDegrees(speed, -jewelDegrees);
+                robot.turnDegrees(speed,-jewelDegrees);
             }
             else if (elapsedTime < LIFTARM) {
                 robot.turnOffMotors();
                 robot.armServo.setPosition(LIFTEDARMPOSITION);
-            }
-            else if (elapsedTime < TURNTOLINEUPWITHCOLUMNS)
-            {
-                robot.turnDegrees(-.5, 150);
             }
             else if(elapsedTime < PHASETHREE)
             {
@@ -218,7 +213,7 @@ public class blueNintyV2 extends LinearOpMode {
             }
             else if (elapsedTime < PHASEFIVE)
             {
-                robot.turnDegrees(-.5,90);
+                robot.turnDegrees(-.5,-90);
             }
             else if (elapsedTime < PHASESIX)
             {
@@ -234,7 +229,7 @@ public class blueNintyV2 extends LinearOpMode {
             }
             else if (elapsedTime < PHASEEIGHT)
             {
-                robot.turnDegrees(.5,15);
+                robot.turnDegrees(.5,-15);
             }
             else if (elapsedTime < PHASENINE)
             {
@@ -269,6 +264,29 @@ public class blueNintyV2 extends LinearOpMode {
                 turnOffMotors();
             }*/
             updateTelemetry();
+        }
+    }
+
+    public void updateTelemetry(){
+        //double armServoValue = armServo.getPosition();
+        //double leftClampValue = leftClampServo.getPosition();
+        //double rightClampValue = rightClampServo.getPosition();
+        //boolean aButton = gamepad1.a;
+        telemetry.addData("Status", "Run Time   : " + runtime.toString());
+
+        telemetry.update();
+    }
+
+    public double sigmoid(double x) {
+        return 1 / (1 + Math.exp(-x));
+    }
+
+    public void stop(double seconds) {
+        double currentTime = runtime.time();
+        double totalTime = currentTime + seconds;
+
+        while(currentTime < totalTime) {
+            currentTime = runtime.time();
         }
     }
 
@@ -331,30 +349,4 @@ public class blueNintyV2 extends LinearOpMode {
 
         return columntoPlaceBlock;
     }
-
-    public void updateTelemetry(){
-        //double armServoValue = armServo.getPosition();
-        //double leftClampValue = leftClampServo.getPosition();
-        //double rightClampValue = rightClampServo.getPosition();
-        //boolean aButton = gamepad1.a;
-        telemetry.addData("Status", "Run Time   : " + runtime.toString());
-
-        telemetry.update();
-    }
-
-    public double sigmoid(double x) {
-        return 1 / (1 + Math.exp(-x));
-    }
-
-    //drive method that accepts two values, x and y motion
-
-    public void stop(double seconds) {
-        double currentTime = runtime.time();
-        double totalTime = currentTime + seconds;
-
-        while(currentTime < totalTime) {
-            currentTime = runtime.time();
-        }
-    }
-
 }
