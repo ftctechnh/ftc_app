@@ -13,6 +13,7 @@ public class FinalUniversalRef extends LinearOpMode
     public void runOpMode()
     {
         newRobot = new NewRobotFinal(hardwareMap);
+        newRobot.initVuforia(hardwareMap);
         waitForStart();
         sleep(300);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
@@ -75,6 +76,7 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.moveXEncoderCounts(100,1,false);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
+                newRobot.driveStraight_In(3,.2);
                 newRobot.stopAllMotors();
             case 'r':
                 waitForStart();
@@ -130,7 +132,11 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.moveXEncoderCounts(100,1,false);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
+                newRobot.driveStraight_In(3,.2);
                 newRobot.stopAllMotors();
+            default:
+                newRobot.driveStraight_In(29, .4);
+                break;
         }
     }
 }
