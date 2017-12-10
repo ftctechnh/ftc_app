@@ -194,9 +194,9 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         }
 
         if (robot.color == Alliance.RED && robot.startingPad == StartingPosition.BACK) {
-            driveTicks -= 100;
+            driveTicks += 100;
         }
-    
+
         robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + driveTicks);
         robot.backLeft.setTargetPosition(robot.backLeft.getCurrentPosition() - driveTicks);
         robot.frontRight.setTargetPosition(robot.frontRight.getCurrentPosition() - driveTicks);
