@@ -28,11 +28,11 @@ public class VuforiaPlagiarism {
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
 
-    public enum type {
+    public static enum type {
         LEFT, CENTER, RIGHT, ERROR
     }
     
-    public type getVuf(HardwareMap hardwareMap) {
+    public static type getVuf(HardwareMap hardwareMap) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = Hardware750.VUF_LIC;
