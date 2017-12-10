@@ -67,7 +67,7 @@ public class christianControlsFinal extends LinearOpMode {
             {
                 drive(gamepad1.right_stick_x,gamepad1.right_stick_y,gamepad1.left_stick_x);
             }
-            
+
 
             //Arm Height
             if (gamepad1.a) {
