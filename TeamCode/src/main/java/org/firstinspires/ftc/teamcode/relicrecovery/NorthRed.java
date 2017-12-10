@@ -25,6 +25,7 @@ public class NorthRed extends LinearOpMode {
         pengwinFin = new PengwinFin(hardwareMap);
         //
         jeffThePengwin.startify();
+        pengwinFin.moveFinUp();
         //
         waitForStartify();
         //
@@ -36,7 +37,7 @@ public class NorthRed extends LinearOpMode {
         //
         jeffThePengwin.rightToPosition(5, .4);
         runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
+        while(runtime.seconds()<1 && opModeIsActive() && jeffThePengwin.isMoving()){
             //Do Nothing
         }
         jeffThePengwin.switcheroo();
@@ -48,9 +49,9 @@ public class NorthRed extends LinearOpMode {
         }
         //
         if (pengwinFin.doesColorSensorSeeBlueJewel()){
-            jeffThePengwin.turnLeftToPosition(4,0.4);
+            jeffThePengwin.turnLeftToPosition(3,0.4);
             runtime.reset();
-            while(runtime.seconds()<1 && opModeIsActive()){
+            while(runtime.seconds()<1 && opModeIsActive()&& jeffThePengwin.isMoving()){
                 //Do Nothing
             }
             pengwinFin.moveFinUp();
@@ -58,11 +59,11 @@ public class NorthRed extends LinearOpMode {
             while(runtime.seconds()<1 && opModeIsActive()){
                 //Do Nothing
             }
-            jeffThePengwin.turnRightToPostion(4,0.4);
+            jeffThePengwin.turnRightToPostion(3,0.4);
         }else{
             jeffThePengwin.turnRightToPostion(4,0.4);
             runtime.reset();
-            while(runtime.seconds()<1 && opModeIsActive()){
+            while(runtime.seconds()<1 && opModeIsActive()&& jeffThePengwin.isMoving()){
                 //Do Nothing
             }
             pengwinFin.moveFinUp();
@@ -73,26 +74,26 @@ public class NorthRed extends LinearOpMode {
             jeffThePengwin.turnLeftToPosition(4., 0.4);
         }
         runtime.reset();
-        while(runtime.seconds()<2 && opModeIsActive()){
+        while(runtime.seconds()<2 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
-        jeffThePengwin.forwardToPosition(27.5,0.4);
+        jeffThePengwin.forwardToPosition(26,0.4);
         runtime.reset();
-        while(runtime.seconds()<5 && opModeIsActive()){
+        while(runtime.seconds()<5 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
         //
-        jeffThePengwin.turnRightToPostion(22, .4);
+        jeffThePengwin.turnRightToPostion(24, .4);
         runtime.reset();
-        while(runtime.seconds()<4 && opModeIsActive()){
+        while(runtime.seconds()<4 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
         //
         jeffThePengwin.backToPosition(3, .4);
         runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
+        while(runtime.seconds()<1 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
         //
@@ -110,7 +111,7 @@ public class NorthRed extends LinearOpMode {
         //
         jeffThePengwin.forwardToPosition(1,.4);
         runtime.reset();
-        while(runtime.seconds()<1 && opModeIsActive()){
+        while(runtime.seconds()<1 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
     }

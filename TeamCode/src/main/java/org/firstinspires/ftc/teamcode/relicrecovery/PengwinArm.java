@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -13,14 +14,15 @@ public class PengwinArm {
 
     DcMotor upMotor; //motor that goes vertically
     DcMotor acrossMotor; //motor that goes horizontally
+    DcMotor retractify;
     Servo leftGlyphy;
     Servo rightGlyphy;
-     //DigitalChannel stopify;
+    DigitalChannel stopify;
     //hmmm
     double acrossPower;
     double upPower;
     double resetify = -1;
-    static double open = -.8;
+    static double open = -1;
     static double rightOpen = open;
     static double closed = .8;
     static double rightClosed = closed;
@@ -29,18 +31,29 @@ public class PengwinArm {
     public PengwinArm(HardwareMap hardwareMap){
         //get motors
         upMotor = hardwareMap.dcMotor.get("arm"); //left back
-
+        retractify = hardwareMap.dcMotor.get("retract");
+        stopify = hardwareMap.digitalChannel.get("arwin");
         acrossMotor = hardwareMap.dcMotor.get("extend"); //right back
         leftGlyphy = hardwareMap.servo.get("glyphy");
         rightGlyphy = hardwareMap.servo.get("rightglyphy");
         leftGlyphy.setDirection(Servo.Direction.FORWARD);
         leftGlyphy.setDirection(Servo.Direction.REVERSE);
+        retractify.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void setAcrossPower(double power){
-       // if(!stopify.getState() || power*resetify  > 0){
+      // if(!stopify.getState() || power > 0 && resetify == 1){
             acrossPower = power;
-            acrossMotor.setPower(acrossPower * resetify);
-        //}
+           if(power *resetify > 0){
+               retractify.setPower(-.3);
+           }
+           else{
+               retractify.setPower(acrossPower * resetify*.8);
+           }
+            acrossMotor.setPower(acrossPower);
+      // }else if(power > 0 && resetify == -1){
+           acrossMotor.setPower(-acrossPower);
+      // }
+
     }
     public void setUpPower(double power){
         upPower = power;

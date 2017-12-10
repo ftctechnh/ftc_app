@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -23,6 +24,8 @@ public class NorthBlue extends LinearOpMode {
         pengwinArm = new PengwinArm(hardwareMap);
         pengwinFin = new PengwinFin(hardwareMap);
         //
+        pengwinFin.moveFinUp();
+
         jeffThePengwin.startify();
         //
         waitForStartify();

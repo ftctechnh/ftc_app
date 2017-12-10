@@ -16,7 +16,7 @@ public class PengwinFin {
     /**
      * The position for the servo to be for the fin to be up
      */
-    public static final double FIN_UP_POSITION = 1;
+    public static final double FIN_UP_POSITION = .5;
     /**
      * The position for the servo to be for the fin to be in a place to move the jewel
      */

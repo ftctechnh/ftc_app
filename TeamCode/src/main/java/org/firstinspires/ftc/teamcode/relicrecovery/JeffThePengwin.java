@@ -45,20 +45,11 @@ public class JeffThePengwin {
     }
     //
     public double getTheFrontWheelPower(){
-        if(touchy.getState()){
             return powerInput*degreeOfPower;
-        }else {
-            return powerInput * degreeOfPower * .5;
-        }
     }
     //
     public double getTheBackWheelPower(){
-        if(touchy.getState()){
             return powerInput*degreeOfPower;
-        }
-        else{
-            return (powerInput  *2.0)* degreeOfPower;
-        }
     }
     //christine added, (PLEASE) explain!
     /**This comment is in memory of a wonderful moment in time where Christine found a "fatal" flaw
@@ -104,10 +95,10 @@ public class JeffThePengwin {
         rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + -move);
 
         //
-        switchify();//switch to rut to position
+        switchify();//switch to run to position
         //
         powerInput = speed;
-        bestowThePowerToAllMotors();
+        bestowThePowerToAllMotorsAdjusted();
         //
     }
     //
@@ -162,6 +153,12 @@ public class JeffThePengwin {
         rightBackMotor.setPower(getTheBackWheelPower());
         rightFrontMotor.setPower(getTheFrontWheelPower());
     }
+    public void bestowThePowerToAllMotorsAdjusted(){
+        leftBackMotor.setPower(getTheBackWheelPower());
+        leftFrontMotor.setPower(getTheFrontWheelPower());
+        rightBackMotor.setPower(getTheBackWheelPower());
+        rightFrontMotor.setPower(getTheFrontWheelPower());
+    }
     //
     public void moveAllMotorsSameDirectionAndDistance(int move){
         leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
@@ -197,15 +194,15 @@ public class JeffThePengwin {
     //
     public void strafeLeft(){
         if(touchy.getState()){
-            leftBackMotor.setPower(-getTheBackWheelPower());
-            leftFrontMotor.setPower(getTheFrontWheelPower());
-            rightBackMotor.setPower(getTheBackWheelPower());
-            rightFrontMotor.setPower(-getTheFrontWheelPower());
+            leftBackMotor.setPower(-powerInput*degreeOfPower);
+            leftFrontMotor.setPower(powerInput*degreeOfPower);
+            rightBackMotor.setPower(powerInput*degreeOfPower);
+            rightFrontMotor.setPower(-powerInput*degreeOfPower);
         }else{
-            leftBackMotor.setPower(-getTheBackWheelPower());
-            leftFrontMotor.setPower(getTheFrontWheelPower());
-            rightBackMotor.setPower(getTheBackWheelPower());
-            rightFrontMotor.setPower(-getTheFrontWheelPower());
+            leftBackMotor.setPower(-powerInput*degreeOfPower);
+            leftFrontMotor.setPower(powerInput*degreeOfPower);
+            rightBackMotor.setPower(powerInput*degreeOfPower);
+            rightFrontMotor.setPower(-powerInput*degreeOfPower);
         }
     }
     //

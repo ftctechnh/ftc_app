@@ -28,7 +28,8 @@ public class SouthBlue extends LinearOpMode {
         pengwinFin = new PengwinFin(hardwareMap);
         //
         jeffThePengwin.startify();
-       // pengwinArm.upMotor.setPower(-0.45);
+        pengwinFin.moveFinUp();
+        // pengwinArm.upMotor.setPower(-0.45);
         //For kids //for ages 3-1020000000078605400000123
         waitForStart();
         //
