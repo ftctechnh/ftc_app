@@ -44,7 +44,9 @@ public class VuforiaPlagiarism {
         relicTrackables.activate();
         boolean bool = true;
         String string = "error";
-        while (bool) {
+        long time = System.currentTimeMillis();
+        while ((bool) && (System.currentTimeMillis() < (time + 2000))) {
+            //TODO: Find out if moving this will break anything
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 if (vuMark == vuMark.CENTER) {
@@ -57,6 +59,7 @@ public class VuforiaPlagiarism {
                     bool = false;
                     string = "RIGHT";
                 }
+                //TODO: Find out if removing this will break anything
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
                 if (pose != null) {
                     VectorF trans = pose.getTranslation();
@@ -74,6 +77,7 @@ public class VuforiaPlagiarism {
             return type.ERROR;
         }
     }
+    //TODO Find out if removing this will break anything
     String format (OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
