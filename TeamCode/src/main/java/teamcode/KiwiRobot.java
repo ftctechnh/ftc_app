@@ -1,7 +1,10 @@
 package teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import static java.lang.Math.sqrt;
 
@@ -12,6 +15,11 @@ public class KiwiRobot {
     public DcMotor  Motor1 = null; // Back wheel
     public DcMotor  Motor2 = null; // Left front wheel
     public DcMotor  Motor3 = null; // Right front wheel
+    public Servo armServo = null;
+    public Servo rightClampServo;
+    public Servo jewelServo;
+    public ColorSensor sensorColor;
+    public DistanceSensor sensorDistance;
     
     public KiwiRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -104,14 +112,66 @@ public class KiwiRobot {
         this.Motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
         this.Motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
     }
-    
+
+    public void liftArm(double currentPosition) {
+        double armLiftChange = .0015;
+        double newPosition = currentPosition - armLiftChange;
+        armServo.setPosition(newPosition);
+    }
+    private  void lowerArm(double currentPosition) {
+        double armLiftChange = .0015;
+        double newPosition = currentPosition + armLiftChange;
+        armServo.setPosition(newPosition);
+    }
+
+    public void closeClampPosition() {
+        this.rightClampServo.setPosition(0);
+    }
+
+    public void openClampPosition() {
+        this.rightClampServo.setPosition(1);
+    }
+
+    public void closeClamp(double currentPosition) {
+        double newPosition = currentPosition + .0005;
+        rightClampServo.setPosition(newPosition);
+    }
+
+    public void openClamp(double currentPosition) {
+        double newPosition = currentPosition - .0005;
+        rightClampServo.setPosition(newPosition);
+    }
+
+    //detects if the side the color sensor is facing is red
+    public Boolean isJewelRed()
+    {
+        double differenceFactor = 1.5;
+        double red = sensorColor.red();
+        double blue = sensorColor.blue();
+        if(red >= 1.5 * blue)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private void init() {
         this.Motor1 = this.hardwareMap.get(DcMotor.class, "motor1");
         this.Motor2 = this.hardwareMap.get(DcMotor.class, "motor2");
         this.Motor3 = this.hardwareMap.get(DcMotor.class, "motor3");
-        
+        this.armServo = this.hardwareMap.get(Servo.class,"armServo");
+        this.jewelServo = this.hardwareMap.get(Servo.class,"jewelServo");
+        this.rightClampServo = this.hardwareMap.get(Servo.class,"rightClampServo");
+        this.sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
+        this.sensorDistance = hardwareMap.get(DistanceSensor.class, "colorDistanceSensor");
+
+
+
         this.Motor1.setDirection(DcMotor.Direction.FORWARD);
         this.Motor2.setDirection(DcMotor.Direction.FORWARD);
         this.Motor3.setDirection(DcMotor.Direction.FORWARD);
+        this.armServo.setDirection(Servo.Direction.FORWARD);
+        this.rightClampServo.setDirection(Servo.Direction.REVERSE);
+        this.jewelServo.setDirection(Servo.Direction.FORWARD);
     }
 }
