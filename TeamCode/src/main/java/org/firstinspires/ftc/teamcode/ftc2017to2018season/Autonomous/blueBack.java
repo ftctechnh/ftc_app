@@ -44,6 +44,7 @@ public class blueBack extends Autonomous_General {
 //reseting gyro sensor
         gyro.resetZAxisIntegrator();
 
+        toggleLight(true);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
@@ -51,6 +52,7 @@ public class blueBack extends Autonomous_General {
         while(!vuMarkFound()){
 
         }
+        toggleLight(false);
         jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
@@ -61,7 +63,7 @@ public class blueBack extends Autonomous_General {
         telemetry.update();
         closeGlyphManipulator();
         sleep(1000);
-        //moveUpGlyph(2.54);
+        moveUpGlyph(2.54);
         sleep(1000);
 
         if(ballColor.equals("red")){
@@ -103,6 +105,8 @@ public class blueBack extends Autonomous_General {
 
         gyroTurn(0.3,90);
         sleep(750);
+        moveDownGlyph(1.54);
+        sleep(500);
         openGlyphManipulator();
 
         encoderMecanumDrive(0.65,55,55,1000,0);

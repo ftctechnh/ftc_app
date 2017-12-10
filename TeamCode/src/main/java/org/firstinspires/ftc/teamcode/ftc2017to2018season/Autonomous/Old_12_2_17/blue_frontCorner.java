@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_12_2_17;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
 
 //10-28-17
 @Autonomous(name="Autonomous Blue Test Front")
+@Disabled
 public class blue_frontCorner extends Autonomous_General_old {
 
     public double rsBuffer = 20.00;

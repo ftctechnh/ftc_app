@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,9 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "DeltaTeleOp")
+@TeleOp(name = "DeltaTeleOp_DEBUG")
 //@Disabled
-public class Delta_TeleOp extends OpMode {
+public class Delta_TeleOp_DEBUG extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -83,15 +81,24 @@ public class Delta_TeleOp extends OpMode {
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
+        double servoPos;
 
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServoLeft.setPosition(0.5);
+        glyphServoLeft.setPosition(0.8);
+        telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+        telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+        telemetry.update();
 
-        glyphServoRight.setPosition(0.35);
-        jewel_servo.setPosition(0.9);
+        glyphServoRight.setPosition(0.1);
+        telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+        telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+        telemetry.update();
+
+// SetPosition | position min to max = 0 to 1
+        jewel_servo.setPosition(0.80);
 
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
@@ -227,6 +234,9 @@ public class Delta_TeleOp extends OpMode {
 
 //opening the claw
             glyphServoRight.setPosition(0.35);
+            telemetry.addData(" right moved, est. pos = 0.35", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.5", glyphServoLeft.getPosition());
+            telemetry.update();
             /*try {
                 glyphServoRight.setPosition(0.5);
             } catch (Exception e) {
@@ -234,19 +244,34 @@ public class Delta_TeleOp extends OpMode {
             }
 */
             glyphServoLeft.setPosition(0.5);
+            telemetry.addData(" right moved, est. pos = 0.35", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.5", glyphServoLeft.getPosition());
+            telemetry.update();
+
+
         } else if (gamepad1.right_bumper) {
 
-            glyphServoRight.setPosition(0.05);
-
-            glyphServoLeft.setPosition(0.85);
-
+            glyphServoRight.setPosition(0.1);
+            telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+            telemetry.update();
+            glyphServoLeft.setPosition(0.8);
+            telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+            telemetry.update();
            /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
             telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
             telemetry.update();    */
         }
         else if (gamepad1.x){
             glyphServoRight.setPosition(0.22);
+            telemetry.addData(" right moved, est. pos = 0.22", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.65", glyphServoLeft.getPosition());
+            telemetry.update();
             glyphServoLeft.setPosition(0.65);
+            telemetry.addData(" right moved, est. pos = 0.22", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.65", glyphServoLeft.getPosition());
+            telemetry.update();
         }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
