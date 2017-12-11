@@ -157,11 +157,13 @@ public class blueNintyV2 extends LinearOpMode {
         double speed = .8;
         double jewelDegrees = -10;//- degrees go right, positive degrees go left
         Boolean isDetected = false;
+        int column = 0;
         while (opModeIsActive())
         {
             elapsedTime = runtime.time();
             if (elapsedTime < JEWELCLOSECLAMP)
             {
+                column = this.getColumn(this.trackable);
                 robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
             }
             else if (elapsedTime < JEWELCHOPTIME)
@@ -200,11 +202,10 @@ public class blueNintyV2 extends LinearOpMode {
             }
             else if (elapsedTime < TURNTOLINEUPWITHCOLUMNS)
             {
-                robot.turnDegrees(-.5, 150);
+                robot.turnDegrees(-.5, 170);
             }
             else if(elapsedTime < PHASETHREE)
             {
-                int column = this.getColumn(this.trackable);
                 double distance = 19.25 + column * 7.5;
                 robot.driveForward(.5,distance,true);
             }

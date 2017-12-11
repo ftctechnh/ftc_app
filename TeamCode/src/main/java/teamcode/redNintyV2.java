@@ -156,89 +156,62 @@ public class redNintyV2 extends LinearOpMode {
         double speed = .8;
         Boolean isDetected = false;
         double jewelDegrees = -10;//- degrees go right, positive degrees go left
+        int column = 0;
         while (opModeIsActive())
         {
             elapsedTime = runtime.time();
-            if (elapsedTime < JEWELCLOSECLAMP)
-            {
-                robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+
+            robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+
+            column = this.getColumn(this.trackable);
+            sleep(500);
+            robot.jewelServo.setPosition(1);
+            sleep(1000);
+            robot.armServo.setPosition(.9);
+            sleep(500);
+            if (!robot.isJewelRed()&& !isDetected) {
+                // the red jewel is on the left of sensor
+                jewelDegrees = -jewelDegrees;
+                isDetected = !isDetected;
             }
-            else if (elapsedTime < JEWELCHOPTIME)
-            {
-                robot.jewelServo.setPosition(1);
-            }
-            else if (elapsedTime < JEWELARMRAISE)
-            {
-                robot.armServo.setPosition(.9);
-            }
-            else if (elapsedTime < SPINTOWIN)
-            {
-                if (!robot.isJewelRed()&& !isDetected) {
-                    // the red jewel is on the left of sensor
-                    jewelDegrees = -jewelDegrees;
-                    isDetected = !isDetected;
-                }
-                robot.turnDegrees(speed,jewelDegrees);
-            }
-            else if (elapsedTime < JEWELSHEATHARM)
-            {
-                robot.turnOffMotors();
-                robot.jewelServo.setPosition(.65);
-            }
-            else if (elapsedTime < JEWELSTOREARM)
-            {
-                robot.jewelServo.setPosition(0);
-            }
-            else if (elapsedTime < JEWELSPINBACK)
-            {
-                robot.turnDegrees(speed,-jewelDegrees);
-            }
-            else if (elapsedTime < LIFTARM) {
-                robot.turnOffMotors();
-                robot.armServo.setPosition(LIFTEDARMPOSITION);
-            }
-            else if(elapsedTime < PHASETHREE)
-            {
-                int column = this.getColumn(this.trackable);
-                double distance = 19.25 + column * 7.5;
-                robot.driveForward(.5,distance,true);
-            }
-            else if(elapsedTime < PHASETHREEHALF)
-            {
-                robot.turnOffMotors();
-            }
-            else if (elapsedTime < PHASEFOUR)
-            {
-                robot.armServo.setPosition(.7);
-            }
-            else if (elapsedTime < PHASEFIVE)
-            {
-                robot.turnDegrees(-.5,-90);
-            }
-            else if (elapsedTime < PHASESIX)
-            {
-                robot.driveForward(.5,12,true);
-            }
-            else if (elapsedTime < PHASESIXHALF)
-            {
-                robot.turnOffMotors();
-            }
-            else if (elapsedTime < PHASESEVEN)
-            {
-                robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
-            }
-            else if (elapsedTime < PHASEEIGHT)
-            {
-                robot.turnDegrees(.5,-15);
-            }
-            else if (elapsedTime < PHASENINE)
-            {
-                robot.driveForward(.5,-2,true);
-            }
-            else if (elapsedTime < PHASENINEHALF)
-            {
-                robot.turnOffMotors();
-            }
+            robot.turnDegrees(speed,jewelDegrees);
+
+            robot.turnOffMotors();
+            robot.jewelServo.setPosition(.65);
+            sleep(1000);
+
+            robot.jewelServo.setPosition(0);
+            sleep(500);
+
+            robot.turnDegrees(speed,-jewelDegrees);
+
+            robot.turnOffMotors();
+            robot.armServo.setPosition(LIFTEDARMPOSITION);
+            sleep(500);
+
+            double distance = 19.25 + (4 - column) * 7.5;
+            robot.driveForward(.5,distance,true);
+
+            robot.turnOffMotors();
+
+            robot.armServo.setPosition(.7);
+            sleep(500);
+
+            robot.turnDegrees(-.5,-90);
+
+            robot.driveForward(.5,12,true);
+
+            robot.turnOffMotors();
+
+            robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
+            sleep(500);
+
+            robot.turnDegrees(.5,-15);
+
+            robot.driveForward(.5,-2,true);
+
+            robot.turnOffMotors();
+
             /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
             {
                 turn(1);

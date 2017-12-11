@@ -149,6 +149,7 @@ public class redStrightV2 extends LinearOpMode {
         double speed = .8;
         double jewelDegrees = -10;//- degrees go right, positive degrees go left
         Boolean isDetected = false;
+        int column = 0;
         while (opModeIsActive())
         {
 
@@ -183,6 +184,7 @@ public class redStrightV2 extends LinearOpMode {
             if (elapsedTime < JEWELCLOSECLAMP)
             {
                 robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+                column = this.getColumn(this.trackable); //(4 - column)
             }
             else if (elapsedTime < JEWELCHOPTIME)
             {

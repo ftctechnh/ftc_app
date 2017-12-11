@@ -154,6 +154,7 @@ public class blueStrightV2 extends LinearOpMode {
         double speed = .8;
         double jewelDegrees = -10;
         boolean isDetected = false;
+        int column = 0;
         while (opModeIsActive())
         {
 
@@ -186,6 +187,7 @@ public class blueStrightV2 extends LinearOpMode {
             elapsedTime = runtime.time();
             if (elapsedTime < JEWELCLOSECLAMP)
             {
+                column = this.getColumn(this.trackable);
                 robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
             }
             else if (elapsedTime < JEWELCHOPTIME)
@@ -232,9 +234,8 @@ public class blueStrightV2 extends LinearOpMode {
             }
             else if (elapsedTime < LATERALLINEUPWITHCOLUMN)
             {
-                int column = this.getColumn(this.trackable);
                 double distance = 4 + column * 7.5;
-                robot.driveLateral(.5,distance,true);
+                //robot.driveLateral(.5,distance,true);
             }
             else if(elapsedTime < TURNOFFMOTORS)
             {
