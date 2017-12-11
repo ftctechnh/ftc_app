@@ -88,6 +88,8 @@ public class GlyphArm
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // Define and initialize ALL installed servos.
         clawServo  = hwMap.get(Servo.class, "the_claw");
         clawServo.setPosition(MID_SERVO);

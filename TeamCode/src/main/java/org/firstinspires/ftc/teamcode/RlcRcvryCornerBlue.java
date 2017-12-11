@@ -29,7 +29,10 @@ public class RlcRcvryCornerBlue extends OpMode{
     GlyphArm gilgearmesh = new GlyphArm();
 
     JewelSystem sensArm = new JewelSystem();
-    String jewelColor;
+    String jewelColor = "Unknown";
+
+    static final double SENS_ARM_TOP = 1;
+    static final double SENS_ARM_BOTTOM = .444;
 
     VuforiaLocalizer vuforia;
     int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -54,6 +57,8 @@ public class RlcRcvryCornerBlue extends OpMode{
         gilgearmesh.armPos(2, 1);
         stateMachineFlow = 0;
         relicTrackables.activate();
+
+        sensArm.colorLED(false);
 
         telemetry.addData("Key",glyph);
         telemetry.addData("Color",jewelColor);
@@ -92,7 +97,7 @@ public class RlcRcvryCornerBlue extends OpMode{
                 stateMachineFlow++;
                 break;
             case 2://look at this
-                sensArm.armPos(.444);
+                sensArm.armPos(SENS_ARM_BOTTOM);
                 sensArm.colorLED(true);
                 if (sensArm.colorSens() == "blue"){
                     jewelColor = "blue";
@@ -115,7 +120,7 @@ public class RlcRcvryCornerBlue extends OpMode{
                 else if (jewelColor == "red"){robot.statTurn(.5,-8);
                     robot.statTurn(.5,8);}
                 //move arm up
-                sensArm.armPos(1);
+                sensArm.armPos(SENS_ARM_TOP);
                 stateMachineFlow++;
                 break;
             case 4:

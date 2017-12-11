@@ -64,11 +64,11 @@ public class ThirtyMinTeleOp extends OpMode{
 
         gilgearmesh.armPower(armPower);
 
-        if (gamepad2.a){gilgearmesh.armPos(25,.4);}
-        else if (gamepad2.x){gilgearmesh.armPos(50,.4);}
-        else if (gamepad2.y){gilgearmesh.armPos(75,.4);}
-        else if (gamepad2.b){gilgearmesh.armPos(100,.4);}
-        else if (gamepad2.right_stick_button){gilgearmesh.armPos(0,.4);}
+        if (gamepad2.a){gilgearmesh.armPos(25,.7);}
+        else if (gamepad2.x){gilgearmesh.armPos(50,.7);}
+        else if (gamepad2.y){gilgearmesh.armPos(75,.7);}
+        else if (gamepad2.b){gilgearmesh.armPos(100,.7);}
+        else if (gamepad2.right_stick_button){gilgearmesh.armPos(0,.7);}
 
         if (gamepad2.right_bumper) {
             gilgearmesh.clawPos(1);

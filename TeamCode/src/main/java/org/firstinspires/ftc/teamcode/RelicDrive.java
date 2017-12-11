@@ -157,6 +157,8 @@ public class RelicDrive
         leftBack.setPower(Math.abs(speed));
         rightBack.setPower(Math.abs(speed));
 
+        while (leftMid.isBusy() && rightMid.isBusy() && leftBack.isBusy() && rightBack.isBusy());
+
         // keep looping while we are still active, and there is time left, and both motors are running.
         /* while (opModeIsActive() &&
         (runtime.seconds() < timeoutS) &&
