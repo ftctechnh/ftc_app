@@ -231,7 +231,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
         for (DcMotor m : robot.motorArr) {
             m.setPower(0.3);
-            m.setTargetPosition(m.getCurrentPosition() - 150);
+            m.setTargetPosition(m.getCurrentPosition() - 50);
         }
 
         waitUntilMovementsComplete();
