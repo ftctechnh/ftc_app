@@ -67,6 +67,42 @@ public class KiwiRobot {
         this.turnOffMotors();
         this.setRunWithEncoders();
     }
+
+    /*public void driveLateral(double power, double distanceInches, boolean resetEncoders) {
+        if (resetEncoders) {
+            this.resetEncoders();
+        }
+
+        double f1 =
+        double f2 = 850/12;
+        double f3 = 860/12;
+
+        int y1_start = this.Motor1.getCurrentPosition()
+        int y2_start = this.Motor2.getCurrentPosition();
+        int y3_start = this.Motor3.getCurrentPosition();
+
+        int y1 = (int)()
+        int y2 = (int)(f2 * -2 * distanceInches / SQRT_3) + y2_start;
+        int y3 = (int)(f3 * 2 * distanceInches / SQRT_3) + y3_start;
+
+        this.Motor1.setTargetPosition(y1);
+        this.Motor2.setTargetPosition(y2);
+        this.Motor3.setTargetPosition(y3);
+
+        this.Motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.Motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.Motor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        this.Motor1.setPower(power * 2);
+        this.Motor2.setPower(power);
+        this.Motor3.setPower(power);
+
+        while (this.Motor1.isBusy() && this.Motor2.isBusy() && this.Motor3.isBusy()) {
+        }
+
+        this.turnOffMotors();
+        this.setRunWithEncoders();
+    }*/
     
     public void turnDegrees(double power, double degrees) {
         this.resetEncoders();
