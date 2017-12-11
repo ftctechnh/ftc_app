@@ -69,9 +69,9 @@ import static java.lang.Math.sqrt;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="redNintyV2", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@Autonomous(name="blueStrightV2", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 
-public class redNintyV2 extends LinearOpMode {
+public class blueStrightV2 extends LinearOpMode {
 
     // Declare OpMode members.
     private VuforiaLocalizer vuforia;
@@ -79,9 +79,6 @@ public class redNintyV2 extends LinearOpMode {
     private VuforiaTrackable trackable;
     private KiwiRobot robot;
     private ElapsedTime runtime = new ElapsedTime();
-
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
 
     int cooldown = 1000;
     private boolean isClamped = true;
@@ -101,31 +98,32 @@ public class redNintyV2 extends LinearOpMode {
     final private double JEWELSHEATHARM = SPINTOWIN + 2; // raise arm to sheath
     final private double JEWELSTOREARM = JEWELSHEATHARM + .5; // store arm
     final private double JEWELSPINBACK = JEWELSTOREARM + .1; // turn back to compensate for knock off jewel turn
-
     final private double LIFTARM = JEWELSPINBACK + 2; //lift arm
-    final private double PHASETHREE = LIFTARM + 1.8; // drive forward
-    final private double PHASETHREEHALF = PHASETHREE + .1; // turn off motors
-    final private double PHASEFOUR = PHASETHREEHALF + .5; // lowerarm
-    final private double PHASEFIVE = PHASEFOUR + .6; // turn to face columns
-    final private double PHASESIX = PHASEFIVE + 2; // drive stright
-    final private double PHASESIXHALF = PHASESIX + .1; // turn off motors
-    final private double PHASESEVEN = PHASESIXHALF + .5; // open clamp
-    final private double PHASEEIGHT = PHASESEVEN + .5; // turn
-    final private double PHASENINE = PHASEEIGHT + .2; // back up
-    final private double PHASENINEHALF = PHASENINE + .1; // turn off motors
 
-    final private double TURNTOWARDSGLYPHPIT = PHASENINEHALF + .6; // turn towards glyph pit
-    final private double DRIVETOGLYPHPIT = TURNTOWARDSGLYPHPIT + 1; // drive to the glyph pit
+    final private double TURNTOLINEUPWITHCOLUMNS = LIFTARM + 1.3; // turn on face columns
+    final private double DRIVETOWARDSCOLUMNS = TURNTOLINEUPWITHCOLUMNS + 1; // forward
+
+    final private double LATERALLINEUPWITHCOLUMN = DRIVETOWARDSCOLUMNS + .7; // turn off motor
+
+    final private double TURNOFFMOTORS = LATERALLINEUPWITHCOLUMN + .1; // turn off motor
+    final private double PHASETHREEHALFHALF = TURNOFFMOTORS + .1; // lower arm
+    final private double PHASEFOUR = PHASETHREEHALFHALF + 1.5; // drive forward
+    final private double PHASEFIVE = PHASEFOUR + .5; // open clamp
+    final private double PHASEFIVEHALF = PHASEFIVE + .1; //stop motors
+    final private double PHASESIX = PHASEFIVEHALF + .4; //turn
+    final private double PHASESEVEN = PHASESIX + .4; // back up
+    final private double PHASESEVENHALF = PHASESEVEN + .1; // turn off motors
+
+    final private double TURNTOWARDSGLYPHPIT = PHASESEVENHALF + .6; // turn towards glyph pit
+    final private double DRIVETOGLYPHPIT = TURNTOWARDSGLYPHPIT + 2.4; // drive to the glyph pit
     final private double GRABABLOCK = DRIVETOGLYPHPIT + 1.5; // grab a block in the pit
-    final private double BACKTOBASE = GRABABLOCK + .75; // grab a block in the pit
+    final private double BACKTOBASE = GRABABLOCK + 2.1; // grab a block in the pit
     final private double TURNTOFACECOLUMNS = BACKTOBASE + .6; // turn to face columns
     //turns off all motors at end
 
 
     @Override
     public void runOpMode() {
-        KiwiRobot robot = new KiwiRobot(hardwareMap);
-        this.initVuforia();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -154,10 +152,37 @@ public class redNintyV2 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         boolean test = true;
         double speed = .8;
-        Boolean isDetected = false;
-        double jewelDegrees = -10;//- degrees go right, positive degrees go left
+        double jewelDegrees = -10;
+        boolean isDetected = false;
         while (opModeIsActive())
         {
+
+            /*if(test) {
+                //assume red jewel is on left
+                clamp(CLOSECLAMPPOSITION);
+                stop(2);
+                jewelServo.setPosition(1);
+                stop(2);
+                armServo.setPosition(.9);
+                stop(.5);
+                double speed = 0.4;
+                if (isJewelRed()) {
+                    // the red jewel is on the left of sensor
+                    speed = -speed;
+                }
+                turn(speed);
+                stop(.15);
+                turnOffMotors();
+                jewelServo.setPosition(.65);
+                stop(2);
+                jewelServo.setPosition(0);
+                stop(2);
+                turn(-speed);
+                stop(.2);
+                turnOffMotors();
+                test = false;
+                runtime.reset();
+            }*/
             elapsedTime = runtime.time();
             if (elapsedTime < JEWELCLOSECLAMP)
             {
@@ -173,7 +198,7 @@ public class redNintyV2 extends LinearOpMode {
             }
             else if (elapsedTime < SPINTOWIN)
             {
-                if (!robot.isJewelRed()&& !isDetected) {
+                if (robot.isJewelRed()&& !isDetected) {
                     // the red jewel is on the left of sensor
                     jewelDegrees = -jewelDegrees;
                     isDetected = !isDetected;
@@ -197,45 +222,50 @@ public class redNintyV2 extends LinearOpMode {
                 robot.turnOffMotors();
                 robot.armServo.setPosition(LIFTEDARMPOSITION);
             }
-            else if(elapsedTime < PHASETHREE)
+            else if (elapsedTime < TURNTOLINEUPWITHCOLUMNS)
+            {
+                robot.turnDegrees(-.5, 150);
+            }
+            else if(elapsedTime < DRIVETOWARDSCOLUMNS)
+            {
+                robot.driveForward(.5,19.25,true);
+            }
+            else if (elapsedTime < LATERALLINEUPWITHCOLUMN)
             {
                 int column = this.getColumn(this.trackable);
-                double distance = 19.25 + column * 7.5;
-                robot.driveForward(.5,distance,true);
+                double distance = 4 + column * 7.5;
+                robot.driveLateral(.5,distance,true);
             }
-            else if(elapsedTime < PHASETHREEHALF)
+            else if(elapsedTime < TURNOFFMOTORS)
             {
                 robot.turnOffMotors();
+            }
+            else if (elapsedTime < PHASETHREEHALFHALF)
+            {
+                robot.armServo.setPosition(.75);
             }
             else if (elapsedTime < PHASEFOUR)
             {
-                robot.armServo.setPosition(.7);
+                robot.driveForward(.5,8,true);
             }
             else if (elapsedTime < PHASEFIVE)
             {
-                robot.turnDegrees(-.5,-90);
+                robot.turnOffMotors();
+                robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
             }
-            else if (elapsedTime < PHASESIX)
-            {
-                robot.driveForward(.5,12,true);
-            }
-            else if (elapsedTime < PHASESIXHALF)
+            else if (elapsedTime < PHASEFIVEHALF)
             {
                 robot.turnOffMotors();
             }
-            else if (elapsedTime < PHASESEVEN)
-            {
-                robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
-            }
-            else if (elapsedTime < PHASEEIGHT)
+            else if (elapsedTime < PHASESIX)
             {
                 robot.turnDegrees(.5,-15);
             }
-            else if (elapsedTime < PHASENINE)
+            else if (elapsedTime < PHASESEVEN)
             {
                 robot.driveForward(.5,-2,true);
             }
-            else if (elapsedTime < PHASENINEHALF)
+            else if (elapsedTime < PHASESEVENHALF)
             {
                 robot.turnOffMotors();
             }
@@ -259,11 +289,11 @@ public class redNintyV2 extends LinearOpMode {
             else if (elapsedTime < TURNTOFACECOLUMNS)
             {
                 turn(1);
-            }
-            else {
-                turnOffMotors();
             }*/
-            updateTelemetry();
+            else {
+                robot.turnOffMotors();
+            }
+            //updateTelemetry();
         }
     }
 
@@ -349,4 +379,5 @@ public class redNintyV2 extends LinearOpMode {
 
         return columntoPlaceBlock;
     }
+
 }

@@ -86,7 +86,7 @@ public class blueNintyV2 extends LinearOpMode {
     private double row3Position = 0.6;
     private BNO055IMU gyro;
     final private double OPENCLAMPPOSITION = 0;
-    final private double CLOSECLAMPPOSITION = .5;
+    final private double CLOSECLAMPPOSITION = 1;
     final private double LIFTEDARMPOSITION = .55;
     final private double DOWNARMPOSITION = .8;
 
@@ -155,7 +155,7 @@ public class blueNintyV2 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         boolean test = true;
         double speed = .8;
-        double jewelDegrees = 10;
+        double jewelDegrees = -10;//- degrees go right, positive degrees go left
         Boolean isDetected = false;
         while (opModeIsActive())
         {
