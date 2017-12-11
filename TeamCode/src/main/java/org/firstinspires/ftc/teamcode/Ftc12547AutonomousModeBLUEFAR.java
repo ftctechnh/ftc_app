@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -47,6 +48,9 @@ public class Ftc12547AutonomousModeBLUEFAR extends LinearOpMode {
     public void runOpMode() {
         // Initialize the robot
         initRobot();
+
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         TEAM_COLOR = Color.BLUE;
 
@@ -107,8 +111,6 @@ public class Ftc12547AutonomousModeBLUEFAR extends LinearOpMode {
         encoderDriver.init();
     }
     private double calcFinalDistanceByVuMark(RelicRecoveryVuMark vuMark) {
-        //TODO: default to middle. Is this ideal?
-        if (vuMark == RelicRecoveryVuMark.UNKNOWN) return START_TO_MIDDLE_DISTANCE_INCHES;
         switch (vuMark) {
             case CENTER:
                 return START_TO_MIDDLE_ANGLE_2;

@@ -51,10 +51,10 @@ public class Ftc12547Config {
     public static final double ENCODER_RUN_SPEED                    = 0.1;
     public static final int REST_AFTER_ENCODER_RUN_MIL_SECONDS      = ONE_SECOND_IN_MIL / 4;
 
-    public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 1.75;
+    public static final double JEWEL_DISPOSITION_DISTANCE_INCHES    = 2.5;
     public static final double JEWEL_DISPOSITION_TIMEOUT_SECONDS    = 3;
 
-    public static final double NINETY_DEGREE_TURN                   = 18 * 3.14159265358979 / 4;
+    public static final double NINETY_DEGREE_TURN                   = 13.5 * 3.14159265358979;
     public static final double ONE_DEGREE_TURN                      = NINETY_DEGREE_TURN / 90;
 
     public static final double START_TO_MIDDLE_DISTANCE_INCHES      = 35;
@@ -65,23 +65,25 @@ public class Ftc12547Config {
     //3=red far
     //4=blue close
 
-    public static final double START_TO_NEAREST_ANGLE               = ONE_DEGREE_TURN * 145;
-    public static final double START_TO_MIDDLE_ANGLE                = ONE_DEGREE_TURN * 160;
-    public static final double START_TO_FURTHEST_ANGLE              = ONE_DEGREE_TURN * 185;
-    public static final double START_TO_NEAREST_ANGLE_3             = ONE_DEGREE_TURN * 210;
-    public static final double START_TO_MIDDLE_ANGLE_3              = ONE_DEGREE_TURN * 190;
-    public static final double START_TO_FURTHEST_ANGLE_3            = ONE_DEGREE_TURN * 180;
-    public static final double START_TO_NEAREST_ANGLE_2             = ONE_DEGREE_TURN * 15;
-    public static final double START_TO_MIDDLE_ANGLE_2              = ONE_DEGREE_TURN * 75;
-    public static final double START_TO_FURTHEST_ANGLE_2            = ONE_DEGREE_TURN * 100;
-    public static final double START_TO_NEAREST_ANGLE_4             = ONE_DEGREE_TURN * 70;
+    public static final double START_TO_NEAREST_ANGLE               = ONE_DEGREE_TURN * 80;
+    public static final double START_TO_MIDDLE_ANGLE                = ONE_DEGREE_TURN * 95;
+    public static final double START_TO_FURTHEST_ANGLE              = ONE_DEGREE_TURN * 115;
+    public static final double START_TO_NEAREST_ANGLE_3             = ONE_DEGREE_TURN * 155;
+    public static final double START_TO_MIDDLE_ANGLE_3              = ONE_DEGREE_TURN * 170;
+    // change the one below
+    public static final double START_TO_FURTHEST_ANGLE_3            = ONE_DEGREE_TURN * 185;
+
+    public static final double START_TO_NEAREST_ANGLE_2             = ONE_DEGREE_TURN * 20;
+    public static final double START_TO_MIDDLE_ANGLE_2              = ONE_DEGREE_TURN * 40;
+    public static final double START_TO_FURTHEST_ANGLE_2            = ONE_DEGREE_TURN * 60;
+    public static final double START_TO_NEAREST_ANGLE_4             = ONE_DEGREE_TURN * 75;
     public static final double START_TO_MIDDLE_ANGLE_4              = ONE_DEGREE_TURN * 55;
-    public static final double START_TO_FURTHEST_ANGLE_4            = ONE_DEGREE_TURN * 35;
+    public static final double START_TO_FURTHEST_ANGLE_4            = ONE_DEGREE_TURN * 45;
 
     public static final double DISTANCE_TO_RACK_WITH_EXTRA_INSURANCE        = 30;
     public static final double EIGHTEEN_INCHES                              = 23;
     public static final double HALF_FOOT                                    = 12;
-    public static final double THREE_INCHES                                 = 6;
+    public static final double THREE_INCHES                                 = 8;
 
     public static final double DESTINATION_TURN_SPEED               = 0.6;
     public static final double DESTINATION_TURN_TIMEOUT_SECONDS     = 5;

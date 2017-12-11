@@ -91,8 +91,8 @@ class JewelDestroyer {
             movedInches = -JEWEL_DISPOSITION_DISTANCE_INCHES;
         }
 
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         return movedInches;
     }
 
