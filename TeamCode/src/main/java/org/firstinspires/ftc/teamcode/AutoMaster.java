@@ -21,7 +21,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-abstract public class AutoMaster extends LinearOpMode {
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+ abstract public class AutoMaster extends LinearOpMode {
     public enum MoveType {
         STRAIGHT, LATERALLY, ROT
     }
@@ -162,7 +164,7 @@ abstract public class AutoMaster extends LinearOpMode {
     }
     public void findBox(int box, int dir) {
         int curBox = 0;
-        encodeInd((0.1 * (dir / Math.abs(dir)), MoveType.LATERALLY);
+        encodeInd((0.1 * (dir / Math.abs(dir))), MoveType.LATERALLY);
         while (curBox < box) {
             if (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 40) {
                 curBox++;
