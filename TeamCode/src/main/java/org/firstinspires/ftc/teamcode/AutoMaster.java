@@ -19,9 +19,22 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
  abstract public class AutoMaster extends LinearOpMode {
     public enum MoveType {
@@ -32,7 +45,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
 
-    //Negative speed means:
+
+     //Negative speed means:
     //Counterclockwise for MoveType.ROT
     //Left for MoveType.LATERALLY
     //Backwards for MoveType.STRAIGHT
@@ -171,5 +185,5 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
             }
         }
         robot.setAllDriveMotors(0);
-    }    
+    }
 }
