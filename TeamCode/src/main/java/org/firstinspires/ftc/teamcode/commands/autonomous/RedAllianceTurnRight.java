@@ -15,25 +15,24 @@ public class RedAllianceTurnRight extends LinearOpMode {
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
     private ElapsedTime runtime = new ElapsedTime();
-    @Override
-    public void runOpMode() throws InterruptedException {
+
+    private void initialize() {
         this.driveSystem = new DriveSystem(hardwareMap, gamepad1);
         this.armSystem = new ArmSystem(hardwareMap);
         this.armSystem.init();
+    }
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        initialize();
         waitForStart();
         runtime.reset();
         int count = 0;
+
         while (opModeIsActive()&& (count < 1)) {
             armSystem.setDownPosition();
             sleep(1000);
-            this.armSystem.enableColorSensor();
-            if(armSystem.isBlue()) {
-                this.driveSystem.driveForward(1.0);
-                sleep(500);
-            } else if (armSystem.isRed()) {
-                this.driveSystem.driveBackwards(1.0);
-                sleep(500);
-            }
+            knockDownBlueJewel();
             driveSystem.stop();
             sleep(1000);
             this.armSystem.setIntitialPosition();
@@ -41,6 +40,17 @@ public class RedAllianceTurnRight extends LinearOpMode {
             this.driveSystem.drive(-0.8, -1.0); // turn right
             sleep(1000);
             count++;
+        }
+    }
+
+    private void knockDownBlueJewel() {
+        this.armSystem.enableColorSensor();
+        if(armSystem.isBlue()) {
+            this.driveSystem.driveForward(1.0);
+            sleep(500);
+        } else if (armSystem.isRed()) {
+            this.driveSystem.driveBackwards(1.0);
+            sleep(500);
         }
     }
 }
