@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -35,33 +36,45 @@ public class RlcRcvryCornerBlue extends OpMode{
     static final double SENS_ARM_BOTTOM = .444;
 
     VuforiaLocalizer vuforia;
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+    /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
     VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
     VuforiaTrackable relicTemplate = relicTrackables.get(0);
-
+*/
     @Override
     public void init() {
+        telemetry.addData("before init","here");
+        telemetry.update();
         robot.init(hardwareMap);
+        telemetry.addData("after robot","here");
+        telemetry.update();
         gilgearmesh.init(hardwareMap);
+        telemetry.addData("after gilgearmesh","here");
+        telemetry.update();
         sensArm.init(hardwareMap);
-        parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        telemetry.addData("after init","here");
+        telemetry.update();
 
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        //parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
+        //parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        //this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        //relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+
 
         //code for gripping glyph and moving arm slightly up
         gilgearmesh.clawPos(0);
         //wait needed? Also... guessed parameters
         gilgearmesh.armPos(2, 1);
         stateMachineFlow = 0;
-        relicTrackables.activate();
+        //relicTrackables.activate();
 
         sensArm.colorLED(false);
 
         telemetry.addData("Key",glyph);
         telemetry.addData("Color",jewelColor);
+        telemetry.addData("Case",stateMachineFlow);
         telemetry.update();
     }
 
@@ -73,25 +86,38 @@ public class RlcRcvryCornerBlue extends OpMode{
                 runtime.reset();
                 telemetry.addData("Key",glyph);
                 telemetry.addData("Color",jewelColor);
+                telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
                 stateMachineFlow++;
                 break;
             case 1:
+                int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+                VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+                VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
+                parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
+                parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+                this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
                 while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    //vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     //viewforia stuff goes here
                     if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;
                         telemetry.addData("Key",glyph);
                         telemetry.addData("Color",jewelColor);
+                        telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
                     else if (vuMark == RelicRecoveryVuMark.LEFT){glyph = RelicRecoveryVuMark.LEFT;
                         telemetry.addData("Key",glyph);
                         telemetry.addData("Color",jewelColor);
+                        telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
                     else if (vuMark == RelicRecoveryVuMark.RIGHT){glyph = RelicRecoveryVuMark.RIGHT;
                         telemetry.addData("Key",glyph);
                         telemetry.addData("Color",jewelColor);
+                        telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
                 }
                 stateMachineFlow++;
@@ -103,11 +129,13 @@ public class RlcRcvryCornerBlue extends OpMode{
                     jewelColor = "blue";
                     telemetry.addData("Key",glyph);
                     telemetry.addData("Color",jewelColor);
+                    telemetry.addData("Case",stateMachineFlow);
                     telemetry.update();}
                 else if (sensArm.colorSens() == "red"){
                     jewelColor = "red";
                     telemetry.addData("Key",glyph);
                     telemetry.addData("Color",jewelColor);
+                    telemetry.addData("Case",stateMachineFlow);
                     telemetry.update();}
 
                 sensArm.colorLED(false);

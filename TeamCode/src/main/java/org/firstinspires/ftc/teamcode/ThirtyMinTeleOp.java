@@ -83,6 +83,7 @@ public class ThirtyMinTeleOp extends OpMode{
         telemetry.addData("Right Mid","%7d",robot.getRMencoder());
         telemetry.addData("Left Back","%7d",robot.getLBencoder());
         telemetry.addData("Right Back","%7d",robot.getRBencoder());
+        telemetry.addData("Jewel Arm","%7.4f",sensArm.getArmPosition());
         telemetry.update();
     }
 }
