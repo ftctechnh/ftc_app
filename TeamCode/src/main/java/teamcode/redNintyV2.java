@@ -155,20 +155,23 @@ public class redNintyV2 extends LinearOpMode {
         boolean test = true;
         double speed = .8;
         Boolean isDetected = false;
-        double jewelDegrees = -10;//- degrees go right, positive degrees go left
+        double jewelDegrees = -15;//- degrees go right, positive degrees go left
         int column = 0;
         while (opModeIsActive())
         {
+            //opmode stuck in stop() resets robot controller;(could be pressing play too early before it finishes initializing)
+            //do we want to make robot go to center and change angle depending on column instead of changing drive forward distance depending on column
+
             elapsedTime = runtime.time();
 
             robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+            sleep(1000);
+            robot.armServo.setPosition(.7);
 
             column = this.getColumn(this.trackable);
             sleep(500);
             robot.jewelServo.setPosition(1);
             sleep(1000);
-            robot.armServo.setPosition(.9);
-            sleep(500);
             if (!robot.isJewelRed()&& !isDetected) {
                 // the red jewel is on the left of sensor
                 jewelDegrees = -jewelDegrees;
@@ -184,12 +187,13 @@ public class redNintyV2 extends LinearOpMode {
             sleep(500);
 
             robot.turnDegrees(speed,-jewelDegrees);
+            robot.turnDegrees(.5,-10);
 
             robot.turnOffMotors();
             robot.armServo.setPosition(LIFTEDARMPOSITION);
             sleep(500);
 
-            double distance = 19.25 + (4 - column) * 7.5;
+            double distance = 19.25 + (4 - column) * 9.5;
             robot.driveForward(.5,distance,true);
 
             robot.turnOffMotors();
@@ -199,7 +203,7 @@ public class redNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(-.5,-90);
 
-            robot.driveForward(.5,12,true);
+            robot.driveForward(.5,24,true);
 
             robot.turnOffMotors();
 
@@ -208,7 +212,7 @@ public class redNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(.5,-15);
 
-            robot.driveForward(.5,-2,true);
+            robot.driveForward(.5,-6,true);
 
             robot.turnOffMotors();
 
@@ -237,6 +241,7 @@ public class redNintyV2 extends LinearOpMode {
                 turnOffMotors();
             }*/
             updateTelemetry();
+            break;
         }
     }
 
@@ -282,7 +287,7 @@ public class redNintyV2 extends LinearOpMode {
     }
 
     private int getColumn(VuforiaTrackable trackable) {
-        int columntoPlaceBlock = -1;
+        int columntoPlaceBlock = 3;
         RelicRecoveryVuMark vumarkImageTracker = RelicRecoveryVuMark.from(trackable);
 
         if(vumarkImageTracker != RelicRecoveryVuMark.UNKNOWN)

@@ -155,7 +155,7 @@ public class blueNintyV2 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         boolean test = true;
         double speed = .8;
-        double jewelDegrees = -10;//- degrees go right, positive degrees go left
+        double jewelDegrees = -15;//- degrees go right, positive degrees go left
         Boolean isDetected = false;
         int column = 0;
         while (opModeIsActive())
@@ -239,7 +239,7 @@ public class blueNintyV2 extends LinearOpMode {
             }
             else if (elapsedTime < PHASENINE)
             {
-                robot.driveForward(.5,-2,true);
+                robot.driveForward(.5,-4,true);
             }
             else if (elapsedTime < PHASENINEHALF)
             {

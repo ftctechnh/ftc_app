@@ -152,7 +152,7 @@ public class blueStrightV2 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         boolean test = true;
         double speed = .8;
-        double jewelDegrees = -10;
+        double jewelDegrees = -15;
         boolean isDetected = false;
         int column = 0;
         while (opModeIsActive())
@@ -264,7 +264,7 @@ public class blueStrightV2 extends LinearOpMode {
             }
             else if (elapsedTime < PHASESEVEN)
             {
-                robot.driveForward(.5,-2,true);
+                robot.driveForward(.5,-4,true);
             }
             else if (elapsedTime < PHASESEVENHALF)
             {
