@@ -27,6 +27,14 @@ public class DriveSystem {
         this.leftMotor.setPower(leftSpeed);
     }
 
+    public void driveForward(double speed) {
+        drive(-speed, -speed);
+    }
+
+    public void driveBackwards(double speed) {
+        drive(speed, speed);
+    }
+
     public void rcCarDrive() {
         if (gamepad.left_stick_y > 0) {
             drive(gamepad.left_stick_y + gamepad.right_stick_x, gamepad.left_stick_y - gamepad.right_stick_x);

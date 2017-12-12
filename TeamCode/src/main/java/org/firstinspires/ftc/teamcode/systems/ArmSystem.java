@@ -16,8 +16,8 @@ public class ArmSystem {
     private Servo leftClaw, rightClaw, jewelArmServo;
     private ColorSensor colorSensor;
     private HardwareMap hardwareMap;
-    private double intitialPosition;
-    private double downPosition;
+    private double initialPosition = 0.07;
+    private double downPosition = 0.8;
 
 
     public ArmSystem (HardwareMap hardwareMap) {
@@ -32,11 +32,16 @@ public class ArmSystem {
     }
 
     public void init() {
-        this.jewelArmServo.setPosition(intitialPosition);
+        this.jewelArmServo.setPosition(initialPosition);
+        this.colorSensor.enableLed(false);
     }
 
     public void goUp() {
         this.armMotor.setPower(1.0);
+    }
+
+    public void enableColorSensor() {
+        this.colorSensor.enableLed(true);
     }
 
     public void goDown() {
@@ -46,6 +51,14 @@ public class ArmSystem {
     public void setClaw(float position) {
         this.rightClaw.setPosition(position);
         this.leftClaw.setPosition(position);
+    }
+
+    public void setIntitialPosition() {
+        this.jewelArmServo.setPosition(initialPosition);
+    }
+
+    public void setDownPosition() {
+        this.jewelArmServo.setPosition(downPosition);
     }
 
     public void setJewelArmServo(float position) {
