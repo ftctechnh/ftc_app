@@ -1,3 +1,13 @@
+// Simple autonomous program that drives bot forward until end of period
+// or touch sensor is hit. If touched, backs up a bit and turns 90 degrees
+// right and keeps going. Demonstrates obstacle avoidance and use of the
+// REV Hub's built in IMU in place of a gyro. Also uses gamepad1 buttons to
+// simulate touch sensor press and supports left as well as right turn.
+//
+// Also uses IMU to drive in a straight line when not avoiding an obstacle.
+
+// from http://stemrobotics.cs.pdx.edu/node/7265
+//  removed touch sensor code
 
 package org.firstinspires.ftc.teamcode;
 
@@ -9,25 +19,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="Blue Right", group="Bacon Autonomous!")
+@Autonomous(name="Blue Left", group="Bacon Autonomous!")
 //@Disabled
-public class FinalPerfectBlueRight extends LinearOpMode
+public class FinalPerfectBlueLeft extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -43,10 +42,6 @@ public class FinalPerfectBlueRight extends LinearOpMode
     double globalAngle, power = .30, correction;
     double xPosUp = 0;
     double xPosDown = .55;
-
-    String vuforialeft = "VuforiaLeft";
-    String vuforiaright = "VuforiaRight";
-    String vuforiacenter = "VuforiaCenter";
 
   /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
@@ -128,22 +123,22 @@ public class FinalPerfectBlueRight extends LinearOpMode
         /* Knock of the Red jewel */
         knockjewelRed();
 
-
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
+        /////////////////* This is the Blue Left Case *\\\\\\\\\\\\\\\\\\\\\\\
+
+        /* Drive forward into the triangle */
+        movebytime(1.2,.5,"Forward");
+
+        /* Wait a moment for the robot to stop moving */
+        sleep(500);
+
 
         /////////* This should vary based on vuforia readings *\\\\\\\\\\\\\\\\\\\\\\
-        /* Drive forward into the triangle */
-        movebytime(1.25,.5,"Forward");
+        /* Move forward slightly so the block is in the space */
+        movebytime(.5, .3, "Right");
         /////////////////////////////////////////////////////////////////////////////
 
-        /* This is really a 90 degree rotation, it is set to 87 to account for the slight slippage after powering
-        off the wheels */
-        rotate(87, .35);
-
-        /* Move forward slightly so the block is in the space */
-        movebytime(.4, .3, "Forward");
 
         /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 

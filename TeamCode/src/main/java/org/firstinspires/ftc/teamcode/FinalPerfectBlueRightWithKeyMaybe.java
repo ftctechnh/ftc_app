@@ -9,25 +9,20 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right", group="Bacon Autonomous!")
+@Autonomous(name="Blue Right With Key", group="Bacon Autonomous!")
 //@Disabled
-public class FinalPerfectBlueRight extends LinearOpMode
+public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -48,12 +43,38 @@ public class FinalPerfectBlueRight extends LinearOpMode
     String vuforiaright = "VuforiaRight";
     String vuforiacenter = "VuforiaCenter";
 
-  /* Create a "timer" that begins once the OpMode begins */
+    OpenGLMatrix lastLocation = null;
+
+    /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
+    VuforiaLocalizer vuforia;
+
+    /* Create a "timer" that begins once the OpMode begins */
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException
     {
+
+    /* To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);*/
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+    /* Our vurforia license key */
+        parameters.vuforiaLicenseKey = "AbWq5Uv/////AAAAGcM6elMmVUOogS1JXLiPuvxUPJgstfq86yvjnKb87ZG0oftSUkO7FUXo+LPZdGe3ytBqkwQmXV6b0hiAMotK9TAX//BaE8tYQe0cJQzMPk5jjMAmLbZgZ1p3V9EQzp59pYvYvBMYzoNw7YzlpMNC3GzmXd40NyecOmx8Q6lp/tQikXO0yKGQLIoJpKtGfoVkxpmyCx/u4/6FYBAGyvZt8I8mz3UtGl/Yf366XKgNXq26uglpVfeurmB/cV5RzMVdVDTdyE/2yLqjalrAKgL2CZFv3iY/MnxW+pIyJUHbXUQVCUoB8SqULq7u948Vx+5w5ObesVFNzZ3jbBTBHwUWbpaJAZFGjmD1dRaVdS/GK74x";
+
+    /*We also indicate which camera on the RC that we wish to use. Here we chose the back (HiRes) camera (for greater range)*/
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+    /* Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+    * in this data set: all three of the VuMarks in the game were created from this one template,
+    * but differ in their instance id information.
+    */
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+
     /* Find all hardware in configuration */
         frontLeftMotor = hardwareMap.dcMotor.get("FL");
         backLeftMotor = hardwareMap.dcMotor.get("BL");
@@ -74,12 +95,12 @@ public class FinalPerfectBlueRight extends LinearOpMode
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     /* Set parameters for the gyro */
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
 
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
+        imuparameters.mode                = BNO055IMU.SensorMode.IMU;
+        imuparameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        imuparameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuparameters.loggingEnabled      = false;
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
@@ -94,7 +115,7 @@ public class FinalPerfectBlueRight extends LinearOpMode
         gemServo.setPosition(xPosUp);
 
     /* Initialize the gyro with the parameters above */
-        imu.initialize(parameters);
+        imu.initialize(imuparameters);
 
     /* Tell driver the gyro is calibrating */
         telemetry.addData("I am...", "calibrating...");
@@ -114,6 +135,8 @@ public class FinalPerfectBlueRight extends LinearOpMode
         // wait for start button.
         waitForStart();
 
+        relicTrackables.activate();
+
         /* Let the team know wassup */
         telemetry.addLine("Ayyy, I'm running");
         telemetry.update();
@@ -128,14 +151,53 @@ public class FinalPerfectBlueRight extends LinearOpMode
         /* Knock of the Red jewel */
         knockjewelRed();
 
+        /* Look at and record the vuMark */
+
+        /* Rotate so the phone can see the Vuforia Key */
+        rotate(10,.3);
+
+        /* Read the vuMark */
+        /* Tells vuforia to look for relic templates, if it finds something, then it returns
+        LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        /* If "vuMark" is something other than UNKNOWN */
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+
+            /* Send telemetry saying what vuforia sees */
+            telemetry.addData("Ayy I see", vuMark);
+        }
+        telemetry.update();
+
+        rotate(-10, .3);
+
+        /* Wait a moment and let vuforia do its work and for the robot to realign properly */
+        sleep(500);
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
-        /////////* This should vary based on vuforia readings *\\\\\\\\\\\\\\\\\\\\\\
-        /* Drive forward into the triangle */
-        movebytime(1.25,.5,"Forward");
+        /* Switch case based on what vuMark we see */
+        switch (vuMark){
+            case LEFT:
+                /* Drive forward into the left position */
+                movebytime(.7,.5,"Forward");
+                break;
+            case RIGHT:
+                /* Drive forward into the right position */
+                movebytime(2, .5, "Forward");
+                break;
+            case CENTER:
+                /* Drive forward into the center position */
+                movebytime(1.25, .5, "Forward");
+                break;
+            case UNKNOWN:
+                /* Drive forward into the center position just cuz i said so */
+                movebytime(1.25, .5, "Forward");
+                break;
+        }
+
         /////////////////////////////////////////////////////////////////////////////
 
         /* This is really a 90 degree rotation, it is set to 87 to account for the slight slippage after powering
