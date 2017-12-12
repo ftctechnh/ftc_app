@@ -176,12 +176,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
         }
     }
-    public void findBox(int box, int dir) {
-        int curBox = 0;
-        encodeInd((0.1 * (dir / Math.abs(dir))), MoveType.LATERALLY);
-        while (curBox < box) {
-            if (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 40) {
-                curBox++;
+    public void findBox(int line, int dir) {
+        int curLine = 0;
+        encodeInd((0.1 * (dir / Math.abs(dir))), MoveType.STRAIGHT);
+        while (curLine < line) {
+            if (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {
+                curLine++;
             }
         }
         robot.setAllDriveMotors(0);
