@@ -15,33 +15,16 @@ public class holonomicDrive_6_0 extends LinearOpMode
     double z = 0;
 
     DcMotor lift;
-//    Servo servo1;
-//    Servo servo2;
+    Servo servo1;
+    Servo servo2;
 
     TouchSensor touchBottom;
     TouchSensor touchTop;
 
-    double pinch = 0.2;
-    //linear arm
-    static final double INCREMENT   = 0.1;     // amount to slew servo each CYCLE_MS cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.2;     // Minimum rotational position
-    double position1 = 0;
-    double position2 = 0;
-    Servo servo1;
-    Servo servo2;
+    static final double MAX_POS     =  .8;     // Maximum rotational position
+    static final double MIN_POS     =  .354;     // Minimum rotational position
 
-    private void open()
-    {
-        servo2.setPosition(1);
-        servo1.setPosition(1);
-    }
-
-    private void close()
-    {
-        servo2.setPosition(0.2);
-        servo1.setPosition(0.2);
-    }
+    double position = 0;
 
     @Override
     public void runOpMode()
@@ -56,7 +39,6 @@ public class holonomicDrive_6_0 extends LinearOpMode
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-        open();
         while (opModeIsActive())
         {
 
@@ -114,42 +96,13 @@ public class holonomicDrive_6_0 extends LinearOpMode
                     x = 0;
                     y = 0;
                 }
-//                // Old Glyph Grabber- outdated, delete soon
-//                else if(gamepad1.right_bumper) {
-//                    pinch += .01;
-//                    if (pinch > 1) {
-//                        pinch = 1;
-//                    }
-//                servo2.setPosition(pinch);
-//                servo1.setPosition(pinch);
-//                }
-//                else if(gamepad1.right_trigger > 0) {
-//                    pinch -= .1;
-//                    if (pinch < 0){
-//                        pinch = 0;
-//                    }
-//
-//                servo1.setPosition(pinch);
-//                }
-//                else if(gamepad1.x)
-//                {
-//                    close();
-//                }
-                else if  (gamepad1.x && position1 < MAX_POS)
+                else if(gamepad1.x)
                 {
-                    position1 = MAX_POS;
+                    position = MAX_POS;
                 }
-                else if(gamepad1.b && position1 > 0)
+                else if(gamepad1.b)
                 {
-                    position1 = MIN_POS;
-                }
-                else if (gamepad2.dpad_up && position2 < MAX_POS)
-                {
-                    position2 = MAX_POS;
-                }
-                else if(gamepad2.dpad_down && position2 > 0)
-                {
-                    position2 = MIN_POS;
+                    position = MIN_POS;
                 }
                 else
                 {
@@ -160,17 +113,12 @@ public class holonomicDrive_6_0 extends LinearOpMode
 
                 engine.drive(x,y);
                 lift.setPower(z);
+                servo1.setPosition(position);
+                servo2.setPosition(position);
             }
 
             // Display the current value
-            telemetry.addData("Servo Position 1", "%5.2f", position1);
-            telemetry.addData("Servo Position 2", "%5.2f", position2);
-            telemetry.update();
-
-            servo1.setPosition(position1);
-            servo2.setPosition(position2);
-
-            telemetry.addData("pinch: ", pinch);
+            telemetry.addData("Servos Positions 1", "%5.2f", position);
             telemetry.addData("servo2 Position: ", servo2.getPosition());
             telemetry.addData("servo1 Position: ", servo1.getPosition());
             telemetry.addData("leftx: ", gamepad1.left_stick_x);
@@ -182,7 +130,6 @@ public class holonomicDrive_6_0 extends LinearOpMode
             telemetry.update();
             idle();
         }
-        close();
     }
 }
 
