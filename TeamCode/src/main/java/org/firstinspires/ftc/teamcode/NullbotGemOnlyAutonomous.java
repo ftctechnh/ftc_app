@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import java.io.IOException;
+
 import static org.firstinspires.ftc.teamcode.Alliance.BLUE;
 import static org.firstinspires.ftc.teamcode.Alliance.RED;
 
@@ -46,12 +48,19 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
         telemetry.log().add("Robot's current alliance is " + robot.color);
         telemetry.log().add("--------------------------");
 
+        robot.openLogFile();
         while (!isStarted()) {
+
             updateBlocks();
             telemetry.addData("Red ball:", redBall.toString());
             telemetry.addData("Blue ball:", blueBall.toString());
             telemetry.update();
+            robot.writePixyCamTick(blueBall, redBall);
         }
+        try {
+            robot.flushLogs();
+            robot.closeLog();
+        } catch (IOException e) {telemetry.log().add("Writing logs failed");}
 
         telemetry.log().add("Robot started");
 

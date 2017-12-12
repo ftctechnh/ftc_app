@@ -54,7 +54,7 @@ public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
 
         @Override public String toString()
         {
-            return String.format("x: %d, y: %d, w: %d, h: %d", this.x, this.y, this.width, this.height);
+            return String.format("Avgx: %d", this.averageX());
         }
     }
 

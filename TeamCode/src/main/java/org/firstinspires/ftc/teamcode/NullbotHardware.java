@@ -163,7 +163,6 @@ public class NullbotHardware {
         this.gp1 = gp1;
         init();
         calibrate();
-        //openLogFile();
     }
 
     private void calibrate() {
@@ -307,12 +306,12 @@ public class NullbotHardware {
         final File path =
                 Environment.getExternalStoragePublicDirectory
                         (
-                                Environment.DIRECTORY_DOCUMENTS + "/NullbotLogs/"
+                                Environment.DIRECTORY_DOCUMENTS + "/PixyCamLogs/"
                         );
         if (!path.exists()) {path.mkdirs();}
 
         String DTS = DateFormat.getDateTimeInstance().format(new Date());
-        file = new File(path, "Nullbot-log-" + DTS + "-" + opMode.getClass().getSimpleName() + ".txt");
+        file = new File(path, "Pixycam-log-" + DTS + "-" + opMode.getClass().getSimpleName() + ".txt");
 
         try
         {
@@ -343,6 +342,13 @@ public class NullbotHardware {
         LogTick l = new LogTick(gp1,this);
         try {
             oW.append(l.toString());
+            oW.append("\n");
+        } catch (IOException e) {tel.log().add("Failed to write log tick!");}
+    }
+
+    public void writePixyCamTick(PixyCam.Block blue, PixyCam.Block red) {
+        try {
+            oW.append("Blue: " + blue.toString() + " ----- Red: " + red.toString());
             oW.append("\n");
         } catch (IOException e) {tel.log().add("Failed to write log tick!");}
     }
@@ -427,11 +433,11 @@ public class NullbotHardware {
 
     }
 
-    public final double RELIC_CLAW_OPEN_POSITION = 0.6;
-    public final double RELIC_CLAW_CLOSED_POSITION = 0.88;
+    public final double RELIC_CLAW_OPEN_POSITION = 0.34;
+    public final double RELIC_CLAW_CLOSED_POSITION = 0.06;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
-    public void flattenRelicClaw() {relicClaw.setPosition(0.0/255.0); RELIC_CLAW_IS_OPEN = true;}
+    public void flattenRelicClaw() {relicClaw.setPosition(0.6); RELIC_CLAW_IS_OPEN = true;}
 
     public void openRelicClaw() {relicClaw.setPosition(RELIC_CLAW_OPEN_POSITION); RELIC_CLAW_IS_OPEN = true;}
     public void closeRelicClaw() {relicClaw.setPosition(RELIC_CLAW_CLOSED_POSITION); RELIC_CLAW_IS_OPEN = false;}
