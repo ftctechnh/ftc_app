@@ -43,15 +43,31 @@ public class JewelKnocker implements IMechanism {
         return jewelColorSensor.blue();
     }
 
-//    public boolean isJewelRed(RelicRecoveryRobot robot){
-//        int blueLevel = getBlue();
-//        int redLevel = getRed();
-//        boolean isRed = false
-//
-//        if(redLevel > 0 && blueLevel <= 0){
-//            return true;
-//        } else if(blueLevel > 0 && redLevel <= 0){
-//            return false;
-//        }
-//    }
+    public boolean isJewelRed(RelicRecoveryRobot robot){
+        int blueLevel = getBlue();
+        int redLevel = getRed();
+        boolean isRed = false;
+
+        if(redLevel > 0 && blueLevel <= 0){
+            isRed= true;
+        } else if(blueLevel > 0 && redLevel <= 0){
+            isRed= false;
+        }
+
+        return isRed;
+    }
+
+    public boolean isJewelBlue(RelicRecoveryRobot robot){
+        int blueLevel = getBlue();
+        int redLevel = getRed();
+        boolean isBlue = false;
+
+        if(blueLevel > 0 && redLevel <= 0){
+            isBlue= true;
+        } else if(redLevel > 0 && blueLevel <= 0){
+            isBlue= false;
+        }
+
+        return isBlue;
+    }
 }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,14 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.DOWN;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.LEFT;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.RIGHT;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.UNDEFINED;
-import static org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift.RotationMotorPosition.UP;
-
 /**
- *
+ * The glyph lift mechanism collects glyphs with two grippers and is able to place them in the cryptobox.
  */
 
 public class GlyphLift implements IMechanism {
@@ -25,8 +20,12 @@ public class GlyphLift implements IMechanism {
     private static final double MAX_LIFT_MOTOR_POWER_UP = 0.9;
     private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.4;
 
-    private static final double ROTATION_MOTOR_GYRO_POWER = 0.1;
+    private static final double ROTATION_MOTOR_POWER_AUTOMATIC = 0.8;
+    private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
     private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
+
+    public static final int LIFT_RAISE_TARGET_POSITION = 850;
+    public static final int LIFT_LOWER_TARGET_POSITION = -850;
 
     private OpMode opMode;
 
@@ -35,24 +34,38 @@ public class GlyphLift implements IMechanism {
 
     private Servo redLeftServo, redRightServo, blueLeftServo, blueRightServo;
 
-    private RotationMotorPosition currentRotationPosition = UNDEFINED;
+    private boolean isRunningToPositionRotationMotor;
+    private boolean isRunningToPositionLiftMotor;
+
+    private RotationMotorPosition previousPosition;
+
+//    private RotationMotorPosition currentRotationPosition = UNDEFINED;
 
     /**
+     * This enumeration type represents the rotation position of the rotation motor,
+     * which can be one of four values:
+     * <ul>
+     *   <li>UP (with the blue gripper on the top)</li>
+     *   <li>DOWN (with the blue gripper on the bottom)</li>
+     *   <li>LEFT (with the red gripper to the right)</li>
+     *   <li>RIGHT (with the red gripper to the left)</li>
+     * </ul>
      *
      */
     public enum RotationMotorPosition {
-        UP(0), DOWN(1650), LEFT(825), RIGHT(-825), UNDEFINED(-1);
+        UP(0), DOWN(1700), LEFT(850), RIGHT(-850);
 
-        public int pos;
+        private int encoderPosition;
 
         RotationMotorPosition(int pos) {
-            this.pos = pos;
+            this.encoderPosition = pos;
         }
     }
 
     /**
+     * Construct a new {@link GlyphLift} with a reference to the utilizing robot.
      *
-     * @param robot
+     * @param robot the robot using this glyph lift
      */
     public GlyphLift(Robot robot) {
         this.opMode = robot.getCurrentOpMode();
@@ -74,124 +87,116 @@ public class GlyphLift implements IMechanism {
         rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // run using encoders
+        rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /**
+     * This method sets the power of the lift motor.
+     * The lift motor is the motor that raises and lowers the linear slides.
      *
-     * @param power
+     * @param power the power to run the lift motor in a range of 1.0 to -1.0.
+     *              Negative values lower the lift and, likewise, positive values raise the lift.
      */
     public void setLiftMotorPower(double power) {
-        if(power < 0) {
-            power *= MAX_LIFT_MOTOR_POWER_UP;
-        } else {
-            power *= MAX_LIFT_MOTOR_POWER_DOWN;
-        }
-
-        liftMotor.setPower(power);
+        liftMotor.setPower(power * (power < 0 ? MAX_LIFT_MOTOR_POWER_UP : MAX_LIFT_MOTOR_POWER_DOWN));
     }
 
     /**
+     * Set the power of the rotation motor. The rotation motor is the motor that rotates the glyph grippers.
      *
-     * @param power
+     * @param power the power to run the rotation motor in a range of 1.0 to -1.0.
+     *              Negative values run the rotation motor in the counterclockwise direction, and
+     *              likewise, positive values run the rotation motor clockwise.
      */
     public void setRotationMotorPower(double power) {
-        rotationMotor.setPower(power * MAX_LIFT_ROTATION_MOTOR_POWER);
+        rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        isRunningToPositionRotationMotor = false;
+        rotationMotor.setPower(power * ROTATION_MOTOR_POWER_MANUAL);
     }
 
     /**
+     * Rotate the rotation motor to the requested rotation position.
+     * This method is implemented so as not to tangle or over-wrap the I2c cable around the motor shaft.
      *
-     * @return
+     * @see RotationMotorPosition
+     * @param requestedPosition the desired rotation position
      */
-    public RotationMotorPosition getCurrentRotationMotorPosition() {
-        int currentPos = rotationMotor.getCurrentPosition();
-        for (RotationMotorPosition pos : RotationMotorPosition.values()) {
-            // if rotation motor position is within 5 degrees of pos
-            if (Math.abs(pos.pos - currentPos) < ROTATION_MOTOR_POSITION_THRESHOLD) {
-                return pos;
-            }
-        }
-        // just return undefined if rotation motor not at any of the positions
-        return RotationMotorPosition.UNDEFINED;
-    }
+      public boolean setRotationMotorPosition(RotationMotorPosition requestedPosition) {
+          opMode.telemetry.addData("previous Position", previousPosition);
+          opMode.telemetry.update();
+
+          if(previousPosition != requestedPosition) {
+              if (!isRunningToPositionRotationMotor) {
+                  rotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                  rotationMotor.setTargetPosition(requestedPosition.encoderPosition);
+                  rotationMotor.setPower(ROTATION_MOTOR_POWER_AUTOMATIC);
+                  isRunningToPositionRotationMotor = true;
+              } else if (!rotationMotor.isBusy()) {
+                  this.previousPosition = requestedPosition;
+                  isRunningToPositionRotationMotor = false;
+                  rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                  rotationMotor.setPower(0);
+              }
+          }
+        return rotationMotor.isBusy();
+      }
+
+      public boolean setLiftPosition(int targetPosition) {
+          if (!isRunningToPositionLiftMotor) {
+              liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+              liftMotor.setTargetPosition(targetPosition);
+              liftMotor.setPower(MAX_LIFT_MOTOR_POWER_DOWN );
+              isRunningToPositionLiftMotor = true;
+          } else if (!liftMotor.isBusy()) {
+              isRunningToPositionLiftMotor = false;
+              liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+              liftMotor.setPower(0);
+          }
+          return liftMotor.isBusy();
+      }
+
 
     /**
-     *
-     * @param requestedPosition
+     * Set the grippers to their initialized positions.
+     * This method should be called during initialization.
      */
-    public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
-        int headingDiff = Math.abs(requestedPosition.pos - rotationMotor.getCurrentPosition());
-
-        // only update current position if it's not undefined
-        RotationMotorPosition tempPos = getCurrentRotationMotorPosition();
-        if(tempPos != UNDEFINED) {
-            this.currentRotationPosition = tempPos;
-        }
-
-        opMode.telemetry.addData("current encoder pos", rotationMotor.getCurrentPosition());
-        opMode.telemetry.addData("pos diff", headingDiff);
-        opMode.telemetry.addData("current rotation position", currentRotationPosition);
-        opMode.telemetry.update();
-
-        if(headingDiff > ROTATION_MOTOR_POSITION_THRESHOLD
-                && currentRotationPosition != requestedPosition) {
-            switch (requestedPosition) {
-                case UP:
-                    // always use negative motor power when requested position is up
-                    rotationMotor.setPower(-ROTATION_MOTOR_GYRO_POWER);
-                    break;
-                case DOWN:
-                    // always use positive motor power when requested position is down
-                    rotationMotor.setPower(ROTATION_MOTOR_GYRO_POWER);
-                    break;
-                case LEFT:
-                    if (currentRotationPosition == DOWN || currentRotationPosition == RIGHT) {
-                        // positive motor power
-                        //rotationMotor.setPower(ROTATION_MOTOR_GYRO_POWER);
-                    } else if (currentRotationPosition == UP) {
-                        // negative motor power
-                        rotationMotor.setPower(-ROTATION_MOTOR_GYRO_POWER);
-                    }
-                    break;
-                case RIGHT:
-                    if (currentRotationPosition == DOWN || currentRotationPosition == LEFT) {
-                        // negative motor power
-                        rotationMotor.setPower(-ROTATION_MOTOR_GYRO_POWER);
-                    } else if (currentRotationPosition == UP) {
-                        // positive motor power
-                        rotationMotor.setPower(ROTATION_MOTOR_GYRO_POWER);
-                    }
-                    break;
-            }
-        } else {
-            rotationMotor.setPower(0);
-        }
-    }
-
-    public void closeRedGripper() {
-        redLeftServo.setPosition(0.35);
-        redRightServo.setPosition(0.65);
-    }
-
-    public void closeBlueGripper() {
-        blueLeftServo.setPosition(0.65);
-        blueRightServo.setPosition(0.35);
-    }
-
-    public void openRedGripper() {
-        redRightServo.setPosition(0.8);
-        redLeftServo.setPosition(0.2);
-    }
-
-    public void openBlueGripper() {
-        blueLeftServo.setPosition(0.8);
-        blueRightServo.setPosition(0.2);
-    }
-
     public void initializeGrippers() {
         blueLeftServo.setPosition(1.0);
         blueRightServo.setPosition(0);
         redRightServo.setPosition(1.0);
         redLeftServo.setPosition(0);
+    }
+
+    /**
+     * Close the red gripper.
+     */
+    public void closeRedGripper() {
+        redLeftServo.setPosition(0.35);
+        redRightServo.setPosition(0.65);
+    }
+
+    /**
+     * Close the blue gripper.
+     */
+    public void closeBlueGripper() {
+        blueLeftServo.setPosition(0.65);
+        blueRightServo.setPosition(0.35);
+    }
+
+    /**
+     * Open the red gripper.
+     */
+    public void openRedGripper() {
+        redRightServo.setPosition(0.8);
+        redLeftServo.setPosition(0.2);
+    }
+
+    /**
+     * Open the blue gripper.
+     */
+    public void openBlueGripper() {
+        blueLeftServo.setPosition(0.8);
+        blueRightServo.setPosition(0.2);
     }
 }

@@ -44,7 +44,7 @@ public class RelicRecoveryRobot extends Robot {
     public RelicRecoveryRobot(OpMode opMode) {
         super(opMode);
 
-        this.hDriveTrain = new HDriveTrain(this);
+        this.hDriveTrain = new HDriveTrain(this, 4, 1.0, 1.5);
         this.glyphLift = new GlyphLift(this);
         this.intake = new Intake(this);
         this.visionHelper = new VisionHelper(this);

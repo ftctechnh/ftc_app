@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode.mechanism.impl;
 
-/**
- * Created by ftc6347 on 9/1/17.
- */
-
-import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;

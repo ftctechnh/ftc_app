@@ -5,24 +5,18 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.IDirectionalDriveTrain;
 
 /**
- * This class implements control of an "H" drive train, which has four wheels parallel to the
- * sides of the robot and one wheel middle perpendicular to the sides of the robot. These
- * wheels are driven by three motors.
+ * This class implements control of an H-drive train, which has four wheels parallel to the
+ * sides of the robot and one (or sometimes two) wheels in the middle perpendicular to the sides of the robot.
+ * These wheels are driven by three motors.
  */
 
 public class HDriveTrain implements IDirectionalDriveTrain {
-
-    private static final int WHEEL_DIAMETER_INCHES = 4;
-
-    private static final int COUNTS_PER_MOTOR_REV = 1120;
-
-    protected static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV /
-            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     private DcMotor leftDrive, rightDrive, middleDrive;
     private DcMotor.RunMode mode;
@@ -35,18 +29,35 @@ public class HDriveTrain implements IDirectionalDriveTrain {
     private double currentSpeedY;
     private double currentPivot;
 
+    private double lateralCountsPerInch;
+    private double axialCountsPerInch;
+
+    private double insideWheelGearing;
+    private double outsideWheelGearing;
+
     /**
      * Construct a new {@link HDriveTrain} with a reference to the utilizing robot.
      *
      * @param robot the robot using this drive train
      */
-    public HDriveTrain(Robot robot) {
+    public HDriveTrain(Robot robot, int wheelDiameterInches,
+                       double insideWheelGearing, double outsideWheelGearing) {
+
         this.opMode = robot.getCurrentOpMode();
         HardwareMap hWMap = opMode.hardwareMap;
 
         leftDrive = hWMap.dcMotor.get("l");
         rightDrive = hWMap.dcMotor.get("r");
         middleDrive = hWMap.dcMotor.get("m");
+
+        this.outsideWheelGearing = outsideWheelGearing;
+        this.insideWheelGearing = insideWheelGearing;
+
+        this.lateralCountsPerInch = (leftDrive.getMotorType().getTicksPerRev() /
+                (wheelDiameterInches * Math.PI)) / outsideWheelGearing;
+
+        this.axialCountsPerInch = middleDrive.getMotorType().getTicksPerRev() /
+                (wheelDiameterInches * Math.PI) / insideWheelGearing;
 
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -87,25 +98,29 @@ public class HDriveTrain implements IDirectionalDriveTrain {
     }
 
     private void setDirectionalTargetPosition(double angleDegrees, double speed, int targetDistance) {
-        double encoderTargetCounts = COUNTS_PER_INCH * targetDistance;
-        double angleRadians = Math.toRadians(angleDegrees);
-        int lateralCounts = (int)(encoderTargetCounts * Math.sin(angleRadians));
-        int axialCounts = (int)(encoderTargetCounts * Math.cos(angleRadians));
+        double encoderTargetCountsLateral = lateralCountsPerInch * -targetDistance;
+        double encoderTargetCountsAxial = axialCountsPerInch * -targetDistance;
 
-        // RUN_TO_POSITION = run to a set distance rather than
-        // using encoders or run with a certain voltage
+        double angleRadians = Math.toRadians(angleDegrees);
+        int lateralCounts = (int)(encoderTargetCountsLateral * Math.sin(angleRadians));
+        int axialCounts = (int)(encoderTargetCountsAxial * Math.cos(angleRadians));
+
+        opMode.telemetry.addData("lateral counts", lateralCounts);
+        opMode.telemetry.addData("axial counts", axialCounts);
+        opMode.telemetry.update();
+
+        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // setting wheels to a distance defined by a custom unit of "encoder counts"
         leftDrive.setTargetPosition(lateralCounts);
         rightDrive.setTargetPosition(lateralCounts);
 
         middleDrive.setTargetPosition(axialCounts);
 
         // set motor powers
-        leftDrive.setPower(speed);
-        rightDrive.setPower(speed);
-        middleDrive.setPower(speed);
+        leftDrive.setPower(Range.clip(speed * insideWheelGearing, -1, 1));
+        rightDrive.setPower(Range.clip(speed * insideWheelGearing, -1, 1));
+        middleDrive.setPower(Range.clip(speed * outsideWheelGearing, -1, 1));
     }
 
     @Override
@@ -139,7 +154,7 @@ public class HDriveTrain implements IDirectionalDriveTrain {
 
     @Override
     public boolean isDriveTrainBusy() {
-        return leftDrive.isBusy() && rightDrive.isBusy() && middleDrive.isBusy();
+        return (leftDrive.isBusy() && rightDrive.isBusy()) || middleDrive.isBusy();
     }
 
     @Override

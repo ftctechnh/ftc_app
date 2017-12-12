@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift;
 
@@ -48,6 +49,13 @@ public class RobotTeleOp extends LinearOpMode {
                 speedX /= 2;
             }
 
+            // operate jewel mechinism
+            if(gamepad1.a){
+                robot.jewelKnocker.extendArm();
+            } else if(gamepad1.b){
+                robot.jewelKnocker.retractArm();
+            }
+
             // intake raise/lower control
             if(gamepad1.left_bumper) {
                 robot.intake.raiseIntake();
@@ -58,9 +66,9 @@ public class RobotTeleOp extends LinearOpMode {
             // intake control
             if(gamepad1.dpad_up) {
                 robot.intake.setIntakePower(1.0);
-            } else if(gamepad1.dpad_down) {
+            } else if(gamepad1.dpad_down||gamepad1.left_trigger>0) {
                 robot.intake.setIntakePower(-1.0);
-            } else {
+            } else{
                 robot.intake.setIntakePower(0);
             }
 
@@ -83,19 +91,18 @@ public class RobotTeleOp extends LinearOpMode {
                 robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.UP);
             } else if(gamepad2.dpad_down) {
                 robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.DOWN);
-            } else if(gamepad2.dpad_left) {
-                robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.LEFT);
-            } else if(gamepad2.dpad_right) {
-                robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.RIGHT);
             } else {
                 robot.glyphLift.setRotationMotorPower(liftRotationMotorPower);
             }
 
+<<<<<<< HEAD
             telemetry.addData("Red Level", robot.jewelKnocker.getRed());
             telemetry.addData("Blue Level", robot.jewelKnocker.getBlue());
             telemetry.update();
 
 
+=======
+>>>>>>> caca4ca0a3a5bfb53e3fc65189adae57fa5d06c8
             robot.hDriveTrain.pivot(pivot);
             robot.hDriveTrain.drive(speedX, speedY);
 
