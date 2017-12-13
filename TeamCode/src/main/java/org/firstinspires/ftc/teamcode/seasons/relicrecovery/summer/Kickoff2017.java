@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery.summer;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CompassSensor;
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.utils.MRIColorBeacon;
 /**
  * Created by ftc6347 on 8/31/17.
  */
-
+@Disabled
 @TeleOp(name = "Kickoff", group = "1-fta")
 public class Kickoff2017 extends OpMode {
 

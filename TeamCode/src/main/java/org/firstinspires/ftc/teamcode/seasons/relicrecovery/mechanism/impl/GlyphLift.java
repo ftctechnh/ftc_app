@@ -20,8 +20,12 @@ public class GlyphLift implements IMechanism {
     private static final double MAX_LIFT_MOTOR_POWER_UP = 0.9;
     private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.4;
 
+<<<<<<< Updated upstream
     private static final double ROTATION_MOTOR_POWER_AUTOMATIC = 0.8;
     private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
+=======
+    private static final double ROTATION_MOTOR_GYRO_POWER = 0.8;
+>>>>>>> Stashed changes
     private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
 
     public static final int LIFT_RAISE_TARGET_POSITION = 850;
@@ -181,22 +185,22 @@ public class GlyphLift implements IMechanism {
      */
     public void closeBlueGripper() {
         blueLeftServo.setPosition(0.65);
-        blueRightServo.setPosition(0.35);
+        blueRightServo.setPosition(0.4);
     }
 
     /**
      * Open the red gripper.
      */
     public void openRedGripper() {
-        redRightServo.setPosition(0.8);
-        redLeftServo.setPosition(0.2);
+        redRightServo.setPosition(0.9);
+        redLeftServo.setPosition(0.1);
     }
 
     /**
      * Open the blue gripper.
      */
     public void openBlueGripper() {
-        blueLeftServo.setPosition(0.8);
-        blueRightServo.setPosition(0.2);
+        blueLeftServo.setPosition(0.9);
+        blueRightServo.setPosition(0.1);
     }
 }

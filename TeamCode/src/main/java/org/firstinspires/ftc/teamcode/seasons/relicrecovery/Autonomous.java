@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.mechanism.impl.VisionHelper;
 /**
  * Created by Owner on 12/5/2017.
  */
-
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "TestAuto", group = "autonomous")
 public class Autonomous extends LinearOpMode {
 
     private RelicRecoveryRobot robot;
@@ -42,34 +42,34 @@ public class Autonomous extends LinearOpMode {
 //            telemetry.addData(">", "Blue stone detected.");
 //        }
 
-
+        robot.glyphLift.initializeGrippers();
+        robot.intake.raiseIntake();
+        robot.jewelKnocker.retractArm();
 
         // get side L/R
         boolean isLeftStone = true;
         telemetry.addData(">", "LB = Left, RB = Right, LT = Red, RT = Blue");
         telemetry.update();
 
-        while(!isStarted() && opModeIsActive()){
+
+        while(!isStarted() && !opModeIsActive()){
             if(gamepad1.left_bumper){
-                telemetry.addData(">", "Left stone Selected.");
-                telemetry.update();
+                telemetry.addData("stone", "Left stone Selected.");
                 isLeftStone = true;
             } else if (gamepad1.right_bumper){
-                telemetry.addData(">", "Right stone Selected.");
-                telemetry.update();
+                telemetry.addData("stone", "Right stone Selected.");
                 isLeftStone = false;
             }
             if(gamepad1.left_trigger > 0){
                 // red team
-                telemetry.addData(">", "Red Alliance Selected.");
-                telemetry.update();
+                telemetry.addData("team", "Red Alliance Selected.");
                 isStoneRed = true;
             } else if(gamepad1.right_trigger > 0){
                 // blue team
-                telemetry.addData(">", "Blue Alliance Selected.");
-                telemetry.update();
+                telemetry.addData("team", "Blue Alliance Selected.");
                 isStoneRed = false;
             }
+            telemetry.update();
         }
 
         waitForStart();
@@ -78,24 +78,22 @@ public class Autonomous extends LinearOpMode {
         if(isStoneRed){
             if(isLeftStone){
                 telemetry.addData(">", "Running Red Alliance Left Stone Program.");
-                telemetry.update();
                 redLeft(robot);
+                telemetry.update();
             } else {
                 telemetry.addData(">", "Running Red Alliance Right Stone Program.");
-                telemetry.update();
                 redRight(robot);
+                telemetry.update();
             }
         } else {
             if(isLeftStone){
                 telemetry.addData(">", "Running Blue Alliance Left Stone Program.");
-                telemetry.update();
-                waitForStart();
                 blueLeft(robot);
+                telemetry.update();
             } else {
                 telemetry.addData(">", "Running Blue Alliance Right Stone Program.");
-                telemetry.update();
-                waitForStart();
                 blueRight(robot);
+                telemetry.update();
             }
         }
     }
@@ -103,14 +101,28 @@ public class Autonomous extends LinearOpMode {
     // PROGRAMS
 
     public void redLeft(RelicRecoveryRobot robot){
-        //raise glyph lift a tiny bit
-        robot.glyphLift.setLiftMotorPower(1);
-        sleep(5);
+        //raise glyph lift a tiny bit and close red gripper
+        robot.glyphLift.closeRedGripper();
+        sleep(500);
+        robot.glyphLift.setLiftMotorPower(-1);
+        sleep(250);
+        robot.glyphLift.setLiftMotorPower(0);
 
         // Lower Jewel Mechinism
         robot.jewelKnocker.extendArm();
+        sleep(500);
 
         //get color of ball
+        if(robot.jewelKnocker.getRed() > 0){
+            telemetry.addData("JewelKnockerReading", robot.jewelKnocker.getRed());
+            telemetry.update();
+            robot.hDriveTrain.directionalDrive(0, 0.5, 4, false); //drive right 4 inches
+
+        }   else {
+            robot.hDriveTrain.directionalDrive(180, 0.5, 4, false); //drive left 4 inches
+        }
+
+
 
 
 

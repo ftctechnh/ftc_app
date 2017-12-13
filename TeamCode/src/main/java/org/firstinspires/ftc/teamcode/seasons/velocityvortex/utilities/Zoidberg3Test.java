@@ -29,7 +29,7 @@ import java.util.ListIterator;
 /**
  * Created by aburger on 3/5/2017.
  */
-
+@Disabled
 @TeleOp(name = "Zoidberg3Test", group = "utilities")
 public class Zoidberg3Test extends LinearOpMode {
     public static final String NOT_IMPLEMENTED_YET = "Not implemented yet";

@@ -24,6 +24,7 @@ public class RobotTeleOp extends LinearOpMode {
 
         robot.glyphLift.initializeGrippers();
         robot.intake.raiseIntake();
+        robot.jewelKnocker.retractArm();
 
         waitForStart();
 
@@ -49,6 +50,12 @@ public class RobotTeleOp extends LinearOpMode {
                 speedX /= 2;
             }
 
+            // Jewel arm control
+            if (gamepad1.y){
+                robot.jewelKnocker.extendArm();
+            } else {
+                robot.jewelKnocker.retractArm();
+            }
             // intake raise/lower control
             if(gamepad1.left_bumper) {
                 robot.intake.raiseIntake();
@@ -66,14 +73,19 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             // close/open blue gripper
-            if(gamepad2.right_bumper) {
+            if(gamepad2.right_trigger > 0.1) {
                 robot.glyphLift.openBlueGripper();
             } else {
                 robot.glyphLift.closeBlueGripper();
             }
 
+            //maneuver jewel arm
+            if(gamepad1.b){
+                robot.jewelKnocker.retractArm();
+            }
+
             // close/open red gripper
-            if(gamepad2.left_bumper) {
+            if(gamepad2.left_trigger > 0.1) {
                 robot.glyphLift.openRedGripper();
             } else {
                 robot.glyphLift.closeRedGripper();

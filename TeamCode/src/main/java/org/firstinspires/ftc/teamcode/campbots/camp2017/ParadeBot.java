@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.campbots.camp2017;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by ftc6347 on 6/27/17.
  */
+@Disabled
 @TeleOp(name = "Parade Robot RobotTeleOp", group = "demos")
 public class ParadeBot extends OpMode {
 

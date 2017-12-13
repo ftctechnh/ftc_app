@@ -28,11 +28,11 @@ public class JewelKnocker implements IMechanism {
     }
 
     public void retractArm() {
-        arm.setPosition(0.4);
+        arm.setPosition(0.35);
     }
 
     public void extendArm() {
-        arm.setPosition(0.8);
+        arm.setPosition(0.95);
     }
 
     public int getRed(){
