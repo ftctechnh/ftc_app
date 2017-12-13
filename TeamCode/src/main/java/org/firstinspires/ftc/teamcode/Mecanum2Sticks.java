@@ -17,7 +17,7 @@ public class Mecanum2Sticks extends OpMode {
                 hardwareMap.dcMotor.get("m2"), //FrontRight
                 hardwareMap.dcMotor.get("m3"), //RearLeft
                 hardwareMap.dcMotor.get("m4"), //RearRight
-                1.0); //top speed as a decimal
+                1.0, telemetry); //top speed as a decimal
     }
     @Override
     public void loop() {

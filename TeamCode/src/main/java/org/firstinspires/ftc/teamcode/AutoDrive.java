@@ -30,6 +30,10 @@ public class AutoDrive {
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
         this.gyro = gyro;
         this.telemetry = telemetry;
+        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void driveTranslateRotate(double x, double y, double z, double distance) {

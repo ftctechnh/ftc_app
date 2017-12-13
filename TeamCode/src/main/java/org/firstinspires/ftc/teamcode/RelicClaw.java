@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class RelicClaw {
     private Servo claw;
     private double clawClosePos = 0.25;
@@ -10,12 +12,15 @@ public class RelicClaw {
     private Servo arm;
     private double armInitPos = 1;
     private DcMotor motor;
+    private Telemetry telemetry;
 
 
-    public RelicClaw(Servo claw, Servo arm, DcMotor motor) {
+    public RelicClaw(Servo claw, Servo arm, DcMotor motor, Telemetry telemetry) {
         this.claw = claw;
         this.arm = arm;
         this.motor = motor;
+        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.telemetry = telemetry;
     }
     public void init() {
         setArmPosition(armInitPos);

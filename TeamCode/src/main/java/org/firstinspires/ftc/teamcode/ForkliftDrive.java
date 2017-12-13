@@ -17,7 +17,8 @@ public class ForkliftDrive extends OpMode {
                 hardwareMap.dcMotor.get("m2"), //FrontRight
                 hardwareMap.dcMotor.get("m3"), //RearLeft
                 hardwareMap.dcMotor.get("m4"), //RearRight
-                1.0); //top speed as a decimal
+                1.0, //top speed as a decimal
+                telemetry); //for debugging
         // Right and Left claws are from back to front point of view
         ForkLift = new ForkLift(
                 hardwareMap.servo.get("s1"), //rightClaw

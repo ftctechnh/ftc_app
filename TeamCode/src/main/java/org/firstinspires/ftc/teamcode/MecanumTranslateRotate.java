@@ -17,7 +17,7 @@ public class MecanumTranslateRotate extends OpMode {
             hardwareMap.dcMotor.get("m2"), //FrontRight
             hardwareMap.dcMotor.get("m3"), //RearLeft
             hardwareMap.dcMotor.get("m4"), //RearRight
-            1.0); //Top speed as a decimal
+            1.0, telemetry); //Top speed as a decimal
 
     }
     @Override

@@ -21,7 +21,7 @@ public class RedRecoveryClasses extends LinearOpMode {
         drive.init(); //Calibrates gyro
         jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
         ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.touchSensor.get("b0"), hardwareMap.touchSensor.get("b1"), telemetry);
-        RelicClaw = new RelicClaw(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"));
+        RelicClaw = new RelicClaw(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"), telemetry);
         telemetry.addData("ready to start", null);
         telemetry.update();
         waitForStart();
