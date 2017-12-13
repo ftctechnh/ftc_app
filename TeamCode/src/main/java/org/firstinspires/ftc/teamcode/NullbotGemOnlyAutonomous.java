@@ -137,6 +137,8 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
 
             positions[0][index] = blueBall.averageX();
             positions[1][index] = redBall.averageX();
+
+            index++;
         }
 
         int[] numPoints = new int[2];
@@ -149,8 +151,7 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
                     numPoints[i] += 1;
                     means[i] += positions[i][k];
 
-                    double error = positions[i][k] - means[i];
-                    variances[i] += Math.pow(error, 2);
+                    variances[i] += Math.pow(positions[i][k], 2);
                 }
             }
 
