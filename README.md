@@ -24,7 +24,7 @@ The Javadoc reference documentation for the FTC SDK is now available online.  Vi
 
 Version 3.4 (built on 17.09.06)
 
-Changes with verion 3.4 include:
+Changes with version 3.4 include:
  * Added telemetry.update() statement for BlankLinearOpMode template.
  * Renamed sample Block op modes to be more consistent with Java samples.
  * Added some additional sample Block op modes.
