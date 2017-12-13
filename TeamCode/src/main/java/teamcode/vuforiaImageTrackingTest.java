@@ -86,11 +86,8 @@ public class vuforiaImageTrackingTest extends LinearOpMode {
 
     private long debugSleep = 800; // sleep time in milliseconds for debugging
 
-    //created variable to only assign one value to int columntoPlaceBlock so that the phone does not accidentally see another vumark
-    private Boolean hasSeenPicture = false;
-
     //created variable to have an int that represents which column the block should be placed in during autonomous
-    private int columntoPlaceBlock;
+    private int columntoPlaceBlock = -1;
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -162,25 +159,21 @@ public class vuforiaImageTrackingTest extends LinearOpMode {
 
         while (opModeIsActive())
         {
-
+            columntoPlaceBlock = getColumn(tempRelicTrackable);
+            /*
             RelicRecoveryVuMark vumarkImageTracker = RelicRecoveryVuMark.from(tempRelicTrackable);
 
             if(vumarkImageTracker != RelicRecoveryVuMark.UNKNOWN)
             {
-                hasSeenPicture = true;
-
-                if (!hasSeenPicture)
+                if(vumarkImageTracker == RelicRecoveryVuMark.LEFT)
                 {
-                    if(vumarkImageTracker == RelicRecoveryVuMark.LEFT)
-                    {
-                        columntoPlaceBlock = 1;
-                    }else if(vumarkImageTracker == RelicRecoveryVuMark.CENTER)
-                    {
-                        columntoPlaceBlock = 2;
-                    }else if(vumarkImageTracker == RelicRecoveryVuMark.RIGHT)
-                    {
-                        columntoPlaceBlock = 3;
-                    }
+                    columntoPlaceBlock = 1;
+                }else if(vumarkImageTracker == RelicRecoveryVuMark.CENTER)
+                {
+                    columntoPlaceBlock = 2;
+                }else if(vumarkImageTracker == RelicRecoveryVuMark.RIGHT)
+                {
+                    columntoPlaceBlock = 3;
                 }
 
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) tempRelicTrackable.getListener()).getPose();
@@ -204,7 +197,7 @@ public class vuforiaImageTrackingTest extends LinearOpMode {
 
                 }
             }
-
+    */
             telemetry.addData("column to place block in", columntoPlaceBlock);
             telemetry.update();
         }
@@ -222,6 +215,47 @@ public class vuforiaImageTrackingTest extends LinearOpMode {
         double thetaX = Math.atan2(rotation[2][1], rotation[2][2]);
         double thetaY = Math.atan2(-rotation[2][0], Math.sqrt(rotation[2][1] * rotation[2][1] + rotation[2][2] * rotation[2][2]));
         double thetaZ = Math.atan2(rotation[1][0], rotation[0][0]); return new VectorF((float)thetaX, (float)thetaY, (float)thetaZ);
+    }
+
+    public int getColumn(VuforiaTrackable tempRelicTrackable) {
+        int columntoPlaceBlock = -1;
+        RelicRecoveryVuMark vumarkImageTracker = RelicRecoveryVuMark.from(tempRelicTrackable);
+
+        if(vumarkImageTracker != RelicRecoveryVuMark.UNKNOWN)
+        {
+            if(vumarkImageTracker == RelicRecoveryVuMark.LEFT)
+            {
+                columntoPlaceBlock = 1;
+            }else if(vumarkImageTracker == RelicRecoveryVuMark.CENTER)
+            {
+                columntoPlaceBlock = 2;
+            }else if(vumarkImageTracker == RelicRecoveryVuMark.RIGHT)
+            {
+                columntoPlaceBlock = 3;
+            }
+
+            /*
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
+
+            if (pose != null) {
+                VectorF translation = pose.getTranslation();
+                telemetry.addData(trackable.getName() + "-Translation", translation);
+
+                double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
+                telemetry.addData(trackable.getName() + "-degrees", degreesToTurn);
+
+                //find out which array value is x, y, and z
+                float zero = translation.get(0);
+                float one = translation.get(1);
+                float two = translation.get(2);
+                telemetry.addData(trackable.getName() + "x", zero);
+                telemetry.addData(trackable.getName() + "y", one);
+                telemetry.addData(trackable.getName() + "z", two);
+            }
+            */
+        }
+
+        return columntoPlaceBlock;
     }
 
     private void Debug(String message){
