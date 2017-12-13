@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.opmodes.RedBallAuto;
  * Created by Noah on 11/18/2017.
  */
 
-@Autonomous(name="Blue Ball")
+//@Autonomous(name="Blue Ball")
 public class BlueBallAuto extends RedBallAuto {
     @Override
     public void init() {

@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
@@ -35,10 +38,10 @@ public class RedPilliar extends VuforiaBallLib {
     private static final int PEAK_HEIGHT_MIN = 110;
     private static final int PEAK_FIND_WINDOW = 40;
     private static final int PEAK_FRAME_COUNT = 3;
-    private static final double BALL_WAIT_SEC = 10.0;
+    private static final double BALL_WAIT_SEC = 2.0;//10.0;
     private static final int PILLIAR_COUNT_INC = 350;
     private static final int PILLIAR_COUNT_START_BLUE = 40;
-    private static final int PILLIAR_COUNT_START_RED = 200;
+    private static final int PILLIAR_COUNT_START_RED = 250;
 
     protected boolean red = true;
     private int[] data;
@@ -109,13 +112,17 @@ public class RedPilliar extends VuforiaBallLib {
                             new PeakFindStep(PEAK_FIND_WINDOW, PEAK_FRAME_COUNT)
                     )
             );
-            blockSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), !red, new SensorLib.PID(-0.15f, -0.05f, 0, 15), 35.0f, 105.0f, 5, this));
+            blockSeq.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
+            blockSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), !red, new SensorLib.PID(-0.15f, -0.05f, 0, 15), 35.0f, 105.0f, 3, this));
 
             blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, count, true));
-            blockSeq.add(new AutoLib.GyroTurnStep(this, 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 2.0f, 3, true));
+            blockSeq.add(new AutoLib.GyroTurnStep(this, 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 2.0f, 10, true));
             blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 100, true));
             blockSeq.add(bot.getDropStep());
-            blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 250, true));
+            blockSeq.add(new AutoLib.RunUntilStopStep(
+                    new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 400, true),
+                    new AutoLib.LogTimeStep(this, "huh", 2.0)
+            ));
             blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 150, true));
             //blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f * mul, 100, true));
             //blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f, 1600, true));
@@ -126,6 +133,10 @@ public class RedPilliar extends VuforiaBallLib {
 
             firstLoop = true;
         }
+
+        //logs!
+        if(color != null) telemetry.addData("Ball Color", color.toString());
+        if(getLastVuMark() != null) telemetry.addData("VuMark", getLastVuMark().toString());
 
         if(firstLoop && mSeq.loop()) requestOpModeStop();
     }

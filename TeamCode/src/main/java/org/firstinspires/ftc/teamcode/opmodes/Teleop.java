@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
@@ -23,9 +24,13 @@ public class Teleop extends OpMode {
 
     private boolean lastBumper2 = false;
     private boolean dropperDown = false;
+    private boolean motorsSet = false;
 
     public void init() {
         bot.init();
+        DcMotor[] ray = bot.getMotorRay();
+        for(DcMotor motor : ray)
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void start() {
@@ -58,12 +63,22 @@ public class Teleop extends OpMode {
         //else bot.raiseBack();
 
         if(robotSlow) {
+            if(!motorsSet) {
+                DcMotor[] ray = bot.getMotorRay();
+                for(DcMotor motor : ray) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motorsSet = true;
+            }
             bot.setLeftDrive(gamepad1.left_stick_y * slowFactor);
             bot.setRightDrive(gamepad1.right_stick_y * slowFactor);
         }
         else {
             bot.setLeftDrive(gamepad1.left_stick_y);
             bot.setRightDrive(gamepad1.right_stick_y);
+            if(motorsSet) {
+                DcMotor[] ray = bot.getMotorRay();
+                for(DcMotor motor : ray) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                motorsSet = false;
+            }
         }
 
 

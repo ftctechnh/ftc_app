@@ -500,9 +500,11 @@ public class AutoLib {
         private final SensorLib.PID errorPid;
         private double lastTime = 0;
         private int rightCount = 0;
+        private boolean increment;
+        private float startHeading;
 
         public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
-                            DcMotor[] motors, float powerMin, float powerMax, SensorLib.PID errorPID, float error, int count, boolean stop, boolean reversed)
+                            DcMotor[] motors, float powerMin, float powerMax, SensorLib.PID errorPID, float error, int count, boolean stop, boolean reversed, boolean increment)
         {
             mOpMode = mode;
             mHeading = heading;
@@ -515,12 +517,13 @@ public class AutoLib {
             mRightCount = count;
             mReversed = reversed;
             this.errorPid = errorPID;
+            this.increment = increment;
         }
 
         public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
                             DcMotor[] motors, float powerMin, float powerMax, SensorLib.PID errorPID, float error, int count, boolean stop)
         {
-            this(mode, heading, gyro, motors,powerMin, powerMax, errorPID, error, count, stop, false);
+            this(mode, heading, gyro, motors,powerMin, powerMax, errorPID, error, count, stop, false, false);
         }
 
         public boolean loop()
@@ -531,6 +534,7 @@ public class AutoLib {
             try{
                 heading = mGyro.getHeading();     // get latest reading from direction sensor
                 // convention is positive angles CCW, wrapping from 359-0
+                if(firstLoopCall()) startHeading = heading;
             }
             //and if not run search code
             catch (NullPointerException e){
@@ -546,7 +550,9 @@ public class AutoLib {
                 return false;       // not done
             }
 
-            float error = SensorLib.Utils.wrapAngle(heading-mHeading);   // deviation from desired heading
+            float error;
+            if(!increment) error = SensorLib.Utils.wrapAngle(heading-mHeading);   // deviation from desired heading
+            else error = SensorLib.Utils.wrapAngle((heading - startHeading) - mHeading);
             // deviations to left are positive, to right are negative
 
             //check if turning has finshed

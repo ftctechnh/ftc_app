@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 /**
  * Created by Noah on 11/9/2017.
  */
-@Autonomous(name="Red Ball")
+//@Autonomous(name="Red Ball")
 public class RedBallAuto extends VuforiaBallLib {
     BotHardware bot = new BotHardware(this);
     AutoLib.Sequence mLeftRedSeq = new AutoLib.LinearSequence();
