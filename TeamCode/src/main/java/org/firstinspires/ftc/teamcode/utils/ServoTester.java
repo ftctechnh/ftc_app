@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.utils;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 /**
  * Created by ftc6347 on 9/10/17.
  */
+@Disabled
 @Autonomous(name = "Servo Tester", group = "utils")
 public class ServoTester extends LinearOpMode {
 

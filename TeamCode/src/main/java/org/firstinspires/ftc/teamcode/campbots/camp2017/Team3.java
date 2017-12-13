@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.campbots.camp2017;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
-
+@Disabled
 @TeleOp(name = "TEAM-3", group = "campbots")
 public class Team3 extends OpMode {
 
