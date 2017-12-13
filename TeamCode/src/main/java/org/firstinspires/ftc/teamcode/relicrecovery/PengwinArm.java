@@ -49,9 +49,9 @@ public class PengwinArm {
            else{
                retractify.setPower(acrossPower * resetify*.8);
            }
-            acrossMotor.setPower(acrossPower);
+            acrossMotor.setPower(acrossPower*resetify);
       // }else if(power > 0 && resetify == -1){
-           acrossMotor.setPower(-acrossPower);
+         //  acrossMotor.setPower(-acrossPower);
       // }
 
     }

@@ -25,13 +25,19 @@ public class NorthRed extends LinearOpMode {
         pengwinFin = new PengwinFin(hardwareMap);
         //
         jeffThePengwin.startify();
-        pengwinFin.moveFinUp();
+        pengwinFin.fin.setPosition(1.0);
         //
         waitForStartify();
         //
         pengwinArm.open();//close
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive()){
+            //Do Nothing
+        }
+        //
+        pengwinFin.moveFinUp();
+        runtime.reset();
+        while(runtime.seconds()<.5 && opModeIsActive()){
             //Do Nothing
         }
         //
@@ -78,7 +84,7 @@ public class NorthRed extends LinearOpMode {
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
-        jeffThePengwin.forwardToPosition(26,0.4);
+        jeffThePengwin.forwardToPosition(28,0.4);
         runtime.reset();
         while(runtime.seconds()<5 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
@@ -112,6 +118,12 @@ public class NorthRed extends LinearOpMode {
         jeffThePengwin.forwardToPosition(1,.4);
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive()&& jeffThePengwin.isMoving()){
+            //Do Nothing
+        }
+        //
+        jeffThePengwin.backToPosition(5, .4);
+        runtime.reset();
+        while(runtime.seconds()<1 && opModeIsActive()){
             //Do Nothing
         }
     }

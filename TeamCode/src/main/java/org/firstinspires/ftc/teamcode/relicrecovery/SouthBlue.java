@@ -26,12 +26,19 @@ public class SouthBlue extends LinearOpMode {
         //
         jeffThePengwin.startify();
         //
+        pengwinFin.fin.setPosition(1.0);
+        //
         waitForStartify();
         //
-        pengwinFin.moveFinUp();
         pengwinArm.open();//close
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive()){
+            //Do Nothing
+        }
+        //
+        pengwinFin.moveFinUp();
+        runtime.reset();
+        while(runtime.seconds()<.5 && opModeIsActive()){
             //Do Nothing
         }
         //
@@ -78,7 +85,7 @@ public class SouthBlue extends LinearOpMode {
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
-        jeffThePengwin.backToPosition(27.5,0.4);
+        jeffThePengwin.backToPosition(26,0.4);
         runtime.reset();
         while(runtime.seconds()<5 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
@@ -116,7 +123,7 @@ public class SouthBlue extends LinearOpMode {
             //Do Nothing
         }
         //
-        jeffThePengwin.backToPosition(1,.4);
+        jeffThePengwin.backToPosition(5,.4);
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive() && jeffThePengwin.isMoving()){
             //Do Nothing
