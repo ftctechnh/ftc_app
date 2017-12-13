@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -33,16 +34,16 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
     ColorSensor             colorSensor;
     Servo                   gemServo;
     BNO055IMU               imu;
+    CRServo                 clawServo;
+
   /* Set up and init all variables */
     Orientation             lastAngles = new Orientation();
     double globalAngle, power = .30, correction;
     double xPosUp = 0;
     double xPosDown = .55;
-
-    String vuforialeft = "VuforiaLeft";
-    String vuforiaright = "VuforiaRight";
-    String vuforiacenter = "VuforiaCenter";
-
+    static double clawClose = .3;
+    static double clawOpen = -.3;
+    static double clawStill = 0;
     OpenGLMatrix lastLocation = null;
 
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
@@ -74,7 +75,6 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-
     /* Find all hardware in configuration */
         frontLeftMotor = hardwareMap.dcMotor.get("FL");
         backLeftMotor = hardwareMap.dcMotor.get("BL");
@@ -83,6 +83,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         verticalArmMotor = hardwareMap.dcMotor.get("VAM");
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
+        clawServo =  hardwareMap.crservo.get("CS");
 
     /* Reverse the direction of the front right and back right motors */
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -94,7 +95,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-    /* Set parameters for the gyro */
+    /* Set parameters for the gyro (imu)*/
         BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
 
         imuparameters.mode                = BNO055IMU.SensorMode.IMU;
@@ -118,7 +119,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         imu.initialize(imuparameters);
 
     /* Tell driver the gyro is calibrating */
-        telemetry.addData("I am...", "calibrating...");
+        telemetry.addLine("I'm calibrating...");
         telemetry.update();
 
     /* Make sure the imu gyro is calibrated before continuing */
@@ -141,6 +142,9 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         telemetry.addLine("Ayyy, I'm running");
         telemetry.update();
 
+        /* Power the claw to have a grip on the block */
+        clawServo.setPower(clawClose);
+
         /* Move the claw up so it doesn't dig into the ground coming off the balance board */
         moveclawbytime(1,.5,"Up");
 
@@ -150,8 +154,6 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
         /* Knock of the Red jewel */
         knockjewelRed();
-
-        /* Look at and record the vuMark */
 
         /* Rotate so the phone can see the Vuforia Key */
         rotate(10,.3);
@@ -163,12 +165,12 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
         /* If "vuMark" is something other than UNKNOWN */
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
             /* Send telemetry saying what vuforia sees */
             telemetry.addData("Ayy I see", vuMark);
         }
         telemetry.update();
 
+        /* Return to starting position */
         rotate(-10, .3);
 
         /* Wait a moment and let vuforia do its work and for the robot to realign properly */
@@ -198,10 +200,8 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
                 break;
         }
 
-        /////////////////////////////////////////////////////////////////////////////
-
-        /* This is really a 90 degree rotation, it is set to 87 to account for the slight slippage after powering
-        off the wheels */
+        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
+        account for the slight slippage after powering off the wheels */
         rotate(87, .35);
 
         /* Move forward slightly so the block is in the space */
@@ -211,11 +211,32 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
         /* Move the claw down slightly */
         moveclawbytime(.5,.3,"Down");
+
+        /* Open up the claw to release the block */
+        clawAbre(1.5);
     }
 
 /***********************************************************************************************
  * These are all of the methods used in the Autonomous*
  ***********************************************************************************************/
+
+
+/* This method moves the claw up or down for a certain amount of time either up or down */
+    public void clawAbre(double time) {
+        /* reset the "timer" to 0 */
+        runtime.reset();
+
+        /* Open the claw */
+        clawServo.setPower(clawOpen);
+
+        /* If the timer hasn't reached the time that is indicated do nothing and keep opening */
+        while (opModeIsActive() && runtime.seconds() < time) {
+        }
+
+        /* Once the while loop above finishes turn off claw servo */
+        clawServo.setPower(clawStill);
+    }
+
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
     public void moveclawbytime(double time, double power, String direction) {
