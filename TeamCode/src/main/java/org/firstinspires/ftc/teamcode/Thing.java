@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
 
 @Autonomous(name="FJSKLADFSDKLJFKLSDGHZSDJKLG bgk;hasd;j", group="Linear Auto")
 
@@ -28,6 +29,9 @@ public class Thing extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        findBox(2, 1);
+        VuforiaPlagiarism vu = new VuforiaPlagiarism();
+        if (vu.getVuf(hardwareMap) == VuforiaPlagiarism.type.CENTER) {
+            encode(20, 0.5, MoveType.STRAIGHT);
         }
+    }
 }
