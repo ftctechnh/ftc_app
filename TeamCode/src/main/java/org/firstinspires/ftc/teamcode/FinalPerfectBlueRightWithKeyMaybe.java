@@ -42,7 +42,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
     double xPosUp = 0;
     double xPosDown = .55;
     static double clawClose = .3;
-    static double clawOpen = -.3;
+    static double clawOpen = -.5;
     static double clawStill = 0;
     OpenGLMatrix lastLocation = null;
 
@@ -166,7 +166,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         /* If "vuMark" is something other than UNKNOWN */
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             /* Send telemetry saying what vuforia sees */
-            telemetry.addData("Ayy I see", vuMark);
+            telemetry.addData("Ayyy I see", vuMark);
         }
         telemetry.update();
 
@@ -184,7 +184,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         switch (vuMark){
             case LEFT:
                 /* Drive forward into the left position */
-                movebytime(.7,.5,"Forward");
+                movebytime(1,.5,"Forward");
                 break;
             case RIGHT:
                 /* Drive forward into the right position */
@@ -205,15 +205,15 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         rotate(87, .35);
 
         /* Move forward slightly so the block is in the space */
-        movebytime(.4, .3, "Forward");
+        movebytime(.2, .3, "Forward");
 
         /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Move the claw down slightly */
-        moveclawbytime(.5,.3,"Down");
+        moveclawbytime(1,.5,"Down");
 
         /* Open up the claw to release the block */
-        clawAbre(1.5);
+        clawServo.setPower(clawOpen);
     }
 
 /***********************************************************************************************
@@ -249,7 +249,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
                 verticalArmMotor.setPower(power);
                 break;
             case "Down":
-                verticalArmMotor.setPower(power);
+                verticalArmMotor.setPower(-power);
                 break;
         }
 
