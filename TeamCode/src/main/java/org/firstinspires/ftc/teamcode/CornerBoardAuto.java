@@ -12,8 +12,8 @@ import java.util.Date;
  * Created by FTC_Team_0267 on 12/12/17
  * By: Liam Patterson
  */
-@Autonomous(name = "0267CIPHERAUTO",group = "Pushbot")
-public class CipherBoardAuto extends LinearOpMode {
+@Autonomous(name = "0267CORNERAUTO",group = "Pushbot")
+public class CornerBoardAuto extends LinearOpMode {
     private String startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
     ;
     private ElapsedTime runtime = new ElapsedTime();
