@@ -74,9 +74,6 @@ import static java.lang.Math.sqrt;
 public class redNintyV2 extends LinearOpMode {
 
     // Declare OpMode members.
-    private VuforiaLocalizer vuforia;
-    private VuforiaTrackables relicTrackables;
-    private VuforiaTrackable trackable;
     private KiwiRobot robot;
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -124,8 +121,7 @@ public class redNintyV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        KiwiRobot robot = new KiwiRobot(hardwareMap);
-        this.initVuforia();
+        KiwiRobot robot = new KiwiRobot(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -160,18 +156,25 @@ public class redNintyV2 extends LinearOpMode {
         while (opModeIsActive())
         {
             //opmode stuck in stop() resets robot controller;(could be pressing play too early before it finishes initializing)
-            //do we want to make robot go to center and change angle depending on column instead of changing drive forward distance depending on column
 
             elapsedTime = runtime.time();
 
             robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
             sleep(1000);
-            robot.armServo.setPosition(.7);
 
-            column = this.getColumn(this.trackable);
-            sleep(500);
+            while ((column = robot.getColumn()) == -1) {
+                robot.writeLog("column = " + column);
+                robot.updateLog();
+            }
+            robot.writeLog("column = " + column);
+            robot.updateLog();
+
             robot.jewelServo.setPosition(1);
             sleep(1000);
+
+            robot.armServo.setPosition(.65);
+            sleep(500);
+
             if (!robot.isJewelRed()&& !isDetected) {
                 // the red jewel is on the left of sensor
                 jewelDegrees = -jewelDegrees;
@@ -193,8 +196,10 @@ public class redNintyV2 extends LinearOpMode {
             robot.armServo.setPosition(LIFTEDARMPOSITION);
             sleep(500);
 
-            double distance = 19.25 + (4 - column) * 9.5;
+            double distance = 18.5 + (4 - column) * 7.5;
             robot.driveForward(.5,distance,true);
+            robot.logEnconders();
+            robot.updateLog();
 
             robot.turnOffMotors();
 
@@ -210,11 +215,25 @@ public class redNintyV2 extends LinearOpMode {
             robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
             sleep(500);
 
-            robot.turnDegrees(.5,-15);
+            robot.turnDegrees(.5,-30);
 
-            robot.driveForward(.5,-6,true);
+            robot.driveForward(.5,-3,true);
 
+            robot.armServo.setPosition(.9);
             robot.turnOffMotors();
+
+            robot.turnDegrees(.5,-135);
+
+            robot.rightClampServo.setPosition(0.7);
+            robot.driveForward(0.5, 26, true);
+            for (int i = 0; i < 6; i++) {
+                if (grabGlyph()) {
+                    break;
+                }
+                robot.driveForward(0.5, 2, false);
+            }
+
+
 
             /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
             {
@@ -245,6 +264,15 @@ public class redNintyV2 extends LinearOpMode {
         }
     }
 
+    public boolean grabGlyph() {
+        robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+        boolean grabbed = robot.isGlyphGrabbed();
+        if (!grabbed) {
+            robot.rightClampServo.setPosition(0.7);
+        }
+        return grabbed;
+    }
+
     public void updateTelemetry(){
         //double armServoValue = armServo.getPosition();
         //double leftClampValue = leftClampServo.getPosition();
@@ -253,78 +281,5 @@ public class redNintyV2 extends LinearOpMode {
         telemetry.addData("Status", "Run Time   : " + runtime.toString());
 
         telemetry.update();
-    }
-
-    public double sigmoid(double x) {
-        return 1 / (1 + Math.exp(-x));
-    }
-
-    public void stop(double seconds) {
-        double currentTime = runtime.time();
-        double totalTime = currentTime + seconds;
-
-        while(currentTime < totalTime) {
-            currentTime = runtime.time();
-        }
-    }
-
-    private void initVuforia() {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
-        parameters.vuforiaLicenseKey = "AY5Y5vL/////AAAAGX2e2w6Jc0ethIktT/zzRE1khe+fR9Mt2fiD8nQZ5KNecPTwAiKX5OZSAAZD/AeeaQbXrhx/NUL0ItyuFDzn5tzYDrVFnhryOQMyuK6RZsw0qG60IbzEffXP+ppGpWRvx/Owr+hJJpNcrIo6otnFFZ79vGiQQiDohkAAsHNIXymC8/xgHDk0XXhtU+UYA8yyhzIFOVNgwBRmYmNhomE/wmShZK69EOLfpfRVvjwE8dj2vlhwTChJ1r/4GUyXB7yZ092c19r345QEx511Nhl+Oo3PSolBWO2hn43uRZ5IB4e+cvR/O6KMV25ylM1toRR98TM06NmmGlbR3+19NBA9Ej7T2aOvCf3dSa0ZTpT+haT7";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        parameters.cameraMonitorFeedback = parameters.cameraMonitorFeedback.AXES;
-
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 1);
-
-        this.relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        this.trackable = relicTrackables.get(0);
-        trackable.setName("RelicRecovery");
-
-    }
-
-    private int getColumn(VuforiaTrackable trackable) {
-        int columntoPlaceBlock = 3;
-        RelicRecoveryVuMark vumarkImageTracker = RelicRecoveryVuMark.from(trackable);
-
-        if(vumarkImageTracker != RelicRecoveryVuMark.UNKNOWN)
-        {
-            if(vumarkImageTracker == RelicRecoveryVuMark.LEFT)
-            {
-                columntoPlaceBlock = 1;
-            }else if(vumarkImageTracker == RelicRecoveryVuMark.CENTER)
-            {
-                columntoPlaceBlock = 2;
-            }else if(vumarkImageTracker == RelicRecoveryVuMark.RIGHT)
-            {
-                columntoPlaceBlock = 3;
-            }
-
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) trackable.getListener()).getPose();
-
-            if (pose != null) {
-                VectorF translation = pose.getTranslation();
-
-                telemetry.addData(trackable.getName() + "-Translation", translation);
-
-                double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1), translation.get(2)));
-
-                telemetry.addData(trackable.getName() + "-degrees", degreesToTurn);
-
-                //find out which array value is x, y, and z
-                float zero = translation.get(0);
-                float one = translation.get(1);
-                float two = translation.get(2);
-                telemetry.addData(trackable.getName() + "x", zero);
-                telemetry.addData(trackable.getName() + "y", one);
-                telemetry.addData(trackable.getName() + "z", two);
-
-            }
-        }
-
-        return columntoPlaceBlock;
     }
 }

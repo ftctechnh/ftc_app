@@ -185,91 +185,63 @@ public class blueStrightV2 extends LinearOpMode {
                 runtime.reset();
             }*/
             elapsedTime = runtime.time();
-            if (elapsedTime < JEWELCLOSECLAMP)
-            {
+
                 column = this.getColumn(this.trackable);
                 robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
-            }
-            else if (elapsedTime < JEWELCHOPTIME)
-            {
+                sleep(1000);
+
                 robot.jewelServo.setPosition(1);
-            }
-            else if (elapsedTime < JEWELARMRAISE)
-            {
-                robot.armServo.setPosition(.9);
-            }
-            else if (elapsedTime < SPINTOWIN)
-            {
+                sleep(1000);
+
+                robot.armServo.setPosition(.65);
+                sleep(500);
+
                 if (robot.isJewelRed()&& !isDetected) {
                     // the red jewel is on the left of sensor
                     jewelDegrees = -jewelDegrees;
                     isDetected = !isDetected;
                 }
                 robot.turnDegrees(speed,jewelDegrees);
-            }
-            else if (elapsedTime < JEWELSHEATHARM)
-            {
+
                 robot.turnOffMotors();
                 robot.jewelServo.setPosition(.65);
-            }
-            else if (elapsedTime < JEWELSTOREARM)
-            {
+                sleep(1000);
+
                 robot.jewelServo.setPosition(0);
-            }
-            else if (elapsedTime < JEWELSPINBACK)
-            {
+                sleep(500);
+
                 robot.turnDegrees(speed,-jewelDegrees);
-            }
-            else if (elapsedTime < LIFTARM) {
+
                 robot.turnOffMotors();
                 robot.armServo.setPosition(LIFTEDARMPOSITION);
-            }
-            else if (elapsedTime < TURNTOLINEUPWITHCOLUMNS)
-            {
+                sleep(500);
+
                 robot.turnDegrees(-.5, 150);
-            }
-            else if(elapsedTime < DRIVETOWARDSCOLUMNS)
-            {
+
                 robot.driveForward(.5,19.25,true);
-            }
-            else if (elapsedTime < LATERALLINEUPWITHCOLUMN)
-            {
+
                 double distance = 4 + column * 7.5;
                 //robot.driveLateral(.5,distance,true);
-            }
-            else if(elapsedTime < TURNOFFMOTORS)
-            {
+
                 robot.turnOffMotors();
-            }
-            else if (elapsedTime < PHASETHREEHALFHALF)
-            {
+
                 robot.armServo.setPosition(.75);
-            }
-            else if (elapsedTime < PHASEFOUR)
-            {
+                sleep(500);
+
                 robot.driveForward(.5,8,true);
-            }
-            else if (elapsedTime < PHASEFIVE)
-            {
+
                 robot.turnOffMotors();
                 robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
-            }
-            else if (elapsedTime < PHASEFIVEHALF)
-            {
+                sleep(1000);
+
                 robot.turnOffMotors();
-            }
-            else if (elapsedTime < PHASESIX)
-            {
+
                 robot.turnDegrees(.5,-15);
-            }
-            else if (elapsedTime < PHASESEVEN)
-            {
+
                 robot.driveForward(.5,-4,true);
-            }
-            else if (elapsedTime < PHASESEVENHALF)
-            {
+
                 robot.turnOffMotors();
-            }
+
             /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
             {
                 turn(1);
@@ -291,10 +263,8 @@ public class blueStrightV2 extends LinearOpMode {
             {
                 turn(1);
             }*/
-            else {
-                robot.turnOffMotors();
-            }
-            //updateTelemetry();
+
+            updateTelemetry();
         }
     }
 
