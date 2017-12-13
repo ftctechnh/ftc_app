@@ -32,10 +32,10 @@ public class RlcRcvryCornerBlue extends OpMode{
     JewelSystem sensArm = new JewelSystem();
     String jewelColor = "Unknown";
 
-    static final double SENS_ARM_TOP = 1;
-    static final double SENS_ARM_BOTTOM = .444;
+    static final double SENS_ARM_TOP = .444;
+    static final double SENS_ARM_BOTTOM = 1;
 
-    VuforiaLocalizer vuforia;
+    //VuforiaLocalizer vuforia;
     /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
     VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
@@ -64,15 +64,15 @@ public class RlcRcvryCornerBlue extends OpMode{
 
 
         //code for gripping glyph and moving arm slightly up
-        gilgearmesh.clawPos(0);
+        gilgearmesh.clawPos(1);
         //wait needed? Also... guessed parameters
-        gilgearmesh.armPos(2, 1);
+        gilgearmesh.armPos(2, .5);
         stateMachineFlow = 0;
         //relicTrackables.activate();
 
         sensArm.colorLED(false);
 
-        telemetry.addData("Key",glyph);
+        //telemetry.addData("Key",glyph);
         telemetry.addData("Color",jewelColor);
         telemetry.addData("Case",stateMachineFlow);
         telemetry.update();
@@ -91,18 +91,21 @@ public class RlcRcvryCornerBlue extends OpMode{
                 stateMachineFlow++;
                 break;
             case 1:
+                VuforiaLocalizer vuforia;
                 int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
                 VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-                VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-                VuforiaTrackable relicTemplate = relicTrackables.get(0);
-
                 parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
-                parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-                this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+                parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+                vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+                VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
+                VuforiaTrackable relicTemplate = relicTrackables.get(0);
+                relicTemplate.setName("relicVuMarkTemplate");
+                relicTrackables.activate();
 
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
                 while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                    //vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     //viewforia stuff goes here
                     if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;
                         telemetry.addData("Key",glyph);
@@ -143,10 +146,10 @@ public class RlcRcvryCornerBlue extends OpMode{
                 break;
             case 3:
                 //knock off correct jewel
-                if (jewelColor == "blue"){robot.statTurn(.5,8);
-                    robot.statTurn(.5,-8);}
-                else if (jewelColor == "red"){robot.statTurn(.5,-8);
-                    robot.statTurn(.5,8);}
+                if (jewelColor == "blue"){robot.statTurn(.25,8);
+                    robot.statTurn(.25,-8);}
+                else if (jewelColor == "red"){robot.statTurn(.25,-8);
+                    robot.statTurn(.25,8);}
                 //move arm up
                 sensArm.armPos(SENS_ARM_TOP);
                 stateMachineFlow++;
@@ -154,28 +157,28 @@ public class RlcRcvryCornerBlue extends OpMode{
             case 4:
                 //move off balancing stone and move towards box
                 if (glyph == RelicRecoveryVuMark.LEFT) {
-                    robot.statTurn(.7,180);//face direction of box
-                    robot.linearDrive(1,20); //in position to place glyph
-                    robot.statTurn(.7,-90);//face box
+                    robot.statTurn(.25,180);//face direction of box
+                    robot.linearDrive(.5,20); //in position to place glyph
+                    robot.statTurn(.25,-90);//face box
                 }
                 else if (glyph == RelicRecoveryVuMark.CENTER) {
-                    robot.statTurn(.7,180); //turn to face box
-                    robot.linearDrive(1,27.4); //drive to middle of box
-                    robot.statTurn(.7,-90); //turn to face box
+                    robot.statTurn(.25,180); //turn to face box
+                    robot.linearDrive(.5,27.4); //drive to middle of box
+                    robot.statTurn(.25,-90); //turn to face box
                 }
                 else if (glyph == RelicRecoveryVuMark.RIGHT) {
-                    robot.statTurn(.7,180);//face box
-                    robot.linearDrive(1,35);//move to box
-                    robot.statTurn(.7,-90);//face box
+                    robot.statTurn(.25,180);//face box
+                    robot.linearDrive(.5,-35);//move to box
+                    robot.statTurn(.25,-90);//face box
                 }
             stateMachineFlow++;
                 break;
             case 5:
                 //not sure if the move needs to before or after we let go of glyph
                 gilgearmesh.clawPos(1);
-                robot.linearDrive(1,-3.5);
+                robot.linearDrive(.25,-3.5);
                 gilgearmesh.clawPos(0);
-                robot.linearDrive(1,6);
+                robot.linearDrive(.25,6);
 
                 stateMachineFlow++;
                 break;
