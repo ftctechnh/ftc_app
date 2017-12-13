@@ -92,7 +92,7 @@ public class encoderDistanceTesting extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        KiwiRobot robot = new KiwiRobot(hardwareMap);
+        KiwiRobot robot = new KiwiRobot(hardwareMap, telemetry);
         this.initVuforia();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
