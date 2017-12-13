@@ -20,11 +20,12 @@ public class DriveMecanum {
     }
     public void driveTranslateRotate(double x, double y, double z) {
         //Trust me, if you edit this next line you don't know what you're doing. Sorry but it's true. If you feel the need to edit this, please talk to me (Kaden) so I explain to you why it needs to not be edited. Thanks.
+        //x = forward, y = side, z = spin
         driveSpeeds(
                 -y + x - z,
-                y + x + z,
+                -y + x + z,
                 y + x - z,
-                -y + x + z);
+                y + x + z);
     }
     public void driveLeftRight(double xLeft, double xRight, double yLeft, double yRight) {
         //Trust me, if you edit this next line you don't know what you're doing. Sorry but it's true. If you feel the need to edit this, please talk to me (Kaden) so I explain to you why it needs to not be edited. Thanks.

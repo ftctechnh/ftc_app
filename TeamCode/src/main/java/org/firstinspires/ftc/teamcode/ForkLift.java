@@ -17,7 +17,7 @@ public class ForkLift {
     private TouchSensor topButton;
     private TouchSensor bottomButton;
     private double clawPosition = 0.25; //0.25 on the other robot
-    private double clawHighEnd = 0.7; //0.7
+    private double clawHighEnd = 0.85; //0.85
     private double clawLowEnd = 0.3; //0.3
     private Telemetry telemetry;
     private HardwareDevice.Manufacturer manufacturer;
