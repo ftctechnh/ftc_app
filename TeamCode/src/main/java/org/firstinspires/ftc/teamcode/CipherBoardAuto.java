@@ -14,7 +14,8 @@ import java.util.Date;
  */
 @Autonomous(name = "0267CIPHERAUTO",group = "Pushbot")
 public class CipherBoardAuto extends LinearOpMode {
-    private String startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());;
+    private String startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+    ;
     private ElapsedTime runtime = new ElapsedTime();
     Hardware267Bot robot = new Hardware267Bot();
 
@@ -24,37 +25,37 @@ public class CipherBoardAuto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-       
+
+
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  Drive forward for 3 seconds
-        robot.leftMotor.setPower(0.8);
-        robot.rightMotor.setPower(0.8);
+        robot.leftMotor.setPower(0.5);
+        robot.rightMotor.setPower(0.5);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.3)) {
             telemetry.addData("Path", "Moving forward off of balancing stone.");
             telemetry.update();
         }
 
         // Step 2:  Spin right for 1.3 seconds
-        robot.leftMotor.setPower(0.5);
+        robot.leftMotor.setPower(-0.5);
+        robot.rightMotor.setPower(0.5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.55)) {
+            telemetry.addData("Path", "Turning Left");
+            telemetry.update();
+        }
+        // Step 3: Backpedal
+        robot.leftMotor.setPower(-0.5);
         robot.rightMotor.setPower(-0.5);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.3)) {
             telemetry.addData("Path", "Turning Left");
             telemetry.update();
         }
 
-        // Step 3:  Drive Backwards for 1 Second
-        robot.leftMotor.setPower(0.8);
-        robot.rightMotor.setPower(0.8);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
-            telemetry.addData("Path", "Going forward");
-            telemetry.update();
-        }
-
-        // Step 4:  Stop.
+                // Step 4:  Stop.
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
         //robot.leftClaw.setPosition(1.0);
