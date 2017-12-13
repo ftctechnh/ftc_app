@@ -32,18 +32,18 @@ public class TeleOPDriveUmayer extends OpMode {
 
     @Override
     public void loop() {
-            this.armSystem.setClaw(gamepad2.right_trigger);
-            if (gamepad2.dpad_up) {
-                this.armSystem.goUp();
-            } else {
-                armSystem.stopArm();
-            }
-            if (gamepad2.dpad_down) {
-                this.armSystem.goDown();
-            } else {
-                this.armSystem.stopArm();
-            }
         this.driveSystem.rcCarDrive();
+        this.armSystem.setClaw(gamepad2.right_trigger);
+        if (gamepad2.dpad_up) {
+            this.armSystem.goUp();
+        } else {
+            armSystem.stopArm();
+        }
+        if (gamepad2.dpad_down) {
+            this.armSystem.goDown();
+        } else {
+            this.armSystem.stopArm();
+        }
         telemetry.addData("left wheel", this.driveSystem.getLeftSpeed());
         telemetry.addData("right wheel", this.driveSystem.getRightSpeed());
         telemetry.addData("jewel arm position", this.armSystem.getJewelArmPosition());

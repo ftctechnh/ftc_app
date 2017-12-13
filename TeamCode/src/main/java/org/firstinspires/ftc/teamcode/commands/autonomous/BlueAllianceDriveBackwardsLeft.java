@@ -35,7 +35,7 @@ public class BlueAllianceDriveBackwardsLeft extends LinearOpMode {
             knockDownRedJewel();
             driveSystem.stop();
             sleep(1000);
-            this.armSystem.setIntitialPosition();
+            this.armSystem.setInitialPosition();
             sleep(2000);
             this.driveSystem.drive(1.0, 0.8); // turn left backwards
             sleep(2000);

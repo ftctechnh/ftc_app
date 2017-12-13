@@ -31,6 +31,7 @@ public class TeleOPDriveUrid extends OpMode {
 
     @Override
     public void loop() {
+        this.driveSystem.tankDrive();
         this.armSystem.setClaw(gamepad2.right_trigger);
         if (gamepad2.dpad_up) {
             this.armSystem.goUp();
@@ -42,7 +43,6 @@ public class TeleOPDriveUrid extends OpMode {
         } else {
             this.armSystem.stopArm();
         }
-        this.driveSystem.tankDrive();
         telemetry.addData("left wheel", this.driveSystem.getLeftSpeed());
         telemetry.addData("right wheel", this.driveSystem.getRightSpeed());
         telemetry.addData("jewel arm position", this.armSystem.getJewelArmPosition());

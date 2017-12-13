@@ -53,7 +53,7 @@ public class ArmSystem {
         this.leftClaw.setPosition(position);
     }
 
-    public void setIntitialPosition() {
+    public void setInitialPosition() {
         this.jewelArmServo.setPosition(initialPosition);
     }
 

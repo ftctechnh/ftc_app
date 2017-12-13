@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.systems.DriveSystem;
 /**
  * Created by Mahim on 12/9/2017.
  */
-@Autonomous
+@Autonomous(name = "Red Alliance: Turn right", group = "Red Alliance")
 public class RedAllianceTurnRight extends LinearOpMode {
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
@@ -35,7 +35,7 @@ public class RedAllianceTurnRight extends LinearOpMode {
             knockDownBlueJewel();
             driveSystem.stop();
             sleep(1000);
-            this.armSystem.setIntitialPosition();
+            this.armSystem.setInitialPosition();
             sleep(2000);
             this.driveSystem.drive(-0.8, -1.0); // turn right
             sleep(1000);

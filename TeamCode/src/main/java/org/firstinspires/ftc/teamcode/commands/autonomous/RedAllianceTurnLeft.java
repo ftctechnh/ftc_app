@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.commands.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.systems.ArmSystem;
@@ -36,7 +35,7 @@ public class RedAllianceTurnLeft extends LinearOpMode {
             knockDownBlueJewel();
             driveSystem.stop();
             sleep(1000);
-            this.armSystem.setIntitialPosition();
+            this.armSystem.setInitialPosition();
             sleep(2000);
             this.driveSystem.drive(-1.0, -0.9); // turn left
             sleep(2500);

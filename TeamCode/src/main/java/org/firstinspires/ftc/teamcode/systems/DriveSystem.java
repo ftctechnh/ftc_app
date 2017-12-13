@@ -53,18 +53,11 @@ public class DriveSystem {
         drive(gamepad.left_stick_y, gamepad.right_stick_y);
     }
 
-    public double getRightSpeed(){
+    public double getRightSpeed() {
         return this.rightMotor.getPower();
     }
 
     public double getLeftSpeed() {
         return this.leftMotor.getPower();
-    }
-
-    public void driveByTime (double startTime, double period, double speed) {
-        double endTime = startTime + period;
-        while (startTime < endTime) {
-            drive(speed, speed);
-        }
     }
 }

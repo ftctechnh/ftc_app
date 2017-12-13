@@ -35,7 +35,7 @@ public class BlueAllianceTurnRight extends LinearOpMode {
             knockDownRedJewel();
             driveSystem.stop();
             sleep(1000);
-            this.armSystem.setIntitialPosition();
+            this.armSystem.setInitialPosition();
             sleep(2000);
             this.driveSystem.drive(-0.9, -1.0); // turn right
             sleep(1000);
