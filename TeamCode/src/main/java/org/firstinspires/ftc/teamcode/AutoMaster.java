@@ -176,14 +176,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
         }
     }
-    public void findBox(int line, int dir) {
+
+    /*
+    *ONE:
+     * 1)Right: 38.98
+     * 2)Center: 45.67
+     * 3)Left: Out of range
+     *
+     * TWO:
+     * 1)Right: 16.14
+     * 2)Center: 22.05
+     * 3)Left: 29.53
+     */
+    public void findBox(double box, int dir) {
         int curLine = 0;
-        encodeInd((0.1 * (dir / Math.abs(dir))), MoveType.STRAIGHT);
-        while (curLine < line) {
-            if (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {
-                curLine++;
-            }
-        }
+        encodeInd((0.1 * (dir / Math.abs(dir))), MoveType.LATERALLY);
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < box) {}
         robot.setAllDriveMotors(0);
     }
 }

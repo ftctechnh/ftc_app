@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 
 @Autonomous(name="Auto Red Two", group="Linear Auto")
 
@@ -10,20 +12,41 @@ public class RedTwoAuto extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(5, -0.5, MoveType.STRAIGHT);
+        VuforiaPlagiarism vu = new VuforiaPlagiarism();
+        double box;
+        VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
+        robot.init(hardwareMap);
+        waitForStart();
+        telemetry.addData("skatin fast,", "eatin' ass");
+        encodeInd(0.25, MoveType.LATERALLY);
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 10) {}
+        robot.setAllDriveMotors(0);
+        wait(500);
         robot.arm.setPosition(1);
-        wait(1000);
+        wait(750);
         if (robot.color.red() > 1) {
-            encode(5, -0.25, MoveType.LATERALLY);
+            encode(5, -0.25, MoveType.STRAIGHT);
         } else {
-            encode(5, 0.25, MoveType.LATERALLY);
+            encode(5, 0.25, MoveType.STRAIGHT);
         }
         robot.arm.setPosition(0);
+
+        typee = vu.getVuf(hardwareMap);
+        if (typee == VuforiaPlagiarism.type.RIGHT) {
+            box = 16.14;
+        } else if (typee == VuforiaPlagiarism.type.CENTER) {
+            box = 22.05;
+        } else if (typee == VuforiaPlagiarism.type.LEFT) {
+            box = 29.53;
+        } else {
+            box = 22.05;
+        }
+        encodeInd(-0.25, MoveType.LATERALLY);
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
+        robot.setAllDriveMotors(0);
+        findBox(box, 1);
+        encode(19, 0.5, MoveType.ROT);
         encode(15, 0.5, MoveType.STRAIGHT);
-        encode(19, 0.5, MoveType.ROT);
-        encode(30, 0.5, MoveType.STRAIGHT);
-        encode(19, 0.5, MoveType.ROT);
-        encode(35, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
