@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -110,10 +110,15 @@ var activeTableTab = "activeTableTab";
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="../../../com/qualcomm/robotcore/eventloop/opmode/EventLoopManagerClient.html" title="interface in com.qualcomm.robotcore.eventloop.opmode">EventLoopManagerClient</a></dd>
+</dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">FtcRobotControllerService</span>
-extends Service</pre>
+extends Service
+implements <a href="../../../com/qualcomm/robotcore/eventloop/opmode/EventLoopManagerClient.html" title="interface in com.qualcomm.robotcore.eventloop.opmode">EventLoopManagerClient</a></pre>
 </li>
 </ul>
 </div>
@@ -204,54 +209,58 @@ extends Service</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#getRobotStatus--">getRobotStatus</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>WebServer</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#getWebServer--">getWebServer</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>IBinder</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#onBind-Intent-">onBind</a></span>(Intent&nbsp;intent)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#onCreate--">onCreate</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#onDestroy--">onDestroy</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>CallbackResult</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#onNetworkConnectionEvent-NetworkConnection.Event-">onNetworkConnectionEvent</a></span>(NetworkConnection.Event&nbsp;event)</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#onReceive-Context-Intent-">onReceive</a></span>(Context&nbsp;context,
          Intent&nbsp;intent)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#onStartCommand-Intent-int-int-">onStartCommand</a></span>(Intent&nbsp;intent,
               int&nbsp;flags,
               int&nbsp;startId)</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#onUnbind-Intent-">onUnbind</a></span>(Intent&nbsp;intent)</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#setCallback-com.qualcomm.ftccommon.UpdateUI.Callback-">setCallback</a></span>(<a href="../../../com/qualcomm/ftccommon/UpdateUI.Callback.html" title="class in com.qualcomm.ftccommon">UpdateUI.Callback</a>&nbsp;callback)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#setupRobot-com.qualcomm.robotcore.eventloop.EventLoop-com.qualcomm.robotcore.eventloop.EventLoop-">setupRobot</a></span>(<a href="../../../com/qualcomm/robotcore/eventloop/EventLoop.html" title="interface in com.qualcomm.robotcore.eventloop">EventLoop</a>&nbsp;eventLoop,
           <a href="../../../com/qualcomm/robotcore/eventloop/EventLoop.html" title="interface in com.qualcomm.robotcore.eventloop">EventLoop</a>&nbsp;idleEventLoop)</code>&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#shutdownRobot--">shutdownRobot</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#startLEDS--">startLEDS</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/qualcomm/ftccommon/FtcRobotControllerService.html#stopLEDS--">stopLEDS</a></span>()</code>&nbsp;</td>
 </tr>
@@ -359,6 +368,19 @@ extends Service</pre>
 <li class="blockList">
 <h4>getRobot</h4>
 <pre>public&nbsp;Robot&nbsp;getRobot()</pre>
+</li>
+</ul>
+<a name="getWebServer--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getWebServer</h4>
+<pre>public&nbsp;WebServer&nbsp;getWebServer()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../com/qualcomm/robotcore/eventloop/opmode/EventLoopManagerClient.html#getWebServer--">getWebServer</a></code>&nbsp;in interface&nbsp;<code><a href="../../../com/qualcomm/robotcore/eventloop/opmode/EventLoopManagerClient.html" title="interface in com.qualcomm.robotcore.eventloop.opmode">EventLoopManagerClient</a></code></dd>
+</dl>
 </li>
 </ul>
 <a name="onCreate--">
