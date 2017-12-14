@@ -92,9 +92,9 @@ public class ServoJewelAuto extends LinearOpMode {
 
         //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
         if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
-            armRotator.setPosition(1);
-        } else {
             armRotator.setPosition(0);
+        } else {
+            armRotator.setPosition(1);
         }
 
         sleep(5000);
@@ -102,12 +102,23 @@ public class ServoJewelAuto extends LinearOpMode {
         armExtender.setPosition(1);
         armRotator.setPosition(0.5);
 
-        sleep(10000);
+        sleep(5000);
+
+        imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
+
+        sleep(1000);
 
         //STEP 3: Get to center tape thing
-        while (//imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y < 36 ||
-                colorSensorWrapper.getRGBValues()[2] < 0.5) {
+        while (imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y < 36
+               //tapeColorSensorWrapper.getRGBValues()[2] < 0.5
+                ) {
             drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.5, 0);
+            telemetry.addData("IMU:", "Pos: %.3f \n\tX: %.2f \n\tY: %.2f \nt\tZ: %.3f",
+                    imuWrapper.getPosition().toUnit(DistanceUnit.INCH).toString(),
+                    imuWrapper.getPosition().toUnit(DistanceUnit.INCH).x,
+                    imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y,
+                    imuWrapper.getPosition().toUnit(DistanceUnit.INCH).z);
+            telemetry.update();
         }
 
         //STEP 4: Rotate
