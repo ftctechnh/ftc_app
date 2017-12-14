@@ -164,12 +164,17 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
             } else if (pictograph == 1) {
                 driveTicks -= 150;
             }
+
+            driveTicks -= 150;
         }
 
         if (robot.color == Alliance.RED && robot.startingPad == StartingPosition.BACK) {
             driveTicks += 100;
             if (pictograph == 0) { // Right
                 driveTicks -= 500; // We turn the other way
+            }
+            if (pictograph == 1) {
+                driveTicks -= 200;
             }
         }
 
@@ -194,7 +199,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         if (robot.startingPad == StartingPosition.BACK) {
             desiredPosition += (Math.PI/2) * robot.color.getColorCode();
             if (robot.color == Alliance.RED && pictograph == 0) {
-                desiredPosition += Math.PI / 3;
+                desiredPosition -= Math.PI / 3;
             }
         }
 
