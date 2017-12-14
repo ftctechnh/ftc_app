@@ -156,9 +156,8 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         knockjewelRed();
 
         /* Rotate so the phone can see the Vuforia Key */
-        rotate(10,.3);
+        rotate(10,.2);
 
-        /* Read the vuMark */
         /* Tells vuforia to look for relic templates, if it finds something, then it returns
         LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -171,7 +170,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         telemetry.update();
 
         /* Return to starting position */
-        rotate(-10, .3);
+        rotate(-10, .2);
 
         /* Wait a moment and let vuforia do its work and for the robot to realign properly */
         sleep(500);
@@ -182,7 +181,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
         /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
         account for the slight slippage after powering off the wheels */
-        rotate(87, .35);
+        rotate(87, .2);
 
         /* Wait a moment to stop moving */
         sleep(700);
@@ -193,11 +192,11 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         switch (vuMark){
             case LEFT:
                 /* Drive forward into the left position */
-                movebytime(1.5,.3,"Left");
+                movebytime(1.2,.3,"Left");
                 break;
             case RIGHT:
                 /* Drive forward into the right position */
-                movebytime(1.5, .3, "Right");
+                movebytime(1.2, .3, "Right");
                 break;
             case CENTER:
                 /* Drive forward into the center position */
@@ -207,25 +206,31 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
                 break;
         }
 
+        /* Wait a moment */
+        sleep(2000);
+
         /* Move forward slightly so the block is in the space */
-        movebytime(.45, .2, "Forward");
+        movebytime(.4, .2, "Forward");
+
+        /* Wait a moment */
+        sleep(2000);
 
         /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//
-//        /* Move the claw down slightly */
-//        moveclawbytime(1,.5,"Down");
 
         /* Open up the claw to release the block */
         clawServo.setPower(clawOpen);
 
-        /* Wait a moment to allow the claw to open */
+        /* Wait a moment */
         sleep(2000);
 
         /* Stop the claw */
         clawServo.setPower(clawStill);
 
+        /* Wait a moment */
+        sleep(2000);
+
         /* Back up a small bit */
-        movebytime(.5, .2, "Backward");
+        movebytime(.3, .2, "Backward");
     }
 
 /***********************************************************************************************
@@ -308,6 +313,10 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         }
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
         while (opModeIsActive() && drivetimer.seconds() < time) {
+
+            telemetry.addData("Driver Timer:", drivetimer.seconds());
+            telemetry.addData("Time Given:", time);
+            telemetry.update();
 
         }
     /* Once the while loop above finishes turn off the wheels */
