@@ -65,6 +65,16 @@ public class Teleop extends OpMode {
         } else if (gamepad1.dpad_right) {
             gromit.glyphTrain.glyphclamp("close");
         }
+
+        // glyph lift
+        if (gamepad1.dpad_up) {
+            gromit.glyphTrain.lift_motor.setPower(.2);
+        } else if (gamepad1.dpad_down) {
+            gromit.glyphTrain.lift_motor.setPower(-.2);
+        } else {
+            gromit.glyphTrain.lift_motor.setPower(0);
+        }
+
         //Set drive train direction
 //        if (gamepad1.a)
 //            gromit.driveTrain.setBack(DriveTrain.Color.GREEN);

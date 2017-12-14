@@ -19,6 +19,7 @@ public class GlyphTrain {
     //Iniatalize motors
     public DcMotor left_glyph = null;
     public DcMotor right_glyph = null;
+    public DcMotor lift_motor = null;
     public Servo    leftlower   = null;
     public Servo    rightlower   = null;
 
@@ -26,6 +27,7 @@ public class GlyphTrain {
     public void init(HardwareMap hardwareMap) {
         left_glyph= hardwareMap.get(DcMotor.class, "left_glyph");
         right_glyph = hardwareMap.get(DcMotor.class, "right_glyph");
+        lift_motor = hardwareMap.get(DcMotor.class, "lift_motor");
 
         rightlower = hardwareMap.get(Servo.class, "right_lower");
         leftlower = hardwareMap.get(Servo.class, "left_lower");
