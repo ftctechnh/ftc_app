@@ -32,8 +32,8 @@ public class RlcRcvryCornerBlue extends OpMode{
     JewelSystem sensArm = new JewelSystem();
     String jewelColor = "Unknown";
 
-    static final double SENS_ARM_TOP = .444;
-    static final double SENS_ARM_BOTTOM = 1;
+    static final double SENS_ARM_TOP = 0;
+    static final double SENS_ARM_BOTTOM = -.666;
 
     //VuforiaLocalizer vuforia;
     /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -66,7 +66,7 @@ public class RlcRcvryCornerBlue extends OpMode{
         //code for gripping glyph and moving arm slightly up
         gilgearmesh.clawPos(1);
         //wait needed? Also... guessed parameters
-        gilgearmesh.armPos(2, .5);
+        gilgearmesh.armPos(40, 1);
         stateMachineFlow = 0;
         //relicTrackables.activate();
 
@@ -90,7 +90,43 @@ public class RlcRcvryCornerBlue extends OpMode{
                 telemetry.update();
                 stateMachineFlow++;
                 break;
-            case 1:
+
+            case 1://look at this
+                sensArm.armPos(SENS_ARM_BOTTOM);
+                sensArm.colorLED(true);
+                double time = getRuntime();
+                while (jewelColor == "Unknown" && getRuntime() > time + 5){
+                if (sensArm.colorSens() == "blue"){
+                    jewelColor = "blue";
+                    telemetry.addData("Key",glyph);
+                    telemetry.addData("Color",jewelColor);
+                    telemetry.addData("Case",stateMachineFlow);
+                    telemetry.update();}
+                else if (sensArm.colorSens() == "red"){
+                    jewelColor = "red";
+                    telemetry.addData("Key",glyph);
+                    telemetry.addData("Color",jewelColor);
+                    telemetry.addData("Case",stateMachineFlow);
+                    telemetry.update();}
+                }
+                sensArm.colorLED(false);
+                stateMachineFlow++;
+                break;
+            case 2:
+                //knock off correct jewel
+                if (jewelColor == "blue"){robot.linearDrive(.25,4);
+                    sensArm.armPos(SENS_ARM_TOP);}
+                else if (jewelColor == "red"){robot.linearDrive(.25,-1);
+                    sensArm.armPos(SENS_ARM_TOP);
+                    robot.linearDrive(.25,5);}
+                else if (jewelColor == "Unknown"){sensArm.armPos(SENS_ARM_TOP);
+                robot.linearDrive(.25,4);}
+                telemetry.addData("Key",glyph);
+                telemetry.addData("Case",stateMachineFlow);
+                telemetry.update();
+                stateMachineFlow++;
+                break;
+            case 3:
                 VuforiaLocalizer vuforia;
                 int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
                 VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -109,66 +145,37 @@ public class RlcRcvryCornerBlue extends OpMode{
                     //viewforia stuff goes here
                     if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;
                         telemetry.addData("Key",glyph);
-                        telemetry.addData("Color",jewelColor);
                         telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
                     else if (vuMark == RelicRecoveryVuMark.LEFT){glyph = RelicRecoveryVuMark.LEFT;
                         telemetry.addData("Key",glyph);
-                        telemetry.addData("Color",jewelColor);
                         telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
                     else if (vuMark == RelicRecoveryVuMark.RIGHT){glyph = RelicRecoveryVuMark.RIGHT;
                         telemetry.addData("Key",glyph);
-                        telemetry.addData("Color",jewelColor);
                         telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
                 }
-                stateMachineFlow++;
-                break;
-            case 2://look at this
-                sensArm.armPos(SENS_ARM_BOTTOM);
-                sensArm.colorLED(true);
-                if (sensArm.colorSens() == "blue"){
-                    jewelColor = "blue";
-                    telemetry.addData("Key",glyph);
-                    telemetry.addData("Color",jewelColor);
-                    telemetry.addData("Case",stateMachineFlow);
-                    telemetry.update();}
-                else if (sensArm.colorSens() == "red"){
-                    jewelColor = "red";
-                    telemetry.addData("Key",glyph);
-                    telemetry.addData("Color",jewelColor);
-                    telemetry.addData("Case",stateMachineFlow);
-                    telemetry.update();}
-
-                sensArm.colorLED(false);
-                stateMachineFlow++;
-                break;
-            case 3:
-                //knock off correct jewel
-                if (jewelColor == "blue"){robot.statTurn(.25,8);
-                    robot.statTurn(.25,-8);}
-                else if (jewelColor == "red"){robot.statTurn(.25,-8);
-                    robot.statTurn(.25,8);}
-                //move arm up
-                sensArm.armPos(SENS_ARM_TOP);
                 stateMachineFlow++;
                 break;
             case 4:
                 //move off balancing stone and move towards box
                 if (glyph == RelicRecoveryVuMark.LEFT) {
+                    gilgearmesh.armPos(35,.6);//move arm up to avoid hitting the mat when we get off the stone
                     robot.statTurn(.25,180);//face direction of box
                     robot.linearDrive(.5,20); //in position to place glyph
                     robot.statTurn(.25,-90);//face box
                 }
                 else if (glyph == RelicRecoveryVuMark.CENTER) {
+                    gilgearmesh.armPos(35,.6);//move arm up to avoid hitting the mat when we get off the stone
                     robot.statTurn(.25,180); //turn to face box
                     robot.linearDrive(.5,27.4); //drive to middle of box
                     robot.statTurn(.25,-90); //turn to face box
                 }
                 else if (glyph == RelicRecoveryVuMark.RIGHT) {
+                    gilgearmesh.armPos(35,.6);//move arm up to avoid hitting the mat when we get off the stone
                     robot.statTurn(.25,180);//face box
-                    robot.linearDrive(.5,-35);//move to box
+                    robot.linearDrive(.5,35);//move to box
                     robot.statTurn(.25,-90);//face box
                 }
             stateMachineFlow++;

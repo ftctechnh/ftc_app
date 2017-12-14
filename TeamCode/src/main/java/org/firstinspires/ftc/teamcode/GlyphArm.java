@@ -79,7 +79,7 @@ public class GlyphArm
 
         // Define and Initialize Motors
         armMotor = hwMap.get(DcMotor.class, "arm_drive");
-        armMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        armMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
         armMotor.setPower(0);
@@ -101,6 +101,8 @@ public class GlyphArm
         armMotor.setTargetPosition(i);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(Math.abs(speed));
+        while (armMotor.isBusy());
+        armMotor.setPower(0);
     }
     public void armPower (double power){
         armMotor.setPower(power);

@@ -18,7 +18,7 @@ public class JewelSystem {
     ColorSensor colorSensor;
 
     public static final double TOP_SERVO = 0;
-    public static final double BOTTOM_SERVO = .444;
+    public static final double BOTTOM_SERVO = -.666;
 
     int red;
     int green;
