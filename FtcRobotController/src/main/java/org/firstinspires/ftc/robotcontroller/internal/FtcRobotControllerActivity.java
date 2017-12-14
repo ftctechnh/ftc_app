@@ -52,6 +52,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -91,6 +92,7 @@ import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 
+import org.directcurrent.opencv.OpenCVRunner;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
@@ -112,9 +114,19 @@ import org.firstinspires.inspection.RcInspectionActivity;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity
-  {
+{
+  // OpenCV Stuff //////////////////////////////////////////////////////////////////////////////////
+  private OpenCVRunner _openCVRunner;
+
+  private TextView _layoutHeader;
+  private TextView _analysisText;
+  private Button _analyzeButton;
+  private Button _showHideButton;
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
   public static final String TAG = "RCActivity";
   public String getTag() { return TAG; }
 
@@ -153,6 +165,7 @@ public class FtcRobotControllerActivity extends Activity
 
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
+
 
   protected class RobotRestarter implements Restarter {
 
@@ -305,6 +318,57 @@ public class FtcRobotControllerActivity extends Activity
     ServiceController.startService(FtcRobotControllerWatchdogService.class);
     bindToService();
     logPackageVersions();
+
+
+    // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
+    _openCVRunner = new OpenCVRunner(this , 0);
+
+    _openCVRunner.start();
+
+    _analyzeButton = (Button)findViewById(R.id.Analyze_OpenCV_Button);
+    _showHideButton = (Button)findViewById(R.id.Show_Hide_Button);
+    _layoutHeader = (TextView)findViewById(R.id.OpenCV_Layout_Header_Text);
+    _analysisText = (TextView)findViewById(R.id.OpenCV_Analysis_Text);
+
+    _analyzeButton.setOnClickListener(v ->
+    {
+        _openCVRunner.toggleAnalyze();
+        if(_openCVRunner.analysisEnabled())
+        {
+            _analysisText.setText(R.string.analysis_enabled);
+        }
+        else
+        {
+            _analysisText.setText(R.string.analysis_disabled);
+        }
+    });
+
+
+    _showHideButton.setOnClickListener(v -> {
+      if(_showHideButton.getText() == getString(R.string.hide))
+      {
+        _openCVRunner.disableCameraView();
+        _showHideButton.setText(R.string.show);
+        _layoutHeader.setText(R.string.OpenCvCameraViewDisabled);
+
+        if(_openCVRunner.analysisEnabled())
+        {
+            _analysisText.setText(R.string.analysis_enabled);
+        }
+        else
+        {
+            _analysisText.setText(R.string.analysis_disabled);
+        }
+      }
+      else
+      {
+        _openCVRunner.enableCameraView();
+        _showHideButton.setText(R.string.hide);
+        _layoutHeader.setText(R.string.opencv_camera_view_enabled);
+        _analysisText.setText(R.string.analysis_disabled);
+      }
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
   protected UpdateUI createUpdateUI() {
@@ -347,6 +411,11 @@ public class FtcRobotControllerActivity extends Activity
   protected void onResume() {
     super.onResume();
     RobotLog.vv(TAG, "onResume()");
+
+
+    // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
+    _openCVRunner.enableView();
+    ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
   @Override
@@ -356,6 +425,10 @@ public class FtcRobotControllerActivity extends Activity
     if (programmingModeController.isActive()) {
       programmingModeController.stopProgrammingMode();
     }
+
+    // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
+    _openCVRunner.disableView();
+    ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
   @Override
@@ -384,6 +457,10 @@ public class FtcRobotControllerActivity extends Activity
 
     preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
     RobotLog.cancelWriteLogcatToDisk();
+
+    // OpenCV Stuff ////////////////////////////////////////////////////////////////////////////////
+    _openCVRunner.disableView();
+    ////////////////////////////////////////////////////////////////////////////////////////////////
   }
 
   protected void bindToService() {
