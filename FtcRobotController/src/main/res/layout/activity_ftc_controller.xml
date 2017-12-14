@@ -80,6 +80,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_centerHorizontal="true"
       android:layout_margin="10dp"/>
 
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textDeviceName"
+        android:layout_centerHorizontal="true"
+        android:width="200dp"
+        android:height="50dp"
+        android:text="Technoramic 5190"
+        android:textColor="@color/bright_red"
+        android:textSize="24sp"
+        tools:text="Technoramic 5190" />
+
   </RelativeLayout>
   <!-- end of black bar -->
 
