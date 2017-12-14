@@ -57,7 +57,7 @@ public class GlyphArm
     public Servo    clawServo   = null;
     public DcMotor  armMotor    = null;
 
-    public static final double THROW = 2000; //Need to measure
+    public static final int THROW = 2000; //Need to measure
     public static final double MID_SERVO       =  0.5 ;
 
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -96,7 +96,7 @@ public class GlyphArm
     }
     public void armPos(int pos, double speed){
         int i = (int) (pos/100*THROW);
-        if (i > 2000){i = 2000;}
+        if (i > THROW){i = THROW;}
         if (i < 0){i = 0;}
         armMotor.setTargetPosition(i);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

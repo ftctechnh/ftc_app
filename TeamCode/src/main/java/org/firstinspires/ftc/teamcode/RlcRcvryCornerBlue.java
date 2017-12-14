@@ -31,6 +31,7 @@ public class RlcRcvryCornerBlue extends OpMode{
 
     JewelSystem sensArm = new JewelSystem();
     String jewelColor = "Unknown";
+    double time;
 
     static final double SENS_ARM_TOP = 0;
     static final double SENS_ARM_BOTTOM = -.666;
@@ -94,8 +95,8 @@ public class RlcRcvryCornerBlue extends OpMode{
             case 1://look at this
                 sensArm.armPos(SENS_ARM_BOTTOM);
                 sensArm.colorLED(true);
-                double time = getRuntime();
-                while (jewelColor == "Unknown" && getRuntime() > time + 5){
+                time = getRuntime();
+                while (jewelColor == "Unknown" && getRuntime() < time + 5){
                 if (sensArm.colorSens() == "blue"){
                     jewelColor = "blue";
                     telemetry.addData("Key",glyph);
@@ -114,19 +115,22 @@ public class RlcRcvryCornerBlue extends OpMode{
                 break;
             case 2:
                 //knock off correct jewel
-                if (jewelColor == "blue"){robot.linearDrive(.25,4);
+                if (jewelColor == "blue"){robot.linearDrive(.25,2);
                     sensArm.armPos(SENS_ARM_TOP);}
                 else if (jewelColor == "red"){robot.linearDrive(.25,-1);
                     sensArm.armPos(SENS_ARM_TOP);
-                    robot.linearDrive(.25,5);}
+                    robot.linearDrive(.25,3);}
                 else if (jewelColor == "Unknown"){sensArm.armPos(SENS_ARM_TOP);
-                robot.linearDrive(.25,4);}
+                robot.linearDrive(.25,2);}
                 telemetry.addData("Key",glyph);
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
                 stateMachineFlow++;
                 break;
             case 3:
+                telemetry.addData("Key",glyph);
+                telemetry.addData("Case",stateMachineFlow);
+                telemetry.update();
                 VuforiaLocalizer vuforia;
                 int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
                 VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -140,7 +144,8 @@ public class RlcRcvryCornerBlue extends OpMode{
                 relicTrackables.activate();
 
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
-                while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                time = getRuntime();
+                while (vuMark == RelicRecoveryVuMark.UNKNOWN && getRuntime() < time + 5) {
                     vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     //viewforia stuff goes here
                     if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;
