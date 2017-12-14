@@ -70,6 +70,7 @@ public class Teleop extends OpMode {
             }
             bot.setLeftDrive(gamepad1.left_stick_y * slowFactor);
             bot.setRightDrive(gamepad1.right_stick_y * slowFactor);
+            BotHardware.Motor.green.motor.setPower(0);
         }
         else {
             bot.setLeftDrive(gamepad1.left_stick_y);
@@ -79,6 +80,8 @@ public class Teleop extends OpMode {
                 for(DcMotor motor : ray) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 motorsSet = false;
             }
+            BotHardware.Motor.green.motor.setPower(1);
+            lastA = gamepad1.a;
         }
 
 

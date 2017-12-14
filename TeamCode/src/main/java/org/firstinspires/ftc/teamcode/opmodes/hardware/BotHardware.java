@@ -33,7 +33,8 @@ public class BotHardware {
         frontRight("fr", true),
         backRight("br", true),
         frontLeft("fl", false),
-        backLeft("bl", false);
+        backLeft("bl", false),
+        green("g", false);
         //suckLeft("sl", false),
         //suckRight("sr", true),
         //lift("l", false);
