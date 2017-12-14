@@ -168,6 +168,9 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
 
         if (robot.color == Alliance.RED && robot.startingPad == StartingPosition.BACK) {
             driveTicks += 100;
+            if (pictograph == 0) { // Right
+                driveTicks -= 500; // We turn the other way
+            }
         }
 
         robot.frontLeft.setTargetPosition(robot.frontLeft.getCurrentPosition() + driveTicks);
@@ -190,6 +193,9 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
 
         if (robot.startingPad == StartingPosition.BACK) {
             desiredPosition += (Math.PI/2) * robot.color.getColorCode();
+            if (robot.color == Alliance.RED && pictograph == 0) {
+                desiredPosition += Math.PI / 3;
+            }
         }
 
         turnToPos(desiredPosition);
