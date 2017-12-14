@@ -30,16 +30,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.hardware.Camera;
-import android.os.Debug;
-import android.util.Log;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -55,19 +51,16 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Test Motors", group="Manual")
+@TeleOp(name="Test Motors REV", group="Manual")
 //@Disabled
-public class TestMotors extends LinearOpMode {
+public class TestMotorsRev extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
-    private DcMotor clawMotor = null;
-    private Servo clawServo = null;
     private float speedMultiplier = 1.0f;
-    int updatesPerSecond;
-    Camera camera;
+    private Camera camera;
 
     @Override
     public void runOpMode() {
@@ -79,8 +72,6 @@ public class TestMotors extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "leftDrive");
         rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
-        clawMotor = hardwareMap.get(DcMotor.class, "armHeight");
-        clawServo = hardwareMap.get(Servo.class, "clawGrip");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -100,12 +91,9 @@ public class TestMotors extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            updatesPerSecond++;
-
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-            double clawPower;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -128,27 +116,15 @@ public class TestMotors extends LinearOpMode {
                 speedMultiplier -= 0.0001;
             }
 
-            clawPower = (gamepad1.right_trigger - gamepad1.left_trigger) / 2;
-
-            //Open or close the claw
-            if (gamepad1.right_bumper) {
-                clawServo.setPosition(2.0);
-            } else if (gamepad1.left_bumper) {
-                clawServo.setPosition(0.2);
-            }
-
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
-            clawMotor.setPower(clawPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f), claw (%.2f)",
-                    leftPower, rightPower, clawPower);
-            telemetry.addData("Claw Position", Double.toString(clawServo.getPosition()));
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)",
+                    leftPower, rightPower);
             telemetry.addData("Speed", Float.toString(speedMultiplier));
-            telemetry.addData("Updates Per Second", (updatesPerSecond / runtime.seconds()));
             telemetry.update();
         }
 
