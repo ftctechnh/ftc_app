@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -50,7 +52,6 @@ public class Autonomous extends LinearOpMode {
         boolean isLeftStone = true;
         telemetry.addData(">", "Press LB for Left, RB for Right, LT for Red, RT for Blue");
         telemetry.update();
-
 
         while(!isStarted() && !opModeIsActive()){
             if(gamepad1.left_bumper){
@@ -103,8 +104,9 @@ public class Autonomous extends LinearOpMode {
 
     public void redLeft(RelicRecoveryRobot robot){
         //raise glyph lift a tiny bit
+        robot.glyphLift.closeRedGripper();
         robot.glyphLift.setLiftMotorPower(1);
-        sleep(5);
+        sleep(250);
         robot.glyphLift.setLiftMotorPower(0);
 
         // Lower Jewel Mechinism
@@ -112,16 +114,14 @@ public class Autonomous extends LinearOpMode {
         sleep(500);
 
         //get color of ball
-        boolean isRed = robot.jewelKnocker.isJewelRed();
+        boolean isRed = robot.jewelKnocker.isJewelRed(robot);
 
         if(isRed){
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
+            robot.hDriveTrain.directionalDrive(0, 0.5, 2, false); //drive 4 inches right
         }else{
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
+            robot.hDriveTrain.directionalDrive(180, 0.5, 2, false); // drive 4 inches left
         }
-        robot.hDriveTrain.directionalDrive(0, 1, 5, false);
+
 //        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
 //        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
 //
@@ -168,7 +168,7 @@ public class Autonomous extends LinearOpMode {
         robot.jewelKnocker.extendArm();
 
         //get color of ball
-        boolean isRed = robot.jewelKnocker.isJewelRed();
+        boolean isRed = robot.jewelKnocker.isJewelRed(robot);
 
         if(isRed){
             robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
@@ -224,7 +224,7 @@ public class Autonomous extends LinearOpMode {
         robot.jewelKnocker.extendArm();
 
         //get color of ball
-        boolean isBlue = robot.jewelKnocker.isJewelBlue();
+        boolean isBlue = robot.jewelKnocker.isJewelBlue(robot);
 
         if(isBlue){
             robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
@@ -280,7 +280,7 @@ public class Autonomous extends LinearOpMode {
         robot.jewelKnocker.extendArm();
 
         //get color of ball
-        boolean isBlue = robot.jewelKnocker.isJewelBlue();
+        boolean isBlue = robot.jewelKnocker.isJewelBlue(robot);
 
         if(isBlue){
             robot.hDriveTrain.directionalDrive(-90, 1, 1, false);

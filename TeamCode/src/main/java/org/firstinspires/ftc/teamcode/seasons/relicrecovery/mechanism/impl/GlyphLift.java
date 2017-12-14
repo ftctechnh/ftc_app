@@ -17,15 +17,15 @@ import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 public class GlyphLift implements IMechanism {
 
     private static final double MAX_LIFT_ROTATION_MOTOR_POWER = 0.4;
-    private static final double MAX_LIFT_MOTOR_POWER_UP = 0.9;
-    private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.4;
+    private static final double MAX_LIFT_MOTOR_POWER_UP = 0.4;
+    private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.9;
 
-<<<<<<< Updated upstream
+
     private static final double ROTATION_MOTOR_POWER_AUTOMATIC = 0.8;
     private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
-=======
+
     private static final double ROTATION_MOTOR_GYRO_POWER = 0.8;
->>>>>>> Stashed changes
+
     private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
 
     public static final int LIFT_RAISE_TARGET_POSITION = 850;
@@ -103,7 +103,7 @@ public class GlyphLift implements IMechanism {
      *              Negative values lower the lift and, likewise, positive values raise the lift.
      */
     public void setLiftMotorPower(double power) {
-        liftMotor.setPower(power * (power < 0 ? MAX_LIFT_MOTOR_POWER_UP : MAX_LIFT_MOTOR_POWER_DOWN));
+        liftMotor.setPower(-power * (power < 0 ? MAX_LIFT_MOTOR_POWER_UP : MAX_LIFT_MOTOR_POWER_DOWN));
     }
 
     /**
