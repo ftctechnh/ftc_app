@@ -159,21 +159,13 @@ public class redNintyV2 extends LinearOpMode {
 
             elapsedTime = runtime.time();
 
-            robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
-            sleep(1000);
+            robot.closeClaw();
 
             while ((column = robot.getColumn()) == -1) {
-                robot.writeLog("column = " + column);
-                robot.updateLog();
             }
-            robot.writeLog("column = " + column);
-            robot.updateLog();
 
             robot.jewelServo.setPosition(1);
-            sleep(1000);
-
-            robot.armServo.setPosition(.65);
-            sleep(500);
+            sleep(1500);
 
             if (!robot.isJewelRed()&& !isDetected) {
                 // the red jewel is on the left of sensor
@@ -183,16 +175,16 @@ public class redNintyV2 extends LinearOpMode {
             robot.turnDegrees(speed,jewelDegrees);
 
             robot.jewelServo.setPosition(.65);
-            sleep(1000);
+            sleep(700);
 
             robot.jewelServo.setPosition(0);
-            sleep(500);
+            sleep(700);
+
+            robot.armServo.setPosition(LIFTEDARMPOSITION);
+            sleep(200);
 
             robot.turnDegrees(speed,-jewelDegrees);
             robot.turnDegrees(.5,-10);
-
-            robot.armServo.setPosition(LIFTEDARMPOSITION);
-            sleep(500);
 
             double distance = 18.5 + (4 - column) * 7.5;
             robot.driveForward(.5,distance,true);
@@ -204,55 +196,49 @@ public class redNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(-.5,-90);
 
-            robot.driveForward(.5,24,true);
+            robot.driveForward(0.5,16,true);
 
-            robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
-            sleep(500);
+            robot.openClaw();
 
             robot.turnDegrees(.5,-30);
 
-            robot.driveForward(.5,-3,true);
+            //robot.driveForward(.5,-3,true);
+            robot.driveForward(.5,-5,true);
 
-            robot.armServo.setPosition(.9);
-            robot.turnOffMotors();
-
-            robot.turnDegrees(.5,-135);
+            //robot.armServo.setPosition(.9);
+            double pitDegrees = -145 + (4 - column) * 10;
+            robot.turnDegrees(.5,pitDegrees);
 
             robot.rightClampServo.setPosition(0.7);
-            robot.driveForward(0.5, 26, true);
-            for (int i = 0; i < 6; i++) {
-                if (grabGlyph()) {
+            robot.driveForward(.8, 24, true);
+
+            // wiggle
+            double turnDegrees = 15;
+            robot.turnDegrees(1, -turnDegrees);
+            robot.turnDegrees(1,  turnDegrees);
+            //robot.turnDegrees(1, -turnDegrees);
+
+            for (int i = 0; i < 2; i++) {
+                if (robot.grabGlyph()) {
                     break;
                 }
-                robot.driveForward(0.5, 2, false);
+                robot.driveForward(.5, 6, true);
             }
 
+            boolean grabbed = robot.grabGlyph();
 
-
-            /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
+            if(!grabbed)
             {
-                turn(1);
+                robot.closeClaw();
             }
-            else if (elapsedTime < DRIVETOGLYPHPIT)
-            {
-                drive(0, 1);
-            }
-            else if (elapsedTime < GRABABLOCK)
-            {
-                turnOffMotors();
-                setClampPosition(CLOSECLAMPPOSITION);
-            }
-            else if (elapsedTime < BACKTOBASE)
-            {
-                drive(0,-1);
-            }
-            else if (elapsedTime < TURNTOFACECOLUMNS)
-            {
-                turn(1);
-            }
-            else {
-                turnOffMotors();
-            }*/
+            robot.armServo.setPosition(.6);
+            robot.driveForward(.5,-12,true);
+            double pitDegreesBack = 180 - (4 * column) * 10;
+            robot.turnDegrees(.5,180);
+            robot.driveForward(1, 20, true);
+            robot.rightClampServo.setPosition(0);
+            robot.armServo.setPosition(.8);
+            robot.driveForward(.5,-2,true);
             updateTelemetry();
             break;
         }

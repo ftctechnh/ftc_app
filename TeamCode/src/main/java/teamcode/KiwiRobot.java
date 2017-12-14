@@ -340,4 +340,35 @@ public class KiwiRobot {
         this.initTouchSensor();
         this.writeLog("end init");
     }
+
+    public boolean grabGlyph() {
+        closeClaw();
+        boolean grabbed = isGlyphGrabbed();
+        if (!grabbed) {
+            openClaw();
+        }
+        return grabbed;
+    }
+
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void openClaw()
+    {
+        rightClampServo.setPosition(0);
+        sleep(450);
+    }
+
+    public void closeClaw()
+    {
+        rightClampServo.setPosition(1);
+        sleep(450);
+    }
+
+
 }
