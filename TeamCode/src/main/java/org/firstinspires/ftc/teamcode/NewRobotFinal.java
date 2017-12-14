@@ -87,7 +87,8 @@ public class NewRobotFinal
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
-
+        leftDoorWall.scaleRange(.5f, .95f);
+        rightDoorWall.scaleRange(.05f, .5f);
         initEndGame(hardwareMap);
 
         zeroStuff();
@@ -140,6 +141,7 @@ public class NewRobotFinal
     {                       //basically sets up lift's step counts starting at its bottom position
         liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //liftMotor.setVelocity(0, AngleUnit.DEGREES);
@@ -495,9 +497,9 @@ public class NewRobotFinal
         if (adjLevels + currentLvl < 0)
         {
             currentLvl = 0;
-        } else if (adjLevels + currentLvl > liftLevels.length)
+        } else if (adjLevels + currentLvl >= liftLevels.length)
         {
-            currentLvl = (short) liftLevels.length;
+            currentLvl = (short) (liftLevels.length - 1);
         } else
         {
             currentLvl += adjLevels;
@@ -595,13 +597,13 @@ public class NewRobotFinal
          */
         if (!close)
         {
-            leftDoorWall.setPosition(.7f);
-            rightDoorWall.setPosition(.3f);
+            leftDoorWall.setPosition(.5f);
+            rightDoorWall.setPosition(.5f);
         }
         else
         {
-            leftDoorWall.setPosition(1f);
-            rightDoorWall.setPosition(0f);
+            leftDoorWall.setPosition(.95f);
+            rightDoorWall.setPosition(.05f);
         }
     }
 

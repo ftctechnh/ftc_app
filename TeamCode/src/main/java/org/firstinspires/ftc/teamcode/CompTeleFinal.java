@@ -28,10 +28,25 @@ public class CompTeleFinal extends OpMode
 
     public void loop()
     {
+
         /**
          * ATTACHMENTS CONTROLLER FIRST
          * GAMEPAD 2
          */
+
+        /*
+        if (gamepad2.left_stick_y == 0)
+        {
+            telemetry.addData("left stick is 0, adj dir", null);
+            telemetry.addData("liftdir", newRobot.getLiftDir());
+            newRobot.AdjLiftDir();
+        }
+        else
+        {
+            newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
+            telemetry.addData("Fine move lift", null);
+        }
+
         if (gamepad2.dpad_up)
         {
             if (liftArmed)
@@ -53,20 +68,11 @@ public class CompTeleFinal extends OpMode
             liftArmed = true;
         }
 
-        if (gamepad2.left_stick_y == 0)
-        {
-            telemetry.addData("left stick is 0, adj dir", null);
-            telemetry.addData("liftdir", newRobot.getLiftDir());
-            newRobot.AdjLiftDir();
-        }
-        else
-        {
-            newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
-            telemetry.addData("Fine move lift", null);
-        }
 
         telemetry.update();
+        */
 
+        newRobot.fineMoveLift(gamepad2.left_stick_y, .9f);
         /*
         if (gamepad2.left_bumper)
             newRobot.fineAdjDoors(.001f);
@@ -93,10 +99,11 @@ public class CompTeleFinal extends OpMode
 
         if (gamepad2.y)
         {
-            newRobot.fineAdjGrabberRotator(-.01f);
-        } else if (gamepad2.x)
+            newRobot.fineAdjGrabberRotator(-.004f);
+        }
+        else if (gamepad2.x)
         {
-            newRobot.fineAdjGrabberRotator(.01f);
+            newRobot.fineAdjGrabberRotator(.004f);
         }
 
 
@@ -104,11 +111,18 @@ public class CompTeleFinal extends OpMode
          *DRIVE CONTROLS
          * GAMEPAD 1
          */
-        if (gamepad1.right_trigger > .4f)
-            newRobot.driveMotors(gamepad1.left_stick_y / 2, -gamepad1.right_stick_y / 2);
+        if(gamepad1.a)
+        {
+            newRobot.autoPark();
+            telemetry.addData("grav perp to gravity", newRobot.anglePerpToGrav());
+        }
         else
-            newRobot.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
-
+        {
+            if (gamepad1.right_trigger > .4f)
+                newRobot.driveMotors(gamepad1.left_stick_y / 2, -gamepad1.right_stick_y / 2);
+            else
+                newRobot.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
+        }
         //
         if (gamepad1.right_bumper)
         {
