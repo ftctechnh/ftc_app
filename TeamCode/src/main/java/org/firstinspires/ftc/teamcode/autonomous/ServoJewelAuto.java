@@ -113,7 +113,7 @@ public class ServoJewelAuto extends LinearOpMode {
                //tapeColorSensorWrapper.getRGBValues()[2] < 0.5
                 ) {
             drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.5, 0);
-            telemetry.addData("IMU:", "Pos: %.3f \n\tX: %.2f \n\tY: %.2f \nt\tZ: %.3f",
+            telemetry.addData("IMU:", "Pos: %s \n\tX: %.2f \n\tY: %.2f \nt\tZ: %.3f",
                     imuWrapper.getPosition().toUnit(DistanceUnit.INCH).toString(),
                     imuWrapper.getPosition().toUnit(DistanceUnit.INCH).x,
                     imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y,
