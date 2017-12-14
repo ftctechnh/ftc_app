@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Sahithi on 12/8/17.
  */
-@Autonomous(name = "FinalUniversalRef",group = "Auto")
-public class FinalUniversalRef extends LinearOpMode
+@Autonomous(name = "FinalUniversalAudi",group = "Auto")
+public class FinalUniversalAudi extends LinearOpMode
 {
     NewRobotFinal newRobot;
     public void runOpMode()
@@ -22,60 +22,55 @@ public class FinalUniversalRef extends LinearOpMode
         telemetry.update();
         sleep(3000);
         switch (colorOfPlatform)
+                //drive is functional, still needs positional tweaking 12/11
         {
             case 'b':
                 waitForStart();
                 newRobot.openOrCloseDoor(true);
-                newRobot.moveXEncoderCounts(100,1,true);
+                //newRobot.moveXEncoderCounts(50,1,true);
                 newRobot.moveWing(true);
                 sleep(1000);
+                char cipher = newRobot.getGlyphCipher();
                 newRobot.getleftWingColorSens();
                 char colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
-                telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getrightWingColorSens()));
+                telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getleftWingColorSens()));
                 telemetry.update();
                 switch (colorOfJewel)
                 {
                     case'r':
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
                         sleep(500);
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         break;
                     case 'b':
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         sleep(500);
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
                         break;
                     default:
                         break;
                 }
                 newRobot.moveWing(false);
-                sleep(500);
-                char cipher = newRobot.getGlyphCipher();
                 telemetry.addData("Cipherr = ", cipher);
-                telemetry.addData("Pos ", newRobot.getGlyphCipher());
                 telemetry.update();
-                switch (newRobot.getGlyphCipher())
+                switch (cipher)
                 {
-                    case 'l':
-                        newRobot.driveStraight_In(22);
+                    case 'r': newRobot.driveStraight_In(45);
                         break;
-                    case 'c':
-                        newRobot.driveStraight_In(11.5f);
+                    case 'c': newRobot.driveStraight_In(39);
                         break;
-                    case 'r':
-                        newRobot.driveStraight_In(5);
+                    case 'l': newRobot.driveStraight_In(28);
                         break;
-                    default:
-                        newRobot.driveStraight_In(11.5f);
+                    default: newRobot.driveStraight_In(39);
                         break;
                 }
                 newRobot.pivot_IMU(83, .25);
-                newRobot.driveStraight_In(8, .1);
-                newRobot.driveStraight_In(8, .1);
+                newRobot.driveStraight_In(12);
+                newRobot.driveStraight_In(8,.2);
                 newRobot.moveXEncoderCounts(100,1,false);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(-2); // back up
+                newRobot.driveStraight_In(-2);
                 newRobot.driveStraight_In(3,.2);
                 newRobot.stopAllMotors();
             case 'r':
@@ -84,21 +79,22 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.moveXEncoderCounts(100,1,true);
                 newRobot.moveWing(true);
                 sleep(1000);
-                newRobot.getrightWingColorSens();
-                colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
+                newRobot.getleftWingColorSens();
+                colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
-                telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getrightWingColorSens()));
+                telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getleftWingColorSens()));
                 telemetry.update();
                 switch (colorOfJewel)
                 {
                     case 'r':
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         sleep(500);
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
+                        break;
                     case 'b':
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
                         sleep(500);
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         break;
                     default:
                         break;
@@ -109,29 +105,22 @@ public class FinalUniversalRef extends LinearOpMode
                 telemetry.addData("Cipherr = ", cipher);
                 telemetry.addData("Pos ", newRobot.getGlyphCipher());
                 telemetry.update();
-                newRobot.driveStraight_In(26);
-                newRobot.pivot_IMU(82, .25);
                 switch (newRobot.getGlyphCipher())
                 {
-                    case 'l':
-                        newRobot.driveStraight_In(22); //needs testing, fix on 11/12
+                    case 'r': newRobot.driveStraight_In(26.5f);
                         break;
-                    case 'c':
-                        newRobot.driveStraight_In(11.5f);
+                    case 'c': newRobot.driveStraight_In(34.5f);
                         break;
-                    case 'r':
-                        newRobot.driveStraight_In(5); //positioning is really off, need to fix on 11/12
+                    case 'l': newRobot.driveStraight_In(41);
                         break;
-                    default:
-                        newRobot.driveStraight_In(11.5f);
+                    default: newRobot.driveStraight_In(35);
                         break;
                 }
                 newRobot.pivot_IMU(-83, .25);
                 newRobot.driveStraight_In(8,.1);
-                newRobot.driveStraight_In(8,.1);
                 newRobot.moveXEncoderCounts(100,1,false);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(-2); // back up
+                newRobot.driveStraight_In(-2);
                 newRobot.driveStraight_In(3,.2);
                 newRobot.stopAllMotors();
             default:
