@@ -16,7 +16,6 @@ import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
  */
 public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
 
-    NullbotHardware robot = new NullbotHardware();
     VuforiaLocalizer vuforia;
 
     final double ACCEPTABLE_HEADING_VARIATION = Math.PI / 90; // 1 degree
@@ -56,33 +55,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         updateBlocks();
         // Higher x-values are on the right
 
-        if (redBall.averageX() > blueBall.averageX()) {
-            rightMostBall = Alliance.RED;
-        } else {
-            rightMostBall = Alliance.BLUE;
-        }
-
-        /*int readingCount = 0;
-        while (opModeIsActive() && readingCount < 5) {
-            updateBlocks();
-            if (ballPositionsKnown()) {
-                if (redBall.averageX() > blueBall.averageX()) {
-                    rightMostBall = RED;
-                } else {
-                    rightMostBall = BLUE;
-                }
-                readingCount += rightMostBall.getColorCode();
-            }
-            readingCount++;
-        }
-
-        if (readingCount > 3) { // If we're pretty sure
-            rightMostBall = BLUE;
-        } else if (readingCount < -3) {
-            rightMostBall = RED;
-        } else {
-            rightMostBall = UNKNOWN;
-        }*/
+        Alliance rightMostBall = getBallPositions();
 
         telemetry.addData("Rightmost ball:", rightMostBall);
         telemetry.update();
@@ -92,7 +65,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         int pictograph = 1;
 
         ElapsedTime timeUntilGuess = new ElapsedTime();
-        while (opModeIsActive() && timeUntilGuess.seconds() < 6) {
+        while (opModeIsActive() && timeUntilGuess.seconds() < 4) {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
@@ -122,8 +95,8 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
             telemetry.update();
         }
 
-        if (ballPositionsKnown()) {
-            knockOffBalls();
+        if (rightMostBall != Alliance.UNKNOWN) {
+            knockOffBalls(rightMostBall);
         }
 
         log("Lifting lift");
@@ -271,7 +244,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         return redBall.isSeen() && blueBall.isSeen();
     }
 
-    public void knockOffBalls() {
+    public void knockOffBalls(Alliance rightMostBall) {
 
         robot.lowerLeftWhipSnake();
         robot.sleep(500);
@@ -341,15 +314,11 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
 
             telemetry.update();
 
-            robot.motorArr[0].setPower(unscaledMotorPowers[0]);
-            robot.motorArr[1].setPower(unscaledMotorPowers[1]);
-            robot.motorArr[2].setPower(unscaledMotorPowers[2]);
-            robot.motorArr[3].setPower(unscaledMotorPowers[3]);
+            robot.setMotorSpeeds(unscaledMotorPowers);
 
             if (Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION) {
                 timeHeadingAcceptable.reset();
             }
-            //robot.setMotorSpeeds(unscaledMotorPowers);
         }
 
         robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
