@@ -73,19 +73,9 @@ public class encoderDistanceTesting extends LinearOpMode {
     private KiwiRobot robot;
     private ElapsedTime runtime = new ElapsedTime();
 
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
-
     int cooldown = 1000;
-    private boolean isClamped = true;
-    private double row1Position = 0.2;
-    private double row2Position = 0.4;
-    private double row3Position = 0.6;
+
     private BNO055IMU gyro;
-    final private double OPENCLAMPPOSITION = 0;
-    final private double CLOSECLAMPPOSITION = 1;
-    final private double LIFTEDARMPOSITION = .55;
-    final private double DOWNARMPOSITION = .8;
 
     @Override
     public void runOpMode() {
@@ -114,13 +104,10 @@ public class encoderDistanceTesting extends LinearOpMode {
         waitForStart();
         runtime.reset();
         double elapsedTime;
+        boolean grabbed = false;
 
         // run until the end of the match (driver presses STOP)
-        boolean test = true;
-        double speed = .8;
-        Boolean isDetected = false;
-        double jewelDegrees = -10;//- degrees go right, positive degrees go left
-        int column = 0;
+
         while (opModeIsActive())
         {
             elapsedTime = runtime.time();
@@ -140,9 +127,17 @@ public class encoderDistanceTesting extends LinearOpMode {
             {
                 robot.driveForward(.5,19.25,true);
             }
+            else if (gamepad1.y) {
+                grabbed = robot.grabGlyph();
+                robot.writeLog("grabbed glyph = " + grabbed);
+            }
+            else
+            {
+                robot.writeLog("in loop");
+            }
 
-
-            updateTelemetry();
+            robot.writeLog("grabbed glyph = " + grabbed);
+            robot.updateLog();
         }
     }
 
