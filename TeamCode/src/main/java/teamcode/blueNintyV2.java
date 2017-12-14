@@ -166,7 +166,7 @@ public class blueNintyV2 extends LinearOpMode {
             robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
 
             robot.jewelServo.setPosition(1);
-            sleep(1000);
+            sleep(2000);
 
             robot.armServo.setPosition(.65);
             sleep(500);

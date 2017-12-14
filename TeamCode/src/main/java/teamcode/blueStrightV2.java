@@ -164,7 +164,7 @@ public class blueStrightV2 extends LinearOpMode {
             sleep(1000);
 
             robot.jewelServo.setPosition(1);
-            sleep(1000);
+            sleep(2000);
 
             robot.armServo.setPosition(.65);
             sleep(500);
