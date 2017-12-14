@@ -182,7 +182,6 @@ public class redNintyV2 extends LinearOpMode {
             }
             robot.turnDegrees(speed,jewelDegrees);
 
-            robot.turnOffMotors();
             robot.jewelServo.setPosition(.65);
             sleep(1000);
 
@@ -192,7 +191,6 @@ public class redNintyV2 extends LinearOpMode {
             robot.turnDegrees(speed,-jewelDegrees);
             robot.turnDegrees(.5,-10);
 
-            robot.turnOffMotors();
             robot.armServo.setPosition(LIFTEDARMPOSITION);
             sleep(500);
 
@@ -201,16 +199,12 @@ public class redNintyV2 extends LinearOpMode {
             robot.logEnconders();
             robot.updateLog();
 
-            robot.turnOffMotors();
-
             robot.armServo.setPosition(.7);
             sleep(500);
 
             robot.turnDegrees(-.5,-90);
 
             robot.driveForward(.5,24,true);
-
-            robot.turnOffMotors();
 
             robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
             sleep(500);

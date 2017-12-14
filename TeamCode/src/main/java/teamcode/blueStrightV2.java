@@ -157,90 +157,54 @@ public class blueStrightV2 extends LinearOpMode {
         int column = 0;
         while (opModeIsActive())
         {
-
-            /*if(test) {
-                //assume red jewel is on left
-                clamp(CLOSECLAMPPOSITION);
-                stop(2);
-                jewelServo.setPosition(1);
-                stop(2);
-                armServo.setPosition(.9);
-                stop(.5);
-                double speed = 0.4;
-                if (isJewelRed()) {
-                    // the red jewel is on the left of sensor
-                    speed = -speed;
-                }
-                turn(speed);
-                stop(.15);
-                turnOffMotors();
-                jewelServo.setPosition(.65);
-                stop(2);
-                jewelServo.setPosition(0);
-                stop(2);
-                turn(-speed);
-                stop(.2);
-                turnOffMotors();
-                test = false;
-                runtime.reset();
-            }*/
             elapsedTime = runtime.time();
 
-                column = this.getColumn(this.trackable);
-                robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
-                sleep(1000);
+            column = this.getColumn(this.trackable);
+            robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+            sleep(1000);
 
-                robot.jewelServo.setPosition(1);
-                sleep(1000);
+            robot.jewelServo.setPosition(1);
+            sleep(1000);
 
-                robot.armServo.setPosition(.65);
-                sleep(500);
+            robot.armServo.setPosition(.65);
+            sleep(500);
 
-                if (robot.isJewelRed()&& !isDetected) {
-                    // the red jewel is on the left of sensor
-                    jewelDegrees = -jewelDegrees;
-                    isDetected = !isDetected;
-                }
-                robot.turnDegrees(speed,jewelDegrees);
+            if (robot.isJewelRed()&& !isDetected) {
+                // the red jewel is on the left of sensor
+                jewelDegrees = -jewelDegrees;
+                isDetected = !isDetected;
+            }
+            robot.turnDegrees(speed,jewelDegrees);
 
-                robot.turnOffMotors();
-                robot.jewelServo.setPosition(.65);
-                sleep(1000);
+            robot.jewelServo.setPosition(.65);
+            sleep(1000);
 
-                robot.jewelServo.setPosition(0);
-                sleep(500);
+            robot.jewelServo.setPosition(0);
+            sleep(500);
 
-                robot.turnDegrees(speed,-jewelDegrees);
+            robot.turnDegrees(speed,-jewelDegrees);
 
-                robot.turnOffMotors();
-                robot.armServo.setPosition(LIFTEDARMPOSITION);
-                sleep(500);
+            robot.armServo.setPosition(LIFTEDARMPOSITION);
+            sleep(500);
 
-                robot.turnDegrees(-.5, 150);
+            robot.turnDegrees(-.5, 150);
 
-                robot.driveForward(.5,19.25,true);
+            robot.driveForward(.5,19.25,true);
 
-                double distance = 4 + column * 7.5;
-                //robot.driveLateral(.5,distance,true);
+            double distance = 4 + column * 7.5;
+            //robot.driveLateral(.5,distance,true);
 
-                robot.turnOffMotors();
+            robot.armServo.setPosition(.75);
+            sleep(500);
 
-                robot.armServo.setPosition(.75);
-                sleep(500);
+            robot.driveForward(.5,8,true);
 
-                robot.driveForward(.5,8,true);
+            robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
+            sleep(1000);
 
-                robot.turnOffMotors();
-                robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
-                sleep(1000);
+            robot.turnDegrees(.5,-15);
 
-                robot.turnOffMotors();
-
-                robot.turnDegrees(.5,-15);
-
-                robot.driveForward(.5,-4,true);
-
-                robot.turnOffMotors();
+            robot.driveForward(.5,-4,true);
 
             /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
             {

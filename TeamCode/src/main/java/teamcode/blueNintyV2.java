@@ -182,6 +182,7 @@ public class blueNintyV2 extends LinearOpMode {
             sleep(1000);
 
             robot.jewelServo.setPosition(0);
+            sleep(500);
 
             robot.turnDegrees(speed, -jewelDegrees);
 
@@ -190,8 +191,7 @@ public class blueNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(-.5, 170);
 
-            double distance = 19.25 + column * 7.5;
-            robot.driveForward(.5,distance,true);
+            robot.driveForward(.5,18.5,true);
 
             robot.turnOffMotors();
 
@@ -200,18 +200,31 @@ public class blueNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(-.5,90);
 
-            robot.driveForward(.5,12,true);
+            double distance = column * 7.5;
+            robot.driveLateral(.5,distance,true);
 
-            robot.turnOffMotors();
+            robot.driveForward(.5,24,true);
 
             robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
             sleep(1000);
 
-            robot.turnDegrees(.5,15);
+            robot.turnDegrees(.5,30);
 
             robot.driveForward(.5,-4,true);
 
+            robot.armServo.setPosition(.9);
             robot.turnOffMotors();
+
+            robot.turnDegrees(.5,135);
+
+            robot.rightClampServo.setPosition(0.7);
+            robot.driveForward(0.5, 26, true);
+            for (int i = 0; i < 6; i++) {
+                if (grabGlyph()) {
+                    break;
+                }
+                robot.driveForward(0.5, 2, false);
+            }
 
             /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
             {
@@ -239,6 +252,15 @@ public class blueNintyV2 extends LinearOpMode {
             }*/
             updateTelemetry();
         }
+    }
+
+    public boolean grabGlyph() {
+        robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+        boolean grabbed = robot.isGlyphGrabbed();
+        if (!grabbed) {
+            robot.rightClampServo.setPosition(0.7);
+        }
+        return grabbed;
     }
 
     private void initVuforia() {

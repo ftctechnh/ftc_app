@@ -152,35 +152,7 @@ public class redStrightV2 extends LinearOpMode {
         int column = 0;
         while (opModeIsActive())
         {
-
-            /*if(test) {
-                //assume red jewel is on left
-                clamp(CLOSECLAMPPOSITION);
-                stop(2);
-                jewelServo.setPosition(1);
-                stop(2);
-                armServo.setPosition(.9);
-                stop(.5);
-                double speed = 0.4;
-                if (isJewelRed()) {
-                    // the red jewel is on the left of sensor
-                    speed = -speed;
-                }
-                turn(speed);
-                stop(.15);
-                turnOffMotors();
-                jewelServo.setPosition(.65);
-                stop(2);
-                jewelServo.setPosition(0);
-                stop(2);
-                turn(-speed);
-                stop(.2);
-                turnOffMotors();
-                test = false;
-                runtime.reset();
-            }*/
             elapsedTime = runtime.time();
-
 
             robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
             sleep(1000);
@@ -200,7 +172,6 @@ public class redStrightV2 extends LinearOpMode {
             }
             robot.turnDegrees(speed,jewelDegrees);
 
-            robot.turnOffMotors();
             robot.jewelServo.setPosition(.65);
             sleep(1000);
 
@@ -209,7 +180,6 @@ public class redStrightV2 extends LinearOpMode {
 
             robot.turnDegrees(speed,-jewelDegrees);
 
-            robot.turnOffMotors();
             robot.armServo.setPosition(LIFTEDARMPOSITION);
             sleep(500);
 
@@ -217,24 +187,17 @@ public class redStrightV2 extends LinearOpMode {
 
             robot.driveForward(.5,19.25,true);
 
-            robot.turnOffMotors();
-
             robot.armServo.setPosition(DOWNARMPOSITION);
             sleep(500);
 
             robot.driveForward(.5,8,true);
 
-            robot.turnOffMotors();
             robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
             sleep(1000);
-
-            robot.turnOffMotors();
 
             robot.turnDegrees(.5,15);
 
             robot.driveForward(.5,-4,true);
-
-            robot.turnOffMotors();
 
             /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
             {
