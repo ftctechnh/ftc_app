@@ -91,6 +91,10 @@ public class TestRobotHardware extends OpMode
         armRotator = hardwareMap.servo.get("armRotator");
         armExtender = hardwareMap.servo.get("armExtender");
 
+        armRotator.scaleRange(0.1,0.9);
+        armExtender.scaleRange(0.16, 0.75);
+
+
         raiser.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 

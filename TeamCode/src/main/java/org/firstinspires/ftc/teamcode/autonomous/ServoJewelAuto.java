@@ -62,8 +62,13 @@ public class ServoJewelAuto extends LinearOpMode {
         //Assuming other hardware not yet on the robot
         armRotator = hardwareMap.servo.get("armRotator");
         armExtender = hardwareMap.servo.get("armExtender");
+
+        armRotator.scaleRange(0.1,0.9);
+        armExtender.scaleRange(0.16, 0.75);
+
         armExtender.setPosition(1.0);
         armRotator.setPosition(0.5);
+
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
         vuforiaWrapper.getLoader().getTrackables().activate();
@@ -81,20 +86,20 @@ public class ServoJewelAuto extends LinearOpMode {
         telemetry.update();
 
         //STEP 2: Hitting the jewel
-        armExtender.setPosition(0.4); //servo in 'out' position
+        armExtender.setPosition(0); //servo in 'out' position
 
         sleep(2000);
 
         //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
         if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
-            armRotator.setPosition(0.75);
+            armRotator.setPosition(1);
         } else {
-            armRotator.setPosition(0.25);
+            armRotator.setPosition(0);
         }
 
         sleep(5000);
 
-        armExtender.setPosition(1.0);
+        armExtender.setPosition(1);
         armRotator.setPosition(0.5);
 
         sleep(10000);
