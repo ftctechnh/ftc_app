@@ -89,6 +89,7 @@ public class encoderCalibration extends LinearOpMode {
                 turnOffMotors();
             }
 
+
             updateTelemetry();
         }
     }
@@ -166,6 +167,8 @@ public class encoderCalibration extends LinearOpMode {
         motor3.setPower(-speed/divisor);
         motor2.setPower(-speed/divisor);
     }
+
+
 
 }
 
