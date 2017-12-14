@@ -146,7 +146,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         clawServo.setPower(clawClose);
 
         /* Move the claw up so it doesn't dig into the ground coming off the balance board */
-        moveclawbytime(1,.5,"Up");
+        moveclawbytime(.5,.5,"Up");
 
         /* Put the servo color arm down */
         gemServo.setPosition(xPosDown);
@@ -178,42 +178,54 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+        movebytime(1.25, .5, "Forward");
+
+        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
+        account for the slight slippage after powering off the wheels */
+        rotate(87, .35);
+
+        /* Wait a moment to stop moving */
+        sleep(700);
+
         /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Switch case based on what vuMark we see */
         switch (vuMark){
             case LEFT:
                 /* Drive forward into the left position */
-                movebytime(1,.5,"Forward");
+                movebytime(1.5,.3,"Left");
                 break;
             case RIGHT:
                 /* Drive forward into the right position */
-                movebytime(2, .5, "Forward");
+                movebytime(1.5, .3, "Right");
                 break;
             case CENTER:
                 /* Drive forward into the center position */
-                movebytime(1.25, .5, "Forward");
                 break;
             case UNKNOWN:
                 /* Drive forward into the center position just cuz i said so */
-                movebytime(1.25, .5, "Forward");
                 break;
         }
 
-        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
-        account for the slight slippage after powering off the wheels */
-        rotate(87, .35);
-
         /* Move forward slightly so the block is in the space */
-        movebytime(.2, .3, "Forward");
+        movebytime(.45, .2, "Forward");
 
         /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        /* Move the claw down slightly */
-        moveclawbytime(1,.5,"Down");
+//
+//        /* Move the claw down slightly */
+//        moveclawbytime(1,.5,"Down");
 
         /* Open up the claw to release the block */
         clawServo.setPower(clawOpen);
+
+        /* Wait a moment to allow the claw to open */
+        sleep(2000);
+
+        /* Stop the claw */
+        clawServo.setPower(clawStill);
+
+        /* Back up a small bit */
+        movebytime(.5, .2, "Backward");
     }
 
 /***********************************************************************************************
@@ -223,14 +235,18 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
     public void clawAbre(double time) {
+
+    /* Create a "timer" that begins once the OpMode begins */
+         ElapsedTime clawtimer = new ElapsedTime();
+
         /* reset the "timer" to 0 */
-        runtime.reset();
+        clawtimer.reset();
 
         /* Open the claw */
         clawServo.setPower(clawOpen);
 
         /* If the timer hasn't reached the time that is indicated do nothing and keep opening */
-        while (opModeIsActive() && runtime.seconds() < time) {
+        while (opModeIsActive() && clawtimer.seconds() < time) {
         }
 
         /* Once the while loop above finishes turn off claw servo */
@@ -240,8 +256,12 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
     public void moveclawbytime(double time, double power, String direction) {
-    /* reset the "timer" to 0 */
-        runtime.reset();
+
+    /* Create a "timer" that begins once the OpMode begins */
+        ElapsedTime verticaltimer = new ElapsedTime();
+
+        /* reset the "timer" to 0 */
+        verticaltimer.reset();
 
     /* This switch case is determined by the String indicated above */
         switch (direction) {
@@ -254,7 +274,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         }
 
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
-        while (opModeIsActive() && runtime.seconds() < time) {
+        while (opModeIsActive() && verticaltimer.seconds() < time) {
         }
 
     /* Once the while loop above finishes turn off claw motor */
@@ -263,8 +283,12 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
 /* This method moves the robot forward for time and power indicated*/
     public void movebytime (double time, double power, String direction) {
-    /* reset the "timer" to 0 */
-        runtime.reset();
+
+    /* Create a "timer" that begins once the OpMode begins */
+        ElapsedTime drivetimer = new ElapsedTime();
+
+        /* reset the "timer" to 0 */
+        drivetimer.reset();
 
     /* This switch case is determined by the String direction indicated above */
 
@@ -283,7 +307,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
                 break;
         }
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
-        while (opModeIsActive() && runtime.seconds() < time) {
+        while (opModeIsActive() && drivetimer.seconds() < time) {
 
         }
     /* Once the while loop above finishes turn off the wheels */
