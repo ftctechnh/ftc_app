@@ -38,7 +38,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
   /* Set up and init all variables */
     Orientation             lastAngles = new Orientation();
-    double globalAngle, power = .30, correction;
+    double globalAngle;
     double xPosUp = 0;
     double xPosDown = .55;
     static double clawClose = .3;
@@ -49,12 +49,20 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
     VuforiaLocalizer vuforia;
 
+    /* Create timers used in autonomous */
+
     /* Create a "timer" that begins once the OpMode begins */
-    private ElapsedTime runtime = new ElapsedTime();
+    ElapsedTime verticaltimer = new ElapsedTime();
+
+
+    /* Create a "timer" that begins once the OpMode begins */
+    ElapsedTime drivetimer = new ElapsedTime();
+
 
     @Override
     public void runOpMode() throws InterruptedException
     {
+
 
     /* To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);*/
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -148,15 +156,15 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         /* Move the claw up so it doesn't dig into the ground coming off the balance board */
         moveclawbytime(.5,.5,"Up");
 
-        /* Put the servo color arm down */
-        gemServo.setPosition(xPosDown);
-        sleep(1500);
+//        /* Put the servo color arm down */
+//        gemServo.setPosition(xPosDown);
+//        sleep(1500);
 
-        /* Knock of the Red jewel */
-        knockjewelRed();
-
-        /* Rotate so the phone can see the Vuforia Key */
-        rotate(10,.2);
+//        /* Knock of the Red jewel */
+//        knockjewelRed();
+//
+//        /* Rotate so the phone can see the Vuforia Key */
+//        rotate(10,.2);
 
         /* Tells vuforia to look for relic templates, if it finds something, then it returns
         LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
@@ -169,19 +177,22 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         }
         telemetry.update();
 
-        /* Return to starting position */
-        rotate(-10, .2);
+//        /* Return to starting position */
+//        rotate(-10, .2);
 
         /* Wait a moment and let vuforia do its work and for the robot to realign properly */
         sleep(500);
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        movebytime(1.25, .5, "Forward");
+//        movebytime(1.25, .5, "Forward");
 
-        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
-        account for the slight slippage after powering off the wheels */
-        rotate(87, .2);
+        movebytime(.3, .2, "Forward");
+
+
+//        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
+//        account for the slight slippage after powering off the wheels */
+//        rotate(87, .2);
 
         /* Wait a moment to stop moving */
         sleep(700);
@@ -207,27 +218,24 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         }
 
         /* Wait a moment */
-        sleep(2000);
+        sleep(700);
 
         /* Move forward slightly so the block is in the space */
-        movebytime(.4, .2, "Forward");
-
-        /* Wait a moment */
-        sleep(2000);
+        movebytime(.3, .2, "Forward");
 
         /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        /* Open up the claw to release the block */
-        clawServo.setPower(clawOpen);
-
-        /* Wait a moment */
-        sleep(2000);
-
-        /* Stop the claw */
-        clawServo.setPower(clawStill);
-
-        /* Wait a moment */
-        sleep(2000);
+//        /* Open up the claw to release the block */
+//        clawServo.setPower(clawOpen);
+//
+//        /* Wait a moment */
+//        sleep(2000);
+//
+//        /* Stop the claw */
+//        clawServo.setPower(clawStill);
+//
+//        /* Wait a moment */
+//        sleep(2000);
 
         /* Back up a small bit */
         movebytime(.3, .2, "Backward");
@@ -239,31 +247,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
-    public void clawAbre(double time) {
-
-    /* Create a "timer" that begins once the OpMode begins */
-         ElapsedTime clawtimer = new ElapsedTime();
-
-        /* reset the "timer" to 0 */
-        clawtimer.reset();
-
-        /* Open the claw */
-        clawServo.setPower(clawOpen);
-
-        /* If the timer hasn't reached the time that is indicated do nothing and keep opening */
-        while (opModeIsActive() && clawtimer.seconds() < time) {
-        }
-
-        /* Once the while loop above finishes turn off claw servo */
-        clawServo.setPower(clawStill);
-    }
-
-
-/* This method moves the claw up or down for a certain amount of time either up or down */
     public void moveclawbytime(double time, double power, String direction) {
-
-    /* Create a "timer" that begins once the OpMode begins */
-        ElapsedTime verticaltimer = new ElapsedTime();
 
         /* reset the "timer" to 0 */
         verticaltimer.reset();
@@ -289,9 +273,6 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 /* This method moves the robot forward for time and power indicated*/
     public void movebytime (double time, double power, String direction) {
 
-    /* Create a "timer" that begins once the OpMode begins */
-        ElapsedTime drivetimer = new ElapsedTime();
-
         /* reset the "timer" to 0 */
         drivetimer.reset();
 
@@ -313,10 +294,6 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         }
     /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
         while (opModeIsActive() && drivetimer.seconds() < time) {
-
-            telemetry.addData("Driver Timer:", drivetimer.seconds());
-            telemetry.addData("Time Given:", time);
-            telemetry.update();
 
         }
     /* Once the while loop above finishes turn off the wheels */
