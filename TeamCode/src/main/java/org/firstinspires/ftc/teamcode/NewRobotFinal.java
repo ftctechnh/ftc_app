@@ -7,8 +7,6 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorImpl;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -32,34 +30,38 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class NewRobotFinal
 {
-    private int liftLevels[] = {0, 769,1500,1538}; //Currently not levels or stops
-    private int liftDeadzone = 0;
-    private short currentLvl;
+    //Currently not levels or stops
+    private short currentLvl = 0;
+    private short liftTargetPos;
+    private short liftDir;
+    private final short UP_L = 1;
+    private final short DOWN_L = 2;
+    private final short STOP_L = 0;
 
-    private ColorSensor floorColorSens;
-    private ColorSensor rightWingColorSens ;
-    private ColorSensor leftWingColorSens ;
+    private ColorSensor floorColorSens = null;
+    private ColorSensor rightWingColorSens = null;
+    private ColorSensor leftWingColorSens = null;
 
-    private DcMotorImplEx driveLeftOne ;
-    private DcMotorImplEx driveRightOne ;
-    private DcMotorImplEx wingMotor ;
+    private DcMotorImplEx driveLeftOne = null;
+    private DcMotorImplEx driveRightOne = null;
+    private DcMotorImplEx wingMotor = null;
 
-    private Servo leftDoorWall ;
-    private Servo rightDoorWall ;
-    private DcMotorImplEx liftMotor ;
-    //private DcMotorImplEx shiftLiftMotor ;
+    private Servo leftDoorWall = null;
+    private Servo rightDoorWall = null;
+    private DcMotorImplEx liftMotor = null;
+    //private DcMotorImplEx shiftLiftMotor = null;
 
-    private DcMotorImplEx tailRelease ;
-    private Servo grabber ;
-    private Servo grabberRotator ;
+    private DcMotorImplEx tailRelease  = null;
+    private Servo grabber  = null;
+    private Servo grabberRotator = null;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
-    private VuforiaLocalizer vuforia ;
-    private RelicRecoveryVuMark vuMark ;
-    private VuforiaTrackables relicTrackables ;
-    private VuforiaTrackable relicTemplate ;
+    private VuforiaLocalizer vuforia  = null;
+    private RelicRecoveryVuMark vuMark  = null;
+    private VuforiaTrackables relicTrackables  = null;
+    private VuforiaTrackable relicTemplate  = null;
 
-    private BNO055IMU imu;
+    private BNO055IMU imu  = null;
     Orientation angles;
     Acceleration gravity;
 
@@ -85,7 +87,8 @@ public class NewRobotFinal
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
-
+        leftDoorWall.scaleRange(.5f, .95f);
+        rightDoorWall.scaleRange(.05f, .5f);
         initEndGame(hardwareMap);
 
         zeroStuff();
@@ -96,11 +99,11 @@ public class NewRobotFinal
     public void initEndGame(HardwareMap hardwareMap)
     {
         tailRelease = hardwareMap.get(DcMotorImplEx.class, "tailRelease");
+        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         tailRelease.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
         tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
-       // tailRelease.setVelocity(3, AngleUnit.RADIANS);
-        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+       // tailRelease.setVelocity(0, AngleUnit.RADIANS);
 
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
         grabber = hardwareMap.get(Servo.class, "grabber");
@@ -108,6 +111,15 @@ public class NewRobotFinal
 
     public void initVuforia(HardwareMap hardwareMap)
     {
+        resetDriveEncoders();
+        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        driveRightOne.setVelocity(0, AngleUnit.RADIANS);
+        driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
+        driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
+        driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //Comment out if you don't want camera view on robo phone
@@ -129,6 +141,7 @@ public class NewRobotFinal
     {                       //basically sets up lift's step counts starting at its bottom position
         liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //liftMotor.setVelocity(0, AngleUnit.DEGREES);
@@ -138,8 +151,6 @@ public class NewRobotFinal
         wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
        // wingMotor.setVelocity(0, AngleUnit.DEGREES);
-
-        currentLvl = 0;
 
         //driveRightOne.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -152,7 +163,7 @@ public class NewRobotFinal
 //        resetDriveEncoders();
 
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
-        leftDoorWall.setDirection(Servo.Direction.REVERSE);
+        leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
 
     public void initIMU()
@@ -235,6 +246,8 @@ public class NewRobotFinal
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void driveStraight_In(float inches, double pow)
@@ -469,25 +482,57 @@ public class NewRobotFinal
 
     public void moveLift(int adjLevels, float pow) //For the lift, I'll use levels or encoders points that stop
     {
+        CalcLiftTarget(adjLevels);
+        while(liftDir != STOP_L)
+        {
+            AdjLiftDir();
+        }
+    }
+
+    public void CalcLiftTarget(int adjLevels) //For the lift, I'll use levels or encoders points that stop
+    {
+        final int liftLevels[] = {0, 100, 769, 1500, 1538};
+        final int liftDeadzone = 0;
+
         if (adjLevels + currentLvl < 0)
-            return;
-        else if (adjLevels + currentLvl > 3)
-            return;
+        {
+            currentLvl = 0;
+        } else if (adjLevels + currentLvl >= liftLevels.length)
+        {
+            currentLvl = (short) (liftLevels.length - 1);
+        } else
+        {
+            currentLvl += adjLevels;
+        }
 
-        currentLvl += adjLevels;
-
+        //Calculate target
         if (adjLevels > 0)
         {
-            liftMotor.setPower(-Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl] - liftDeadzone){}
+            liftTargetPos = (short) (liftLevels[currentLvl] - liftDeadzone);
+            liftDir = UP_L;
+        } else
+        {
+            liftTargetPos = (short) (liftLevels[currentLvl] + liftDeadzone);
+            liftDir = DOWN_L;
+        }
+    }
+
+
+    public void AdjLiftDir()
+    {
+        if (liftDir == UP_L && -liftMotor.getCurrentPosition() < liftTargetPos)
+        {
+            liftMotor.setPower(-.7);
+        }
+        else if(liftDir == DOWN_L && -liftMotor.getCurrentPosition() > liftTargetPos)
+        {
+            liftMotor.setPower(.7);
         }
         else
         {
-            liftMotor.setPower(Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl] + liftDeadzone){}
+            liftDir = STOP_L;
+            liftMotor.setPower(0);
         }
-
-        liftMotor.setPower(0);
     }
 
     public void fineMoveLift(float y)
@@ -497,6 +542,8 @@ public class NewRobotFinal
 
     public void fineMoveLift(float y, float factor)
     {
+        liftDir = STOP_L;
+
         if (y > .3)
         {
             liftMotor.setPower(Math.abs(y * factor));
@@ -550,13 +597,13 @@ public class NewRobotFinal
          */
         if (!close)
         {
-            leftDoorWall.setPosition(.7f);
-            rightDoorWall.setPosition(.3f);
+            leftDoorWall.setPosition(.5f);
+            rightDoorWall.setPosition(.5f);
         }
         else
         {
-            leftDoorWall.setPosition(1f);
-            rightDoorWall.setPosition(0f);
+            leftDoorWall.setPosition(.95f);
+            rightDoorWall.setPosition(.05f);
         }
     }
 
@@ -599,6 +646,7 @@ public class NewRobotFinal
     {
         grabber.setPosition(grabber.getPosition() + in);
     }
+
     public void fineAdjGrabberRotator(float in)
     {
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
@@ -677,4 +725,6 @@ public class NewRobotFinal
     public DcMotorImplEx getTailRelease(){return tailRelease;}
 
     public BNO055IMU getImu(){return imu;}
+
+    public short getLiftDir(){return liftDir;}
 }
