@@ -3,28 +3,31 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp (name="okay", group="TeleOp")
 public class okay extends OpMode {
-    Hardware750 robot = new Hardware750();
+    private Servo thiccClaw1   = null;
+    private Servo thiccClaw2   = null;
     @Override
     public void init() {
         telemetry.addData("Status", "Uninitialized...");
-        robot.init(hardwareMap);
+        thiccClaw1 = hardwareMap.get(Servo.class, "thiccClaw1");
+        thiccClaw2 = hardwareMap.get(Servo.class, "thiccClaw2");
         telemetry.addData("Status", "Initialized");
-        robot.frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+    double CLOSE_POS = 0.12;
+    double OPEN_POS = 0.75;
     @Override
     public void loop() {
-        if (gamepad1.a) {robot.setAllDriveMotors(.25); } else {robot.setAllDriveMotors(0);}
-        telemetry.addData("pos:", robot.rrDrive.getCurrentPosition());
-        telemetry.addData("pos:", robot.rlDrive.getCurrentPosition());
-        telemetry.addData("pos:", robot.frDrive.getCurrentPosition());
-        telemetry.addData("pos:", robot.flDrive.getCurrentPosition());
-
+        if (gamepad1.a) {
+            thiccClaw1.setPosition(CLOSE_POS);
+            thiccClaw2.setPosition(CLOSE_POS);
+        }else if (gamepad1.b){
+            thiccClaw1.setPosition(OPEN_POS);
+            thiccClaw2.setPosition(OPEN_POS);
+        }
     }
 
 }

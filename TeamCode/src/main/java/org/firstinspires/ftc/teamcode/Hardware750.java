@@ -46,6 +46,8 @@ public class Hardware750 {
     /* Public OpMode members. */
     public ModernRoboticsI2cRangeSensor rangeSensor  = null;
     public Servo                        arm          = null;
+    public Servo                        thiccClaw1   = null;
+    public Servo                        thiccClaw2   = null;
     public DcMotor                      flDrive      = null;
     public DcMotor                      frDrive      = null;
     public DcMotor                      rlDrive      = null;
