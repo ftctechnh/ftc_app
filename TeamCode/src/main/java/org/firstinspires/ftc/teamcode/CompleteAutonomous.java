@@ -96,7 +96,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         }
 
         if (rightMostBall != Alliance.UNKNOWN) {
-            knockOffBalls();
+            knockOffBalls(rightMostBall);
         }
 
         log("Lifting lift");
@@ -244,7 +244,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         return redBall.isSeen() && blueBall.isSeen();
     }
 
-    public void knockOffBalls() {
+    public void knockOffBalls(Alliance rightMostBall) {
 
         robot.lowerLeftWhipSnake();
         robot.sleep(500);
@@ -314,15 +314,11 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
 
             telemetry.update();
 
-            robot.motorArr[0].setPower(unscaledMotorPowers[0]);
-            robot.motorArr[1].setPower(unscaledMotorPowers[1]);
-            robot.motorArr[2].setPower(unscaledMotorPowers[2]);
-            robot.motorArr[3].setPower(unscaledMotorPowers[3]);
+            robot.setMotorSpeeds(unscaledMotorPowers);
 
             if (Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION) {
                 timeHeadingAcceptable.reset();
             }
-            //robot.setMotorSpeeds(unscaledMotorPowers);
         }
 
         robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
