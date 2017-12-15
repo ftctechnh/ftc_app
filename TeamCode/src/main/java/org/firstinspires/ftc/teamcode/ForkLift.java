@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareDevice.Manufacturer;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,11 +14,9 @@ public class ForkLift {
     private DcMotor motor;
     private DigitalChannel topButton;
     private DigitalChannel bottomButton;
-    private double clawPosition = 0.25; //0.25 on the other robot
     private double clawHighEnd = 1; //0.85
     private double clawLowEnd = 0; //0.3
     private Telemetry telemetry;
-    private HardwareDevice.Manufacturer manufacturer;
 
     public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, DigitalChannel topButton, DigitalChannel bottomButton, Telemetry telemetry) {
         if(rightClaw.getManufacturer().equals(Manufacturer.ModernRobotics)){
@@ -52,7 +46,7 @@ public class ForkLift {
 
 
     public void init() {
-        setClawPosition(clawPosition);
+        openClaw();
         //motor.setPower(-1);
         //while (!bottomButton.isPressed()) {
 
