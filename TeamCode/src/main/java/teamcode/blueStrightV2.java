@@ -124,6 +124,7 @@ public class blueStrightV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        robot = new KiwiRobot(hardwareMap,telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -159,15 +160,18 @@ public class blueStrightV2 extends LinearOpMode {
         {
             elapsedTime = runtime.time();
 
-            column = this.getColumn(this.trackable);
             robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
-            sleep(1000);
+            while ((column = robot.getColumn()) == -1 && elapsedTime < 5 ){
+                elapsedTime = runtime.time();
+            }
+
+            if(column == -1)
+            {
+                column = 2;
+            }
 
             robot.jewelServo.setPosition(1);
-            sleep(2000);
-
-            robot.armServo.setPosition(.65);
-            sleep(500);
+            sleep(1500);
 
             if (robot.isJewelRed()&& !isDetected) {
                 // the red jewel is on the left of sensor
@@ -177,58 +181,46 @@ public class blueStrightV2 extends LinearOpMode {
             robot.turnDegrees(speed,jewelDegrees);
 
             robot.jewelServo.setPosition(.65);
-            sleep(1000);
+            sleep(700);
 
             robot.jewelServo.setPosition(0);
-            sleep(500);
+            sleep(700);
+
+            robot.armServo.setPosition(LIFTEDARMPOSITION);
+            sleep(200);
 
             robot.turnDegrees(speed,-jewelDegrees);
 
-            robot.armServo.setPosition(LIFTEDARMPOSITION);
+            robot.turnDegrees(-.5, 160);
+
+            robot.driveForward(.5,16,true);
+
+            robot.armServo.setPosition(.65);
             sleep(500);
 
-            robot.turnDegrees(-.5, 150);
+            robot.turnDegrees(-.5,-90);
 
-            robot.driveForward(.5,19.25,true);
+            double distance = (column - 1) * 8.5;
+            robot.driveForward(.5,distance,true);
 
-            double distance = 4 + column * 7.5;
-            //robot.driveLateral(.5,distance,true);
+            robot.turnDegrees(.5,90);
 
-            robot.armServo.setPosition(.75);
-            sleep(500);
+            robot.driveForward(.5,16,true);
 
-            robot.driveForward(.5,8,true);
+            robot.openClaw();
 
-            robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
-            sleep(1000);
+            robot.turnDegrees(.5,-30);
 
-            robot.turnDegrees(.5,-15);
+            robot.armServo.setPosition(.8);
+            robot.driveForward(.5,-2,true);
 
-            robot.driveForward(.5,-4,true);
-
-            /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
+            if(column == 1)
             {
-                turn(1);
+                robot.driveLateral(.5,5,true);
             }
-            else if (elapsedTime < DRIVETOGLYPHPIT)
-            {
-                drive(0, 1);
-            }
-            else if (elapsedTime < GRABABLOCK)
-            {
-                turnOffMotors();
-                setClampPosition(CLOSECLAMPPOSITION);
-            }
-            else if (elapsedTime < BACKTOBASE)
-            {
-                drive(0,-1);
-            }
-            else if (elapsedTime < TURNTOFACECOLUMNS)
-            {
-                turn(1);
-            }*/
 
             updateTelemetry();
+            break;
         }
     }
 

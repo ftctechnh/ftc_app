@@ -123,7 +123,6 @@ public class blueNintyV2 extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot = new KiwiRobot(hardwareMap, telemetry);
-        this.initVuforia();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -148,13 +147,13 @@ public class blueNintyV2 extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         /** Start tracking the data sets we care about. */
-        relicTrackables.activate();
         runtime.reset();
         double elapsedTime;
 
         // run until the end of the match (driver presses STOP)
         boolean test = true;
         double speed = .8;
+        double turnSpeed = 0.6;
         double jewelDegrees = -15;//- degrees go right, positive degrees go left
         Boolean isDetected = false;
         int column = 0;
@@ -162,95 +161,92 @@ public class blueNintyV2 extends LinearOpMode {
         {
             elapsedTime = runtime.time();
 
-            column = this.getColumn(this.trackable);
             robot.rightClampServo.setPosition(CLOSECLAMPPOSITION);
+            while ((column = robot.getColumn()) == -1 && elapsedTime < 5 ){
+                elapsedTime = runtime.time();
+            }
+
+            if(column == -1)
+            {
+                column = 2;
+            }
 
             robot.jewelServo.setPosition(1);
-            sleep(2000);
-
-            robot.armServo.setPosition(.65);
-            sleep(500);
+            sleep(1800);
 
             if (robot.isJewelRed()&& !isDetected) {
                 // the red jewel is on the left of sensor
                 jewelDegrees = -jewelDegrees;
                 isDetected = !isDetected;
             }
-            robot.turnDegrees(speed, jewelDegrees);
+            robot.turnDegrees(turnSpeed, jewelDegrees);
 
             robot.jewelServo.setPosition(.65);
-            sleep(1000);
+            sleep(700);
 
             robot.jewelServo.setPosition(0);
-            sleep(500);
-
-            robot.turnDegrees(speed, -jewelDegrees);
+            sleep(700);
 
             robot.armServo.setPosition(LIFTEDARMPOSITION);
-            sleep(500);
+            sleep(200);
 
-            robot.turnDegrees(-.5, 170);
+            robot.turnDegrees(turnSpeed, -jewelDegrees);
 
-            robot.driveForward(.5,18.5,true);
+            robot.armServo.setPosition(LIFTEDARMPOSITION);
+            sleep(200);
 
-            robot.turnOffMotors();
+            robot.turnDegrees(turnSpeed, 160);
+
+            double distance = 26 + (column - 2) * 7.5;
+            robot.driveForward(.5, distance,true);
 
             robot.armServo.setPosition(.7);
             sleep(500);
 
-            robot.turnDegrees(-.5,90);
+            robot.turnDegrees(turnSpeed,90);
 
-            double distance = column * 7.5;
-            robot.driveLateral(.5,distance,true);
+            robot.driveForward(.5,9,true);
 
-            robot.driveForward(.5,24,true);
+            robot.openClaw();
 
-            robot.rightClampServo.setPosition(OPENCLAMPPOSITION);
-            sleep(1000);
+            robot.turnDegrees(turnSpeed,-30);
 
-            robot.turnDegrees(.5,30);
+            robot.driveForward(.5,-5,true);
 
-            robot.driveForward(.5,-4,true);
-
-            robot.armServo.setPosition(.9);
-            robot.turnOffMotors();
-
-            robot.turnDegrees(.5,135);
+            //robot.armServo.setPosition(.9);
+            double pitDegrees = - 135 - ((column - 2) * 10);
+            robot.turnDegrees(turnSpeed, pitDegrees);
 
             robot.rightClampServo.setPosition(0.7);
-            robot.driveForward(0.5, 26, true);
-            for (int i = 0; i < 6; i++) {
-                if (grabGlyph()) {
+            robot.driveForward(1, 24, true);
+
+            // wiggle
+            double turnDegrees = 15;
+            robot.turnDegrees(1, -turnDegrees);
+            robot.turnDegrees(1,  turnDegrees);
+            //robot.turnDegrees(1, -turnDegrees);
+            boolean grabbed = false;
+
+            for (int i = 0; i < 2; i++) {
+                if (grabbed = robot.grabGlyph()) {
                     break;
                 }
-                robot.driveForward(0.5, 2, false);
+                robot.driveForward(0.5, 6, false);
             }
 
-            /*else if (elapsedTime < TURNTOWARDSGLYPHPIT)
+            if(!grabbed)
             {
-                turn(1);
+                robot.closeClaw();
             }
-            else if (elapsedTime < DRIVETOGLYPHPIT)
-            {
-                drive(0, 1);
-            }
-            else if (elapsedTime < GRABABLOCK)
-            {
-                turnOffMotors();
-                setClampPosition(CLOSECLAMPPOSITION);
-            }
-            else if (elapsedTime < BACKTOBASE)
-            {
-                drive(0,-1);
-            }
-            else if (elapsedTime < TURNTOFACECOLUMNS)
-            {
-                turn(1);
-            }
-            else {
-                turnOffMotors();
-            }*/
-            updateTelemetry();
+            robot.armServo.setPosition(.6);
+            robot.driveForward(.5,-16,true);
+            double pitDegreesBack = 180 + ((column - 2) * 25);
+            robot.turnDegrees(turnSpeed,pitDegreesBack);
+            robot.driveForward(.6, 16, true);
+            robot.rightClampServo.setPosition(0);
+            robot.armServo.setPosition(.8);
+            robot.driveForward(.5,-3,true);
+            break;
         }
     }
 

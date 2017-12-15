@@ -159,9 +159,15 @@ public class redNintyV2 extends LinearOpMode {
 
             elapsedTime = runtime.time();
 
-            robot.closeClaw();
+            robot.rightClampServo.setPosition(0);
 
-            while ((column = robot.getColumn()) == -1) {
+            while ((column = robot.getColumn()) == -1 && elapsedTime < 5 ){
+                elapsedTime = runtime.time();
+            }
+
+            if(column == -1)
+            {
+                column = 2;
             }
 
             robot.jewelServo.setPosition(1);
@@ -218,14 +224,14 @@ public class redNintyV2 extends LinearOpMode {
             robot.turnDegrees(1,  turnDegrees);
             //robot.turnDegrees(1, -turnDegrees);
 
+            boolean grabbed = false;
+
             for (int i = 0; i < 2; i++) {
-                if (robot.grabGlyph()) {
+                if (grabbed = robot.grabGlyph()) {
                     break;
                 }
                 robot.driveForward(.5, 6, true);
             }
-
-            boolean grabbed = robot.grabGlyph();
 
             if(!grabbed)
             {
@@ -234,7 +240,7 @@ public class redNintyV2 extends LinearOpMode {
             robot.armServo.setPosition(.6);
             robot.driveForward(.5,-12,true);
             double pitDegreesBack = 180 - (4 * column) * 10;
-            robot.turnDegrees(.5,180);
+            robot.turnDegrees(.5,pitDegreesBack);
             robot.driveForward(1, 20, true);
             robot.rightClampServo.setPosition(0);
             robot.armServo.setPosition(.8);
