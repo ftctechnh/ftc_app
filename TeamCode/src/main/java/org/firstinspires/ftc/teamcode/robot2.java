@@ -80,7 +80,7 @@ public class robot2 extends LinearOpMode {
             }
             y = gamepad2.y;
             if (Tower.getCurrentPosition()<0 && !limitoff){
-                towerpower= .01*(0-Tower.getCurrentPosition());
+                towerpower= Range.clip(towerpower,0,1) + .01*(0-Tower.getCurrentPosition());
             }else if(Tower.getCurrentPosition()>max && !limitoff ){
                 towerpower = -1;
             }
