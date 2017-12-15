@@ -174,8 +174,21 @@ public class AutonomousTemplate extends LinearOpMode
         gemServo.setPosition(xPosDown);
         sleep(1500);
 
-        /* Knock of the Red jewel */
-        knockjewelRed();
+        /* Knock off the jewel */
+        switch (teamColorPosition) {
+            case "BlueRight":
+                knockjewelBlue();
+                break;
+            case "BlueLeft":
+                knockjewelBlue();
+                break;
+            case "RedRight":
+                knockjewelRed();
+                break;
+            case "RedLeft":
+                knockjewelRed();
+                break;
+        }
 
         /* Rotate so the phone can see the Vuforia Key */
         rotate(10,.2);
