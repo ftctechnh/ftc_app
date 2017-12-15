@@ -90,14 +90,19 @@ public class ServoJewelAuto extends LinearOpMode {
 
         sleep(2000);
 
+        telemetry.addData("Color Sensor", "R: %f \nB: %f ", colorSensorWrapper.getRGBValues()[0], colorSensorWrapper.getRGBValues()[2]);
+        telemetry.update();
+
+        sleep(1000);
+
         //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
         if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
-            armRotator.setPosition(0);
-        } else {
             armRotator.setPosition(1);
+        } else {
+            armRotator.setPosition(0);
         }
 
-        sleep(5000);
+        sleep(1000);
 
         armExtender.setPosition(1);
         armRotator.setPosition(0.5);
@@ -106,7 +111,7 @@ public class ServoJewelAuto extends LinearOpMode {
 
         imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
-        sleep(1000);
+        sleep(10000);
 
         //STEP 3: Get to center tape thing
         while (imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y < 36
