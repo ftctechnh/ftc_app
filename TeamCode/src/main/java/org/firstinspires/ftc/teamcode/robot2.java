@@ -60,8 +60,8 @@ public class robot2 extends LinearOpMode {
                 }else{
                     position=max;
                 }
-                //factor = Range.clip((2/(1+(3^(Tower.getCurrentPosition()-4416))))-1,-1,1);
-            }else if (towerpower == 0){
+                //factor = Range.clip((2/(1+(3^(Tower.getCurrentPosition()-max))))-1,-1,1);
+            }else if (Math.abs(towerpower) < .01){
                 bonus = .01*(position-Tower.getCurrentPosition());
             }else{
                 if (position>0&&position<max){
@@ -73,11 +73,13 @@ public class robot2 extends LinearOpMode {
                 }
                 //factor = Range.clip((2/(1+(3^(-Tower.getCurrentPosition()))))-1,-1,1);
             }
+            */
             if (Tower.getCurrentPosition()<0){
-                bonus += .25;
+                towerpower= 1;
             }else if(Tower.getCurrentPosition()>max){
-                bonus -= .25;
+                towerpower = -1;
             }
+            /*
             //towerpower = (bonus+factor*towerpower);*/
             //towerpower += bonus;
             Left.setPower(.5*Range.clip(gamepad1.left_stick_y, -1, 1));
@@ -85,10 +87,10 @@ public class robot2 extends LinearOpMode {
             Tower.setPower(.5 * Range.clip(towerpower, -1, 1));
             Slack.setPower(-.5 *Range.clip((towerpower), -1, 1));
             //finger adjustment statements
-            if(gamepad2.b && !b && Fingeroffset <= 1){
+            if(gamepad2.b && !b && Fingeroffset <= .4){
                 Fingeroffset += .1;
             }
-            if(gamepad2.x && !x && Fingeroffset >= -1 ){
+            if(gamepad2.x && !x && Fingeroffset >= .1 ){
                 Fingeroffset -= .1;
             }
             RF.setPosition(Range.clip(0.5 - Fingeroffset, -1,1));
@@ -96,7 +98,8 @@ public class robot2 extends LinearOpMode {
             x = gamepad2.x;
             b = gamepad2.b;
             //Finger controls
-            telemetry.addData("Path1",String.valueOf(Tower.getCurrentPosition())+" " + String.valueOf(factor)+" " + String.valueOf(bonus) + " " + String.valueOf(towerpower));
+            telemetry.addData("Path1","Tower position: " + String.valueOf(Tower.getCurrentPosition())+" factor: " + String.valueOf(factor)+"bonus: " + String.valueOf(bonus) + "tower power: " + String.valueOf(towerpower)+ " position: " + String.valueOf(position));
+            telemetry.addData("Path2","Finger offset: " + String.valueOf(Fingeroffset));
             telemetry.update();
 
         }
