@@ -29,22 +29,22 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.moveXEncoderCounts(100,1,true);
                 newRobot.moveWing(true);
                 sleep(1000);
-                newRobot.getleftWingColorSens();
-                char colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
+                newRobot.getrightWingColorSens();
+                char colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
                 telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getrightWingColorSens()));
                 telemetry.update();
                 switch (colorOfJewel)
                 {
                     case'r':
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
                         sleep(500);
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         break;
                     case 'b':
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         sleep(500);
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
                         break;
                     default:
                         break;
@@ -92,13 +92,13 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case 'r':
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         sleep(500);
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
                     case 'b':
-                        newRobot.driveStraight_In(6);
+                        newRobot.driveStraight_In(-8);
                         sleep(500);
-                        newRobot.driveStraight_In(-6);
+                        newRobot.driveStraight_In(8);
                         break;
                     default:
                         break;
