@@ -11,60 +11,87 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public abstract class MeccyAutoMode extends MeccyMode{
     abstract public void runOpMode();
     //
-    DcMotor leftFrontMotor;
-    DcMotor rightFrontMotor;
-    DcMotor leftBackMotor;
-    DcMotor rightBackMotor;
-
+    static final double countify = 116.501;
+    //
     public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
-        leftBackMotor = hardwareMap.dcMotor.get(leftFront);
-        rightBackMotor = hardwareMap.dcMotor.get(rightFront);
-        leftFrontMotor = hardwareMap.dcMotor.get(leftBack);
-        rightFrontMotor = hardwareMap.dcMotor.get(rightBack);
-
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        super.configureMotors(leftFront, rightFront, leftBack,rightBack);
+        //
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     //
-    public void turnRight(double powerInput){
-        leftBackMotor.setPower(powerInput);
-        leftFrontMotor.setPower(powerInput);
-        rightBackMotor.setPower(-powerInput);
-        rightFrontMotor.setPower(-powerInput);
+    public void forwardToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
+        //
+        setSpeed(speed);
     }
     //
-    public void turnLeft(double powerInput){
-        leftBackMotor.setPower(-powerInput);
-        leftFrontMotor.setPower(-powerInput);
-        rightBackMotor.setPower(powerInput);
-        rightFrontMotor.setPower(powerInput);
+    public void backToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
+        //
+        setSpeed(speed);
     }
     //
-    public void driveForward(double powerInput){
-        leftBackMotor.setPower(powerInput);
-        leftFrontMotor.setPower(powerInput);
-        rightBackMotor.setPower(powerInput);
-        rightFrontMotor.setPower(powerInput);
+    public void rightToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() - move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - move);
+        //
+        setSpeed(speed);
     }
     //
-    public void driveBackward(double powerInput){
-        leftBackMotor.setPower(-powerInput);
-        leftFrontMotor.setPower(-powerInput);
-        rightBackMotor.setPower(-powerInput);
-        rightFrontMotor.setPower(-powerInput);
+    public void turnRightToPostion(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - move);
+        //
+        setSpeed(speed);
     }
     //
-    public void strafeLeft(double powerInput){
-            leftBackMotor.setPower(-powerInput);
-            leftFrontMotor.setPower(powerInput);
-            rightBackMotor.setPower(powerInput);
-            rightFrontMotor.setPower(-powerInput);
+    public void leftToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
+        //
+        setSpeed(speed);
     }
     //
-    public void strafeRight(double powerInput){
-        leftBackMotor.setPower(powerInput);
-        leftFrontMotor.setPower(-powerInput);
-        rightBackMotor.setPower(-powerInput);
-        rightFrontMotor.setPower(powerInput);
+    public void turnLeftToPosition (double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() - move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() - move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
+        //
+        setSpeed(speed);
+    }
+    //
+    private void setSpeed(double speed){
+        leftBackMotor.setPower(speed);
+        rightBackMotor.setPower(speed);
+        leftFrontMotor.setPower(speed);
+        rightFrontMotor.setPower(speed);
     }
 }

@@ -175,45 +175,6 @@ public class JeffThePengwin {
         rightFrontMotor.setPower(-powerInput*degreeOfPower);
     }
     //
-    public void turnLeft(){
-        leftBackMotor.setPower(-powerInput*degreeOfPower);
-        leftFrontMotor.setPower(-powerInput*degreeOfPower);
-        rightBackMotor.setPower(powerInput*degreeOfPower);
-        rightFrontMotor.setPower(powerInput*degreeOfPower);
-    }
-    //
-    public void driveForward(){
-        bestowThePowerToAllMotors();
-    }
-    //
-    public void driveBackward(){
-        leftBackMotor.setPower(-powerInput*degreeOfPower);
-        leftFrontMotor.setPower(-powerInput*degreeOfPower);
-        rightBackMotor.setPower(-powerInput*degreeOfPower);
-        rightFrontMotor.setPower(-powerInput*degreeOfPower);
-    }
-    //
-    public void strafeLeft(){
-        if(touchy.getState()){
-            leftBackMotor.setPower(-powerInput*degreeOfPower);
-            leftFrontMotor.setPower(powerInput*degreeOfPower);
-            rightBackMotor.setPower(powerInput*degreeOfPower);
-            rightFrontMotor.setPower(-powerInput*degreeOfPower);
-        }else{
-            leftBackMotor.setPower(-powerInput*degreeOfPower);
-            leftFrontMotor.setPower(powerInput*degreeOfPower);
-            rightBackMotor.setPower(powerInput*degreeOfPower);
-            rightFrontMotor.setPower(-powerInput*degreeOfPower);
-        }
-    }
-    //
-    public void strafeRight(){
-        leftBackMotor.setPower(getTheBackWheelPower());
-        leftFrontMotor.setPower(-getTheFrontWheelPower());
-        rightBackMotor.setPower(-getTheBackWheelPower());
-        rightFrontMotor.setPower(getTheFrontWheelPower());
-    }
-    //
     public void switchify(){
         //leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);

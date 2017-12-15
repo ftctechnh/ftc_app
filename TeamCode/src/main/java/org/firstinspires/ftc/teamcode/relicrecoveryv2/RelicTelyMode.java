@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Created by christinecarroll on 12/14/17.
  */
 
-public abstract class RelicTelyMode  extends MeccyTelyMode{
+public abstract class RelicTelyMode  extends MeccyMode{
     abstract public void runOpMode();
     //
 
