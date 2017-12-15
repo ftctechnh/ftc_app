@@ -34,18 +34,6 @@ public class CompTeleFinal extends OpMode
          * GAMEPAD 2
          */
 
-        /*
-        if (gamepad2.left_stick_y == 0)
-        {
-            telemetry.addData("left stick is 0, adj dir", null);
-            telemetry.addData("liftdir", newRobot.getLiftDir());
-            newRobot.AdjLiftDir();
-        }
-        else
-        {
-            newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
-            telemetry.addData("Fine move lift", null);
-        }
 
         if (gamepad2.dpad_up)
         {
@@ -55,14 +43,16 @@ public class CompTeleFinal extends OpMode
                 newRobot.CalcLiftTarget(1);
                 liftArmed = false;
             }
-        } else if (gamepad2.dpad_down)
+        }
+        else if (gamepad2.dpad_down)
         {
             if (liftArmed)
             {   telemetry.addData("In calclift -1", null);
                 newRobot.CalcLiftTarget(-1);
                 liftArmed = false;
             }
-        } else
+        }
+        else
         {
             telemetry.addData("Armedlift true", null);
             liftArmed = true;
@@ -70,7 +60,7 @@ public class CompTeleFinal extends OpMode
 
 
         telemetry.update();
-        */
+
 
         newRobot.fineMoveLift(gamepad2.left_stick_y, .9f);
         /*
@@ -92,20 +82,20 @@ public class CompTeleFinal extends OpMode
         else
             newRobot.getTailRelease().setPower(0f);
 
-        if (gamepad2.a)
+        //Doesn't close all the way
+        if (gamepad2.a) //we will measure these values and see if its a mechanical or programming issue
             newRobot.fineAdjGrabber(.01f);
         else if (gamepad2.b)
             newRobot.fineAdjGrabber(-.01f);
 
         if (gamepad2.y)
         {
-            newRobot.fineAdjGrabberRotator(-.004f);
+            newRobot.fineAdjGrabberRotator(.008f);
         }
         else if (gamepad2.x)
         {
-            newRobot.fineAdjGrabberRotator(.004f);
+            newRobot.fineAdjGrabberRotator(-.008f);
         }
-
 
         /**
          *DRIVE CONTROLS

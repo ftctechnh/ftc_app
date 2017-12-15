@@ -14,22 +14,21 @@ public class FinalUniversalAudi extends LinearOpMode
     {
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.initVuforia(hardwareMap);
-        waitForStart();
         sleep(300);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
         telemetry.update();
-        sleep(3000);
+        waitForStart();
+        sleep(300);
         switch (colorOfPlatform)
                 //drive is functional, still needs positional tweaking 12/11
         {
             case 'b':
-                waitForStart();
                 newRobot.openOrCloseDoor(true);
-                //newRobot.moveXEncoderCounts(50,1,true);
                 newRobot.moveWing(true);
-                sleep(1000);
+                newRobot.moveLift(1);
+                sleep(500);
                 char cipher = newRobot.getGlyphCipher();
                 newRobot.getleftWingColorSens();
                 char colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
@@ -68,17 +67,17 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.pivot_IMU(83, .25);
                 newRobot.driveStraight_In(12);
                 newRobot.driveStraight_In(8,.2);
-                newRobot.moveXEncoderCounts(100,1,false);
-                newRobot.openOrCloseDoor(false);
+                newRobot.moveLift(-1);
                 newRobot.driveStraight_In(-2);
                 newRobot.driveStraight_In(3,.2);
+                newRobot.driveStraight_In(-2,1);
                 newRobot.stopAllMotors();
             case 'r':
-                waitForStart();
                 newRobot.openOrCloseDoor(true);
-                newRobot.moveXEncoderCounts(100,1,true);
                 newRobot.moveWing(true);
+                newRobot.moveXEncoderCounts(100,1,true);
                 sleep(1000);
+                cipher = newRobot.getGlyphCipher();
                 newRobot.getleftWingColorSens();
                 colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
@@ -100,10 +99,7 @@ public class FinalUniversalAudi extends LinearOpMode
                         break;
                 }
                 newRobot.moveWing(false);
-                sleep(500);
-                cipher = newRobot.getGlyphCipher();
                 telemetry.addData("Cipherr = ", cipher);
-                telemetry.addData("Pos ", newRobot.getGlyphCipher());
                 telemetry.update();
                 switch (newRobot.getGlyphCipher())
                 {
@@ -118,12 +114,16 @@ public class FinalUniversalAudi extends LinearOpMode
                 }
                 newRobot.pivot_IMU(-83, .25);
                 newRobot.driveStraight_In(8,.1);
-                newRobot.moveXEncoderCounts(100,1,false);
+                newRobot.moveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2);
                 newRobot.driveStraight_In(3,.2);
+                newRobot.driveStraight_In(-2,1);
                 newRobot.stopAllMotors();
             default:
+                newRobot.openOrCloseDoor(true);
+                sleep(500);
+                newRobot.moveLift(1);
                 newRobot.driveStraight_In(29, .4);
                 break;
         }
