@@ -9,10 +9,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 public abstract class MeccyAutoMode extends MeccyMode{
+    //<editor-fold desc="Yay">
     abstract public void runOpMode();
     //
     static final double countify = 116.501;
+    //</editor-fold>
     //
+    //<editor-fold desc="Extraneous">
     public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
         super.configureMotors(leftFront, rightFront, leftBack,rightBack);
         //
@@ -22,6 +25,15 @@ public abstract class MeccyAutoMode extends MeccyMode{
         rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     //
+    private void setSpeed(double speed){
+        leftBackMotor.setPower(speed);
+        rightBackMotor.setPower(speed);
+        leftFrontMotor.setPower(speed);
+        rightFrontMotor.setPower(speed);
+    }
+    //</editor-fold>
+    //
+    //<editor-fold desc="Moving">
     public void forwardToPosition(double inches, double speed){
         int move = (int)(Math.round(inches*countify));
         //
@@ -33,6 +45,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
         setSpeed(speed);
     }
     //
+    //
     public void backToPosition(double inches, double speed){
         int move = (int)(Math.round(inches*countify));
         //
@@ -43,6 +56,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
         //
         setSpeed(speed);
     }
+
     //
     public void rightToPosition(double inches, double speed){
         int move = (int)(Math.round(inches*countify));
@@ -50,17 +64,6 @@ public abstract class MeccyAutoMode extends MeccyMode{
         leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() - move);
         leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
         rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
-        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - move);
-        //
-        setSpeed(speed);
-    }
-    //
-    public void turnRightToPostion(double inches, double speed){
-        int move = (int)(Math.round(inches*countify));
-        //
-        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
-        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
-        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - move);
         rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - move);
         //
         setSpeed(speed);
@@ -76,6 +79,19 @@ public abstract class MeccyAutoMode extends MeccyMode{
         //
         setSpeed(speed);
     }
+    //</editor-fold>
+    //
+    //<editor-fold desc="turning">
+    public void turnRightToPosition(double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        //
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() - move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() - move);
+        //
+        setSpeed(speed);
+    }
     //
     public void turnLeftToPosition (double inches, double speed){
         int move = (int)(Math.round(inches*countify));
@@ -87,11 +103,6 @@ public abstract class MeccyAutoMode extends MeccyMode{
         //
         setSpeed(speed);
     }
+    //</editor-fold>
     //
-    private void setSpeed(double speed){
-        leftBackMotor.setPower(speed);
-        rightBackMotor.setPower(speed);
-        leftFrontMotor.setPower(speed);
-        rightFrontMotor.setPower(speed);
-    }
 }

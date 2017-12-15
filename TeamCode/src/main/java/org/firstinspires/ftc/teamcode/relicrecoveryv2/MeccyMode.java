@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 public abstract class MeccyMode extends LinearOpMode{
+    //<editor-fold desc="Yay"
     abstract public void runOpMode();
     //
     DcMotor leftFrontMotor;
@@ -25,7 +26,9 @@ public abstract class MeccyMode extends LinearOpMode{
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+    //</editor-fold>
     //
+    //<editor-fold desc="Turning">
     public void turnRight(double powerInput){
         leftBackMotor.setPower(powerInput);
         leftFrontMotor.setPower(powerInput);
@@ -39,7 +42,9 @@ public abstract class MeccyMode extends LinearOpMode{
         rightBackMotor.setPower(powerInput);
         rightFrontMotor.setPower(powerInput);
     }
+    //</editor-fold>
     //
+    //<editor-fold desc="Driving">
     public void driveForward(double powerInput){
         leftBackMotor.setPower(powerInput);
         leftFrontMotor.setPower(powerInput);
@@ -53,7 +58,9 @@ public abstract class MeccyMode extends LinearOpMode{
         rightBackMotor.setPower(-powerInput);
         rightFrontMotor.setPower(-powerInput);
     }
+    //</editor-fold>
     //
+    //<editor-fold desc="Strafing">
     public void strafeLeft(double powerInput){
             leftBackMotor.setPower(-powerInput);
             leftFrontMotor.setPower(powerInput);
@@ -67,4 +74,5 @@ public abstract class MeccyMode extends LinearOpMode{
         rightBackMotor.setPower(-powerInput);
         rightFrontMotor.setPower(powerInput);
     }
+    //</editor-fold>
 }
