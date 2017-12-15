@@ -559,9 +559,9 @@ public class NewRobotFinal
 	    liftDir = STOP_L;
             liftMotor.setPower(-Math.abs(factor * y));
         }
-        else if (liftDir == STOP_L)
+        else
         {
-            liftMotor.setPower(0);
+            AdjLiftDir();
         }
     }
 
@@ -602,22 +602,24 @@ public class NewRobotFinal
         if (close)
         {
             leftDoorWall.setPosition(.95f);
-            rightDoorWall.setPosition(.05f);
+            rightDoorWall.setPosition(.03f);
         }
         else
         {
-            leftDoorWall.setPosition(0.5f);
+            leftDoorWall.setPosition(0f);
             rightDoorWall.setPosition(0.5f);
         }
     }
 
-    public void fineAdjDoors(double in)
+    public void fineAdjDoors(double in) //Note: Check and see if it goes past 0 or 1
     {
         leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
         rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
     }
 
-    public void autoPark() {
+    public void autoPark() //We saw the angle wasn't detecting it on the new robot.
+                            //Maybe x over z? Look at the data collected
+    {
         double angle = anglePerpToGrav();
         if (angle > 5) {
             driveLeftOne.setPower(.5);

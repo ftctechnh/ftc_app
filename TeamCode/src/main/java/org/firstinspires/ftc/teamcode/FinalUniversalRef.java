@@ -26,7 +26,7 @@ public class FinalUniversalRef extends LinearOpMode
             case 'b':
                 waitForStart();
                 newRobot.openOrCloseDoor(true);
-                newRobot.moveXEncoderCounts(100,1,true);
+                newRobot.moveLift(1);
                 newRobot.moveWing(true);
                 sleep(1000);
                 newRobot.getrightWingColorSens();
@@ -73,7 +73,7 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.pivot_IMU(83, .25);
                 newRobot.driveStraight_In(8, .1);
                 newRobot.driveStraight_In(8, .1);
-                newRobot.moveXEncoderCounts(100,1,false);
+                newRobot.moveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
                 newRobot.driveStraight_In(3,.2);
@@ -81,7 +81,7 @@ public class FinalUniversalRef extends LinearOpMode
             case 'r':
                 waitForStart();
                 newRobot.openOrCloseDoor(true);
-                newRobot.moveXEncoderCounts(100,1,true);
+                newRobot.moveLift(1);
                 newRobot.moveWing(true);
                 sleep(1000);
                 newRobot.getrightWingColorSens();
@@ -129,7 +129,7 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.pivot_IMU(-83, .25);
                 newRobot.driveStraight_In(8,.1);
                 newRobot.driveStraight_In(8,.1);
-                newRobot.moveXEncoderCounts(100,1,false);
+                newRobot.moveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
                 newRobot.driveStraight_In(3,.2);
