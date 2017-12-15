@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by Sahithi on 12/6/17.
+ * Created by Sahithi on 12/8/17.
  */
-@Autonomous(name = "FinalRedAutoAudi", group = "Auto")
-public class FinalRedAutoAudi extends LinearOpMode
+@Autonomous(name = "FinalRedAutoRef",group = "Auto")
+public class FinalRedAutoRef extends LinearOpMode
 {
     private NewRobotFinal newRobot;
 
@@ -31,7 +31,6 @@ public class FinalRedAutoAudi extends LinearOpMode
                 newRobot.driveStraight_In(-6);
                 sleep(500);
                 newRobot.driveStraight_In(6);
-                break;
             case 'b':
                 newRobot.driveStraight_In(6);
                 sleep(500);
@@ -46,22 +45,29 @@ public class FinalRedAutoAudi extends LinearOpMode
         telemetry.addData("Cipherr = ", cipher);
         telemetry.addData("Pos ", newRobot.getGlyphCipher());
         telemetry.update();
+        newRobot.driveStraight_In(26);
+        newRobot.pivot_IMU(82, .25);
         switch (newRobot.getGlyphCipher())
         {
-            case 'r': newRobot.driveStraight_In(26.5f);
+            case 'l':
+                newRobot.driveStraight_In(22); //needs testing, fix on 11/12
                 break;
-            case 'c': newRobot.driveStraight_In(34.5f);
+            case 'c':
+                newRobot.driveStraight_In(11.5f);
                 break;
-            case 'l': newRobot.driveStraight_In(41);
+            case 'r':
+                newRobot.driveStraight_In(5); //positioning is really off, need to fix on 11/12
                 break;
-            default: newRobot.driveStraight_In(35);
+            default:
+                newRobot.driveStraight_In(11.5f);
                 break;
         }
         newRobot.pivot_IMU(-83, .25);
         newRobot.driveStraight_In(8,.1);
+        newRobot.driveStraight_In(8,.1);
         newRobot.moveXEncoderCounts(100,1,false);
         newRobot.openOrCloseDoor(false);
-        newRobot.driveStraight_In(-2);
+        newRobot.driveStraight_In(-2); // back up
         newRobot.driveStraight_In(3,.2);
         newRobot.stopAllMotors();
     }
