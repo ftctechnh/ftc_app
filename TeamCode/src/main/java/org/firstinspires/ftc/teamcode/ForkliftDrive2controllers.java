@@ -13,19 +13,8 @@ public class ForkliftDrive2controllers extends OpMode {
 
     @Override
     public void init() {
-        drive = new DriveMecanum(
-                hardwareMap.dcMotor.get("m1"), //FrontLeft
-                hardwareMap.dcMotor.get("m2"), //FrontRight
-                hardwareMap.dcMotor.get("m3"), //RearLeft
-                hardwareMap.dcMotor.get("m4"), //RearRight
-                1.0, telemetry);
-        ForkLift = new ForkLift(
-                hardwareMap.servo.get("s1"), //rightClaw
-                hardwareMap.servo.get("s2"), //leftClaw
-                hardwareMap.dcMotor.get("m5"), //updown
-                hardwareMap.touchSensor.get("b0"), //top button
-                hardwareMap.touchSensor.get("b1"),
-                telemetry); //bottom button
+        drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
+        ForkLift = new ForkLift(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
         ForkLift.init();
     }
 

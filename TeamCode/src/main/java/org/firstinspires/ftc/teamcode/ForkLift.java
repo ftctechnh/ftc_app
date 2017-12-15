@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
@@ -15,16 +16,16 @@ public class ForkLift {
     private Servo rightClaw;
     private Servo leftClaw;
     private DcMotor motor;
-    private TouchSensor topButton;
-    private TouchSensor bottomButton;
+    private DigitalChannel topButton;
+    private DigitalChannel bottomButton;
     private double clawPosition = 0.25; //0.25 on the other robot
     private double clawHighEnd = 1; //0.85
     private double clawLowEnd = 0; //0.3
     private Telemetry telemetry;
     private HardwareDevice.Manufacturer manufacturer;
 
-    public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, TouchSensor topButton, TouchSensor bottomButton, Telemetry telemetry) {
-        if(rightClaw.getManufacturer().equals("ModernRobotics")){
+    public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, DigitalChannel topButton, DigitalChannel bottomButton, Telemetry telemetry) {
+        if(rightClaw.getManufacturer().equals(Manufacturer.ModernRobotics)){
             clawHighEnd=0.85;
             clawLowEnd=0.3;
         }
@@ -69,19 +70,22 @@ public class ForkLift {
     }
 
     public void moveUpDown(double speed) {
+        telemetry.addData("input", speed);
         if (bottomButton != null) {
             if (speed < 0) {
-                if (bottomButton.isPressed()) {
+                if (!bottomButton.getState()) {
                     speed = 0;
                 }
             }
             if (speed > 0) {
-                if (topButton.isPressed()) {
+                if (!topButton.getState()) {
                     speed = 0;
                 }
             }
         }
+        telemetry.addData("motor speed", speed);
         motor.setPower(speed);
+        telemetry.update();
     }
 
     public void setClawPosition(double position) {
