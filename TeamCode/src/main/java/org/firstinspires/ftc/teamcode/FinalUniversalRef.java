@@ -14,20 +14,20 @@ public class FinalUniversalRef extends LinearOpMode
     {
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.initVuforia(hardwareMap);
-        waitForStart();
         sleep(300);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
         telemetry.update();
-        sleep(3000);
+        waitForStart();
+        sleep(300);
         switch (colorOfPlatform)
         {
             case 'b':
                 waitForStart();
                 newRobot.openOrCloseDoor(true);
-                newRobot.moveLift(1);
                 newRobot.moveWing(true);
+                newRobot.moveLift(1);
                 sleep(1000);
                 newRobot.getrightWingColorSens();
                 char colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
@@ -77,12 +77,13 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
                 newRobot.driveStraight_In(3,.2);
+                newRobot.driveStraight_In(-2,1);
                 newRobot.stopAllMotors();
             case 'r':
                 waitForStart();
                 newRobot.openOrCloseDoor(true);
-                newRobot.moveLift(1);
                 newRobot.moveWing(true);
+                newRobot.moveLift(1);
                 sleep(1000);
                 newRobot.getrightWingColorSens();
                 colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
@@ -133,9 +134,12 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
                 newRobot.driveStraight_In(3,.2);
+                newRobot.driveStraight_In(-2,1);
                 newRobot.stopAllMotors();
             default:
                 newRobot.driveStraight_In(29, .4);
+                newRobot.openOrCloseDoor(true);
+                newRobot.moveLift(1);
                 break;
         }
     }
