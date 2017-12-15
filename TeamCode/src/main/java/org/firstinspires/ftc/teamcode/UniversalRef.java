@@ -105,7 +105,7 @@ public class UniversalRef extends LinearOpMode
                 //INSERT CODE TO RAISE WING
                 break;
             default:
-                robot.driveStraight_In(28, .4);
+                robot.driveStraight_In(29, .4);
                 break;
         }
     }

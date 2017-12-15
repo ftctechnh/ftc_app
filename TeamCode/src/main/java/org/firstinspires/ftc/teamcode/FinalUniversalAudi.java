@@ -20,6 +20,7 @@ public class FinalUniversalAudi extends LinearOpMode
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
         telemetry.update();
+        sleep(3000);
         switch (colorOfPlatform)
                 //drive is functional, still needs positional tweaking 12/11
         {

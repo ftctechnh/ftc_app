@@ -6,11 +6,16 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImpl;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -38,30 +43,30 @@ public class NewRobotFinal
     private final short DOWN_L = 2;
     private final short STOP_L = 0;
 
-    private ColorSensor floorColorSens = null;
-    private ColorSensor rightWingColorSens = null;
-    private ColorSensor leftWingColorSens = null;
+    private ColorSensor floorColorSens;
+    private ColorSensor rightWingColorSens ;
+    private ColorSensor leftWingColorSens ;
 
-    private DcMotorImplEx driveLeftOne = null;
-    private DcMotorImplEx driveRightOne = null;
-    private DcMotorImplEx wingMotor = null;
+    private DcMotorImplEx driveLeftOne ;
+    private DcMotorImplEx driveRightOne ;
+    private DcMotorImplEx wingMotor ;
 
-    private Servo leftDoorWall = null;
-    private Servo rightDoorWall = null;
-    private DcMotorImplEx liftMotor = null;
-    //private DcMotorImplEx shiftLiftMotor = null;
+    private Servo leftDoorWall ;
+    private Servo rightDoorWall ;
+    private DcMotorImplEx liftMotor ;
+    //private DcMotorImplEx shiftLiftMotor ;
 
-    private DcMotorImplEx tailRelease  = null;
-    private Servo grabber  = null;
-    private Servo grabberRotator = null;
+    private DcMotorImplEx tailRelease ;
+    private Servo grabber ;
+    private Servo grabberRotator ;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
-    private VuforiaLocalizer vuforia  = null;
-    private RelicRecoveryVuMark vuMark  = null;
-    private VuforiaTrackables relicTrackables  = null;
-    private VuforiaTrackable relicTemplate  = null;
+    private VuforiaLocalizer vuforia ;
+    private RelicRecoveryVuMark vuMark ;
+    private VuforiaTrackables relicTrackables ;
+    private VuforiaTrackable relicTemplate ;
 
-    private BNO055IMU imu  = null;
+    private BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
 
@@ -542,17 +547,19 @@ public class NewRobotFinal
 
     public void fineMoveLift(float y, float factor)
     {
-        liftDir = STOP_L;
+        
 
         if (y > .3)
         {
-            liftMotor.setPower(Math.abs(y * factor));
+	    liftDir = STOP_L;        
+	    liftMotor.setPower(Math.abs(y * factor));
         }
         else if (y < -.3)
         {
+	    liftDir = STOP_L;
             liftMotor.setPower(-Math.abs(factor * y));
         }
-        else
+        else if (liftDir == STOP_L)
         {
             liftMotor.setPower(0);
         }
@@ -578,12 +585,12 @@ public class NewRobotFinal
     {
         if(moveDown)
         {
-            wingMotor.setPower(-.3);
-            while(wingMotor.getCurrentPosition() > -2500){}
+            wingMotor.setPower(-.6);
+            while(wingMotor.getCurrentPosition() > -2700){}
         }
         else
         {
-            wingMotor.setPower(.3);
+            wingMotor.setPower(.6);
             while(wingMotor.getCurrentPosition() < 0){}
         }
 
@@ -592,18 +599,15 @@ public class NewRobotFinal
 
     public void openOrCloseDoor(boolean close)
     {
-        /**
-         * NOTE NEED TO CHECK THE VALUES
-         */
-        if (!close)
-        {
-            leftDoorWall.setPosition(.5f);
-            rightDoorWall.setPosition(.5f);
-        }
-        else
+        if (close)
         {
             leftDoorWall.setPosition(.95f);
             rightDoorWall.setPosition(.05f);
+        }
+        else
+        {
+            leftDoorWall.setPosition(0.5f);
+            rightDoorWall.setPosition(0.5f);
         }
     }
 
@@ -613,23 +617,20 @@ public class NewRobotFinal
         rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
     }
 
-    public void autoPark()
-    {
+    public void autoPark() {
         double angle = anglePerpToGrav();
-        if (angle > 5)
-        {
+        if (angle > 5) {
             driveLeftOne.setPower(.5);
             driveRightOne.setPower(-.5);
-        }
-        else if (angle < -5)
-        {
+        } else if (angle < -5) {
             driveLeftOne.setPower(-.5);
             driveRightOne.setPower(.5);
-        }
-        else
-            return;
-    }
+        } else {
+            driveLeftOne.setPower(0);
+            driveRightOne.setPower(0);
 
+        }
+    }
     public void OpenCloseGrabber(boolean close)
     {
         if(close)
