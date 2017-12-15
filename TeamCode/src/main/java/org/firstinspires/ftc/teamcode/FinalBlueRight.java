@@ -212,7 +212,7 @@ public class FinalBlueRight extends LinearOpMode
         /* Move forward slightly so the block is in the space */
         movebytime(800, .2, "Forward");
 
-        /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Open up the claw to release the block */
         clawServo.setPower(clawOpen);
