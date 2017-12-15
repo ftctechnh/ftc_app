@@ -40,7 +40,8 @@ public class robot2 extends LinearOpMode {
 
         waitForStart();
         // run until the end of the match (driver presses STOP)
-
+        boolean limitoff=false;
+        boolean y = false;
         double Fingeroffset = 0;
         boolean b = false;
         boolean x = false;
@@ -74,9 +75,13 @@ public class robot2 extends LinearOpMode {
                 //factor = Range.clip((2/(1+(3^(-Tower.getCurrentPosition()))))-1,-1,1);
             }
             */
-            if (Tower.getCurrentPosition()<0){
-                towerpower= 1;
-            }else if(Tower.getCurrentPosition()>max){
+            if (gamepad2.y && !y){
+                limitoff = !limitoff;
+            }
+            y = gamepad2.y;
+            if (Tower.getCurrentPosition()<0 && !limitoff){
+                towerpower= .01*(0-Tower.getCurrentPosition());
+            }else if(Tower.getCurrentPosition()>max && !limitoff ){
                 towerpower = -1;
             }
             /*
@@ -98,10 +103,14 @@ public class robot2 extends LinearOpMode {
             x = gamepad2.x;
             b = gamepad2.b;
             //Finger controls
+            if (limitoff){
+                telemetry.addData("path 0","limits off");
+            }else {
+                telemetry.addData("path 0","limits on");
+            }
             telemetry.addData("Path1","Tower position: " + String.valueOf(Tower.getCurrentPosition())+" factor: " + String.valueOf(factor)+"bonus: " + String.valueOf(bonus) + "tower power: " + String.valueOf(towerpower)+ " position: " + String.valueOf(position));
-            telemetry.addData("Path2","Finger offset: " + String.valueOf(Fingeroffset));
+            telemetry.addData("Path2","Finger offset: " + String.valueOf(Fingeroffset) + " y: "+ String.valueOf(y));
             telemetry.update();
-
         }
     }
 }
