@@ -32,7 +32,7 @@ public class JewelKnocker implements IMechanism {
     }
 
     public void extendArm() {
-        arm.setPosition(0.95);
+        arm.setPosition(1.0);
     }
 
     public int getRed(){
@@ -48,9 +48,9 @@ public class JewelKnocker implements IMechanism {
         int redLevel = getRed();
         boolean isRed = false;
 
-        if(redLevel > 0 && blueLevel <= 0){
+        if(redLevel > blueLevel){
             isRed= true;
-        } else if(blueLevel > 0 && redLevel <= 0){
+        } else {
             isRed= false;
         }
 
@@ -62,9 +62,9 @@ public class JewelKnocker implements IMechanism {
         int redLevel = getRed();
         boolean isBlue = false;
 
-        if(blueLevel > 0 && redLevel <= 0){
+        if(blueLevel > redLevel){
             isBlue= true;
-        } else if(redLevel > 0 && blueLevel <= 0){
+        } else {
             isBlue= false;
         }
 

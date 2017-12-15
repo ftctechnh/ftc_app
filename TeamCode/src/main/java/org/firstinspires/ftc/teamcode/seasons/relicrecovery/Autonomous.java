@@ -55,21 +55,31 @@ public class Autonomous extends LinearOpMode {
 
         while(!isStarted() && !opModeIsActive()){
             if(gamepad1.left_bumper){
-                telemetry.addData("stone", "Left stone Selected.");
                 isLeftStone = true;
             } else if (gamepad1.right_bumper){
-                telemetry.addData("stone", "Right stone Selected.");
                 isLeftStone = false;
             }
+
             if(gamepad1.left_trigger > 0){
                 // red team
-                telemetry.addData("team", "Red Alliance Selected.");
                 isStoneRed = true;
             } else if(gamepad1.right_trigger > 0){
                 // blue team
-                telemetry.addData("team", "Blue Alliance Selected.");
                 isStoneRed = false;
             }
+
+            if(isLeftStone) {
+                telemetry.addData("stone", "Left stone Selected.");
+            } else {
+                telemetry.addData("stone", "Right stone Selected.");
+            }
+
+            if(isStoneRed) {
+                telemetry.addData("team", "Red Alliance Selected.");
+            } else {
+                telemetry.addData("team", "Blue Alliance Selected.");
+            }
+
             telemetry.update();
         }
 
@@ -102,25 +112,43 @@ public class Autonomous extends LinearOpMode {
 
     // PROGRAMS
 
-    public void redLeft(RelicRecoveryRobot robot){
+    private void redLeft(RelicRecoveryRobot robot){
         //raise glyph lift a tiny bit
         robot.glyphLift.closeRedGripper();
+
+        sleep(500);
+
         robot.glyphLift.setLiftMotorPower(1);
         sleep(250);
         robot.glyphLift.setLiftMotorPower(0);
 
         // Lower Jewel Mechinism
         robot.jewelKnocker.extendArm();
+
         sleep(500);
 
-        //get color of ball
-        boolean isRed = robot.jewelKnocker.isJewelRed(robot);
+        if(robot.jewelKnocker.isJewelRed(robot)) {
+            robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
+            robot.jewelKnocker.retractArm();
 
-        if(isRed){
-            robot.hDriveTrain.directionalDrive(0, 0.5, 2, false); //drive 4 inches right
-        }else{
-            robot.hDriveTrain.directionalDrive(180, 0.5, 2, false); // drive 4 inches left
+            sleep(500);
+
+            robot.hDriveTrain.directionalDrive(180, 0.5, 7, false);
+        } else if(robot.jewelKnocker.isJewelBlue(robot)) {
+            robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
+            robot.jewelKnocker.retractArm();
+        } else {
+            robot.jewelKnocker.retractArm();
         }
+
+
+        robot.hDriveTrain.directionalDrive(0, 1.0, 36, false);
+
+        robot.glyphLift.setLiftMotorPower(-0.5);
+        sleep(250);
+        robot.glyphLift.setLiftMotorPower(0);
+
+        robot.glyphLift.openRedGripper();
 
 //        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
 //        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
@@ -159,25 +187,42 @@ public class Autonomous extends LinearOpMode {
     }
 
     public void redRight(RelicRecoveryRobot robot){
-
         //raise glyph lift a tiny bit
+        robot.glyphLift.closeRedGripper();
+
+        sleep(500);
+
         robot.glyphLift.setLiftMotorPower(1);
-        sleep(5);
+        sleep(250);
+        robot.glyphLift.setLiftMotorPower(0);
 
         // Lower Jewel Mechinism
         robot.jewelKnocker.extendArm();
 
-        //get color of ball
-        boolean isRed = robot.jewelKnocker.isJewelRed(robot);
+        sleep(500);
 
-        if(isRed){
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
-        }else{
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
+        if(robot.jewelKnocker.isJewelRed(robot)) {
+            robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
+            robot.jewelKnocker.retractArm();
+
+            sleep(500);
+
+            robot.hDriveTrain.directionalDrive(180, 0.5, 7, false);
+        } else if(robot.jewelKnocker.isJewelBlue(robot)) {
+            robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
+            robot.jewelKnocker.retractArm();
+        } else {
+            robot.jewelKnocker.retractArm();
         }
-        robot.hDriveTrain.directionalDrive(0, 1, 5, false);
+
+
+        robot.hDriveTrain.directionalDrive(0, 1.0, 36, false);
+
+        robot.glyphLift.setLiftMotorPower(-0.5);
+        sleep(250);
+        robot.glyphLift.setLiftMotorPower(0);
+
+        robot.glyphLift.openRedGripper();
 
 //        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
 //        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
@@ -217,23 +262,41 @@ public class Autonomous extends LinearOpMode {
 
     public void blueLeft(RelicRecoveryRobot robot){
         //raise glyph lift a tiny bit
+        robot.glyphLift.closeRedGripper();
+
+        sleep(500);
+
         robot.glyphLift.setLiftMotorPower(1);
-        sleep(5);
+        sleep(250);
+        robot.glyphLift.setLiftMotorPower(0);
 
         // Lower Jewel Mechinism
         robot.jewelKnocker.extendArm();
 
-        //get color of ball
-        boolean isBlue = robot.jewelKnocker.isJewelBlue(robot);
+        sleep(500);
 
-        if(isBlue){
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
-        }else{
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
+        if(robot.jewelKnocker.isJewelRed(robot)) {
+            robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
+            robot.jewelKnocker.retractArm();
+
+            sleep(500);
+
+            robot.hDriveTrain.directionalDrive(180, 0.5, 7, false);
+        } else if(robot.jewelKnocker.isJewelBlue(robot)) {
+            robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
+            robot.jewelKnocker.retractArm();
+        } else {
+            robot.jewelKnocker.retractArm();
         }
-        robot.hDriveTrain.directionalDrive(0, 1, 5, false);
+
+
+        robot.hDriveTrain.directionalDrive(0, 1.0, 36, false);
+
+        robot.glyphLift.setLiftMotorPower(-0.5);
+        sleep(250);
+        robot.glyphLift.setLiftMotorPower(0);
+
+        robot.glyphLift.openRedGripper();
 
 //        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
 //        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
