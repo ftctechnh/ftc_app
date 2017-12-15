@@ -49,7 +49,7 @@ public class ServoJewelAuto extends LinearOpMode {
     private RelicRecoveryVuMark relicRecoveryVuMark;
 
     @Override
-    public void runOpMode(){
+    public void runOpMode() throws InterruptedException{
 
         //Initialize hardware
         robot = new Robot(hardwareMap);
@@ -91,30 +91,31 @@ public class ServoJewelAuto extends LinearOpMode {
         sleep(2000);
 
         telemetry.addData("Color Sensor", "R: %f \nB: %f ", colorSensorWrapper.getRGBValues()[0], colorSensorWrapper.getRGBValues()[2]);
-        telemetry.update();
-
-        sleep(1000);
-
         //Checks that blue jewel is closer towards the cryptoboxes (assuming color sensor is facing forward
-        if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
+        if(Math.abs(colorSensorWrapper.getRGBValues()[2] - colorSensorWrapper.getRGBValues()[0]) < 30) {
+            telemetry.addData("Jewels", "Too close.");
+        } else if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
             armRotator.setPosition(1);
+            telemetry.addData("Jewels", "Blue Team!");
         } else {
             armRotator.setPosition(0);
+            telemetry.addData("Jewels", "Red Team!");
         }
+        telemetry.update();
 
         sleep(1000);
 
         armExtender.setPosition(1);
         armRotator.setPosition(0.5);
 
-        sleep(5000);
+        sleep(1000);
 
         imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
-        sleep(10000);
+        sleep(1000);
 
         //STEP 3: Get to center tape thing
-        while (imuWrapper.getPosition().toUnit(DistanceUnit.INCH).y < 36
+        while (imuWrapper.getPosition().toUnit(DistanceUnit.INCH).x < 36
                //tapeColorSensorWrapper.getRGBValues()[2] < 0.5
                 ) {
             drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 0.5, 0);
@@ -148,5 +149,8 @@ public class ServoJewelAuto extends LinearOpMode {
         //Move using color sensor
         //nah
 
+        robot.stopMoving();
+
     }
+
 }
