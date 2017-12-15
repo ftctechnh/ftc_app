@@ -11,6 +11,7 @@ public class REVGyroTeleOp extends OpMode {
     REVGyro gyro;
     public void init() {
         gyro = new REVGyro(hardwareMap.get(BNO055IMU.class, "imu"));
+        gyro.calibrate();
     }
     public void loop() {
         telemetry.addData("Current heading: ", gyro.getHeading());
