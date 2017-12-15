@@ -21,9 +21,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right With Key", group="Bacon Autonomous!")
+@Autonomous(name="Blue Right Using Sleep", group="Bacon Autonomous!")
 //@Disabled
-public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
+public class FinalBlueRight extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -48,16 +48,6 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
     VuforiaLocalizer vuforia;
-
-    /* Create timers used in autonomous */
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime verticaltimer = new ElapsedTime();
-
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime drivetimer = new ElapsedTime();
-
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -154,17 +144,17 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         clawServo.setPower(clawClose);
 
         /* Move the claw up so it doesn't dig into the ground coming off the balance board */
-        moveclawbytime(.5,.5,"Up");
+        moveclawbytime(500,.5,"Up");
 
-//        /* Put the servo color arm down */
-//        gemServo.setPosition(xPosDown);
-//        sleep(1500);
+        /* Put the servo color arm down */
+        gemServo.setPosition(xPosDown);
+        sleep(1500);
 
-//        /* Knock of the Red jewel */
-//        knockjewelRed();
-//
-//        /* Rotate so the phone can see the Vuforia Key */
-//        rotate(10,.2);
+        /* Knock of the Red jewel */
+        knockjewelRed();
+
+        /* Rotate so the phone can see the Vuforia Key */
+        rotate(10,.2);
 
         /* Tells vuforia to look for relic templates, if it finds something, then it returns
         LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
@@ -177,22 +167,21 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         }
         telemetry.update();
 
-//        /* Return to starting position */
-//        rotate(-10, .2);
-///ugghhhhh
+        /* Return to starting position */
+        rotate(-10, .2);
+
         /* Wait a moment and let vuforia do its work and for the robot to realign properly */
         sleep(500);
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-//        movebytime(1.25, .5, "Forward");
 
-        movebytime(.3, .2, "Forward");
+        movebytime(1560, .3, "Forward");
 
 
-//        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
-//        account for the slight slippage after powering off the wheels */
-//        rotate(87, .2);
+        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
+        account for the slight slippage after powering off the wheels */
+        rotate(87, .2);
 
         /* Wait a moment to stop moving */
         sleep(700);
@@ -203,11 +192,11 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         switch (vuMark){
             case LEFT:
                 /* Drive forward into the left position */
-                movebytime(1.2,.3,"Left");
+                movebytime(500,.3,"Left");
                 break;
             case RIGHT:
                 /* Drive forward into the right position */
-                movebytime(1.2, .3, "Right");
+                movebytime(500, .3, "Right");
                 break;
             case CENTER:
                 /* Drive forward into the center position */
@@ -221,24 +210,21 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
         sleep(700);
 
         /* Move forward slightly so the block is in the space */
-        movebytime(.3, .2, "Forward");
+        movebytime(800, .2, "Forward");
 
         /////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-//        /* Open up the claw to release the block */
-//        clawServo.setPower(clawOpen);
-//
-//        /* Wait a moment */
-//        sleep(2000);
-//
-//        /* Stop the claw */
-//        clawServo.setPower(clawStill);
-//
-//        /* Wait a moment */
-//        sleep(2000);
+        /* Open up the claw to release the block */
+        clawServo.setPower(clawOpen);
+
+        /* Let the claw */
+        sleep(2500);
+
+        /* Stop the claw */
+        clawServo.setPower(clawStill);
 
         /* Back up a small bit */
-        movebytime(.3, .2, "Backward");
+        movebytime(300, .2, "Backward");
     }
 
 /***********************************************************************************************
@@ -247,10 +233,7 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
 
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
-    public void moveclawbytime(double time, double power, String direction) {
-
-        /* reset the "timer" to 0 */
-        verticaltimer.reset();
+    public void moveclawbytime(long time, double power, String direction) {
 
     /* This switch case is determined by the String indicated above */
         switch (direction) {
@@ -262,19 +245,15 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
                 break;
         }
 
-    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
-        while (opModeIsActive() && verticaltimer.seconds() < time) {
-        }
+    /* Sleep instead timer sucks */
+    sleep(time);
 
     /* Once the while loop above finishes turn off claw motor */
         verticalArmMotor.setPower(0);
     }
 
 /* This method moves the robot forward for time and power indicated*/
-    public void movebytime (double time, double power, String direction) {
-
-        /* reset the "timer" to 0 */
-        drivetimer.reset();
+    public void movebytime (long time, double power, String direction) {
 
     /* This switch case is determined by the String direction indicated above */
 
@@ -292,10 +271,11 @@ public class FinalPerfectBlueRightWithKeyMaybe extends LinearOpMode
                 setWheelPower(-power, -power, power, power);
                 break;
         }
-    /* If the timer hasn't reached the time that is indicated do nothing and keep the wheels powered */
-        while (opModeIsActive() && drivetimer.seconds() < time) {
 
-        }
+    /* Sleep */
+    sleep(time);
+
+
     /* Once the while loop above finishes turn off the wheels */
         wheelsOff();
     }

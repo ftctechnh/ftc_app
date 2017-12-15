@@ -1,32 +1,3 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -36,19 +7,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
-@TeleOp(name = "♪ ♥ Perfect Teleop ♥  ♪", group = "Concept")
+@TeleOp(name = "♪ ♥ Perfect Teleop ♥  ♪", group = "Our Teleop")
 //@Disabled
 public class FinalPerfectTeleop extends LinearOpMode {
 
-    /* this says use ArmHardwareClass */
-MasterHardwareClass robot = new MasterHardwareClass();
+    /* This says use MasterHardwareClass */
+    MasterHardwareClass robot = new MasterHardwareClass();
 
     /*These values are used for the drive*/
     double frontLeft;
     double frontRight;
     double backLeft;
     double backRight;
-
 
     @Override
     public void runOpMode() {
@@ -119,82 +89,83 @@ MasterHardwareClass robot = new MasterHardwareClass();
                         robot.verticalArmMotor.setPower(-1);
                         robot.VerticalArmPower = -1;
                     }
-                }
-                    else{
+                } else {
                     if (robot.VerticalArmPower != 0) {
                         robot.verticalArmMotor.setPower(0);
                         robot.VerticalArmPower = 0;
                     }
                 }
+            }
+        /* Rotational Drive Control */
+            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
 
-                        if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
+                double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
 
-                            double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
+                final double v1 = +GRX;
+                final double v2 = -GRX;
+                final double v3 = +GRX;
+                final double v4 = -GRX;
 
-                            final double v1 = +GRX;
-                            final double v2 = -GRX;
-                            final double v3 = +GRX;
-                            final double v4 = -GRX;
+                frontLeft = -v1;
+                frontRight = v2;
+                backLeft = -v3;
+                backRight = v4;
 
-                            frontLeft = -v1;
-                            frontRight = v2;
-                            backLeft = -v3;
-                            backRight = v4;
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            } else {
 
-                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
-                        } else {
+                double GRX = gamepad1.right_stick_x / robot.nobumper;
 
-                            double GRX = gamepad1.right_stick_x / robot.nobumper;
+                final double v1 = +GRX;
+                final double v2 = -GRX;
+                final double v3 = +GRX;
+                final double v4 = -GRX;
 
-                            final double v1 = +GRX;
-                            final double v2 = -GRX;
-                            final double v3 = +GRX;
-                            final double v4 = -GRX;
+                frontLeft = -v1;
+                frontRight = v2;
+                backLeft = -v3;
+                backRight = v4;
 
-                            frontLeft = -v1;
-                            frontRight = v2;
-                            backLeft = -v3;
-                            backRight = v4;
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            }
 
-                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
-                        }
-                        if (gamepad1.left_bumper) {
-                            double GLY = -gamepad1.left_stick_y / robot.bumperSlowest;
-                            double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
-                            double GLX = gamepad1.left_stick_x  / robot.bumperSlowest;
+        /* Drive Control */
+            if (gamepad1.left_bumper) {
+                double GLY = -gamepad1.left_stick_y / robot.bumperSlowest;
+                double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
+                double GLX = gamepad1.left_stick_x  / robot.bumperSlowest;
 
-                            final double v1 = GLY + GRX + GLX;
-                            final double v2 = GLY - GRX - GLX;
-                            final double v3 = GLY + GRX - GLX;
-                            final double v4 = GLY - GRX + GLX;
+                final double v1 = GLY + GRX + GLX;
+                final double v2 = GLY - GRX - GLX;
+                final double v3 = GLY + GRX - GLX;
+                final double v4 = GLY - GRX + GLX;
 
-                            frontLeft = -v1;
-                            frontRight = v2;
-                            backLeft = -v3;
-                            backRight = v4;
+                frontLeft = -v1;
+                frontRight = v2;
+                backLeft = -v3;
+                backRight = v4;
 
-                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
-                        } else {
-                                double GLY = -gamepad1.left_stick_y / robot.nobumper;
-                                double GRX = gamepad1.right_stick_x / robot.nobumper;
-                                double GLX =  gamepad1.left_stick_x / robot.nobumper;
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            } else {
+                    double GLY = -gamepad1.left_stick_y / robot.nobumper;
+                    double GRX = gamepad1.right_stick_x / robot.nobumper;
+                    double GLX =  gamepad1.left_stick_x / robot.nobumper;
 
-                                final double v1 = GLY + GRX + GLX;
-                                final double v2 = GLY - GRX - GLX;
-                                final double v3 = GLY + GRX - GLX;
-                                final double v4 = GLY - GRX + GLX;
+                    final double v1 = GLY + GRX + GLX;
+                    final double v2 = GLY - GRX - GLX;
+                    final double v3 = GLY + GRX - GLX;
+                    final double v4 = GLY - GRX + GLX;
 
-                                frontLeft = -v1;
-                                frontRight = v2;
-                                backLeft = -v3;
-                                backRight = v4;
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
 
-                                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
 
-                            }
-                        }
-                    }
                 }
+            }
+        }
 
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*

@@ -21,20 +21,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-//This class defines all the specific hardware for a the BACONbot robot.
+//This class defines all the specific hardware for our robot.
 
 public class MasterHardwareClass {
     /* Public OpMode members. */
-//    ColorSensor sensorColorRight;
-//    Servo gemServo;
-//    /* local OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
     public CRServo clawServo = null;
-    public BNO055IMU imu = null;
     public Servo gemServo;
 
 
@@ -59,9 +55,8 @@ public class MasterHardwareClass {
     static double xPosUp = 0;
     static double xPosDown = .5;
 
-    /* local OpMode members. */
+    /* Define hardwaremap */
     HardwareMap hwMap = null;
-    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
     public MasterHardwareClass() {
@@ -70,6 +65,7 @@ public class MasterHardwareClass {
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
+
         // Save reference to Hardware map
         hwMap = ahwMap;
 
@@ -80,10 +76,8 @@ public class MasterHardwareClass {
         backRightMotor = hwMap.dcMotor.get("BR");
         verticalArmMotor = hwMap.dcMotor.get("VAM");
         clawServo =  hwMap.crservo.get("CS");
-        imu = hwMap.get(BNO055IMU.class, "imu");
         gemServo = hwMap.servo.get("gemservo");
 
-        // Set all hardware to default position
         // Set all hardware to default position
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
@@ -91,6 +85,7 @@ public class MasterHardwareClass {
         backRightMotor.setPower(0);
         verticalArmMotor.setPower(0);
         clawServo.setPower(0);
+
 
         // Set proper encoder state for all motor
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
