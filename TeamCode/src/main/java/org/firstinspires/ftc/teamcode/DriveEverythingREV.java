@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Kaden on 112/12/2017.
@@ -27,10 +26,8 @@ public class DriveEverythingREV extends OpMode {
         //Drive
         if (gamepad1.right_bumper || gamepad1.left_bumper) {
             drive.driveLeftRight(gamepad1.left_stick_y / 4, gamepad1.right_stick_y / 4, gamepad1.left_stick_x / 4, gamepad1.right_stick_x / 4);
-
         } else {
             drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
         }
         //ForkLift
         if (gamepad1.a) {
