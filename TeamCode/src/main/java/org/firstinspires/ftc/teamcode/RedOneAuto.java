@@ -27,6 +27,9 @@ public class RedOneAuto extends AutoMaster {
             encode(5, 0.25, MoveType.STRAIGHT);
         }
         robot.arm.setPosition(0);
+        encodeInd(-0.5, MoveType.LATERALLY);
+        while (robot.rangeSensor.getPosition(DistanceUnit.INCH) < 20) {}
+        robot.setAllDriveMotors(0);
 
         typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
@@ -38,14 +41,11 @@ public class RedOneAuto extends AutoMaster {
         } else {
             box = 45.67;
         }
-        encodeInd(-0.25, MoveType.LATERALLY);
+        /*encodeInd(-0.25, MoveType.LATERALLY);
         while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
-        robot.setAllDriveMotors(0);
+        robot.setAllDriveMotors(0);*/
         encode(19, 0.25, MoveType.ROT);
         findBox(box, -1);
-        if (box == 45.7) {
-            encode(2.5, -0.5, MoveType.LATERALLY);
-        }
         encode(15, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
