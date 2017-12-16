@@ -39,6 +39,12 @@ public class BlueOneAuto extends AutoMaster {
         encode(19, 0.5, MoveType.ROT);
         findBox(box, -1);
         encode(38, 0.5, MoveType.ROT);
+        encode(15, 0.5, MoveType.STRAIGHT);
+        wait(500);
+        robot.gripper.setPower(-0.25);
+        wait(1000);
+        robot.gripper.setPower(0);
+        encode(2, -0.25, MoveType.STRAIGHT);
         
     }
 }
