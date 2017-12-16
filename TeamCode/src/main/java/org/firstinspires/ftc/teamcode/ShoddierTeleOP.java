@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,7 +14,7 @@ import java.lang.Math;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-
+@Disabled
 @TeleOp(name="Shoddier Tele OP", group="Linear Opmode")
 public class ShoddierTeleOP extends LinearOpMode {
 
