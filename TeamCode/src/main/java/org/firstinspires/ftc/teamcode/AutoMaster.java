@@ -193,5 +193,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
         encodeInd((0.1 * (dir / Math.abs(dir))), MoveType.LATERALLY);
         while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < box) {}
         robot.setAllDriveMotors(0);
+        if (box == 45.7) {
+             encode(2, (0.1 * (dir / Math.abs(dir))), MoveType.LATERALLY);
+        }
     }
 }
