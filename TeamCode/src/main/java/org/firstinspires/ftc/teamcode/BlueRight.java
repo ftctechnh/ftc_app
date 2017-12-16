@@ -46,6 +46,10 @@ public class BlueRight extends LinearOpMode {
             driver.turn(40,.4);
             driver.forward(3,.5);
             driver.turn(-40,.4);
+            driver.forward(3,.5);
+            driver.turn(40,.4);
+            driver.forward(-1,.5);
+            driver.turn(-40,.4);
         }
     }
 }

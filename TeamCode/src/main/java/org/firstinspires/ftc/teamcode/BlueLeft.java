@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by jxfio on 12/15/2017.
  */
-
+@Autonomous(name = "Blue Left/Red Right", group = "robot2")
 public class BlueLeft extends LinearOpMode{
     private DcMotor Left;
     private DcMotor Right;
@@ -30,6 +32,10 @@ public class BlueLeft extends LinearOpMode{
             driver.forward(-1,.5);
             driver.turn(40,.4);
             driver.forward(3,.5);
+            driver.turn(-40,.4);
+            driver.forward(3,.5);
+            driver.turn(40,.4);
+            driver.forward(-1,.5);
             driver.turn(-40,.4);
         }
     }

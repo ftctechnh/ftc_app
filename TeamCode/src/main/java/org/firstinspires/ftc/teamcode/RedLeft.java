@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by jxfio on 12/15/2017.
  */
 
-@Autonomous(name="Blue Right", group="robot2")
+@Autonomous(name="Red Left", group="robot2")
 public class RedLeft extends LinearOpMode {
 
     // Declare OpMode members.
@@ -45,6 +45,10 @@ public class RedLeft extends LinearOpMode {
             driver.forward(-1,.5);
             driver.turn(40,.4);
             driver.forward(3,.5);
+            driver.turn(-40,.4);
+            driver.forward(3,.5);
+            driver.turn(40,.4);
+            driver.forward(-1,.5);
             driver.turn(-40,.4);
         }
     }
