@@ -22,6 +22,9 @@ public class BlueOneAuto extends AutoMaster {
             encode(5, 0.5, MoveType.STRAIGHT);
         }
         robot.arm.setPosition(0);
+        encodeInd(-0.5, MoveType.LATERALLY);
+        while (robot.rangeSensor.getPosition(DistanceUnit.INCH) < 20) {}
+        robot.setAllDriveMotors(0);
 
         typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
@@ -33,6 +36,9 @@ public class BlueOneAuto extends AutoMaster {
         } else {
             box = 45.67;
         }
+        encode(19, 0.5, MoveType.ROT);
+        findBox(box, -1);
+        encode(38, 0.5, MoveType.ROT);
         
     }
 }
