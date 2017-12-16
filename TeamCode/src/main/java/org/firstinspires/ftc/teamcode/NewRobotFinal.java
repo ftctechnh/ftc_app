@@ -231,9 +231,9 @@ public class NewRobotFinal
     {
         float hue = getHueValue(in_ColorSens);
 
-        if (hue < 5 || hue > 330)
+        if (hue < 71 || hue > 310)
             return 'r';
-        else if (hue > 219 && hue < 241)
+        else if (hue > 150 && hue < 271)
             return 'b';
         else
             return '?';
@@ -607,12 +607,12 @@ public class NewRobotFinal
     {
         if(moveDown)
         {
-            wingMotor.setPower(-.6);
+            wingMotor.setPower(-.9f);
             while(wingMotor.getCurrentPosition() > -2700){}
         }
         else
         {
-            wingMotor.setPower(.6);
+            wingMotor.setPower(.9f);
             while(wingMotor.getCurrentPosition() < 0){}
         }
 

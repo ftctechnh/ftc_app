@@ -49,28 +49,27 @@ public class FinalUniversalAudi extends LinearOpMode
                         newRobot.driveStraight_In(8);
                         break;
                     default:
+                        newRobot.moveWing(false);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
                 telemetry.update();
                 switch (cipher)
                 {
-                    case 'r': newRobot.driveStraight_In(45);
+                    case 'r': newRobot.driveStraight_In(46);
                         break;
-                    case 'c': newRobot.driveStraight_In(39);
+                    case 'c': newRobot.driveStraight_In(36);
                         break;
-                    case 'l': newRobot.driveStraight_In(28);
+                    case 'l': newRobot.driveStraight_In(25);
                         break;
-                    default: newRobot.driveStraight_In(39);
+                    default: newRobot.driveStraight_In(36);
                         break;
                 }
-                newRobot.pivot_IMU(83, .25);
-                newRobot.driveStraight_In(12);
-                newRobot.driveStraight_In(8,.2);
+                newRobot.pivot_IMU(86, .25);
                 newRobot.oldMoveLift(-1);
-                newRobot.driveStraight_In(-2);
-                newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-2,1);
+                newRobot.openOrCloseDoor(false);
+                newRobot.driveStraight_In(23);
+                newRobot.driveStraight_In(-5,1);
                 newRobot.stopAllMotors();
             case 'r':
                 newRobot.openOrCloseDoor(true);
@@ -97,6 +96,7 @@ public class FinalUniversalAudi extends LinearOpMode
                         newRobot.driveStraight_In(-8);
                         break;
                     default:
+                        newRobot.moveWing(false);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
@@ -109,16 +109,16 @@ public class FinalUniversalAudi extends LinearOpMode
                         break;
                     case 'l': newRobot.driveStraight_In(41);
                         break;
-                    default: newRobot.driveStraight_In(35);
+                    default: newRobot.driveStraight_In(34.5f);
                         break;
                 }
-                newRobot.pivot_IMU(-83, .25);
-                newRobot.driveStraight_In(8,.1);
+                newRobot.pivot_IMU(-86, .25);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
+                /*newRobot.driveStraight_In(8,.1);
                 newRobot.driveStraight_In(-2);
                 newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-2,1);
+                newRobot.driveStraight_In(-10,1);*/
                 newRobot.stopAllMotors();
             default:
                 newRobot.openOrCloseDoor(true);
@@ -127,5 +127,6 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.driveStraight_In(35, .4);
                 break;
         }
+        newRobot.stopDriveMotors();
     }
 }

@@ -24,12 +24,11 @@ public class FinalUniversalRef extends LinearOpMode
         switch (colorOfPlatform)
         {
             case 'b':
-                waitForStart();
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
-                //newRobot.oldMoveLift(1);
-                sleep(1000);
-                newRobot.getrightWingColorSens();
+                newRobot.oldMoveLift(1);
+                sleep(500);
+                char cipher = newRobot.getGlyphCipher();
                 char colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
                 telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getrightWingColorSens()));
@@ -37,23 +36,22 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case'r':
-                        newRobot.driveStraight_In(-8);
-                        sleep(500);
                         newRobot.driveStraight_In(8);
+                        sleep(500);
+                        newRobot.moveWing(false);
+                        newRobot.driveStraight_In(-8);
                         break;
                     case 'b':
-                        newRobot.driveStraight_In(8);
-                        sleep(500);
                         newRobot.driveStraight_In(-8);
+                        sleep(500);
+                        newRobot.moveWing(false);
+                        newRobot.driveStraight_In(8);
                         break;
                     default:
+                        newRobot.moveWing(false);
                         break;
                 }
-                newRobot.moveWing(false);
-                sleep(500);
-                char cipher = newRobot.getGlyphCipher();
                 telemetry.addData("Cipherr = ", cipher);
-                telemetry.addData("Pos ", newRobot.getGlyphCipher());
                 telemetry.update();
                 switch (newRobot.getGlyphCipher())
                 {
@@ -70,22 +68,18 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In(11.5f);
                         break;
                 }
-                newRobot.pivot_IMU(83, .25);
-                newRobot.driveStraight_In(8, .1);
-                newRobot.driveStraight_In(8, .1);
+                newRobot.pivot_IMU(86, .25);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(-2); // back up
-                newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-2,1);
+                newRobot.driveStraight_In(16, .2);
+                newRobot.driveStraight_In(-5,1);
                 newRobot.stopAllMotors();
             case 'r':
-                waitForStart();
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
-                //newRobot.oldMoveLift(1);
-                sleep(1000);
-                newRobot.getrightWingColorSens();
+                newRobot.oldMoveLift(1);
+                sleep(500);
+                cipher = newRobot.getGlyphCipher();
                 colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
                 telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getrightWingColorSens()));
@@ -93,22 +87,20 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case 'r':
-                        newRobot.driveStraight_In(8);
-                        sleep(500);
                         newRobot.driveStraight_In(-8);
+                        sleep(500);
+                        newRobot.moveWing(false);
+                        newRobot.driveStraight_In(8);
                     case 'b':
-                        newRobot.driveStraight_In(-8);
-                        sleep(500);
                         newRobot.driveStraight_In(8);
+                        sleep(500);
+                        newRobot.moveWing(false);
+                        newRobot.driveStraight_In(-8);
                         break;
                     default:
                         break;
                 }
-                newRobot.moveWing(false);
-                sleep(500);
-                cipher = newRobot.getGlyphCipher();
                 telemetry.addData("Cipherr = ", cipher);
-                telemetry.addData("Pos ", newRobot.getGlyphCipher());
                 telemetry.update();
                 newRobot.driveStraight_In(26);
                 newRobot.pivot_IMU(82, .25);
@@ -127,18 +119,16 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In(32);
                         break;
                 }
-                newRobot.pivot_IMU(-83, .25);
-                newRobot.driveStraight_In(8,.1);
-                newRobot.driveStraight_In(8,.1);
+                newRobot.pivot_IMU(-86, .25);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(-2); // back up
-                newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-2,1);
+                newRobot.driveStraight_In(16,.2);
+                newRobot.driveStraight_In(-5,1);
                 newRobot.stopAllMotors();
             default:
                 newRobot.driveStraight_In(29, .4);
                 newRobot.openOrCloseDoor(true);
+                sleep(200);
                 newRobot.oldMoveLift(1);
                 break;
         }

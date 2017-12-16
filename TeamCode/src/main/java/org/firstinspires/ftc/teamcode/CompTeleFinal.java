@@ -84,9 +84,9 @@ public class CompTeleFinal extends OpMode
 
         //Doesn't close all the way
         if (gamepad2.a) //we will measure these values and see if its a mechanical or programming issue
-            newRobot.fineAdjGrabber(.01f);
+            newRobot.fineAdjGrabber(.04f);
         else if (gamepad2.b)
-            newRobot.fineAdjGrabber(-.01f);
+            newRobot.fineAdjGrabber(-.04f);
 
         if (gamepad2.y)
         {
@@ -118,15 +118,16 @@ public class CompTeleFinal extends OpMode
         telemetry.addData("RIGHt POW= ", newRobot.getDriveRightOne().getPower());
 
         if (gamepad1.y)
-            newRobot.getWingMotor().setPower(.6f);//lift wing
+            newRobot.getWingMotor().setPower(.9f);//lift wing
         else if (gamepad1.b)
-            newRobot.getWingMotor().setPower(-.6f);
+            newRobot.getWingMotor().setPower(-.9f);
         else
             newRobot.getWingMotor().setPower(0f);
 
         telemetry.addData("LiftEnc", newRobot.getLiftMotor().getCurrentPosition());
         telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
         telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
+        telemetry.addData("AnglePerpToGrav ", newRobot.anglePerpToGrav());
         telemetry.update();
     }
 
