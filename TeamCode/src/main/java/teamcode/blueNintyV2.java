@@ -197,7 +197,7 @@ public class blueNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(turnSpeed, 160);
 
-            double distance = 26 + (column - 2) * 7.5;
+            double distance = 26 + (column - 2) * 6.5;
             robot.driveForward(.5, distance,true);
 
             robot.armServo.setPosition(.7);
@@ -211,8 +211,14 @@ public class blueNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(turnSpeed,-30);
 
-            robot.driveForward(.5,-5,true);
+            //robot.driveForward(.5,-5,true);
+            robot.driveForward(.5,-3,true);
+            if(column == 1)
+            {
+                robot.driveLateral(.5,5,true);
+            }
 
+            /*
             //robot.armServo.setPosition(.9);
             double pitDegrees = - 135 - ((column - 2) * 10);
             robot.turnDegrees(turnSpeed, pitDegrees);
@@ -240,12 +246,13 @@ public class blueNintyV2 extends LinearOpMode {
             }
             robot.armServo.setPosition(.6);
             robot.driveForward(.5,-16,true);
-            double pitDegreesBack = 180 + ((column - 2) * 25);
+            double pitDegreesBack = 180 + ((column - 2) * 35);
             robot.turnDegrees(turnSpeed,pitDegreesBack);
             robot.driveForward(.6, 16, true);
             robot.rightClampServo.setPosition(0);
             robot.armServo.setPosition(.8);
             robot.driveForward(.5,-3,true);
+            */
             break;
         }
     }

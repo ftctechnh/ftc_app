@@ -159,7 +159,7 @@ public class redNintyV2 extends LinearOpMode {
 
             elapsedTime = runtime.time();
 
-            robot.rightClampServo.setPosition(0);
+            robot.rightClampServo.setPosition(1);
 
             while ((column = robot.getColumn()) == -1 && elapsedTime < 5 ){
                 elapsedTime = runtime.time();
@@ -193,6 +193,10 @@ public class redNintyV2 extends LinearOpMode {
             robot.turnDegrees(.5,-10);
 
             double distance = 18.5 + (4 - column) * 7.5;
+            if(column == 1)
+            {
+                distance = distance -1;
+            }
             robot.driveForward(.5,distance,true);
             robot.logEnconders();
             robot.updateLog();
@@ -208,9 +212,17 @@ public class redNintyV2 extends LinearOpMode {
 
             robot.turnDegrees(.5,-30);
 
-            //robot.driveForward(.5,-3,true);
-            robot.driveForward(.5,-5,true);
+            robot.driveForward(.5,-3,true);
+            if(column == 1)
+            {
+                robot.driveLateral(.5,5,true);
+                robot.driveForward(.5,3,true);
+                robot.turnDegrees(.5,10);
+            }
+            robot.armServo.setPosition(.8);
+            //robot.driveForward(.5,-5,true);
 
+            /*
             //robot.armServo.setPosition(.9);
             double pitDegrees = -145 + (4 - column) * 10;
             robot.turnDegrees(.5,pitDegrees);
@@ -245,6 +257,7 @@ public class redNintyV2 extends LinearOpMode {
             robot.rightClampServo.setPosition(0);
             robot.armServo.setPosition(.8);
             robot.driveForward(.5,-2,true);
+            */
             updateTelemetry();
             break;
         }

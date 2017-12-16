@@ -119,6 +119,7 @@ public class redStrightV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        robot = new KiwiRobot(hardwareMap,telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -165,7 +166,7 @@ public class redStrightV2 extends LinearOpMode {
                 column = 2;
             }
 
-            robot.jewelServo.setPosition(1);
+            robot.jewelServo.setPosition(CLOSECLAMPPOSITION);
             sleep(1500);
 
             if (!robot.isJewelRed() && !isDetected) {
@@ -188,14 +189,14 @@ public class redStrightV2 extends LinearOpMode {
 
             robot.turnDegrees(.5,-15);
 
-            robot.driveForward(.5,16,true);
+            robot.driveForward(.5,17,true);
 
             robot.armServo.setPosition(.65);
             sleep(500);
 
             robot.turnDegrees(-.5,90);
 
-            double distance = (column) * 7;
+            double distance = (column - 1) * 8.5;
             robot.driveForward(.5,distance,true);
 
             robot.turnDegrees(.5,-90);
