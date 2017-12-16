@@ -47,6 +47,6 @@ public class RedOneAuto extends AutoMaster {
         robot.gripper.setPower(0);
         encode(4, -0.25, MoveType.STRAIGHT);
         encode(5, 0.1, MoveType.STRAIGHT);
-        encode(-5, -0.2, MoveType.STRAIGHT);
+        encode(5, -0.2, MoveType.STRAIGHT);
     }
 }
