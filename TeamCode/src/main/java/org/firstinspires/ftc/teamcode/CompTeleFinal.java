@@ -34,7 +34,7 @@ public class CompTeleFinal extends OpMode
          * GAMEPAD 2
          */
 
-
+        /*
         if (gamepad2.dpad_up)
         {
             if (liftArmed)
@@ -61,7 +61,7 @@ public class CompTeleFinal extends OpMode
 
         telemetry.update();
 
-
+*/
         newRobot.fineMoveLift(gamepad2.left_stick_y, .9f);
         /*
         if (gamepad2.left_bumper)
@@ -114,13 +114,6 @@ public class CompTeleFinal extends OpMode
                 newRobot.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
         }
         //
-        if (gamepad1.right_bumper)
-        {
-            telemetry.addData("GAMEPAD 1 R BUMPER", null);
-            newRobot.driveMotors(-.9f, .9f);
-            telemetry.addData("LEFT POW= ", newRobot.getDriveLeftOne().getPower());
-            telemetry.addData("RIGHt POW= ", newRobot.getDriveRightOne().getPower());
-        }
         telemetry.addData("LEFT POW= ", newRobot.getDriveLeftOne().getPower());
         telemetry.addData("RIGHt POW= ", newRobot.getDriveRightOne().getPower());
 
@@ -131,10 +124,9 @@ public class CompTeleFinal extends OpMode
         else
             newRobot.getWingMotor().setPower(0f);
 
-        telemetry.addData("gamepad2 Trigger l", gamepad2.left_trigger);
-        telemetry.addData("gamepad2 Trigger r", gamepad2.right_trigger);
-        telemetry.addData("gamepad1 joystick l", gamepad1.left_stick_y);
-        telemetry.addData("gamepad1 joystick r", gamepad1.right_stick_y);
+        telemetry.addData("LiftEnc", newRobot.getLiftMotor().getCurrentPosition());
+        telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
+        telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
         telemetry.update();
     }
 
