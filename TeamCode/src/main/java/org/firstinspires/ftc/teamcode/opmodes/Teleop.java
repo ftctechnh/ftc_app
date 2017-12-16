@@ -47,6 +47,9 @@ public class Teleop extends OpMode {
         if(gamepad1.left_trigger > 0) bot.setDropPos(BotHardware.ServoE.backDropUp + (gamepad1.left_trigger * (BotHardware.ServoE.backDropDown - BotHardware.ServoE.backDropUp)));
         else bot.setDropPos(BotHardware.ServoE.backDropUp);
 
+        if(gamepad1.right_trigger > 0) BotHardware.ServoE.stick.servo.setPosition(BotHardware.ServoE.stickUp + (gamepad1.right_trigger * (BotHardware.ServoE.stickDown - BotHardware.ServoE.stickUp)));
+        else BotHardware.ServoE.stick.servo.setPosition(BotHardware.ServoE.stickUp);
+
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
         //if(suckerDown) bot.dropFront();
@@ -70,7 +73,7 @@ public class Teleop extends OpMode {
             }
             bot.setLeftDrive(gamepad1.left_stick_y * slowFactor);
             bot.setRightDrive(gamepad1.right_stick_y * slowFactor);
-            BotHardware.Motor.green.motor.setPower(0);
+            BotHardware.Motor.green.motor.setPower(0.5);
         }
         else {
             bot.setLeftDrive(gamepad1.left_stick_y);
@@ -80,13 +83,13 @@ public class Teleop extends OpMode {
                 for(DcMotor motor : ray) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 motorsSet = false;
             }
-            BotHardware.Motor.green.motor.setPower(1);
+            BotHardware.Motor.green.motor.setPower(0);
             lastA = gamepad1.a;
         }
 
 
-        if(gamepad1.b) bot.dropStick();
-        else bot.liftStick();
+        //if(gamepad1.b) bot.dropStick();
+        //else bot.liftStick();
 
         bot.getStickBase().setPosition(BotHardware.ServoE.stickBaseHidden);
 

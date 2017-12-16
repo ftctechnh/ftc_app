@@ -72,11 +72,14 @@ public class BotHardware {
         public static final double leftGrabOpen = 0;
         public static final double leftGrabClose = 1.0;
 
-        public static final double stickUp = 0.2;
+        public static final double stickUp = 0.4;
         public static final double stickDown = 1.0;
 
-        public static final double stickBaseCenter = 0.5;
-        public static final double stickBaseHidden = 0.0;
+        public static final double stickBaseCenterBlue = 0.435;
+        public static final double stickBaseCenterRed = 0.4;
+        public static final double stickBaseSwingLeft = 0.3;
+        public static final double stickBaseSwingRight = 0.6;
+        public static final double stickBaseHidden = 1.0;
 
         public static final double garyUp = 0.1;
         public static final double garyDown = 0.55;
@@ -130,6 +133,8 @@ public class BotHardware {
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
+        ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
+        ServoE.stick.servo.setPosition(ServoE.stickUp);
         //init IMU
         BNO055IMU.Parameters par = new BNO055IMU.Parameters();
         par.mode = BNO055IMU.SensorMode.IMU;

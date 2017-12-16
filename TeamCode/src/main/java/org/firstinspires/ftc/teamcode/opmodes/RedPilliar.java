@@ -44,6 +44,7 @@ public class RedPilliar extends VuforiaBallLib {
     private static final int PILLIAR_COUNT_START_RED = 250;
 
     protected boolean red = true;
+    protected boolean justDrive = false;
     private int[] data;
     private BotHardware bot = new BotHardware(this);
 
@@ -87,8 +88,22 @@ public class RedPilliar extends VuforiaBallLib {
             AutoLib.Sequence whack = new AutoLib.LinearSequence();
             //check detection
             if(color != BallColor.Indeterminate && color != BallColor.Undefined) {
+                if(red) whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed, 0.25, false));
+                else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
+                whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
                 //hmmmmm
-
+                final AutoLib.Step whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseSwingLeft, 1.0, false);
+                final AutoLib.Step whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseSwingRight, 1.0, false);
+                if(color == BallColor.LeftBlue) {
+                    if(red) whack.add(whackLeft);
+                    else whack.add(whackRight);
+                }
+                else if(color == BallColor.LeftRed) {
+                    if(red) whack.add(whackRight);
+                    else whack.add(whackLeft);
+                }
+                whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
+                whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             }
 
             if(getLastVuMark() != null) {
@@ -127,9 +142,14 @@ public class RedPilliar extends VuforiaBallLib {
             //blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f * mul, 100, true));
             //blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 270.0f, 1600, true));
 
+            AutoLib.LinearSequence driveSeq = new AutoLib.LinearSequence();
+
+            driveSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0 * mul, 1500, true));
+
             //smash it all together
             mSeq.add(whack);
-            mSeq.add(blockSeq);
+            if(!justDrive) mSeq.add(blockSeq);
+            else mSeq.add(driveSeq);
 
             firstLoop = true;
         }
