@@ -17,9 +17,7 @@ public class RedTwoAuto extends AutoMaster {
         VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
         robot.init(hardwareMap);
         waitForStart();
-        encodeInd(0.2,  MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 11.2) {}
-        robot.setAllDriveMotors(0);
+        encode(15, 0.5, MoveType.LATERALLY);
         wait(500);
         robot.arm.setPosition(1);
         wait(750);
@@ -30,7 +28,7 @@ public class RedTwoAuto extends AutoMaster {
         }
         robot.arm.setPosition(0);
 
-        typee = vu.getVuf(hardwareMap);
+        /*.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
             box = 16.14;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
@@ -39,13 +37,13 @@ public class RedTwoAuto extends AutoMaster {
             box = 29.53;
         } else {
             box = 22.05;
-        }
-        findBox(box, 1);
+        } */
+        encode(25, -0.5, MoveType.LATERALLY);
         encode(15, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
-        encode(2, -0.25, MoveType.STRAIGHT);
+        encode(4, -0.25, MoveType.STRAIGHT);
     }
 }

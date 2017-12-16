@@ -15,16 +15,16 @@ public class BlueOneAuto extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeInd(0.25, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 11.2) {}
-        robot.setAllDriveMotors(0);
-        wait(1000);
+        encode(15, 0.5, MoveType.LATERALLY);
+        wait(500);
         robot.arm.setPosition(1);
+        wait(750);
         if (robot.color.red() > 1) {
-            encode(5, -0.5, MoveType.STRAIGHT);
+            encode(5, 0.25, MoveType.STRAIGHT);
         } else {
-            encode(5, 0.5, MoveType.STRAIGHT);
+            encode(5, -0.25, MoveType.STRAIGHT);
         }
+        robot.arm.setPosition(0);
         robot.arm.setPosition(0);
         encodeInd(-0.5, MoveType.LATERALLY);
         while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
@@ -40,15 +40,15 @@ public class BlueOneAuto extends AutoMaster {
         } else {
             box = 45.67;
         }
+        encode(15, -0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
-        findBox(box, -1);
-        encode(38, 0.5, MoveType.ROT);
-        encode(15, 0.5, MoveType.STRAIGHT);
+        encode(20, 0.5, MoveType.LATERALLY);
+        encode(10, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
-        encode(2, -0.25, MoveType.STRAIGHT);
+        encode(4, -0.25, MoveType.STRAIGHT);
         
     }
 }

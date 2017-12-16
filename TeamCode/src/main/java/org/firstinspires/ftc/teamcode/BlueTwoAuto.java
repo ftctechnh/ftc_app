@@ -14,20 +14,18 @@ public class BlueTwoAuto extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeInd(0.25, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 11.2) {}
-        robot.setAllDriveMotors(0);
-        wait(1000);
+        encode(15, 0.5, MoveType.LATERALLY);
+        wait(500);
         robot.arm.setPosition(1);
-        //TODO: Find out if it goes the right way
+        wait(750);
         if (robot.color.red() > 1) {
-            encode(5, 0.5, MoveType.STRAIGHT);
+            encode(5, 0.25, MoveType.STRAIGHT);
         } else {
-            encode(5, -0.5, MoveType.STRAIGHT);
+            encode(5, -0.25, MoveType.STRAIGHT);
         }
         robot.arm.setPosition(0);
         double box;
-        typee = vu.getVuf(hardwareMap);
+       /* typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
             box = 38.98;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
@@ -36,14 +34,13 @@ public class BlueTwoAuto extends AutoMaster {
             box = 45.7;
         } else {
             box = 45.67;
-        }
-        findBox(box, -1);
+        } */
         encode(32, 0.5, MoveType.ROT);
         encode(45, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
-        encode(2, -0.25, MoveType.STRAIGHT);
+        encode(4, -0.25, MoveType.STRAIGHT);
     }
 }

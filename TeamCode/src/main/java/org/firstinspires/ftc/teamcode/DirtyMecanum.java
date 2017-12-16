@@ -139,10 +139,10 @@ public class DirtyMecanum extends OpMode
         telemetry.addData("D-Pad down", dpadStates[2]);
         telemetry.addData("D-Pad left", dpadStates[3]);
         telemetry.addData("ENCODERS", "");
-        telemetry.addData("FL", robot.flDrive.getCurrentPosition());
-        telemetry.addData("FR", robot.frDrive.getCurrentPosition());
-        telemetry.addData("RL", robot.rlDrive.getCurrentPosition());
-        telemetry.addData("RR", robot.rrDrive.getCurrentPosition());
+        telemetry.addData("FL", (robot.flDrive.getCurrentPosition() / 1120));
+        telemetry.addData("FR", (robot.frDrive.getCurrentPosition() / 1120));
+        telemetry.addData("RL", (robot.rlDrive.getCurrentPosition() / 1120));
+        telemetry.addData("RR", (robot.rrDrive.getCurrentPosition() / 1120));
     }
 
     /*

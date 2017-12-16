@@ -15,11 +15,9 @@ public class RedOneAuto extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeInd(0.2, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 11.2) {}
-        robot.setAllDriveMotors(0);
+        encode(5, 0.5, MoveType.LATERALLY);
         wait(500);
-        robot.arm.setPosition(1);
+        robot.arm.setPosition(0.9);
         wait(750);
         if (robot.color.red() > 1) {
             encode(5, -0.25, MoveType.STRAIGHT);
@@ -27,11 +25,10 @@ public class RedOneAuto extends AutoMaster {
             encode(5, 0.25, MoveType.STRAIGHT);
         }
         robot.arm.setPosition(0);
-        encodeInd(-0.5, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
-        robot.setAllDriveMotors(0);
+        wait(1000);
 
-        typee = vu.getVuf(hardwareMap);
+/*
+        typee = vu.getVuf
         if (typee == VuforiaPlagiarism.type.RIGHT) {
             box = 38.98;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
@@ -40,17 +37,16 @@ public class RedOneAuto extends AutoMaster {
             box = 45.7;
         } else {
             box = 45.67;
-        }
-        /*encodeInd(-0.25, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
-        robot.setAllDriveMotors(0);*/
-        encode(16, 0.25, MoveType.ROT);
-        findBox(box, -1);
+        */
+
         encode(15, 0.5, MoveType.STRAIGHT);
+        encode(19, 0.5, MoveType.ROT);
+        encode(20, -0.5, MoveType.LATERALLY);
+        encode(10, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
-        encode(2, -0.25, MoveType.STRAIGHT);
+        encode(4, -0.25, MoveType.STRAIGHT);
     }
 }
