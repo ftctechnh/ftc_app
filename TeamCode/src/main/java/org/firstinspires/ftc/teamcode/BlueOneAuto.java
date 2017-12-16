@@ -15,8 +15,6 @@ public class BlueOneAuto extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(15, 0.5, MoveType.LATERALLY);
-        wait(500);
         robot.arm.setPosition(1);
         wait(750);
         if (robot.color.red() > 1) {
@@ -25,12 +23,9 @@ public class BlueOneAuto extends AutoMaster {
             encode(5, -0.25, MoveType.STRAIGHT);
         }
         robot.arm.setPosition(0);
-        robot.arm.setPosition(0);
-        encodeInd(-0.5, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
-        robot.setAllDriveMotors(0);
+        wait(1000);
 
-        typee = vu.getVuf(hardwareMap);
+       /* typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
             box = 38.98;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
@@ -39,7 +34,7 @@ public class BlueOneAuto extends AutoMaster {
             box = 45.7;
         } else {
             box = 45.67;
-        }
+        } */
         encode(15, -0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
         encode(20, 0.5, MoveType.LATERALLY);

@@ -15,8 +15,6 @@ public class RedOneAuto extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(5, 0.5, MoveType.LATERALLY);
-        wait(500);
         robot.arm.setPosition(0.9);
         wait(750);
         if (robot.color.red() > 1) {
