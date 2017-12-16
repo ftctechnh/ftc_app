@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class BlueOneAuto extends AutoMaster {
     @Override
     public void runOpMode() {
+        double box;
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
@@ -20,5 +21,18 @@ public class BlueOneAuto extends AutoMaster {
         } else {
             encode(5, 0.5, MoveType.STRAIGHT);
         }
+        robot.arm.setPosition(0);
+
+        typee = vu.getVuf(hardwareMap);
+        if (typee == VuforiaPlagiarism.type.RIGHT) {
+            box = 38.98;
+        } else if (typee == VuforiaPlagiarism.type.CENTER) {
+            box = 45.67;
+        } else if (typee == VuforiaPlagiarism.type.LEFT) {
+            box = 45.7;
+        } else {
+            box = 45.67;
+        }
+        
     }
 }
