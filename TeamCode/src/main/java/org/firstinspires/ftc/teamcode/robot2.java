@@ -89,8 +89,8 @@ public class robot2 extends LinearOpMode {
             //towerpower += bonus;
             Left.setPower(.5*Range.clip(gamepad1.left_stick_y, -1, 1));
             Right.setPower(.5*Range.clip(-gamepad1.right_stick_y, -1, 1));
-            Tower.setPower(.5 * Range.clip(towerpower, -1, 1));
-            Slack.setPower(-.5 *Range.clip((towerpower), -1, 1));
+            Tower.setPower(.25 * Range.clip(towerpower, -1, 1));
+            Slack.setPower(-.25 *Range.clip((towerpower), -1, 1));
             //finger adjustment statements
             if(gamepad2.b && !b && Fingeroffset <= .4){
                 Fingeroffset += .1;
