@@ -37,14 +37,16 @@ public class RedOneAuto extends AutoMaster {
             box = 45.67;
         */
 
-        encode(15, 0.5, MoveType.STRAIGHT);
+        encode(17, 0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
-        encode(20, -0.5, MoveType.LATERALLY);
+        encode(18, -0.5, MoveType.LATERALLY);
         encode(10, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
         encode(4, -0.25, MoveType.STRAIGHT);
+        encode(5, 0.1, MoveType.STRAIGHT);
+        encode(-5, -0.2, MoveType.STRAIGHT);
     }
 }
