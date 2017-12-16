@@ -6,16 +6,12 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -35,6 +31,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class NewRobotFinal
 {
+    final int liftLevels[] = {0, 100, 769, 1500, 1538};
     //Currently not levels or stops
     private short currentLvl = 0;
     private short liftTargetPos;
@@ -153,6 +150,7 @@ public class NewRobotFinal
 
         wingMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        wingMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
        // wingMotor.setVelocity(0, AngleUnit.DEGREES);
@@ -257,7 +255,7 @@ public class NewRobotFinal
 
     public void driveStraight_In(float inches, double pow)
     {
-        float encTarget = neverrestEncCountsPerRev / wheelCircCm * inches;
+        float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         resetDriveEncoders();
@@ -480,6 +478,30 @@ public class NewRobotFinal
         stopDriveMotors();
     }
 
+    public void oldMoveLift(int adjLevels) //For the lift, I'll use levels or encoders points that stop
+    {
+        float pow = .75f;
+        if (adjLevels + currentLvl < 0)
+            return;
+        else if (adjLevels + currentLvl > 3)
+            return;
+
+        currentLvl += adjLevels;
+
+        if (adjLevels > 0)
+        {
+            liftMotor.setPower(-Math.abs(pow));
+            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl]){}
+        }
+        else
+        {
+            liftMotor.setPower(Math.abs(pow));
+            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl]){}
+        }
+
+        liftMotor.setPower(0);
+    }
+
     public void moveLift(int adjLevels)
     {
         moveLift(adjLevels, .66f);
@@ -607,7 +629,7 @@ public class NewRobotFinal
         else
         {
             leftDoorWall.setPosition(0f);
-            rightDoorWall.setPosition(0.5f);
+            rightDoorWall.setPosition(0.6f);
         }
     }
 

@@ -27,7 +27,7 @@ public class FinalUniversalRef extends LinearOpMode
                 waitForStart();
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
-                newRobot.moveLift(1);
+                //newRobot.oldMoveLift(1);
                 sleep(1000);
                 newRobot.getrightWingColorSens();
                 char colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
@@ -73,7 +73,7 @@ public class FinalUniversalRef extends LinearOpMode
                 newRobot.pivot_IMU(83, .25);
                 newRobot.driveStraight_In(8, .1);
                 newRobot.driveStraight_In(8, .1);
-                newRobot.moveLift(-1);
+                newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
                 newRobot.driveStraight_In(3,.2);
@@ -83,7 +83,7 @@ public class FinalUniversalRef extends LinearOpMode
                 waitForStart();
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
-                newRobot.moveLift(1);
+                //newRobot.oldMoveLift(1);
                 sleep(1000);
                 newRobot.getrightWingColorSens();
                 colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
@@ -124,13 +124,13 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In(5); //positioning is really off, need to fix on 11/12
                         break;
                     default:
-                        newRobot.driveStraight_In(11.5f);
+                        newRobot.driveStraight_In(32);
                         break;
                 }
                 newRobot.pivot_IMU(-83, .25);
                 newRobot.driveStraight_In(8,.1);
                 newRobot.driveStraight_In(8,.1);
-                newRobot.moveLift(-1);
+                newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(-2); // back up
                 newRobot.driveStraight_In(3,.2);
@@ -139,7 +139,7 @@ public class FinalUniversalRef extends LinearOpMode
             default:
                 newRobot.driveStraight_In(29, .4);
                 newRobot.openOrCloseDoor(true);
-                newRobot.moveLift(1);
+                newRobot.oldMoveLift(1);
                 break;
         }
     }
