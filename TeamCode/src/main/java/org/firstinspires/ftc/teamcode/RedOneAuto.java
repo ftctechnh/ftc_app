@@ -15,8 +15,8 @@ public class RedOneAuto extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encodeInd(0.25, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 10.5) {}
+        encodeInd(0.2, MoveType.LATERALLY);
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 11.2) {}
         robot.setAllDriveMotors(0);
         wait(500);
         robot.arm.setPosition(1);
@@ -44,7 +44,7 @@ public class RedOneAuto extends AutoMaster {
         /*encodeInd(-0.25, MoveType.LATERALLY);
         while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
         robot.setAllDriveMotors(0);*/
-        encode(19, 0.25, MoveType.ROT);
+        encode(16, 0.25, MoveType.ROT);
         findBox(box, -1);
         encode(15, 0.5, MoveType.STRAIGHT);
         wait(500);

@@ -30,9 +30,7 @@ public class Thing extends AutoMaster {
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
         VuforiaPlagiarism vu = new VuforiaPlagiarism();
-        encode(19, 0.5, MoveType.ROT);
-        if (vu.getVuf(hardwareMap) == VuforiaPlagiarism.type.CENTER) {
-            encode(20, 0.5, MoveType.STRAIGHT);
-        }
+
+        encode(16, 0.5, MoveType.ROT);
     }
 }

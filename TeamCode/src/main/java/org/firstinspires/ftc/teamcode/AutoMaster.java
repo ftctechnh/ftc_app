@@ -190,11 +190,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
      */
     public void findBox(double box, int dir) {
         int curLine = 0;
-        encodeInd((0.1 * (dir / Math.abs(dir))), MoveType.LATERALLY);
+        encodeInd((0.2 * dir), MoveType.LATERALLY);
         while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < box) {}
         robot.setAllDriveMotors(0);
         if (box == 45.7) {
-             encode(2, (0.1 * (dir / Math.abs(dir))), MoveType.LATERALLY);
+             encode(2, (0.2 * dir), MoveType.LATERALLY);
         }
     }
 }

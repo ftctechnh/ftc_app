@@ -16,7 +16,7 @@ public class BlueOneAuto extends AutoMaster {
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
         encodeInd(0.25, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10.5) {}
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 11.2) {}
         robot.setAllDriveMotors(0);
         wait(1000);
         robot.arm.setPosition(1);

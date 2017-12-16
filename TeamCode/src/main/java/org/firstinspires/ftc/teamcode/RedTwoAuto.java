@@ -17,9 +17,8 @@ public class RedTwoAuto extends AutoMaster {
         VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
         robot.init(hardwareMap);
         waitForStart();
-        telemetry.addData("skatin fast,", "eatin' ass");
-        encodeInd(0.25, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 10) {}
+        encodeInd(0.2,  MoveType.LATERALLY);
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 11.2) {}
         robot.setAllDriveMotors(0);
         wait(500);
         robot.arm.setPosition(1);
@@ -41,11 +40,7 @@ public class RedTwoAuto extends AutoMaster {
         } else {
             box = 22.05;
         }
-        encodeInd(-0.25, MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
-        robot.setAllDriveMotors(0);
         findBox(box, 1);
-        encode(19, 0.5, MoveType.ROT);
         encode(15, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
