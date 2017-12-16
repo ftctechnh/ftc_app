@@ -132,7 +132,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         robot.sleep(400);
 
         if (robot.startingPad == StartingPosition.BACK) {
-            turnToPos(Math.PI/2);
+            turnToPos(Math.PI / 2);
         } else {
             if (robot.color == Alliance.RED) {
                 turnToPos(Math.PI);
@@ -152,8 +152,16 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
 
         if (pictograph == 0 && robot.color == Alliance.RED) {
             driveTicks += 100;
-        } else if (robot.color == Alliance.RED) {
+            if (robot.startingPad == StartingPosition.BACK) {
+                driveTicks -= 1200;
+            }
+        } else if (robot.color == Alliance.RED && pictograph == 2) {
             driveTicks += 150;
+        } else if (robot.color == Alliance.RED && pictograph == 1 && robot.startingPad == StartingPosition.BACK) {
+            driveTicks += 150;
+        } else if (robot.color == Alliance.BLUE && pictograph == 0 && robot.startingPad == StartingPosition.BACK) {
+            telemetry.log().add("Got here");
+            driveTicks += 1675;
         } else { // For blue
             driveTicks -= 75;
         }
@@ -200,9 +208,12 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
             desiredPosition += (Math.PI/2) * robot.color.getColorCode();
             if (robot.color == Alliance.RED && pictograph == 0) {
                 desiredPosition -= Math.PI / 3;
+            } else if (robot.color == Alliance.BLUE && pictograph == 0) {
+                desiredPosition += Math.PI / 3;
             }
         }
 
+        robot.sleep(400); // Give some time for motors to stop moving
         turnToPos(desiredPosition);
 
         robot.sleep(1000);
@@ -292,6 +303,7 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double difference = Double.MAX_VALUE;
         ElapsedTime timeHeadingAcceptable = new ElapsedTime();
+        double turnSign = 0;
 
         while(Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION && timeHeadingAcceptable.milliseconds() < 500 && opModeIsActive()) {
             robot.updateReadings();
@@ -299,7 +311,13 @@ public class CompleteAutonomous extends NullbotGemOnlyAutonomous {
             double heading = robot.getGyroHeading();
 
             difference = getAngleDifference(pos, heading);
-            double turnSpeed = difference;
+
+            if (turnSign == 0) {
+                turnSign = Math.signum(difference);
+            }
+
+            double turnSpeed = Math.copySign(difference, turnSign);
+
             turnSpeed = Math.max(-0.75, Math.min(0.75, turnSpeed));
 
             // Don't go below 0.2

@@ -413,9 +413,9 @@ public class NullbotHardware {
     public void lowerWhipSnake() {
         lowerLeftWhipSnake();
     }
-    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(215.0/255.0);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(60.0/255.0);}
-    public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(120.0/255.0);}
+    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(0.49);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(0.08);}
+    public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(0.12);}
 
     public void crunchBlockClaw() {
         leftBlockClaw.setPosition(200.0/255.0);
