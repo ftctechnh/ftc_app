@@ -2,18 +2,22 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @Autonomous(name="Auto Blue One", group="Linear Auto")
 
 public class BlueOneAuto extends AutoMaster {
     @Override
     public void runOpMode() {
+        VuforiaPlagiarism vu = new VuforiaPlagiarism();
+        VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
         double box;
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
         encodeInd(0.25, MoveType.LATERALLY);
         while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10.5) {}
-        robot.setallDriveMotors(0);
+        robot.setAllDriveMotors(0);
         wait(1000);
         robot.arm.setPosition(1);
         if (robot.color.red() > 1) {
@@ -23,7 +27,7 @@ public class BlueOneAuto extends AutoMaster {
         }
         robot.arm.setPosition(0);
         encodeInd(-0.5, MoveType.LATERALLY);
-        while (robot.rangeSensor.getPosition(DistanceUnit.INCH) < 20) {}
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
         robot.setAllDriveMotors(0);
 
         typee = vu.getVuf(hardwareMap);

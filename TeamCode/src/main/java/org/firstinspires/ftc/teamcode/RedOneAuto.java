@@ -28,7 +28,7 @@ public class RedOneAuto extends AutoMaster {
         }
         robot.arm.setPosition(0);
         encodeInd(-0.5, MoveType.LATERALLY);
-        while (robot.rangeSensor.getPosition(DistanceUnit.INCH) < 20) {}
+        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < 20) {}
         robot.setAllDriveMotors(0);
 
         typee = vu.getVuf(hardwareMap);
