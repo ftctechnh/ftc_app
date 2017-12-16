@@ -37,7 +37,7 @@ public class RedLeft extends LinearOpMode {
         driver.forward(31,.5);
         //RF.setPosition(.5);
         //LF.setPosition(.5);
-        driver.turn(90,.2);
+        driver.turn(-90,.2);
         RF.setPosition(.3);
         LF.setPosition(.7);
         driver.forward(15,.5);

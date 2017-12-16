@@ -24,10 +24,13 @@ public class BlueLeft extends LinearOpMode{
 
         waitForStart();
         Driver driver = new DriverWithEncoder(Left,Right,2.5, 15.375);
+        Left.setDirection(DcMotor.Direction.REVERSE);
         // run until the end of the match (driver presses STOP)
+        RF.setPosition(.5);
+        LF.setPosition(.5);
+        driver.forward(34,.5);
         RF.setPosition(.3);
         LF.setPosition(.7);
-        driver.forward(34,.5);
         while (opModeIsActive()) {
             driver.forward(-1,.5);
             driver.turn(40,.4);
