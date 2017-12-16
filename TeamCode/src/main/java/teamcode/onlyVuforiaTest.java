@@ -30,6 +30,7 @@
 package teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -80,7 +81,7 @@ import java.util.List;
  */
 
 @Autonomous(name="onlyVuforiaTest", group ="Concept")
-//@Disabled
+@Disabled
 public class onlyVuforiaTest extends LinearOpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";

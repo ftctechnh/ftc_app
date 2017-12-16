@@ -59,7 +59,7 @@ import static java.lang.Math.sqrt;
  */
 
 @Autonomous(name="basicAutonomousTestWithEncoder", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Disabled
 public class basicAutonomousTestWithEncoder extends LinearOpMode {
 
     // Declare OpMode members.
