@@ -17,8 +17,7 @@ public class JewelSystem {
     public Servo    jewelArm    = null;
     ColorSensor colorSensor;
 
-    public static final double TOP_SERVO = 0;
-    public static final double BOTTOM_SERVO = -.666;
+    public static final double TOP_SERVO = 0.45;
 
     int red;
     int green;
@@ -46,8 +45,8 @@ public class JewelSystem {
         //colorSensor.enableLed(false);
     }
     public void armPos(double pos){
-        if (pos < BOTTOM_SERVO)
-            pos = (BOTTOM_SERVO);
+        //if (pos < BOTTOM_SERVO)
+        //    pos = (BOTTOM_SERVO);
         jewelArm.setPosition(pos);
     }
     public void colorLED(boolean onOff){

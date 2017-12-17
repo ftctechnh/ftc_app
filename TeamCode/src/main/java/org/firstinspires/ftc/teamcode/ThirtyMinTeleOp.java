@@ -39,8 +39,8 @@ public class ThirtyMinTeleOp extends OpMode{
         double left;
         double armPower;
 
-        left = gamepad1.left_stick_y;
-        right = gamepad1.right_stick_y;
+        left = -gamepad1.left_stick_y;
+        right = -gamepad1.right_stick_y;
 
         if (gamepad1.left_trigger > 0) {
             left = gamepad1.left_stick_y;

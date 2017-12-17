@@ -18,9 +18,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Joseph Liang on 10/30/2017.
  */
 
-@Autonomous(name="Relic Recovery: Blue Corner", group="Pushbot")
+@Autonomous(name="Jewel Park: Blue Corner", group="Pushbot")
 //@Disabled
-public class RlcRcvryCornerBlue extends OpMode{
+public class BlueCornerJewelPark extends OpMode{
 
     private int stateMachineFlow;
     RelicDrive robot       = new RelicDrive();
@@ -34,7 +34,7 @@ public class RlcRcvryCornerBlue extends OpMode{
     double time;
 
     static final double SENS_ARM_TOP = 0.45;
-    static final double SENS_ARM_BOTTOM = 1;
+    static final double SENS_ARM_BOTTOM = 1.15;
 
     //VuforiaLocalizer vuforia;
     /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -42,6 +42,7 @@ public class RlcRcvryCornerBlue extends OpMode{
     VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
     VuforiaTrackable relicTemplate = relicTrackables.get(0);
 */
+
     @Override
     public void init() {
         telemetry.addData("before init","here");
@@ -65,9 +66,9 @@ public class RlcRcvryCornerBlue extends OpMode{
 
 
         //code for gripping glyph and moving arm slightly up
-        gilgearmesh.clawPos(1);
+        //gilgearmesh.clawPos(1);
         //wait needed? Also... guessed parameters
-        gilgearmesh.armPos(800,.6);
+        //gilgearmesh.armPos(800,.6);
         stateMachineFlow = 0;
         //relicTrackables.activate();
 
@@ -80,13 +81,21 @@ public class RlcRcvryCornerBlue extends OpMode{
         telemetry.update();
     }
 
+    /*@Override
+    public void init_loop(){
+
+
+        telemetry.addData("Arm Pos",gilgearmesh.getArmPosition());
+        telemetry.addData("Color",jewelColor);
+        telemetry.addData("Case",stateMachineFlow);
+        telemetry.update();}*/
 
     @Override
     public void loop() {
         switch(stateMachineFlow){
             case 0:
                 runtime.reset();
-                telemetry.addData("Key",glyph);
+                gilgearmesh.armPos(1000,.6);
                 telemetry.addData("Color",jewelColor);
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
@@ -98,18 +107,17 @@ public class RlcRcvryCornerBlue extends OpMode{
                 sensArm.colorLED(true);
                 time = getRuntime();
                 while (jewelColor == "Unknown" && getRuntime() < time + 3){
-                if (sensArm.colorSens() == "blue"){
-                    jewelColor = "blue";
-                    telemetry.addData("Key",glyph);
-                    telemetry.addData("Color",jewelColor);
-                    telemetry.addData("Case",stateMachineFlow);
-                    telemetry.update();}
-                else if (sensArm.colorSens() == "red"){
-                    jewelColor = "red";
-                    telemetry.addData("Key",glyph);
-                    telemetry.addData("Color",jewelColor);
-                    telemetry.addData("Case",stateMachineFlow);
-                    telemetry.update();}
+                    if (sensArm.colorSens() == "blue"){
+                        jewelColor = "blue";
+                        telemetry.addData("Key",glyph);
+                        telemetry.addData("Color",jewelColor);
+                        telemetry.addData("Case",stateMachineFlow);
+                        telemetry.update();}
+                    else if (sensArm.colorSens() == "red"){
+                        jewelColor = "red";
+                        telemetry.addData("Color",jewelColor);
+                        telemetry.addData("Case",stateMachineFlow);
+                        telemetry.update();}
                 }
                 sensArm.colorLED(false);
                 stateMachineFlow++;
@@ -118,19 +126,30 @@ public class RlcRcvryCornerBlue extends OpMode{
                 //knock off correct jewel
                 if (jewelColor == "blue"){robot.linearDrive(.25,2);
                     sensArm.armPos(SENS_ARM_TOP);}
-                else if (jewelColor == "red"){robot.linearDrive(.25,-1);
+                else if (jewelColor == "red"){robot.linearDrive(.25,-2);
                     sensArm.armPos(SENS_ARM_TOP);
                     robot.linearDrive(.25,3);}
                 else if (jewelColor == "Unknown"){sensArm.armPos(SENS_ARM_TOP);
                     robot.linearDrive(.25,2);}
 
                 telemetry.addData("Jewel Arm",sensArm.getArmPosition());
-                telemetry.addData("Key",glyph);
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
                 stateMachineFlow++;
                 break;
             case 3:
+                robot.linearDrive(.25,-20);
+                stateMachineFlow++;
+                break;
+            case 4:
+                robot.statTurn(.5,-90);
+                stateMachineFlow++;
+                break;
+            case 5:
+                robot.linearDrive(.25,-2);
+                stateMachineFlow++;
+                break;
+            /*case 3:
                 telemetry.addData("Jewel Arm",sensArm.getArmPosition());
                 telemetry.addData("Key",glyph);
                 telemetry.addData("Case",stateMachineFlow);
@@ -181,7 +200,7 @@ public class RlcRcvryCornerBlue extends OpMode{
                     gilgearmesh.armPos(50,.6);//move arm up to avoid hitting the mat when we get off the stone
                     robot.statTurn(.2,180);//face box
                 }
-            stateMachineFlow++;
+                stateMachineFlow++;
                 break;
             case 5:
                 if (glyph == RelicRecoveryVuMark.LEFT) {
@@ -215,8 +234,8 @@ public class RlcRcvryCornerBlue extends OpMode{
                 robot.linearDrive(.25,6);
 
                 stateMachineFlow++;
-                break;
-            case 8:
+                break;*/
+            case 6:
                 //end?
                 break;
         }
