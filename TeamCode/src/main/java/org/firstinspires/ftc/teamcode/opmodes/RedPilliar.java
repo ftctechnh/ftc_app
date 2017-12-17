@@ -33,7 +33,7 @@ import java.util.ArrayList;
 @Autonomous(name="Red Drive", group="test")
 public class RedPilliar extends VuforiaBallLib {
     private static final double SAT_MIN = 0.5;
-    private static final int LUM_THRESH = 50;
+    private static final int LUM_THRESH = 25;
     private static final int PEAK_WIDTH_MIN = 4;
     private static final int PEAK_HEIGHT_MIN = 110;
     private static final int PEAK_FIND_WINDOW = 40;
