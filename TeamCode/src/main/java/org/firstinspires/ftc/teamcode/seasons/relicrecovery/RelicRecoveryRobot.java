@@ -15,17 +15,12 @@ import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.Jewel
  * This class represents the Relic Recovery robot.
  */
 public class RelicRecoveryRobot extends Robot {
-    protected HDriveTrain hDriveTrain;
+    private final HDriveTrain hDriveTrain;
+    private final VisionHelper visionHelper;
 
-    protected HardwareMap hwMap;
-
-    protected GlyphLift glyphLift;
-
-    protected Intake intake;
-
-    protected VisionHelper visionHelper;
-
-    protected JewelKnocker jewelKnocker;
+    private final GlyphLift glyphLift;
+    private final Intake intake;
+    private final JewelKnocker jewelKnocker;
 
     /**
      * Construct a new Relic Recovery robot, with an op-mode that is using this robot.
@@ -46,5 +41,25 @@ public class RelicRecoveryRobot extends Robot {
         this.intake = new Intake(this);
         this.visionHelper = new VisionHelper(this);
         this.jewelKnocker = new JewelKnocker(this);
+    }
+
+    public HDriveTrain getHDriveTrain() {
+        return hDriveTrain;
+    }
+
+    public GlyphLift getGlyphLift() {
+        return glyphLift;
+    }
+
+    public Intake getIntake() {
+        return intake;
+    }
+
+    public VisionHelper getVisionHelper() {
+        return visionHelper;
+    }
+
+    public JewelKnocker getJewelKnocker() {
+        return jewelKnocker;
     }
 }

@@ -22,8 +22,8 @@ public class RobotTeleOp extends LinearOpMode {
         gamepad1.setJoystickDeadzone(JOYSTICK_DEADZONE);
         gamepad2.setJoystickDeadzone(JOYSTICK_DEADZONE);
 
-        robot.glyphLift.initializeGrippers();
-        robot.intake.raiseIntake();
+        robot.getGlyphLift().initializeGrippers();
+        robot.getIntake().raiseIntake();
 
         waitForStart();
 
@@ -51,51 +51,51 @@ public class RobotTeleOp extends LinearOpMode {
 
             // intake raise/lower control
             if(gamepad1.left_bumper) {
-                robot.intake.raiseIntake();
+                robot.getIntake().raiseIntake();
             } else if(gamepad1.left_trigger > 0) {
-                robot.intake.lowerIntake();
+                robot.getIntake().lowerIntake();
             }
 
             // intake control
             if(gamepad1.dpad_up) {
-                robot.intake.setIntakePower(1.0);
+                robot.getIntake().setIntakePower(1.0);
             } else if(gamepad1.dpad_down||gamepad1.left_trigger>0) {
-                robot.intake.setIntakePower(-1.0);
+                robot.getIntake().setIntakePower(-1.0);
             } else{
-                robot.intake.setIntakePower(0);
+                robot.getIntake().setIntakePower(0);
             }
 
             // close/open blue gripper
             if(gamepad2.right_bumper) {
-                robot.glyphLift.openBlueGripper();
+                robot.getGlyphLift().openBlueGripper();
             } else {
-                robot.glyphLift.closeBlueGripper();
+                robot.getGlyphLift().closeBlueGripper();
             }
 
             // close/open red gripper
             if(gamepad2.left_bumper) {
-                robot.glyphLift.openRedGripper();
+                robot.getGlyphLift().openRedGripper();
             } else {
-                robot.glyphLift.closeRedGripper();
+                robot.getGlyphLift().closeRedGripper();
             }
 
             // automatic lift rotation motor control
             if(gamepad2.dpad_up) {
-                robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.UP);
+                robot.getGlyphLift().setRotationMotorPosition(GlyphLift.RotationMotorPosition.UP);
             } else if(gamepad2.dpad_down) {
-                robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.DOWN);
+                robot.getGlyphLift().setRotationMotorPosition(GlyphLift.RotationMotorPosition.DOWN);
             } else {
-                robot.glyphLift.setRotationMotorPower(liftRotationMotorPower);
+                robot.getGlyphLift().setRotationMotorPower(liftRotationMotorPower);
             }
 
-            telemetry.addData("Red Level", robot.jewelKnocker.getRed());
-            telemetry.addData("Blue Level", robot.jewelKnocker.getBlue());
+            telemetry.addData("Red Level", robot.getJewelKnocker().getRed());
+            telemetry.addData("Blue Level", robot.getJewelKnocker().getBlue());
             telemetry.update();
 
-            robot.hDriveTrain.pivot(pivot);
-            robot.hDriveTrain.drive(speedX, speedY);
+            robot.getHDriveTrain().pivot(pivot);
+            robot.getHDriveTrain().drive(speedX, speedY);
 
-            robot.glyphLift.setLiftMotorPower(liftMotorPower);
+            robot.getGlyphLift().setLiftMotorPower(liftMotorPower);
         }
     }
 }

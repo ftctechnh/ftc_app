@@ -104,11 +104,11 @@ public class Autonomous extends LinearOpMode {
 
     public void redLeft(RelicRecoveryRobot robot){
         //raise glyph lift a tiny bit
-        robot.glyphLift.setLiftMotorPower(1);
+        robot.getGlyphLift().setLiftMotorPower(1);
         sleep(5);
 
         // Lower Jewel Mechinism
-        robot.jewelKnocker.extendArm();
+        robot.getJewelKnocker().extendArm();
 
         //get color of ball
 
@@ -117,7 +117,7 @@ public class Autonomous extends LinearOpMode {
 
 
 
-//        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
+//        VuforiaLocalizer vuforia = robot.getVisionHelper().getVuforia();
 //        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
 //
 //        keyColumn = scanPicto();
@@ -140,28 +140,28 @@ public class Autonomous extends LinearOpMode {
 //                break;
 //        }
 //        // drive to key column
-//        robot.hDriveTrain.directionalDrive(-90, 1, distToKeyColumn, false);
+//        robot.getHDriveTrain().directionalDrive(-90, 1, distToKeyColumn, false);
 //
 //        // turn to cryptobox
-//        robot.hDriveTrain.pivot(1);
+//        robot.getHDriveTrain().pivot(1);
 //        sleep(1000);
 //
 //        //drive to cryptobox
-//        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
+//        robot.getHDriveTrain().directionalDrive(0, 0.4, 3, false);
 //
 //        //release preloaded glyph
-//        robot.glyphLift.openRedGripper();
+//        robot.getGlyphLift().openRedGripper();
     }
 
     public void redRight(RelicRecoveryRobot robot){
 
         //raise glyph lift a tiny bit
-        robot.glyphLift.setLiftMotorPower(1);
+        robot.getGlyphLift().setLiftMotorPower(1);
         sleep(5);
 
         //TODO add code for jewels
 
-        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
+        VuforiaLocalizer vuforia = robot.getVisionHelper().getVuforia();
         RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
 
         keyColumn = scanPicto();
@@ -184,27 +184,27 @@ public class Autonomous extends LinearOpMode {
                 break;
         }
         // drive to key column
-        robot.hDriveTrain.directionalDrive(90, 1, 12, false);
-        robot.hDriveTrain.pivot(1);
+        robot.getHDriveTrain().directionalDrive(90, 1, 12, false);
+        robot.getHDriveTrain().pivot(1);
         sleep(500);
 
-        robot.hDriveTrain.directionalDrive(-90, 1, distToKeyColumn, false);
+        robot.getHDriveTrain().directionalDrive(-90, 1, distToKeyColumn, false);
 
         //drive to cryptobox
-        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
+        robot.getHDriveTrain().directionalDrive(0, 0.4, 3, false);
 
         //release preloaded glyph
-        robot.glyphLift.openRedGripper();
+        robot.getGlyphLift().openRedGripper();
     }
 
     public void blueLeft(RelicRecoveryRobot robot){
         //raise glyph lift a tiny bit
-        robot.glyphLift.setLiftMotorPower(1);
+        robot.getGlyphLift().setLiftMotorPower(1);
         sleep(5);
 
         //TODO add code for jewels
 
-        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
+        VuforiaLocalizer vuforia = robot.getVisionHelper().getVuforia();
         RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
 
         keyColumn = scanPicto();
@@ -227,27 +227,27 @@ public class Autonomous extends LinearOpMode {
                 break;
         }
         // drive to key column
-        robot.hDriveTrain.directionalDrive(-90, 1, 12, false);
-        robot.hDriveTrain.pivot(1);
+        robot.getHDriveTrain().directionalDrive(-90, 1, 12, false);
+        robot.getHDriveTrain().pivot(1);
         sleep(500);
 
-        robot.hDriveTrain.directionalDrive(90, 1, distToKeyColumn, false);
+        robot.getHDriveTrain().directionalDrive(90, 1, distToKeyColumn, false);
 
         //drive to cryptobox
-        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
+        robot.getHDriveTrain().directionalDrive(0, 0.4, 3, false);
 
         //release preloaded glyph
-        robot.glyphLift.openRedGripper();
+        robot.getGlyphLift().openRedGripper();
     }
 
     public void blueRight(RelicRecoveryRobot robot){
         //raise glyph lift a tiny bit
-        robot.glyphLift.setLiftMotorPower(1);
+        robot.getGlyphLift().setLiftMotorPower(1);
         sleep(5);
 
         //TODO add code for jewels
 
-        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
+        VuforiaLocalizer vuforia = robot.getVisionHelper().getVuforia();
         RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
 
         keyColumn = scanPicto();
@@ -270,17 +270,17 @@ public class Autonomous extends LinearOpMode {
                 break;
         }
         // drive to key column
-        robot.hDriveTrain.directionalDrive(90, 1, distToKeyColumn, false);
+        robot.getHDriveTrain().directionalDrive(90, 1, distToKeyColumn, false);
 
         // turn to cryptobox
-        robot.hDriveTrain.pivot(1);
+        robot.getHDriveTrain().pivot(1);
         sleep(1000);
 
         //drive to cryptobox
-        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
+        robot.getHDriveTrain().directionalDrive(0, 0.4, 3, false);
 
         //release preloaded glyph
-        robot.glyphLift.openRedGripper();
+        robot.getGlyphLift().openRedGripper();
     }
 
     String format(OpenGLMatrix transformationMatrix) {
@@ -288,7 +288,7 @@ public class Autonomous extends LinearOpMode {
     }
     RelicRecoveryVuMark scanPicto(){
         RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
-        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
+        VuforiaLocalizer vuforia = robot.getVisionHelper().getVuforia();
         /**
          * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
          * in this data set: all three of the VuMarks in the game were created from this one template,
