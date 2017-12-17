@@ -1,18 +1,9 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.ServoController;
-import com.qualcomm.robotcore.util.Hardware;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.impl.HDriveTrain;
 import org.firstinspires.ftc.teamcode.mechanism.impl.VisionHelper;
@@ -44,7 +35,13 @@ public class RelicRecoveryRobot extends Robot {
     public RelicRecoveryRobot(OpMode opMode) {
         super(opMode);
 
-        this.hDriveTrain = new HDriveTrain(this, 4, 1.0, 1.5);
+        this.hDriveTrain = new HDriveTrain.Builder(this)
+                .setRightMotorDirection(DcMotor.Direction.REVERSE)
+                .setWheelDiameterInches(4)
+                .setInsideWheelGearingRatio(1.0)
+                .setOutsideWheelGearingRatio(1.5)
+                .build();
+
         this.glyphLift = new GlyphLift(this);
         this.intake = new Intake(this);
         this.visionHelper = new VisionHelper(this);
