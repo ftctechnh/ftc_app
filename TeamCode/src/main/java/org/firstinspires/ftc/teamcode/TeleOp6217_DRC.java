@@ -16,6 +16,9 @@ import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import java.lang.Math;
 
 
@@ -71,13 +74,18 @@ public class TeleOp6217_DRC extends OpMode
         servoConL = hardwareMap.crservo.get("servoConL");
         servoConR = hardwareMap.crservo.get("servoConR");
 
-        // Rocker
+        // Rocker Motors
 
-        motorConR.setDirection(DcMotor.Direction.FORWARD);
         motorRocker1 = hardwareMap.dcMotor.get("motorRocker1");
         motorRocker1.setDirection(DcMotor.Direction.FORWARD);
+        motorRocker1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRocker1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         motorRocker2 = hardwareMap.dcMotor.get("motorRocker2");
         motorRocker2.setDirection(DcMotor.Direction.FORWARD);
+        motorRocker2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRocker2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         servoJack = hardwareMap.servo.get ("servoJack");
 
         modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -102,7 +110,6 @@ public class TeleOp6217_DRC extends OpMode
     @Override
     public void start() {
     }
-
 
     @Override
     public void loop() {
@@ -291,8 +298,4 @@ public class TeleOp6217_DRC extends OpMode
 
        return (dScale);
    }
-
-
-
-
 }
