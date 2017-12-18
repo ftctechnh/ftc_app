@@ -5,6 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96a59d7d-c9ad-4820-922b-fa030e83f90b" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/bundles/debug/assets/FTC_2016-17.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/bundles/debug/assets/FTC_2016-17.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/bundles/debug/assets/RelicVuMark.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/bundles/debug/assets/RelicVuMark.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/bundles/debug/assets/StonesAndChips.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/bundles/debug/assets/StonesAndChips.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/outputs/aar/FtcRobotController-debug.aar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/classes/debug/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Beta.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/classes/debug/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp_Relic.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileContent/fileContent.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileContent/fileContent.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/classAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/classAnalysis.bin" />
@@ -14,12 +24,23 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Analytics_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Analytics_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Blocks_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Blocks_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/FtcCommon_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/FtcCommon_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Hardware_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Hardware_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Inspection_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Inspection_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/RobotCore_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/RobotCore_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/WirelessP2p_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/WirelessP2p_release__aar.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugAssets/merger.xml" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugAssets/merger.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugShaders/merger.xml" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugShaders/merger.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/manifests/full/debug/AndroidManifest.xml" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/manifests/full/debug/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/General_MacArthur_TeleOp.java" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/General_MacArthur_TeleOp.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/merger.xml" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/merger.xml" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/outputs/logs/manifest-merger-debug-report.txt" afterPath="$PROJECT_DIR$/TeamCode/build/outputs/logs/manifest-merger-debug-report.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="ftc_app.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -69,7 +90,7 @@
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/General_MacArthur_TeleOp.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="504">
-              <caret line="29" column="33" lean-forward="true" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
+              <caret line="29" column="33" lean-forward="false" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -2972,7 +2993,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513575091388" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513575232382" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -3020,7 +3041,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513575091388" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513575232382" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3182,7 +3203,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513575091389" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1513575232383" />
       </method>
     </configuration>
     <list size="1">
@@ -3629,7 +3650,7 @@
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/General_MacArthur_TeleOp.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="504">
-          <caret line="29" column="33" lean-forward="true" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
+          <caret line="29" column="33" lean-forward="false" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
           <folding />
         </state>
       </provider>
