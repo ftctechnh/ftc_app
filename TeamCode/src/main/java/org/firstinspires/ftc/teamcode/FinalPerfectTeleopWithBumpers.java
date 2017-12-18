@@ -96,7 +96,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                 }
             }
         /* Rotational Drive Control */
-            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
+            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
                 double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
 
@@ -113,7 +113,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                 setWheelPower(frontLeft, frontRight, backLeft, backRight);
             } else {
 
-                if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
+                if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_bumper && gamepad1.right_stick_x > 0) {
 
                     double GRX = gamepad1.right_stick_x / robot.bumperFastest;
 
