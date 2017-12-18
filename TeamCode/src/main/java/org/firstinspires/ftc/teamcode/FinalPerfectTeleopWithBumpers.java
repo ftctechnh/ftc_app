@@ -113,7 +113,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                 setWheelPower(frontLeft, frontRight, backLeft, backRight);
             } else {
 
-                if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
+                if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_stick_x > 0) {
 
                     double GRX = gamepad1.right_stick_x / robot.bumperFastest;
 
@@ -164,22 +164,43 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
 
                     setWheelPower(frontLeft, frontRight, backLeft, backRight);
                 } else {
-                    double GLY = -gamepad1.left_stick_y / robot.nobumper;
-                    double GRX = gamepad1.right_stick_x / robot.nobumper;
-                    double GLX = gamepad1.left_stick_x / robot.nobumper;
 
-                    final double v1 = GLY + GRX + GLX;
-                    final double v2 = GLY - GRX - GLX;
-                    final double v3 = GLY + GRX - GLX;
-                    final double v4 = GLY - GRX + GLX;
+                    if (gamepad1.right_bumper) {
+                        double GLY = -gamepad1.left_stick_y / robot.bumperFastest;
+                        double GRX = gamepad1.right_stick_x / robot.bumperFastest;
+                        double GLX = gamepad1.left_stick_x / robot.bumperFastest;
 
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
+                        final double v1 = GLY + GRX + GLX;
+                        final double v2 = GLY - GRX - GLX;
+                        final double v3 = GLY + GRX - GLX;
+                        final double v4 = GLY - GRX + GLX;
 
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                        frontLeft = -v1;
+                        frontRight = v2;
+                        backLeft = -v3;
+                        backRight = v4;
 
+                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
+                    } else {
+
+                        double GLY = -gamepad1.left_stick_y / robot.nobumper;
+                        double GRX = gamepad1.right_stick_x / robot.nobumper;
+                        double GLX = gamepad1.left_stick_x / robot.nobumper;
+
+                        final double v1 = GLY + GRX + GLX;
+                        final double v2 = GLY - GRX - GLX;
+                        final double v3 = GLY + GRX - GLX;
+                        final double v4 = GLY - GRX + GLX;
+
+                        frontLeft = -v1;
+                        frontRight = v2;
+                        backLeft = -v3;
+                        backRight = v4;
+
+                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
+                    }
                 }
             }
         }
