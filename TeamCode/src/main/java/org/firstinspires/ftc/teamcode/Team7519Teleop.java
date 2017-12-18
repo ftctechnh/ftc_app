@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Created by E-6420 on 11/28/2017.
+ * Team 7519 Relic Recovery Code
+ * Ryan Gniadek and Ben Bernstein
  */
 @TeleOp(name = "7519Teleop", group = "7519")
 public class Team7519Teleop extends LinearOpMode{
@@ -39,46 +40,31 @@ public class Team7519Teleop extends LinearOpMode{
             double h = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
 
-            final double leftFrontPower = h * Math.cos(robotAngle) + gamepad1.right_stick_x;
-            final double rightFrontPower = h * Math.sin(robotAngle) - gamepad1.right_stick_x;
-            final double leftRearPower = h * Math.sin(robotAngle) + gamepad1.right_stick_x;
-            final double rightRearPower = h * Math.cos(robotAngle) - gamepad1.right_stick_x;
+            final double leftFrontPower = h * Math.cos(robotAngle) + gamepad1.right_stick_y;
+            final double rightFrontPower = h * Math.sin(robotAngle) - gamepad1.right_stick_y;
+            final double leftRearPower = h * Math.sin(robotAngle) + gamepad1.right_stick_y;
+            final double rightRearPower = h * Math.cos(robotAngle) - gamepad1.right_stick_y;
 
             leftFront.setPower(leftFrontPower);
-            rightFront.setPower(rightFrontPower);
+            rightFront.setPower(-rightFrontPower);
             leftRear.setPower(leftRearPower);
-            rightRear.setPower(rightRearPower);
+            rightRear.setPower(-rightRearPower);
 
             //Manual Lift Control w/Trigger
-            motorLift.setPower(gamepad1.right_trigger);
-            motorLift.setPower(-gamepad1.left_trigger);
-
+            while(gamepad1.right_trigger>0) {
+                motorLift.setPower(gamepad1.right_trigger);
+            }//end loop
+            while (gamepad1.left_trigger>0){
+                motorLift.setPower(-gamepad1.left_trigger);
+            }//end loop
+            motorLift.setPower(0);
             //Claw Control (A-Move Claw, B-Switch Direction)
             if (gamepad1.a)
                 testServo.setPower(1);
-            if (gamepad1.b)
+            else if (gamepad1.b)
                 testServo.setPower(-1);
-            testServo.setPower(0);
-
-//            while (gamepad1.a==false){
-//                testServo.setPower(0);
-//                if (gamepad1.b==true) {
-//                    if (clawPosition == 0) {
-//                        testServo.setDirection(CRServo.Direction.REVERSE);
-//                        clawPosition++;
-//                        sleep(300);
-//                    }
-//                    else  {
-//                        testServo.setDirection(CRServo.Direction.FORWARD);
-//                        clawPosition--;
-//                        sleep(300);
-//                    }
-//                }//end if
-//            }//end loop
-//            while (gamepad1.a) {
-//                testServo.setPower(1);
-//
-//            }//end loop
+            else
+                testServo.setPower(0);
 
             idle();
 
