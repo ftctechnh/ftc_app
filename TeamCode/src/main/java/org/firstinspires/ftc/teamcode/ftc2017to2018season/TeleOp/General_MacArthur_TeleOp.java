@@ -91,8 +91,9 @@ public class General_MacArthur_TeleOp extends OpMode {
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
         glyphServoLeft.setPosition(0.5);
-
-        glyphServoRight.setPosition(0.35);
+        glyphServoRight.setPosition(0.5);
+        // left is closed
+        // right is open
         jewel_servo.setPosition(0.9);
 
 //This is closed-loop speed control. Encoders are required for this mode.
@@ -226,9 +227,38 @@ public class General_MacArthur_TeleOp extends OpMode {
        */
        leftServoValue = glyphServoLeft.getPosition();
        rightServoValue = glyphServoRight.getPosition();
-        if (gamepad1.right_bumper){
+        if (gamepad1.right_bumper) {
+            if (rightServoValue < 1 && leftServoValue > 0) {
+                rightServoValue = rightServoValue + 0.5;
+                leftServoValue = leftServoValue - 0.5;
 
+                glyphServoLeft.setPosition(leftServoValue);
+                glyphServoRight.setPosition(rightServoValue);
+            }
+            else if (rightServoValue >= 1 && leftServoValue <= 0){
+                rightServoValue = 1;
+                leftServoValue = 0;
 
+                glyphServoLeft.setPosition(leftServoValue);
+                glyphServoRight.setPosition(rightServoValue);
+            }
+        }
+        else if (gamepad1.left_bumper) {
+            if (rightServoValue > 0 && leftServoValue < 1){
+                rightServoValue = rightServoValue - 0.5;
+                leftServoValue = leftServoValue + 0.5;
+
+                glyphServoLeft.setPosition(leftServoValue);
+                glyphServoRight.setPosition(rightServoValue);
+            }
+
+            else if (rightServoValue <= 0 && leftServoValue >= 1){
+                rightServoValue = 0;
+                leftServoValue = 1;
+
+                glyphServoRight.setPosition(rightServoValue);
+                glyphServoLeft.setPosition(leftServoValue);
+            }
 
         }
 
