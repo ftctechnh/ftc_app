@@ -685,6 +685,9 @@ public class Autonomous_General extends LinearOpMode {
         relicTrackables.activate();
 
     }
+    public void stopTracking(){
+        relicTrackables.deactivate();
+    }
 
     //initializes vumark and returns whether its unknown or not
     public boolean vuMarkFound(){

@@ -2,9 +2,9 @@
 manifest
 ADDED from C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml:8:1-12:12
 	package
-		ADDED from C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml:9:5-45
-		INJECTED from C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml
+		ADDED from C:\Users\boswo\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml:9:5-45
+		INJECTED from C:\Users\boswo\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\boswo\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\src\main\AndroidManifest.xml
