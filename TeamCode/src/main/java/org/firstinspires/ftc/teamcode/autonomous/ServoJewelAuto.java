@@ -95,10 +95,10 @@ public class ServoJewelAuto extends LinearOpMode {
         if(Math.abs(colorSensorWrapper.getRGBValues()[2] - colorSensorWrapper.getRGBValues()[0]) < 30) {
             telemetry.addData("Jewels", "Too close.");
         } else if (colorSensorWrapper.getRGBValues()[2] > colorSensorWrapper.getRGBValues()[0]) {
-            armRotator.setPosition(1);
+            armRotator.setPosition(0);
             telemetry.addData("Jewels", "Blue Team!");
         } else {
-            armRotator.setPosition(0);
+            armRotator.setPosition(1);
             telemetry.addData("Jewels", "Red Team!");
         }
         telemetry.update();
