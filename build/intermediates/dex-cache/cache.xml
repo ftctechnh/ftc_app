@@ -21,21 +21,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Inspiration Team\.android\build-cache\9f67aa5436ccf20bcedc08faabeda26bc1da174d\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.2"
-        sha1="e444b561b0feba789cac93c5db61f08ef8c25ee6">
-        <dex dex="C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_5c1cdf4beb52dfff11fbfdbc32f78ac1c893ef6b.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\Inspiration Team\Documents\ftc_app\FtcRobotController\build\intermediates\bundles\default\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="26.0.2"
         sha1="abb00ab31cf45632bef1f0c21b1f7cea9ae5e589">
         <dex dex="C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_6ff31195fd1a4d8c594aef3deb5d69993726ca4d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Inspiration Team\.android\build-cache\9f67aa5436ccf20bcedc08faabeda26bc1da174d\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="e444b561b0feba789cac93c5db61f08ef8c25ee6">
+        <dex dex="C:\Users\Inspiration Team\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_5c1cdf4beb52dfff11fbfdbc32f78ac1c893ef6b.jar" />
     </item>
     <item
         is-multidex="false"
