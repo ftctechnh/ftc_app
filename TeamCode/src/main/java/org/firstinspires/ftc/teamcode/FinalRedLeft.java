@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -21,23 +20,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="TEMPLATE", group="Bacon Autonomous!")
+@Autonomous(name = "Red Left", group = "Bacon Autonomous!")
 //@Disabled
-public class AutonomousTemplate extends LinearOpMode
-{
-  /* Declare all devices since hardware class isn't working */
-    DcMotor                 frontLeftMotor;
-    DcMotor                 backLeftMotor;
-    DcMotor                 frontRightMotor;
-    DcMotor                 backRightMotor;
-    DcMotor                 verticalArmMotor;
-    ColorSensor             colorSensor;
-    Servo                   gemServo;
-    BNO055IMU               imu;
-    CRServo                 clawServo;
+public class FinalRedLeft extends LinearOpMode {
+    /* Declare all devices since hardware class isn't working */
+    DcMotor frontLeftMotor;
+    DcMotor backLeftMotor;
+    DcMotor frontRightMotor;
+    DcMotor backRightMotor;
+    DcMotor verticalArmMotor;
+    ColorSensor colorSensor;
+    Servo gemServo;
+    BNO055IMU imu;
+    CRServo clawServo;
 
-  /* Set up and init all variables */
-    Orientation             lastAngles = new Orientation();
+    /* Set up and init all variables */
+    Orientation lastAngles = new Orientation();
     double globalAngle;
     double xPosUp = 0;
     double xPosDown = .55;
@@ -46,36 +44,11 @@ public class AutonomousTemplate extends LinearOpMode
     static double clawStill = 0;
     OpenGLMatrix lastLocation = null;
 
-    /*******************************/
-    /* Define team color and position
-         When saving the different versions of autonomous,
-         make one for each color position.
-         All other code should work.
-    */
-
-    String teamColorPosition = "BlueRight";
-//    String teamColorPosition = "BlueLeft";
-//    String teamColorPosition = "RedRight";
-//    String teamColorPosition = "RedLeft";
-
-    /*******************************/
-
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
     VuforiaLocalizer vuforia;
 
-    /* Create timers used in autonomous */
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime verticaltimer = new ElapsedTime();
-
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime drivetimer = new ElapsedTime();
-
-
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
 
 
     /* To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);*/
@@ -105,7 +78,7 @@ public class AutonomousTemplate extends LinearOpMode
         verticalArmMotor = hardwareMap.dcMotor.get("VAM");
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
-        clawServo =  hardwareMap.crservo.get("CS");
+        clawServo = hardwareMap.crservo.get("CS");
 
     /* Reverse the direction of the front right and back right motors */
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -120,10 +93,10 @@ public class AutonomousTemplate extends LinearOpMode
     /* Set parameters for the gyro (imu)*/
         BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
 
-        imuparameters.mode                = BNO055IMU.SensorMode.IMU;
-        imuparameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        imuparameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imuparameters.loggingEnabled      = false;
+        imuparameters.mode = BNO055IMU.SensorMode.IMU;
+        imuparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imuparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuparameters.loggingEnabled = false;
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
@@ -145,8 +118,7 @@ public class AutonomousTemplate extends LinearOpMode
         telemetry.update();
 
     /* Make sure the imu gyro is calibrated before continuing */
-        while (!isStopRequested() && !imu.isGyroCalibrated())
-        {
+        while (!isStopRequested() && !imu.isGyroCalibrated()) {
             sleep(50);
             idle();
         }
@@ -168,30 +140,17 @@ public class AutonomousTemplate extends LinearOpMode
         clawServo.setPower(clawClose);
 
         /* Move the claw up so it doesn't dig into the ground coming off the balance board */
-        moveclawbytime(500,.5,"Up");
+        moveclawbytime(500, .5, "Up");
 
         /* Put the servo color arm down */
         gemServo.setPosition(xPosDown);
         sleep(1500);
 
-        /* Knock off the jewel */
-        switch (teamColorPosition) {
-            case "BlueRight":
-                knockjewelBlue();
-                break;
-            case "BlueLeft":
-                knockjewelBlue();
-                break;
-            case "RedRight":
-                knockjewelRed();
-                break;
-            case "RedLeft":
-                knockjewelRed();
-                break;
-        }
+        /* Knock of the Red jewel */
+        knockjewelRed();
 
         /* Rotate so the phone can see the Vuforia Key */
-        rotate(10,.2);
+        rotate(10, .2);
 
         /* Tells vuforia to look for relic templates, if it finds something, then it returns
         LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
@@ -210,39 +169,32 @@ public class AutonomousTemplate extends LinearOpMode
         /* Wait a moment and let vuforia do its work and for the robot to realign properly */
         sleep(500);
 
-        //////////////////* Move and face cryptobox. Claw is in front of center position center *\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        switch (teamColorPosition) {
-            case "BlueRight":
-                movebytime(1250, .5, "Forward");  // forward three feet
-                rotate(-87,.2);  // counter clockwise 90 degrees
-                break;
-            case "BlueLeft":
-                movebytime(625, .5, "Forward");  // forward two feet
-                movebytime(313, .5, "Right");    // right one foot
-                break;
-            case "RedRight":
-                movebytime(625, .5, "Backward");
-                movebytime(313, .5, "Right");    // right one foot
-                rotate(176,.2);  // clockwise 180 degrees
-                break;
-            case "RedLeft":
-                movebytime(1250, .5, "Backward");
-                rotate(-87,.2);  // counter clockwise 90 degrees
-                break;
-        }
+        /* Move backwards into the triangle */
+        movebytime(1560, .3, "Backward");
 
-        /////////////////* move to the column in the cryptobox specified by vuMark *\\\\\\\\\\\\\\\\\\\\\\\
+
+        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
+        account for the slight slippage after powering off the wheels */
+        rotate(87, .2);
+
+        /* Wait a moment to stop moving */
+        sleep(700);
+
+
+
+        /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Switch case based on what vuMark we see */
-        switch (vuMark){
+        switch (vuMark) {
             case LEFT:
                 /* Drive forward into the left position */
-                movebytime(70,.3,"Left");
+                movebytime(500, .3, "Left");
                 break;
             case RIGHT:
                 /* Drive forward into the right position */
-                movebytime(70, .3, "Right");
+                movebytime(500, .3, "Right");
                 break;
             case CENTER:
                 /* Drive forward into the center position */
@@ -252,32 +204,34 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
+        /* Wait a moment */
+        sleep(700);
+
         /* Move forward slightly so the block is in the space */
-        movebytime(300, .2, "Forward");
+        movebytime(500, .2, "Forward");
+
+        ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Open up the claw to release the block */
         clawServo.setPower(clawOpen);
 
-        /* Wait a moment */
-        sleep(2000);
+        /* Let the claw */
+        sleep(1200);
 
         /* Stop the claw */
         clawServo.setPower(clawStill);
 
-        /* Wait a moment */
-        sleep(2000);
-
         /* Back up a small bit */
-        movebytime(200, .2, "Backward");
+        movebytime(300, .2, "Backward");
     }
 
-/***********************************************************************************************
- * These are all of the methods used in the Autonomous*
- ***********************************************************************************************/
+    /***********************************************************************************************
+     * These are all of the methods used in the Autonomous*
+     ***********************************************************************************************/
 
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
-    public void moveclawbytime(int time, double power, String direction) {
+    public void moveclawbytime(long time, double power, String direction) {
 
     /* This switch case is determined by the String indicated above */
         switch (direction) {
@@ -289,14 +243,15 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
+    /* Sleep instead timer sucks */
         sleep(time);
 
-    /* turn off claw motor */
+    /* Once the while loop above finishes turn off claw motor */
         verticalArmMotor.setPower(0);
     }
 
-/* This method moves the robot forward for time and power indicated*/
-    public void movebytime (int time, double power, String direction) {
+    /* This method moves the robot forward for time and power indicated*/
+    public void movebytime(long time, double power, String direction) {
 
     /* This switch case is determined by the String direction indicated above */
 
@@ -315,19 +270,21 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
+    /* Sleep */
         sleep(time);
 
-    /* turn off the wheels */
+
+    /* Once the while loop above finishes turn off the wheels */
         wheelsOff();
     }
 
 
-/* This method simply sets all wheel motors to zero power */
+    /* This method simply sets all wheel motors to zero power */
     public void wheelsOff() {
-        setWheelPower(0,0,0,0);
+        setWheelPower(0, 0, 0, 0);
     }
 
-/* This method powers each wheel to whichever power is desired */
+    /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
 
         /* Create power variables */
@@ -347,31 +304,31 @@ public class AutonomousTemplate extends LinearOpMode
         BackRightPower = 0;
 
         /* Initialize the powers with the values input whenever this method is called */
-        frontLeft   =   fl;
-        frontRight  =   fr;
-        backLeft    =   bl;
-        backRight   =   br;
+        frontLeft = fl;
+        frontRight = fr;
+        backLeft = bl;
+        backRight = br;
 
         /* set each wheel to the power indicated whenever this method is called */
-        if ( FrontLeftPower != frontLeft) {
+        if (FrontLeftPower != frontLeft) {
             frontLeftMotor.setPower(-fl);
             FrontLeftPower = frontLeft;
         }
-        if ( FrontRightPower != frontRight) {
+        if (FrontRightPower != frontRight) {
             frontRightMotor.setPower(fr);
             FrontRightPower = frontRight;
         }
-        if ( BackLeftPower != backLeft) {
+        if (BackLeftPower != backLeft) {
             backLeftMotor.setPower(-bl);
             BackLeftPower = backLeft;
         }
-        if ( BackRightPower != backRight)
+        if (BackRightPower != backRight)
             backRightMotor.setPower(br);
-            BackRightPower = backRight;
+        BackRightPower = backRight;
     }
 
-/* This method is tells the color sensor to read color, then rotate to knock off the blue
-jewel and then return the color sensor arm back up */
+    /* This method is tells the color sensor to read color, then rotate to knock off the blue
+    jewel and then return the color sensor arm back up */
     public void knockjewelRed() {
 
         if (colorSensor.red() < colorSensor.blue()) {
@@ -380,20 +337,20 @@ jewel and then return the color sensor arm back up */
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
-            rotate(-10,.3);
+            rotate(-10, .3);
         } else {
             resetAngle();
             rotate(-10, .3);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
-            rotate(10,.3);
+            rotate(10, .3);
         }
     }
 
-/* This method is tells the color sensor to read color, then rotate to knock off the red
-jewel and then return the color sensor arm back up */
-    public void knockjewelBlue(){
+    /* This method is tells the color sensor to read color, then rotate to knock off the red
+    jewel and then return the color sensor arm back up */
+    public void knockjewelBlue() {
 
         if (colorSensor.red() > colorSensor.blue()) {
             resetAngle();
@@ -401,14 +358,14 @@ jewel and then return the color sensor arm back up */
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
-            rotate(-10,.3);
+            rotate(-10, .3);
         } else {
             resetAngle();
             rotate(-10, .3);
             wheelsOff();
             sleep(500);
             gemServo.setPosition(xPosUp);
-            rotate(10,.3);
+            rotate(10, .3);
         }
 
     }
@@ -416,18 +373,17 @@ jewel and then return the color sensor arm back up */
     /**
      * Resets the cumulative angle tracking to zero.
      */
-    private void resetAngle()
-    {
+    private void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
 
     /**
      * Get current cumulative angle rotation from last reset.
+     *
      * @return Angle in degrees. + = left, - = right.
      */
-    private double getAngle()
-    {
+    private double getAngle() {
 
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
         // We have to process the angle because the imu works in euler angles so the Z axis is
@@ -452,10 +408,10 @@ jewel and then return the color sensor arm back up */
 
     /**
      * See if we are moving in a straight line and if not return a power correction value.
+     *
      * @return Power adjustment, + is adjust left - is adjust right.
      */
-    private double checkDirection()
-    {
+    private double checkDirection() {
         // The gain value determines how sensitive the correction is to direction changes.
         // You will have to experiment with your robot to get small smooth direction changes
         // to stay on a straight line.
@@ -475,11 +431,11 @@ jewel and then return the color sensor arm back up */
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     *
      * @param degrees Degrees to turn, + is left - is right
      */
-    private void rotate(int degrees, double power)
-    {
-        double  leftPower, rightPower;
+    private void rotate(int degrees, double power) {
+        double leftPower, rightPower;
 
         // restart imu movement tracking.
         resetAngle();
@@ -487,17 +443,13 @@ jewel and then return the color sensor arm back up */
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
         // clockwise (right).
 
-        if (degrees < 0)
-        {   // turn right.
+        if (degrees < 0) {   // turn right.
             leftPower = -power;
             rightPower = power;
-        }
-        else if (degrees > 0)
-        {   // turn left.
+        } else if (degrees > 0) {   // turn left.
             leftPower = power;
             rightPower = -power;
-        }
-        else return;
+        } else return;
 
         // set power to rotate.
         frontLeftMotor.setPower(leftPower);
@@ -507,15 +459,16 @@ jewel and then return the color sensor arm back up */
         backRightMotor.setPower(rightPower);
 
         // rotate until turn is completed.
-        if (degrees < 0)
-        {
+        if (degrees < 0) {
             // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0) {}
+            while (opModeIsActive() && getAngle() == 0) {
+            }
 
-            while (opModeIsActive() && getAngle() > degrees) {}
-        }
-        else    // left turn.
-            while (opModeIsActive() && getAngle() < degrees) {}
+            while (opModeIsActive() && getAngle() > degrees) {
+            }
+        } else    // left turn.
+            while (opModeIsActive() && getAngle() < degrees) {
+            }
 
         // turn the motors off.
         frontLeftMotor.setPower(0);

@@ -45,9 +45,10 @@ public class FinalPerfectTeleop extends LinearOpMode {
             telemetry.update();
 
         /* Set the arm up */
-            if (robot.gemServo.getPosition() != robot.xPosUp) {
-                robot.gemServo.setPosition(robot.xPosUp);
-            }
+//            if (robot.gemServo.getPosition() != robot.xPosUp) {
+//                robot.gemServo.setPosition(robot.xPosUp);
+//           \ }
+            robot.gemServo.setPosition(robot.xPosUp);
 
         /* Servo Control */
             if (gamepad2.x) {

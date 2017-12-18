@@ -21,9 +21,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="TEMPLATE", group="Bacon Autonomous!")
+@Autonomous(name="Blue Right Template", group="Bacon Autonomous!")
 //@Disabled
-public class AutonomousTemplate extends LinearOpMode
+public class BlueRightTemplate extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;

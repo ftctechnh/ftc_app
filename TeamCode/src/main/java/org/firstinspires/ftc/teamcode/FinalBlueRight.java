@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right Using Sleep", group="Bacon Autonomous!")
+@Autonomous(name="Blue Right", group="Bacon Autonomous!")
 //@Disabled
 public class FinalBlueRight extends LinearOpMode
 {
@@ -151,7 +151,7 @@ public class FinalBlueRight extends LinearOpMode
         sleep(1500);
 
         /* Knock of the Red jewel */
-        knockjewelRed();
+        knockjewelBlue();
 
         /* Rotate so the phone can see the Vuforia Key */
         rotate(10,.2);
@@ -210,7 +210,7 @@ public class FinalBlueRight extends LinearOpMode
         sleep(700);
 
         /* Move forward slightly so the block is in the space */
-        movebytime(800, .2, "Forward");
+        movebytime(300, .2, "Forward");
 
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -218,13 +218,16 @@ public class FinalBlueRight extends LinearOpMode
         clawServo.setPower(clawOpen);
 
         /* Let the claw */
-        sleep(2500);
+        sleep(1200);
 
         /* Stop the claw */
         clawServo.setPower(clawStill);
 
+        /* Wait a moment */
+        sleep(200);
+
         /* Back up a small bit */
-        movebytime(300, .2, "Backward");
+        movebytime(200, .2, "Backward");
     }
 
 /***********************************************************************************************

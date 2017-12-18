@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -21,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="TEMPLATE", group="Bacon Autonomous!")
+@Autonomous(name="Red Right", group="Bacon Autonomous!")
 //@Disabled
-public class AutonomousTemplate extends LinearOpMode
+public class FinalRedRight extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -46,32 +45,8 @@ public class AutonomousTemplate extends LinearOpMode
     static double clawStill = 0;
     OpenGLMatrix lastLocation = null;
 
-    /*******************************/
-    /* Define team color and position
-         When saving the different versions of autonomous,
-         make one for each color position.
-         All other code should work.
-    */
-
-    String teamColorPosition = "BlueRight";
-//    String teamColorPosition = "BlueLeft";
-//    String teamColorPosition = "RedRight";
-//    String teamColorPosition = "RedLeft";
-
-    /*******************************/
-
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
     VuforiaLocalizer vuforia;
-
-    /* Create timers used in autonomous */
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime verticaltimer = new ElapsedTime();
-
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime drivetimer = new ElapsedTime();
-
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -174,21 +149,8 @@ public class AutonomousTemplate extends LinearOpMode
         gemServo.setPosition(xPosDown);
         sleep(1500);
 
-        /* Knock off the jewel */
-        switch (teamColorPosition) {
-            case "BlueRight":
-                knockjewelBlue();
-                break;
-            case "BlueLeft":
-                knockjewelBlue();
-                break;
-            case "RedRight":
-                knockjewelRed();
-                break;
-            case "RedLeft":
-                knockjewelRed();
-                break;
-        }
+        /* Knock of the Red jewel */
+        knockjewelRed();
 
         /* Rotate so the phone can see the Vuforia Key */
         rotate(10,.2);
@@ -210,39 +172,33 @@ public class AutonomousTemplate extends LinearOpMode
         /* Wait a moment and let vuforia do its work and for the robot to realign properly */
         sleep(500);
 
-        //////////////////* Move and face cryptobox. Claw is in front of center position center *\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        switch (teamColorPosition) {
-            case "BlueRight":
-                movebytime(1250, .5, "Forward");  // forward three feet
-                rotate(-87,.2);  // counter clockwise 90 degrees
-                break;
-            case "BlueLeft":
-                movebytime(625, .5, "Forward");  // forward two feet
-                movebytime(313, .5, "Right");    // right one foot
-                break;
-            case "RedRight":
-                movebytime(625, .5, "Backward");
-                movebytime(313, .5, "Right");    // right one foot
-                rotate(176,.2);  // clockwise 180 degrees
-                break;
-            case "RedLeft":
-                movebytime(1250, .5, "Backward");
-                rotate(-87,.2);  // counter clockwise 90 degrees
-                break;
-        }
+        /* Move backwards into the triangle */
+        movebytime(900, .3, "Backward");
 
-        /////////////////* move to the column in the cryptobox specified by vuMark *\\\\\\\\\\\\\\\\\\\\\\\
+
+        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
+        account for the slight slippage after powering off the wheels */
+        rotate(177, .2);
+
+        /* Wait a moment to stop moving */
+        sleep(700);
+
+        /* Drive to center of cryptobox */
+        movebytime(1560, .3, "Left");
+
+        /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Switch case based on what vuMark we see */
         switch (vuMark){
             case LEFT:
                 /* Drive forward into the left position */
-                movebytime(70,.3,"Left");
+                movebytime(500,.3,"Left");
                 break;
             case RIGHT:
                 /* Drive forward into the right position */
-                movebytime(70, .3, "Right");
+                movebytime(500, .3, "Right");
                 break;
             case CENTER:
                 /* Drive forward into the center position */
@@ -252,23 +208,25 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
+        /* Wait a moment */
+        sleep(700);
+
         /* Move forward slightly so the block is in the space */
-        movebytime(300, .2, "Forward");
+        movebytime(500, .2, "Forward");
+
+        ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Open up the claw to release the block */
         clawServo.setPower(clawOpen);
 
-        /* Wait a moment */
-        sleep(2000);
+        /* Let the claw */
+        sleep(1200);
 
         /* Stop the claw */
         clawServo.setPower(clawStill);
 
-        /* Wait a moment */
-        sleep(2000);
-
         /* Back up a small bit */
-        movebytime(200, .2, "Backward");
+        movebytime(300, .2, "Backward");
     }
 
 /***********************************************************************************************
@@ -277,7 +235,7 @@ public class AutonomousTemplate extends LinearOpMode
 
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
-    public void moveclawbytime(int time, double power, String direction) {
+    public void moveclawbytime(long time, double power, String direction) {
 
     /* This switch case is determined by the String indicated above */
         switch (direction) {
@@ -289,14 +247,15 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
-        sleep(time);
+    /* Sleep instead timer sucks */
+    sleep(time);
 
-    /* turn off claw motor */
+    /* Once the while loop above finishes turn off claw motor */
         verticalArmMotor.setPower(0);
     }
 
 /* This method moves the robot forward for time and power indicated*/
-    public void movebytime (int time, double power, String direction) {
+    public void movebytime (long time, double power, String direction) {
 
     /* This switch case is determined by the String direction indicated above */
 
@@ -315,9 +274,11 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
-        sleep(time);
+    /* Sleep */
+    sleep(time);
 
-    /* turn off the wheels */
+
+    /* Once the while loop above finishes turn off the wheels */
         wheelsOff();
     }
 
