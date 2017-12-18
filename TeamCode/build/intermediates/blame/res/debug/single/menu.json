@@ -1,23 +1,23 @@
 [
     {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\menu_server.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\f973cced30bffcd0d3d5f4d793f6f59c4c040f16\\output\\res\\menu\\menu_server.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\menu_server.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\menu\\menu_server.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\main_menu.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\menu\\main_menu.xml"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8b2b9da6ab7ccc3d68e35765c71f9b919e90e0c6\\output\\res\\menu\\menu_server.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\ftc_robot_controller.xml",
         "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\menu\\ftc_robot_controller.xml"
     },
     {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\main_menu.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\menu\\main_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\menu_server.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\menu\\menu_server.xml"
+    },
+    {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\main_menu.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\b2c6da4614428ef8cc1e8465419d710a8f66e943\\output\\res\\menu\\main_menu.xml"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\cab680ad81036fc0695de103a695c46bee9cab7e\\output\\res\\menu\\main_menu.xml"
     },
     {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\menu\\ftc_robot_controller.xml",
