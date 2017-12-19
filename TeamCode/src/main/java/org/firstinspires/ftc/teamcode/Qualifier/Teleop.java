@@ -1,18 +1,17 @@
-package RicksCode.Bill_Adapted;
+package org.firstinspires.ftc.teamcode.Qualifier;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static RicksCode.Bill_Adapted.DriveTrain.SpeedSetting.FAST;
-import static RicksCode.Bill_Adapted.DriveTrain.SpeedSetting.SLOW;
+import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.FAST;
+import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.SLOW;
 import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
 
 
 @TeleOp(name = "zMoo", group = "zRick")  // @Autonomous(...) is the other common choice
-@Disabled
+//@Disabled
 public class Teleop extends OpMode {
 
     RobotRR gromit;
