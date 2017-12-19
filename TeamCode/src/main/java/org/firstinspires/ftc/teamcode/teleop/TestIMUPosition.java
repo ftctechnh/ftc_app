@@ -33,7 +33,7 @@ public class TestIMUPosition extends OpMode {
 
         telemetry.addData("Calibration:", imuWrapper.getIMU().getCalibrationStatus().toString());
 
-        telemetry.addData("Acquisition Time:", imuWrapper.getIMU().getAcceleration().acquisitionTime);
+        telemetry.addData("Aquisition Time", "%.3f", imuWrapper.getIMU().getAcceleration().acquisitionTime * 1e-9);
 
         telemetry.addData("Acceleration:", imuWrapper.getIMU().getAcceleration().toString());
 

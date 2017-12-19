@@ -89,6 +89,8 @@ public class MainTeleOp extends OpMode
         raiser = hardwareMap.dcMotor.get("raiser");
         grabber = hardwareMap.servo.get("grabber");
 
+        grabber.scaleRange(0.25, 1.0);
+
         armRotator = hardwareMap.servo.get("armRotator");
         armExtender = hardwareMap.servo.get("armExtender");
 
@@ -136,13 +138,12 @@ public class MainTeleOp extends OpMode
             raiser.setPower(0);
         }
 
-        //Move grabber when bumpers are pressed.
+
         if(gamepad1.left_bumper){
-            grabber.setPosition(Math.max(0, armRotator.getPosition() - 0.01));
+            grabber.setPosition(Math.min(1, grabber.getPosition() + 0.01));
         } else if (gamepad1.right_bumper){
-            grabber.setPosition(Math.min(1, armRotator.getPosition() + 0.01));
+            grabber.setPosition(Math.max(0, grabber.getPosition() - 0.01));
         }
-        telemetry.addData("Grabber Position", grabber.getPosition());
 
         /* Grabber code w/ lock using a motor
         if(gamepad1.right_trigger == 0 && !locking){
