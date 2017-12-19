@@ -6,12 +6,13 @@ package RicksCode.Bill_Adapted;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name = "Nathanauto", group = "zRick")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Disabled
 public class MecAuto extends LinearOpMode {
 
     RobotRR gromit;

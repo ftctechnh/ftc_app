@@ -8,7 +8,7 @@ import RicksCode.Bill_VV.ParameterFileHandler;
 
 
 @TeleOp(name = "zChangeParameters", group = "zRick")
-//@Disabled
+@Disabled
 public class ChangeAutonDistances extends OpMode {
 
     ConfigFileHandler parameterFile;
