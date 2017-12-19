@@ -13,7 +13,7 @@ public class RelicArm {
 
 
     public void init(HardwareMap hardwareMap) {
-        relicClawServo = hardwareMap.servo.get("relicclaw");
+        relicClawServo = hardwareMap.servo.get("relic_claw");
 
         //jawOpen();
         //jawClosed();

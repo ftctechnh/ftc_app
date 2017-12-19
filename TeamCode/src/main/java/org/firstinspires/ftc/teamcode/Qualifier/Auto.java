@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name = "Nathanauto", group = "zRick")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "TheAuto", group = "8045")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class Auto extends LinearOpMode {
 
