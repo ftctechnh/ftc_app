@@ -22,11 +22,11 @@ public class JewelArm {
     }
 
     public void jewelArmUp() {
-        jewelArmServo.setPosition(0.2);
+        jewelArmServo.setPosition(0.85);
     }
 
     public void jewelArmDown() {
-        jewelArmServo.setPosition(0.85);
+        jewelArmServo.setPosition(0.2);
     }
 
    /* public void jewelflickerBack() {

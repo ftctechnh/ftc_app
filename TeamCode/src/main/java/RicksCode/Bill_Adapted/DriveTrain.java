@@ -24,7 +24,11 @@ import java.util.Locale;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static java.lang.Math.abs;
+import static java.lang.Math.asin;
+import static java.lang.Math.atan;
 import static java.lang.Math.signum;
+import static java.lang.Math.sqrt;
+import static java.lang.Math.toRadians;
 
 
 public class DriveTrain {
@@ -119,7 +123,8 @@ public class DriveTrain {
 
     public void drive(double x, double y, double turn) {
         //speed change code
-        double speedMultiplier = 1.0;
+        //   double drive_direction = atan(y/x);
+        double speedMultiplier;
         switch (speedMode) {
             // lookup parameter for "fast mode"
             case FAST:
@@ -132,15 +137,47 @@ public class DriveTrain {
             default:
                 speedMultiplier = 1.0;
         }
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+//        lfpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
+//        lrpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rfpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rrpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
+//
+
+        // Run wheels in tank mode (note: The joystick goes negat when pushed forwards, so negate it)
+        double forward = y;
+        double strafe = x;
+        double rotate = turn;
+
+// temp
+        lfpower =  ( forward/1.0 - strafe/1.0 + rotate/1.0 );
+        lrpower =  ( forward/1.0 + strafe/1.0 + rotate/1.0  );
+        rfpower = ( forward/1.0 + strafe/1.0 - rotate/1.0 );
+        rrpower = ( forward/1.0 - strafe/1.0 - rotate/1.0 );
 
 
-        //DRIVE CODE APPLYING MOTOR POWERS
-        left_front.setPower(Range.clip(speedMultiplier * (y + x + turn), -1, 1));
-        left_rear.setPower(Range.clip(speedMultiplier * (y - x + turn), -1, 1));
 
-        right_front.setPower(Range.clip(speedMultiplier * (y - x + turn), -1, 1));
-        right_rear.setPower(Range.clip(speedMultiplier * (y + x + turn), -1, 1));
+        //Determine largest power being applied in either direction
+            double max = abs(lfpower);
+            if (abs(lrpower) > max) max = abs(lrpower);
+            if (abs(rfpower) > max) max = abs(rfpower);
+            if (abs(rrpower) > max) max = abs(rrpower);
 
+//            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+        double multiplier = 0.5;
+        
+            lfpower *= multiplier;
+            lrpower *= multiplier;
+            rfpower *= multiplier;
+            rrpower *= multiplier;
+
+            left_front.setPower(lfpower);
+            left_rear.setPower(lrpower);
+            right_front.setPower(rfpower);
+            right_rear.setPower(rrpower);
     }
 
     public void stopMotors() {

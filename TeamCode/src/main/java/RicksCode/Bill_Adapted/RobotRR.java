@@ -6,6 +6,8 @@ public class RobotRR {
     DriveTrain driveTrain;
     JewelArm jewelArm;
     RelicArm relicArm;
+    GlyphTrain glyphTrain;
+
     //Shooter shooter;
     //Loader loader;
     //Sweeper sweeper;
@@ -17,6 +19,8 @@ public class RobotRR {
         driveTrain = new DriveTrain();
         relicArm = new RelicArm();
         jewelArm = new JewelArm();
+        glyphTrain = new GlyphTrain();
+
         //shooter = new Shooter();
         //beaconColorDetector = new BeaconColorDetector();
         //loader = new Loader();
@@ -29,6 +33,7 @@ public class RobotRR {
         driveTrain.init(hardwareMap);
         jewelArm.init(hardwareMap);
         relicArm.init(hardwareMap);
+        glyphTrain.init(hardwareMap);
         //shooter.init(hardwareMap);
         //beaconColorDetector.init(hardwareMap);
         //loader.init(hardwareMap);
