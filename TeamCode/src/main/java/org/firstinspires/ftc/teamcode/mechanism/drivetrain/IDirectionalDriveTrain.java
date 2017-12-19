@@ -32,15 +32,6 @@ public interface IDirectionalDriveTrain extends IDriveTrain {
     void directionalDrive(double angleDegrees, double speed, int targetDistance, boolean nonBlocking);
 
     /**
-     * Returns whether the drive train is currently running. A drive movement initiated by any
-     * drive method defined in this class or its superclass ({@link IDriveTrain}) will result
-     * in this method returning {@code true}, given that it is called during the course of the robot's movement.
-     *
-     * @return whether the drive train is currently running.
-     */
-    boolean isDriveTrainBusy();
-
-    /**
      * Drives the robot in the direction specified by {@code speedX} and {@code speedY}
      * indefinitely unless overridden by some other command.
      *

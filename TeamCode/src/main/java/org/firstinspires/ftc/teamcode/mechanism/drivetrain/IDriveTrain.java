@@ -33,6 +33,16 @@ public interface IDriveTrain extends IMechanism {
     void drive(double speedY, int targetDistance);
 
     /**
+     * Returns whether the drive train is currently in use (i.e. running).
+     * A drive movement initiated by any drive method defined in this class
+     * will result in this method returning {@code true}, given that it is called
+     * during the course of the robot's movement.
+     *
+     * @return whether the drive train is currently running.
+     */
+    boolean isDriveTrainBusy();
+
+    /**
      * Stop every motor utilized as part of this drive train.
      * This will cause the robot to come to a complete stop.
      */
