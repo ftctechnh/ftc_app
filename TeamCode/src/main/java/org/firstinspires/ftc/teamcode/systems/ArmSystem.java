@@ -18,6 +18,7 @@ public class ArmSystem {
     private HardwareMap hardwareMap;
     private double initialPosition = 0.07;
     private double downPosition = 0.8;
+    private int lowThreshold;
 
 
     public ArmSystem (HardwareMap hardwareMap) {
@@ -34,6 +35,7 @@ public class ArmSystem {
     public void init() {
         this.jewelArmServo.setPosition(initialPosition);
         this.colorSensor.enableLed(false);
+        this.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void goUp() {
@@ -97,13 +99,19 @@ public class ArmSystem {
         return colorSensor.green();
     }
 
-    public int getAlpha() { return colorSensor.alpha(); }
-
     public boolean isBlue() {
         return (getBlue() > getRed()) && (getBlue() > getGreen());
     }
 
     public boolean isRed() {
         return (getRed() > getBlue()) && (getRed() > getGreen());
+    }
+
+    public int getArmEncoderPosition() {
+        return this.armMotor.getCurrentPosition();
+    }
+
+    public int getLowThreshold() {
+        return this.lowThreshold;
     }
 }

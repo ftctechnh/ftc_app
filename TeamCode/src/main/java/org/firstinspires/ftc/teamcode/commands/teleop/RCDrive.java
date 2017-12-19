@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commands;
+package org.firstinspires.ftc.teamcode.commands.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,10 +8,11 @@ import org.firstinspires.ftc.teamcode.systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.DriveSystem;
 
 /**
- * Created by Mahim on 12/9/2017.
+ * Created by Mahim on 11/4/2017.
  */
-@TeleOp
-public class TeleOPDriveUrid extends OpMode {
+
+@TeleOp(name = "TeleOP Drive: Umayer", group = "TeleOP Drive")
+public class RCDrive extends OpMode {
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
     private ElapsedTime runtime = new ElapsedTime();
@@ -31,7 +32,7 @@ public class TeleOPDriveUrid extends OpMode {
 
     @Override
     public void loop() {
-        this.driveSystem.tankDrive();
+        this.driveSystem.rcCarDrive();
         this.armSystem.setClaw(gamepad2.right_trigger);
         if (gamepad2.dpad_up) {
             this.armSystem.goUp();

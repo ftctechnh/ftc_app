@@ -1,18 +1,16 @@
-package org.firstinspires.ftc.teamcode.commands;
+package org.firstinspires.ftc.teamcode.commands.teleop.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.DriveSystem;
 
 /**
- * Created by Mahim on 11/4/2017.
+ * Created by Mahim on 12/19/2017.
  */
 
-@TeleOp
-public class TeleOPDriveUmayer extends OpMode {
+public class TestArmEncoder extends OpMode{
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
     private ElapsedTime runtime = new ElapsedTime();
@@ -44,10 +42,13 @@ public class TeleOPDriveUmayer extends OpMode {
         } else {
             this.armSystem.stopArm();
         }
+        telemetry.addLine("Motor Speeds");
         telemetry.addData("left wheel", this.driveSystem.getLeftSpeed());
         telemetry.addData("right wheel", this.driveSystem.getRightSpeed());
+        telemetry.addLine("Arm Actuators");
         telemetry.addData("jewel arm position", this.armSystem.getJewelArmPosition());
         telemetry.addData("arm speed", this.armSystem.getArmMotorSpeed());
+        telemetry.addData("arm position", this.armSystem.getArmEncoderPosition());
     }
 
     @Override
