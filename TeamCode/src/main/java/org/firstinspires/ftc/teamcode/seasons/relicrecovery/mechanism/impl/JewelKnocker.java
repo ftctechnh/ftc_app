@@ -28,11 +28,11 @@ public class JewelKnocker implements IMechanism {
     }
 
     public void retractArm() {
-        arm.setPosition(0.4);
+        arm.setPosition(0.35);
     }
 
     public void extendArm() {
-        arm.setPosition(0.8);
+        arm.setPosition(1.0);
     }
 
     public int getRed(){
@@ -43,15 +43,31 @@ public class JewelKnocker implements IMechanism {
         return jewelColorSensor.blue();
     }
 
-//    public boolean isJewelRed(RelicRecoveryRobot robot){
-//        int blueLevel = getBlue();
-//        int redLevel = getRed();
-//        boolean isRed = false
-//
-//        if(redLevel > 0 && blueLevel <= 0){
-//            return true;
-//        } else if(blueLevel > 0 && redLevel <= 0){
-//            return false;
-//        }
-//    }
+    public boolean isJewelRed(RelicRecoveryRobot robot){
+        int blueLevel = getBlue();
+        int redLevel = getRed();
+        boolean isRed = false;
+
+        if(redLevel > blueLevel){
+            isRed= true;
+        } else {
+            isRed= false;
+        }
+
+        return isRed;
+    }
+
+    public boolean isJewelBlue(RelicRecoveryRobot robot){
+        int blueLevel = getBlue();
+        int redLevel = getRed();
+        boolean isBlue = false;
+
+        if(blueLevel > redLevel){
+            isBlue= true;
+        } else {
+            isBlue= false;
+        }
+
+        return isBlue;
+    }
 }

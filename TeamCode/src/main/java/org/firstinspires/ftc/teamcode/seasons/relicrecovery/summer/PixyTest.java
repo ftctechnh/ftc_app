@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery.summer;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
  * Created by ftc6347 on 6/20/17.
  */
 
+@Disabled
 @Autonomous (name = "Pixy Cam Test", group = "Tests")
 public class PixyTest extends LinearOpMode {
     AnalogInput pixy;

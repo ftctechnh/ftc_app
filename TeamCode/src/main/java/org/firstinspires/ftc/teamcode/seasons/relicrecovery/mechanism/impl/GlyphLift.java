@@ -17,11 +17,15 @@ import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 public class GlyphLift implements IMechanism {
 
     private static final double MAX_LIFT_ROTATION_MOTOR_POWER = 0.4;
-    private static final double MAX_LIFT_MOTOR_POWER_UP = 0.9;
-    private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.4;
+    private static final double MAX_LIFT_MOTOR_POWER_UP = 0.4;
+    private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.9;
+
 
     private static final double ROTATION_MOTOR_POWER_AUTOMATIC = 0.8;
     private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
+
+    private static final double ROTATION_MOTOR_GYRO_POWER = 0.8;
+
     private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
 
     public static final int LIFT_RAISE_TARGET_POSITION = 850;
@@ -99,7 +103,7 @@ public class GlyphLift implements IMechanism {
      *              Negative values lower the lift and, likewise, positive values raise the lift.
      */
     public void setLiftMotorPower(double power) {
-        liftMotor.setPower(power * (power < 0 ? MAX_LIFT_MOTOR_POWER_UP : MAX_LIFT_MOTOR_POWER_DOWN));
+        liftMotor.setPower(-power * (power < 0 ? MAX_LIFT_MOTOR_POWER_UP : MAX_LIFT_MOTOR_POWER_DOWN));
     }
 
     /**
@@ -110,8 +114,13 @@ public class GlyphLift implements IMechanism {
      *              likewise, positive values run the rotation motor clockwise.
      */
     public void setRotationMotorPower(double power) {
+        opMode.telemetry.addData("current position", rotationMotor.getCurrentPosition());
+        opMode.telemetry.update();
+
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         isRunningToPositionRotationMotor = false;
+
+        rotationMotor.setPower(0);
         rotationMotor.setPower(power * ROTATION_MOTOR_POWER_MANUAL);
     }
 
@@ -122,8 +131,9 @@ public class GlyphLift implements IMechanism {
      * @see RotationMotorPosition
      * @param requestedPosition the desired rotation position
      */
-      public boolean setRotationMotorPosition(RotationMotorPosition requestedPosition) {
+      public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
           opMode.telemetry.addData("previous Position", previousPosition);
+          opMode.telemetry.addData("current position", rotationMotor.getCurrentPosition());
           opMode.telemetry.update();
 
           if(previousPosition != requestedPosition) {
@@ -139,7 +149,6 @@ public class GlyphLift implements IMechanism {
                   rotationMotor.setPower(0);
               }
           }
-        return rotationMotor.isBusy();
       }
 
       public boolean setLiftPosition(int targetPosition) {
@@ -181,22 +190,22 @@ public class GlyphLift implements IMechanism {
      */
     public void closeBlueGripper() {
         blueLeftServo.setPosition(0.65);
-        blueRightServo.setPosition(0.35);
+        blueRightServo.setPosition(0.4);
     }
 
     /**
      * Open the red gripper.
      */
     public void openRedGripper() {
-        redRightServo.setPosition(0.8);
-        redLeftServo.setPosition(0.2);
+        redRightServo.setPosition(0.9);
+        redLeftServo.setPosition(0.1);
     }
 
     /**
      * Open the blue gripper.
      */
     public void openBlueGripper() {
-        blueLeftServo.setPosition(0.8);
-        blueRightServo.setPosition(0.2);
+        blueLeftServo.setPosition(0.9);
+        blueRightServo.setPosition(0.1);
     }
 }

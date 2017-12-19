@@ -42,7 +42,11 @@ public class Intake implements IMechanism {
      * Raise the intake servo motors.
      */
     public void raiseIntake() {
+
         leftArmServo.setPosition(0.90);
+
+        leftArmServo.setPosition(0.9);
+
         rightArmServo.setPosition(0.05);
     }
 

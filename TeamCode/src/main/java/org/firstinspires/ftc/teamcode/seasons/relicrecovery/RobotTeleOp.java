@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift;
@@ -25,6 +26,10 @@ public class RobotTeleOp extends LinearOpMode {
         robot.getGlyphLift().initializeGrippers();
         robot.getIntake().raiseIntake();
 
+        robot.getGlyphLift().initializeGrippers();
+        robot.getIntake().raiseIntake();
+        robot.getJewelKnocker().retractArm();
+
         waitForStart();
 
         double speedX;
@@ -39,7 +44,7 @@ public class RobotTeleOp extends LinearOpMode {
             speedY = gamepad1.right_stick_y;
             pivot = -gamepad1.left_stick_x;
 
-            liftMotorPower = gamepad2.right_stick_y;
+            liftMotorPower = -gamepad2.right_stick_y;
             liftRotationMotorPower = -gamepad2.left_stick_x;
 
             // slow down robot with right trigger
@@ -49,6 +54,12 @@ public class RobotTeleOp extends LinearOpMode {
                 speedX /= 2;
             }
 
+            // Jewel arm control
+            if (gamepad1.y){
+                robot.getJewelKnocker().extendArm();
+            } else {
+                robot.getJewelKnocker().retractArm();
+            }
             // intake raise/lower control
             if(gamepad1.left_bumper) {
                 robot.getIntake().raiseIntake();
@@ -66,14 +77,18 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             // close/open blue gripper
-            if(gamepad2.right_bumper) {
+            if(gamepad2.right_trigger > 0.1) {
                 robot.getGlyphLift().openBlueGripper();
             } else {
                 robot.getGlyphLift().closeBlueGripper();
             }
 
+            if(gamepad1.b){
+                robot.getJewelKnocker().retractArm();
+            }
+
             // close/open red gripper
-            if(gamepad2.left_bumper) {
+            if(gamepad2.left_trigger > 0.1) {
                 robot.getGlyphLift().openRedGripper();
             } else {
                 robot.getGlyphLift().closeRedGripper();
@@ -86,6 +101,10 @@ public class RobotTeleOp extends LinearOpMode {
                 robot.getGlyphLift().setRotationMotorPosition(GlyphLift.RotationMotorPosition.DOWN);
             } else {
                 robot.getGlyphLift().setRotationMotorPower(liftRotationMotorPower);
+            }
+
+            if(gamepad2.b) {
+                robot.getGlyphLift().rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             telemetry.addData("Red Level", robot.getJewelKnocker().getRed());
