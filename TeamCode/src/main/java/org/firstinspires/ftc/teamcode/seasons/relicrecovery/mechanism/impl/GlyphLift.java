@@ -114,8 +114,13 @@ public class GlyphLift implements IMechanism {
      *              likewise, positive values run the rotation motor clockwise.
      */
     public void setRotationMotorPower(double power) {
+        opMode.telemetry.addData("current position", rotationMotor.getCurrentPosition());
+        opMode.telemetry.update();
+
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         isRunningToPositionRotationMotor = false;
+
+        rotationMotor.setPower(0);
         rotationMotor.setPower(power * ROTATION_MOTOR_POWER_MANUAL);
     }
 
@@ -126,8 +131,9 @@ public class GlyphLift implements IMechanism {
      * @see RotationMotorPosition
      * @param requestedPosition the desired rotation position
      */
-      public boolean setRotationMotorPosition(RotationMotorPosition requestedPosition) {
+      public void setRotationMotorPosition(RotationMotorPosition requestedPosition) {
           opMode.telemetry.addData("previous Position", previousPosition);
+          opMode.telemetry.addData("current position", rotationMotor.getCurrentPosition());
           opMode.telemetry.update();
 
           if(previousPosition != requestedPosition) {
@@ -143,7 +149,6 @@ public class GlyphLift implements IMechanism {
                   rotationMotor.setPower(0);
               }
           }
-        return rotationMotor.isBusy();
       }
 
       public boolean setLiftPosition(int targetPosition) {

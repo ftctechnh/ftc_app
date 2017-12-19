@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift;
@@ -98,6 +99,10 @@ public class RobotTeleOp extends LinearOpMode {
                 robot.glyphLift.setRotationMotorPosition(GlyphLift.RotationMotorPosition.DOWN);
             } else {
                 robot.glyphLift.setRotationMotorPower(liftRotationMotorPower);
+            }
+
+            if(gamepad2.b) {
+                robot.glyphLift.rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             telemetry.addData("Red Level", robot.jewelKnocker.getRed());

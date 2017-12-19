@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -34,8 +35,10 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new RelicRecoveryRobot(this);
 
-//        //detect color of stone
-          boolean isStoneRed = true;
+        //detect color of stone
+        boolean isStoneRed = true;
+        boolean isStoneRight = false;
+
 //        if(robot.balancingStoneSensor.red() > 0){
 //            isStoneRed = true;
 //            telemetry.addData(">", "Red stone detected.");
@@ -48,30 +51,20 @@ public class Autonomous extends LinearOpMode {
         robot.intake.raiseIntake();
         robot.jewelKnocker.retractArm();
 
-        // get side L/R
-        boolean isLeftStone = true;
         telemetry.addData(">", "Press LB for Left, RB for Right, LT for Red, RT for Blue");
         telemetry.update();
 
         while(!isStarted() && !opModeIsActive()){
-            if(gamepad1.left_bumper){
-                isLeftStone = true;
-            } else if (gamepad1.right_bumper){
-                isLeftStone = false;
-            }
-
             if(gamepad1.left_trigger > 0){
-                // red team
                 isStoneRed = true;
             } else if(gamepad1.right_trigger > 0){
-                // blue team
                 isStoneRed = false;
             }
 
-            if(isLeftStone) {
-                telemetry.addData("stone", "Left stone Selected.");
-            } else {
-                telemetry.addData("stone", "Right stone Selected.");
+            if(gamepad1.right_bumper) {
+                isStoneRight = true;
+            } else if(gamepad1.left_bumper) {
+                isStoneRed = false;
             }
 
             if(isStoneRed) {
@@ -80,315 +73,103 @@ public class Autonomous extends LinearOpMode {
                 telemetry.addData("team", "Blue Alliance Selected.");
             }
 
+            if(isStoneRight) {
+                telemetry.addData("stone", "Right Stone Selected");
+            } else {
+                telemetry.addData("stone", "Left Stone Selected.");
+            }
+
             telemetry.update();
         }
 
         waitForStart();
 
-        //decide which program to run
-        if(isStoneRed){
-            if(isLeftStone){
-                telemetry.addData(">", "Running Red Alliance Left Stone Program.");
-                telemetry.update();
-                redLeft(robot);
-                telemetry.update();
-            } else {
-                telemetry.addData(">", "Running Red Alliance Right Stone Program.");
-                telemetry.update();
-                redRight(robot);
+        // decide which program to run
+        if(isStoneRed) {
+            telemetry.addData(">", "Running Red Alliance Program.");
+            telemetry.update();
+
+            robot.glyphLift.closeRedGripper();
+
+            sleep(500);
+
+            robot.glyphLift.setLiftMotorPower(1);
+            sleep(250);
+            robot.glyphLift.setLiftMotorPower(0);
+
+            // Lower Jewel Mechinism
+            robot.jewelKnocker.extendArm();
+
+            sleep(500);
+
+            if(robot.jewelKnocker.isJewelRed(robot)) {
+                robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
+                robot.jewelKnocker.retractArm();
+
+                sleep(500);
+
+                robot.hDriveTrain.directionalDrive(180, 0.5, 7, false);
+            } else if(robot.jewelKnocker.isJewelBlue(robot)) {
+                robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
             }
-        } else {
-            if(isLeftStone){
-                telemetry.addData(">", "Running Blue Alliance Left Stone Program.");
-                telemetry.update();
-                blueLeft(robot);
-            } else {
-                telemetry.addData(">", "Running Blue Alliance Right Stone Program.");
-                telemetry.update();
-                blueRight(robot);
+
+            robot.jewelKnocker.retractArm();
+
+            robot.hDriveTrain.directionalDrive(0, 1.0, 36, false);
+
+            // drive forward
+            if(isStoneRight) {
+                robot.hDriveTrain.directionalDrive(90, 0.5, 24, false);
             }
-        }
-    }
 
-    // PROGRAMS
+            robot.glyphLift.setLiftMotorPower(-0.5);
+            sleep(250);
+            robot.glyphLift.setLiftMotorPower(0);
 
-    private void redLeft(RelicRecoveryRobot robot){
-        //raise glyph lift a tiny bit
-        robot.glyphLift.closeRedGripper();
+            robot.glyphLift.openRedGripper();
 
-        sleep(500);
+        } else {
+            telemetry.addData(">", "Running Blue Alliance Program.");
+            telemetry.update();
 
-        robot.glyphLift.setLiftMotorPower(1);
-        sleep(250);
-        robot.glyphLift.setLiftMotorPower(0);
-
-        // Lower Jewel Mechinism
-        robot.jewelKnocker.extendArm();
-
-        sleep(500);
-
-        if(robot.jewelKnocker.isJewelRed(robot)) {
-            robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
-            robot.jewelKnocker.retractArm();
+            robot.glyphLift.closeRedGripper();
 
             sleep(500);
 
-            robot.hDriveTrain.directionalDrive(180, 0.5, 7, false);
-        } else if(robot.jewelKnocker.isJewelBlue(robot)) {
-            robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
-            robot.jewelKnocker.retractArm();
-        } else {
-            robot.jewelKnocker.retractArm();
-        }
+            robot.glyphLift.setLiftMotorPower(1);
+            sleep(250);
+            robot.glyphLift.setLiftMotorPower(0);
 
-
-        robot.hDriveTrain.directionalDrive(0, 1.0, 36, false);
-
-        robot.glyphLift.setLiftMotorPower(-0.5);
-        sleep(250);
-        robot.glyphLift.setLiftMotorPower(0);
-
-        robot.glyphLift.openRedGripper();
-
-//        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
-//        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
-//
-//        keyColumn = scanPicto();
-//
-//        // dist: 4 for right, 5 for middle, and 6 for left.
-//        int distToKeyColumn = 0;
-//
-//        switch(keyColumn) {
-//            case LEFT:
-//                distToKeyColumn = 4;
-//                break;
-//            case CENTER:
-//                distToKeyColumn = 5;
-//                break;
-//            case RIGHT:
-//                distToKeyColumn = 6;
-//                break;
-//            default:
-//                distToKeyColumn = 5;
-//                break;
-//        }
-//        // drive to key column
-//        robot.hDriveTrain.directionalDrive(-90, 1, distToKeyColumn, false);
-//
-//        // turn to cryptobox
-//        robot.hDriveTrain.pivot(1);
-//        sleep(1000);
-//
-//        //drive to cryptobox
-//        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
-//
-//        //release preloaded glyph
-//        robot.glyphLift.openRedGripper();
-    }
-
-    public void redRight(RelicRecoveryRobot robot){
-        //raise glyph lift a tiny bit
-        robot.glyphLift.closeRedGripper();
-
-        sleep(500);
-
-        robot.glyphLift.setLiftMotorPower(1);
-        sleep(250);
-        robot.glyphLift.setLiftMotorPower(0);
-
-        // Lower Jewel Mechinism
-        robot.jewelKnocker.extendArm();
-
-        sleep(500);
-
-        if(robot.jewelKnocker.isJewelRed(robot)) {
-            robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
-            robot.jewelKnocker.retractArm();
+            robot.jewelKnocker.extendArm();
 
             sleep(500);
 
-            robot.hDriveTrain.directionalDrive(180, 0.5, 7, false);
-        } else if(robot.jewelKnocker.isJewelBlue(robot)) {
-            robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
+            if(robot.jewelKnocker.isJewelRed(robot)) {
+                robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
+                robot.jewelKnocker.retractArm();
+
+                sleep(500);
+
+                robot.hDriveTrain.directionalDrive(0, 0.5, 7, false);
+            } else if(robot.jewelKnocker.isJewelBlue(robot)) {
+                robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
+            }
+
             robot.jewelKnocker.retractArm();
-        } else {
-            robot.jewelKnocker.retractArm();
+
+            robot.hDriveTrain.directionalDrive(180, 1.0, 36, false);
+
+            // drive forward
+            if(isStoneRight) {
+                robot.hDriveTrain.directionalDrive(90, 0.5, 24, false);
+            }
+
+            robot.glyphLift.setLiftMotorPower(-0.5);
+            sleep(250);
+            robot.glyphLift.setLiftMotorPower(0);
+
+            robot.glyphLift.openRedGripper();
         }
-
-
-        robot.hDriveTrain.directionalDrive(0, 1.0, 36, false);
-
-        robot.glyphLift.setLiftMotorPower(-0.5);
-        sleep(250);
-        robot.glyphLift.setLiftMotorPower(0);
-
-        robot.glyphLift.openRedGripper();
-
-//        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
-//        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
-//
-//        keyColumn = scanPicto();
-//
-//        // dist: 4 for right, 5 for middle, and 6 for left.
-//        int distToKeyColumn = 0;
-//
-//        switch(keyColumn) {
-//            case LEFT:
-//                distToKeyColumn = 4;
-//                break;
-//            case CENTER:
-//                distToKeyColumn = 5;
-//                break;
-//            case RIGHT:
-//                distToKeyColumn = 6;
-//                break;
-//            default:
-//                distToKeyColumn = 5;
-//                break;
-//        }
-//        // drive to key column
-//        robot.hDriveTrain.directionalDrive(90, 1, 12, false);
-//        robot.hDriveTrain.pivot(1);
-//        sleep(500);
-//
-//        robot.hDriveTrain.directionalDrive(-90, 1, distToKeyColumn, false);
-//
-//        //drive to cryptobox
-//        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
-//
-//        //release preloaded glyph
-//        robot.glyphLift.openRedGripper();
-    }
-
-    public void blueLeft(RelicRecoveryRobot robot){
-        //raise glyph lift a tiny bit
-        robot.glyphLift.closeRedGripper();
-
-        sleep(500);
-
-        robot.glyphLift.setLiftMotorPower(1);
-        sleep(250);
-        robot.glyphLift.setLiftMotorPower(0);
-
-        // Lower Jewel Mechinism
-        robot.jewelKnocker.extendArm();
-
-        sleep(500);
-
-        if(robot.jewelKnocker.isJewelRed(robot)) {
-            robot.hDriveTrain.directionalDrive(0, 0.5, 3, false); //drive 4 inches right
-            robot.jewelKnocker.retractArm();
-
-            sleep(500);
-
-            robot.hDriveTrain.directionalDrive(180, 0.5, 7, false);
-        } else if(robot.jewelKnocker.isJewelBlue(robot)) {
-            robot.hDriveTrain.directionalDrive(180, 0.5, 3, false); // drive 4 inches left
-            robot.jewelKnocker.retractArm();
-        } else {
-            robot.jewelKnocker.retractArm();
-        }
-
-
-        robot.hDriveTrain.directionalDrive(0, 1.0, 36, false);
-
-        robot.glyphLift.setLiftMotorPower(-0.5);
-        sleep(250);
-        robot.glyphLift.setLiftMotorPower(0);
-
-        robot.glyphLift.openRedGripper();
-
-//        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
-//        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
-//
-//        keyColumn = scanPicto();
-//
-//        // dist: 4 for right, 5 for middle, and 6 for left.
-//        int distToKeyColumn = 0;
-//
-//        switch(keyColumn) {
-//            case LEFT:
-//                distToKeyColumn = 4;
-//                break;
-//            case CENTER:
-//                distToKeyColumn = 5;
-//                break;
-//            case RIGHT:
-//                distToKeyColumn = 6;
-//                break;
-//            default:
-//                distToKeyColumn = 5;
-//                break;
-//        }
-//        // drive to key column
-//        robot.hDriveTrain.directionalDrive(-90, 1, 12, false);
-//        robot.hDriveTrain.pivot(1);
-//        sleep(500);
-//
-//        robot.hDriveTrain.directionalDrive(90, 1, distToKeyColumn, false);
-//
-//        //drive to cryptobox
-//        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
-//
-//        //release preloaded glyph
-//        robot.glyphLift.openRedGripper();
-    }
-
-    public void blueRight(RelicRecoveryRobot robot){
-        //raise glyph lift a tiny bit
-        robot.glyphLift.setLiftMotorPower(1);
-        sleep(5);
-
-        // Lower Jewel Mechinism
-        robot.jewelKnocker.extendArm();
-
-        //get color of ball
-        boolean isBlue = robot.jewelKnocker.isJewelBlue(robot);
-
-        if(isBlue){
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
-        }else{
-            robot.hDriveTrain.directionalDrive(90, 1, 1, false);
-            robot.hDriveTrain.directionalDrive(-90, 1, 1, false);
-        }
-
-        robot.hDriveTrain.directionalDrive(0, 1, 5, false);
-
-//        VuforiaLocalizer vuforia = robot.visionHelper.getVuforia();
-//        RelicRecoveryVuMark keyColumn = RelicRecoveryVuMark.UNKNOWN;
-//
-//        keyColumn = scanPicto();
-//
-//        // dist: 4 for right, 5 for middle, and 6 for left.
-//        int distToKeyColumn = 0;
-//
-//        switch(keyColumn) {
-//            case LEFT:
-//                distToKeyColumn = 4;
-//                break;
-//            case CENTER:
-//                distToKeyColumn = 5;
-//                break;
-//            case RIGHT:
-//                distToKeyColumn = 6;
-//                break;
-//            default:
-//                distToKeyColumn = 5;
-//                break;
-//        }
-//        // drive to key column
-//        robot.hDriveTrain.directionalDrive(90, 1, distToKeyColumn, false);
-//
-//        // turn to cryptobox
-//        robot.hDriveTrain.pivot(1);
-//        sleep(1000);
-//
-//        //drive to cryptobox
-//        robot.hDriveTrain.directionalDrive(0, 0.4, 3, false);
-//
-//        //release preloaded glyph
-//        robot.glyphLift.openRedGripper();
     }
 
     String format(OpenGLMatrix transformationMatrix) {
