@@ -1,4 +1,5 @@
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.NewRobot;
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.TankBase;
 /**
  * Created by sahithithumuluri on 11/18/17.
  */
+@Disabled
 @Autonomous(name = "JavaTestingSahithi", group = "Auto")
 public class JavaTestingSahithi extends LinearOpMode
 {

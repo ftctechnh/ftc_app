@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Raghav on 10/20/2017.
  */
-
+@Disabled
 @Autonomous(name = "BlueAutoRef", group = "Test")
 
 public class BlueAutoRef extends LinearOpMode

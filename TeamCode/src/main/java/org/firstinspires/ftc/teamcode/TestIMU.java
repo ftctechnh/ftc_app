@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode;
 //Created to demonstrate both opmodes, used as an example mostly.
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by Jeremy on 8/27/2017.
  */
+@Disabled
 @Autonomous(name = "IMU DRIVE TESTS", group = "concept")
 public class TestIMU extends LinearOpMode
 {

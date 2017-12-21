@@ -47,7 +47,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
-
+@Disabled
 @Autonomous(name = "IMU Test", group = "Sensor")
                 // Comment this out to add to the opmode list
 public class OrientationSensors extends LinearOpMode

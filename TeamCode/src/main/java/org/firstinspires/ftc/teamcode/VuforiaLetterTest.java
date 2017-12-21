@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by Jeremy on 10/15/2017.
  */
-
+@Disabled
 @Autonomous(name = "Vuforia letters", group = "Test")
 public class VuforiaLetterTest extends LinearOpMode
 {
