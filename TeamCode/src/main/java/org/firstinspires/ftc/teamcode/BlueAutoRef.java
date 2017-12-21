@@ -52,7 +52,6 @@ public class BlueAutoRef extends LinearOpMode
         robot.pivot_IMU(83, .25);
         robot.driveStraight_In(8, .1);
         robot.driveStraight_In(8, .1);
-        // lower door attachment to the ground
         //lower door attachment to ground
         //open door attachment to release glyph
         robot.driveStraight_In(-2); // back up
