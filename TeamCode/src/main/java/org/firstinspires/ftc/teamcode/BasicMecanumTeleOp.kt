@@ -5,9 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
+import com.qualcomm.robotcore.util.Range
+import kotlin.math.*
 
 @TeleOp(name = "Basic Mecanum Drivetrain", group = "Rebound Development")
 //@Disabled
@@ -63,7 +62,16 @@ class BasicMecanumTeleOp : OpMode() {
         val gLinearDirection : Double = Math.toDegrees(Math.atan2(-Math.pow(gamepad1.left_stick_y.toDouble(), 3.0),
                 Math.pow(gamepad1.right_stick_x.toDouble(), 3.0)));
         val mecanumPowers : List<Double> = mecanumDrive2(gLinearPower, gLinearDirection, gRotPower)*/
-        val mecanumPowers : List<Double> = mecanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, 0.5)
+        when {
+            gamepad1.dpad_up -> mecanumDrive(0.5F, 0.0F, 0.0F, 1.0)
+            gamepad1.dpad_down -> mecanumDrive(-0.5F, 0.0F, 0.0F, 1.0)
+            gamepad1.dpad_right -> mecanumDrive(0.0F, 0.5F, 0.0F, 1.0)
+            gamepad1.dpad_left -> mecanumDrive(0.0F, -0.5F, 0.0F, 1.0)
+            gamepad1.right_trigger > 0 -> mecanumDrive(0.0F, 0.0F, gamepad1.right_trigger/2.0F, 1.0)
+            gamepad1.left_trigger > 0 -> mecanumDrive(0.0F, 0.0F, -gamepad1.left_trigger/2.0F, 1.0)
+        }
+        val mecanumPowers : List<Double> = simplisticMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y,
+                gamepad1.right_stick_x, gamepad1.right_stick_y)
         telemetry.addData("LF: ", mecanumPowers[0])
         lf.power = mecanumPowers[0]
         telemetry.addData("RF: ", mecanumPowers[1])
@@ -98,8 +106,8 @@ class BasicMecanumTeleOp : OpMode() {
         val right : Double = x1.toDouble()
         val clockwise : Double = tuner * x2.toDouble()
 
-        // generate motor powers - these numbers have been tested in python
-        val lf : Double = forward + clockwise + right
+        // generate motor powers - this is where the problems are coming up
+        val lf : Double = -(forward + clockwise + right)
         val rf : Double = -(forward - clockwise - right)
         val lb : Double = -(forward + clockwise - right)
         val rb : Double = forward - clockwise + right
@@ -110,8 +118,24 @@ class BasicMecanumTeleOp : OpMode() {
         return powers.map {x -> clampDouble(x, low = -1.0, high = 1.0)} // finally, return the numbers in a nice list
     }
 
+    private fun simplisticMecanum(left_x: Float, left_y: Float, right_x: Float, right_y: Float) : List<Double> {
+        val vD : Double = Math.sqrt(Math.pow(left_x.toDouble(), 2.0) + Math.pow(left_y.toDouble(), 2.0))
+        val thetaD : Double = Math.atan2(-left_x.toDouble(), left_y.toDouble())
+        val vTheta : Double = right_x.toDouble()
+
+        val lf : Double = vD * sin(-thetaD + Math.PI / 4) - vTheta
+        val rf : Double = vD * cos(-thetaD + Math.PI / 4) + vTheta
+        val lb : Double = vD * cos(-thetaD + Math.PI / 4) - vTheta
+        val rb : Double = -(vD * sin(-thetaD + Math.PI / 4) + vTheta)
+        Range.scale(lf, (-2).toDouble(), 2.0, (-1).toDouble(), 1.0)
+        Range.scale(rf, (-2).toDouble(), 2.0, (-1).toDouble(), 1.0)
+        Range.scale(lb, (-2).toDouble(), 2.0, (-1).toDouble(), 1.0)
+        Range.scale(rb, (-2).toDouble(), 2.0, (-1).toDouble(), 1.0)
+        return listOf(lf, rf, lb, rb)
+    }
+
     @SuppressWarnings("unused")
-    private fun mecanumDrive2(linearPower : Double, linearDirection : Double, rotPower : Double) : List<Double> {
+    private fun zmecanumDrive2(linearPower : Double, linearDirection : Double, rotPower : Double) : List<Double> {
         // Limit sum of rotational and translational powers to 1
         val processedRotPower: Double =
                 if (linearPower + abs(rotPower) > 1.0) (Math.signum(rotPower)*(abs(rotPower)-linearPower)) else rotPower
