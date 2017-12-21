@@ -20,7 +20,7 @@ public class JewelArm {
 
     public void jewelArmUp() {
 //        jewelArmServo.setPosition(0.75);
-        jewelArmServo.setPosition(0.25);
+        jewelArmServo.setPosition(0.75);
     }
 
     public void jewelArmDown() {

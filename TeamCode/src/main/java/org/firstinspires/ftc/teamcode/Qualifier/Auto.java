@@ -87,7 +87,8 @@ public class Auto extends LinearOpMode {
         gromit.driveTrain.resetencoders();
         sleep(20);
         gromit.driveTrain.runUsingEncoders();
-        gromit.driveTrain.mecanumDrive(.5,20, 0, -20);
+//        gromit.driveTrain.mecanumDrive(.5,20, 0, -20);
+        gromit.driveTrain.mecanumDrive(.5,20, 0, 0);
         //gromit.driveTrain.mecanumTurn(1,45);
         /*gromit.driveTrain.mecanumDrive(0.5, 20, 0,0);
         gromit.driveTrain.mecanumDrive(0.85, -10, 0,-90);

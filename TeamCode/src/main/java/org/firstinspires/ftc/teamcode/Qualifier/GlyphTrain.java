@@ -74,8 +74,8 @@ public class GlyphTrain {
     }
     void glyphclamp(String moveto){
         if( moveto == "open"){
-            leftlower.setPosition(0.42);
-            rightlower.setPosition(0.55); //glyph open
+            leftlower.setPosition(0.50);
+            rightlower.setPosition(0.50); //glyph open
         }
         else if(moveto == "close"){
             leftlower.setPosition(0.27);

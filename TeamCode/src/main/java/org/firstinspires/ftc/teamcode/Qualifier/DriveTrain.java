@@ -136,7 +136,7 @@ public class DriveTrain {
 
         // Run wheels in tank mode (note: The joystick goes negat when pushed forwards, so negate it)
         double forward = y;
-        double strafe = x;
+        double strafe = -x;
         double rotate = turn;
 
 // temp
