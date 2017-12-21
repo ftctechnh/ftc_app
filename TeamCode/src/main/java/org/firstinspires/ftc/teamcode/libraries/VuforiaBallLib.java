@@ -60,7 +60,7 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
     //identity mats to be constructed later in the project
     protected Vec3F[] point;
     //output bitmap
-    private Bitmap bm;
+    protected Bitmap bm;
     private boolean bmChanged = false;
     //output bitmap lock
     private static final Object bmLock = new Object();

@@ -40,7 +40,7 @@ public class APDS9960 {
         sensor.enableWriteCoalescing(true);
         //read id
         //bad code!
-        byte thing = sensor.read8(Regs.ID.REG); //TODO: FIX?
+        byte thing = sensor.read8(Regs.ID.REG);
         if((thing & 0xFF) != 0xAB) throw new InvalidParameterException("That's no sensor! " + thing);
         //disable device
         sensor.write8(Regs.ENABLE.REG, 0);
@@ -64,6 +64,7 @@ public class APDS9960 {
         //else read from STATUS-PDATA to check interrupt
         //if(!config.interruptEnabled) sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.PDATA.REG, 1, I2cDeviceSynch.ReadMode.REPEAT));
         //else sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.STATUS.REG, 10, I2cDeviceSynch.ReadMode.REPEAT));
+        sensor.waitForWriteCompletions(I2cWaitControl.WRITTEN);
     }
 
     public int getDist() {
@@ -105,6 +106,11 @@ public class APDS9960 {
     }
     //configuration class, cuz that's how qualcomm does it
     public static class Config {
+        public PulseLength len;
+        public byte count;
+        public LEDStrength strength;
+        public LEDBoost boost;
+        public DistGain gain;
         //enums for mode
         public enum PulseLength {
             PULSE_4US (0),
@@ -191,6 +197,11 @@ public class APDS9960 {
             //set drive and gain values
             this.CONTROL = (byte)((gain.bVal << 2) | (strength.bVal << 6));
             this.CONFIG2 = (byte)(boost.bVal << 4);
+            this.gain = gain;
+            this.len = len;
+            this.count = count;
+            this.strength = strength;
+            this.boost = boost;
         }
     }
 

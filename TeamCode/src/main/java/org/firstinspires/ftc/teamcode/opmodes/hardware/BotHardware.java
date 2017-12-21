@@ -73,7 +73,7 @@ public class BotHardware {
         public static final double leftGrabClose = 1.0;
 
         public static final double stickUp = 0.4;
-        public static final double stickDown = 1.0;
+        public static final double stickDown = .96;
 
         public static final double stickBaseCenterBlue = 0.435;
         public static final double stickBaseCenterRed = 0.4;
