@@ -14,7 +14,7 @@ public class FinalUniversalAudi extends LinearOpMode
     {
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.initVuforia(hardwareMap);
-        sleep(300);
+        sleep(250);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
@@ -28,7 +28,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
                 newRobot.oldMoveLift(1);
-                sleep(500);
+                sleep(250);
                 char cipher = newRobot.getGlyphCipher();
                 char colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
@@ -38,13 +38,13 @@ public class FinalUniversalAudi extends LinearOpMode
                 {
                     case'r':
                         newRobot.driveStraight_In(8);
-                        sleep(500);
+                        sleep(100);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(-8);
                         break;
                     case 'b':
                         newRobot.driveStraight_In(-8);
-                        sleep(500);
+                        sleep(100);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(8);
                         break;
@@ -65,17 +65,18 @@ public class FinalUniversalAudi extends LinearOpMode
                     default: newRobot.driveStraight_In(36);
                         break;
                 }
-                newRobot.pivot_IMU(86, .25);
+                newRobot.pivot_IMU(80, .25); //86 degrees is almost perfect 90
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(23);
+                newRobot.driveStraight_In(20);
+                newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-5,1);
                 newRobot.stopAllMotors();
             case 'r':
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
                 newRobot.oldMoveLift(1);
-                sleep(500);
+                sleep(250);
                 cipher = newRobot.getGlyphCipher();
                 colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
@@ -85,13 +86,13 @@ public class FinalUniversalAudi extends LinearOpMode
                 {
                     case 'r':
                         newRobot.driveStraight_In(-8);
-                        sleep(500);
+                        sleep(100);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(8);
                         break;
                     case 'b':
                         newRobot.driveStraight_In(8);
-                        sleep(500);
+                        sleep(100);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(-8);
                         break;
@@ -112,17 +113,17 @@ public class FinalUniversalAudi extends LinearOpMode
                     default: newRobot.driveStraight_In(34.5f);
                         break;
                 }
-                newRobot.pivot_IMU(-86, .25);
+                newRobot.pivot_IMU(-80, .25); //86 is nearly perfect 90
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                /*newRobot.driveStraight_In(8,.1);
+                newRobot.driveStraight_In(8,.1);
                 newRobot.driveStraight_In(-2);
-                newRobot.driveStraight_In(3,.2);
+                /*newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-10,1);*/
                 newRobot.stopAllMotors();
             default:
                 newRobot.openOrCloseDoor(true);
-                sleep(500);
+                sleep(100);
                 newRobot.oldMoveLift(1);
                 newRobot.driveStraight_In(35, .4);
                 break;
