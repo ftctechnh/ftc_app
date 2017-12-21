@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Team7518Teleop extends LinearOpMode{
 
     private DcMotor  leftFront, rightFront, leftRear, rightRear, absoluteRight, absoluteLeft, yAxis, zAxis;
-    private Servo topLeftServo, topRightServo, bottomLeftServo, bottomRightServo;
+    private Servo topLeftServo, topRightServo, bottomLeftServo, bottomRightServo, colorSensor;
     int clawPosition=0;
     @Override
     public void runOpMode() throws InterruptedException
@@ -81,9 +81,9 @@ public class Team7518Teleop extends LinearOpMode{
 
 
                         //z-axis motor
-                        if (gamepad1.dpad_left)
+                        if (gamepad1.dpad_up)
                             zAxis.setPower(1);
-                        if (gamepad1.dpad_right)
+                        if (gamepad1.dpad_down)
                             zAxis.setPower(-1);
                         else zAxis.setPower(0);
 
@@ -95,7 +95,7 @@ public class Team7518Teleop extends LinearOpMode{
                         else yAxis.setPower(0);
 
                         //color sensor
-
+                        
 
                         idle();
 
