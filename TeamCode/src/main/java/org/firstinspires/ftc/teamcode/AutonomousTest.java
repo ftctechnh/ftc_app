@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by Jeremy on 10/20/2017.
  */
+@Disabled
 @Autonomous(name = "Test Ramp", group = "test")
 public class AutonomousTest extends LinearOpMode
 {

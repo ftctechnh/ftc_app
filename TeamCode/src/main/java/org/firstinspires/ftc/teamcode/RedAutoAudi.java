@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Jeremy on 10/29/2017.
  */
+@Disabled
 @Autonomous(name = "RedAutoAudi", group = "Auto")
 public class RedAutoAudi extends LinearOpMode
 {
