@@ -35,18 +35,6 @@ public class CompTeleFinal extends OpMode
          */
 
         /*
-        if (gamepad2.left_stick_y == 0)
-        {
-            telemetry.addData("left stick is 0, adj dir", null);
-            telemetry.addData("liftdir", newRobot.getLiftDir());
-            newRobot.AdjLiftDir();
-        }
-        else
-        {
-            newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
-            telemetry.addData("Fine move lift", null);
-        }
-
         if (gamepad2.dpad_up)
         {
             if (liftArmed)
@@ -55,14 +43,16 @@ public class CompTeleFinal extends OpMode
                 newRobot.CalcLiftTarget(1);
                 liftArmed = false;
             }
-        } else if (gamepad2.dpad_down)
+        }
+        else if (gamepad2.dpad_down)
         {
             if (liftArmed)
             {   telemetry.addData("In calclift -1", null);
                 newRobot.CalcLiftTarget(-1);
                 liftArmed = false;
             }
-        } else
+        }
+        else
         {
             telemetry.addData("Armedlift true", null);
             liftArmed = true;
@@ -70,8 +60,8 @@ public class CompTeleFinal extends OpMode
 
 
         telemetry.update();
-        */
 
+*/
         newRobot.fineMoveLift(gamepad2.left_stick_y, .9f);
         /*
         if (gamepad2.left_bumper)
@@ -92,20 +82,20 @@ public class CompTeleFinal extends OpMode
         else
             newRobot.getTailRelease().setPower(0f);
 
-        if (gamepad2.a)
-            newRobot.fineAdjGrabber(.01f);
+        //Doesn't close all the way
+        if (gamepad2.a) //we will measure these values and see if its a mechanical or programming issue
+            newRobot.fineAdjGrabber(.04f);
         else if (gamepad2.b)
-            newRobot.fineAdjGrabber(-.01f);
+            newRobot.fineAdjGrabber(-.04f);
 
         if (gamepad2.y)
         {
-            newRobot.fineAdjGrabberRotator(-.004f);
+            newRobot.fineAdjGrabberRotator(.008f);
         }
         else if (gamepad2.x)
         {
-            newRobot.fineAdjGrabberRotator(.004f);
+            newRobot.fineAdjGrabberRotator(-.008f);
         }
-
 
         /**
          *DRIVE CONTROLS
@@ -124,27 +114,20 @@ public class CompTeleFinal extends OpMode
                 newRobot.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
         }
         //
-        if (gamepad1.right_bumper)
-        {
-            telemetry.addData("GAMEPAD 1 R BUMPER", null);
-            newRobot.driveMotors(-.9f, .9f);
-            telemetry.addData("LEFT POW= ", newRobot.getDriveLeftOne().getPower());
-            telemetry.addData("RIGHt POW= ", newRobot.getDriveRightOne().getPower());
-        }
         telemetry.addData("LEFT POW= ", newRobot.getDriveLeftOne().getPower());
         telemetry.addData("RIGHt POW= ", newRobot.getDriveRightOne().getPower());
 
         if (gamepad1.y)
-            newRobot.getWingMotor().setPower(.6f);//lift wing
+            newRobot.getWingMotor().setPower(.9f);//lift wing
         else if (gamepad1.b)
-            newRobot.getWingMotor().setPower(-.6f);
+            newRobot.getWingMotor().setPower(-.9f);
         else
             newRobot.getWingMotor().setPower(0f);
 
-        telemetry.addData("gamepad2 Trigger l", gamepad2.left_trigger);
-        telemetry.addData("gamepad2 Trigger r", gamepad2.right_trigger);
-        telemetry.addData("gamepad1 joystick l", gamepad1.left_stick_y);
-        telemetry.addData("gamepad1 joystick r", gamepad1.right_stick_y);
+        telemetry.addData("LiftEnc", newRobot.getLiftMotor().getCurrentPosition());
+        telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
+        telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
+        telemetry.addData("AnglePerpToGrav ", newRobot.anglePerpToGrav());
         telemetry.update();
     }
 
