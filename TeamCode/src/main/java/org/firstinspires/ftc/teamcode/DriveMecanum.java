@@ -54,6 +54,9 @@ public class DriveMecanum {
         RearLeft.setPower(speed * clip(rlSpeed));
         RearRight.setPower(speed * clip(rrSpeed));
     }
+    public void stop() {
+        driveSpeeds(0,0,0,0);
+    }
     public double clip(double value) {
         return Range.clip(value, -1, 1);
     }
