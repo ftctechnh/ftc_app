@@ -120,11 +120,11 @@ public class RedPilliar extends PilliarLib {
             blockSeq.add(
                     new AutoLib.RunUntilStopStep(
                             new AutoLib.MoveByTimeStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 5.0f, true),
-                            new PeakFindStep(PEAK_FIND_WINDOW, PEAK_FRAME_COUNT)
+                            new PeakFindStep(PEAK_FIND_WINDOW, PEAK_FRAME_COUNT, red)
                     )
             );
             blockSeq.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
-            blockSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), !red, new SensorLib.PID(-0.15f, -0.05f, 0, 15), 35.0f, 105.0f, 3, this));
+            blockSeq.add(new PeakHoneStep(bot.getMotorVelocityShimArray(), !red, new SensorLib.PID(-0.15f, -0.05f, 0, 15), 35.0f, 105.0f, 3, this, red));
 
             blockSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, count, true));
             blockSeq.add(new AutoLib.GyroTurnStep(this, 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
@@ -162,105 +162,4 @@ public class RedPilliar extends PilliarLib {
             return 0;
         }
     }
-
-    private class PeakFindStep extends AutoLib.Step {
-        private int peakFrameCount = 0;
-        private int count;
-        private int centerWindow;
-        PeakFindStep(int centerWindow, int count) {
-            this.count = count;
-            this.centerWindow = centerWindow;
-        }
-
-        public boolean loop() {
-            final int middle = 255 / 2;
-            //check peak window for peaks
-            ArrayList<Integer> peaks = getPeaks(red);
-            int i = 0;
-            for(; i < peaks.size(); i++) {
-                if(peaks.get(i) < middle + centerWindow && peaks.get(i) > middle - centerWindow) {
-                    peakFrameCount++;
-                    break;
-                }
-            }
-            if(i == peaks.size()) peakFrameCount = 0;
-
-            return peakFrameCount > this.count;
-        }
-   }
-
-    private class PeakHoneStep extends  AutoLib.Step {
-        private final int error;
-        private final DcMotor[] motorRay;
-        private final OpMode mode;
-        SensorLib.PID errorPid;
-        float minPower;
-        float maxPower;
-        double lastTime = 0;
-
-        private int lastPeakPos = -1;
-        private int lostPeaksCount = 0;
-        private int foundPeakCount = 0;
-        private boolean fromLeft;
-
-        private static final int PEAK_LOST_BREAK = 10;
-        private static final int PEAK_DIST_THRESH = 15;
-        private static final int PEAK_FOUND_COUNT = 10;
-
-        PeakHoneStep(DcMotor[] motors, boolean fromLeft, SensorLib.PID errorPid, float minPower, float maxPower, int error, OpMode mode) {
-            this.motorRay = motors;
-            this.errorPid = errorPid;
-            this.minPower = minPower;
-            this.maxPower = maxPower;
-            this.error = error;
-            this.fromLeft = fromLeft;
-            this.mode = mode;
-        }
-
-        public boolean loop() {
-            mode.telemetry.addData("Home!", true);
-            if(lastTime == 0) lastTime = mode.getRuntime();
-            //if first run, get the peak we want to center on.
-            //in this case, the one farthest left in the frame
-            ArrayList<Integer> peaks = getPeaks(red);
-            //if we have no peaks, ty again next time
-            if(peaks.size() <= 0) return ++lostPeaksCount >= PEAK_LOST_BREAK;
-            //get the peak according to whether it's coming to the left or right
-            int peak;
-            if(!fromLeft) peak = peaks.get(0);
-            else peak = peaks.get(peaks.size() - 1);
-            if(lastPeakPos == -1) lastPeakPos = peak;
-            //else if the distance of the peaks is greater than reasonable, break
-            if(lastPeakPos != -1 && Math.abs(peak - lastPeakPos) >= PEAK_DIST_THRESH) return ++lostPeaksCount >= PEAK_LOST_BREAK;
-            //if the peak is within stopping margin, stop
-            if(Math.abs(peak - 127) <= error) {
-                setMotors(0);
-                return ++foundPeakCount >= PEAK_FOUND_COUNT;
-            }
-            //save the last peak
-            lastPeakPos = peak;
-            //reset lost peaks counter
-            lostPeaksCount = 0;
-            foundPeakCount = 0;
-            //adjust motors
-            int error = 127 - peak;
-            double time = getRuntime();
-            float pError = errorPid.loop(error, (float)(time - lastTime));
-            lastTime = time;
-            mode.telemetry.addData("power error", pError);
-            //cut out a middle range, but handle positive and negative
-            float power;
-            if(pError >= 0) power = Range.clip(minPower + pError, minPower, maxPower);
-            else power = Range.clip(pError - minPower, -maxPower, -minPower);
-            setMotors(-power);
-            //telem
-            telemetry.addData("Peak dist", error);
-            //return
-            return false;
-        }
-
-        private void setMotors(float power) {
-            for(DcMotor motor : motorRay) motor.setPower(power);
-        }
-   }
 }
