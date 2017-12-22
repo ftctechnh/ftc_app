@@ -29,6 +29,24 @@ public class DriveEverythingREV extends OpMode {
         } else {
             drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         }
+        if (gamepad1.x) {
+            ForkLift.closeClaw();
+            ForkLift.moveUpDown(1);
+            sleep(750);
+            ForkLift.moveUpDown(0);
+            drive.driveTranslateRotate(-0.75, 0,0);
+            sleep(750);
+            drive.stop();
+            ForkLift.openClaw();
+            ForkLift.moveUpDown(-1);
+            sleep(500);
+            ForkLift.moveUpDown(0);
+            ForkLift.closeClaw();
+            sleep(250);
+            ForkLift.moveUpDown(1);
+            sleep(250);
+            ForkLift.moveUpDown(0);
+        }
         //ForkLift
         if (gamepad1.a) {
             ForkLift.closeClaw();
@@ -49,5 +67,10 @@ public class DriveEverythingREV extends OpMode {
         RelicClaw.setArmPosition(Range.clip(gamepad2.right_stick_y / 250 + RelicClaw.getArmPosition(), 0.0, 1.0));
         RelicClaw.moveMotor(-gamepad2.left_stick_y);
         */
+    }
+    private void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {}
     }
 }
