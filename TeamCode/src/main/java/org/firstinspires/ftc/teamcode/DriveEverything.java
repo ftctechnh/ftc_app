@@ -32,6 +32,18 @@ public class DriveEverything extends OpMode {
             drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         }
+        if (gamepad1.dpad_up) {
+            drive.driveTranslateRotate(0.2, 0, 0);
+        }
+        if (gamepad1.dpad_left) {
+            drive.driveTranslateRotate(0, -0.2, 0);
+        }
+        if (gamepad1.dpad_down) {
+            drive.driveTranslateRotate(-0.2, 0, 0);
+        }
+        if (gamepad1.dpad_right) {
+            drive.driveTranslateRotate(0, 0.2, 0);
+        }
         //ForkLift
         if (gamepad1.a) {
             ForkLift.closeClaw();
