@@ -14,7 +14,7 @@ public class TestAuto extends LinearOpMode {
 				hardwareMap.dcMotor.get("m2"), //fr motor
 				hardwareMap.dcMotor.get("m3"), //rl motor
 				hardwareMap.dcMotor.get("m4"), //rr motor
-				hardwareMap.gyroSensor.get("g1"),
+				hardwareMap,
 				telemetry); // gyro
 		drive.init();
 		telemetry.addLine("Ready to start");

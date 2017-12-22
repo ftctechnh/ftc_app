@@ -37,6 +37,8 @@ public class DriveEverythingREV extends OpMode {
             ForkLift.openClaw();
         }
         ForkLift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
+        telemetry.addData("ForkLift motor encoder value: ", ForkLift.motor.getCurrentPosition());
+        telemetry.update();
         //Relic arm
         /*if (gamepad2.a) {
             RelicClaw.closeClaw();

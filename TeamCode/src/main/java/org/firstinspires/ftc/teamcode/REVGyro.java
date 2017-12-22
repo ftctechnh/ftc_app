@@ -21,6 +21,7 @@ public class REVGyro {
     public void calibrate() {
         imu.initialize(parameters);
     }
+
     public double getHeading() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;

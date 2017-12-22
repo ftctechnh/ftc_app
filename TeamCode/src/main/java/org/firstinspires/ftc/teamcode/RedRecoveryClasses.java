@@ -17,7 +17,7 @@ public class RedRecoveryClasses extends LinearOpMode {
     String color;
 
     public void runOpMode() throws InterruptedException {
-        drive = new AutoDrive(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), hardwareMap.gyroSensor.get("g1"), telemetry);
+        drive = new AutoDrive(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), hardwareMap, telemetry);
         drive.init(); //Calibrates gyro
         jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
         ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
@@ -31,18 +31,20 @@ public class RedRecoveryClasses extends LinearOpMode {
         jewelArm.init();
         jewelArm.down();
         ForkLift.closeClaw();
+        Thread.sleep(500);
+        ForkLift.moveUpDown(1, 100);
         color = jewelArm.findJewel();
-        if (color == "Red") { //if the arm sees red
-            drive.driveTranslateRotate(0, .125, 0, 2);
-            drive.driveTranslateRotate(0, -.125, 0, 2);
-        } else if (color == "Blue") { //if the arm sees blue
-            drive.driveTranslateRotate(0, -.125, 0, 2);
-            drive.driveTranslateRotate(0, .125, 0, 2);
+        if (color.equals("Red")) { //if the arm sees red
+            drive.driveTranslateRotate(0, 0, .125, 5);
+            drive.driveTranslateRotate(0, 0, -.125, 5);
+        } else if (color.equals("Blue")) { //if the arm sees blue
+            drive.driveTranslateRotate(0, 0, -.125, 5);
+            drive.driveTranslateRotate(0, 0, .125, 5);
         } else {}
         jewelArm.up();
         Thread.sleep(500);
-        drive.driveTranslateRotate(0, -.5, 0, 32);
-        drive.leftGyro(0, 0, -0.05, 90);
+        drive.driveTranslateRotate(0, .5, 0, 32);
+        drive.rightGyro(0, 0, 0.05, -45);
         drive.driveTranslateRotate(0,0.5,0, 5);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }

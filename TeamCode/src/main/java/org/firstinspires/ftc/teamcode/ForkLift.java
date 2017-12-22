@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class ForkLift {
     private Servo rightClaw;
     private Servo leftClaw;
-    private DcMotor motor;
+    public DcMotor motor;
     private DigitalChannel topButton;
     private DigitalChannel bottomButton;
     private double clawHighEnd = 1; //0.85
@@ -32,6 +32,7 @@ public class ForkLift {
         resetEncoder();
         this.telemetry = telemetry;
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, Telemetry telemetry) {
@@ -92,6 +93,16 @@ public class ForkLift {
     private void resetEncoder() {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void moveUpDown(double speed, long time) {
+        moveUpDown(speed);
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {}
+        stop();
+    }
+    public void stop() {
+        moveUpDown(0);
     }
 
 }

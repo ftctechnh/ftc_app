@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
@@ -15,25 +15,26 @@ public class AutoDrive {
     private DcMotor FrontRight;
     private DcMotor RearLeft;
     private DcMotor RearRight;
-    private GyroSensor gyro;
+    private REVGyro imu;
     private double cir = 3.937 * Math.PI;
     private int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
-    public int heading;
+    public double heading;
+    private HardwareMap hwMap;
     private Telemetry telemetry;
 
-    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, GyroSensor gyro, Telemetry telemetry) {
+    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hwMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
         this.FrontRight = FrontRight;
         this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
         this.RearLeft = RearLeft;
         this.RearRight = RearRight;
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
-        this.gyro = gyro;
+        this.hwMap = hwMap;
+        this.imu = new REVGyro(this.hwMap.get(BNO055IMU.class, "imu"));
         this.telemetry = telemetry;
-        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        setBRAKE();
+
+
     }
 
     public void driveTranslateRotate(double x, double y, double z, double distance) {
@@ -144,18 +145,23 @@ public class AutoDrive {
     }
 
     public void init() {
-        gyro.calibrate();
-        while (gyro.isCalibrating()) {
-
-        }
+        imu.calibrate();
         heading = getHeading();
     }
 
-    public int getHeading() {
-        return gyro.getHeading();
+    public double getHeading() {
+        return imu.getHeading();
     }
+
     public void telemetrizeGyro() {
         telemetry.addData("Current heading: ", getHeading());
         telemetry.update();
+    }
+
+    public void setBRAKE() {
+        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
