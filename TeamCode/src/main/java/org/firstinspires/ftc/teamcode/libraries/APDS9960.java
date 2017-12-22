@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.libraries;
 
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
@@ -20,13 +21,23 @@ import java.security.InvalidParameterException;
 public class APDS9960 {
     //unsigned...?
     public static final byte ADDR = 0x39;
+    //auto gain thresholds
+    private static final int RAISE_GAIN_THRESH = 100;
+    private static final int LOWER_GAIN_THRESH = 200;
+
     //instance of config
     private final Config config;
     private final I2cDeviceSynch sensor;
+    private final boolean autoGain;
     //constructor
-    public APDS9960(Config config, I2cDeviceSynch sensor) {
+    public APDS9960(Config config, I2cDeviceSynch sensor, boolean autoGain) {
         this.config = config;
         this.sensor = sensor;
+        this.autoGain = autoGain;
+    }
+
+    public APDS9960(Config config, I2cDeviceSynch sensor) {
+        this(config, sensor, false);
     }
 
     //initialize using config
@@ -56,6 +67,11 @@ public class APDS9960 {
         return thing;
     }
 
+    public void updateGain() {
+        sensor.write8(Regs.CONTROL.REG, config.CONTROL);
+        sensor.waitForWriteCompletions(I2cWaitControl.WRITTEN);
+    }
+
     public void startDevice() {
         //enable
         sensor.write8(Regs.ENABLE.REG, this.config.ENABLE);
@@ -68,7 +84,17 @@ public class APDS9960 {
     }
 
     public int getDist() {
-        return sensor.read8(Regs.PDATA.REG) & 0xff;
+        int dist = sensor.read8(Regs.PDATA.REG) & 0xff;
+        if(autoGain) {
+            if(config.gain != APDS9960.Config.DistGain.GAIN_1X && dist >= LOWER_GAIN_THRESH) setSensorGain(APDS9960.Config.DistGain.values()[this.config.gain.ordinal() - 1]);
+            else if(config.gain != APDS9960.Config.DistGain.GAIN_8X && dist <= RAISE_GAIN_THRESH) setSensorGain(APDS9960.Config.DistGain.values()[this.config.gain.ordinal() + 1]);
+        }
+        return dist;
+    }
+
+    private void setSensorGain(APDS9960.Config.DistGain gain) {
+        config.setPulse(config.len, config.count, config.strength, config.boost, gain);
+        updateGain();
     }
 
     public boolean checkInterrupt() {
@@ -82,6 +108,63 @@ public class APDS9960 {
             return true;
         }
         else return false;
+    }
+
+    /**
+     * Returns a calibrated, linear sense of distance as read by the infrared proximity
+     * part of the sensor. Distance is measured to the plastic housing at the front of the
+     * sensor.
+     *
+     * Natively, the raw optical signal follows an inverse square law. Here, parameters have
+     * been fitted to turn that into a <em>linear</em> measure of distance. The function fitted
+     * was of the form:
+     *
+     *      APDS = a(mm)^b
+     *
+     * We can solve this for mm:
+     *
+     *      mm = (APDS/a)^(1/b)
+     *
+     * This fitted linearity is fairly accurate over a wide range of target surfaces, but is ultimately
+     * affected by the infrared reflectivity of the surface. However, even on surfaces where there is
+     * significantly different reflectivity, the linearity calculated here tends to be preserved,
+     * so distance accuracy can often be refined with a simple further multiplicative scaling.
+     *
+     * Note that readings are most accurate when perpendicular to the surface. For non-perpendicularity,
+     * a cosine correction factor is usually appropriate.
+     *
+     * I have taken the time to get coefficients for each level of gain on the sensor, and as such the
+     * setting will automatically be taken into account
+     *
+     * @return the estimated MM from the sensor
+     */
+
+    //the coefficents
+    private enum GainLinearizationCoff {
+        COFF_1X(138451, -1.74),
+        COFF_2X(332944, -1.78),
+        COFF_4X(774727, -1.79),
+        COFF_8X(2760000, -1.9);
+
+        GainLinearizationCoff(double a, double b) {
+            this.ainv = 1.0/a;
+            this.binv = 1.0/b;
+        }
+        private double ainv;
+        private double binv;
+
+        public double linearize(int dist) {
+            return Math.pow(dist * this.ainv, this.binv);
+        }
+    }
+
+    public double getLinearizedDistance() {
+        //linearize!
+        return GainLinearizationCoff.values()[this.config.gain.ordinal()].linearize(getDist());
+    }
+
+    public double getLinearizedDistance(int dist, Config.DistGain gain) {
+        return GainLinearizationCoff.values()[gain.ordinal()].linearize(dist);
     }
 
     //Register enums

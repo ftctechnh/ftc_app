@@ -43,7 +43,7 @@ import static org.opencv.core.CvType.CV_8UC3;
  * Also includes openCV functionality
  */
 
-public abstract class VuforiaBallLib extends OpenCVLoad {
+public abstract class VuforiaBallLib extends DrawLib {
     //define the jewel platform relative to the image with a buncha vectors to add
     //all units in vuforia are mm, so we multiply to inches to make it readable
     protected static final float inToMM = 25.4f;
@@ -59,13 +59,6 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
 
     //identity mats to be constructed later in the project
     protected Vec3F[] point;
-    //output bitmap
-    protected Bitmap bm;
-    private boolean bmChanged = false;
-    //output bitmap lock
-    private static final Object bmLock = new Object();
-
-    private ImageView mView;
 
     protected BlockingQueue<VuforiaLocalizer.CloseableFrame> ray;
 
@@ -122,19 +115,8 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
         point = new Vec3F[] { botLeft, botRight, botFrontRight, botFrontLeft, topLeft, topRight, topFrontRight, topFrontLeft,
                 ballLeftTop, ballLeftBottom, ballRightTop, ballRightBottom };
 
-        initOpenCV();
-
         //setup view
-        if(displayData) {
-            mView = (ImageView)((Activity)hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.OpenCVOverlay);
-            mView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mView.setAlpha(1.0f);
-                    mView.setImageBitmap(bm);
-                }
-            });
-        }
+        if(displayData) super.initDraw();
     }
 
     //start vuforia tracking
@@ -238,17 +220,7 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
     protected void stopVuforia() {
         this.vuforia.stop();
         if(displayData) {
-            mView.setAlpha(0.0f);
-            mView.post(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (bmLock) {
-                        mView.setImageDrawable(null);
-                        mView.invalidate();
-                        if(bm != null) bm.recycle();
-                    }
-                }
-            });
+            super.stopDraw();
             this.ray.clear();
         }
     }
@@ -273,32 +245,6 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
             return color;
         }
         else return null;
-    }
-
-    protected void drawFrame(Mat frame) {
-        //convert to bitmap, synchronized
-        synchronized (bmLock) {
-            if(bm == null || frame.rows() != bm.getHeight() && frame.cols() != bm.getWidth()){
-                if(bm != null) bm.recycle();
-                bm = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-                bmChanged = true;
-            }
-            Utils.matToBitmap(frame, bm);
-        }
-
-        //display!
-        mView.getHandler().post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (bmLock) {
-                    if(bmChanged) {
-                        mView.setImageBitmap(bm);
-                        bmChanged = false;
-                    }
-                    mView.invalidate();
-                }
-            }
-        });
     }
 
     protected Mat getFrame() throws InterruptedException {
@@ -331,7 +277,7 @@ public abstract class VuforiaBallLib extends OpenCVLoad {
         LeftRed,
         LeftBlue,
         Indeterminate,
-        Undefined;
+        Undefined
     }
 
     /**

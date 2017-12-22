@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.libraries.APDS9960;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
 
@@ -25,14 +26,14 @@ public class ADPSAuto extends OpMode {
 
     public void init() {
         config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_8X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"));
+        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), true);
         dist.initDevice();
 
         bot.init();
 
         mSeq.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, 0.469, 0.5, false));
         mSeq.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, BotHardware.ServoE.stickDown - 0.1, 0.5, false));
-        mSeq.add(new APDSFind(bot.getMotorVelocityShimArray(), dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), 35.0f, 105.0f, 200, 3, this));
+        mSeq.add(new APDSFind(bot.getMotorVelocityShimArray(), dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), 35.0f, 360.0f, 45, 5, this));
         //mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 35.0f, 500, true));
 
         dist.startDevice();
@@ -51,7 +52,7 @@ public class ADPSAuto extends OpMode {
 
     }
 
-    private static class APDSFind extends AutoLib.Step {
+    public static class APDSFind extends AutoLib.Step {
         private final int mError;
         private final int mDist;
         private final DcMotor[] motorRay;
@@ -61,12 +62,12 @@ public class ADPSAuto extends OpMode {
         private final SensorLib.PID errorPid;
         private final float minPower;
         private final float maxPower;
+        private final FilterLib.MovingWindowFilter movingAvg = new FilterLib.MovingWindowFilter(10);
 
         private double lastTime = 0;
         private int foundCount = 0;
 
-        private static final int APDS_FOUND_COUNT = 5;
-        private static final int GAIN_LOWER_WINDOW = 40;
+        private static final int APDS_FOUND_COUNT = 10;
 
         APDSFind(DcMotor[] motors, APDS9960 sens, APDS9960.Config config, SensorLib.PID errorPid, float minPower, float maxPower, int dist, int error, OpMode mode) {
             this.motorRay = motors;
@@ -83,36 +84,29 @@ public class ADPSAuto extends OpMode {
         public boolean loop() {
             if(lastTime == 0) lastTime = mode.getRuntime();
             //get the distance and error
-            int error = this.mDist - this.sens.getDist();
+            double dist = this.sens.getLinearizedDistance();
+            float error = (float)(this.mDist - dist);
             //if we found it, stop
             //if the peak is within stopping margin, stop
             if(config.gain == APDS9960.Config.DistGain.GAIN_1X && Math.abs(error) <= mError) {
                 setMotors(0);
                 return ++foundCount >= APDS_FOUND_COUNT;
             }
-            //else lower gain level until bottom out
-            else if(config.gain != APDS9960.Config.DistGain.GAIN_1X && Math.abs(error) <= GAIN_LOWER_WINDOW) {
-                APDS9960.Config.DistGain temp;
-                if(config.gain == APDS9960.Config.DistGain.GAIN_8X) temp = APDS9960.Config.DistGain.GAIN_4X;
-                else if(config.gain == APDS9960.Config.DistGain.GAIN_4X) temp = APDS9960.Config.DistGain.GAIN_2X;
-                else if(config.gain == APDS9960.Config.DistGain.GAIN_2X) temp = APDS9960.Config.DistGain.GAIN_1X;
-                else throw new IllegalArgumentException("boi");
-                config.setPulse(config.len, config.count, config.strength, config.boost, temp);
-                sens.initDevice();
-                sens.startDevice();
-            }
+            else foundCount = 0;
+            //moving avg
+            movingAvg.appendValue(dist);
             //PID
             double time = mode.getRuntime();
-            float pError = errorPid.loop(error, (float)(time - lastTime));
+            float pError = errorPid.loop((float)(this.mDist - movingAvg.currentValue()), (float)(time - lastTime));
             lastTime = time;
             mode.telemetry.addData("power error", pError);
             //cut out a middle range, but handle positive and negative
             float power;
             if(pError >= 0) power = Range.clip(minPower + pError, minPower, maxPower);
             else power = Range.clip(pError - minPower, -maxPower, -minPower);
-            setMotors(-power);
+            setMotors(power);
             //telem
-            mode.telemetry.addData("Peak dist", error);
+            mode.telemetry.addData("APDS dist", error);
             //return
             return false;
         }
