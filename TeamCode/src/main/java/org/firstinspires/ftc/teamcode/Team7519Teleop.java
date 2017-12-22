@@ -40,15 +40,16 @@ public class Team7519Teleop extends LinearOpMode{
             double h = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
 
-            final double leftFrontPower = h * Math.cos(robotAngle) + gamepad1.right_stick_y;
-            final double rightFrontPower = h * Math.sin(robotAngle) - gamepad1.right_stick_y;
-            final double leftRearPower = h * Math.sin(robotAngle) + gamepad1.right_stick_y;
-            final double rightRearPower = h * Math.cos(robotAngle) - gamepad1.right_stick_y;
+            final double leftFrontPower = h * Math.cos(robotAngle) + gamepad1.right_stick_x;
+            final double rightFrontPower = h * Math.sin(robotAngle) - gamepad1.right_stick_x;
+            final double leftRearPower = h * Math.sin(robotAngle) + gamepad1.right_stick_x;
+            final double rightRearPower = h * Math.cos(robotAngle) - gamepad1.right_stick_x;
 
-            leftFront.setPower(leftFrontPower);
-            rightFront.setPower(-rightFrontPower);
-            leftRear.setPower(leftRearPower);
-            rightRear.setPower(-rightRearPower);
+
+            leftFront.setPower(leftFrontPower*.7);
+            rightFront.setPower(-rightFrontPower*.7);
+            leftRear.setPower(leftRearPower*.7);
+            rightRear.setPower(-rightRearPower*.7);
 
             //Manual Lift Control w/Trigger
             while(gamepad1.right_trigger>0) {
