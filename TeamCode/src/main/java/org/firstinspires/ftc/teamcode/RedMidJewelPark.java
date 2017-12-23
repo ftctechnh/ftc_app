@@ -1,20 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Jewel Park: Blue Mid", group="Pushbot")
-//@Disabled
-public class BlueMidJewelPark extends OpMode{
+@Autonomous(name="Jewel Park: Red Mid", group="Pushbot")
+public class RedMidJewelPark extends OpMode{
 
     private int stateMachineFlow;
     RelicDrive robot       = new RelicDrive();
     private ElapsedTime     runtime = new ElapsedTime();
 
     GlyphArm gilgearmesh = new GlyphArm();
+
     JewelSystem sensArm = new JewelSystem();
     JewelColor jewelColor = JewelColor.UNKNOWN;
     double time;
@@ -33,8 +31,8 @@ public class BlueMidJewelPark extends OpMode{
         telemetry.addData("after init","here");
         telemetry.update();
 
+        gilgearmesh.clawPos(1);
         stateMachineFlow = 0;
-
         sensArm.colorLED(false);
 
         telemetry.addData("Arm Pos",gilgearmesh.getArmPosition());
@@ -56,7 +54,6 @@ public class BlueMidJewelPark extends OpMode{
                 break;
 
             case 1://look at this
-                sensArm.wristPos(WristServoPosition.CENTER);
                 sensArm.armPos(ArmServoPosition.BOTTOM);
                 sensArm.colorLED(true);
                 time = getRuntime();
@@ -77,27 +74,27 @@ public class BlueMidJewelPark extends OpMode{
                 break;
             case 2:
                 //knock off correct jewel
-                if (jewelColor == JewelColor.BLUE){sensArm.wristPos(WristServoPosition.RIGHT);
-                    sensArm.armPos(ArmServoPosition.TOP);
-                    sensArm.wristPos(WristServoPosition.CENTER);}
-                else if (jewelColor == JewelColor.RED){sensArm.wristPos(WristServoPosition.LEFT);
+                if (jewelColor == JewelColor.BLUE){sensArm.wristPos(WristServoPosition.LEFT);
                     sensArm.wristPos(WristServoPosition.MID);
                     sensArm.wristPos(WristServoPosition.CENTER);
                     sensArm.armPos(ArmServoPosition.TOP);}
+                else if (jewelColor == JewelColor.RED){sensArm.wristPos(WristServoPosition.RIGHT);
+                    sensArm.armPos(ArmServoPosition.TOP);
+                    sensArm.wristPos(WristServoPosition.CENTER);}
                 else if (jewelColor == JewelColor.UNKNOWN){sensArm.armPos(ArmServoPosition.TOP);}
 
                 telemetry.addData("Jewel Arm",sensArm.getArmPosition());
-                telemetry.addData("Jewel Wrist",sensArm.getWristPosition());
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
                 stateMachineFlow++;
                 break;
             case 3:
-                robot.linearDrive(.25,-20);
+                gilgearmesh.armPos(25,.6);
+                robot.linearDrive(.25,20);
                 stateMachineFlow++;
                 break;
             case 4:
-                robot.statTurn(.5,90);
+                robot.statTurn(.5,-45);
                 stateMachineFlow++;
                 break;
             case 5:
