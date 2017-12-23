@@ -66,11 +66,11 @@ public class GlyphArm
         clawServo.setPosition(MID_SERVO);
     }
     public void armPos(int pos, double speed){
-        double newPos = (pos/100*THROW);
+        double newPos = (-pos/100.0*THROW);
         int i = (int) (newPos);
         //if (i > THROW){i = THROW;}
         //if (i < 0){i = 0;}
-        armMotor.setTargetPosition(pos);
+        armMotor.setTargetPosition(i);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(Math.abs(speed));
         while (armMotor.isBusy());

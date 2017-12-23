@@ -18,9 +18,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by Joseph Liang on 10/30/2017.
  */
 
-@Autonomous(name="Relic Recovery: Blue Corner", group="Pushbot")
+//@Autonomous(name="Relic Recovery: Blue Corner", group="Pushbot")
 //@Disabled
-public class RlcRcvryCornerBlue extends OpMode{
+/*public class RlcRcvryCornerBlue extends OpMode{
 
     private int stateMachineFlow;
     RelicDrive robot       = new RelicDrive();
@@ -33,16 +33,14 @@ public class RlcRcvryCornerBlue extends OpMode{
     String jewelColor = "Unknown";
     double time;
 
-    static final double SENS_ARM_TOP = 0.45;
-    static final double SENS_ARM_BOTTOM = 1;
 
     //VuforiaLocalizer vuforia;
     /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
     VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
     VuforiaTrackable relicTemplate = relicTrackables.get(0);
-*/
-    @Override
+
+    //@Override
     public void init() {
         telemetry.addData("before init","here");
         telemetry.update();
@@ -81,7 +79,7 @@ public class RlcRcvryCornerBlue extends OpMode{
     }
 
 
-    @Override
+    //@Override
     public void loop() {
         switch(stateMachineFlow){
             case 0:
@@ -94,7 +92,7 @@ public class RlcRcvryCornerBlue extends OpMode{
                 break;
 
             case 1://look at this
-                sensArm.armPos(SENS_ARM_BOTTOM);
+                sensArm.armPos("bottom");
                 sensArm.colorLED(true);
                 time = getRuntime();
                 while (jewelColor == "Unknown" && getRuntime() < time + 3){
@@ -117,11 +115,11 @@ public class RlcRcvryCornerBlue extends OpMode{
             case 2:
                 //knock off correct jewel
                 if (jewelColor == "blue"){robot.linearDrive(.25,2);
-                    sensArm.armPos(SENS_ARM_TOP);}
+                    sensArm.armPos("top");}
                 else if (jewelColor == "red"){robot.linearDrive(.25,-1);
-                    sensArm.armPos(SENS_ARM_TOP);
+                    sensArm.armPos("top");
                     robot.linearDrive(.25,3);}
-                else if (jewelColor == "Unknown"){sensArm.armPos(SENS_ARM_TOP);
+                else if (jewelColor == "Unknown"){sensArm.armPos("top");
                     robot.linearDrive(.25,2);}
 
                 telemetry.addData("Jewel Arm",sensArm.getArmPosition());
@@ -222,4 +220,4 @@ public class RlcRcvryCornerBlue extends OpMode{
         }
     }
 }//end of class
-
+*/
