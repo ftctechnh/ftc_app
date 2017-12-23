@@ -9,36 +9,32 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class TestAuto extends LinearOpMode {
 	AutoDrive drive;
 	public void runOpMode() throws InterruptedException {
-		drive = new AutoDrive(
-				hardwareMap.dcMotor.get("m1"), //fl motor
-				hardwareMap.dcMotor.get("m2"), //fr motor
-				hardwareMap.dcMotor.get("m3"), //rl motor
-				hardwareMap.dcMotor.get("m4"), //rr motor
-				hardwareMap,
-				telemetry); // gyro
+		drive = new AutoDrive(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), hardwareMap, telemetry);
 		drive.init();
 		telemetry.addLine("Ready to start");
 		telemetry.update();
 		waitForStart();
-		drive.driveTranslateRotate(0,0.5,0,10); // Forward
+		drive.driveTranslateRotate(0,0.1,0,10); // Forward
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0,-0.5,0,10); // Backward
+		drive.driveTranslateRotate(0,-0.1,0,10); // Backward
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0.5,0,0,10); // Move right
+		drive.driveTranslateRotate(0.1,0,0,10); // Move right
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(-0.5,0,0,10); // Move left
+		drive.driveTranslateRotate(-0.1,0,0,10); // Move left
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0,0,0.5,10); // Spin right
+		drive.driveTranslateRotate(0,0,0.1,10); // Spin right
 		Thread.sleep(2000);
-		drive.driveTranslateRotate(0,0,-0.5,10); // Spin left
+		drive.driveTranslateRotate(0,0,-0.1,10); // Spin left
 		Thread.sleep(2000);
-		drive.rightGyro(0,0,0.125,270);
+		drive.rightGyro(0,0,0.125,-90);
 		Thread.sleep(2000);
 		drive.leftGyro(0,0,-0.125,90);
 		Thread.sleep(2000);
-		drive.rightGyro(0,0,0.125,270);
+		drive.rightGyro(0,0,0.125,90);
 		Thread.sleep(2000);
-		drive.leftGyro(0,0,-0.125,350);
+		drive.leftGyro(0,0,-0.125,-90);
+		Thread.sleep(2000);
+		drive.rightGyro(0,0,0.125,0);
 
 	}
 }

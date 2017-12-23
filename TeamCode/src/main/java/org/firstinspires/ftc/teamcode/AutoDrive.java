@@ -48,7 +48,7 @@ public class AutoDrive {
         double high = findHigh(list);
         driveSpeeds(fl, fr, rl, rr);
         while (!(isMotorAtTarget(FrontLeft, fl / high * clicks)) && (!(isMotorAtTarget(FrontRight, fr / high * clicks))) && (!(isMotorAtTarget(RearLeft, rl / high * clicks))) && (!(isMotorAtTarget(RearRight, rr / high * clicks)))) {
-          
+            telemetrizeEncoders();
         }
         stopMotors();
     }
@@ -155,6 +155,13 @@ public class AutoDrive {
 
     public void telemetrizeGyro() {
         telemetry.addData("Current heading: ", getHeading());
+        telemetry.update();
+    }
+    public void telemetrizeEncoders() {
+        telemetry.addData("First motor: ", FrontLeft.getCurrentPosition());
+        telemetry.addData("Second motor: ", FrontRight.getCurrentPosition());
+        telemetry.addData("third motor: ", RearLeft.getCurrentPosition());
+        telemetry.addData("fourth motor: ", RearRight.getCurrentPosition());
         telemetry.update();
     }
 

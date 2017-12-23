@@ -7,8 +7,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RelicClaw {
     private Servo claw;
-    private double clawClosePos = 0.25;
-    private double clawOpenPos = 0.75;
+    private double closePosition = 0.0;
+    private double openPosition = 1.0;
+    private double downPosition = 0;
+    private double upPosition = 1;
     private Servo arm;
     private double armInitPos = 1;
     private DcMotor motor;
@@ -27,16 +29,19 @@ public class RelicClaw {
         openClaw();
     }
     public void closeClaw() {
-    	claw.setPosition(clawClosePos);
+    	claw.setPosition(closePosition);
     }
     public void openClaw() {
-    	claw.setPosition(clawOpenPos);
+    	claw.setPosition(openPosition);
+    }
+    public void up() {
+        setArmPosition(upPosition);
+    }
+    public void down() {
+        setArmPosition(downPosition);
     }
     public void setArmPosition(double position) {
     	arm.setPosition(position);
-    }
-    public double getArmPosition() {
-    	return arm.getPosition();
     }
     public void moveMotor(double speed) {
     	motor.setPower(speed);

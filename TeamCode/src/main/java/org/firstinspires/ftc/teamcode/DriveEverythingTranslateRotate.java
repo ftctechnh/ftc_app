@@ -47,7 +47,12 @@ public class DriveEverythingTranslateRotate extends OpMode {
         if (gamepad2.b) {
             RelicClaw.openClaw();
         }
-        RelicClaw.setArmPosition(Range.clip(gamepad2.right_stick_y / 250 + RelicClaw.getArmPosition(), 0.0, 1.0));
+        if (gamepad2.x) {
+            RelicClaw.down();
+        }
+        if (gamepad2.y) {
+            RelicClaw.up();
+        }
         RelicClaw.moveMotor(-gamepad2.left_stick_y);
     }
 }
