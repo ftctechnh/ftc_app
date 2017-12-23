@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.libraries.SquirrelyLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.FunctionCall;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.LineFollowLib;

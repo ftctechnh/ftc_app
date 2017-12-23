@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.hardware;
+package org.firstinspires.ftc.teamcode.libraries.hardware;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

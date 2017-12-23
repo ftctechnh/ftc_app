@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
 /**
  * Created by Noah on 12/6/2016.

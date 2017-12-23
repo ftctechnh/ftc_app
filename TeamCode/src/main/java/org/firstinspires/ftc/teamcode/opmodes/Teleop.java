@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.libraries.FilterLib;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 
 /**
  * Created by Noah on 10/27/2017.

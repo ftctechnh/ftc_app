@@ -6,8 +6,7 @@ package org.firstinspires.ftc.teamcode.opmodes.outdated;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
-import org.firstinspires.ftc.teamcode.opmodes.outdated.BlockAuto;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
 @Autonomous(name="Red Block Auto (Shoot Balls, Defense)", group="Main")
 @Disabled

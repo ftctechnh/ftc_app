@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
 
 /**

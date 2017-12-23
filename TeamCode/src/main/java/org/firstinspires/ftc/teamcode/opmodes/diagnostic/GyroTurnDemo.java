@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 
 /**
  * Created by Noah on 12/1/2017.

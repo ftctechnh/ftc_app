@@ -6,8 +6,7 @@ package org.firstinspires.ftc.teamcode.opmodes.outdated;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.opmodes.outdated.ShootAuto;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
 @Autonomous(name="Red Shoot Auto (Shoot Balls)", group="Main")
 @Disabled

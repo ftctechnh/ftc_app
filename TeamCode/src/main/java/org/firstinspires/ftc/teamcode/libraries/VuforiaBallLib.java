@@ -218,7 +218,7 @@ public abstract class VuforiaBallLib extends DrawLib {
     }
 
     protected void stopVuforia() {
-        this.vuforia.stop();
+        //this.vuforia.stop();
         if(displayData) {
             super.stopDraw();
             this.ray.clear();

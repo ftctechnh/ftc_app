@@ -1,18 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmodes.hardware;
-
-import android.hardware.Sensor;
-import android.support.annotation.NonNull;
+package org.firstinspires.ftc.teamcode.libraries.hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -20,7 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
-import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
 
 /**
  * Created by Noah on 10/27/2017.
@@ -118,6 +110,8 @@ public class BotHardware {
 
     //opmode pointer
     private final OpMode mode;
+    //motor wrap array pointer
+    private DcMotorWrap[] shimRay;
 
     //IMU pointer
     private BNO055IMU imu;
@@ -131,6 +125,8 @@ public class BotHardware {
     public void init() {
         //init all motors
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
+        //init motor shim array
+        shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
         ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
@@ -213,7 +209,7 @@ public class BotHardware {
     }
 
     public DcMotorWrap[] getMotorVelocityShimArray() {
-        return new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
+        return shimRay;
     }
 
     private static class IMUHeading implements HeadingSensor {

@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
 @Autonomous(name="Shoot Auto (Shoot Balls)", group="Main")
 @Disabled

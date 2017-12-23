@@ -36,8 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
-import org.firstinspires.ftc.teamcode.opmodes.outdated.LineDrive;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
 @Autonomous(name="Blue Auto (Push Beacons)", group="Main")
 @Disabled

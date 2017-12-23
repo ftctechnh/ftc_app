@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.SquirrelyLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
 @TeleOp(name = "Ye Olde TeleOpMain", group = "Main")
 @Disabled

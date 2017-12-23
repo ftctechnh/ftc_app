@@ -4,23 +4,16 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.CameraCalibration;
-import com.vuforia.CameraDevice;
-import com.vuforia.CameraField;
-import com.vuforia.Device;
 import com.vuforia.Image;
 import com.vuforia.Matrix34F;
 import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.State;
 import com.vuforia.Tool;
 import com.vuforia.Vec3F;
-import com.vuforia.VideoMode;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -31,10 +24,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
-import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLoad;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardware;
-import org.opencv.android.CameraBridgeViewBase;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

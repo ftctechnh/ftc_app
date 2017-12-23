@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.firstinspires.ftc.teamcode.libraries.LineFollowLib;
 import org.firstinspires.ftc.teamcode.libraries.OpenCVLib;
-import org.firstinspires.ftc.teamcode.opmodes.hardware.BotHardwareOld;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 import org.opencv.core.Mat;
 
 
