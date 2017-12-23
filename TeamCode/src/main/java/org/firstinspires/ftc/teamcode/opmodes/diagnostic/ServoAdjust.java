@@ -14,7 +14,21 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 //@Disabled
 public class ServoAdjust extends OpMode {
 
+    private enum Incs {
+        SMALL(0.01),
+        MEDIUM(0.05),
+        EHH(0.1),
+        HOLYMOTHER(0.5);
+
+        public double inc;
+        Incs(double inc) {
+            this.inc = inc;
+        }
+    }
+
     BotHardware bot = new BotHardware(this);
+    boolean lastDPad = false;
+    int incIndex = 0;
 
     @Override
     public void init() {
@@ -33,9 +47,16 @@ public class ServoAdjust extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("Servo", bot.getStick().getPosition());
-        if (gamepad1.dpad_up)
-            bot.getStick().setPosition(Range.clip(bot.getStick().getPosition() + 0.01, -1, 1));
-        else if (gamepad1.dpad_down)
-            bot.getStick().setPosition(Range.clip(bot.getStick().getPosition() - 0.01, -1, 1));
+        telemetry.addData("Increment", Incs.values()[incIndex].inc);
+        if(!lastDPad) {
+            if (gamepad1.dpad_up)
+                bot.getStick().setPosition(Range.clip(bot.getStick().getPosition() + Incs.values()[incIndex].inc, -1, 1));
+            else if (gamepad1.dpad_down)
+                bot.getStick().setPosition(Range.clip(bot.getStick().getPosition() - Incs.values()[incIndex].inc, -1, 1));
+            else if (gamepad1.dpad_left) incIndex = Range.clip(incIndex - 1, 0, Incs.values().length - 1);
+            else if (gamepad1.dpad_right) incIndex = Range.clip(incIndex + 1, 0, Incs.values().length - 1);
+        }
+
+        lastDPad = gamepad1.dpad_up || gamepad1.dpad_right || gamepad1.dpad_left || gamepad1.dpad_down;
     }
 }

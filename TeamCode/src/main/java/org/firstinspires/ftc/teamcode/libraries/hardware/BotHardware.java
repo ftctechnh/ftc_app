@@ -58,32 +58,20 @@ public class BotHardware {
         stickBase("sb"),
         //dropLeft("dl"),
         //dropRight("dr"),
-        backDropLeft("bdl"),
-        backDropRight("bdr", true);
-
-        public static final double leftGrabOpen = 0;
-        public static final double leftGrabClose = 1.0;
+        backDropLeft("bdl", true),
+        backDropRight("bdr");
 
         public static final double stickUp = 0.4;
         public static final double stickDown = .96;
 
-        public static final double stickBaseCenterBlue = 0.435;
-        public static final double stickBaseCenterRed = 0.4;
-        public static final double stickBaseSwingLeft = 0.3;
-        public static final double stickBaseSwingRight = 0.6;
-        public static final double stickBaseHidden = 1.0;
+        public static final double stickBaseCenterBlue = 0.31;
+        public static final double stickBaseCenterRed = 0.34;
+        public static final double stickBaseCenter = 0.38;
+        public static final double stickBaseSwingSize = 0.2;
+        public static final double stickBaseHidden = 0.91;
 
-        public static final double garyUp = 0.1;
-        public static final double garyDown = 0.55;
-
-        public static final double dropLeftDown = 0.8;
-        public static final double dropLeftUp = 0.1;
-
-        public static final double dropRightDown = 0.2;
-        public static final double dropRightUp = 0.7;
-
-        public static final double backDropDown = 0.725;
-        public static final double backDropUp = 0.0;
+        public static final double backDropDown = 0.2;
+        public static final double backDropUp = 0.82;
 
         private final String name;
         public Servo servo;

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.APDS9960;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.FilterLib;
@@ -45,8 +46,8 @@ public class ADPSAuto extends VuforiaBallLib {
     public void init() {
         initVuforia(true);
 
-        config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_8X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), true);
+        config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_1X);
+        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), false);
         dist.initDevice();
 
         bot.init();
@@ -69,8 +70,12 @@ public class ADPSAuto extends VuforiaBallLib {
                 else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
                 whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
                 //hmmmmm
-                final AutoLib.Step whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseSwingLeft, 1.0, false);
-                final AutoLib.Step whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseSwingRight, 1.0, false);
+                final AutoLib.Step whackLeft;
+                if(red) whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed - BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
+                else whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue - BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
+                final AutoLib.Step whackRight;
+                if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
+                else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
                 if(color == BallColor.LeftBlue) {
                     if(red) whack.add(whackLeft);
                     else whack.add(whackRight);
@@ -85,49 +90,43 @@ public class ADPSAuto extends VuforiaBallLib {
 
             final int mul = red ? -1 : 1;
 
-            AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
+            int skip = 0;
 
-            //findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 700, true));
-            //findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
-            findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, 0.469, 0.5, false));
-            findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, BotHardware.ServoE.stickDown - 0.1, 0.5, false));
-            findPilliar.add(new APDSFind(bot.getMotorVelocityShimArray(), BotHardware.ServoE.stick.servo, BotHardware.ServoE.stickDown - 0.1, BotHardware.ServoE.stickDown - 0.3, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), 35.0f, 225.0f, 45, 5, 2, 110, this));
-
-            /*
             if(getLastVuMark() != null) {
                 RelicRecoveryVuMark thing = getLastVuMark();
                 //if we're on red it's the far one, else it's the close one
                 //and if its' on the right and we're on blue, go twice
-                if((thing == RelicRecoveryVuMark.LEFT && red) || (thing == RelicRecoveryVuMark.RIGHT && !red)) {
-                    findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 200, true));
-                    findPilliar.add(makeFindSequence());
-                    findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 200, true));
-                    findPilliar.add(makeFindSequence());
-                }
+                if((thing == RelicRecoveryVuMark.LEFT && red) || (thing == RelicRecoveryVuMark.RIGHT && !red)) skip = 2;
                 //if it's center, always increment
-                if(thing == RelicRecoveryVuMark.CENTER) {
-                    findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 200, true));
-                    findPilliar.add(makeFindSequence());
-                }
+                if(thing == RelicRecoveryVuMark.CENTER) skip = 1;
                 //telemetry
                 telemetry.addData("Mark", thing.toString());
             }
-            */
 
-            /*
+            AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
+
+            //TODO: GYRO STEERING WHILE DRIVING OFF PLATFORM
+            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 105.0f * mul, 700, true));
+            findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
+            findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
+            findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.9, 0.25, false));
+            findPilliar.add(new APDSFind(bot.getMotorVelocityShimArray(), BotHardware.ServoE.stick.servo, 0.9, 0.71, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), 35.0f, 250.0f,
+                    70, 8, skip, 110, this));
+
+            findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
-            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 500, true));
-            findPilliar.add(new AutoLib.GyroTurnStep(this, 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
-            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 100, true));
+            //findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 500, true));
+            findPilliar.add(new AutoLib.GyroTurnStep(this, 60f, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
+            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 225.0f, 425, true));
             findPilliar.add(bot.getDropStep());
             findPilliar.add(new AutoLib.RunUntilStopStep(
-                    new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 400, true),
+                    new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 150, true),
                     new AutoLib.LogTimeStep(this, "huh", 2.0)
             ));
-            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 150, true));
-            */
+            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 200, true));
 
-            //mSeq.add(whack);
+
+            mSeq.add(whack);
             mSeq.add(findPilliar);
 
             firstLoop = true;
