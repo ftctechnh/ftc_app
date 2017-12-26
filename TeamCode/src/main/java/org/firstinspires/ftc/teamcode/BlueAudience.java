@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 //All imports go here, anything you will use, like motors or servos.
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -12,6 +13,7 @@ import android.util.Log;
 //This makes the OpMode available in the Autonomouds group under the name 'Autonomous', in the Driver Station
 //@Disabled //AUSTIN REMEMBER TO REMOVE THIS -Austin from 4:55 P. M. on 11/7/17 // remembered
 @Autonomous(name = "BAutonomousA", group = "Autonomous")
+@Disabled
 //This is the basic class
 public class BlueAudience extends LinearOpMode {
     //Declare all of your motors, servos, sensors, etc.

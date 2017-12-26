@@ -8,12 +8,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Autonomous(name = "TestingAutoWithClass", group = "Autonomous")
 public class TestAuto extends LinearOpMode {
 	AutoDrive drive;
+	ForkLift ForkLift;
 	public void runOpMode() throws InterruptedException {
-		drive = new AutoDrive(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), hardwareMap, telemetry);
+		drive = new AutoDrive(hardwareMap, telemetry);
+		ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
 		drive.init();
+		ForkLift.moveUpDown(0.2, 100);
 		telemetry.addLine("Ready to start");
 		telemetry.update();
 		waitForStart();
+
 		drive.driveTranslateRotate(0,0.1,0,10); // Forward
 		Thread.sleep(2000);
 		drive.driveTranslateRotate(0,-0.1,0,10); // Backward

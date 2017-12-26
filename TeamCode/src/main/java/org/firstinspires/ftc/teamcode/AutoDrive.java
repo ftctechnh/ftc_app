@@ -21,6 +21,12 @@ public class AutoDrive {
     public double heading;
     private HardwareMap hwMap;
     private Telemetry telemetry;
+    public final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
+    public final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
+    public final double DRIVE_OFF_BALANCE_BAORD_SPEED = 0.4;
+    public final double TURN_TO_CRYPTOBOX_SPEED = 0.25;
+    public final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
+    public final double DEFAULT_
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hwMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
@@ -31,6 +37,18 @@ public class AutoDrive {
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
         this.hwMap = hwMap;
         this.imu = new REVGyro(this.hwMap.get(BNO055IMU.class, "imu"));
+        this.telemetry = telemetry;
+        setBRAKE();
+    }
+
+    public AutoDrive(HardwareMap hwMap, Telemetry telemetry) {
+        this.FrontLeft = hwMap.dcMotor.get("m1");
+        this.FrontRight = hwMap.dcMotor.get("m2");
+        this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
+        this.RearLeft = hwMap.dcMotor.get("m3");
+        this.RearRight = hwMap.dcMotor.get("m4");
+        this.RearRight.setDirection(DcMotor.Direction.REVERSE);
+        this.imu = new REVGyro(hwMap.get(BNO055IMU.class, "imu"));
         this.telemetry = telemetry;
         setBRAKE();
 
@@ -49,6 +67,8 @@ public class AutoDrive {
         driveSpeeds(fl, fr, rl, rr);
         while (!(isMotorAtTarget(FrontLeft, fl / high * clicks)) && (!(isMotorAtTarget(FrontRight, fr / high * clicks))) && (!(isMotorAtTarget(RearLeft, rl / high * clicks))) && (!(isMotorAtTarget(RearRight, rr / high * clicks)))) {
             telemetrizeEncoders();
+            telemetrizeSpeeds();
+            telemetry.update();
         }
         stopMotors();
     }
@@ -82,10 +102,11 @@ public class AutoDrive {
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RearLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RearRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RearLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
     public void stopMotors() {
@@ -162,7 +183,12 @@ public class AutoDrive {
         telemetry.addData("Second motor: ", FrontRight.getCurrentPosition());
         telemetry.addData("third motor: ", RearLeft.getCurrentPosition());
         telemetry.addData("fourth motor: ", RearRight.getCurrentPosition());
-        telemetry.update();
+    }
+    public void telemetrizeSpeeds() {
+        telemetry.addData("First motor: ", FrontLeft.getPower());
+        telemetry.addData("Second motor: ", FrontRight.getPower());
+        telemetry.addData("third motor: ", RearLeft.getPower());
+        telemetry.addData("fourth motor: ", RearRight.getPower());
     }
 
     public void setBRAKE() {

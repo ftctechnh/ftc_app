@@ -28,9 +28,7 @@ public class RelicClaw {
         setArmPosition(armInitPos);
         openClaw();
     }
-    public void closeClaw() {
-    	claw.setPosition(closePosition);
-    }
+    public void closeClaw() {claw.setPosition(closePosition);}
     public void openClaw() {
     	claw.setPosition(openPosition);
     }

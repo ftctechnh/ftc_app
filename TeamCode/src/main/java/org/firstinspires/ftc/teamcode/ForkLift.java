@@ -35,25 +35,15 @@ public class ForkLift {
         this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, Telemetry telemetry) {
-        this.rightClaw = rightClaw;
-        this.leftClaw = leftClaw;
-        this.motor = motor;
-        this.topButton = null;
-        this.bottomButton = null;
-        this.telemetry = telemetry;
-        resetEncoder();
-    }
-
-
     public void init() {
         openClaw();
-        //motor.setPower(-1);
-        //while (!bottomButton.isPressed()) {
-
-        //}
-        //motor.setPower(0);
-        //resetEncoder();
+        moveUntilDown(0.5);
+    }
+    public void autoInit() {
+        openClaw();
+        sleep(100);
+        moveUpDown(0.5, 200);
+        init();
     }
 
     public void closeClaw() {
@@ -101,8 +91,16 @@ public class ForkLift {
         } catch (InterruptedException e) {}
         stop();
     }
+    public void moveUntilDown(double speed) {
+        while (bottomButton.getState()) {
+            moveUpDown(-Math.abs(speed));
+        }
+        stop();
+    }
     public void stop() {
         moveUpDown(0);
     }
+
+    public void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
 
 }

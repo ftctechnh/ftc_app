@@ -34,6 +34,7 @@ public class JewelArm {
     }
 
     public String findJewel() {
+        down();
         while (cs.red() < 2 && cs.blue() < 2) {
 
         }
