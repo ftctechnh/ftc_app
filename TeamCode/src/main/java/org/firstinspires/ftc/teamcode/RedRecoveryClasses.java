@@ -47,13 +47,13 @@ public class RedRecoveryClasses extends LinearOpMode {
         }
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, 40);
+            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, 32);
+            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, 24);
+            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY - drive.CYRPTOBOX_COLUMNS_OFFSET);
 
         }
         drive.rightGyro(0, 0, drive.TURN_TO_CRYPTOBOX_SPEED, -90);

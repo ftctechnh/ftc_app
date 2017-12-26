@@ -26,7 +26,8 @@ public class AutoDrive {
     public final double DRIVE_OFF_BALANCE_BAORD_SPEED = 0.4;
     public final double TURN_TO_CRYPTOBOX_SPEED = 0.25;
     public final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
-    public final double DEFAULT_
+    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY = 32;
+    public final double CYRPTOBOX_COLUMNS_OFFSET = 6;
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hwMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
