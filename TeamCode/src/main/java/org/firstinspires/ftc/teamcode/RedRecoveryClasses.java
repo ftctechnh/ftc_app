@@ -43,7 +43,6 @@ public class RedRecoveryClasses extends LinearOpMode {
             drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
             jewelArm.up();
             drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-        } else {
         }
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
