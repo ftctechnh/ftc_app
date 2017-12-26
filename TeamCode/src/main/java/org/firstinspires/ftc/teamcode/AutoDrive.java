@@ -26,8 +26,8 @@ public class AutoDrive {
     public final double DRIVE_OFF_BALANCE_BAORD_SPEED = 0.4;
     public final double TURN_TO_CRYPTOBOX_SPEED = 0.25;
     public final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
-    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY = 32;
-    public final double CYRPTOBOX_COLUMNS_OFFSET = 6;
+    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY = 33;
+    public final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hwMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
@@ -169,6 +169,12 @@ public class AutoDrive {
     public void init() {
         imu.calibrate();
         heading = getHeading();
+    }
+    public void pushInBlock(ForkLift ForkLift) {
+        ForkLift.openClaw();
+        driveTranslateRotate(0,-0.25,0,4);
+        ForkLift.closeClaw();
+        driveTranslateRotate(0,0.25,0,6);
     }
 
     public double getHeading() {

@@ -54,10 +54,11 @@ public class RedRecoveryClasses extends LinearOpMode {
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
             drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY - drive.CYRPTOBOX_COLUMNS_OFFSET);
-
         }
-        drive.rightGyro(0, 0, drive.TURN_TO_CRYPTOBOX_SPEED, -90);
+        drive.rightGyro(0, 0, drive.TURN_TO_CRYPTOBOX_SPEED, -88);
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 5);
+        drive.pushInBlock(ForkLift);
+        drive.driveTranslateRotate(0,-.25, 0, 2);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

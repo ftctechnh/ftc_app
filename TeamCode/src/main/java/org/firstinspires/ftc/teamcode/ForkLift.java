@@ -41,7 +41,7 @@ public class ForkLift {
     }
     public void autoInit() {
         openClaw();
-        sleep(100);
+        sleep(500);
         moveUpDown(0.5, 200);
         init();
     }
