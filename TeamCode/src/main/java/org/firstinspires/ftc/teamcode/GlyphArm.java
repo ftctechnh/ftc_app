@@ -54,7 +54,7 @@ public class GlyphArm
 
         // Set all motors to zero power
         armMotor.setPower(0);
-
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -66,7 +66,7 @@ public class GlyphArm
         clawServo.setPosition(MID_SERVO);
     }
     public void armPos(int pos, double speed){
-        double newPos = (-pos/100.0*THROW);
+        double newPos = (pos/100.0*THROW);
         int i = (int) (newPos);
         //if (i > THROW){i = THROW;}
         //if (i < 0){i = 0;}
@@ -76,6 +76,7 @@ public class GlyphArm
         while (armMotor.isBusy());
         armMotor.setPower(0);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
     public void armPower (double power){
         armMotor.setPower(power);

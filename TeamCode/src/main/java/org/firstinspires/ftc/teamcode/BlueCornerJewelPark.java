@@ -80,7 +80,7 @@ public class BlueCornerJewelPark extends OpMode{
         switch(stateMachineFlow){
             case 0:
                 runtime.reset();
-                gilgearmesh.armPos(50,.6);
+                telemetry.addData("Arm",gilgearmesh.getArmPosition());
                 telemetry.addData("Color",jewelColor);
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
@@ -95,16 +95,22 @@ public class BlueCornerJewelPark extends OpMode{
                 if (1 < getRuntime() - time ) {
                     stateMachineFlow++;
                 }
+                telemetry.addData("Arm",gilgearmesh.getArmPosition());
+                telemetry.addData("Color",jewelColor);
+                telemetry.addData("Case",stateMachineFlow);
+                telemetry.update();
                 break;
 
             case 2:
                     if (sensArm.colorSens() == JewelColor.BLUE){
                         jewelColor = JewelColor.BLUE;
+                        telemetry.addData("Arm",gilgearmesh.getArmPosition());
                         telemetry.addData("Color",jewelColor);
                         telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
                     else if (sensArm.colorSens() == JewelColor.RED){
                         jewelColor = JewelColor.RED;
+                        telemetry.addData("Arm",gilgearmesh.getArmPosition());
                         telemetry.addData("Color",jewelColor);
                         telemetry.addData("Case",stateMachineFlow);
                         telemetry.update();}
@@ -133,11 +139,13 @@ public class BlueCornerJewelPark extends OpMode{
                 }
                 break;
             case 5:
+                gilgearmesh.armPos(50,.6);
                 robot.linearDrive(.25,-20);
                 stateMachineFlow++;
                 break;
             case 6:
-                robot.statTurn(.5,50);
+                gilgearmesh.armPos(0,.6);
+                robot.statTurn(.5,140);
                 stateMachineFlow++;
                 break;
             case 7:

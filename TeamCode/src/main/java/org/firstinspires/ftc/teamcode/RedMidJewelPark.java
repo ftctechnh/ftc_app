@@ -107,7 +107,7 @@ public class RedMidJewelPark extends OpMode{
                 stateMachineFlow++;
                 break;
             case 7:
-                robot.linearDrive(.25,-2);
+                robot.linearDrive(.25,2);
                 stateMachineFlow++;
                 break;
             case 8:

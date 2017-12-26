@@ -119,11 +119,11 @@ public class RedCornerJewelPark extends OpMode{
                 stateMachineFlow++;
                 break;
             case 6:
-                robot.statTurn(.5,90);
+                robot.statTurn(.5,45);
                 stateMachineFlow++;
                 break;
             case 7:
-                //robot.linearDrive(.25,-2);
+                robot.linearDrive(.25,2);
                 stateMachineFlow++;
                 break;
             case 8:

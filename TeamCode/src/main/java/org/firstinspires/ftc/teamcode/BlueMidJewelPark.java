@@ -48,7 +48,6 @@ public class BlueMidJewelPark extends OpMode{
         switch(stateMachineFlow){
             case 0:
                 runtime.reset();
-                gilgearmesh.armPos(50,.6);
                 telemetry.addData("Color",jewelColor);
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
@@ -100,15 +99,17 @@ public class BlueMidJewelPark extends OpMode{
                 }
                 break;
             case 5:
+                gilgearmesh.armPos(50,.6);
                 robot.linearDrive(.25,-20);
                 stateMachineFlow++;
                 break;
             case 6:
-                robot.statTurn(.5,90);
+                gilgearmesh.armPos(10,.6);
+                robot.statTurn(.5,-50);
                 stateMachineFlow++;
                 break;
             case 7:
-                robot.linearDrive(.25,-2);
+                robot.linearDrive(.25,5);
                 stateMachineFlow++;
                 break;
             case 8:
