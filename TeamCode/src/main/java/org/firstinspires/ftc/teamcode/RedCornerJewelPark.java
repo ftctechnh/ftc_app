@@ -66,58 +66,67 @@ public class RedCornerJewelPark extends OpMode{
                 telemetry.addData("Color",jewelColor);
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
+                time = getRuntime();
                 stateMachineFlow++;
                 break;
 
             case 1:
+                sensArm.wristPos(WristServoPosition.CENTER);
                 sensArm.armPos(ArmServoPosition.BOTTOM);
                 sensArm.colorLED(true);
-                time = getRuntime();
-                while (jewelColor == JewelColor.UNKNOWN && getRuntime() < time + 3){
-                    if (sensArm.colorSens() == JewelColor.BLUE){
-                        jewelColor = JewelColor.BLUE;
-                        telemetry.addData("Color",jewelColor);
-                        telemetry.addData("Case",stateMachineFlow);
-                        telemetry.update();}
-                    else if (sensArm.colorSens() == JewelColor.RED){
-                        jewelColor = JewelColor.RED;
-                        telemetry.addData("Color",jewelColor);
-                        telemetry.addData("Case",stateMachineFlow);
-                        telemetry.update();}
+                if (1 < getRuntime() - time ) {
+                    stateMachineFlow++;
                 }
-                sensArm.colorLED(false);
-                stateMachineFlow++;
                 break;
             case 2:
+                if (sensArm.colorSens() == JewelColor.BLUE){
+                    jewelColor = JewelColor.BLUE;
+                    telemetry.addData("Color",jewelColor);
+                    telemetry.addData("Case",stateMachineFlow);
+                    telemetry.update();}
+                else if (sensArm.colorSens() == JewelColor.RED){
+                    jewelColor = JewelColor.RED;
+                    telemetry.addData("Color",jewelColor);
+                    telemetry.addData("Case",stateMachineFlow);
+                    telemetry.update();}
+
+                stateMachineFlow++;
+                break;
+            case 3:
                 //knock off correct jewel
-                if (jewelColor == JewelColor.BLUE){sensArm.wristPos(WristServoPosition.LEFT);
-                    sensArm.wristPos(WristServoPosition.MID);
-                    sensArm.wristPos(WristServoPosition.CENTER);
-                    sensArm.armPos(ArmServoPosition.TOP);}
-                else if (jewelColor == JewelColor.RED){sensArm.wristPos(WristServoPosition.RIGHT);
-                    sensArm.armPos(ArmServoPosition.TOP);
-                    sensArm.wristPos(WristServoPosition.CENTER);}
+                if (jewelColor == JewelColor.BLUE){sensArm.wristPos(WristServoPosition.LEFT);}
+                else if (jewelColor == JewelColor.RED){sensArm.wristPos(WristServoPosition.RIGHT);}
                 else if (jewelColor == JewelColor.UNKNOWN){sensArm.armPos(ArmServoPosition.TOP);}
 
+                time = getRuntime();
+
                 telemetry.addData("Jewel Arm",sensArm.getArmPosition());
+                telemetry.addData("Jewel Wrist",sensArm.getWristPosition());
                 telemetry.addData("Case",stateMachineFlow);
                 telemetry.update();
                 stateMachineFlow++;
                 break;
-            case 3:
+            case 4:
+                if (2 < getRuntime() - time){
+                    sensArm.wristPos(WristServoPosition.CENTER);
+                    sensArm.armPos(ArmServoPosition.TOP);
+                    stateMachineFlow++;
+                }
+                break;
+            case 5:
                 gilgearmesh.armPos(25,.6);
                 robot.linearDrive(.25,20);
                 stateMachineFlow++;
                 break;
-            case 4:
+            case 6:
                 robot.statTurn(.5,90);
                 stateMachineFlow++;
                 break;
-            case 5:
+            case 7:
                 //robot.linearDrive(.25,-2);
                 stateMachineFlow++;
                 break;
-            case 6:
+            case 8:
                 //end?
                 break;
         }
