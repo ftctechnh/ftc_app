@@ -21,12 +21,12 @@ import java.io.IOException;
  *  set the transfer to the 'usable' name  (updateVariables method)
  *
  */
-public class MenuFileHandler {
+public class MenuFileHandler_Ana {
     private Gamepad gamepad;
 
 
     Telemetry telemetry;
-    public MenuFileHandler(Telemetry telemetry, Gamepad g){
+    public MenuFileHandler_Ana(Telemetry telemetry, Gamepad g){
         this.telemetry = telemetry;
         gamepad = g;
         }
@@ -97,17 +97,17 @@ public class MenuFileHandler {
         menuvaluetoken[2][3] = "Demo";
         mode = menuvalue[2];
 
-        menulabel[3] = "Drive1";
+        menulabel[3] = "test3";
         menuvalue[3] = 13;
         menulowerlimit[3] = 0;
         menuupperlimit[3] = 100;
 
-        menulabel[4] = "heading1";
-        menuvalue[4] = 0;
-        menulowerlimit[4] = -180;
-        menuupperlimit[4] = 180;
+        menulabel[4] = "test4";
+        menuvalue[4] = 14;
+        menulowerlimit[4] = 0;
+        menuupperlimit[4] = 100;
 
-        menulabel[5] = "Drive2";
+        menulabel[5] = "test5";
         menuvalue[5] = 15;
         menulowerlimit[5] = 0;
         menuupperlimit[5] = 100;

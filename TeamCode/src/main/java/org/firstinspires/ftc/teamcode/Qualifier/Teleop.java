@@ -10,7 +10,7 @@ import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
 
 
-@TeleOp(name = "zMoo", group = "zRick")  // @Autonomous(...) is the other common choice
+@TeleOp(name = "zMoo", group = "8045")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class Teleop extends OpMode {
 
@@ -67,9 +67,9 @@ public class Teleop extends OpMode {
 
         // glyph lift
         if (gamepad1.dpad_up) {
-            gromit.glyphTrain.lift_motor.setPower(.2);
+            gromit.glyphTrain.lift_motor.setPower(1.0);
         } else if (gamepad1.dpad_down) {
-            gromit.glyphTrain.lift_motor.setPower(-.2);
+            gromit.glyphTrain.lift_motor.setPower(-.5);
         } else {
             gromit.glyphTrain.lift_motor.setPower(0);
         }

@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.Qualifier;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
- * Created by jmgu3 on 11/7/2016.
- */
+
 public class JewelArm {
     public Servo jewelArmServo;
     public Servo jewelFlickerServo;
@@ -18,11 +16,11 @@ public class JewelArm {
 
         //jewelflickerCenter();
 
-        //leftIn();
     }
 
     public void jewelArmUp() {
-        jewelArmServo.setPosition(0.85);
+//        jewelArmServo.setPosition(0.75);
+        jewelArmServo.setPosition(0.75);
     }
 
     public void jewelArmDown() {

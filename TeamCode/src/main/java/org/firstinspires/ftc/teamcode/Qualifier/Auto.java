@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name = "Nathanauto", group = "zRick")  // @Autonomous(...) is the other common choice
+@Autonomous(name = "TheAuto", group = "8045")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class Auto extends LinearOpMode {
 
@@ -87,7 +87,8 @@ public class Auto extends LinearOpMode {
         gromit.driveTrain.resetencoders();
         sleep(20);
         gromit.driveTrain.runUsingEncoders();
-        gromit.driveTrain.mecanumDrive(.5,20, 0, -20);
+//        gromit.driveTrain.mecanumDrive(.5,20, 0, -20);
+        gromit.driveTrain.mecanumDrive(.5,20, 0, 0);
         //gromit.driveTrain.mecanumTurn(1,45);
         /*gromit.driveTrain.mecanumDrive(0.5, 20, 0,0);
         gromit.driveTrain.mecanumDrive(0.85, -10, 0,-90);
