@@ -78,9 +78,9 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.oldMoveLift(1);
                 sleep(250);
                 cipher = newRobot.getGlyphCipher();
-                colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
+                colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
-                telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getleftWingColorSens()));
+                telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getrightWingColorSens()));
                 telemetry.update();
                 switch (colorOfJewel)
                 {
@@ -113,7 +113,7 @@ public class FinalUniversalAudi extends LinearOpMode
                     default: newRobot.driveStraight_In(34.5f);
                         break;
                 }
-                newRobot.pivot_IMU(-80, .25); //86 is nearly perfect 90
+                /*newRobot.pivot_IMU(-80, .25);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(8,.1);
