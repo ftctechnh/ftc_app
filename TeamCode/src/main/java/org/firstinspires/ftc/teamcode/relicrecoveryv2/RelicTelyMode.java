@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by christinecarroll on 12/14/17.
+ * Created by TPR on 12/14/17.
  */
 
 public class RelicTelyMode  extends MeccyMode{
@@ -14,6 +14,7 @@ public class RelicTelyMode  extends MeccyMode{
     double leftX;
     double leftY;
     double rightX;
+    double direction;
     boolean halfPower;
     boolean quarterPower;
     //</editor-fold>
@@ -26,6 +27,7 @@ public class RelicTelyMode  extends MeccyMode{
         leftX = Math.abs(gamepad1.left_stick_x);
         leftY = Math.abs(gamepad1.left_stick_y);
         rightX = Math.abs(gamepad1.right_stick_x);
+        if (gamepad1.left_stick_y >= 0){direction = 1;} else{direction = -1;}
         halfPower = gamepad1.left_bumper;
         quarterPower = gamepad1.right_bumper;
         //</editor-fold>
@@ -55,7 +57,7 @@ public class RelicTelyMode  extends MeccyMode{
     private void switchMove(){
         if (!(rightX == 0)){
             DrivingAction drivingAction = DrivingAction.Turning;
-        }else if(leftX > leftY){
+        }else if(leftX > .15){
             DrivingAction drivingAction = DrivingAction.Strafing;
         }else{
             DrivingAction drivingAction = DrivingAction.Driving;
@@ -79,9 +81,9 @@ public class RelicTelyMode  extends MeccyMode{
                 break;
             case Strafing:
                 if (leftX > 0){
-                    strafeRight(leftX);
+                    strafeRight(leftX, leftY, direction);
                 }else{
-                    strafeLeft(leftX);
+                    strafeLeft(leftX, leftY, direction);
                 }
                 break;
         }
