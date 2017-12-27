@@ -244,7 +244,8 @@ public class NewRobotFinal
     {
         float hue = getHueValue(in_ColorSens);
         float value = getValueValue(in_ColorSens);
-        if (value < .1)
+
+        if (value < .06)
             return 'k';
         else if (hue < 71 || hue > 310)
             return 'r';
@@ -479,6 +480,7 @@ public class NewRobotFinal
             degrees += 360;
         }
         initIMU();
+        updateIMUValues();
 
         if (degrees < 0)
         {
