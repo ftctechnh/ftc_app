@@ -25,8 +25,8 @@ public class DriveTrain {
 
     private SpeedSetting speedMode;
     public final double WHEEL_DIAMETER = 4.0;
-    public final double GEAR_RATIO = 1.0;
-    public final double TICKS_REV = 1120;
+    public final double GEAR_RATIO = 32/24;
+    public final double TICKS_REV = 537.6;
     public final double COUNTS_PER_INCH = (TICKS_REV * GEAR_RATIO) / (WHEEL_DIAMETER * 3.1415);
     public static final double turn_THRESHOLD = 1.0;
     public static final double drive_THRESHOLD = 1.0;
@@ -345,7 +345,7 @@ public class DriveTrain {
         stopMotors();
     }*/
 
-    public void mecanumDrive(double speed, double distance, double robot_orientation, double drive_direction) {
+    public void mecanumDrive(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
         double max;
         double multiplier;
         int right_start;

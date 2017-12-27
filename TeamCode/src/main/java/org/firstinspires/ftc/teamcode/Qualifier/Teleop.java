@@ -80,6 +80,13 @@ public class Teleop extends OpMode {
         else if (gamepad1.y){
             gromit.relicArm.relicClawServo.setPosition(.6);
         }
+
+        if (gamepad1.right_bumper){
+            gromit.relicArm.relicClawServo.setPosition(.45);
+        }
+        else if (gamepad1.left_bumper){
+            gromit.relicArm.relicClawServo.setPosition(.55);
+        }
         //Set drive train direction
 //        if (gamepad1.a)
 //            gromit.driveTrain.setBack(DriveTrain.Color.GREEN);

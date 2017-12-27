@@ -83,7 +83,6 @@ public class GlyphTrain {
         }
     }
 
-    //changes the speed of the robot
 
 
 
