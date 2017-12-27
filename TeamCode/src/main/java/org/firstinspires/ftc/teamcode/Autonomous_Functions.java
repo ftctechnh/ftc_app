@@ -35,6 +35,8 @@ public class Autonomous_Functions {
     protected DcMotor R_L = null;
     protected DcMotor R_R = null;
 
+    public DcMotor clamp = null;
+
     protected Servo dropper = null;
 
     ColorSensor colorSensor = null;
@@ -72,6 +74,8 @@ public class Autonomous_Functions {
         R_R.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         dropper = hwMap.get(Servo.class, "dropper");
+
+        clamp = hwMap.get(DcMotor.class, "clamp");
 
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 

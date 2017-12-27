@@ -12,7 +12,11 @@
                     "endOffset": 187
                 },
                 "from": {
+<<<<<<< HEAD
                     "file": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\values-v11\\values-v11.xml",
+=======
+                    "file": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\values-v11\\values-v11.xml",
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,

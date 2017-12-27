@@ -1,5 +1,6 @@
 [
     {
+<<<<<<< HEAD
         "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
         "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xxhdpi-v4\\ic_launcher.png"
     },
@@ -10,5 +11,13 @@
     {
         "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
         "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xxhdpi-v4\\ic_launcher.png"
+=======
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\sugar\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xxhdpi-v4\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
+        "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xxhdpi-v4\\ic_launcher.png"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
     }
 ]

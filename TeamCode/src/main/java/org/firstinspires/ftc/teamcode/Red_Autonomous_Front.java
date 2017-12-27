@@ -142,7 +142,6 @@ public class Red_Autonomous_Front extends LinearOpMode {
         boolean found = false;
         RelicRecoveryVuMark vuMark = null;
 
-
         while (opModeIsActive() && !found) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark == RelicRecoveryVuMark.LEFT || vuMark == RelicRecoveryVuMark.RIGHT || vuMark == RelicRecoveryVuMark.CENTER) {
@@ -151,6 +150,7 @@ public class Red_Autonomous_Front extends LinearOpMode {
         }
 
         if (opModeIsActive() && found) {
+
             if (vuMark == RelicRecoveryVuMark.LEFT) {
 
                 telemetry.addData("vuMark", vuMark);
@@ -168,6 +168,11 @@ public class Red_Autonomous_Front extends LinearOpMode {
                     turnMotorUsingGyro(.1, 20, Constants.spinLeft);
                     af.stopMotor(500);
                     af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
+
 
                 }
 
@@ -178,9 +183,13 @@ public class Red_Autonomous_Front extends LinearOpMode {
                     turnMotorUsingGyro(.1, -20, Constants.spinRight);
                     af.stopMotor(500);
                     af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
                 }
-
-            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+            }
+            else if (vuMark == RelicRecoveryVuMark.CENTER) {
 
                 telemetry.addData("vuMark", vuMark);
                 telemetry.update();
@@ -197,6 +206,11 @@ public class Red_Autonomous_Front extends LinearOpMode {
                     turnMotorUsingGyro(.1, 20, Constants.spinLeft);
                     af.stopMotor(500);
                     af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
+
 
                 }
 
@@ -207,46 +221,55 @@ public class Red_Autonomous_Front extends LinearOpMode {
                     turnMotorUsingGyro(.1, -20, Constants.spinRight);
                     af.stopMotor(500);
                     af.moveMotorWithTime(.2, 2200, Constants.forward);
-
-                } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                    telemetry.addData("vuMark", vuMark);
-                    telemetry.update();
-
-                    af.dropper.setPosition(0);
-
-                    telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
-                    telemetry.update();
-
-                    if (jewelColor == "BLUE") {
-
-                        turnMotorUsingGyro(.1, -20, Constants.spinRight);
-                        af.dropper.setPosition(1);
-                        turnMotorUsingGyro(.1, 20, Constants.spinLeft);
-                        af.stopMotor(500);
-                        af.moveMotorWithTime(.2, 2200, Constants.forward);
-                    }
-
-                    if (jewelColor == "RED") {
-
-                        turnMotorUsingGyro(.1, 20, Constants.spinLeft);
-                        af.dropper.setPosition(1);
-                        turnMotorUsingGyro(.1, -20, Constants.spinRight);
-                        af.stopMotor(500);
-                        af.moveMotorWithTime(.2, 2200, Constants.forward);
-
-                    }
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
                 }
 
-                while (opModeIsActive()) {
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+
+                telemetry.addData("vuMark", vuMark);
+                telemetry.update();
+
+                af.dropper.setPosition(0);
+
+                telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
+                telemetry.update();
+
+                if (jewelColor == "BLUE") {
+
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
 
 
                 }
+
+                if (jewelColor == "RED") {
+
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.stopMotor(1000);
+                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
+                }
+            }
+
+            while (opModeIsActive()) {
+
+
             }
         }
     }
 }
-
-
-
-
-

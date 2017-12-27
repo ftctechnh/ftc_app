@@ -138,58 +138,64 @@ public class HolonomicTeleop extends OpMode {
             if (right_x < 0) dir = -1;
 
             robot.F_L.setPower(dir * limiter);
+<<<<<<< HEAD
             robot.F_R.setPower(dir * limiter);
             robot.R_R.setPower(dir * limiter);
             robot.R_L.setPower(dir * limiter);
+=======
+            robot.F_R.setPower(dir *limiter);
+            robot.R_R.setPower(dir *limiter);
+            robot.R_L.setPower(dir *limiter);
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
         }
 
         //DPAD DIRECTIONS
          if (gamepad1.dpad_up) {
             //DPAD FORWARD 0.5
-            robot.F_L.setPower(0.5);
-            robot.F_R.setPower(-0.5);
-            robot.R_L.setPower(0.5);
-            robot.R_R.setPower(-0.5);
+            robot.F_L.setPower(0.5*limiter);
+            robot.F_R.setPower(-0.5*limiter);
+            robot.R_L.setPower(0.5*limiter);
+            robot.R_R.setPower(-0.5*limiter);
         } else if (gamepad1.dpad_down) {
             //DPAD BACKWARD 0.5
-            robot.F_L.setPower(-0.5);
-            robot.F_R.setPower(0.5);
-            robot.R_L.setPower(-0.5);
-            robot.R_R.setPower(0.5);
+            robot.F_L.setPower(-0.5*limiter);
+            robot.F_R.setPower(0.5*limiter);
+            robot.R_L.setPower(-0.5*limiter);
+            robot.R_R.setPower(0.5*limiter);
         } else if (gamepad1.dpad_left) {
             //DPAD LEFT 0.5
-            robot.F_L.setPower(-0.5);
-            robot.F_R.setPower(-0.5);
-            robot.R_L.setPower(0.5);
-            robot.R_R.setPower(0.5);
+            robot.F_L.setPower(-0.5*limiter);
+            robot.F_R.setPower(-0.5*limiter);
+            robot.R_L.setPower(0.5*limiter);
+            robot.R_R.setPower(0.5*limiter);
         } else if (gamepad1.dpad_right) {
             //DPAD RIGHT 0.5
-            robot.F_L.setPower(0.5);
-            robot.F_R.setPower(0.5);
-            robot.R_L.setPower(-0.5);
-            robot.R_R.setPower(-0.5);
+            robot.F_L.setPower(0.5*limiter);
+            robot.F_R.setPower(0.5*limiter);
+            robot.R_L.setPower(-0.5*limiter);
+            robot.R_R.setPower(-0.5*limiter);
         } else if (gamepad1.dpad_up && gamepad1.dpad_right) {
             //DPAD NORTHEAST (RIGHT FRONT DIAGONAL)
-            robot.F_L.setPower(0.5);
-            robot.F_R.setPower(0);
-            robot.R_L.setPower(0);
-            robot.R_R.setPower(-0.5);
+            robot.F_L.setPower(0.5*limiter);
+            robot.F_R.setPower(0*limiter);
+            robot.R_L.setPower(0*limiter);
+            robot.R_R.setPower(-0.5*limiter);
         } else if (gamepad1.dpad_up && gamepad1.dpad_left) {
             //DPAD NORTHWEST (LEFT FRONT DIAGONAL
-            robot.F_L.setPower(0);
-            robot.F_R.setPower(-0.5);
-            robot.R_L.setPower(0.5);
-            robot.R_R.setPower(0);
+            robot.F_L.setPower(0*limiter);
+            robot.F_R.setPower(-0.5*limiter);
+            robot.R_L.setPower(0.5*limiter);
+            robot.R_R.setPower(0*limiter);
         } else if (gamepad1.dpad_down && gamepad1.dpad_right) {
-            robot.F_L.setPower(0);
-            robot.F_R.setPower(0.5);
-            robot.R_L.setPower(-0.5);
-            robot.R_R.setPower(0);
+            robot.F_L.setPower(0*limiter);
+            robot.F_R.setPower(0.5*limiter);
+            robot.R_L.setPower(-0.5*limiter);
+            robot.R_R.setPower(0*limiter);
         } else if (gamepad1.dpad_down && gamepad1.dpad_left) {
-            robot.F_L.setPower(-0.5);
-            robot.F_R.setPower(0);
-            robot.R_L.setPower(0);
-            robot.R_R.setPower(0.5);
+            robot.F_L.setPower(-0.5*limiter);
+            robot.F_R.setPower(0*limiter);
+            robot.R_L.setPower(0*limiter);
+            robot.R_R.setPower(0.5*limiter);
         }
 
     // TELEMETRY WITH INFO ABOUT POWER, AND VALUES OF (X,Y)
