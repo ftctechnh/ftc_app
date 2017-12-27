@@ -28,7 +28,7 @@ public class AutoDrive {
     public final double TURN_TO_CRYPTOBOX_SPEED = 0.25;
     public final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
     public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY = 32.5;
-    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR = 13;
+    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR = 15.5;
     public final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
     public final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
 
