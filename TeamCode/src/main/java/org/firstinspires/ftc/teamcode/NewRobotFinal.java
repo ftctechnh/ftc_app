@@ -480,6 +480,7 @@ public class NewRobotFinal
             degrees += 360;
         }
         initIMU();
+        updateIMUValues();
 
         if (degrees < 0)
         {
