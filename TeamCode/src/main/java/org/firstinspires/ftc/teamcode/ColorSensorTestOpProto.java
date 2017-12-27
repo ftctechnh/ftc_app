@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
 /**
  * Created by Jeremy on 9/20/2017.
  */
+@Disabled
 @TeleOp(name = "ColorSensorTest", group = "Test")
 public class ColorSensorTestOpProto extends OpMode
 {
