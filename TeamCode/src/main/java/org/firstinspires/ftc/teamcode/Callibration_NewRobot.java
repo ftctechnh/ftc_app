@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by Harshini and Satvik on 11/29/2017.
  */
-
+@Disabled
 @Autonomous(name = "Callibration", group = "Cal")
 public class Callibration_NewRobot extends LinearOpMode
 {

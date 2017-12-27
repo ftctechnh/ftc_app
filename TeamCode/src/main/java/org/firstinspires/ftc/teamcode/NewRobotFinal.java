@@ -4,14 +4,14 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -32,9 +32,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class NewRobotFinal
 {
-    private int liftLevels[] = {0, 769,1500,1538}; //Currently not levels or stops
-    private int liftDeadzone = 0;
-    private short currentLvl;
+    final int liftLevels[] = {0, 100, 769, 1500, 1538};
+    //Currently not levels or stops
+    private short currentLvl = 0;
+    private short liftTargetPos;
+    private short liftDir;
+    private final short UP_L = 1;
+    private final short DOWN_L = 2;
+    private final short STOP_L = 0;
 
     private ColorSensor floorColorSens;
     private ColorSensor rightWingColorSens ;
@@ -85,7 +90,8 @@ public class NewRobotFinal
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
-
+        leftDoorWall.scaleRange(.5f, .95f);
+        rightDoorWall.scaleRange(.05f, .5f);
         initEndGame(hardwareMap);
 
         zeroStuff();
@@ -96,11 +102,11 @@ public class NewRobotFinal
     public void initEndGame(HardwareMap hardwareMap)
     {
         tailRelease = hardwareMap.get(DcMotorImplEx.class, "tailRelease");
+        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         tailRelease.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
         tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
-       // tailRelease.setVelocity(3, AngleUnit.RADIANS);
-        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+       // tailRelease.setVelocity(0, AngleUnit.RADIANS);
 
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
         grabber = hardwareMap.get(Servo.class, "grabber");
@@ -108,6 +114,15 @@ public class NewRobotFinal
 
     public void initVuforia(HardwareMap hardwareMap)
     {
+        resetDriveEncoders();
+        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        driveRightOne.setVelocity(0, AngleUnit.RADIANS);
+        driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
+        driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
+        driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //Comment out if you don't want camera view on robo phone
@@ -129,17 +144,17 @@ public class NewRobotFinal
     {                       //basically sets up lift's step counts starting at its bottom position
         liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //liftMotor.setVelocity(0, AngleUnit.DEGREES);
 
         wingMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        wingMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
        // wingMotor.setVelocity(0, AngleUnit.DEGREES);
-
-        currentLvl = 0;
 
         //driveRightOne.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -152,7 +167,7 @@ public class NewRobotFinal
 //        resetDriveEncoders();
 
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
-        leftDoorWall.setDirection(Servo.Direction.REVERSE);
+        leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
 
     public void initIMU()
@@ -212,14 +227,28 @@ public class NewRobotFinal
         Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
         return hsvValues[0];
     }
+    public float getSatValue(ColorSensor in_ColorSens)
+    {
+        float hsvValues[] = {0F,0F,0F};
+        Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
+        return hsvValues[1];
+    }
+    public float getValueValue(ColorSensor in_ColorSens)
+    {
+        float hsvValues[] = {0F,0F,0F};
+        Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
+        return hsvValues[2];
+    }
 
     public char getColor(ColorSensor in_ColorSens)
     {
         float hue = getHueValue(in_ColorSens);
-
-        if (hue < 5 || hue > 330)
+        float value = getValueValue(in_ColorSens);
+        if (value < .1)
+            return 'k';
+        else if (hue < 71 || hue > 310)
             return 'r';
-        else if (hue > 219 && hue < 241)
+        else if (hue > 150 && hue < 271)
             return 'b';
         else
             return '?';
@@ -235,11 +264,13 @@ public class NewRobotFinal
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void driveStraight_In(float inches, double pow)
     {
-        float encTarget = neverrestEncCountsPerRev / wheelCircCm * inches;
+        float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         resetDriveEncoders();
@@ -251,7 +282,10 @@ public class NewRobotFinal
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
 
-            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            {
+                
+            }
         }
         else
         {
@@ -462,13 +496,9 @@ public class NewRobotFinal
         stopDriveMotors();
     }
 
-    public void moveLift(int adjLevels)
+    public void oldMoveLift(int adjLevels) //For the lift, I'll use levels or encoders points that stop
     {
-        moveLift(adjLevels, .66f);
-    }
-
-    public void moveLift(int adjLevels, float pow) //For the lift, I'll use levels or encoders points that stop
-    {
+        float pow = 1f;
         if (adjLevels + currentLvl < 0)
             return;
         else if (adjLevels + currentLvl > 3)
@@ -479,15 +509,75 @@ public class NewRobotFinal
         if (adjLevels > 0)
         {
             liftMotor.setPower(-Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl] - liftDeadzone){}
+            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl]){}
         }
         else
         {
             liftMotor.setPower(Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl] + liftDeadzone){}
+            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl]){}
         }
 
         liftMotor.setPower(0);
+    }
+
+    public void moveLift(int adjLevels)
+    {
+        moveLift(adjLevels, .66f);
+    }
+
+    public void moveLift(int adjLevels, float pow) //For the lift, I'll use levels or encoders points that stop
+    {
+        CalcLiftTarget(adjLevels);
+        while(liftDir != STOP_L)
+        {
+            AdjLiftDir();
+        }
+    }
+
+    public void CalcLiftTarget(int adjLevels) //For the lift, I'll use levels or encoders points that stop
+    {
+        final int liftLevels[] = {0, 100, 769, 1500, 1538};
+        final int liftDeadzone = 0;
+
+        if (adjLevels + currentLvl < 0)
+        {
+            currentLvl = 0;
+        } else if (adjLevels + currentLvl >= liftLevels.length)
+        {
+            currentLvl = (short) (liftLevels.length - 1);
+        } else
+        {
+            currentLvl += adjLevels;
+        }
+
+        //Calculate target
+        if (adjLevels > 0)
+        {
+            liftTargetPos = (short) (liftLevels[currentLvl] - liftDeadzone);
+            liftDir = UP_L;
+        } else
+        {
+            liftTargetPos = (short) (liftLevels[currentLvl] + liftDeadzone);
+            liftDir = DOWN_L;
+        }
+    }
+
+
+    public void AdjLiftDir()
+    {
+        if (liftDir == UP_L && -liftMotor.getCurrentPosition() < liftTargetPos)
+        {
+            liftMotor.setPower(-.7);
+        }
+        else if(liftDir == DOWN_L && -liftMotor.getCurrentPosition() > liftTargetPos)
+        {
+            liftMotor.setPower(.7);
+        }
+        else
+        {
+            liftDir = STOP_L;
+            liftMotor.setPower(0);
+        }
     }
 
     public void fineMoveLift(float y)
@@ -497,17 +587,21 @@ public class NewRobotFinal
 
     public void fineMoveLift(float y, float factor)
     {
+        
+
         if (y > .3)
         {
-            liftMotor.setPower(Math.abs(y * factor));
+	    liftDir = STOP_L;        
+	    liftMotor.setPower(Math.abs(y * factor));
         }
         else if (y < -.3)
         {
+	    liftDir = STOP_L;
             liftMotor.setPower(-Math.abs(factor * y));
         }
         else
         {
-            liftMotor.setPower(0);
+            AdjLiftDir();
         }
     }
 
@@ -529,60 +623,65 @@ public class NewRobotFinal
 
     public void moveWing(boolean moveDown)
     {
+        long endTime = System.currentTimeMillis() + 6000;
+
         if(moveDown)
         {
-            wingMotor.setPower(-.3);
-            while(wingMotor.getCurrentPosition() > -2500){}
+            wingMotor.setPower(-1f);
+            while(wingMotor.getCurrentPosition() > -2700)
+            {
+               // if (System.currentTimeMillis() > endTime)
+                 //   break;
+            }
         }
         else
         {
-            wingMotor.setPower(.3);
-            while(wingMotor.getCurrentPosition() < 0){}
+            wingMotor.setPower(1f);
+            while(wingMotor.getCurrentPosition() < 69)
+            {
+             //   if (System.currentTimeMillis() > endTime)
+                 //   break;
+            }
         }
-
         wingMotor.setPower(0);
     }
 
     public void openOrCloseDoor(boolean close)
     {
-        /**
-         * NOTE NEED TO CHECK THE VALUES
-         */
-        if (!close)
+        if (close)
         {
-            leftDoorWall.setPosition(.7f);
-            rightDoorWall.setPosition(.3f);
+            leftDoorWall.setPosition(.95f);
+            rightDoorWall.setPosition(.03f);
         }
         else
         {
-            leftDoorWall.setPosition(1f);
-            rightDoorWall.setPosition(0f);
+            leftDoorWall.setPosition(0f);
+            rightDoorWall.setPosition(0.6f);
         }
     }
 
-    public void fineAdjDoors(double in)
+    public void fineAdjDoors(double in) //Note: Check and see if it goes past 0 or 1
     {
         leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
         rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
     }
 
-    public void autoPark()
+    public void autoPark() //We saw the angle wasn't detecting it on the new robot.
+                            //Maybe x over z? Look at the data collected
     {
         double angle = anglePerpToGrav();
-        if (angle > 5)
-        {
+        if (angle > 5) {
             driveLeftOne.setPower(.5);
             driveRightOne.setPower(-.5);
-        }
-        else if (angle < -5)
-        {
+        } else if (angle < -5) {
             driveLeftOne.setPower(-.5);
             driveRightOne.setPower(.5);
-        }
-        else
-            return;
-    }
+        } else {
+            driveLeftOne.setPower(0);
+            driveRightOne.setPower(0);
 
+        }
+    }
     public void OpenCloseGrabber(boolean close)
     {
         if(close)
@@ -599,6 +698,7 @@ public class NewRobotFinal
     {
         grabber.setPosition(grabber.getPosition() + in);
     }
+
     public void fineAdjGrabberRotator(float in)
     {
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
@@ -677,4 +777,6 @@ public class NewRobotFinal
     public DcMotorImplEx getTailRelease(){return tailRelease;}
 
     public BNO055IMU getImu(){return imu;}
+
+    public short getLiftDir(){return liftDir;}
 }
