@@ -1,32 +1,37 @@
 package org.firstinspires.ftc.teamcode
 
+import com.qualcomm.hardware.bosch.BNO055IMU
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.util.Range
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
 import kotlin.math.*
 
-@TeleOp(name = "Basic Mecanum Drivetrain", group = "Rebound Development")
+@TeleOp(name = "Basic Mecanum Drivetrain")
 //@Disabled
 class BasicMecanumTeleOp : OpMode() {
 
-    private lateinit var lf : DcMotorEx
-    private lateinit var lb : DcMotorEx
-    private lateinit var rf : DcMotorEx
-    private lateinit var rb : DcMotorEx
+    private lateinit var lf : DcMotor
+    private lateinit var lb : DcMotor
+    private lateinit var rf : DcMotor
+    private lateinit var rb : DcMotor
+    private lateinit var imu : BNO055IMU
 
     /**
      * Sets up the motors in a 4-wheel-drive Mecanum drivetrain.
      */
     private fun initializeMotors() {
         // bring the motors in from the configuration
-        lf = hardwareMap.get(DcMotorEx::class.java, "lf")
-        lb = hardwareMap.get(DcMotorEx::class.java, "lb")
-        rf = hardwareMap.get(DcMotorEx::class.java, "rf")
-        rb = hardwareMap.get(DcMotorEx::class.java, "rb")
+        lf = hardwareMap.get(DcMotor::class.java, "lf")
+        lb = hardwareMap.get(DcMotor::class.java, "lb")
+        rf = hardwareMap.get(DcMotor::class.java, "rf")
+        rb = hardwareMap.get(DcMotor::class.java, "rb")
         // compensate for motor mounting
         lf.direction = DcMotorSimple.Direction.REVERSE
         lb.direction = DcMotorSimple.Direction.REVERSE
@@ -47,51 +52,54 @@ class BasicMecanumTeleOp : OpMode() {
     override fun init() {
         // motor setup
         initializeMotors()
-        if (lf.isMotorEnabled && lb.isMotorEnabled && rf.isMotorEnabled && rb.isMotorEnabled) {
+        if (lf.deviceName != null && lb.deviceName != null && rf.deviceName != null && rb.deviceName != null) {
             telemetry.addLine("Motors Initialized! Ready to drive.")
         } else {
             telemetry.addLine("ERROR: Motors not initialized successfully, shutting down.")
             telemetry.update()
             requestOpModeStop()
         }
+        // define IMU config
+        val parameters : BNO055IMU.Parameters = BNO055IMU.Parameters()
+        parameters.mode = BNO055IMU.SensorMode.IMU
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json" // see the calibration sample opmode
+        parameters.loggingEnabled = true
+        parameters.loggingTag = "IMU"
+        parameters.accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
+        // initialize the IMU
+        imu = hardwareMap.get(BNO055IMU::class.java, "imu")
+        // apply IMU configuration
+        imu.initialize(parameters)
+        // basic IMU tests
+        if (imu.isGyroCalibrated) {
+            telemetry.addLine("IMU Gyro is calibrated. AngleSnap should work properly!")
+        }
+        val orientation = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES)
+        telemetry.addData("Initial Orientation: ", orientation.firstAngle)
     }
 
     override fun loop() {
-        /*val gRotPower : Double = Math.pow(gamepad1.right_stick_x.toDouble(), 3.0)
-        val gLinearPower : Double = Math.pow(Math.sqrt(Math.pow(gamepad1.left_stick_x.toDouble(), 2.0) +
-                Math.pow(gamepad1.left_stick_y.toDouble(), 2.0)), 3.0)
-        val gLinearDirection : Double = Math.toDegrees(Math.atan2(-Math.pow(gamepad1.left_stick_y.toDouble(), 3.0),
-                Math.pow(gamepad1.right_stick_x.toDouble(), 3.0)));
-        val mecanumPowers : List<Double> = mecanumDrive2(gLinearPower, gLinearDirection, gRotPower)*/
-        when {
-            gamepad1.dpad_up -> simplisticMecanum(0.5F, 0.0F, 0.0F)
-            gamepad1.dpad_down -> simplisticMecanum(-0.5F, 0.0F, 0.0F)
-            gamepad1.dpad_right -> simplisticMecanum(0.0F, 0.5F, 0.0F)
-            gamepad1.dpad_left -> simplisticMecanum(0.0F, -0.5F, 0.0F)
-            gamepad1.right_trigger > 0 -> simplisticMecanum(0.0F, 0.0F, gamepad1.right_trigger/2.0F)
-            gamepad1.left_trigger > 0 -> simplisticMecanum(0.0F, 0.0F, -gamepad1.left_trigger/2.0F)
+        val orientation = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES)
+        if (gamepad1.x) {
+            if (orientation.firstAngle != 90F) {
+                inverseKinematicsMecanum(0.0, 0.0, 0.5)
+            }
+        } else {
+            val mecanumPowers : List<Double> = inverseKinematicsMecanum((-gamepad1.left_stick_x).toDouble(),
+                    gamepad1.left_stick_y.toDouble(), gamepad1.right_stick_x.toDouble())
+            telemetry.addData("LF: ", mecanumPowers[0])
+            lf.power = mecanumPowers[0]
+            telemetry.addData("RF: ", mecanumPowers[1])
+            rf.power = mecanumPowers[1]
+            telemetry.addData("LB: ", mecanumPowers[2])
+            lb.power = mecanumPowers[2]
+            telemetry.addData("RB: ", mecanumPowers[3])
+            rb.power = mecanumPowers[3]
         }
-        val mecanumPowers : List<Double> = simplisticMecanum(gamepad1)
-        telemetry.addData("LF: ", mecanumPowers[0])
-        lf.power = mecanumPowers[0]
-        telemetry.addData("RF: ", mecanumPowers[1])
-        rf.power = mecanumPowers[1]
-        telemetry.addData("LB: ", mecanumPowers[2])
-        lb.power = mecanumPowers[2]
-        telemetry.addData("RB: ", mecanumPowers[3])
-        rb.power = mecanumPowers[3]
+        telemetry.addData("Angle: ", orientation.firstAngle)
     }
-
-    /**
-     * Checks if a double is within a given range, and if it isn't, clamps it to that range.
-     * By the wa there MUST be a more Kotlin-like way of doing this, but it's almost midnight.
-     * @param n the number to clamp
-     * @param low the lowest that nunmber can be
-     * @param high the highest thaat number can be
-     * @return a double clamped to the given range
-     */
-    @Deprecated(message = "No longer in use", replaceWith = ReplaceWith("max(low, min(n, high))", "kotlin.math.max", "kotlin.math.min"))
-    private fun clampDouble (n : Double, low : Double, high : Double) : Double = max(low, min(n, high))
 
     /**
      * Creates the motor power numbers for a Mecanum drivetrain using vector adding.
@@ -117,7 +125,7 @@ class BasicMecanumTeleOp : OpMode() {
         // clip the motor values, beacause in some cases they do go over 1 or under -1
         // note: this is NOT a problem with the algorithm - it's just how vector adding works
 
-        return powers.map {x -> clampDouble(x, low = -1.0, high = 1.0)} // finally, return the numbers in a nice list
+        return powers.map {x -> max(a = -1.0, b = min(x, 1.0)) } // finally, return the numbers in a nice list
     }
 
     /**
@@ -128,6 +136,7 @@ class BasicMecanumTeleOp : OpMode() {
      * @see <a href="https://github.com/pmtischler/ftc_app">pmtischler/ftc-app</a>
      * @see <a href="http://thinktank.wpi.edu/resources/346/ControllingMecanumDrive.pdf">and this WPI paper on controlling Mecanum wheels</a>
      */
+    @Deprecated(message = "Not in use")
     private fun simplisticMecanum(gamepad: Gamepad) : List<Double> {
         val vD : Double = Math.sqrt(Math.pow(gamepad.left_stick_x.toDouble(), 2.0)
                 + Math.pow(gamepad.left_stick_y.toDouble(), 2.0))
@@ -144,7 +153,7 @@ class BasicMecanumTeleOp : OpMode() {
         Range.scale(rb, (-2).toDouble(), 2.0, (-1).toDouble(), 1.0)
         return listOf(lf, rf, lb, rb)
     }
-
+    @Deprecated(message = "Not in use")
     private fun simplisticMecanum(left_x: Float, left_y: Float, right_x: Float) : List<Double> {
         val vD : Double = Math.sqrt(Math.pow(left_x.toDouble(), 2.0)
                 + Math.pow(left_y.toDouble(), 2.0))
@@ -160,6 +169,40 @@ class BasicMecanumTeleOp : OpMode() {
         Range.scale(lb, (-2).toDouble(), 2.0, (-1).toDouble(), 1.0)
         Range.scale(rb, (-2).toDouble(), 2.0, (-1).toDouble(), 1.0)
         return listOf(lf, rf, lb, rb)
+    }
+    /*
+    private fun inverseKinematicsMecanum(gamepad: Gamepad) : List<Double> {
+        val vtX : Double = -gamepad.left_stick_x.toDouble()
+        val vtY : Double = gamepad.left_stick_y.toDouble()
+        val vR : Double =  gamepad.right_stick_x.toDouble()
+        // inverse kinematics to find wheel powers
+        val rf : Double = vtY - vtX + vR
+        telemetry.addData("Desired RF: ", rf)
+        val lf : Double = vtY + vtX - vR
+        telemetry.addData("Desired LF: ", lf)
+        val lb : Double = vtY - vtX - vR
+        telemetry.addData("Desired LB: ", lb)
+        val rb : Double = -(vtY + vtX + vR)
+        telemetry.addData("Desired RB: ", rb)
+        // find maximum for scale factor
+        // val maxWheelSpeed : Double = max(rf, max(lf, max(lb, rb)))
+        // return a scaled list
+        return listOf(lf, rf, lb, rb) //.map {x -> maxWheelSpeed/x}
+    }*/
+
+    private fun inverseKinematicsMecanum(vtX: Double, vtY: Double, vR: Double): List<Double> {
+        val rf : Double = vtY - vtX + vR
+        telemetry.addData("Desired RF: ", rf)
+        val lf : Double = vtY + vtX - vR
+        telemetry.addData("Desired LF: ", lf)
+        val lb : Double = vtY - vtX - vR
+        telemetry.addData("Desired LB: ", lb)
+        val rb : Double = -(vtY + vtX + vR)
+        telemetry.addData("Desired RB: ", rb)
+        // find maximum for scale factor
+        // val maxWheelSpeed : Double = max(rf, max(lf, max(lb, rb)))
+        // return a scaled list
+        return listOf(lf, rf, lb, rb) //.map {x -> maxWheelSpeed/x}
     }
 
     @Deprecated(level = DeprecationLevel.ERROR, message = "Not working")
@@ -187,6 +230,6 @@ class BasicMecanumTeleOp : OpMode() {
         val lb : Double = d2+processedRotPower
         val rb : Double = -d1+processedRotPower
         // and return them in a list, clipped to prevent errors
-        return listOf(lf, rf, lb, rb).map {x -> clampDouble(x, low = -1.0, high = 1.0)}
+        return listOf(lf, rf, lb, rb).map {x -> max(a = -1.0, b = min(x, 1.0)) }
     }
 }
