@@ -37,6 +37,8 @@ public class BeehiveVuforia {
 
             telemetry.update();
         }
+        telemetry.addData("Pictograph", "%s visible", vuMark);
+        telemetry.update();
         return vuMark;
     }
 }

@@ -28,9 +28,7 @@ public class JewelArm {
     }
 
     public void up() {
-        telemetrize("going up");
         setPostion(servoUpPos);
-        telemetrize("went up");
     }
 
     public String findJewel() {
@@ -43,19 +41,18 @@ public class JewelArm {
         for (int i = 0; i <= 5; i++) {
             if (cs.blue() > cs.red()) {
                 blue += 1;
-                telemetry.addData("saw blue", 1);
-                telemetry.update();
             } else if (cs.blue() < cs.red()) {
                 red += 1;
-                telemetry.addData("saw red", 1);
-                telemetry.update();
             }
         }
         if (red > blue) {
+            addLine("RED");
             return "Red";
         } else if (blue > red) {
+            addLine("BLUE");
             return "Blue";
         } else {
+            addLine("NOTHING");
             return "nothing";
         }
     }
@@ -71,8 +68,8 @@ public class JewelArm {
         servo.setPosition(postion);
         servo.setPosition(postion);
     }
-    public void telemetrize(String message) {
-        telemetry.addData(message, null);
+    private void addLine(String message) {
+        telemetry.addLine(message);
         telemetry.update();
     }
 }

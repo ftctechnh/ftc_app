@@ -23,11 +23,14 @@ public class AutoDrive {
     private Telemetry telemetry;
     public final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
     public final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
-    public final double DRIVE_OFF_BALANCE_BAORD_SPEED = 0.4;
+    public final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
+    public final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.6;
     public final double TURN_TO_CRYPTOBOX_SPEED = 0.25;
     public final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
-    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY = 33;
+    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY = 32.5;
+    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR = 13;
     public final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
+    public final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hwMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
@@ -67,26 +70,23 @@ public class AutoDrive {
         double high = findHigh(list);
         driveSpeeds(fl, fr, rl, rr);
         while (!(isMotorAtTarget(FrontLeft, fl / high * clicks)) && (!(isMotorAtTarget(FrontRight, fr / high * clicks))) && (!(isMotorAtTarget(RearLeft, rl / high * clicks))) && (!(isMotorAtTarget(RearRight, rr / high * clicks)))) {
-            telemetrizeEncoders();
-            telemetrizeSpeeds();
-            telemetry.update();
         }
         stopMotors();
     }
 
 
-    public void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
+    private void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
         FrontLeft.setPower(clip(flSpeed));
         FrontRight.setPower(clip(frSpeed));
         RearLeft.setPower(clip(rlSpeed));
         RearRight.setPower(clip(rrSpeed));
     }
 
-    public double clip(double value) {
+    private double clip(double value) {
         return Range.clip(value, -1, 1);
     }
 
-    public double findHigh(double[] nums) {
+    private double findHigh(double[] nums) {
         double high = 0;
         int i = 0;
         while (i < nums.length) {
@@ -98,7 +98,7 @@ public class AutoDrive {
         return high;
     }
 
-    public void resetEncoders() {
+    private void resetEncoders() {
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RearLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -114,11 +114,11 @@ public class AutoDrive {
         driveSpeeds(0, 0, 0, 0);
     }
 
-    public int getCurrentPosition(DcMotor motor) {
+    private int getCurrentPosition(DcMotor motor) {
         return motor.getCurrentPosition();
     }
 
-    public boolean isMotorAtTarget(DcMotor motor, double target) {
+    private boolean isMotorAtTarget(DcMotor motor, double target) {
         return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);
     }
 
@@ -134,12 +134,10 @@ public class AutoDrive {
             while(change <= 0) {
                 change = getHeading() - heading;
                 heading = getHeading();
-                telemetrizeGyro();
             }
         }
         while(heading >= target) {
             heading = getHeading();
-            telemetrizeGyro();
         }
         stopMotors();
     }
@@ -156,12 +154,10 @@ public class AutoDrive {
           while(change >= 0) {
             change = getHeading() - heading;
             heading = getHeading();
-            telemetrizeGyro();
           }
         }
         while(heading <= target) {
             heading = getHeading();
-            telemetrizeGyro();
         }
         stopMotors();
     }
@@ -172,33 +168,34 @@ public class AutoDrive {
     }
     public void pushInBlock(ForkLift ForkLift) {
         ForkLift.openClaw();
-        driveTranslateRotate(0,-0.25,0,4);
+        driveTranslateRotate(0, -DRIVE_INTO_CRYPTOBOX_SPEED,0,4);
+        ForkLift.moveUntilDown(0.75);
         ForkLift.closeClaw();
-        driveTranslateRotate(0,0.25,0,6);
+        driveTranslateRotate(0,DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
     }
 
     public double getHeading() {
         return imu.getHeading();
     }
 
-    public void telemetrizeGyro() {
+    private void telemetrizeGyro() {
         telemetry.addData("Current heading: ", getHeading());
         telemetry.update();
     }
-    public void telemetrizeEncoders() {
+    private void telemetrizeEncoders() {
         telemetry.addData("First motor: ", FrontLeft.getCurrentPosition());
         telemetry.addData("Second motor: ", FrontRight.getCurrentPosition());
         telemetry.addData("third motor: ", RearLeft.getCurrentPosition());
         telemetry.addData("fourth motor: ", RearRight.getCurrentPosition());
     }
-    public void telemetrizeSpeeds() {
+    private void telemetrizeSpeeds() {
         telemetry.addData("First motor: ", FrontLeft.getPower());
         telemetry.addData("Second motor: ", FrontRight.getPower());
         telemetry.addData("third motor: ", RearLeft.getPower());
         telemetry.addData("fourth motor: ", RearRight.getPower());
     }
 
-    public void setBRAKE() {
+    private void setBRAKE() {
         this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

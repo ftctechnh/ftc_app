@@ -8,8 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by BeehiveRobotics-3648 on 11/28/2017.
  */
-@Autonomous(name = "RAutonomousRC", group = "Autonomous")
-public class RedRecoveryClasses extends LinearOpMode {
+@Autonomous(name = "Red Far", group = "Autonomous")
+public class RedFar extends LinearOpMode {
     AutoDrive drive;
     JewelArm jewelArm;
     ForkLift ForkLift;
@@ -19,12 +19,14 @@ public class RedRecoveryClasses extends LinearOpMode {
     String color;
 
     public void runOpMode() throws InterruptedException {
+        telemetry.addLine("DO NOT PRESS PLAY YET");
+        telemetry.update();
         drive = new AutoDrive(hardwareMap, telemetry);
         drive.init(); //Calibrates gyro
         jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
         ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
         RelicClaw = new RelicClaw(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"), telemetry);
-        telemetry.addLine("ready to start");
+        telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,22 +45,21 @@ public class RedRecoveryClasses extends LinearOpMode {
             drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
             jewelArm.up();
             drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-        } else {
         }
         sleep(500);
+        drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  0, 24);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY);
+            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BAORD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
-        drive.rightGyro(0, 0, drive.TURN_TO_CRYPTOBOX_SPEED, -88);
-        drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 5);
+        drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 3);
         drive.pushInBlock(ForkLift);
-        drive.driveTranslateRotate(0,-.25, 0, 2);
+        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

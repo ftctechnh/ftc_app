@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-/**
- * Created by Aus on 11/7/2017.
- */
+
+  Created by Aus on 11/7/2017.
 
 //ok so this is the program that confirmed that the color sensors don't actually suck. this is just a basic program so don't use it until i do some things to make it so it doesn't crash the robot controller it stops
 
@@ -51,3 +50,4 @@ public class colortest extends RedRecovery {
     }
 
 }
+*/

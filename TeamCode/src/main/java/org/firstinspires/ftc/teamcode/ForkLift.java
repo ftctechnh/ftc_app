@@ -73,7 +73,7 @@ public class ForkLift {
         telemetry.update();
     }
 
-    public void setClawPosition(double position) {
+    private void setClawPosition(double position) {
         rightClaw.setPosition(position);
         rightClaw.setPosition(position);
         leftClaw.setPosition(position);
@@ -101,6 +101,6 @@ public class ForkLift {
         moveUpDown(0);
     }
 
-    public void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
+    private void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
 
 }
