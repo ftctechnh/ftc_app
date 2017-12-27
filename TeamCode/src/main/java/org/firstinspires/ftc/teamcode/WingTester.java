@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by JeremyYao on 12/20/2017.
  */
+@Disabled
 @TeleOp(name = "WingTesterTele", group = "Test")
 public class WingTester extends OpMode
 {

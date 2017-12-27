@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by Sahithi on 12/8/17.
  */
+@Disabled
 @Autonomous(name = "FinalBlueAutoRef",group = "Auto")
 public class FinalBlueAutoRef extends LinearOpMode
 {
