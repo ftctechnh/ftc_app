@@ -59,10 +59,15 @@ public class Team7518Teleop extends LinearOpMode{
 
                         //green wheels
 
-                        absoluteLeft.setPower(gamepad1.right_trigger);
-                        absoluteRight.setPower(-gamepad1.right_trigger);
-                        absoluteRight.setPower(gamepad1.left_trigger);
-                        absoluteLeft.setPower(-gamepad1.left_trigger);
+                        if (gamepad1.left_trigger>0){
+                            absoluteLeft.setPower(gamepad1.left_trigger);
+                            absoluteRight.setPower(-gamepad1.left_trigger);
+                        }//end if
+                        else if (gamepad1.right_trigger>0){
+                            absoluteLeft.setPower(-gamepad1.right_trigger);
+                            absoluteRight.setPower(gamepad1.right_trigger);
+                        }//end else if
+           
 
                         //foldable doors
                           while (gamepad1.a){
