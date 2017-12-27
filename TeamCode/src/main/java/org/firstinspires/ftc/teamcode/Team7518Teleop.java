@@ -42,23 +42,20 @@ public class Team7518Teleop extends LinearOpMode{
                         //Include commands to run on controller presses here
 
                         //Mecanum Drive
-                        double h = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-                        double robotAngle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
+                        double h = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+                        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
 
-                        final double leftFrontPower = h * Math.cos(robotAngle) + gamepad1.left_stick_y;
-                        final double rightFrontPower = h * Math.sin(robotAngle) - gamepad1.left_stick_y;
-                        final double leftRearPower = h * Math.sin(robotAngle) + gamepad1.left_stick_y;
-                        final double rightRearPower = h * Math.cos(robotAngle) - gamepad1.left_stick_y;
+                        final double leftFrontPower = h * Math.cos(robotAngle) + gamepad1.right_stick_x;
+                        final double rightFrontPower = h * Math.sin(robotAngle) - gamepad1.right_stick_x;
+                        final double leftRearPower = h * Math.sin(robotAngle) + gamepad1.right_stick_x;
+                        final double rightRearPower = h * Math.cos(robotAngle) - gamepad1.right_stick_x;
 
                         leftFront.setPower(leftFrontPower);
-                        rightFront.setPower(rightFrontPower);
+                        rightFront.setPower(-rightFrontPower);
                         leftRear.setPower(leftRearPower);
-                        rightRear.setPower(rightRearPower);
-
-                        //write code above idel
+                        rightRear.setPower(-rightRearPower);
 
                         //green wheels
-
                         if (gamepad1.left_trigger>0){
                             absoluteLeft.setPower(gamepad1.left_trigger);
                             absoluteRight.setPower(-gamepad1.left_trigger);
@@ -67,6 +64,10 @@ public class Team7518Teleop extends LinearOpMode{
                             absoluteLeft.setPower(-gamepad1.right_trigger);
                             absoluteRight.setPower(gamepad1.right_trigger);
                         }//end else if
+                        else{
+                            absoluteLeft.setPower(0);
+                            absoluteRight.setPower(0);
+                        }//end else
            
 
                         //foldable doors
