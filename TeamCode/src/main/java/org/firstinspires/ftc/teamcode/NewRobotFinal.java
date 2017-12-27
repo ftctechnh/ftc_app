@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -226,12 +227,26 @@ public class NewRobotFinal
         Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
         return hsvValues[0];
     }
+    public float getSatValue(ColorSensor in_ColorSens)
+    {
+        float hsvValues[] = {0F,0F,0F};
+        Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
+        return hsvValues[1];
+    }
+    public float getValueValue(ColorSensor in_ColorSens)
+    {
+        float hsvValues[] = {0F,0F,0F};
+        Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
+        return hsvValues[2];
+    }
 
     public char getColor(ColorSensor in_ColorSens)
     {
         float hue = getHueValue(in_ColorSens);
-
-        if (hue < 71 || hue > 310)
+        float value = getValueValue(in_ColorSens);
+        if (value < .1)
+            return 'k';
+        else if (hue < 71 || hue > 310)
             return 'r';
         else if (hue > 150 && hue < 271)
             return 'b';
@@ -267,7 +282,10 @@ public class NewRobotFinal
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
 
-            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            {
+                
+            }
         }
         else
         {
@@ -480,7 +498,7 @@ public class NewRobotFinal
 
     public void oldMoveLift(int adjLevels) //For the lift, I'll use levels or encoders points that stop
     {
-        float pow = .75f;
+        float pow = 1f;
         if (adjLevels + currentLvl < 0)
             return;
         else if (adjLevels + currentLvl > 3)
@@ -605,17 +623,26 @@ public class NewRobotFinal
 
     public void moveWing(boolean moveDown)
     {
+        long endTime = System.currentTimeMillis() + 6000;
+
         if(moveDown)
         {
-            wingMotor.setPower(-.9f);
-            while(wingMotor.getCurrentPosition() > -2700){}
+            wingMotor.setPower(-1f);
+            while(wingMotor.getCurrentPosition() > -2700)
+            {
+               // if (System.currentTimeMillis() > endTime)
+                 //   break;
+            }
         }
         else
         {
-            wingMotor.setPower(.9f);
-            while(wingMotor.getCurrentPosition() < 0){}
+            wingMotor.setPower(1f);
+            while(wingMotor.getCurrentPosition() < 69)
+            {
+             //   if (System.currentTimeMillis() > endTime)
+                 //   break;
+            }
         }
-
         wingMotor.setPower(0);
     }
 

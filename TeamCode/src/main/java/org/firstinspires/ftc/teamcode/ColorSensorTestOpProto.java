@@ -15,11 +15,11 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
  * Created by Jeremy on 9/20/2017.
  */
 @TeleOp(name = "ColorSensorTest", group = "Test")
-public class ColorSensorTestOp extends OpMode
+public class ColorSensorTestOpProto extends OpMode
 {
     //  private OmniDriveBot robot = new OmniDriveBot();
     //ColorSensor sensorRGB;
-    ColorSensor leftWingColorSens;
+    //ColorSensor leftWingColorSens;
     ColorSensor rightWingColorSens;
     //DeviceInterfaceModule cdim;
     boolean bPrevState;
@@ -27,7 +27,7 @@ public class ColorSensorTestOp extends OpMode
     boolean bLedOn;
     float hsvValues[] = {0F,0F,0F};
     float hsvValues_Ada[] = {0F,0F,0F};
-    NewRobotFinal newRobot;
+  //  NewRobotFinal newRobot;
 
     // final float values[] = hsvValues;
 
@@ -39,7 +39,7 @@ public class ColorSensorTestOp extends OpMode
     {
         gamepad2.setJoystickDeadzone(.3f);//attachments
         gamepad1.setJoystickDeadzone(.3f);//driver
-        newRobot = new NewRobotFinal(hardwareMap);
+        //newRobot = new NewRobotFinal(hardwareMap);
 //        robot.init(hardwareMap);
 
         // get a reference to the RelativeLayout so we can change the background
@@ -62,7 +62,7 @@ public class ColorSensorTestOp extends OpMode
         //  cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
         // get a reference to our ColorSensor object.
-        leftWingColorSens = hardwareMap.colorSensor.get("leftWingColorSens");
+        //leftWingColorSens = hardwareMap.colorSensor.get("leftWingColorSens");
         rightWingColorSens = hardwareMap.colorSensor.get("rightWingColorSens");
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         //    cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
@@ -78,30 +78,25 @@ public class ColorSensorTestOp extends OpMode
         // bPrevState = bCurrState;
 
         // convert the RGB values to HSV values.
-        Color.RGBToHSV((leftWingColorSens.red() * 255) / 800, (leftWingColorSens.green() * 255) / 800, (leftWingColorSens.blue() * 255) / 800, hsvValues);
+        //Color.RGBToHSV((leftWingColorSens.red() * 255) / 800, (leftWingColorSens.green() * 255) / 800, (leftWingColorSens.blue() * 255) / 800, hsvValues);
         Color.RGBToHSV((rightWingColorSens.red() * 255) / 800, (rightWingColorSens.green() * 255) / 800, (rightWingColorSens.blue() * 255) / 800, hsvValues_Ada);
 
         // send the info back to driver station using telemetry function.
 
         telemetry.addData("right" , null);
-        telemetry.addData("RWC = ", newRobot.getColor(rightWingColorSens));
         telemetry.addData("Hue ", hsvValues_Ada[0]);
         telemetry.addData("Saturation ", hsvValues_Ada[1]);
         telemetry.addData("Value ", hsvValues_Ada[2]);
-
-        telemetry.addData("left" , null);
-        telemetry.addData("LWC = ", newRobot.getColor(leftWingColorSens));
-        telemetry.addData("Hue " ,hsvValues[0]);
-        telemetry.addData("Saturation ", hsvValues[1]);
-        telemetry.addData("Value ", hsvValues[2]);
+        //telemetry.addData("Color ", newRobot.getColor(rightWingColorSens) + "");
 
         // telemetry.addData("Hue= ", hsvValues[0]);
         telemetry.update();
-        if (gamepad1.y)
+      /*  if (gamepad1.y)
             newRobot.getWingMotor().setPower(.9f);//lift wing
         else if (gamepad1.b)
             newRobot.getWingMotor().setPower(-.9f);
         else
             newRobot.getWingMotor().setPower(0f);
+            */
     }
 }
