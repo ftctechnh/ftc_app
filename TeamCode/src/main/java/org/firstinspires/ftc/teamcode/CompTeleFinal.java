@@ -67,7 +67,6 @@ public class CompTeleFinal extends OpMode
         if(gamepad1.a)
         {
             newRobot.autoPark();
-            telemetry.addData("grav perp to gravity", newRobot.anglePerpToGrav());
         }
         else
         {

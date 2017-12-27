@@ -227,12 +227,26 @@ public class NewRobotFinal
         Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
         return hsvValues[0];
     }
+    public float getSatValue(ColorSensor in_ColorSens)
+    {
+        float hsvValues[] = {0F,0F,0F};
+        Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
+        return hsvValues[1];
+    }
+    public float getValueValue(ColorSensor in_ColorSens)
+    {
+        float hsvValues[] = {0F,0F,0F};
+        Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
+        return hsvValues[2];
+    }
 
     public char getColor(ColorSensor in_ColorSens)
     {
         float hue = getHueValue(in_ColorSens);
-
-        if (hue < 71 || hue > 310)
+        float value = getValueValue(in_ColorSens);
+        if (value < .1)
+            return 'k';
+        else if (hue < 71 || hue > 310)
             return 'r';
         else if (hue > 150 && hue < 271)
             return 'b';

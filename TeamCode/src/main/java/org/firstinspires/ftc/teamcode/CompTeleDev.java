@@ -99,6 +99,8 @@ public class CompTeleDev extends OpMode
          *DRIVE CONTROLS
          * GAMEPAD 1
          */
+        telemetry.addData("grav perp to gravity", newRobot.anglePerpToGrav());
+
         if(gamepad1.a)
         {
             newRobot.autoPark();
