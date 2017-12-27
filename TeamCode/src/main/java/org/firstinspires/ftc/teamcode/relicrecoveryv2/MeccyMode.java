@@ -33,6 +33,10 @@ public abstract class MeccyMode extends LinearOpMode{
                 rightBackMotor.isBusy() &&
                 rightFrontMotor.isBusy();
     }
+    //
+    public void waitForStartify(){
+        waitForStart();
+    }
     //</editor-fold>
     //
     //<editor-fold desc="Turning">
