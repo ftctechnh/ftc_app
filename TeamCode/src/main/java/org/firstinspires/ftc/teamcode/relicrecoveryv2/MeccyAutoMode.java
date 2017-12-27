@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * Created by christinecarroll on 12/14/17.
+ * Created by Pilt on 12/14/17.
  */
 
 public abstract class MeccyAutoMode extends MeccyMode{

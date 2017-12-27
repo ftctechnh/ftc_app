@@ -5,26 +5,33 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * Created by christinecarroll on 12/14/17.
+ * Created by  on 12/14/17.
  */
 
 public abstract class MeccyMode extends LinearOpMode{
-    //<editor-fold desc="Yay"
+    //<editor-fold desc="Yay">
     abstract public void runOpMode();
     //
     DcMotor leftFrontMotor;
     DcMotor rightFrontMotor;
     DcMotor leftBackMotor;
     DcMotor rightBackMotor;
-
+    //
     public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
         leftBackMotor = hardwareMap.dcMotor.get(leftFront);
         rightBackMotor = hardwareMap.dcMotor.get(rightFront);
         leftFrontMotor = hardwareMap.dcMotor.get(leftBack);
         rightFrontMotor = hardwareMap.dcMotor.get(rightBack);
-
+        //
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+    //
+    public boolean isMoving(){
+        return leftBackMotor.isBusy() &&
+                leftFrontMotor.isBusy() &&
+                rightBackMotor.isBusy() &&
+                rightFrontMotor.isBusy();
     }
     //</editor-fold>
     //

@@ -242,20 +242,5 @@ public class JeffsRealRun extends RelicTelyMode {
         return jeffThePengwin.touchy.getState();
     }
 
-    private double getPathagorus(double a, double b){//Define Pythagorean Theorem
-        double c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-        return c;
-
-        //Finding the joystick position using pythagorean theorem (a2 + b2 = c2)
-    }
-    //
-    private void smartify(){//calibrate up position
-        pengwinArm.upMotor.setPower(.4);//opposite of touchy
-        while(jeffThePengwin.up.getState() && opModeIsActive()){
-            //TODO Wookie
-        }
-        pengwinArm.upMotor.setPower(0);//stop the motor
-        pengwinArm.upPosition = pengwinArm.upMotor.getCurrentPosition();
-    }
 
 }
