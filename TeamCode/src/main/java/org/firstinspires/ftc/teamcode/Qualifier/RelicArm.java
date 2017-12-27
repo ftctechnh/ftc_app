@@ -8,15 +8,18 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 public class RelicArm {
-    public Servo relicArmServo;
+    public Servo relicElbowServo;
     public Servo relicClawServo;
 
 
     public void init(HardwareMap hardwareMap) {
         relicClawServo = hardwareMap.servo.get("relic_claw");
-
+        relicElbowServo = hardwareMap.servo.get("relic_elbow");
         //jawOpen();
         //jawClosed();
+
+        relicClawServo.setPosition(0.4);
+        relicElbowServo.setPosition(0.5);
     }
 
     /*public void jawOpen() {
