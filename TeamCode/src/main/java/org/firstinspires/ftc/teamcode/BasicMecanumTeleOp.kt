@@ -1,106 +1,55 @@
 package org.firstinspires.ftc.teamcode
 
+import android.media.MediaPlayer
 import com.qualcomm.hardware.bosch.BNO055IMU
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.Gamepad
-import com.qualcomm.robotcore.util.Range
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference
-import kotlin.math.*
 
 @TeleOp(name = "Basic Mecanum Drivetrain")
 //@Disabled
 class BasicMecanumTeleOp : OpMode() {
 
-    private lateinit var lf : DcMotor
-    private lateinit var lb : DcMotor
-    private lateinit var rf : DcMotor
-    private lateinit var rb : DcMotor
-    private lateinit var imu : BNO055IMU
-
     /**
      * Sets up the motors in a 4-wheel-drive Mecanum drivetrain.
      */
-    private fun initializeMotors() {
-        // bring the motors in from the configuration
-        lf = hardwareMap.get(DcMotor::class.java, "lf")
-        lb = hardwareMap.get(DcMotor::class.java, "lb")
-        rf = hardwareMap.get(DcMotor::class.java, "rf")
-        rb = hardwareMap.get(DcMotor::class.java, "rb")
-        // compensate for motor mounting
-        lf.direction = DcMotorSimple.Direction.REVERSE
-        lb.direction = DcMotorSimple.Direction.REVERSE
-        rf.direction = DcMotorSimple.Direction.FORWARD
-        rb.direction = DcMotorSimple.Direction.FORWARD
-        // make the motors stop hard
-        lf.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        lb.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        rf.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        rb.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        // run the motors using encoders
-        lf.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        lb.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        rf.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        rb.mode = DcMotor.RunMode.RUN_USING_ENCODER
-    }
+    private lateinit var drivetrain: ReboundDriver
+    lateinit var mediaPlayer: MediaPlayer
 
     override fun init() {
-        // motor setup
-        initializeMotors()
-        if (lf.deviceName != null && lb.deviceName != null && rf.deviceName != null && rb.deviceName != null) {
-            telemetry.addLine("Motors Initialized! Ready to drive.")
-        } else {
-            telemetry.addLine("ERROR: Motors not initialized successfully, shutting down.")
-            telemetry.update()
-            requestOpModeStop()
-        }
-        // define IMU config
-        val parameters : BNO055IMU.Parameters = BNO055IMU.Parameters()
-        parameters.mode = BNO055IMU.SensorMode.IMU
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json" // see the calibration sample opmode
-        parameters.loggingEnabled = true
-        parameters.loggingTag = "IMU"
-        parameters.accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
-        // initialize the IMU
-        imu = hardwareMap.get(BNO055IMU::class.java, "imu")
-        // apply IMU configuration
-        imu.initialize(parameters)
-        // basic IMU tests
-        if (imu.isGyroCalibrated) {
-            telemetry.addLine("IMU Gyro is calibrated. AngleSnap should work properly!")
-        }
-        val orientation = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES)
-        telemetry.addData("Initial Orientation: ", orientation.firstAngle)
+        // setup
+        val lf : DcMotor = hardwareMap.dcMotor.get("lf")
+        val lb : DcMotor = hardwareMap.dcMotor.get("lb")
+        val rf : DcMotor = hardwareMap.dcMotor.get("rf")
+        val rb : DcMotor = hardwareMap.dcMotor.get("rb")
+        val imu : BNO055IMU = hardwareMap.get(BNO055IMU::class.java, "imu")
+        drivetrain = ReboundDriver(telemetry, hardwareMap, lf, lb, rf, rb, imu)
+        drivetrain.initialize()
+        telemetry.addData("Initial Orientation: ", drivetrain.getRobotOrientation())
+        mediaPlayer = MediaPlayer.create(hardwareMap.appContext, R.raw.up_and_away)
     }
 
     override fun loop() {
-        val orientation = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES)
-        if (gamepad1.x) {
-            if (orientation.firstAngle != 90F) {
-                inverseKinematicsMecanum(0.0, 0.0, 0.5)
-            }
-        } else {
-            val mecanumPowers : List<Double> = inverseKinematicsMecanum((-gamepad1.left_stick_x).toDouble(),
-                    gamepad1.left_stick_y.toDouble(), gamepad1.right_stick_x.toDouble())
-            telemetry.addData("LF: ", mecanumPowers[0])
-            lf.power = mecanumPowers[0]
-            telemetry.addData("RF: ", mecanumPowers[1])
-            rf.power = mecanumPowers[1]
-            telemetry.addData("LB: ", mecanumPowers[2])
-            lb.power = mecanumPowers[2]
-            telemetry.addData("RB: ", mecanumPowers[3])
-            rb.power = mecanumPowers[3]
+        val orientation = drivetrain.getRobotOrientation()
+        telemetry.addData("Orientation: ", orientation)
+        when {
+            gamepad1.x -> turnTo(90)
+            //gamepad1.a -> mediaPlayer.start()
+            gamepad1.left_trigger > 0 -> drivetrain.simplisticMecanum((-gamepad1.left_trigger).toDouble(), 0.0, 0.0)
+            gamepad1.right_trigger > 0 -> drivetrain.simplisticMecanum(gamepad1.right_trigger.toDouble(), 0.0, 0.0)
+            else -> drivetrain.simplisticMecanum(Math.pow(((-gamepad1.left_stick_x).toDouble()), 3.0),
+                    Math.pow(gamepad1.left_stick_y.toDouble(), 3.0), Math.pow(gamepad1.right_stick_x.toDouble(), 3.0))
         }
-        telemetry.addData("Angle: ", orientation.firstAngle)
+        telemetry.addData("Position: ", drivetrain.getEncoderPosition())
     }
 
+    private fun turnTo(degrees: Int) {
+        while (drivetrain.getRobotOrientation().toInt() < degrees) {
+            drivetrain.inverseKinematicsMecanum(0.0, 0.0, 0.1)
+        }
+        drivetrain.inverseKinematicsMecanum(0.0, 0.0, 0.0)
+    }
+/*
     /**
      * Creates the motor power numbers for a Mecanum drivetrain using vector adding.
      * @param x1 generally the x axis of the left joystick
@@ -231,5 +180,5 @@ class BasicMecanumTeleOp : OpMode() {
         val rb : Double = -d1+processedRotPower
         // and return them in a list, clipped to prevent errors
         return listOf(lf, rf, lb, rb).map {x -> max(a = -1.0, b = min(x, 1.0)) }
-    }
+    }*/
 }
