@@ -22,12 +22,7 @@ public abstract class MeccyMode extends LinearOpMode{
     DcMotor leftBackMotor;
     DcMotor rightBackMotor;
     //
-    public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
-        leftBackMotor = hardwareMap.dcMotor.get(leftFront);
-        rightBackMotor = hardwareMap.dcMotor.get(rightFront);
-        leftFrontMotor = hardwareMap.dcMotor.get(leftBack);
-        rightFrontMotor = hardwareMap.dcMotor.get(rightBack);
-        //
+    public void configureMotors(){
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
@@ -44,51 +39,24 @@ public abstract class MeccyMode extends LinearOpMode{
     }
     //</editor-fold>
     //
-    //<editor-fold desc="Turning">
-    public void turnRight(double powerInput){
+    public void turn(double powerInput){
         leftBackMotor.setPower(powerInput);
         leftFrontMotor.setPower(powerInput);
         rightBackMotor.setPower(-powerInput);
         rightFrontMotor.setPower(-powerInput);
     }
     //
-    public void turnLeft(double powerInput){
-        leftBackMotor.setPower(-powerInput);
-        leftFrontMotor.setPower(-powerInput);
-        rightBackMotor.setPower(powerInput);
-        rightFrontMotor.setPower(powerInput);
-    }
-    //</editor-fold>
-    //
-    //<editor-fold desc="Driving">
-    public void driveForward(double powerInput){
+    public void drive(double powerInput){
         leftBackMotor.setPower(powerInput);
         leftFrontMotor.setPower(powerInput);
         rightBackMotor.setPower(powerInput);
         rightFrontMotor.setPower(powerInput);
     }
     //
-    public void driveBackward(double powerInput){
-        leftBackMotor.setPower(-powerInput);
-        leftFrontMotor.setPower(-powerInput);
-        rightBackMotor.setPower(-powerInput);
-        rightFrontMotor.setPower(-powerInput);
+    public void strafe(double power1, double power2){
+        leftBackMotor.setPower(-power1 + (power2 / 2));
+        leftFrontMotor.setPower(power1 + (power2 / 2));
+        rightBackMotor.setPower(power1 + (power2 / 2));
+        rightFrontMotor.setPower(-power1 + (power2 / 2));
     }
-    //</editor-fold>
-    //
-    //<editor-fold desc="Strafing">
-    public void strafeLeft(double power1, double power2, double direction){
-            leftBackMotor.setPower(power1 + (direction * power2 / 2));
-            leftFrontMotor.setPower(-power1 - (direction * power2 / 2));
-            rightBackMotor.setPower(-power1 - (direction * power2 / 2));
-            rightFrontMotor.setPower(power1 + (direction * power2 / 2));
-    }
-    //
-    public void strafeRight(double power1, double power2, double direction){
-        leftBackMotor.setPower(-power1 - (direction * power2 / 2));
-        leftFrontMotor.setPower(power1 + (direction * power2 / 2));
-        rightBackMotor.setPower(power1 + (direction * power2 / 2));
-        rightFrontMotor.setPower(-power1 - (direction * power2 / 2));
-    }
-    //</editor-fold>
 }

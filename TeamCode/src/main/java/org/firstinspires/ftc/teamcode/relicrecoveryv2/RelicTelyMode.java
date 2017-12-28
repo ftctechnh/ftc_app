@@ -1,45 +1,84 @@
 package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by TPR on 12/14/17.
  */
-
+@TeleOp(name="RelicTelyOp",group="Jeff" )
 public class RelicTelyMode  extends MeccyMode{
+    //
     //<editor-fold desc="Startify">
+    VuforiaLocalizer vuforia;
+    OpenGLMatrix lastLocation = null;
+    //
     double degreeOfRobotPower = 1;
     DrivingAction drivingAction = DrivingAction.Driving;
     //<editor-fold desc="Controls"
     double leftX;
     double leftY;
     double rightX;
-    double direction;
     boolean halfPower;
     boolean quarterPower;
     //</editor-fold>
     //
-    //<
     //</editor-fold>
     //
     public void runOpMode() {
         //<editor-fold desc="Initialize">
-        leftX = Math.abs(gamepad1.left_stick_x);
-        leftY = Math.abs(gamepad1.left_stick_y);
-        rightX = Math.abs(gamepad1.right_stick_x);
-        if (gamepad1.left_stick_y >= 0){direction = 1;} else{direction = -1;}
-        halfPower = gamepad1.left_bumper;
-        quarterPower = gamepad1.right_bumper;
+        //<editor-fold desc="Vuforia">
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        //
+        parameters.vuforiaLicenseKey = "AbxR5+T/////AAAAGR1YlvU/6EDzrJvG5EfPnXSFutoBr1aCusr0K3pKqPuWTBQsUb0mv5irjoX2Xf/GFvAvHyw8v1GBYgHwE+hNTcNj05kw3juX+Ur4l3HNnp5SfXV/8fave0xB7yVYZ/LBDraNnYXiuT+D/5iGfQ99PVVao3LI4uGUOvL9+3vbPqtTXLowqFJX5uE7R/W4iLmNqHgTCSzWcm/J1CzwWuOPD252FDE9lutdDVRri17DBX0C/D4mt6BdI5CpxhG6ZR0tm6Zh2uvljnCK6N42V5x/kXd+UrBgyP43CBAACQqgP6MEvQylUD58U4PeTUWe9Q4o6Xrx9QEwlr8v+pmi9nevKnmE2CrPPwQePkDUqradHHnU";
+        //
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;//set camera (back)
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        //
+        //Load ciphers:
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate");
         //</editor-fold>
         //
-        setDegreePower();
+        leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
+        rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
+        leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
+        rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
+        configureMotors();
+        //</editor-fold>
         //
-        switchMove();
+        waitForStartify();
         //
-        moveTheRobot();
+        relicTrackables.activate();
         //
-        telemetryJazz();
-        //
+        while (opModeIsActive()) {
+            //<editor-fold desc="Update">
+            leftX = gamepad1.left_stick_x;
+            leftY = gamepad1.left_stick_y;
+            rightX = gamepad1.right_stick_x;
+            halfPower = gamepad1.left_bumper;
+            quarterPower = gamepad1.right_bumper;
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            //</editor-fold>
+            //
+            setDegreePower();
+            //
+            switchMove();
+            //
+            moveTheRobot();
+            //
+            telemetryJazz(vuMark);
+            //
+        }
     }
     //
     //<editor-fold desc="Functions">
@@ -56,41 +95,37 @@ public class RelicTelyMode  extends MeccyMode{
     //
     private void switchMove(){
         if (!(rightX == 0)){
-            DrivingAction drivingAction = DrivingAction.Turning;
-        }else if(leftX > .15){
-            DrivingAction drivingAction = DrivingAction.Strafing;
+            drivingAction = DrivingAction.Turning;
+        }else if(Math.abs(leftX) > .15){
+            drivingAction = DrivingAction.Strafing;
         }else{
-            DrivingAction drivingAction = DrivingAction.Driving;
+            drivingAction = DrivingAction.Driving;
         }
     }
     //
     private void moveTheRobot() {
         switch (drivingAction){
             case Driving:
-                if (leftY < 0){
-                    driveForward(leftY);
-                }else{
-                    driveBackward(leftY);
-                }
+                    drive(-leftY);
+                break;
             case Turning:
-                if (rightX > 0){
-                    turnRight(rightX);
-                }else{
-                    turnLeft(rightX);
-                }
+                    turn(rightX);
                 break;
             case Strafing:
-                if (leftX > 0){
-                    strafeRight(leftX, leftY, direction);
-                }else{
-                    strafeLeft(leftX, leftY, direction);
-                }
+                    strafe(leftX, -leftY);
                 break;
         }
     }
     //
-    private void telemetryJazz() {
+    private void telemetryJazz(RelicRecoveryVuMark vuMark) {
         telemetry.addData("Unicorn Crossing", "Always a danger WATCH OUT");
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            //
+            telemetry.addData("VuMark", vuMark);
+            //
+        }else {
+            telemetry.addData("VuMark", "None");
+        }
         telemetry.update();
     }
     //</editor-fold>

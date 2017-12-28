@@ -17,7 +17,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
     //
     //<editor-fold desc="Extraneous">
     public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
-        super.configureMotors(leftFront, rightFront, leftBack,rightBack);
+        super.configureMotors();
         //
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
