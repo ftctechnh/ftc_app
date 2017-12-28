@@ -59,6 +59,9 @@ public class RedRecovery extends LinearOpMode {
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 1);
         drive.pushInBlock(ForkLift);
         drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
+        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 90);
+        ForkLift.openClaw();
+        ForkLift.moveUntilDown(0.75);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

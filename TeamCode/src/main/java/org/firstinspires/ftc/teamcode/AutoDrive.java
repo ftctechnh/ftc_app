@@ -17,7 +17,7 @@ public class AutoDrive {
     private DcMotor RearRight;
     private REVGyro imu;
     private final double CIRCUMFERENCE_Of_WHEELS = 3.937 * Math.PI;
-    private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit...
+    private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit.
     public double heading;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -31,6 +31,7 @@ public class AutoDrive {
     public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR = 15.5;
     public final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
     public final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
+    public final double SPIN_TO_CENTER_SPEED = 0.75;
 
     public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
@@ -115,9 +116,7 @@ public class AutoDrive {
         return motor.getCurrentPosition();
     }
 
-    private boolean isMotorAtTarget(DcMotor motor, double target) {
-        return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);
-    }
+    private boolean isMotorAtTarget(DcMotor motor, double target) {return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);}
 
     public void rightGyro(double x, double y, double z, double target) {
         heading = getHeading();
