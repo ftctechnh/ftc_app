@@ -608,15 +608,15 @@ public class AutoLib {
     // assumes an even number of concurrent drive motor steps in order right ..., left ...
     // this step tries to keep the robot on the given course by adjusting the left vs. right motors to change the robot's heading.
     static public class GyroGuideStep extends Step {
-        private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
-        private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
-        private OpMode mOpMode;                             // needed so we can log output (may be null)
-        private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
-        private SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
+        private final float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private final float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
+        private final OpMode mOpMode;                             // needed so we can log output (may be null)
+        private final HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
+        private final SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
         private double mPrevTime;                           // time of previous loop() call
-        private ArrayList<SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
-        private float powerMin;
-        private float powerMax;
+        private final ArrayList<SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
+        private final float powerMin;
+        private final float powerMax;
 
         public GyroGuideStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
                              ArrayList<SetPower> motorsteps, float power)
@@ -682,22 +682,6 @@ public class AutoLib {
             // guidance step always returns "done" so the CS in which it is embedded completes when
             // all the motors it's controlling are done
             return true;
-        }
-
-        public void setPower(float power) {
-            this.mPower = power;
-        }
-
-        public void overridePower(float power) {
-            for (SetPower ms : mMotorSteps) ms.setPower(power);
-        }
-
-        public float getMinPower() {
-            return this.powerMin;
-        }
-
-        public float getMaxPower() {
-            return this.powerMax;
         }
     }
 

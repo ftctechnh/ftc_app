@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -48,7 +49,7 @@ public class ADPSAuto extends VuforiaBallLib {
     SensorLib.PID drivePID = new SensorLib.PID(Kp4, Ki4, Kd4, Ki4Cutoff);
 
     //parameters for gyro turning
-    float Kp5 = 3.0f;        // degree heading proportional term correction per degree of deviation
+    float Kp5 = 10.0f;        // degree heading proportional term correction per degree of deviation
     float Ki5 = 0.0f;         // ... integrator term
     float Kd5 = 0;             // ... derivative term
     float Ki5Cutoff = 0.0f;    // maximum angle error for which we update integrator
@@ -120,19 +121,16 @@ public class ADPSAuto extends VuforiaBallLib {
             }
 
             AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
-
-            //TODO: GYRO STEERING WHILE DRIVING OFF PLATFORM
-            //findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 105.0f * mul, 700, true));
-            findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 105.0f * mul, 700, true, -360.0f, 360.0f));
+            
+            findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 105.0f * mul, 600, true, -360.0f, 360.0f));
             findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.9, 0.25, false));
-            findPilliar.add(new APDSFind(bot.getMotorVelocityShimArray(), BotHardware.ServoE.stick.servo, 0.9, 0.71, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), 35.0f, 250.0f,
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.9, 0.66, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10),
+                    new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 35.0f, 360.0f),
                     70, 8, skip, 70, this));
-
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
-            //findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f * mul, 500, true));
             findPilliar.add(new AutoLib.GyroTurnStep(this, 60f, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 225.0f, 425, true));
             findPilliar.add(bot.getDropStep());
@@ -171,13 +169,11 @@ public class ADPSAuto extends VuforiaBallLib {
     public static class APDSFind extends AutoLib.Step {
         private final int mError;
         private final int mDist;
-        private final DcMotor[] motorRay;
         private final APDS9960 sens;
         private final APDS9960.Config config;
         private final OpMode mode;
         private final SensorLib.PID errorPid;
-        private final float minPower;
-        private final float maxPower;
+        private final GyroCorrectStep gyroStep;
         private final Servo stick;
         private final int pilliarDist;
         private int[] encoderCache = new int[4];
@@ -191,16 +187,14 @@ public class ADPSAuto extends VuforiaBallLib {
         private int foundCount = 0;
 
         private static final int APDS_FOUND_COUNT = 10;
-        private static final int COUNTS_BETWEEN_PILLIAR = 145;
+        private static final int COUNTS_BETWEEN_PILLIAR = 155;
 
-        APDSFind(DcMotor[] motors, Servo stick, double stickDown, double stickUp, APDS9960 sens, APDS9960.Config config, SensorLib.PID errorPid,
-                 float minPower, float maxPower, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode) {
-            this.motorRay = motors;
+        APDSFind(Servo stick, double stickDown, double stickUp, APDS9960 sens, APDS9960.Config config, SensorLib.PID errorPid,
+                 GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode) {
             this.config = config;
             this.errorPid = errorPid;
             this.sens = sens;
-            this.minPower = minPower;
-            this.maxPower = maxPower;
+            this.gyroStep = correctIt;
             this.mError = error;
             this.mDist = dist;
             this.mode = mode;
@@ -225,7 +219,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 //if we found it, stop
                 //if the peak is within stopping margin, stop
                 if(config.gain == APDS9960.Config.DistGain.GAIN_1X && Math.abs(error) <= mError) {
-                    setMotors(0);
+                    setMotorsWithoutGyro(0);
                     return ++foundCount >= APDS_FOUND_COUNT;
                 }
                 else foundCount = 0;
@@ -236,9 +230,9 @@ public class ADPSAuto extends VuforiaBallLib {
                 mode.telemetry.addData("power error", pError);
                 //cut out a middle range, but handle positive and negative
                 float power;
-                if(pError >= 0) power = Range.clip(minPower + pError, minPower, maxPower);
-                else power = Range.clip(pError - minPower, -maxPower, -minPower);
-                setMotors(-power);
+                if(pError >= 0) power = Range.clip(gyroStep.getMinPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
+                else power = Range.clip(pError - gyroStep.getMinPower(), -gyroStep.getMaxPower(), -gyroStep.getMinPower());
+                setMotorsWithoutGyro(-power);
                 //telem
                 mode.telemetry.addData("APDS dist", error);
                 //return
@@ -259,8 +253,8 @@ public class ADPSAuto extends VuforiaBallLib {
                     markEncoders();
                     stickPulled = true;
                 }
-                //set motors to speedy
-                setMotors(maxPower);
+                //set motors to corrected
+                gyroStep.loop();
                 //not done
                 return false;
             }
@@ -268,18 +262,117 @@ public class ADPSAuto extends VuforiaBallLib {
 
         }
 
-        private void setMotors(float power) {
-            for(DcMotor motor : motorRay) motor.setPower(power);
+        private void setMotorsWithoutGyro(float power) {
+            for(DcMotor motor : gyroStep.getMotors()) motor.setPower(power);
         }
 
         private boolean checkEncoders(int dist) {
             boolean done = true;
+            DcMotor[] motorRay = gyroStep.getMotors();
             for(int i = 0; i < 4; i++) done &= (Math.abs(motorRay[i].getCurrentPosition() - encoderCache[i]) >= dist);
             return done;
         }
 
         private void markEncoders() {
+            DcMotor[] motorRay = gyroStep.getMotors();
             for (int i = 0; i < 4; i++) encoderCache[i] = motorRay[i].getCurrentPosition();
+        }
+    }
+
+    // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
+    // assumes an even number of concurrent drive motor steps in order right ..., left ...
+    // this step tries to keep the robot on the given course by adjusting the left vs. right motors to change the robot's heading.
+    static public class GyroCorrectStep extends AutoLib.Step {
+        private final float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private final float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
+        private final OpMode mOpMode;                             // needed so we can log output (may be null)
+        private final HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
+        private final SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
+        private double mPrevTime;                           // time of previous loop() call
+        private final DcMotor[] mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
+        private final float powerMin;
+        private final float powerMax;
+
+        public GyroCorrectStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                             DcMotor[] motorsteps, float power)
+        {
+            this(mode, heading, gyro, pid, motorsteps, power, -1, 1);
+        }
+
+        public GyroCorrectStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                             DcMotor[] motorsteps, float power, float powerMin, float powerMax)
+        {
+            mOpMode = mode;
+            mHeading = heading;
+            mGyro = gyro;
+            mPid = pid;
+            mMotorSteps = motorsteps;
+            mPower = power;
+            this.powerMin = powerMin;
+            this.powerMax = powerMax;
+        }
+
+        public boolean loop()
+        {
+            super.loop();
+            // initialize previous-time on our first call -> dt will be zero on first call
+            if (firstLoopCall()) {
+                mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
+            }
+
+            float heading = mGyro.getHeading();     // get latest reading from direction sensor
+            // convention is positive angles CCW, wrapping from 359-0
+
+            float error = SensorLib.Utils.wrapAngle(heading-mHeading);   // deviation from desired heading
+            // deviations to left are positive, to right are negative
+
+            // compute delta time since last call -- used for integration time of PID step
+            double time = mOpMode.getRuntime();
+            double dt = time - mPrevTime;
+            mPrevTime = time;
+
+            // feed error through PID to get motor power correction value
+            float correction = -mPid.loop(error, (float)dt);
+
+            mOpMode.telemetry.addData("Correction", correction);
+
+            // compute new right/left motor powers
+            float rightPower = Range.clip(mPower + correction, this.powerMin, this.powerMax);
+            float leftPower = Range.clip(mPower - correction, this.powerMin, this.powerMax);
+
+            // set the motor powers -- handle both time-based and encoder-based motor Steps
+            // assumed order is right motors followed by an equal number of left motors
+            int i = 0;
+            for (DcMotor ms : mMotorSteps) {
+                ms.setPower((i++ < mMotorSteps.length/2) ? rightPower : leftPower);
+            }
+
+            // log some data
+            if (mOpMode != null) {
+                mOpMode.telemetry.addData("heading ", heading);
+                mOpMode.telemetry.addData("left power ", leftPower);
+                mOpMode.telemetry.addData("right power ", rightPower);
+            }
+
+            // guidance step always returns "done" so the CS in which it is embedded completes when
+            // all the motors it's controlling are done
+            return true;
+        }
+
+        public float getPower() {
+            return this.mPower;
+        }
+
+        public DcMotor[] getMotors() {
+            return this.mMotorSteps;
+        }
+
+        public float getMinPower() {
+            return this.powerMin;
+        }
+
+        public float getMaxPower() {
+            return this.powerMax;
         }
     }
 }
