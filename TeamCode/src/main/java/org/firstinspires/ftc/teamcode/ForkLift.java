@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareDevice.Manufacturer;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
@@ -14,15 +12,11 @@ public class ForkLift {
     public DcMotor motor;
     private DigitalChannel topButton;
     private DigitalChannel bottomButton;
-    private double clawHighEnd = 1; //0.85
-    private double clawLowEnd = 0; //0.3
+    private final double clawHighEnd = 1;
+    private final double clawLowEnd = 0;
     private Telemetry telemetry;
 
     public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, DigitalChannel topButton, DigitalChannel bottomButton, Telemetry telemetry) {
-        if(rightClaw.getManufacturer().equals(Manufacturer.ModernRobotics)){
-            clawHighEnd=0.85;
-            clawLowEnd=0.3;
-        }
         this.rightClaw = rightClaw;
         this.leftClaw = leftClaw;
         this.motor = motor;
@@ -42,7 +36,7 @@ public class ForkLift {
     public void autoInit() {
         openClaw();
         sleep(500);
-        moveUpDown(0.5, 200);
+        moveMotor(0.5, 200);
         init();
     }
 
@@ -54,7 +48,7 @@ public class ForkLift {
         setClawPosition(clawLowEnd);
     }
 
-    public void moveUpDown(double speed) {
+    public void moveMotor(double speed) {
         telemetry.addData("input", speed);
         if (bottomButton != null) {
             if (speed < 0) {
@@ -84,8 +78,8 @@ public class ForkLift {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    public void moveUpDown(double speed, long time) {
-        moveUpDown(speed);
+    public void moveMotor(double speed, long time) {
+        moveMotor(speed);
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {}
@@ -93,12 +87,12 @@ public class ForkLift {
     }
     public void moveUntilDown(double speed) {
         while (bottomButton.getState()) {
-            moveUpDown(-Math.abs(speed));
+            moveMotor(-Math.abs(speed));
         }
         stop();
     }
     public void stop() {
-        moveUpDown(0);
+        moveMotor(0);
     }
 
     private void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}

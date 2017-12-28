@@ -13,6 +13,7 @@ public class REVGyro {
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
     Orientation angles;
+    public double heading;
     public REVGyro (BNO055IMU imu) {
         this.parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -20,10 +21,12 @@ public class REVGyro {
     }
     public void calibrate() {
         imu.initialize(parameters);
+        heading = getHeading();
     }
 
     public double getHeading() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angles.firstAngle;
+        heading = angles.firstAngle;
+        return heading;
     }
 }

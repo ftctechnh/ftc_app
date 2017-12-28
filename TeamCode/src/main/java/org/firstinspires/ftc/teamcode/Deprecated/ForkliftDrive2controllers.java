@@ -28,6 +28,6 @@ public class ForkliftDrive2controllers extends OpMode {
         if (gamepad2.b) {
             ForkLift.openClaw();
         }
-        ForkLift.moveUpDown(gamepad2.right_trigger - gamepad2.left_trigger);
+        ForkLift.moveMotor(gamepad2.right_trigger - gamepad2.left_trigger);
     }
 }

@@ -38,7 +38,7 @@ public class DriveMecanum {
     }
     public void driveLeftRight(double xLeft, double xRight, double yLeft, double yRight) {
         //Trust me, if you edit this next line you don't know what you're doing. Sorry but it's true. If you feel the need to edit this, please talk to me (Kaden) so I explain to you why it needs to not be edited. Thanks.
-        driveSpeeds(xLeft - yLeft, xRight + yRight, yLeft + xLeft, xRight - yRight);
+        driveSpeeds(xLeft - yLeft, xRight + yRight, xLeft + yLeft, xRight - yRight);
     }
 
     public void swingRight() {

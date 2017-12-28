@@ -10,13 +10,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
  */
 @Autonomous(name = "Blue Recovery", group = "Autonomous")
 public class BlueRecovery extends LinearOpMode {
-    AutoDrive drive;
-    JewelArm jewelArm;
-    ForkLift ForkLift;
-    RelicClaw RelicClaw;
-    BeehiveVuforia vuforia = new BeehiveVuforia();
-    RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
-    String color;
+    private AutoDrive drive;
+    private JewelArm jewelArm;
+    private ForkLift ForkLift;
+    private BeehiveVuforia vuforia;
+    private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
+    private String color;
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");
@@ -25,7 +24,7 @@ public class BlueRecovery extends LinearOpMode {
         drive.init(); //Calibrates gyro
         jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
         ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
-        RelicClaw = new RelicClaw(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"), telemetry);
+        vuforia = new BeehiveVuforia(hardwareMap, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
@@ -34,8 +33,8 @@ public class BlueRecovery extends LinearOpMode {
         jewelArm.up();
         ForkLift.closeClaw();
         sleep(200);
-        ForkLift.moveUpDown(1, 300);
-        pictograph = vuforia.getMark(hardwareMap, telemetry);
+        ForkLift.moveMotor(1, 300);
+        pictograph = vuforia.getMark();
         color = jewelArm.findJewel();
         if (color.equals("Red")) { //if the arm sees red
             drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);

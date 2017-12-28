@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Kaden on 10/19/2017.
@@ -51,7 +50,7 @@ public class DriveEverything extends OpMode {
         if (gamepad1.b) {
             ForkLift.openClaw();
         }
-        ForkLift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
+        ForkLift.moveMotor(gamepad1.right_trigger - gamepad1.left_trigger);
         //Relic arm
         if (gamepad2.a) {
             RelicClaw.closeClaw();

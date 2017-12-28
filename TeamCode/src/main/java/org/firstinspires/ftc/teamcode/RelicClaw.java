@@ -7,12 +7,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RelicClaw {
     private Servo claw;
-    private double closePosition = 0.0;
-    private double openPosition = 1.0;
-    private double downPosition = 0;
-    private double upPosition = 1;
+    private final double closePosition = 0.0;
+    private final double openPosition = 1.0;
+    private final double downPosition = 0;
+    private final double upPosition = 1;
     private Servo arm;
-    private double armInitPos = 1;
+    private final double armInitPos = 1;
     private DcMotor motor;
     private Telemetry telemetry;
 

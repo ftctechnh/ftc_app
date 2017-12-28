@@ -14,10 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "MecanumDriveExpo", group = "linear OpMode")
 @Disabled
 public class MecanumDriveExpo extends OpMode {
-    private DcMotor FrontLeft;
-    private DcMotor FrontRight;
-    private DcMotor RearLeft;
-    private DcMotor RearRight;
+    private DriveMecanum drive;
     private double x;
     private double y;
     private double z;
@@ -27,19 +24,11 @@ public class MecanumDriveExpo extends OpMode {
 
     @Override
     public void init() {
-        FrontLeft = hardwareMap.dcMotor.get("m1");
-        FrontRight = hardwareMap.dcMotor.get("m2");
-        RearLeft = hardwareMap.dcMotor.get("m3");
-        RearRight = hardwareMap.dcMotor.get("m4");
-        reverseMotor(FrontRight);
-        reverseMotor(RearRight);
+        drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
     }
 
     @Override
     public void loop() {
-        //x is forward/backward
-        //y is side to side
-        //z is angle
         if (gamepad1.left_stick_y > 0) {
             x = Math.pow(gamepad1.left_stick_y, expo);
         }
@@ -69,20 +58,6 @@ public class MecanumDriveExpo extends OpMode {
         else {
             z = 0;
         }
-
-        FrontLeft.setPower(speed*clip(-y+x-z));
-        FrontRight.setPower(speed*clip(y+x+z));
-        RearLeft.setPower(speed*clip(y+x-z));
-        RearRight.setPower(speed*clip(-y+x+z));
-
+        drive.driveTranslateRotate(x, y, z);
     }
-
-    public void reverseMotor(DcMotor motor) {
-        motor.setDirection(DcMotor.Direction.REVERSE);
-    }
-
-    public double clip(double value) {
-        return Range.clip(value, -1,1);
-    }
-
 }

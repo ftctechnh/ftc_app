@@ -29,21 +29,21 @@ public class DriveEverythingREV extends OpMode {
         }
         if (gamepad1.x) {
             ForkLift.closeClaw();
-            ForkLift.moveUpDown(1);
+            ForkLift.moveMotor(1);
             sleep(750);
-            ForkLift.moveUpDown(0);
+            ForkLift.moveMotor(0);
             drive.driveTranslateRotate(-0.75, 0,0);
             sleep(750);
             drive.stop();
             ForkLift.openClaw();
-            ForkLift.moveUpDown(-1);
+            ForkLift.moveMotor(-1);
             sleep(500);
-            ForkLift.moveUpDown(0);
+            ForkLift.moveMotor(0);
             ForkLift.closeClaw();
             sleep(250);
-            ForkLift.moveUpDown(1);
+            ForkLift.moveMotor(1);
             sleep(250);
-            ForkLift.moveUpDown(0);
+            ForkLift.moveMotor(0);
         }
 
         if (gamepad1.a) {
@@ -52,10 +52,6 @@ public class DriveEverythingREV extends OpMode {
         if (gamepad1.b) {
             ForkLift.openClaw();
         }
-        ForkLift.moveUpDown(gamepad1.right_trigger - gamepad1.left_trigger);
-        telemetry.addData("ForkLift motor encoder value: ", ForkLift.motor.getCurrentPosition());
-        telemetry.update();
-
         if (gamepad2.a) {
             RelicClaw.closeClaw();
         }

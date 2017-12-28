@@ -13,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class JewelArm {
     public Servo servo;
     private ColorSensor cs;
-    private double servoDownPos = 0;
-    private double servoUpPos = 1;
+    private final double servoDownPos = 0;
+    private final double servoUpPos = 1;
     private Telemetry telemetry;
 
     public JewelArm(Servo servo, ColorSensor cs, Telemetry telemetry) {

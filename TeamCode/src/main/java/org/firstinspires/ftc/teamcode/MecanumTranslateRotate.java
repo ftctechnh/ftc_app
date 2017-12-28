@@ -12,13 +12,7 @@ public class MecanumTranslateRotate extends OpMode {
     private DriveMecanum drive;
     @Override
     public void init() {
-        drive = new DriveMecanum(
-            hardwareMap.dcMotor.get("m1"), //FrontLeft
-            hardwareMap.dcMotor.get("m2"), //FrontRight
-            hardwareMap.dcMotor.get("m3"), //RearLeft
-            hardwareMap.dcMotor.get("m4"), //RearRight
-            1.0, telemetry); //Top speed as a decimal
-
+        drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
     }
     @Override
     public void loop() {

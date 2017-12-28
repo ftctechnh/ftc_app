@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 @Autonomous(name = "TestingAutoWithClass", group = "Autonomous")
 public class TestAuto extends LinearOpMode {
 	AutoDrive drive;
@@ -13,7 +11,7 @@ public class TestAuto extends LinearOpMode {
 		drive = new AutoDrive(hardwareMap, telemetry);
 		ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
 		drive.init();
-		ForkLift.moveUpDown(0.2, 100);
+		ForkLift.moveMotor(0.2, 100);
 		telemetry.addLine("Ready to start");
 		telemetry.update();
 		waitForStart();

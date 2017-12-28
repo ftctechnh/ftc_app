@@ -16,8 +16,8 @@ public class AutoDrive {
     private DcMotor RearLeft;
     private DcMotor RearRight;
     private REVGyro imu;
-    private double cir = 3.937 * Math.PI;
-    private int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
+    private final double cir = 3.937 * Math.PI;
+    private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
     public double heading;
     private HardwareMap hwMap;
     private Telemetry telemetry;

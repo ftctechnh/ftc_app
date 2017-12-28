@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import java.util.concurrent.TimeUnit;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by Peter on 12/21/2017.
  */
-
+@TeleOp(name = "Presentation Program", group = "Test")
+@Disabled
 public class Presentation extends OpMode {
 
     private ForkLift ForkLift;
@@ -37,11 +38,11 @@ public class Presentation extends OpMode {
         ForkLift.closeClaw();
         sleep(1000);
 
-        ForkLift.moveUpDown(speed);
+        ForkLift.moveMotor(speed);
         sleep(500);
-        ForkLift.moveUpDown(-speed);
+        ForkLift.moveMotor(-speed);
         sleep(500);
-        ForkLift.moveUpDown(0);
+        ForkLift.moveMotor(0);
         sleep(1000);
     }
     public void loop() {
