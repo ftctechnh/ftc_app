@@ -25,23 +25,23 @@ public class DriveEverything extends OpMode {
     public void loop() {
         //Drive
         if (gamepad1.right_bumper || gamepad1.left_bumper) {
-            drive.driveLeftRight(gamepad1.left_stick_y / 4, gamepad1.right_stick_y / 4, gamepad1.left_stick_x / 4, gamepad1.right_stick_x / 4);
+            drive.driveLeftRight(gamepad1.left_stick_x / 4, gamepad1.right_stick_x / 4, gamepad1.left_stick_y / 4, gamepad1.right_stick_y / 4);
 
         } else {
-            drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            drive.driveLeftRight(gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y);
 
         }
         if (gamepad1.dpad_up) {
-            drive.driveTranslateRotate(0.2, 0, 0);
-        }
-        if (gamepad1.dpad_left) {
             drive.driveTranslateRotate(0, -0.2, 0);
         }
-        if (gamepad1.dpad_down) {
+        if (gamepad1.dpad_left) {
             drive.driveTranslateRotate(-0.2, 0, 0);
         }
-        if (gamepad1.dpad_right) {
+        if (gamepad1.dpad_down) {
             drive.driveTranslateRotate(0, 0.2, 0);
+        }
+        if (gamepad1.dpad_right) {
+            drive.driveTranslateRotate(0.2, 0, 0);
         }
         //ForkLift
         if (gamepad1.a) {
@@ -64,6 +64,6 @@ public class DriveEverything extends OpMode {
         if (gamepad2.y) {
             RelicClaw.up();
         }
-        RelicClaw.moveMotor(-gamepad2.left_stick_y);
+        RelicClaw.moveMotor(gamepad2.right_trigger - gamepad2.left_trigger);
     }
 }

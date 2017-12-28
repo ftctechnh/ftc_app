@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class JewelArm {
     public Servo servo;
     private ColorSensor cs;
-    private final double servoDownPos = 0;
-    private final double servoUpPos = 1;
+    private final double DOWN_POSITION = 0;
+    private final double UP_POSITION = 1;
     private Telemetry telemetry;
 
     public JewelArm(Servo servo, ColorSensor cs, Telemetry telemetry) {
@@ -24,11 +23,11 @@ public class JewelArm {
     }
 
     public void down() {
-        setPostion(servoDownPos);
+        setPostion(DOWN_POSITION);
     }
 
     public void up() {
-        setPostion(servoUpPos);
+        setPostion(UP_POSITION);
     }
 
     public String findJewel() {

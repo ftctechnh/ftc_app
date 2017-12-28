@@ -16,10 +16,10 @@ public class AutoDrive {
     private DcMotor RearLeft;
     private DcMotor RearRight;
     private REVGyro imu;
-    private final double cir = 3.937 * Math.PI;
-    private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest motors. Please do not edit...
+    private final double CIRCUMFERENCE_Of_WHEELS = 3.937 * Math.PI;
+    private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit...
     public double heading;
-    private HardwareMap hwMap;
+    private HardwareMap hardwareMap;
     private Telemetry telemetry;
     public final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
     public final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
@@ -32,36 +32,34 @@ public class AutoDrive {
     public final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
     public final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
 
-    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hwMap, Telemetry telemetry) {
+    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
         this.FrontRight = FrontRight;
         this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
         this.RearLeft = RearLeft;
         this.RearRight = RearRight;
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
-        this.hwMap = hwMap;
-        this.imu = new REVGyro(this.hwMap.get(BNO055IMU.class, "imu"));
+        this.hardwareMap = hardwareMap;
+        this.imu = new REVGyro(this.hardwareMap.get(BNO055IMU.class, "imu"));
         this.telemetry = telemetry;
         setBRAKE();
     }
 
-    public AutoDrive(HardwareMap hwMap, Telemetry telemetry) {
-        this.FrontLeft = hwMap.dcMotor.get("m1");
-        this.FrontRight = hwMap.dcMotor.get("m2");
+    public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.FrontLeft = hardwareMap.dcMotor.get("m1");
+        this.FrontRight = hardwareMap.dcMotor.get("m2");
         this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
-        this.RearLeft = hwMap.dcMotor.get("m3");
-        this.RearRight = hwMap.dcMotor.get("m4");
+        this.RearLeft = hardwareMap.dcMotor.get("m3");
+        this.RearRight = hardwareMap.dcMotor.get("m4");
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
-        this.imu = new REVGyro(hwMap.get(BNO055IMU.class, "imu"));
+        this.imu = new REVGyro(hardwareMap.get(BNO055IMU.class, "imu"));
         this.telemetry = telemetry;
         setBRAKE();
-
-
     }
 
     public void driveTranslateRotate(double x, double y, double z, double distance) {
         resetEncoders();
-        double clicks = Math.abs(distance * CPR / cir);
+        double clicks = Math.abs(distance * CPR / CIRCUMFERENCE_Of_WHEELS);
         double fl = clip(-y + -x - z);
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
@@ -107,10 +105,9 @@ public class AutoDrive {
         FrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RearLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
 
-    public void stopMotors() {
+    private void stopMotors() {
         driveSpeeds(0, 0, 0, 0);
     }
 
@@ -169,8 +166,8 @@ public class AutoDrive {
     public void pushInBlock(ForkLift ForkLift) {
         ForkLift.openClaw();
         driveTranslateRotate(0, -DRIVE_INTO_CRYPTOBOX_SPEED,0,4);
-        ForkLift.moveUntilDown(0.75);
         ForkLift.closeClaw();
+        ForkLift.moveUntilDown(0.75);
         driveTranslateRotate(0,DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
     }
 

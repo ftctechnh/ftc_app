@@ -23,27 +23,19 @@ public class DriveEverythingREV extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.right_bumper || gamepad1.left_bumper) {
-            drive.driveLeftRight(gamepad1.left_stick_y / 4, gamepad1.right_stick_y / 4, gamepad1.left_stick_x / 4, gamepad1.right_stick_x / 4);
+            drive.driveLeftRight(gamepad1.left_stick_x / 4, gamepad1.right_stick_x / 4, gamepad1.left_stick_y / 4, gamepad1.right_stick_y / 4);
         } else {
-            drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            drive.driveLeftRight(gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y);
         }
         if (gamepad1.x) {
             ForkLift.closeClaw();
-            ForkLift.moveMotor(1);
-            sleep(750);
-            ForkLift.moveMotor(0);
-            drive.driveTranslateRotate(-0.75, 0,0);
-            sleep(750);
-            drive.stop();
+            ForkLift.moveMotor(1, 750);
+            drive.driveTranslateRotate(0, -0.75,0, 750);
             ForkLift.openClaw();
-            ForkLift.moveMotor(-1);
-            sleep(500);
-            ForkLift.moveMotor(0);
+            ForkLift.moveMotor(-1, 500);
             ForkLift.closeClaw();
             sleep(250);
-            ForkLift.moveMotor(1);
-            sleep(250);
-            ForkLift.moveMotor(0);
+            ForkLift.moveMotor(1, 250);
         }
 
         if (gamepad1.a) {
@@ -52,6 +44,7 @@ public class DriveEverythingREV extends OpMode {
         if (gamepad1.b) {
             ForkLift.openClaw();
         }
+
         if (gamepad2.a) {
             RelicClaw.closeClaw();
         }
@@ -65,11 +58,6 @@ public class DriveEverythingREV extends OpMode {
             RelicClaw.up();
         }
         RelicClaw.moveMotor(gamepad2.right_trigger - gamepad2.left_trigger);
-
     }
-    private void sleep(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {}
-    }
+    private void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
 }

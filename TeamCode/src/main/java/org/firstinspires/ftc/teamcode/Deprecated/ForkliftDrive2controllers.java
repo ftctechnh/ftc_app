@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.DriveMecanum;
+import org.firstinspires.ftc.teamcode.ForkLift;
 /**
  * Created by Kaden on 10/19/2017.
  */
@@ -20,7 +22,7 @@ public class ForkliftDrive2controllers extends OpMode {
 
     @Override
     public void loop() {
-        drive.driveLeftRight(gamepad1.left_stick_y, gamepad1.right_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        drive.driveLeftRight(gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y);
         if (gamepad2.a) {
             ForkLift.closeClaw();
 

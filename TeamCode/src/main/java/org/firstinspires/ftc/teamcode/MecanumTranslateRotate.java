@@ -16,7 +16,7 @@ public class MecanumTranslateRotate extends OpMode {
     }
     @Override
     public void loop() {
-        drive.driveTranslateRotate(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        drive.driveTranslateRotate(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         if (gamepad1.right_bumper) {
             drive.swingRight();
         }

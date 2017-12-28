@@ -7,14 +7,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RelicClaw {
     private Servo claw;
-    private final double closePosition = 0.0;
-    private final double openPosition = 1.0;
-    private final double downPosition = 0;
-    private final double upPosition = 1;
     private Servo arm;
-    private final double armInitPos = 1;
     private DcMotor motor;
     private Telemetry telemetry;
+    private final double CLOSE_POSITION = 0.0;
+    private final double OPEN_POSITION = 1.0;
+    private final double DOWN_POSITION = 0;
+    private final double UP_POSITION = 1;
+
 
 
     public RelicClaw(Servo claw, Servo arm, DcMotor motor, Telemetry telemetry) {
@@ -25,24 +25,30 @@ public class RelicClaw {
         this.telemetry = telemetry;
     }
     public void init() {
-        setArmPosition(armInitPos);
+        down();
         openClaw();
     }
-    public void closeClaw() {claw.setPosition(closePosition);}
+    public void closeClaw() {claw.setPosition(CLOSE_POSITION);}
     public void openClaw() {
-    	claw.setPosition(openPosition);
+    	claw.setPosition(OPEN_POSITION);
     }
     public void up() {
-        setArmPosition(upPosition);
+        setArmPosition(UP_POSITION);
     }
     public void down() {
-        setArmPosition(downPosition);
+        setArmPosition(DOWN_POSITION);
     }
-    public void setArmPosition(double position) {
+    private void setArmPosition(double position) {
     	arm.setPosition(position);
     }
     public void moveMotor(double speed) {
     	motor.setPower(speed);
     }
-
+    public void moveMotor(double speed, long time) {
+        moveMotor(speed);
+        sleep(time);
+        stop();
+    }
+    private void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
+    private void stop() {moveMotor(0);}
 }

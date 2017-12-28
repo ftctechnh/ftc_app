@@ -25,10 +25,10 @@ public class DriveEverythingTranslateRotate extends OpMode {
     public void loop() {
         //Drive
         if (gamepad1.right_bumper || gamepad1.left_bumper) {
-            drive.driveTranslateRotate(gamepad1.left_stick_y/4, gamepad1.left_stick_x/4, gamepad1.right_stick_x/4);
+            drive.driveTranslateRotate(gamepad1.left_stick_x/4, gamepad1.left_stick_y/4, gamepad1.right_stick_x/4);
 
         } else {
-            drive.driveTranslateRotate(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            drive.driveTranslateRotate(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         }
         //ForkLift

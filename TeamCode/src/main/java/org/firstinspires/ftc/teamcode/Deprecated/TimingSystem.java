@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,7 +10,6 @@ import java.util.TimerTask;
 public class TimingSystem{
     public void newTimer(TimerTask function, long ms, long delay) {
             Timer timer = new Timer("Timer");
-
-        timer.scheduleAtFixedRate(function, delay, ms);
+            timer.scheduleAtFixedRate(function, delay, ms);
     }
 }

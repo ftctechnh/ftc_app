@@ -20,33 +20,30 @@ public class MecanumDriveExpo extends OpMode {
     private double z;
     private double speed = 1;
     private double expo = 1.75;
-
-
     @Override
     public void init() {
         drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
     }
-
     @Override
     public void loop() {
         if (gamepad1.left_stick_y > 0) {
-            x = Math.pow(gamepad1.left_stick_y, expo);
+            y = Math.pow(gamepad1.left_stick_y, expo);
         }
         else if (gamepad1.left_stick_y < 0){
-            x = -Math.pow(Math.abs(gamepad1.left_stick_y), expo);
-        }
-        else {
-            x = 0;
-        }
-
-        if (gamepad1.left_stick_x > 0) {
-            y = Math.pow(gamepad1.left_stick_x, expo);
-        }
-        else if (gamepad1.left_stick_x < 0){
-            y = -Math.pow(Math.abs(gamepad1.left_stick_x), expo);
+            y = -Math.pow(Math.abs(gamepad1.left_stick_y), expo);
         }
         else {
             y = 0;
+        }
+
+        if (gamepad1.left_stick_x > 0) {
+            x = Math.pow(gamepad1.left_stick_x, expo);
+        }
+        else if (gamepad1.left_stick_x < 0){
+            x = -Math.pow(Math.abs(gamepad1.left_stick_x), expo);
+        }
+        else {
+            x = 0;
         }
 
         if (gamepad1.right_stick_x > 0) {

@@ -12,9 +12,9 @@ public class ForkLift {
     public DcMotor motor;
     private DigitalChannel topButton;
     private DigitalChannel bottomButton;
-    private final double clawHighEnd = 1;
-    private final double clawLowEnd = 0;
     private Telemetry telemetry;
+    private final double CLAW_CLOSE_POSITION = 1;
+    private final double CLAW_OPEN_POSITION = 0;
 
     public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, DigitalChannel topButton, DigitalChannel bottomButton, Telemetry telemetry) {
         this.rightClaw = rightClaw;
@@ -41,11 +41,11 @@ public class ForkLift {
     }
 
     public void closeClaw() {
-        setClawPosition(clawHighEnd);
+        setClawPosition(CLAW_CLOSE_POSITION);
     }
 
     public void openClaw() {
-        setClawPosition(clawLowEnd);
+        setClawPosition(CLAW_OPEN_POSITION);
     }
 
     public void moveMotor(double speed) {
