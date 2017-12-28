@@ -14,6 +14,10 @@ import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
+import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
+
+import java.util.ArrayList;
 
 /**
  * Created by Noah on 12/20/2017.
@@ -35,13 +39,25 @@ public class ADPSAuto extends VuforiaBallLib {
 
     private AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
 
-    //parameters for gyro PID, but cranked up
+    //parameters for gyro steering
+    float Kp4 = -8.0f;        // degree heading proportional term correction per degree of deviation
+    float Ki4 = 0.0f;         // ... integrator term
+    float Kd4 = 0;             // ... derivative term
+    float Ki4Cutoff = 0.0f;    // maximum angle error for which we update integrator
+
+    SensorLib.PID drivePID = new SensorLib.PID(Kp4, Ki4, Kd4, Ki4Cutoff);
+
+    //parameters for gyro turning
     float Kp5 = 3.0f;        // degree heading proportional term correction per degree of deviation
     float Ki5 = 0.0f;         // ... integrator term
     float Kd5 = 0;             // ... derivative term
     float Ki5Cutoff = 0.0f;    // maximum angle error for which we update integrator
 
     SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
+
+
+
+    //
 
     public void init() {
         initVuforia(true);
@@ -106,12 +122,13 @@ public class ADPSAuto extends VuforiaBallLib {
             AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
 
             //TODO: GYRO STEERING WHILE DRIVING OFF PLATFORM
-            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 105.0f * mul, 700, true));
+            //findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 105.0f * mul, 700, true));
+            findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 105.0f * mul, 700, true, -360.0f, 360.0f));
             findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.9, 0.25, false));
             findPilliar.add(new APDSFind(bot.getMotorVelocityShimArray(), BotHardware.ServoE.stick.servo, 0.9, 0.71, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), 35.0f, 250.0f,
-                    70, 8, skip, 110, this));
+                    70, 8, skip, 70, this));
 
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
@@ -166,7 +183,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private int[] encoderCache = new int[4];
         private int pilliarCount;
         private boolean stickPulled = false;
-        private final FilterLib.MovingWindowFilter movingAvg = new FilterLib.MovingWindowFilter(10, 255);
+        private FilterLib.MovingWindowFilter movingAvg;
         private final double stickDown;
         private final double stickUp;
 
@@ -176,7 +193,8 @@ public class ADPSAuto extends VuforiaBallLib {
         private static final int APDS_FOUND_COUNT = 10;
         private static final int COUNTS_BETWEEN_PILLIAR = 145;
 
-        APDSFind(DcMotor[] motors, Servo stick, double stickDown, double stickUp, APDS9960 sens, APDS9960.Config config, SensorLib.PID errorPid, float minPower, float maxPower, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode) {
+        APDSFind(DcMotor[] motors, Servo stick, double stickDown, double stickUp, APDS9960 sens, APDS9960.Config config, SensorLib.PID errorPid,
+                 float minPower, float maxPower, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode) {
             this.motorRay = motors;
             this.config = config;
             this.errorPid = errorPid;
@@ -196,6 +214,7 @@ public class ADPSAuto extends VuforiaBallLib {
         public boolean loop() {
             //get distance
             double dist = this.sens.getLinearizedDistance();
+            if(movingAvg == null) movingAvg = new FilterLib.MovingWindowFilter(10, dist);
             movingAvg.appendValue(dist);
             double filteredDist = movingAvg.currentValue();
             //if we aren't skipping any more pilliars
@@ -235,7 +254,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 }
                 //else if stick isn't pulled, but the sensor found a pilliar
                 //lift the stick and mark the encoders to drive
-                else if(!stickPulled && filteredDist <= pilliarDist) {
+                else if(!stickPulled && dist <= pilliarDist) {
                     stick.setPosition(stickUp);
                     markEncoders();
                     stickPulled = true;

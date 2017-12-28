@@ -683,6 +683,22 @@ public class AutoLib {
             // all the motors it's controlling are done
             return true;
         }
+
+        public void setPower(float power) {
+            this.mPower = power;
+        }
+
+        public void overridePower(float power) {
+            for (SetPower ms : mMotorSteps) ms.setPower(power);
+        }
+
+        public float getMinPower() {
+            return this.powerMin;
+        }
+
+        public float getMaxPower() {
+            return this.powerMax;
+        }
     }
 
     //a step which runs a servo for a given amount of time
@@ -789,8 +805,6 @@ public class AutoLib {
         // all the motors are done.
 
     }
-
-
     // some convenience utility classes for common operations
 
     // a Sequence that moves an up-to-four-motor robot in a straight line with given power for given time
