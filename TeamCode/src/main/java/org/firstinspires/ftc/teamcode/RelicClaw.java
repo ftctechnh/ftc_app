@@ -12,8 +12,9 @@ public class RelicClaw {
     private Telemetry telemetry;
     private final double CLOSE_POSITION = 0.0;
     private final double OPEN_POSITION = 1.0;
-    private final double DOWN_POSITION = 0;
-    private final double UP_POSITION = 1;
+    private final double DOWN_POSITION = 1.0;
+    private final double DEFAULT_POSITION = 0.5;
+    private final double UP_POSITION = 0.0;
 
 
 
@@ -38,6 +39,9 @@ public class RelicClaw {
     public void down() {
         setArmPosition(DOWN_POSITION);
     }
+    public void middle() {
+      setArmPosition(DEFAULT_POSITION);
+    }
     private void setArmPosition(double position) {
     	arm.setPosition(position);
     }
@@ -50,5 +54,5 @@ public class RelicClaw {
         stop();
     }
     private void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
-    private void stop() {moveMotor(0);}
+    public void stop() {moveMotor(0);}
 }
