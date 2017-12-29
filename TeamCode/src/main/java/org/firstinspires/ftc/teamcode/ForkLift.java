@@ -49,22 +49,13 @@ public class ForkLift {
     }
 
     public void moveMotor(double speed) {
-        telemetry.addData("input", speed);
-        if (bottomButton != null) {
-            if (speed < 0) {
-                if (!bottomButton.getState()) {
+            if (speed < 0 && !bottomButton.getState()) {
                     speed = 0;
-                }
             }
-            if (speed > 0) {
-                if (!topButton.getState()) {
+            if (speed > 0 && !topButton.getState()) {
                     speed = 0;
-                }
             }
-        }
-        telemetry.addData("motor speed", speed);
         motor.setPower(speed);
-        telemetry.update();
     }
 
     private void setClawPosition(double position) {
