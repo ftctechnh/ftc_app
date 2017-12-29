@@ -76,6 +76,7 @@ public class NewRobotFinal
 
     public NewRobotFinal(HardwareMap hardwareMap)
     {
+
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
 
         imu = (hardwareMap.get(BNO055IMU.class, "imu"));
@@ -109,6 +110,7 @@ public class NewRobotFinal
        // tailRelease.setVelocity(0, AngleUnit.RADIANS);
 
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
+        grabberRotator.scaleRange(0, .8f);
         grabber = hardwareMap.get(Servo.class, "grabber");
     }
 
@@ -167,7 +169,7 @@ public class NewRobotFinal
 //        resetDriveEncoders();
 
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
-        leftDoorWall.setDirection(Servo.Direction.FORWARD);
+        leftDoorWall.setDirection(Servo.Direction.REVERSE);
     }
 
     public void initIMU()
@@ -257,13 +259,13 @@ public class NewRobotFinal
 
     public void driveMotors(float lPow, float rPow)
     {
-        driveLeftOne.setPower(lPow);
         driveRightOne.setPower(-rPow);
+        driveLeftOne.setPower(lPow);
     }
 
     public void driveMotorsAuto (float lPow, float rPow)
     {
-        driveMotors(-lPow, rPow);
+        driveMotors(-lPow, -rPow);
     }
 
     private void resetDriveEncoders()//sets encoders to 0 for motors
@@ -285,7 +287,11 @@ public class NewRobotFinal
         //Notes: We are using Andymark Neverrest 40
         // 1120 counts per rev
 
-        if(inches * pow < 0)
+        if(pow < 0)
+        {
+            inches *= -1;
+        }
+        if(inches < 0)
         {
             driveMotorsAuto(-absPow, -absPow);
 
@@ -689,7 +695,7 @@ public class NewRobotFinal
 
         }
     }
-    public void OpenCloseGrabber(boolean close)
+   /* public void OpenCloseGrabber(boolean close)
     {
         if(close)
         {
@@ -700,6 +706,7 @@ public class NewRobotFinal
             grabberRotator.setPosition(.15f);
         }
     }
+    */
 
     public void fineAdjGrabber(float in)
     {

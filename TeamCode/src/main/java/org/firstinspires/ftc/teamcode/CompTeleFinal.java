@@ -53,11 +53,11 @@ public class CompTeleFinal extends OpMode
 
         if (gamepad2.y)
         {
-            newRobot.fineAdjGrabberRotator(.008f);
+            newRobot.fineAdjGrabberRotator(.005f);
         }
         else if (gamepad2.x)
         {
-            newRobot.fineAdjGrabberRotator(-.008f);
+            newRobot.fineAdjGrabberRotator(-.005f);
         }
 
         /**
@@ -71,9 +71,9 @@ public class CompTeleFinal extends OpMode
         else
         {
             if (gamepad1.right_trigger > .4f)
-                newRobot.driveMotors(gamepad1.left_stick_y / 2, -gamepad1.right_stick_y / 2);
+                newRobot.driveMotors(gamepad1.left_stick_y / 2, gamepad1.right_stick_y / 2);
             else
-                newRobot.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
+                newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
         }
 
         if (gamepad1.y)
@@ -82,6 +82,13 @@ public class CompTeleFinal extends OpMode
             newRobot.getWingMotor().setPower(-1f);
         else
             newRobot.getWingMotor().setPower(0f);
+
+        telemetry.addData("LiftEnc", newRobot.getLiftMotor().getCurrentPosition());
+        telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
+        telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
+        telemetry.addData("Left Y", gamepad1.left_stick_y);
+        telemetry.addData("Right y", gamepad1.right_stick_y);
+        telemetry.update();
     }
 
     public void stop()
