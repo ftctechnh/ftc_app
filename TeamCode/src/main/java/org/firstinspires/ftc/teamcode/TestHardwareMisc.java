@@ -62,10 +62,10 @@ public class TestHardwareMisc {
 
         // Define and Initialize Motors
 
+        DcMotor  leftgrabbermotor = null;
+        DcMotor rightgrabbermotor = null;
 
 
-        dropper = hwMap.get(Servo.class, "dropper");
-        dropper.setDirection(Servo.Direction.REVERSE);
 
         // REVERSE THE MOTORS
 

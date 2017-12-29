@@ -29,66 +29,117 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
-// Created by Roma Bhatia  on 9/21/17
-//
-//
-// Last edit: 10/21/17 by Mrinaal Ramachandran
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
- * This file provides basic Teleop driving for a Holonomic robot.
+ * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
  *
- * This OpMode uses the common Holonomic hardware class to define the devices on the robot.
- * All device access is managed through the HolonomicHardware class.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
+ * All device access is managed through the HardwarePushbot class.
  *
- * This particular OpMode executes a basic Holonomic Drive Teleop for a Holonomic bot with omniwheels
- * facing at 45 degree angles.
+ * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
+ * It raises and lowers the claw using the Gampad Y and A buttons respectively.
+ * It also opens and closes the claws slowly using the left and right Bumper buttons.
+ *
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
+
+@TeleOp(name="Test Grabber", group="We Love PI")
+public class TestTeleopMisc extends OpMode{
+
+
+    // Declare OpMode members.
+    ElapsedTime runtime = new ElapsedTime();
+    DcMotor leftGrabberMotor = null;
+    DcMotor rightGrabberMotor = null;
+
     /*
-    * Created by Roma Bhatia (@sugarcrystals01) on 12/17/17
-    * Last edit: 12/17/17
-    */
-@TeleOp(name="Test_TeleOp", group="We Love Pi")
+     * Code to run ONCE when the driver hits INIT
+     */
 
-public class TestTeleopMisc extends OpMode {
-
-    // DECLARE OPMODE MEMBERS
-    TestHardwareMisc robot = new TestHardwareMisc(); // use the class created to define a Pushbot's hardware
-
-    double limiter = 1;
 
     @Override
     public void init() {
-        // INIT robot
-        robot.init(hardwareMap);
-        robot.dropper.setPosition(0.5);
+        /* Initialize the hardware variables.
+         * The init() method of the hardware class does all the work here
+         */
 
-        // TELL DRIVER STATION THAT ROBOT IS INIT
-        telemetry.addData("Status", "Initialized");    //
+
+
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+        leftGrabberMotor  = hardwareMap.get(DcMotor.class, "leftgrabbermotor");
+        rightGrabberMotor = hardwareMap.get(DcMotor.class, "rightgrabbermotor");
+
+        // Most robots need the motor on one side to be reversed to drive forward
+        // Reverse the motor that runs backwards when connected directly to the battery
+        leftGrabberMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightGrabberMotor.setDirection(DcMotor.Direction.REVERSE);
+
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Say", "Hello Driver");    //
     }
 
+    /*
+     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     */
+    @Override
+    public void init_loop() {
+    }
+
+    /*
+     * Code to run ONCE when the driver hits PLAY
+     */
+    @Override
+    public void start() {
+    }
+
+    /*
+     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+     */
     @Override
     public void loop() {
+        // Setup a variable for each side of the spinner wheel to save power level for telemetry
+        double leftPower;
+        double rightPower;
+
+        // Calculate power as the average value of left and right triggers. This would
+        // correctly reflect driver's motivation. The reasoning behind average power
+        // would be to apply the same power on the both sides of the spinner.
+
+        double power = (gamepad1.left_trigger + gamepad1.right_trigger)/2.0;
+
+        //
+        leftPower    = Range.clip(power, -1.0, 1.0) ;
+        rightPower   = -leftPower;
 
 
+        // Send calculated power to wheels
+        leftGrabberMotor.setPower(leftPower);
+        rightGrabberMotor.setPower(rightPower);
 
+        // Show the elapsed game time and wheel power.
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.update();
+    }
 
-
-            robot.dropper.setPosition(gamepad1.right_trigger);
-
-
-
-
-
-
-
-
-    // TELEMETRY WITH INFO ABOUT POWER, AND VALUES OF (X,Y)
-
-        telemetry.addData("test","%b",gamepad1.right_trigger);
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop() {
     }
 }
