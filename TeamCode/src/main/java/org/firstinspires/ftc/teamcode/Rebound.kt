@@ -173,45 +173,80 @@ class Rebound(private val telemetry: Telemetry, private val hardwareMap: Hardwar
     }
 
     /**
-     * Runs the motors based on an Inverse Kinematics equation that takes input from 2 joysticks.
-     * @
-     *
+     * Sets motor powers based on an Inverse Kinematics algorithm.
+     * @param vtX translational power along the X axis (-1 to 1)
+     * @param vtY translational power along the Y axis (-1 to 1)
+     * @param vR rotational power around the Z axis (-1 to 1)
      */
-    @Deprecated(message = "No longer in use")
-    fun inverseKinematicsMecanum(vtX: Double, vtY: Double, vR: Double) {
+    fun arcadeMecanum(vtX: Double, vtY: Double, vR: Double) {
         telemetry.addData("Inputs: ", listOf(vtX, vtY, vR))
-        val rfPow : Double = vtY - vtX + vR
+        // calculate raw motor powers
         val lfPow : Double = vtY + vtX - vR
+        val rfPow : Double = vtY - vtX + vR
         val lbPow : Double = vtY - vtX - vR
         val rbPow : Double = -(vtY + vtX + vR)
-        // find scale factor
-        val scale : Double = (abs(vtX) + abs(vtY) + abs(vR))
-        telemetry.addData("Scale: ", scale)
-        // return a scaled list
-        val powers: List<Double> = listOf(lfPow, rfPow, lbPow, rbPow).map {x -> x/scale}
-        /*
-        for (i in powers) {
-            if (powers[i] < - 1) { powers [i] = -1;}
-            if (powers[i] > 1) {powers [i] = 1;}
-        }*/
+        // get the max wheel power
+        val wMax : Double = max(lfPow, max(rfPow, max(lbPow, rbPow)))
+        telemetry.addData("Max Speed: ", wMax)
+        // scale the motor powers
+        val powers: List<Double> = listOf(lfPow, rfPow, lbPow, rbPow).map {x -> x/max(1.0, wMax)}
         telemetry.addData("Powers: ", powers)
+        // set the motor powers
         lf.power = powers[0]
         rf.power = powers[1]
         lb.power = powers[2]
         rb.power = powers[3]
     }
+    /**
+    * Sets motor powers based on an Inverse Kinematics algorithm using input from a Gamepad.
+    * Two joysticks are used - the X and Y axes of the left joystick control the linear motion of the robot,
+    * and the X axis of the right joystick controls rotational motion.
+    * @param gamepad the gamepad used to drive
+    */
+    fun arcadeMecanum(gamepad: Gamepad) =
+            arcadeMecanum(Math.pow(gamepad.left_stick_x.toDouble(), 3.0),
+                    Math.pow(gamepad.left_stick_y.toDouble(), 3.0),
+                    Math.pow(gamepad.right_stick_x.toDouble(), 3.0))
 
     /**
-     * Sets motor powers based on the Simplistic Mecanum algorithm, designed for input from two Joysticks.
-     * @param left_x the x-axis of the left joystick
-     * @param left_y the y axis of the left joystick
-     * @param right_x the x axis of the right joystick
+     * Sets motor powers based on an Inverse Kinematics algorithm designed to act similarly to a tank drive system
+     * when used with a Gamepad.
+     * @param left_y the left joystick Y axis
+     * @param right_y the right joystick y axis
+     * @param left_trigger the left trigger
+     * @param right_trigger the right trigger
+     * @param kT a turning multiplier, used to tune gamepad sensitivity
      */
-    fun arcadeMecanum(left_x: Double, left_y: Double, right_x: Double) {
-        val vD : Double = sqrt(Math.pow(left_x, 2.0)
-                + Math.pow(left_y, 2.0))
-        val thetaD : Double = atan2(-left_x, left_y)
-        val vTheta : Double = Math.pow(right_x, 3.0)/(1.5)
+    fun tankMecanum(left_y: Double, right_y: Double,
+                    left_trigger: Double, right_trigger: Double, kT: Double = 0.5) {
+        // set up movement variables
+        val vtY : Double = (left_y + right_y) / 2
+        val vR : Double = (left_y - right_y) / 2
+        val vtX : Double = right_trigger - left_trigger
+        // then plug those into arcadeMecanum() - we're done!
+        arcadeMecanum(vtX = vtX, vtY = vtY, vR = (kT*vR))
+    }
+    /**
+     * Sets motor powers based on an Inverse Kinematics algorithm using a Gamepad, designed to work like a tank drive.
+     * The joysticks behave identically to a tank drive, and the triggers allow for strafing.
+     * @param gamepad the gamepad used to drive
+     */
+    fun tankMecanum(gamepad: Gamepad) = tankMecanum(Math.pow(gamepad.left_stick_y.toDouble(), 3.0),
+            Math.pow(gamepad.right_stick_y.toDouble(), 3.0),
+            Math.pow(gamepad.left_trigger.toDouble(), 3.0),
+            Math.pow(gamepad.right_trigger.toDouble(), 3.0))
+
+    /**
+     * Sets motor powers based on the Simplistic Mecanum algorithm from WPI Think Tank.
+     * @param vtX translational power along the X axis (-1 to 1)
+     * @param vtY translational power along the Y axis (-1 to 1)
+     * @param vR rotational power around the Z axis (-1 to 1)
+     */
+    fun arcadeMecanum_WPI(vtX: Double, vtY: Double, vR: Double) {
+        val vD : Double = sqrt(Math.pow(vtX, 2.0)
+                + Math.pow(vtY, 2.0))
+        val thetaD : Double = atan2(-vtX, vtY)
+        val vTheta : Double = Math.pow(vR, 3.0)/(1.5)
         telemetry.addData("Inputs: ", listOf(vD, thetaD, vTheta))
 
         val lfPow : Double = vD * sin(-thetaD + Math.PI / 4) - vTheta
@@ -231,38 +266,14 @@ class Rebound(private val telemetry: Telemetry, private val hardwareMap: Hardwar
     }
     /**
      * Sets motor powers based on the Simplistic Mecanum algorithm, using input from a Gamepad.
+     * Two joysticks are used - the X and Y axes of the left joystick control the linear motion of the robot,
+     * and the X axis of the right joystick controls rotational motion.
      * @param gamepad the gamepad used to drive
      */
-    fun arcadeMecanum(gamepad: Gamepad) =
-            arcadeMecanum(Math.pow(gamepad.left_stick_x.toDouble(), 3.0),
+    fun arcadeMecanum_WPI(gamepad: Gamepad) =
+            arcadeMecanum_WPI(Math.pow(gamepad.left_stick_x.toDouble(), 3.0),
                     Math.pow(gamepad.left_stick_y.toDouble(), 3.0),
                     Math.pow(gamepad.right_stick_x.toDouble(), 3.0))
-
-    fun tankMecanum(left_y: Double, right_y: Double,
-                    left_trigger: Double, right_trigger: Double) {
-        val yF : Double = (left_y + right_y) / 2
-        val yT : Double = (left_y - right_y) / 2
-        val vX : Double = right_trigger - left_trigger
-
-        val kT = 0.5 // turn multiplier
-
-        val lfPow : Double = yF + yT + (kT*vX)
-        val rfPow : Double = yF - yT - (kT*vX)
-        val lbPow : Double = yF + yT - (kT*vX)
-        val rbPow : Double = -(yF - yT + (kT*vX))
-
-        val wMax : Double = max(lfPow, max(rfPow, max(lbPow, rbPow)))
-        val powers = listOf(lfPow, rfPow, lbPow, rbPow).map { x -> x/max(1.0, abs(wMax))}
-
-        lf.power = powers[0]
-        rf.power = powers[1]
-        lb.power = powers[2]
-        rb.power = powers[3]
-    }
-    fun tankMecanum(gamepad: Gamepad) = tankMecanum(Math.pow(gamepad.left_stick_y.toDouble(), 3.0),
-            Math.pow(gamepad.right_stick_y.toDouble(), 3.0),
-            Math.pow(gamepad.left_trigger.toDouble(), 3.0),
-            Math.pow(gamepad.right_trigger.toDouble(), 3.0))
 
     /**
      * Checks if motors are busy.

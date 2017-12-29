@@ -11,7 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor
 class ReboundTeleOp : OpMode() {
 
     private lateinit var drivetrain: Rebound
-    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayer: MediaPlayer // dedicated to Elliot Kahn of 8148 Aleph Bots
+    private var tankStyleControl : Boolean = false
 
     override fun init() {
         // setup
@@ -30,11 +31,10 @@ class ReboundTeleOp : OpMode() {
         val orientation = drivetrain.getOrientation()
         telemetry.addData("Orientation: ", orientation)
         when {
-            gamepad1.a -> mediaPlayer.start()
-            gamepad1.b -> mediaPlayer.stop()
-            //gamepad1.left_trigger > 0 -> drivetrain.arcadeMecanum((-gamepad1.left_trigger).toDouble(), 0.0, 0.0)
-            //gamepad1.right_trigger > 0 -> drivetrain.arcadeMecanum(gamepad1.right_trigger.toDouble(), 0.0, 0.0)
-            else -> drivetrain.tankMecanum(gamepad1)
+            gamepad1.x -> mediaPlayer.start()
+            gamepad1.y -> mediaPlayer.stop()
+            gamepad1.a -> tankStyleControl = !tankStyleControl
+            else -> if(tankStyleControl) {drivetrain.tankMecanum(gamepad1)} else {drivetrain.arcadeMecanum(gamepad1)}
         }
     }
 
