@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.libraries.hardware;
 
+import android.graphics.Path;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -63,6 +66,8 @@ public class BotHardware {
 
         public static final double stickUp = 0.4;
         public static final double stickDown = .96;
+        public static final double stick90 = 0.44;
+        public static final double stick0 = 0.95;
 
         public static final double stickBaseCenterBlue = 0.31;
         public static final double stickBaseCenterRed = 0.34;
@@ -96,6 +101,28 @@ public class BotHardware {
         }
     }
 
+    public enum ContiniuosServoE {
+        TestServo("crl", false);
+
+        private final String name;
+        public CRServo servo;
+        private boolean reversed;
+        ContiniuosServoE(String name, boolean reversed) {
+            this.name = name;
+            this.reversed = reversed;
+        }
+
+        void initServo(OpMode mode) {
+            try{
+                this.servo = mode.hardwareMap.get(CRServo.class, this.name);
+                if(this.reversed) this.servo.setDirection(CRServo.Direction.REVERSE);
+            }
+            catch (Exception e) {
+                mode.telemetry.addData(this.name, "Failed to find");
+            }
+        }
+    }
+
     //opmode pointer
     private final OpMode mode;
     //motor wrap array pointer
@@ -117,6 +144,7 @@ public class BotHardware {
         shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
+        for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
         ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
         ServoE.stick.servo.setPosition(ServoE.stickUp);
         //init IMU

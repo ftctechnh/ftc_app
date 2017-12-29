@@ -25,6 +25,8 @@ public class APDSDistance extends CrappyGraphLib {
 
     private int regDist;
     private double linearDist;
+    private double lastDist;
+    private double lastTime;
 
     private LinkedList<Double> data = new LinkedList<>();
 
@@ -65,6 +67,12 @@ public class APDSDistance extends CrappyGraphLib {
 
     public void loop() {
         linearDist = dist.getLinearizedDistance();
+        if(lastTime == 0) lastTime = getRuntime();
+
+        final double time = getRuntime();
+        final double slope = (linearDist - lastDist) / (time - lastTime);
+        lastDist = linearDist;
+        lastTime = time;
 
         //add graph stuff
         this.data.add(linearDist);
@@ -75,5 +83,6 @@ public class APDSDistance extends CrappyGraphLib {
         telemetry.addData("Gain", config.gain.toString());
         telemetry.addData("Regular", regDist);
         telemetry.addData("Linear", linearDist);
+        telemetry.addData("Slope", slope);
     }
 }

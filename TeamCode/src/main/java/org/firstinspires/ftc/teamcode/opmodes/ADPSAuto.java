@@ -56,9 +56,7 @@ public class ADPSAuto extends VuforiaBallLib {
 
     SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
 
-
-
-    //
+    private static final double MM_PER_ENCODE = 13.298;
 
     public void init() {
         initVuforia(true);
@@ -121,7 +119,7 @@ public class ADPSAuto extends VuforiaBallLib {
             }
 
             AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
-            
+
             findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 105.0f * mul, 600, true, -360.0f, 360.0f));
             findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));

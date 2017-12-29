@@ -51,6 +51,12 @@ public class Teleop extends OpMode {
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
+        if(gamepad2.left_trigger > 0) BotHardware.ContiniuosServoE.TestServo.servo.setPower(-1.0);
+        else if (gamepad2.right_trigger > 0) BotHardware.ContiniuosServoE.TestServo.servo.setPower(1.0);
+        else BotHardware.ContiniuosServoE.TestServo.servo.setPower(0);
+
+        telemetry.addData("Continious", BotHardware.ContiniuosServoE.TestServo.servo.getPower());
+
         //if(suckerDown) bot.dropFront();
         //else bot.raiseFront();
 
