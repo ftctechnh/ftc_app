@@ -30,11 +30,19 @@ public class SouthRed extends LinearOpMode {
         //
         jeffThePengwin.startify();
         //
+        pengwinFin.fin.setPosition(1.0);
+        //
         waitForStartify();
         //
         pengwinArm.open();//close
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive()){
+            //Do Nothing
+        }
+        //
+        pengwinFin.moveFinUp();
+        runtime.reset();
+        while(runtime.seconds()<.5 && opModeIsActive()){
             //Do Nothing
         }
         //
@@ -94,6 +102,12 @@ public class SouthRed extends LinearOpMode {
         }
         gentlyPutTheMotorsToSleep();
         //
+        jeffThePengwin.turnRightToPostion(5, 0.4);
+        runtime.reset();
+        while(runtime.seconds()<2 && opModeIsActive() && jeffThePengwin.isMoving()){
+            //Do Nothing
+        }
+        //
         jeffThePengwin.backToPosition(3,0.4);
         runtime.reset();
         while(runtime.seconds()<2 && opModeIsActive() && jeffThePengwin.isMoving()){
@@ -111,7 +125,7 @@ public class SouthRed extends LinearOpMode {
             //Do Nothing
         }
         //
-        jeffThePengwin.forwardToPosition(1,.4);
+        jeffThePengwin.backToPosition(5,.4);
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive() && jeffThePengwin.isMoving()){
             //Do Nothing

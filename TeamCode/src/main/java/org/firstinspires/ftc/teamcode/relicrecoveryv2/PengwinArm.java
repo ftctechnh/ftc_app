@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.relicrecovery;
+package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 /**
  * Created by thund on 10/19/2017.
