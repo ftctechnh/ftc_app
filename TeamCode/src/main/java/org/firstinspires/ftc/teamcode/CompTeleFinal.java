@@ -73,7 +73,7 @@ public class CompTeleFinal extends OpMode
             if (gamepad1.right_trigger > .4f)
                 newRobot.driveMotors(gamepad1.left_stick_y / 2, -gamepad1.right_stick_y / 2);
             else
-                newRobot.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
+                newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
         }
 
         if (gamepad1.y)
