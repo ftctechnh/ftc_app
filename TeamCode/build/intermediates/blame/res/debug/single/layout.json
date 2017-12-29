@@ -1,391 +1,433 @@
 [
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module.xml"
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\matrices.xml"
     },
     {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\legacy.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\legacy.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/banner_parent.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/banner_parent.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_fw_update.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_lynx_fw_update.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/analog_input_device.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/analog_input_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/port_attached_row.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/port_attached_row.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\simple_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\simple_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_program_and_manage.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_program_and_manage.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_program_and_manage.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_program_and_manage.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrix_devices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\matrix_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/i2cs.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/i2cs.xml"
+=======
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrices.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\matrices.xml"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\matrices.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\gray_line.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\gray_line.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\simple_device.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\simple_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2c_device.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\i2c_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\device_interface_module.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\device_interface_module.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_about.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrices.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\matrices.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_remembered_groups.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_wifi_remembered_groups.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\simple_device.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\simple_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_channel_selector.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_wifi_channel_selector.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_load.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_address_update.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_controller_banner.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo_controller_banner.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_inputs.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_inputs.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_programming_mode.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\f973cced30bffcd0d3d5f4d793f6f59c4c040f16\\output\\res\\layout\\activity_programming_mode.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\digital_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\motor.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\servo_list.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_output_device.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_output_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_inputs.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_inputs.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\file_info.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\file_info.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_devices.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_devices.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_usb_device.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_usb_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_programming_mode.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\layout\\activity_programming_mode.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\servo.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_swap_usb_devices.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_swap_usb_devices.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address_spin_item.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_module_configure_address_spin_item.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_configure_from_template.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_configure_from_template.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_controller.xml",
-        "source": "C:\\Users\\sugar\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\layout\\activity_ftc_controller.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_about.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_controller_banner.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\motor_controller_banner.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwm_device.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\pwm_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\template_info.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrix_devices.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\matrix_devices.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\legacy.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\legacy.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_generic_settings.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_generic_settings.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2cs.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\i2cs.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2c_device.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\i2c_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_list.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\motor_list.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\legacy.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\legacy.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_fw_update.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_lynx_fw_update.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_device.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\device_interface_module.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\device_interface_module.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_view_logs.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_view_logs.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\red_line.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\red_line.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_blocks.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\layout\\activity_blocks.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\loading_indicator_overlay.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\layout\\loading_indicator_overlay.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\info_button.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\info_button.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\simple_device.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\simple_device.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_program_and_manage.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_program_and_manage.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\feedback.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\layout\\feedback.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrix_devices.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\matrix_devices.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\port_attached_row.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\port_attached_row.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_about.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module_configure_address.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_remembered_groups.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_ftc_wifi_remembered_groups.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwm_device.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\pwm_device.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor.xml"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_address_update.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_about.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\header.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\header.xml"
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_remembered_groups.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_wifi_remembered_groups.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\button_list.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\button_list.xml"
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/button_list.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/button_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_load.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/lynx_module_configure_address.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/lynx_module_configure_address.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_inspection.xml",
+        "source": "/Users/samih/.android/build-cache/d8ca45d68a7b3b7eac93b4ade92e763b24e411e5/output/res/layout/activity_inspection.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/item_list_parent.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/item_list_parent.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/header.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/header.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\device_interface_module.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\device_interface_module.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_programming_mode.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\f973cced30bffcd0d3d5f4d793f6f59c4c040f16\\output\\res\\layout\\activity_programming_mode.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\digital_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\motor.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\servo_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_generic_settings.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_generic_settings.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/red_line.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/red_line.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_inputs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_inputs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\feedback.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\feedback.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\matrices.xml"
+=======
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\device_interface_module.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\device_interface_module.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_programming_mode.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8b2b9da6ab7ccc3d68e35765c71f9b919e90e0c6\\output\\res\\layout\\activity_programming_mode.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\digital_device.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\motor.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\servo_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_generic_settings.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_generic_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_inputs.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\analog_inputs.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\feedback.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\feedback.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrices.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\matrices.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\file_info.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\file_info.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\gray_line.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\gray_line.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device_lynx.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_device_lynx.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\gray_line.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\gray_line.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\color_list_preference_line_item.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\color_list_preference_line_item.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo_list.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_list.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor_list.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrix_devices.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\matrix_devices.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\header.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\header.xml"
-    },
-    {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\info_button.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\info_button.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_outputs.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_outputs.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\file_info.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\file_info.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwms.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\pwms.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_blocks.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\f973cced30bffcd0d3d5f4d793f6f59c4c040f16\\output\\res\\layout\\activity_blocks.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_controller.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\layout\\activity_ftc_controller.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_usb_device.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\lynx_usb_device.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_view_logs.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_view_logs.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_controller_banner.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor_controller_banner.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo_list.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\item_list_parent.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\item_list_parent.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\servo.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_config_wifi_direct.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_config_wifi_direct.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\banner_parent.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\banner_parent.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwms.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\pwms.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_inspection.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\b2c6da4614428ef8cc1e8465419d710a8f66e943\\output\\res\\layout\\activity_inspection.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_configure_from_template.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_configure_from_template.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_module.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\item_list_parent.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\item_list_parent.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_configuration.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_configuration.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_controller_banner.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\servo_controller_banner.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_fw_update.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_lynx_fw_update.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_configuration.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_configuration.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_swap_usb_devices.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_swap_usb_devices.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address_spin_item.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module_configure_address_spin_item.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_config_wifi_direct.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_config_wifi_direct.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address_spin_item.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\lynx_module_configure_address_spin_item.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_generic_settings.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_generic_settings.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\port_attached_row.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\port_attached_row.xml"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\loading_indicator_overlay.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\loading_indicator_overlay.xml"
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\file_info.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\file_info.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_input_device.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_input_device.xml"
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\gray_line.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\gray_line.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_swap_usb_devices.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_swap_usb_devices.xml"
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device_lynx.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_device_lynx.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device_lynx.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\digital_device_lynx.xml"
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/digital_devices.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/digital_devices.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\banner_parent.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\banner_parent.xml"
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\info_button.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\info_button.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_program_and_manage.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_program_and_manage.xml"
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/servo_list.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/servo_list.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\color_list_preference_line_item.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\layout\\color_list_preference_line_item.xml"
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_usb_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_usb_device.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\port_attached_row.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\port_attached_row.xml"
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/motor_controller_banner.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/motor_controller_banner.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_inspection.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\layout\\activity_inspection.xml"
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/info_button.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/info_button.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_configuration.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_ftc_configuration.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_view_logs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_view_logs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_list.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\servo.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_swap_usb_devices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_swap_usb_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_generic_settings.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_generic_settings.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address_spin_item.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module_configure_address_spin_item.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address_spin_item.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_module_configure_address_spin_item.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\port_attached_row.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\port_attached_row.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_controller.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\layout\\activity_ftc_controller.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\file_info.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\file_info.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_blocks.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\layout\\activity_blocks.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_programming_mode.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\layout\\activity_programming_mode.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_controller_banner.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\motor_controller_banner.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/gray_line.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/gray_line.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrix_devices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\matrix_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_outputs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_outputs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_input_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_input_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\legacy.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\legacy.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\button_list.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\button_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\template_info.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_wifi_remembered_groups.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_ftc_wifi_remembered_groups.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_controller.xml",
+        "source": "/Users/samih/Documents/ftc_app/FtcRobotController/build/intermediates/bundles/default/res/layout/activity_ftc_controller.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/loading_indicator_overlay.xml",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/layout/loading_indicator_overlay.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2c_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\i2c_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_list.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\motor_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/digital_device_lynx.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/digital_device_lynx.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/motor.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/motor.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/servo_controller_banner.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/servo_controller_banner.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\device_interface_module.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\device_interface_module.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_swap_usb_devices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_swap_usb_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_configure_from_template.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_configure_from_template.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_view_logs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_view_logs.xml"
+=======
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\file_info.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\file_info.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_blocks.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\layout\\activity_blocks.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_programming_mode.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\layout\\activity_programming_mode.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_controller_banner.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\motor_controller_banner.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\matrix_devices.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\matrix_devices.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_outputs.xml",
@@ -396,55 +438,677 @@
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_input_device.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\legacy.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\legacy.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\legacy.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\legacy.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\red_line.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\red_line.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\button_list.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\button_list.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_output_device.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_output_device.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\template_info.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_load.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2c_device.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\i2c_device.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_list.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\motor_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\device_interface_module.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\device_interface_module.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_swap_usb_devices.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_swap_usb_devices.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_view_logs.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_view_logs.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\red_line.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\red_line.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\loading_indicator_overlay.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\layout\\loading_indicator_overlay.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\info_button.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\info_button.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_inspection.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\layout\\activity_inspection.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\feedback.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\layout\\feedback.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\banner_parent.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\banner_parent.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_remembered_groups.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_wifi_remembered_groups.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_devices.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\digital_devices.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\red_line.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\red_line.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_module_configure_address.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwm_device.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\pwm_device.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_channel_selector.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_wifi_channel_selector.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_address_update.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\template_info.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwm_device.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\pwm_device.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2cs.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\i2cs.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_output_device.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_output_device.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\gray_line.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\gray_line.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_devices.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_devices.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\header.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\header.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\header.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\header.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_outputs.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\analog_outputs.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_blocks.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8b2b9da6ab7ccc3d68e35765c71f9b919e90e0c6\\output\\res\\layout\\activity_blocks.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\item_list_parent.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\item_list_parent.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_address_update.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwms.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\pwms.xml"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\red_line.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\red_line.xml"
+    },
+    {
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/color_list_preference_line_item.xml",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/layout/color_list_preference_line_item.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/file_info.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/file_info.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/template_info.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/template_info.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\loading_indicator_overlay.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\layout\\loading_indicator_overlay.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/motor_list.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/motor_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_load.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_load.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_blocks.xml",
+        "source": "/Users/samih/.android/build-cache/c11d6f6f1e93b50e2ee3f921fbb068f88e19bcd5/output/res/layout/activity_blocks.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\info_button.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\info_button.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_inspection.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\layout\\activity_inspection.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\feedback.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\layout\\feedback.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\banner_parent.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\banner_parent.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_remembered_groups.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_wifi_remembered_groups.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_lynx_fw_update.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_ftc_lynx_fw_update.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\red_line.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\red_line.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwm_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\pwm_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_address_update.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwm_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\pwm_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_view_logs.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_view_logs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_config_wifi_direct.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_config_wifi_direct.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_output_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_output_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\gray_line.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\gray_line.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/digital_device.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/digital_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_devices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_lynx_address_update.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_ftc_lynx_address_update.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\header.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\header.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\header.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\header.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_outputs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_outputs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/feedback.xml",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/layout/feedback.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_blocks.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\f973cced30bffcd0d3d5f4d793f6f59c4c040f16\\output\\res\\layout\\activity_blocks.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\item_list_parent.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\item_list_parent.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/lynx_module_configure_address_spin_item.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/lynx_module_configure_address_spin_item.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_address_update.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_lynx_address_update.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwms.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\pwms.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/pwm_device.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/pwm_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_controller_banner.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor_controller_banner.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_inspection.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\b2c6da4614428ef8cc1e8465419d710a8f66e943\\output\\res\\layout\\activity_inspection.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_configure_from_template.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_configure_from_template.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2c_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\i2c_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_module.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/legacy.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/legacy.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_channel_selector.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_wifi_channel_selector.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/i2c_device.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/i2c_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_configuration.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_configuration.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2cs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\i2cs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_controller_banner.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\servo_controller_banner.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/matrix_devices.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/matrix_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_configure_from_template.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_configure_from_template.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_fw_update.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_lynx_fw_update.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/device_interface_module.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/device_interface_module.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_usb_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_usb_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/analog_outputs.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/analog_outputs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/analog_inputs.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/analog_inputs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/servo.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/servo.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\simple_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\simple_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_config_wifi_direct.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_config_wifi_direct.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_generic_settings.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_generic_settings.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\color_list_preference_line_item.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\color_list_preference_line_item.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/simple_device.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/simple_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_inputs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_inputs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_input_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_input_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device_lynx.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\digital_device_lynx.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\banner_parent.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\banner_parent.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_about.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\loading_indicator_overlay.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\loading_indicator_overlay.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_ftc_wifi_channel_selector.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_ftc_wifi_channel_selector.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_program_and_manage.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_program_and_manage.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\color_list_preference_line_item.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\layout\\color_list_preference_line_item.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\port_attached_row.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\port_attached_row.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_swap_usb_devices.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_swap_usb_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_controller.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\layout\\activity_ftc_controller.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/analog_output_device.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/analog_output_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_programming_mode.xml",
+        "source": "/Users/samih/.android/build-cache/c11d6f6f1e93b50e2ee3f921fbb068f88e19bcd5/output/res/layout/activity_programming_mode.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_list.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module_configure_address.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_configuration.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_configuration.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/activity_about.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/activity_about.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_output_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\analog_output_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_load.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/pwms.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/pwms.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_devices.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\digital_devices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\lynx_module_configure_address.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_channel_selector.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\activity_ftc_wifi_channel_selector.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\template_info.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2cs.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\i2cs.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\item_list_parent.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\item_list_parent.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/matrices.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/matrices.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\button_list.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\button_list.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/lynx_usb_device.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/lynx_usb_device.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/layout/lynx_module.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/layout/lynx_module.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwms.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\pwms.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_controller_banner.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo_controller_banner.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_config_wifi_direct.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_config_wifi_direct.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_device.xml"
+=======
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_inspection.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\cab680ad81036fc0695de103a695c46bee9cab7e\\output\\res\\layout\\activity_inspection.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_configure_from_template.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_configure_from_template.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2c_device.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\i2c_device.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\lynx_module.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_channel_selector.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_wifi_channel_selector.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_configuration.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_ftc_configuration.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2cs.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\i2cs.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_controller_banner.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\servo_controller_banner.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_configure_from_template.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_configure_from_template.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_lynx_fw_update.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_ftc_lynx_fw_update.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_usb_device.xml",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_usb_device.xml"
     },
     {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\button_list.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\layout\\button_list.xml"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\simple_device.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\simple_device.xml"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\feedback.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\feedback.xml"
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_config_wifi_direct.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_config_wifi_direct.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_generic_settings.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_generic_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\color_list_preference_line_item.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\color_list_preference_line_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_inputs.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\analog_inputs.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_input_device.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\analog_input_device.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device_lynx.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\digital_device_lynx.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\banner_parent.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\banner_parent.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_about.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_about.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\loading_indicator_overlay.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\layout\\loading_indicator_overlay.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_program_and_manage.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_program_and_manage.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\color_list_preference_line_item.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\layout\\color_list_preference_line_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\port_attached_row.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\port_attached_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_controller.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\layout\\activity_ftc_controller.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\motor_list.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\motor_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module_configure_address.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_configuration.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_ftc_configuration.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\analog_output_device.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\analog_output_device.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_load.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_load.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_devices.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\digital_devices.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module_configure_address.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\lynx_module_configure_address.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_ftc_wifi_channel_selector.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\activity_ftc_wifi_channel_selector.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\template_info.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\template_info.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\i2cs.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\i2cs.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\item_list_parent.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\item_list_parent.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\button_list.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\layout\\button_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\pwms.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\pwms.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\servo_controller_banner.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\servo_controller_banner.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\lynx_module.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\lynx_module.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\activity_config_wifi_direct.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\activity_config_wifi_direct.xml"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\layout\\digital_device.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\layout\\digital_device.xml"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
     }
 ]

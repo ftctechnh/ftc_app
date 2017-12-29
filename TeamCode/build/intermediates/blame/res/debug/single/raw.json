@@ -1,90 +1,217 @@
 [
     {
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/simple_vertex_shader.glsl",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/raw/simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/chimedisconnect.wav",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/raw/chimedisconnect.wav"
+=======
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimedisconnect.wav",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\chimedisconnect.wav"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\raw\\chimedisconnect.wav"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
     },
     {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/warningmessage.wav",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/raw/warningmessage.wav"
+    },
+    {
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_vertex_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\texture_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/chimeconnect.wav",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/raw/chimeconnect.wav"
+=======
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\errormessage.wav",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\errormessage.wav"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimedisconnect.wav",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\chimedisconnect.wav"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\errormessage.wav",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\errormessage.wav"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_vertex_shader.glsl",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\texture_vertex_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_vertex_shader.glsl",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\texture_vertex_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_vertex_shader.glsl",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\cube_mesh_vertex_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_fragment_shader.glsl",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\texture_fragment_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\nxtstartupsound.wav",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\nxtstartupsound.wav"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\color_fragment_shader.glsl",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\color_fragment_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\warningmessage.wav",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\warningmessage.wav"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_fragment_shader.glsl",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\cube_mesh_fragment_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\simple_vertex_shader.glsl",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\simple_vertex_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\simple_vertex_shader.glsl",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\simple_vertex_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_fragment_shader.glsl",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\cube_mesh_fragment_shader.glsl"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimeconnect.wav",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\chimeconnect.wav"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\color_fragment_shader.glsl",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\color_fragment_shader.glsl"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\raw\\errormessage.wav"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimeconnect.wav",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\chimeconnect.wav"
     },
     {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_vertex_shader.glsl",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\raw\\texture_vertex_shader.glsl"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_vertex_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\texture_vertex_shader.glsl"
+    },
+    {
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\warningmessage.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\warningmessage.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\warningmessage.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\warningmessage.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\simple_vertex_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\simple_vertex_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\nxtstartupsound.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\nxtstartupsound.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_fragment_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\texture_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/texture_fragment_shader.glsl",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/raw/texture_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_vertex_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\cube_mesh_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/cube_mesh_vertex_shader.glsl",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/raw/cube_mesh_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/color_fragment_shader.glsl",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/raw/color_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimedisconnect.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\chimedisconnect.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimedisconnect.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\chimedisconnect.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/nxtstartupsound.wav",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/raw/nxtstartupsound.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\errormessage.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\errormessage.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimeconnect.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\chimeconnect.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\color_fragment_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\color_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\errormessage.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\errormessage.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/texture_vertex_shader.glsl",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/raw/texture_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_fragment_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_fragment_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimeconnect.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\chimeconnect.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/errormessage.wav",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/raw/errormessage.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/raw/cube_mesh_fragment_shader.glsl",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/raw/cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\nxtstartupsound.wav",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\nxtstartupsound.wav"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_vertex_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\cube_mesh_vertex_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\color_fragment_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\color_fragment_shader.glsl"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_fragment_shader.glsl",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\texture_fragment_shader.glsl"
+=======
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\errormessage.wav",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\errormessage.wav"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\color_fragment_shader.glsl",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\raw\\color_fragment_shader.glsl"
+    },
+    {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\warningmessage.wav",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\warningmessage.wav"
     },
     {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\warningmessage.wav",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\raw\\warningmessage.wav"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\simple_vertex_shader.glsl",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\simple_vertex_shader.glsl",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\raw\\simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\nxtstartupsound.wav",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\raw\\nxtstartupsound.wav"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_fragment_shader.glsl",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_fragment_shader.glsl",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\raw\\cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimeconnect.wav",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\raw\\chimeconnect.wav"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_fragment_shader.glsl",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\texture_fragment_shader.glsl"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_vertex_shader.glsl",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\cube_mesh_vertex_shader.glsl"
+    },
+    {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\nxtstartupsound.wav",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\raw\\nxtstartupsound.wav"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\raw\\nxtstartupsound.wav"
     },
     {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_vertex_shader.glsl",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\cube_mesh_vertex_shader.glsl"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\raw\\cube_mesh_vertex_shader.glsl"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\color_fragment_shader.glsl",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\raw\\color_fragment_shader.glsl"
     },
     {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_fragment_shader.glsl",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\raw\\texture_fragment_shader.glsl"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\raw\\texture_fragment_shader.glsl"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
     }
 ]

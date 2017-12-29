@@ -1,7 +1,7 @@
 [
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\icon_robotcontroller.png",
-        "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xhdpi-v4\\icon_robotcontroller.png"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\icon_menu.png",
+        "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xhdpi-v4\\icon_menu.png"
     },
     {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\icon_robotcontroller.png",
@@ -20,7 +20,7 @@
         "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xhdpi-v4\\ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\icon_menu.png",
-        "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xhdpi-v4\\icon_menu.png"
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\icon_robotcontroller.png",
+        "source": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\FtcRobotController\\build\\intermediates\\bundles\\default\\res\\drawable-xhdpi-v4\\icon_robotcontroller.png"
     }
 ]

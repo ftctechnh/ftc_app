@@ -1,42 +1,100 @@
 [
     {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\black_border.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\drawable\\black_border.xml"
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/drawable/black_border.xml",
+        "source": "/Users/samih/.android/build-cache/c11d6f6f1e93b50e2ee3f921fbb068f88e19bcd5/output/res/drawable/black_border.xml"
     },
     {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\black_border.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\f973cced30bffcd0d3d5f4d793f6f59c4c040f16\\output\\res\\drawable\\black_border.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\drawable\\button_shape.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/drawable/button_shape.xml",
+        "source": "/Users/samih/.android/build-cache/253dbfae3f0b4bc8886e101dae26c3f0239ad64d/output/res/drawable/button_shape.xml"
+=======
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\black_border.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\f973cced30bffcd0d3d5f4d793f6f59c4c040f16\\output\\res\\drawable\\black_border.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\drawable\\button_shape.xml"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8b2b9da6ab7ccc3d68e35765c71f9b919e90e0c6\\output\\res\\drawable\\black_border.xml"
     },
     {
         "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\2988e32d1dd21047c230505f664421e4ba3f0c47\\output\\res\\drawable\\button_shape.xml"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_menu.png",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\drawable\\icon_menu.png"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_robotcontroller.png",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\b2c6da4614428ef8cc1e8465419d710a8f66e943\\output\\res\\drawable\\icon_robotcontroller.png"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\feedback_shape_orange.xml",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\drawable\\feedback_shape_orange.xml"
-    },
-    {
-        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_menu.png",
-        "source": "C:\\Users\\sugar\\.android\\build-cache\\b2c6da4614428ef8cc1e8465419d710a8f66e943\\output\\res\\drawable\\icon_menu.png"
-    },
-    {
-        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\feedback_shape_orange.xml",
-        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\drawable\\feedback_shape_orange.xml"
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\2dd82d04d12af688930519253bd524605c889160\\output\\res\\drawable\\button_shape.xml"
     },
     {
         "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_robotcontroller.png",
         "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\drawable\\icon_robotcontroller.png"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_robotcontroller.png",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\cab680ad81036fc0695de103a695c46bee9cab7e\\output\\res\\drawable\\icon_robotcontroller.png"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\black_border.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\drawable\\black_border.xml"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/drawable/icon_robotcontroller.png",
+        "source": "/Users/samih/.android/build-cache/d8ca45d68a7b3b7eac93b4ade92e763b24e411e5/output/res/drawable/icon_robotcontroller.png"
+    },
+    {
+<<<<<<< HEAD
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_robotcontroller.png",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\drawable\\icon_robotcontroller.png"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_robotcontroller.png",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\b2c6da4614428ef8cc1e8465419d710a8f66e943\\output\\res\\drawable\\icon_robotcontroller.png"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\black_border.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\c5803c8a9c70b567fb2ba8c849116feac1953742\\output\\res\\drawable\\black_border.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_menu.png",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\b2d780f14f19bc050e2238aa8bfcaa207bed730b\\output\\res\\drawable\\icon_menu.png"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/drawable/icon_menu.png",
+        "source": "/Users/samih/.android/build-cache/d8ca45d68a7b3b7eac93b4ade92e763b24e411e5/output/res/drawable/icon_menu.png"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/TeamCode/build/intermediates/res/merged/debug/drawable/feedback_shape_orange.xml",
+        "source": "/Users/samih/.android/build-cache/8574092f9d48a9da2c8dc62c904f0f7716ce02a9/output/res/drawable/feedback_shape_orange.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\feedback_shape_orange.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\drawable\\feedback_shape_orange.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\feedback_shape_orange.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\4f75466cdf1f0f619720a0769461a5adf29b6efe\\output\\res\\drawable\\feedback_shape_orange.xml"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_menu.png",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\sugar\\.android\\build-cache\\b2c6da4614428ef8cc1e8465419d710a8f66e943\\output\\res\\drawable\\icon_menu.png"
+    },
+    {
+        "merged": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
+        "source": "/Users/samih/Documents/ftc_app/C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\drawable\\button_shape.xml"
+=======
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\feedback_shape_orange.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\a15efd40b7c4d5ed4648224612140fe68bf28eaa\\output\\res\\drawable\\feedback_shape_orange.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\feedback_shape_orange.xml",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\8ff042fd27826e634fceb1339590144e4a4ef40a\\output\\res\\drawable\\feedback_shape_orange.xml"
+    },
+    {
+        "merged": "C:\\Users\\sugar\\Documents\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\icon_menu.png",
+        "source": "C:\\Users\\sugar\\.android\\build-cache\\cab680ad81036fc0695de103a695c46bee9cab7e\\output\\res\\drawable\\icon_menu.png"
+    },
+    {
+        "merged": "C:\\Users\\Swagster_Wagster\\Work\\ftc_app\\TeamCode\\build\\intermediates\\res\\merged\\debug\\drawable\\button_shape.xml",
+        "source": "C:\\Users\\Swagster_Wagster\\.android\\build-cache\\07ec9cac24f1247e4ad1444596a1b77ff790b553\\output\\res\\drawable\\button_shape.xml"
+>>>>>>> 67ecde76a2a33d97f83233d006cf13147434501b
     }
 ]

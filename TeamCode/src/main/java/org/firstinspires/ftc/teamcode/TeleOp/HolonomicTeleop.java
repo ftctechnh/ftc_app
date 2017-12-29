@@ -137,9 +137,15 @@ public class HolonomicTeleop extends OpMode {
             if (right_x < 0) dir = -1;
 
             robot.F_L.setPower(dir * limiter);
+
+            robot.F_R.setPower(dir * limiter);
+            robot.R_R.setPower(dir * limiter);
+            robot.R_L.setPower(dir * limiter);
+
             robot.F_R.setPower(dir *limiter);
             robot.R_R.setPower(dir *limiter);
             robot.R_L.setPower(dir *limiter);
+
         }
 
         //DPAD DIRECTIONS
