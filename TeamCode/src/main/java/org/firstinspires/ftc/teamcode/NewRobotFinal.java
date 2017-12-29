@@ -258,7 +258,12 @@ public class NewRobotFinal
     public void driveMotors(float lPow, float rPow)
     {
         driveLeftOne.setPower(lPow);
-        driveRightOne.setPower(rPow);
+        driveRightOne.setPower(-rPow);
+    }
+
+    public void driveMotorsAuto (float lPow, float rPow)
+    {
+        driveMotors(-lPow, rPow);
     }
 
     private void resetDriveEncoders()//sets encoders to 0 for motors
@@ -271,17 +276,18 @@ public class NewRobotFinal
 
     public void driveStraight_In(float inches, double pow)
     {
+        stopDriveMotors();
         float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
+        float absPow = (float)Math.abs(pow);
         resetDriveEncoders();
         //Notes: We are using Andymark Neverrest 40
         // 1120 counts per rev
 
-        if(inches < 0)
+        if(inches * pow < 0)
         {
-            driveRightOne.setPower(-Math.abs(pow));
-            driveLeftOne.setPower(Math.abs(pow));
+            driveMotorsAuto(-absPow, -absPow);
 
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
@@ -290,8 +296,7 @@ public class NewRobotFinal
         }
         else
         {
-            driveRightOne.setPower(Math.abs(pow));
-            driveLeftOne.setPower(-Math.abs(pow));
+            driveMotorsAuto(absPow, absPow);
 
             while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
         }
