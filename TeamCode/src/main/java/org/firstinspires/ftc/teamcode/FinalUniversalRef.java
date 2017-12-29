@@ -40,14 +40,14 @@ public class FinalUniversalRef extends LinearOpMode
                         //sleep(100);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(-8,.5);
-                        sleep(100)
+                        sleep(100);
                         break;
                     case 'b':
                         newRobot.driveStraight_In(-8);
                         //sleep(100);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(8,.5);
-                        sleep(100)
+                        sleep(100);
                         break;
                     default:
                         newRobot.moveWing(false);
