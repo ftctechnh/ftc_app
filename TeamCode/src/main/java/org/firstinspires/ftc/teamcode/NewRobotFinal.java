@@ -169,7 +169,7 @@ public class NewRobotFinal
 //        resetDriveEncoders();
 
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
-        leftDoorWall.setDirection(Servo.Direction.REVERSE);
+        leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
 
     public void initIMU()
