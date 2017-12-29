@@ -1,22 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 
 import android.graphics.Color;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -113,6 +107,64 @@ public class Autonomous_Functions {
         stopMotor(0);
 
     }
+
+    public void moveMotor(double power, String direction) {
+
+        if (direction == Constants.forward) {
+
+            F_L.setDirection(DcMotor.Direction.REVERSE);
+            F_R.setDirection(DcMotor.Direction.FORWARD);
+            R_L.setDirection(DcMotor.Direction.REVERSE);
+            R_R.setDirection(DcMotor.Direction.FORWARD);
+
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
+        }
+
+        if (direction == Constants.backward) {
+
+            F_R.setDirection(DcMotor.Direction.REVERSE);
+            F_L.setDirection(DcMotor.Direction.FORWARD);
+            R_L.setDirection(DcMotor.Direction.FORWARD);
+            R_R.setDirection(DcMotor.Direction.REVERSE);
+
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
+        }
+
+        if (direction == Constants.left) {
+
+            R_L.setDirection(DcMotor.Direction.REVERSE);
+            F_L.setDirection(DcMotor.Direction.FORWARD);
+            F_R.setDirection(DcMotor.Direction.FORWARD);
+            R_R.setDirection(DcMotor.Direction.REVERSE);
+
+            F_L.setPower(power);
+            F_R.setPower(power);
+            R_L.setPower(power);
+            R_R.setPower(power);
+        }
+
+        if (direction == Constants.right) {
+
+            F_L.setDirection(DcMotor.Direction.REVERSE);
+            F_R.setDirection(DcMotor.Direction.REVERSE);
+            R_L.setDirection(DcMotor.Direction.FORWARD);
+            R_R.setDirection(DcMotor.Direction.FORWARD);
+
+            F_L.setPower(-power);
+            F_R.setPower(-power);
+            R_L.setPower(power);
+            R_R.setPower(power);
+        }
+
+        stopMotor();
+    }
+
 
     // MOVES THE MOTOR FOR TIME WITH INPUTS POWER, TIME, AND DIRECTION
     public void moveMotorWithTime(double power, long time, String direction) {

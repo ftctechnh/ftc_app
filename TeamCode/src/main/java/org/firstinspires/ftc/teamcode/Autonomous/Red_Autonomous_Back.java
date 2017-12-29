@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,8 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 // Last edit: 10/22/17 BY MRINAAL RAMACHANDRAN
 
 
-@Autonomous(name = "Blue_Autonomous_Front",group="We Love Pi")
-public class Blue_Autonomous_Front extends LinearOpMode {
+@Autonomous(name = "Red_Autonomous_Back",group="We Love Pi")
+public class Red_Autonomous_Back extends LinearOpMode {
 
     Autonomous_Functions af = new Autonomous_Functions();
 
@@ -161,35 +161,33 @@ public class Blue_Autonomous_Front extends LinearOpMode {
                 telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
                 telemetry.update();
 
-                if (jewelColor == "BLUE") {
-
-                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
-                    af.dropper.setPosition(1);
-                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
-                    af.stopMotor(500);
-                    af.moveMotorWithTime(.2, 2200, Constants.backward);
-                    af.stopMotor(1000);
-                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
-                    af.stopMotor(1000);
-                    af.moveMotorWithTime(.2, 500, Constants.forward);
-
-
-                }
-
                 if (jewelColor == "RED") {
 
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 1200, Constants.left);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
+
+
+                }
+
+                if (jewelColor == "BLUE") {
+
                     turnMotorUsingGyro(.1, 20, Constants.spinLeft);
                     af.dropper.setPosition(1);
                     turnMotorUsingGyro(.1, -20, Constants.spinRight);
                     af.stopMotor(500);
-                    af.moveMotorWithTime(.2, 2200, Constants.backward);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
                     af.stopMotor(1000);
-                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.moveMotorWithTime(.2, 1200, Constants.left);
                     af.stopMotor(1000);
                     af.moveMotorWithTime(.2, 500, Constants.forward);
-
                 }
-
             }
             else if (vuMark == RelicRecoveryVuMark.CENTER) {
 
@@ -201,33 +199,32 @@ public class Blue_Autonomous_Front extends LinearOpMode {
                 telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
                 telemetry.update();
 
-                if (jewelColor == "BLUE") {
+                if (jewelColor == "RED") {
 
                     turnMotorUsingGyro(.1, -20, Constants.spinRight);
                     af.dropper.setPosition(1);
                     turnMotorUsingGyro(.1, 20, Constants.spinLeft);
                     af.stopMotor(500);
-                    af.moveMotorWithTime(.2, 2200, Constants.backward);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
                     af.stopMotor(1000);
-                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.moveMotorWithTime(.2, 1200, Constants.left);
                     af.stopMotor(1000);
                     af.moveMotorWithTime(.2, 500, Constants.forward);
 
 
                 }
 
-                if (jewelColor == "RED") {
+                if (jewelColor == "BLUE") {
 
                     turnMotorUsingGyro(.1, 20, Constants.spinLeft);
                     af.dropper.setPosition(1);
                     turnMotorUsingGyro(.1, -20, Constants.spinRight);
                     af.stopMotor(500);
-                    af.moveMotorWithTime(.2, 2200, Constants.backward);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
                     af.stopMotor(1000);
-                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.moveMotorWithTime(.2, 1200, Constants.left);
                     af.stopMotor(1000);
                     af.moveMotorWithTime(.2, 500, Constants.forward);
-
                 }
 
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
@@ -240,35 +237,33 @@ public class Blue_Autonomous_Front extends LinearOpMode {
                 telemetry.addData(" COLOR IS ", jewelColor = senseJewelColor());
                 telemetry.update();
 
-                if (jewelColor == "BLUE") {
-
-                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
-                    af.dropper.setPosition(1);
-                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
-                    af.stopMotor(500);
-                    af.moveMotorWithTime(.2, 2200, Constants.backward);
-                    af.stopMotor(1000);
-                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
-                    af.stopMotor(1000);
-                    af.moveMotorWithTime(.2, 500, Constants.forward);
-
-
-                }
-
                 if (jewelColor == "RED") {
 
+                    turnMotorUsingGyro(.1, -20, Constants.spinRight);
+                    af.dropper.setPosition(1);
+                    turnMotorUsingGyro(.1, 20, Constants.spinLeft);
+                    af.stopMotor(500);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 1200, Constants.left);
+                    af.stopMotor(1000);
+                    af.moveMotorWithTime(.2, 500, Constants.forward);
+
+
+                }
+
+                if (jewelColor == "BLUE") {
+
                     turnMotorUsingGyro(.1, 20, Constants.spinLeft);
                     af.dropper.setPosition(1);
                     turnMotorUsingGyro(.1, -20, Constants.spinRight);
                     af.stopMotor(500);
-                    af.moveMotorWithTime(.2, 2200, Constants.backward);
+                    af.moveMotorWithTime(.2, 2200, Constants.forward);
                     af.stopMotor(1000);
-                    turnMotorUsingGyro(.2, -90, Constants.spinRight);
+                    af.moveMotorWithTime(.2, 1200, Constants.left);
                     af.stopMotor(1000);
                     af.moveMotorWithTime(.2, 500, Constants.forward);
-
                 }
-
             }
 
             while (opModeIsActive()) {
