@@ -641,7 +641,7 @@ public class NewRobotFinal
         if(moveDown)
         {
             wingMotor.setPower(-1f);
-            while(wingMotor.getCurrentPosition() > -2700)
+            while(wingMotor.getCurrentPosition() > -2500)
             {
                // if (System.currentTimeMillis() > endTime)
                  //   break;
@@ -650,7 +650,7 @@ public class NewRobotFinal
         else
         {
             wingMotor.setPower(1f);
-            while(wingMotor.getCurrentPosition() < 90)
+            while(wingMotor.getCurrentPosition() < 150)
             {
              //   if (System.currentTimeMillis() > endTime)
                  //   break;

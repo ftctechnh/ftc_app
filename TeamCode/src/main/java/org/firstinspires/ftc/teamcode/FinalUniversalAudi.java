@@ -119,7 +119,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.pivot_IMU(-80, .6);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                /*newRobot.driveStraight_In(8,.1);
+                newRobot.driveStraight_In(8,.1);
                 newRobot.driveStraight_In(-2);
                 /*newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-10,1);*/
