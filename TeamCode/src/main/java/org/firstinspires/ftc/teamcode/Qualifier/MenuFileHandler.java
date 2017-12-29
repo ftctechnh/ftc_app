@@ -44,7 +44,7 @@ public class MenuFileHandler {
 
 
 //    //Menu Variables
-    public int      nitems = 7;    // easier to just include 0 as the first element so there are actually 5
+    public int      nitems = 15;    // easier to just include 0 as the first element so there are actually 5
     //public String[]  menulabel = {"waitTime","shooterWait","shooterForwardTime","shooterForwardAfterShoot","driveSpeed","whiteColor","driveBackTime"};
     public String  menulabel[] = new String[nitems];
     public int     menuvalue[] = new int[nitems];
@@ -53,22 +53,145 @@ public class MenuFileHandler {
     public String  menuvaluetoken[][] = new String[nitems][5];
 
 
-//    public int[]     menuvalue  = {0,1,2,3,4,5,6};
-//    public String[] teamname = {"Red", "Blue"};
-//    public String[] modename = {"Beacon Route","Judging Mode","Beacon Route SUPER Mode"," Simple Capball","Simple Ramp", "Defense Mode","Super Defense Mode"};
-//    public int      programmode,secondstodelay,particles,heading0,distance0,heading1,distance1,heading2,distance2,heading3,distance3,heading4,distance4,heading5,distance5,rightaveragecolor,leftaveragecolor, supermodeturnblue,supermodeturnred;
-//    public boolean  TeamisBlue,PickUpPartnerBall, hitcapball;
-
-
     public void updateVariables() {
         teamIsRed = (menuvalue[0] == 1);
         startPositionIsFront = (menuvalue[1] == 1);
         mode = menuvalue[2];
-        distance1 = menuvalue[3];
-        heading1  = menuvalue[4];
-        distance2 = menuvalue[5];
-        heading2  = menuvalue[6];
+        }
+
+    public void initializeNTransferValues(Boolean init) {
+
+        if (init) {
+            menulabel[0] = "Team Color";
+            menuvalue[0] = 1;
+            menulowerlimit[0] = 0;
+            menuupperlimit[0] = 1;
+            menuvaluetoken[0][0] = "Blue";
+            menuvaluetoken[0][1] = "Red";
+        }
+        teamIsRed = (menuvalue[0] == 1);
+
+        if (init) {
+            menulabel[1] = "Start Position";
+            menuvalue[1] = 1;
+            menulowerlimit[1] = 0;
+            menuupperlimit[1] = 1;
+            menuvaluetoken[1][0] = "Back";
+            menuvaluetoken[1][1] = "Front";
+        }
+        startPositionIsFront = (menuvalue[1] == 1);
+
+        if (init) {
+            menulabel[2] = "Mode";
+            menuvalue[2] = 0;
+            menulowerlimit[2] = 0;
+            menuupperlimit[2] = 3;
+            menuvaluetoken[2][0] = "Glyph";
+            menuvaluetoken[2][1] = "Relic";
+            menuvaluetoken[2][2] = "Test";
+            menuvaluetoken[2][3] = "Demo";
+        }
+        mode = menuvalue[2];
+
+        if (init) {
+            menulabel[3] = "Front BLUE Drive 1";
+            menuvalue[3] = 13;
+            menulowerlimit[3] = 0;
+            menuupperlimit[3] = 100;
+        }
+        float FrontBlueDistance1 = menuvalue[3];
+
+        if (init) {
+            menulabel[4] = "Front BLUE Turn 1";
+            menuvalue[4] = 0;
+            menulowerlimit[4] = 80;
+            menuupperlimit[4] = 100;
+        }
+        float FrontBlueTurn1 = menuvalue[4];
+
+        if (init) {
+            menulabel[5] = "Front BLUE Drive 2";
+            menuvalue[5] = 15;
+            menulowerlimit[5] = 0;
+            menuupperlimit[5] = 100;
+        }
+        float FrontBlueDistance2 = menuvalue[5];
+
+        if (init) {
+            menulabel[6] = "Front RED Drive 1";
+            menuvalue[6] = 16;
+            menulowerlimit[6] = 0;
+            menuupperlimit[6] = 100;
+        }
+        float FrontRedDistance1 = menuvalue[6];
+
+        if (init) {
+            menulabel[7] = "Front RED Turn 1";
+            menuvalue[7] = 16;
+            menulowerlimit[7] = 80;
+            menuupperlimit[7] = 100;
+        }
+        float FrontRedTurn1 = menuvalue[7];
+
+        if (init) {
+            menulabel[8] = "Front RED Drive 2";
+            menuvalue[8] = 16;
+            menulowerlimit[8] = 0;
+            menuupperlimit[8] = 100;
+        }
+        float FrontRedDistance2 = menuvalue[8];
+
+        if (init) {
+            menulabel[9] = "Back BLUE Drive 1";
+            menuvalue[9] = 13;
+            menulowerlimit[9] = 0;
+            menuupperlimit[9] = 100;
+        }
+        float BackBlueDistance1 = menuvalue[9];
+
+        if (init) {
+            menulabel[10] = "Back BLUE Drive 2";
+            menuvalue[10] = 0;
+            menulowerlimit[10] = 80;
+            menuupperlimit[10] = 100;
+        }
+        float BackBlueDistance2 = menuvalue[10];
+
+        if (init) {
+            menulabel[11] = "Back BLUE Drive 3";
+            menuvalue[11] = 15;
+            menulowerlimit[11] = 0;
+            menuupperlimit[11] = 100;
+        }
+        float BackBlueDistance3 = menuvalue[11];
+
+        if (init) {
+            menulabel[12] = "Back RED Drive 1";
+            menuvalue[12] = 13;
+            menulowerlimit[12] = 0;
+            menuupperlimit[12] = 100;
+        }
+        float BackRedDistance1 = menuvalue[12];
+
+        if (init) {
+            menulabel[13] = "Back RED Drive 2";
+            menuvalue[13] = 0;
+            menulowerlimit[13] = 80;
+            menuupperlimit[13] = 100;
+        }
+        float BackRedDistance2 = menuvalue[13];
+
+        if (init) {
+            menulabel[14] = "Back RED Drive 3";
+            menuvalue[14] = 15;
+            menulowerlimit[14] = 0;
+            menuupperlimit[14] = 100;
+        }
+        float BackRedDistance3 = menuvalue[14];
+
     }
+
+
     public void initializeValues() {
 
         menulabel[0] = "Team Color";
@@ -97,25 +220,66 @@ public class MenuFileHandler {
         menuvaluetoken[2][3] = "Demo";
         mode = menuvalue[2];
 
-        menulabel[3] = "Drive1";
+        menulabel[3] = "Front BLUE Drive 1";
         menuvalue[3] = 13;
         menulowerlimit[3] = 0;
         menuupperlimit[3] = 100;
 
-        menulabel[4] = "heading1";
+        menulabel[4] = "Front BLUE Turn 1";
         menuvalue[4] = 0;
-        menulowerlimit[4] = -180;
-        menuupperlimit[4] = 180;
+        menulowerlimit[4] = 80;
+        menuupperlimit[4] = 100;
 
-        menulabel[5] = "Drive2";
+        menulabel[5] = "Front BLUE Drive 2";
         menuvalue[5] = 15;
         menulowerlimit[5] = 0;
         menuupperlimit[5] = 100;
 
-        menulabel[6] = "test6";
+        menulabel[6] = "Front RED Drive 1";
         menuvalue[6] = 16;
         menulowerlimit[6] = 0;
         menuupperlimit[6] = 100;
+
+        menulabel[7] = "Front RED Turn 1";
+        menuvalue[7] = 16;
+        menulowerlimit[7] = 80;
+        menuupperlimit[7] = 100;
+
+        menulabel[8] = "Front RED Drive 2";
+        menuvalue[8] = 16;
+        menulowerlimit[8] = 0;
+        menuupperlimit[8] = 100;
+
+        menulabel[9] = "Back BLUE Drive 1";
+        menuvalue[9] = 13;
+        menulowerlimit[9] = 0;
+        menuupperlimit[9] = 100;
+
+        menulabel[10] = "Back BLUE Drive 2";
+        menuvalue[10] = 0;
+        menulowerlimit[10] = 80;
+        menuupperlimit[10] = 100;
+
+        menulabel[11] = "Back BLUE Drive 3";
+        menuvalue[11] = 15;
+        menulowerlimit[11] = 0;
+        menuupperlimit[11] = 100;
+
+        menulabel[12] = "Back RED Drive 1";
+        menuvalue[12] = 13;
+        menulowerlimit[12] = 0;
+        menuupperlimit[12] = 100;
+
+        menulabel[13] = "Back RED Drive 2";
+        menuvalue[13] = 0;
+        menulowerlimit[13] = 80;
+        menuupperlimit[13] = 100;
+
+        menulabel[14] = "Back RED Drive 3";
+        menuvalue[14] = 15;
+        menulowerlimit[14] = 0;
+        menuupperlimit[14] = 100;
+
     }
 
 
@@ -219,6 +383,8 @@ public class MenuFileHandler {
         telemetry.clear();
         telemetry.addLine("  *** Finished editing  ***");
         telemetry.update();
+
+        initializeNTransferValues(false);   // transfer new values to variables
     }
 
 

@@ -27,6 +27,7 @@ public class Auto extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private MenuFileHandler menuFile;
     public static final String TAG = "Vuforia VuMark Sample";
+    public boolean redjewelisright;
 
     OpenGLMatrix lastLocation = null;
 
@@ -86,14 +87,17 @@ public class Auto extends LinearOpMode {
         telemetry.addLine("Back Button reverts to code values");
         telemetry.update();
         //sleep(1000);
-        menuFile.initializeValues();       // initialize variables & values
+        menuFile.initializeNTransferValues( true );       // initialize variables & values
 
         // update them from the file if the back button is not pressed
 
         if (!gamepad1.back) {
-            menuFile.readDataFromTxtFile(hardwareMap.appContext);
             telemetry.addLine("Reading Data from File");
             telemetry.update();
+            menuFile.readDataFromTxtFile(hardwareMap.appContext);
+            telemetry.addLine("Transferring Data to Variables");
+            telemetry.update();
+            menuFile.initializeNTransferValues(false);            // transfer the array to variables with useable names
             //sleep(1000);
         } else {
             telemetry.addLine("Reverting to Initial Values");
@@ -102,9 +106,8 @@ public class Auto extends LinearOpMode {
         }
 
         //sleep(3000);
-        menuFile.editParameters();                            // edit parameters
-        menuFile.writeDataToTxtFile(hardwareMap.appContext);  // write the current parameters to the file for next time
-        menuFile.updateVariables();   // transfer the array to variables with useable names
+        //menuFile.editParameters();                            // edit parameters
+        //menuFile.writeDataToTxtFile(hardwareMap.appContext);  // write the current parameters to the file for next time
 
 
         /**********************************************************************************************\
@@ -131,8 +134,21 @@ public class Auto extends LinearOpMode {
         // Actual Init loop
         while (!opModeIsActive()) {
             telemetry.addData("", "Heading: %4.2f ", gromit.driveTrain.getheading());
+            telemetry.addLine("************ READY TO RUN *************");
+            telemetry.addLine("Press joystick button to enter EDIT mode");
+
             telemetry.update();
             idle();
+            //
+            //
+            if (gamepad1.right_stick_button) {             // edit parameters  & write the new file
+                menuFile.editParameters();
+                menuFile.writeDataToTxtFile(hardwareMap.appContext);  // write the current parameters to the file for next time
+
+            }
+
+
+
         }
         //}
 
@@ -166,14 +182,22 @@ public class Auto extends LinearOpMode {
         gromit.jewelArm.jewelArmDown();
         sleep(750);
         // pretend we're red for now...
-        if (gromit.jewelArm.sensorColor.red() < gromit.jewelArm.sensorColor.blue()) {               //Left Jewel is Blue
+        // determine if Red to the left, the sensor reads in the left direction.
+        if (gromit.jewelArm.sensorColor.red() < gromit.jewelArm.sensorColor.blue()) {
+            redjewelisright = true;
+        }  else {
+            redjewelisright = false;
+        }
+
+        if (redjewelisright) {               //Left Jewel is Blue, right is red
             //Backward
             gromit.driveTrain.mecanumDrive(0.2,-2,0,0);
         }
-        else {                                                                                      //Left Jewel is Red
+        else {                               //Left Jewel is RED, right is BLUE                                                                          //Left Jewel is Red
             //Forward
             gromit.driveTrain.mecanumDrive(0.2,2,0,0);
         }
+
         gromit.jewelArm.jewelArmUp();
         //gromit.driveTrain.resetencoders();
 
