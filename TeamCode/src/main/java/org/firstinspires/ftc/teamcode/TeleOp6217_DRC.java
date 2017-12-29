@@ -21,9 +21,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import java.lang.Math;
 
+import static java.lang.Math.abs;
 
-
-@TeleOp(name="Preciousss: TeleOp6217_DRC ", group="Preciousss")
+@TeleOp(name="Preciousss: TeleOp6217_DRC 1654", group="Preciousss")
 
 public class TeleOp6217_DRC extends OpMode
 {
@@ -43,6 +43,8 @@ public class TeleOp6217_DRC extends OpMode
     IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;
 
+    static final double     COUNTS_PER_MOTOR_REV    = 420 ; // PPR for NeveRest 400
+    static final double     limitRocker = COUNTS_PER_MOTOR_REV / 4 ; // 90 degrees
     private ElapsedTime     runtime = new ElapsedTime();
 
     private boolean RunLauncher = false;
@@ -82,7 +84,7 @@ public class TeleOp6217_DRC extends OpMode
         motorRocker1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         motorRocker2 = hardwareMap.dcMotor.get("motorRocker2");
-        motorRocker2.setDirection(DcMotor.Direction.FORWARD);
+        motorRocker2.setDirection(DcMotor.Direction.REVERSE);
         motorRocker2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRocker2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -128,7 +130,6 @@ public class TeleOp6217_DRC extends OpMode
         float FRBLPower = 0.f;
         float posx = gamepad1.left_stick_x;
         float posy = gamepad1.left_stick_y;
-        float posxR = gamepad1.right_stick_x;
         float posyR = gamepad1.right_stick_y;
         float LT = gamepad1.left_trigger;
         float RT = gamepad1.right_trigger;
@@ -149,9 +150,6 @@ public class TeleOp6217_DRC extends OpMode
 
         posx = (float) powerCurve(posx);
         posy = (float) powerCurve(posy);
-
-        posxR = (float) powerCurve(posxR);
-        posyR = (float) powerCurve(posyR);
 
         LT = (float) powerCurve(LT);
         RT = (float) powerCurve(RT);
@@ -178,17 +176,13 @@ public class TeleOp6217_DRC extends OpMode
         }
 
         // Rocker
-        if (posyR > 0) {
-            motorRocker1.setPower(1);
-            motorRocker2.setPower(1);
-        }
-        else if (posyR < 0){
-            motorRocker1.setPower(-1);
-            motorRocker2.setPower(-1);
-        }
-        else {
-            motorRocker1.setPower(0);
-            motorRocker2.setPower(0);
+
+        int limited = (int) (limitRocker * powerCurve( Range.clip(posyR, -1, 1) ) );
+        if (limited != 0) {
+            motorRocker1.setTargetPosition(limited);
+            motorRocker2.setTargetPosition(limited);
+            motorRocker1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorRocker2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         // Jack
@@ -201,25 +195,24 @@ public class TeleOp6217_DRC extends OpMode
 
         //  Driving
 
-            if ( ( posy != 0) || ( posx != 0 ) ) {
+        if ( ( posy != 0) || ( posx != 0 ) ) {
 
-                FRBLPower = posy - posx;
-                FLBRPower = posy + posx;
-                motorFR.setPower( FRBLPower );
-                motorFL.setPower( FLBRPower );
-                motorBR.setPower( FLBRPower );
-                motorBL.setPower( FRBLPower );
+            FRBLPower = posy - posx;
+            FLBRPower = posy + posx;
+            motorFR.setPower( FRBLPower );
+            motorFL.setPower( FLBRPower );
+            motorBR.setPower( FLBRPower );
+            motorBL.setPower( FRBLPower );
 
-            }
+        }
 
-            else {
+        else {
 
-                motorFR.setPower(0);
-                motorFL.setPower(0);
-                motorBR.setPower(0);
-                motorBL.setPower(0);
-            }
-
+            motorFR.setPower(0);
+            motorFL.setPower(0);
+            motorBR.setPower(0);
+            motorBL.setPower(0);
+        }
 
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Write telemetry back to driver station
@@ -248,9 +241,6 @@ public class TeleOp6217_DRC extends OpMode
         telemetry.addData("4", "Right Bumper Left Bumper" +
                 String.format("%b", gamepad1.right_bumper)+ " " +
                 String.format("%b", gamepad1.left_bumper));
-
-
-
     }
     /*
      * Code to run when the op mode is first disabled goes here
@@ -290,7 +280,7 @@ public class TeleOp6217_DRC extends OpMode
        }
 
        double dScale = 0.0;
-       if (Math.abs(dVal) < dead) {
+       if (abs(dVal) < dead) {
            dScale = 0.0;
        } else {
            dScale = ((dVal * dVal) * max) * direction;
