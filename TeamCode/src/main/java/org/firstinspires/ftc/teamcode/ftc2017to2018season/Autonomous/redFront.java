@@ -39,12 +39,13 @@ public class redFront extends Autonomous_General {
 
 
         toggleLight(false);
+        light.setPower(1);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
 
         double begintime = runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
+        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
 
         }
         toggleLight(false);
@@ -56,20 +57,21 @@ public class redFront extends Autonomous_General {
         telemetry.update();
         sleep(1000);
         readColor();
+        light.setPower(0);
         //returnImage();
         closeGlyphManipulator();
         sleep(1000);
-        //moveUpGlyph(2.54);
+        moveUpGlyph(2);
         sleep(1000);
 
-        if(ballColor.equals("red")){
+        if(ballColor.equals("blue")){
             encoderMecanumDrive(0.9, 10,10,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
             encoderMecanumDrive(0.9,-65,-65,5000,0);
             sleep(1000);
         }
-        else if(ballColor.equals("blue")){
+        else if(ballColor.equals("red")){
             encoderMecanumDrive(0.9,-65,-65,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
@@ -104,6 +106,8 @@ public class redFront extends Autonomous_General {
         gyroTurn(0.3,180);
 
         sleep(750);
+        moveDownGlyph(2);
+        sleep(500);
 
         openGlyphManipulator();
 
