@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 public class redFront extends Autonomous_General {
 
     public double rsBuffer = 20.00;
-
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -23,11 +24,6 @@ public class redFront extends Autonomous_General {
         telemetry.update();
         gyro.calibrate();
 
-        while(gyro.isCalibrating()){
-            sleep(50);
-            idle();
-
-        }
 
         telemetry.addData("---->","Gyro Calibrated. Good to go...");
         telemetry.update();
@@ -38,12 +34,14 @@ public class redFront extends Autonomous_General {
 
 
         toggleLight(true);
+        light.setPower(1);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
 
+        double begintime= runtime.seconds();
+        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
 
-        while(!vuMarkFound()){
 
         }
         toggleLight(false);
@@ -55,20 +53,21 @@ public class redFront extends Autonomous_General {
         telemetry.update();
         sleep(1000);
         readColor();
+        light.setPower(0);
         //returnImage();
         closeGlyphManipulator();
         sleep(1000);
         //moveUpGlyph(2.54);
         sleep(1000);
 
-        if(ballColor.equals("red")){
+        if(ballColor.equals("blue")){
             encoderMecanumDrive(0.9, 10,10,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
             encoderMecanumDrive(0.9,-65,-65,5000,0);
             sleep(1000);
         }
-        else if(ballColor.equals("blue")){
+        else if(ballColor.equals("red")){
             encoderMecanumDrive(0.9,-65,-65,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
