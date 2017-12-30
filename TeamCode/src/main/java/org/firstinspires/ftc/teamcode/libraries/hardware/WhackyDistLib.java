@@ -47,6 +47,6 @@ public final class WhackyDistLib {
    }
 
     public static double getWhackyPosFromDegrees(double degrees) {
-        return BotHardware.ServoE.stick0 + (degrees / 90.0) * (BotHardware.ServoE.stick90 - BotHardware.ServoE.stick0);
+        return BotHardware.ServoE.stick0 - (degrees / 90.0) * (BotHardware.ServoE.stick0 - BotHardware.ServoE.stick90);
     }
 }

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.sun.source.tree.ContinueTree;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -75,8 +76,10 @@ public class BotHardware {
         public static final double stickBaseSwingSize = 0.2;
         public static final double stickBaseHidden = 0.91;
 
-        public static final double backDropDown = 0.2;
-        public static final double backDropUp = 0.82;
+        public static final double rightBackDropDown = 0.2;
+        public static final double rightBackDropUp = 0.82;
+        public static final double leftBackDropDown = 0;
+        public static final double leftBackDropUp = 0;
 
         private final String name;
         public Servo servo;
@@ -102,7 +105,8 @@ public class BotHardware {
     }
 
     public enum ContiniuosServoE {
-        TestServo("crl", false);
+        LiftLeft("crl", false),
+        LiftRight("crr", true);
 
         private final String name;
         public CRServo servo;
@@ -189,13 +193,18 @@ public class BotHardware {
     public Servo getStickBase() { return ServoE.stickBase.servo; }
 
     public void dropBack() {
-        ServoE.backDropLeft.servo.setPosition(ServoE.backDropDown);
-        ServoE.backDropRight.servo.setPosition(ServoE.backDropDown);
+        ServoE.backDropLeft.servo.setPosition(ServoE.leftBackDropDown);
+        ServoE.backDropRight.servo.setPosition(ServoE.rightBackDropDown);
     }
 
     public void raiseBack() {
-        ServoE.backDropLeft.servo.setPosition(ServoE.backDropUp);
-        ServoE.backDropRight.servo.setPosition(ServoE.backDropUp);
+        ServoE.backDropLeft.servo.setPosition(ServoE.leftBackDropUp);
+        ServoE.backDropRight.servo.setPosition(ServoE.rightBackDropUp);
+    }
+
+    public void setLiftServos(double power) {
+        ContiniuosServoE.LiftLeft.servo.setPower(power);
+        ContiniuosServoE.LiftRight.servo.setPower(power);
     }
 
     public void setDropPos(double pos) {
@@ -206,12 +215,12 @@ public class BotHardware {
     public AutoLib.Sequence getDropStep() {
         AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
         AutoLib.Sequence drop = new AutoLib.ConcurrentSequence();
-        drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 1.0, false));
-        drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 1.0, false));
+        drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.leftBackDropDown, 1.0, false));
+        drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.rightBackDropDown, 1.0, false));
         mSeq.add(drop);
         AutoLib.Sequence lift = new AutoLib.ConcurrentSequence();
-        lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropUp, 1.0, false));
-        lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropUp, 1.0, false));
+        lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.leftBackDropUp, 1.0, false));
+        lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.rightBackDropUp, 1.0, false));
         mSeq.add(lift);
         return mSeq;
     }

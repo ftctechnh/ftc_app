@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cWaitControl;
 
+import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
+
 import java.io.InvalidObjectException;
 import java.security.InvalidParameterException;
 
@@ -29,15 +31,17 @@ public class APDS9960 {
     private final Config config;
     private final I2cDeviceSynch sensor;
     private final boolean autoGain;
+    private final Config.DistGain maxGain;
     //constructor
-    public APDS9960(Config config, I2cDeviceSynch sensor, boolean autoGain) {
+    public APDS9960(Config config, I2cDeviceSynch sensor, boolean autoGain, Config.DistGain maxGain) {
         this.config = config;
         this.sensor = sensor;
         this.autoGain = autoGain;
+        this.maxGain = maxGain;
     }
 
     public APDS9960(Config config, I2cDeviceSynch sensor) {
-        this(config, sensor, false);
+        this(config, sensor, false, Config.DistGain.GAIN_8X);
     }
 
     //initialize using config
@@ -87,7 +91,7 @@ public class APDS9960 {
         int dist = sensor.read8(Regs.PDATA.REG) & 0xff;
         if(autoGain) {
             if(config.gain != APDS9960.Config.DistGain.GAIN_1X && dist >= LOWER_GAIN_THRESH) setSensorGain(APDS9960.Config.DistGain.values()[this.config.gain.ordinal() - 1]);
-            else if(config.gain != APDS9960.Config.DistGain.GAIN_8X && dist <= RAISE_GAIN_THRESH) setSensorGain(APDS9960.Config.DistGain.values()[this.config.gain.ordinal() + 1]);
+            else if(config.gain.ordinal() < maxGain.ordinal() && dist <= RAISE_GAIN_THRESH) setSensorGain(APDS9960.Config.DistGain.values()[this.config.gain.ordinal() + 1]);
         }
         return dist;
     }
@@ -158,13 +162,13 @@ public class APDS9960 {
         }
     }
 
-    public double getLinearizedDistance() {
+    public double getLinearizedDistance(boolean redCorrect) {
         //linearize!
-        return GainLinearizationCoff.values()[this.config.gain.ordinal()].linearize(getDist());
+        return GainLinearizationCoff.values()[this.config.gain.ordinal()].linearize(redCorrect ? getDist() - 60 : getDist());
     }
 
-    public double getLinearizedDistance(int dist, Config.DistGain gain) {
-        return GainLinearizationCoff.values()[gain.ordinal()].linearize(dist);
+    public double getLinearizedDistance(int dist, Config.DistGain gain, boolean redCorrect) {
+        return GainLinearizationCoff.values()[gain.ordinal()].linearize(redCorrect ? dist : dist - 60);
     }
 
     //Register enums

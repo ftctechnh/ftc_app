@@ -62,7 +62,7 @@ public class ADPSAuto extends VuforiaBallLib {
         initVuforia(true);
 
         config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_1X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), false);
+        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"));
         dist.initDevice();
 
         bot.init();
@@ -126,7 +126,7 @@ public class ADPSAuto extends VuforiaBallLib {
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.9, 0.25, false));
             findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.9, 0.66, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10),
                     new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 35.0f, 360.0f),
-                    70, 8, skip, 70, this));
+                    70, 8, skip, 70, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             findPilliar.add(new AutoLib.GyroTurnStep(this, 60f, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
@@ -174,6 +174,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private final GyroCorrectStep gyroStep;
         private final Servo stick;
         private final int pilliarDist;
+        private final boolean red;
         private int[] encoderCache = new int[4];
         private int pilliarCount;
         private boolean stickPulled = false;
@@ -188,7 +189,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private static final int COUNTS_BETWEEN_PILLIAR = 155;
 
         APDSFind(Servo stick, double stickDown, double stickUp, APDS9960 sens, APDS9960.Config config, SensorLib.PID errorPid,
-                 GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode) {
+                 GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode, boolean red) {
             this.config = config;
             this.errorPid = errorPid;
             this.sens = sens;
@@ -201,11 +202,12 @@ public class ADPSAuto extends VuforiaBallLib {
             this.pilliarDist = skipDist;
             this.stickDown = stickDown;
             this.stickUp = stickUp;
+            this.red = red;
         }
 
         public boolean loop() {
             //get distance
-            double dist = this.sens.getLinearizedDistance();
+            double dist = this.sens.getLinearizedDistance(red);
             if(movingAvg == null) movingAvg = new FilterLib.MovingWindowFilter(10, dist);
             movingAvg.appendValue(dist);
             double filteredDist = movingAvg.currentValue();

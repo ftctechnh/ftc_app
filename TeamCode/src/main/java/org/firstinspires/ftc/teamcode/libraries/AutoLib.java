@@ -903,14 +903,20 @@ public class AutoLib {
 
     public static class RunCodeStep extends Step{
         FunctionCall funcPoint;
+        Runnable run;
 
         public RunCodeStep(FunctionCall call){
             funcPoint = call;
         }
 
+        public RunCodeStep(Runnable call) {
+            run = call;
+        }
+
         public boolean loop(){
             super.loop();
-            funcPoint.run();
+            if(funcPoint != null) funcPoint.run();
+            if(run != null) run.run();
             return true;
         }
     }

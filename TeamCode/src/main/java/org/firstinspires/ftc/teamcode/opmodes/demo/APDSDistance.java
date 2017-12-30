@@ -34,7 +34,7 @@ public class APDSDistance extends CrappyGraphLib {
         initGraph(data, true);
 
         config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_8X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), true);
+        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), true, APDS9960.Config.DistGain.GAIN_8X);
         dist.initDevice();
         dist.startDevice();
 
@@ -43,7 +43,7 @@ public class APDSDistance extends CrappyGraphLib {
             public void run() {
                 APDS9960.Config.DistGain mahGain = config.gain;
                 regDist = dist.getDist();
-                linearDist = dist.getLinearizedDistance(regDist, mahGain);
+                linearDist = dist.getLinearizedDistance(regDist, mahGain, true);
             }
         });
 
@@ -66,7 +66,7 @@ public class APDSDistance extends CrappyGraphLib {
     }
 
     public void loop() {
-        linearDist = dist.getLinearizedDistance();
+        linearDist = dist.getLinearizedDistance(false);
         if(lastTime == 0) lastTime = getRuntime();
 
         final double time = getRuntime();

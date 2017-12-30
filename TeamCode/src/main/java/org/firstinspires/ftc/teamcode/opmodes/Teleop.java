@@ -43,19 +43,22 @@ public class Teleop extends OpMode {
         if((gamepad1.left_bumper || gamepad1.right_bumper) && !lastBumper) suckerDown = !suckerDown;
         lastBumper = gamepad1.left_bumper || gamepad1.right_bumper;
 
-        if(gamepad1.left_trigger > 0) bot.setDropPos(BotHardware.ServoE.backDropUp + (gamepad1.left_trigger * (BotHardware.ServoE.backDropDown - BotHardware.ServoE.backDropUp)));
-        else bot.setDropPos(BotHardware.ServoE.backDropUp);
+        if(gamepad1.left_trigger > 0) {
+            BotHardware.ServoE.backDropLeft.servo.setPosition((BotHardware.ServoE.leftBackDropUp > BotHardware.ServoE.leftBackDropDown ? BotHardware.ServoE.leftBackDropDown : BotHardware.ServoE.leftBackDropUp) + (gamepad1.left_trigger * Math.abs(BotHardware.ServoE.leftBackDropDown - BotHardware.ServoE.leftBackDropUp)));
+            BotHardware.ServoE.backDropRight.servo.setPosition((BotHardware.ServoE.rightBackDropUp > BotHardware.ServoE.rightBackDropDown ? BotHardware.ServoE.rightBackDropDown : BotHardware.ServoE.rightBackDropUp) + (gamepad1.left_trigger * Math.abs(BotHardware.ServoE.rightBackDropDown - BotHardware.ServoE.rightBackDropUp)));
+        }
+        else {
+            BotHardware.ServoE.backDropLeft.servo.setPosition(BotHardware.ServoE.leftBackDropUp);
+            BotHardware.ServoE.backDropRight.servo.setPosition(BotHardware.ServoE.rightBackDropUp);
+        }
 
         if(gamepad1.right_trigger > 0) BotHardware.ServoE.stick.servo.setPosition(BotHardware.ServoE.stickUp + (gamepad1.right_trigger * (BotHardware.ServoE.stickDown - BotHardware.ServoE.stickUp)));
         else BotHardware.ServoE.stick.servo.setPosition(BotHardware.ServoE.stickUp);
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
-        if(gamepad2.left_trigger > 0) BotHardware.ContiniuosServoE.TestServo.servo.setPower(-1.0);
-        else if (gamepad2.right_trigger > 0) BotHardware.ContiniuosServoE.TestServo.servo.setPower(1.0);
-        else BotHardware.ContiniuosServoE.TestServo.servo.setPower(0);
-
-        telemetry.addData("Continious", BotHardware.ContiniuosServoE.TestServo.servo.getPower());
+        BotHardware.ContiniuosServoE.LiftLeft.servo.setPower(gamepad2.left_stick_y);
+        BotHardware.ContiniuosServoE.LiftRight.servo.setPower(gamepad2.right_stick_y);
 
         //if(suckerDown) bot.dropFront();
         //else bot.raiseFront();
