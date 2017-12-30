@@ -44,7 +44,7 @@ public class RobotTeleOp extends LinearOpMode {
             speedY = gamepad1.right_stick_y;
             pivot = -gamepad1.left_stick_x;
 
-            liftMotorPower = -gamepad2.right_stick_y;
+            liftMotorPower = -gamepad2.left_stick_y;
             liftRotationMotorPower = -gamepad2.left_stick_x;
 
             // slow down robot with right trigger
@@ -93,6 +93,9 @@ public class RobotTeleOp extends LinearOpMode {
             } else {
                 robot.getGlyphLift().closeRedGripper();
             }
+
+            // operate relic arm
+
 
             // automatic lift rotation motor control
             if(gamepad2.dpad_up) {
