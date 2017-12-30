@@ -16,6 +16,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @TeleOp(name="RelicTelyOp",group="Jeff" )
 public class RelicTelyMode  extends MeccyMode{
     //
+    PengwinFin pengwinFin;
+    PengwinWing pengwinWing;
+    //
     //<editor-fold desc="Startify">
     VuforiaLocalizer vuforia;
     OpenGLMatrix lastLocation = null;
@@ -44,6 +47,8 @@ public class RelicTelyMode  extends MeccyMode{
     //
     public void runOpMode() {
         //<editor-fold desc="Initialize">
+        pengwinFin = new PengwinFin(hardwareMap);
+        pengwinWing = new PengwinWing(hardwareMap);
         //<editor-fold desc="Vuforia">
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);

@@ -7,8 +7,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 public class RelicAutoMode extends LinearOpMode {
+    PengwinFin pengwinFin;
+    PengwinWing pengwinWing;
     @Override
     public void runOpMode() throws InterruptedException {
 
     }
+    public void startify (){
+        pengwinFin = new PengwinFin(hardwareMap);
+        pengwinWing = new PengwinWing(hardwareMap);
+    }
+
+
 }

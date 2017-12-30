@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="NorthRed", group="Autonomisisisisis")
+
 public class NorthRed extends LinearOpMode {
     PengwinArm pengwinArm;
     PengwinFin pengwinFin;
@@ -16,6 +17,14 @@ public class NorthRed extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     //
 
+    /**
+     * This is a model class to hold North red
+     * @see java.lang.Object
+     * @author Eric and Nora
+     */
+    public NorthRed(){
+
+    }
     //
     //Push
     @Override
@@ -29,17 +38,33 @@ public class NorthRed extends LinearOpMode {
         //
         waitForStartify();
         //
+        /**
+         * the arm closed to grab the glyph
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
+        //
         pengwinArm.open();//close
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive()){
             //Do Nothing
         }
+        /**
+         * keep the fin up while closing
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         pengwinFin.moveFinUp();
         runtime.reset();
         while(runtime.seconds()<.5 && opModeIsActive()){
             //Do Nothing
         }
+        /**
+         * move the robot to get close to the jewel
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         jeffThePengwin.rightToPosition(5, .4);
         runtime.reset();
@@ -47,12 +72,23 @@ public class NorthRed extends LinearOpMode {
             //Do Nothing
         }
         jeffThePengwin.switcheroo();
+        /**
+         * moves the fin down to hit the ball
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         pengwinFin.moveFinDown();
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive()){
             //Do Nothing
         }
+
+        /**
+         *dedcide whether the ball is blue or red and hit it
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         if (pengwinFin.doesColorSensorSeeBlueJewel()){
             jeffThePengwin.turnLeftToPosition(3,0.4);
@@ -72,6 +108,13 @@ public class NorthRed extends LinearOpMode {
             while(runtime.seconds()<1 && opModeIsActive()&& jeffThePengwin.isMoving()){
                 //Do Nothing
             }
+
+            /**
+             *move the fin back up for easy access
+             * @see java.lang.Object
+             * @author Eric and Nora
+             */
+            //
             pengwinFin.moveFinUp();
             runtime.reset();
             while(runtime.seconds()<1 && opModeIsActive()){
@@ -83,12 +126,25 @@ public class NorthRed extends LinearOpMode {
         while(runtime.seconds()<2 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
+
+        /**
+         *stop the motors and then go forward
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
+        //
         gentlyPutTheMotorsToSleep();
         jeffThePengwin.forwardToPosition(28,0.4);
         runtime.reset();
         while(runtime.seconds()<5 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
+
+        /**
+         *turn right to line up with the glyph box
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         jeffThePengwin.turnRightToPostion(24, .4);
         runtime.reset();
@@ -96,6 +152,12 @@ public class NorthRed extends LinearOpMode {
             //Do Nothing
         }
         gentlyPutTheMotorsToSleep();
+
+        /**
+         *move the robot back to place the block
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         jeffThePengwin.backToPosition(3, .4);
         runtime.reset();
@@ -108,18 +170,35 @@ public class NorthRed extends LinearOpMode {
         while(runtime.seconds()<3 && opModeIsActive()){
             //Do Nothing
         }
+        /**
+         *open the arm to let the gylph go
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         pengwinArm.close();//open
         runtime.reset();
         while(runtime.seconds()<.5 && opModeIsActive()){
             //Do Nothing
         }
+
+        /**
+         *move torwards the glyph case to push the block back in
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         jeffThePengwin.forwardToPosition(1,.4);
         runtime.reset();
         while(runtime.seconds()<1 && opModeIsActive()&& jeffThePengwin.isMoving()){
             //Do Nothing
         }
+
+        /**
+         *move back after pushing in back
+         * @see java.lang.Object
+         * @author Eric and Nora
+         */
         //
         jeffThePengwin.backToPosition(5, .4);
         runtime.reset();
@@ -136,7 +215,7 @@ public class NorthRed extends LinearOpMode {
                 (runtime.seconds() < time) &&
                 (jeffThePengwin.isMoving());
     }
-
+    //do the telemetrys
     private void getTelemetry(double time) {
         telemetry.addData("lbm position", jeffThePengwin.leftBackMotor.getCurrentPosition());
         telemetry.addData("lfm position", jeffThePengwin.leftFrontMotor.getCurrentPosition());
