@@ -109,7 +109,7 @@ public class blueFront extends Autonomous_General {
         gyroTurn(0.3,0);
 
         sleep(750);
-        moveDownGlyph(2);
+        moveDownGlyph(1);
         sleep(500);
 
         openGlyphManipulator();
