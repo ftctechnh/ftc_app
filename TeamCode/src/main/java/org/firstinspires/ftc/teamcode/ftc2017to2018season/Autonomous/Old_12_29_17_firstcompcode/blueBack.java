@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_12_29_17_firstcompcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Final.Autonomous_General_final;
 
 //10-28-17
 @Autonomous(name="Autonomous Blue Back Final")
@@ -18,7 +17,6 @@ public class blueBack extends Autonomous_General {
     DcMotor rightBack;
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
-
 
 
     @Override
@@ -52,7 +50,7 @@ public class blueBack extends Autonomous_General {
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
         double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
+        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
 
         }
         toggleLight(false);

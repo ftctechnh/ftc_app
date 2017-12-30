@@ -50,6 +50,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Disabled
 public class Autonomous_General extends LinearOpMode {
 
+    public double waitTime = 8;
+
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
     public static double WHEEL_REV_PER_MOTOR_REV;     // 56/24
     public static double WHEEL_PERIMETER_CM;     // For figuring circumference
@@ -83,7 +85,7 @@ public class Autonomous_General extends LinearOpMode {
     VuforiaLocalizer vuforia;
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
-    RelicRecoveryVuMark vuMark;
+    public RelicRecoveryVuMark vuMark;
 
     public void initiate() {
         COUNTS_PER_MOTOR_REV = 1120;

@@ -48,7 +48,7 @@ public class redBack extends Autonomous_General {
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
         double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
+        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
 
         }
         toggleLight(false);
