@@ -40,8 +40,8 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorRocker2;
     Servo   servoJack;
 
-    IntegratingGyroscope gyro;
-    ModernRoboticsI2cGyro modernRoboticsI2cGyro;
+   /* IntegratingGyroscope gyro;
+    ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
 
     static final double     COUNTS_PER_MOTOR_REV    = 420 ; // PPR for NeveRest 400
     static final double     limitRocker = COUNTS_PER_MOTOR_REV / 4 ; // 90 degrees
@@ -80,20 +80,14 @@ public class TeleOp6217_DRC extends OpMode
 
         motorRocker1 = hardwareMap.dcMotor.get("motorRocker1");
         motorRocker1.setDirection(DcMotor.Direction.FORWARD);
-        motorRocker1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRocker1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         motorRocker2 = hardwareMap.dcMotor.get("motorRocker2");
         motorRocker2.setDirection(DcMotor.Direction.REVERSE);
-        motorRocker2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRocker2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         servoJack = hardwareMap.servo.get ("servoJack");
 
-        modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+       /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
-       /* telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
+       telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update()
         telemetry.addData("WBG",  "Starting at %7d",
                // motorWBT1.getCurrentPosition());
         telemetry.update());*/
@@ -131,6 +125,7 @@ public class TeleOp6217_DRC extends OpMode
         float posx = gamepad1.left_stick_x;
         float posy = gamepad1.left_stick_y;
         float posyR = gamepad1.right_stick_y;
+        float posxR = gamepad1.right_stick_x;
         float LT = gamepad1.left_trigger;
         float RT = gamepad1.right_trigger;
         boolean a = gamepad1.a;
@@ -147,9 +142,14 @@ public class TeleOp6217_DRC extends OpMode
 
         posx = Range.clip(posx, -1, 1);
         posy = Range.clip(posy, -1, 1);
+        posxR = Range.clip(posxR, -1,1);
+        posyR = Range.clip(posyR, -1,1);
 
         posx = (float) powerCurve(posx);
         posy = (float) powerCurve(posy);
+        posxR = (float) powerCurve(posxR);
+        posyR = (float) powerCurve(posyR);
+
 
         LT = (float) powerCurve(LT);
         RT = (float) powerCurve(RT);
@@ -157,14 +157,14 @@ public class TeleOp6217_DRC extends OpMode
         //  Loading Glyphs
         // Directions will require testing
         if (dpad_up) {
-            motorConL.setPower(1);
-            motorConR.setPower(-1);
+            motorConL.setPower(-1);
+            motorConR.setPower(1);
             servoConL.setPower(-1);
             servoConR.setPower(1);
         }
         else if (dpad_down)  {
-            motorConL.setPower(-1);
-            motorConR.setPower(1);
+            motorConL.setPower(1);
+            motorConR.setPower(-1);
             servoConL.setPower(1);
             servoConR.setPower(-1);
         }
@@ -176,15 +176,14 @@ public class TeleOp6217_DRC extends OpMode
         }
 
         // Rocker
-
-        int limited = (int) (limitRocker * powerCurve( Range.clip(posyR, -1, 1) ) );
-        if (limited != 0) {
-            motorRocker1.setTargetPosition(limited);
-            motorRocker2.setTargetPosition(limited);
-            motorRocker1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorRocker2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (posyR != 0) {
+            motorRocker1.setPower(posyR);
+            motorRocker2.setPower(posyR);
         }
-
+        else    {
+            motorRocker1.setPower(0);
+            motorRocker2.setPower(0);
+        }
         // Jack
         if(a) {
             servoJack.setPosition(.5);
@@ -205,7 +204,18 @@ public class TeleOp6217_DRC extends OpMode
             motorBL.setPower( FRBLPower );
 
         }
-
+        else if ( LT != 0){
+            motorFL.setPower(LT);
+            motorBL.setPower(LT);
+            motorFL.setPower(-LT);
+            motorBR.setPower(-LT);
+        }
+        else if ( RT != 0){
+            motorFL.setPower(RT);
+            motorBL.setPower(RT);
+            motorFL.setPower(-RT);
+            motorBR.setPower(-RT);
+        }
         else {
 
             motorFR.setPower(0);
@@ -213,6 +223,7 @@ public class TeleOp6217_DRC extends OpMode
             motorBR.setPower(0);
             motorBL.setPower(0);
         }
+
 
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Write telemetry back to driver station

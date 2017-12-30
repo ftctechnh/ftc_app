@@ -47,6 +47,7 @@ public class Auto6217Red extends LinearOpMode {
     static ModernRoboticsI2cGyro gyro;
     boolean iAmBlue = false;
     boolean iAmRed = true;
+    boolean isBoxSide = true;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -67,7 +68,7 @@ public class Auto6217Red extends LinearOpMode {
                 "BM2DOODFNz2EU3F3N1WxnOvCERQ+c934JKPajgCrNs5dquSo1wpcr0Kkf3u29hzK0DornR8s9j03g8Ea7q5cYN8WLn/e" +
                 "q1dUOFznng+6y2/7/fvw9wrzokOP9nP1QujkUN";
 
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
@@ -78,10 +79,10 @@ public class Auto6217Red extends LinearOpMode {
 
         // H a r d w a r e   M a p p i n g
 
-        motorFL = hardwareMap.dcMotor.get("motorFL");
-        motorFL.setDirection(DcMotor.Direction.FORWARD);
         motorFR = hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.REVERSE);
+        motorFL = hardwareMap.dcMotor.get("motorFL");
+        motorFL.setDirection(DcMotor.Direction.FORWARD);
         motorBL = hardwareMap.dcMotor.get("motorBL");
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
@@ -101,6 +102,8 @@ public class Auto6217Red extends LinearOpMode {
 
         boolean autoClear = false;
         telemetry.setAutoClear(autoClear);
+        telemetry.addLine("starting");
+        telemetry.update();
 
         servoTapper.setPosition(0.0d);
         Wait(1);
@@ -140,50 +143,41 @@ public class Auto6217Red extends LinearOpMode {
         }
         telemetry.update();
         servoTapper.setPosition(0.1d);
-        Wait(2.5f);
-
-        move(0f, .25f, 1f);
-
-        move(.25f, 0f, 1f);
 
         // R e a d   V u M a r k
 
         RelicRecoveryVuMark currentVumark = ReadPicto(relicTemplate);
+        // Move off balance stone
+        move(0f,.25f, 1f);
+        // Put this back when gyro is working
+        // if (isBoxSide) {pivotByZ(90);}
 
         if (currentVumark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("1", "LEFT");
-
             move(0f, .25f, 3f);
             Wait(1);
-            pivotByZ(90);
-
         }
         else if (currentVumark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("1", "CENTER");
-
             move(0f, .25f, 2f);
             Wait(1);
-            pivotByZ(90);
         }
         else if (currentVumark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("1", "RIGHT");
-
             move(0f, .25f, 1f);
             Wait(1);
-            pivotByZ(90);
         }
         else {
             telemetry.addData("1", "UNKNOWN");
             move(0f, .25f, 02f);
             Wait(1);
-            pivotByZ(90);
         }
-
-        telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
+        telemetry.update();
+        /*telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
         telemetry.addData("raw optical", rangeSensor.rawOptical());
         telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
         telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
-        telemetry.update();
+        telemetry.update();*/
     }
 
     void move(float posx, float posy, float waitTime) {
@@ -294,9 +288,6 @@ public class Auto6217Red extends LinearOpMode {
             telemetry.addData("3", "%03d", iCount);
             telemetry.update();
         }
-
-
-
         sR();
     }
 
