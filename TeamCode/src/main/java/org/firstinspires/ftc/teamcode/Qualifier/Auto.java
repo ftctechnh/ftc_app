@@ -172,6 +172,7 @@ public class Auto extends LinearOpMode {
             }
             telemetry.update();
             idle();
+
         }
 
         /**********************************************************************************************\
@@ -188,11 +189,6 @@ public class Auto extends LinearOpMode {
          * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
          * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
          */
-        gromit.jewelArm.jewelflickerCenter();
-        sleep(2000);
-        gromit.jewelArm.jewelflickerForward();
-        sleep(2000);
-
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 //        while ( RelicRecoveryVuMark.from(relicTemplate) == RelicRecoveryVuMark.UNKNOWN && opModeIsActive()) {//Add timeout
@@ -201,14 +197,21 @@ public class Auto extends LinearOpMode {
 //            telemetry.update();
 //        }
         relicTrackables.deactivate();
+
         //VUMARK FOUND OR TIMEOUT
         //Grip Block
             gromit.glyphTrain.glyphclamp("close");
         //Raise Block
         // do the jewel should be a method in the jewelArm
+
         gromit.jewelArm.jewelArmDown();
-            while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
-        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
+          while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
+        //sleep(1000);
+        gromit.jewelArm.jewelflickerBack();
+        sleep(500);
+        gromit.jewelArm.jewelflickerCenter();
+        sleep(2000);
+        //gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
         gromit.jewelArm.jewelArmUp();
         //        //Put Jewel Arm down
 //        gromit.jewelArm.jewelArmDown();
@@ -247,40 +250,19 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(0.25, menuFile.FrontRedDistance2, menuFile.FrontRedHeading2,0);
 
         } else if (!menuFile.startPositionIsFront  && !menuFile.teamIsRed){                 /** Back Blue  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance1, menuFile.BackBlueHeading1,0);
-//            gromit.driveTrain.mecanumDrive(0.5, menuFile.BackBlueDistance2, menuFile.BackBlueHeading2,90);
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance3, menuFile.BackBlueHeading3,0);
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance1,  menuFile.BackBlueHeading1,0);  //0
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance2,  menuFile.BackBlueHeading2,90);  //-90
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance3,  menuFile.BackBlueHeading3,0);  //0
 
         } else if (!menuFile.startPositionIsFront  && menuFile.teamIsRed) {                 /** Back RED  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance1, menuFile.BackRedHeading1,0);
- //           gromit.driveTrain.mecanumDrive(0.5, menuFile.BackRedDistance2, menuFile.BackRedHeading2,-90);
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance3, menuFile.BackRedHeading3,0);}
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance1, menuFile.BackRedHeading1, 0);  //0
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance2, menuFile.BackRedHeading2, -90);  //-90
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance3, menuFile.BackRedHeading3, 0);  //0
 
-            sleep(2000);
+        }
+        sleep(2000);
 
-        gromit.driveTrain.mecanumDrive(0.5,-10,0,0);
-        gromit.driveTrain.mecanumTurn(0.5,0.0);
-//        sleep(2000);
-//            // drive forward some Left Center Right
-//            //  vuMark
-//            if (vuMark == RelicRecoveryVuMark.LEFT) {
-//               //Turn Right Away
-//                //drive more
-//                sleep(200);
-//                gromit.driveTrain.mecanumTurn(0.5,90);
-//
-//            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
-//                //drive more
-//                gromit.driveTrain.mecanumDrive(0.5,-10,0,0);
-//                sleep(2000);
-//                gromit.driveTrain.mecanumTurn(0.5,90);
-//
-//            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-//                //drive more
-//                gromit.driveTrain.mecanumDrive(0.5,-20,0,0);
-//                sleep(200);
-//                gromit.driveTrain.mecanumTurn(0.5,90);
-//            }
+
 
 
 //        gromit.driveTrain.mecanumDrive(.5,20, 0, -20);

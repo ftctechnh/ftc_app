@@ -44,7 +44,7 @@ public class JewelArm {
     }
 
     public void jewelArmDown() {
-        jewelArmServo.setPosition(0.55);
+        jewelArmServo.setPosition(0.50);
         jewelflickerCenter();
     }
 

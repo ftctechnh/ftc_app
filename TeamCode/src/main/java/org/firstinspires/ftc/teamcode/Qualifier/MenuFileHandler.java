@@ -81,7 +81,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[0] = "Team Color";
-            menuvalue[0] = 1;
+            menuvalue[0] = 0;
             menulowerlimit[0] = 0;
             menuupperlimit[0] = 1;
             menuvaluetoken[0][0] = "Blue";
@@ -117,7 +117,7 @@ public class MenuFileHandler {
             menulowerlimit[3] = -20;
             menuupperlimit[3] =  20;
         }
-        float FrontBlueDistance1 = menuvalue[3];
+        FrontBlueDistance1 = menuvalue[3];
 
         if (init) {
             menulabel[4] = "Front BLUE Heading 1";
@@ -125,55 +125,55 @@ public class MenuFileHandler {
             menulowerlimit[4] = -100;
             menuupperlimit[4] = 100;
         }
-        float FrontBlueHeading1 = menuvalue[4];
+        FrontBlueHeading1 = menuvalue[4];
 
         if (init) {
             menulabel[5] = "Front BLUE Turn 1";
             menuvalue[5] = 90;
-            menulowerlimit[5] = 80;
-            menuupperlimit[5] = 100;
+            menulowerlimit[5] = -180;
+            menuupperlimit[5] = 180;
         }
-        float FrontBlueTurn1 = menuvalue[5];
+        FrontBlueTurn1 = menuvalue[5];
 
         if (init) {
             menulabel[6] = "Front BLUE Drive 2";
-            menuvalue[6] = 5;
-            menulowerlimit[6] = 0;
-            menuupperlimit[6] = 20;
+            menuvalue[6] = -5;
+            menulowerlimit[6] = -20;
+            menuupperlimit[6] =  20;
         }
-        float FrontBlueDistance2 = menuvalue[6];
+        FrontBlueDistance2 = menuvalue[6];
 
         if (init) {
             menulabel[7] = "Front BLUE Heading 2";
-            menuvalue[7] = 0;
-            menulowerlimit[7] = -100;
-            menuupperlimit[7] = 100;
+            menuvalue[7] = 90;
+            menulowerlimit[7] = -180;
+            menuupperlimit[7] = 180;
         }
-        float FrontBlueHeading2 = menuvalue[7];
+        FrontBlueHeading2 = menuvalue[7];
 
         if (init) {
             menulabel[8] = "Front RED Drive 1";
             menuvalue[8] = 6;
-            menulowerlimit[8] = 0;
-            menuupperlimit[8] = 20;
+            menulowerlimit[8] = -20;
+            menuupperlimit[8] =  20;
         }
-        float FrontRedDistance1 = menuvalue[8];
+       FrontRedDistance1 = menuvalue[8];
 
         if (init) {
             menulabel[9] = "Front RED Heading 1";
             menuvalue[9] = 0;
-            menulowerlimit[9] = -100;
-            menuupperlimit[9] = 100;
+            menulowerlimit[9] = -180;
+            menuupperlimit[9] =  180;
         }
-        float FrontRedHeading1 = menuvalue[9];
+       FrontRedHeading1 = menuvalue[9];
 
         if (init) {
             menulabel[10] = "Front RED Turn 1";
-            menuvalue[10] = -91;
-            menulowerlimit[10] = -100;
-            menuupperlimit[10] = -80;
+            menuvalue[10] = -90;
+            menulowerlimit[10] = -180;
+            menuupperlimit[10] =  180;
         }
-        float FrontRedTurn1 = menuvalue[10];
+        FrontRedTurn1 = menuvalue[10];
 
         if (init) {
             menulabel[11] = "Front RED Drive 2";
@@ -181,111 +181,111 @@ public class MenuFileHandler {
             menulowerlimit[11] = 0;
             menuupperlimit[11] = 20;
         }
-        float FrontRedDistance2 = menuvalue[11];
+        FrontRedDistance2 = menuvalue[11];
 
         if (init) {
             menulabel[12] = "Front RED Heading 2";
-            menuvalue[12] = 0;
-            menulowerlimit[12] = 0;
-            menuupperlimit[12] = 100;
+            menuvalue[12] = -90;
+            menulowerlimit[12] = -180;
+            menuupperlimit[12] =  180;
         }
-        float FrontRedHeading2 = menuvalue[12];
+       FrontRedHeading2 = menuvalue[12];
 
         if (init) {
             menulabel[13] = "Back BLUE Drive 1";
-            menuvalue[13] = 5;
-            menulowerlimit[13] = 0;
-            menuupperlimit[13] = 2;
+            menuvalue[13] = -5;
+            menulowerlimit[13] = -20;
+            menuupperlimit[13] =  20;
         }
-        float BackBlueDistance1 = menuvalue[13];
+       BackBlueDistance1 = menuvalue[13];
 
         if (init) {
             menulabel[14] = "Back BLUE Heading 1";
             menuvalue[14] = 0;
-            menulowerlimit[14] = -100;
-            menuupperlimit[14] = 100;
+            menulowerlimit[14] = -180;
+            menuupperlimit[14] =  180;
         }
-        float BackBlueHeading1 = menuvalue[14];
+        BackBlueHeading1 = menuvalue[14];
 
         if (init) {
             menulabel[15] = "Back BLUE Drive 2";
-            menuvalue[15] = 0;
-            menulowerlimit[15] = 80;
-            menuupperlimit[15] = 100;
+            menuvalue[15] = 5;
+            menulowerlimit[15] = -20;
+            menuupperlimit[15] =  20;
         }
-        float BackBlueDistance2 = menuvalue[15];
+        BackBlueDistance2 = menuvalue[15];
 
         if (init) {
             menulabel[16] = "Back BLUE Heading 2";
             menuvalue[16] = 0;
-            menulowerlimit[16] = -100;
-            menuupperlimit[16] = 100;
+            menulowerlimit[16] = -180;
+            menuupperlimit[16] =  180;
         }
-        float BackBlueHeading2 = menuvalue[16];
+        BackBlueHeading2 = menuvalue[16];
 
         if (init) {
             menulabel[17] = "Back BLUE Drive 3";
-            menuvalue[17] = 5;
-            menulowerlimit[17] = 0;
-            menuupperlimit[17] = 2;
+            menuvalue[17] = -5;
+            menulowerlimit[17] = -20;
+            menuupperlimit[17] =  20;
         }
-        float BackBlueDistance3 = menuvalue[17];
+        BackBlueDistance3 = menuvalue[17];
 
         if (init) {
             menulabel[18] = "Back BLUE Heading 3";
             menuvalue[18] = 0;
-            menulowerlimit[18] = -100;
-            menuupperlimit[18] = 100;
+            menulowerlimit[18] = -180;
+            menuupperlimit[18] =  180;
         }
-        float BackBlueHeading3 = menuvalue[18];
+        BackBlueHeading3 = menuvalue[18];
 
         if (init) {
             menulabel[19] = "Back RED Drive 1";
-            menuvalue[19] = 5;
-            menulowerlimit[19] = 0;
-            menuupperlimit[19] = 20;
+            menuvalue[19] = -5;
+            menulowerlimit[19] = -20;
+            menuupperlimit[19] =  20;
         }
-        float BackRedDistance1 = menuvalue[19];
+        BackRedDistance1 = menuvalue[19];
 
         if (init) {
             menulabel[20] = "Back RED Heading 1";
             menuvalue[20] = 0;
-            menulowerlimit[20] = -100;
-            menuupperlimit[20] = 100;
+            menulowerlimit[20] = -180;
+            menuupperlimit[20] =  180;
         }
-        float BackRedHeading1 = menuvalue[20];
+        BackRedHeading1 = menuvalue[20];
 
         if (init) {
             menulabel[21] = "Back RED Drive 2";
             menuvalue[21] = 5;
-            menulowerlimit[21] = 0;
-            menuupperlimit[21] = 20;
+            menulowerlimit[21] = -20;
+            menuupperlimit[21] =  20;
         }
-        float BackRedDistance2 = menuvalue[21];
+        BackRedDistance2 = menuvalue[21];
 
         if (init) {
             menulabel[22] = "Back RED Heading 2";
             menuvalue[22] = 0;
-            menulowerlimit[22] = -100;
-            menuupperlimit[22] = 100;
+            menulowerlimit[22] = -180;
+            menuupperlimit[22] =  180;
         }
-        float BackRedHeading2 = menuvalue[22];
+        BackRedHeading2 = menuvalue[22];
 
         if (init) {
             menulabel[23] = "Back RED Drive 3";
-            menuvalue[23] = 5;
-            menulowerlimit[23] = 0;
-            menuupperlimit[23] = 20;
+            menuvalue[23] = -5;
+            menulowerlimit[23] = -20;
+            menuupperlimit[23] =  20;
         }
-        float BackRedDistance3 = menuvalue[23];
+        BackRedDistance3 = menuvalue[23];
 
         if (init) {
             menulabel[24] = "Back RED Heading 3";
             menuvalue[24] = 0;
-            menulowerlimit[24] = -100;
-            menuupperlimit[24] = 100;
+            menulowerlimit[24] = -180;
+            menuupperlimit[24] =  180;
         }
-        float BackRedHeading3 = menuvalue[24];
+        BackRedHeading3 = menuvalue[24];
 
 
     }
