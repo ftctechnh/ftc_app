@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotplus.autonomous.VuforiaWrapper;
 
+@Disabled
 @Autonomous(name = "VuforiaImageTester", group = "Testing")
 public class AutonomousVuforiaPatternTester extends LinearOpMode {
     private VuforiaWrapper identifier;

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.robotplus.hardware.ColorSensorWrapper;
@@ -12,6 +13,8 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.ColorSensorWrapper;
  * @author Alex Migala, Nick Clifford, Blake Abel
  * @since 9/14/17
  */
+
+@Disabled
 @Autonomous(name = "Color Tester", group = "Testing")
 public class AutonomousJewelTester extends LinearOpMode {
 

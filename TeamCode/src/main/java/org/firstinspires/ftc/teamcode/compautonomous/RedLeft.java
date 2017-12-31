@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
  */
 
 @Autonomous(name="RedLeft", group="compauto")
-public class RedLeft extends LinearOpMode {
+public class RedLeft extends LinearOpMode implements Settings {
 
     private Robot robot;
     private DcMotor raiser;
@@ -97,6 +97,17 @@ public class RedLeft extends LinearOpMode {
         //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
         sleep(1000);
-    }
 
+        // PSEUDO move backwards and slam into the wall
+        this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0); // move backwards
+        sleep(firstStretch);
+        // turn counterclockwise
+        this.drivetrain.complexDrive(MecanumDrive.Direction.LEFT.angle(), 0, 1);
+        switch (relicRecoveryVuMark) {
+            case LEFT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle(), 1, 0); break;
+            case CENTER: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0); break;
+            case RIGHT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle(), 1, 0); break;
+            default: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0 ); break;
+        }
+    }
 }

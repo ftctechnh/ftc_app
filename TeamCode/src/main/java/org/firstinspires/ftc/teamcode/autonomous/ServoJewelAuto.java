@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
  * Created by BAbel on 11/2/2017.
  */
 
-//@Disabled
+@Disabled
 @Autonomous(name = "Blake tryina code (servo)", group = "Competition OpModes")
 public class ServoJewelAuto extends LinearOpMode {
 
