@@ -27,6 +27,8 @@ class Rebound(private val telemetry: Telemetry, private val hardwareMap: Hardwar
               private var lf: DcMotor, private var lb: DcMotor, private var rf: DcMotor, private var rb: DcMotor,
               private var imu: BNO055IMU)
 {
+    private val ENCODER_COUNTS_PER_ROTATION : Double = 1120.0
+    private val WHEEL_CIRCUMFERENCE_INCHES : Double = 4.0 * PI
     /**
      * Sets all the hardware devices up. Assumes motors are named "lf", "lb", "rf", and "rb".
      */
@@ -49,13 +51,15 @@ class Rebound(private val telemetry: Telemetry, private val hardwareMap: Hardwar
 
         // IMU initialization code
         val parameters : BNO055IMU.Parameters = BNO055IMU.Parameters()
-        parameters.mode = BNO055IMU.SensorMode.IMU
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json" // see the calibration sample opmode
-        parameters.loggingEnabled = true
-        parameters.loggingTag = "IMU"
-        parameters.accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
+        with(parameters) {
+            mode = BNO055IMU.SensorMode.IMU
+            angleUnit = BNO055IMU.AngleUnit.DEGREES
+            accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
+            calibrationDataFile = "BNO055IMUCalibration.json" // see the calibration sample opmode
+            loggingEnabled = true
+            loggingTag = "IMU"
+            accelerationIntegrationAlgorithm = JustLoggingAccelerationIntegrator()
+        }
         // initialize the IMU
         imu = hardwareMap.get(BNO055IMU::class.java, "imu")
         // apply IMU configuration
@@ -128,6 +132,31 @@ class Rebound(private val telemetry: Telemetry, private val hardwareMap: Hardwar
      */
     fun setTargetPositions(target: Int) = setTargetPositions(target, target)
 
+    fun setTargetRotations(lfTarget: Double, rfTarget: Double, lbTarget: Double, rbTarget: Double) =
+            setTargetPositions((lfTarget * ENCODER_COUNTS_PER_ROTATION).toInt(),
+                (rfTarget * ENCODER_COUNTS_PER_ROTATION).toInt(),
+                (lbTarget * ENCODER_COUNTS_PER_ROTATION).toInt(),
+                (rbTarget * ENCODER_COUNTS_PER_ROTATION).toInt())
+    fun setTargetRotations(lTarget: Double, rTarget: Double) = setTargetRotations(lTarget, rTarget, lTarget, rTarget)
+    fun setTargetRotations(target: Double) = setTargetRotations(target, target)
+    /**
+     * Set a strafe target in rotations.
+     * @param lCfgTarget controls Left Configuration wheels (LF and RB).
+     * @param rCfgTarget controls Right Configuration wheels (Rf and LB).
+     */
+    fun setTargetRotationStrafe(lCfgTarget: Double, rCfgTarget: Double) =
+            setTargetRotations(lCfgTarget, rCfgTarget, rCfgTarget, lCfgTarget)
+
+    fun setTargetTravelInches(lfTarget: Double, rfTarget: Double, lbTarget: Double, rbTarget: Double) =
+            setTargetRotations(lfTarget * WHEEL_CIRCUMFERENCE_INCHES,
+                    rfTarget * WHEEL_CIRCUMFERENCE_INCHES,
+                    lbTarget * WHEEL_CIRCUMFERENCE_INCHES,
+                    rbTarget * WHEEL_CIRCUMFERENCE_INCHES)
+    fun setTargetTravelInches(lTarget: Double, rTarget: Double) =
+            setTargetTravelInches(lTarget, rTarget, lTarget, rTarget)
+    fun setTargetTravelInches(target: Double) = setTargetTravelInches(target, target)
+    // about 2866 encoder counts per rotation for full rotation, or 716.5 in a 90 degree turn
+
     /**
      * Resets the encoders, then sets the motors to the given mode.
      * @param mode the mode to set for the motors after the encoders have been reset
@@ -179,7 +208,7 @@ class Rebound(private val telemetry: Telemetry, private val hardwareMap: Hardwar
      * @param vR rotational power around the Z axis (-1 to 1)
      */
     fun arcadeMecanum(vtX: Double, vtY: Double, vR: Double) {
-        telemetry.addData("Inputs: ", listOf(vtX, vtY, vR))
+        //telemetry.addData("Inputs: ", listOf(vtX, vtY, vR))
         // calculate raw motor powers
         val lfPow : Double = vtY + vtX - vR
         val rfPow : Double = vtY - vtX + vR
@@ -187,10 +216,13 @@ class Rebound(private val telemetry: Telemetry, private val hardwareMap: Hardwar
         val rbPow : Double = -(vtY + vtX + vR)
         // get the max wheel power
         val wMax : Double = max(lfPow, max(rfPow, max(lbPow, rbPow)))
-        telemetry.addData("Max Speed: ", wMax)
+        //telemetry.addData("Max Speed: ", wMax)
         // scale the motor powers
         val powers: List<Double> = listOf(lfPow, rfPow, lbPow, rbPow).map {x -> x/max(1.0, wMax)}
-        telemetry.addData("Powers: ", powers)
+        telemetry.addData("LF: ", powers[0])
+                 .addData("RF: ", powers[1])
+                 .addData("LB: ", powers[2])
+                 .addData("RB: ", powers[3])
         // set the motor powers
         lf.power = powers[0]
         rf.power = powers[1]
