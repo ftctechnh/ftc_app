@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 import com.sun.source.tree.ContinueTree;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
+import org.firstinspires.ftc.teamcode.libraries.StupidMotorLib;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 
 /**
@@ -30,10 +32,8 @@ public class BotHardware {
         backRight("br", true),
         frontLeft("fl", false),
         backLeft("bl", false),
-        green("g", false);
-        //suckLeft("sl", false),
-        //suckRight("sr", true),
-        //lift("l", false);
+        liftLeft("ll", true),
+        liftRight("lr", false);
 
         private final String name;
         private final boolean reverse;
@@ -60,8 +60,8 @@ public class BotHardware {
     public enum ServoE {
         stick("stick"),
         stickBase("sb"),
-        //dropLeft("dl"),
-        //dropRight("dr"),
+        frontDropLeft("dl", true),
+        frontDropRight("dr"),
         backDropLeft("bdl", true),
         backDropRight("bdr");
 
@@ -80,6 +80,9 @@ public class BotHardware {
         public static final double rightBackDropUp = 0.82;
         public static final double leftBackDropDown = 0;
         public static final double leftBackDropUp = 0;
+
+        public static final double frontDropUp = 0.6;
+        public static final double frontDropDown = 0.23;
 
         private final String name;
         public Servo servo;
@@ -105,8 +108,10 @@ public class BotHardware {
     }
 
     public enum ContiniuosServoE {
-        LiftLeft("crl", false),
-        LiftRight("crr", true);
+        SuckLeft("crl", false),
+        SuckRight("crr", true),
+        FrontSuckLeft("fcrl", true),
+        FrontSuckRight("fcll", false);
 
         private final String name;
         public CRServo servo;
@@ -131,6 +136,7 @@ public class BotHardware {
     private final OpMode mode;
     //motor wrap array pointer
     private DcMotorWrap[] shimRay;
+    private StupidMotorLib[] liftMotors;
 
     //IMU pointer
     private BNO055IMU imu;
@@ -146,6 +152,7 @@ public class BotHardware {
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
         //init motor shim array
         shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
+        liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
         for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
@@ -202,14 +209,22 @@ public class BotHardware {
         ServoE.backDropRight.servo.setPosition(ServoE.rightBackDropUp);
     }
 
-    public void setLiftServos(double power) {
-        ContiniuosServoE.LiftLeft.servo.setPower(power);
-        ContiniuosServoE.LiftRight.servo.setPower(power);
+    public void setFrontDrop(double pos) {
+        ServoE.frontDropLeft.servo.setPosition(pos);
+        ServoE.frontDropRight.servo.setPosition(pos);
+    }
+
+    public double getFrontDrop() {
+        return ServoE.frontDropRight.servo.getPosition();
     }
 
     public void setDropPos(double pos) {
         ServoE.backDropLeft.servo.setPosition(pos);
         ServoE.backDropRight.servo.setPosition(pos);
+    }
+
+    public double getDropPos() {
+        return ServoE.backDropRight.servo.getPosition();
     }
 
     public AutoLib.Sequence getDropStep() {
@@ -225,6 +240,16 @@ public class BotHardware {
         return mSeq;
     }
 
+    public void setSuckLeft(double power) {
+        ContiniuosServoE.SuckLeft.servo.setPower(power);
+        ContiniuosServoE.FrontSuckLeft.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
+    }
+
+    public void setSuckRight(double power) {
+        ContiniuosServoE.SuckRight.servo.setPower(power);
+        ContiniuosServoE.FrontSuckRight.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
+    }
+
     public DcMotorEx getMotor(String name) {
         return Motor.valueOf(name).motor;
     }
@@ -235,6 +260,11 @@ public class BotHardware {
 
     public DcMotorWrap[] getMotorVelocityShimArray() {
         return shimRay;
+    }
+
+    public void setLiftMotors(float power) {
+        Motor.liftLeft.motor.setPower(power);
+        Motor.liftRight.motor.setPower(power);
     }
 
     private static class IMUHeading implements HeadingSensor {
