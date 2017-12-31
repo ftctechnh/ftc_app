@@ -34,7 +34,6 @@ public class RedRecovery extends LinearOpMode {
         ForkLift.closeClaw();
         sleep(200);
         ForkLift.moveMotor(1, 300);
-        pictograph = vuforia.getMark();
         color = jewelArm.findJewel();
         if (color.equals("Red")) { //if the arm sees red
             drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
@@ -45,17 +44,18 @@ public class RedRecovery extends LinearOpMode {
             jewelArm.up();
             drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
         }
+        pictograph = drive.getMark(vuforia);
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY);
+            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
-            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
-        drive.rightGyro(0, 0, drive.TURN_TO_CRYPTOBOX_SPEED, -88);
+        drive.rightGyro(0, 0, drive.SPIN_TO_CRYPTOBOX_SPEED, -88);
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 1);
         drive.pushInBlock(ForkLift);
         drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);

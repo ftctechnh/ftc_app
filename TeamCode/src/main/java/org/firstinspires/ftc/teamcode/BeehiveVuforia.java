@@ -21,6 +21,7 @@ public class BeehiveVuforia {
     private Telemetry telemetry;
     private VuforiaTrackable relicTemplate;
     private VuforiaTrackables relicTrackables;
+    private ElapsedTime time;
     public BeehiveVuforia(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
@@ -31,17 +32,18 @@ public class BeehiveVuforia {
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
+        time = new ElapsedTime(telemetry);
     }
     public RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
-        while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+        time.start();
+        while (time.getElapsedTime() < 3000) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
             } else {
                 telemetry.addData("VuMark", "not visible");
             }
-
             telemetry.update();
         }
         telemetry.addData("Pictograph", "%s visible", vuMark);

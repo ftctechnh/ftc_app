@@ -2,21 +2,19 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 /**
- * Created by BeehiveRobotics-3648 on 11/28/2017.
+ * Created by Kaden on 12/30/2017.
  */
-@Autonomous(name = "Red Far", group = "Autonomous")
-public class RedFar extends LinearOpMode {
+@Autonomous(name = "Blue Far", group = "Autonomous")
+public class BlueFar extends LinearOpMode {
     private AutoDrive drive;
     private JewelArm jewelArm;
     private ForkLift ForkLift;
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private String color;
-
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");
         telemetry.update();
@@ -33,35 +31,35 @@ public class RedFar extends LinearOpMode {
         jewelArm.up();
         ForkLift.closeClaw();
         sleep(200);
-        ForkLift.moveMotor(1, 300);
+        ForkLift.moveMotor(1, 400);
         color = jewelArm.findJewel();
         if (color.equals("Red")) { //if the arm sees red
-            drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            jewelArm.up();
             drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
+            jewelArm.up();
+            drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
         } else if (color.equals("Blue")) { //if the arm sees blue
-            drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            jewelArm.up();
             drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
+            jewelArm.up();
+            drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
         }
         pictograph = drive.getMark(vuforia);
         sleep(500);
-        drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  0, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
+        drive.driveTranslateRotate(0,-drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
+        drive.rightGyro(0,0, drive.SPIN_TO_CRYPTOBOX_SPEED, -178);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
+            drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
-            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 3);
         drive.pushInBlock(ForkLift);
         drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
-        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 150);
+        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 30);
         ForkLift.openClaw();
         ForkLift.moveUntilDown(0.75);
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

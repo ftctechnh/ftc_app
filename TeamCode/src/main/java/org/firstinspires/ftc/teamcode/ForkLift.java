@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -12,6 +13,7 @@ public class ForkLift {
     public DcMotor motor;
     private DigitalChannel topButton;
     private DigitalChannel bottomButton;
+    private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private final double CLAW_CLOSE_POSITION = 1;
     private final double CLAW_OPEN_POSITION = 0;
@@ -27,6 +29,18 @@ public class ForkLift {
         this.telemetry = telemetry;
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public ForkLift(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.hardwareMap = hardwareMap;
+        this.rightClaw = hardwareMap.servo.get("s5");
+        this.leftClaw = hardwareMap.servo.get("s6");
+        this.motor = hardwareMap.dcMotor.get("m6");
+        this.topButton = hardwareMap.digitalChannel.get("b0");
+        this.bottomButton = hardwareMap.digitalChannel.get("b1");
+        this.telemetry = telemetry;
+        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        resetEncoder();
     }
 
     public void init() {

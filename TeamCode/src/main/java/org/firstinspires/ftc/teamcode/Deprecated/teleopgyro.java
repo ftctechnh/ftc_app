@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.AutoDrive;
 public class teleopgyro extends OpMode {
     AutoDrive drive;
     public void init() {
-        drive = new AutoDrive(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), hardwareMap, telemetry);
+        drive = new AutoDrive(hardwareMap, telemetry);
         drive.init();
     }
     public void loop() {

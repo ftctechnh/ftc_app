@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 /**
  * Created by Kaden on 11/25/2017.
@@ -18,22 +19,24 @@ public class AutoDrive {
     private REVGyro imu;
     private final double CIRCUMFERENCE_Of_WHEELS = 3.937 * Math.PI;
     private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit.
-    public double heading;
+    double heading;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    public final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
-    public final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
-    public final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
-    public final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.6;
-    public final double TURN_TO_CRYPTOBOX_SPEED = 0.25;
-    public final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
-    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY = 32.5;
-    public final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR = 15.5;
-    public final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
-    public final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
-    public final double SPIN_TO_CENTER_SPEED = 0.75;
+    final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
+    final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
+    final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
+    final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.6;
+    final double SPIN_TO_CRYPTOBOX_SPEED = 0.5;
+    final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
+    final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION = 32.5;
+    final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 15.5;
+    final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
+    final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
+    final double SPIN_TO_CENTER_SPEED = 0.75;
+    final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
+    final double FIND_VUMARK_DISTANCE = 2;
 
-    public AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hardwareMap, Telemetry telemetry) {
+    AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
         this.FrontRight = FrontRight;
         this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -167,7 +170,7 @@ public class AutoDrive {
         driveTranslateRotate(0, -DRIVE_INTO_CRYPTOBOX_SPEED,0,4);
         ForkLift.closeClaw();
         ForkLift.moveUntilDown(0.75);
-        driveTranslateRotate(0,DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
+        driveTranslateRotate(0, DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
     }
 
     public double getHeading() {
@@ -196,5 +199,19 @@ public class AutoDrive {
         this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    public RelicRecoveryVuMark getMark(BeehiveVuforia vuforia) {
+        RelicRecoveryVuMark vuMark;
+        vuMark = vuforia.getMark();
+        int i = 0 ;
+        if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            driveTranslateRotate(0,0,-SPIN_ON_BALANCE_BOARD_SPEED, FIND_VUMARK_DISTANCE);
+            vuMark = vuforia.getMark();
+            i++;
+        }
+        if (i>0) {
+            driveTranslateRotate(0, 0, SPIN_ON_BALANCE_BOARD_SPEED, FIND_VUMARK_DISTANCE * i);
+        }
+        return vuMark;
     }
 }
