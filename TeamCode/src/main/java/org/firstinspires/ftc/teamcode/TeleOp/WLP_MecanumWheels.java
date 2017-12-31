@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -90,7 +90,7 @@ public class WLP_MecanumWheels {
     }
 
     // The only constructors
-    WLP_MecanumWheels(double left_x, double left_y, double right_x) {
+    public WLP_MecanumWheels(double left_x, double left_y, double right_x) {
         UpdateInput(left_x, left_y, right_x);
     }
 
@@ -98,7 +98,7 @@ public class WLP_MecanumWheels {
         return wheelPowers[FrontLeft];
     }
 
-    public double getFrontRighttPower() {
+    public double getFrontRightPower() {
         return wheelPowers[FrontRight];
     }
 
