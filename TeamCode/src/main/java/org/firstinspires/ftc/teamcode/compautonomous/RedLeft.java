@@ -94,7 +94,7 @@ public class RedLeft extends LinearOpMode {
 
         sleep(1000);
 
-        imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
+        //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
         sleep(1000);
     }
