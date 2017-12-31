@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.compautonomous;
 
+import android.media.MediaActionSound;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -105,7 +107,11 @@ public class RedRight extends LinearOpMode implements Settings {
         sleep(secondStretch);
         // turn clockwise
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 0, 1);
-        // this is when we slam into the wall
-        this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
+        switch (relicRecoveryVuMark) {
+            case LEFT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle(), 1, 0); break;
+            case CENTER: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0); break;
+            case RIGHT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle(), 1, 0); break;
+            default: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0 ); break;
+        }
     }
 }
