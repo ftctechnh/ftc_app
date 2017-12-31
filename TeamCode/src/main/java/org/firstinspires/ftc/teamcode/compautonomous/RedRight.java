@@ -13,11 +13,11 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
- * Created by Alex on 12/30/2017.
+ * @author Alex Migala, Blake Abel
+ * @since 12/30/17
  */
-
 @Autonomous(name="RedRight", group="compauto")
-public class RedRight extends LinearOpMode {
+public class RedRight extends LinearOpMode implements Settings {
 
     private Robot robot;
     private DcMotor raiser;
@@ -98,7 +98,14 @@ public class RedRight extends LinearOpMode {
 
         sleep(1000);
 
-
+        // PSEUDO move backwards and slam into the wall
+        this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0);
+        sleep(firstStretch);
+        this.drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), 1, 0);
+        sleep(secondStretch);
+        // turn clockwise
+        this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 0, 1);
+        // this is when we slam into the wall
+        this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
     }
-
 }
