@@ -27,9 +27,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -52,6 +53,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+@TeleOp(name="Grabber", group="We Love PI")
 public class WLP_RR_Grabber {
 
 
@@ -91,11 +93,18 @@ public class WLP_RR_Grabber {
      */
 
 
-    public void init() {
+    public void init(Telemetry telemetry, HardwareMap hardwareMap,
+                     Gamepad gamepad1, Gamepad gamepad2) {
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+        //true initialization
+        this.telemetry = telemetry;
+        this.hardwareMap = hardwareMap;
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+
 
         leftGrabberMotor  = hardwareMap.get(DcMotor.class, "leftgrabbermotor");
         rightGrabberMotor = hardwareMap.get(DcMotor.class, "rightgrabbermotor");
@@ -104,26 +113,6 @@ public class WLP_RR_Grabber {
         // Send telemetry message to signify that Grabber initialization complete
         telemetry.addData("Grabber", "Init Complete");    //
     }
-
-
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    public void init_loop() {
-    }
-
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-
-    public void start() {
-
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
 
     public void loop() {
 
@@ -144,12 +133,5 @@ public class WLP_RR_Grabber {
         // Show the elapsed game time and wheel power.
         telemetry.addData("Motors Power", "left (%.2f), right (%.2f)",
                 leftGrabberMotor.getPower(), rightGrabberMotor.getPower());
-    }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-
-    public void stop() {
     }
 }
