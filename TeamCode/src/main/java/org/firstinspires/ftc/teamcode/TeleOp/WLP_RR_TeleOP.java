@@ -27,18 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.WLP_RR_Grabber;
-import org.firstinspires.ftc.teamcode.WLP_RR_TeleOP;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -55,7 +48,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="RR TeleOp", group="We Love PI")
+@TeleOp(name="WLP_RR_TeleOp", group="We Love PI")
 public class WLP_RR_TeleOP extends OpMode{
 
 
@@ -73,12 +66,15 @@ public class WLP_RR_TeleOP extends OpMode{
     @Override
     public void init() {
 
+        telemetry.addData("Say", "Starting Init");    //
         // Initialize the grabber
-        grabber.init();
-        drivetrain.init();
+        telemetry.addData("Say", "Initialize Grabber");
+        //grabber.init(telemetry, hardwareMap, gamepad1, gamepad2);
+        telemetry.addData("Say", "Initialize  DriveTrain");
+        drivetrain.init(telemetry, hardwareMap, gamepad1, gamepad2);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Ending Init");    //
 
     }
 
@@ -87,8 +83,8 @@ public class WLP_RR_TeleOP extends OpMode{
      */
     @Override
     public void init_loop() {
-        grabber.init_loop();
-        drivetrain.init_loop();
+
+
     }
 
     /*
@@ -97,8 +93,8 @@ public class WLP_RR_TeleOP extends OpMode{
     @Override
     public void start() {
         runtime.reset();
-        grabber.start();
-        drivetrain.start();
+
+
     }
 
     /*
@@ -111,7 +107,7 @@ public class WLP_RR_TeleOP extends OpMode{
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         // Loop the grabber
-        grabber.loop();
+        //grabber.loop();
         drivetrain.loop();
 
 
@@ -123,7 +119,6 @@ public class WLP_RR_TeleOP extends OpMode{
      */
     @Override
     public void stop() {
-        grabber.stop();
-        drivetrain.stop();
+
     }
 }
