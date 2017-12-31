@@ -27,15 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.TeleOp.WLP_MecanumWheels;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -52,9 +54,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+@TeleOp(name="MecanumDriveTrain", group="We Love PI")
+
 public class WLP_MecanumDriveTrain {
-
-
+    
     // Global variables to be initialized in the constructor
     private Telemetry telemetry = null;
     private HardwareMap hardwareMap = null;
@@ -63,11 +66,15 @@ public class WLP_MecanumDriveTrain {
 
 
     // Declare Drive Train modors
-    private DcMotor frontLeft = null;
-    private DcMotor frontRight = null;
-    private DcMotor rearLeft = null;
-    private DcMotor rearRight = null;
+    protected DcMotor frontLeft = null;
+    protected DcMotor frontRight = null;
+    protected DcMotor rearLeft = null;
+    protected DcMotor rearRight = null;
 
+    protected WLP_MecanumWheels wheels = new WLP_MecanumWheels(0,0,0);
+
+
+    double limiter = 1;
 
     // Constructors
 
@@ -92,67 +99,238 @@ public class WLP_MecanumDriveTrain {
      */
 
 
-    public void init() {
+    public void init(Telemetry telemetry, HardwareMap hardwareMap,
+                     Gamepad gamepad1, Gamepad gamepad2) {
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+        //true initialization
+        this.telemetry = telemetry;
+        this.hardwareMap = hardwareMap;
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
 
         frontLeft  = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         rearLeft  = hardwareMap.get(DcMotor.class, "rearLeft");
         rearRight = hardwareMap.get(DcMotor.class, "rearRight");
 
+
+        //frontLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+
+        //rearLeft.setDirection(DcMotor.Direction.REVERSE);
+        rearRight.setDirection(DcMotor.Direction.REVERSE);
+
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Drive Train", "Init complete");    //
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    public void init_loop() {
-
-    }
-
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-
-    public void start() {
-
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-
     public void loop() {
-        double v1=0.0, v2=0.0, v3=0.0, v4=0.0;
-
-        // Calculate power as the average value of left and right triggers. This would
-        // correctly reflect driver's motivation. The reasoning behind average power
-        // would be to apply the same power on the both sides of the spinner.
 
 
-        // Send calculated power to the wheels
-        frontLeft.setPower(v1);
-        frontRight.setPower(v2);
-        rearLeft.setPower(v3);
-        rearRight.setPower(v4);
+        // THE X AND Y AXIS FOR EACH SIDE (LEFT AND RIGHT)
+        double left_y;
+        double left_x;
+        double right_y;
+        double right_x;
+
+        // pass the left x_y and right x_y to mechanum wheels
+        // get the power for the motors
+        // multiply with the limiter
+        left_y = gamepad1.left_stick_y ;
+        left_x = gamepad1.left_stick_x ;
+        // SETTING VALUES FOR RIGHT X AND Y
+        right_y = gamepad1.right_stick_y ;
+        right_x = gamepad1.right_stick_x ;
+        telemetry.addData("Drive Train::Left_X","(%.2f)", left_x);
+        telemetry.addData("Drive Train::Left_Y", "(%.2f)",left_y);
+        telemetry.addData("Drive Train::Right_X","(%.2f)", right_x);
 
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("DT Motors Power", "frontLeft (%.2f), frontRight (%.2f)"
-                + "rearLeft (%.2f), rightRight (%.2f)",
-                frontLeft.getPower(), frontRight.getPower(),
-                rearLeft.getPower(), rearRight.getPower());
-    }
+        if ( gamepad1.dpad_down == false && gamepad1.dpad_left == false && gamepad1.dpad_right == false && gamepad1.dpad_up == false) {
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
+            wheels.UpdateInput(left_x, left_y, right_x);
 
-    public void stop() {
+            if (gamepad1.left_trigger > 0 && gamepad1.right_trigger == 0) {
+                limiter = 0.2;
+
+                telemetry.addData("limiter is", limiter);
+            } else if (gamepad1.right_trigger > 0 && gamepad1.left_trigger == 0) {
+                limiter = 0.3;
+                telemetry.addData("limiter is", limiter);
+
+            } else {
+                limiter = 0.5;
+                telemetry.addData("Limiter is ", limiter);
+            }
+
+            telemetry.addData("Drive Train::FrontLeftPower", "(%.2f)", wheels.getFrontLeftPower());
+            telemetry.addData("Drive Train::FrontRightPower", "(%.2f)", wheels.getFrontRightPower());
+            telemetry.addData("Drive Train::RearRightPower", "(%.2f)", wheels.getRearLeftPower());
+            telemetry.addData("Drive Train::RearLeftPower", "(%.2f)", wheels.getRearRightPower());
+
+
+            frontLeft.setPower(wheels.getFrontLeftPower());
+            frontRight.setPower(wheels.getFrontRightPower());
+            rearRight.setPower(wheels.getRearRightPower());
+            rearLeft.setPower(wheels.getRearLeftPower());
+
+        }
+
+
+        //DPAD DIRECTIONS
+        if (gamepad1.dpad_up) {
+            //DPAD FORWARD 0.5
+            frontLeft.setPower(1 * limiter);
+            frontRight.setPower(-1 * limiter);
+            rearLeft.setPower(1 * limiter);
+            rearRight.setPower(-1 * limiter);
+        } else if (gamepad1.dpad_down) {
+            //DPAD BACKWARD 0.5
+            frontLeft.setPower(-1 * limiter);
+            frontRight.setPower(1 * limiter);
+            rearLeft.setPower(-1 * limiter);
+            rearRight.setPower(1 * limiter);
+        } else if (gamepad1.dpad_left) {
+            //DPAD LEFT 0.5
+            frontLeft.setPower(1 * limiter);
+            frontRight.setPower(1 * limiter);
+            rearLeft.setPower(-1 * limiter);
+            rearRight.setPower(-1 * limiter);
+        } else if (gamepad1.dpad_right) {
+            //DPAD RIGHT 0.5
+            frontLeft.setPower(-1 * limiter);
+            frontRight.setPower(-1 * limiter);
+            rearLeft.setPower(1 * limiter);
+            rearRight.setPower(1 * limiter);
+        } else if (gamepad1.dpad_up && gamepad1.dpad_right) {
+            //DPAD NORTHEAST (RIGHT FRONT DIAGONAL)
+            frontLeft.setPower(1* limiter);
+            frontRight.setPower(0 * limiter);
+            rearLeft.setPower(0 * limiter);
+            rearRight.setPower(-1 * limiter);
+        } else if (gamepad1.dpad_up && gamepad1.dpad_left) {
+            //DPAD NORTHWEST (LEFT FRONT DIAGONAL
+            frontLeft.setPower(0 * limiter);
+            frontRight.setPower(-1 * limiter);
+            rearLeft.setPower(1 * limiter);
+            rearRight.setPower(0 * limiter);
+        } else if (gamepad1.dpad_down && gamepad1.dpad_right) {
+            frontLeft.setPower(0 * limiter);
+            frontRight.setPower(1 * limiter);
+            rearLeft.setPower(-1 * limiter);
+            rearRight.setPower(0 * limiter);
+        } else if (gamepad1.dpad_down && gamepad1.dpad_left) {
+            frontLeft.setPower(-1 * limiter);
+            frontRight.setPower(0 * limiter);
+            rearLeft.setPower(0 * limiter);
+            rearRight.setPower(1 * limiter);
+        }
+
+        /*
+
+        // SETTING VALUES FOR LEFT X AND Y
+        left_y = -this.gamepad1.left_stick_y * limiter;
+        left_x = gamepad1.left_stick_x * limiter;
+        // SETTING VALUES FOR RIGHT X AND Y
+        right_y = -gamepad1.right_stick_y * limiter;
+        right_x = gamepad1.right_stick_x * limiter;
+
+
+        // SETTING THE POWER TO MOVE THE ROBOT WITH EACH MOTOR
+
+        if ((right_x == 0) && gamepad1.dpad_down == false && gamepad1.dpad_left == false && gamepad1.dpad_right == false && gamepad1.dpad_up == false) {
+
+            frontLeft.setPower(left_y + left_x);
+            frontRight.setPower(left_x - left_y);
+            rearRight.setPower(-left_y - left_x);
+            rearLeft.setPower(left_y - left_x);
+        }
+
+        if (gamepad1.left_trigger > 0 && gamepad1.right_trigger == 0) {
+            limiter = 0.2;
+
+            telemetry.addData("limiter is", limiter);
+        } else if (gamepad1.right_trigger > 0 && gamepad1.left_trigger == 0) {
+            limiter = 0.3;
+            telemetry.addData("limiter is", limiter);
+
+        } else {
+            limiter = 0.5;
+            telemetry.addData("Limiter is ", limiter);
+        }
+
+
+        // MAKE THE ROBOT ROTATE
+        if ((left_y + left_x == 0) && (right_x != 0)) {
+            int dir = 1;
+            if (right_x < 0) dir = -1;
+
+            frontLeft.setPower(dir * limiter);
+
+            frontRight.setPower(dir * limiter);
+            rearRight.setPower(dir * limiter);
+            rearLeft.setPower(dir * limiter);
+
+            frontRight.setPower(dir * limiter);
+            rearRight.setPower(dir * limiter);
+            rearLeft.setPower(dir * limiter);
+
+        }
+
+        //DPAD DIRECTIONS
+        if (gamepad1.dpad_up) {
+            //DPAD FORWARD 0.5
+            frontLeft.setPower(1 * limiter);
+            frontRight.setPower(-1 * limiter);
+            rearLeft.setPower(1 * limiter);
+            rearRight.setPower(-1 * limiter);
+        } else if (gamepad1.dpad_down) {
+            //DPAD BACKWARD 0.5
+            frontLeft.setPower(-1 * limiter);
+            frontRight.setPower(1 * limiter);
+            rearLeft.setPower(-1 * limiter);
+            rearRight.setPower(1 * limiter);
+        } else if (gamepad1.dpad_left) {
+            //DPAD LEFT 0.5
+            frontLeft.setPower(1 * limiter);
+            frontRight.setPower(1 * limiter);
+            rearLeft.setPower(-1 * limiter);
+            rearRight.setPower(-1 * limiter);
+        } else if (gamepad1.dpad_right) {
+            //DPAD RIGHT 0.5
+            frontLeft.setPower(-1 * limiter);
+            frontRight.setPower(-1 * limiter);
+            rearLeft.setPower(1 * limiter);
+            rearRight.setPower(1 * limiter);
+        } else if (gamepad1.dpad_up && gamepad1.dpad_right) {
+            //DPAD NORTHEAST (RIGHT FRONT DIAGONAL)
+            frontLeft.setPower(1* limiter);
+            frontRight.setPower(0 * limiter);
+            rearLeft.setPower(0 * limiter);
+            rearRight.setPower(-1 * limiter);
+        } else if (gamepad1.dpad_up && gamepad1.dpad_left) {
+            //DPAD NORTHWEST (LEFT FRONT DIAGONAL
+            frontLeft.setPower(0 * limiter);
+            frontRight.setPower(-1 * limiter);
+            rearLeft.setPower(1 * limiter);
+            rearRight.setPower(0 * limiter);
+        } else if (gamepad1.dpad_down && gamepad1.dpad_right) {
+            frontLeft.setPower(0 * limiter);
+            frontRight.setPower(1 * limiter);
+            rearLeft.setPower(-1 * limiter);
+            rearRight.setPower(0 * limiter);
+        } else if (gamepad1.dpad_down && gamepad1.dpad_left) {
+            frontLeft.setPower(-1 * limiter);
+            frontRight.setPower(0 * limiter);
+            rearLeft.setPower(0 * limiter);
+            rearRight.setPower(1 * limiter);
+        }
+        */
+
     }
 }
