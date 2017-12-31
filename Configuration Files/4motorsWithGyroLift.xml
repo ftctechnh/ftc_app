@@ -16,7 +16,11 @@
             <LynxColorSensor name="colorDistanceLeft" port="0" bus="1" />
         </LynxModule>
         <LynxModule name="Expansion Hub 3" port="3">
-            <NeveRest40Gearmotor name="liftmotor" port="3" />
+            <TetrixMotor name="reliclift" port="1" />
+            <NeveRest40Gearmotor name="liftmotor" port="2" />
+            <Servo name="slidelift" port="0" />
+            <Servo name="relictilt" port="1" />
+            <Servo name="relicclamp" port="2" />
             <LynxColorSensor name="colorDistanceRight" port="0" bus="0" />
         </LynxModule>
     </LynxUsbDevice>

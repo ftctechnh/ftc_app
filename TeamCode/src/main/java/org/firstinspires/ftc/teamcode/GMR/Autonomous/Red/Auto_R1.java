@@ -9,13 +9,13 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.GMR.Autonomous.States;
 import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 
@@ -54,7 +54,6 @@ public class Auto_R1 extends OpMode {
 
     VuforiaTrackable relicTemplate;
     VuforiaTrackables relicTrackables;
-
 
     private ElapsedTime time = new ElapsedTime();
 
@@ -97,13 +96,13 @@ public class Auto_R1 extends OpMode {
         relicTemplate.setName("relicVuMarkTemplate");
 
         state = States.SCAN;
+
         isFinished = false;
 
         //Starts the timer WORKING
         time.reset();
 
         relicTrackables.activate();
-
     }
         @Override
         public void loop(){
@@ -237,26 +236,4 @@ public class Auto_R1 extends OpMode {
             }
 
         }
-
 }
-
-enum States {
-    SCAN,
-    TIME,
-    ARMDOWN,
-    READ,
-    LEFTKNOCK,
-    RIGHTKNOCK,
-    LEFTARMUP,
-    RIGHTARMUP,
-    LEFTZONE,
-    RIGHTZONE,
-    TURNBOX,
-    DRIVEBOX,
-    DRIVEBACK,
-    END,
-    GRAB,
-    DROP,
-    LIFT
-}
-

@@ -450,10 +450,10 @@ public class DriveTrain {
                 if (goalDegrees == -1) {
                     goalDegrees = (this.getYaw() + degrees);
                     if (goalDegrees > 360) {
-                        goalDegrees = (goalDegrees - 360);
+                        goalDegrees -= 360;
                     }
                 }
-                if (!(this.getYaw() > (goalDegrees + gyroRange) && this.getYaw() > (goalDegrees - gyroRange))) {
+                if (!(this.getYaw() < (goalDegrees + gyroRange) && this.getYaw() > (goalDegrees - gyroRange))) {
                     drive(direction, power);
 
                     telemetry.addData("Goal Degrees", goalDegrees);
