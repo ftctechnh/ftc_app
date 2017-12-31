@@ -20,6 +20,16 @@ public class BlockLift {
     private int slidePosition = 1;
     private boolean buttonPressed = false;
 
+    private int currentLiftPosition;
+
+    private double topLeftPosition = 0.37; //Open: 0.37, Close: 0
+    private double topRightPosition = 0.26; //Open: 0.26, Close: 0.65
+    private double bottomLeftPosition = 0.55; //Open: 0.117, Close: 0.55
+    private double bottomRightPosition = 0.2; //Open: 0.2, Close: 0.67
+
+    private boolean topButtonPress = false;
+    private boolean bottomButtonPress = false;
+
     public BlockLift(DcMotor liftMotor, Servo topLeftGrab, Servo topRightGrab, Servo bottomLeftGrab, Servo bottomRightGrab) {
 
         this.liftMotor = liftMotor;
@@ -33,8 +43,8 @@ public class BlockLift {
 
         topLeftGrab.setPosition(0.37);
         topRightGrab.setPosition(0.26);
-        bottomLeftGrab.setPosition(0.55);
-        bottomRightGrab.setPosition(0.5);
+        bottomLeftGrab.setPosition(0.117);
+        bottomRightGrab.setPosition(0.2);
 
     }
 
@@ -67,10 +77,60 @@ public class BlockLift {
             liftMotor.setTargetPosition(-4410);
             telemetry.addData("Current Position", slidePosition);
         }
-        /*
-        else if (slidePosition == 4) {
-            telemetry.addData("Current Position", slidePosition);
+    }
+
+    public void lift(boolean bumper, float trigger, Telemetry telemetry) {
+        if (bumper /*&& liftMotor.getCurrentPosition() < 0*/) {
+            currentLiftPosition = liftMotor.getCurrentPosition();
+            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftMotor.setPower(1);
+        } else if (trigger > 0 /*&& liftMotor.getCurrentPosition() > -4400*/) {
+            currentLiftPosition = liftMotor.getCurrentPosition();
+            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftMotor.setPower(-1);
+        } else {
+            if ((Math.abs(Math.abs(currentLiftPosition) - Math.abs(liftMotor.getCurrentPosition()))) > 10)  {
+                currentLiftPosition = liftMotor.getCurrentPosition();
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setTargetPosition(currentLiftPosition);
+            } else {
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setTargetPosition(currentLiftPosition);
+            }
         }
-        */
+        telemetry.addData("Current Lift Goal: ", currentLiftPosition);
+        telemetry.addData("Current Actual Position", liftMotor.getCurrentPosition());
+    }
+
+    public void setLift(int height) {
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(-1);
+        liftMotor.setTargetPosition(liftMotor.getCurrentPosition() - height);
+    }
+
+    public void clamp(boolean a, boolean x, boolean y, boolean b) {
+        if (a) {
+            bottomRightPosition = 0.2;
+            bottomLeftPosition = 0.55;
+        } else if (x) {
+            bottomRightPosition = 0.67;
+            bottomLeftPosition = 0.117;
+        }
+
+        if (y) {
+            topLeftPosition = 0.37;
+            topRightPosition = 0.26;
+        } else if (b) {
+            topLeftPosition = 0;
+            topRightPosition = 0.65;
+        }
+
+        topButtonPress = b;
+        bottomButtonPress = a;
+
+        topLeftGrab.setPosition(topLeftPosition); //Open: 0.37, Close: 0
+        topRightGrab.setPosition(topRightPosition); //Open: 0.26, Close: 0.65
+        bottomLeftGrab.setPosition(bottomLeftPosition); //Open: 0.55, Close: 0.117
+        bottomRightGrab.setPosition(bottomRightPosition); //Open: 0.2, Close: 0.67
     }
 }
