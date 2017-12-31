@@ -663,20 +663,20 @@ public class NewRobotFinal
     {
         if (close)
         {
-            leftDoorWall.setPosition(.95f);
-            rightDoorWall.setPosition(.03f);
+            leftDoorWall.setPosition(1f);
+            rightDoorWall.setPosition(.15f);
         }
         else
         {
-            leftDoorWall.setPosition(0f);
-            rightDoorWall.setPosition(0.6f);
+            leftDoorWall.setPosition(.55f);
+            rightDoorWall.setPosition(0.53f);
         }
     }
 
     public void fineAdjDoors(double in) //Note: Check and see if it goes past 0 or 1
     {
         leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
+        rightDoorWall.setPosition(rightDoorWall.getPosition() - in);
     }
 
     public void autoPark() //We saw the angle wasn't detecting it on the new robot.
