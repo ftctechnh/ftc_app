@@ -109,9 +109,9 @@ public class CompTeleDev extends OpMode
         else
         {
             if (gamepad1.right_trigger > .4f)
-                newRobot.driveMotors(gamepad1.left_stick_y / 2, -gamepad1.right_stick_y / 2);
+                newRobot.driveMotors(gamepad1.left_stick_y / 2, gamepad1.right_stick_y / 2);
             else
-                newRobot.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
+                newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
         }
         //
         telemetry.addData("LEFT POW= ", newRobot.getDriveLeftOne().getPower());
@@ -128,6 +128,8 @@ public class CompTeleDev extends OpMode
         telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
         telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
         telemetry.addData("AnglePerpToGrav ", newRobot.anglePerpToGrav());
+        telemetry.addData("Left Y", gamepad1.left_stick_y);
+        telemetry.addData("Right y", gamepad1.right_stick_y);
         telemetry.update();
     }
 
