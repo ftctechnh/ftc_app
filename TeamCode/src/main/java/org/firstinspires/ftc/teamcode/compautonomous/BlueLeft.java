@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
  */
 
 @Autonomous(name="BlueLeft", group="compauto")
-public class BlueLeft extends LinearOpMode {
+public class BlueLeft extends LinearOpMode implements Settings{
 
     private Robot robot;
     private DcMotor raiser;
@@ -97,6 +97,29 @@ public class BlueLeft extends LinearOpMode {
         //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
         sleep(1000);
+
+        //PSUEDO - THE TIME VALUES MUST BE CHANGED
+        drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0);
+        sleep(firstStretch);
+
+        drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), 1,0);
+        sleep(secondStretch);
+
+        switch (relicRecoveryVuMark) {
+            case LEFT: telemetry.addData("Column", "Putting it in the left");
+                drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle(), slamIntoWallSpeed, 0);
+                break;
+            case CENTER: telemetry.addData("Column", "Putting it in the center");
+                drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
+                break;
+            case RIGHT: telemetry.addData("Column", "Putting it in the right");
+                drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle(), slamIntoWallSpeed, 0);
+                break;
+            default: drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
+                break;
+        }
+
+        sleep(5000);
     }
 
 }
