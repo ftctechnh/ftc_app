@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.autonomii;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
  * @since 9/28/17
  */
 
+@Disabled
 @Autonomous(name = "IMU Tester", group = "Testing")
 public class AutonomousIMUTester extends LinearOpMode {
 
