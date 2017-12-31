@@ -22,9 +22,11 @@ public class JewelArm {
     // to amplify/attentuate the measured values.
     final double SCALE_FACTOR = 255;
 
+    boolean teamIsRED;
+
     public void init(HardwareMap hardwareMap) {
         jewelArmServo = hardwareMap.servo.get("jewel_arm");
-        //jewelFlickerServo = hardwareMap.servo.get("jewelflicker");
+        jewelFlickerServo = hardwareMap.servo.get("jewel_flicker");
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
@@ -32,28 +34,34 @@ public class JewelArm {
 
         jewelArmUp();
 
-        //jewelflickerCenter();
 
     }
 
     public void jewelArmUp() {
 //        jewelArmServo.setPosition(0.75);
         jewelArmServo.setPosition(0.0);
+        jewelflickerForward();
     }
 
     public void jewelArmDown() {
         jewelArmServo.setPosition(0.55);
+        jewelflickerCenter();
     }
 
-   /* public void jewelflickerBack() {
+    public void jewelflickerBack() {
         jewelFlickerServo.setPosition(0.0);
     }
     public void jewelflickerCenter() {
         jewelFlickerServo.setPosition(0.5);
     }
     public void jewelflickerForward() {
-        jewelArmServo.setPosition(1.0);
-    }*/
+        jewelFlickerServo.setPosition(1.0);
+    }
+   public void solveJewelPuzzle(boolean teamIsRED) {
+
+
+   }
 
 
 }
+
