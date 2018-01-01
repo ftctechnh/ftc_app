@@ -76,10 +76,8 @@ public class BotHardware {
         public static final double stickBaseSwingSize = 0.2;
         public static final double stickBaseHidden = 0.91;
 
-        public static final double rightBackDropDown = 0.2;
-        public static final double rightBackDropUp = 0.82;
-        public static final double leftBackDropDown = 0;
-        public static final double leftBackDropUp = 0;
+        public static final double backDropDown = 0.2;
+        public static final double backDropUp = 0.82;
 
         public static final double frontDropUp = 0.6;
         public static final double frontDropDown = 0.23;
@@ -200,13 +198,13 @@ public class BotHardware {
     public Servo getStickBase() { return ServoE.stickBase.servo; }
 
     public void dropBack() {
-        ServoE.backDropLeft.servo.setPosition(ServoE.leftBackDropDown);
-        ServoE.backDropRight.servo.setPosition(ServoE.rightBackDropDown);
+        ServoE.backDropLeft.servo.setPosition(ServoE.backDropDown);
+        ServoE.backDropRight.servo.setPosition(ServoE.backDropDown);
     }
 
     public void raiseBack() {
-        ServoE.backDropLeft.servo.setPosition(ServoE.leftBackDropUp);
-        ServoE.backDropRight.servo.setPosition(ServoE.rightBackDropUp);
+        ServoE.backDropLeft.servo.setPosition(ServoE.backDropUp);
+        ServoE.backDropRight.servo.setPosition(ServoE.backDropUp);
     }
 
     public void setFrontDrop(double pos) {
@@ -230,12 +228,12 @@ public class BotHardware {
     public AutoLib.Sequence getDropStep() {
         AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
         AutoLib.Sequence drop = new AutoLib.ConcurrentSequence();
-        drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.leftBackDropDown, 1.0, false));
-        drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.rightBackDropDown, 1.0, false));
+        drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 1.0, false));
+        drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 1.0, false));
         mSeq.add(drop);
         AutoLib.Sequence lift = new AutoLib.ConcurrentSequence();
-        lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.leftBackDropUp, 1.0, false));
-        lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.rightBackDropUp, 1.0, false));
+        lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropUp, 1.0, false));
+        lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropUp, 1.0, false));
         mSeq.add(lift);
         return mSeq;
     }

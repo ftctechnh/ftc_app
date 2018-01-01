@@ -33,8 +33,8 @@ public class APDSDistance extends CrappyGraphLib {
     public void init() {
         initGraph(data, true);
 
-        config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_8X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), true, APDS9960.Config.DistGain.GAIN_8X);
+        config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_2X);
+        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"), true, APDS9960.Config.DistGain.GAIN_2X);
         dist.initDevice();
         dist.startDevice();
 

@@ -105,39 +105,56 @@ public class ADPSAuto extends VuforiaBallLib {
 
             final int mul = red ? -1 : 1;
 
-            int skip = 0;
+            int skip = 1;
+            boolean closest = false;
 
-            if(getLastVuMark() != null) {
-                RelicRecoveryVuMark thing = getLastVuMark();
+            if(getLastVuMark() != null || true) {
+                RelicRecoveryVuMark thing = RelicRecoveryVuMark.LEFT;//getLastVuMark();
                 //if we're on red it's the far one, else it's the close one
                 //and if its' on the right and we're on blue, go twice
                 if((thing == RelicRecoveryVuMark.LEFT && red) || (thing == RelicRecoveryVuMark.RIGHT && !red)) skip = 2;
                 //if it's center, always increment
-                if(thing == RelicRecoveryVuMark.CENTER) skip = 1;
+                else if(thing == RelicRecoveryVuMark.CENTER) skip = 1;
+                else {
+                    skip = 3;
+                    closest = true;
+                }
                 //telemetry
                 telemetry.addData("Mark", thing.toString());
             }
 
             AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
 
-            findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 105.0f * mul, 600, true, -360.0f, 360.0f));
+            findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 155.0f * mul, 600, true, -360.0f, 360.0f));
             findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.9, 0.25, false));
-            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.9, 0.66, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10),
-                    new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 35.0f, 360.0f),
+            GyroCorrectStep step;
+            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 35.0f, 360.0f);
+            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 35.0f, 360.0f);
+            if(red) skip--;
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.9, 0.7, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
                     70, 8, skip, 70, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
-            findPilliar.add(new AutoLib.GyroTurnStep(this, 60f, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
-            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 225.0f, 425, true));
+            float heading = 55;
+            if(closest) heading = 180 - 55;
+            if(red) heading = 180 - heading;
+            findPilliar.add(new AutoLib.GyroTurnStep(this, heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
+            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 225.0f, 410, true));
             findPilliar.add(bot.getDropStep());
-            findPilliar.add(new AutoLib.RunUntilStopStep(
-                    new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 135.0f, 150, true),
-                    new AutoLib.LogTimeStep(this, "huh", 2.0)
-            ));
+            AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
+            DcMotor[] temp = bot.getMotorRay();
+            if(closest ? !red : red) {
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.2f, 2.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.2f, 2.0, true));
+            }
+            else {
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.2f, 2.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.2f, 2.0, true));
+            }
+            findPilliar.add(oneSideSeq);
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 200, true));
-
 
             mSeq.add(whack);
             mSeq.add(findPilliar);
@@ -213,7 +230,7 @@ public class ADPSAuto extends VuforiaBallLib {
             double filteredDist = movingAvg.currentValue();
             //if we aren't skipping any more pilliars
             if(pilliarCount == 0) {
-                if(lastTime == 0) lastTime = mode.getRuntime();
+                if(lastTime == 0) lastTime = mode.getRuntime() - 1;
                 //get the distance and error
                 float error = (float)(this.mDist - dist);
                 //if we found it, stop
@@ -230,6 +247,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 mode.telemetry.addData("power error", pError);
                 //cut out a middle range, but handle positive and negative
                 float power;
+                if(red) pError = -pError;
                 if(pError >= 0) power = Range.clip(gyroStep.getMinPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
                 else power = Range.clip(pError - gyroStep.getMinPower(), -gyroStep.getMaxPower(), -gyroStep.getMinPower());
                 setMotorsWithoutGyro(-power);
@@ -337,8 +355,16 @@ public class ADPSAuto extends VuforiaBallLib {
             mOpMode.telemetry.addData("Correction", correction);
 
             // compute new right/left motor powers
-            float rightPower = Range.clip(mPower + correction, this.powerMin, this.powerMax);
-            float leftPower = Range.clip(mPower - correction, this.powerMin, this.powerMax);
+            float rightPower;
+            float leftPower;
+            if(mPower >= 0) {
+                rightPower = Range.clip(mPower + correction, this.powerMin, this.powerMax);
+                leftPower = Range.clip(mPower - correction, this.powerMin, this.powerMax);
+            }
+            else {
+                rightPower = Range.clip(mPower + correction, -this.powerMax, -this.powerMin);
+                leftPower = Range.clip(mPower - correction, -this.powerMax, -this.powerMin);
+            }
 
             // set the motor powers -- handle both time-based and encoder-based motor Steps
             // assumed order is right motors followed by an equal number of left motors

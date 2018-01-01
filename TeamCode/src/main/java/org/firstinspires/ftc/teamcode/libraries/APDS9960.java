@@ -158,7 +158,8 @@ public class APDS9960 {
         private double binv;
 
         public double linearize(int dist) {
-            return Math.pow(dist * this.ainv, this.binv);
+            if(dist >= 0) return Math.pow(dist * this.ainv, this.binv);
+            else return Math.abs(Math.pow(-dist * ainv, binv));
         }
     }
 
