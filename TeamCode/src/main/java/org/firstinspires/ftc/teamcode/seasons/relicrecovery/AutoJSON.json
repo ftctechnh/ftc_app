@@ -2,21 +2,20 @@
             "comment0": "For angleDegrees, 0 is right, 180 is left, 90 is forward, and 270 is back",
             "comment1": "targetDist is always in inches",
             "comment2": "speed range is 1.0 to 0.0",
-            "comment3": "pivotSPD (relative to bot): 1 is 180 to Right, .5 is Right,",
-            "comment3.5":                           "-.5 is Left, -1 is 180 to Left",
+            "comment3": "pivotSPD (relative to bot): 1 is back to Right, .5 is Right,",
+            "comment3p2":                           "-.5 is Left, -1 is back to Left",
             "comment4": "Pivoting occurs AFTER driving!!!",
-
+            "comment5": "firstMove runs after the jewel is knocked and robot returns to start",
+            "comment6": "firstMove's targetDist drives robot to face Center row. ",
+          "comment6p2": "Code will adjust for key column later by adding or subtracting inches",
 
     "redLeft": {
         "isRed": true,
-      
-            "comment": "firstMove runs after the jewel is knocked and robot returns to start",
-      
       "firstMove": {
 
-            "comment": "this targetDist drives robot to face Center row. Code will adjust for key column later.",
+            "comment": "",
 
-          "angleDegrees": 180,
+          "angleDegrees": 0,
           "speed": 1,
           "targetDist": 36,
           "pivotSPD": 1
@@ -28,7 +27,7 @@
         "firstMove": {
                   "TODO": "adjust angleDegrees+targetDist to drive to cryptobox in one move",
 
-          "angleDegrees": 135,
+          "angleDegrees": 22.5,
             "speed": 1,
             "targetDist": 35,
             "pivotSPD": 0.5
@@ -36,20 +35,21 @@
     },
     "blueLeft": {
         "isRed": false,
+      "TODO": "adjust angleDegrees+targetDist to drive to cryptobox in one move",
         "firstMove": {
-            "angleDegrees": 135,
+            "angleDegrees": 122.5,
             "speed": 1,
             "targetDist": 35,
-            "pivotSPD": 0
+            "pivotSPD": 0.5
         }
     },
     "blueRight":{
         "isRed": false,
         "firstMove": {
-            "angleDegrees": 0,
-            "speed": 0,
-            "targetDist": 0,
-            "pivotSPD": 0
+            "angleDegrees": 180,
+            "speed": 1,
+            "targetDist": 36,
+            "pivotSPD": 1
         }
     }
 
