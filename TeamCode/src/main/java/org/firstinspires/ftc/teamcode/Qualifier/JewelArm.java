@@ -12,6 +12,7 @@ public class JewelArm {
     public ColorSensor sensorColor;
     public DistanceSensor sensorDistance;
 
+
     // hsvValues is an array that will hold the hue, saturation, and value information.
     float hsvValues[] = {0F, 0F, 0F};
 
@@ -23,6 +24,7 @@ public class JewelArm {
     final double SCALE_FACTOR = 255;
 
     boolean teamIsRED;
+    boolean redjewelisfront;
 
     public void init(HardwareMap hardwareMap) {
         jewelArmServo = hardwareMap.servo.get("jewel_arm");
@@ -38,7 +40,6 @@ public class JewelArm {
     }
 
     public void jewelArmUp() {
-//        jewelArmServo.setPosition(0.75);
         jewelArmServo.setPosition(0.0);
         jewelflickerForward();
     }
@@ -51,16 +52,39 @@ public class JewelArm {
     public void jewelflickerBack() {
         jewelFlickerServo.setPosition(0.0);
     }
+
     public void jewelflickerCenter() {
         jewelFlickerServo.setPosition(0.5);
     }
+
     public void jewelflickerForward() {
         jewelFlickerServo.setPosition(1.0);
     }
-   public void solveJewelPuzzle(boolean teamIsRED) {
+
+    public void solveJewelPuzzle(boolean teamIsRED) {
+
+        jewelArmDown();
+
+//        // sensor is facing the forward ball.
+//        // determine if Red to the left, the sensor reads in the left direction.
+        if (sensorColor.red() < sensorColor.blue()) {   //then RED is front
+            redjewelisfront = true;
+        } else {
+            redjewelisfront = false;
+        }
+
+        if (teamIsRED && redjewelisfront) {            //Red Team, red is in front
+            jewelflickerBack();
+        } else if (teamIsRED && !redjewelisfront) {    //Red Team, red is in back
+            jewelflickerForward();
+        } else if (!teamIsRED && redjewelisfront) {     //Blue Team, red is in front
+            jewelflickerForward();
+        } else if (!teamIsRED && !redjewelisfront) {    //Blue Team, red is in front
+            jewelflickerBack();
+        }
 
 
-   }
+    }
 
 
 }

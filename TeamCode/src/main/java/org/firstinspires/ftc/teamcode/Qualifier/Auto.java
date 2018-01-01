@@ -207,11 +207,8 @@ public class Auto extends LinearOpMode {
         gromit.jewelArm.jewelArmDown();
           while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
         //sleep(1000);
-        gromit.jewelArm.jewelflickerBack();
-        sleep(500);
-        gromit.jewelArm.jewelflickerCenter();
-        sleep(2000);
-        //gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
+        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
+
         gromit.jewelArm.jewelArmUp();
         //        //Put Jewel Arm down
 //        gromit.jewelArm.jewelArmDown();
