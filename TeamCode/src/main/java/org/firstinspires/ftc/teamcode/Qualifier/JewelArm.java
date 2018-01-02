@@ -64,6 +64,7 @@ public class JewelArm {
     public void solveJewelPuzzle(boolean teamIsRED) {
 
           // sensor is facing the forward ball.
+
 //        // determine if Red to the left, the sensor reads in the left direction.
         if (sensorColor.red() > sensorColor.blue()) {   //then RED is front
             redjewelisfront = true;
