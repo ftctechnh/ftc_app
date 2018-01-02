@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import static com.sun.tools.doclint.Entity.pi;
+
 
 public class GlyphTrain {
 
@@ -11,7 +13,8 @@ public class GlyphTrain {
 //    public enum SpeedSetting {FAST, SLOW}
 
 //    private SpeedSetting speedMode;
-
+public double pulleydiameter = 1;
+    public final double TICKS_REV = 1120;
 
     //Iniatalize motors
     public DcMotor left_glyph  = null;
@@ -35,6 +38,7 @@ public class GlyphTrain {
         left_glyph.setDirection(DcMotor.Direction.REVERSE);
         right_glyph.setDirection(DcMotor.Direction.FORWARD);
 
+        // not sure if run using encoders is good here?
         left_glyph.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_glyph.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -83,7 +87,21 @@ public class GlyphTrain {
         }
     }
 
+    void liftGlyph(float height){
+        // clamp glyph
+        //glyphclamp("close");
 
+        //height is encoder counts or inches, absolute or relative?
+        // get the current encoder counts
+        int startposition = lift_motor.getCurrentPosition();
+
+        while(lift_motor.getCurrentPosition() < startposition + (height/(Math.PI*pulleydiameter))*TICKS_REV ){
+            lift_motor.setPower(0.7);
+        }
+
+        lift_motor.setPower(0.0);
+
+    }
 
 
 

@@ -63,11 +63,9 @@ public class JewelArm {
 
     public void solveJewelPuzzle(boolean teamIsRED) {
 
-        jewelArmDown();
-
-//        // sensor is facing the forward ball.
+          // sensor is facing the forward ball.
 //        // determine if Red to the left, the sensor reads in the left direction.
-        if (sensorColor.red() < sensorColor.blue()) {   //then RED is front
+        if (sensorColor.red() > sensorColor.blue()) {   //then RED is front
             redjewelisfront = true;
         } else {
             redjewelisfront = false;
@@ -75,12 +73,16 @@ public class JewelArm {
 
         if (teamIsRED && redjewelisfront) {            //Red Team, red is in front
             jewelflickerBack();
+            //while( jewelFlickerServo.getPosition() > 0.05) { }
         } else if (teamIsRED && !redjewelisfront) {    //Red Team, red is in back
             jewelflickerForward();
+            //while( jewelFlickerServo.getPosition() < 0.95) { }
         } else if (!teamIsRED && redjewelisfront) {     //Blue Team, red is in front
             jewelflickerForward();
+            //while( jewelFlickerServo.getPosition() < 0.95) { }
         } else if (!teamIsRED && !redjewelisfront) {    //Blue Team, red is in front
             jewelflickerBack();
+           //while( jewelFlickerServo.getPosition() > 0.05) { }
         }
 
 

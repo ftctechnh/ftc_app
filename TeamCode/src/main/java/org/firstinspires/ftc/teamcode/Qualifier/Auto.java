@@ -94,15 +94,15 @@ public class Auto extends LinearOpMode {
         /**********************************************************************************************\
          |--------------------------------- Pre Init Loop ----------------------------------------------|
          \**********************************************************************************************/
-        telemetry.addLine("Back Button reverts to code values");
+        telemetry.addLine("Back/Start Buttons revert to code values");
         telemetry.update();
-        //sleep(1000);
+        sleep(500);
         menuFile.initArrays();
         menuFile.initializeNTransferValues( true );       // initialize variables & values
 
         // update them from the file if the back button is not pressed
 
-        if (!gamepad1.back) {
+        if (!gamepad1.back || !gamepad1.start) {
             telemetry.addLine("Reading Data from File");
             telemetry.update();
             menuFile.readDataFromTxtFile(hardwareMap.appContext);
@@ -134,7 +134,7 @@ public class Auto extends LinearOpMode {
         while (!opModeIsActive()) {
             telemetry.addData("IMU", "Heading: %4.2f ", gromit.driveTrain.getheading());
             telemetry.addLine("************ READY TO RUN *************");
-            telemetry.addLine("Press START button to enter EDIT mode");
+            telemetry.addLine("Press BACK or START button to enter EDIT mode");
             telemetry.addLine(" ");
 
             relativeLayout.post(new Runnable() {
@@ -145,7 +145,7 @@ public class Auto extends LinearOpMode {
 
             //
             //
-            if (gamepad1.start) {             // edit parameters  & write the new file
+            if (gamepad1.start || gamepad1.back) {             // edit parameters  & write the new file
                 // change the background color to match the color detected by the RGB sensor.
                 // pass a reference to the hue, saturation, and value array as an argument
                 // to the HSVToColor method.
@@ -161,15 +161,17 @@ public class Auto extends LinearOpMode {
 
             }
 
-            for (int i = 0; i < menuFile.menulabel.length; i++) {
-                     if (menuFile.menuvaluetoken[i][1] != "" ) {                           // menu items that need tokens should be less than 5
-                //           if (menuFile.menuupperlimit[i] < 5) {                           // menu items that need tokens should be less than 5
-                         telemetry.addLine().addData(menuFile.menulabel[i], menuFile.menuvalue[i] + "  " + menuFile.menuvaluetoken[i][menuFile.menuvalue[i]]);
-                     } else {
-                         telemetry.addData(menuFile.menulabel[i], menuFile.menuvalue[i]);
-                     }
+//            for (int i = 0; i < menuFile.menulabel.length; i++) {
+//                     if (menuFile.menuvaluetoken[i][1] != "" ) {                           // menu items that need tokens should be less than 5
+//                //           if (menuFile.menuupperlimit[i] < 5) {                           // menu items that need tokens should be less than 5
+//                         telemetry.addLine().addData(menuFile.menulabel[i], menuFile.menuvalue[i] + "  " + menuFile.menuvaluetoken[i][menuFile.menuvalue[i]]);
+//                     } else {
+//                         telemetry.addData(menuFile.menulabel[i], menuFile.menuvalue[i]);
+//                     }
+//
+//            }
 
-            }
+            menuFile.displayValues();
             telemetry.update();
             idle();
 
@@ -200,15 +202,17 @@ public class Auto extends LinearOpMode {
 
         //VUMARK FOUND OR TIMEOUT
         //Grip Block
-            gromit.glyphTrain.glyphclamp("close");
+        gromit.glyphTrain.glyphclamp("close");
+        sleep(200);
         //Raise Block
+        gromit.glyphTrain.liftGlyph(3);
         // do the jewel should be a method in the jewelArm
-
+sleep(30000);
         gromit.jewelArm.jewelArmDown();
-          while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
-        //sleep(1000);
+         // while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
+        sleep(1000);
         gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
-
+        sleep(1000);
         gromit.jewelArm.jewelArmUp();
         //        //Put Jewel Arm down
 //        gromit.jewelArm.jewelArmDown();
@@ -237,24 +241,24 @@ public class Auto extends LinearOpMode {
         //lift glyph
 
         if (menuFile.startPositionIsFront  && !menuFile.teamIsRed){/** Front Blue  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.FrontBlueDistance1, menuFile.FrontBlueHeading1,0);
-            gromit.driveTrain.mecanumTurn(0.25,menuFile.FrontBlueTurn1);
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.FrontBlueDistance2, menuFile.FrontBlueHeading2,0);
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueFrontDistance1, menuFile.BlueFrontHeading1,0);
+            gromit.driveTrain.mecanumTurn(0.25,menuFile.BlueFrontTurn1);
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2,0);
 
         } else if (menuFile.startPositionIsFront  && menuFile.teamIsRed){                   /** Front RED  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.FrontRedDistance1, menuFile.FrontRedHeading1,0);
-            gromit.driveTrain.mecanumTurn(0.25,menuFile.FrontRedTurn1);
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.FrontRedDistance2, menuFile.FrontRedHeading2,0);
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedFrontDistance1, menuFile.RedFrontHeading1,0);
+            gromit.driveTrain.mecanumTurn(0.25,menuFile.RedFrontTurn1);
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2,0);
 
         } else if (!menuFile.startPositionIsFront  && !menuFile.teamIsRed){                 /** Back Blue  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance1,  menuFile.BackBlueHeading1,0);  //0
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance2,  menuFile.BackBlueHeading2,90);  //-90
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackBlueDistance3,  menuFile.BackBlueHeading3,0);  //0
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  //0
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueBackDistance2,  menuFile.BlueBackHeading2,90);  //-90
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueBackDistance3,  menuFile.BlueBackHeading3,0);  //0
 
         } else if (!menuFile.startPositionIsFront  && menuFile.teamIsRed) {                 /** Back RED  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance1, menuFile.BackRedHeading1, 0);  //0
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance2, menuFile.BackRedHeading2, -90);  //-90
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BackRedDistance3, menuFile.BackRedHeading3, 0);  //0
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedBackDistance2, menuFile.RedBackHeading2, -90);  //-90
+            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
 
         }
         sleep(2000);
