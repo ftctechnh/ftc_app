@@ -113,7 +113,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[3] = "BLUE Front Drive   1";
-            menuvalue[3] = -6;
+            menuvalue[3] = -34;
             menulowerlimit[3] = -50;
             menuupperlimit[3] =  50;
         }
@@ -193,7 +193,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[13] = "BLUE Back Drive   1";
-            menuvalue[13] = -5;
+            menuvalue[13] = -30;
             menulowerlimit[13] = -50;
             menuupperlimit[13] =  50;
         }
@@ -209,7 +209,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[15] = "BLUE Back Drive   2";
-            menuvalue[15] = 5;
+            menuvalue[15] = 4;
             menulowerlimit[15] = -50;
             menuupperlimit[15] =  50;
         }
@@ -225,7 +225,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[17] = "BLUE Back Drive   3";
-            menuvalue[17] = -5;
+            menuvalue[17] = -12;
             menulowerlimit[17] = -50;
             menuupperlimit[17] =  50;
         }
