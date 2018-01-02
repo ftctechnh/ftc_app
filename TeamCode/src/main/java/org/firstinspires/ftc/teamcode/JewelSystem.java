@@ -70,16 +70,16 @@ public class JewelSystem {
     }
     public JewelColor colorSens() {
         colorSensor.enableLed(true);
-        red   = colorSensor.red();
-        green = colorSensor.green();
-        blue  = colorSensor.blue();
-        if (colorSensor.red() > colorSensor.blue()) {
-            colorSensor.enableLed(false);
-            return JewelColor.RED;
-        }else if (colorSensor.blue() > colorSensor.red()) {
-            colorSensor.enableLed(false);
-            return JewelColor.BLUE;
-        }else {
+            red   = colorSensor.red();
+            green = colorSensor.green();
+            blue  = colorSensor.blue();
+            if (colorSensor.red() > colorSensor.blue()) {
+                colorSensor.enableLed(false);
+                return JewelColor.RED;
+            }else if (colorSensor.blue() > colorSensor.red()) {
+                colorSensor.enableLed(false);
+                return JewelColor.BLUE;
+            }else {
             colorSensor.enableLed(false);
             return JewelColor.UNKNOWN;
         }

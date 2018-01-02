@@ -169,12 +169,12 @@ public class RelicDrive
         double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
         encoderDrive(speed, midArc, -midArc, outArc, -outArc);
     }
-    public void pivotTurn(double speed, double degrees, String direction){
-        if (direction == "right"){
+    public void pivotTurn(double speed, double degrees, RobotDirection direction){
+        if (direction == RobotDirection.RIGHT){
             double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
             double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
             encoderDrive(speed, midArc, 0, outArc, 0);
-        }else if (direction == "left"){
+        }else if (direction == RobotDirection.LEFT){
             double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
             double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
             encoderDrive(speed, 0, midArc, 0, outArc);

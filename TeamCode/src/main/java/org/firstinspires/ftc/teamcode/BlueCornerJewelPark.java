@@ -144,7 +144,7 @@ public class BlueCornerJewelPark extends OpMode{
                 stateMachineFlow++;
                 break;
             case 6:
-                gilgearmesh.armPos(0,.6);
+                gilgearmesh.armPos(10,.6);
                 robot.statTurn(.5,140);
                 stateMachineFlow++;
                 break;
