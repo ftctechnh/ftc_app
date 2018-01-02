@@ -1,20 +1,14 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Random;
@@ -29,26 +23,37 @@ public class TestOP extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new RelicRecoveryRobot(this);
 
         waitForStart();
 
         while (opModeIsActive()) {
-                                    // PASTE YOUR CODE HERE
-/*
-            son gson = new Gson();
+            // PASTE YOUR CODE HERE
+
+            Gson gson = new Gson();
             Random rand = new Random();
             JsonParser parser = new JsonParser();
 
-            Object obj = parser.parse(new FileReader("Testing.json"));
+            Object obj = null;
+            try {
+                obj = parser.parse(new FileReader("Testing.json"));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
             JSONObject jsonObject = (JSONObject) obj;
-            String name = (String) jsonObject.get("name");
-            //print name in test-op
-            JSONArray memberNames = (JSONArray) jsonObject.get("memberNames");
-            String randomMemberName = (String) memberNames.get(rand.nextInt(9));
+            try {
+                String name = (String) jsonObject.get("name");
 
-    public JsonTesting() throws FileNotFoundException, JSONException {
-            } **/
+                //print name in test-op
+                JSONArray memberNames = (JSONArray) jsonObject.get("memberNames");
+                String randomMemberName = (String) memberNames.get(rand.nextInt(9));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
+/*
+E/EventLoopManager: java.lang.NullPointerException
+E/EventLoopManager:     at org.firstinspires.ftc.teamcode.seasons.relicrecovery.TestOP.runOpMode(TestOP.java:44)
+ */
