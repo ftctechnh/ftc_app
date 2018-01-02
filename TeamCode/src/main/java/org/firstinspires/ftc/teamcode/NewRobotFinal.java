@@ -662,7 +662,7 @@ public class NewRobotFinal
         if (close)
         {
             leftDoorWall.setPosition(1f);
-            rightDoorWall.setPosition(.15f);
+            rightDoorWall.setPosition(.08f);
         }
         else
         {
@@ -674,7 +674,7 @@ public class NewRobotFinal
     public void fineAdjDoors(double in) //Note: Check and see if it goes past 0 or 1
     {
         leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() - in);
+        rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
     }
 
     public void autoPark() //We saw the angle wasn't detecting it on the new robot.
