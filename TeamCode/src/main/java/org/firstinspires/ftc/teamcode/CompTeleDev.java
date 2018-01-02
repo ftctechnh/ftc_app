@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by Jeremy on 11/17/2017.
  */
 @TeleOp(name = "CompTeleDev", group = "Tele")
+
 public class CompTeleDev extends OpMode
 {
     boolean isWingUp = true;
@@ -69,9 +70,9 @@ public class CompTeleDev extends OpMode
             newRobot.fineAdjDoors(-.001f);
           */
         if (gamepad2.left_bumper)           //DO NO
-            newRobot.fineAdjDoors(.008f);
+            newRobot.fineAdjDoors(.003f);
         else if (gamepad2.left_trigger > .3f)
-            newRobot.fineAdjDoors(-.008f);
+            newRobot.fineAdjDoors(-.003f);
 
         if (gamepad2.right_bumper)
             newRobot.getTailRelease().setPower(-1);//release
