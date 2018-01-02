@@ -30,6 +30,7 @@ class ReboundTeleOp : OpMode() {
     override fun loop() {
         val orientation = drivetrain.getOrientation()
         telemetry.addData("Orientation: ", orientation)
+        telemetry.addData("Jordan Drive ", if(tankStyleControl) "Enabled." else "Disabled.")
         when {
             gamepad1.x -> mediaPlayer.start()
             gamepad1.y -> mediaPlayer.stop()
