@@ -91,8 +91,6 @@ public class NewRobotFinal
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
-        leftDoorWall.scaleRange(.5f, .95f);
-        rightDoorWall.scaleRange(.05f, .5f);
         initEndGame(hardwareMap);
 
         zeroStuff();
