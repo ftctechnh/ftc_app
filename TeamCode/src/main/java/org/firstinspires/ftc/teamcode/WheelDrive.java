@@ -1,25 +1,56 @@
+/* Copyright (c) 2017 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
+ ☺ yey this works ☺
  */
-@TeleOp(name = "♪ ♥ Drive Mode 1 (nonlinear bumpers) ♥  ♪", group = "Our Teleop")
+@TeleOp(name = "♪ ♥ Drive Mode 2 ♥  ♪", group = "Concept")
 //@Disabled
-public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
+public class WheelDrive extends LinearOpMode {
 
-    /* This says use MasterHardwareClass */
-    MasterHardwareClass robot = new MasterHardwareClass();
+    /* this says use ArmHardwareClass */
+MasterHardwareClass robot = new MasterHardwareClass();
 
-    /*These values are used for the drive*/
     double frontLeft;
     double frontRight;
     double backLeft;
     double backRight;
 
-    @Override
+    double x;
+    double y;
+
+//    @Override
     public void runOpMode() {
 
         /* The init() method of the hardware class does all the work here*/
@@ -95,155 +126,89 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                     }
                 }
             }
-        /* Rotational Drive Control */
-            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
-                double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
-
-                final double v1 = +GRX;
-                final double v2 = -GRX;
-                final double v3 = +GRX;
-                final double v4 = -GRX;
-
-                frontLeft = -v1;
-                frontRight = v2;
-                backLeft = -v3;
-                backRight = v4;
-
-                setWheelPower(frontLeft, frontRight, backLeft, backRight);
-            } else {
-
-                if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_bumper && gamepad1.right_stick_x > 0) {
-
-                    double GRX = gamepad1.right_stick_x / robot.bumperFastest;
-
-                    final double v1 = +GRX;
-                    final double v2 = -GRX;
-                    final double v3 = +GRX;
-                    final double v4 = -GRX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
-
-                } else {
-
-                    double GRX = gamepad1.right_stick_x / robot.nobumper;
-
-                    final double v1 = +GRX;
-                    final double v2 = -GRX;
-                    final double v3 = +GRX;
-                    final double v4 = -GRX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            /*If the left bumper is being pressed it allows the robot to run at only 1/5 of its full speed*/
+            if ((gamepad1.left_bumper)) {
+                y = gamepad1.left_stick_y / robot.bumperSlowest;
+                x = gamepad1.left_stick_x/ robot.bumperSlowest;
+                moveYAxis(-y);
+                moveXAxis(x);
+            }
+            /*If the left bumper is not being pressed, this allows the robot to run at full speed*/
+            else {
+                if(gamepad1.right_bumper) {
+                    y = gamepad1.left_stick_y / robot.bumperFastest;
+                    x = gamepad1.left_stick_x/ robot.bumperFastest;
+                    moveYAxis(-y);
+                    moveXAxis(x);
                 }
+                else{
+                    y = gamepad1.left_stick_y / robot.nobumper;
+                    x = gamepad1.left_stick_x/ robot.nobumper;
+                    moveYAxis(-y);
+                    moveXAxis(x);
+                }
+            }
 
-        /* Drive Control */
-                if (gamepad1.left_bumper) {
-                    double GLY = -gamepad1.left_stick_y / robot.bumperSlowest;
-                    double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
-                    double GLX = gamepad1.left_stick_x / robot.bumperSlowest;
-
-                    final double v1 = GLY + GRX + GLX;
-                    final double v2 = GLY - GRX - GLX;
-                    final double v3 = GLY + GRX - GLX;
-                    final double v4 = GLY - GRX + GLX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
-                } else {
-
-                    if (gamepad1.right_bumper) {
-                        double GLY = -gamepad1.left_stick_y / robot.bumperFastest;
-                        double GRX = gamepad1.right_stick_x / robot.bumperFastest;
-                        double GLX = gamepad1.left_stick_x / robot.bumperFastest;
-
-                        final double v1 = GLY + GRX + GLX;
-                        final double v2 = GLY - GRX - GLX;
-                        final double v3 = GLY + GRX - GLX;
-                        final double v4 = GLY - GRX + GLX;
-
-                        frontLeft = -v1;
-                        frontRight = v2;
-                        backLeft = -v3;
-                        backRight = v4;
-
-                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
-
-                    } else {
-
-                        double GLY = -gamepad1.left_stick_y / robot.nobumper;
-                        double GRX = gamepad1.right_stick_x / robot.nobumper;
-                        double GLX = gamepad1.left_stick_x / robot.nobumper;
-
-                        final double v1 = GLY + GRX + GLX;
-                        final double v2 = GLY - GRX - GLX;
-                        final double v3 = GLY + GRX - GLX;
-                        final double v4 = GLY - GRX + GLX;
-
-                        frontLeft = -v1;
-                        frontRight = v2;
-                        backLeft = -v3;
-                        backRight = v4;
-
-                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
-
-                    }
+            if(gamepad1.left_bumper && gamepad1.right_stick_x > 0 || gamepad1.left_bumper && gamepad1.right_stick_x < 0){
+                x = gamepad1.right_stick_x/ robot.bumperSlowest;
+                rotateXAxis(x);
+            }
+            else{
+                if(gamepad1.right_bumper && gamepad1.right_stick_x > 0 || gamepad1.right_bumper && gamepad1.right_stick_x < 0){
+                    x = gamepad1.right_stick_x/ robot.bumperFastest;
+                    rotateXAxis(x);
+                }
+                else{
+                    x = gamepad1.right_stick_x/ robot.nobumper;
+                    rotateXAxis(x);
                 }
             }
         }
     }
+
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
 
-    /* This method powers each wheel to whichever power is desired */
-    public void setWheelPower(double fl, double fr, double bl, double br) {
+    /* This method does all of the math that calculates the power to set on the wheels
+    for moving on the X-Axis (Strafing left & right) */
+    public void moveXAxis(double x) {
 
-        /* Create power variables */
         double frontLeft;
         double frontRight;
         double backLeft;
         double backRight;
+        double max;
 
-        /* Initialize the powers with the values input whenever this method is called */
-        frontLeft   =   fl;
-        frontRight  =   fr;
-        backLeft    =   bl;
-        backRight   =   br;
+        /*calculate the power for each wheel*/
+        frontLeft = -x;
+        frontRight = -x;
+        backLeft = x;
+        backRight = +x;
 
-        /* set each wheel to the power indicated whenever this method is called */
+        /*Set power on each wheel*/
         if (robot.FrontLeftPower != frontLeft) {
-            robot.frontLeftMotor.setPower(fl);
+            robot.frontLeftMotor.setPower(frontLeft);
             robot.FrontLeftPower = frontLeft;
         }
         if (robot.FrontRightPower != frontRight) {
-            robot.frontRightMotor.setPower(fr);
+            robot.frontRightMotor.setPower(frontRight);
             robot.FrontRightPower = frontRight;
         }
         if (robot.BackLeftPower != backLeft) {
-            robot.backLeftMotor.setPower(bl);
+            robot.backLeftMotor.setPower(backLeft);
             robot.BackLeftPower = backLeft;
         }
-        if (robot.BackRightPower != backRight)
-            robot.backRightMotor.setPower(br);
+        if (robot.BackRightPower != backRight) {
+            robot.backRightMotor.setPower(backRight);
             robot.BackRightPower = backRight;
+        }
     }
 
 
-    /* This method does all of the math that calculates the power to set on the wheels*/
+    /* This method does all of the math that calculates the power to set on the wheels
+    for moving on the Y-Axis (Moving forward & backward */
     public void moveYAxis(double y) {
 
         double frontLeft;
@@ -277,7 +242,8 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         }
     }
 
-    public void moveXAxis(double x){
+    /* This function rotates the robot */
+    public void rotateXAxis(double x){
 
         double frontLeft;
         double frontRight;
@@ -309,4 +275,3 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         }
     }
 }
-

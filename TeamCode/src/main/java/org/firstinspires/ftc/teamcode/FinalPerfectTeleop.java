@@ -66,7 +66,7 @@ public class FinalPerfectTeleop extends LinearOpMode {
             }
 
             if (!gamepad2.b && !gamepad2.x) {
-                if(robot.ClawPower != robot.clawStill){
+                if (robot.ClawPower != robot.clawStill) {
                     robot.clawServo.setPower(robot.clawStill);
                     robot.ClawPower = robot.clawStill;
                 }
@@ -78,8 +78,7 @@ public class FinalPerfectTeleop extends LinearOpMode {
                     robot.verticalArmMotor.setPower(1);
                     robot.VerticalArmPower = 1;
                 }
-            }
-            else {
+            } else {
                 if (robot.VerticalArmPower != 0) {
                     robot.verticalArmMotor.setPower(0);
                     robot.VerticalArmPower = 0;
@@ -133,42 +132,42 @@ public class FinalPerfectTeleop extends LinearOpMode {
 
                 } else {
 
-                double GRX = gamepad1.right_stick_x / robot.nobumper;
+                    double GRX = gamepad1.right_stick_x / robot.nobumper;
 
-                final double v1 = +GRX;
-                final double v2 = -GRX;
-                final double v3 = +GRX;
-                final double v4 = -GRX;
+                    final double v1 = +GRX;
+                    final double v2 = -GRX;
+                    final double v3 = +GRX;
+                    final double v4 = -GRX;
 
-                frontLeft = -v1;
-                frontRight = v2;
-                backLeft = -v3;
-                backRight = v4;
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
 
-                setWheelPower(frontLeft, frontRight, backLeft, backRight);
-            }
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                }
 
         /* Drive Control */
-            if (gamepad1.left_bumper) {
-                double GLY = -gamepad1.left_stick_y / robot.bumperSlowest;
-                double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
-                double GLX = gamepad1.left_stick_x  / robot.bumperSlowest;
+                if (gamepad1.left_bumper) {
+                    double GLY = -gamepad1.left_stick_y / robot.bumperSlowest;
+                    double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
+                    double GLX = gamepad1.left_stick_x / robot.bumperSlowest;
 
-                final double v1 = GLY + GRX + GLX;
-                final double v2 = GLY - GRX - GLX;
-                final double v3 = GLY + GRX - GLX;
-                final double v4 = GLY - GRX + GLX;
+                    final double v1 = GLY + GRX + GLX;
+                    final double v2 = GLY - GRX - GLX;
+                    final double v3 = GLY + GRX - GLX;
+                    final double v4 = GLY - GRX + GLX;
 
-                frontLeft = -v1;
-                frontRight = v2;
-                backLeft = -v3;
-                backRight = v4;
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
 
-                setWheelPower(frontLeft, frontRight, backLeft, backRight);
-            } else {
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                } else {
                     double GLY = -gamepad1.left_stick_y / robot.nobumper;
                     double GRX = gamepad1.right_stick_x / robot.nobumper;
-                    double GLX =  gamepad1.left_stick_x / robot.nobumper;
+                    double GLX = gamepad1.left_stick_x / robot.nobumper;
 
                     final double v1 = GLY + GRX + GLX;
                     final double v2 = GLY - GRX - GLX;
@@ -185,10 +184,11 @@ public class FinalPerfectTeleop extends LinearOpMode {
                 }
             }
         }
+    }
 
-    /***********************************************************************************************
-     * These are all of the methods used in the Teleop*
-     ***********************************************************************************************/
+        /***********************************************************************************************
+         * These are all of the methods used in the Teleop*
+         ***********************************************************************************************/
 
     /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
@@ -220,8 +220,6 @@ public class FinalPerfectTeleop extends LinearOpMode {
         }
         if (robot.BackRightPower != backRight)
             robot.backRightMotor.setPower(br);
-            robot.BackRightPower = backRight;
+        robot.BackRightPower = backRight;
     }
 }
-
-

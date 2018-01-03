@@ -32,7 +32,8 @@ public class MasterHardwareClass {
     public DcMotor verticalArmMotor = null;
     public CRServo clawServo = null;
     public Servo gemServo;
-
+    public BNO055IMU imu;
+    public ModernRoboticsI2cGyro gyro;
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;
@@ -78,6 +79,8 @@ public class MasterHardwareClass {
         verticalArmMotor = hwMap.dcMotor.get("VAM");
         clawServo =  hwMap.crservo.get("CS");
         gemServo = hwMap.servo.get("gemservo");
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        gyro = (ModernRoboticsI2cGyro) hwMap.gyroSensor.get("G");
 
         // Set all hardware to default position
         frontLeftMotor.setPower(0);
@@ -87,6 +90,9 @@ public class MasterHardwareClass {
         verticalArmMotor.setPower(0);
         clawServo.setPower(0);
 
+        /* Reverse the direction of the front right and back right motors */
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set proper encoder state for all motor
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
