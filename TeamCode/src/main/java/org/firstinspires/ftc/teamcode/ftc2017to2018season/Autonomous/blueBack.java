@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
@@ -16,7 +17,7 @@ public class blueBack extends Autonomous_General {
     DcMotor leftBack;
     DcMotor rightBack;
     public double rsBuffer = 20.00;
-
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -45,11 +46,14 @@ public class blueBack extends Autonomous_General {
         gyro.resetZAxisIntegrator();
 
         toggleLight(true);
+        light.setPower(1);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
 
-        while(!vuMarkFound()){
+        double begintime= runtime.seconds();
+        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
+
 
         }
         toggleLight(false);
@@ -58,6 +62,7 @@ public class blueBack extends Autonomous_General {
         telemetry.update();
         sleep(1000);
         readColor();
+        light.setPower(0);
         //returnImage();
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
@@ -66,14 +71,14 @@ public class blueBack extends Autonomous_General {
         moveUpGlyph(2.54);
         sleep(1000);
 
-        if(ballColor.equals("red")){
+        if(ballColor.equals("blue")){
             encoderMecanumDrive(0.9, -10,-10,5000,0);
             jewelServo.setPosition(0.8);
             sleep(1000);
             encoderMecanumDrive(0.9,25,25,5000,0);
             sleep(1000);
         }
-        else if(ballColor.equals("blue")){
+        else if(ballColor.equals("red")){
             encoderMecanumDrive(0.9,25,25,5000,0);
             jewelServo.setPosition(0.8);
             sleep(1000);

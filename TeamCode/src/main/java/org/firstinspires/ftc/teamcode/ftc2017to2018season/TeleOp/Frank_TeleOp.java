@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "DeltaTeleOp")
+@TeleOp(name = "Frank_TeleOp")
 //@Disabled
-public class Delta_TeleOp extends OpMode {
+public class Frank_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -283,7 +283,7 @@ public class Delta_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(-0.6);
+        slideMotor.setPower(-1);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -305,7 +305,7 @@ public class Delta_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(1);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());

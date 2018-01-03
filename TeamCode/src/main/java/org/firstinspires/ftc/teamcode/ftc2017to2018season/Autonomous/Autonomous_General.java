@@ -49,6 +49,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 @Disabled
 public class Autonomous_General extends LinearOpMode {
+    //we attached a light to make it easier to see the target
+    public DcMotor light;
+    public double waitTime = 8;
 
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
     public static double WHEEL_REV_PER_MOTOR_REV;     // 56/24
@@ -101,6 +104,7 @@ public class Autonomous_General extends LinearOpMode {
         back_left_motor = hardwareMap.dcMotor.get("leftWheelMotorBack");
         back_right_motor = hardwareMap.dcMotor.get("rightWheelMotorBack");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        light = hardwareMap.dcMotor.get("light");
         idle();
 
         jewelServo = hardwareMap.servo.get("jewelServo");
@@ -140,7 +144,7 @@ public class Autonomous_General extends LinearOpMode {
         jewelServo.setPosition(0.9);
         glyphServoRight.setPosition(1);
         glyphServoLeft.setPosition(0);
-
+        light.setPower(0);
     }
 
     public void straightDrive(double power) {
@@ -880,13 +884,13 @@ public class Autonomous_General extends LinearOpMode {
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        target_Position = slideMotor.getCurrentPosition() - finalTarget;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
         slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(-0.6);
+        slideMotor.setPower(0.6);
 
         while (slideMotor.isBusy() && opModeIsActive()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -905,13 +909,13 @@ public class Autonomous_General extends LinearOpMode {
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+        target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(-0.6);
 
         while (slideMotor.isBusy() && opModeIsActive()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
