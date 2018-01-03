@@ -25,23 +25,19 @@ public class Presentation extends LinearOpMode {
         ForkLift.init();
 
         //Translations:
-        drive.driveTranslateRotate(speed, 0, 0);
-        sleep(100);
-        drive.driveTranslateRotate(-speed, 0, 0);
-        sleep(100);
-        drive.driveTranslateRotate(0, 0, 0);
-        sleep(1000);
+        drive.driveTranslateRotate(speed, 0, 0, (long) speed*400);
+        sleep((long) speed*2000);
+        drive.driveTranslateRotate(-speed, 0, 0, (long) speed*400);
+        sleep((long) speed*2000);
 
         //Forklift:
         ForkLift.openClaw();
-        sleep(1000);
+        sleep((long) speed*2000);
         ForkLift.closeClaw();
-        sleep(1000);
-        ForkLift.moveMotor(speed);
-        sleep(500);
-        ForkLift.moveMotor(-speed);
-        sleep(500);
-        ForkLift.moveMotor(0);
-        sleep(1000);
+        sleep((long) speed*2000);
+
+        ForkLift.moveUntilUp(speed);
+        sleep((long) speed*2000);
+        ForkLift.moveUntilDown(speed);
     }
 }
