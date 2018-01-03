@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name = "Concept: Scan Servo", group = "Concept")
 //@Disabled
 public class ConceptScanServo extends LinearOpMode {
-//test
+
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
