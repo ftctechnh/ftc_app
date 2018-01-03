@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
-//import org.firstinspires.ftc.teamcode.ftc2017to2018season.Final.Autonomous_General_final;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Final.Autonomous_General_final;
 
 //10-28-17
 @Autonomous(name="Autonomous Blue Final")
@@ -42,13 +42,12 @@ public class blueFront extends Autonomous_General {
 
 
         toggleLight(false);
-        light.setPower(1);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
 
         double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds()-begintime <= waitTime){
+        while(!vuMarkFound() && runtime.seconds()-begintime <= 8){
 
         }
         toggleLight(false);
@@ -58,23 +57,22 @@ public class blueFront extends Autonomous_General {
         telemetry.update();
         sleep(1000);
         readColor();
-        light.setPower(0);
         //returnImage();
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
         closeGlyphManipulator();
         sleep(1000);
-        moveUpGlyph(2);
+        //moveUpGlyph(2.54);
         sleep(1000);
 
-        if(ballColor.equals("blue")){
+        if(ballColor.equals("red")){
             encoderMecanumDrive(0.9, -10,-10,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
             encoderMecanumDrive(0.9,65,65,5000,0);
             sleep(1000);
         }
-        else if(ballColor.equals("red")){
+        else if(ballColor.equals("blue")){
             encoderMecanumDrive(0.9,65,65,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
@@ -90,17 +88,17 @@ public class blueFront extends Autonomous_General {
         sleep(1000);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            simpleRangeDistance(62, 0.6, rsBuffer);
+            simpleRangeDistance(59, 0.6, rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            simpleRangeDistance(40, 0.6, rsBuffer);
+            simpleRangeDistance(42, 0.6, rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            simpleRangeDistance(80, 0.6, rsBuffer);
+            simpleRangeDistance(76, 0.6, rsBuffer);
 
         }
         else{
-            simpleRangeDistance(62, 0.6, rsBuffer);
+            simpleRangeDistance(59, 0.6, rsBuffer);
         }
 
 
@@ -109,8 +107,6 @@ public class blueFront extends Autonomous_General {
         gyroTurn(0.3,0);
 
         sleep(750);
-        moveDownGlyph(2);
-        sleep(500);
 
         openGlyphManipulator();
 
