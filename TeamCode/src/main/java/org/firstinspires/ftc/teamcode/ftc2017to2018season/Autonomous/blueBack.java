@@ -20,7 +20,6 @@ public class blueBack extends Autonomous_General {
     private ElapsedTime runtime = new ElapsedTime();
 
 
-
     @Override
     public void runOpMode() {
 
@@ -52,7 +51,7 @@ public class blueBack extends Autonomous_General {
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
         double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
+        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
 
         }
         toggleLight(false);

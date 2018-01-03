@@ -47,7 +47,7 @@ public class blueFront extends Autonomous_General {
         telemetry.update();
 
         double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds()-begintime <= waitTime){
+        while(!vuMarkFound() && runtime.seconds()-begintime <= 8){
 
         }
         toggleLight(false);
