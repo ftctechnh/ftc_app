@@ -229,8 +229,8 @@ public class General_MacArthur_TeleOp extends OpMode {
        rightServoValue = glyphServoRight.getPosition();
         if (gamepad1.right_bumper) {
             if (rightServoValue < 1 && leftServoValue > 0) {
-                rightServoValue = rightServoValue + 0.05;
-                leftServoValue = leftServoValue - 0.05;
+                rightServoValue = rightServoValue + 0.5;
+                leftServoValue = leftServoValue - 0.5;
 
                 glyphServoLeft.setPosition(leftServoValue);
                 glyphServoRight.setPosition(rightServoValue);
@@ -242,14 +242,11 @@ public class General_MacArthur_TeleOp extends OpMode {
                 glyphServoLeft.setPosition(leftServoValue);
                 glyphServoRight.setPosition(rightServoValue);
             }
-            else{
-
-            }
         }
         else if (gamepad1.left_bumper) {
             if (rightServoValue > 0 && leftServoValue < 1){
-                rightServoValue = rightServoValue - 0.05;
-                leftServoValue = leftServoValue + 0.05;
+                rightServoValue = rightServoValue - 0.5;
+                leftServoValue = leftServoValue + 0.5;
 
                 glyphServoLeft.setPosition(leftServoValue);
                 glyphServoRight.setPosition(rightServoValue);
@@ -262,13 +259,7 @@ public class General_MacArthur_TeleOp extends OpMode {
                 glyphServoRight.setPosition(rightServoValue);
                 glyphServoLeft.setPosition(leftServoValue);
             }
-            else {
 
-            }
-        }
-        else {
-
-            
         }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
