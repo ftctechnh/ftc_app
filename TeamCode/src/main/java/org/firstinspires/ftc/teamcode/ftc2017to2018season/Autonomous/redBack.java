@@ -48,7 +48,6 @@ public class redBack extends Autonomous_General {
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
         double begintime= runtime.seconds();
-        //most likely getting stuck here in auto
         while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
 
         }
