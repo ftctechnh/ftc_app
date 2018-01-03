@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by Jeremy on 11/17/2017.
@@ -10,12 +11,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class CompTeleDev extends OpMode
 {
+    TouchSensor wingTouchSens;
     boolean isWingUp = true;
     boolean liftArmed = true;
     NewRobotFinal newRobot;
 
     public void init()
     {
+        wingTouchSens = hardwareMap.touchSensor.get("wingTouchSens");
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);

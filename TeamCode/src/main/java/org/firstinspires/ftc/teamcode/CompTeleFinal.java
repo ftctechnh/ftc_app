@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by Jeremy on 11/17/2017.
@@ -9,12 +11,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "CompTele", group = "Tele")
 public class CompTeleFinal extends OpMode
 {
+    DigitalChannel wingTouchSens;
+    DigitalChannel bottomLiftMagSwitch;
+    DigitalChannel topLiftMagSwitch;
     boolean isWingUp = true;
     boolean liftArmed = true;
     NewRobotFinal newRobot;
 
     public void init()
     {
+        /*
+        wingTouchSens = hardwareMap.digitalChannel.get("wingTouchSens");
+        bottomLiftMagSwitch = hardwareMap.digitalChannel.get("bottomLiftMagSwitch");
+        topLiftMagSwitch = hardwareMap.digitalChannel.get("topLiftMagSwitch");
+        wingTouchSens.setMode(DigitalChannel.Mode.INPUT);
+        bottomLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);
+        topLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);*/
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
@@ -88,6 +100,9 @@ public class CompTeleFinal extends OpMode
         telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
         telemetry.addData("Left Y", gamepad1.left_stick_y);
         telemetry.addData("Right y", gamepad1.right_stick_y);
+    //    telemetry.addData("wingTouchSens", wingTouchSens.getState());
+      //  telemetry.addData("TopMag", topLiftMagSwitch.getState());
+        //telemetry.addData("botMag", bottomLiftMagSwitch.getState());
         telemetry.update();
     }
 

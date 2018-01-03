@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -32,7 +33,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class NewRobotFinal
 {
-    final int liftLevels[] = {0, 100, 769, 1500, 1538};
+    final int liftLevels[] = {0, 250, 769, 1500, 1538};
     //Currently not levels or stops
     private short currentLvl = 0;
     private short liftTargetPos;
@@ -44,6 +45,8 @@ public class NewRobotFinal
     private ColorSensor floorColorSens;
     private ColorSensor rightWingColorSens ;
     private ColorSensor leftWingColorSens ;
+
+    DigitalChannel wingTouchSens;
 
     private DcMotorImplEx driveLeftOne ;
     private DcMotorImplEx driveRightOne ;
@@ -70,13 +73,13 @@ public class NewRobotFinal
 
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
-    public final float roboDiameterCm = (float)(38.1*Math.PI); // can be adjusted
+    public final float roboDiameterCm = (float)(38.7*Math.PI); // can be adjusted
     public final float wheelCircIn = (float)(Math.PI * 4) ; //Circumference of wheels used
     public final float wheelCircCm = (float)(10.168* Math.PI);
+   // public final short neverrestMaxRPM =
 
     public NewRobotFinal(HardwareMap hardwareMap)
     {
-
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
 
         imu = (hardwareMap.get(BNO055IMU.class, "imu"));
@@ -154,7 +157,8 @@ public class NewRobotFinal
         wingMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-       // wingMotor.setVelocity(0, AngleUnit.DEGREES);
+
+       // wingTouchSens.setMode(DigitalChannel.Mode.INPUT);
 
         //driveRightOne.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -295,7 +299,7 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
-                
+               // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
             }
         }
         else
@@ -436,9 +440,10 @@ public class NewRobotFinal
         }
         stopDriveMotors();
     }
-/*
-    public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
+
+        public void pivot(float degrees_In, double pow)//Utilizes two motors at a time; spins in place
     {
+        float degrees = (float)(degrees_In * 0.55776 + 8.23819);
         float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
 
         float encTarget = (roboDiameterCm / 2 * degToRad) * (neverrestEncCountsPerRev / wheelCircCm)/2;
@@ -472,7 +477,7 @@ public class NewRobotFinal
     {
         pivot(degrees, .23);
     }
-*/
+
     public void pivot_IMU(float degrees)
     {
         pivot_IMU(degrees, .23);
@@ -634,12 +639,12 @@ public class NewRobotFinal
 
     public void moveWing(boolean moveDown)
     {
-        long endTime = System.currentTimeMillis() + 6000;
+        //long endTime = System.currentTimeMillis() + 6000;
 
         if(moveDown)
         {
             wingMotor.setPower(-1f);
-            while(wingMotor.getCurrentPosition() > -2500)
+            while(wingMotor.getCurrentPosition() > -2750)
             {
                // if (System.currentTimeMillis() > endTime)
                  //   break;
@@ -648,7 +653,7 @@ public class NewRobotFinal
         else
         {
             wingMotor.setPower(1f);
-            while(wingMotor.getCurrentPosition() < 150)
+            while(wingMotor.getCurrentPosition() < 0)
             {
              //   if (System.currentTimeMillis() > endTime)
                  //   break;
