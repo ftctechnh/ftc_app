@@ -7,40 +7,35 @@ package org.firstinspires.ftc.teamcode;
 /**
  * Created by Harshini and Satvik on 11/29/2017.
  */
-@Disabled
-@Autonomous(name = "Callibration", group = "Cal")
+@Autonomous(name = "CallibrationPivots", group = "Cal")
 public class Callibration_NewRobot extends LinearOpMode
 {
-    private TankBase robot;
+    NewRobotFinal robot;
 
     public void runOpMode()
     {
-        robot = new TankBase(hardwareMap);
+        robot = new NewRobotFinal(hardwareMap);
+        robot.initVuforia(hardwareMap);
+
         waitForStart();
 
-        robot.pivot(45, .25);
-        telemetry.addData("Angle = ", robot.getYaw());
-        telemetry.update();
+        robot.pivot(45, .5);
 
         while(!gamepad1.a){}
-        robot.initIMU();
-        robot.pivot(90, .25);
-        telemetry.addData("Angle = ", robot.getYaw());
-        telemetry.update();
+        robot.pivot(90, .5);
 
         while(!gamepad1.a){}
 
-        robot.initIMU();
-        robot.pivot(-45, .25);
-        telemetry.addData("Angle = ", robot.getYaw());
-        telemetry.update();
+        robot.pivot(-45, .5);
 
         while(!gamepad1.a){}
 
-        robot.initIMU();
-        robot.pivot(-90, .25);
-        telemetry.addData("Angle = ", robot.getYaw());
-        telemetry.update();
+        robot.pivot(-90, .5);
+
+        robot.stopAllMotors();
+        robot.kill();
+        robot.killAuto();
+
     }
 
 }
