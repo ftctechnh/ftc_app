@@ -16,6 +16,7 @@ public class RedFar extends LinearOpMode {
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private String color;
+    private Systems Systems;
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");
@@ -25,6 +26,7 @@ public class RedFar extends LinearOpMode {
         jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
         ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
         vuforia = new BeehiveVuforia(hardwareMap, telemetry);
+        Systems = new Systems(drive, ForkLift, jewelArm,vuforia);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
@@ -34,17 +36,8 @@ public class RedFar extends LinearOpMode {
         ForkLift.closeClaw();
         sleep(200);
         ForkLift.moveMotor(1, 300);
-        color = jewelArm.findJewel();
-        if (color.equals("Red")) { //if the arm sees red
-            drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            jewelArm.up();
-            drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-        } else if (color.equals("Blue")) { //if the arm sees blue
-            drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            jewelArm.up();
-            drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-        }
-        pictograph = drive.getMark(vuforia);
+        Systems.findJewel(Color.RED);
+        pictograph = Systems.getMark();
         sleep(500);
         drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  0, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
@@ -57,7 +50,7 @@ public class RedFar extends LinearOpMode {
             drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 3);
-        drive.pushInBlock(ForkLift);
+        Systems.pushInBlock();
         drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
         drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 150);
         ForkLift.openClaw();

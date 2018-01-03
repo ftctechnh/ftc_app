@@ -37,7 +37,7 @@ public class BeehiveVuforia {
     public RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
         time.start();
-        while (time.getElapsedTime() < 3000) {
+        while (time.getElapsedTime() < 3000 && vuMark!=RelicRecoveryVuMark.UNKNOWN) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);

@@ -10,39 +10,32 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 @Autonomous(name = "Blue Far", group = "Autonomous")
 public class BlueFar extends LinearOpMode {
     private AutoDrive drive;
-    private JewelArm jewelArm;
+    private JewelArm JewelArm;
     private ForkLift ForkLift;
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private String color;
+    private Systems Systems;
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");
         telemetry.update();
         drive = new AutoDrive(hardwareMap, telemetry);
         drive.init(); //Calibrates gyro
-        jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
+        JewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
         ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
         vuforia = new BeehiveVuforia(hardwareMap, telemetry);
+        Systems = new Systems(drive, ForkLift, JewelArm, vuforia);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
-        jewelArm.up();
+        JewelArm.up();
         ForkLift.closeClaw();
         sleep(200);
         ForkLift.moveMotor(1, 400);
-        color = jewelArm.findJewel();
-        if (color.equals("Red")) { //if the arm sees red
-            drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            jewelArm.up();
-            drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-        } else if (color.equals("Blue")) { //if the arm sees blue
-            drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            jewelArm.up();
-            drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED, drive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-        }
-        pictograph = drive.getMark(vuforia);
+        Systems.findJewel(Color.BLUE);
+        pictograph = Systems.getMark();
         sleep(500);
         drive.driveTranslateRotate(0,-drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
         drive.rightGyro(0,0, drive.SPIN_TO_CRYPTOBOX_SPEED, -178);
@@ -56,7 +49,7 @@ public class BlueFar extends LinearOpMode {
             drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 3);
-        drive.pushInBlock(ForkLift);
+        Systems.pushInBlock();
         drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
         drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 30);
         ForkLift.openClaw();

@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 /**
  * Created by Kaden on 12/2/2017.
  */
-@TeleOp(name = "CRServoMid", group = "linear OpMode")
-@Disabled
 public class CRServoMid extends OpMode{
     CRServo servo;
     public void init() {
