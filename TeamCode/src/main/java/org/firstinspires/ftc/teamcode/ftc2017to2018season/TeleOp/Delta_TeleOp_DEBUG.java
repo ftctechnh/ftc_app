@@ -33,7 +33,7 @@ public class Delta_TeleOp_DEBUG extends OpMode {
     Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
-    //test
+
 
 
 /*
