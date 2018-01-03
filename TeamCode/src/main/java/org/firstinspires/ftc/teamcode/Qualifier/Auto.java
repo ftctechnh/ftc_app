@@ -184,6 +184,9 @@ public class Auto extends LinearOpMode {
 
         waitForStart();
         telemetry.clearAll();
+
+        // should start a timer to timeout for vumark...
+
         //Search for Vumark
         /**
          * See if any of the instances of {@link relicTemplate} are currently visible.
@@ -193,11 +196,11 @@ public class Auto extends LinearOpMode {
          */
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-//        while ( RelicRecoveryVuMark.from(relicTemplate) == RelicRecoveryVuMark.UNKNOWN && opModeIsActive()) {//Add timeout
-//            // vuMark = RelicRecoveryVuMark.from(relicTemplate);
-//            telemetry.addData("VuMark", "%s not visible", vuMark);
-//            telemetry.update();
-//        }
+        while ( RelicRecoveryVuMark.from(relicTemplate) == RelicRecoveryVuMark.UNKNOWN && !gamepad1.start && opModeIsActive()) {//Add timeout
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            telemetry.addData("VuMark", "%s not visible", vuMark);
+            telemetry.update();
+        }
         relicTrackables.deactivate();
 
         //VUMARK FOUND OR TIMEOUT
@@ -243,39 +246,51 @@ public class Auto extends LinearOpMode {
         //  back  4, 14, 26
 
         if ( menuFile.teamIsRed && menuFile.startPositionIsFront ){                   /** RED Front  */
-            gromit.driveTrain.mecanumDrive(0.4, menuFile.RedFrontDistance1, menuFile.RedFrontHeading1,0);
-            gromit.driveTrain.mecanumTurn (0.5,menuFile.RedFrontTurn1);
-            gromit.driveTrain.mecanumDrive(0.5, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2,0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.RedFrontDistance1, menuFile.RedFrontHeading1,0);
+            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2,0);
             gromit.glyphTrain.glyphclamp("open");
             sleep(200);
-            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.RedFrontHeading2,0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedFrontHeading2,0);
 
 
         } else if (!menuFile.teamIsRed && menuFile.startPositionIsFront ){/** BLUE Front  */
-            gromit.driveTrain.mecanumDrive(0.4, menuFile.BlueFrontDistance1, menuFile.BlueFrontHeading1,0);
-            gromit.driveTrain.mecanumTurn (0.5,menuFile.BlueFrontTurn1);
-            gromit.driveTrain.mecanumDrive(0.5, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2,0);
-            gromit.glyphTrain.glyphclamp("open");
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.BlueFrontDistance1, menuFile.BlueFrontHeading1,0);
+            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.BlueFrontTurn1);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2,0);
+            gromit.glyphTrain.glyphclamp  ("open");
             sleep(200);
-            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.BlueFrontHeading2,0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);
 
         } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront ) {                 /** RED  Back  */
-            gromit.driveTrain.mecanumDrive(0.4, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
-            gromit.driveTrain.mecanumDrive(0.5, menuFile.RedBackDistance2, menuFile.RedBackHeading2, -90);  //-90
-            gromit.driveTrain.mecanumDrive(0.5, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
-            gromit.glyphTrain.glyphclamp("open");
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
+            double distance2 = menuFile.RedBackDistance2;
+            if (vuMark == RelicRecoveryVuMark.CENTER) {
+                distance2 = distance2 + 10.0 ;
+            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+                distance2 = distance2 + 22.0 ;
+            }
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, -90);  //-90
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
+            gromit.glyphTrain.glyphclamp  ("open");
             sleep(200);
-            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.RedBackHeading3,0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedBackHeading3,0);
 
         } else if ( !menuFile.teamIsRed && !menuFile.startPositionIsFront ){                 /** BLUE Back  */
-            gromit.driveTrain.mecanumDrive(0.4, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  //0
-            gromit.driveTrain.mecanumDrive(0.5, menuFile.BlueBackDistance2,  menuFile.BlueBackHeading2,90);  //-90
-            gromit.driveTrain.mecanumTurn(0.5,menuFile.BlueBackTurn3);   // about face 180.
-            gromit.driveTrain.mecanumDrive(0.5, menuFile.BlueBackDistance3,  menuFile.BlueBackHeading3,0);  // 0
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  //0
+            double distance2 = menuFile.BlueBackDistance2;
+            if (vuMark == RelicRecoveryVuMark.CENTER) {
+                distance2 = distance2 + 10.0 ;
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                distance2 = distance2 + 22.0 ;
+            }
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, -90);  //-90
+            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.BlueBackTurn3);   // about face 180.
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, menuFile.BlueBackDistance3,  menuFile.BlueBackHeading3,0);  // 0
 
             gromit.glyphTrain.glyphclamp("open");
             sleep(200);
-            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.BlueBackHeading3,0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueBackHeading3,0);
 
 
         }
