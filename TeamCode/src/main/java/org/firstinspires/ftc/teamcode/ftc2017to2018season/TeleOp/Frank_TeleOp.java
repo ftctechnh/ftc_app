@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "General_MacArthur_TeleOp")
+@TeleOp(name = "Frank_TeleOp")
 //@Disabled
-public class General_MacArthur_TeleOp extends OpMode {
+public class Frank_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -35,8 +35,6 @@ public class General_MacArthur_TeleOp extends OpMode {
     Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
-    public double leftServoValue;
-    public double rightServoValue;
 
 
 
@@ -91,9 +89,8 @@ public class General_MacArthur_TeleOp extends OpMode {
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
         glyphServoLeft.setPosition(0.5);
-        glyphServoRight.setPosition(0.5);
-        // left is closed
-        // right is open
+
+        glyphServoRight.setPosition(0.35);
         jewel_servo.setPosition(0.9);
 
 //This is closed-loop speed control. Encoders are required for this mode.
@@ -211,7 +208,7 @@ public class General_MacArthur_TeleOp extends OpMode {
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
-            slideMotor.setPower(gamepad2.right_stick_y);
+            slideMotor.setPower(-1.0*gamepad2.right_stick_y);
 
         }
         else{
@@ -225,50 +222,31 @@ public class General_MacArthur_TeleOp extends OpMode {
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
        */
-       leftServoValue = glyphServoLeft.getPosition();
-       rightServoValue = glyphServoRight.getPosition();
-        if (gamepad1.right_bumper) {
-            if (rightServoValue < 1 && leftServoValue > 0) {
-                rightServoValue = rightServoValue + 0.05;
-                leftServoValue = leftServoValue - 0.05;
 
-                glyphServoLeft.setPosition(leftServoValue);
-                glyphServoRight.setPosition(rightServoValue);
-            }
-            else if (rightServoValue >= 1 && leftServoValue <= 0){
-                rightServoValue = 1;
-                leftServoValue = 0;
+        if (gamepad1.left_bumper) {
 
-                glyphServoLeft.setPosition(leftServoValue);
-                glyphServoRight.setPosition(rightServoValue);
+//opening the claw
+            glyphServoRight.setPosition(0.35);
+            /*try {
+                glyphServoRight.setPosition(0.5);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else{
+*/
+            glyphServoLeft.setPosition(0.5);
+        } else if (gamepad1.right_bumper) {
 
-            }
+            glyphServoRight.setPosition(0.05);
+
+            glyphServoLeft.setPosition(0.85);
+
+           /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
+            telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
+            telemetry.update();    */
         }
-        else if (gamepad1.left_bumper) {
-            if (rightServoValue > 0 && leftServoValue < 1){
-                rightServoValue = rightServoValue - 0.05;
-                leftServoValue = leftServoValue + 0.05;
-
-                glyphServoLeft.setPosition(leftServoValue);
-                glyphServoRight.setPosition(rightServoValue);
-            }
-
-            else if (rightServoValue <= 0 && leftServoValue >= 1){
-                rightServoValue = 0;
-                leftServoValue = 1;
-
-                glyphServoRight.setPosition(rightServoValue);
-                glyphServoLeft.setPosition(leftServoValue);
-            }
-            else {
-
-            }
-        }
-        else {
-
-            
+        else if (gamepad1.x){
+            glyphServoRight.setPosition(0.22);
+            glyphServoLeft.setPosition(0.65);
         }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
@@ -305,7 +283,7 @@ public class General_MacArthur_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(-0.6);
+        slideMotor.setPower(-1);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -327,7 +305,7 @@ public class General_MacArthur_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(1);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());

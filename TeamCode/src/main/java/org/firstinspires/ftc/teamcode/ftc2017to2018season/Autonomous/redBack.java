@@ -43,38 +43,41 @@ public class redBack extends Autonomous_General {
 
         gyro.resetZAxisIntegrator();
         closeGlyphManipulator();
-        toggleLight(false);
+        toggleLight(true);
+        light.setPower(1);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
+
         double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
+        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
+
 
         }
         toggleLight(false);
         //returnImage();
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
-        stopTracking();
         jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
         readColor();
+        light.setPower(0);
         //returnImage();
 
         sleep(1000);
         moveUpGlyph(2.54);
         sleep(1000);
 
-        if(ballColor.equals("red")){
+        if(ballColor.equals("blue")){
             encoderMecanumDrive(0.9, 10,10,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
             encoderMecanumDrive(0.9,-65,-65,5000,0);
             sleep(1000);
         }
-        else if(ballColor.equals("blue")){
+        else if(ballColor.equals("red")){
             encoderMecanumDrive(0.9,-55,-55,5000,0);
             jewelServo.setPosition(0.9);
             sleep(1000);
@@ -86,23 +89,21 @@ public class redBack extends Autonomous_General {
         }
 
         encoderMecanumDrive(0.4, -55, -55, 1000, 0);
-        gyroTurn(0.3,180);
+        gyroTurn(0.3,-180);
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            simpleRangeDistance(112,0.5,rsBuffer);
+            simpleRangeDistance(112,0.2,rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            simpleRangeDistance(123,0.5,rsBuffer);
+            simpleRangeDistance(123,0.2,rsBuffer);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            simpleRangeDistance(104,0.5,rsBuffer);
+            simpleRangeDistance(104,0.2,rsBuffer);
 
         }
-        else{
-            simpleRangeDistance(112, 0.5, rsBuffer);
-        }
+
         gyroTurn(0.3,90);
 
         sleep(750);
