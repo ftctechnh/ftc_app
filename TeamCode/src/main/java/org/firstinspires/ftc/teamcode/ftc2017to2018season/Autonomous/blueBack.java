@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
@@ -17,7 +16,6 @@ public class blueBack extends Autonomous_General {
     DcMotor leftBack;
     DcMotor rightBack;
     public double rsBuffer = 20.00;
-    private ElapsedTime runtime = new ElapsedTime();
 
 
     @Override
@@ -46,16 +44,15 @@ public class blueBack extends Autonomous_General {
 //reseting gyro sensor
         gyro.resetZAxisIntegrator();
 
-        toggleLight(false);
+        toggleLight(true);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
-        double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
+
+        while(!vuMarkFound()){
 
         }
         toggleLight(false);
-        stopTracking();
         jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
@@ -104,9 +101,6 @@ public class blueBack extends Autonomous_General {
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
             simpleRangeDistance(123,0.35,rsBuffer);
 
-        }
-        else{
-            simpleRangeDistance(112, 0.35, rsBuffer);
         }
 
         gyroTurn(0.3,90);

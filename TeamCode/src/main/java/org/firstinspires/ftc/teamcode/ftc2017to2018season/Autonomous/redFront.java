@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
@@ -11,7 +10,7 @@ public class redFront extends Autonomous_General {
 
     public double rsBuffer = 20.00;
 
-    private ElapsedTime runtime = new ElapsedTime();
+
     @Override
     public void runOpMode() {
 
@@ -38,19 +37,19 @@ public class redFront extends Autonomous_General {
         gyro.resetZAxisIntegrator();
 
 
-        toggleLight(false);
+        toggleLight(true);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
 
-        double begintime = runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
+
+        while(!vuMarkFound()){
 
         }
         toggleLight(false);
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
-        stopTracking();
+
         jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
@@ -93,9 +92,6 @@ public class redFront extends Autonomous_General {
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
             simpleRangeDistance(42, 0.6, rsBuffer);
 
-        }
-        else{
-            simpleRangeDistance(59, 0.6, rsBuffer);
         }
 
 

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
@@ -15,7 +14,7 @@ public class redBack extends Autonomous_General {
     DcMotor leftBack;
     DcMotor rightBack;
     public double rsBuffer = 20.00;
-    private ElapsedTime runtime = new ElapsedTime();
+
 
     @Override
     public void runOpMode() {
@@ -43,19 +42,18 @@ public class redBack extends Autonomous_General {
 
         gyro.resetZAxisIntegrator();
         closeGlyphManipulator();
-        toggleLight(false);
+        toggleLight(true);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
-        double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= 8){
+
+        while(!vuMarkFound()){
 
         }
         toggleLight(false);
         //returnImage();
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
-        stopTracking();
         jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
@@ -90,19 +88,17 @@ public class redBack extends Autonomous_General {
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            simpleRangeDistance(112,0.5,rsBuffer);
+            simpleRangeDistance(112,0.2,rsBuffer);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            simpleRangeDistance(123,0.5,rsBuffer);
+            simpleRangeDistance(123,0.2,rsBuffer);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            simpleRangeDistance(104,0.5,rsBuffer);
+            simpleRangeDistance(104,0.2,rsBuffer);
 
         }
-        else{
-            simpleRangeDistance(112, 0.5, rsBuffer);
-        }
+
         gyroTurn(0.3,90);
 
         sleep(750);
