@@ -36,24 +36,25 @@ public class TestOP extends LinearOpMode {
             Object obj = null;
             try {
                 obj = parser.parse(new FileReader("Testing.json"));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            JSONObject jsonObject = (JSONObject) obj;
-            try {
+                if(obj != null){
+                    telemetry.addData("File has been:", "Parsed");
+                } else {
+                    telemetry.addData("File has been:", "Not Parsed");
+                }
+                telemetry.update();
+                JSONObject jsonObject = (JSONObject) obj;
                 String name = (String) jsonObject.get("name");
+                String num = (String) jsonObject.get("team");
 
-                //print name in test-op
-                JSONArray memberNames = (JSONArray) jsonObject.get("memberNames");
-                String randomMemberName = (String) memberNames.get(rand.nextInt(9));
-            } catch (JSONException e) {
-                e.printStackTrace();
+                telemetry.addData("Name", name);
+                telemetry.addData("Team #", num);
+                telemetry.update();
+
+            } catch (FileNotFoundException e) {
+                telemetry.addData("Error Report", e.getMessage());
+            }catch (JSONException e) {
+                telemetry.addData("Error Report", e.getMessage());
             }
-
         }
     }
 }
-/*
-E/EventLoopManager: java.lang.NullPointerException
-E/EventLoopManager:     at org.firstinspires.ftc.teamcode.seasons.relicrecovery.TestOP.runOpMode(TestOP.java:44)
- */
