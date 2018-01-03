@@ -3,10 +3,14 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-//import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
+/**
+ * Created by Rohan on 11/18/17.
+ */
 
 
 @TeleOp(name = "Frank_TeleOp")
@@ -19,7 +23,7 @@ public class Frank_TeleOp extends OpMode {
     /*
         ---------------------------------------------------------------------------------------------
 
-       Define the actuators we use in the orbot here
+       Define the actuators we use in the robot here
     */
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
@@ -28,7 +32,7 @@ public class Frank_TeleOp extends OpMode {
     DcMotor slideMotor;
     Servo glyphServoRight;
     Servo glyphServoLeft;
-    //Servo jewel_servo;
+    Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -77,7 +81,7 @@ public class Frank_TeleOp extends OpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
-        //jewel_servo = hardwareMap.servo.get("jewelServo");
+        jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
 
 
@@ -87,7 +91,7 @@ public class Frank_TeleOp extends OpMode {
         glyphServoLeft.setPosition(0.5);
 
         glyphServoRight.setPosition(0.35);
-        //jewel_servo.setPosition(0.9);
+        jewel_servo.setPosition(0.9);
 
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
@@ -151,28 +155,28 @@ public class Frank_TeleOp extends OpMode {
 
         read the gamepad values and put into variables
          */
-        float leftY_gp1 = (gamepad1.left_stick_y);
-        float rightY_gp1 = (gamepad1.right_stick_y);
+        float leftY_gp1 = (-gamepad1.left_stick_y);
+        float rightY_gp1 = (-gamepad1.right_stick_y);
         //
         //11/24/17 This edit was made by Colin Szeto. This was a test that we used to see if the triggers will work for the servos
         // float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
         // float strafeStickRight = (-gamepad1.right_trigger);//*leftWheelMotorFront.getMaxSpeed();
         //
         // run the motors by setting power to the motors with the game pad value
- 0) {
 
-            leftWheelMotorFront.se
-            if (gamepad1.left_trigger >tPower(1);
-            leftWheelMotorBack.setPower(-1);
-            rightWheelMotorFront.setPower(-1);
-            rightWheelMotorBack.setPower(1);
-
-        } else if (gamepad1.right_trigger > 0) {
+        if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
+
+        } else if (gamepad1.right_trigger > 0) {
+
+            leftWheelMotorFront.setPower(1);
+            leftWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(-1);
+            rightWheelMotorBack.setPower(1);
 
         } else {
             leftWheelMotorFront.setPower(leftY_gp1);
@@ -204,7 +208,7 @@ public class Frank_TeleOp extends OpMode {
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
-            slideMotor.setPower(gamepad2.right_stick_y);
+            slideMotor.setPower(-1.0*gamepad2.right_stick_y);
 
         }
         else{
@@ -279,7 +283,7 @@ public class Frank_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(-1);
+        slideMotor.setPower(-0.6);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -301,7 +305,7 @@ public class Frank_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(1);
+        slideMotor.setPower(0.6);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
@@ -314,3 +318,4 @@ public class Frank_TeleOp extends OpMode {
     }
 }
 
+//--------------------------------------------------------------------------------------------

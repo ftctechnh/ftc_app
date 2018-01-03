@@ -4,7 +4,40 @@
     <bookmark url="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/Old_12_2_17/blue_frontCorner.java" line="72" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96a59d7d-c9ad-4820-922b-fa030e83f90b" name="Default" comment="" />
+    <list default="true" id="96a59d7d-c9ad-4820-922b-fa030e83f90b" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/FtcRobotController/build/outputs/aar/FtcRobotController-debug.aar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/classes/debug/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Beta.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/classes/debug/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp_Relic.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/javaCompile.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/javaCompile.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskHistory.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskJars.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskJars.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Analytics_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Analytics_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Blocks_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Blocks_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/FtcCommon_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/FtcCommon_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Hardware_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Hardware_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Inspection_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Inspection_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/RobotCore_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/RobotCore_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/WirelessP2p_release__aar.xml" afterPath="$PROJECT_DIR$/.idea/libraries/WirelessP2p_release__aar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugAssets/merger.xml" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugAssets/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugShaders/merger.xml" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/mergeDebugShaders/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/merger.xml" afterPath="$PROJECT_DIR$/FtcRobotController/build/intermediates/incremental/packageDebugResources/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/merger.xml" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/incremental/mergeDebugResources/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/intermediates/manifests/full/debug/AndroidManifest.xml" afterPath="$PROJECT_DIR$/TeamCode/build/intermediates/manifests/full/debug/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/build/outputs/logs/manifest-merger-debug-report.txt" afterPath="$PROJECT_DIR$/TeamCode/build/outputs/logs/manifest-merger-debug-report.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Frank_TeleOp.java" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Frank_TeleOp.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gradlew" afterPath="$PROJECT_DIR$/gradlew" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
+    </list>
     <ignored path="ftc_app.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,7 +75,7 @@
       <file leaf-file-name="blueFront.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/blueFront.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
+            <state relative-caret-position="1008">
               <caret line="55" column="9" lean-forward="false" selection-start-line="51" selection-start-column="8" selection-end-line="55" selection-end-column="9" />
               <folding />
             </state>
@@ -52,7 +85,7 @@
       <file leaf-file-name="SensorMRRangeSensor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/SensorMRRangeSensor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
+            <state relative-caret-position="399">
               <caret line="51" column="13" lean-forward="false" selection-start-line="51" selection-start-column="13" selection-end-line="51" selection-end-column="13" />
               <folding />
             </state>
@@ -72,7 +105,7 @@
       <file leaf-file-name="redBack.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/redBack.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1037">
+            <state relative-caret-position="1281">
               <caret line="65" column="24" lean-forward="false" selection-start-line="65" selection-start-column="24" selection-end-line="65" selection-end-column="24" />
               <folding />
             </state>
@@ -82,7 +115,7 @@
       <file leaf-file-name="redFront.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/redFront.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="884">
+            <state relative-caret-position="1092">
               <caret line="55" column="24" lean-forward="false" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="24" />
               <folding />
             </state>
@@ -92,7 +125,7 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
+            <state relative-caret-position="273">
               <caret line="17" column="14" lean-forward="false" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
               <folding />
             </state>
@@ -102,18 +135,8 @@
       <file leaf-file-name="blueBack.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/blueBack.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="986">
+            <state relative-caret-position="760">
               <caret line="64" column="24" lean-forward="false" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Delta_TeleOp.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5304">
-              <caret line="317" column="5" lean-forward="false" selection-start-line="317" selection-start-column="5" selection-end-line="317" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -122,11 +145,11 @@
       <file leaf-file-name="Frank_TeleOp.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Frank_TeleOp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="154" column="52" lean-forward="true" selection-start-line="154" selection-start-column="52" selection-end-line="154" selection-end-column="52" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="-4389">
+              <caret line="25" column="52" lean-forward="true" selection-start-line="25" selection-start-column="52" selection-end-line="25" selection-end-column="52" />
+              <caret line="26" column="6" lean-forward="true" selection-start-line="26" selection-start-column="6" selection-end-line="26" selection-end-column="6" />
+              <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -134,7 +157,7 @@
       <file leaf-file-name="Autonomous_General.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/Autonomous_General.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2057">
+            <state relative-caret-position="2541">
               <caret line="146" column="26" lean-forward="false" selection-start-line="146" selection-start-column="26" selection-end-line="146" selection-end-column="26" />
               <folding>
                 <element signature="e#25234#25235#0" expanded="true" />
@@ -177,7 +200,7 @@
   <component name="GradleLocalSettings">
     <option name="myGradleHomes">
       <map>
-        <entry key="$PROJECT_DIR$" value="C:\Users\Inspiration Team\.gradle\wrapper\dists\gradle-4.1-bin\c3kp51zwwt108wc78u68yt7vs\gradle-4.1" />
+        <entry key="$PROJECT_DIR$" value="C:\Users\boswo\.gradle\wrapper\dists\gradle-4.1-bin\c3kp51zwwt108wc78u68yt7vs\gradle-4.1" />
       </map>
     </option>
     <option name="myGradleVersions">
@@ -2668,6 +2691,75 @@
               <option name="name" value="ftc_app" />
               <option name="projectBuildClasspath">
                 <list>
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/ant-1.9.6.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/ant-launcher-1.9.6.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-base-services-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-base-services-groovy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-cli-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-core-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-docs-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-installation-beacon-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-jvm-services-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-compiler-plugin-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-tooling-builders-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-tooling-models-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-launcher-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-logging-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-messaging-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-model-core-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-model-groovy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-process-services-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-resources-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-runtime-api-info-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-tooling-api-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-wrapper-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/groovy-all-2.4.11.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-announce-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-antlr-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-build-cache-http-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-build-comparison-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-build-init-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-code-quality-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-composite-builds-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-dependency-management-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-diagnostics-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ear-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ide-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ide-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ide-play-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ivy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-jacoco-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-javascript-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-groovy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-java-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-jvm-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-scala-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-maven-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-osgi-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-base-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-jvm-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-play-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-plugin-development-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-plugin-use-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-plugins-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-publish-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-reporting-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-resources-http-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-resources-s3-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-resources-sftp-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-scala-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-signing-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-test-kit-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-testing-base-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-testing-jvm-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-testing-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-tooling-api-builders-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-workers-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/ivy-2.2.0.jar" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/java" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/groovy" />
                 </list>
@@ -2739,10 +2831,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1924" />
-    <option name="height" value="1056" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -2759,23 +2851,6 @@
       <foldersAlwaysOnTop value="false" />
     </navigator>
     <panes>
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ftc_app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Gradle Scripts" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidBuildScriptsGroupNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -2926,16 +3001,71 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TeamCode" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="teamcode" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc2017to2018season" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Final" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Gradle Scripts" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidBuildScriptsGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="device.picker.selection" value="9f6b65e6" />
-    <property name="sync.plugin.last.upgrade.timestamp" value="1512794224095" />
+    <property name="sync.plugin.last.upgrade.timestamp" value="1514939134445" />
     <property name="android.profiler.active" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -3041,7 +3171,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514927282363" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514939489667" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -3089,7 +3219,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514927282364" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514939489667" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3121,27 +3251,6 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -3272,7 +3381,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514927282367" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514939489668" />
       </method>
     </configuration>
     <list size="1">
@@ -3322,17 +3431,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1924" height="1056" extended-state="0" />
-    <editor active="true" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <layout>
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4154334" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4150289" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25349087" sideWeight="0.5042631" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32875264" sideWeight="0.50427806" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33063585" sideWeight="0.50427806" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32947975" sideWeight="0.49572194" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283237" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -3341,7 +3449,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24790357" sideWeight="0.4957369" order="4" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24759358" sideWeight="0.4957369" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973147" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32994652" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -3646,7 +3754,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples/SensorMRRangeSensor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
+        <state relative-caret-position="399">
           <caret line="51" column="13" lean-forward="false" selection-start-line="51" selection-start-column="13" selection-end-line="51" selection-end-column="13" />
           <folding />
         </state>
@@ -3662,7 +3770,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/Autonomous_General.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2057">
+        <state relative-caret-position="2541">
           <caret line="146" column="26" lean-forward="false" selection-start-line="146" selection-start-column="26" selection-end-line="146" selection-end-column="26" />
           <folding>
             <element signature="e#25234#25235#0" expanded="true" />
@@ -3673,7 +3781,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
+        <state relative-caret-position="273">
           <caret line="17" column="14" lean-forward="false" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
           <folding />
         </state>
@@ -3681,7 +3789,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/blueFront.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
+        <state relative-caret-position="1008">
           <caret line="55" column="9" lean-forward="false" selection-start-line="51" selection-start-column="8" selection-end-line="55" selection-end-column="9" />
           <folding />
         </state>
@@ -3689,7 +3797,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/redBack.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
+        <state relative-caret-position="1281">
           <caret line="65" column="24" lean-forward="false" selection-start-line="65" selection-start-column="24" selection-end-line="65" selection-end-column="24" />
           <folding />
         </state>
@@ -3697,35 +3805,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/redFront.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="884">
+        <state relative-caret-position="1092">
           <caret line="55" column="24" lean-forward="false" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/blueBack.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="986">
-          <caret line="64" column="24" lean-forward="false" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5304">
-          <caret line="317" column="5" lean-forward="false" selection-start-line="317" selection-start-column="5" selection-end-line="317" selection-end-column="5" />
+        <state relative-caret-position="25">
+          <caret line="282" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="320" selection-end-column="94" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/blueBack.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="760">
+          <caret line="64" column="24" lean-forward="false" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Frank_TeleOp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="154" column="52" lean-forward="true" selection-start-line="154" selection-start-column="52" selection-end-line="154" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="-4389">
+          <caret line="25" column="52" lean-forward="true" selection-start-line="25" selection-start-column="52" selection-end-line="25" selection-end-column="52" />
+          <caret line="26" column="6" lean-forward="true" selection-start-line="26" selection-start-column="6" selection-end-line="26" selection-end-column="6" />
+          <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>
