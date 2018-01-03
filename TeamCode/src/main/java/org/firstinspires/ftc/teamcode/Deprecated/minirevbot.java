@@ -11,7 +11,6 @@ import junit.framework.Test;
  * Created by Aus on 11/7/2017.
  */
 
-@TeleOp(name = "minirevbot", group = "linear OpMode")
 public class minirevbot extends OpMode {
 
     DcMotor FrontLeft;

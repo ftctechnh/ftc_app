@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by Aus on 10/24/2017.
  */
-@TeleOp(name = "jewelarm", group = "linear OpMode")
-@Disabled
 public class jewelarmteleop extends OpMode {
     private Servo claw;
     private double servolowend = 0.0;

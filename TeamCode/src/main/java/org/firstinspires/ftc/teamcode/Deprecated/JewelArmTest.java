@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 /**
  * Created by Kaden on 11/30/2017.
  */
-@TeleOp(name = "jewel arm thing", group = "linear OpMode")
 public class JewelArmTest extends OpMode {
     JewelArm jewelArm;
     public void init() {

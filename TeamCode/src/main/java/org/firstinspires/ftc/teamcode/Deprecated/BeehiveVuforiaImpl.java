@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.BeehiveVuforia;
 /**
  * Created by root on 12/26/17.
  */
-@TeleOp(name = "vuforiatest", group = "test")
 public class BeehiveVuforiaImpl extends OpMode {
     BeehiveVuforia v;
     public void init() {
