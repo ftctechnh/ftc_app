@@ -106,7 +106,7 @@ public class redFront extends Autonomous_General {
         gyroTurn(0.3,180);
 
         sleep(750);
-        moveDownGlyph(1);
+        moveDownGlyph(2);
         sleep(500);
 
         openGlyphManipulator();
