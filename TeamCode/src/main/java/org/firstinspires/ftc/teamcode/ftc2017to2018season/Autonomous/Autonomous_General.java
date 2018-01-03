@@ -884,13 +884,13 @@ public class Autonomous_General extends LinearOpMode {
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        target_Position = slideMotor.getCurrentPosition() - finalTarget;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
         slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(-0.6);
+        slideMotor.setPower(0.6);
 
         while (slideMotor.isBusy() && opModeIsActive()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -909,13 +909,13 @@ public class Autonomous_General extends LinearOpMode {
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+        target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(-0.6);
 
         while (slideMotor.isBusy() && opModeIsActive()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());

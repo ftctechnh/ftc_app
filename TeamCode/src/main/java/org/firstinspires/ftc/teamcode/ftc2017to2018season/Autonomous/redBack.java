@@ -89,7 +89,7 @@ public class redBack extends Autonomous_General {
         }
 
         encoderMecanumDrive(0.4, -55, -55, 1000, 0);
-        gyroTurn(0.3,180);
+        gyroTurn(0.3,-180);
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){

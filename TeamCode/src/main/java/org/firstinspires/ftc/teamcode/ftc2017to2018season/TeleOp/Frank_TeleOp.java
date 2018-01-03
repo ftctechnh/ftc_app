@@ -19,7 +19,7 @@ public class Frank_TeleOp extends OpMode {
     /*
         ---------------------------------------------------------------------------------------------
 
-       Define the actuators we use in the robot here
+       Define the actuators we use in the orbot here
     */
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
@@ -279,7 +279,7 @@ public class Frank_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(-0.6);
+        slideMotor.setPower(-1);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -301,7 +301,7 @@ public class Frank_TeleOp extends OpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(1);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
