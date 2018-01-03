@@ -242,38 +242,41 @@ public class Auto extends LinearOpMode {
 
         //  back  4, 14, 26
 
-        if (menuFile.startPositionIsFront  && !menuFile.teamIsRed){/** Front Blue  */
-            gromit.driveTrain.mecanumDrive(0.4, menuFile.BlueFrontDistance1, menuFile.BlueFrontHeading1,0);
-            gromit.driveTrain.mecanumTurn (0.5,menuFile.BlueFrontTurn1);
-            gromit.driveTrain.mecanumDrive(0.5, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2,0);
-            gromit.glyphTrain.glyphclamp("open");
-           sleep(200);
-            gromit.driveTrain.mecanumDrive(0.25, 5,  menuFile.BlueFrontHeading2,0);  //0
-
-
-        } else if (menuFile.startPositionIsFront  && menuFile.teamIsRed){                   /** Front RED  */
+        if ( menuFile.teamIsRed && menuFile.startPositionIsFront ){                   /** RED Front  */
             gromit.driveTrain.mecanumDrive(0.4, menuFile.RedFrontDistance1, menuFile.RedFrontHeading1,0);
             gromit.driveTrain.mecanumTurn (0.5,menuFile.RedFrontTurn1);
             gromit.driveTrain.mecanumDrive(0.5, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2,0);
             gromit.glyphTrain.glyphclamp("open");
             sleep(200);
-            gromit.driveTrain.mecanumDrive(0.25, 5,  menuFile.RedFrontHeading2,0);  //0
+            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.RedFrontHeading2,0);
 
-        } else if (!menuFile.startPositionIsFront  && !menuFile.teamIsRed){                 /** Back Blue  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  //0
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueBackDistance2,  menuFile.BlueBackHeading2,90);  //-90
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.BlueBackDistance3,  menuFile.BlueBackHeading3,0);  //0
+
+        } else if (!menuFile.teamIsRed && menuFile.startPositionIsFront ){/** BLUE Front  */
+            gromit.driveTrain.mecanumDrive(0.4, menuFile.BlueFrontDistance1, menuFile.BlueFrontHeading1,0);
+            gromit.driveTrain.mecanumTurn (0.5,menuFile.BlueFrontTurn1);
+            gromit.driveTrain.mecanumDrive(0.5, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2,0);
             gromit.glyphTrain.glyphclamp("open");
             sleep(200);
-            gromit.driveTrain.mecanumDrive(0.25, 5,  menuFile.BlueBackHeading3,0);  //0
+            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.BlueFrontHeading2,0);
 
-        } else if (!menuFile.startPositionIsFront  && menuFile.teamIsRed) {                 /** Back RED  */
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedBackDistance2, menuFile.RedBackHeading2, -90);  //-90
-            gromit.driveTrain.mecanumDrive(0.25, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
+        } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront ) {                 /** RED  Back  */
+            gromit.driveTrain.mecanumDrive(0.4, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
+            gromit.driveTrain.mecanumDrive(0.5, menuFile.RedBackDistance2, menuFile.RedBackHeading2, -90);  //-90
+            gromit.driveTrain.mecanumDrive(0.5, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
             gromit.glyphTrain.glyphclamp("open");
             sleep(200);
-            gromit.driveTrain.mecanumDrive(0.25, 5,  menuFile.RedBackHeading3,0);  //0
+            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.RedBackHeading3,0);
+
+        } else if ( !menuFile.teamIsRed && !menuFile.startPositionIsFront ){                 /** BLUE Back  */
+            gromit.driveTrain.mecanumDrive(0.4, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  //0
+            gromit.driveTrain.mecanumDrive(0.5, menuFile.BlueBackDistance2,  menuFile.BlueBackHeading2,90);  //-90
+            gromit.driveTrain.mecanumTurn(0.5,menuFile.BlueBackTurn3);   // about face 180.
+            gromit.driveTrain.mecanumDrive(0.5, menuFile.BlueBackDistance3,  menuFile.BlueBackHeading3,0);  // 0
+
+            gromit.glyphTrain.glyphclamp("open");
+            sleep(200);
+            gromit.driveTrain.mecanumDrive(0.4, 5,  menuFile.BlueBackHeading3,0);
+
 
         }
 

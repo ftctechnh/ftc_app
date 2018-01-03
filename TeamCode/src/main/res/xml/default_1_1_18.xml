@@ -10,6 +10,7 @@
             <Servo name="right_lower" port="1" />
             <Servo name="left_lower" port="2" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+            <LynxColorSensor name="sensor_color" port="1" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2">
             <NeveRest60Gearmotor name="left_glyph" port="0" />
@@ -19,7 +20,6 @@
             <Servo name="relic_claw" port="1" />
             <Servo name="relic_elbow" port="2" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
-            <LynxColorSensor name="sensor_color" port="1" bus="0" />
         </LynxModule>
     </LynxUsbDevice>
 </Robot>
