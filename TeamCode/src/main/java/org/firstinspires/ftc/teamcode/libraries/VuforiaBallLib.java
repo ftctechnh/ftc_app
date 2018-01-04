@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.CameraCalibration;
+import com.vuforia.CameraDevice;
 import com.vuforia.Image;
 import com.vuforia.Matrix34F;
 import com.vuforia.PIXEL_FORMAT;
@@ -81,6 +82,7 @@ public abstract class VuforiaBallLib extends DrawLib {
         //bwahaha java shim
         this.vuforia = new VuforiaLocalizerShim(parameters);
         Vuforia.setFrameFormat(PIXEL_FORMAT.RGB888, true); //enables RGB888 format for the image
+        CameraDevice.getInstance().setFlashTorchMode(true);
         VuforiaTrackables relicTrackables = this.vuforia.loadShimTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary

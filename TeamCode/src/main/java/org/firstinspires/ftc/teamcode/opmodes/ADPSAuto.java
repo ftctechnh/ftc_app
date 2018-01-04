@@ -108,8 +108,8 @@ public class ADPSAuto extends VuforiaBallLib {
             int skip = 1;
             boolean closest = false;
 
-            if(getLastVuMark() != null || true) {
-                RelicRecoveryVuMark thing = RelicRecoveryVuMark.LEFT;//getLastVuMark();
+            if(getLastVuMark() != null) {
+                RelicRecoveryVuMark thing = getLastVuMark();
                 //if we're on red it's the far one, else it's the close one
                 //and if its' on the right and we're on blue, go twice
                 if((thing == RelicRecoveryVuMark.LEFT && red) || (thing == RelicRecoveryVuMark.RIGHT && !red)) skip = 2;
