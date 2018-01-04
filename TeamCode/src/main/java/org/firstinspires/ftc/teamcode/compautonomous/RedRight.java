@@ -96,9 +96,7 @@ public class RedRight extends LinearOpMode implements Settings {
 
         sleep(1000);
 
-        //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
-
-        sleep(1000);
+        imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
         // PSEUDO move backwards and slam into the wall
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0);
@@ -107,6 +105,8 @@ public class RedRight extends LinearOpMode implements Settings {
         sleep(secondStretch);
         // turn clockwise
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 0, 1);
+        sleep(2*rotate90);
+        this.drivetrain.stopMoving();
         switch (relicRecoveryVuMark) {
             case LEFT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle(), 1, 0); break;
             case CENTER: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0); break;

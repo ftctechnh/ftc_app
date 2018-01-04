@@ -6,7 +6,8 @@ package org.firstinspires.ftc.teamcode.compautonomous;
  * @since 12/30/17
  */
 public interface Settings {
-    int firstStretch = 1000;
+    int firstStretch = 1400;
     int secondStretch = 1000;
-    double slamIntoWallSpeed = 0.25;
+    int rotate90 = 549; //2196 for a full rotation
+    double slamIntoWallSpeed = 0.4;
 }

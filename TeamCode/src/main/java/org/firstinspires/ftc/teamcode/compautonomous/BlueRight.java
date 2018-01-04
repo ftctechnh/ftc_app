@@ -49,13 +49,22 @@ public class BlueRight extends LinearOpMode implements Settings{
 
         armRotator.scaleRange(0.1, 0.9);
         armExtender.scaleRange(0.16, 0.75);
+        grabber.scaleRange(0.25, 1.0);
+
 
         armExtender.setPosition(1.0);
         armRotator.setPosition(0.5);
 
+        grabber.setPosition(1.0);
+        grabber.setPosition(0.8);
+        grabber.setPosition(1.0);
+
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
         vuforiaWrapper.getLoader().getTrackables().activate();
+
+        telemetry.addData("Grabber", grabber.getPosition());
+        telemetry.update();
 
         waitForStart();
 
@@ -89,6 +98,9 @@ public class BlueRight extends LinearOpMode implements Settings{
 
         sleep(1000);
 
+        //grab the block before moving off balancing stone
+        grabber.setPosition(0);
+
         armExtender.setPosition(1);
         armRotator.setPosition(0.5);
 
@@ -96,30 +108,43 @@ public class BlueRight extends LinearOpMode implements Settings{
 
         //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
-        sleep(1000);
-
         //PSUEDO - THE TIME VALUES MUST BE CHANGED
         drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0);
         sleep(firstStretch);
 
-        drivetrain.complexDrive(0, 0,1);
-        sleep(500);
+        //telemetry.addData("FirstAngle", imuWrapper.getOrientation().firstAngle);
+        //telemetry.update();
+
+        /*while (imuWrapper.getOrientation().firstAngle < Math.PI / 2) {
+            drivetrain.complexDrive(0, 0, -1);
+            telemetry.addData("FirstAngle", imuWrapper.getOrientation().firstAngle);
+            telemetry.update();
+        } */
+
+        drivetrain.complexDrive(0,0,-1);
+            sleep(rotate90);
+
+        robot.stopMoving();
+
+        sleep(1000);
 
         switch (relicRecoveryVuMark) {
             case LEFT: telemetry.addData("Column", "Putting it in the left");
-                drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle(), slamIntoWallSpeed, 0);
+                drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle() + 0.2, slamIntoWallSpeed, 0);
                 break;
             case CENTER: telemetry.addData("Column", "Putting it in the center");
                 drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
                 break;
             case RIGHT: telemetry.addData("Column", "Putting it in the right");
-                drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle(), slamIntoWallSpeed, 0);
+                drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle() - 0.2, slamIntoWallSpeed, 0);
                 break;
             default: drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
                 break;
         }
 
         sleep(5000);
+
+        grabber.setPosition(1);
     }
 
 }

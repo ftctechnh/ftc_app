@@ -49,9 +49,16 @@ public class BlueLeft extends LinearOpMode implements Settings{
 
         armRotator.scaleRange(0.1, 0.9);
         armExtender.scaleRange(0.16, 0.75);
+        grabber.scaleRange(0.25, 1.0);
+
 
         armExtender.setPosition(1.0);
         armRotator.setPosition(0.5);
+
+        grabber.setPosition(1.0);
+        grabber.setPosition(0.8);
+        grabber.setPosition(1.0);
+
 
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
@@ -89,14 +96,14 @@ public class BlueLeft extends LinearOpMode implements Settings{
 
         sleep(1000);
 
+        grabber.setPosition(0);
+
         armExtender.setPosition(1);
         armRotator.setPosition(0.5);
 
         sleep(1000);
 
         //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
-
-        sleep(1000);
 
         //PSUEDO - THE TIME VALUES MUST BE CHANGED
         drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0);

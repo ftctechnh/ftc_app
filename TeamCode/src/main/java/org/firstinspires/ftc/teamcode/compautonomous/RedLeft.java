@@ -94,15 +94,15 @@ public class RedLeft extends LinearOpMode implements Settings {
 
         sleep(1000);
 
-        //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
-
-        sleep(1000);
+        imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
         // PSEUDO move backwards and slam into the wall
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0); // move backwards
         sleep(firstStretch);
         // turn counterclockwise
-        this.drivetrain.complexDrive(MecanumDrive.Direction.LEFT.angle(), 0, 1);
+        this.drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), 0, 1);
+        sleep(rotate90);
+        this.drivetrain.stopMoving();
         switch (relicRecoveryVuMark) {
             case LEFT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle(), 1, 0); break;
             case CENTER: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0); break;
