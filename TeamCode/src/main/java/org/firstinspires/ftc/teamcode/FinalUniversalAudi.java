@@ -107,20 +107,20 @@ public class FinalUniversalAudi extends LinearOpMode
                 telemetry.update();
                 switch (newRobot.getGlyphCipher())
                 {
-                    case 'r': newRobot.driveStraight_In(20.5f - adjustment,.6);
+                    case 'r': newRobot.driveStraight_In(17.5f - adjustment,.6);
                         break;
-                    case 'c': newRobot.driveStraight_In(25.5f - adjustment,.6);
+                    case 'c': newRobot.driveStraight_In(24.5f - adjustment,.6);
                         break;
-                    case 'l': newRobot.driveStraight_In(33 - adjustment,.6);
+                    case 'l': newRobot.driveStraight_In(30 - adjustment,.6);
                         break;
-                    default: newRobot.driveStraight_In(25.5f - adjustment,.6);
+                    default: newRobot.driveStraight_In(24.5f - adjustment,.6);
                         break;
                 }
-                newRobot.pivot(-80, .6);
+                newRobot.pivot(-85, .6);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(8,.1);
-                newRobot.driveStraight_In(-2);
+                newRobot.driveStraight_In(10,.1);
+                newRobot.driveStraight_In(-3);
                 /*newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-10,1);*/
                 newRobot.stopAllMotors();
