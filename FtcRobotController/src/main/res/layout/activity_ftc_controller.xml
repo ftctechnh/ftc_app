@@ -48,21 +48,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     android:layout_height="80dp"
     android:background="@color/background_black">
 
-    <ImageView
-      android:id="@+id/robotIcon"
-      android:src="@drawable/icon_robotcontroller"
-      android:layout_width="wrap_content"
-      android:layout_height="fill_parent"
-      android:adjustViewBounds="true"
-      android:layout_margin="1dp"/>
-
     <TextView
       android:id="@+id/textDeviceName"
-      android:layout_toEndOf="@id/robotIcon"
+      android:layout_marginLeft="24dp"
+      android:layout_centerInParent="true"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textColor="?attr/textWhite"
-      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:textSize="36sp"
       android:padding="8dp"
       android:textStyle="bold"/>
 
@@ -100,6 +93,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:id="@+id/textNetworkConnectionStatus"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:textSize="18sp"
       android:visibility="invisible"
       android:text="" />
 
@@ -108,6 +102,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/textNetworkConnectionStatus"
+      android:textSize="18sp"
       android:visibility="invisible"
       android:text="" />
 
@@ -116,6 +111,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/textRobotStatus"
+      android:textSize="18sp"
       android:visibility="invisible"
       android:text="" />
 
@@ -142,6 +138,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
+            android:textSize="24sp"
             android:visibility="invisible"
             android:textColor="?attr/textMediumDark" />
 

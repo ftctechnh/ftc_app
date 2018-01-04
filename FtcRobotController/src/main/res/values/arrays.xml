@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="balancing_stones">
+		<item>Red Far</item>
+		<item>Red Near</item>
+		<item>Blue Far</item>
+		<item>Blue Near</item>
+	</string-array>
+	<string-array name="balancing_stones_values">
+		<item>red_far</item>
+		<item>red_near</item>
+		<item>blue_far</item>
+		<item>blue_near</item>
+	</string-array>
+	<string-array name="empty_array"/>
+</resources>
