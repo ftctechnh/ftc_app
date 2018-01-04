@@ -796,4 +796,40 @@ public class NewRobotFinal
     public BNO055IMU getImu(){return imu;}
 
     public short getLiftDir(){return liftDir;}
+
+    public void driveStall_In(float inches, double pow)
+    {
+        stopDriveMotors();
+        float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
+        //You get the number of encoder counts per unit and multiply it by how far you want to go
+
+        float absPow = (float)Math.abs(pow);
+        float lastEncoderCount = ();
+        resetDriveEncoders();
+        //Notes: We are using Andymark Neverrest 40
+        // 1120 counts per rev
+
+        if(pow < 0)
+        {
+            inches *= -1;
+        }
+        if(inches < 0)
+        {
+            driveMotorsAuto(-absPow, -absPow);
+
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            {
+                // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
+                //add encoder counts set equal to current encoder counts and then break;
+            }
+        }
+        else
+        {
+            driveMotorsAuto(absPow, absPow);
+
+            while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
+        }
+
+        stopDriveMotors();
+    }
 }
