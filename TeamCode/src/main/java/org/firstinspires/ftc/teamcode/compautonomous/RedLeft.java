@@ -14,7 +14,9 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
- * Created by Alex on 12/30/2017.
+ * Red Left Scenario
+ * @author Alex M, Blake A
+ * @since 12/30/17
  */
 
 @Autonomous(name="RedLeft", group="compauto")
@@ -103,7 +105,7 @@ public class RedLeft extends LinearOpMode implements Settings {
 
         imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
-        // PSEUDO move backwards and slam into the wall
+        // move backwards and slam into the wall
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0); // move backwards
         sleep(firstStretch - 150);
         // turn counterclockwise

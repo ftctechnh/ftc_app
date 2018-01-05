@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
+ * Red Right Scenario
  * @author Alex Migala, Blake Abel
  * @since 12/30/17
  */
@@ -103,7 +104,7 @@ public class RedRight extends LinearOpMode implements Settings {
 
         imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
-        // PSEUDO move backwards and slam into the wall
+        // move backwards and slam into the wall
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0);
         sleep(forwardShort);
         this.drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), 1, 0);

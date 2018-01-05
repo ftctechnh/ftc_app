@@ -13,7 +13,9 @@ import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
 
 /**
- * Created by Alex on 12/30/2017.
+ * Blue Left Scenario
+ * @author Alex M, Blake A
+ * @since 12/30/2017
  */
 
 @Autonomous(name="BlueLeft", group="compauto")
@@ -106,7 +108,6 @@ public class BlueLeft extends LinearOpMode implements Settings{
 
         //imuWrapper.getIMU().initialize(imuWrapper.getIMU().getParameters());
 
-        //PSUEDO - THE TIME VALUES MUST BE CHANGED
         drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0);
         sleep(forwardShort);
 
