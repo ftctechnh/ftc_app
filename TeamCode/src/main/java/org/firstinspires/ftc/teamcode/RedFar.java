@@ -40,10 +40,10 @@ public class RedFar extends LinearOpMode {
         pictograph = Systems.getMark();
         sleep(500);
         drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  0, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
-        if (pictograph == RelicRecoveryVuMark.LEFT) {
+        if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
             drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
-        else if (pictograph == RelicRecoveryVuMark.CENTER || pictograph == RelicRecoveryVuMark.UNKNOWN) {
+        else if (pictograph == RelicRecoveryVuMark.CENTER) {
             drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {

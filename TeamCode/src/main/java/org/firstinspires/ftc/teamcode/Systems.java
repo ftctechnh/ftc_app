@@ -34,14 +34,14 @@ public class Systems {
     RelicRecoveryVuMark getMark() {
         RelicRecoveryVuMark vuMark;
         vuMark = vuforia.getMark();
-        int i = 0 ;
+        boolean triedAgain = false;
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            AutoDrive.driveTranslateRotate(0,0,-AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, -AutoDrive.FIND_VUMARK_DISTANCE);
+            AutoDrive.driveTranslateRotate(0,0,-AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.FIND_VUMARK_DISTANCE);
             vuMark = vuforia.getMark();
-            i++;
+            triedAgain = true;
         }
-        if (i>0) {
-            AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.FIND_VUMARK_DISTANCE * i);
+        if (triedAgain) {
+            AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.FIND_VUMARK_DISTANCE);
         }
         return vuMark;
     }
