@@ -42,7 +42,8 @@ public class MenuFileHandler {
     // all data here
     public boolean teamIsRed;
     public boolean startPositionIsFront;
-    public Integer mode,distance1,heading1,distance2,heading2,DriveSpeed;
+    public Integer mode,distance1,heading1,distance2,heading2;
+    public double DriveSpeed;
     public float BlueFrontDistance1,BlueFrontHeading1,BlueFrontTurn1,BlueFrontDistance2,BlueFrontHeading2;
     public float RedFrontDistance1,RedFrontHeading1,RedFrontTurn1,RedFrontDistance2,RedFrontHeading2;
     public float BlueBackDistance1,BlueBackHeading1,BlueBackDistance2,BlueBackHeading2,BlueBackTurn3,BlueBackDistance3,BlueBackHeading3 ;
@@ -113,11 +114,11 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[3] = "Drive Speed x10 ";
-            menuvalue[3] = -5;
+            menuvalue[3] = 5;
             menulowerlimit[3] =  0;
             menuupperlimit[3] = 10;
         }
-        DriveSpeed = menuvalue[3];
+        DriveSpeed = menuvalue[3]/10.0;
 
         if (init) {
             menulabel[4] = "RED Front Drive   1";

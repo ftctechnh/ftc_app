@@ -40,17 +40,17 @@ public class JewelArm {
     }
 
     public void jewelArmUp() {
-        jewelArmServo.setPosition(0.98);
+        jewelArmServo.setPosition(0.0);
         jewelflickerForward();
     }
 
     public void jewelArmDown() {
-        jewelArmServo.setPosition(0.45);
+        jewelArmServo.setPosition(0.55);
         jewelflickerCenter();
     }
 
     public void jewelflickerBack() {
-        jewelFlickerServo.setPosition(1.0);
+        jewelFlickerServo.setPosition(0.0);
     }
 
     public void jewelflickerCenter() {
@@ -58,7 +58,7 @@ public class JewelArm {
     }
 
     public void jewelflickerForward() {
-        jewelFlickerServo.setPosition(0.0);
+        jewelFlickerServo.setPosition(1.0);
     }
 
     public void solveJewelPuzzle(boolean teamIsRED) {
