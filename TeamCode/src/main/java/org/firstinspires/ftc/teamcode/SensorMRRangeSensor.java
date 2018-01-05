@@ -29,66 +29,51 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
- * algorithm for calculation of magnitude
- * for use with advanced mecanum drives
- * jlemke 9/26/2017 @ 7:26 AM
+ * {@link SensorMRRangeSensor} illustrates how to use the Modern Robotics
+ * Range Sensor.
+ *
+ * The op mode assumes that the range sensor is configured with a name of "sensor_range".
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ *
+ * @see <a href="http://modernroboticsinc.com/range-sensor">MR Range Sensor</a>
  */
+@Autonomous(name = "Sensor: MR range sensor", group = "Sensor")
+   // comment out or remove this line to enable this opmode
+public class SensorMRRangeSensor extends LinearOpMode {
 
-@TeleOp(name="Mecanum Magnitude Algorithm Concept", group="Concept")
-@Disabled
-public class ConceptAlgoMagnitude extends OpMode
-{
-    // move that gear up
+    //ModernRoboticsI2cRangeSensor rangeSensor;
     Hardware750 robot = new Hardware750();
-    // setup runtime timer
-    private ElapsedTime runtime = new ElapsedTime();
 
-    @Override
-    public void init() {
-        telemetry.addData("Status", "Uninitialized...");
+
+    public void innit() {
         robot.init(hardwareMap);
-        telemetry.addData("Status", "Initialized");
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
+    @Override public void runOpMode() {
+        innit();
 
-    @Override
-    public void start() {
-        runtime.reset();
-    }
+        // get a reference to our compass
+        //rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
-    @Override
-    public void loop() {
-        telemetry.addData("lstick X", gamepad1.left_stick_x);
-        telemetry.addData("lstick Y", (-1 * gamepad1.left_stick_y));
-        double presquare = Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2);
-        telemetry.addData("presquare", presquare);
-        double magnitude = ((-1 * gamepad1.left_stick_y) < 0) ? -1*Math.sqrt(presquare) : Math.sqrt(presquare);
-        telemetry.addData("magnitude", magnitude);
-        double angle = Math.atan2((-1*gamepad1.left_stick_y),gamepad1.left_stick_x);
-        if (angle < 0) {
-            angle += Math.PI*2;
+        // wait for the start button to be pressed
+        waitForStart();
+
+        while (opModeIsActive()) {
+            telemetry.addData("raw ultrasonic", robot.rangeSensor.rawUltrasonic());
+            telemetry.addData("raw optical", robot.rangeSensor.rawOptical());
+            telemetry.addData("cm optical", "%.2f cm", robot.rangeSensor.cmOptical());
+            telemetry.addData("cm", "%.2f cm", robot.rangeSensor.getDistance(DistanceUnit.INCH));
+            telemetry.update();
         }
-        telemetry.addData("ang le", angle);
-        telemetry.addData("number of pi", (angle / Math.PI));
     }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
-
 }

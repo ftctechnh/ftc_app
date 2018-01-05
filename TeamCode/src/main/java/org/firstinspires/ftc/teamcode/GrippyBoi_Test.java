@@ -32,63 +32,75 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /**
- * algorithm for calculation of magnitude
- * for use with advanced mecanum drives
- * jlemke 9/26/2017 @ 7:26 AM
+ * This file contains an opmode for test control of the block gripper.
+ *
+ * The gripper has like, 97 different things it should do and can cause
+ * weird issues based on how the magnets are holding the cables and will
+ * probably break
+ *
+ * haha mechanical engineers make me cry :')
+ *
+ * @author jlemke
+ * @version disaster
  */
 
-@TeleOp(name="Mecanum Magnitude Algorithm Concept", group="Concept")
-@Disabled
-public class ConceptAlgoMagnitude extends OpMode
+@TeleOp(name="Grippy Boi Test", group="testmode")
+public class GrippyBoi_Test extends OpMode
 {
-    // move that gear up
-    Hardware750 robot = new Hardware750();
-    // setup runtime timer
+    // Declare OpMode members.
+    DcMotor gripper = null;
+
+    //Hardware750 robot = new Hardware750();
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {
         telemetry.addData("Status", "Uninitialized...");
-        robot.init(hardwareMap);
+        //robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
     @Override
     public void init_loop() {
+
     }
 
     @Override
     public void start() {
+        gripper = hardwareMap.get(DcMotor.class, "gripper");
         runtime.reset();
     }
 
     @Override
     public void loop() {
-        telemetry.addData("lstick X", gamepad1.left_stick_x);
-        telemetry.addData("lstick Y", (-1 * gamepad1.left_stick_y));
-        double presquare = Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2);
-        telemetry.addData("presquare", presquare);
-        double magnitude = ((-1 * gamepad1.left_stick_y) < 0) ? -1*Math.sqrt(presquare) : Math.sqrt(presquare);
-        telemetry.addData("magnitude", magnitude);
-        double angle = Math.atan2((-1*gamepad1.left_stick_y),gamepad1.left_stick_x);
-        if (angle < 0) {
-            angle += Math.PI*2;
+        if (gamepad1.a) {
+            gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            telemetry.addData("ZPB", "FLOATING");
         }
-        telemetry.addData("ang le", angle);
-        telemetry.addData("number of pi", (angle / Math.PI));
+        if (gamepad1.b) {
+            gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            telemetry.addData("ZPB", "BRAKING");
+        }
+        if (gamepad1.x) {
+            gripper.setPower(0.5);
+        } else if (gamepad1.y){
+            gripper.setPower(-0.5);
+        }
+        else {
+            gripper.setPower(0);
+        }
+
+        telemetry.addData("current grip loc", gripper.getCurrentPosition());
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
     @Override
     public void stop() {
+
     }
 
 }

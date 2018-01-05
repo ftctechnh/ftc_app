@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import static java.lang.Double.NaN;
 
 /**
  * concept for reworked adv. mecanum drive
@@ -20,8 +19,7 @@ import static java.lang.Double.NaN;
  */
 
 @TeleOp(name="Mecanum Rework", group="TeleOp")
-public class MecanumRework extends OpMode
-{
+public class MecanumRework extends OpMode {
     Hardware750 robot = new Hardware750();
     private ElapsedTime runtime = new ElapsedTime();
     // declare class locals for loop
@@ -30,9 +28,15 @@ public class MecanumRework extends OpMode
     double rotate = 0;
     double gp1y;
     double[] voltageMultiplier = {0,0,0,0};
+    boolean isGripped = true;
+    boolean lastGripState = true;
+    double lastRuntime;
+    final double GRIPPER_POWER = .5;
+    double twitchTime = 0;
 
     @Override
     public void init() {
+        //robot.arm.setPosition(50);
         telemetry.addData("Status", "Uninitialized...");
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
@@ -78,15 +82,23 @@ public class MecanumRework extends OpMode
         // rotation magnitude
         if (gamepad1.left_bumper){
             rotate = gamepad1.left_trigger * -1;
-        } else {
+        } else  {
             rotate = gamepad1.left_trigger;
         }
+        // alternative rotation mag.
+        if (gamepad1.right_stick_x != 0){
+            rotate = gamepad1.right_stick_x;
+        }
+
+
         //DEBUG: dump outputs
+        /*
         telemetry.addData("REQUIRED INFORMATION", "");
         telemetry.addData("speed:", speed);
         telemetry.addData("angle:", angle);
         telemetry.addData("angle (pi):", angle/Math.PI);
         telemetry.addData("rot. magnitude:", rotate);
+        */
         // calc voltage multipliers
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) {
             speed = 0;
@@ -101,11 +113,13 @@ public class MecanumRework extends OpMode
             }
         }
         //DEBUG: voltage multiplier output
+        /*
         telemetry.addData("VOLTAGE MULTIPLIERS (unnormalized)", "");
         telemetry.addData("VM1", voltageMultiplier[0]);
         telemetry.addData("VM2", voltageMultiplier[1]);
         telemetry.addData("VM3", voltageMultiplier[2]);
         telemetry.addData("VM4", voltageMultiplier[3]);
+        */
         // begin normalization process
         // store the biggest voltage multiplier
         double topStore = 1;
@@ -121,18 +135,48 @@ public class MecanumRework extends OpMode
         for (int x = 0; x < 4; x++) {
             voltageMultiplier[x] /= topStore;
         }
-
+        /*
         telemetry.addData("VOLTAGE MULTIPLIERS (normalized)", "");
         telemetry.addData("VM1", voltageMultiplier[0]);
         telemetry.addData("VM2", voltageMultiplier[1]);
         telemetry.addData("VM3", voltageMultiplier[2]);
         telemetry.addData("VM4", voltageMultiplier[3]);
-
+        */
         if (gamepad1.b) {
-            for (int i = 1; i < 4; i++) {
+            for (int i = 0; i < 4; i++) {
                 voltageMultiplier[i] = 0;
             }
         }
+
+        if(gamepad1.y){
+            robot.arm.setPosition(1); // outwards
+        }
+        if(gamepad1.x){
+            robot.arm.setPosition(0.4); // back up towards robot
+        }
+        // TODO: gripper implementation and locking setup
+
+        if (!(robot.limitTop.getState() && gamepad2.left_stick_y < 0)) {
+            robot.lift.setPower(gamepad2.left_stick_y / 2);
+        } else if (robot.limitTop.getState()) {
+            robot.lift.setPower(0);
+        }
+
+        // hold a to open gripper to limit.
+        // press b to unlock
+        if (gamepad2.a){
+            robot.gripper.setPower(-GRIPPER_POWER);
+            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        } else if (gamepad2.b){
+            robot.gripper.setPower(GRIPPER_POWER);
+            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        } else {
+            robot.gripper.setPower(0);
+        }
+
+        telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
+        telemetry.addData("gp2 y", gamepad2.left_stick_y);
+        telemetry.addData("top limiter", robot.limitTop.getState());
 
         robot.flDrive.setPower(voltageMultiplier[0]);
         robot.frDrive.setPower(voltageMultiplier[1]);
@@ -142,5 +186,9 @@ public class MecanumRework extends OpMode
 
     @Override
     public void stop() {
+    }
+
+    private void toggleGrip(){
+        isGripped = !isGripped;
     }
 }
