@@ -44,8 +44,8 @@ public class MasterHardwareClass {
     double ClawPower = 0;
 
     /* Define values used in commanding the claw */
-    static double clawClose = .4;
-    static double clawOpen = -.4;
+    static double clawClose = .25;
+    static double clawOpen = -.25;
     static double clawStill = 0;
 
     /* Define values for teleop bumper control */
