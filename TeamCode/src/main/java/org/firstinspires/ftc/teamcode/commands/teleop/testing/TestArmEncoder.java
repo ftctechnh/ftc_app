@@ -50,9 +50,4 @@ public class TestArmEncoder extends OpMode{
         telemetry.addData("arm speed", this.armSystem.getArmMotorSpeed());
         telemetry.addData("arm position", this.armSystem.getArmEncoderPosition());
     }
-
-    @Override
-    public void stop() {
-        driveSystem.stop();
-    }
 }
