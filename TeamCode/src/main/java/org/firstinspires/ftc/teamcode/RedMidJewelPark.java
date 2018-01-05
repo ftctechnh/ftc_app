@@ -99,7 +99,7 @@ public class RedMidJewelPark extends OpMode{
                 break;
             case 5:
                 gilgearmesh.armPos(25,.6);
-                robot.pivotTurn(.5, 30, RobotDirection.LEFT);
+                robot.pivotTurn(.5, 60, RobotDirection.LEFT);
                 robot.linearDrive(.25,20);
                 stateMachineFlow++;
                 break;

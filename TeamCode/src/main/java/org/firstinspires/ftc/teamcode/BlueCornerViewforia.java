@@ -29,10 +29,6 @@ public class BlueCornerViewforia extends OpMode{
 
 
     VuforiaLocalizer vuforia;
-    int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-    VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-    VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
 
     @Override
@@ -49,11 +45,6 @@ public class BlueCornerViewforia extends OpMode{
         telemetry.addData("after init","here");
         telemetry.update();
 
-        parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         //code for gripping glyph and moving arm slightly up
         //gilgearmesh.clawPos(1);
@@ -147,7 +138,6 @@ public class BlueCornerViewforia extends OpMode{
                 stateMachineFlow++;
                 break;
             case 6:
-                VuforiaLocalizer vuforia;
                 int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
                 VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
                 parameters.vuforiaLicenseKey = "Ab47Iov/////AAAAGVSivzkE2UEEoiMKAm72knw+f69pC3+FWtnwmp26yNKLBnQ7o48HaEaAIbAMmi4KE/YqAOa1hWE6uV+U5eOZyTSDhJOQQqMhHKtFymevtYLWk+CsXyFA4ipONM9Yfi06TN3sAJUDqqm3sWR8pWgTAvs2M/VoRDw9ZNwg1MzxZPmU5VVmr9ifsv0rGbcoE585jWH+jzTnnnxnRN+3i/AoE1nTthvv9KIq6ZSNpgR2hguJUcBv8B43gg122D0akqbG+pAIGp78TiMn5BZqciaHRSzvZV2JOcIMZzk5FPp96rn7sWhyHZMI5mpUpgA25CG8gTC8e+8NoxMyN277hid7VFubrb4VbsH5qUxDzfDCcmOV";
@@ -160,7 +150,7 @@ public class BlueCornerViewforia extends OpMode{
                 relicTrackables.activate();
 
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
-                while (vuMark == RelicRecoveryVuMark.UNKNOWN && getRuntime() < time + 5) {
+                while (vuMark == RelicRecoveryVuMark.UNKNOWN && getRuntime() < time + 3) {
                     vuMark = RelicRecoveryVuMark.from(relicTemplate);
                     //viewforia stuff goes here
                     if (vuMark == RelicRecoveryVuMark.CENTER){glyph = RelicRecoveryVuMark.CENTER;
@@ -180,7 +170,7 @@ public class BlueCornerViewforia extends OpMode{
                 break;
             case 7:
                 gilgearmesh.armPos(50,.6);
-                if (glyph == RelicRecoveryVuMark.CENTER){
+                if (glyph == RelicRecoveryVuMark.CENTER || glyph == RelicRecoveryVuMark.UNKNOWN){
                     robot.linearDrive(.25,-20);
                 }else if (glyph == RelicRecoveryVuMark.LEFT){
                     robot.linearDrive(.25,-17);
