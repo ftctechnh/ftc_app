@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp (name="okay", group="TeleOp")
+@TeleOp (name="relic claw", group="TeleOp")
 public class okay extends OpMode {
     private Servo thiccClaw1   = null;
     private Servo thiccClaw2   = null;
@@ -17,7 +17,7 @@ public class okay extends OpMode {
         telemetry.addData("Status", "Initialized");
     }
 
-    double CLOSE_POS = 0.12;
+    double CLOSE_POS = 0;
     double OPEN_POS = 0.75;
     @Override
     public void loop() {
