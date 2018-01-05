@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right", group="Bacon Autonomous!")
+@Autonomous(name="Blue Right", group="Old Auto")
 //@Disabled
 public class FinalBlueRight extends LinearOpMode
 {
@@ -435,10 +435,73 @@ jewel and then return the color sensor arm back up */
         return correction;
     }
 
-    /**
-     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
-     * @param degrees Degrees to turn, + is left - is right
-     */
+//    /**
+//     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+//     * @param degrees Degrees to turn, + is left - is right
+//     */
+
+    /* This method is used to have the robot rotate to a desired heading that is defined throughout the code*/
+    private void RotateTo(int targetHeading) throws InterruptedException {
+        /* declare values and define constant values*/
+        int robotHeading = 0;
+        int headingError;
+        double r = 0;
+        int opModeLoopCount = 0;
+
+        headingError = 1;
+
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && (headingError != 0)) {
+            // get the heading info.
+            // the Modern Robotics' gyro sensor keeps
+            // track of the current heading for the Z axis only.
+            robotHeading = gyroGetHeading();
+            // adjust heading to match unit circle
+            //       Modern Robotics gyro heading increases CW
+            //       unit circle increases CCW
+            if (robotHeading != 0) {
+                robotHeading = 360 - robotHeading;
+            }
+
+            // if heading not desired heading rotate left or right until they match
+            headingError = targetHeading - robotHeading;
+
+            if (headingError != 0) {
+                if (headingError < -180) {
+                    headingError = headingError + 360;
+                } else if (headingError > 180) {
+                    headingError = headingError - 360;
+                }
+                // avoid overflow to motors
+                //    headingError is -180 to 180
+                //    divide by 180 to make -1 to 1
+                r = (double) headingError / 180.0;
+
+                // ensure minimal power to move robot
+                if ((r < .07) && (r > 0)) {
+                    r = .07;
+                } else if ((r > -.07) && (r < 0)) {
+                    r = -.07;
+                }
+
+                // Set power on each wheel
+                frontLeftMotor.setPower(r);
+                frontRightMotor.setPower(r);
+                backLeftMotor.setPower(r);
+                backRightMotor.setPower(r);
+            } else {
+                wheelsOff();
+            }
+            opModeLoopCount = opModeLoopCount + 1;
+        }
+    }
+
+    private int gyroGetHeading(){
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        return Math.round(angles.firstAngle);
+    }
+
     private void rotate(int degrees, double power)
     {
         double  leftPower, rightPower;

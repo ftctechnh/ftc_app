@@ -20,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Left", group="Old Auto")
+@Autonomous(name="Blue Right w/ RS", group="Bacon Autonomous!")
 //@Disabled
-public class FinalBlueLeft extends LinearOpMode
+public class FinalBlueRightWithRS extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -174,17 +174,16 @@ public class FinalBlueLeft extends LinearOpMode
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        /* Move forward into the triangle */
-        movebytime(650, .3, "Forward");
+
+        movebytime(1560, .3, "Forward");
+
+
+        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
+        account for the slight slippage after powering off the wheels */
+        rotate(87, .2);
 
         /* Wait a moment to stop moving */
-        sleep(500);
-
-        /* Center onto the triangle */
-        movebytime(1020, .3, "Right");
-
-        /* Wait a moment to stop moving */
-        sleep(500);
+        sleep(700);
 
         /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -206,28 +205,25 @@ public class FinalBlueLeft extends LinearOpMode
                 break;
         }
 
-        /* Wait a moment to stop moving */
-        sleep(500);
+        /* Wait a moment */
+        sleep(700);
 
         /* Move forward slightly so the block is in the space */
-        movebytime(350, .2, "Forward");
-//
-//        /* Wait a moment */
-//        sleep(500);
+        movebytime(300, .2, "Forward");
 
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Open up the claw to release the block */
         clawServo.setPower(clawOpen);
 
-        /* Let the claw open */
-        sleep(2500);
+        /* Let the claw */
+        sleep(1200);
 
         /* Stop the claw */
         clawServo.setPower(clawStill);
 
         /* Wait a moment */
-        sleep(1200);
+        sleep(200);
 
         /* Back up a small bit */
         movebytime(200, .2, "Backward");
@@ -438,10 +434,73 @@ jewel and then return the color sensor arm back up */
         return correction;
     }
 
-    /**
-     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
-     * @param degrees Degrees to turn, + is left - is right
-     */
+//    /**
+//     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+//     * @param degrees Degrees to turn, + is left - is right
+//     */
+
+    /* This method is used to have the robot rotate to a desired heading that is defined throughout the code*/
+    private void RotateTo(int targetHeading) throws InterruptedException {
+        /* declare values and define constant values*/
+        int robotHeading = 0;
+        int headingError;
+        double r = 0;
+        int opModeLoopCount = 0;
+
+        headingError = 1;
+
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && (headingError != 0)) {
+            // get the heading info.
+            // the Modern Robotics' gyro sensor keeps
+            // track of the current heading for the Z axis only.
+            robotHeading = gyroGetHeading();
+            // adjust heading to match unit circle
+            //       Modern Robotics gyro heading increases CW
+            //       unit circle increases CCW
+            if (robotHeading != 0) {
+                robotHeading = 360 - robotHeading;
+            }
+
+            // if heading not desired heading rotate left or right until they match
+            headingError = targetHeading - robotHeading;
+
+            if (headingError != 0) {
+                if (headingError < -180) {
+                    headingError = headingError + 360;
+                } else if (headingError > 180) {
+                    headingError = headingError - 360;
+                }
+                // avoid overflow to motors
+                //    headingError is -180 to 180
+                //    divide by 180 to make -1 to 1
+                r = (double) headingError / 180.0;
+
+                // ensure minimal power to move robot
+                if ((r < .07) && (r > 0)) {
+                    r = .07;
+                } else if ((r > -.07) && (r < 0)) {
+                    r = -.07;
+                }
+
+                // Set power on each wheel
+                frontLeftMotor.setPower(r);
+                frontRightMotor.setPower(r);
+                backLeftMotor.setPower(r);
+                backRightMotor.setPower(r);
+            } else {
+                wheelsOff();
+            }
+            opModeLoopCount = opModeLoopCount + 1;
+        }
+    }
+
+    private int gyroGetHeading(){
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        return Math.round(angles.firstAngle);
+    }
+
     private void rotate(int degrees, double power)
     {
         double  leftPower, rightPower;

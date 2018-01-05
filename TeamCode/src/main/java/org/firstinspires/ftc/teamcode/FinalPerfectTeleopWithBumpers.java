@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
+ * ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
 @TeleOp(name = "♪ ♥ Drive Mode 1 (nonlinear bumpers) ♥  ♪", group = "Our Teleop")
 //@Disabled
@@ -52,21 +52,21 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         /* Servo Control */
             if (gamepad2.x) {
                 if (robot.ClawPower != robot.clawClose) {
-                    robot.clawServo.setPower(robot.clawClose);
+                    robot.clawMotor.setPower(robot.clawClose);
                     robot.ClawPower = robot.clawClose;
                 }
             }
 
             if (gamepad2.b) {
                 if (robot.ClawPower != robot.clawOpen) {
-                    robot.clawServo.setPower(robot.clawOpen);
+                    robot.clawMotor.setPower(robot.clawOpen);
                     robot.ClawPower = robot.clawOpen;
                 }
             }
 
             if (!gamepad2.b && !gamepad2.x) {
                 if (robot.ClawPower != robot.clawStill) {
-                    robot.clawServo.setPower(robot.clawStill);
+                    robot.clawMotor.setPower(robot.clawStill);
                     robot.ClawPower = robot.clawStill;
                 }
             }
@@ -95,7 +95,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                     }
                 }
             }
-        /* Rotational Drive Control */
+    /* Rotational Drive Control */
             if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
                 double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
@@ -164,7 +164,6 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
 
                     setWheelPower(frontLeft, frontRight, backLeft, backRight);
                 } else {
-
                     if (gamepad1.right_bumper) {
                         double GLY = -gamepad1.left_stick_y / robot.bumperFastest;
                         double GRX = gamepad1.right_stick_x / robot.bumperFastest;
@@ -183,7 +182,6 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                         setWheelPower(frontLeft, frontRight, backLeft, backRight);
 
                     } else {
-
                         double GLY = -gamepad1.left_stick_y / robot.nobumper;
                         double GRX = gamepad1.right_stick_x / robot.nobumper;
                         double GLX = gamepad1.left_stick_x / robot.nobumper;
@@ -205,6 +203,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             }
         }
     }
+
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
@@ -219,10 +218,10 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         double backRight;
 
         /* Initialize the powers with the values input whenever this method is called */
-        frontLeft   =   fl;
-        frontRight  =   fr;
-        backLeft    =   bl;
-        backRight   =   br;
+        frontLeft = fl;
+        frontRight = fr;
+        backLeft = bl;
+        backRight = br;
 
         /* set each wheel to the power indicated whenever this method is called */
         if (robot.FrontLeftPower != frontLeft) {
@@ -239,7 +238,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         }
         if (robot.BackRightPower != backRight)
             robot.backRightMotor.setPower(br);
-            robot.BackRightPower = backRight;
+        robot.BackRightPower = backRight;
     }
 
 
@@ -277,7 +276,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         }
     }
 
-    public void moveXAxis(double x){
+    public void moveXAxis(double x) {
 
         double frontLeft;
         double frontRight;

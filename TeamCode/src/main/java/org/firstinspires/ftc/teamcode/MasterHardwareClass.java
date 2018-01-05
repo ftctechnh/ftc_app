@@ -30,7 +30,7 @@ public class MasterHardwareClass {
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
-    public CRServo clawServo = null;
+    public DcMotor clawMotor = null;
     public Servo gemServo;
     public BNO055IMU imu;
     public ModernRoboticsI2cGyro gyro;
@@ -44,8 +44,8 @@ public class MasterHardwareClass {
     double ClawPower = 0;
 
     /* Define values used in commanding the claw */
-    static double clawClose = .5;
-    static double clawOpen = -.5;
+    static double clawClose = .4;
+    static double clawOpen = -.4;
     static double clawStill = 0;
 
     /* Define values for teleop bumper control */
@@ -77,10 +77,10 @@ public class MasterHardwareClass {
         backLeftMotor = hwMap.dcMotor.get("BL");
         backRightMotor = hwMap.dcMotor.get("BR");
         verticalArmMotor = hwMap.dcMotor.get("VAM");
-        clawServo =  hwMap.crservo.get("CS");
+        clawMotor = hwMap.dcMotor.get("CM");
         gemServo = hwMap.servo.get("gemservo");
+
         imu = hwMap.get(BNO055IMU.class, "imu");
-        gyro = (ModernRoboticsI2cGyro) hwMap.gyroSensor.get("G");
 
         // Set all hardware to default position
         frontLeftMotor.setPower(0);
@@ -88,11 +88,11 @@ public class MasterHardwareClass {
         backLeftMotor.setPower(0);
         backRightMotor.setPower(0);
         verticalArmMotor.setPower(0);
-        clawServo.setPower(0);
+        clawMotor.setPower(0);
 
         /* Reverse the direction of the front right and back right motors */
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+//        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+//        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set proper encoder state for all motor
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

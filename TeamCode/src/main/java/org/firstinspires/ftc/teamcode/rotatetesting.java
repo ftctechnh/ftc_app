@@ -20,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Left", group="Old Auto")
+@Autonomous(name="rotatingtest", group="Bacon Autonomous!")
 //@Disabled
-public class FinalBlueLeft extends LinearOpMode
+public class rotatetesting extends LinearOpMode
 {
   /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -49,8 +49,7 @@ public class FinalBlueLeft extends LinearOpMode
     VuforiaLocalizer vuforia;
 
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
 
 
     /* To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);*/
@@ -80,7 +79,7 @@ public class FinalBlueLeft extends LinearOpMode
         verticalArmMotor = hardwareMap.dcMotor.get("VAM");
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
-        clawServo =  hardwareMap.crservo.get("CS");
+        clawServo = hardwareMap.crservo.get("CS");
 
     /* Reverse the direction of the front right and back right motors */
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -95,10 +94,10 @@ public class FinalBlueLeft extends LinearOpMode
     /* Set parameters for the gyro (imu)*/
         BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
 
-        imuparameters.mode                = BNO055IMU.SensorMode.IMU;
-        imuparameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        imuparameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imuparameters.loggingEnabled      = false;
+        imuparameters.mode = BNO055IMU.SensorMode.IMU;
+        imuparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imuparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuparameters.loggingEnabled = false;
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
@@ -120,8 +119,7 @@ public class FinalBlueLeft extends LinearOpMode
         telemetry.update();
 
     /* Make sure the imu gyro is calibrated before continuing */
-        while (!isStopRequested() && !imu.isGyroCalibrated())
-        {
+        while (!isStopRequested() && !imu.isGyroCalibrated()) {
             sleep(50);
             idle();
         }
@@ -133,109 +131,87 @@ public class FinalBlueLeft extends LinearOpMode
         // wait for start button.
         waitForStart();
 
-        relicTrackables.activate();
+        while (opModeIsActive()) {
 
-        /* Let the team know wassup */
-        telemetry.addLine("Ayyy, I'm running");
-        telemetry.update();
-
-        /* Power the claw to have a grip on the block */
-        clawServo.setPower(clawClose);
-
-        /* Move the claw up so it doesn't dig into the ground coming off the balance board */
-        moveclawbytime(500,.5,"Up");
-
-        /* Put the servo color arm down */
-        gemServo.setPosition(xPosDown);
-        sleep(1500);
-
-        /* Knock of the Red jewel */
-        knockjewelBlue();
-
-        /* Rotate so the phone can see the Vuforia Key */
-        rotate(10,.2);
-
-        /* Tells vuforia to look for relic templates, if it finds something, then it returns
-        LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-        /* If "vuMark" is something other than UNKNOWN */
-        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-            /* Send telemetry saying what vuforia sees */
-            telemetry.addData("Ayyy I see", vuMark);
+            if(gamepad1.dpad_up){
+                RotateTo(0);
+            }
+            if(gamepad1.dpad_left){
+                RotateTo(90);
+            }
+            if(gamepad1.dpad_right){
+                RotateTo(180);
+            }
+            if(gamepad1.dpad_down){
+                RotateTo(270);
+            }
         }
-        telemetry.update();
-
-        /* Return to starting position */
-        rotate(-10, .2);
-
-        /* Wait a moment and let vuforia do its work and for the robot to realign properly */
-        sleep(500);
-
-        //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        /* Move forward into the triangle */
-        movebytime(650, .3, "Forward");
-
-        /* Wait a moment to stop moving */
-        sleep(500);
-
-        /* Center onto the triangle */
-        movebytime(1020, .3, "Right");
-
-        /* Wait a moment to stop moving */
-        sleep(500);
-
-        /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
-
-        /* Switch case based on what vuMark we see */
-        switch (vuMark){
-            case LEFT:
-                /* Drive forward into the left position */
-                movebytime(500,.3,"Left");
-                break;
-            case RIGHT:
-                /* Drive forward into the right position */
-                movebytime(500, .3, "Right");
-                break;
-            case CENTER:
-                /* Drive forward into the center position */
-                break;
-            case UNKNOWN:
-                /* Drive forward into the center position just cuz i said so */
-                break;
-        }
-
-        /* Wait a moment to stop moving */
-        sleep(500);
-
-        /* Move forward slightly so the block is in the space */
-        movebytime(350, .2, "Forward");
-//
-//        /* Wait a moment */
-//        sleep(500);
-
-        ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        /* Open up the claw to release the block */
-        clawServo.setPower(clawOpen);
-
-        /* Let the claw open */
-        sleep(2500);
-
-        /* Stop the claw */
-        clawServo.setPower(clawStill);
-
-        /* Wait a moment */
-        sleep(1200);
-
-        /* Back up a small bit */
-        movebytime(200, .2, "Backward");
     }
-
 /***********************************************************************************************
  * These are all of the methods used in the Autonomous*
  ***********************************************************************************************/
+
+/* This method is used to have the robot rotate to a desired heading that is defined throughout the code*/
+private void RotateTo(int targetHeading) throws InterruptedException {
+        /* declare values and define constant values*/
+    int robotHeading = 0;
+    int headingError;
+    double r = 0;
+    int opModeLoopCount = 0;
+
+    headingError = 1;
+
+    // keep looping while we are still active, and not on heading.
+    while (opModeIsActive() && (headingError != 0)) {
+        // get the heading info.
+        // the Modern Robotics' gyro sensor keeps
+        // track of the current heading for the Z axis only.
+        robotHeading = gyroGetHeading();
+        // adjust heading to match unit circle
+        //       Modern Robotics gyro heading increases CW
+        //       unit circle increases CCW
+        if (robotHeading != 0) {
+            robotHeading = 360 - robotHeading;
+        }
+
+        // if heading not desired heading rotate left or right until they match
+        headingError = targetHeading - robotHeading;
+
+        if (headingError != 0) {
+            if (headingError < -180) {
+                headingError = headingError + 360;
+            } else if (headingError > 180) {
+                headingError = headingError - 360;
+            }
+            // avoid overflow to motors
+            //    headingError is -180 to 180
+            //    divide by 180 to make -1 to 1
+            r = (double) headingError / 180.0;
+
+            // ensure minimal power to move robot
+            if ((r < .07) && (r > 0)) {
+                r = .07;
+            } else if ((r > -.07) && (r < 0)) {
+                r = -.07;
+            }
+
+            // Set power on each wheel
+            frontLeftMotor.setPower(r);
+            frontRightMotor.setPower(r);
+            backLeftMotor.setPower(r);
+            backRightMotor.setPower(r);
+        } else {
+            wheelsOff();
+        }
+        opModeLoopCount = opModeLoopCount + 1;
+    }
+}
+
+    private int gyroGetHeading(){
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        return Math.round(angles.firstAngle);
+    }
 
 
 /* This method moves the claw up or down for a certain amount of time either up or down */

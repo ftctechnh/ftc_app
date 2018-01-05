@@ -35,9 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 /**
  ☺ yey this works ☺
  */
-@TeleOp(name = "♪ ♥ Drive Mode 2 ♥  ♪", group = "Concept")
+@TeleOp(name = "♪ ♥ Drive Mode 2 (linear) ♥  ♪", group = "Our Teleop")
 //@Disabled
-public class WheelDrive extends LinearOpMode {
+public class FinalPerfectTeleopLinear extends LinearOpMode {
 
     /* this says use ArmHardwareClass */
 MasterHardwareClass robot = new MasterHardwareClass();
@@ -83,21 +83,21 @@ MasterHardwareClass robot = new MasterHardwareClass();
         /* Servo Control */
             if (gamepad2.x) {
                 if (robot.ClawPower != robot.clawClose) {
-                    robot.clawServo.setPower(robot.clawClose);
+                    robot.clawMotor.setPower(robot.clawClose);
                     robot.ClawPower = robot.clawClose;
                 }
             }
 
             if (gamepad2.b) {
                 if (robot.ClawPower != robot.clawOpen) {
-                    robot.clawServo.setPower(robot.clawOpen);
+                    robot.clawMotor.setPower(robot.clawOpen);
                     robot.ClawPower = robot.clawOpen;
                 }
             }
 
             if (!gamepad2.b && !gamepad2.x) {
                 if (robot.ClawPower != robot.clawStill) {
-                    robot.clawServo.setPower(robot.clawStill);
+                    robot.clawMotor.setPower(robot.clawStill);
                     robot.ClawPower = robot.clawStill;
                 }
             }
