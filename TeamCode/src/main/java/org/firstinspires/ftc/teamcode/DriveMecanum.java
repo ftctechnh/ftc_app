@@ -48,11 +48,6 @@ public class DriveMecanum {
         driveSpeeds(yLeft - xLeft, yRight + xRight, yLeft + xLeft, yRight - xRight);
     }
 
-    public void driveLeftRight(double xLeft, double xRight, double yLeft, double yRight, long miliseconds) {
-        driveLeftRight(xLeft, xRight, yLeft, yRight);
-        sleep(miliseconds);
-        stop();
-    }
     public void swingRight() {
         driveSpeeds(0, 0, -1, 1);
     }

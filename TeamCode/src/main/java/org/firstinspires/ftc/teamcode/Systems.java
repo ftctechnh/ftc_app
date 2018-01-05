@@ -31,7 +31,7 @@ public class Systems {
         ForkLift.moveUntilDown(0.75);
         AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
     }
-    RelicRecoveryVuMark getMark() {
+    public RelicRecoveryVuMark getMark() {
         RelicRecoveryVuMark vuMark;
         vuMark = vuforia.getMark();
         boolean triedAgain = false;

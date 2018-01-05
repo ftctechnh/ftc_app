@@ -22,7 +22,7 @@ public class AutoDrive {
     double heading;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
+    final double SPIN_ON_BALANCE_BOARD_SPEED = 0.1;
     final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
     final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
     final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.6;

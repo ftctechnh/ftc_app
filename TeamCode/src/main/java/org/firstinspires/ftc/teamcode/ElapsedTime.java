@@ -9,10 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class ElapsedTime {
     private long startTime;
     private long currentTime;
-    private Telemetry telemetry;
-    ElapsedTime(Telemetry telemetry) {
-        this.telemetry = telemetry;
-    }
+    ElapsedTime () {}
     void start() {
         this.startTime = System.nanoTime();
     }
