@@ -93,6 +93,10 @@ public class Delta_TeleOp extends OpMode {
         glyphServoRight.setPosition(0.35);
         jewel_servo.setPosition(0.9);
 
+        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
+        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
+        telemetry.addData("jewel pos", jewel_servo.getPosition());
+        telemetry.update();
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
@@ -133,6 +137,10 @@ public class Delta_TeleOp extends OpMode {
         glyphManipulator();
         slideIncrement();
 
+        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
+        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
+        telemetry.addData("jewel pos", jewel_servo.getPosition());
+        telemetry.update();
 
     }
 
