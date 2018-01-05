@@ -1,6 +1,7 @@
 <component name="libraryTable">
   <library name="RobotCore-release:@aar">
     <CLASSES>
+<<<<<<< HEAD
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/ca56e21555168f94b2da722d4c2d0b00/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/ca56e21555168f94b2da722d4c2d0b00/jars/libs/Vuforia.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/ca56e21555168f94b2da722d4c2d0b00/jars/classes.jar!/" />
@@ -8,6 +9,15 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/ca56e21555168f94b2da722d4c2d0b00/jars/libs/gson-extras-0.2.1.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/ca56e21555168f94b2da722d4c2d0b00/jars/libs/support-annotations-23.4.0.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/ca56e21555168f94b2da722d4c2d0b00/jars/libs/javac.jar!/" />
+=======
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/779a6cf88df2c71ebae0599ee75fe1a6/jars/libs/javac.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/779a6cf88df2c71ebae0599ee75fe1a6/jars/libs/support-annotations-23.4.0.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/779a6cf88df2c71ebae0599ee75fe1a6/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/779a6cf88df2c71ebae0599ee75fe1a6/jars/libs/gson-extras-0.2.1.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/779a6cf88df2c71ebae0599ee75fe1a6/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/779a6cf88df2c71ebae0599ee75fe1a6/jars/libs/Vuforia.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/779a6cf88df2c71ebae0599ee75fe1a6/jars/libs/gson-2.8.0.jar!/" />
+>>>>>>> 2b2e8932265b2386f5981ef1aeea04b748772e57
     </CLASSES>
     <JAVADOC />
     <SOURCES>
