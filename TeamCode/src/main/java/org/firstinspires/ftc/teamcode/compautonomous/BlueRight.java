@@ -112,6 +112,9 @@ public class BlueRight extends LinearOpMode implements Settings{
         drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0);
         sleep(firstStretch);
 
+        robot.stopMoving();
+        sleep(1000);
+
         //telemetry.addData("FirstAngle", imuWrapper.getOrientation().firstAngle);
         //telemetry.update();
 
@@ -126,21 +129,26 @@ public class BlueRight extends LinearOpMode implements Settings{
 
         robot.stopMoving();
 
-        sleep(1000);
+        sleep(3000);
 
         switch (relicRecoveryVuMark) {
             case LEFT: telemetry.addData("Column", "Putting it in the left");
-                drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle() + 0.2, slamIntoWallSpeed, 0);
+                drivetrain.complexDrive(MecanumDrive.Direction.LEFT.angle(), slamIntoWallSpeed, 0);
+                sleep(sideShort);
                 break;
             case CENTER: telemetry.addData("Column", "Putting it in the center");
-                drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
                 break;
             case RIGHT: telemetry.addData("Column", "Putting it in the right");
-                drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle() - 0.2, slamIntoWallSpeed, 0);
+                drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), slamIntoWallSpeed, 0);
+                sleep(sideShort);
                 break;
-            default: drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
+            default:
                 break;
         }
+
+        telemetry.update();
+
+        drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
 
         sleep(5000);
 

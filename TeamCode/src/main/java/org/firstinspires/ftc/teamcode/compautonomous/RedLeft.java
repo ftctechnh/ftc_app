@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotplus.autonomous.VuforiaWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.ColorSensorWrapper;
+import org.firstinspires.ftc.teamcode.robotplus.hardware.GrabberPrimer;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.IMUWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
@@ -25,6 +26,7 @@ public class RedLeft extends LinearOpMode implements Settings {
     private MecanumDrive drivetrain;
     private IMUWrapper imuWrapper;
     private VuforiaWrapper vuforiaWrapper;
+    private GrabberPrimer grabberPrimer;
 
     private Servo armExtender;
     private Servo armRotator;
@@ -42,6 +44,7 @@ public class RedLeft extends LinearOpMode implements Settings {
         grabber = hardwareMap.servo.get("grabber");
         imuWrapper = new IMUWrapper(hardwareMap);
         vuforiaWrapper = new VuforiaWrapper(hardwareMap);
+        grabberPrimer = new GrabberPrimer(this.grabber);
 
         //Assuming other hardware not yet on the robot
         armRotator = hardwareMap.servo.get("armRotator");
@@ -53,11 +56,15 @@ public class RedLeft extends LinearOpMode implements Settings {
         armExtender.setPosition(1.0);
         armRotator.setPosition(0.5);
 
+        this.grabberPrimer.initGrabber();
+
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
         vuforiaWrapper.getLoader().getTrackables().activate();
 
         waitForStart();
+
+        this.grabberPrimer.grab();
 
         //STEP 1: Scan vuforia pattern
         relicRecoveryVuMark = RelicRecoveryVuMark.from(vuforiaWrapper.getLoader().getRelicTemplate());
