@@ -14,7 +14,6 @@ public class BlueFar extends LinearOpMode {
     private ForkLift ForkLift;
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
-    private String color;
     private Systems Systems;
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");

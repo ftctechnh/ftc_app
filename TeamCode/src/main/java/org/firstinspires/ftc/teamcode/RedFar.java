@@ -15,7 +15,6 @@ public class RedFar extends LinearOpMode {
     private ForkLift ForkLift;
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
-    private String color;
     private Systems Systems;
 
     public void runOpMode() throws InterruptedException {
