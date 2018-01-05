@@ -23,12 +23,8 @@ public class Presentation extends LinearOpMode {
         drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
         ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
         ForkLift.init();
-
-        //Translations:
-        drive.driveTranslateRotate(speed, 0, 0, (long) speed*400);
-        sleep((long) speed*2000);
-        drive.driveTranslateRotate(-speed, 0, 0, (long) speed*400);
-        sleep((long) speed*2000);
+        RelicClaw = new RelicClaw(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"),hardwareMap.digitalChannel.get("b2"), hardwareMap.digitalChannel.get("b3"), telemetry);
+        RelicClaw.init();
 
         //Forklift:
         ForkLift.openClaw();
@@ -39,5 +35,12 @@ public class Presentation extends LinearOpMode {
         ForkLift.moveUntilUp(speed);
         sleep((long) speed*2000);
         ForkLift.moveUntilDown(speed);
+
+        sleep((long) speed*4000);
+
+        //Driving:
+        RelicClaw.driving();
+        RelicClaw.moveMotor(-speed, 1500);
+
     }
 }
