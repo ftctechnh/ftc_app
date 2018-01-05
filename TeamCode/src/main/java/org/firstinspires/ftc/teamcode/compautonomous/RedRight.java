@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.compautonomous;
 
-import android.media.MediaActionSound;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -58,7 +56,7 @@ public class RedRight extends LinearOpMode implements Settings {
         armExtender.setPosition(1.0);
         armRotator.setPosition(0.5);
 
-        this.grabberPrimer.initGrabber();
+        this.grabberPrimer.initSystem();
 
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
@@ -107,11 +105,11 @@ public class RedRight extends LinearOpMode implements Settings {
 
         // PSEUDO move backwards and slam into the wall
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0);
-        sleep(firstStretch);
+        sleep(forwardShort);
         this.drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), 1, 0);
-        sleep(secondStretch);
+        sleep(sideShort);
         // turn clockwise
-        this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 0, 1);
+        this.drivetrain.complexDrive(0, 0, 0.5);
         sleep(2*rotate90);
         this.drivetrain.stopMoving();
         switch (relicRecoveryVuMark) {
@@ -120,5 +118,7 @@ public class RedRight extends LinearOpMode implements Settings {
             case RIGHT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle(), 1, 0); break;
             default: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0 ); break;
         }
+
+        this.grabberPrimer.open();
     }
 }

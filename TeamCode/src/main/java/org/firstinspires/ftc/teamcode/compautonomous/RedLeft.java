@@ -56,7 +56,7 @@ public class RedLeft extends LinearOpMode implements Settings {
         armExtender.setPosition(1.0);
         armRotator.setPosition(0.5);
 
-        this.grabberPrimer.initGrabber();
+        this.grabberPrimer.initSystem();
 
         colorSensorWrapper = new ColorSensorWrapper(hardwareMap);
 
@@ -105,10 +105,10 @@ public class RedLeft extends LinearOpMode implements Settings {
 
         // PSEUDO move backwards and slam into the wall
         this.drivetrain.complexDrive(MecanumDrive.Direction.DOWN.angle(), 1, 0); // move backwards
-        sleep(firstStretch);
+        sleep(firstStretch - 150);
         // turn counterclockwise
-        this.drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), 0, 1);
-        sleep(rotate90);
+        this.drivetrain.complexDrive(MecanumDrive.Direction.LEFT.angle(), 0, 0.5);
+        sleep(((3*rotate90) - 6));
         this.drivetrain.stopMoving();
         switch (relicRecoveryVuMark) {
             case LEFT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPLEFT.angle(), 1, 0); break;
@@ -116,5 +116,7 @@ public class RedLeft extends LinearOpMode implements Settings {
             case RIGHT: this.drivetrain.complexDrive(MecanumDrive.Direction.UPRIGHT.angle(), 1, 0); break;
             default: this.drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), 1, 0 ); break;
         }
+
+        this.grabberPrimer.open();
     }
 }

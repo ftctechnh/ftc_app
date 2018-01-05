@@ -68,6 +68,9 @@ public class BlueRight extends LinearOpMode implements Settings{
 
         waitForStart();
 
+        //grab the block before moving off balancing stone
+        grabber.setPosition(0);
+
         //STEP 1: Scan vuforia pattern
         relicRecoveryVuMark = RelicRecoveryVuMark.from(vuforiaWrapper.getLoader().getRelicTemplate());
 
@@ -97,9 +100,6 @@ public class BlueRight extends LinearOpMode implements Settings{
         telemetry.update();
 
         sleep(1000);
-
-        //grab the block before moving off balancing stone
-        grabber.setPosition(0);
 
         armExtender.setPosition(1);
         armRotator.setPosition(0.5);
@@ -133,14 +133,14 @@ public class BlueRight extends LinearOpMode implements Settings{
 
         switch (relicRecoveryVuMark) {
             case LEFT: telemetry.addData("Column", "Putting it in the left");
-                drivetrain.complexDrive(MecanumDrive.Direction.LEFT.angle(), slamIntoWallSpeed, 0);
-                sleep(sideShort);
+                drivetrain.complexDrive(MecanumDrive.Direction.LEFT.angle(), 0.75, 0);
+                sleep((long)(sideShort));
                 break;
             case CENTER: telemetry.addData("Column", "Putting it in the center");
                 break;
             case RIGHT: telemetry.addData("Column", "Putting it in the right");
-                drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), slamIntoWallSpeed, 0);
-                sleep(sideShort);
+                drivetrain.complexDrive(MecanumDrive.Direction.RIGHT.angle(), 0.75, 0);
+                sleep((long)(sideShort));
                 break;
             default:
                 break;
@@ -150,7 +150,7 @@ public class BlueRight extends LinearOpMode implements Settings{
 
         drivetrain.complexDrive(MecanumDrive.Direction.UP.angle(), slamIntoWallSpeed, 0);
 
-        sleep(5000);
+        sleep(2000);
 
         grabber.setPosition(1);
     }

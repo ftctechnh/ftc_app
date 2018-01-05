@@ -7,7 +7,7 @@ package org.firstinspires.ftc.teamcode.compautonomous;
  */
 public interface Settings {
     int firstStretch = 1400;
-    int forwardShort = 1240;
+    int forwardShort = 1050;
     int sideShort = 900;
     int secondStretch = 1000;
     int rotate90 = 549; //2196 for a full rotation
