@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.robotplus.gamepadwrapper.ControllerWrapper;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robotplus.hardware.Robot;
+import org.firstinspires.ftc.teamcode.robotplus.robodata.AccessControl;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -71,6 +72,8 @@ public class MainTeleOp extends OpMode
     private Servo grabber;
     private Servo armRotator;
     private Servo armExtender;
+
+    private AccessControl accessControl = new AccessControl();
 
     private boolean locking;
     private boolean returning;
@@ -126,8 +129,18 @@ public class MainTeleOp extends OpMode
     public void loop() {
 
         telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Access", accessControl.getTelemetryState());
 
-        drivetrain.complexDrive(gamepad1, telemetry);
+        if (accessControl.isG2Primary()) {
+            drivetrain.complexDrive(gamepad2, telemetry);
+        }
+        else {
+            drivetrain.complexDrive(gamepad1, telemetry);
+        }
+
+        if (gamepad1.guide || gamepad2.guide) {
+            accessControl.changeAccess();
+        }
 
         //Raise arm while the y button is held, lower it when a it held
         if(gamepad1.a){
