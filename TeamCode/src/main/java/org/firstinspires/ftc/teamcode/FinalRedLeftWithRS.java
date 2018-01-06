@@ -21,10 +21,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right w/ RS", group="Bacon Autonomous!")
+@Autonomous(name = "Red Left", group = "Bacon Autonomous!")
 //@Disabled
-public class FinalBlueRightWithRS extends LinearOpMode
-{
+public class FinalRedLeftWithRS extends LinearOpMode {
     /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
     DcMotor                 backLeftMotor;
@@ -150,17 +149,17 @@ public class FinalBlueRightWithRS extends LinearOpMode
         clawServo.setPower(clawClose);
 
         /* Move the claw up so it doesn't dig into the ground coming off the balance board */
-        moveclawbytime(500,.5,"Up");
+        moveclawbytime(500, .5, "Up");
 
         /* Put the servo color arm down */
         gemServo.setPosition(xPosDown);
         sleep(1500);
 
         /* Knock of the Red jewel */
-        knockjewelBlue();
+        knockjewelRed();
 
         /* Rotate so the phone can see the Vuforia Key */
-        rotate(10,.2);
+        rotate(10, .2);
 
         /* Tells vuforia to look for relic templates, if it finds something, then it returns
         LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
@@ -181,7 +180,8 @@ public class FinalBlueRightWithRS extends LinearOpMode
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        movebytime(1200, .3, "Forward");
+        /* Move backwards into the triangle */
+        movePowerDistanceDirectionSensor(.3, x, "Backward", "Front" );
 
         /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
         account for the slight slippage after powering off the wheels */
@@ -229,11 +229,8 @@ public class FinalBlueRightWithRS extends LinearOpMode
         /* Stop the claw */
         clawServo.setPower(clawStill);
 
-        /* Wait a moment */
-        sleep(200);
-
         /* Back up a small bit */
-        movebytime(200, .2, "Backward");
+        movebytime(300, .2, "Backward");
     }
 
     /***********************************************************************************************

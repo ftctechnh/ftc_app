@@ -21,9 +21,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right w/ RS", group="Bacon Autonomous!")
+@Autonomous(name="Red Right", group="Bacon Autonomous!")
 //@Disabled
-public class FinalBlueRightWithRS extends LinearOpMode
+public class FinalRedRightWithRS extends LinearOpMode
 {
     /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -157,7 +157,7 @@ public class FinalBlueRightWithRS extends LinearOpMode
         sleep(1500);
 
         /* Knock of the Red jewel */
-        knockjewelBlue();
+        knockjewelRed();
 
         /* Rotate so the phone can see the Vuforia Key */
         rotate(10,.2);
@@ -181,14 +181,19 @@ public class FinalBlueRightWithRS extends LinearOpMode
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        movebytime(1200, .3, "Forward");
+        /* Move backwards into the triangle */
+        movePowerDistanceDirectionSensor(.3, x, "Backward", "");
+
 
         /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
         account for the slight slippage after powering off the wheels */
-        rotate(87, .2);
+        rotate(177, .2);
 
         /* Wait a moment to stop moving */
         sleep(700);
+
+        /* Drive to center of cryptobox */
+        movePowerDistanceDirectionSensor(1560, .3, "Left", "");
 
         /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -217,7 +222,6 @@ public class FinalBlueRightWithRS extends LinearOpMode
 
         /* Move forward slightly so the block is in the space */
         movePowerDistanceDirectionSensor(.3, x, "Forward", "Front");
-
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Open up the claw to release the block */
@@ -229,11 +233,8 @@ public class FinalBlueRightWithRS extends LinearOpMode
         /* Stop the claw */
         clawServo.setPower(clawStill);
 
-        /* Wait a moment */
-        sleep(200);
-
         /* Back up a small bit */
-        movebytime(200, .2, "Backward");
+        movebytime(300, .2, "Backward");
     }
 
     /***********************************************************************************************

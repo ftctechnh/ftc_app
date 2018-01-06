@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
@@ -13,6 +16,8 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     /* This says use MasterHardwareClass */
     MasterHardwareClass robot = new MasterHardwareClass();
 
+    ModernRoboticsI2cRangeSensor rangeSensor;
+
     /*These values are used for the drive*/
     double frontLeft;
     double frontRight;
@@ -21,6 +26,9 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // get a reference to our compass
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        rangeSensor.initialize();
 
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
@@ -37,10 +45,9 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             telemetry.addData("Claw Opening Controls", "X is Close, B is Open");
             telemetry.addData("Claw Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
 
-            telemetry.addData("Front Left Power", robot.frontLeftMotor.getPower());
-            telemetry.addData("Front Right Power", robot.frontRightMotor.getPower());
-            telemetry.addData("Back Left Power", robot.backLeftMotor.getPower());
-            telemetry.addData("Back Right Power", robot.backRightMotor.getPower());
+            telemetry.addLine("Range Sensor Data");
+            telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
             telemetry.update();
 
         /* Set the arm up */

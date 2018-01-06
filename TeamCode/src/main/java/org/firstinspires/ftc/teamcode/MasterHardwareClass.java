@@ -33,7 +33,6 @@ public class MasterHardwareClass {
     public DcMotor clawMotor = null;
     public Servo gemServo;
     public BNO055IMU imu;
-    public ModernRoboticsI2cGyro gyro;
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;

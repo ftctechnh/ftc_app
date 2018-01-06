@@ -54,8 +54,6 @@ public class Range_Sensor extends LinearOpMode {
 
     ModernRoboticsI2cRangeSensor rangeSensor;
 
-    double i = 0;
-
     @Override public void runOpMode() {
 
         // Wait for the start button
@@ -76,10 +74,7 @@ public class Range_Sensor extends LinearOpMode {
 //            telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
             telemetry.addLine("Hi!");
             telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
-            telemetry.addData("What's i?", i);
             telemetry.update();
-            i = i + 1;
-
         }
     }
 }
