@@ -9,13 +9,26 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 public abstract class MeccyAutoMode extends MeccyMode{
+
+    PengwinFin pengwinFin;
+    PengwinWing pengwinWing;
+    double roationInches;
+
+
     //<editor-fold desc="Yay">
     abstract public void runOpMode();
     //
     static final double countify = 116.501;
+
+
     //</editor-fold>
     //
     //<editor-fold desc="Extraneous">
+
+    public void startify (){
+        pengwinFin = new PengwinFin(hardwareMap);
+        pengwinWing = new PengwinWing(hardwareMap);
+    }
     public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
         super.configureMotors();
         //
