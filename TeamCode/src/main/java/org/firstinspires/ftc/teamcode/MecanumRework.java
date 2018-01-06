@@ -32,7 +32,8 @@ public class MecanumRework extends OpMode {
     boolean lastGripState = true;
     double lastRuntime;
     final double GRIPPER_POWER = .5;
-    double twitchTime = 0;
+    double cooldown = 0;
+    boolean ejectorState = false;
 
     @Override
     public void init() {
@@ -174,7 +175,31 @@ public class MecanumRework extends OpMode {
             robot.gripper.setPower(0);
         }
 
+        try {
+            if (gamepad2.x) {
+                robot.clawMotor.setPower(0.25);
+            } else if (gamepad2.y) {
+                robot.clawMotor.setPower(-0.25);
+            } else {
+                robot.clawMotor.setPower(0);
+            }
+        } catch (Exception e) {}
+
+        if(gamepad2.right_bumper && runtime.seconds() > cooldown){
+            ejectorState = !ejectorState;
+            cooldown = runtime.seconds() + 1;
+
+        }
+
+        if(ejectorState){
+            robot.blockEjector.setPosition(1);
+        } else if (!ejectorState) {
+            robot.blockEjector.setPosition(0);
+        }
+
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
+        telemetry.addData("ZPB of Lift", robot.lift.getZeroPowerBehavior());
+        telemetry.addData("lift power", robot.lift.getPower());
         telemetry.addData("gp2 y", gamepad2.left_stick_y);
         telemetry.addData("top limiter", robot.limitTop.getState());
 

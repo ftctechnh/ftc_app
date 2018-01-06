@@ -30,12 +30,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 /**
@@ -57,6 +61,8 @@ public class Hardware750 {
     public DcMotor                      lift         = null;
     public DigitalChannel               limitTop     = null;
     public DigitalChannel               limitGripper = null; // limit open switch for gripper
+    public DcMotor                      clawMotor    = null; // rotator motor for relic claw
+    public Servo                        blockEjector = null; // he eject but he also attac
 
     // vuforia license key ;)
     public static final String VUF_LIC = "AbQfkoj/////AAAAGURTD1LwoUjKk6qgxygb/6QTHah6F5/HMfF99SDO7C7wnhjBctp6i+bm/mX4El1OTHR8wW0gGjoM4qNsfM3cgFiMDHE4/IBhgpc2siB6nwrgEVZbo3PwJ0xImdXvTSEfWn8Fc6g+svSUFb97VAyjVAEsOvMC+sSqpjIKEQLoCdbCpLRmnX+9socxkX5qix9OVb0xREGbTtddp2fwtLleMXMHxUwhsTc3q7vqD5LDK7Q8GxOaV9jyB6/3Y3T65qaWOGjlGo39Ts394+WTp4hqwqvuu0Gkztlk2e6IeJbN9sN1+8xb2XQllnrHeBhIXxaoES1MRkyjMHliwQxbRJv8kwPeY9q/AsOA/dUy1x87iZLp";
@@ -85,6 +91,12 @@ public class Hardware750 {
         limitTop.setMode(DigitalChannel.Mode.INPUT);
         limitGripper = hwMap.get(DigitalChannel.class, "limitGripper");
         limitGripper.setMode(DigitalChannel.Mode.INPUT);
+        try {
+            clawMotor = hwMap.get(DcMotor.class, "relicClaw");
+        } catch (Exception e){
+            System.out.println("Relic claw not connected! Handled it...");
+        }
+        blockEjector = hwMap.get(Servo.class, "blockEjector");
 
         flDrive = hwMap.get(DcMotor.class, "flDrive");
         frDrive = hwMap.get(DcMotor.class, "frDrive");
@@ -115,14 +127,20 @@ public class Hardware750 {
         // rem: this <i>may</i> cause issues with how the motor's speed
         // functions.
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        try {
+            clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        } catch (Exception e) {}
         // braking setting
         // FLOAT: do not actively resist external forces
         // BRAKE: actively resist external forces
         gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         // gravity-assisted. we want this to try and hold itself up.
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        try {
+            clawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        } catch (Exception e) {}
     }
+
 
     public void setAllDriveMotors(double requestedSpeed) {
         flDrive.setPower(requestedSpeed);
