@@ -4,9 +4,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Auto Blue Two", group="Linear Auto")
+@Autonomous(name="Auto Blue RelRec", group="Linear Auto")
 
-public class BlueTwoAuto extends AutoMaster {
+public class RelRecSideBlue extends AutoMaster {
     @Override
     public void runOpMode() {
         VuforiaPlagiarism vu = new VuforiaPlagiarism();
@@ -18,7 +18,7 @@ public class BlueTwoAuto extends AutoMaster {
         wait(500);
         robot.arm.setPosition(1);
         wait(750);
-        if (robot.color.red() > 1) {
+        if (robot.color.red() > 0) {
             encode(5, 0.25, MoveType.STRAIGHT);
         } else {
             encode(5, -0.25, MoveType.STRAIGHT);

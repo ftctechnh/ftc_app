@@ -29,8 +29,24 @@ public class Thing extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        VuforiaPlagiarism vu = new VuforiaPlagiarism();
-
-        encode(16, 0.5, MoveType.ROT);
+        boolean oldIsRed = false;
+        boolean newIsRed = false;
+        double red;
+        double blue;
+        while (opModeIsActive()) {
+            red = robot.color.red();
+            blue = robot.color.blue();
+            if (red > 0) {
+                oldIsRed = true;
+            }
+            if (red > blue) {
+                newIsRed = true;
+            }
+            telemetry.addData("Red: ", red);
+            telemetry.addData("Blue: ", blue);
+            telemetry.addData("Old way: ", oldIsRed);
+            telemetry.addData("New way: ", newIsRed);
+            telemetry.update();
+        }
     }
 }

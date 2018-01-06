@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
-@Autonomous(name="Auto Red Two", group="Linear Auto")
+@Autonomous(name="Auto Red RelRec", group="Linear Auto")
 
-public class RedTwoAuto extends AutoMaster {
+public class RelRecSideRed extends AutoMaster {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
@@ -21,7 +21,7 @@ public class RedTwoAuto extends AutoMaster {
         wait(500);
         robot.arm.setPosition(1);
         wait(750);
-        if (robot.color.red() > 1) {
+        if (robot.color.red() > 0) {
             encode(5, -0.25, MoveType.STRAIGHT);
         } else {
             encode(5, 0.25, MoveType.STRAIGHT);
