@@ -30,7 +30,7 @@ public class DriveTrain {
     public final double COUNTS_PER_INCH = (TICKS_REV * GEAR_RATIO) / (WHEEL_DIAMETER * 3.1415);
     public static final double turn_THRESHOLD = 1.0;
     public static final double drive_THRESHOLD = 1.0;
-    public static final double turn_MIN_SPEED = 0.3;
+    public static final double turn_MIN_SPEED = 0.2;
     public static final double turn_COEF = 0.90;
     public static final double drive_COEF = 1.0; //Maximum additional speed to add to a motor during a gyro drive
 
@@ -119,9 +119,9 @@ public class DriveTrain {
                 break;
             case SLOW:
                 // lookup slow speed parameter
-                speedMultiplier = 0.3;
+                speedMultiplier = 0.5;
                 break;
-            default:
+           default:
                 speedMultiplier = 1.0;
         }
         double lfpower;
@@ -154,7 +154,7 @@ public class DriveTrain {
             if (abs(rrpower) > max) max = abs(rrpower);
 
 //            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-        double multiplier = 0.5;
+        double multiplier = speedMultiplier;
         
             lfpower *= multiplier;
             lrpower *= multiplier;

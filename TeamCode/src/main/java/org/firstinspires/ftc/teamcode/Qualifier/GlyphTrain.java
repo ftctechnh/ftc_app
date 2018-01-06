@@ -77,13 +77,14 @@ public double pulleydiameter = 1;
         right_glyph.setPower(0.0);
     }
     void glyphclamp(String moveto){
+        double clampRange = 0.4;
         if( moveto == "open"){
-            leftlower.setPosition(0.50);
+            leftlower.setPosition(0.45);
             rightlower.setPosition(0.50); //glyph open
         }
         else if(moveto == "close"){
-            leftlower.setPosition(0.27);
-            rightlower.setPosition(0.65); //glyph open
+            leftlower.setPosition(0.45 - clampRange);
+            rightlower.setPosition(0.50 + clampRange);
         }
     }
 

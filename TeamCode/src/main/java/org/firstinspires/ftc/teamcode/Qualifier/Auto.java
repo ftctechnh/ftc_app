@@ -171,6 +171,13 @@ public class Auto extends LinearOpMode {
 //
 //            }
 
+            if (gamepad1.right_bumper) {
+                gromit.glyphTrain.glyphclamp("close");
+            }
+            if (gamepad1.right_trigger > 0.1) {
+                gromit.glyphTrain.glyphclamp("open");
+            }
+
             menuFile.displayValues();
             telemetry.update();
             idle();
@@ -243,12 +250,18 @@ public class Auto extends LinearOpMode {
         //clamp glyph
         //lift glyph
 
-        //  back  4, 14, 26
+
 
         if ( menuFile.teamIsRed && menuFile.startPositionIsFront ){                   /** RED Front  */
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.RedFrontDistance1, menuFile.RedFrontHeading1,0);
+            double distance1 = menuFile.RedFrontDistance1;
+            if (vuMark == RelicRecoveryVuMark.CENTER) {
+                distance1 = distance1 - 10 ;
+            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+                distance1 = distance1 - 19.0 ;
+            }
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, distance1, menuFile.RedFrontHeading1,0);
             gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2,0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.5, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2,0);
             gromit.glyphTrain.glyphclamp("open");
             sleep(200);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedFrontHeading2,0);
@@ -262,8 +275,8 @@ public class Auto extends LinearOpMode {
             sleep(200);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);
 
-        } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront ) {                 /** RED  Back  */
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
+        } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront ) {                 /** RED  Back  */    //  back  4, 14, 26
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
             double distance2 = menuFile.RedBackDistance2;
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 distance2 = distance2 + 10.0 ;
@@ -271,12 +284,12 @@ public class Auto extends LinearOpMode {
                 distance2 = distance2 + 22.0 ;
             }
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, -90);  //-90
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.5, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
             gromit.glyphTrain.glyphclamp  ("open");
             sleep(200);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedBackHeading3,0);
 
-        } else if ( !menuFile.teamIsRed && !menuFile.startPositionIsFront ){                 /** BLUE Back  */
+        } else if ( !menuFile.teamIsRed && !menuFile.startPositionIsFront ){                 /** BLUE Back  */     //  back  4, 14, 26
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  //0
             double distance2 = menuFile.BlueBackDistance2;
             if (vuMark == RelicRecoveryVuMark.CENTER) {

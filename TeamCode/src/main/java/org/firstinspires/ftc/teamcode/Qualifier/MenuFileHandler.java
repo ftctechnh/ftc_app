@@ -146,7 +146,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[7] = "RED Front Drive   2";
-            menuvalue[7] = -5;
+            menuvalue[7] = -9;
             menulowerlimit[7] = -50;
             menuupperlimit[7] =  50;
         }
@@ -186,7 +186,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[12] = "BLUE Front Drive   2";
-            menuvalue[12] = 5;
+            menuvalue[12] = -9;
             menulowerlimit[12] = -50;
             menuupperlimit[12] =  50;
         }
@@ -210,7 +210,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[15] = "RED Back Heading 1";
-            menuvalue[15] = 0;
+            menuvalue[15] = 2;
             menulowerlimit[15] = -180;
             menuupperlimit[15] =  180;
         }
@@ -218,7 +218,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[16] = "RED Back Drive   2";
-            menuvalue[16] = 4;
+            menuvalue[16] = 6;
             menulowerlimit[16] = -50;
             menuupperlimit[16] =  50;
         }
@@ -234,7 +234,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[18] = "RED Back Drive   3";
-            menuvalue[18] = -12;
+            menuvalue[18] = -9;
             menulowerlimit[18] = -50;
             menuupperlimit[18] =  50;
         }
@@ -466,7 +466,7 @@ public class MenuFileHandler {
 
         int indexstart = 4, indexend = 26;
 
-        for ( int i=0; i < 3; i++){                     // write out the list of variables
+        for ( int i=0; i < 4; i++){                     // write out the list of variables
             if (menuvaluetoken[i][1] != "" ) {                           // menu items that need tokens should be less than 5
 //                        if (menuupperlimit[i] < 5 ) {                           // menu items that need tokens should be less than 5
                     telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][menuvalue[i]] );

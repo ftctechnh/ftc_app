@@ -47,7 +47,7 @@ public class Teleop extends OpMode {
         timeLeft = 120 - runtime.seconds();
 
         //set drive speed
-        if (gamepad1.left_stick_button || gamepad1.right_stick_button)
+        if (gamepad1.left_bumper)
             gromit.driveTrain.setSpeedMode(FAST);
         else
             gromit.driveTrain.setSpeedMode(SLOW);
