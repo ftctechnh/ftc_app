@@ -20,10 +20,12 @@ public class RelRecSideRed extends AutoMaster {
         wait(500);
         robot.arm.setPosition(1);
         wait(750);
+        boolean i = false;
         if (robot.color.red() > 0) {
             encode(5, -0.25, MoveType.STRAIGHT);
         } else {
             encode(5, 0.25, MoveType.STRAIGHT);
+            i = true;
         }
         robot.arm.setPosition(0);
 
@@ -37,9 +39,13 @@ public class RelRecSideRed extends AutoMaster {
         } else {
             box = 22.05;
         } */
-        encode(25, -0.5, MoveType.LATERALLY);
-        encode(15, 0.5, MoveType.STRAIGHT);
+        encode(28, 0.5, MoveType.STRAIGHT);
+        encode(19, 0.5, MoveType.ROT);
+        if (!i) {
+            encode(15, -0.5, MoveType.LATERALLY);
+        }
         wait(500);
+        encode(8, 0.5, MoveType.STRAIGHT);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
