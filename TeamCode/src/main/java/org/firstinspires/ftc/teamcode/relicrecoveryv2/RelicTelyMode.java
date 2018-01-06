@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -9,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import java.util.Random;
 
 /**
  * Created by TPR on 12/14/17.
@@ -20,8 +26,11 @@ public class RelicTelyMode  extends MeccyMode{
     VuforiaLocalizer vuforia;
     OpenGLMatrix lastLocation = null;
     //
+    private Random randy = new Random();
+    //
     double degreeOfRobotPower = 1;
     DrivingAction drivingAction = DrivingAction.Driving;
+    //
     //<editor-fold desc="Controls"
     double leftX;
     double leftY;
@@ -40,7 +49,7 @@ public class RelicTelyMode  extends MeccyMode{
         //
         parameters.vuforiaLicenseKey = "AbxR5+T/////AAAAGR1YlvU/6EDzrJvG5EfPnXSFutoBr1aCusr0K3pKqPuWTBQsUb0mv5irjoX2Xf/GFvAvHyw8v1GBYgHwE+hNTcNj05kw3juX+Ur4l3HNnp5SfXV/8fave0xB7yVYZ/LBDraNnYXiuT+D/5iGfQ99PVVao3LI4uGUOvL9+3vbPqtTXLowqFJX5uE7R/W4iLmNqHgTCSzWcm/J1CzwWuOPD252FDE9lutdDVRri17DBX0C/D4mt6BdI5CpxhG6ZR0tm6Zh2uvljnCK6N42V5x/kXd+UrBgyP43CBAACQqgP6MEvQylUD58U4PeTUWe9Q4o6Xrx9QEwlr8v+pmi9nevKnmE2CrPPwQePkDUqradHHnU";
         //
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;//set camera (back)
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;//set camera (front)
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         //
         //Load ciphers:
@@ -57,6 +66,8 @@ public class RelicTelyMode  extends MeccyMode{
         //</editor-fold>
         //
         waitForStartify();
+        //
+        telemetry.log().clear();
         //
         relicTrackables.activate();
         //
@@ -118,7 +129,7 @@ public class RelicTelyMode  extends MeccyMode{
     }
     //
     private void telemetryJazz(RelicRecoveryVuMark vuMark) {
-        telemetry.addData("Unicorn Crossing", "Always a danger WATCH OUT");
+        telemetry.addData("Unicorn Crossing", randy.nextInt(1000000));
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             //
             telemetry.addData("VuMark", vuMark);
