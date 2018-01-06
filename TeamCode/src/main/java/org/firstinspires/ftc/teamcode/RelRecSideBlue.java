@@ -14,7 +14,6 @@ public class RelRecSideBlue extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        encode(15, 0.5, MoveType.LATERALLY);
         wait(500);
         robot.arm.setPosition(1);
         wait(750);

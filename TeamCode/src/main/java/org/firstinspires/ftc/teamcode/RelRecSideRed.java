@@ -17,7 +17,6 @@ public class RelRecSideRed extends AutoMaster {
         VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
         robot.init(hardwareMap);
         waitForStart();
-        encode(15, 0.5, MoveType.LATERALLY);
         wait(500);
         robot.arm.setPosition(1);
         wait(750);
