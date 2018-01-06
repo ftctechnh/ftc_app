@@ -39,6 +39,7 @@ public class MenuFileHandler {
     private String filePath = directoryPath + configFileName;
 
 
+
     // all data here
     public boolean teamIsRed;
     public boolean startPositionIsFront;
