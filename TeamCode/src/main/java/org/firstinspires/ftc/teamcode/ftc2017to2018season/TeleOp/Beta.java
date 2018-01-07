@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "Beta")
-//@Disabled
+@Disabled
 public class Beta extends OpMode {
 
     // Beta is the tester robot that Team Inspiration is using. This program is similar to Delta_TeleOp. It has a few changes.
