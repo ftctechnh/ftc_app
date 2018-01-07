@@ -15,36 +15,7 @@ public class TestStall extends LinearOpMode
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.initVuforia(hardwareMap);
         {
-            stopDriveMotors();
-            float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
-            //You get the number of encoder counts per unit and multiply it by how far you want to go
-
-            float absPow = (float)Math.abs(pow);
-            resetDriveEncoders();
-            //Notes: We are using Andymark Neverrest 40
-            // 1120 counts per rev
-
-            if(pow < 0)
-            {
-                inches *= -1;
-            }
-            if(inches < 0)
-            {
-                driveMotorsAuto(-absPow, -absPow);
-
-                while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
-                {
-                    // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                }
-            }
-            else
-            {
-                driveMotorsAuto(absPow, absPow);
-
-                while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
-            }
-
-            stopDriveMotors();
+            newRobot.driveStraight_In(20);
         }
     }
 }
