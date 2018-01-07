@@ -196,19 +196,19 @@ public class FinalBlueRightWithRS extends LinearOpMode
         switch (vuMark){
             case LEFT:
                 /* Drive rightwards into the left position */
-                movePowerDistanceDirectionSensor(.3, x,"Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20,"Right", "Side");
                 break;
             case RIGHT:
                 /* Drive rightwards into the right position */
-                movePowerDistanceDirectionSensor(.3, x,"Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20,"Right", "Side");
                 break;
             case CENTER:
                 /* Drive rightwards into the center position */
-                movePowerDistanceDirectionSensor(.3, x, "Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20, "Right", "Side");
                 break;
             case UNKNOWN:
                 /* Drive forward into the center position just cuz i said so */
-                movePowerDistanceDirectionSensor(.3, x, "Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20, "Right", "Side");
                 break;
         }
 
@@ -216,7 +216,7 @@ public class FinalBlueRightWithRS extends LinearOpMode
         sleep(700);
 
         /* Move forward slightly so the block is in the space */
-        movePowerDistanceDirectionSensor(.3, x, "Forward", "Front");
+        movePowerDistanceDirectionSensor(.3, 20, "Forward", "Front");
 
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 

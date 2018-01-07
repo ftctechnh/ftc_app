@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Red Right", group="Bacon Autonomous!")
+@Autonomous(name="Red Right w/ RS", group="Bacon Autonomous!")
 //@Disabled
 public class FinalRedRightWithRS extends LinearOpMode
 {
@@ -182,7 +182,7 @@ public class FinalRedRightWithRS extends LinearOpMode
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Move backwards into the triangle */
-        movePowerDistanceDirectionSensor(.3, x, "Backward", "");
+        movePowerDistanceDirectionSensor(.3, 20, "Backward", "");
 
 
         /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
@@ -201,19 +201,19 @@ public class FinalRedRightWithRS extends LinearOpMode
         switch (vuMark){
             case LEFT:
                 /* Drive rightwards into the left position */
-                movePowerDistanceDirectionSensor(.3, x,"Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20,"Right", "Side");
                 break;
             case RIGHT:
                 /* Drive rightwards into the right position */
-                movePowerDistanceDirectionSensor(.3, x,"Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20,"Right", "Side");
                 break;
             case CENTER:
                 /* Drive rightwards into the center position */
-                movePowerDistanceDirectionSensor(.3, x, "Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20, "Right", "Side");
                 break;
             case UNKNOWN:
                 /* Drive forward into the center position just cuz i said so */
-                movePowerDistanceDirectionSensor(.3, x, "Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 20, "Right", "Side");
                 break;
         }
 
@@ -221,7 +221,7 @@ public class FinalRedRightWithRS extends LinearOpMode
         sleep(700);
 
         /* Move forward slightly so the block is in the space */
-        movePowerDistanceDirectionSensor(.3, x, "Forward", "Front");
+        movePowerDistanceDirectionSensor(.3, 20, "Forward", "Front");
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Open up the claw to release the block */

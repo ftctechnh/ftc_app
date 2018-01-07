@@ -98,6 +98,7 @@ public class MasterHardwareClass {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 }

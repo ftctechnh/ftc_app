@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -23,6 +24,7 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     double frontRight;
     double backLeft;
     double backRight;
+    boolean trigger;
 
     @Override
     public void runOpMode() {
@@ -33,6 +35,10 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
 
+        /* Initialize the vertical arm encoder */
+        robot.verticalArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sleep(100);
+        robot.verticalArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Wait for the start button
         telemetry.addLine("!☻ Ready to Run ☻!");
         telemetry.update();
@@ -45,16 +51,15 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             telemetry.addData("Claw Opening Controls", "X is Close, B is Open");
             telemetry.addData("Claw Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
 
+            telemetry.addData("Encoder Data", robot.verticalArmMotor.getCurrentPosition());
+            telemetry.update();
+
             telemetry.addLine("Range Sensor Data");
             telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
-            telemetry.update();
 
-        /* Set the arm up */
-//            if (robot.gemServo.getPosition() != robot.xPosUp) {
-//                robot.gemServo.setPosition(robot.xPosUp);
-//           \ }
-            robot.gemServo.setPosition(robot.xPosUp);
+        /* Put the servo arm up */
+           robot.gemServo.setPosition(robot.xPosUp);
 
         /* Servo Control */
             if (gamepad2.x) {
@@ -102,67 +107,51 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                     }
                 }
             }
-    /* Rotational Drive Control */
-            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
-                double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
-
-                final double v1 = +GRX;
-                final double v2 = -GRX;
-                final double v3 = +GRX;
-                final double v4 = -GRX;
-
-                frontLeft = -v1;
-                frontRight = v2;
-                backLeft = -v3;
-                backRight = v4;
-
-                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+    /* Range Trigger Linear Drive */
+            if (gamepad1.left_trigger <= .5 && gamepad1.left_trigger != 0) {
+                setWheelPower(-.5, -.5, .5, .5);
+                trigger = true;
             } else {
-
-                if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_bumper && gamepad1.right_stick_x > 0) {
-
-                    double GRX = gamepad1.right_stick_x / robot.bumperFastest;
-
-                    final double v1 = +GRX;
-                    final double v2 = -GRX;
-                    final double v3 = +GRX;
-                    final double v4 = -GRX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
-
-                } else {
-
-                    double GRX = gamepad1.right_stick_x / robot.nobumper;
-
-                    final double v1 = +GRX;
-                    final double v2 = -GRX;
-                    final double v3 = +GRX;
-                    final double v4 = -GRX;
-
-                    frontLeft = -v1;
-                    frontRight = v2;
-                    backLeft = -v3;
-                    backRight = v4;
-
-                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                if (gamepad1.left_trigger <= .25 && gamepad1.left_trigger != 0) {
+                    setWheelPower(-.25, -.25, .25, .25);
+                    trigger = true;
                 }
+                if (gamepad1.left_trigger <= 1 && gamepad1.left_trigger != 0) {
+                    setWheelPower(-1, -1, 1, 1);
+                    trigger = true;
+                }
+            }
 
-        /* Drive Control */
-                if (gamepad1.left_bumper) {
-                    double GLY = -gamepad1.left_stick_y / robot.bumperSlowest;
+
+            if (gamepad1.right_trigger <= .5 && gamepad1.right_trigger != 0) {
+                setWheelPower(.5, .5, -.5, -.5);
+                trigger = true;
+            } else {
+                if (gamepad1.right_trigger <= .25 && gamepad1.right_trigger != 0) {
+                    setWheelPower(.25, .25, -.25, -.25);
+                    trigger = true;
+                }
+                if (gamepad1.right_trigger <= 1 && gamepad1.right_trigger != 0) {
+                    setWheelPower(1, 1, -1, -1);
+                    trigger = true;
+                }
+            }
+
+            if(gamepad1.right_trigger == 0 || gamepad1.left_trigger == 0){
+                trigger = false;
+            }
+
+            if (!trigger) {
+        /* Rotational Drive Control */
+                if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
+
                     double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
-                    double GLX = gamepad1.left_stick_x / robot.bumperSlowest;
 
-                    final double v1 = GLY + GRX + GLX;
-                    final double v2 = GLY - GRX - GLX;
-                    final double v3 = GLY + GRX - GLX;
-                    final double v4 = GLY - GRX + GLX;
+                    final double v1 = +GRX;
+                    final double v2 = -GRX;
+                    final double v3 = +GRX;
+                    final double v4 = -GRX;
 
                     frontLeft = -v1;
                     frontRight = v2;
@@ -171,15 +160,15 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
 
                     setWheelPower(frontLeft, frontRight, backLeft, backRight);
                 } else {
-                    if (gamepad1.right_bumper) {
-                        double GLY = -gamepad1.left_stick_y / robot.bumperFastest;
-                        double GRX = gamepad1.right_stick_x / robot.bumperFastest;
-                        double GLX = gamepad1.left_stick_x / robot.bumperFastest;
 
-                        final double v1 = GLY + GRX + GLX;
-                        final double v2 = GLY - GRX - GLX;
-                        final double v3 = GLY + GRX - GLX;
-                        final double v4 = GLY - GRX + GLX;
+                    if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_bumper && gamepad1.right_stick_x > 0) {
+
+                        double GRX = gamepad1.right_stick_x / robot.bumperFastest;
+
+                        final double v1 = +GRX;
+                        final double v2 = -GRX;
+                        final double v3 = +GRX;
+                        final double v4 = -GRX;
 
                         frontLeft = -v1;
                         frontRight = v2;
@@ -189,9 +178,27 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                         setWheelPower(frontLeft, frontRight, backLeft, backRight);
 
                     } else {
-                        double GLY = -gamepad1.left_stick_y / robot.nobumper;
+
                         double GRX = gamepad1.right_stick_x / robot.nobumper;
-                        double GLX = gamepad1.left_stick_x / robot.nobumper;
+
+                        final double v1 = +GRX;
+                        final double v2 = -GRX;
+                        final double v3 = +GRX;
+                        final double v4 = -GRX;
+
+                        frontLeft = -v1;
+                        frontRight = v2;
+                        backLeft = -v3;
+                        backRight = v4;
+
+                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                    }
+
+        /* Drive Control */
+                    if (gamepad1.left_bumper) {
+                        double GLY = -gamepad1.left_stick_y / robot.bumperSlowest;
+                        double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
+                        double GLX = gamepad1.left_stick_x / robot.bumperSlowest;
 
                         final double v1 = GLY + GRX + GLX;
                         final double v2 = GLY - GRX - GLX;
@@ -204,13 +211,47 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                         backRight = v4;
 
                         setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                    } else {
+                        if (gamepad1.right_bumper) {
+                            double GLY = -gamepad1.left_stick_y / robot.bumperFastest;
+                            double GRX = gamepad1.right_stick_x / robot.bumperFastest;
+                            double GLX = gamepad1.left_stick_x / robot.bumperFastest;
 
+                            final double v1 = GLY + GRX + GLX;
+                            final double v2 = GLY - GRX - GLX;
+                            final double v3 = GLY + GRX - GLX;
+                            final double v4 = GLY - GRX + GLX;
+
+                            frontLeft = -v1;
+                            frontRight = v2;
+                            backLeft = -v3;
+                            backRight = v4;
+
+                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
+                        } else {
+                            double GLY = -gamepad1.left_stick_y / robot.nobumper;
+                            double GRX = gamepad1.right_stick_x / robot.nobumper;
+                            double GLX = gamepad1.left_stick_x / robot.nobumper;
+
+                            final double v1 = GLY + GRX + GLX;
+                            final double v2 = GLY - GRX - GLX;
+                            final double v3 = GLY + GRX - GLX;
+                            final double v4 = GLY - GRX + GLX;
+
+                            frontLeft = -v1;
+                            frontRight = v2;
+                            backLeft = -v3;
+                            backRight = v4;
+
+                            setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
+                        }
                     }
                 }
             }
         }
     }
-
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
