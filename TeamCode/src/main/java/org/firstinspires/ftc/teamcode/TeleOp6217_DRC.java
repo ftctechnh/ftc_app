@@ -3,7 +3,8 @@
     2016 - 2017 Velocity Vortex Robot Code */
 
 package org.firstinspires.ftc.teamcode;
-
+import com.qualcomm.robotcore.hardware.PWMOutput;
+import com.qualcomm.robotcore.hardware.PWMOutputController;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -38,13 +39,13 @@ public class TeleOp6217_DRC extends OpMode
     CRServo servoConR;
     DcMotor motorRocker1;
     DcMotor motorRocker2;
-    Servo   servoJack;
+    Servo Jack;
 
    /* IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
 
-    static final double     COUNTS_PER_MOTOR_REV    = 420 ; // PPR for NeveRest 400
-    static final double     limitRocker = COUNTS_PER_MOTOR_REV / 4 ; // 90 degrees
+    //static final double     COUNTS_PER_MOTOR_REV    = 420 ; // PPR for NeveRest 400
+    //static final double     limitRocker = COUNTS_PER_MOTOR_REV / 4 ; // 90 degrees
     private ElapsedTime     runtime = new ElapsedTime();
 
     private boolean RunLauncher = false;
@@ -74,7 +75,9 @@ public class TeleOp6217_DRC extends OpMode
         motorConR = hardwareMap.dcMotor.get("motorConR");
         motorConR.setDirection(DcMotor.Direction.FORWARD);
         servoConL = hardwareMap.crservo.get("servoConL");
+        servoConL.setDirection(CRServo.Direction.FORWARD);
         servoConR = hardwareMap.crservo.get("servoConR");
+        servoConR.setDirection(CRServo.Direction.REVERSE);
 
         // Rocker Motors
 
@@ -82,7 +85,8 @@ public class TeleOp6217_DRC extends OpMode
         motorRocker1.setDirection(DcMotor.Direction.FORWARD);
         motorRocker2 = hardwareMap.dcMotor.get("motorRocker2");
         motorRocker2.setDirection(DcMotor.Direction.REVERSE);
-        servoJack = hardwareMap.servo.get ("servoJack");
+        Jack = hardwareMap.servo.get ("Jack");
+
 
        /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
@@ -147,8 +151,8 @@ public class TeleOp6217_DRC extends OpMode
 
         posx = (float) powerCurve(posx);
         posy = (float) powerCurve(posy);
-        posxR = (float) powerCurve(posxR);
-        posyR = (float) powerCurve(posyR);
+        posxR = (float) pCurve(posxR);
+        posyR = (float) pCurve(posyR);
 
 
         LT = (float) powerCurve(LT);
@@ -157,44 +161,91 @@ public class TeleOp6217_DRC extends OpMode
         //  Loading Glyphs
         // Directions will require testing
         if (dpad_up) {
-            motorConL.setPower(-1);
-            motorConR.setPower(1);
-            servoConL.setPower(-1);
-            servoConR.setPower(1);
+            motorConL.setPower(-.7);
+            motorConR.setPower(.7);
+
         }
         else if (dpad_down)  {
-            motorConL.setPower(1);
-            motorConR.setPower(-1);
-            servoConL.setPower(1);
-            servoConR.setPower(-1);
+            motorConL.setPower(.7);
+            motorConR.setPower(-.7);
+
         }
         else {
             motorConL.setPower(0);
             motorConR.setPower(0);
+
+        }
+        if(rightPad)    {
+            servoConL.setPower(-1);
+            servoConR.setPower(-1);
+        }
+
+        else if (leftPad)   {
+            servoConL.setPower(1);
+            servoConR.setPower(1);
+        }
+
+        else    {
             servoConL.setPower(0);
             servoConR.setPower(0);
         }
 
         // Rocker
-        if (posyR != 0) {
+        if (posyR <= -.2) {
             motorRocker1.setPower(posyR);
             motorRocker2.setPower(posyR);
         }
+        else if (posyR >= .2) {
+            motorRocker1.setPower(posyR);
+            motorRocker2.setPower(posyR);
+        }
+        else if (x)  {
+            motorRocker1.setPower(.15);
+            motorRocker2.setPower(-.15);
+        }
+
         else    {
             motorRocker1.setPower(0);
             motorRocker2.setPower(0);
         }
         // Jack
         if(a) {
-            servoJack.setPosition(.5);
+            Jack.setPosition(1.0);
         }
         else if(b) {
-            servoJack.setPosition(0);
+            Jack.setPosition(0.2);
         }
 
+        else if (y) {
+            Jack.setPosition(0.6);
+        }
+
+
+
+//  pivot left
+
+        if (LT != 0)  {
+
+            motorFL.setPower(LT);
+            motorBL.setPower(LT);
+            motorFR.setPower(-LT);
+            motorBR.setPower(-LT);
+        }
+
+        //
+
+        //  pivot right
+
+        else if (RT != 0)  {
+
+            motorFL.setPower(-RT);
+            motorBL.setPower(-RT);
+            motorFR.setPower(RT);
+            motorBR.setPower(RT);
+        }
         //  Driving
 
-        if ( ( posy != 0) || ( posx != 0 ) ) {
+        else if ( ( posy != 0) || ( posx != 0 ) ) {
 
             FRBLPower = posy - posx;
             FLBRPower = posy + posx;
@@ -204,18 +255,7 @@ public class TeleOp6217_DRC extends OpMode
             motorBL.setPower( FRBLPower );
 
         }
-        else if ( LT != 0){
-            motorFL.setPower(LT);
-            motorBL.setPower(LT);
-            motorFL.setPower(-LT);
-            motorBR.setPower(-LT);
-        }
-        else if ( RT != 0){
-            motorFL.setPower(RT);
-            motorBL.setPower(RT);
-            motorFL.setPower(-RT);
-            motorBR.setPower(-RT);
-        }
+
         else {
 
             motorFR.setPower(0);
@@ -252,7 +292,12 @@ public class TeleOp6217_DRC extends OpMode
         telemetry.addData("4", "Right Bumper Left Bumper" +
                 String.format("%b", gamepad1.right_bumper)+ " " +
                 String.format("%b", gamepad1.left_bumper));
+
+        telemetry.addData("5", "Actuator A, B,: " +
+                String.format("%b", gamepad1.a) + " " +
+                String.format("%b", gamepad1.b));
     }
+
     /*
      * Code to run when the op mode is first disabled goes here
      *
@@ -299,4 +344,34 @@ public class TeleOp6217_DRC extends OpMode
 
        return (dScale);
    }
+
+    double pCurve ( float dVal ) {
+    /*
+     * This method adjusts the joystick input to apply a power curve that
+     * is less than linear.  This is to make it easier to drive
+     * the robot more precisely at slower speeds.
+     */
+// LB = left bumper, RB = right bumper.
+
+
+
+        double dead = .2;
+
+        // Regular
+        double max = 1;
+
+        int direction = 1;
+        if (dVal < 0) {
+            direction = -1;
+        }
+
+        double dScale = 0.0;
+        if (abs(dVal) < dead) {
+            dScale = 0.0;
+        } else {
+            dScale = ((dVal * dVal) * max) * direction;
+        }
+
+        return (dScale);
+    }
 }
