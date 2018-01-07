@@ -89,16 +89,18 @@ public class Team7518Teleop extends LinearOpMode{
                         //z-axis motor
                         if (gamepad1.dpad_up)
                             zAxis.setPower(1);
-                        if (gamepad1.dpad_down)
+                        else if (gamepad1.dpad_down)
                             zAxis.setPower(-1);
-                        else zAxis.setPower(0);
+                        else
+                            zAxis.setPower(0);
 
                         //y-axis motor
                         if (gamepad1.x)
                             yAxis.setPower(1);
-                        if (gamepad1.y)
+                        else if (gamepad1.y)
                             yAxis.setPower(-1);
-                        else yAxis.setPower(0);
+                        else
+                            yAxis.setPower(0);
 
                         //color sensor
 
