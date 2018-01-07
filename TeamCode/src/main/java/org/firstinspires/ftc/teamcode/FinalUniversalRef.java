@@ -36,18 +36,17 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case'r':
-                        newRobot.driveStraight_In(8);
-                        //sleep(100);
+                        adjustment = -3;
+                        newRobot.driveStraight_In(adjustment);
+                        sleep(200);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(-8,.5);
-                        sleep(100);
                         break;
                     case 'b':
                         newRobot.driveStraight_In(-8);
-                        //sleep(100);
+                        adjustment = 3;
+                        newRobot.driveStraight_In(adjustment);
+                        sleep(200);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(8,.5);
-                        sleep(100);
                         break;
                     default:
                         newRobot.moveWing(false);
@@ -58,26 +57,31 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (newRobot.getGlyphCipher())
                 {
                     case 'l':
-                        newRobot.driveStraight_In(5);
+                        newRobot.pivot(35,.5);
+                        newRobot.driveStraight_In(37.5);
                         break;
                     case 'c':
-                        newRobot.driveStraight_In(11.5f);
+                        newRobot.pivot(20,.5);
+                        newRobot.driveStraight_In(34);
                         break;
                     case 'r':
-                        newRobot.driveStraight_In(22);
+                        newRobot.pivot(8,.5);
+                        newRobot.driveStraight_In(30.5);
                         break;
                     default:
-                        newRobot.driveStraight_In(11.5f);
+                        newRobot.pivot(20,.5);
+                        newRobot.driveStraight_In(30.5);
                         break;
                 }
-                newRobot.pivot_IMU(80, .25);
+                /*newRobot.pivot_IMU(80, .25);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In(20);
                 newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-5,1);
                 newRobot.stopAllMotors();
-                break;
+                break;*/
+
             case 'r':
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
@@ -91,17 +95,17 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case 'r':
-                        newRobot.driveStraight_In(-8);
-                        sleep(100);
+                        adjustment = -2;
+                        newRobot.driveStraight_In(adjustment);
+                        sleep(200);
+                        adjustment = -3;
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(8,.5);
-                        sleep(100);
+                        break;
                     case 'b':
-                        newRobot.driveStraight_In(8);
-                        sleep(100);
+                        adjustment = 3;
+                        newRobot.driveStraight_In(adjustment);
+                        sleep(200);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(-8,.5);
-                        sleep(100);
                         break;
                     default:
                         newRobot.moveWing(false);
@@ -109,32 +113,36 @@ public class FinalUniversalRef extends LinearOpMode
                 }
                 telemetry.addData("Cipherr = ", cipher);
                 telemetry.update();
-                newRobot.driveStraight_In(26);
-                newRobot.pivot_IMU(82, .25);
+                /*newRobot.driveStraight_In(26);
+                newRobot.pivot_IMU(82, .25);*/
                 switch (newRobot.getGlyphCipher())
                 {
                     case 'l':
-                        newRobot.driveStraight_In(22); //needs testing, fix on 11/12
+                        newRobot.pivot(-35,.5);
+                        newRobot.driveStraight_In(37.5); //needs testing, fix on 11/12
                         break;
                     case 'c':
-                        newRobot.driveStraight_In(11.5f);
+                        newRobot.pivot(-20,.5);
+                        newRobot.driveStraight_In(34);
                         break;
                     case 'r':
-                        newRobot.driveStraight_In(5); //positioning is really off, need to fix on 11/12
+                        newRobot.pivot(-8,.5);
+                        newRobot.driveStraight_In(30.5); //positioning is really off, need to fix on 11/12
                         break;
                     default:
-                        newRobot.driveStraight_In(32);
+                        newRobot.pivot(-20,.5);
+                        newRobot.driveStraight_In(30.5);
                         break;
                 }
-                newRobot.pivot_IMU(-80, .25);
+                /*newRobot.pivot_IMU(-80, .25);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                /*newRobot.driveStraight_In(16,.2);
-                newRobot.driveStraight_In(-5,1); */
+                newRobot.driveStraight_In(16,.2);
+                newRobot.driveStraight_In(-5,1);
                 newRobot.driveStraight_In(20);
                 newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-5,1);
-                newRobot.stopAllMotors();
+                newRobot.stopAllMotors();*/
                 break;
             default:
                 newRobot.driveStraight_In(29, .4);
