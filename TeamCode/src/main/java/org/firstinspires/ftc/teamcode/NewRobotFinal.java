@@ -311,17 +311,17 @@ public class NewRobotFinal {
         }
         if (inches < 0) {
             driveMotorsAuto(-absPow, -absPow);
-
+            //left is opposite because drive motors flips it
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget) {
                 // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0)
+                if (driveRightOne.getVelocity(AngleUnit.DEGREES) > -10 || driveLeftOne.getVelocity(AngleUnit.DEGREES) < 10)
                     break;
             }
         } else {
             driveMotorsAuto(absPow, absPow);
 
             while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget) {
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0) {
+                if (driveRightOne.getVelocity(AngleUnit.DEGREES) < 10 || driveLeftOne.getVelocity(AngleUnit.DEGREES) > -10) {
                     break;
                 }
             }
