@@ -21,15 +21,15 @@ public class MecanumDriveSystem {
         this.rearLeftMotor = hardwareMap.get(DcMotor.class,"rear left motor");
         this.frontRightMotor = hardwareMap.get(DcMotor.class,"front right motor");
         this.rearRightMotor = hardwareMap.get(DcMotor.class, "rear right motor");
-        this.frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void drive(double x, double y, double turn) {
-        this.frontLeftMotor.setPower(y + x + turn);
-        this.rearLeftMotor.setPower(y - x + turn);
-        this.frontRightMotor.setPower(y - x -turn);
-        this.rearRightMotor.setPower(y + x - turn);
+        this.frontLeftMotor.setPower(y - x - turn);
+        this.rearLeftMotor.setPower(y + x - turn);
+        this.frontRightMotor.setPower(y + x + turn);
+        this.rearRightMotor.setPower(y - x + turn);
     }
 
     public void stop() {
