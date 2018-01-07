@@ -129,6 +129,8 @@ public class RedCornerJewelPark extends OpMode{
                 break;
             case 8:
                gilgearmesh.clawPos(0);
+               robot.linearDrive(.25, -1.5);
+               stateMachineFlow++;
                 //end?
                 break;
         }

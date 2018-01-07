@@ -145,7 +145,7 @@ public class BlueCornerJewelPark extends OpMode{
                 break;
             case 6:
                 gilgearmesh.armPos(10,.6);
-                robot.statTurn(.5,140);
+                robot.statTurn(.5,130);//chamged turn from 140 to 130
                 stateMachineFlow++;
                 break;
             case 7:
@@ -153,6 +153,10 @@ public class BlueCornerJewelPark extends OpMode{
                 stateMachineFlow++;
                 break;
             case 8:
+                robot.linearDrive(.25, 8);
+                gilgearmesh.clawPos(0);
+                robot.linearDrive(.25, -1.5);
+                stateMachineFlow++;
                 //end?
                 break;
         }

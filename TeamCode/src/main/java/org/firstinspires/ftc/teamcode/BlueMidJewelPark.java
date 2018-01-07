@@ -110,11 +110,18 @@ public class BlueMidJewelPark extends OpMode{
                 break;
             case 7:
                 robot.linearDrive(.25,5);
+                //robot.pivotTurn(.5, 90, RobotDirection.LEFT);
+                robot.statTurn(.25, -75);
                 stateMachineFlow++;
                 break;
             case 8:
+                robot.linearDrive(.25, 4);
+                gilgearmesh.clawPos(0);
+                robot.linearDrive(.25, -1.5);
+                stateMachineFlow++;
                 //end?
                 break;
         }
+
     }
 }

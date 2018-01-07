@@ -100,16 +100,18 @@ public class RedMidJewelPark extends OpMode{
             case 5:
                 gilgearmesh.armPos(25,.6);
                 robot.pivotTurn(.5, 60, RobotDirection.LEFT);
-                robot.linearDrive(.25,20);
+                robot.linearDrive(.15,20);
                 stateMachineFlow++;
                 break;
             case 6:
                 gilgearmesh.armPos(10,.6);
-                robot.statTurn(.5,-45);
+                robot.statTurn(.5,-60);
                 stateMachineFlow++;
                 break;
             case 7:
-                robot.linearDrive(.25,2);
+                robot.linearDrive(.15,10);
+                gilgearmesh.clawPos(0);
+                robot.linearDrive(.15, -1.5);
                 stateMachineFlow++;
                 break;
             case 8:
