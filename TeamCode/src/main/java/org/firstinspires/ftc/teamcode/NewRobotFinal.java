@@ -446,12 +446,13 @@ public class NewRobotFinal {
         stopDriveMotors();
     }
 
-    public void pivot(float degrees_In, double pow)//Utilizes two motors at a time; spins in place
+        public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
-        float degrees = (float) (degrees_In * 0.55776 + 8.23819);
-        float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
+        //float degrees = (float)(degrees_In * 0.55776 + 8.23819);
+        //float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (neverrestEncCountsPerRev / wheelCircCm) / 2;
+        float encTarget = (float)(degrees * 11.79712 - 50.29669);
+       
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
         //we divide it by two at the end to compensate for using two motors
