@@ -53,10 +53,12 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor light;
     public double waitTime = 8;
 
+    public static double RobotWidth = 41.91;
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
     public static double WHEEL_REV_PER_MOTOR_REV;     // 56/24
     public static double WHEEL_PERIMETER_CM;     // For figuring circumference
     public static double COUNTS_PER_CM;
+    public static double ENCODERS_PER_DEGREE;
     double P_TURN_COEFF = 0.1;
     double TURN_THRESHOLD = 2.5;
     public DcMotor front_right_motor;
@@ -64,6 +66,7 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
     public DcMotor slideMotor;
+    public boolean gyroFail = false;
 
     public Servo jewelServo;
     public Servo glyphServoRight;
@@ -94,6 +97,8 @@ public class Autonomous_General extends LinearOpMode {
         WHEEL_PERIMETER_CM = 2*5.08* Math.PI;
         COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
                 (WHEEL_PERIMETER_CM * WHEEL_REV_PER_MOTOR_REV);
+        ENCODERS_PER_DEGREE = ((COUNTS_PER_MOTOR_REV * ((RobotWidth*Math.PI)/WHEEL_PERIMETER_CM))/360);
+
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -834,6 +839,8 @@ public class Autonomous_General extends LinearOpMode {
     }
     /**
      * uses range sensor by reading distance and then driving that distance
+        int leftFrontPos;
+        int rightFrontPos;
      * @param distInCM
      * @param speed
      * @param rsBufffer
@@ -928,5 +935,76 @@ public class Autonomous_General extends LinearOpMode {
         slideMotor.setPower(0);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+    }
+
+    public void encoderTurn(int degrees, double speed){
+
+        double leftSpeed = 0;
+        double rightSpeed = 0;
+        int leftFrontPos;
+        int rightFrontPos;
+        int leftBackPos;
+        int rightBackPos;
+
+        back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        sleep(200);
+
+        leftFrontPos = front_left_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+        rightFrontPos = front_right_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+        leftBackPos = back_left_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+        rightBackPos = back_right_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+
+        if (degrees > 0){
+            leftSpeed = -speed;
+            rightSpeed = speed;
+
+            front_left_motor.setTargetPosition(-leftFrontPos);
+            front_right_motor.setTargetPosition(rightFrontPos);
+            back_left_motor.setTargetPosition(-leftBackPos);
+            back_right_motor.setTargetPosition(rightBackPos);
+        }
+        else if (degrees < 0){
+            leftSpeed = speed;
+            rightSpeed = -speed;
+
+            front_left_motor.setTargetPosition(leftFrontPos);
+            front_right_motor.setTargetPosition(-rightFrontPos);
+            back_left_motor.setTargetPosition(leftBackPos);
+            back_right_motor.setTargetPosition(-rightBackPos);
+        }
+        //if degrees is more than 0, you'll move counterclockwise
+        //if degrees is less than 0, you'll move clockwise
+
+
+        back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        back_right_motor.setPower(rightSpeed);
+        front_right_motor.setPower(rightSpeed);
+        front_left_motor.setPower(leftSpeed);
+        back_left_motor.setPower(leftSpeed);
+
+        while (opModeIsActive() &&
+                (back_left_motor.isBusy() && back_right_motor.isBusy()&&
+                        front_left_motor.isBusy() && front_right_motor.isBusy())) {
+            back_left_motor.setPower(Math.abs(leftSpeed));
+            //idle();
+            back_right_motor.setPower(Math.abs(rightSpeed));
+            //idle();
+            front_left_motor.setPower(Math.abs(leftSpeed));
+            //idle();
+            front_right_motor.setPower(Math.abs(rightSpeed));
+            //idle();
+            idle();
+        }
+        idle();
+        // Stop all motion;
+        stopMotors();
     }
 }

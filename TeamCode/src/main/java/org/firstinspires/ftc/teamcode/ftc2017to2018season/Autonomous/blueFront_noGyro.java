@@ -4,17 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Final.Autonomous_General_final;
-
-import static org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.beta.AutonomousGeneral.runtime;
 
 //10-28-17
-@Autonomous(group = "Blue", name = "Blue Front")
-public class blueFront extends Autonomous_General {
+@Autonomous(group = "Blue", name = "Blue Front No gyro")
+public class blueFront_noGyro extends Autonomous_General {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
+    int distanceFor90Turn = (int)(RobotWidth*Math.PI)/4;
 
 
     @Override
@@ -118,8 +115,8 @@ public class blueFront extends Autonomous_General {
             encoderMecanumDrive(0.5,65,65,5000,0);
         }
 
-
-        gyroTurn(0.3,-88);
+        encoderTurn(-90,0.5);
+        //gyroTurn(0.3,-88);
         sleep(1000);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
@@ -135,8 +132,8 @@ public class blueFront extends Autonomous_General {
 
 
         sleep(1000);
-
-        gyroTurn(0.3,0);
+        encoderTurn(90,0.5);
+        //gyroTurn(0.3,0);
 
         sleep(750);
 

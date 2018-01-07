@@ -21,9 +21,7 @@ public class redBack extends Autonomous_General {
     public void runOpMode() {
 
 
-        vuforiaInit(true, true);
-        telemetry.addData("","Vuforia Initiated");
-        telemetry.update();
+
         initiate();
         telemetry.addData("--->", "Gyro Calibrating");
         telemetry.update();
@@ -38,6 +36,13 @@ public class redBack extends Autonomous_General {
 
         telemetry.addData("---->","Gyro Calibrated. Good to go...");
         telemetry.update();
+
+        sleep(500);
+
+        vuforiaInit(true, true);
+        telemetry.addData("","Vuforia Initiated");
+        telemetry.update();
+
 
         waitForStart();
 

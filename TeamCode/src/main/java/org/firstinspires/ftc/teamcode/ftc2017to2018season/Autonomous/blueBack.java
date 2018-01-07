@@ -57,6 +57,12 @@ public class blueBack extends Autonomous_General {
 
         }
         toggleLight(false);
+
+        moveDownGlyph(3);
+        sleep(200);
+        closeGlyphManipulator();;
+        sleep(200);
+        moveUpGlyph(2);
         jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
