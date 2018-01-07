@@ -84,4 +84,21 @@ public class Systems {
             }
         }
     }
+    public void grabSecondGlyph() {
+        ForkLift.closeClaw();
+        ForkLift.moveMotor(1, 750);
+        DriveMecanum.driveTranslateRotate(0, -1, 0, 550);
+        ForkLift.openClaw();
+        DriveMecanum.driveTranslateRotate(0, 1, 0, 500);
+        ForkLift.moveUntilDown(0.75);
+        DriveMecanum.driveTranslateRotate(0, -1, 0, 750);
+        ForkLift.closeClaw();
+        sleep(250);
+        ForkLift.moveMotor(1, 250);
+    }
+    private void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {}
+    }
 }

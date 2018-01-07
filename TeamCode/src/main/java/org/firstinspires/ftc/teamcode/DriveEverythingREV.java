@@ -12,6 +12,7 @@ public class DriveEverythingREV extends OpMode {
     private RelicClaw RelicClaw;
     private DriveMecanum drive;
     private JewelArm jewelArm;
+    private Systems Systems;
 
     @Override
     public void init() {
@@ -21,6 +22,7 @@ public class DriveEverythingREV extends OpMode {
         drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
         jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
         jewelArm.up();
+        Systems = new Systems(drive, ForkLift, RelicClaw);
     }
 
     @Override
@@ -56,14 +58,7 @@ public class DriveEverythingREV extends OpMode {
             }
         }
         if (gamepad1.x) {
-            ForkLift.closeClaw();
-            ForkLift.moveMotor(1, 750);
-            drive.driveTranslateRotate(0, -0.75, 0, 750);
-            ForkLift.openClaw();
-            ForkLift.moveMotor(-1, 500);
-            ForkLift.closeClaw();
-            sleep(250);
-            ForkLift.moveMotor(1, 250);
+            Systems.grabSecondGlyph();
         }
 
         //ForkLift
@@ -96,10 +91,5 @@ public class DriveEverythingREV extends OpMode {
             RelicClaw.driving();
         }
         RelicClaw.moveMotor(gamepad2.left_trigger - gamepad2.right_trigger);
-    }
-    private void sleep(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {}
     }
 }
