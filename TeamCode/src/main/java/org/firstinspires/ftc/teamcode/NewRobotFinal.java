@@ -87,13 +87,12 @@ public class NewRobotFinal {
 
         wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
 
-        //   leftDoorWall = hardwareMap.get(Servo.class, "leftDoorWall");
-        // rightDoorWall = hardwareMap.get(Servo.class, "rightDoorWall");
-
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
+        leftDoorWall.scaleRange(.55f, 1f);
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
-        initEndGame(hardwareMap);
+        rightDoorWall.scaleRange(.08f, .53f);
 
+        initEndGame(hardwareMap);
         zeroStuff();
         initIMU();
         updateIMUValues();
@@ -647,7 +646,7 @@ public class NewRobotFinal {
     public void fineAdjDoors(double in) //Note: Check and see if it goes past 0 or 1
     {
         leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() + in);
+        rightDoorWall.setPosition(rightDoorWall.getPosition() - in);
     }
 
     public void autoPark() //We saw the angle wasn't detecting it on the new robot.

@@ -80,10 +80,10 @@ public class CompTeleDev extends OpMode
         else if (gamepad2.left_trigger > .2f)
             newRobot.fineAdjDoors(-.001f);
           */
-        if (gamepad2.left_bumper)           //DO NO
-            newRobot.fineAdjDoors(.003f);
-        else if (gamepad2.left_trigger > .3f)
+        if (gamepad2.left_bumper)
             newRobot.fineAdjDoors(-.003f);
+        else if (gamepad2.left_trigger > .3f)
+            newRobot.fineAdjDoors(.003f);
 
         if (gamepad2.right_bumper)
             newRobot.getTailRelease().setPower(-1);//release
@@ -143,7 +143,7 @@ public class CompTeleDev extends OpMode
         telemetry.addData("Left Y", gamepad1.left_stick_y);
         telemetry.addData("Right y", gamepad1.right_stick_y);
         telemetry.addData("wingTouchSens", wingTouchSens.getState());
-          telemetry.addData("TopMag", topLiftMagSwitch.getState());
+        telemetry.addData("TopMag", topLiftMagSwitch.getState());
         telemetry.addData("botMag", bottomLiftMagSwitch.getState());
         telemetry.update();
     }
