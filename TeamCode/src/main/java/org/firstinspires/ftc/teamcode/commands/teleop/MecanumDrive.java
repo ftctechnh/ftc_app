@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commands.teleop.testing;
+package org.firstinspires.ftc.teamcode.commands.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,7 +17,7 @@ public class MecanumDrive extends OpMode {
 
     @Override
     public void init() {
-        this.mecanumDriveSystem = new MecanumDriveSystem(hardwareMap, gamepad1);
+        this.mecanumDriveSystem = new MecanumDriveSystem(this);
     }
 
     @Override
