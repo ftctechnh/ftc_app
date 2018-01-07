@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
@@ -20,17 +21,4 @@ import java.util.Random;
 
 public class JsonTesting {
 
-    Gson gson = new Gson();
-    Random rand = new Random();
-    JsonParser parser = new JsonParser();
-
-    Object obj = parser.parse(new FileReader("Testing.json"));
-    JSONObject jsonObject = (JSONObject) obj;
-    String name = (String) jsonObject.get("name");
-    //print name in test-op
-    JSONArray memberNames = (JSONArray) jsonObject.get("memberNames");
-    String randomMemberName = (String) memberNames.get(rand.nextInt(9));
-
-    public JsonTesting() throws FileNotFoundException, JSONException {
-    }
 }

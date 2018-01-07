@@ -10,11 +10,8 @@
           "comment6p2": "Code will adjust for key column later by adding or subtracting inches",
 
     "redLeft": {
-        "isRed": true,
+      "isRed": true,
       "firstMove": {
-
-            "comment": "",
-
           "angleDegrees": 0,
           "speed": 1,
           "targetDist": 36,
