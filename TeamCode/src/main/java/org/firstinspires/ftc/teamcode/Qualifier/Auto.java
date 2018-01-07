@@ -29,7 +29,7 @@ public class Auto extends LinearOpMode {
     RobotRR gromit;
 
     private ElapsedTime runtime = new ElapsedTime();
-    private MenuFileHandler menuFile;
+    private MenuFileHandler2 menuFile;
     public static final String TAG = "Vuforia VuMark Sample";
     public boolean redjewelisright;
 
@@ -46,7 +46,7 @@ public class Auto extends LinearOpMode {
         //Init Hardware map
         gromit = new RobotRR();
         gromit.init(hardwareMap);
-        menuFile = new MenuFileHandler(telemetry, gamepad1);
+        menuFile = new MenuFileHandler2(telemetry, gamepad1);
 
                 // get a reference to the RelativeLayout so we can change the background  for Edit mode
                 // color of the Robot Controller app to match the hue detected by the RGB sensor.
