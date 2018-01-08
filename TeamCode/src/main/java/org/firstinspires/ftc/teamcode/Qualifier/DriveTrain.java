@@ -22,8 +22,12 @@ public class DriveTrain {
 
 
     public enum SpeedSetting {FAST, SLOW}
-
     private SpeedSetting speedMode;
+
+    public enum DirectionSetting {FRONT, BACK}
+    private DirectionSetting forwardDirection;
+
+
     public final double WHEEL_DIAMETER = 4.0;
     public final double GEAR_RATIO = 32/24;
     public final double TICKS_REV = 537.6;
@@ -92,6 +96,7 @@ public class DriveTrain {
         runWithoutEncoders();
 
         speedMode = SpeedSetting.FAST;
+        forwardDirection = DirectionSetting.FRONT;
     }
 
     public void runWithoutEncoders() {
@@ -124,26 +129,45 @@ public class DriveTrain {
            default:
                 speedMultiplier = 1.0;
         }
+
+        // Forward or Reverse Drive (note: The joystick goes negative when pushed forwards, so negate it)
+        double forward;
+        double strafe;
+        double rotate;
+
+        switch (forwardDirection) {
+            // lookup parameter for "fast mode"
+            case FRONT:
+                forward = Math.pow(y,3);
+                strafe  = Math.pow(-x,3);
+                rotate  = turn;
+                break;
+            case BACK:
+                forward = - Math.pow(y,3);
+                strafe  = - Math.pow(-x,3);
+                rotate  = turn;
+                break;
+            default:
+                forward = Math.pow(y,3);
+                strafe  = Math.pow(-x,3);
+                rotate  = turn;
+        }
+
         double lfpower;
         double lrpower;
         double rfpower;
         double rrpower;
-//        lfpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
-//        lrpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
-//        rfpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
-//        rrpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
-//
-
-        // Run wheels in tank mode (note: The joystick goes negat when pushed forwards, so negate it)
-        double forward = y;
-        double strafe = -x;
-        double rotate = turn;
 
 // temp
         lfpower =  ( forward/1.0 - strafe/1.0 + rotate/1.0 );
         lrpower =  ( forward/1.0 + strafe/1.0 + rotate/1.0  );
         rfpower = ( forward/1.0 + strafe/1.0 - rotate/1.0 );
         rrpower = ( forward/1.0 - strafe/1.0 - rotate/1.0 );
+//        lfpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
+//        lrpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rfpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rrpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
+//
 
 
 
