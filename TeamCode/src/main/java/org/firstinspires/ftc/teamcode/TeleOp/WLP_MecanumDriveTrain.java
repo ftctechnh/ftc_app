@@ -30,307 +30,102 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.TeleOp.WLP_MecanumWheels;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * This file provides necessary functionality for We Love Pi Team's 2017 Relic
+ * Recovery Robot's robot's Mecanum Wheel Drivetrain
  */
 
-@TeleOp(name="MecanumDriveTrain", group="We Love PI")
 
 public class WLP_MecanumDriveTrain {
-    
-    // Global variables to be initialized in the constructor
-    private Telemetry telemetry = null;
-    private HardwareMap hardwareMap = null;
-    private Gamepad gamepad1 = null;
-    private Gamepad gamepad2 = null;
-
 
     // Declare Drive Train modors
     protected DcMotor frontLeft = null;
     protected DcMotor frontRight = null;
     protected DcMotor rearLeft = null;
     protected DcMotor rearRight = null;
+    protected WLP_MecanumWheels wheels = new WLP_MecanumWheels();
 
-    protected WLP_MecanumWheels wheels = new WLP_MecanumWheels(0,0,0);
+    // Global variables to be initialized in the constructor
+    private Telemetry telemetry = null;
+    private HardwareMap hardwareMap = null;
+    private Gamepad gamepad1 = null;
+    private Gamepad gamepad2 = null;
 
-
-    double limiter = 1;
+    private boolean isInitialized =false;
 
     // Constructors
 
-    // Don't allow default constructors
-    private WLP_MecanumDriveTrain() {
-        // Throw an error in the private constructor avoids call it within the class.
-        throw new AssertionError();
+    WLP_MecanumDriveTrain() {
+        // Default consturctor
     }
 
-    // This is the only valid consturctor
-    public WLP_MecanumDriveTrain(Telemetry telemetry, HardwareMap hardwareMap,
-                                 Gamepad gamepad1, Gamepad gamepad2){
-        this.telemetry = telemetry;
-        this.hardwareMap = hardwareMap;
-        this.gamepad1 = gamepad1;
-        this.gamepad2 = gamepad2;
-    }
-
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
-
-
+    // Code to run ONCE when the driver hits INIT
     public void init(Telemetry telemetry, HardwareMap hardwareMap,
                      Gamepad gamepad1, Gamepad gamepad2) {
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        //true initialization
+        // First initialize the hardware parameters
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
 
-        frontLeft  = hardwareMap.get(DcMotor.class, "frontLeft");
+
+        // Initialize motors.
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        rearLeft  = hardwareMap.get(DcMotor.class, "rearLeft");
+        rearLeft = hardwareMap.get(DcMotor.class, "rearLeft");
         rearRight = hardwareMap.get(DcMotor.class, "rearRight");
 
 
-        //frontLeft.setDirection(DcMotor.Direction.REVERSE);
-
+        // Set Motor Directions
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        rearLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
-
-        //rearLeft.setDirection(DcMotor.Direction.REVERSE);
         rearRight.setDirection(DcMotor.Direction.REVERSE);
 
 
+        // finally
+        isInitialized = true;
+
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Drive Train", "Init complete");    //
+        telemetry.addData("Drive Train", "Init complete");
+
     }
 
+    // During teleop this function runs repeatedly
     public void loop() {
 
-
-        // THE X AND Y AXIS FOR EACH SIDE (LEFT AND RIGHT)
-        double left_y;
-        double left_x;
-        double right_y;
-        double right_x;
-
-        // pass the left x_y and right x_y to mechanum wheels
-        // get the power for the motors
-        // multiply with the limiter
-        left_y = gamepad1.left_stick_y ;
-        left_x = gamepad1.left_stick_x ;
-        // SETTING VALUES FOR RIGHT X AND Y
-        right_y = gamepad1.right_stick_y ;
-        right_x = gamepad1.right_stick_x ;
-        telemetry.addData("Drive Train::Left_X","(%.2f)", left_x);
-        telemetry.addData("Drive Train::Left_Y", "(%.2f)",left_y);
-        telemetry.addData("Drive Train::Right_X","(%.2f)", right_x);
-
-
-        if ( gamepad1.dpad_down == false && gamepad1.dpad_left == false && gamepad1.dpad_right == false && gamepad1.dpad_up == false) {
-
-            wheels.UpdateInput(left_x, left_y, right_x);
-
-            if (gamepad1.left_trigger > 0 && gamepad1.right_trigger == 0) {
-                limiter = 0.2;
-
-                telemetry.addData("limiter is", limiter);
-            } else if (gamepad1.right_trigger > 0 && gamepad1.left_trigger == 0) {
-                limiter = 0.3;
-                telemetry.addData("limiter is", limiter);
-
-            } else {
-                limiter = 0.5;
-                telemetry.addData("Limiter is ", limiter);
-            }
-
-            telemetry.addData("Drive Train::FrontLeftPower", "(%.2f)", wheels.getFrontLeftPower());
-            telemetry.addData("Drive Train::FrontRightPower", "(%.2f)", wheels.getFrontRightPower());
-            telemetry.addData("Drive Train::RearRightPower", "(%.2f)", wheels.getRearLeftPower());
-            telemetry.addData("Drive Train::RearLeftPower", "(%.2f)", wheels.getRearRightPower());
-
-
-            frontLeft.setPower(wheels.getFrontLeftPower());
-            frontRight.setPower(wheels.getFrontRightPower());
-            rearRight.setPower(wheels.getRearRightPower());
-            rearLeft.setPower(wheels.getRearLeftPower());
-
+        if (isInitialized == false) {
+            return;
         }
 
+        double left_x = gamepad1.left_stick_x;
+        double left_y = gamepad1.left_stick_y;
+        double right_x = gamepad1.right_stick_x;
 
-        //DPAD DIRECTIONS
-        if (gamepad1.dpad_up) {
-            //DPAD FORWARD 0.5
-            frontLeft.setPower(1 * limiter);
-            frontRight.setPower(-1 * limiter);
-            rearLeft.setPower(1 * limiter);
-            rearRight.setPower(-1 * limiter);
-        } else if (gamepad1.dpad_down) {
-            //DPAD BACKWARD 0.5
-            frontLeft.setPower(-1 * limiter);
-            frontRight.setPower(1 * limiter);
-            rearLeft.setPower(-1 * limiter);
-            rearRight.setPower(1 * limiter);
-        } else if (gamepad1.dpad_left) {
-            //DPAD LEFT 0.5
-            frontLeft.setPower(1 * limiter);
-            frontRight.setPower(1 * limiter);
-            rearLeft.setPower(-1 * limiter);
-            rearRight.setPower(-1 * limiter);
-        } else if (gamepad1.dpad_right) {
-            //DPAD RIGHT 0.5
-            frontLeft.setPower(-1 * limiter);
-            frontRight.setPower(-1 * limiter);
-            rearLeft.setPower(1 * limiter);
-            rearRight.setPower(1 * limiter);
-        } else if (gamepad1.dpad_up && gamepad1.dpad_right) {
-            //DPAD NORTHEAST (RIGHT FRONT DIAGONAL)
-            frontLeft.setPower(1* limiter);
-            frontRight.setPower(0 * limiter);
-            rearLeft.setPower(0 * limiter);
-            rearRight.setPower(-1 * limiter);
-        } else if (gamepad1.dpad_up && gamepad1.dpad_left) {
-            //DPAD NORTHWEST (LEFT FRONT DIAGONAL
-            frontLeft.setPower(0 * limiter);
-            frontRight.setPower(-1 * limiter);
-            rearLeft.setPower(1 * limiter);
-            rearRight.setPower(0 * limiter);
-        } else if (gamepad1.dpad_down && gamepad1.dpad_right) {
-            frontLeft.setPower(0 * limiter);
-            frontRight.setPower(1 * limiter);
-            rearLeft.setPower(-1 * limiter);
-            rearRight.setPower(0 * limiter);
-        } else if (gamepad1.dpad_down && gamepad1.dpad_left) {
-            frontLeft.setPower(-1 * limiter);
-            frontRight.setPower(0 * limiter);
-            rearLeft.setPower(0 * limiter);
-            rearRight.setPower(1 * limiter);
-        }
+        // Update the joystick input to calculate  wheel powers
+        wheels.UpdateInput(left_x, left_y, right_x);
 
-        /*
-
-        // SETTING VALUES FOR LEFT X AND Y
-        left_y = -this.gamepad1.left_stick_y * limiter;
-        left_x = gamepad1.left_stick_x * limiter;
-        // SETTING VALUES FOR RIGHT X AND Y
-        right_y = -gamepad1.right_stick_y * limiter;
-        right_x = gamepad1.right_stick_x * limiter;
+        frontLeft.setPower(wheels.getFrontLeftPower());
+        frontRight.setPower(wheels.getFrontRightPower());
+        rearRight.setPower(wheels.getRearRightPower());
+        rearLeft.setPower(wheels.getRearLeftPower());
 
 
-        // SETTING THE POWER TO MOVE THE ROBOT WITH EACH MOTOR
+        telemetry.addData("Drive Train::Left_X", "(%.2f)", left_x);
+        telemetry.addData("Drive Train::Left_Y", "(%.2f)", left_y);
+        telemetry.addData("Drive Train::Right_X", "(%.2f)", right_x);
 
-        if ((right_x == 0) && gamepad1.dpad_down == false && gamepad1.dpad_left == false && gamepad1.dpad_right == false && gamepad1.dpad_up == false) {
-
-            frontLeft.setPower(left_y + left_x);
-            frontRight.setPower(left_x - left_y);
-            rearRight.setPower(-left_y - left_x);
-            rearLeft.setPower(left_y - left_x);
-        }
-
-        if (gamepad1.left_trigger > 0 && gamepad1.right_trigger == 0) {
-            limiter = 0.2;
-
-            telemetry.addData("limiter is", limiter);
-        } else if (gamepad1.right_trigger > 0 && gamepad1.left_trigger == 0) {
-            limiter = 0.3;
-            telemetry.addData("limiter is", limiter);
-
-        } else {
-            limiter = 0.5;
-            telemetry.addData("Limiter is ", limiter);
-        }
-
-
-        // MAKE THE ROBOT ROTATE
-        if ((left_y + left_x == 0) && (right_x != 0)) {
-            int dir = 1;
-            if (right_x < 0) dir = -1;
-
-            frontLeft.setPower(dir * limiter);
-
-            frontRight.setPower(dir * limiter);
-            rearRight.setPower(dir * limiter);
-            rearLeft.setPower(dir * limiter);
-
-            frontRight.setPower(dir * limiter);
-            rearRight.setPower(dir * limiter);
-            rearLeft.setPower(dir * limiter);
-
-        }
-
-        //DPAD DIRECTIONS
-        if (gamepad1.dpad_up) {
-            //DPAD FORWARD 0.5
-            frontLeft.setPower(1 * limiter);
-            frontRight.setPower(-1 * limiter);
-            rearLeft.setPower(1 * limiter);
-            rearRight.setPower(-1 * limiter);
-        } else if (gamepad1.dpad_down) {
-            //DPAD BACKWARD 0.5
-            frontLeft.setPower(-1 * limiter);
-            frontRight.setPower(1 * limiter);
-            rearLeft.setPower(-1 * limiter);
-            rearRight.setPower(1 * limiter);
-        } else if (gamepad1.dpad_left) {
-            //DPAD LEFT 0.5
-            frontLeft.setPower(1 * limiter);
-            frontRight.setPower(1 * limiter);
-            rearLeft.setPower(-1 * limiter);
-            rearRight.setPower(-1 * limiter);
-        } else if (gamepad1.dpad_right) {
-            //DPAD RIGHT 0.5
-            frontLeft.setPower(-1 * limiter);
-            frontRight.setPower(-1 * limiter);
-            rearLeft.setPower(1 * limiter);
-            rearRight.setPower(1 * limiter);
-        } else if (gamepad1.dpad_up && gamepad1.dpad_right) {
-            //DPAD NORTHEAST (RIGHT FRONT DIAGONAL)
-            frontLeft.setPower(1* limiter);
-            frontRight.setPower(0 * limiter);
-            rearLeft.setPower(0 * limiter);
-            rearRight.setPower(-1 * limiter);
-        } else if (gamepad1.dpad_up && gamepad1.dpad_left) {
-            //DPAD NORTHWEST (LEFT FRONT DIAGONAL
-            frontLeft.setPower(0 * limiter);
-            frontRight.setPower(-1 * limiter);
-            rearLeft.setPower(1 * limiter);
-            rearRight.setPower(0 * limiter);
-        } else if (gamepad1.dpad_down && gamepad1.dpad_right) {
-            frontLeft.setPower(0 * limiter);
-            frontRight.setPower(1 * limiter);
-            rearLeft.setPower(-1 * limiter);
-            rearRight.setPower(0 * limiter);
-        } else if (gamepad1.dpad_down && gamepad1.dpad_left) {
-            frontLeft.setPower(-1 * limiter);
-            frontRight.setPower(0 * limiter);
-            rearLeft.setPower(0 * limiter);
-            rearRight.setPower(1 * limiter);
-        }
-        */
+        telemetry.addData("Drive Train::FrontLeftPower", "(%.2f)", frontLeft.getPower());
+        telemetry.addData("Drive Train::FrontRightPower", "(%.2f)", frontRight.getPower());
+        telemetry.addData("Drive Train::RearRightPower", "(%.2f)", rearRight.getPower());
+        telemetry.addData("Drive Train::RearLeftPower", "(%.2f)", rearLeft.getPower());
 
     }
 }

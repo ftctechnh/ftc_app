@@ -39,99 +39,116 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * This file provides necessary functionality for We Love Pi Team's 2017 Relic
+ * Recovery Robot's arm used for picking and stacking up 6" glyphs cube
+ * into the crypto boxes.
  */
 
-@TeleOp(name="Grabber", group="We Love PI")
+
 public class WLP_RR_Grabber {
 
+    // constants
+    final double spinnerPower = 0.5;
+    final double armPower = 0.5;
+    final double stopPower = 0.0;
 
-    // Global variables to be initialized in the constructor
+
+    // Global variables to be initialized in init function
     private Telemetry telemetry = null;
     private HardwareMap hardwareMap = null;
     private Gamepad gamepad1 = null;
     private Gamepad gamepad2 = null;
 
 
-    // Declare Grabber members.
-    private DcMotor leftGrabberMotor = null;
-    private DcMotor rightGrabberMotor = null;
+    //  Declar Motors as private members
+    private DcMotor spinnerLeft = null;
+    private DcMotor spinnerRight = null;
+    private DcMotor armMover = null;
+    private DcMotor slider = null;
 
+    private boolean isInitialized = false;
 
+    // Use default Constructors
+    WLP_RR_Grabber() {
+        // Nothing needs to be done here
 
-    // Constructors
-
-    // Don't allow default constructors
-    private WLP_RR_Grabber() {
-        // Throw an error in the private constructor avoids call it within the class.
-        throw new AssertionError();
-    }
-
-    // This is the only valid consturctor
-    public WLP_RR_Grabber(Telemetry telemetry, HardwareMap hardwareMap,
-                          Gamepad gamepad1, Gamepad gamepad2){
-        this.telemetry = telemetry;
-        this.hardwareMap = hardwareMap;
-        this.gamepad1 = gamepad1;
-        this.gamepad2 = gamepad2;
     }
 
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
-
+    // Code to run ONCE when the driver hits INIT
 
     public void init(Telemetry telemetry, HardwareMap hardwareMap,
                      Gamepad gamepad1, Gamepad gamepad2) {
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        //true initialization
+
+        // Initiatalize hardware devices passed from parent
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
 
+        // Initialize the motors. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
 
-        leftGrabberMotor  = hardwareMap.get(DcMotor.class, "leftgrabbermotor");
-        rightGrabberMotor = hardwareMap.get(DcMotor.class, "rightgrabbermotor");
+        spinnerLeft = hardwareMap.get(DcMotor.class, "spinnerleft");
+        spinnerRight = hardwareMap.get(DcMotor.class, "spinnerright");
+        armMover = hardwareMap.get(DcMotor.class, "armmover");
+        slider = hardwareMap.get(DcMotor.class, "slider");
 
-
+        isInitialized = true;
         // Send telemetry message to signify that Grabber initialization complete
-        telemetry.addData("Grabber", "Init Complete");    //
+        telemetry.addData("Grabber", "Initialization succeeded");
     }
 
+
+    // During teleop, this function will be called repeatedly
     public void loop() {
 
-        // Calculate power as the average value of left and right triggers. This would
-        // correctly reflect driver's motivation. The reasoning behind average power
-        // would be to apply the same power on the both sides of the spinner.
+        if (isInitialized == false) {
+            return;
+        }
 
-        double power = (gamepad1.left_trigger + gamepad1.right_trigger)/2.0;
+        // Calculate and set motor powers
 
-        //
-        power    = Range.clip(power, -1.0, 1.0) ;
+        // Spinner: A button toggles the spinner
+        if (gamepad2.a) {
+            double power = (spinnerLeft.getPower() == spinnerPower) ? stopPower : spinnerPower;
+            spinnerLeft.setPower(power);
+            spinnerRight.setPower(-power);
+        }
+
+        // Arm: X - open, Y - Close, B stop
+        if (gamepad2.x) {
+            armMover.setPower(-armPower);
+        } else if (gamepad2.y) {
+            armMover.setPower(armPower);
+        } else if (gamepad2.b) {
+            armMover.setPower(stopPower);
+        }
 
 
-        // Send calculated power to the wheels
-        leftGrabberMotor.setPower(power);
-        rightGrabberMotor.setPower(-power);
+        // Slider: RT - up, LT - down
+        if (gamepad2.left_trigger > 0.0) {
+            slider.setPower(-gamepad2.left_trigger);
+        } else if (gamepad2.right_trigger > 0.0) {
+            slider.setPower(gamepad2.right_trigger);
+        } else {
+            if (slider.getPower() != stopPower) {
+                slider.setPower(stopPower);
+            }
+        }
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Motors Power", "left (%.2f), right (%.2f)",
-                leftGrabberMotor.getPower(), rightGrabberMotor.getPower());
+        telemetry.addData("Gamepad2 ", "left trigger (%.2f)", gamepad2.left_trigger);
+        telemetry.addData("Gamepad2 ", "right trigger (%.2f)", gamepad2.right_trigger);
+        telemetry.addData("Gamepad2 ", "A (%b)", gamepad2.a);
+        telemetry.addData("Gamepad2 ", "B (%b)", gamepad2.b);
+        telemetry.addData("Gamepad2 ", "X (%b)", gamepad2.x);
+        telemetry.addData("Gamepad2 ", "Y (%b)", gamepad2.y);
+
+        telemetry.addData("Motor ", "Spinner Left (%.2f)", spinnerLeft.getPower());
+        telemetry.addData("Motor ", "Spinner Right (%.2f)", spinnerRight.getPower());
+        telemetry.addData("Motor ", "Arm Mover (%.2f)", armMover.getPower());
+        telemetry.addData("Motor ", "Slider  (%.2f)", slider.getPower());
     }
 }

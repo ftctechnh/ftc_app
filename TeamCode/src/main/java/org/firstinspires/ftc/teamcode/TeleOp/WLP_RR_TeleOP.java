@@ -34,29 +34,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * This file provides basic Telop driving for We Love Pi 2017 Relic Revovery Mecanum Wheel
+ * dirvetrain robot.
  */
 
-@TeleOp(name="WLP_RR_TeleOp", group="We Love PI")
-public class WLP_RR_TeleOP extends OpMode{
+@TeleOp(name = "WLP_RR_TeleOp", group = "We Love PI")
+public class WLP_RR_TeleOP extends OpMode {
 
 
     // Declare OpMode members.
     ElapsedTime runtime = new ElapsedTime();
-    WLP_RR_Grabber grabber = new WLP_RR_Grabber(telemetry, hardwareMap, gamepad1, gamepad2);
-    WLP_MecanumDriveTrain drivetrain = new WLP_MecanumDriveTrain(telemetry, hardwareMap,
-            gamepad1, gamepad2);
+    WLP_RR_Grabber grabber = new WLP_RR_Grabber();
+    WLP_MecanumDriveTrain drivetrain = new WLP_MecanumDriveTrain();
 
 
     /*
@@ -66,15 +55,14 @@ public class WLP_RR_TeleOP extends OpMode{
     @Override
     public void init() {
 
-        telemetry.addData("Say", "Starting Init");    //
         // Initialize the grabber
-        telemetry.addData("Say", "Initialize Grabber");
-        //grabber.init(telemetry, hardwareMap, gamepad1, gamepad2);
-        telemetry.addData("Say", "Initialize  DriveTrain");
+        // grabber.init(telemetry, hardwareMap, gamepad1, gamepad2);
+
+        //Initialize Drivetrain
         drivetrain.init(telemetry, hardwareMap, gamepad1, gamepad2);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Ending Init");    //
+        telemetry.addData("WLP_RR_TeleOp: ", "Initialization succeeded");
 
     }
 
@@ -106,10 +94,8 @@ public class WLP_RR_TeleOP extends OpMode{
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        // Loop the grabber
-        //grabber.loop();
+        grabber.loop();
         drivetrain.loop();
-
 
         telemetry.update();
     }

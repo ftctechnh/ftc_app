@@ -51,9 +51,15 @@ public class WLP_MecanumWheels {
 
     double[] wheelPowers = new double[4];
 
-    // private
-    private WLP_MecanumWheels() {
-        throw new AssertionError();
+    // Override Default constructor
+     WLP_MecanumWheels() {
+         left_x=0;
+         left_y=0;
+         right_x=0;
+
+         for (int i = 0; i < wheelPowers.length; i++) {
+             wheelPowers[i] = 0.0;
+         }
     }
 
     private void CalclulatePower() {
@@ -89,10 +95,6 @@ public class WLP_MecanumWheels {
         CalclulatePower();
     }
 
-    // The only constructors
-    public WLP_MecanumWheels(double left_x, double left_y, double right_x) {
-        UpdateInput(left_x, left_y, right_x);
-    }
 
     public double getFrontLeftPower() {
         return wheelPowers[FrontLeft];
@@ -112,16 +114,19 @@ public class WLP_MecanumWheels {
 
     public void print(Boolean header) {
         if (header) {
-            System.out.printf("left_x, left_y, right_x, FrontLeft, FrontRight, RearLeft, RearRight%n");
+            System.out.printf("left_x, left_y, right_x, FrontLeft, " +
+                    "FrontRight, RearLeft, RearRight%n");
         }
-        System.out.printf("%6.2f, %6.2f, %7.2f, %9.2f, %10.2f, %8.2f, %9.2f%n", left_x, left_y, right_x,
-                wheelPowers[FrontLeft], wheelPowers[FrontRight], wheelPowers[RearLeft], wheelPowers[RearRight]);
+        System.out.printf("%6.2f, %6.2f, %7.2f, %9.2f, %10.2f, %8.2f, %9.2f%n",
+                left_x, left_y, right_x,
+                wheelPowers[FrontLeft], wheelPowers[FrontRight],
+                wheelPowers[RearLeft], wheelPowers[RearRight]);
     }
 
     public static void main(String[] args) {
         double JoyPos[] = { 1.0, 0.0, -1.0 };
         //double JoyPos[] = { 1.0, 0.75, 0.5, 0.25, 0.0, -0.5, -0.75, -1.0 };
-        WLP_MecanumWheels dt = new WLP_MecanumWheels(0, 0, 0);
+        WLP_MecanumWheels dt = new WLP_MecanumWheels();
         dt.print(true);
 
         for (int left_x = 0; left_x < JoyPos.length; left_x++) {
