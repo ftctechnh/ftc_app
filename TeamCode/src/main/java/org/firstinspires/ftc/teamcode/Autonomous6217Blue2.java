@@ -47,6 +47,7 @@ public class Autonomous6217Blue2 extends LinearOpMode {
     CRServo servoConR;
     DcMotor motorConL;
     DcMotor motorConR;
+    NormalizedColorSensor colorSensor;
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -77,6 +78,11 @@ public class Autonomous6217Blue2 extends LinearOpMode {
         servoConR = hardwareMap.crservo.get("servoConR");
         servoConR.setDirection(CRServo.Direction.REVERSE);
         servoTapper = hardwareMap.servo.get("tapper");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+        if (colorSensor instanceof SwitchableLight) {
+            ((SwitchableLight) colorSensor).enableLight(true);
+        }
+
 
         // S t a r t
 
@@ -84,11 +90,19 @@ public class Autonomous6217Blue2 extends LinearOpMode {
 
         // J e w e l s
 
-        move(0f, -0.5f, .35f);
+        move(0f, 0.5f, .23f);
 
         Wait(1);
 
-        move(.75f,0f,1.0f);
+        move(-.7f,0f,.75f);
+
+        Wait(1);
+
+        move(0f,-.25f,.15f);
+
+        Wait(1);
+
+        pivotRight(1.75f);
 
         Wait(1);
 
@@ -96,15 +110,11 @@ public class Autonomous6217Blue2 extends LinearOpMode {
 
         Wait(1);
 
-        move(0f,-.25f,.5f);
-
-        Wait(1);
-
         move(0f,.25f,.25f);
 
+        Wait(3);
 
-
-
+        move(0f,-.25f,.25f);
     }
 
     void move(float posx, float posy, float waitTime) {

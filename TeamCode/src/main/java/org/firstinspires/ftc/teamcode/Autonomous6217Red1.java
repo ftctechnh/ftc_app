@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Autonomous6217 extends LinearOpMode {
+public class Autonomous6217Red1 extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;

@@ -213,7 +213,7 @@ public class TeleOp6217_DRC extends OpMode
             Jack.setPosition(1.0);
         }
         else if(b) {
-            Jack.setPosition(0.2);
+            Jack.setPosition(0.25);
         }
 
         else if (y) {
