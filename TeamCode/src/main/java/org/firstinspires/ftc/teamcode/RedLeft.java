@@ -83,7 +83,7 @@ public class RedLeft extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.25;
     double          ballArmUp = .7; // makes ball Arm a variable L.A.S
-    double          ballArmDown = 0.075;
+    double          ballArmDown = 0.05;
 
     NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor L.A.S
 
