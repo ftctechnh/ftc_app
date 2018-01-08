@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
@@ -138,7 +137,7 @@ public class Delta_TeleOp extends OpMode {
 
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-        telemetry.addData("jewel pos", jewel_servo.getPosition());
+       //telemetry.addData("jewel pos", jewel_servo.getPosition());
         telemetry.update();
 
     }
