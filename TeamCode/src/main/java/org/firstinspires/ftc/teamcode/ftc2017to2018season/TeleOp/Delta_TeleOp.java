@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 
@@ -87,10 +88,10 @@ public class Delta_TeleOp extends OpMode {
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setDirection(DcMotor.Direction.REVERSE);
 
      openGlyph();
         jewel_servo.setPosition(0.1);
-
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
         telemetry.addData("jewel pos", jewel_servo.getPosition());
@@ -214,7 +215,7 @@ public class Delta_TeleOp extends OpMode {
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
-            slideMotor.setPower(-1.0 * gamepad2.right_stick_y);
+            slideMotor.setPower(gamepad2.right_stick_y);
 
         } else {
             slideMotor.setPower(0);
@@ -307,8 +308,8 @@ public class Delta_TeleOp extends OpMode {
     }
 
     public void openGlyph() {
-        glyphServoRight.setPosition(0.4);
-        glyphServoLeft.setPosition(0.5);
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
     }
 
     public void closeGlyph() {
