@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Autonomous Red Test Front Final")
+@Autonomous(name="Red Front")
 public class redFront extends Autonomous_General {
 
     public double rsBuffer = 20.00;

@@ -77,7 +77,7 @@ public class Autonomous_General extends LinearOpMode {
     public ModernRoboticsI2cColorSensor colorSensor;
     //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
-    public String ballColor = "blank";
+    public String ballColor;
     public static final String TAG = "Vuforia VuMark Sample";
 
     OpenGLMatrix lastLocation = null;
@@ -146,9 +146,8 @@ public class Autonomous_General extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(0.9);
-        glyphServoRight.setPosition(1);
-        glyphServoLeft.setPosition(0);
+        jewelServo.setPosition(0.2);
+        allOpenGlyphManipulator();
         light.setPower(0);
     }
 
@@ -828,14 +827,25 @@ public class Autonomous_General extends LinearOpMode {
     }*/
 
     public void openGlyphManipulator(){
-        glyphServoRight.setPosition(0.35);
+        glyphServoRight.setPosition(0.4);
         glyphServoLeft.setPosition(0.5);
     }
 
     public void closeGlyphManipulator(){
-        glyphServoRight.setPosition(0.05);
-        glyphServoLeft.setPosition(0.85);
+        glyphServoRight.setPosition(0.9);
+        glyphServoLeft.setPosition(0);
 
+    }
+
+    public void middleGlyphManipulator(){
+
+        glyphServoRight.setPosition(0.65);
+        glyphServoLeft.setPosition(0.25);
+    }
+
+    public void allOpenGlyphManipulator(){
+        glyphServoRight.setPosition(0.1);
+        glyphServoLeft.setPosition(0.8);
     }
     /**
      * uses range sensor by reading distance and then driving that distance
@@ -990,6 +1000,10 @@ public class Autonomous_General extends LinearOpMode {
         front_left_motor.setPower(leftSpeed);
         back_left_motor.setPower(leftSpeed);
 
+        telemetry.addData("rightSpeed", rightSpeed);
+        telemetry.addData("leftSpeed", leftSpeed);
+        telemetry.addData("angle", degrees);
+        telemetry.addData("front_left_target", leftFrontPos);
         while (opModeIsActive() &&
                 (back_left_motor.isBusy() && back_right_motor.isBusy()&&
                         front_left_motor.isBusy() && front_right_motor.isBusy())) {
@@ -1001,6 +1015,14 @@ public class Autonomous_General extends LinearOpMode {
             //idle();
             front_right_motor.setPower(Math.abs(rightSpeed));
             //idle();
+            telemetry.addData("rightSpeed", rightSpeed);
+            telemetry.addData("leftSpeed", leftSpeed);
+            telemetry.addData("angle", degrees);
+            telemetry.addData("front_left_target", leftFrontPos);
+            telemetry.addData("front_left_current", front_left_motor.getCurrentPosition());
+            telemetry.addData("front_right_target", rightFrontPos);
+            telemetry.addData("front_right_current", front_right_motor.getCurrentPosition());
+            telemetry.update();
             idle();
         }
         idle();

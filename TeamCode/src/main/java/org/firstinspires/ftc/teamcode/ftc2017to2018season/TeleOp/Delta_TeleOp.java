@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 
@@ -88,10 +89,10 @@ public class Delta_TeleOp extends OpMode {
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServoRight.setPosition(0.35);
-        glyphServoLeft.setPosition(0.5);
-        jewel_servo.setPosition(0.9);
+        openGlyph();
+        jewel_servo.setPosition(0.1);
 
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
@@ -139,7 +140,7 @@ public class Delta_TeleOp extends OpMode {
 
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-        telemetry.addData("jewel pos", jewel_servo.getPosition());
+      //  telemetry.addData("jewel pos", jewel_servo.getPosition());
         telemetry.update();
 
     }
@@ -216,7 +217,7 @@ public class Delta_TeleOp extends OpMode {
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
-            slideMotor.setPower(-1.0*gamepad2.right_stick_y);
+            slideMotor.setPower(gamepad2.right_stick_y);
 
         }
         else{
@@ -234,27 +235,13 @@ public class Delta_TeleOp extends OpMode {
         if (gamepad1.left_bumper) {
 
 //opening the claw
-            glyphServoRight.setPosition(0.35);
-            /*try {
-                glyphServoRight.setPosition(0.5);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-*/
-            glyphServoLeft.setPosition(0.5);
+           openGlyph();
         } else if (gamepad1.right_bumper) {
 
-            glyphServoRight.setPosition(0.05);
-
-            glyphServoLeft.setPosition(0.85);
-
-           /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
-            telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
-            telemetry.update();    */
+          closeGlyph();
         }
         else if (gamepad1.x){
-            glyphServoRight.setPosition(0.22);
-            glyphServoLeft.setPosition(0.65);
+           middleGlyph();
         }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
@@ -324,12 +311,20 @@ public class Delta_TeleOp extends OpMode {
         slideMotor.setPower(0);
 
     }
-    @Override
-    public void stop(){
-        glyphServoLeft.setPosition(0.5);
-        glyphServoRight.setPosition(0.35);
+  public void openGlyph(){
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
+  }
 
-    }
+  public void closeGlyph(){
+      glyphServoRight.setPosition(0.9);
+      glyphServoLeft.setPosition(0.0);
+  }
+
+  public void middleGlyph(){
+      glyphServoRight.setPosition(0.7);
+      glyphServoLeft.setPosition(0.25);
+  }
 }
 
 //--------------------------------------------------------------------------------------------

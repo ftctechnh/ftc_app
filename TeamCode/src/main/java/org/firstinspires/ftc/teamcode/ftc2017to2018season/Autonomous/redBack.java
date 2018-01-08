@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Autonomous Red Test Back Final")
+@Autonomous(name="Red Back")
 public class redBack extends Autonomous_General {
 
     DcMotor leftFront;

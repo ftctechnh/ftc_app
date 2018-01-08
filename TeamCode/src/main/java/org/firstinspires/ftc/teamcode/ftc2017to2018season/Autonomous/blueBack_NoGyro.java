@@ -6,12 +6,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Final.Autonomous_General_final;
 
 //10-28-17
-@Autonomous(name="Blue Back")
-public class blueBack extends Autonomous_General {
+@Autonomous(name="Blue Back No Gyro")
+public class blueBack_NoGyro extends Autonomous_General {
 
     DcMotor leftFront;
     DcMotor rightFront;
@@ -19,6 +17,7 @@ public class blueBack extends Autonomous_General {
     DcMotor rightBack;
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
+
 
     @Override
     public void runOpMode() {
@@ -28,23 +27,12 @@ public class blueBack extends Autonomous_General {
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
         initiate();
-        telemetry.addData("--->", "Gyro Calibrating");
-        telemetry.update();
-        gyro.calibrate();
-
-
-        while(gyro.isCalibrating()){
-            sleep(50);
-            idle();
-
-        }
-
-        telemetry.addData("---->","Gyro Calibrated. Good to go...");
+        sleep(500);
+        telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
 
         waitForStart();
 //reseting gyro sensor
-        gyro.resetZAxisIntegrator();
 
         toggleLight(true);
         light.setPower(1);
@@ -89,7 +77,7 @@ public class blueBack extends Autonomous_General {
             encoderMecanumDrive(0.9, -10,-10,5000,0);
             jewelServo.setPosition(0);
             sleep(1000);
-            encoderMecanumDrive(0.9,25,25,5000,0);
+            encoderMecanumDrive(0.9,35,35,5000,0);
             sleep(1000);
         }
         else if(ballColor.equals("red")){
@@ -122,6 +110,12 @@ public class blueBack extends Autonomous_General {
                 encoderMecanumDrive(0.9, 25, 25, 5000, 0);
             }
         }
+
+        //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
+        sleep(100);
+        encoderMecanumDrive(0.4,26,25,5000,0);
+
+
         if(rangeSensor.getDistance(DistanceUnit.CM)< 90 || rangeSensor.getDistance(DistanceUnit.CM)> 200){
             telemetry.addData("", "rangeSensor malfunctioned");
             telemetry.update();
@@ -137,13 +131,10 @@ public class blueBack extends Autonomous_General {
             else{
                 encoderMecanumDrive(0.7,30,30,500,0);
             }
-        }else {
-            //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
-            sleep(100);
-            encoderMecanumDrive(0.7, 25, 25, 5000, 0);
-
-            gyroTurn(0.3, 0);
-
+        }
+        else {
+            telemetry.addData("", "Doing Simple Range Distance");
+            telemetry.update();
             sleep(250);
 
             if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -154,9 +145,13 @@ public class blueBack extends Autonomous_General {
                 simpleRangeDistance(123, 0.35, rsBuffer);
 
             }
+            else{
+                encoderMecanumDrive(0.7,76,76,500,0);
+            }
         }
 
-        gyroTurn(0.3,90);
+
+        encoderTurn(90, 0.3);
         sleep(750);
         moveDownGlyph(0.4);
         sleep(500);
@@ -166,7 +161,7 @@ public class blueBack extends Autonomous_General {
 
 
 
-    }
+        }
 
 
 }

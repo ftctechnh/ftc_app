@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Final.Autonomous_Gener
 import static org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.beta.AutonomousGeneral.runtime;
 
 //10-28-17
-@Autonomous(group = "Blue", name = "Blue Front")
+@Autonomous(group = "Blue Front")
 public class blueFront extends Autonomous_General {
 
     public double rsBuffer = 20.00;
