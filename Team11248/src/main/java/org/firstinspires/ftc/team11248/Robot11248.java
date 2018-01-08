@@ -50,13 +50,10 @@ public class Robot11248 extends HolonomicDriver_11248 {
     private final String[] frontServoNames = {"servo1", "servo9", "servo2", "servo8"};
     private final String[] backServoNames = {"servo10", "servo3", "servo11", "servo4"};
 
-    private final double[] frontClose = {0, .9, 0, .9};
-    private final double[] frontGrab = {.45, .35, .4, .4};
-    private final double[] frontOpen = {.6, .225, .6, .225};
-
-    private final double[] backOpen = {.6, .15, .725, .15};
-    private final double[] backGrab = {.4, .35, .50, .40};
-    private final double[] backClose = {0, .85, .2, .85};
+    private final double[] close = {0, 0, 0, 0};
+    private final double[] release = {.6, .3, .6, .3};
+    private final double[] grab = {.45, .55, .45, .55};
+    private final double[] open = {1, 0, 1, 0};
 
     /*
      * SERVO DECLARATIONS
@@ -64,7 +61,7 @@ public class Robot11248 extends HolonomicDriver_11248 {
 
     private ServoController servoController1, servoController2;
     private Servo jewelArm;
-    private final double jewelDown = 0.125; // servo7
+    private final double jewelDown = 0.09; // servo7
     private final double jewelUp = .85;
 
 
@@ -105,8 +102,8 @@ public class Robot11248 extends HolonomicDriver_11248 {
          * SERVO INITS
          */
         this.jewelArm = hardwareMap.servo.get("servo7");
-        this.frontClaw = new Claw(hardwareMap, frontServoNames, frontOpen, frontGrab, frontClose);
-        this.backClaw = new Claw(hardwareMap, backServoNames, backOpen, backGrab, backClose);
+        this.frontClaw = new Claw(hardwareMap, frontServoNames, open, release, grab, close);
+        this.backClaw = new Claw(hardwareMap, backServoNames, open, release, grab, close);
         this.servoController1 = hardwareMap.servoController.get("Servo Controller 0");
         this.servoController2 = hardwareMap.servoController.get("Servo Controller 1");
 
@@ -134,13 +131,8 @@ public class Robot11248 extends HolonomicDriver_11248 {
 
     public void init(){
 
-        try {
-            frontClaw.close();
-            backClaw.close();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        frontClaw.open();
+        backClaw.open();
         raiseJewelArm();
         setDimLed(true, true);
     }

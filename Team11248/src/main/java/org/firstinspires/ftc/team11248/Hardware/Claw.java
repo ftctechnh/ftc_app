@@ -11,14 +11,14 @@ public class Claw {
 
     public enum Position {
         OPEN,
+        RELEASE,
         GRAB,
         CLOSE,
-        OPEN_MAX
     }
 
     public Position state;
 
-    private double[] open, grab, close, open_max;
+    private double[] open, grab, close, release;
 
     private Servo tl, tr, bl, br;
 
@@ -30,9 +30,10 @@ public class Claw {
      * @param grab Double array of 4 grabbing values of the servos {top_left, top_right, bottom_left, bottom_right}
      * @param close Double array of 4 closed values of the servos {top_left, top_right, bottom_left, bottom_right}
      */
-    public Claw(HardwareMap hardwareMap, String[] servoNames, double[] open, double[] grab, double[] close  ){
+    public Claw(HardwareMap hardwareMap, String[] servoNames, double[] open, double[] release, double[] grab, double[] close ){
 
         this.open = open;
+        this.release = release;
         this.grab = grab;
         this.close = close;
 
@@ -40,20 +41,6 @@ public class Claw {
         this.tr = hardwareMap.servo.get(servoNames[1]);
         this.bl = hardwareMap.servo.get(servoNames[2]);
         this.br = hardwareMap.servo.get(servoNames[3]);
-
-//       `
-
-    }
-
-    public void open_max(){
-
-        tl.setPosition(open_max[0]);
-        tr.setPosition(open_max[1]);
-        bl.setPosition(open_max[2]);
-        br.setPosition(open_max[3]);
-
-        state = Position.OPEN_MAX;
-
 
     }
 
@@ -66,6 +53,18 @@ public class Claw {
         state = Position.OPEN;
     }
 
+    public void release(){
+
+        tl.setPosition(release[0]);
+        tr.setPosition(release[1]);
+        bl.setPosition(release[2]);
+        br.setPosition(release[3]);
+
+        state = Position.RELEASE;
+
+
+    }
+
     public void grab(){
         tl.setPosition(grab[0]);
         tr.setPosition(grab[1]);
@@ -75,12 +74,10 @@ public class Claw {
         state = Position.GRAB;
     }
 
-    public void close() throws InterruptedException {
+    public void close() {
 
         tr.setPosition(close[1]);
         br.setPosition(close[3]);
-
-        Thread.sleep(100);
 
         tl.setPosition(close[0]);
         bl.setPosition(close[2]);

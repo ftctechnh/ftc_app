@@ -49,37 +49,40 @@ public class Teleop extends OpMode {
 
         //DIRECTION SWAP
 
-        if ( (gamepad1.b && !prevGP1.b) || (gamepad2.b && !prevGP2.b) ) {
-
-            if(robot.getOffsetAngle() == 0){
-
-                robot.setOffsetAngle(HolonomicDriver_11248.BACK_OFFSET);
-                robot.backClaw.open();
-
-            } else {
-                robot.setOffsetAngle(0);
-                robot.frontClaw.open();
-            }
-
-        }
+//        if ( (gamepad1.b && !prevGP1.b) || (gamepad2.b && !prevGP2.b) ) {
+//
+//            if(robot.getOffsetAngle() == 0){
+//
+//                robot.setOffsetAngle(HolonomicDriver_11248.BACK_OFFSET);
+//                robot.frontClaw.release();
+//                robot.backClaw.release();
+//
+//            } else {
+//                robot.setOffsetAngle(0);
+//                robot.frontClaw.release();
+//                robot.backClaw.release();
+//
+//            }
+//
+//        }
 
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             robot.setOffsetAngle(0);
             robot.frontClaw.open();
-            robot.backClaw.open();
+            robot.backClaw.release();
 
         } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
             robot.setOffsetAngle(HolonomicDriver_11248.BACK_OFFSET);
             robot.backClaw.open();
-            robot.frontClaw.open();
+            robot.frontClaw.release();
 
         }
 
 
+        //DRIVE TRAIN
         robot.drive(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, true);
-
+        if (gamepad1.y && !prevGP1.y) robot.toggleDriftMode();
         robot.setFastMode(gamepad1.right_bumper);
-
 
 
 
@@ -105,15 +108,11 @@ public class Teleop extends OpMode {
         }
 
         if (frontLiftGamepad.x && !frontLiftGamepadPrev.x)
-            if (robot.frontClaw.state == Claw.Position.CLOSE) {
+            if (robot.frontClaw.state == Claw.Position.RELEASE) {
                 robot.frontClaw.open();
 
             } else {  // if claw is open or grabbed then close
-                try {
-                    robot.frontClaw.close();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                robot.frontClaw.release();
             }
 
         //Sets arm motor to whatever right trigger is
@@ -142,27 +141,22 @@ public class Teleop extends OpMode {
         }
 
         if (backLiftGamepad.x && !backLiftGamepadPrev.x)
-            if (robot.backClaw.state == Claw.Position.CLOSE) {
+            if (robot.backClaw.state == Claw.Position.RELEASE) {
                 robot.backClaw.open();
 
             } else {  // if claw is open or grabbed then close
-                try {
-                    robot.backClaw.close();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                robot.backClaw.release();
             }
 
         //Sets arm motor to whatever right trigger is
         if (backLiftGamepad.right_trigger > 0)
             robot.setBackLiftPower(backLiftGamepad.right_trigger);
+
         else if (backLiftGamepad.left_trigger > 0)
             robot.setBackLiftPower(-backLiftGamepad.left_trigger);
+
         else
             robot.setBackLiftPower(0);
-
-
-
 
 
 
