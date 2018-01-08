@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous(name = "encoderTurn")
 public class encoderTurn extends Autonomous_General{
 
-    public static double ENCODERSPER360 = 110.2362204724409;
+    public static double ENCODERSPER360 = 120.2362204724409;
 
     public void runOpMode(){
         initiate();

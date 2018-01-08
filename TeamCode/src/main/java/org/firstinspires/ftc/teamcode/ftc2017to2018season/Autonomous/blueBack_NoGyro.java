@@ -113,7 +113,7 @@ public class blueBack_NoGyro extends Autonomous_General {
 
         //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
         sleep(100);
-        encoderMecanumDrive(0.4,26,25,5000,0);
+        encoderMecanumDrive(0.3,26,25,5000,0);
 
 
         if(rangeSensor.getDistance(DistanceUnit.CM)< 90 || rangeSensor.getDistance(DistanceUnit.CM)> 200){
@@ -151,7 +151,7 @@ public class blueBack_NoGyro extends Autonomous_General {
         }
 
 
-        encoderTurn(90, 0.3);
+        encoderTurn(95, 0.3);
         sleep(750);
         moveDownGlyph(0.4);
         sleep(500);
