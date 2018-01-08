@@ -18,7 +18,7 @@ public class TankDrive extends OpMode {
 
     @Override
     public void init() {
-        this.driveSystem = new DriveSystem(this);
+        this.driveSystem = new DriveSystem(hardwareMap, gamepad1);
         this.armSystem = new ArmSystem(hardwareMap);
         this.armSystem.init();
     }
