@@ -68,8 +68,8 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="blueFront.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/blueFront.java">
+      <file leaf-file-name="Delta_TeleOp.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="85">
               <caret line="12" column="31" lean-forward="false" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
@@ -2626,6 +2626,75 @@
               <option name="name" value="ftc_app" />
               <option name="projectBuildClasspath">
                 <list>
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/ant-1.9.6.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/ant-launcher-1.9.6.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-base-services-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-base-services-groovy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-cli-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-core-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-docs-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-installation-beacon-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-jvm-services-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-compiler-plugin-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-tooling-builders-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-kotlin-dsl-tooling-models-0.10.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-launcher-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-logging-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-messaging-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-model-core-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-model-groovy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-process-services-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-resources-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-runtime-api-info-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-tooling-api-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/gradle-wrapper-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/groovy-all-2.4.11.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-announce-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-antlr-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-build-cache-http-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-build-comparison-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-build-init-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-code-quality-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-composite-builds-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-dependency-management-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-diagnostics-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ear-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ide-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ide-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ide-play-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-ivy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-jacoco-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-javascript-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-groovy-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-java-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-jvm-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-language-scala-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-maven-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-osgi-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-base-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-jvm-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-platform-play-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-plugin-development-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-plugin-use-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-plugins-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-publish-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-reporting-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-resources-http-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-resources-s3-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-resources-sftp-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-scala-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-signing-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-test-kit-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-testing-base-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-testing-jvm-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-testing-native-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-tooling-api-builders-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/gradle-workers-4.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-4.1/lib/plugins/ivy-2.2.0.jar" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/java" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/groovy" />
                 </list>
@@ -2658,7 +2727,6 @@
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/Old_12_2_17/Autonomous_General_old.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/Old_12_2_17/red_frontCorner_old.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Test/jewel_servo.java" />
-        <option value="$PROJECT_DIR$/libs/RobotCore-release-sources.jar!/com/qualcomm/robotcore/hardware/HardwareDevice.java" />
         <option value="$PROJECT_DIR$/libs/RobotCore-release-sources.jar!/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp_DEBUG.java" />
         <option value="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/Old_12_2_17/blue_BackCorner.java" />
@@ -2697,10 +2765,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -2720,6 +2788,73 @@
       <foldersAlwaysOnTop value="false" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Gradle Scripts" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidBuildScriptsGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TeamCode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FtcRobotController" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FtcRobotController" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="robotcontroller" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ftc_app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FtcRobotController" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manifests" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidManifestsGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -3018,80 +3153,13 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ftc_app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Gradle Scripts" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidBuildScriptsGroupNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ftc_app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="TeamCode" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ftc_app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FtcRobotController" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ftc_app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FtcRobotController" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="robotcontroller" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ftc_app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FtcRobotController" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="manifests" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidManifestsGroupNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
-    <property name="settings.editor.selected.configurable" value="instant.run" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="device.picker.selection" value="ZY223H5V2J" />
     <property name="sync.plugin.last.upgrade.timestamp" value="1515097108601" />
@@ -3284,27 +3352,6 @@
       </ExternalSystemSettings>
       <method />
     </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <envs />
@@ -3483,8 +3530,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -3577,13 +3623,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3847">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/RobotCore-release-sources.jar!/com/qualcomm/robotcore/hardware/HardwareDevice.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="867">
-          <caret line="80" column="15" lean-forward="false" selection-start-line="80" selection-start-column="15" selection-end-line="80" selection-end-column="15" />
         </state>
       </provider>
     </entry>
@@ -3930,6 +3969,23 @@
         <state relative-caret-position="518">
           <caret line="126" column="31" lean-forward="false" selection-start-line="126" selection-start-column="31" selection-end-line="126" selection-end-column="31" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/RobotCore-release-sources.jar!/com/qualcomm/robotcore/hardware/HardwareDevice.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="664">
+          <caret line="81" column="0" lean-forward="true" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="727">
+          <caret line="110" column="0" lean-forward="true" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
