@@ -100,14 +100,4 @@ repositories {
         dirs rootProject.file('libs')
     }
 }
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
-
-    }
-}
 apply from: 'build.release.gradle'
