@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Qualifier;
 
+import android.app.ListFragment;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,8 +15,14 @@ public class GlyphTrain {
 //    public enum SpeedSetting {FAST, SLOW}
 
 //    private SpeedSetting speedMode;
-public double pulleydiameter = 1;
+    public double pulleydiameter = 1;
     public final double TICKS_REV = 1120;
+    public int lowerLiftLimit = 0;
+    public int upperLiftLimit = 4470;
+    public int liftIndex = 0;
+    public int[] liftPosition ={0,1200,2400};
+//     0,(int) (7 * TICKS_REV / (pulleydiameter*Math.PI)), (int)( 13 * TICKS_REV / (pulleydiameter*Math.PI) ) };
+
 
     //Iniatalize motors
     public DcMotor left_glyph  = null;
@@ -44,8 +52,10 @@ public double pulleydiameter = 1;
 
         // Set all motors to zero power
         stopGlyphMotors();
-
-
+        // reset encoder to zero for lift (assume you have it down)
+        lift_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
@@ -96,14 +106,52 @@ public double pulleydiameter = 1;
         // get the current encoder counts
         int startposition = lift_motor.getCurrentPosition();
 
-        while(lift_motor.getCurrentPosition() < startposition + (height/(Math.PI*pulleydiameter))*TICKS_REV ){
-            lift_motor.setPower(0.7);
+        while(lift_motor.getCurrentPosition() < startposition + (height/(Math.PI*pulleydiameter))*TICKS_REV  &&
+              lift_motor.getCurrentPosition() < upperLiftLimit  ){
+            lift_motor.setPower(0.9);
         }
 
         lift_motor.setPower(0.0);
 
     }
+    void liftGlyphIndex(int newindex){
 
+        //height is encoder counts or ticks
+        // going up
+        if(liftPosition[newindex] > lift_motor.getCurrentPosition()){
+            while(lift_motor.getCurrentPosition() < liftPosition[newindex] &&
+                    lift_motor.getCurrentPosition() < upperLiftLimit  ){
+                lift_motor.setPower(0.9);
+            }
+        } else{                           // going down
+            while(lift_motor.getCurrentPosition() > liftPosition[newindex]  &&
+                    lift_motor.getCurrentPosition() >lowerLiftLimit  ){
+                lift_motor.setPower(-0.7);
+            }
+
+        }
+
+
+        lift_motor.setPower(0.0);
+
+    }
+
+    void lowerGlyph(float height){
+        // clamp glyph
+        //glyphclamp("close");
+
+        //height is encoder counts or inches, absolute or relative?
+        // get the current encoder counts
+        int startposition = lift_motor.getCurrentPosition();
+
+        while(lift_motor.getCurrentPosition() > startposition - (height/(Math.PI*pulleydiameter))*TICKS_REV &&
+                lift_motor.getCurrentPosition() > lowerLiftLimit  ){
+            lift_motor.setPower(-0.7);
+        }
+
+        lift_motor.setPower(0.0);
+
+    }
 
 
 }

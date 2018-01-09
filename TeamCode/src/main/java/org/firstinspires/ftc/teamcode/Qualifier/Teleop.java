@@ -21,6 +21,9 @@ public class Teleop extends OpMode {
     double timeLeft;
 
     public boolean backIsReleased = true;
+    public boolean rightbumperIsReleased = true;
+    public boolean righttriggerIsReleased = true;
+
     boolean loadedLastTime = false;
 
     double lastLoadTime;
@@ -57,13 +60,50 @@ public class Teleop extends OpMode {
         } else {
             backIsReleased = true;
         }
-        telemetry.addData("backisreleased",backIsReleased);
-//        if (gamepad1.back) {
-//            gromit.driveTrain.frontisforward = true;
-//        } else {
-//            gromit.driveTrain.frontisforward = false;
-//        }
         //------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------
+        //Lift/lower glyph
+        //------------------------------------------------------------------------------
+       if(gamepad1.right_bumper) {
+            if (rightbumperIsReleased) {
+                rightbumperIsReleased = false;
+                gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
+                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lift
+                //gromit.glyphTrain.liftGlyph(6);
+            }
+        } else {
+            rightbumperIsReleased = true;
+        }
+       if(gamepad1.right_trigger > 0.1) {
+            if (righttriggerIsReleased) {
+                righttriggerIsReleased = false;
+                //gromit.glyphTrain.lowerGlyph(6);
+                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is 0
+                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
+            }
+        } else {
+            righttriggerIsReleased = true;
+        }
+        telemetry.addData("liftticks",gromit.glyphTrain.lift_motor.getCurrentPosition() );
+        //------------------------------------------------------------------------------
+        // glyph lift
+        if (gamepad1.dpad_up) {
+            if(gromit.glyphTrain.lift_motor.getCurrentPosition() < gromit.glyphTrain.upperLiftLimit){
+                gromit.glyphTrain.lift_motor.setPower(1.0);
+            }else {
+                gromit.glyphTrain.lift_motor.setPower(0);
+            }
+        } else if (gamepad1.dpad_down) {
+            if(gromit.glyphTrain.lift_motor.getCurrentPosition() > gromit.glyphTrain.lowerLiftLimit){
+                gromit.glyphTrain.lift_motor.setPower(-0.8);
+            }else {
+                gromit.glyphTrain.lift_motor.setPower(0);
+            }
+
+        } else {
+            gromit.glyphTrain.lift_motor.setPower(0);
+        }
+
         //set drive speed
         if (gamepad1.left_bumper) {
             gromit.driveTrain.setSpeedMode(FAST);
@@ -84,14 +124,6 @@ public class Teleop extends OpMode {
             gromit.glyphTrain.glyphclamp("close");
         }
 
-        // glyph lift
-        if (gamepad1.dpad_up) {
-            gromit.glyphTrain.lift_motor.setPower(1.0);
-        } else if (gamepad1.dpad_down) {
-            gromit.glyphTrain.lift_motor.setPower(-.5);
-        } else {
-            gromit.glyphTrain.lift_motor.setPower(0);
-        }
 
         if (gamepad1.a){
             gromit.relicArm.relicClawServo.setPosition(.4);
@@ -175,8 +207,10 @@ public class Teleop extends OpMode {
             gromit.jewelArm.jewelArmDown();
         }*/
         double vector = toDegrees(atan(gamepad1.right_stick_y / gamepad1.right_stick_x)) + 90;
-        telemetry.addLine("vector: " + vector);
+        telemetry.addData("vector: ",  vector);
         telemetry.addLine("Time Left: " + timeLeft);
+        telemetry.addData("liftindex",gromit.glyphTrain.liftIndex);
+
     }
 
     @Override
@@ -185,62 +219,3 @@ public class Teleop extends OpMode {
     }
 
 }
-/*
-if (gamepad1.a) {
-                if (gromit.a1isreleased) {
-                    gromit.a1isreleased = false;
-                    if (gromit.smartsweeping) {                                                     //Turn off Smart Sweeping
-                        gromit.smartsweeping = false;
-                        gromit.motorsweeper.setPower(0.0);
-                        gromit.sweeperon = false;
-                    } else {                                                                        //Turn on Smart Sweeping
-                        gromit.smartsweeping = true;
-                        gromit.motorsweeper.setPower(gromit.sweeperpowerauto);
-                        gromit.sweeperon = true;
-                    }
-                }
-            } else {
-                gromit.a1isreleased = true;
-            }
-public boolean backisreleased = true;
-
-// Only toggle Mode when the button was
-// released and it is now pressed.
-
-if (gamepad1.back) {                                                                // if the button is pressed
-                if (backisreleased) {                                               // and if the button was released toggle
-                    backisreleased = false;
-                    if (gromit.smartsweeping) {                                                     //Turn off Smart Sweeping
-                        gromit.smartsweeping = false;
-                        gromit.motorsweeper.setPower(0.0);
-                        gromit.sweeperon = false;
-                    } else {                                                                        //Turn on Smart Sweeping
-                        gromit.smartsweeping = true;
-                        gromit.motorsweeper.setPower(gromit.sweeperpowerauto);
-                        gromit.sweeperon = true;
-                    }
-                }
-} else {
-                backisreleased = true;
-}
-
-
-if(gamepad1.back) {
-
-// Only toggle SlowMode when the button was
-// released and it is now pressed.
-
-  if (backIsReleased) {
-    backIsReleased = false;
-    if(frontIsForward == false) {
-      SlowMode = true;
-    } else if(SlowMode == true) {
-      SlowMode = false;
-    }
-  }
-
-} else {
-backIsReleased = true;
-}
-
- */
