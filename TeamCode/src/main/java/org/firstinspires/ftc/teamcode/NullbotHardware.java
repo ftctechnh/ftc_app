@@ -78,11 +78,11 @@ public class NullbotHardware {
     public DcMotor[] motorArr;
     public final int hz = 100;
 
-    BNO055IMU imu;
+    public BNO055IMU imu;
     double gyroError;
 
     // State used for updating telemetry
-    Orientation angles;
+    public Orientation angles;
 
     public boolean initialized = false;
 
