@@ -305,7 +305,6 @@ public class Auto extends LinearOpMode {
             sleep(200);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueBackHeading3,0);
 
-
         }
 
 
