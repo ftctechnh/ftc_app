@@ -4,11 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
 
 
 /**
@@ -17,11 +15,12 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 @Autonomous(name="7519Autonomous", group="7519")
 @Disabled
-public class Team7519Autonomous extends LinearOpMode {
+public class Team7519AutonomousBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     private CRServo testServo;
     private DcMotor motorLift, leftFront, rightFront, leftRear, rightRear;
+    private ColorSensor colorSensor;
     private ElapsedTime     runtime = new ElapsedTime();
 
 
@@ -38,6 +37,7 @@ public class Team7519Autonomous extends LinearOpMode {
         leftRear = hardwareMap.dcMotor.get("leftRear");
         rightRear = hardwareMap.dcMotor.get("rightRear");
         testServo = hardwareMap.crservo.get("testServo");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -48,9 +48,18 @@ public class Team7519Autonomous extends LinearOpMode {
 
         //Insert Code Below
 
+        int bColor = colorSensor.blue();
+        int rColor = colorSensor.red();
+        boolean color = false;
+
+
+        //in event of searching for blue
+
         runtime.reset();
         while(opModeIsActive() && runtime.seconds()<3){
-            if(true){//Replace true with Team Colored Jewel
+            if(bColor > rColor)
+                color = true;
+            if(color){//Replace true with Team Colored Jewel
                 leftFront.setPower(speed);
                 rightFront.setPower(speed);
                 leftRear.setPower(speed);
