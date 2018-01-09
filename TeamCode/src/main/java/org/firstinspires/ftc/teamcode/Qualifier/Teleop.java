@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.DirectionSetting.BACK;
+import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.DirectionSetting.FRONT;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.FAST;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.SLOW;
 import static java.lang.Math.atan;
@@ -45,6 +47,11 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         timeLeft = 120 - runtime.seconds();
+        //set drive direction
+        if (gamepad1.back)
+            gromit.driveTrain.setForwardDirection(BACK);
+        else
+            gromit.driveTrain.setForwardDirection(FRONT);
 
         //set drive speed
         if (gamepad1.left_bumper)

@@ -205,6 +205,10 @@ public class DriveTrain {
         speedMode = speed;
     }
 
+    public void setForwardDirection(DirectionSetting direction) {
+        forwardDirection = direction;
+    }
+
     public float getheading() {
         // Acquiring the angles is relatively expensive; we don't want
         // to do that in each of the three items that need that info, as that's
