@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -25,7 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 //@Disabled
 public class AutonomousTemplate extends LinearOpMode
 {
-  /* Declare all devices since hardware class isn't working */
+    /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
     DcMotor                 backLeftMotor;
     DcMotor                 frontRightMotor;
@@ -35,8 +36,9 @@ public class AutonomousTemplate extends LinearOpMode
     Servo                   gemServo;
     BNO055IMU               imu;
     CRServo                 clawServo;
+    ModernRoboticsI2cRangeSensor sideRangeSensor;
+    ModernRoboticsI2cRangeSensor frontRangeSensor;
 
-  /* Set up and init all variables */
     Orientation             lastAngles = new Orientation();
     double globalAngle;
     double xPosUp = 0;
@@ -46,32 +48,13 @@ public class AutonomousTemplate extends LinearOpMode
     static double clawStill = 0;
     OpenGLMatrix lastLocation = null;
 
-    /*******************************/
-    /* Define team color and position
-         When saving the different versions of autonomous,
-         make one for each color position.
-         All other code should work.
-    */
-
     String teamColorPosition = "BlueRight";
 //    String teamColorPosition = "BlueLeft";
 //    String teamColorPosition = "RedRight";
 //    String teamColorPosition = "RedLeft";
 
-    /*******************************/
-
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
     VuforiaLocalizer vuforia;
-
-    /* Create timers used in autonomous */
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime verticaltimer = new ElapsedTime();
-
-
-    /* Create a "timer" that begins once the OpMode begins */
-    ElapsedTime drivetimer = new ElapsedTime();
-
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -106,6 +89,8 @@ public class AutonomousTemplate extends LinearOpMode
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
         clawServo =  hardwareMap.crservo.get("CS");
+        sideRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "SRS");
+        frontRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "FRS");
 
     /* Reverse the direction of the front right and back right motors */
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -116,6 +101,10 @@ public class AutonomousTemplate extends LinearOpMode
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+    /* Init the range sensor */
+        sideRangeSensor.initialize();
+        frontRangeSensor.initialize();
 
     /* Set parameters for the gyro (imu)*/
         BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
@@ -271,13 +260,13 @@ public class AutonomousTemplate extends LinearOpMode
         movebytime(200, .2, "Backward");
     }
 
-/***********************************************************************************************
- * These are all of the methods used in the Autonomous*
- ***********************************************************************************************/
+    /***********************************************************************************************
+     * These are all of the methods used in the Autonomous*
+     ***********************************************************************************************/
 
 
 /* This method moves the claw up or down for a certain amount of time either up or down */
-    public void moveclawbytime(int time, double power, String direction) {
+    public void moveclawbytime(long time, double power, String direction) {
 
     /* This switch case is determined by the String indicated above */
         switch (direction) {
@@ -289,14 +278,15 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
+    /* Sleep instead timer sucks */
         sleep(time);
 
-    /* turn off claw motor */
+    /* Once the while loop above finishes turn off claw motor */
         verticalArmMotor.setPower(0);
     }
 
-/* This method moves the robot forward for time and power indicated*/
-    public void movebytime (int time, double power, String direction) {
+    /* This method moves the robot forward for time and power indicated*/
+    public void movebytime (long time, double power, String direction) {
 
     /* This switch case is determined by the String direction indicated above */
 
@@ -315,19 +305,53 @@ public class AutonomousTemplate extends LinearOpMode
                 break;
         }
 
+    /* Sleep */
         sleep(time);
 
-    /* turn off the wheels */
+
+    /* Once the while loop above finishes turn off the wheels */
+        wheelsOff();
+    }
+
+    /* This method moves the robot forward for time and power indicated*/
+    public void movePowerDistanceDirectionSensor ( double power, double distance, String direction, String sensor) {
+
+    /* This switch case is determined by the String direction indicated above */
+        switch (direction) {
+            case "Forward":
+                setWheelPower(power, -power, power, -power);
+                break;
+            case "Backward":
+                setWheelPower(-power, power, -power, power);
+                break;
+            case "Right":
+                setWheelPower(power, power, -power, -power);
+                break;
+            case "Left":
+                setWheelPower(-power, -power, power, power);
+                break;
+        }
+
+        switch (sensor){
+            case "Front":
+                while(opModeIsActive() && sideRangeSensor.cmUltrasonic() != distance){};
+                break;
+            case "Side":
+                while(opModeIsActive() && frontRangeSensor.cmUltrasonic() != distance){};
+                break;
+        }
+
+    /* Once the while loop above finishes turn off the wheels */
         wheelsOff();
     }
 
 
-/* This method simply sets all wheel motors to zero power */
+    /* This method simply sets all wheel motors to zero power */
     public void wheelsOff() {
         setWheelPower(0,0,0,0);
     }
 
-/* This method powers each wheel to whichever power is desired */
+    /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
 
         /* Create power variables */
@@ -367,11 +391,11 @@ public class AutonomousTemplate extends LinearOpMode
         }
         if ( BackRightPower != backRight)
             backRightMotor.setPower(br);
-            BackRightPower = backRight;
+        BackRightPower = backRight;
     }
 
-/* This method is tells the color sensor to read color, then rotate to knock off the blue
-jewel and then return the color sensor arm back up */
+    /* This method is tells the color sensor to read color, then rotate to knock off the blue
+    jewel and then return the color sensor arm back up */
     public void knockjewelRed() {
 
         if (colorSensor.red() < colorSensor.blue()) {
@@ -391,8 +415,8 @@ jewel and then return the color sensor arm back up */
         }
     }
 
-/* This method is tells the color sensor to read color, then rotate to knock off the red
-jewel and then return the color sensor arm back up */
+    /* This method is tells the color sensor to read color, then rotate to knock off the red
+    jewel and then return the color sensor arm back up */
     public void knockjewelBlue(){
 
         if (colorSensor.red() > colorSensor.blue()) {

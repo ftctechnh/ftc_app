@@ -83,7 +83,8 @@ public class FinalBlueRightWithRS extends LinearOpMode
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
         clawServo =  hardwareMap.crservo.get("CS");
-        sideRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        sideRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "SRS");
+        frontRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "FRS");
 
     /* Reverse the direction of the front right and back right motors */
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -140,6 +141,12 @@ public class FinalBlueRightWithRS extends LinearOpMode
         // wait for start button.
         waitForStart();
 
+        while(opModeIsActive()){
+            telemetry.addData("Side RS:", sideRangeSensor.cmUltrasonic());
+            telemetry.addData("Front RS:", frontRangeSensor.cmUltrasonic());
+            telemetry.update();
+        }
+
         relicTrackables.activate();
 
         /* Let the team know wassup */
@@ -183,8 +190,6 @@ public class FinalBlueRightWithRS extends LinearOpMode
 
         movebytime(1200, .3, "Forward");
 
-        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
-        account for the slight slippage after powering off the wheels */
         rotate(87, .2);
 
         /* Wait a moment to stop moving */
@@ -196,19 +201,19 @@ public class FinalBlueRightWithRS extends LinearOpMode
         switch (vuMark){
             case LEFT:
                 /* Drive rightwards into the left position */
-                movePowerDistanceDirectionSensor(.3, 20,"Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 104,"Right", "Side");
                 break;
             case RIGHT:
                 /* Drive rightwards into the right position */
-                movePowerDistanceDirectionSensor(.3, 20,"Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 63,"Right", "Side");
                 break;
             case CENTER:
                 /* Drive rightwards into the center position */
-                movePowerDistanceDirectionSensor(.3, 20, "Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 70, "Right", "Side");
                 break;
             case UNKNOWN:
                 /* Drive forward into the center position just cuz i said so */
-                movePowerDistanceDirectionSensor(.3, 20, "Right", "Side");
+                movePowerDistanceDirectionSensor(.3, 70, "Right", "Side");
                 break;
         }
 
@@ -309,10 +314,10 @@ public class FinalBlueRightWithRS extends LinearOpMode
         }
 
         switch (sensor){
-            case "Front":
+            case "Side":
                 while(opModeIsActive() && sideRangeSensor.cmUltrasonic() != distance){};
                 break;
-            case "Side":
+            case "Front":
                 while(opModeIsActive() && frontRangeSensor.cmUltrasonic() != distance){};
                 break;
         }

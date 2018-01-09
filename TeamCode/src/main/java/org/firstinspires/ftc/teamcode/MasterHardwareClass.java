@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -29,10 +30,12 @@ public class MasterHardwareClass {
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
-    public DcMotor verticalArmMotor = null;
+    public DcMotor verticalArmMotor;
     public DcMotor clawMotor = null;
     public Servo gemServo;
     public BNO055IMU imu;
+    ModernRoboticsI2cRangeSensor sideRangeSensor;
+    ModernRoboticsI2cRangeSensor frontRangeSensor;
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;
@@ -78,7 +81,8 @@ public class MasterHardwareClass {
         verticalArmMotor = hwMap.dcMotor.get("VAM");
         clawMotor = hwMap.dcMotor.get("CM");
         gemServo = hwMap.servo.get("gemservo");
-
+        sideRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "SRS");
+        frontRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "FRS");
         imu = hwMap.get(BNO055IMU.class, "imu");
 
         // Set all hardware to default position
