@@ -22,7 +22,7 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion 23
-    buildToolsVersion '25.0.3'
+    buildToolsVersion '26.0.2'
 
     signingConfigs {
         debug {
@@ -35,8 +35,8 @@ android {
 
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 23
+        targetSdkVersion 23
 
         /**
          * We keep the versionCode and versionName of robot controller applications in sync with
@@ -99,5 +99,12 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    maven {
+        url 'http://repo1.maven.org/maven2'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 apply from: 'build.release.gradle'
