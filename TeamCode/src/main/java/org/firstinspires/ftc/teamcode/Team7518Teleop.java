@@ -94,9 +94,6 @@ public class Team7518Teleop extends LinearOpMode{
                             yAxis.setPower(-1);
                         else yAxis.setPower(0);
 
-                        //color sensor
-
-
                         idle();
 
         }//end while(opModeIsActive)
