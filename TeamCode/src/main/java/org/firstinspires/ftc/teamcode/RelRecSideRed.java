@@ -1,23 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 
 @Autonomous(name="Auto Red RelRec", group="Linear Auto")
-
 public class RelRecSideRed extends AutoMaster {
+    static final double VUF_DISTANCE = 5;
     @Override
     public void runOpMode() {
+        VuforiaPlagiarism vu = new VuforiaPlagiarism();
+        VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
+        double vufSpeed = 0;
+
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        VuforiaPlagiarism vu = new VuforiaPlagiarism();
-        double box;
-        VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
-        robot.init(hardwareMap);
-        waitForStart();
-        wait(500);
+
+        //Knocks off the right ball
         robot.arm.setPosition(1);
         wait(750);
         boolean i = false;
@@ -29,22 +27,29 @@ public class RelRecSideRed extends AutoMaster {
         }
         robot.arm.setPosition(0);
 
-        /*.getVuf(hardwareMap);
+        //Finds Vuforia
+        typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
-            box = 16.14;
+            vufSpeed = 0.5;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
-            box = 22.05;
+            vufSpeed = 0;
         } else if (typee == VuforiaPlagiarism.type.LEFT) {
-            box = 29.53;
+            vufSpeed = -0.5;
         } else {
-            box = 22.05;
-        } */
+            vufSpeed = 0;
+        }
+
+        //Lines up the proper box
         encode(28, 0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
         if (!i) {
             encode(15, -0.5, MoveType.LATERALLY);
         }
-        wait(500);
+        if (vufSpeed != 0) {
+            encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);
+        }
+
+        //Final approach
         encode(8, 0.5, MoveType.STRAIGHT);
         robot.gripper.setPower(-0.25);
         wait(1000);

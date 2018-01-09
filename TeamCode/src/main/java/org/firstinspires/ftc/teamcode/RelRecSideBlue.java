@@ -1,20 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Auto Blue RelRec", group="Linear Auto")
-
 public class RelRecSideBlue extends AutoMaster {
+    static final double VUF_DISTANCE = 5;
     @Override
     public void runOpMode() {
         VuforiaPlagiarism vu = new VuforiaPlagiarism();
         VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
+        double vufSpeed = 0;
+
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        wait(500);
+
+        //Knocks off the right ball
         robot.arm.setPosition(1);
         wait(750);
         boolean i = false;
@@ -25,22 +26,30 @@ public class RelRecSideBlue extends AutoMaster {
             i = true;
         }
         robot.arm.setPosition(0);
-        double box;
-       /* typee = vu.getVuf(hardwareMap);
+
+        //Finds Vuforia
+        typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
-            box = 38.98;
+            vufSpeed = 0.5;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
-            box = 45.67;
+            vufSpeed = 0;
         } else if (typee == VuforiaPlagiarism.type.LEFT) {
-            box = 45.7;
+            vufSpeed = -0.5;
         } else {
-            box = 45.67;
-        } */
+            vufSpeed = 0;
+        }
+
+        //Lines up the proper box
         encode(28, -0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
         if (!i) {
             encode(15, 0.5, MoveType.LATERALLY);
         }
+        if (vufSpeed != 0) {
+            encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);
+        }
+
+        //Final approach
         encode(5, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
