@@ -99,5 +99,12 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    maven {
+        url 'http://repo1.maven.org/maven2'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 apply from: 'build.release.gradle'
