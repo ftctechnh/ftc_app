@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.DirectionSetting.BACK;
-import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.DirectionSetting.FRONT;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.FAST;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.SLOW;
 import static java.lang.Math.atan;
@@ -22,6 +20,7 @@ public class Teleop extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     double timeLeft;
 
+    public boolean backIsReleased = true;
     boolean loadedLastTime = false;
 
     double lastLoadTime;
@@ -47,17 +46,30 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         timeLeft = 120 - runtime.seconds();
-        //set drive direction
-        if (gamepad1.back)
-            gromit.driveTrain.setForwardDirection(BACK);
-        else
-            gromit.driveTrain.setForwardDirection(FRONT);
-
+        //------------------------------------------------------------------------------
+        //toggle  drive direction-when the button was released and it is now pressed.
+        //------------------------------------------------------------------------------
+        if(gamepad1.back) {
+            if (backIsReleased) {
+                backIsReleased = false;
+                gromit.driveTrain.frontIsForward = !gromit.driveTrain.frontIsForward;
+            }
+        } else {
+            backIsReleased = true;
+        }
+        telemetry.addData("backisreleased",backIsReleased);
+//        if (gamepad1.back) {
+//            gromit.driveTrain.frontisforward = true;
+//        } else {
+//            gromit.driveTrain.frontisforward = false;
+//        }
+        //------------------------------------------------------------------------------
         //set drive speed
-        if (gamepad1.left_bumper)
+        if (gamepad1.left_bumper) {
             gromit.driveTrain.setSpeedMode(FAST);
-        else
+        } else {
             gromit.driveTrain.setSpeedMode(SLOW);
+        }
 //on and off glyph intake
         if (gamepad1.b) {
             gromit.glyphTrain.startGlyphMotors(1.0);
@@ -173,3 +185,62 @@ public class Teleop extends OpMode {
     }
 
 }
+/*
+if (gamepad1.a) {
+                if (gromit.a1isreleased) {
+                    gromit.a1isreleased = false;
+                    if (gromit.smartsweeping) {                                                     //Turn off Smart Sweeping
+                        gromit.smartsweeping = false;
+                        gromit.motorsweeper.setPower(0.0);
+                        gromit.sweeperon = false;
+                    } else {                                                                        //Turn on Smart Sweeping
+                        gromit.smartsweeping = true;
+                        gromit.motorsweeper.setPower(gromit.sweeperpowerauto);
+                        gromit.sweeperon = true;
+                    }
+                }
+            } else {
+                gromit.a1isreleased = true;
+            }
+public boolean backisreleased = true;
+
+// Only toggle Mode when the button was
+// released and it is now pressed.
+
+if (gamepad1.back) {                                                                // if the button is pressed
+                if (backisreleased) {                                               // and if the button was released toggle
+                    backisreleased = false;
+                    if (gromit.smartsweeping) {                                                     //Turn off Smart Sweeping
+                        gromit.smartsweeping = false;
+                        gromit.motorsweeper.setPower(0.0);
+                        gromit.sweeperon = false;
+                    } else {                                                                        //Turn on Smart Sweeping
+                        gromit.smartsweeping = true;
+                        gromit.motorsweeper.setPower(gromit.sweeperpowerauto);
+                        gromit.sweeperon = true;
+                    }
+                }
+} else {
+                backisreleased = true;
+}
+
+
+if(gamepad1.back) {
+
+// Only toggle SlowMode when the button was
+// released and it is now pressed.
+
+  if (backIsReleased) {
+    backIsReleased = false;
+    if(frontIsForward == false) {
+      SlowMode = true;
+    } else if(SlowMode == true) {
+      SlowMode = false;
+    }
+  }
+
+} else {
+backIsReleased = true;
+}
+
+ */

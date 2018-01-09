@@ -24,9 +24,9 @@ public class DriveTrain {
     public enum SpeedSetting {FAST, SLOW}
     private SpeedSetting speedMode;
 
-    public enum DirectionSetting {FRONT, BACK}
-    private DirectionSetting forwardDirection;
-
+    //public enum DirectionSetting {FRONT, BACK}
+    //public  DirectionSetting forwardDirection;
+    public boolean frontIsForward = true;
 
     public final double WHEEL_DIAMETER = 4.0;
     public final double GEAR_RATIO = 32/24;
@@ -96,7 +96,7 @@ public class DriveTrain {
         runWithoutEncoders();
 
         speedMode = SpeedSetting.FAST;
-        forwardDirection = DirectionSetting.FRONT;
+//        forwardDirection = DirectionSetting.FRONT;
     }
 
     public void runWithoutEncoders() {
@@ -135,22 +135,14 @@ public class DriveTrain {
         double strafe;
         double rotate;
 
-        switch (forwardDirection) {
-            // lookup parameter for "fast mode"
-            case FRONT:
-                forward = Math.pow(y,3);
-                strafe  = Math.pow(-x,3);
-                rotate  = turn;
-                break;
-            case BACK:
-                forward = - Math.pow(y,3);
-                strafe  = - Math.pow(-x,3);
-                rotate  = turn;
-                break;
-            default:
-                forward = Math.pow(y,3);
-                strafe  = Math.pow(-x,3);
-                rotate  = turn;
+        if (frontIsForward) {             // driving with the front facing forward
+            forward = Math.pow(y, 3);
+            strafe = Math.pow(-x, 3);
+            rotate = turn;
+        } else {                            // driving with the rear facing forward
+            forward = -Math.pow(y, 3);
+            strafe = -Math.pow(-x, 3);
+            rotate = turn;
         }
 
         double lfpower;
@@ -203,10 +195,6 @@ public class DriveTrain {
 
     public void setSpeedMode(SpeedSetting speed) {
         speedMode = speed;
-    }
-
-    public void setForwardDirection(DirectionSetting direction) {
-        forwardDirection = direction;
     }
 
     public float getheading() {
