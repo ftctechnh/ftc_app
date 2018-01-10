@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+/**
+ * Created by BeehiveRobotics-3648 on 11/28/2017.
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
-/**
- * Created by BeehiveRobotics-3648 on 11/28/2017.
- */
 @Autonomous(name = "Red Far", group = "Autonomous")
 public class RedFar extends LinearOpMode {
     private AutoDrive drive;

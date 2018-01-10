@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+/**
+ *Created by Kaden on 11/25/2017.
+ **/
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-
-/**
- *Created by Kaden on 11/25/2017.
-**/
 
 public class AutoDrive {
     private DcMotor FrontLeft;

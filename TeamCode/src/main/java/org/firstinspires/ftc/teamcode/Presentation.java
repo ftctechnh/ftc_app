@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+/**
+ * Created by Peter on 12/21/2017.
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-/**
- * Created by Peter on 12/21/2017.
- */
 @Autonomous(name = "Presentation Program", group = "Test")
 @Disabled
 public class Presentation extends LinearOpMode {
