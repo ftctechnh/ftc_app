@@ -203,21 +203,22 @@ public class AutonomousTemplate extends LinearOpMode
 
         switch (teamColorPosition) {
             case "BlueRight":
-                movebytime(1250, .5, "Forward");  // forward three feet
-                rotate(-87,.2);  // counter clockwise 90 degrees
+                movebytime(1200, .3, "Forward");
+                rotate(87, .2);
                 break;
             case "BlueLeft":
-                movebytime(625, .5, "Forward");  // forward two feet
-                movebytime(313, .5, "Right");    // right one foot
+                movePowerDistanceDirectionSensor(.3, 20, "Forward", "Front" );
                 break;
             case "RedRight":
-                movebytime(625, .5, "Backward");
-                movebytime(313, .5, "Right");    // right one foot
-                rotate(176,.2);  // clockwise 180 degrees
+                movePowerDistanceDirectionSensor(.3, 20, "Backward", "");
+                rotate(177, .2);
+                sleep(700);
+                movePowerDistanceDirectionSensor(1560, .3, "Left", "");
                 break;
             case "RedLeft":
-                movebytime(1250, .5, "Backward");
-                rotate(-87,.2);  // counter clockwise 90 degrees
+                movePowerDistanceDirectionSensor(.3, 20, "Backward", "Front" );
+                rotate(87, .2);
+                sleep(700);
                 break;
         }
 

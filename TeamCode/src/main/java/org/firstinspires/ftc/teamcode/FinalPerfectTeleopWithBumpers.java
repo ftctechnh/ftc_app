@@ -17,8 +17,6 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     /* This says use MasterHardwareClass */
     MasterHardwareClass robot = new MasterHardwareClass();
 
-    ModernRoboticsI2cRangeSensor rangeSensor;
-
     /*These values are used for the drive*/
     double frontLeft;
     double frontRight;
@@ -29,8 +27,8 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     @Override
     public void runOpMode() {
         // get a reference to our compass
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
-        rangeSensor.initialize();
+//        robot.sideRangeSensor.initialize();
+//        robot.frontRangeSensor.initialize();
 
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
@@ -51,8 +49,9 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             telemetry.addData("Claw Opening Controls", "X is Close, B is Open");
             telemetry.addData("Claw Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
 
-            telemetry.addData("Encoder Data", robot.verticalArmMotor.getCurrentPosition());
-            telemetry.addLine("Range Sensor Data");
+            telemetry.addData("Encoder Mode:", robot.verticalArmMotor.getMode());
+            telemetry.addData("Encoder Data:", robot.verticalArmMotor.getCurrentPosition());
+            telemetry.addLine("Front RS Data");
             telemetry.addData("cm", "%.2f cm", robot.frontRangeSensor.cmUltrasonic());
             telemetry.addLine("Wheel power");
             telemetry.addData("Front Left:", robot.frontLeftMotor.getPower());
@@ -112,43 +111,43 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             }
 
     /* Range Trigger Linear Drive */
-//            if (gamepad1.left_trigger <= .5 && gamepad1.left_trigger != 0) {
-//                setWheelPower(-.5, -.5, .5, .5);
-//                trigger = true;
-//            } else {
-//                if (gamepad1.left_trigger <= .25 && gamepad1.left_trigger != 0) {
-//                    setWheelPower(-.25, -.25, .25, .25);
-//                    trigger = true;
-//                }
-//                if (gamepad1.left_trigger <= 1 && gamepad1.left_trigger != 0) {
-//                    setWheelPower(-1, -1, 1, 1);
-//                    trigger = true;
-//                }
-//            }
-//
-//
-//            if (gamepad1.right_trigger <= .5 && gamepad1.right_trigger != 0) {
-//                setWheelPower(.5, .5, -.5, -.5);
-//                trigger = true;
-//            } else {
-//                if (gamepad1.right_trigger <= .25 && gamepad1.right_trigger != 0) {
-//                    setWheelPower(.25, .25, -.25, -.25);
-//                    trigger = true;
-//                }
-//                if (gamepad1.right_trigger <= 1 && gamepad1.right_trigger != 0) {
-//                    setWheelPower(1, 1, -1, -1);
-//                    trigger = true;
-//                }
-//            }
-            if (gamepad1.left_trigger != 0) {
-                setWheelPower(1, 1, -1, -1);
+            if (gamepad1.right_trigger <= .5 && gamepad1.right_trigger != 0) {
+                setWheelPower(-.5, -.5, .5, .5);
                 trigger = true;
+            } else {
+                if (gamepad1.right_trigger <= .25 && gamepad1.right_trigger != 0) {
+                    setWheelPower(-.25, -.25, .25, .25);
+                    trigger = true;
+                }
+                if (gamepad1.right_trigger <= 1 && gamepad1.right_trigger != 0) {
+                    setWheelPower(-1, -1, 1, 1);
+                    trigger = true;
+                }
             }
 
-            if (gamepad1.right_trigger != 0) {
-                setWheelPower(-1, -1, 1, 1);
+
+            if (gamepad1.left_trigger <= .5 && gamepad1.left_trigger != 0) {
+                setWheelPower(.5, .5, -.5, -.5);
                 trigger = true;
+            } else {
+                if (gamepad1.left_trigger <= .25 && gamepad1.left_trigger != 0) {
+                    setWheelPower(.25, .25, -.25, -.25);
+                    trigger = true;
+                }
+                if (gamepad1.left_trigger <= 1 && gamepad1.left_trigger != 0) {
+                    setWheelPower(1, 1, -1, -1);
+                    trigger = true;
+                }
             }
+//            if (gamepad1.left_trigger != 0) {
+//                setWheelPower(1, 1, -1, -1);
+//                trigger = true;
+//            }
+//
+//            if (gamepad1.right_trigger != 0) {
+//                setWheelPower(-1, -1, 1, 1);
+//                trigger = true;
+//            }
 
                 if(gamepad1.right_trigger == 0 && gamepad1.left_trigger == 0){
                 trigger = false;

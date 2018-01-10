@@ -30,7 +30,7 @@ public class MasterHardwareClass {
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor backRightMotor = null;
-    public DcMotor verticalArmMotor;
+    public DcMotor verticalArmMotor = null;
     public DcMotor clawMotor = null;
     public Servo gemServo;
     public BNO055IMU imu;
@@ -103,6 +103,7 @@ public class MasterHardwareClass {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         verticalArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 }
