@@ -67,6 +67,7 @@ public class RelicClaw {
     public double getArmPosition() {return arm.getPosition();}
 
     public void moveMotor(double speed) {
+        motor.setPower(speed); //ayy if you want those limits, comment this and uncomment the other one
         if (speed < 0 && !inButton.getState()) {
             speed = 0;
 
@@ -74,7 +75,7 @@ public class RelicClaw {
         if (speed > 0 && !outButton.getState()) {
             speed = 0;
         }
-        motor.setPower(speed);
+        //motor.setPower(speed); //this is the other one
     }
 
     public void moveMotor(double speed, long time) {
