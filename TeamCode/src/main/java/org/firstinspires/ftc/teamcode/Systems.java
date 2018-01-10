@@ -118,6 +118,7 @@ public class Systems {
                 none += 1;
             }
         }
+        AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
         if (target == Color.RED) {
             if (red > blue) {
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
@@ -144,7 +145,6 @@ public class Systems {
                 return;
             }
         }
-        AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
     }
     public void grabSecondGlyph() {
         ForkLift.closeClaw();
