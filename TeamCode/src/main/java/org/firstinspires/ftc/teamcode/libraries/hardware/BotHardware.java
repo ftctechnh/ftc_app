@@ -66,7 +66,8 @@ public class BotHardware {
         backDropRight("bdr");
 
         public static final double stickUp = 0.4;
-        public static final double stickDown = .96;
+        public static final double stickDown = .94;
+        public static final double stickDetect = 0.9;
         public static final double stick90 = 0.44;
         public static final double stick0 = 0.95;
 

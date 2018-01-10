@@ -43,7 +43,7 @@ public class APDSGrapher extends OpMode{
     public void init() {
         final APDS9960.Config config = new APDS9960.Config();
         config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_4X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"));
+        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "bluedist"));
         thing = dist.initDevice();
 
         //graph stuff

@@ -62,7 +62,7 @@ public class ADPSAuto extends VuforiaBallLib {
         initVuforia(true);
 
         config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_1X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, "dist"));
+        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, red ? "reddist" : "bluedist"));
         dist.initDevice();
 
         bot.init();
@@ -133,7 +133,7 @@ public class ADPSAuto extends VuforiaBallLib {
             if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 35.0f, 360.0f);
             else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 35.0f, 360.0f);
             if(red) skip--;
-            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.9, 0.7, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.87, 0.7, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
                     70, 8, skip, 70, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
