@@ -123,15 +123,15 @@ public class AutoDrive {
 
     public void rightGyro(double x, double y, double z, double target) {
         heading = getHeading();
-        double change = 0;
+        double derivative = 0;
         double fl = clip(-y + -x - z);
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
         if(heading < target) {
-            while(change <= 0) {
-                change = getHeading() - heading;
+            while(derivative <= 0) {
+                derivative = getHeading() - heading;
                 heading = getHeading();
             }
         }
@@ -143,15 +143,15 @@ public class AutoDrive {
 
     public void leftGyro(double x, double y, double z, double target) {
         heading = getHeading();
-        double change = 0;
+        double derivative = 0;
         double fl = clip(-y + -x - z);
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
         if (target < heading) {
-          while(change >= 0) {
-            change = getHeading() - heading;
+          while(derivative >= 0) {
+            derivative = getHeading() - heading;
             heading = getHeading();
           }
         }
@@ -199,19 +199,5 @@ public class AutoDrive {
         this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
-    public RelicRecoveryVuMark getMark(BeehiveVuforia vuforia) {
-        RelicRecoveryVuMark vuMark;
-        vuMark = vuforia.getMark();
-        int i = 0 ;
-        if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            driveTranslateRotate(0,0,-SPIN_ON_BALANCE_BOARD_SPEED, FIND_VUMARK_DISTANCE);
-            vuMark = vuforia.getMark();
-            i++;
-        }
-        if (i>0) {
-            driveTranslateRotate(0, 0, SPIN_ON_BALANCE_BOARD_SPEED, FIND_VUMARK_DISTANCE * i);
-        }
-        return vuMark;
     }
 }

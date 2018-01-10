@@ -33,11 +33,12 @@ public class BeehiveVuforia {
         relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         time = new ElapsedTime();
+        vuMark = RelicRecoveryVuMark.UNKNOWN;
     }
     RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
         time.start();
-        while (time.getElapsedTime() < 3000) {
+        while (time.getElapsedTime() < 3000 && vuMark == RelicRecoveryVuMark.UNKNOWN) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
         telemetry.addData("Pictograph", "%s visible", vuMark);

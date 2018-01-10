@@ -94,6 +94,7 @@ public class Systems {
             }
         }
     }
+<<<<<<< HEAD
     private void jewelTryAgain(Color target) {
         AutoDrive.driveTranslateRotate(0,0,-AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
         JewelArm.down();
@@ -147,5 +148,23 @@ public class Systems {
             }
         }
         AutoDrive.driveTranslateRotate(0,0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
+=======
+    public void grabSecondGlyph() {
+        ForkLift.closeClaw();
+        ForkLift.moveMotor(1, 750);
+        DriveMecanum.driveTranslateRotate(0, -1, 0, 550);
+        ForkLift.openClaw();
+        DriveMecanum.driveTranslateRotate(0, 1, 0, 500);
+        ForkLift.moveUntilDown(0.75);
+        DriveMecanum.driveTranslateRotate(0, -1, 0, 750);
+        ForkLift.closeClaw();
+        sleep(250);
+        ForkLift.moveMotor(1, 250);
+    }
+    private void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {}
+>>>>>>> f9faba2c962814f2a7ae85e9535587b0df76d926
     }
 }
