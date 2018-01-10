@@ -22,8 +22,8 @@ public class BlueRecovery extends LinearOpMode {
         telemetry.update();
         drive = new AutoDrive(hardwareMap, telemetry);
         drive.init(); //Calibrates gyro
-        jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
-        ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
+        jewelArm = new JewelArm(hardwareMap, telemetry);
+        ForkLift = new ForkLift(hardwareMap, telemetry);
         vuforia = new BeehiveVuforia(hardwareMap, telemetry);
         Systems = new Systems(drive, ForkLift, jewelArm,vuforia);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");

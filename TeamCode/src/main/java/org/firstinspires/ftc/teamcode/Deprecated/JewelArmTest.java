@@ -1,26 +1,26 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+
+import org.firstinspires.ftc.teamcode.JewelArm;
 
 /**
  * Created by Kaden on 11/30/2017.
  */
 public class JewelArmTest extends OpMode {
-    JewelArm jewelArm;
+    JewelArm JewelArm;
     public void init() {
-        jewelArm = new JewelArm(hardwareMap.servo.get("s4"), hardwareMap.colorSensor.get("cs1"), telemetry);
-        jewelArm.up();
+        JewelArm = new JewelArm(hardwareMap, telemetry);
+        JewelArm.up();
     }
     public void loop() {
         if(gamepad1.a) {
-            jewelArm.setPostion(jewelArm.servo.getPosition() + 0.001);
+            JewelArm.setPostion(JewelArm.servo.getPosition() + 0.001);
         }
         if(gamepad1.b) {
-            jewelArm.setPostion(jewelArm.servo.getPosition() - 0.001);
+            JewelArm.setPostion(JewelArm.servo.getPosition() - 0.001);
         }
-        telemetry.addData("current pos: ", jewelArm.servo.getPosition());
+        telemetry.addData("current pos: ", JewelArm.servo.getPosition());
         telemetry.update();
     }
 }
