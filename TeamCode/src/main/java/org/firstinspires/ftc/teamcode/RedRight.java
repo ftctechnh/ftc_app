@@ -178,7 +178,7 @@ public class RedRight extends LinearOpMode {
 
         encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5); // Drive off balance board
 
-        if (vuMark == RelicRecoveryVuMark.RIGHT || vuMark == RelicRecoveryVuMark.UNKNOWN9) {
+        if (vuMark == RelicRecoveryVuMark.RIGHT || vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
             encoderDrive(TURN_SPEED, -15, 15, 5); //13.5 tank turn went to scond one
