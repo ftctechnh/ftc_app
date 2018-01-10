@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Auto Blue NonRelRec", group="Linear Auto")
 public class NonRelRecSideBlue extends AutoMaster {
-    static final double VUF_DISTANCE = 5;
     @Override
     public void runOpMode() {
         VuforiaPlagiarism vu = new VuforiaPlagiarism();

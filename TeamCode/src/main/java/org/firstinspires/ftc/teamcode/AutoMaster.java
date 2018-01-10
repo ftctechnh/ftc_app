@@ -41,6 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
         STRAIGHT, LATERALLY, ROT
     }
 
+    static final double VUF_DISTANCE = 5;
     final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();

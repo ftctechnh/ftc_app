@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Auto Red NonRelRec", group="Linear Auto")
 public class NonRelRecSideRed extends AutoMaster {
-    static final double VUF_DISTANCE = 5;
     @Override
     public void runOpMode() {
         VuforiaPlagiarism vu = new VuforiaPlagiarism();
@@ -53,7 +52,5 @@ public class NonRelRecSideRed extends AutoMaster {
         wait(1000);
         robot.gripper.setPower(0);
         encode(4, -0.25, MoveType.STRAIGHT);
-        encode(5, 0.1, MoveType.STRAIGHT);
-        encode(5, -0.2, MoveType.STRAIGHT);
     }
 }
