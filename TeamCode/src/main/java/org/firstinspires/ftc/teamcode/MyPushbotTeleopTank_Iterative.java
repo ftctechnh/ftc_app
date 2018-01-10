@@ -82,7 +82,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-     //   robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.ballArm.setPosition(.7);
@@ -126,11 +126,14 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
 
         // Use right Bumper to toggle claw between open and close position
         // 0 is open, -0.30 is closed
+
         if (gamepad1.right_bumper) {
             if (clawOffset == 0)            //if opened, close
-                clawOffset = -0.5;
+                   clawOffset = -0.5;
             else if (clawOffset == -0.50)    // if closed, open
-                clawOffset = 0;
+                   clawOffset = -0.25;
+            else if (clawOffset == -0.25)    // if closed, open
+                    clawOffset = 0;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
             // 0.15 correction factor for difference in hand attachment to left and right servo

@@ -37,6 +37,15 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -86,18 +95,25 @@ public class RedLeft extends LinearOpMode {
     double          ballArmDown = 0.05;
 
     NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor L.A.S
+    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
-
 
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
-
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "AQnPJDP/////AAAAmUS73qR6gk0zhRdrQV8z5sQcsIZOLNFEeBu51S0z1IDJ2mjzjQakuSkKjPPN5P0OU1xLzIllx8BNZ1+sUF0TMno1opOTWRq7LHOx1FwfiYL9OWCB+nti7esVQTjWHAat6af1DAX0wpzvL+YSjcTptliDr1r4mQ5jZvuypJDv2F/o0F2sGVAM0GZNczjmp3mconmIdNFt/ZkuhtEmqSYNEiRO5vp049huTdMQ+wF63ZO9naWQgNf/sD4u/6YydHzKNGg9BneTYjWrdXnfLMrUlPCFzVZ+WOWh6HnbV8OxA+AEMGSJCe9dZwkVouBgfAMXmTLkWxerr195jyo/pVPAZ2euUnqVOCbZwKS0S/jdZapO";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTrackables.activate();
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -156,6 +172,16 @@ public class RedLeft extends LinearOpMode {
             robot.ballArm.setPosition(ballArmUp);
             encoderDrive(TURN_SPEED,  2, -2,.5 ); 
         }
+        // turn toward and view pictograph
+        encoderDrive(TURN_SPEED, 2, -2,5 );
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        runtime.reset();
+        while (runtime.seconds() < 30) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            telemetry.update();
+        }
+        encoderDrive(TURN_SPEED, -2, 2,5 );
 
 
         encoderDrive(DRIVE_SPEED, -35, -35, 5);

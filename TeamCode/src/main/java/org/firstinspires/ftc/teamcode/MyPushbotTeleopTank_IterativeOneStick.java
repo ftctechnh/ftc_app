@@ -78,7 +78,7 @@ public class MyPushbotTeleopTank_IterativeOneStick extends OpMode{
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-     //   robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.ballArm.setPosition(.7);
@@ -111,31 +111,12 @@ public class MyPushbotTeleopTank_IterativeOneStick extends OpMode{
 
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        //left = gamepad1.left_stick_y;
-       // right = gamepad1.right_stick_y;
 
-        //robot.leftDrive.setPower(left);
-        //robot.rightDrive.setPower(right);
         // when you click R2 it goes double the speed
         //robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
         //robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2);
-        float X = gamepad1.left_stick_x;
-        float Y = -(gamepad1.left_stick_y); //Pushing stick forward is -1 Y.
-        float Left = Y + X;
-        float Right = Y - X;
-        float Max = Math.max(Math.abs(Left),Math.abs(Right));
-        Left/=Max;
-        Right/=Max;
-        double Radius = Math.sqrt(X*X + Y*Y);
-        Left *= -Radius;
-        Right *= -Radius;
-        robot.leftDrive.setPower(Left * (gamepad1.left_trigger + 1) / 2);
-        robot.rightDrive.setPower(Right * (gamepad1.left_trigger + 1) / 2);
-        telemetry.addData("X",X);
-        telemetry.addData("Y",Y);
-        telemetry.addData("Left",Left);
-        telemetry.addData("Right",Right);
 
+        onestick();    //drive robot with one joystick
 
         // Use right Bumper to toggle claw between open and close position
         // 0 is open, -0.30 is closed
@@ -186,14 +167,7 @@ public class MyPushbotTeleopTank_IterativeOneStick extends OpMode{
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lift.setPower(0.8);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
-                left = gamepad1.left_stick_y;
-                right = gamepad1.right_stick_y;
-
-                //robot.leftDrive.setPower(left);
-                //robot.rightDrive.setPower(right);
-                // when you click R2 it goes double the speed
-                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
-                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2);
+                onestick();
             }   //wait for lift to stop
             robot.lift.setPower(0.0);
         }
@@ -203,14 +177,9 @@ public class MyPushbotTeleopTank_IterativeOneStick extends OpMode{
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lift.setPower(0.8);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
-                left = gamepad1.left_stick_y;
-                right = gamepad1.right_stick_y;
-
-                //robot.leftDrive.setPower(left);
-                //robot.rightDrive.setPower(right);
+                    onestick();
                 // when you click R2 it goes double the speed
-                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
-                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2);
+
             }   // wait for lift to stop
             robot.lift.setPower(0.0);
         }
@@ -234,6 +203,29 @@ public class MyPushbotTeleopTank_IterativeOneStick extends OpMode{
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
         }
         robot.lift.setPower(0.0); */
+
+    }
+
+    //================================================================
+    // drive robot with one joystick
+
+    public void onestick(){
+        float X = gamepad1.left_stick_x;
+        float Y = -(gamepad1.left_stick_y); //Pushing stick forward is -1 Y.
+        float Left = Y + X;
+        float Right = Y - X;
+        float Max = Math.max(Math.abs(Left),Math.abs(Right));
+        Left/=Max;
+        Right/=Max;
+        double Radius = Math.sqrt(X*X + Y*Y);
+        Left *= -Radius;
+        Right *= -Radius;
+        robot.leftDrive.setPower(Left * (gamepad1.left_trigger + 1) / 2);
+        robot.rightDrive.setPower(Right * (gamepad1.left_trigger + 1) / 2);
+        telemetry.addData("X",X);
+        telemetry.addData("Y",Y);
+        telemetry.addData("Left",Left);
+        telemetry.addData("Right",Right);
 
     }
 }
