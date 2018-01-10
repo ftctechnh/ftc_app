@@ -12,6 +12,7 @@ public class FinalUniversalRef extends LinearOpMode
     NewRobotFinal newRobot;
     public void runOpMode()
     {
+        float adjustment = 0;
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.initVuforia(hardwareMap);
         sleep(250);
@@ -58,7 +59,7 @@ public class FinalUniversalRef extends LinearOpMode
                 {
                     case 'l':
                         newRobot.pivot(35,.5);
-                        newRobot.driveStraight_In(37.5);
+                        newRobot.driveStraight_In(37.5f);
                         break;
                     case 'c':
                         newRobot.pivot(20,.5);
@@ -66,11 +67,11 @@ public class FinalUniversalRef extends LinearOpMode
                         break;
                     case 'r':
                         newRobot.pivot(8,.5);
-                        newRobot.driveStraight_In(30.5);
+                        newRobot.driveStraight_In(30.5f);
                         break;
                     default:
                         newRobot.pivot(20,.5);
-                        newRobot.driveStraight_In(30.5);
+                        newRobot.driveStraight_In(30.5f);
                         break;
                 }
                 /*newRobot.pivot_IMU(80, .25);
@@ -119,7 +120,7 @@ public class FinalUniversalRef extends LinearOpMode
                 {
                     case 'l':
                         newRobot.pivot(-35,.5);
-                        newRobot.driveStraight_In(37.5); //needs testing, fix on 11/12
+                        newRobot.driveStraight_In(37.5f); //needs testing, fix on 11/12
                         break;
                     case 'c':
                         newRobot.pivot(-20,.5);
@@ -127,11 +128,11 @@ public class FinalUniversalRef extends LinearOpMode
                         break;
                     case 'r':
                         newRobot.pivot(-8,.5);
-                        newRobot.driveStraight_In(30.5); //positioning is really off, need to fix on 11/12
+                        newRobot.driveStraight_In(30.5f); //positioning is really off, need to fix on 11/12
                         break;
                     default:
                         newRobot.pivot(-20,.5);
-                        newRobot.driveStraight_In(30.5);
+                        newRobot.driveStraight_In(30.5f);
                         break;
                 }
                 /*newRobot.pivot_IMU(-80, .25);
