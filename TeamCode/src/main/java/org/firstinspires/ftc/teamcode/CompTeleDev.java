@@ -12,21 +12,13 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class CompTeleDev extends OpMode
 {
-    DigitalChannel wingTouchSens;
-    DigitalChannel bottomLiftMagSwitch;
-    DigitalChannel topLiftMagSwitch;
     boolean isWingUp = true;
     boolean liftArmed = true;
     NewRobotFinal newRobot;
 
     public void init()
     {
-        wingTouchSens = hardwareMap.digitalChannel.get("wingTouchSens");
-        bottomLiftMagSwitch = hardwareMap.digitalChannel.get("bottomLiftMagSwitch");
-        topLiftMagSwitch = hardwareMap.digitalChannel.get("topLiftMagSwitch");
-        wingTouchSens.setMode(DigitalChannel.Mode.INPUT);
-        bottomLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);
-        topLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);
+
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
@@ -142,9 +134,6 @@ public class CompTeleDev extends OpMode
         telemetry.addData("AnglePerpToGrav ", newRobot.anglePerpToGrav());
         telemetry.addData("Left Y", gamepad1.left_stick_y);
         telemetry.addData("Right y", gamepad1.right_stick_y);
-        telemetry.addData("wingTouchSens", wingTouchSens.getState());
-        telemetry.addData("TopMag", topLiftMagSwitch.getState());
-        telemetry.addData("botMag", bottomLiftMagSwitch.getState());
         telemetry.update();
     }
 
