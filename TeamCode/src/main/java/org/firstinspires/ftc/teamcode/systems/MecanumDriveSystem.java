@@ -76,7 +76,11 @@ public class MecanumDriveSystem {
 
             drive(speed, speed, speed, speed);
 
-            while (this.linearOpMode.opModeIsActive() && (this.frontLeftMotor.isBusy() && this.rearLeftMotor.isBusy() && this.frontRightMotor.isBusy() && this.rearRightMotor.isBusy())) {
+            while (this.linearOpMode.opModeIsActive() &&
+                    (this.frontLeftMotor.isBusy() &&
+                            this.rearLeftMotor.isBusy() &&
+                            this.frontRightMotor.isBusy() &&
+                            this.rearRightMotor.isBusy())) {
 
             }
             stop();
@@ -105,6 +109,10 @@ public class MecanumDriveSystem {
             rearRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
+            frontLeftMotor.setPower(-speed);
+            rearLeftMotor.setPower(speed);
+            frontRightMotor.setPower(speed);
+            rearRightMotor.setPower(-speed);
         }
     }
 
