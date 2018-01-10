@@ -145,7 +145,7 @@ public class ADPSAuto extends VuforiaBallLib {
             findPilliar.add(bot.getDropStep());
             AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
             DcMotor[] temp = bot.getMotorRay();
-            if(closest ? !red : red) {
+            if(closest != red) {
                 oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.2f, 2.0, true));
                 oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.2f, 2.0, true));
             }
