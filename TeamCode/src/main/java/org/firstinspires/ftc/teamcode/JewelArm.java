@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -20,6 +21,10 @@ public class JewelArm {
         this.servo = servo;
         this.cs = cs;
         this.telemetry = telemetry;
+    }
+    public JewelArm (HardwareMap hwMap, Telemetry telemetry) {
+        this.servo = hwMap.servo.get("s4");
+        this.cs = hwMap.colorSensor.get("cs1");
     }
 
     public void down() {
