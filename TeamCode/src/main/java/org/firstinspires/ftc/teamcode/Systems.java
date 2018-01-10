@@ -94,16 +94,15 @@ public class Systems {
             }
         }
     }
-<<<<<<< HEAD
     private void jewelTryAgain(Color target) {
-        AutoDrive.driveTranslateRotate(0,0,-AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
+        AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
         JewelArm.down();
         ElapsedTime time = new ElapsedTime();
         time.start();
         while (JewelArm.cs.red() < 2 && JewelArm.cs.blue() < 2) {
-            if(time.getElapsedTime() > 3000) {
+            if (time.getElapsedTime() > 3000) {
                 JewelArm.up();
-                AutoDrive.driveTranslateRotate(0,0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
+                AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
                 return;
             }
         }
@@ -116,16 +115,15 @@ public class Systems {
             } else if (JewelArm.cs.blue() < JewelArm.cs.red()) {
                 red += 1;
             } else {
-                none +=1;
+                none += 1;
             }
         }
-        if(target == Color.RED) {
-            if(red>blue) {
+        if (target == Color.RED) {
+            if (red > blue) {
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            }
-            else if (blue>red){
+            } else if (blue > red) {
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
@@ -133,13 +131,12 @@ public class Systems {
                 return;
             }
         }
-        if(target == Color.BLUE) {
-            if(blue>red) {
+        if (target == Color.BLUE) {
+            if (blue > red) {
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
-            }
-            else if (red>blue){
+            } else if (red > blue) {
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
@@ -147,8 +144,8 @@ public class Systems {
                 return;
             }
         }
-        AutoDrive.driveTranslateRotate(0,0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
-=======
+        AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
+    }
     public void grabSecondGlyph() {
         ForkLift.closeClaw();
         ForkLift.moveMotor(1, 750);
@@ -165,6 +162,5 @@ public class Systems {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {}
->>>>>>> f9faba2c962814f2a7ae85e9535587b0df76d926
     }
 }
