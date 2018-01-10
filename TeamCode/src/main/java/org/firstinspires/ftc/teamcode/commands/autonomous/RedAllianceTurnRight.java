@@ -29,7 +29,7 @@ public class RedAllianceTurnRight extends LinearOpMode {
         runtime.reset();
         int count = 0;
 
-        while (opModeIsActive()&& (count < 1)) {
+        while (opModeIsActive() && (count < 1)) {
             armSystem.setDownPosition();
             sleep(1000);
             knockDownBlueJewel();

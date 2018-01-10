@@ -74,10 +74,7 @@ public class MecanumDriveSystem {
             frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rearRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            frontLeftMotor.setPower(speed);
-            rearLeftMotor.setPower(speed);
-            frontRightMotor.setPower(speed);
-            rearRightMotor.setPower(speed);
+            drive(speed, speed, speed, speed);
 
             while (this.linearOpMode.opModeIsActive() && (this.frontLeftMotor.isBusy() && this.rearLeftMotor.isBusy() && this.frontRightMotor.isBusy() && this.rearRightMotor.isBusy())) {
 
@@ -118,6 +115,14 @@ public class MecanumDriveSystem {
         this.rearRightMotor.setPower(y - x + turn);
     }
 
+    public void drive(double frontLeftSpeed, double rearLeftSpeed,
+                      double frontRightSpeed, double rearRightSpeed) {
+        this.frontRightMotor.setPower(frontRightSpeed);
+        this.rearRightMotor.setPower(rearRightSpeed);
+        this.frontLeftMotor.setPower(frontLeftSpeed);
+        this.rearRightMotor.setPower(rearRightSpeed);
+    }
+
     public void stop() {
         this.frontLeftMotor.setPower(0.0);
         this.rearLeftMotor.setPower(0.0);
@@ -139,5 +144,21 @@ public class MecanumDriveSystem {
 
     public double getRearLeftSpeed() {
         return  this.rearLeftMotor.getPower();
+    }
+
+    public int getFrontLeftMotorEncoderTick() {
+        return frontLeftMotor.getCurrentPosition();
+    }
+
+    public int getRearLeftMotorEncoderTick() {
+        return rearLeftMotor.getCurrentPosition();
+    }
+
+    public int getFrontRightMotorEncoderTick() {
+        return frontRightMotor.getCurrentPosition();
+    }
+
+    public int getRearRightMotorEncoderTick() {
+        return rearRightMotor.getCurrentPosition();
     }
 }
