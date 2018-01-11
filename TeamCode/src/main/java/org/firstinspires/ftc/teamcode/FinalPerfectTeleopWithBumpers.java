@@ -22,6 +22,11 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     double frontRight;
     double backLeft;
     double backRight;
+    double verticalMax = 0;
+    double verticalMin = 0;
+    double clawMax = 0;
+    double clawMin = 0;
+
     boolean trigger;
 
     @Override
@@ -63,18 +68,46 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         /* Put the servo arm up */
            robot.gemServo.setPosition(robot.xPosUp);
 
-        /* Servo Control */
-            if (gamepad2.x) {
+        /* Claw Motor Control */
+            if (gamepad2.x && robot.clawMotor.getCurrentPosition() > clawMin) {
                 if (robot.ClawPower != robot.clawClose) {
                     robot.clawMotor.setPower(robot.clawClose);
                     robot.ClawPower = robot.clawClose;
                 }
             }
+            else{
+                if(gamepad2.x && robot.clawMotor.getCurrentPosition() <= clawMin){
+                    if (robot.ClawPower != robot.clawStill) {
+                        robot.clawMotor.setPower(robot.clawStill);
+                        robot.ClawPower = robot.clawStill;
+                    }
+                }
+                else{
+                    if (robot.ClawPower != robot.clawStill) {
+                        robot.clawMotor.setPower(robot.clawStill);
+                        robot.ClawPower = robot.clawStill;
+                    }
+                }
+            }
 
-            if (gamepad2.b) {
+            if (gamepad2.b && robot.clawMotor.getCurrentPosition() < clawMax) {
                 if (robot.ClawPower != robot.clawOpen) {
                     robot.clawMotor.setPower(robot.clawOpen);
                     robot.ClawPower = robot.clawOpen;
+                }
+            }
+            else{
+                if(gamepad2.b && robot.clawMotor.getCurrentPosition() >= clawMax){
+                    if (robot.ClawPower != robot.clawStill) {
+                        robot.clawMotor.setPower(robot.clawStill);
+                        robot.ClawPower = robot.clawStill;
+                    }
+                }
+                else{
+                    if (robot.ClawPower != robot.clawStill) {
+                        robot.clawMotor.setPower(robot.clawStill);
+                        robot.ClawPower = robot.clawStill;
+                    }
                 }
             }
 
@@ -86,29 +119,38 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             }
 
         /* Vertical Arm Motor */
-            if (gamepad2.dpad_up) {
+            if (gamepad2.dpad_up && robot.verticalArmMotor.getCurrentPosition() < verticalMax) {
                 if (robot.VerticalArmPower != 1) {
                     robot.verticalArmMotor.setPower(1);
                     robot.VerticalArmPower = 1;
                 }
             } else {
-                if (robot.VerticalArmPower != 0) {
+                if (gamepad2.dpad_up && robot.verticalArmMotor.getCurrentPosition() >= verticalMax) {
                     robot.verticalArmMotor.setPower(0);
                     robot.VerticalArmPower = 0;
                 }
-
-                if (gamepad2.dpad_down) {
-                    if (robot.VerticalArmPower != -1) {
-                        robot.verticalArmMotor.setPower(-1);
-                        robot.VerticalArmPower = -1;
-                    }
-                } else {
-                    if (robot.VerticalArmPower != 0) {
-                        robot.verticalArmMotor.setPower(0);
-                        robot.VerticalArmPower = 0;
-                    }
+                else{
+                    robot.verticalArmMotor.setPower(0);
+                    robot.VerticalArmPower = 0;
                 }
             }
+
+            if (gamepad2.dpad_up && robot.verticalArmMotor.getCurrentPosition() < verticalMax) {
+                if (robot.VerticalArmPower != -1) {
+                    robot.verticalArmMotor.setPower(-1);
+                    robot.VerticalArmPower = -1;
+                }
+            } else {
+                if (gamepad2.dpad_up && robot.verticalArmMotor.getCurrentPosition() >= verticalMax) {
+                    robot.verticalArmMotor.setPower(0);
+                    robot.VerticalArmPower = 0;
+                }
+                else{
+                    robot.verticalArmMotor.setPower(0);
+                    robot.VerticalArmPower = 0;
+                }
+            }
+
 
     /* Range Trigger Linear Drive */
             if (gamepad1.right_trigger <= .5 && gamepad1.right_trigger != 0) {
@@ -266,6 +308,72 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
+
+//    /* This method powers the claw */
+//    public void setClawPower (String XorB){
+//    boolean button;
+//    double power;
+//    double encoderMax, encoderMin;
+//
+//
+//        switch(XorB){
+//            case"X":
+//            button = gamepad2.x; power = robot.clawClose; encoderMin = clawMin; encoderMax = clawMax;
+//
+//            case"B":
+//            button = gamepad2.b; power = robot.clawOpen; encoderMin =
+//        }
+//
+//        if (gamepad2.x && robot.clawMotor.getCurrentPosition() > clawMin) {
+//            if (robot.ClawPower != robot.clawClose) {
+//                robot.clawMotor.setPower(robot.clawClose);
+//                robot.ClawPower = robot.clawClose;
+//            }
+//        }
+//        else{
+//            if(gamepad2.x && robot.clawMotor.getCurrentPosition() <= clawMin){
+//                if (robot.ClawPower != robot.clawStill) {
+//                    robot.clawMotor.setPower(robot.clawStill);
+//                    robot.ClawPower = robot.clawStill;
+//                }
+//            }
+//            else{
+//                if (robot.ClawPower != robot.clawStill) {
+//                    robot.clawMotor.setPower(robot.clawStill);
+//                    robot.ClawPower = robot.clawStill;
+//                }
+//            }
+//        }
+//
+//        if (gamepad2.b && robot.clawMotor.getCurrentPosition() < clawMax) {
+//            if (robot.ClawPower != robot.clawOpen) {
+//                robot.clawMotor.setPower(robot.clawOpen);
+//                robot.ClawPower = robot.clawOpen;
+//            }
+//        }
+//        else{
+//            if(gamepad2.b && robot.clawMotor.getCurrentPosition() >= clawMax){
+//                if (robot.ClawPower != robot.clawStill) {
+//                    robot.clawMotor.setPower(robot.clawStill);
+//                    robot.ClawPower = robot.clawStill;
+//                }
+//            }
+//            else{
+//                if (robot.ClawPower != robot.clawStill) {
+//                    robot.clawMotor.setPower(robot.clawStill);
+//                    robot.ClawPower = robot.clawStill;
+//                }
+//            }
+//        }
+//
+//        if (!gamepad2.b && !gamepad2.x) {
+//            if (robot.ClawPower != robot.clawStill) {
+//                robot.clawMotor.setPower(robot.clawStill);
+//                robot.ClawPower = robot.clawStill;
+//            }
+//        }
+//    }
+
 
     /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
