@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "TestingAutoWithClass", group = "Autonomous")
-
+@Disabled
 public class TestAuto extends LinearOpMode {
 	AutoDrive drive;
 	ForkLift ForkLift;
