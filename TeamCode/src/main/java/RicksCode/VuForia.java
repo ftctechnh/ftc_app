@@ -29,6 +29,8 @@
 package RicksCode;
 
 import android.graphics.Bitmap;
+import android.media.ImageWriter;
+import android.provider.ContactsContract;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -78,7 +80,6 @@ public class VuForia extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     public static final String TAG = "Vuforia VuMark Sample";
-
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -170,17 +171,6 @@ public class VuForia extends LinearOpMode {
         while (opModeIsActive()) {
         telemetry.addData("time",runtime.seconds());
 
-//        VuforiaLocalizer.CloseableFrame frame = null;
-
-
-//                long numImages = frame.getNumImages();
-//                for (int i = 0; i < numImages; i++) {
-//                    final Image img = frame.getImage(i);
-//                    int fmt = img.getFormat();
-//                    if (fmt == PIXEL_FORMAT.RGB565) {
-//                        return img;
-//                    }
-//                }
 
         try {
             frame = this.vuforia.getFrameQueue().take();
@@ -189,28 +179,32 @@ public class VuForia extends LinearOpMode {
                 final Image img = frame.getImage(i);
                 int fmt = img.getFormat();
                 if (fmt == PIXEL_FORMAT.RGB565) {
-                    telemetry.addData("frame rgb565 ",i);
-            Bitmap bm = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(img.getPixels());
+//                    telemetry.addData("frame rgb565 ",i);
+            Bitmap rgbImage = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
+            rgbImage.copyPixelsFromBuffer(img.getPixels());
+                    boolean blueIsOnLeft = blueIsOnLeft(rgbImage);
+
                     break;
                 }
-                telemetry.update();
+//                telemetry.update();
             }
         } catch (InterruptedException e)
         {
             throw new RuntimeException(e);
         }
 
+
+
 //        /*rgb is now the Image object that weve used in the video*/
 //            Bitmap bm = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
 //            bm.copyPixelsFromBuffer(rgb.getPixels());
 //        frame.close();  /should run this after done
 
-            telemetry.addData("Number of images",frame.getNumImages());
-        Image image = frame.getImage(0);
-        telemetry.log().add("Picture type = %d %d x %d",image.getFormat(),image.getWidth(),image.getHeight());
-        telemetry.addData("Num Bytes = %d",image.getPixels().remaining());
-            telemetry.addData("Num Bytes = %d",image.getPixels().remaining());
+//            telemetry.addData("Number of images",frame.getNumImages());
+//        Image image = frame.getImage(0);
+//        telemetry.log().add("Picture type = %d %d x %d",image.getFormat(),image.getWidth(),image.getHeight());
+ //       telemetry.addData("Num Bytes = %d",image.getPixels().remaining());
+//            telemetry.addData("Num Bytes = %d",image.getPixels().remaining());
             //telemetry.update();
 
 
@@ -255,6 +249,7 @@ public class VuForia extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
             }
 
+            telemetry.clear();
             telemetry.update();
             sleep(1000);
 
@@ -265,6 +260,38 @@ public class VuForia extends LinearOpMode {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
+    public boolean blueIsOnLeft(Bitmap rgbImage) {
+        // play images are 1280x720 w x h  origin is lower right looking at vuforia image,  Lower Left from camer pov
+        // x is vertical, y is horizontal (for portrait orientation)
+        int XStart = (int) ((double) rgbImage.getWidth() * 0.75);
+        int XEnd = (int) ((double) rgbImage.getWidth() * 1.0);
 
+        int yStart = (int) ((double) rgbImage.getHeight() * 0.0);
+        int yEnd = (int) ((double) rgbImage.getHeight() * 0.25);
+
+        int RedValue = 0;
+        int BlueValue = 0;
+
+        for (int x = XStart; x < XEnd; x++) {
+            for (int y = yStart; y < yEnd; y++) {
+                int pixel = rgbImage.getPixel(x, y);
+                RedValue += (pixel >> 16) & 0xff;
+                BlueValue += pixel & 0xff;
+            }
+        }
+        double BRratio = (double) BlueValue / RedValue;
+
+        telemetry.log().add("Blue / Red  %f  %f ",  (float) BlueValue/RedValue , (float) RedValue/BlueValue);
+
+//        telemetry.addData("BLUE ",BlueValue );
+//        telemetry.update();
+        //sleep(1000);
+        if (BlueValue > RedValue)
+
+            return true;
+        else
+            return false;
+
+    }
 
 }
