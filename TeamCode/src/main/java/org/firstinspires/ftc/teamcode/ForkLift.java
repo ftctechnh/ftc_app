@@ -36,6 +36,7 @@ public class ForkLift {
     public ForkLift(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.rightClaw = hardwareMap.servo.get("s5");
+        this.rightClaw.setDirection(Servo.Direction.REVERSE);
         this.leftClaw = hardwareMap.servo.get("s6");
         this.motor = hardwareMap.dcMotor.get("m6");
         this.topButton = hardwareMap.digitalChannel.get("b0");
