@@ -15,6 +15,8 @@ public class DriveMecanum {
     private DcMotor RearRight;
     private double speed = 1;
     private Telemetry telemetry;
+    final double D_PAD_SLOW_SPEED = 0.25;
+    final double BUMPER_SLOW_SPEED = 0.25;
 
     public DriveMecanum(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, double speed, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;

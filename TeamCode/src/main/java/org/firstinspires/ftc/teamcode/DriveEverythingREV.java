@@ -31,29 +31,29 @@ public class DriveEverythingREV extends OpMode {
         //drive
         if (Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x) + Math.abs(gamepad1.right_stick_y) > Math.abs(gamepad2.left_stick_x) + Math.abs(gamepad2.left_stick_y) + Math.abs(gamepad2.right_stick_x) + Math.abs(gamepad2.right_stick_y)) {
             if (gamepad1.right_bumper || gamepad1.left_bumper) {
-                drive.driveLeftRight(gamepad1.left_stick_x / 4, gamepad1.right_stick_x / 4, gamepad1.left_stick_y / 4, gamepad1.right_stick_y / 4);
+                drive.driveLeftRight(gamepad1.left_stick_x * drive.BUMPER_SLOW_SPEED, gamepad1.right_stick_x * drive.BUMPER_SLOW_SPEED, gamepad1.left_stick_y * drive.BUMPER_SLOW_SPEED, gamepad1.right_stick_y * drive.BUMPER_SLOW_SPEED);
             } else {
                 drive.driveLeftRight(gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_y);
             }
         } else if (Math.abs(gamepad2.left_stick_x) + Math.abs(gamepad2.left_stick_y) + Math.abs(gamepad2.right_stick_x) + Math.abs(gamepad2.right_stick_y) > Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x) + Math.abs(gamepad1.right_stick_y)) {
             if (gamepad2.right_bumper || gamepad2.left_bumper) {
-              drive.driveLeftRight(gamepad2.left_stick_x / 4, gamepad2.right_stick_x / 4, gamepad2.left_stick_y / 4, gamepad2.right_stick_y / 4);
+              drive.driveLeftRight(gamepad2.left_stick_x * drive.BUMPER_SLOW_SPEED, gamepad2.right_stick_x * drive.BUMPER_SLOW_SPEED, gamepad2.left_stick_y * drive.BUMPER_SLOW_SPEED, gamepad2.right_stick_y * drive.BUMPER_SLOW_SPEED);
             } else {
               drive.driveLeftRight(gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_y);
 
             }
         } else {
             if (gamepad1.dpad_up) {
-                drive.driveTranslateRotate(0, -0.25, 0);
+                drive.driveTranslateRotate(0, -drive.D_PAD_SLOW_SPEED, 0);
             }
             else if (gamepad1.dpad_left) {
-                drive.driveTranslateRotate(-0.25, 0, 0);
+                drive.driveTranslateRotate(-drive.D_PAD_SLOW_SPEED, 0, 0);
             }
             else if (gamepad1.dpad_down) {
-                drive.driveTranslateRotate(0, 0.25, 0);
+                drive.driveTranslateRotate(0, drive.D_PAD_SLOW_SPEED, 0);
             }
             else if (gamepad1.dpad_right) {
-                drive.driveTranslateRotate(0.25, 0, 0);
+                drive.driveTranslateRotate(drive.D_PAD_SLOW_SPEED, 0, 0);
             } else {
                 drive.stop();
             }
