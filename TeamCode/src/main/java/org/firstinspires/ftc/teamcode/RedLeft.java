@@ -175,20 +175,35 @@ public class RedLeft extends LinearOpMode {
         // turn toward and view pictograph
         encoderDrive(TURN_SPEED, 2, -2,5 );
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        runtime.reset();
-        while (runtime.seconds() < 30) {
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            telemetry.addData("VuMark", "%s visible", vuMark);
-            telemetry.update();
-        }
         encoderDrive(TURN_SPEED, -2, 2,5 );
 
+        // drive to cryptobox
+        encoderDrive(DRIVE_SPEED, -29, -29, 5);      // drives off balancing stone
+        encoderDrive(TURN_SPEED, -14, 14, 30);
+        encoderDrive(DRIVE_SPEED, -18,  -18, 5);// this is the straight drive that clears the plate
 
-        encoderDrive(DRIVE_SPEED, -35, -35, 5);
-        encoderDrive(TURN_SPEED, -12, 12, 5);
-        encoderDrive(DRIVE_SPEED, -10,  -10, 5);// this is the straight drive that clears the plate
-        encoderDrive(TURN_SPEED, -6.5,6.5,5);
-        encoderDrive(DRIVE_SPEED, -50,-50,5);
+        runtime.reset();
+        while (runtime.seconds() < 3) {    //wait for claw to finish open or close
+        }
+        if (vuMark == RelicRecoveryVuMark.RIGHT){
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            telemetry.update();
+            encoderDrive(TURN_SPEED, -6.5,6.5,5);
+            encoderDrive(DRIVE_SPEED, -50,-50,5);
+        }
+        else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            telemetry.update();
+            encoderDrive(TURN_SPEED, -5.5,5.5,5);
+            encoderDrive(DRIVE_SPEED, -50,-50,5);
+        }
+        else if (vuMark == RelicRecoveryVuMark.LEFT) {
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            telemetry.update();
+            encoderDrive(TURN_SPEED, -4.5,4.5,5);
+            encoderDrive(DRIVE_SPEED, -50,-50,5);
+        }
+
 
         clawOffset = .0;
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
@@ -211,7 +226,7 @@ public class RedLeft extends LinearOpMode {
         telemetry.update();
     }
 
-    /*
+    /*========================================================================================================
      *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
@@ -251,7 +266,7 @@ public class RedLeft extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+                   (robot.leftDrive.isBusy() || robot.rightDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
