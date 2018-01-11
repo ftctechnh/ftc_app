@@ -47,8 +47,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
-
-@Autonomous(name = "IMU Test", group = "Sensor")
+@Autonomous(name = "GET IMU VALUES", group = "Sensor")
                 // Comment this out to add to the opmode list
 public class OrientationSensors extends LinearOpMode
 {
@@ -105,7 +104,8 @@ public class OrientationSensors extends LinearOpMode
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
-    void composeTelemetry() {
+    void composeTelemetry()
+    {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.

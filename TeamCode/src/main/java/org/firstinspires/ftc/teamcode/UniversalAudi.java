@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by Jeremy and Sahithi on 11/12/2017.
  */
+@Disabled
 @Autonomous(name = "UniversalAudi", group = "Auto")
 public class UniversalAudi extends LinearOpMode
 {
@@ -56,6 +58,7 @@ public class UniversalAudi extends LinearOpMode
                 //open door to release glyph
                 robot.driveStraight_In(-2);
                 robot.stopAllMotors();
+                //INSERT CODE TO RAISE
                 break;
             case'r':
                 // Close doors
@@ -87,8 +90,10 @@ public class UniversalAudi extends LinearOpMode
                 //open door to release glyph
                 robot.driveStraight_In(-2);
                 robot.stopAllMotors();
+                //INSERT CODE TO RAISE WING
                 break;
             default:
+                robot.driveStraight_In(30, .4);
                 break;
         }
     }

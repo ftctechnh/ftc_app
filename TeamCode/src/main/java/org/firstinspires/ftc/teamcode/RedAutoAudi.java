@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Jeremy on 10/29/2017.
  */
+@Disabled
 @Autonomous(name = "RedAutoAudi", group = "Auto")
 public class RedAutoAudi extends LinearOpMode
 {
@@ -20,11 +21,11 @@ public class RedAutoAudi extends LinearOpMode
         waitForStart(); //stops the code running until after pressing the play button on phone
         // Close doors
         // Lift up doors to get glyph
-        // Lower the right arm
+        // Lower the right wing
         // Look at the color of platform
         // Sense color of the jewel
         // if the jewel has the same color as the platform; move backwards; return to original position
-        // else if the jewel isn't same color; move forward; return to orignal position
+        // else if the jewel isn't same color; move forward; return to original position
         // else (no color sense); do nothing
         // raise/retract arm arm
         // decode pictogram

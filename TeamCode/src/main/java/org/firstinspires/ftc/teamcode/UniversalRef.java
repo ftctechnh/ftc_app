@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by Sahithi on 11/15/2017.
  */
-@Autonomous(name = "UniversalRef", group = "Auto")
+@Disabled
+@Autonomous(name = "!UniversalRef", group = "Auto")
 public class UniversalRef extends LinearOpMode
 {
     NewRobot newRobot;
@@ -22,6 +24,7 @@ public class UniversalRef extends LinearOpMode
         telemetry.addData("hue platform = ", newRobot.getHueValue(newRobot.getFloorColorSens()));
         telemetry.update();
         sleep(2000);
+        //INSERT CODE CODE TO CLENCH GLYPH AND LIFT IT
         switch (colorOfPlatform) {
             case 'b':
                 // Close doors
@@ -61,6 +64,7 @@ public class UniversalRef extends LinearOpMode
                 //open door attachment to release glyph
                 robot.driveStraight_In(-2); // back up
                 robot.stopAllMotors();
+                //INSERT CODE TO RAISE WING
                 break;
             case 'r':
                 // Close doors
@@ -100,8 +104,11 @@ public class UniversalRef extends LinearOpMode
                 //open door attachment to release glyph
                 robot.driveStraight_In(-2); // back up
                 robot.stopAllMotors();
+                //INSERT CODE TO RAISE WING
                 break;
             default:
+                robot.driveStraight_In(29, .4);
+                break;
         }
     }
 }

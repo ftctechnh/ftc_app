@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Sahithi on 10/20/2017.
  */
-
+@Disabled
 @Autonomous(name = "RedAutoRef", group = "Auto")
 public class RedAutoRef extends LinearOpMode
 {
@@ -54,7 +54,6 @@ public class RedAutoRef extends LinearOpMode
         robot.driveStraight_In(8,.1);
         robot.driveStraight_In(8, .1);
         // lower door attachment to the ground
-        //lower door attachment to ground
         //open door attachment to release glyph
         robot.driveStraight_In(-2); // back up
         robot.stopAllMotors();
