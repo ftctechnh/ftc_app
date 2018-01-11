@@ -34,7 +34,7 @@ public class DriveOffTable extends LinearOpMode {
             Thread.sleep(10000);
 
             // IN HONOR OF AMOUNT OF TALENT ON JV
-            int[] t = {};
+            int t = 0;
 
         }
     }
