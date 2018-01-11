@@ -1,16 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /**
  * Created by Sahithi on 1/3/18.
- */
+ */@Disabled
 @Autonomous(name = "Test Stall",group = "Auto")
 public class TestStall extends LinearOpMode
 {
+
+    TankBase robot;
+    public void runOpMode()
+    {
+        robot = new TankBase(hardwareMap);
+        waitForStart();
+
+    }/*
     NewRobotFinal newRobot;
     public void runOpMode()
     {
@@ -53,4 +62,5 @@ public class TestStall extends LinearOpMode
 
         }
     }
+    */
 }
