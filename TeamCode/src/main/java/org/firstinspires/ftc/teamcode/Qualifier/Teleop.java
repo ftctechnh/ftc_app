@@ -245,7 +245,10 @@ public class Teleop extends OpMode {
 
     @Override
     public void stop() {
-        //       gromit.shooter.turnOff();
+               gromit.driveTrain.stopMotors();
+               gromit.glyphTrain.stopGlyphMotors();
+                gromit.glyphTrain.lift_motor.setPower(0.0);
+                //               gromit.relicArm.stoprelic...
     }
 
 }

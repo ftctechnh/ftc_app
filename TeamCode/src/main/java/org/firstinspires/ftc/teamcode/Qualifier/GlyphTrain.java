@@ -85,7 +85,8 @@ public class GlyphTrain {
     public void stopGlyphMotors() {
         left_glyph.setPower(0.0);
         right_glyph.setPower(0.0);
-    }
+        }
+
     void glyphclamp(String moveto){
         double clampRange = 0.4;
         if( moveto == "open"){
