@@ -297,7 +297,7 @@ public class FinalBlueRightWithRS extends LinearOpMode
     /* This method moves the robot forward for time and power indicated*/
     public void movePowerDistanceDirectionSensor ( double power, double distance, String direction, String sensor) {
 
-    /* This switch case is determined by the String direction indicated above */
+    /* This switch case is determined by the String direction indicated above hahah*/
         switch (direction) {
             case "Forward":
                 setWheelPower(power, -power, power, -power);
