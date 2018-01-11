@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+/**
+ * Created by Kaden on 10/20/2017.
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
-
-/**
- * Created by Kaden on 10/20/2017.
- */
 
 @TeleOp(name = "MecanumDriveExpo", group = "linear OpMode")
 @Disabled

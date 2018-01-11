@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
 /**
  * Created by Kaden on 112/12/2017.
  */
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 @TeleOp(name = "REVDriveEverything", group = "linear OpMode")
 public class DriveEverythingREV extends OpMode {
     private ForkLift ForkLift;

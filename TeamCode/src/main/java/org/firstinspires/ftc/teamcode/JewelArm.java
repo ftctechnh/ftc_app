@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+/**
+ * Created by Kaden on 11/28/2017.
+ */
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-/**
- * Created by Kaden on 11/28/2017.
- */
 
 public class JewelArm {
     public Servo servo;
