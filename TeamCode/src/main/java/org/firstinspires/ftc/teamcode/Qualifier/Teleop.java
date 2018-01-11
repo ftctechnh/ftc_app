@@ -64,9 +64,10 @@ public class Teleop extends OpMode {
         //------------------------------------------------------------------------------
         //Lift/lower glyph
         //------------------------------------------------------------------------------
-       if(gamepad1.right_bumper) {
+       if(gamepad1.y) {
             if (rightbumperIsReleased) {
                 rightbumperIsReleased = false;
+
                 gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
                 gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lift
                 //gromit.glyphTrain.liftGlyph(6);
@@ -74,7 +75,7 @@ public class Teleop extends OpMode {
         } else {
             rightbumperIsReleased = true;
         }
-       if(gamepad1.right_trigger > 0.1) {
+       if(gamepad1.a) {
             if (righttriggerIsReleased) {
                 righttriggerIsReleased = false;
                 //gromit.glyphTrain.lowerGlyph(6);
@@ -125,12 +126,12 @@ public class Teleop extends OpMode {
         }
 
 
-        if (gamepad1.a){
-            gromit.relicArm.relicClawServo.setPosition(.4);
-        }
-        else if (gamepad1.y){
-            gromit.relicArm.relicClawServo.setPosition(.6);
-        }
+//        if (gamepad1.a){
+//            gromit.relicArm.relicClawServo.setPosition(.4);
+//        }
+//        else if (gamepad1.y){
+//            gromit.relicArm.relicClawServo.setPosition(.6);
+//        }
 
         if (gamepad1.right_bumper){
             gromit.relicArm.relicClawServo.setPosition(.45);

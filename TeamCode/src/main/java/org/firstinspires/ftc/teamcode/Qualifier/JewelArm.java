@@ -11,7 +11,7 @@ public class JewelArm {
     public Servo jewelFlickerServo;
     public ColorSensor sensorColor;
     public DistanceSensor sensorDistance;
-
+    public double jewelarmup = 0.22;
 
     // hsvValues is an array that will hold the hue, saturation, and value information.
     float hsvValues[] = {0F, 0F, 0F};
@@ -40,12 +40,12 @@ public class JewelArm {
     }
 
     public void jewelArmUp() {
-        jewelArmServo.setPosition(0.0);
+        jewelArmServo.setPosition(0.22);
         jewelflickerForward();
     }
 
     public void jewelArmDown() {
-        jewelArmServo.setPosition(0.53);
+        jewelArmServo.setPosition(0.75);
         jewelflickerCenter();
     }
 

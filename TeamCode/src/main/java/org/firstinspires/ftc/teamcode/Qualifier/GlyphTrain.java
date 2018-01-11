@@ -20,7 +20,7 @@ public class GlyphTrain {
     public int lowerLiftLimit = 0;
     public int upperLiftLimit = 4470;
     public int liftIndex = 0;
-    public int[] liftPosition ={0,1200,2400};
+    public int[] liftPosition ={0,2100,4100};
 //     0,(int) (7 * TICKS_REV / (pulleydiameter*Math.PI)), (int)( 13 * TICKS_REV / (pulleydiameter*Math.PI) ) };
 
 
@@ -118,6 +118,14 @@ public class GlyphTrain {
 
         //height is encoder counts or ticks
         // going up
+        if (Math.abs(lift_motor.getCurrentPosition()-liftPosition[newindex]) > 2200){
+            if(liftPosition[newindex] > lift_motor.getCurrentPosition()){
+                newindex = newindex -1;
+            }else{
+                newindex = newindex +1;
+            }
+
+        }
         if(liftPosition[newindex] > lift_motor.getCurrentPosition()){
             while(lift_motor.getCurrentPosition() < liftPosition[newindex] &&
                     lift_motor.getCurrentPosition() < upperLiftLimit  ){
