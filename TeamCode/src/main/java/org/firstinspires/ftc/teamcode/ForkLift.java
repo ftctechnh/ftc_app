@@ -49,7 +49,7 @@ public class ForkLift {
 
     public void init() {
         openClaw();
-        moveUntilDown(0.5);
+        moveUntilDown(0.75);
     }
     public void autoInit() {
         openClaw();
@@ -100,16 +100,21 @@ public class ForkLift {
         }
         stop();
     }
+    public void moveUntilDown() {
+        moveUntilDown(0.75);
+    }
     public void moveUntilUp(double speed) {
         while (topButton.getState()) {
             moveMotor(Math.abs(speed));
         }
         stop();
     }
+    public void moveUntilUp() {
+        moveUntilUp(0.75);
+    }
     public void stop() {
         moveMotor(0);
     }
 
     private void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
-
 }
