@@ -4,7 +4,7 @@ android:
   components:
     - build-tools-26.0.2
 
-    - android-23
+    - android-19
 
 before_install:
  - sudo chmod +x gradlew
