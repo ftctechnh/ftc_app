@@ -6,12 +6,16 @@ package org.firstinspires.ftc.teamcode.Qualifier;
 
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.Image;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -32,6 +36,7 @@ public class Auto extends LinearOpMode {
     private MenuFileHandler2 menuFile;
     public static final String TAG = "Vuforia VuMark Sample";
     public boolean redjewelisright;
+    public boolean blueJewelIsLeft;
 
     OpenGLMatrix lastLocation = null;
 
@@ -89,7 +94,11 @@ public class Auto extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
+// jewel image grabbing
 
+        this.vuforia.setFrameQueueCapacity(3);
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565,true);
+        VuforiaLocalizer.CloseableFrame frame = null;
 
         /**********************************************************************************************\
          |--------------------------------- Pre Init Loop ----------------------------------------------|
@@ -133,15 +142,17 @@ public class Auto extends LinearOpMode {
         // Actual Init loop
         while (!opModeIsActive()) {
             telemetry.addData("IMU", "Heading: %4.2f ", gromit.driveTrain.getheading());
+            telemetry.addData("Blue/Red Ratio", "Heading: %4.2f ", gromit.jewelArm.BRRatio);
+
             telemetry.addLine("************ READY TO RUN *************");
             telemetry.addLine("Press BACK or START button to enter EDIT mode");
             telemetry.addLine(" ");
 
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.BLACK);
-                }
-            });
+//            relativeLayout.post(new Runnable() {
+//                public void run() {
+//                    relativeLayout.setBackgroundColor(Color.BLACK);
+//                }
+//            });
 
             //
             //
@@ -170,6 +181,53 @@ public class Auto extends LinearOpMode {
 //                     }
 //
 //            }
+
+            // should look for vumark here
+
+            // check jewel
+            try {
+                frame = this.vuforia.getFrameQueue().take();
+                long numImages = frame.getNumImages();
+                for (int i = 0; i < numImages; i++) {
+                    final Image img = frame.getImage(i);
+                    int fmt = img.getFormat();
+                    if (fmt == PIXEL_FORMAT.RGB565) {
+//                    telemetry.addData("frame rgb565 ",i);
+                        Bitmap rgbImage = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
+                        rgbImage.copyPixelsFromBuffer(img.getPixels());
+                        blueJewelIsLeft = gromit.jewelArm.blueIsOnLeft(rgbImage);
+                        break;
+                    }
+//                telemetry.update();
+                }
+            } catch (InterruptedException e)
+            {
+                throw new RuntimeException(e);
+            }
+            if ( (gromit.jewelArm.BRRatio > 2)|| (gromit.jewelArm.BRRatio < 0.5) ) {
+                if (blueJewelIsLeft) {
+                    relativeLayout.post(new Runnable() {
+                        public void run() {
+                            relativeLayout.setBackgroundColor(Color.BLUE);
+                        }
+                    });
+
+                } else {
+                    relativeLayout.post(new Runnable() {
+                        public void run() {
+                            relativeLayout.setBackgroundColor(Color.RED);
+                        }
+                    });
+
+                }
+            }else{
+                relativeLayout.post(new Runnable() {
+                    public void run() {
+                        relativeLayout.setBackgroundColor(Color.BLACK);
+                    }
+                });
+
+            }
 
             if (gamepad1.right_bumper) {
                 gromit.glyphTrain.glyphclamp("close");

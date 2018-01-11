@@ -127,8 +127,8 @@ public class VuForia extends LinearOpMode {
 
         //vuforia.setFrameQueueCapacity(3);
         this.vuforia.setFrameQueueCapacity(3);
-        telemetry.addData("Frame Capacity = %d",this.vuforia.getFrameQueueCapacity());
-        telemetry.update();
+//        telemetry.addData("Frame Capacity = %d",this.vuforia.getFrameQueueCapacity());
+//        telemetry.update();
         Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565,true);
         VuforiaLocalizer.CloseableFrame frame = null;
         //waitForStart();
@@ -280,7 +280,7 @@ public class VuForia extends LinearOpMode {
                 BlueValue += pixel & 0xff;
             }
         }
-        double BRratio = (double) BlueValue / RedValue;
+        double BRRratio = (double) BlueValue / RedValue;
 
         telemetry.log().add("Blue / Red  %f  %f ",  (float) BlueValue/RedValue , (float) RedValue/BlueValue);
 

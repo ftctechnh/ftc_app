@@ -13,7 +13,7 @@ public class JewelArm {
     public Servo jewelFlickerServo;
     public ColorSensor sensorColor;
     public DistanceSensor sensorDistance;
-    public double BRRatio;
+    public double BRRatio = 0;
     public double jewelarmup = 0.22;
 
     // hsvValues is an array that will hold the hue, saturation, and value information.
@@ -111,7 +111,7 @@ public class JewelArm {
                 BlueValue += pixel & 0xff;
             }
         }
-        double BRratio = (double) BlueValue / RedValue;
+        BRRatio = (double) BlueValue / RedValue;
 
         if (BlueValue > RedValue)
 
