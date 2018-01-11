@@ -89,4 +89,43 @@ public class HardwareUtilityFunctionsTest {
             }
         }
     }
+
+    @Test
+    public void hardwareUtilities_NormAngle() {
+        final double[] INPUTS = {0, -Math.PI, 3.385, -Math.PI * 2, Math.PI * 1827428.5};
+        final double[] EXPECTED_OUTPUTS = {0, Math.PI, 3.385, 0, Math.PI/2};
+        final double DELTA = 0.00001;
+
+        for (int i = 0; i < INPUTS.length; i++) {
+            assertEquals(robot.normAngle(INPUTS[i]), EXPECTED_OUTPUTS[i], DELTA);
+        }
+    }
+
+    @Test
+    public void hardwareUtilities_AngleDifference() {
+        final double[] MINUENDS = {Math.PI, -Math.PI, 3, Math.PI * 1.5};
+        final double[] SUBTRAHENDS = {-Math.PI*2, -2, -1, Math.PI * 119748371};
+        final double[] DIFFERENCES = {Math.PI, (Math.PI - 2), ((Math.PI * 2) - 4), Math.PI/2};
+        final double DELTA = 0.00001;
+
+        for (int i = 0; i < MINUENDS.length; i++) {
+            assertEquals(DIFFERENCES[i], robot.getAngleDifference(MINUENDS[i], SUBTRAHENDS[i]), DELTA);
+        }
+    }
+
+    @Test
+    public void hardwareUtilities_GetDrivePowers() {
+        final double[] ANGLES = {0, Math.PI/4, Math.PI/2, Math.PI, Math.PI * 1.5, 2.5};
+        final double[] DIAGONAL1_EXPECTED = {0.7071, 1, 0.7071, -0.7071, -0.7071, -0.1433};
+        final double[] DIAGONAL2_EXPECTED = {0.7071, 0, -0.7071, -0.7071, 0.7071, -0.9897};
+        final double DELTA = 0.001;
+
+        for (int i = 0; i < ANGLES.length; i++) {
+            double[] powers = robot.getDrivePowersFromAngle(ANGLES[i]);
+            assertEquals(DIAGONAL1_EXPECTED[i], powers[0], DELTA); // Both wheels on diagonal should
+            assertEquals(DIAGONAL1_EXPECTED[i], powers[3], DELTA); // go the same speed
+            assertEquals(DIAGONAL2_EXPECTED[i], powers[1], DELTA);
+            assertEquals(DIAGONAL2_EXPECTED[i], powers[2], DELTA);
+        }
+    }
 }
