@@ -1,6 +1,4 @@
-//This will be used for testing the forklift.
-
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
 
 /**
  * Created by BeehiveRobotics-3648 on 7/22/2017.
@@ -13,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.TimerTask;
+
+//This will be used for testing the forklift.
 
 @TeleOp(name = "TeleOpForklift", group = "linear OpMode")
 @Disabled

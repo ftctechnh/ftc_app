@@ -1,16 +1,19 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
+
+/**
+ * Created by BeehiveRobotics-3648 on 7/28/2017.
+ */
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.Deprecated.iDrive;
+
 import java.lang.*;
 
 //the one that controls like a racing game
-
-/**
- * Created by BeehiveRobotics-3648 on 7/28/2017.
- */
 
 @TeleOp(name = "TeleOpVG", group = "linear OpMode")
 @Disabled

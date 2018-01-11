@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.Deprecated;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * Created by Peter on 9/5/2017.
  */
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class TimingSystem{
     public void newTimer(TimerTask function, long ms, long delay) {

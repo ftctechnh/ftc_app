@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.Deprecated;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-
 /**
  * Created by Kaden on 12/2/2017.
  */
-public class CRServoMid extends OpMode{
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+
+public class CRServoMid extends OpMode {
     CRServo servo;
     public void init() {
         servo = hardwareMap.crservo.get("s0");

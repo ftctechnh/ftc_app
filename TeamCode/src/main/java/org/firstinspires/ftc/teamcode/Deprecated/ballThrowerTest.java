@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+/**
+ * Created by BeehiveRobotics-3648 on 8/22/2017.
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-/**
- * Created by BeehiveRobotics-3648 on 8/22/2017.
- */
 @TeleOp(name = "balllaunchtest", group = "linear OpMode")
 @Disabled
 public class ballThrowerTest extends OpMode {

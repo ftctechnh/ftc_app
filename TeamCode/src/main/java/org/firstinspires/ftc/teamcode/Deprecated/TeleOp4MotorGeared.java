@@ -1,4 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
+
+/**
+ * Created by Liam on 7/20/2017.
+ */
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -9,9 +13,6 @@ import junit.framework.Test;
 
 //teleop mode to use if you have 4 motors
 
-/**
- * Created by BeehiveRobotics-3648 on 7/20/2017.
- */
 
 @TeleOp(name = "4MotorTeleOp", group = "linear OpMode")
 @Disabled

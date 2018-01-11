@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
+
+/**
+ * Created by BeehiveRobotics-3648 on 7/20/2017.
+ */
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-/**
- * Created by BeehiveRobotics-3648 on 7/20/2017.
- */
 
 @TeleOp(name = "Directdrive4motorteleop", group = "linear OpMode")
 @Disabled

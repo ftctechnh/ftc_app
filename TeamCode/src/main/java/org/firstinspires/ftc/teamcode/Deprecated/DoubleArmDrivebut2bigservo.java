@@ -1,4 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
+
+/**
+ * Created by Aus on 11/2/2017.
+ */
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,9 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
-/**
- * Created by Aus on 11/2/2017.
- */
 @TeleOp(name = "DoubleArm2ServoDrive", group = "linear OpMode")
 @Disabled
 public class DoubleArmDrivebut2bigservo extends OpMode {

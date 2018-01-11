@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Deprecated;
 
+/**
+ * Created by Aus on 10/7/2017.
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,10 +20,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-/**
- * Created by Aus on 10/7/2017.
- */
 
     @Autonomous(name = "beehiveVuAuto", group = "Concept")
 @Disabled

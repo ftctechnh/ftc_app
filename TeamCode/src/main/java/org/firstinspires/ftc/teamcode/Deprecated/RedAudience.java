@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Deprecated;
 //All imports go here, anything you will use, like motors or servos.
 
+/**
+ * Created by Liam on 11/16/2017.
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

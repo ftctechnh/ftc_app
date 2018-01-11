@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+/**
+ * Created by Liam on 9/14/2017.
+ */
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-/**
- * Created by BeehiveRobotics-3648 on 9/14/2017.
- */
 @TeleOp(name = "ConveyerTest", group = "linear OpMode")
 @Disabled
 public class ConveyerTest extends OpMode {

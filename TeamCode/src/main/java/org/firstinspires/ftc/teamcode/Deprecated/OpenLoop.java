@@ -1,13 +1,13 @@
-package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+package org.firstinspires.ftc.teamcode.Deprecated;
+
+/**
+ * Created by Aus on 9/7/2017.
+ */
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import java.lang.*;
 
 
-/**
- * Created by BeehiveRobotics on 9/7/2017.
- */
 
 public class OpenLoop implements iDrive{
     private DcMotor FrontLeftMotor;

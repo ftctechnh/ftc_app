@@ -1,12 +1,12 @@
-//This program lets the robot be controlled by the dpad.
-//You can also change the speed of the robot with the a, b, y, and x buttons.
-//a is fastest, b is fast, x is slow, y is slowest.
-
 package org.firstinspires.ftc.teamcode.Deprecated;
 
 /**
  * Created by BeehiveRobotics-3648 on 7/22/2017.
  */
+
+//This program lets the robot be controlled by the dpad.
+//You can also change the speed of the robot with the a, b, y, and x buttons.
+//a is fastest, b is fast, x is slow, y is slowest.
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

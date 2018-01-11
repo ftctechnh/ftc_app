@@ -1,4 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Deprecated;
+
+/**
+ * Created by Aus on 11/7/2017.
+ */
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,10 +11,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import junit.framework.Test;
 
 // this is my little test program for the little rev bot that i'm playing around with
-/**
- * Created by Aus on 11/7/2017.
- */
-
 public class minirevbot extends OpMode {
 
     DcMotor FrontLeft;
