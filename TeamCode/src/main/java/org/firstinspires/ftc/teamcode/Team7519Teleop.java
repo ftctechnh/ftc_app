@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Team 7519 Relic Recovery Code
@@ -14,6 +15,7 @@ public class Team7519Teleop extends LinearOpMode{
 
     private CRServo testServo;
     private DcMotor motorLift, leftFront, rightFront, leftRear, rightRear;
+    private Servo arm;
     int clawPosition=0;
     @Override
     public void runOpMode() throws InterruptedException
@@ -26,6 +28,7 @@ public class Team7519Teleop extends LinearOpMode{
         leftRear = hardwareMap.dcMotor.get("leftRear");
         rightRear = hardwareMap.dcMotor.get("rightRear");
         testServo = hardwareMap.crservo.get("testServo");
+        arm = hardwareMap.servo.get("arm");
 
 
         //Include any code to run only once here
@@ -33,6 +36,8 @@ public class Team7519Teleop extends LinearOpMode{
 
         while(opModeIsActive())
         {
+
+            arm.setPosition(0);//Lock Servo Arm in Up Position
 
             //Include commands to run on controller presses here
 
