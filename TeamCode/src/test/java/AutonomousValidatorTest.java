@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class AutonomousValidatorTest {
 
     @Test
-    public void autnomousSimulator() {
+    public void autonomousSimulator() {
         assertTrue(true);
     }
 }
