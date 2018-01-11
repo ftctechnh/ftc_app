@@ -4,34 +4,34 @@ In order to use Json files in FTC, you have to follow these steps.
 
 *************************************************
 
+// create jsonparser to get the json file from the folder
 JsonParser parser = new JsonParser();
 
+            // create object to fill with Json data
             Object obj;
             try {
-                //get file in folder
-                obj = parser.parse(new FileReader("/storage/emulated/0/FIRST/Testing.json"));
-                telemetry.update();
+                //get file in folder and load it into the obj file
+                obj = parser.parse(new FileReader("/storage/emulated/0/FIRST/NAME HERE.json"));
+
+               // create JsonObject that holds the data from the Json file it found
                 JsonObject jsonObject = (JsonObject) obj;
 
                 // add data you want to pull from json file here
                 String parameter = jsonObject.get("DATA NAME HERE").toString();
-                String otherParameter = jsonObject.get("DATA NAME HERE").toString();
 
                 // this prints the json data pulled to make sure it got it right.
                 telemetry.addData("DATA NAME HERE", parameter);
-                telemetry.addData("OTHER DATA NAME HERE", otherParameter);
+
+                // print data
                 telemetry.update();
 
+            // error reports if anything goes wrong. Prints out error report and the type of exception it caught
             } catch (FileNotFoundException e) {
                 telemetry.addData("Error Report", e.getMessage());
                 telemetry.addData("Exception", "FileNotFound");
-                telemetry.addData("Cause", e.getCause());
-                telemetry.addData("e.toString()", e.toString());
             }catch (ClassCastException e) {
                 telemetry.addData("Error Report", e.getMessage());
                 telemetry.addData("Exception", "ClassCast");
-                telemetry.addData("Cause", e.getCause());
-                telemetry.addData("e.toString()", e.toString());
             }
 
 *************************************************
