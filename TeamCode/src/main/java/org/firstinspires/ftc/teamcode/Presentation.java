@@ -42,6 +42,7 @@ public class Presentation extends OpMode {
 
     }
     public void loop() {
+        drive.driveLeftRight(gamepad2.left_stick_x / 4, gamepad2.right_stick_x / 4, gamepad2.left_stick_y / 4, gamepad2.right_stick_y / 4);
         if (gamepad1.a) {
             RelicClaw.closeClaw();
         }

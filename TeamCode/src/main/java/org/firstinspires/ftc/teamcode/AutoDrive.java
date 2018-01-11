@@ -35,6 +35,7 @@ public class AutoDrive {
     final double SPIN_TO_CENTER_SPEED = 0.75;
     final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
     final double FIND_VUMARK_DISTANCE = 2;
+    final double TRY_AGAIN_JEWEL_DISTANCE = 0.6;
 
     AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = FrontLeft;
