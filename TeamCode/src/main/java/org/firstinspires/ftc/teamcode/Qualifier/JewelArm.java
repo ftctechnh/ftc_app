@@ -91,7 +91,37 @@ public class JewelArm {
 
 
     }
+    public void solveJewelPuzzleCamera(boolean teamIsRED,boolean blueJewelIsLeft) {
 
+        // sensor is facing the forward ball.
+
+//        // determine if Red to the left, the sensor reads in the left direction.
+//        if (sensorColor.red() > sensorColor.blue()) {   //then RED is front
+//            redjewelisfront = true;
+//       } else {
+//            redjewelisfront = false;
+//        }
+
+        if (teamIsRED && blueJewelIsLeft) {            //Red Team, blue is in front
+            jewelflickerForward();
+            //while( jewelFlickerServo.getPosition() > 0.05) { }
+        } else if (teamIsRED && !blueJewelIsLeft) {    //Red Team, blue is in back
+            jewelflickerBack();
+            //while( jewelFlickerServo.getPosition() < 0.95) { }
+        } else if (!teamIsRED && blueJewelIsLeft) {     //Blue Team, blue is in front
+            jewelflickerBack();
+            //while( jewelFlickerServo.getPosition() < 0.95) { }
+        } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
+            jewelflickerForward();
+            //while( jewelFlickerServo.getPosition() > 0.05) { }
+        }
+
+
+    }
+
+    /** -----------------------------------------------------------------------------------
+    |  Grab a frame from Vuforia, check out where the jewel should be, see if it's red or Blue.
+    \------------------------------------------------------------------------------------- */
     public boolean blueIsOnLeft(Bitmap rgbImage) {
         // play images are 1280x720 w x h  origin is lower right looking at vuforia image,  Lower Left from camer pov
         // x is vertical, y is horizontal (for portrait orientation)
