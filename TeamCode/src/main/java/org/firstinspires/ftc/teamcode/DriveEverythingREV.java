@@ -44,16 +44,16 @@ public class DriveEverythingREV extends OpMode {
             }
         } else {
             if (gamepad1.dpad_up) {
-                drive.driveTranslateRotate(0, -0.2, 0);
+                drive.driveTranslateRotate(0, -0.25, 0);
             }
             else if (gamepad1.dpad_left) {
-                drive.driveTranslateRotate(-0.2, 0, 0);
+                drive.driveTranslateRotate(-0.25, 0, 0);
             }
             else if (gamepad1.dpad_down) {
-                drive.driveTranslateRotate(0, 0.2, 0);
+                drive.driveTranslateRotate(0, 0.25, 0);
             }
             else if (gamepad1.dpad_right) {
-                drive.driveTranslateRotate(0.2, 0, 0);
+                drive.driveTranslateRotate(0.25, 0, 0);
             } else {
                 drive.stop();
             }
