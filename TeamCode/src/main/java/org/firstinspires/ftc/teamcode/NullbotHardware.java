@@ -367,9 +367,9 @@ public class NullbotHardware {
      * Translates inputted angle between 0 and 2 pi radians
      *
      * @param a   The angle to be translated
-     * @return    The translated angle
+     * @return    The translated angle from 0 to 2 pi
      */
-    public double normAngle(double a) {
+    public static double normAngle(double a) {
         a = a % (Math.PI * 2);
 
         if (a < 0) {
@@ -388,17 +388,9 @@ public class NullbotHardware {
 
 
     public static double getAngleDifference(double d1, double d2) {
-        double diff = d2 - d1;
-        if (d1 > Math.PI) {d1 -= 2 * Math.PI;}
-        if (d2 > Math.PI) {d2 -= 2 * Math.PI;}
-
-        double diff2 = d2 - d1;
-
-        if (Math.abs(diff) < Math.abs(diff2)) {
-            return diff;
-        } else {
-            return diff2;
-        }
+        double diff = Math.abs(d2 - d1);
+        diff = diff % (Math.PI * 2);
+        return diff > Math.PI ? (Math.PI * 2) - diff : diff;
     }
     /**
      * @return    The error adjusted gyro position, between 0 and 2pi radians
