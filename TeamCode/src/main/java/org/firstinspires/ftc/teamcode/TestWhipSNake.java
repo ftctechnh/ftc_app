@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="Test whip snake", group="Diagnostics")
-public class TestWhipSNake extends LinearOpMode {
+public class TestWhipSnake extends LinearOpMode {
 
     NullbotHardware robot   = new NullbotHardware();
 
