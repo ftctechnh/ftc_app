@@ -24,6 +24,8 @@ public class Teleop extends OpMode {
     public boolean backIsReleased = true;
     public boolean rightbumperIsReleased = true;
     public boolean righttriggerIsReleased = true;
+    public boolean glyphLiftismoving = false;
+    public int liftTarget = 0;
 
     boolean loadedLastTime = false;
 
@@ -68,10 +70,11 @@ public class Teleop extends OpMode {
        if(gamepad1.x) {
             if (rightbumperIsReleased) {
                 rightbumperIsReleased = false;
-
                 gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
-                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lift
-                //gromit.glyphTrain.liftGlyph(6);
+//                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lift
+                liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];  // set the new Target
+                glyphLiftismoving = true;
+                gromit.glyphTrain.lift_motor.setPower(0.9);   // start the motor going up
             }
         } else {
             rightbumperIsReleased = true;
@@ -80,12 +83,33 @@ public class Teleop extends OpMode {
             if (righttriggerIsReleased) {
                 righttriggerIsReleased = false;
                 //gromit.glyphTrain.lowerGlyph(6);
-                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is 0
-                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
+                glyphLiftismoving = true;
+                gromit.glyphTrain.liftIndex = 0;  //down always goes to zero
+                liftTarget = 0;
+                gromit.glyphTrain.lift_motor.setPower(-0.7);   // start the motor going down
+                gromit.glyphTrain.glyphclamp("open");   // might as well open when lowering
+//                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is
+//                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
             }
         } else {
             righttriggerIsReleased = true;
         }
+        // check if target is reached yet
+        if (glyphLiftismoving){
+            if (liftTarget == 0){  // going down
+                if(gromit.glyphTrain.lift_motor.getCurrentPosition() <= liftTarget){
+                    gromit.glyphTrain.lift_motor.setPower(0.0);
+                    glyphLiftismoving = false;
+                }
+            }else{
+                if(gromit.glyphTrain.lift_motor.getCurrentPosition() >= liftTarget){
+                    gromit.glyphTrain.lift_motor.setPower(0.0);
+                    glyphLiftismoving = false;
+                }
+            }
+        }
+
+
         telemetry.addData("liftticks",gromit.glyphTrain.lift_motor.getCurrentPosition() );
         //------------------------------------------------------------------------------
         // glyph lift
