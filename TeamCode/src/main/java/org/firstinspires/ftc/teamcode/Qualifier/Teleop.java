@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.FAST;
+import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.MID;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.SLOW;
 import static java.lang.Math.atan;
 import static java.lang.Math.toDegrees;
@@ -52,7 +53,7 @@ public class Teleop extends OpMode {
         //------------------------------------------------------------------------------
         //toggle  drive direction-when the button was released and it is now pressed.
         //------------------------------------------------------------------------------
-        if(gamepad1.back) {
+        if(gamepad1.right_stick_button) {
             if (backIsReleased) {
                 backIsReleased = false;
                 gromit.driveTrain.frontIsForward = !gromit.driveTrain.frontIsForward;
@@ -64,7 +65,7 @@ public class Teleop extends OpMode {
         //------------------------------------------------------------------------------
         //Lift/lower glyph
         //------------------------------------------------------------------------------
-       if(gamepad1.y) {
+       if(gamepad1.x) {
             if (rightbumperIsReleased) {
                 rightbumperIsReleased = false;
 
@@ -88,13 +89,13 @@ public class Teleop extends OpMode {
         telemetry.addData("liftticks",gromit.glyphTrain.lift_motor.getCurrentPosition() );
         //------------------------------------------------------------------------------
         // glyph lift
-        if (gamepad1.dpad_up) {
+        if (gamepad1.y) {
             if(gromit.glyphTrain.lift_motor.getCurrentPosition() < gromit.glyphTrain.upperLiftLimit){
                 gromit.glyphTrain.lift_motor.setPower(1.0);
             }else {
                 gromit.glyphTrain.lift_motor.setPower(0);
             }
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad1.b) {
             if(gromit.glyphTrain.lift_motor.getCurrentPosition() > gromit.glyphTrain.lowerLiftLimit){
                 gromit.glyphTrain.lift_motor.setPower(-0.8);
             }else {
@@ -108,20 +109,24 @@ public class Teleop extends OpMode {
         //set drive speed
         if (gamepad1.left_bumper) {
             gromit.driveTrain.setSpeedMode(FAST);
-        } else {
+        }
+        else if(gamepad1.left_trigger > 0.1) {
             gromit.driveTrain.setSpeedMode(SLOW);
         }
+        else {
+            gromit.driveTrain.setSpeedMode(MID);
+        }
 //on and off glyph intake
-        if (gamepad1.b) {
+        if (gamepad1.dpad_down) {
             gromit.glyphTrain.startGlyphMotors(1.0);
 
-        } else if (gamepad1.x) {
+        } else if (gamepad1.dpad_up) {
             gromit.glyphTrain.stopGlyphMotors();
         }
         // glyph clamp
-        if (gamepad1.dpad_left) {
+        if (gamepad1.right_trigger > 0.1) {
             gromit.glyphTrain.glyphclamp("open");
-        } else if (gamepad1.dpad_right) {
+        } else if (gamepad1.right_bumper) {
             gromit.glyphTrain.glyphclamp("close");
         }
 
@@ -133,12 +138,12 @@ public class Teleop extends OpMode {
 //            gromit.relicArm.relicClawServo.setPosition(.6);
 //        }
 
-        if (gamepad1.right_bumper){
-            gromit.relicArm.relicClawServo.setPosition(.45);
-        }
-        else if (gamepad1.left_bumper){
-            gromit.relicArm.relicClawServo.setPosition(.55);
-        }
+//        if (gamepad1.right_bumper){
+//            gromit.relicArm.relicClawServo.setPosition(.45);
+//        }
+//        else if (gamepad1.left_bumper){
+//            gromit.relicArm.relicClawServo.setPosition(.55);
+//        }
         //Set drive train direction
 //        if (gamepad1.a)
 //            gromit.driveTrain.setBack(DriveTrain.Color.GREEN);

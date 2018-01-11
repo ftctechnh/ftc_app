@@ -21,7 +21,7 @@ import static java.lang.Math.signum;
 public class DriveTrain {
 
 
-    public enum SpeedSetting {FAST, SLOW}
+    public enum SpeedSetting {FAST, MID, SLOW}
     private SpeedSetting speedMode;
 
     //public enum DirectionSetting {FRONT, BACK}
@@ -122,12 +122,15 @@ public class DriveTrain {
             case FAST:
                 speedMultiplier = 1.0;
                 break;
-            case SLOW:
-                // lookup slow speed parameter
+            case MID:
                 speedMultiplier = 0.5;
                 break;
+            case SLOW:
+                // lookup slow speed parameter
+                speedMultiplier = 0.25;
+                break;
            default:
-                speedMultiplier = 1.0;
+                speedMultiplier = 0.5;
         }
 
         // Forward or Reverse Drive (note: The joystick goes negative when pushed forwards, so negate it)
