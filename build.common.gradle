@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 23
+    compileSdkVersion 19
     buildToolsVersion '26.0.2'
 
     signingConfigs {
@@ -35,8 +35,8 @@ android {
 
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
-        minSdkVersion 23
-        targetSdkVersion 23
+        minSdkVersion 19
+        targetSdkVersion 19
 
         /**
          * We keep the versionCode and versionName of robot controller applications in sync with
@@ -69,7 +69,7 @@ android {
 
     // Advanced user code might just want to use Vuforia directly, so we set up the libs as needed
     buildTypes {
-        release {
+        /*release {
             // Disable debugging for release versions so it can be uploaded to Google Play.
             //debuggable true
             ndk {
@@ -81,7 +81,7 @@ android {
             ndk {
                 abiFilters "armeabi-v7a"
             }
-        }
+        }*/
     }
 
     compileOptions {

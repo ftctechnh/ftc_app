@@ -6,11 +6,11 @@ apply plugin: 'com.android.library'
 android {
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 23
+        minSdkVersion 19
+        targetSdkVersion 19
     }
 
-    compileSdkVersion 23
+    compileSdkVersion 19
     buildToolsVersion '26.0.2'
 
     compileOptions {
