@@ -28,6 +28,7 @@
  */
 package RicksCode;
 
+
 import android.graphics.Bitmap;
 import android.media.ImageWriter;
 import android.provider.ContactsContract;
