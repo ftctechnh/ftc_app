@@ -88,6 +88,7 @@ public class RelicTelyMode  extends MeccyMode{
         while (opModeIsActive()) {
             //<editor-fold desc="Update">
             //Joeys controller
+            //<editor-fold desc="Update">
             leftX = gamepad1.left_stick_x;
             leftY = gamepad1.left_stick_y;
             rightX = gamepad1.right_stick_x;
@@ -103,7 +104,7 @@ public class RelicTelyMode  extends MeccyMode{
             pushBelow = gamepad2.right_stick_y;
             onlyRight = gamepad2.right_bumper;
             onlyLeft = gamepad2.left_bumper;
-
+            //
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             //</editor-fold>
             //
