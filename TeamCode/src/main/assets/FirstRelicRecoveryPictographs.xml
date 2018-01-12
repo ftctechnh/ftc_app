@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="BlueCryptoBox" size="0.840000 0.770348" />
+    <ImageTarget name="RelicRecoveryVisionTargetRight" size="0.160000 0.067216" />
+    <ImageTarget name="RelicRecoveryVisionTargetCenter" size="0.160000 0.065371" />
+    <ImageTarget name="RelicRecoveryVisionTargetLeft" size="0.160000 0.067216" />
+  </Tracking>
+</QCARConfig>

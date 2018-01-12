@@ -21,8 +21,8 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 23
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 19
+    buildToolsVersion '26.0.2'
 
     signingConfigs {
         debug {
@@ -69,7 +69,7 @@ android {
 
     // Advanced user code might just want to use Vuforia directly, so we set up the libs as needed
     buildTypes {
-        release {
+        /*release {
             // Disable debugging for release versions so it can be uploaded to Google Play.
             //debuggable true
             ndk {
@@ -81,7 +81,7 @@ android {
             ndk {
                 abiFilters "armeabi-v7a"
             }
-        }
+        }*/
     }
 
     compileOptions {
@@ -96,8 +96,18 @@ android {
 }
 
 repositories {
+    jcenter()
+
     flatDir {
         dirs rootProject.file('libs')
     }
+    maven {
+        url 'http://repo1.maven.org/maven2'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    testCompile 'org.mockito:mockito-core:2.+'
 }
 apply from: 'build.release.gradle'

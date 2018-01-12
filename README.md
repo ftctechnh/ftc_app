@@ -42,6 +42,23 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
 
 
+**************************************************************************************
+# Release Information
+**************************************************************************************
+
+Version 3.5 (built on 17.10.30)
+
+Changes with version 3.5 include:
+ * Introduced a fix to prevent random op mode stops, which can occur after the Robot Controller app has been paused and then resumed (for example, when a user temporarily turns off the display of the Robot Controller phone, and then turns the screen back on).
+ * Introduced a fix to prevent random op mode stops, which were previously caused by random peer disconnect events on the Driver Station.
+ * Fixes issue where log files would be closed on pause of the RC or DS, but not re-opened upon resume.
+ * Fixes issue with battery handler (voltage) start/stop race.
+ * Fixes issue where Android Studio generated op modes would disappear from available list in certain situations.
+ * Fixes problem where OnBot Java would not build on REV Robotics Control Hub.
+ * Fixes problem where OnBot Java would not build if the date and time on the Robot Controller device was "rewound" (set to an earlier date/time).
+ * Improved error message on OnBot Java that occurs when renaming a file fails.
+ * Removed unneeded resources from android.jar binaries used by OnBot Java to reduce final size of Robot Controller app.
+ * Added MR_ANALOG_TOUCH_SENSOR block to Blocks Programming Tool.
 
 **************************************************************************************
 # Release Information
