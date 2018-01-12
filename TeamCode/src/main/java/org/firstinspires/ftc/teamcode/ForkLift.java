@@ -21,18 +21,6 @@ public class ForkLift {
     private final double CLAW_CLOSE_POSITION = 1;
     private final double CLAW_OPEN_POSITION = 0;
 
-    public ForkLift(Servo rightClaw, Servo leftClaw, DcMotor motor, DigitalChannel topButton, DigitalChannel bottomButton, Telemetry telemetry) {
-        this.rightClaw = rightClaw;
-        this.leftClaw = leftClaw;
-        this.motor = motor;
-        this.topButton = topButton;
-        this.bottomButton = bottomButton;
-        this.rightClaw.setDirection(Servo.Direction.REVERSE);
-        resetEncoder();
-        this.telemetry = telemetry;
-        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
     public ForkLift(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.rightClaw = hardwareMap.servo.get("s5");

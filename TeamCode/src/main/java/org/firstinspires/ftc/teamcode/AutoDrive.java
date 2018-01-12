@@ -37,19 +37,6 @@ public class AutoDrive {
     final double FIND_VUMARK_DISTANCE = 2;
     final double TRY_AGAIN_JEWEL_DISTANCE = 0.6;
 
-    AutoDrive(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, HardwareMap hardwareMap, Telemetry telemetry) {
-        this.FrontLeft = FrontLeft;
-        this.FrontRight = FrontRight;
-        this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
-        this.RearLeft = RearLeft;
-        this.RearRight = RearRight;
-        this.RearRight.setDirection(DcMotor.Direction.REVERSE);
-        this.hardwareMap = hardwareMap;
-        this.imu = new REVGyro(this.hardwareMap.get(BNO055IMU.class, "imu"));
-        this.telemetry = telemetry;
-        setBRAKE();
-    }
-
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
         this.FrontRight = hardwareMap.dcMotor.get("m2");

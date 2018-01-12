@@ -25,19 +25,13 @@ public class RelicClaw {
     private final double DRIVING_POSITION = 0.6;
     private final double UP_POSITION = 0.0;
 
-
-    public RelicClaw(Servo claw, Servo arm, DcMotor motor, DigitalChannel outButton, DigitalChannel inButton, Telemetry telemetry) {
-        this.claw = claw;
-        this.arm = arm;
-        this.motor = motor;
-        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.outButton = outButton;
-        this.inButton = inButton;
-        this.telemetry = telemetry;
-    }
-
     public RelicClaw(HardwareMap hardwareMap, Telemetry telemetry) {
-
+        this.claw = hardwareMap.servo.get("s1");
+        this.arm = hardwareMap.servo.get("s2");
+        this.motor = hardwareMap.dcMotor.get("m5");
+        this.outButton = hardwareMap.digitalChannel.get("b2");
+        this.inButton = hardwareMap.digitalChannel.get("b3");
+        this.telemetry = telemetry;
     }
 
     public void init() {

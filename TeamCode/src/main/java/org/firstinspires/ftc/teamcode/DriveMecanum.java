@@ -19,20 +19,6 @@ public class DriveMecanum {
     final double D_PAD_SLOW_SPEED = 0.25;
     final double BUMPER_SLOW_SPEED = 0.25;
 
-    public DriveMecanum(DcMotor FrontLeft, DcMotor FrontRight, DcMotor RearLeft, DcMotor RearRight, double speed, Telemetry telemetry) {
-        this.FrontLeft = FrontLeft;
-        this.FrontRight = FrontRight;
-        this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
-        this.RearLeft = RearLeft;
-        this.RearRight = RearRight;
-        this.RearRight.setDirection(DcMotor.Direction.REVERSE);
-        this.speed = speed;
-        this.telemetry = telemetry;
-        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
     public DriveMecanum(HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
         this.FrontRight = hardwareMap.dcMotor.get("m2");
