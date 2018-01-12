@@ -9,9 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(name="Red North", group="Auto")
 public class AutoRedNorth extends RelicAutoMode{
     @Override
-    public void runOpMode() throws InterruptedException {
-       super.runOpMode();
+    public void runOpMode() {
+       //
     }
-
-
 }

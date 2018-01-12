@@ -49,7 +49,6 @@ public class RelicTelyMode  extends MeccyMode{
     double pushBelow;
     boolean onlyRight;
     boolean onlyLeft;
-
     //</editor-fold>
     //
     //</editor-fold>

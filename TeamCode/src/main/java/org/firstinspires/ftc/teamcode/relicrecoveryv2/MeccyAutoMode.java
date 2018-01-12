@@ -13,14 +13,11 @@ public abstract class MeccyAutoMode extends MeccyMode{
     PengwinFin pengwinFin;
     PengwinWing pengwinWing;
     double roationInches;
-
-
+    //
     //<editor-fold desc="Yay">
     abstract public void runOpMode();
     //
     static final double countify = 116.501;
-
-
     //</editor-fold>
     //
     //<editor-fold desc="Extraneous">
@@ -29,12 +26,25 @@ public abstract class MeccyAutoMode extends MeccyMode{
         pengwinFin = new PengwinFin(hardwareMap);
         pengwinWing = new PengwinWing(hardwareMap);
     }
+    //
     public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
         super.configureMotors();
         //
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    //
+    public void stopAndResetify(){
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     //

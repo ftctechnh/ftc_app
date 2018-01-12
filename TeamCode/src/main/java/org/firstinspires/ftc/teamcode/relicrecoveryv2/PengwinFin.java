@@ -12,18 +12,13 @@ import com.qualcomm.robotcore.hardware.Servo;
  * @author Eric and Nora
  */
 public class PengwinFin {
-
-    /**
-     * The position for the servo to be for the fin to be up
-     */
-    public static final double FIN_UP_POSITION = .5;
-    /**
-     * The position for the servo to be for the fin to be in a place to move the jewel
-     */
-    public static final double FIN_DOWN_POSITION = 0.09;
+    public static final double FIN_UP = 0.5;
+    //
+    public static final double FIN_DOWN = 0.09;
+    //
+    public static final double FIN_SENSE = 0.2;
     Servo fin;
     ColorSensor colorSensor;
-
     /**
      * This is the constructor of the pengwin class.  It will find the servo controlling
      * the fin, called <b>fin</b>, and the color sensor, called <b>sitefy</b>.
@@ -36,32 +31,20 @@ public class PengwinFin {
         fin = hardwareMap.servo.get("fin");
         colorSensor = hardwareMap.colorSensor.get("sitefy");
     }
-
-
     /**
-     * The command to move the fin down to the position {@value #FIN_DOWN_POSITION}
+     * The command to move the fin down to the position {@value #FIN_DOWN}
      * on the servo
      */
     public void moveFinDown(){
-            fin.setPosition(FIN_DOWN_POSITION);
+            fin.setPosition(FIN_DOWN);
     }
-
-
-    /**
-     * The command to move the fun up to the position {@value #FIN_UP_POSITION}
-     * on the servo
-     * and the narwhal is Barney
-     * and Unicorn Crossings
-     * yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaay-
-     */
     public void moveFinUp(){
-            fin.setPosition(FIN_UP_POSITION);
+            fin.setPosition(FIN_UP);
     }
-
-    /**
-     * Determine if the color sensor is pointed at something, hopefully a jewel, that is more blue then red
-     * @return boolean if the sensor is seeing more blue then seeing red
-     */
+    public void moveFinSense(){
+            fin.setPosition(FIN_SENSE);
+    }
+    //
     public boolean doesColorSensorSeeBlueJewel(){
         return colorSensor.blue() > colorSensor.red();
     }
