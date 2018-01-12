@@ -68,16 +68,19 @@ public class Teleop extends OpMode {
         }
         //------------------------------------------------------------------------------
         //------------------------------------------------------------------------------
-        //Lift/lower glyph
+        //Lift/lower glyph  x/a by increments,   y/b manually
         //------------------------------------------------------------------------------
         if (gamepad1.x) {
             if (xIsReleased) {
                 xIsReleased = false;
                 gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
 //                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lift
+                if (gromit.glyphTrain.lift_motor.getCurrentPosition()+400 < gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex - 1 ] ){
+                    gromit.glyphTrain.liftIndex -= 1;
+                }
                 liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];  // set the new Target
                 glyphLiftismoving = true;
-                gromit.glyphTrain.lift_motor.setPower(0.9);   // start the motor going up
+                gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
             }
         } else {
             xIsReleased = true;
@@ -89,7 +92,7 @@ public class Teleop extends OpMode {
                 glyphLiftismoving = true;
                 gromit.glyphTrain.liftIndex = 0;  //down always goes to zero
                 liftTarget = 0;
-                gromit.glyphTrain.lift_motor.setPower(-0.7);   // start the motor going down
+                gromit.glyphTrain.lift_motor.setPower(-0.9);   // start the motor going down
                 gromit.glyphTrain.glyphclamp("open");   // might as well open when lowering
 //                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is
 //                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
@@ -106,32 +109,35 @@ public class Teleop extends OpMode {
                 }
             } else {
                 if (gromit.glyphTrain.lift_motor.getCurrentPosition() >= liftTarget) {
-                    gromit.glyphTrain.lift_motor.setPower(0.0);
+                    //gromit.glyphTrain.lift_motor.setPower(0.0);
                     glyphLiftismoving = false;
                 }
-            }
+           }
         }
 
 
         telemetry.addData("liftticks", gromit.glyphTrain.lift_motor.getCurrentPosition());
         telemetry.addData("lifttarget", liftTarget);
+        telemetry.addData("glyphLmoving", glyphLiftismoving);
 
         //------------------------------------------------------------------------------
         // glyph lift
         if (gamepad1.y) {
+            glyphLiftismoving = false;
             if (gromit.glyphTrain.lift_motor.getCurrentPosition() < gromit.glyphTrain.upperLiftLimit) {
                 gromit.glyphTrain.lift_motor.setPower(1.0);
             } else {
                 gromit.glyphTrain.lift_motor.setPower(0);
             }
         } else if (gamepad1.b) {
+            glyphLiftismoving = false;
             if (gromit.glyphTrain.lift_motor.getCurrentPosition() > gromit.glyphTrain.lowerLiftLimit) {
                 gromit.glyphTrain.lift_motor.setPower(-0.8);
             } else {
                 gromit.glyphTrain.lift_motor.setPower(0);
             }
 
-        } else {
+        } else if (!glyphLiftismoving)  {
             gromit.glyphTrain.lift_motor.setPower(0);
         }
 
