@@ -74,7 +74,7 @@ public class Teleop extends OpMode {
             if (xIsReleased) {
                 xIsReleased = false;
                 gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
-//                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lift
+//  check to see if you're lower than the next lower position by 400 ticks, stop there first.
                 if (gromit.glyphTrain.lift_motor.getCurrentPosition()+400 < gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex - 1 ] ){
                     gromit.glyphTrain.liftIndex -= 1;
                 }
@@ -115,10 +115,6 @@ public class Teleop extends OpMode {
            }
         }
 
-
-        telemetry.addData("liftticks", gromit.glyphTrain.lift_motor.getCurrentPosition());
-        telemetry.addData("lifttarget", liftTarget);
-        telemetry.addData("glyphLmoving", glyphLiftismoving);
 
         //------------------------------------------------------------------------------
         // glyph lift
