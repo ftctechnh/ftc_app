@@ -56,6 +56,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
  * the identity of Vuforia VuMarks encountered on the field. The code is structured as
@@ -184,6 +187,7 @@ public class VuForia extends LinearOpMode {
             Bitmap rgbImage = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
             rgbImage.copyPixelsFromBuffer(img.getPixels());
                     boolean blueIsOnLeft = blueIsOnLeft(rgbImage);
+                    SaveImage(rgbImage);
 
                     break;
                 }
@@ -294,5 +298,31 @@ public class VuForia extends LinearOpMode {
             return false;
 
     }
+
+    private static void SaveImage(Bitmap finalBitmap) {
+        String configFileName = "8045Relic.txt";
+        String directoryPath = "/sdcard/FIRST/";
+        String filePath = directoryPath + configFileName;
+
+        //String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+        //File myDir = new File(root + "/saved_images");
+        //myDir.mkdirs();
+
+        String fname = "VuforiaImage.jpg";
+        File file = new File (directoryPath, fname);
+        if (file.exists ()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 }

@@ -92,8 +92,8 @@ public class Teleop extends OpMode {
                 glyphLiftismoving = true;
                 gromit.glyphTrain.liftIndex = 0;  //down always goes to zero
                 liftTarget = 0;
-                gromit.glyphTrain.lift_motor.setPower(-0.9);   // start the motor going down
                 gromit.glyphTrain.glyphclamp("open");   // might as well open when lowering
+                gromit.glyphTrain.lift_motor.setPower(-0.9);   // start the motor going down
 //                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is
 //                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
             }
