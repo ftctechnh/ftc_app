@@ -367,6 +367,8 @@ public class Auto extends LinearOpMode {
         }
 
 
+        gromit.glyphTrain.liftGlyph(0);
+
 
 //        gromit.driveTrain.mecanumDrive(.5,20, 0, -20);
         //gromit.driveTrain.mecanumDrive(.5,20, 0, 0);

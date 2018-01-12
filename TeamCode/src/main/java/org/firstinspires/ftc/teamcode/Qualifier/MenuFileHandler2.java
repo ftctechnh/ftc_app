@@ -123,8 +123,8 @@ public class MenuFileHandler2 {
             menulabel[3] = "Drive Speed x10 ";
             menuvalue[3] = 5;
             menulowerlimit[3] =  0;
-            menuupperlimit[3] = 10;
-            menuincrement[3] = 0.2;
+            menuupperlimit[3] = 2;
+            menuincrement[3] = 0.050000;
         }
         DriveSpeed = menuvalue[3];
 

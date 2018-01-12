@@ -48,7 +48,7 @@ public class JewelArm {
     }
 
     public void jewelArmDown() {
-        jewelArmServo.setPosition(0.75);
+        jewelArmServo.setPosition(0.80);
         jewelflickerCenter();
     }
 
@@ -125,12 +125,17 @@ public class JewelArm {
     public boolean blueIsOnLeft(Bitmap rgbImage) {
         // play images are 1280x720 w x h  origin is lower right looking at vuforia image,  Lower Left from camer pov
         // x is vertical, y is horizontal (for portrait orientation)
-        int XStart = (int) ((double) rgbImage.getWidth() * 0.75);
-        int XEnd = (int) ((double) rgbImage.getWidth() * 1.0);
+//        int XStart = (int) ((double) rgbImage.getWidth() * 0.75);
+//        int XEnd = (int) ((double) rgbImage.getWidth() * 1.0);
+//
+//        int yStart = (int) ((double) rgbImage.getHeight() * 0.0);
+//        int yEnd = (int) ((double) rgbImage.getHeight() * 0.25);
 
-        int yStart = (int) ((double) rgbImage.getHeight() * 0.0);
-        int yEnd = (int) ((double) rgbImage.getHeight() * 0.25);
+        int XStart = 1000;
+        int XEnd =1280;
 
+        int yStart =0;
+        int yEnd = 400;
         int RedValue = 0;
         int BlueValue = 0;
 

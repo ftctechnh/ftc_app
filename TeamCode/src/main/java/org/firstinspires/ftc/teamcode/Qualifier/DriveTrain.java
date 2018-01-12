@@ -186,6 +186,90 @@ public class DriveTrain {
             right_rear.setPower(rrpower);
     }
 
+    public void drivesmart(double x, double y, double turn) {
+        //speed change code
+        //   double drive_direction = atan(y/x);
+        double speedMultiplier;
+        switch (speedMode) {
+            // lookup parameter for "fast mode"
+            case FAST:
+                speedMultiplier = 1.0;
+                break;
+            case MID:
+                speedMultiplier = 0.5;
+                break;
+            case SLOW:
+                // lookup slow speed parameter
+                speedMultiplier = 0.25;
+                break;
+            default:
+                speedMultiplier = 0.5;
+        }
+
+        // Forward or Reverse Drive (note: The joystick goes negative when pushed forwards, so negate it)
+//        double forward;
+//        double strafe;
+//        double rotate;
+//
+//        if (frontIsForward) {             // driving with the front facing forward
+//            forward = Math.pow(y, 3);
+//            strafe = Math.pow(-x, 3);
+//            rotate = turn;
+//        } else {                            // driving with the rear facing forward
+//            forward = -Math.pow(y, 3);
+//            strafe = -Math.pow(-x, 3);
+//            rotate = turn;
+//        }
+
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double rotation = turn*0.75;
+// temp
+
+        if (frontIsForward) {             // driving with the front facing forward
+            y = Math.pow(y, 3);
+            x = Math.pow(-x, 3);
+        } else {                            // driving with the rear facing forward
+            y = -Math.pow(y, 3);
+            x = -Math.pow(-x, 3);
+        }
+
+
+        lfpower = ( y - x + rotation);
+        lrpower = ( y + x + rotation);
+        rfpower = ( y + x - rotation);
+        rrpower = ( y - x - rotation);
+//        lfpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
+//        lrpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rfpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rrpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
+//
+
+
+
+        //Determine largest power being applied in either direction
+        double max = abs(lfpower);
+        if (abs(lrpower) > max) max = abs(lrpower);
+        if (abs(rfpower) > max) max = abs(rfpower);
+        if (abs(rrpower) > max) max = abs(rrpower);
+
+//            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+        double multiplier = speedMultiplier;
+
+        lfpower *= multiplier;
+        lrpower *= multiplier;
+        rfpower *= multiplier;
+        rrpower *= multiplier;
+
+        left_front.setPower(lfpower);
+        left_rear.setPower(lrpower);
+        right_front.setPower(rfpower);
+        right_rear.setPower(rrpower);
+    }
+
     public void stopMotors() {
         left_front.setPower(0.0);
         right_front.setPower(0.0);
@@ -249,120 +333,6 @@ public class DriveTrain {
         stopMotors();
     }
 
-    /*public void mecanumDrive(double speed, String direction, double distance) {
-        if (abs(speed) > 1) speed = speed / abs(speed);
-
-        double max;
-        double multiplier;
-        int LeftTarget;
-        int RightTarget;
-        int moveCounts;
-        float orientation = getheading();
-
-        moveCounts = (int) (distance * COUNTS_PER_INCH);
-        LeftTarget = left_rear.getCurrentPosition() + moveCounts;
-        RightTarget = right_rear.getCurrentPosition() + moveCounts;
-
-
-        //I don't think we want to run with encoders
-        left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//      gromit.motorleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//      gromit.motorright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        switch (direction) {
-            //IF not absolute GO at these angles, if not go from current position
-            case "0"://Drive forward
-                if (distance > 0) {
-                    while ((left_rear.getCurrentPosition() + right_rear.getCurrentPosition()) / 2 < LeftTarget) {//Should we average all four motors
-                        double lfpower = Math.cos(Math.toRadians(45));
-                        double lrpower = Math.sin(Math.toRadians(45));
-                        double rfpower = Math.sin(Math.toRadians(45));
-                        double rrpower = Math.cos(Math.toRadians(45));
-
-                        //Determine correction
-                        double correction = 45 - getheading();
-                        if (abs(correction) > drive_THRESHOLD) {
-                            //Apply power to one side of the robot
-                            double right_adjustment = Range.clip((Math.signum(correction) * drive_COEF * correction / 90), -1, 1);
-                            double left_adjustment = Range.clip((-1 * Math.signum(correction) * drive_COEF * correction / 90), -1, 1);
-
-                        }
-                        //Determine largest power being applied
-                        max = abs(lfpower);
-                        if (abs(lrpower) > max) max = abs(lrpower);
-                        if (abs(rfpower) > max) max = abs(rfpower);
-                        if (abs(rrpower) > max) max = abs(rrpower);
-
-                        multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-
-                        lfpower = multiplier * lfpower;
-                        lrpower = multiplier * lrpower;
-                        rfpower = multiplier * rfpower;
-                        rrpower = multiplier * rrpower;
-
-                        left_front.setPower(lfpower);
-                        left_rear.setPower(lrpower);
-                        right_front.setPower(rfpower);
-                        right_rear.setPower(rrpower);
-
-                        //  sleep(250);   // optional pause after each move
-                    }
-                }
-
-                break;
-            case "45"://DRIVE left and forward
-                break;
-            case "90"://STRAFE LEFT
-
-
-                break;
-            case "135"://DRIVE left and backward
-                break;
-            case "180"://Drive backward
-                break;
-            case "225"://Drive right and backward
-                break;
-            case "270"://STRAFE RIGHT
-                break;
-            case "315"://Drive right and forward
-                break;
-
-
-        }
-        // Ensure that the opmode is still active
-        if (distance > 0) {
-            while (left_rear.getCurrentPosition() < LeftTarget) {//Should we average multiple motors
-                double lfpower = Math.cos(Math.toRadians(direction + 45));
-                double lrpower = Math.sin(Math.toRadians(direction + 45));
-                double rfpower = Math.sin(Math.toRadians(direction + 45));
-                double rrpower = Math.cos(Math.toRadians(direction + 45));
-
-                //Determine largest power being applied
-                max = abs(lfpower);
-                if (abs(lrpower) > max) max = abs(lrpower);
-                if (abs(rfpower) > max) max = abs(rfpower);
-                if (abs(rrpower) > max) max = abs(rrpower);
-
-                multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-
-                lfpower = multiplier * lfpower;
-                lrpower = multiplier * lrpower;
-                rfpower = multiplier * rfpower;
-                rrpower = multiplier * rrpower;
-
-                left_front.setPower(lfpower);
-                left_rear.setPower(lrpower);
-                right_front.setPower(rfpower);
-                right_rear.setPower(rrpower);
-
-                //  sleep(250);   // optional pause after each move
-            }
-        }
-        stopMotors();
-    }*/
 
     public void mecanumDrive(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
         double max;
