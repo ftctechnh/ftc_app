@@ -88,13 +88,13 @@ public class RedRight extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     int             target = 0;
     int             maxlift = 7100;                     // maxiumum lift height
-    double          clawOffset  = - 0.40 ; // starts claw closed on block L.A.S
+    double          clawOffset  = - 0.40 ; // starts claw closed on block
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.25;
-    double          ballArmUp = .7; // makes ball Arm a variable L.A.S
+    double          ballArmUp = .7; // makes ball Arm a variable
     double          ballArmDown = 0.05;
 
-    NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor L.A.S
+    NormalizedColorSensor colorSensor; //This line creates a NormalizedColorSensor variable called colorSensor
     VuforiaLocalizer vuforia;
 
     @Override
@@ -103,6 +103,7 @@ public class RedRight extends LinearOpMode {
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
+         * set up Vuforis
          */
         robot.init(hardwareMap);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -120,6 +121,7 @@ public class RedRight extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
+        // setup DC motors
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -136,10 +138,11 @@ public class RedRight extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color"); // Uses the phone to find the color sensor named sensor_color L.A.S
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color"); // Uses the phone to find the color sensor named sensor_color
 
-        robot.ballArm.setPosition(ballArmDown);// lowers ballArm all the way down L.A.S
+        robot.ballArm.setPosition(ballArmDown);// lowers ballArm all the way down
 
+        // grab and slightly lift glyph
         clawOffset =-.4;
         clawOffset = Range.clip(clawOffset, -0.5, 0.5);
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
@@ -155,61 +158,73 @@ public class RedRight extends LinearOpMode {
         robot.lift.setPower(0.0);
 
 
-        NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors L.A.S
+        NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors
 
-        if (colors.red < colors.blue){ //It checks if the ball is blue L.A.S
+        if (colors.red < colors.blue){ //It checks if the ball is blue
 
-            encoderDrive(TURN_SPEED, 2, -2,5 ); // turns right to knock blue ball L.A.S
+            encoderDrive(TURN_SPEED, 2, -2,5 ); // turns right to knock blue ball
             robot.ballArm.setPosition(ballArmUp);
             encoderDrive(TURN_SPEED, -2, 2,5 );
 
         }
-        else  { //The ball facing the color sensor is red  L.A.S
-            encoderDrive(TURN_SPEED, -2, 2, 5 ); //It turns left knocking the blue ball and turning to face glyph box L.A.S
+        else  { //The ball facing the color sensor is red
+            encoderDrive(TURN_SPEED, -2, 2, 5 ); //turns left knocking the blue ball and turning to face glyph box
             robot.ballArm.setPosition(ballArmUp);
-            encoderDrive(TURN_SPEED,  2, -2,.5 ); //It turns right to face the glyph bock L.A.S
+            encoderDrive(TURN_SPEED,  2, -2,.5 );
         }
 
         //turn toward and view pictograph
-        encoderDrive(TURN_SPEED, 2, -2,5 );
+        encoderDrive(TURN_SPEED, 3, -3,5 );
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        encoderDrive(TURN_SPEED, -2, 2,5 );
+        runtime.reset();
+        while (runtime.seconds() < 1) {    //wait for claw to finsh open or close
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            telemetry.update();
 
+        }
 
+        encoderDrive(TURN_SPEED, -3, 3,5 );
+
+        // drive to cryptobox
         encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5); // Drive off balance board
 
+        // turn toward right, center,or left column depending on pictograph
         if (vuMark == RelicRecoveryVuMark.RIGHT || vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -15, 15, 5); //13.5 tank turn went to scond one
+            encoderDrive(TURN_SPEED, -15, 15, 5);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -14, 14, 5); //13.5 tank turn went to scond one
+            encoderDrive(TURN_SPEED, -14.5, 14.5, 5);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -12.875, 12.875, 5); //13.5 tank turn went to scond one
+            encoderDrive(TURN_SPEED, -12.875, 12.875, 5);
         }
 
         encoderDrive(DRIVE_SPEED, -41, -41, 5);
+
+        //drop glyph and lower lift
         clawOffset = .0;
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
-
         robot.lift.setTargetPosition(50);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.3);
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
         robot.lift.setPower(0.0);
-        encoderDrive(DRIVE_SPEED, 2, 2, 5);
-        encoderDrive(TURN_SPEED, 3, -3, 5 );
-        encoderDrive(DRIVE_SPEED, 3.5,3.5,5); //Robot cannot touch the glyph
+
+
+        encoderDrive(DRIVE_SPEED, 2.5, 2.5, 5);    // back up
+        encoderDrive(TURN_SPEED, 3, -3, 5 );   // turn to push glyph into cryptobox
+        encoderDrive(DRIVE_SPEED, 3.5,3.5,5);   // backup away from glyph
 
 
         telemetry.addData("Path", "Complete");
