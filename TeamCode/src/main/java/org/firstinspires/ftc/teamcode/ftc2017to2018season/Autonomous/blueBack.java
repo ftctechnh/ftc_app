@@ -89,7 +89,7 @@ public class blueBack extends Autonomous_General {
             encoderMecanumDrive(0.9, -10,-10,5000,0);
             jewelServo.setPosition(0);
             sleep(1000);
-            encoderMecanumDrive(0.9,25,25,5000,0);
+            encoderMecanumDrive(0.9,35,35,5000,0);
             sleep(1000);
         }
         else if(ballColor.equals("red")){
@@ -108,7 +108,7 @@ public class blueBack extends Autonomous_General {
                 encoderMecanumDrive(0.9, -10,-10,5000,0);
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9,25,25,5000,0);
+                encoderMecanumDrive(0.9,35,35,5000,0);
                 sleep(1000);
             }
             else if(ballColor.equals("red")){
@@ -122,6 +122,11 @@ public class blueBack extends Autonomous_General {
                 encoderMecanumDrive(0.9, 25, 25, 5000, 0);
             }
         }
+
+        //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
+        sleep(100);
+        encoderMecanumDrive(0.3,26,25,5000,0);
+
         if(rangeSensor.getDistance(DistanceUnit.CM)< 90 || rangeSensor.getDistance(DistanceUnit.CM)> 200){
             telemetry.addData("", "rangeSensor malfunctioned");
             telemetry.update();
@@ -139,8 +144,6 @@ public class blueBack extends Autonomous_General {
             }
         }else {
             //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
-            sleep(100);
-            encoderMecanumDrive(0.7, 25, 25, 5000, 0);
 
             gyroTurn(0.3, 0);
 
@@ -152,11 +155,13 @@ public class blueBack extends Autonomous_General {
                 simpleRangeDistance(104, 0.35, rsBuffer);
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 simpleRangeDistance(123, 0.35, rsBuffer);
-
+            }
+            else{
+                simpleRangeDistance(112,0.35,rsBuffer);
             }
         }
 
-        gyroTurn(0.3,90);
+        gyroTurn(0.3, 90);
         sleep(750);
         moveDownGlyph(0.4);
         sleep(500);

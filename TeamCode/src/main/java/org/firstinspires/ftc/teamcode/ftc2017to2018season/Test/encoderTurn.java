@@ -1,21 +1,25 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
 
 /**
  * Created by Inspiration Team on 1/7/2018.
  */
-@Autonomous(name = "encoderTurn")
-public class encoderTurn extends Autonomous_General{
+@Autonomous(name = "encoderTurn360")
+public class encoderTurn extends Autonomous_General {
 
-    public static double ENCODERSPER360 = 120.2362204724409;
+    public static double ENCODERSPER360 = 5645;
 
     public void runOpMode(){
         initiate();
 
         waitForStart();
-        turn360(360,0.5);
+
+        turn360(85,0.5);
     }
 
     public void turn360(int degrees, double speed){

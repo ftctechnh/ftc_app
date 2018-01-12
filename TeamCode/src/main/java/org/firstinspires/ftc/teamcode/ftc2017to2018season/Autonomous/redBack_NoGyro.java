@@ -8,14 +8,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Red Back")
-public class redBack extends Autonomous_General {
+@Autonomous(name="Red Back No Gyro")
+public class redBack_NoGyro extends Autonomous_General {
 
     DcMotor leftFront;
     DcMotor rightFront;
     DcMotor leftBack;
     DcMotor rightBack;
     public double rsBuffer = 20.00;
+    public boolean rangeSensorWorking = true;
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -35,7 +36,6 @@ public class redBack extends Autonomous_General {
 
         waitForStart();
 
-        gyro.resetZAxisIntegrator();
 
         toggleLight(true);
         light.setPower(1);
@@ -117,6 +117,7 @@ public class redBack extends Autonomous_General {
             telemetry.addData("", "rangeSensor malfunctioned");
             telemetry.update();
             sleep(250);
+            rangeSensorWorking = false;
             //robot should end up 94 cm away from the wall
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 encoderMecanumDrive(0.7,-30,-30,500,0);
@@ -131,7 +132,7 @@ public class redBack extends Autonomous_General {
         }else {
             //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
 
-            gyroTurn(0.3, -180);
+            encoderTurn(-180,0.3);
 
             sleep(250);
 
@@ -146,9 +147,14 @@ public class redBack extends Autonomous_General {
                 simpleRangeDistance(112,0.35,rsBuffer);
             }
         }
-        sleep(1000);
 
-        gyroTurn(0.3,85);
+        sleep(1000);
+        stopMotors();
+        if(rangeSensorWorking) {
+            encoderTurn (-85,0.3);
+        }else{
+            encoderTurn (85,0.3);
+        }
 
         sleep(750);
         moveDownGlyph(0.4);

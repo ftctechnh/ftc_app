@@ -96,7 +96,7 @@ public class blueBack_NoGyro extends Autonomous_General {
                 encoderMecanumDrive(0.9, -10,-10,5000,0);
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9,25,25,5000,0);
+                encoderMecanumDrive(0.9,35,35,5000,0);
                 sleep(1000);
             }
             else if(ballColor.equals("red")){
@@ -146,7 +146,7 @@ public class blueBack_NoGyro extends Autonomous_General {
 
             }
             else{
-                encoderMecanumDrive(0.7,76,76,500,0);
+                simpleRangeDistance(112,0.35,rsBuffer);
             }
         }
 

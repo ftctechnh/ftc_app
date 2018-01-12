@@ -59,6 +59,7 @@ public class Autonomous_General extends LinearOpMode {
     public static double WHEEL_PERIMETER_CM;     // For figuring circumference
     public static double COUNTS_PER_CM;
     public static double ENCODERS_PER_DEGREE;
+    public static double ENCODERSPER360;
     double P_TURN_COEFF = 0.1;
     double TURN_THRESHOLD = 2.5;
     public DcMotor front_right_motor;
@@ -98,6 +99,8 @@ public class Autonomous_General extends LinearOpMode {
         COUNTS_PER_CM = (COUNTS_PER_MOTOR_REV) /
                 (WHEEL_PERIMETER_CM * WHEEL_REV_PER_MOTOR_REV);
         ENCODERS_PER_DEGREE = ((COUNTS_PER_MOTOR_REV * ((RobotWidth*Math.PI)/WHEEL_PERIMETER_CM))/360);
+        ENCODERSPER360 = 5645;
+
 
         /*
          * Initialize the drive system variables.
@@ -946,7 +949,6 @@ public class Autonomous_General extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
-
     public void encoderTurn(int degrees, double speed){
 
         double leftSpeed = 0;
@@ -963,10 +965,10 @@ public class Autonomous_General extends LinearOpMode {
 
         sleep(200);
 
-        leftFrontPos = front_left_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
-        rightFrontPos = front_right_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
-        leftBackPos = back_left_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
-        rightBackPos = back_right_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+        leftFrontPos = front_left_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
+        rightFrontPos = front_right_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
+        leftBackPos = back_left_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
+        rightBackPos = back_right_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
 
         if (degrees > 0){
             leftSpeed = -speed;
@@ -1029,4 +1031,88 @@ public class Autonomous_General extends LinearOpMode {
         // Stop all motion;
         stopMotors();
     }
+
+//    old encoder turn. Using the one above ^
+//    public void encoderTurn(int degrees, double speed){
+//
+//        double leftSpeed = 0;
+//        double rightSpeed = 0;
+//        int leftFrontPos;
+//        int rightFrontPos;
+//        int leftBackPos;
+//        int rightBackPos;
+//
+//        back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        sleep(200);
+//
+//        leftFrontPos = front_left_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+//        rightFrontPos = front_right_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+//        leftBackPos = back_left_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+//        rightBackPos = back_right_motor.getCurrentPosition() + (int)(ENCODERS_PER_DEGREE * Math.abs(degrees));
+//
+//        if (degrees > 0){
+//            leftSpeed = -speed;
+//            rightSpeed = speed;
+//
+//            front_left_motor.setTargetPosition(-leftFrontPos);
+//            front_right_motor.setTargetPosition(rightFrontPos);
+//            back_left_motor.setTargetPosition(-leftBackPos);
+//            back_right_motor.setTargetPosition(rightBackPos);
+//        }
+//        else if (degrees < 0){
+//            leftSpeed = speed;
+//            rightSpeed = -speed;
+//
+//            front_left_motor.setTargetPosition(leftFrontPos);
+//            front_right_motor.setTargetPosition(-rightFrontPos);
+//            back_left_motor.setTargetPosition(leftBackPos);
+//            back_right_motor.setTargetPosition(-rightBackPos);
+//        }
+//        //if degrees is more than 0, you'll move counterclockwise
+//        //if degrees is less than 0, you'll move clockwise
+//
+//
+//        back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        back_right_motor.setPower(rightSpeed);
+//        front_right_motor.setPower(rightSpeed);
+//        front_left_motor.setPower(leftSpeed);
+//        back_left_motor.setPower(leftSpeed);
+//
+//        telemetry.addData("rightSpeed", rightSpeed);
+//        telemetry.addData("leftSpeed", leftSpeed);
+//        telemetry.addData("angle", degrees);
+//        telemetry.addData("front_left_target", leftFrontPos);
+//        while (opModeIsActive() &&
+//                (back_left_motor.isBusy() && back_right_motor.isBusy()&&
+//                        front_left_motor.isBusy() && front_right_motor.isBusy())) {
+//            back_left_motor.setPower(Math.abs(leftSpeed));
+//            //idle();
+//            back_right_motor.setPower(Math.abs(rightSpeed));
+//            //idle();
+//            front_left_motor.setPower(Math.abs(leftSpeed));
+//            //idle();
+//            front_right_motor.setPower(Math.abs(rightSpeed));
+//            //idle();
+//            telemetry.addData("rightSpeed", rightSpeed);
+//            telemetry.addData("leftSpeed", leftSpeed);
+//            telemetry.addData("angle", degrees);
+//            telemetry.addData("front_left_target", leftFrontPos);
+//            telemetry.addData("front_left_current", front_left_motor.getCurrentPosition());
+//            telemetry.addData("front_right_target", rightFrontPos);
+//            telemetry.addData("front_right_current", front_right_motor.getCurrentPosition());
+//            telemetry.update();
+//            idle();
+//        }
+//        idle();
+//        // Stop all motion;
+//        stopMotors();
+//    }
 }
