@@ -192,7 +192,7 @@ public class MecanumRework extends OpMode {
         }
 
         if(ejectorState){
-            robot.blockEjector.setPosition(0.8);
+            robot.blockEjector.setPosition(0.75);
         } else if (!ejectorState) {
             robot.blockEjector.setPosition(0);
         }
