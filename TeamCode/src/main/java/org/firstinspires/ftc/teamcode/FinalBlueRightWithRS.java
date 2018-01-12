@@ -31,10 +31,10 @@ public class FinalBlueRightWithRS extends LinearOpMode
     DcMotor                 frontRightMotor;
     DcMotor                 backRightMotor;
     DcMotor                 verticalArmMotor;
+    DcMotor                 clawMotor;
     ColorSensor             colorSensor;
     Servo                   gemServo;
     BNO055IMU               imu;
-    CRServo                 clawServo;
     ModernRoboticsI2cRangeSensor sideRangeSensor;
     ModernRoboticsI2cRangeSensor frontRangeSensor;
 
@@ -42,8 +42,8 @@ public class FinalBlueRightWithRS extends LinearOpMode
     double globalAngle;
     double xPosUp = 0;
     double xPosDown = .55;
-    static double clawClose = .3;
-    static double clawOpen = -.5;
+    static double clawClose = .25;
+    static double clawOpen = -.25;
     static double clawStill = 0;
     OpenGLMatrix lastLocation = null;
 
@@ -80,9 +80,9 @@ public class FinalBlueRightWithRS extends LinearOpMode
         frontRightMotor = hardwareMap.dcMotor.get("FR");
         backRightMotor = hardwareMap.dcMotor.get("BR");
         verticalArmMotor = hardwareMap.dcMotor.get("VAM");
+        clawMotor = hardwareMap.dcMotor.get("CM");
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
-        clawServo =  hardwareMap.crservo.get("CS");
         sideRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "SRS");
         frontRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "FRS");
 
@@ -154,7 +154,7 @@ public class FinalBlueRightWithRS extends LinearOpMode
         telemetry.update();
 
         /* Power the claw to have a grip on the block */
-        clawServo.setPower(clawClose);
+        clawMotor.setPower(clawClose);
 
         /* Move the claw up so it doesn't dig into the ground coming off the balance board */
         moveclawbytime(500,.5,"Up");
@@ -226,19 +226,23 @@ public class FinalBlueRightWithRS extends LinearOpMode
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Open up the claw to release the block */
-        clawServo.setPower(clawOpen);
+        clawMotor.setPower(clawOpen);
 
         /* Let the claw */
         sleep(1200);
 
         /* Stop the claw */
-        clawServo.setPower(clawStill);
+        clawMotor.setPower(clawStill);
 
         /* Wait a moment */
         sleep(200);
 
         /* Back up a small bit */
         movebytime(200, .2, "Backward");
+
+        if(verticalArmMotor.getCurrentPosition() != 0) {
+            verticalArmMotor.setPower(-.5);
+        }
     }
 
     /***********************************************************************************************

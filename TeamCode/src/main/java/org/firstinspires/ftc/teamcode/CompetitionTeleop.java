@@ -1,18 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 /**
- * ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
+ ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
  */
-@TeleOp(name = "♪ ♥ Drive Mode 1 (nonlinear bumpers) ♥  ♪", group = "Our Teleop")
+@TeleOp(name = "♪ ♥ Perfect Teleop ♥  ♪", group = "Our Teleop")
 //@Disabled
-public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
+public class CompetitionTeleop extends LinearOpMode {
 
     /* This says use MasterHardwareClass */
     MasterHardwareClass robot = new MasterHardwareClass();
@@ -22,31 +19,21 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     double frontRight;
     double backLeft;
     double backRight;
-    double verticalMax = 5900;
-    double verticalMin = 300;
-    boolean up;
-//    double clawMax = 0;
-//    double clawMin = 0;
-
-    //boolean trigger;
 
     @Override
     public void runOpMode() {
+
         // get a reference to our compass
-//        robot.sideRangeSensor.initialize();
-//        robot.frontRangeSensor.initialize();
+        robot.sideRangeSensor.initialize();
+        robot.frontRangeSensor.initialize();
 
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
 
-        robot.verticalArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-//        /* Initialize the vertical arm encoder */
+        /* Initialize the vertical arm encoder */
         robot.verticalArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        robot.clawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sleep(100);
         robot.verticalArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        robot.clawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the start button
         telemetry.addLine("!☻ Ready to Run ☻!");
@@ -60,109 +47,17 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             telemetry.addData("Claw Opening Controls", "X is Close, B is Open");
             telemetry.addData("Claw Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
 
-            telemetry.addData("Encoder Mode:", robot.verticalArmMotor.getMode());
-            telemetry.addData("Vertical Encoder:", robot.verticalArmMotor.getCurrentPosition());
-            telemetry.addLine("Side RS Data");
-            telemetry.addData("cm", "%.2f cm", robot.sideRangeSensor.cmUltrasonic());
-
+            telemetry.addData("Front Left Power", robot.frontLeftMotor.getPower());
+            telemetry.addData("Front Right Power", robot.frontRightMotor.getPower());
+            telemetry.addData("Back Left Power", robot.backLeftMotor.getPower());
+            telemetry.addData("Back Right Power", robot.backRightMotor.getPower());
             telemetry.update();
 
-        /* Put the servo arm up */
+        /* Set the arm up */
+//            if (robot.gemServo.getPosition() != robot.xPosUp) {
+//                robot.gemServo.setPosition(robot.xPosUp);
+//           \ }
             robot.gemServo.setPosition(robot.xPosUp);
-
-//        /* Claw Motor Control */
-//            if (gamepad2.x && robot.clawMotor.getCurrentPosition() > clawMin) {
-//                if (robot.ClawPower != robot.clawClose) {
-//                    robot.clawMotor.setPower(robot.clawClose);
-//                    robot.ClawPower = robot.clawClose;
-//                }
-//            }
-//            else{
-//                if(gamepad2.x && robot.clawMotor.getCurrentPosition() <= clawMin){
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//                else{
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//            }
-//
-//            if (gamepad2.b && robot.clawMotor.getCurrentPosition() < clawMax) {
-//                if (robot.ClawPower != robot.clawOpen) {
-//                    robot.clawMotor.setPower(robot.clawOpen);
-//                    robot.ClawPower = robot.clawOpen;
-//                }
-//            }
-//            else{
-//                if(gamepad2.b && robot.clawMotor.getCurrentPosition() >= clawMax){
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//                else{
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//            }
-//
-//            if (!gamepad2.b && !gamepad2.x) {
-//                if (robot.ClawPower != robot.clawStill) {
-//                    robot.clawMotor.setPower(robot.clawStill);
-//                    robot.ClawPower = robot.clawStill;
-//                }
-//            }
-
-        /* Vertical Arm Motor */
-            if (gamepad2.dpad_up && robot.verticalArmMotor.getCurrentPosition() < verticalMax) {
-                if (robot.VerticalArmPower != 1) {
-                    robot.verticalArmMotor.setPower(1);
-                    robot.VerticalArmPower = 1;
-                    up = true;
-                }
-            } else {
-                if (gamepad2.dpad_up && robot.verticalArmMotor.getCurrentPosition() >= verticalMax) {
-                    robot.verticalArmMotor.setPower(0);
-                    robot.VerticalArmPower = 0;
-                    up = true;
-                } else {
-                    if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
-                        robot.verticalArmMotor.setPower(0);
-                        robot.VerticalArmPower = 0;
-                        up = false;
-                    }
-
-                }
-            }
-
-            if(!up) {
-                if (gamepad2.dpad_down && robot.verticalArmMotor.getCurrentPosition() > verticalMin) {
-                    if (robot.VerticalArmPower != -1) {
-                        robot.verticalArmMotor.setPower(-1);
-                        robot.VerticalArmPower = -1;
-                        up = false;
-                    }
-                } else {
-                    if (gamepad2.dpad_down && robot.verticalArmMotor.getCurrentPosition() <= verticalMin) {
-                        robot.verticalArmMotor.setPower(0);
-                        robot.VerticalArmPower = 0;
-                        up = false;
-                    } else {
-                        if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
-                            robot.verticalArmMotor.setPower(0);
-                            robot.VerticalArmPower = 0;
-                            up = false;
-                        }
-                    }
-                }
-            }
 
         /* Servo Control */
             if (gamepad2.x) {
@@ -186,7 +81,32 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
                 }
             }
 
-            /* Rotational Drive Control */
+        /* Vertical Arm Motor */
+            if (gamepad2.dpad_up) {
+                if (robot.VerticalArmPower != 1) {
+                    robot.verticalArmMotor.setPower(1);
+                    robot.VerticalArmPower = 1;
+                }
+            } else {
+                if (robot.VerticalArmPower != 0) {
+                    robot.verticalArmMotor.setPower(0);
+                    robot.VerticalArmPower = 0;
+                }
+
+                if (gamepad2.dpad_down) {
+                    if (robot.VerticalArmPower != -1) {
+                        robot.verticalArmMotor.setPower(-1);
+                        robot.VerticalArmPower = -1;
+                    }
+                } else {
+                    if (robot.VerticalArmPower != 0) {
+                        robot.verticalArmMotor.setPower(0);
+                        robot.VerticalArmPower = 0;
+                    }
+                }
+            }
+
+               /* Rotational Drive Control */
             if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
                 double GRX = gamepad1.right_stick_x / robot.bumperSlowest;
@@ -291,7 +211,6 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
 
                     }
                 }
-
             }
         }
     }
@@ -299,7 +218,6 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
-
 
     /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
@@ -311,10 +229,10 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         double backRight;
 
         /* Initialize the powers with the values input whenever this method is called */
-        frontLeft = fl;
-        frontRight = fr;
-        backLeft = bl;
-        backRight = br;
+        frontLeft   =   fl;
+        frontRight  =   fr;
+        backLeft    =   bl;
+        backRight   =   br;
 
         /* set each wheel to the power indicated whenever this method is called */
         if (robot.FrontLeftPower != frontLeft) {
@@ -334,4 +252,5 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         robot.BackRightPower = backRight;
     }
 }
+
 

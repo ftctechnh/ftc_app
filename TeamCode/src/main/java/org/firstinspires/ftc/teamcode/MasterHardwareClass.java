@@ -97,13 +97,16 @@ public class MasterHardwareClass {
 //        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
 //        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
+//        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
         // Set proper encoder state for all motor
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
 }
