@@ -18,11 +18,11 @@ public class DriveEverything extends OpMode {
 
     @Override
     public void init() {
-        ForkLift = new ForkLift(hardwareMap.servo.get("s5"), hardwareMap.servo.get("s6"), hardwareMap.dcMotor.get("m6"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
+        ForkLift = new ForkLift(hardwareMap, telemetry);
         ForkLift.init();
-        RelicClaw = new RelicClaw(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"),hardwareMap.digitalChannel.get("b2"), hardwareMap.digitalChannel.get("b3"), telemetry);
+        RelicClaw = new RelicClaw(hardwareMap, telemetry);
         RelicClaw.init();
-        drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
+        drive = new DriveMecanum(hardwareMap, telemetry);
     }
 
     @Override

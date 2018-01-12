@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode;
  */
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -32,6 +33,17 @@ public class DriveMecanum {
         this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+    public DriveMecanum(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.FrontLeft = hardwareMap.dcMotor.get("m1");
+        this.FrontRight = hardwareMap.dcMotor.get("m2");
+        this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
+        this.RearLeft = hardwareMap.dcMotor.get("m3");
+        this.RearRight = hardwareMap.dcMotor.get("m4");
+        this.RearRight.setDirection(DcMotor.Direction.REVERSE);
+        this.telemetry = telemetry;
+        setBRAKE();
+    }
+
     public void driveTranslateRotate(double x, double y, double z) {
         //Trust me, if you edit this next line you don't know what you're doing. Sorry but it's true. If you feel the need to edit this, please talk to me (Kaden) so I explain to you why it needs to not be edited. Thanks.
         //for positive values: x - strafe right, y - backward, z - spin right
@@ -76,4 +88,10 @@ public class DriveMecanum {
         return Range.clip(value, -1, 1);
     }
     public void sleep(long miliseconds) {try {Thread.sleep(miliseconds);} catch (InterruptedException e) {}}
+    private void setBRAKE() {
+        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
 }

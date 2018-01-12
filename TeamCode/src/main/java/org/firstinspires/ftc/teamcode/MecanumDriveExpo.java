@@ -22,7 +22,7 @@ public class MecanumDriveExpo extends OpMode {
     private double expo = 1.75;
     @Override
     public void init() {
-        drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
+        drive = new DriveMecanum(hardwareMap, telemetry);
     }
     @Override
     public void loop() {

@@ -19,8 +19,8 @@ public class ForkliftDrive2controllers extends OpMode {
 
     @Override
     public void init() {
-        drive = new DriveMecanum(hardwareMap.dcMotor.get("m1"), hardwareMap.dcMotor.get("m2"), hardwareMap.dcMotor.get("m3"), hardwareMap.dcMotor.get("m4"), 1.0, telemetry);
-        ForkLift = new ForkLift(hardwareMap.servo.get("s1"), hardwareMap.servo.get("s2"), hardwareMap.dcMotor.get("m5"), hardwareMap.digitalChannel.get("b0"), hardwareMap.digitalChannel.get("b1"), telemetry);
+        drive = new DriveMecanum(hardwareMap, telemetry);
+        ForkLift = new ForkLift(hardwareMap, telemetry);
         ForkLift.init();
     }
 

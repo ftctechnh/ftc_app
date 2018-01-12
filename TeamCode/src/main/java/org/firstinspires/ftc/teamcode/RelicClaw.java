@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -33,6 +34,10 @@ public class RelicClaw {
         this.outButton = outButton;
         this.inButton = inButton;
         this.telemetry = telemetry;
+    }
+
+    public RelicClaw(HardwareMap hardwareMap, Telemetry telemetry) {
+
     }
 
     public void init() {
