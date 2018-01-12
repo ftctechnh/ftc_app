@@ -25,7 +25,7 @@ public class TestAuto extends LinearOpMode {
 		JewelArm = new JewelArm(hardwareMap, telemetry);
 		ForkLift = new ForkLift(hardwareMap, telemetry);
 		vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-		Systems = new Systems(drive, ForkLift, JewelArm,vuforia);
+		Systems = new Systems(drive, ForkLift, JewelArm, vuforia, telemetry);
 		telemetry.addLine("NOW YOU CAN PRESS PLAY");
 		telemetry.update();
 		waitForStart();

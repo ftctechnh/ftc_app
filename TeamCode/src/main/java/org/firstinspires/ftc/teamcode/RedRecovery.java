@@ -26,7 +26,7 @@ public class RedRecovery extends LinearOpMode {
         JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, JewelArm,vuforia);
+        Systems = new Systems(drive, ForkLift, JewelArm, vuforia, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
@@ -51,8 +51,8 @@ public class RedRecovery extends LinearOpMode {
         drive.rightGyro(0, 0, drive.SPIN_TO_CRYPTOBOX_SPEED, -88);
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 1);
         Systems.pushInBlock();
-        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
-        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 90);
+        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 4);
+        //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 90);
         ForkLift.openClaw();
         ForkLift.moveUntilDown(0.75);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

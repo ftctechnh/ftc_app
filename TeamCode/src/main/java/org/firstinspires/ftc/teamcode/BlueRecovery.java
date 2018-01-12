@@ -26,7 +26,7 @@ public class BlueRecovery extends LinearOpMode {
         jewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, jewelArm,vuforia);
+        Systems = new Systems(drive, ForkLift, jewelArm, vuforia, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
@@ -40,19 +40,19 @@ public class BlueRecovery extends LinearOpMode {
         pictograph = Systems.getMark();
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.driveTranslateRotate(0, -drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(0, -drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
             drive.driveTranslateRotate(0, -drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.driveTranslateRotate(0, -drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.driveTranslateRotate(0, -drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         drive.rightGyro(0, 0, drive.SPIN_TO_CRYPTOBOX_SPEED, -88);
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 1);
         Systems.pushInBlock();
-        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
-        drive.rightGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, -90);
+        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 4);
+        //drive.rightGyro(0,0, drive.SPIN_TO_CENTER_SPEED, 90);
         ForkLift.openClaw();
         ForkLift.moveUntilDown(0.75);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

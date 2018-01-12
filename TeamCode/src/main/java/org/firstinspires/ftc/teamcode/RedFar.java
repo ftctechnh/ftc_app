@@ -26,7 +26,7 @@ public class RedFar extends LinearOpMode {
         JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, JewelArm,vuforia);
+        Systems = new Systems(drive, ForkLift, JewelArm, vuforia, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
@@ -51,8 +51,8 @@ public class RedFar extends LinearOpMode {
         }
         drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 3);
         Systems.pushInBlock();
-        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 2);
-        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 150);
+        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 4);
+        //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 120);
         ForkLift.openClaw();
         ForkLift.moveUntilDown(0.75);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

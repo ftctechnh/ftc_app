@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 1/3/2018.
  */
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 public class Systems {
@@ -13,16 +14,18 @@ public class Systems {
     private RelicClaw RelicClaw;
     private BeehiveVuforia vuforia;
     private JewelArm JewelArm;
+    private Telemetry telemetry;
     public Systems(DriveMecanum drive, ForkLift ForkLift, RelicClaw RelicClaw) {
         this.DriveMecanum = drive;
         this.ForkLift = ForkLift;
         this.RelicClaw = RelicClaw;
     }
-    public Systems(AutoDrive drive, ForkLift ForkLift, JewelArm JewelArm, BeehiveVuforia vuforia) {
+    public Systems(AutoDrive drive, ForkLift ForkLift, JewelArm JewelArm, BeehiveVuforia vuforia, Telemetry telemetry) {
         this.AutoDrive = drive;
         this.ForkLift = ForkLift;
         this.JewelArm = JewelArm;
         this.vuforia = vuforia;
+        this.telemetry = telemetry;
     }
     void pushInBlock() {
         ForkLift.openClaw();
@@ -76,16 +79,28 @@ public class Systems {
                 red += 1;
             }
         }
+        if(red>blue) {
+            telemetry.addData("Jewel Color", "RED");
+        }
+        else if (blue>red) {
+            telemetry.addData("Jewel Color", "BLUE");
+        }
+        else {
+            telemetry.addData("Jewel Color","NONE");
+        }
+        telemetry.update();
         if(target == Color.RED) {
             if(red>blue) {
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
             }
-            else {
+            else if(blue>red){
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
+            } else {
+                JewelArm.up();
             }
         }
         if(target == Color.BLUE) {
@@ -94,10 +109,12 @@ public class Systems {
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
             }
-            else {
+            else if (red>blue){
                 AutoDrive.driveTranslateRotate(0, 0, -AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
                 JewelArm.up();
                 AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.SPIN_ON_BALANCE_BOARD_DISTANCE);
+            } else {
+                JewelArm.up();
             }
         }
     }
