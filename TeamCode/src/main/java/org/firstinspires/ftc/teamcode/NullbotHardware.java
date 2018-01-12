@@ -15,7 +15,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Deprecated.AccelerationIntegrator;
 import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestInterface;
 import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestMashupPID;
 
@@ -48,6 +47,9 @@ public class NullbotHardware {
     public DcMotor lift;
     public DcMotor zType;
 
+    public DcMotor intakeLeft;
+    public DcMotor intakeRight;
+
     // Servos
     public Servo leftWhipSnake;
     public Servo leftBlockClaw;
@@ -73,7 +75,6 @@ public class NullbotHardware {
     OutputStreamWriter oW;
     LinearOpMode opMode;
     ScheduledExecutorService loggerThread;
-    AccelerationIntegrator integrator;
 
     // Utility mechanisms
     public DcMotor[] motorArr;
@@ -111,6 +112,9 @@ public class NullbotHardware {
         if (!isTestChassis) {
             lift = hwMap.dcMotor.get("lift");
             zType = hwMap.dcMotor.get("zType");
+
+            intakeLeft = hwMap.dcMotor.get("intakeLeft");
+            intakeRight = hwMap.dcMotor.get("intakeRight");
 
             leftWhipSnake = hwMap.servo.get("leftGemHitter");
 
@@ -185,12 +189,6 @@ public class NullbotHardware {
         parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
 
-        integrator = new AccelerationIntegrator();
-
-        parameters.accelerationIntegrationAlgorithm = integrator;
-
-        imu.initialize(parameters);
-
         //imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
 
         updateReadings();
@@ -209,6 +207,7 @@ public class NullbotHardware {
         if (!isTestChassis) {
             setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
             zType.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            setIntakeMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
 
@@ -485,6 +484,16 @@ public class NullbotHardware {
         if (m.getMode() != mode) {
             m.setMode(mode);
         }
+    }
+
+    public void setIntakeMode(DcMotor.RunMode m) {
+        intakeLeft.setMode(m);
+        intakeRight.setMode(m);
+    }
+
+    public void setIntakeSpeed(double s) {
+        intakeLeft.setPower(s);
+        intakeRight.setPower(s);
     }
 
     public double[] getDrivePowersFromAngle(double angle) {

@@ -172,6 +172,13 @@ public class MainTeleOp extends LinearOpMode {
                         robot.almostRaiseWhipSnake();
                     }
 
+                    // Intake speed control
+                    if (Math.abs(gamepad2.left_stick_x) > triggerThreshold) {
+                        robot.setIntakeSpeed(gamepad2.left_stick_x);
+                    } else {
+                        robot.setIntakeSpeed(0);
+                    }
+
                     if ((gamepad1.start && gamepad1.a) || (gamepad2.start && gamepad2.a)) {
                         lift.encoderOffset = robot.lift.getCurrentPosition();
                     }
