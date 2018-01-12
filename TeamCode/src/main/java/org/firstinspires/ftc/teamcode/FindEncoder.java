@@ -16,10 +16,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class FindEncoder extends LinearOpMode {
 
     private DcMotor m;
-    private Servo s1;
+    private Servo s1,s2;
 
-    double currentAngle = 0.0;
+    double angle1 = 0.0;
+    double angle2 = 1.0;
     double interval = 0.05;
+    boolean pressed = false;
 
 
     @Override
@@ -27,6 +29,7 @@ public class FindEncoder extends LinearOpMode {
 
         m = hardwareMap.get(DcMotor.class,"Motor1");
         s1 = hardwareMap.get(Servo.class,"Servo1");
+        s2 = hardwareMap.get(Servo.class,"Servo2");
 
         m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -35,6 +38,8 @@ public class FindEncoder extends LinearOpMode {
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        s1.setPosition(0);
+        s2.setPosition(0);
 
 
         // run until the end of the match (driver presses STOP)
@@ -49,19 +54,27 @@ public class FindEncoder extends LinearOpMode {
             telemetry.update();
 
 
-            if (gamepad1.a) {
+            if (gamepad1.a && !pressed) {
                 telemetry.addData("Servo","A");
                 telemetry.update();
-                while (currentAngle < 0.5){
-                    s1.setPosition(currentAngle);
-                    currentAngle += interval;
+                while (angle1 < 0.5){
+                    s1.setPosition(angle1);
+                    s2.setPosition(angle2);
+                    angle1 += interval;
+                    angle2 -= interval;
+                    sleep(100);
                 }
+                pressed = true;
             }
-            else if (gamepad1.x){
-                while (currentAngle > 0.05){
-                    s1.setPosition(currentAngle);
-                    currentAngle -= interval;
+            else if (gamepad1.a && pressed){
+                while (angle1 > 0.00){
+                    s1.setPosition(angle1);
+                    s2.setPosition(angle2);
+                    angle1 -= interval;
+                    angle2 += interval;
+                    sleep(100);
                 };
+                pressed = false;
             }
 
         }
