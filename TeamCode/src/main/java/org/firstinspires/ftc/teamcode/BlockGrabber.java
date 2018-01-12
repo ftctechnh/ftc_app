@@ -41,7 +41,7 @@ import java.lang.annotation.Target;
 
 
 @TeleOp(name="BlockGrabber Linear OpMode", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class BlockGrabber extends LinearOpMode {
 
     // Declare OpMode members.
@@ -78,7 +78,7 @@ public class BlockGrabber extends LinearOpMode {
 
         GrabberMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        GrabberMotor.setTargetPosition(400);
+        GrabberMotor.setTargetPosition(87);
 
         GrabberMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -99,7 +99,7 @@ public class BlockGrabber extends LinearOpMode {
                 s1.setPosition(final_angle_value);
                 s2.setPosition(final_angle_value);
 
-                GrabberMotor.setTargetPosition(400);
+                GrabberMotor.setTargetPosition(87);
                 GrabberMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 while (GrabberMotor.isBusy()){
