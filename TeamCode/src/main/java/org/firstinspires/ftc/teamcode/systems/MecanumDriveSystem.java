@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.systems;
 
+import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,6 +19,7 @@ public class MecanumDriveSystem {
     private OpMode opMode;
     private LinearOpMode linearOpMode;
     private HardwareMap hardwareMap;
+    private AHRS navX;
 
 
     public MecanumDriveSystem(OpMode opMode) {
@@ -129,6 +131,13 @@ public class MecanumDriveSystem {
         this.rearRightMotor.setPower(rearRightSpeed);
         this.frontLeftMotor.setPower(frontLeftSpeed);
         this.rearRightMotor.setPower(rearRightSpeed);
+    }
+
+    public void drive(double left, double right) {
+        this.frontLeftMotor.setPower(left);
+        this.rearLeftMotor.setPower(left);
+        this.rearRightMotor.setPower(right);
+        this.frontRightMotor.setPower(right);
     }
 
     public void stop() {
