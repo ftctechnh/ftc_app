@@ -34,7 +34,7 @@ public class blueBack_NoGyro extends Autonomous_General {
         waitForStart();
 //reseting gyro sensor
 
-        toggleLight(true);
+        //toggleLight(true);
         light.setPower(1);
         startTracking();
         telemetry.addData("","READY TO TRACK");
@@ -45,7 +45,7 @@ public class blueBack_NoGyro extends Autonomous_General {
 
 
         }
-        toggleLight(false);
+        //toggleLight(false);
 
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();

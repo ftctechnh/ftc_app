@@ -300,6 +300,7 @@ public class Delta_TeleOp extends OpMode {
 
         slideMotor.setPower(0.6);
 
+
         while (slideMotor.isBusy()) {
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
             telemetry.update();
@@ -310,8 +311,8 @@ public class Delta_TeleOp extends OpMode {
 
     }
   public void openGlyph(){
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
+        glyphServoRight.setPosition(0.7);
+        glyphServoLeft.setPosition(0.25);
   }
 
   public void closeGlyph(){

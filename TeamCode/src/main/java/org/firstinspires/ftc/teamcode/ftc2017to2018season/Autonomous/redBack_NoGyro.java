@@ -35,7 +35,7 @@ public class redBack_NoGyro extends Autonomous_General {
         waitForStart();
 
 
-        toggleLight(true);
+        //toggleLight(true);
         light.setPower(1);
         startTracking();
         telemetry.addData("", "READY TO TRACK");
@@ -46,7 +46,7 @@ public class redBack_NoGyro extends Autonomous_General {
 
 
         }
-        toggleLight(false);
+        //toggleLight(false);
         //returnImage();
         telemetry.addData("Vumark", vuMark);
         telemetry.update();
