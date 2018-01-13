@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
+import static java.lang.Math.signum;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.FAST;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.MID;
 import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.SLOW;
@@ -193,14 +196,14 @@ public class Teleop extends OpMode {
             }
         }
         else {
-            rightbumperIsReleased = true;
+            backIsReleased = true;
         }
 
         if(tristanmode) {
-            gromit.driveTrain.drivesmart(gamepad1.left_stick_x, -gamepad1.left_stick_y, turnDirection * gamepad1.right_stick_x);
+            gromit.driveTrain.drivevector(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
         }
         else{
-            gromit.driveTrain.drivesmart(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
+            gromit.driveTrain.drivesmart(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
         }
         //Shooter on and off
 //        if (gamepad1.dpad_up)
@@ -259,8 +262,15 @@ public class Teleop extends OpMode {
         if (gamepad1.a){
             gromit.jewelArm.jewelArmDown();
         }*/
-        double vector = toDegrees(atan(gamepad1.right_stick_y / gamepad1.right_stick_x)) + 90;
+        double vector = toDegrees(PI/4+atan(gamepad1.right_stick_y / gamepad1.right_stick_x));
         telemetry.addData("vector: ", vector);
+        /*double drive_direction = atan(y/x);
+        lfpower = signum(y)*Math.cos(drive_direction-PI/4);
+        lrpower = signum(y)*Math.sin(drive_direction-PI/4);
+        rfpower = signum(y)*Math.sin(drive_direction-PI/4);
+        rrpower = signum(y)*Math.cos(drive_direction-PI/4);
+*/
+
         telemetry.addLine("Time Left: " + timeLeft);
         telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);
 
@@ -273,5 +283,48 @@ public class Teleop extends OpMode {
         gromit.glyphTrain.lift_motor.setPower(0.0);
         //               gromit.relicArm.stoprelic...
     }
+    public void drivevector(double x, double y, double turn) {
+        //speed change code
+        //   double drive_direction = atan(y/x);
+        //double speedMultiplier = 0.4;
 
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double rotation = turn*0.75;
+
+        double drive_direction = atan(y/x);
+
+        lfpower = Math.cos(drive_direction-PI/4);
+        lrpower = Math.sin(drive_direction-PI/4);
+        rfpower = Math.sin(drive_direction-PI/4);
+        rrpower = Math.cos(drive_direction-PI/4);
+
+//        lfbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
+//        lrbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rfbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rrbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
+
+
+        //Determine largest power being applied in either direction
+        double max = abs(lfpower);
+        if (abs(lrpower) > max) max = abs(lrpower);
+        if (abs(rfpower) > max) max = abs(rfpower);
+        if (abs(rrpower) > max) max = abs(rrpower);
+
+//            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+        double multiplier = 0;//speedMultiplier;
+
+        lfpower *= multiplier;
+        lrpower *= multiplier;
+        rfpower *= multiplier;
+        rrpower *= multiplier;
+
+        gromit.driveTrain.left_front.setPower(lfpower);
+        gromit.driveTrain.left_rear.setPower(lrpower);
+        gromit.driveTrain.right_front.setPower(rfpower);
+        gromit.driveTrain.right_rear.setPower(rrpower);
+    }
 }

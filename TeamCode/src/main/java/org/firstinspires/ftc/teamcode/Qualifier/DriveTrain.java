@@ -14,7 +14,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
 
+import static java.lang.Math.PI;
 import static java.lang.Math.abs;
+import static java.lang.Math.atan;
 import static java.lang.Math.signum;
 
 
@@ -230,11 +232,10 @@ public class DriveTrain {
 // temp
 
         if (frontIsForward) {             // driving with the front facing forward
-            y = Math.pow(y, 3);
-            x = Math.pow(-x, 3);
+
         } else {                            // driving with the rear facing forward
-            y = -Math.pow(y, 3);
-            x = -Math.pow(-x, 3);
+            y = -y;
+            x = -x;
         }
 
 
@@ -248,6 +249,73 @@ public class DriveTrain {
 //        rrpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
 //
 
+
+
+        //Determine largest power being applied in either direction
+        double max = abs(lfpower);
+        if (abs(lrpower) > max) max = abs(lrpower);
+        if (abs(rfpower) > max) max = abs(rfpower);
+        if (abs(rrpower) > max) max = abs(rrpower);
+
+//            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+        double multiplier = speedMultiplier / max;
+
+        lfpower *= multiplier;
+        lrpower *= multiplier;
+        rfpower *= multiplier;
+        rrpower *= multiplier;
+
+        left_front.setPower(lfpower);
+        left_rear.setPower(lrpower);
+        right_front.setPower(rfpower);
+        right_rear.setPower(rrpower);
+    }
+
+
+    public void drivevector(double x, double y, double turn) {
+        //speed change code
+        //   double drive_direction = atan(y/x);
+        double speedMultiplier;
+        switch (speedMode) {
+            // lookup parameter for "fast mode"
+            case FAST:
+                speedMultiplier = 1.0;
+                break;
+            case MID:
+                speedMultiplier = 0.5;
+                break;
+            case SLOW:
+                // lookup slow speed parameter
+                speedMultiplier = 0.25;
+                break;
+            default:
+                speedMultiplier = 0.5;
+        }
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double rotation = turn*0.75;
+
+        if (frontIsForward) {             // driving with the front facing forward
+            y = Math.pow(y, 3);
+            x = Math.pow(-x, 3);
+        } else {                            // driving with the rear facing forward
+            y = -Math.pow(y, 3);
+            x = -Math.pow(-x, 3);
+        }
+
+        double drive_direction = atan(y/x);
+        lfpower = signum(y)*Math.cos(drive_direction-PI/4);
+        lrpower = signum(y)*Math.sin(drive_direction-PI/4);
+        rfpower = signum(y)*Math.sin(drive_direction-PI/4);
+        rrpower = signum(y)*Math.cos(drive_direction-PI/4);
+
+//        lfbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
+//        lrbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rfbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
+//        rrbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
 
 
         //Determine largest power being applied in either direction
