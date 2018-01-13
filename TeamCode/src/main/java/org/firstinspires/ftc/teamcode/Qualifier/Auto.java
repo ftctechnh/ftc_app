@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
@@ -52,6 +53,11 @@ public class Auto extends LinearOpMode {
         gromit = new RobotRR();
         gromit.init(hardwareMap);
         menuFile = new MenuFileHandler2(telemetry, gamepad1);
+
+        gromit.driveTrain.left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gromit.driveTrain.left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gromit.driveTrain.left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gromit.driveTrain.left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
                 // get a reference to the RelativeLayout so we can change the background  for Edit mode
                 // color of the Robot Controller app to match the hue detected by the RGB sensor.
@@ -338,7 +344,7 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
             double distance2 = menuFile.RedBackDistance2;
             if (vuMark == RelicRecoveryVuMark.CENTER) {
-                distance2 = distance2 + 10.0 ;
+                distance2 = distance2 + 10.5 ;
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 distance2 = distance2 + 22.0 ;
             }

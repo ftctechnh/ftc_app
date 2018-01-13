@@ -15,12 +15,13 @@ public class GlyphTrain {
 //    public enum SpeedSetting {FAST, SLOW}
 
 //    private SpeedSetting speedMode;
-    public double pulleydiameter = 1;
+    public double pulleydiameter = 2.7;
     public final double TICKS_REV = 1120;
     public int lowerLiftLimit = 0;
-    public int upperLiftLimit = 4470;
+    public int upperLiftLimit = (int)( (14/(Math.PI*pulleydiameter)) * TICKS_REV );   // was 4700
     public int liftIndex = 0;
-    public int[] liftPosition ={0,2100,4100};
+//    public int[] liftPosition ={0,2100,4100};
+    public int[] liftPosition ={0,(int)( (7/(Math.PI*pulleydiameter)) * TICKS_REV ),(int)( (13/(Math.PI*pulleydiameter)) * TICKS_REV )};
 //     0,(int) (7 * TICKS_REV / (pulleydiameter*Math.PI)), (int)( 13 * TICKS_REV / (pulleydiameter*Math.PI) ) };
 
 

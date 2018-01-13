@@ -78,7 +78,7 @@ public class Teleop extends OpMode {
                 xIsReleased = false;
                 gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
 //  check to see if you're lower than the next lower position by 400 ticks, stop there first.
-                if (gromit.glyphTrain.lift_motor.getCurrentPosition()+400 < gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex - 1 ] ){
+                if (gromit.glyphTrain.lift_motor.getCurrentPosition() + 200 < gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex - 1 ] ){
                     gromit.glyphTrain.liftIndex -= 1;
                 }
                 liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];  // set the new Target
@@ -149,16 +149,16 @@ public class Teleop extends OpMode {
             gromit.driveTrain.setSpeedMode(MID);
         }
 //on and off glyph intake
-        if (gamepad1.dpad_down) {
+        if (gamepad1.dpad_down || gamepad2.dpad_down) {
             gromit.glyphTrain.startGlyphMotors(1.0);
 
-        } else if (gamepad1.dpad_up) {
+        } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
             gromit.glyphTrain.stopGlyphMotors();
         }
         // glyph clamp
-        if (gamepad1.right_trigger > 0.1) {
+        if (gamepad1.right_trigger > 0.1 || gamepad2.right_trigger > 0.1) {
             gromit.glyphTrain.glyphclamp("open");
-        } else if (gamepad1.right_bumper) {
+        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
             gromit.glyphTrain.glyphclamp("close");
         }
 
