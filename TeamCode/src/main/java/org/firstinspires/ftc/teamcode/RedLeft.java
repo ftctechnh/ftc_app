@@ -176,20 +176,21 @@ public class RedLeft extends LinearOpMode {
         }
 
         // turn toward and view pictograph
-        encoderDrive(TURN_SPEED, 3, -3,5 );
+        encoderDrive(TURN_SPEED, 1.5, -1.5,5 );
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+    //   telemetry.setAutoClear(false);
         runtime.reset();
         do {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-        }while (vuMark ==  RelicRecoveryVuMark.UNKNOWN);
-        encoderDrive(TURN_SPEED, -3, 3,5 );
+        }while (runtime.seconds() < 1);   // vuMark ==  RelicRecoveryVuMark.UNKNOWN)
+        encoderDrive(TURN_SPEED, -1.5, 1.5,5 );
 
         // drive to cryptobox
         encoderDrive(DRIVE_SPEED, -29, -29, 5);      // drives off balancing stone
         encoderDrive(TURN_SPEED, -14, 14, 30);
-        encoderDrive(DRIVE_SPEED, -18,  -18, 5);  //  drive that clears the balancing stone
+        encoderDrive(DRIVE_SPEED, -18.5,  -18.5, 5);  //  drive that clears the balancing stone
 
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
@@ -205,12 +206,12 @@ public class RedLeft extends LinearOpMode {
         else if (vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -3.5,3.5,5);
+            encoderDrive(TURN_SPEED, -3.6,3.6,5);
         }
         else if  (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -3.5,3.5,5);
+            encoderDrive(TURN_SPEED, -3.6,3.6,5);
         }
         encoderDrive(DRIVE_SPEED, -36,-36,5);   // drive into cryptobox
 
@@ -228,7 +229,7 @@ public class RedLeft extends LinearOpMode {
         while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
         robot.lift.setPower(0.0);
 
-        encoderDrive(DRIVE_SPEED,3,3,5);      // back up
+        encoderDrive(DRIVE_SPEED,2.5,2.5,5);      // back up
         encoderDrive(TURN_SPEED, -3, 3, 2 );  // turn to push glyph into cryptobox
         encoderDrive(DRIVE_SPEED, 3.5,3.5,5); // back up away from glyph
 

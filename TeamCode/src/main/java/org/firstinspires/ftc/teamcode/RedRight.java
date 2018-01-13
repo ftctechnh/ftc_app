@@ -160,31 +160,28 @@ public class RedRight extends LinearOpMode {
 
         NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors
 
-        if (colors.red < colors.blue){ //It checks if the ball is blue
+        if (colors.red > colors.blue){ //It checks if the ball is blue
 
-            encoderDrive(TURN_SPEED, 2, -2,5 ); // turns right to knock blue ball
+            encoderDrive(TURN_SPEED, -2, 2,5 ); // turns right to knock blue ball
             robot.ballArm.setPosition(ballArmUp);
-            encoderDrive(TURN_SPEED, -2, 2,5 );
+            encoderDrive(TURN_SPEED, 2, -2,5 );
 
         }
         else  { //The ball facing the color sensor is red
-            encoderDrive(TURN_SPEED, -2, 2, 5 ); //turns left knocking the blue ball and turning to face glyph box
+            encoderDrive(TURN_SPEED, 2, -2, 5 ); //turns left knocking the blue ball and turning to face glyph box
             robot.ballArm.setPosition(ballArmUp);
-            encoderDrive(TURN_SPEED,  2, -2,.5 );
+            encoderDrive(TURN_SPEED,  -2, 2,.5 );
         }
 
         //turn toward and view pictograph
-        encoderDrive(TURN_SPEED, 3, -3,5 );
+        encoderDrive(TURN_SPEED, 1.5, -1.5,5 );
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        runtime.reset();
-        while (runtime.seconds() < 1) {    //wait for claw to finsh open or close
+        do {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-
-        }
-
-        encoderDrive(TURN_SPEED, -3, 3,5 );
+        }while (runtime.seconds() < 1);   // vuMark ==  RelicRecoveryVuMark.UNKNOWN)
+        encoderDrive(TURN_SPEED, -1.5, 1.5,5 );
 
         // drive to cryptobox
         encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5); // Drive off balance board
@@ -198,7 +195,7 @@ public class RedRight extends LinearOpMode {
         else if (vuMark == RelicRecoveryVuMark.CENTER) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -14.5, 14.5, 5);
+            encoderDrive(TURN_SPEED, -14, 14, 5);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("VuMark", "%s visible", vuMark);
