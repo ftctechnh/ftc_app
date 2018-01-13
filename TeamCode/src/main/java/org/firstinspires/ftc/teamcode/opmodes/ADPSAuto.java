@@ -3,22 +3,18 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.libraries.APDS9960;
+import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9930;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
-import org.firstinspires.ftc.teamcode.libraries.interfaces.SetPower;
-
-import java.util.ArrayList;
 
 /**
  * Created by Noah on 12/20/2017.
@@ -28,8 +24,7 @@ import java.util.ArrayList;
 public class ADPSAuto extends VuforiaBallLib {
     private static final double BALL_WAIT_SEC = 2.0;
 
-    APDS9960 dist;
-    APDS9960.Config config = new APDS9960.Config();
+    APDS9930 dist;
     protected boolean red = false;
     protected boolean justDrive = false;
     private BotHardware bot = new BotHardware(this);
@@ -61,8 +56,7 @@ public class ADPSAuto extends VuforiaBallLib {
     public void init() {
         initVuforia(true);
 
-        config.setPulse(APDS9960.Config.PulseLength.PULSE_16US, (byte)8, APDS9960.Config.LEDStrength.STREN_100MA, APDS9960.Config.LEDBoost.BOOST_1X, APDS9960.Config.DistGain.GAIN_1X);
-        dist = new APDS9960(config, hardwareMap.get(I2cDeviceSynch.class, red ? "reddist" : "bluedist"));
+        dist = new APDS9930(hardwareMap.get(I2cDeviceSynch.class, red ? "reddist" : "bluedist"), true);
         dist.initDevice();
 
         bot.init();
@@ -133,7 +127,7 @@ public class ADPSAuto extends VuforiaBallLib {
             if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 35.0f, 360.0f);
             else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 35.0f, 360.0f);
             if(red) skip--;
-            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.87, 0.7, dist, config, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.87, 0.7, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
                     70, 8, skip, 70, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
@@ -170,6 +164,7 @@ public class ADPSAuto extends VuforiaBallLib {
             if(firstLoop && mSeq.loop()) requestOpModeStop();
         }
         catch (Exception e) {
+            dist.stopDevice();
             bot.stopAll();
             throw e;
         }
@@ -177,6 +172,7 @@ public class ADPSAuto extends VuforiaBallLib {
 
 
     public void stop() {
+        dist.stopDevice();
         bot.stopAll();
         stopVuforia();
     }
@@ -184,8 +180,7 @@ public class ADPSAuto extends VuforiaBallLib {
     public static class APDSFind extends AutoLib.Step {
         private final int mError;
         private final int mDist;
-        private final APDS9960 sens;
-        private final APDS9960.Config config;
+        private final APDS9930 sens;
         private final OpMode mode;
         private final SensorLib.PID errorPid;
         private final GyroCorrectStep gyroStep;
@@ -205,9 +200,8 @@ public class ADPSAuto extends VuforiaBallLib {
         private static final int APDS_FOUND_COUNT = 10;
         private static final int COUNTS_BETWEEN_PILLIAR = 155;
 
-        APDSFind(Servo stick, double stickDown, double stickUp, APDS9960 sens, APDS9960.Config config, SensorLib.PID errorPid,
+        APDSFind(Servo stick, double stickDown, double stickUp, APDS9930 sens, SensorLib.PID errorPid,
                  GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode, boolean red) {
-            this.config = config;
             this.errorPid = errorPid;
             this.sens = sens;
             this.gyroStep = correctIt;
@@ -235,7 +229,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 float error = (float)(this.mDist - dist);
                 //if we found it, stop
                 //if the peak is within stopping margin, stop
-                if(config.gain == APDS9960.Config.DistGain.GAIN_1X && Math.abs(error) <= mError) {
+                if(sens.getPGAIN() == APDS9930.ProxGain.GAIN_1X && Math.abs(error) <= mError) {
                     setMotorsWithoutGyro(0);
                     return ++foundCount >= APDS_FOUND_COUNT;
                 }

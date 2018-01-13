@@ -1,14 +1,9 @@
-package org.firstinspires.ftc.teamcode.libraries;
+package org.firstinspires.ftc.teamcode.libraries.hardware;
 
-import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cWaitControl;
 
-import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
-
-import java.io.InvalidObjectException;
 import java.security.InvalidParameterException;
 
 /**

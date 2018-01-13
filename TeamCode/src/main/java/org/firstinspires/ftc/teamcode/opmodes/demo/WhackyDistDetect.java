@@ -6,17 +6,12 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.teamcode.libraries.APDS9960;
+import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
-import org.firstinspires.ftc.teamcode.libraries.CrappyGraphLib;
 import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.WhackyDistLib;
-import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.LocationSensor;
-
-import java.util.LinkedList;
-import java.util.Vector;
 
 /**
  * Created by Noah on 12/28/2017.

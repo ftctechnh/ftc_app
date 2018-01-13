@@ -5,6 +5,7 @@ import android.graphics.Path;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -47,7 +48,7 @@ public class BotHardware {
             try{
                 this.motor = mode.hardwareMap.get(DcMotorEx.class, this.name);
                 //set run mode
-                //this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 //config
                 if(this.reverse) this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
             }
