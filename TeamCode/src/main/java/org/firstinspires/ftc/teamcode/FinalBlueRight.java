@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right", group="Old Auto")
+@Autonomous(name="Blue Right", group="Best")
 //@Disabled
 public class FinalBlueRight extends LinearOpMode
 {
@@ -164,15 +164,9 @@ public class FinalBlueRight extends LinearOpMode
         clawMotor.setPower(clawClose);
         sleep(500);
         clawMotor.setPower(0);
-//        telemetry.addLine("Ayyy, claw closed");
-//        telemetry.update();
+
         /* Move the claw to position up */
         clawPowerPositionDirection(1, clawUp, "Up");
-//        telemetry.addLine("Ayyy, Claw up");
-//        telemetry.update();
-
-//        /* Move the claw up so it doesn't dig into the ground coming off the balance board */
-//        moveclawbytime(500,.5,"Up");
 
         /* Put the servo color arm down */
         gemServo.setPosition(xPosDown);
@@ -219,21 +213,15 @@ public class FinalBlueRight extends LinearOpMode
         switch (vuMark){
             case LEFT:
                 crabLeft(lefty);
-                //                /* Drive forward into the left position */
-//                movebytime(500,.3,"Left");
                 break;
             case RIGHT:
                 crabRight(righty);
-//                /* Drive forward into the right position */
-//                movebytime(500, .3, "Right");
                 break;
             case CENTER:
-                /* Drive forward into the center position */
                 crabCenter();
                 break;
             case UNKNOWN:
                 crabCenter();
-                /* Drive forward into the center position just cuz i said so */
                 break;
         }
 
@@ -258,7 +246,11 @@ public class FinalBlueRight extends LinearOpMode
         sleep(200);
 
         /* Back up a small bit */
-//        movebytime(50, .2, "Backward");
+        movebytime(50, .2, "Backward");
+
+        sleep(200);
+
+        wheelsOff();
 
         clawPowerPositionDirection(-.3, clawDown, "Down");
 
@@ -319,40 +311,7 @@ public class FinalBlueRight extends LinearOpMode
     }
 
 
-///* This method moves the robot forward for time and power indicated*/
-//public void movePowerDistanceDirectionSensor ( double power, double distance, String direction, String sensor) {
-//
-//    /* This switch case is determined by the String direction indicated above hahah*/
-//    switch (direction) {
-//        case "Forward":
-//            setWheelPower(power, -power, power, -power);
-//            break;
-//        case "Backward":
-//            setWheelPower(-power, power, -power, power);
-//            break;
-//        case "Right":
-//            setWheelPower(power, power, -power, -power);
-//            break;
-//        case "Left":
-//            setWheelPower(-power, -power, power, power);
-//            break;
-//    }
-//
-//    switch (sensor){
-//        case "Side":
-//            while(opModeIsActive() && sideRangeSensor.cmUltrasonic() != distance){};
-//            break;
-//        case "Front":
-//            while(opModeIsActive() && frontRangeSensor.cmUltrasonic() != distance){};
-//            break;
-//    }
-//
-//    /* Once the while loop above finishes turn off the wheels */
-//    wheelsOff();
-//}
-
-
-/* This is method uses the back right wheel and its encoder to give a number of ticks that the robot should move */
+/* This method uses moves the claw to a certain tick using encoders */
 public void clawPowerPositionDirection(double power, double position, String direction) {
 
     switch(direction){
@@ -371,26 +330,6 @@ public void clawPowerPositionDirection(double power, double position, String dir
     }
     verticalArmMotor.setPower(0.0);
 }
-
-/* This method moves the claw up or down for a certain amount of time either up or down */
-    public void moveclawbytime(long time, double power, String direction) {
-
-    /* This switch case is determined by the String indicated above */
-        switch (direction) {
-            case "Up":
-                verticalArmMotor.setPower(power);
-                break;
-            case "Down":
-                verticalArmMotor.setPower(-power);
-                break;
-        }
-
-    /* Sleep instead timer sucks */
-    sleep(time);
-
-    /* Once the while loop above finishes turn off claw motor */
-        verticalArmMotor.setPower(0);
-    }
 
 /* This method moves the robot forward for time and power indicated*/
     public void movebytime (long time, double power, String direction) {
