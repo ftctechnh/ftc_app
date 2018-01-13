@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.Trackable;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by TPR on 12/14/17.
+ * IMPORTANT
+ * DEFAULT IS RED
  */
 
 public abstract class RelicAutoMode extends MeccyAutoMode {
@@ -22,6 +26,9 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     //
     VuforiaLocalizer vuforia;
     OpenGLMatrix lastLocation = null;
+    //
+    BNO055IMU imu;
+    Orientation angles;
     //
     @Override
     //
@@ -36,7 +43,7 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         return leftBackMotor.getCurrentPosition();
     }
     //
-    public void auto(int key){
+    public void autoNorth(int key){
         //<editor-fold desc="Startify">
         //<editor-fold desc="Hardware Map">
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
@@ -64,6 +71,9 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         //
         relicTrackables.activate();
         //
+        pengwinFin.moveFinDown();
+        //
+        int blueJewel = (pengwinFin.doesColorSensorSeeBlueJewel()) ? 1 : -1 * key;
 
     }
 }
