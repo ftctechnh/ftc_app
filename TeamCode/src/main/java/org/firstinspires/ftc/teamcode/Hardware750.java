@@ -48,21 +48,22 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class Hardware750 {
     /* Public OpMode members. */
-    public ModernRoboticsI2cRangeSensor rangeSensor  = null;
-    public Servo                        arm          = null;
-    public Servo                        thiccClaw1   = null;
-    public Servo                        thiccClaw2   = null;
-    public DcMotor                      flDrive      = null;
-    public DcMotor                      frDrive      = null;
-    public DcMotor                      rlDrive      = null;
-    public DcMotor                      rrDrive      = null;
-    public ColorSensor                  color        = null;
-    public DcMotor                      gripper      = null;
-    public DcMotor                      lift         = null;
-    public DigitalChannel               limitTop     = null;
-    public DigitalChannel               limitGripper = null; // limit open switch for gripper
-    public DcMotor                      clawMotor    = null; // rotator motor for relic claw
-    public Servo                        blockEjector = null; // he eject but he also attac
+    public ModernRoboticsI2cRangeSensor rangeSensor      = null;
+    public Servo                        arm              = null;
+    public Servo                        thiccClaw1       = null;
+    public Servo                        thiccClaw2       = null;
+    public DcMotor                      flDrive          = null;
+    public DcMotor                      frDrive          = null;
+    public DcMotor                      rlDrive          = null;
+    public DcMotor                      rrDrive          = null;
+    public DcMotor                      armExtender      = null;
+    public ColorSensor                  color            = null;
+    public DcMotor                      gripper          = null;
+    public DcMotor                      lift             = null;
+    public DigitalChannel               limitTop         = null;
+    public DigitalChannel               limitGripper     = null; // limit open switch for gripper
+    public DcMotor                      clawMotor        = null; // rotator motor for relic claw
+    public Servo                        blockEjector     = null; // he eject but he also attac
 
     // vuforia license key ;)
     public static final String VUF_LIC = "AbQfkoj/////AAAAGURTD1LwoUjKk6qgxygb/6QTHah6F5/HMfF99SDO7C7wnhjBctp6i+bm/mX4El1OTHR8wW0gGjoM4qNsfM3cgFiMDHE4/IBhgpc2siB6nwrgEVZbo3PwJ0xImdXvTSEfWn8Fc6g+svSUFb97VAyjVAEsOvMC+sSqpjIKEQLoCdbCpLRmnX+9socxkX5qix9OVb0xREGbTtddp2fwtLleMXMHxUwhsTc3q7vqD5LDK7Q8GxOaV9jyB6/3Y3T65qaWOGjlGo39Ts394+WTp4hqwqvuu0Gkztlk2e6IeJbN9sN1+8xb2XQllnrHeBhIXxaoES1MRkyjMHliwQxbRJv8kwPeY9q/AsOA/dUy1x87iZLp";
@@ -87,6 +88,7 @@ public class Hardware750 {
         arm     = hwMap.get(Servo.class, "colorarm");
         color   = hwMap.get(ColorSensor.class, "color");
         lift    = hwMap.get(DcMotor.class, "lift");
+        armExtender    = hwMap.get(DcMotor.class, "armExtender");
         limitTop = hwMap.get(DigitalChannel.class, "limitTop");
         limitTop.setMode(DigitalChannel.Mode.INPUT);
         limitGripper = hwMap.get(DigitalChannel.class, "limitGripper");
@@ -124,6 +126,7 @@ public class Hardware750 {
         frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armExtender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // rem: this <i>may</i> cause issues with how the motor's speed
         // functions.
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
