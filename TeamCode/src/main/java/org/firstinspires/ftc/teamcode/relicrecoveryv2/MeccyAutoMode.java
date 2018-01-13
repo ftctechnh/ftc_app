@@ -1,18 +1,27 @@
 package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by Pilt on 12/14/17.
  */
 
 public abstract class MeccyAutoMode extends MeccyMode{
-
+    //
     PengwinFin pengwinFin;
     PengwinWing pengwinWing;
     double roationInches;
+    //
+    BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
     //
     //<editor-fold desc="Yay">
     abstract public void runOpMode();
@@ -21,7 +30,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
     //</editor-fold>
     //
     //<editor-fold desc="Extraneous">
-
+    //
     public void startify (){
         pengwinFin = new PengwinFin(hardwareMap);
         pengwinWing = new PengwinWing(hardwareMap);
@@ -125,6 +134,25 @@ public abstract class MeccyAutoMode extends MeccyMode{
         rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
         //
         setSpeed(speed);
+    }
+    //
+    public void turnWithGyro(double degrees, double speedDirection){
+        //<editor-fold desc="Gyro">
+        BNO055IMU.Parameters parameter = new BNO055IMU.Parameters();
+        parameter.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameter.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameter.calibrationDataFile = "GyroCal.json"; // see the calibration sample opmode
+        parameter.loggingEnabled = true;
+        parameter.loggingTag = "IMU";
+        parameter.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        //
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameter);
+        //</editor-fold>
+        double yaw = angles.firstAngle;
+        turn(speedDirection);
+        while (Math.abs(yaw - angles.firstAngle) < degrees){}
+        turn(0);
     }
     //</editor-fold>
     //
