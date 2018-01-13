@@ -177,7 +177,7 @@ public class APDS9930 {
 
     //the coefficents
     private enum GainLinearizationCoff {
-        COFF_1X(9715.293462, -1.207935787),
+        COFF_1X(10329.67742, -1.223433889),
         COFF_2X(66634.6608, -1.536053096),
         COFF_4X(93507.24087, -1.423473266),
         COFF_8X(274630.7561, -1.533135152);
