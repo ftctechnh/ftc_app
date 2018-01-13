@@ -30,6 +30,17 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     BNO055IMU imu;
     Orientation angles;
     //
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+    parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+    parameters.calibrationDataFile = "GyroCal.json"; // see the calibration sample opmode
+    parameters.loggingEnabled = true;
+    parameters.loggingTag = "IMU";
+    parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+    //
+    imu = hardwareMap.get(BNO055IMU.class, "imu");
+    imu.initialize(parameters);
+    //
     @Override
     //
     public void startify() {
