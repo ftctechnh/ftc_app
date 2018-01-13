@@ -30,7 +30,7 @@ public class Thing extends AutoMaster {
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
 
-        encode(5,0.5, MoveType.LATERALLY);
+        encode(10,0.5, MoveType.LATERALLY);
         }
     }
 
