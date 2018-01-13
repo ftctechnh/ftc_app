@@ -149,7 +149,7 @@ public class Autonomous_General extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(0.2);
+        jewelServo.setPosition(0);
         allOpenGlyphManipulator();
         light.setPower(0);
     }
