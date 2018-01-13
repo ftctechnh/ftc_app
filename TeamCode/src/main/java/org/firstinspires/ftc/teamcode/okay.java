@@ -53,5 +53,5 @@ public class okay extends OpMode {
             thiccClaw2.setPosition(OPEN_POS);
         }
         */
-    }
+}
 }

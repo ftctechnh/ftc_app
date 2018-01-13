@@ -176,9 +176,9 @@ public class MecanumRework extends OpMode {
         }
 
         try {
-            if (gamepad2.x) {
+            if (gamepad2.dpad_left) {
                 robot.clawMotor.setPower(0.25);
-            } else if (gamepad2.y) {
+            } else if (gamepad2.dpad_right) {
                 robot.clawMotor.setPower(-0.25);
             } else {
                 robot.clawMotor.setPower(0);
@@ -195,6 +195,16 @@ public class MecanumRework extends OpMode {
             robot.blockEjector.setPosition(0.75);
         } else if (!ejectorState) {
             robot.blockEjector.setPosition(0);
+        }
+
+        final double extendoSpeed = 0.3;
+
+        if(gamepad2.dpad_left) {
+            robot.armExtender.setPower(extendoSpeed);
+        } else if (gamepad2.dpad_right) {
+            robot.armExtender.setPower(-extendoSpeed);
+        } else {
+            robot.armExtender.setPower(0);
         }
 
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
