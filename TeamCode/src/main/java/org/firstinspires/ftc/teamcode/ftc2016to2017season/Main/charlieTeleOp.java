@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name = "charlie tele op test thingy")
-//@Disabled
+@Disabled
 public class charlieTeleOp extends OpMode {
 
 

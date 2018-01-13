@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ftc2016to2017season.chobani;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @Autonomous(name = "encoding")
+@Disabled
 public class encodin extends LinearOpMode {
 
     //initialization, like setup

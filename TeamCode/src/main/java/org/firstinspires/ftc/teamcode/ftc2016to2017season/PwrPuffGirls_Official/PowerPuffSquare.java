@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2016to2017season.PwrPuffGirls_Official;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @Autonomous(name = "powerpuffgirlssquare")
+@Disabled
 public class PowerPuffSquare extends LinearOpMode {
 
     public double encoder_ticks_per_rotation;

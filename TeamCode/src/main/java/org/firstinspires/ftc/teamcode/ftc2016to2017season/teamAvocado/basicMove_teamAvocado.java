@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2016to2017season.teamAvocado;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Rohan Bosworth on 7/16/17.
  */
 @Autonomous(name = "basicMove_teamAvocado")
+@Disabled
 public class basicMove_teamAvocado extends LinearOpMode{
 
 
