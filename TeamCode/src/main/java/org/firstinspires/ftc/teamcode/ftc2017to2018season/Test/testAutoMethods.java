@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
  * Created by inspirationteam on 11/20/17.
  */
 @Autonomous(name = "testAutoMethods")
+@Disabled
 public class testAutoMethods extends Autonomous_General {
 
     public void runOpMode(){

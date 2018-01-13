@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.StressTess.rev;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.StressTess.rev.Autonom
 
 //10-28-17
 @Autonomous(name="Servo Test_", group = "REV")
+@Disabled
 public class revServo extends Autonomous_General {
 
     DcMotor leftFront;

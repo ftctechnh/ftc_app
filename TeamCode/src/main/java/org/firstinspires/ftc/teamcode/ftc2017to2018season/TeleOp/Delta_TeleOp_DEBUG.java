@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "DeltaTeleOp_DEBUG")
-//@Disabled
+@Disabled
 public class Delta_TeleOp_DEBUG extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for

@@ -52,6 +52,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
 */
 @TeleOp(name = "Sensor: MR Gyro", group = "Sensor")
+@Disabled
 public class SensorMRGyro extends LinearOpMode {
 
   /** In this sample, for illustration purposes we use two interfaces on the one gyro object.

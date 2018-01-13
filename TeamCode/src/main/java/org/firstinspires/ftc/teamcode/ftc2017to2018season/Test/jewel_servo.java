@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @Autonomous(name="jewel_servo", group ="Autonomous")
+@Disabled
 public class jewel_servo extends LinearOpMode{
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle

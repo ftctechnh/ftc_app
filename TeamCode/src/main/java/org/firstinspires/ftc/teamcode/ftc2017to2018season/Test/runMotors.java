@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -16,7 +17,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 @TeleOp(name = "runMotors")
-//@Disabled
+@Disabled
 public class runMotors extends OpMode {
 
 

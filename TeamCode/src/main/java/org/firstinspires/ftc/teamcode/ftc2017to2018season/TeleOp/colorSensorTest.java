@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
@@ -12,12 +12,10 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "servo read position")
+@TeleOp(name = "color sensor test new")
 @Disabled
-public class servo_valueRead extends OpMode {
-/*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
-* This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
-* simple program and could work on a different robot with simple debugging and configuration.*/
+public class colorSensorTest extends OpMode {
+
 
     /*
         ---------------------------------------------------------------------------------------------
@@ -25,13 +23,9 @@ public class servo_valueRead extends OpMode {
        Define the actuators we use in the robot here
     */
 
-    Servo glyphServoRight;
-    Servo glyphServoLeft;
-    Servo jewel_servo;
+    ColorSensor colorSensor;
 
-    public double glyphLeftPos;
-    public double glyphRightPos;
-    public double jewelPos;
+
 
 
     //Initial value for slide motor
@@ -76,13 +70,12 @@ public class servo_valueRead extends OpMode {
     @Override
     public void init() {
 
-        glyphServoRight = hardwareMap.servo.get("glyphServoRight");
-        glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
-        jewel_servo = hardwareMap.servo.get("jewelServo");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        colorSensor.enableLed(true);
 
-        glyphServoLeft.setPosition(0.5);
-        glyphServoRight.setPosition(0.5);
-        jewel_servo.setPosition(0.5);
+        telemetry.addData("ready to go", "");
+        telemetry.update();
+
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
         telemetry.addData("jewel pos", jewel_servo.getPosition());
@@ -123,52 +116,14 @@ public class servo_valueRead extends OpMode {
     @Override
     public void loop() {
 
-        moveServos();
+       telemetry.addData("red value", colorSensor.red());
+       telemetry.addData("blue value", colorSensor.blue());
+       telemetry.update();
 
-        glyphLeftPos = glyphServoLeft.getPosition();
-        glyphRightPos = glyphServoRight.getPosition();
-        jewelPos = jewel_servo.getPosition();
 
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-        telemetry.addData("jewel pos", jewel_servo.getPosition());
-        telemetry.update();
 
     }
 
-    public void moveServos(){
-
-        if (gamepad1.dpad_up){
-
-            jewel_servo.setPosition(jewel_servo.getPosition() + 0.1);
-        }
-        else if (gamepad1.dpad_down){
-
-            jewel_servo.setPosition(jewel_servo.getPosition() -0.1);
-        }
-
-
-
-        if (gamepad1.y){
-
-            glyphServoRight.setPosition(glyphServoRight.getPosition() + 0.1);
-        }
-        else if (gamepad1.a){
-
-            glyphServoRight.setPosition(glyphServoRight.getPosition() -0.1);
-        }
-
-
-
-        if (gamepad1.left_bumper){
-
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition() + 0.1);
-        }
-        else if (gamepad1.right_bumper){
-
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition() -0.1);
-        }
-    }
 }
 
 //--------------------------------------------------------------------------------------------

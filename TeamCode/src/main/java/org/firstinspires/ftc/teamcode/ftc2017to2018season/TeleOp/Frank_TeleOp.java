@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "Frank_TeleOp")
-//@Disabled
+@Disabled
 public class Frank_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for

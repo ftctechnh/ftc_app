@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.StressTess.modernRobotics;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.StressTess.modernRobot
 
 //10-28-17
 @Autonomous(name="Servo Test", group = "MR")
+@Disabled
 public class mrServo extends Autonomous_General {
 
 

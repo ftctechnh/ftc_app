@@ -51,7 +51,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class Autonomous_General extends LinearOpMode {
     //we attached a light to make it easier to see the target
     public DcMotor light;
-    public double waitTime = 8;
+    public double waitTime = 5;
 
     public static double RobotWidth = 41.91;
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
