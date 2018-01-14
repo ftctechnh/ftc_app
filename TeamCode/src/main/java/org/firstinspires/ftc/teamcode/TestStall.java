@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 /**
  * Created by Sahithi on 1/3/18.
  */
+@Disabled
 @TeleOp(name = "Test Stall Prog Base",group = "Auto")
 public class TestStall extends LinearOpMode
 {

@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -351,6 +352,69 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
             {
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
+            }
+
+            stopDriveMotors();
+        }
+    }
+
+    public void driveStraight_In_Stall(float inches, double pow, Telemetry telemetry)
+    {
+        double velocitiesR = 0;
+        double velocitiesL = 0;
+        int loops = 0;
+        float encTarget = 1120 / wheelCircIn * inches;
+        //You get the number of encoder counts per unit and multiply it by how far you want to go
+
+        float absPow = (float) Math.abs(pow);
+        resetDriveEncoders();
+        //Notes: We are using Andymark Neverrest 40
+        // 1120 counts per rev
+
+        if (pow < 0)
+        {
+            inches *= -1;
+        }
+        if (inches < 0)
+        {
+            driveMotorsAuto(-absPow, -absPow);
+
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            {
+                // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.update();
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
+            }
+        } else
+        {
+            driveMotorsAuto(absPow, absPow);
+
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            {
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.update();
                 if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
