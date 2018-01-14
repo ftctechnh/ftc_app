@@ -123,19 +123,16 @@ public class JewelArm {
     |  Grab a frame from Vuforia, check out where the jewel should be, see if it's red or Blue.
     \------------------------------------------------------------------------------------- */
     public boolean blueIsOnLeft(Bitmap rgbImage) {
-        // play images are 1280x720 w x h  origin is lower right looking at vuforia image,  Lower Left from camer pov
+        // play images are 1280x720 w x h  origin is lower right looking at vuforia image,  Lower Left from camera pov
         // x is vertical, y is horizontal (for portrait orientation)
-//        int XStart = (int) ((double) rgbImage.getWidth() * 0.75);
-//        int XEnd = (int) ((double) rgbImage.getWidth() * 1.0);
-//
-//        int yStart = (int) ((double) rgbImage.getHeight() * 0.0);
-//        int yEnd = (int) ((double) rgbImage.getHeight() * 0.25);
 
-        int XStart = 1000;
-        int XEnd =1280;
+        // go for a square that is inside the ball (ball is about 350x 350,  sample 250x250;
 
+        int XStart = 1280-300;
+        int XEnd =1280-50;
         int yStart =0;
-        int yEnd = 400;
+        int yEnd = 300-50;
+
         int RedValue = 0;
         int BlueValue = 0;
 

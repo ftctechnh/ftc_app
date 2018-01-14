@@ -114,8 +114,8 @@ public class MenuFileHandler2 {
             menuincrement[2] = 1;
             menuvaluetoken[2][0] = "Glyph";
             menuvaluetoken[2][1] = "Relic";
-            menuvaluetoken[2][2] = "Test";
-            menuvaluetoken[2][3] = "Demo";
+            menuvaluetoken[2][2] = "Demo ";
+            menuvaluetoken[2][3] = "Test ";
         }
         mode = menuvalue[2];
 
@@ -124,7 +124,7 @@ public class MenuFileHandler2 {
             menuvalue[3] = 0.5;
             menulowerlimit[3] =  0;
             menuupperlimit[3] = 2;
-            menuincrement[3] = 0.050000;
+            menuincrement[3] = 0.05;
         }
         DriveSpeed = menuvalue[3];
 

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Qualifier;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -43,22 +42,25 @@ public class MenuFileHandler {
     // all data here
     public boolean teamIsRed;
     public boolean startPositionIsFront;
-    public Integer mode,distance1,heading1,distance2,heading2;
     public double DriveSpeed;
-    public float BlueFrontDistance1,BlueFrontHeading1,BlueFrontTurn1,BlueFrontDistance2,BlueFrontHeading2;
-    public float RedFrontDistance1,RedFrontHeading1,RedFrontTurn1,RedFrontDistance2,RedFrontHeading2;
-    public float BlueBackDistance1,BlueBackHeading1,BlueBackDistance2,BlueBackHeading2,BlueBackTurn3,BlueBackDistance3,BlueBackHeading3 ;
-    public float RedBackDistance1,RedBackHeading1,RedBackDistance2,RedBackHeading2,RedBackDistance3,RedBackHeading3 ;
+
+    public double mode,distance1,distance2;
+
+    public double BlueFrontDistance1Right,BlueFrontDistance1Center,BlueFrontDistance1Left,BlueFrontHeading1,BlueFrontTurn1,BlueFrontDistance2,BlueFrontHeading2;
+    public double RedFrontDistance1Right,RedFrontDistance1Center,RedFrontDistance1Left,RedFrontHeading1,RedFrontTurn1,RedFrontDistance2,RedFrontHeading2;
+    public double BlueBackDistance1,BlueBackHeading1,BlueBackDistance2Right,BlueBackDistance2Center,BlueBackDistance2Left,BlueBackHeading2,BlueBackTurn3,BlueBackDistance3,BlueBackHeading3 ;
+    public double RedBackDistance1,RedBackHeading1,RedBackDistance2Right,RedBackDistance2Center,RedBackDistance2Left,RedBackHeading2,RedBackDistance3,RedBackHeading3 ;
 
 
 
     //    //Menu Variables
-    public int      nitems = 27;    //
+    public int      nitems = 35;    //
     //public String[]  menulabel = {"waitTime","shooterWait","shooterForwardTime","shooterForwardAfterShoot","driveSpeed","whiteColor","driveBackTime"};
-    public String  menulabel[] = new String[nitems];
-    public int     menuvalue[] = new int[nitems];
-    public int     menulowerlimit[] = new int[nitems];
-    public int     menuupperlimit[] = new int[nitems];
+    public String       menulabel[] = new String[nitems];
+    public double       menuvalue[] = new double[nitems];
+    public double  menulowerlimit[] = new double[nitems];
+    public double  menuupperlimit[] = new double[nitems];
+    public double   menuincrement[] = new double[nitems];
     public String  menuvaluetoken[][] = new String[nitems][5];
 
 
@@ -70,6 +72,7 @@ public class MenuFileHandler {
         menuvalue[i] = 0;
         menulowerlimit[i] = 0;
         menuupperlimit[i] = 100;
+        menuincrement[i] = 1;
             menuvaluetoken[i][0] = "";
             menuvaluetoken[i][1] = "";
             menuvaluetoken[i][2] = "";
@@ -86,6 +89,7 @@ public class MenuFileHandler {
             menuvalue[0] = 1;
             menulowerlimit[0] = 0;
             menuupperlimit[0] = 1;
+            menuincrement[0] = 1;
             menuvaluetoken[0][0] = "Blue";
             menuvaluetoken[0][1] = "Red";
         }
@@ -96,6 +100,7 @@ public class MenuFileHandler {
             menuvalue[1] = 1;
             menulowerlimit[1] = 0;
             menuupperlimit[1] = 1;
+            menuincrement[1] = 1;
             menuvaluetoken[1][0] = "Back";
             menuvaluetoken[1][1] = "Front";
         }
@@ -106,206 +111,303 @@ public class MenuFileHandler {
             menuvalue[2] = 0;
             menulowerlimit[2] = 0;
             menuupperlimit[2] = 3;
+            menuincrement[2] = 1;
             menuvaluetoken[2][0] = "Glyph";
             menuvaluetoken[2][1] = "Relic";
-            menuvaluetoken[2][2] = "Test";
-            menuvaluetoken[2][3] = "Demo";
+            menuvaluetoken[2][2] = "Demo ";
+            menuvaluetoken[2][3] = "Test ";
         }
         mode = menuvalue[2];
 
         if (init) {
-            menulabel[3] = "Drive Speed x10 ";
-            menuvalue[3] = 5;
+            menulabel[3] = "Drive Speed  ";
+            menuvalue[3] = 0.5;
             menulowerlimit[3] =  0;
-            menuupperlimit[3] = 10;
+            menuupperlimit[3] = 2;
+            menuincrement[3] = 0.05;
         }
-        DriveSpeed = menuvalue[3]/10.0;
+        DriveSpeed = menuvalue[3];
 
         if (init) {
-            menulabel[4] = "RED Front Drive   1";
+            menulabel[4] = "RED Front Distance 1 RIGHT";
             menuvalue[4] = -34;
             menulowerlimit[4] = -50;
             menuupperlimit[4] =  50;
+            menuincrement[4] = 0.5;
         }
-        RedFrontDistance1 = menuvalue[4];
+        RedFrontDistance1Right = menuvalue[4];
 
         if (init) {
-            menulabel[5] = "RED Front Heading 1";
-            menuvalue[5] = 0;
-            menulowerlimit[5] = -180;
-            menuupperlimit[5] =  180;
+            menulabel[5] = "RED Front Distance 1 CENTER";
+            menuvalue[5] = -34 - 10;
+            menulowerlimit[5] = -50;
+            menuupperlimit[5] =  50;
+            menuincrement[5] = 0.5;
         }
-        RedFrontHeading1 = menuvalue[5];
+        RedFrontDistance1Center = menuvalue[5];
 
         if (init) {
-            menulabel[6] = "RED Front Turn    1";
-            menuvalue[6] = -90;
-            menulowerlimit[6] = -180;
-            menuupperlimit[6] =  180;
+            menulabel[6] = "RED Front Distance 1 LEFT";
+            menuvalue[6] = -34 - 19;
+            menulowerlimit[6] = -50;
+            menuupperlimit[6] =  50;
+            menuincrement[6] = 0.5;
         }
-        RedFrontTurn1 = menuvalue[6];
+        RedFrontDistance1Left = menuvalue[6];
 
         if (init) {
-            menulabel[7] = "RED Front Drive   2";
-            menuvalue[7] = -9;
-            menulowerlimit[7] = -50;
-            menuupperlimit[7] =  50;
+            menulabel[7] = "RED Front Heading 1";
+            menuvalue[7] = 0;
+            menulowerlimit[7] = -180;
+            menuupperlimit[7] =  180;
+            menuincrement[7] = 1.0;
         }
-        RedFrontDistance2 = menuvalue[7];
+        RedFrontHeading1 = menuvalue[7];
 
         if (init) {
-            menulabel[8] = "RED Front Heading 2";
+            menulabel[8] = "RED Front Turn    1";
             menuvalue[8] = -90;
             menulowerlimit[8] = -180;
             menuupperlimit[8] =  180;
+            menuincrement[8] = 0.5;
         }
-        RedFrontHeading2 = menuvalue[8];   //fb 3-7
+        RedFrontTurn1 = menuvalue[8];
 
         if (init) {
-            menulabel[9] = "BLUE Front Drive   1";
-            menuvalue[9] = 34;
+            menulabel[9] = "RED Front Distance 2";
+            menuvalue[9] = -9;
             menulowerlimit[9] = -50;
             menuupperlimit[9] =  50;
+            menuincrement[9] = 0.5;
         }
-        BlueFrontDistance1 = menuvalue[9];
+        RedFrontDistance2 = menuvalue[9];
 
         if (init) {
-            menulabel[10] = "BLUE Front Heading 1";
-            menuvalue[10] = 0;
+            menulabel[10] = "RED Front Heading 2";
+            menuvalue[10] = -90;
             menulowerlimit[10] = -180;
             menuupperlimit[10] =  180;
+            menuincrement[10] = 1.0;
         }
-       BlueFrontHeading1 = menuvalue[10];
+        RedFrontHeading2 = menuvalue[10];   //fb 3-7
 
         if (init) {
-            menulabel[11] = "BLUE Front Turn    1";
-            menuvalue[11] = -90;
-            menulowerlimit[11] = -180;
-            menuupperlimit[11] =  180;
+            menulabel[11] = "BLUE Front Distance 1 RIGHT";
+            menuvalue[11] = 34;
+            menulowerlimit[11] = -50;
+            menuupperlimit[11] =  50;
+            menuincrement[11] = 0.5;
         }
-        BlueFrontTurn1 = menuvalue[11];
+        BlueFrontDistance1Right = menuvalue[11];
 
         if (init) {
-            menulabel[12] = "BLUE Front Drive   2";
-            menuvalue[12] = -9;
+            menulabel[12] = "BLUE Front Distance 1 CENTER";
+            menuvalue[12] = 34 + 10;
             menulowerlimit[12] = -50;
             menuupperlimit[12] =  50;
+            menuincrement[12] = 0.5;
         }
-        BlueFrontDistance2 = menuvalue[12];
+        BlueFrontDistance1Center = menuvalue[12];
 
         if (init) {
-            menulabel[13] = "BLUE Front Heading 2";
-            menuvalue[13] =  -90;
-            menulowerlimit[13] = -180;
-            menuupperlimit[13] =  180;
+            menulabel[13] = "BLUE Front Distance 1 LEFT";
+            menuvalue[13] = 34 + 19;
+            menulowerlimit[13] = -50;
+            menuupperlimit[13] =  50;
+            menuincrement[13] = 0.5;
         }
-       BlueFrontHeading2 = menuvalue[13];
+        BlueFrontDistance1Left = menuvalue[13];
 
         if (init) {
-            menulabel[14] = "RED Back Drive   1";
-            menuvalue[14] = -30;
-            menulowerlimit[14] = -50;
-            menuupperlimit[14] =  50;
+            menulabel[14] = "BLUE Front Heading 1";
+            menuvalue[14] = 0;
+            menulowerlimit[14] = -180;
+            menuupperlimit[14] =  180;
+            menuincrement[14] = 1.0;
         }
-       RedBackDistance1 = menuvalue[14];
+       BlueFrontHeading1 = menuvalue[14];
 
         if (init) {
-            menulabel[15] = "RED Back Heading 1";
-            menuvalue[15] = 2;
+            menulabel[15] = "BLUE Front Turn    1";
+            menuvalue[15] = -90;
             menulowerlimit[15] = -180;
             menuupperlimit[15] =  180;
+            menuincrement[15] = 0.5;
         }
-        RedBackHeading1 = menuvalue[15];
+        BlueFrontTurn1 = menuvalue[15];
 
         if (init) {
-            menulabel[16] = "RED Back Drive   2";
-            menuvalue[16] = 6;
+            menulabel[16] = "BLUE Front Distance 2";
+            menuvalue[16] = -9;
             menulowerlimit[16] = -50;
             menuupperlimit[16] =  50;
+            menuincrement[16] = 0.5;
         }
-        RedBackDistance2 = menuvalue[16];
+        BlueFrontDistance2 = menuvalue[16];
 
         if (init) {
-            menulabel[17] = "RED Back Heading 2";
-            menuvalue[17] = 0;
+            menulabel[17] = "BLUE Front Heading 2";
+            menuvalue[17] =  -90;
             menulowerlimit[17] = -180;
             menuupperlimit[17] =  180;
+            menuincrement[17] = 1.0;
         }
-        RedBackHeading2 = menuvalue[17];
+       BlueFrontHeading2 = menuvalue[17];
 
         if (init) {
-            menulabel[18] = "RED Back Drive   3";
-            menuvalue[18] = -9;
+            menulabel[18] = "RED Back Distance 1";
+            menuvalue[18] = -30;
             menulowerlimit[18] = -50;
             menuupperlimit[18] =  50;
+            menuincrement[18] = 0.5;
         }
-        RedBackDistance3 = menuvalue[18];
+       RedBackDistance1 = menuvalue[18];
 
         if (init) {
-            menulabel[19] = "RED Back Heading 3";
+            menulabel[19] = "RED Back Heading 1";
             menuvalue[19] = 0;
             menulowerlimit[19] = -180;
             menuupperlimit[19] =  180;
+            menuincrement[19] = 1.0;
         }
-        RedBackHeading3 = menuvalue[19];
+        RedBackHeading1 = menuvalue[19];
 
         if (init) {
-            menulabel[20] = "BLUE Back Drive   1";
-            menuvalue[20] = 30;
+            menulabel[20] = "RED Back Distance 2 RIGHT";
+            menuvalue[20] = 7;
             menulowerlimit[20] = -50;
             menuupperlimit[20] =  50;
+            menuincrement[20] = 0.5;
         }
-        BlueBackDistance1 = menuvalue[20];
-
+        RedBackDistance2Right = menuvalue[20];
+       
         if (init) {
-            menulabel[21] = "BLUE Back Heading 1";
-            menuvalue[21] = 0;
-            menulowerlimit[21] = -180;
-            menuupperlimit[21] =  180;
+            menulabel[21] = "RED Back Distance 2 CENTER";
+            menuvalue[21] = 7 + 10.5;
+            menulowerlimit[21] = -50;
+            menuupperlimit[21] =  50;
+            menuincrement[21] = 0.5;
         }
-        BlueBackHeading1 = menuvalue[21];
-
+        RedBackDistance2Center = menuvalue[21];
+        
         if (init) {
-            menulabel[22] = "BLUE Back Drive   2";
-            menuvalue[22] = 4;
+            menulabel[22] = "RED Back Distance 2 LEFT";
+            menuvalue[22] = 7 + 22;
             menulowerlimit[22] = -50;
             menuupperlimit[22] =  50;
+            menuincrement[22] = 0.5;
         }
-        BlueBackDistance2 = menuvalue[22];
+        RedBackDistance2Left = menuvalue[22];
 
         if (init) {
-            menulabel[23] = "BLUE Back Heading 2";
+            menulabel[23] = "RED Back Heading 2";
             menuvalue[23] = 0;
             menulowerlimit[23] = -180;
             menuupperlimit[23] =  180;
+            menuincrement[23] = 1.0;
         }
-        BlueBackHeading2 = menuvalue[23];
+        RedBackHeading2 = menuvalue[23];
+
+        if (init) {
+            menulabel[24] = "RED Back Distance 3 Right";
+            menuvalue[24] = -9;
+            menulowerlimit[24] = -50;
+            menuupperlimit[24] =  50;
+            menuincrement[24] = 0.5;
+        }
+        RedBackDistance3 = menuvalue[24];
+
+        if (init) {
+            menulabel[25] = "RED Back Heading 3";
+            menuvalue[25] = 0;
+            menulowerlimit[25] = -180;
+            menuupperlimit[25] =  180;
+            menuincrement[25] = 1.0;
+        }
+        RedBackHeading3 = menuvalue[25];
+
+        if (init) {
+            menulabel[26] = "BLUE Back Distance 1";
+            menuvalue[26] = 30;
+            menulowerlimit[26] = -50;
+            menuupperlimit[26] =  50;
+            menuincrement[26] = 0.5;
+        }
+        BlueBackDistance1 = menuvalue[26];
+
+        if (init) {
+            menulabel[27] = "BLUE Back Heading 1";
+            menuvalue[27] = 0;
+            menulowerlimit[27] = -180;
+            menuupperlimit[27] =  180;
+            menuincrement[27] = 1.0;
+        }
+        BlueBackHeading1 = menuvalue[27];
+
+        if (init) {
+            menulabel[28] = "BLUE Back Distance 2 LEFT";
+            menuvalue[28] = 7;
+            menulowerlimit[28] = -50;
+            menuupperlimit[28] =  50;
+            menuincrement[28] = 0.5;
+        }
+        BlueBackDistance2Left = menuvalue[28];
+
+        if (init) {
+            menulabel[29] = "BLUE Back Distance 2 CENTER";
+            menuvalue[29] = 7 + 10.5;
+            menulowerlimit[29] = -50;
+            menuupperlimit[29] =  50;
+            menuincrement[29] = 0.5;
+        }
+        BlueBackDistance2Center = menuvalue[29];
+
+        if (init) {
+            menulabel[30]= "BLUE Back Distance 2 RIGHT";
+            menuvalue[30] = 7 + 22.0;
+            menulowerlimit[30] = -50;
+            menuupperlimit[30] =  50;
+            menuincrement[30] = 0.5;
+        }
+        BlueBackDistance2Right = menuvalue[30];
+
+        if (init) {
+            menulabel[31]= "BLUE Back Heading 2";
+            menuvalue[31]= 0;
+            menulowerlimit[31]= -180;
+            menuupperlimit[31]=  180;
+            menuincrement[31]= 1.0;
+        }
+        BlueBackHeading2 = menuvalue[31];
 
         // need a turn180 here
         if (init) {
-            menulabel[24] = "BLUE Turn   3";
-            menuvalue[24] = 180;
-            menulowerlimit[24] = -180;
-            menuupperlimit[24] =  180;
+            menulabel[32] = "*BLUE Back Turn   3";
+            menuvalue[32] = 180;
+            menulowerlimit[32] = -180;
+            menuupperlimit[32] =  180;
+            menuincrement[32] = 0.5;
         }
-        BlueBackTurn3 = menuvalue[24];
+        BlueBackTurn3 = menuvalue[32];
 
 
         if (init) {
-            menulabel[25] = "BLUE Back Drive   3";
-            menuvalue[25] = -12;
-            menulowerlimit[25] = -50;
-            menuupperlimit[25] =  50;
+            menulabel[33] = "BLUE Back Distance 3";
+            menuvalue[33] = -12;
+            menulowerlimit[33] = -50;
+            menuupperlimit[33] =  50;
+            menuincrement[33] = 0.5;
         }
-        BlueBackDistance3 = menuvalue[25];
+        BlueBackDistance3 = menuvalue[33];
 
         if (init) {
-            menulabel[26] = "BLUE Back Heading 3";
-            menuvalue[26] = 180;
-            menulowerlimit[26] = -180;
-            menuupperlimit[26] =  180;
+            menulabel[34] = "BLUE Back Heading 3";
+            menuvalue[34] = 180;
+            menulowerlimit[34] = -180;
+            menuupperlimit[34] =  180;
+            menuincrement[34] = 1.0;
         }
-        BlueBackHeading3 = menuvalue[26];
+        BlueBackHeading3 = menuvalue[34];
 
 
     }
@@ -326,7 +428,8 @@ public class MenuFileHandler {
             while ((s = br.readLine()) != null && i < menuvalue.length) {                // read the label then the value they are on separate lines
                 menulabel[i] = s;                                   //Updates the label "string" of our array
                 //s = br.readLine();
-                menuvalue[i] = Integer.parseInt(br.readLine());                //values is our integer array, converts string to integer
+//                menuvalue[i] = Integer.parseInt(br.readLine());                //values is our integer array, converts string to integer
+                menuvalue[i] = Double.parseDouble(br.readLine());                //values is our integer array, converts string to integer
 
                 i += 1;                                         //Only to do with our array
             }
@@ -344,24 +447,23 @@ public class MenuFileHandler {
         int index = 0;
         boolean aisreleased = true, yisreleased = true, bisreleased = true, xisreleased = true;
 
-
         while ( !gamepad.right_stick_button) {
             telemetry.addLine("===> Press Right Joystick to exit EDIT mode <===" );
-            telemetry.addLine("####    " + menuvaluetoken[0][menuvalue[0]]+" " +menuvaluetoken[1][menuvalue[1]]+" " +menuvaluetoken[2][menuvalue[2]] +"   ####");
+            telemetry.addLine("####    " + menuvaluetoken[0][((int)menuvalue[0])] +" " +menuvaluetoken[1][(int)menuvalue[1]]+" " +menuvaluetoken[2][(int)menuvalue[2]] +"   ####");
 //            telemetry.addLine("#######    " + menuvaluetoken[0][menuvalue[0]] +"   " +  menuvaluetoken[1][menuvalue[1]] + "  " +  menuvaluetoken[3][menuvalue[3]] +"    ######");
             telemetry.addLine("");
             for ( int i=0; i < menulabel.length; i++){                     // write out the list of variables
                 if ( i == index ) {                                        // if the index, add an arrow
                     if (menuvaluetoken[i][1] != "" ) {                           // menu items that need tokens should be less than 5
 //                    if (menuupperlimit[i] < 5) {                           // menu items that need tokens should be less than 5
-                    telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][menuvalue[i]] + "  <<======" );
+                    telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][(int)menuvalue[i]] + "  <<======" );
                     }else{
                     telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  <<======");
                     }
                 }else{
                     if (menuvaluetoken[i][1] != "" ) {                           // menu items that need tokens should be less than 5
 //                        if (menuupperlimit[i] < 5 ) {                           // menu items that need tokens should be less than 5
-                        telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][menuvalue[i]] );
+                        telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][(int)menuvalue[i]] );
                     }else{
                         telemetry.addLine().addData(menulabel[i], menuvalue[i]);
                     }
@@ -390,7 +492,7 @@ public class MenuFileHandler {
             if (gamepad.b) {
                 if (bisreleased) {
                     bisreleased = false;
-                    menuvalue[index] += 1;
+                    menuvalue[index] += menuincrement[index];
                 }
             } else {
                 bisreleased = true;
@@ -398,7 +500,7 @@ public class MenuFileHandler {
             if (gamepad.x) {
                 if (xisreleased) {
                     xisreleased = false;
-                    menuvalue[index] -= 1;
+                    menuvalue[index] -= menuincrement[index];
                 }
             } else {
                 xisreleased = true;
@@ -470,7 +572,7 @@ public class MenuFileHandler {
         for ( int i=0; i < 4; i++){                     // write out the list of variables
             if (menuvaluetoken[i][1] != "" ) {                           // menu items that need tokens should be less than 5
 //                        if (menuupperlimit[i] < 5 ) {                           // menu items that need tokens should be less than 5
-                    telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][menuvalue[i]] );
+                    telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][(int)menuvalue[i]] );
                 }else{
                     telemetry.addLine().addData(menulabel[i], menuvalue[i]);
                 }
@@ -478,18 +580,18 @@ public class MenuFileHandler {
         }
         //rf 3-7  bf 8-12  rb 13 18 bb 19-25
         if(teamIsRed && startPositionIsFront) {
-            indexstart=4; indexend=8;
+            indexstart=4; indexend=10;
         } else if(!teamIsRed && startPositionIsFront ) {
-            indexstart=9; indexend=13;
+            indexstart=11; indexend=17;
         } else if(teamIsRed && !startPositionIsFront ) {
-            indexstart=14; indexend=19;
+            indexstart=18; indexend=25;
         } else if(!teamIsRed && !startPositionIsFront ) {
-            indexstart=20; indexend=26;
+            indexstart=26; indexend=34;
         }
         for ( int i=indexstart; i <= indexend; i++){                     // write out the list of variables
             if (menuvaluetoken[i][1] != "" ) {                           // menu items that need tokens should be less than 5
 //                        if (menuupperlimit[i] < 5 ) {                           // menu items that need tokens should be less than 5
-                telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][menuvalue[i]] );
+                telemetry.addLine().addData(menulabel[i], menuvalue[i] + "  " + menuvaluetoken[i][(int)menuvalue[i]] );
             }else{
                 telemetry.addLine().addData(menulabel[i], menuvalue[i]);
             }
