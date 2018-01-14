@@ -49,7 +49,7 @@ public class Robot {
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
     private int ultraRange = 0;
-    private int distanceThreshold = 5;
+    private int distanceThreshold = 8;
     private int columnPassed = 0;
     private boolean distanceChange = false;
     private RelicRecoveryVuMark currentColumn;
@@ -126,9 +126,9 @@ public class Robot {
 
     private void driveDirection(AllianceColor color) {
         if (color == AllianceColor.RED) {
-            driveTrain.drive(DriveTrain.Direction.E, strafePower);
-        } else {
             driveTrain.drive(DriveTrain.Direction.W, strafePower);
+        } else {
+            driveTrain.drive(DriveTrain.Direction.E, strafePower);
         }
     }
 
@@ -149,6 +149,7 @@ public class Robot {
 
         telemetry.addData("Column Passed", columnPassed);
         telemetry.addData("Goal Column", goalColumn);
+        telemetry.addData("Raw Ultrasonic", rawUltrasonic());
 
         if (goalColumn != currentColumn) {
             driveDirection(color);
@@ -158,5 +159,8 @@ public class Robot {
             return true;
         }
 
+    }
+    public boolean firstColumn(AllianceColor color, Telemetry telemetry) {
+        return false;
     }
 }
