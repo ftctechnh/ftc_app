@@ -16,7 +16,8 @@ public class testRangeMovement extends OpMode {
 
     private Robot robot;
 
-    private boolean canMove = false;
+    private boolean canMove1 = false;
+    private boolean canMove2 = false;
 
     @Override
     public void init() {
@@ -25,10 +26,16 @@ public class testRangeMovement extends OpMode {
 
     @Override
     public void loop() {
-        if (canMove) {
-            canMove = !robot.columnMove(RelicRecoveryVuMark.CENTER, AllianceColor.RED, telemetry);
+        if (canMove1) {
+            canMove1 = !robot.columnMove(RelicRecoveryVuMark.CENTER, AllianceColor.RED, telemetry);
         } else {
-            canMove = gamepad1.a;
+            canMove1 = gamepad1.a;
+        }
+
+        if (canMove2) {
+            canMove2 = !robot.firstColumn(AllianceColor.RED, telemetry);
+        } else {
+            canMove2 = gamepad1.b;
         }
     }
 }

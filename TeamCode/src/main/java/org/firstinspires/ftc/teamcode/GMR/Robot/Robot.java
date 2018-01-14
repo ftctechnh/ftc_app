@@ -126,9 +126,9 @@ public class Robot {
 
     private void driveDirection(AllianceColor color) {
         if (color == AllianceColor.RED) {
-            driveTrain.drive(DriveTrain.Direction.W, strafePower);
-        } else {
             driveTrain.drive(DriveTrain.Direction.E, strafePower);
+        } else {
+            driveTrain.drive(DriveTrain.Direction.W, strafePower);
         }
     }
 
@@ -161,6 +161,22 @@ public class Robot {
 
     }
     public boolean firstColumn(AllianceColor color, Telemetry telemetry) {
-        return false;
+
+        if ((rawUltrasonic() <= ultraRange - distanceThreshold) && ultraRange != 0) {
+            columnPassed += 1;
+        }
+
+        ultraRange = rawUltrasonic();
+
+        telemetry.addData("Column Passed", columnPassed);
+        telemetry.addData("Raw Ultrasonic", rawUltrasonic());
+
+        if (columnPassed >= 1) {
+            driveTrain.stop();
+            return true;
+        } else {
+            driveDirection(color);
+            return false;
+        }
     }
 }
