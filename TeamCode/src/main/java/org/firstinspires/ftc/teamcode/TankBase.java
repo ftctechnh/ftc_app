@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -26,6 +27,9 @@ public class TankBase
     private BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
+    int loops = 0;
+    double velocitiesR = 0;
+    double velocitiesL = 0;
 
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
     private float roboDiameterCm = (float)(45.7*Math.PI); // can be adjusted
@@ -103,7 +107,7 @@ public class TankBase
         driveMotors(-lPow, -rPow);
     }
 
-    public void driveStraight_In_Stall(float inches, double pow)
+    public void driveStraight_In_Stall(float inches, double pow, Telemetry telemetry)
     {
         float encTarget = 1120 / wheelCircIn * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
@@ -124,7 +128,7 @@ public class TankBase
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
                 // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0)
+                if (Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5)
                     break;
             }
         } else
@@ -133,10 +137,15 @@ public class TankBase
 
             while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
             {
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0)
-                {
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+
+                telemetry.addData("RightVel ", getDriveRightOne().getVelocity(AngleUnit.DEGREES));
+                telemetry.addData("RightVel ", getDriveRightOne().getVelocity(AngleUnit.DEGREES));
+                if (Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5)
                     break;
-                }
+                telemetry.update();
             }
 
             stopDriveMotors();

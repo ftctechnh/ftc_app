@@ -663,13 +663,12 @@ public class NewRobotFinal
 
     public void fineMoveLift(float y, float factor)
     {
-
-
         if (y > .3)
         {
             liftDir = STOP_L;
             liftMotor.setPower(Math.abs(y * factor));
-        } else if (y < -.3)
+        }
+        else if (y < -.3)
         {
             liftDir = STOP_L;
             liftMotor.setPower(-Math.abs(factor * y));
