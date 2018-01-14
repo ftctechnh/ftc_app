@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.GMR.Robot;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.BlockLift;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.RelicGrab;
@@ -42,6 +46,14 @@ public class Robot {
     private Servo rightColor;
     private Servo leftColor;
 
+    private ModernRoboticsI2cRangeSensor rangeSensor;
+
+    private int ultraRange = 0;
+    private int distanceThreshold = 5;
+    private int columnPassed = 0;
+    private boolean distanceChange = false;
+    private RelicRecoveryVuMark currentColumn;
+    private double strafePower = .25;
 
     public Robot (HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -65,6 +77,8 @@ public class Robot {
         relicTilt = hardwareMap.servo.get("relictilt");
         relicClamp = hardwareMap.servo.get("relicclamp");
 
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
+
         rightColor.setPosition(0);
         leftColor.setPosition(0.85);
 
@@ -82,4 +96,67 @@ public class Robot {
         leftColor.setPosition(0.85);
     }
 
+    private int rawUltrasonic() {
+        return rangeSensor.rawUltrasonic();
+    }
+
+    private RelicRecoveryVuMark getCurrentColumn(int columnPassed, AllianceColor color) {
+        if (color == AllianceColor.RED) {
+            switch (columnPassed) {
+                case 1:
+                    return(RelicRecoveryVuMark.RIGHT);
+                case 2:
+                    return(RelicRecoveryVuMark.CENTER);
+                case 3:
+                    return(RelicRecoveryVuMark.LEFT);
+
+            }
+        } else {
+            switch (columnPassed) {
+                case 1:
+                    return(RelicRecoveryVuMark.LEFT);
+                case 2:
+                    return(RelicRecoveryVuMark.CENTER);
+                case 3:
+                    return(RelicRecoveryVuMark.RIGHT);
+            }
+        }
+        return RelicRecoveryVuMark.UNKNOWN;
+    }
+
+    private void driveDirection(AllianceColor color) {
+        if (color == AllianceColor.RED) {
+            driveTrain.drive(DriveTrain.Direction.E, strafePower);
+        } else {
+            driveTrain.drive(DriveTrain.Direction.W, strafePower);
+        }
+    }
+
+    public boolean columnMove(RelicRecoveryVuMark goalColumn, AllianceColor color, Telemetry telemetry) {
+
+        if (ultraRange != 0) {
+            if ((rawUltrasonic() >= ultraRange + distanceThreshold) && !distanceChange) {
+                columnPassed += 1;
+                distanceChange = true;
+            } else if (rawUltrasonic() >= ultraRange - distanceThreshold) {
+                distanceChange = false;
+            }
+        }
+
+        ultraRange = rawUltrasonic();
+
+        currentColumn = getCurrentColumn(columnPassed, color);
+
+        telemetry.addData("Column Passed", columnPassed);
+        telemetry.addData("Goal Column", goalColumn);
+
+        if (goalColumn != currentColumn) {
+            driveDirection(color);
+            return false;
+        } else {
+            driveTrain.stop();
+            return true;
+        }
+
+    }
 }
