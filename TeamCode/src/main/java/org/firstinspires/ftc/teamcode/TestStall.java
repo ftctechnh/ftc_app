@@ -36,14 +36,14 @@ public class TestStall extends LinearOpMode
                 //left is opposite because drive motors flips it
                 while (newRobot.driveLeftOne.getCurrentPosition() < -encTarget && newRobot.driveRightOne.getCurrentPosition() > encTarget) {
                     // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) > -10 || driveLeftOne.getVelocity(AngleUnit.DEGREES) < 10)
+                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) > -5 || driveLeftOne.getVelocity(AngleUnit.DEGREES) < 5)
                         break;
                 }
             } else {
                 newRobot.driveMotorsAuto(absPow, absPow);
 
                 while (newRobot.driveLeftOne.getCurrentPosition() > -encTarget && newRobot.driveRightOne.getCurrentPosition() < encTarget) {
-                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) < 10 || driveLeftOne.getVelocity(AngleUnit.DEGREES) > -10) {
+                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) < 5 || driveLeftOne.getVelocity(AngleUnit.DEGREES) > -5) {
                         break;
                     }
                 }
