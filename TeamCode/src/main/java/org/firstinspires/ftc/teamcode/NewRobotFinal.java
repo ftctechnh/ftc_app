@@ -323,7 +323,8 @@ public class NewRobotFinal
 
     public void driveStraight_In_Stall(float inches, double pow)
     {
-        float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
+        int loops = 0;
+        float encTarget = 1120 / wheelCircIn * inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         float absPow = (float) Math.abs(pow);
@@ -341,8 +342,7 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
-                // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0)
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
         } else
@@ -351,10 +351,8 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
             {
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0)
-                {
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
-                }
             }
 
             stopDriveMotors();

@@ -128,7 +128,18 @@ public class TankBase
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
                 // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                if (Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5)
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.update();
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
         } else
@@ -145,9 +156,11 @@ public class TankBase
                 telemetry.addData("RightVel ",rVel);
                 telemetry.addData("LeftVel ",lVel);
                 telemetry.addData("Average", null);
-                if (Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5)
-                    break;
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
                 telemetry.update();
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                 break;
             }
 
             stopDriveMotors();

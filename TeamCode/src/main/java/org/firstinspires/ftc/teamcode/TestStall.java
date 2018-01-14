@@ -18,11 +18,10 @@ public class TestStall extends LinearOpMode
     {
         robot = new TankBase(hardwareMap);
         waitForStart();
-        robot.driveStraight_In_Stall(25, .5, telemetry);
+        robot.driveStraight_In_Stall(35, .5, telemetry);
         while(!gamepad1.a)
         {
-            telemetry.addData("RightVel ", robot.getDriveRightOne().getVelocity(AngleUnit.DEGREES));
-            telemetry.addData("RightVel ", robot.getDriveRightOne().getVelocity(AngleUnit.DEGREES));
+
         }
         telemetry.addData("RightVel ", robot.getDriveRightOne().getVelocity(AngleUnit.DEGREES));
         telemetry.addData("RightVel ", robot.getDriveRightOne().getVelocity(AngleUnit.DEGREES));
