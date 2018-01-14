@@ -140,9 +140,11 @@ public class TankBase
                 double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
                 double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
                 loops++;
-
-                telemetry.addData("RightVel ", getDriveRightOne().getVelocity(AngleUnit.DEGREES));
-                telemetry.addData("RightVel ", getDriveRightOne().getVelocity(AngleUnit.DEGREES));
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
                 if (Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5)
                     break;
                 telemetry.update();
