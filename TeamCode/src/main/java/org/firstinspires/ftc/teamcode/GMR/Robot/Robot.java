@@ -7,10 +7,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.BlockLift;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.ColumnDetection;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.RelicGrab;
-
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -24,6 +29,7 @@ public class Robot {
     public DriveTrain driveTrain;
     public BlockLift blockLift;
     public RelicGrab relicGrab;
+    public ColumnDetection columnDetection;
 
     private DcMotor leftFront;
     private DcMotor rightFront;
@@ -55,6 +61,13 @@ public class Robot {
     private RelicRecoveryVuMark currentColumn;
     private double strafePower = .25;
 
+    private OpenGLMatrix lastLocation = null;
+    private VuforiaLocalizer vuforia;
+    private VuforiaTrackables relicTrackables;
+    private VuforiaTrackable relicTemplate;
+    private VuforiaLocalizer.Parameters parameters;
+
+
     public Robot (HardwareMap hardwareMap, Telemetry telemetry) {
 
         gyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
@@ -79,6 +92,10 @@ public class Robot {
 
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
 
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        
         rightColor.setPosition(0);
         leftColor.setPosition(0.85);
 
@@ -87,6 +104,8 @@ public class Robot {
         blockLift = new BlockLift(liftMotor, topLeftGrab, topRightGrab, bottomLeftGrab, bottomRightGrab);
 
         relicGrab = new RelicGrab(relicLift, slideLift, relicTilt, relicClamp);
+
+        columnDetection = new ColumnDetection(vuforia, parameters, relicTrackables, relicTemplate);
 
         blockLift.clamp(false, true, false, false);
     }
