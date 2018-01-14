@@ -21,7 +21,10 @@ public class TestStallCompBot extends LinearOpMode
         newRobot.driveStraight_In(33);
         newRobot.pivot(-90);
         newRobot.driveStraight_In_Stall(54, .5, telemetry);
-        while(!gamepad1.a);
+        while(!gamepad1.a)
+        {
+            
+        };
 
     }
 }
