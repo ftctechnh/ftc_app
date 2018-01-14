@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -51,6 +52,7 @@ public class WLP_RR_Grabber {
     final double spinnerPower = 0.5;
     final double armPower = 0.5;
     final double stopPower = 0.0;
+    final double stopPosition = 0.0;
 
 
     // Global variables to be initialized in init function
@@ -63,7 +65,7 @@ public class WLP_RR_Grabber {
     //  Declar Motors as private members
     private DcMotor spinnerLeft = null;
     private DcMotor spinnerRight = null;
-    private DcMotor armMover = null;
+    private Servo armMover = null;
     private DcMotor slider = null;
 
     private boolean isInitialized = false;
@@ -93,8 +95,8 @@ public class WLP_RR_Grabber {
 
         spinnerLeft = hardwareMap.get(DcMotor.class, "spinnerleft");
         spinnerRight = hardwareMap.get(DcMotor.class, "spinnerright");
-        armMover = hardwareMap.get(DcMotor.class, "armmover");
-        slider = hardwareMap.get(DcMotor.class, "slider");
+        armMover = hardwareMap.get(Servo.class, "armmover");
+        // slider = hardwareMap.get(DcMotor.class, "slider");
 
         isInitialized = true;
         // Send telemetry message to signify that Grabber initialization complete
@@ -104,6 +106,7 @@ public class WLP_RR_Grabber {
 
     // During teleop, this function will be called repeatedly
     public void loop() {
+        double pos = 0.0;
 
         if (isInitialized == false) {
             return;
@@ -120,11 +123,16 @@ public class WLP_RR_Grabber {
 
         // Arm: X - open, Y - Close, B stop
         if (gamepad2.x) {
-            armMover.setPower(-armPower);
+            pos = armMover.getPosition()+0.2;
         } else if (gamepad2.y) {
-            armMover.setPower(armPower);
+            pos = armMover.getPosition()+0.2;
         } else if (gamepad2.b) {
-            armMover.setPower(stopPower);
+            pos = stopPosition;
+        }
+
+        if (pos != armMover.getPosition())
+        {
+            armMover.setPosition(pos);
         }
 
 
@@ -148,7 +156,7 @@ public class WLP_RR_Grabber {
 
         telemetry.addData("Motor ", "Spinner Left (%.2f)", spinnerLeft.getPower());
         telemetry.addData("Motor ", "Spinner Right (%.2f)", spinnerRight.getPower());
-        telemetry.addData("Motor ", "Arm Mover (%.2f)", armMover.getPower());
+        telemetry.addData("Servo ", "Arm Mover (%.2f)", armMover.getPosition());
         telemetry.addData("Motor ", "Slider  (%.2f)", slider.getPower());
     }
 }

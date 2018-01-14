@@ -56,7 +56,7 @@ public class WLP_RR_TeleOP extends OpMode {
     public void init() {
 
         // Initialize the grabber
-        // grabber.init(telemetry, hardwareMap, gamepad1, gamepad2);
+        grabber.init(telemetry, hardwareMap, gamepad1, gamepad2);
 
         //Initialize Drivetrain
         drivetrain.init(telemetry, hardwareMap, gamepad1, gamepad2);
