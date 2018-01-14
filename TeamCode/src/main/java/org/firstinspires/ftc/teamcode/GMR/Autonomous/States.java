@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.GMR.Autonomous;
  */
 
 public enum States {
+    SCAN,
     TIME,
     ARMDOWN,
     READ,
