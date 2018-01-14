@@ -58,19 +58,19 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (newRobot.getGlyphCipher())
                 {
                     case 'l':
-                        newRobot.pivot(-35,.5);
+                        newRobot.pivot(-35,.6);
                         newRobot.driveStraight_In(37.5f);
                         break;
                     case 'c':
-                        newRobot.pivot(-20,.5);
+                        newRobot.pivot(-20,.6);
                         newRobot.driveStraight_In(34);
                         break;
                     case 'r':
-                        newRobot.pivot(-8,.5);
+                        newRobot.pivot(-12,.6);
                         newRobot.driveStraight_In(30.5f);
                         break;
                     default:
-                        newRobot.pivot(-20,.5);
+                        newRobot.pivot(-20,.6);
                         newRobot.driveStraight_In(30.5f);
                         break;
                 }
@@ -127,7 +127,7 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In(34);
                         break;
                     case 'r':
-                        newRobot.pivot(8,.5);
+                        newRobot.pivot(12,.5);
                         newRobot.driveStraight_In(30.5f); //positioning is really off, need to fix on 11/12
                         break;
                     default:
