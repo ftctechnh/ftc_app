@@ -48,7 +48,10 @@ public class Autonomous6217Blue2 extends LinearOpMode {
     DcMotor motorConL;
     DcMotor motorConR;
 
-
+    NormalizedColorSensor colorSensor;
+    static ModernRoboticsI2cGyro gyro;
+    boolean iAmBlue = true;
+    boolean iAmRed = false;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -84,7 +87,51 @@ public class Autonomous6217Blue2 extends LinearOpMode {
         waitForStart();
 
         // J e w e l s
+        boolean autoClear = false;
+        telemetry.setAutoClear(autoClear);
+        telemetry.addLine("starting");
+        telemetry.update();
 
+        servoTapper.setPosition(0.0d);
+        Wait(1);
+        servoTapper.setPosition(0.6d);
+        Wait(1);
+        boolean iSeeBlue = false;
+        boolean iSeeRed = false;
+
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();
+
+        telemetry.addLine()
+                .addData("r", "%.3f", colors.red)
+                .addData("b", "%.3f", colors.blue);
+
+        telemetry.update();
+
+        if (colors.red > colors.blue) {
+            iSeeRed = true;
+            iSeeBlue = false;
+        } else {
+            iSeeBlue = true;
+            iSeeRed = false;
+        }
+
+        Wait(2.5f);
+
+        if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
+            telemetry.addData("1", "move right");
+            move(0f, .2f, .25f);
+            Wait(1);
+            move(0f, -.2f, .25f);
+        } else {
+            telemetry.addData("1", "move left");
+            move(0f, -.2f, .25f);
+            Wait(1);
+            move(0f, .2f, .25f);
+        }
+        telemetry.update();
+        servoTapper.setPosition(0.1d);
+
+        //G L Y P H  P L A C E M E N T
         move(0f, 0.5f, .23f);
 
         Wait(1);
