@@ -36,7 +36,6 @@ public class FindEncoder extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        s1.setPosition(0.0);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -51,6 +50,8 @@ public class FindEncoder extends LinearOpMode {
 
 
             if (gamepad1.a) {
+                telemetry.addData("Servo","A");
+                telemetry.update();
                 while (currentAngle < 0.5){
                     s1.setPosition(currentAngle);
                     currentAngle += interval;
