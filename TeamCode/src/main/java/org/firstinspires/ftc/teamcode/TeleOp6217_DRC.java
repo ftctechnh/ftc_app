@@ -28,7 +28,9 @@ import static java.lang.Math.abs;
 
 public class TeleOp6217_DRC extends OpMode
 {
-/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2*/
+/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Right Wheel, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2.
+* Servo_0-3 are the cr servos for the extended arm to pick up Reggie.
+* The servos are named closest to farthest, servo_0 being closest to the robot.*/
     DcMotor motorFR;
     DcMotor motorFL;
     DcMotor motorBR;
@@ -37,6 +39,11 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorConR;
     CRServo servoConL;
     CRServo servoConR;
+    CRServo servo_0;
+    CRServo servo_1;
+    CRServo servo_2;
+    CRServo servo_3;
+
     DcMotor motorRocker1;
     DcMotor motorRocker2;
     Servo Jack;
@@ -86,6 +93,12 @@ public class TeleOp6217_DRC extends OpMode
         motorRocker2 = hardwareMap.dcMotor.get("motorRocker2");
         motorRocker2.setDirection(DcMotor.Direction.REVERSE);
         Jack = hardwareMap.servo.get ("Jack");
+
+        //Extended Arm Servos
+        servo_0 = hardwareMap.crservo.get("servo_0");
+        servo_1 = hardwareMap.crservo.get("servo_1");
+        servo_2 = hardwareMap.crservo.get("servo_2");
+        servo_3 = hardwareMap.crservo.get("servo 3");
 
 
        /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -222,7 +235,7 @@ public class TeleOp6217_DRC extends OpMode
 
 
 
-//  pivot left
+        //  pivot left
 
         if (LT != 0)  {
 
