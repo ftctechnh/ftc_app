@@ -173,7 +173,7 @@ public class BlueRight2 extends LinearOpMode {
         }
 
         // turn toward and view pictograph
-        encoderDrive(TURN_SPEED, -2.25, 2.25,5 );
+        encoderDrive(TURN_SPEED, 2.25, -2.25,5 );
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
     //   telemetry.setAutoClear(false);
         runtime.reset();
@@ -184,7 +184,7 @@ public class BlueRight2 extends LinearOpMode {
         }while ( runtime.seconds() < 1 );   // vuMark ==  RelicRecoveryVuMark.UNKNOWN)
         telemetry.addData("VuMark", "%s visible", vuMark);
         telemetry.update();
-        encoderDrive(TURN_SPEED, 2.25, -2.25,5 );
+        encoderDrive(TURN_SPEED, -2.25, 2.25,5 );
 
         // drive to cryptobox
         encoderDrive(DRIVE_SPEED, -29, -29, 5);      // drives off balancing stone
@@ -195,17 +195,17 @@ public class BlueRight2 extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.LEFT){
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, 6,-6,5);
+            encoderDrive(TURN_SPEED, 5,-5,5);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER ) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, 5,-5,5);
+            encoderDrive(TURN_SPEED, 4.5,-4.5,5);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, 3.6,-3.6,5);
+            encoderDrive(TURN_SPEED, 3.1,-3.1,5);
         }
         else if  (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);

@@ -171,7 +171,7 @@ public class BlueLeft2 extends LinearOpMode {
         }
 
         //turn toward and view pictograph
-        encoderDrive(TURN_SPEED, -2.25, 2.25,5 );
+        encoderDrive(TURN_SPEED, 2.25, -2.25,5 );
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         runtime.reset();
         do {
@@ -181,7 +181,7 @@ public class BlueLeft2 extends LinearOpMode {
         }while (runtime.seconds() < 1 );   //   vuMark ==  RelicRecoveryVuMark.UNKNOWN
         telemetry.addData("VuMark", "%s visible", vuMark);
         telemetry.update();
-        encoderDrive(TURN_SPEED, 2.25, -2.25,5 );
+        encoderDrive(TURN_SPEED, -2.25, 2.25,5 );
 
         // drive to cryptobox
         encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5); // Drive off balance board
