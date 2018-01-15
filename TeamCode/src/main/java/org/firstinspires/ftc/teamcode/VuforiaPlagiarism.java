@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,7 +20,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-//@Autonomous(name="Vuforia", group ="Concept")
 public class VuforiaPlagiarism {
     public static final String TAG = "Vuforia VuMark Sample";
     Hardware750 robot = new Hardware750();
@@ -35,19 +33,25 @@ public class VuforiaPlagiarism {
     public type getVuf(HardwareMap hardwareMap) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        
         parameters.vuforiaLicenseKey = Hardware750.VUF_LIC;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;  //TODO: Figure this thing out and turn the light on
+        
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        
         relicTemplate.setName("relicVuMarkTemplate");
         relicTrackables.activate();
+        
         boolean bool = true;
         String string = "error";
         long time = System.currentTimeMillis();
+        
         while ((bool) && (System.currentTimeMillis() < (time + 2000))) {
-            //TODO: Find out if moving this will break anything
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 if (vuMark == vuMark.CENTER) {
                     bool = false;
@@ -59,6 +63,7 @@ public class VuforiaPlagiarism {
                     bool = false;
                     string = "RIGHT";
                 }
+                
                 //TODO: Find out if removing this will break anything
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
                 if (pose != null) {
@@ -66,7 +71,7 @@ public class VuforiaPlagiarism {
                     Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
                 }
             }
-        }
+        } //End of while loop
         if (string.equals("LEFT")) {
             return type.LEFT;
         } else if (string.equals("RIGHT")) {
