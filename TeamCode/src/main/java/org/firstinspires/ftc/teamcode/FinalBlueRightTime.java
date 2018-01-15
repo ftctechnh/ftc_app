@@ -5,11 +5,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -22,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right", group="Best")
+@Autonomous(name="BR TIME", group="TIME")
 //@Disabled
-public class FinalBlueRight extends LinearOpMode
+public class FinalBlueRightTime extends LinearOpMode
 {
     /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -199,63 +197,65 @@ public class FinalBlueRight extends LinearOpMode
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        movebytime(1560, .3, "Forward");
+        movebytime(800, .3, "Forward");
 
         /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
-        account for the slight slippage after powering off the wheels */
-        rotate(87, .2);
+//        account for the slight slippage after powering off the wheels */
+//        rotate(87, .2);
 
         /* Wait a moment to stop moving */
-        sleep(700);
+//        sleep(700);
 
         /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
         /* Switch case based on what vuMark we see */
-        switch (vuMark){
-            case LEFT:
-                crabLeft(lefty);
-                break;
-            case RIGHT:
-                crabRight(righty);
-                break;
-            case CENTER:
-                crabCenter();
-                break;
-            case UNKNOWN:
-                crabCenter();
-                break;
-        }
+//        switch (vuMark){
+//            case LEFT:
+//                crabLeft(lefty);
+
+//                break;
+//            case RIGHT:
+//                crabRight(righty);
+//                break;
+//            case CENTER:
+//                crabCenter();
+//                break;
+//            case UNKNOWN:
+//                crabCenter();
+//                break;
+//        }
 
         /* Wait a moment */
-        sleep(700);
-
-        crabFrontBack(forwardy, "Forward");
+//        sleep(700);
+//
+//        crabFrontBack(forwardy, "Forward");
 
 //        /* Move forward slightly so the block is in the space */
 //        movebytime(300, .2, "Forward");
 
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        /* Open up the claw to release the block */
-        clawMotor.setPower(clawOpen);
+        clawPowerPositionDirection(-.3, clawDown, "Down");
 
-        /* Let the claw */
-        sleep(500);
 
-        /* Stop the claw */
-        clawMotor.setPower(clawStill);
+//        /* Open up the claw to release the block */
+//        clawMotor.setPower(clawOpen);
+//
+//        /* Let the claw */
+//        sleep(500);
+//
+//        /* Stop the claw */
+//        clawMotor.setPower(clawStill);
+//
+//        /* Wait a moment */
+//        sleep(200);
 
-        /* Wait a moment */
-        sleep(200);
-
-        crabFrontBack(backwardy, "Backward");
+//        crabFrontBack(backwardy, "Backward");
 //        /* Back up a small bit */
 //        movebytime(50, .2, "Backward");
-        sleep(200);
+  //      sleep(200);
 
         wheelsOff();
-
-        clawPowerPositionDirection(-.3, clawDown, "Down");
 
     }
 

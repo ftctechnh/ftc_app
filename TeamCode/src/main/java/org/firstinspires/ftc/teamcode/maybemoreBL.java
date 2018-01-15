@@ -5,11 +5,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -22,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Blue Right", group="Best")
+@Autonomous(name="BL RISKY", group="RISK")
 //@Disabled
-public class FinalBlueRight extends LinearOpMode
+public class maybemoreBL extends LinearOpMode
 {
     /* Declare all devices since hardware class isn't working */
     DcMotor                 frontLeftMotor;
@@ -199,44 +197,58 @@ public class FinalBlueRight extends LinearOpMode
 
         //////////////////* Begin the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-        movebytime(1560, .3, "Forward");
+        /* Rotate to kinda face crypto box */
+//        rotate(-25, .3);
 
-        /* This is really meant to accomplish  a 90 degree rotation, however, it is set to 87 to
-        account for the slight slippage after powering off the wheels */
-        rotate(87, .2);
+        /* Move forward into the triangle */
+        movebytime(200, .3, "Forward");
 
-        /* Wait a moment to stop moving */
-        sleep(700);
+        rotate(-25, .3);
+        
+        /* Move forward into the triangle */
+        movebytime(700, .3, "Forward");
+
+//        /* Wait a moment to stop moving */
+//        sleep(500);
+//
+//        /* Center onto the triangle */
+//        movebytime(1020, .3, "Right");
+//
+//        /* Wait a moment to stop moving */
+//        sleep(500);
 
         /////////////////* This is the Blue Right Case *\\\\\\\\\\\\\\\\\\\\\\\
 
-        /* Switch case based on what vuMark we see */
-        switch (vuMark){
-            case LEFT:
-                crabLeft(lefty);
-                break;
-            case RIGHT:
-                crabRight(righty);
-                break;
-            case CENTER:
-                crabCenter();
-                break;
-            case UNKNOWN:
-                crabCenter();
-                break;
-        }
+//        /* Switch case based on what vuMark we see */
+//        switch (vuMark){
+//            case LEFT:
+//                crabLeft(lefty);
+//                break;
+//            case RIGHT:
+//                crabRight(righty);
+//                break;
+//            case CENTER:
+//                crabCenter();
+//                break;
+//            case UNKNOWN:
+//                crabCenter();
+//                break;
+//        }
+//        /* Wait a moment to stop moving */
+//        sleep(500);
 
-        /* Wait a moment */
-        sleep(700);
-
-        crabFrontBack(forwardy, "Forward");
-
+//        crabFrontBack(forwardy, "Forward");
+        wheelsOff();
 //        /* Move forward slightly so the block is in the space */
-//        movebytime(300, .2, "Forward");
+//        movebytime(350, .2, "Forward");
+//
+//        /* Wait a moment */
+//        sleep(500);
+        /* Move the claw to position up */
+        clawPowerPositionDirection(-1, clawDown, "Down");
 
         ///////////////////* End the variance *\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        /* Open up the claw to release the block */
+/* Open up the claw to release the block */
         clawMotor.setPower(clawOpen);
 
         /* Let the claw */
@@ -247,21 +259,53 @@ public class FinalBlueRight extends LinearOpMode
 
         /* Wait a moment */
         sleep(200);
-
-        crabFrontBack(backwardy, "Backward");
-//        /* Back up a small bit */
-//        movebytime(50, .2, "Backward");
-        sleep(200);
-
-        wheelsOff();
-
-        clawPowerPositionDirection(-.3, clawDown, "Down");
-
+//
+//        crabFrontBack(backwardy, "Backward");
     }
 
-/***********************************************************************************************
- * These are all of the methods used in the Autonomous*
- ***********************************************************************************************/
+    /***********************************************************************************************
+     * These are all of the methods used in the Autonomous*
+     ***********************************************************************************************/
+
+    public void crabDirectionGtLtStop(String direction, String gtlt, double stop) {
+        double power = .3;
+
+        if (direction == "Right") {
+            if (gtlt == "GT") {
+
+                setWheelPower(power, power, -power, -power);
+
+                while (opModeIsActive() && getDistanceCM() > stop) {
+                    telemetry.addData("SRS Distance:", getDistanceCM());
+                    telemetry.update();
+                }
+                wheelsOff();
+            } else {
+                while (opModeIsActive() && getDistanceCM() < stop) {
+                    telemetry.addData("SRS Distance:", getDistanceCM());
+                    telemetry.update();
+                }
+                wheelsOff();
+            }
+        } else {
+         /* Left strafe */
+            if (gtlt == "GT") {
+                setWheelPower(-power, -power, power, power);
+
+                while (opModeIsActive() && getDistanceCM() > stop) {
+                    telemetry.addData("SRS Distance:", getDistanceCM());
+                    telemetry.update();
+                }
+                wheelsOff();
+            } else {
+                while (opModeIsActive() && getDistanceCM() < stop) {
+                    telemetry.addData("SRS Distance:", getDistanceCM());
+                    telemetry.update();
+                }
+                wheelsOff();
+            }
+        }
+    }
 
     public double getFrontDistanceCM(){
         double firstDistance;
@@ -270,7 +314,7 @@ public class FinalBlueRight extends LinearOpMode
 
         return firstDistance;
 
-}
+    }
 
     public double getDistanceCM(){
         double firstDistance;
@@ -281,7 +325,7 @@ public class FinalBlueRight extends LinearOpMode
             return 160;
         }
         else if(firstDistance < 95){
-                return 95;
+            return 95;
         }
         else{
             return firstDistance;
@@ -309,22 +353,22 @@ public class FinalBlueRight extends LinearOpMode
 
     public void crabLeft(double stop){
         double power = .3;
-                setWheelPower(-power, -power, power, power);
+        setWheelPower(-power, -power, power, power);
 
-            while(opModeIsActive() && getDistanceCM() > stop){
-                telemetry.addData("SRS Distance:", getDistanceCM());
-                telemetry.update();
-            }
-            wheelsOff();
+        while(opModeIsActive() && getDistanceCM() > stop){
+            telemetry.addData("SRS Distance:", getDistanceCM());
+            telemetry.update();
+        }
+        wheelsOff();
     }
 
     public void crabRight(double stop){
         double power = .3;
-            setWheelPower(power, power, -power, -power);
+        setWheelPower(power, power, -power, -power);
 
         while(opModeIsActive() && getDistanceCM() < stop){
-                telemetry.addData("SRS Distance:", getDistanceCM());
-                telemetry.update();
+            telemetry.addData("SRS Distance:", getDistanceCM());
+            telemetry.update();
         }
         wheelsOff();
     }
@@ -342,27 +386,27 @@ public class FinalBlueRight extends LinearOpMode
     }
 
 
-/* This method uses moves the claw to a certain tick using encoders */
-public void clawPowerPositionDirection(double power, double position, String direction) {
+    /* This method uses moves the claw to a certain tick using encoders */
+    public void clawPowerPositionDirection(double power, double position, String direction) {
 
-    switch(direction){
-        case "Up":
-            verticalArmMotor.setPower(power);
-            while(opModeIsActive() && verticalArmMotor.getCurrentPosition() < position){
-                telemetry.addData("position", verticalArmMotor.getCurrentPosition());
-                telemetry.update();
-            }
-            break;
-        case "Down":
-            verticalArmMotor.setPower(power);
-            while(opModeIsActive() && verticalArmMotor.getCurrentPosition() > position){
-            }
-            break;
+        switch(direction){
+            case "Up":
+                verticalArmMotor.setPower(power);
+                while(opModeIsActive() && verticalArmMotor.getCurrentPosition() < position){
+                    telemetry.addData("position", verticalArmMotor.getCurrentPosition());
+                    telemetry.update();
+                }
+                break;
+            case "Down":
+                verticalArmMotor.setPower(power);
+                while(opModeIsActive() && verticalArmMotor.getCurrentPosition() > position){
+                }
+                break;
+        }
+        verticalArmMotor.setPower(0.0);
     }
-    verticalArmMotor.setPower(0.0);
-}
 
-/* This method moves the robot forward for time and power indicated*/
+    /* This method moves the robot forward for time and power indicated*/
     public void movebytime (long time, double power, String direction) {
 
     /* This switch case is determined by the String direction indicated above */
@@ -383,7 +427,7 @@ public void clawPowerPositionDirection(double power, double position, String dir
         }
 
     /* Sleep */
-    sleep(time);
+        sleep(time);
 
 
     /* Once the while loop above finishes turn off the wheels */
@@ -391,12 +435,12 @@ public void clawPowerPositionDirection(double power, double position, String dir
     }
 
 
-/* This method simply sets all wheel motors to zero power */
+    /* This method simply sets all wheel motors to zero power */
     public void wheelsOff() {
         setWheelPower(0,0,0,0);
     }
 
-/* This method powers each wheel to whichever power is desired */
+    /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
 
         /* Create power variables */
@@ -436,11 +480,11 @@ public void clawPowerPositionDirection(double power, double position, String dir
         }
         if ( BackRightPower != backRight)
             backRightMotor.setPower(br);
-            BackRightPower = backRight;
+        BackRightPower = backRight;
     }
 
-/* This method is tells the color sensor to read color, then rotate to knock off the blue
-jewel and then return the color sensor arm back up */
+    /* This method is tells the color sensor to read color, then rotate to knock off the blue
+    jewel and then return the color sensor arm back up */
     public void knockjewelRed() {
 
         if (colorSensor.red() < colorSensor.blue()) {
@@ -460,8 +504,8 @@ jewel and then return the color sensor arm back up */
         }
     }
 
-/* This method is tells the color sensor to read color, then rotate to knock off the red
-jewel and then return the color sensor arm back up */
+    /* This method is tells the color sensor to read color, then rotate to knock off the red
+    jewel and then return the color sensor arm back up */
     public void knockjewelBlue(){
 
         if (colorSensor.red() > colorSensor.blue()) {
