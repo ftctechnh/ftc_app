@@ -50,7 +50,8 @@ public class WLP_RR_Grabber {
 
     // constants
     final double spinnerPower = 0.5;
-    final double armPower = 0.5;
+    final double armOpen = 0.8;
+    final double armClose = 0.0;
     final double stopPower = 0.0;
     final double stopPosition = 0.0;
 
@@ -93,9 +94,9 @@ public class WLP_RR_Grabber {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        spinnerLeft = hardwareMap.get(DcMotor.class, "spinnerleft");
-        spinnerRight = hardwareMap.get(DcMotor.class, "spinnerright");
-        armMover = hardwareMap.get(Servo.class, "armmover");
+        spinnerLeft = hardwareMap.get(DcMotor.class, "spinnerLeft");
+        spinnerRight = hardwareMap.get(DcMotor.class, "spinnerRight");
+        armMover = hardwareMap.get(Servo.class, "armMover");
         // slider = hardwareMap.get(DcMotor.class, "slider");
 
         isInitialized = true;
@@ -106,7 +107,7 @@ public class WLP_RR_Grabber {
 
     // During teleop, this function will be called repeatedly
     public void loop() {
-        double pos = 0.0;
+        double pos = armMover.getPosition();
 
         if (isInitialized == false) {
             return;
@@ -119,23 +120,25 @@ public class WLP_RR_Grabber {
             double power = (spinnerLeft.getPower() == spinnerPower) ? stopPower : spinnerPower;
             spinnerLeft.setPower(power);
             spinnerRight.setPower(-power);
+        } else if (gamepad2.b) {
+            spinnerLeft.setPower(stopPower);
+            spinnerRight.setPower(stopPower);
         }
 
         // Arm: X - open, Y - Close, B stop
         if (gamepad2.x) {
-            pos = armMover.getPosition()+0.2;
+            pos =  armOpen;
         } else if (gamepad2.y) {
-            pos = armMover.getPosition()+0.2;
-        } else if (gamepad2.b) {
-            pos = stopPosition;
+            pos =  armClose;
         }
 
         if (pos != armMover.getPosition())
         {
+
             armMover.setPosition(pos);
         }
 
-
+/*
         // Slider: RT - up, LT - down
         if (gamepad2.left_trigger > 0.0) {
             slider.setPower(-gamepad2.left_trigger);
@@ -146,7 +149,7 @@ public class WLP_RR_Grabber {
                 slider.setPower(stopPower);
             }
         }
-
+*/
         telemetry.addData("Gamepad2 ", "left trigger (%.2f)", gamepad2.left_trigger);
         telemetry.addData("Gamepad2 ", "right trigger (%.2f)", gamepad2.right_trigger);
         telemetry.addData("Gamepad2 ", "A (%b)", gamepad2.a);
@@ -157,6 +160,6 @@ public class WLP_RR_Grabber {
         telemetry.addData("Motor ", "Spinner Left (%.2f)", spinnerLeft.getPower());
         telemetry.addData("Motor ", "Spinner Right (%.2f)", spinnerRight.getPower());
         telemetry.addData("Servo ", "Arm Mover (%.2f)", armMover.getPosition());
-        telemetry.addData("Motor ", "Slider  (%.2f)", slider.getPower());
+        // telemetry.addData("Motor ", "Slider  (%.2f)", slider.getPower());
     }
 }

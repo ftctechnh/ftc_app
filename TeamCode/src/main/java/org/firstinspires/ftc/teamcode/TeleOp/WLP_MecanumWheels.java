@@ -68,10 +68,10 @@ public class WLP_MecanumWheels {
         double robotAngle = Math.atan2(left_y, left_x) - Math.PI / 4;
         double rightX = right_x;
 
-        wheelPowers[FrontLeft] = r * Math.cos(robotAngle) + rightX;
-        wheelPowers[FrontRight] = r * Math.sin(robotAngle) - rightX;
-        wheelPowers[RearLeft] = r * Math.sin(robotAngle) + rightX;
-        wheelPowers[RearRight] = r * Math.cos(robotAngle) - rightX;
+        wheelPowers[FrontLeft] = r * Math.cos(robotAngle) - rightX;
+        wheelPowers[FrontRight] = r * Math.sin(robotAngle) + rightX;
+        wheelPowers[RearLeft] = r * Math.sin(robotAngle) - rightX;
+        wheelPowers[RearRight] = r * Math.cos(robotAngle) + rightX;
 
         // Adjust maximum power from -1.0 to 1.0
         double absMax = 0.0;

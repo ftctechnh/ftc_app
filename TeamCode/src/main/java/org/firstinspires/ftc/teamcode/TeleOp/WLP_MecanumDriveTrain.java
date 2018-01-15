@@ -102,6 +102,7 @@ public class WLP_MecanumDriveTrain {
     public void loop() {
 
         if (isInitialized == false) {
+            telemetry.addData("Drive Train::", " Not initialized");
             return;
         }
 
