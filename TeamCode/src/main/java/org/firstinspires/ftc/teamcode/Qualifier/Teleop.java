@@ -26,12 +26,18 @@ public class Teleop extends OpMode {
 
     public boolean backIsReleased = true;
     public boolean tristanmode = false;
-    public boolean rghtbtnIsReleased = true;
+    public boolean rightbtnIsReleased = true;
     public boolean xIsReleased = true;
+    //public boolean aIsReleased = true;
     public boolean rightbumperIsReleased = true;
     public boolean righttriggerIsReleased = true;
     public boolean glyphLiftismoving = false;
+    public boolean padupIsReleased = true;
+    public boolean paddownIsReleased = true;
+    public boolean aIsReleased = true;
+
     public int liftTarget = 0;
+    public boolean trainon = false;
 
     boolean loadedLastTime = false;
 
@@ -58,23 +64,29 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         timeLeft = 120 - runtime.seconds();
+
+//        double maxVoltage = gromit.driveTrain.maxbotixSensor.getVoltage();
+//        telemetry.addData("maxbotix ",maxVoltage);
+
+
         //------------------------------------------------------------------------------
         //toggle  drive direction-when the button was released and it is now pressed.
         //------------------------------------------------------------------------------
         if (gamepad1.right_stick_button) {
-            if (rghtbtnIsReleased) {
-                rghtbtnIsReleased = false;
+            if (rightbtnIsReleased) {
+                rightbtnIsReleased = false;
                 gromit.driveTrain.frontIsForward = !gromit.driveTrain.frontIsForward;
             }
         } else {
-            rghtbtnIsReleased = true;
+            rightbtnIsReleased = true;
         }
         //------------------------------------------------------------------------------
         //------------------------------------------------------------------------------
         //Lift/lower glyph  x/a by increments,   y/b manually
         //------------------------------------------------------------------------------
-        if (gamepad1.x) {
+        if (gamepad1.x || gamepad2.x) {
             if (xIsReleased) {
+                gromit.glyphTrain.glyphclamp("close");
                 xIsReleased = false;
                 gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
 //  check to see if you're lower than the next lower position by 400 ticks, stop there first.
@@ -88,9 +100,9 @@ public class Teleop extends OpMode {
         } else {
             xIsReleased = true;
         }
-        if (gamepad1.a) {
-            if (righttriggerIsReleased) {
-                righttriggerIsReleased = false;
+        if (gamepad1.a || gamepad2.a) {
+            if (aIsReleased) {
+                aIsReleased = false;
                 //gromit.glyphTrain.lowerGlyph(6);
                 glyphLiftismoving = true;
                 gromit.glyphTrain.liftIndex = 0;  //down always goes to zero
@@ -101,7 +113,7 @@ public class Teleop extends OpMode {
 //                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
             }
         } else {
-            righttriggerIsReleased = true;
+            aIsReleased = true;
         }
         // check if target is reached yet
         if (glyphLiftismoving) {
@@ -121,14 +133,14 @@ public class Teleop extends OpMode {
 
         //------------------------------------------------------------------------------
         // glyph lift
-        if (gamepad1.y) {
+        if (gamepad1.y || gamepad2.y) {
             glyphLiftismoving = false;
             if (gromit.glyphTrain.lift_motor.getCurrentPosition() < gromit.glyphTrain.upperLiftLimit) {
                 gromit.glyphTrain.lift_motor.setPower(1.0);
             } else {
                 gromit.glyphTrain.lift_motor.setPower(0);
             }
-        } else if (gamepad1.b) {
+        } else if (gamepad1.b || gamepad2.b) {
             glyphLiftismoving = false;
             if (gromit.glyphTrain.lift_motor.getCurrentPosition() > gromit.glyphTrain.lowerLiftLimit) {
                 gromit.glyphTrain.lift_motor.setPower(-0.8);
@@ -150,10 +162,35 @@ public class Teleop extends OpMode {
         }
 //on and off glyph intake
         if (gamepad1.dpad_down || gamepad2.dpad_down) {
-            gromit.glyphTrain.startGlyphMotors(1.0);
-
-        } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            gromit.glyphTrain.stopGlyphMotors();
+            if(paddownIsReleased) {
+                paddownIsReleased = false;
+                if (trainon) {
+                    trainon = false;
+                    gromit.glyphTrain.stopGlyphMotors();
+                } else {
+                    trainon = true;
+                    gromit.glyphTrain.startGlyphMotors(1.0);
+                }
+            }
+        }
+        else{
+            paddownIsReleased = true;
+        }
+        //BACKWARDS
+        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            if(padupIsReleased) {
+                padupIsReleased = false;
+                if (trainon) {
+                    trainon = false;
+                    gromit.glyphTrain.stopGlyphMotors();
+                } else {
+                    trainon = true;
+                    gromit.glyphTrain.startGlyphMotors(-0.2);
+                }
+            }
+        }
+        else{
+            padupIsReleased =true;
         }
         // glyph clamp
         if (gamepad1.right_trigger > 0.1 || gamepad2.right_trigger > 0.1) {

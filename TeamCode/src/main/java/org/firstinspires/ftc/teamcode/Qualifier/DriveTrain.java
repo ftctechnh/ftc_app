@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Qualifier;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -46,6 +47,12 @@ public class DriveTrain {
     public DcMotor right_front = null;
     public DcMotor right_rear = null;
     public DcMotor left_rear = null;
+
+    public AnalogInput maxbotixSensor;
+
+    public AnalogInput sharpIRSensor;
+
+
 
     // The IMU sensor object
     BNO055IMU imu;
@@ -99,6 +106,13 @@ public class DriveTrain {
 
         speedMode = SpeedSetting.FAST;
 //        forwardDirection = DirectionSetting.FRONT;
+
+        //Maxbotix Sensor
+ //       maxbotixSensor = hardwareMap.analogInput.get("maxbotixsensor");
+        //Sharp IR Sensors
+ //       sharpIRSensor = hardwareMap.analogInput.get("sharpirsensor");
+
+
     }
 
     public void runWithoutEncoders() {

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Qualifier;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class RobotRR {
@@ -7,6 +8,7 @@ public class RobotRR {
     JewelArm jewelArm;
     RelicArm relicArm;
     GlyphTrain glyphTrain;
+
 
     //Shooter shooter;
     //Loader loader;
@@ -20,6 +22,7 @@ public class RobotRR {
         relicArm = new RelicArm();
         jewelArm = new JewelArm();
         glyphTrain = new GlyphTrain();
+
 
         //shooter = new Shooter();
         //beaconColorDetector = new BeaconColorDetector();
