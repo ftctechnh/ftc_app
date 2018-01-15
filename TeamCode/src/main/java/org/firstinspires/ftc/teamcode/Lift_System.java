@@ -23,29 +23,35 @@ public class Lift_System extends LinearOpMode {
         
 
         boolean pressed = false;
-        double currentAngle = 0;
-        double interval = 0.05;
+        double angle1 = 0;
+        double angle2 = 1;
+        double interval = 0.01;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if ((gamepad1.x) && (!pressed)){
-                while (currentAngle < 0.5){
-                    s1.setPosition(currentAngle);
-                    s2.setPosition(currentAngle);
-                    currentAngle += interval;
+
+
+            if (gamepad1.a && !pressed) {
+                while ((angle1 < 0.5)){
+                    angle1 = (angle1 < 0.5)? angle1 + interval:angle1;
+                    angle2 = (angle2 > 0.5)? angle2 - interval:angle2;
+                    s1.setPosition(angle1);
+                    s2.setPosition(angle2);
 
                 }
                 pressed = true;
             }
-            else if((gamepad1.x) && (pressed)){
-                while (currentAngle > 0.05) {
-                    s1.setPosition(currentAngle);
-                    s2.setPosition(currentAngle);
-                    currentAngle -= interval;
-                }
+            else if (gamepad1.a && pressed){
+                while ((angle1 > 0)){
+                    angle1 = (angle1 > 0)? angle1 - interval:angle1;
+                    angle2 = (angle2 < 1)? angle2 + interval:angle2;
+                    s1.setPosition(angle1);
+                    s2.setPosition(angle2);
+
+                };
                 pressed = false;
             }
 

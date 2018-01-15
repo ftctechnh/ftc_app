@@ -18,9 +18,9 @@ public class FindEncoder extends LinearOpMode {
     private DcMotor m;
     private Servo s1,s2;
 
-    double angle1 = 0.0;
-    double angle2 = 1.0;
-    double interval = 0.05;
+    double angle1 = 0;
+    double angle2 = 1;
+    double interval = 0.01;
     boolean pressed = false;
 
 
@@ -38,8 +38,7 @@ public class FindEncoder extends LinearOpMode {
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        s1.setPosition(0);
-        s2.setPosition(0);
+
 
 
         // run until the end of the match (driver presses STOP)
@@ -55,27 +54,27 @@ public class FindEncoder extends LinearOpMode {
 
 
             if (gamepad1.a && !pressed) {
-                telemetry.addData("Servo","A");
-                telemetry.update();
-                while (angle1 < 0.5){
+                while ((angle1 < 0.5)){
+                    angle1 = (angle1 < 0.5)? angle1 + interval:angle1;
+                    angle2 = (angle2 > 0.5)? angle2 - interval:angle2;
                     s1.setPosition(angle1);
                     s2.setPosition(angle2);
-                    angle1 += interval;
-                    angle2 -= interval;
-                    sleep(100);
+
                 }
                 pressed = true;
             }
             else if (gamepad1.a && pressed){
-                while (angle1 > 0.00){
+                while ((angle1 > 0)){
+                    angle1 = (angle1 > 0)? angle1 - interval:angle1;
+                    angle2 = (angle2 < 1)? angle2 + interval:angle2;
                     s1.setPosition(angle1);
                     s2.setPosition(angle2);
-                    angle1 -= interval;
-                    angle2 += interval;
-                    sleep(100);
+
                 };
                 pressed = false;
             }
+
+
 
         }
     }
