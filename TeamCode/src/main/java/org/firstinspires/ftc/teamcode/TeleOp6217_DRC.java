@@ -29,8 +29,8 @@ import static java.lang.Math.abs;
 public class TeleOp6217_DRC extends OpMode
 {
 /*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Right Wheel, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2.
-* Servo_0-3 are the cr servos for the extended arm to pick up Reggie.
-* The servos are named closest to farthest, servo_0 being closest to the robot.*/
+* Servo0-3 are the cr servos for the extended arm to pick up Reggie.
+* The servos are named closest to farthest, servo0 being closest to the robot.*/
     DcMotor motorFR;
     DcMotor motorFL;
     DcMotor motorBR;
@@ -39,10 +39,10 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorConR;
     CRServo servoConL;
     CRServo servoConR;
-    CRServo servo_0;
-    CRServo servo_1;
-    CRServo servo_2;
-    CRServo servo_3;
+    CRServo servo0;
+    CRServo servo1;
+    CRServo servo2;
+    CRServo servo3;
 
     DcMotor motorRocker1;
     DcMotor motorRocker2;
@@ -95,10 +95,10 @@ public class TeleOp6217_DRC extends OpMode
         Jack = hardwareMap.servo.get ("Jack");
 
         //Extended Arm Servos
-        servo_0 = hardwareMap.crservo.get("servo_0");
-        servo_1 = hardwareMap.crservo.get("servo_1");
-        servo_2 = hardwareMap.crservo.get("servo_2");
-        servo_3 = hardwareMap.crservo.get("servo 3");
+        servo0 = hardwareMap.crservo.get("servo0");
+        servo1 = hardwareMap.crservo.get("servo1");
+        servo2 = hardwareMap.crservo.get("servo2");
+        servo3 = hardwareMap.crservo.get("servo3");
 
 
        /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
