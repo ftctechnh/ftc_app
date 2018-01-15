@@ -21,7 +21,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -46,8 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
     private ElapsedTime runtime = new ElapsedTime();
     Hardware750 robot = new Hardware750();
 
-
-     //Negative speed means:
+    //Negative speed means:
     //Counterclockwise for MoveType.ROT
     //Left for MoveType.LATERALLY
     //Backwards for MoveType.STRAIGHT
@@ -84,7 +82,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
                 multFR *= -1;
                 multRL *= -1;
                 multRR *= -1;
-
             }
         }
 
@@ -174,28 +171,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
         try {
             Thread.sleep(t);
         } catch (Exception e) {
-
-        }
-    }
-
-    /*
-    *ONE:
-     * 1)Right: 38.98
-     * 2)Center: 45.67
-     * 3)Left: Out of range
-     *
-     * TWO:
-     * 1)Right: 16.14
-     * 2)Center: 22.05
-     * 3)Left: 29.53
-     */
-    public void findBox(double box, int dir) {
-        int curLine = 0;
-        encodeInd((0.2 * dir), MoveType.LATERALLY);
-        while (robot.rangeSensor.getDistance(DistanceUnit.INCH) < box) {}
-        robot.setAllDriveMotors(0);
-        if (box == 45.7) {
-             encode(2, (0.2 * dir), MoveType.LATERALLY);
+        
         }
     }
 }
