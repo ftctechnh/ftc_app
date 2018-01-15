@@ -52,7 +52,7 @@ public class Autonomous6217Blue1 extends LinearOpMode {
     static ModernRoboticsI2cGyro gyro;
     boolean iAmBlue = true;
     boolean iAmRed = false;
-   
+
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
