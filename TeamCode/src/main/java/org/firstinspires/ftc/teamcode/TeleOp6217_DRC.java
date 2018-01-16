@@ -47,6 +47,7 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorRocker1;
     DcMotor motorRocker2;
     Servo Jack;
+    Servo servoTapper;
 
    /* IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
@@ -94,14 +95,17 @@ public class TeleOp6217_DRC extends OpMode
         motorRocker2.setDirection(DcMotor.Direction.REVERSE);
         Jack = hardwareMap.servo.get ("Jack");
 
+        //Jewel Tapper Servo
+        servoTapper = hardwareMap.servo.get("tapper");
+
         // Relic Arm Servos
         // Set config file names to servo0-3 for easier typing
         // Shoulder servo: Hitec H875 HB CR servo
-        shoulderServo = hardwareMap.crservo.get("servo0");
+        //shoulderServo = hardwareMap.crservo.get("servo0");
         // Elbow, wrist, claw servos: REV 180 servos
-        elbowServo = hardwareMap.servo.get("servo1");
-        wristServo = hardwareMap.servo.get("servo2");
-        clawServo = hardwareMap.servo.get("servo3");
+        //elbowServo = hardwareMap.servo.get("servo1");
+        //wristServo = hardwareMap.servo.get("servo2");
+        //clawServo = hardwareMap.servo.get("servo3");
 
        /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
@@ -124,6 +128,7 @@ public class TeleOp6217_DRC extends OpMode
      */
     @Override
     public void start() {
+        servoTapper.setPosition(0.2);
     }
 
     @Override
