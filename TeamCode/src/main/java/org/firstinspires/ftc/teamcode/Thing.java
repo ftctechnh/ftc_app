@@ -29,19 +29,14 @@ public class Thing extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-
-        encode(10,0.5, MoveType.LATERALLY);
         VuforiaPlagiarism vuforiaPlagiarism = new VuforiaPlagiarism();
         VuforiaPlagiarism.type type = VuforiaPlagiarism.type.ERROR;
-        while (opModeIsActive()) {
             type = vuforiaPlagiarism.getVuf(hardwareMap);
             if (type != type.ERROR) {
                 robot.arm.setPosition(1);
             } else {
                 robot.arm.setPosition(0.5);
             }
-            robot.arm.setPosition(0);
-        }
     }
 }
 
