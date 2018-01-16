@@ -392,9 +392,11 @@ public class DriveTrain {
         //else if(speed <= 0) speed = 0.1;
 
         double correction = target_heading - getheading();
-        if (correction <= -180)
+        if (correction <= -180) {
             correction += 360;   // correction should be +/- 180 (to the left negative, right positive)
-        if (correction >= 180) correction -= 360;
+        } else if (correction >= 180){
+            correction -= 360;
+        }
 
         while (abs(correction) >= turn_THRESHOLD) { //opmode active?{
             correction = target_heading - getheading();
@@ -442,6 +444,11 @@ public class DriveTrain {
         while ((abs(right_rear.getCurrentPosition() - right_start) + abs(left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts) /* ENCODERS*/) {//Should we average all four motors?
             //Determine correction
             double correction = robot_orientation - getheading();
+            if (correction <= -180){
+                correction += 360; }
+            else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
+                correction -= 360;
+            }
             lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
             lfpower = lfbase;
             rrpower = rrbase;
