@@ -23,7 +23,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class VuforiaPlagiarism {
     public static final String TAG = "Vuforia VuMark Sample";
     Hardware750 robot = new Hardware750();
-    OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
 
     public enum type {
@@ -83,7 +82,7 @@ public class VuforiaPlagiarism {
         }
     }
     //TODO Find out if removing this will break anything
-    String format (OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
-    }
+    //String format (OpenGLMatrix transformationMatrix) {
+    //    return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    //}
 }
