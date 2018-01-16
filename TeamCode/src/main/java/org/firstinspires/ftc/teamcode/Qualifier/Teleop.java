@@ -70,7 +70,7 @@ public class Teleop extends OpMode {
        double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
         double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
         telemetry.addData("Sharp IR V ",sharpIRVoltage);
-        telemetry.addData("Sharp IR cm",IRdistance);
+        telemetry.addData("Sharp IR ","cm %4.1f ",IRdistance);
 
 
         //------------------------------------------------------------------------------

@@ -25,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.AutoTransitioner;
 
 
 @Autonomous(name = "TheAuto", group = "8045")  // @Autonomous(...) is the other common choice
@@ -149,7 +150,9 @@ public class Auto extends LinearOpMode {
 
         //Run using encoders
         gromit.driveTrain.runUsingEncoders();
+        AutoTransitioner.transitionOnStop(this, "zMoo");
 
+        // AutoTransitioner used before waitForStart()
         // Actual Init loop
         while (!opModeIsActive()) {
             telemetry.addData("IMU", "Heading: %4.2f ", gromit.driveTrain.getheading());
