@@ -43,19 +43,19 @@ public class POV extends LinearOpMode {
 
 
 
-            double turn = gamepad1.right_stick_x;
+            double turn = Range.clip(gamepad1.right_stick_y,-0.5,0.5);
 
             if (turn > 0){
-                m1.setPower(-0.5);
-                m2.setPower(0.5);
-                m3.setPower(0.5);
-                m4.setPower(-0.5);
+                m1.setPower(-turn);
+                m2.setPower(turn);
+                m3.setPower(turn);
+                m4.setPower(-turn);
             }
             else if(turn < 0){
-                m1.setPower(0.5);
-                m2.setPower(-0.5);
-                m3.setPower(-0.5);
-                m4.setPower(0.5);
+                m1.setPower(turn);
+                m2.setPower(-turn);
+                m3.setPower(-turn);
+                m4.setPower(turn);
             }
             else{
                 m1.setPower(-rightPower);
