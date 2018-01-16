@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot type="FirstInspires-FTC">
+    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ1761WI" parentModuleAddress="1">
+        <LynxModule name="Expansion Hub 1" port="1">
+            <NeveRest20Gearmotor name="left_front" port="0" />
+            <NeveRest20Gearmotor name="left_rear" port="1" />
+            <NeveRest20Gearmotor name="right_front" port="2" />
+            <NeveRest20Gearmotor name="right_rear" port="3" />
+            <Servo name="jewel_arm" port="0" />
+            <Servo name="right_lower" port="1" />
+            <Servo name="left_lower" port="2" />
+            <AnalogInput name="sharpirsensor" port="1"/>
+            <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+            <LynxColorSensor name="sensor_color" port="1" bus="0" />
+        </LynxModule>
+        <LynxModule name="Expansion Hub 2" port="2">
+            <NeveRest60Gearmotor name="left_glyph" port="0" />
+            <NeveRest60Gearmotor name="right_glyph" port="1" />
+            <NeveRest40Gearmotor name="lift_motor" port="2" />
+            <Servo name="jewel_flicker" port="0" />
+            <Servo name="relic_claw" port="1" />
+            <Servo name="relic_elbow" port="2" />
+            <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+        </LynxModule>
+    </LynxUsbDevice>
+</Robot>

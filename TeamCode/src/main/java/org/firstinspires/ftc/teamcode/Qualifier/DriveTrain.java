@@ -48,7 +48,7 @@ public class DriveTrain {
     public DcMotor right_rear = null;
     public DcMotor left_rear = null;
 
-    public AnalogInput maxbotixSensor;
+//    public AnalogInput maxbotixSensor;
 
     public AnalogInput sharpIRSensor;
 
@@ -110,7 +110,7 @@ public class DriveTrain {
         //Maxbotix Sensor
  //       maxbotixSensor = hardwareMap.analogInput.get("maxbotixsensor");
         //Sharp IR Sensors
- //       sharpIRSensor = hardwareMap.analogInput.get("sharpirsensor");
+        sharpIRSensor = hardwareMap.analogInput.get("sharpirsensor");
 
 
     }
@@ -273,7 +273,7 @@ public class DriveTrain {
         if (abs(rrpower) > max) max = abs(rrpower);
 
 //            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-        double multiplier = (speedMultiplier / max) + 0.3*Math.abs(x);  // try to boost up the strafing power
+        double multiplier = (speedMultiplier / max) + 0.2*Math.abs(x);  // try to boost up the strafing power
 
 //        double multiplier = speedMultiplier / max;
 

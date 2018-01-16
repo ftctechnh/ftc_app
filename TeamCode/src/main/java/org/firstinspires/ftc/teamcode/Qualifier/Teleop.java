@@ -43,7 +43,6 @@ public class Teleop extends OpMode {
     public boolean trainon = false;
 
     boolean loadedLastTime = false;
-
     double lastLoadTime;
 
     @Override
@@ -68,8 +67,10 @@ public class Teleop extends OpMode {
     public void loop() {
         timeLeft = 120 - runtime.seconds();
 
-//        double maxVoltage = gromit.driveTrain.maxbotixSensor.getVoltage();
-//        telemetry.addData("maxbotix ",maxVoltage);
+       double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+        double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+        telemetry.addData("Sharp IR V ",sharpIRVoltage);
+        telemetry.addData("Sharp IR cm",IRdistance);
 
 
         //------------------------------------------------------------------------------
