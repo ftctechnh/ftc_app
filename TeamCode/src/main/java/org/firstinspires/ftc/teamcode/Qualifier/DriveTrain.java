@@ -253,26 +253,29 @@ public class DriveTrain {
         }
 
 
-        lfpower = ( y - x + rotation);
-        lrpower = ( y + x + rotation);
-        rfpower = ( y + x - rotation);
-        rrpower = ( y - x - rotation);
 //        lfpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
 //        lrpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
 //        rfpower = signum(y)*Math.sin(Math.toRadians(drive_direction + 45));
 //        rrpower = signum(y)*Math.cos(Math.toRadians(drive_direction + 45));
 //
 
-
-
         //Determine largest power being applied in either direction
+
+        lfpower = ( y - x + rotation);
+        lrpower = ( y + x + rotation);
+        rfpower = ( y + x - rotation);
+        rrpower = ( y - x - rotation);
+
+//        //Determine largest power being applied in either direction
         double max = abs(lfpower);
         if (abs(lrpower) > max) max = abs(lrpower);
         if (abs(rfpower) > max) max = abs(rfpower);
         if (abs(rrpower) > max) max = abs(rrpower);
 
 //            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-        double multiplier = speedMultiplier / max;
+        double multiplier = (speedMultiplier / max) + 0.3*Math.abs(x);  // try to boost up the strafing power
+
+//        double multiplier = speedMultiplier / max;
 
         lfpower *= multiplier;
         lrpower *= multiplier;

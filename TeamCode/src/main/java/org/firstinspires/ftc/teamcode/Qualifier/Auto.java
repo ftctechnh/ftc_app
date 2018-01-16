@@ -264,15 +264,13 @@ public class Auto extends LinearOpMode {
 
 
         waitForStart();
-        telemetry.clearAll();
+        runtime.reset();
+        //telemetry.clearAll();
 
         // should start a timer to timeout for vumark...
 
-        telemetry.addData("VuMark", "%s is where we're heading", vuMark);
-        telemetry.update();
-
-
-
+        //telemetry.addData("VuMark", "%s is where we're heading", vuMark);
+        //telemetry.update();
 
         relicTrackables.deactivate();
 
