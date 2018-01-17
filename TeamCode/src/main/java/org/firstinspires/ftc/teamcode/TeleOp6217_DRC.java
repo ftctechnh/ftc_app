@@ -1,6 +1,6 @@
 /* Team 6217
     The Fellowship
-    2017 - 2018 Relic Recovery Robot Code */
+    2016 - 2017 Velocity Vortex Robot Code */
 
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.PWMOutput;
@@ -28,9 +28,7 @@ import static java.lang.Math.abs;
 
 public class TeleOp6217_DRC extends OpMode
 {
-/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Right Wheel, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2.
-* Servo0-3 are the cr servos for the extended arm to pick up Reggie.
-* The servos are named closest to farthest, servo0 being closest to the robot.*/
+/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2*/
     DcMotor motorFR;
     DcMotor motorFL;
     DcMotor motorBR;
@@ -39,15 +37,9 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorConR;
     CRServo servoConL;
     CRServo servoConR;
-    CRServo shoulderServo;
-    Servo elbowServo;
-    Servo wristServo;
-    Servo clawServo;
-
     DcMotor motorRocker1;
     DcMotor motorRocker2;
     Servo Jack;
-    Servo servoTapper;
 
    /* IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
@@ -95,17 +87,6 @@ public class TeleOp6217_DRC extends OpMode
         motorRocker2.setDirection(DcMotor.Direction.REVERSE);
         Jack = hardwareMap.servo.get ("Jack");
 
-        //Jewel Tapper Servo
-        servoTapper = hardwareMap.servo.get("tapper");
-
-        // Relic Arm Servos
-        // Set config file names to servo0-3 for easier typing
-        // Shoulder servo: Hitec H875 HB CR servo
-        //shoulderServo = hardwareMap.crservo.get("servo0");
-        // Elbow, wrist, claw servos: REV 180 servos
-        //elbowServo = hardwareMap.servo.get("servo1");
-        //wristServo = hardwareMap.servo.get("servo2");
-        //clawServo = hardwareMap.servo.get("servo3");
 
        /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
@@ -128,7 +109,6 @@ public class TeleOp6217_DRC extends OpMode
      */
     @Override
     public void start() {
-        servoTapper.setPosition(0.2);
     }
 
     @Override
@@ -160,7 +140,6 @@ public class TeleOp6217_DRC extends OpMode
         boolean leftPad = gamepad1.dpad_left;
         boolean dpad_up = gamepad1.dpad_up;
         boolean dpad_down = gamepad1.dpad_down;
-
          /* ~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Limit x and y values and adjust to power curve
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -184,31 +163,34 @@ public class TeleOp6217_DRC extends OpMode
         if (dpad_up) {
             motorConL.setPower(-.7);
             motorConR.setPower(.7);
+
         }
         else if (dpad_down)  {
             motorConL.setPower(.7);
             motorConR.setPower(-.7);
+
         }
         else {
             motorConL.setPower(0);
             motorConR.setPower(0);
-        }
 
+        }
         if(rightPad)    {
             servoConL.setPower(-1);
             servoConR.setPower(-1);
         }
+
         else if (leftPad)   {
             servoConL.setPower(1);
             servoConR.setPower(1);
         }
+
         else    {
             servoConL.setPower(0);
             servoConR.setPower(0);
         }
 
-        // R o c k e r
-
+        // Rocker
         if (posyR <= -.2) {
             motorRocker1.setPower(posyR);
             motorRocker2.setPower(posyR);
@@ -217,31 +199,26 @@ public class TeleOp6217_DRC extends OpMode
             motorRocker1.setPower(posyR);
             motorRocker2.setPower(posyR);
         }
+        else if (x)  {
+            motorRocker1.setPower(.15);
+            motorRocker2.setPower(-.15);
+        }
+
         else    {
             motorRocker1.setPower(0);
             motorRocker2.setPower(0);
         }
-
-        // J a c k
-
+        // Jack
         if(a) {
             Jack.setPosition(1.0);
         }
         else if(b) {
-            Jack.setPosition(0.25);
-        }
-        else if (y) {
-            Jack.setPosition(0.6);
+            Jack.setPosition(0.2);
         }
 
-        // R e l i c   C l a w
-        // X button triggers use of left joystick for arm/claw control
 
-        if (x) {
-            wristServo.setPosition(posy);
-        }
 
-        //  P i v o t left
+//  pivot left
 
         if (LT != 0)  {
 
@@ -251,7 +228,9 @@ public class TeleOp6217_DRC extends OpMode
             motorBR.setPower(-LT);
         }
 
-        //  P i v o t  right
+        //
+
+        //  pivot right
 
         else if (RT != 0)  {
 
@@ -260,28 +239,33 @@ public class TeleOp6217_DRC extends OpMode
             motorFR.setPower(RT);
             motorBR.setPower(RT);
         }
-
-        //  D r i v e
+        //  Driving
 
         else if ( ( posy != 0) || ( posx != 0 ) ) {
+
             FRBLPower = posy - posx;
             FLBRPower = posy + posx;
             motorFR.setPower( FRBLPower );
             motorFL.setPower( FLBRPower );
             motorBR.setPower( FLBRPower );
             motorBL.setPower( FRBLPower );
+
         }
+
         else {
+
             motorFR.setPower(0);
             motorFL.setPower(0);
             motorBR.setPower(0);
             motorBL.setPower(0);
         }
 
+
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Write telemetry back to driver station
             NOTE: Output is sorted by the first field, hence the numbering
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
         telemetry.addData("1", "Power, FRBL/FLBR: " +
                 String.format("%.2f", FRBLPower) + " " +
@@ -325,9 +309,10 @@ public class TeleOp6217_DRC extends OpMode
      * is less than linear.  This is to make it easier to drive
      * the robot more precisely at slower speeds.
      */
-        // LB = left bumper, RB = right bumper.
+// LB = left bumper, RB = right bumper.
        boolean LB = gamepad1.left_bumper;
        boolean RB = gamepad1.right_bumper;
+
 
        double dead = .2;
 

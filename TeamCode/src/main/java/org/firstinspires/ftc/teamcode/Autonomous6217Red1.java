@@ -48,10 +48,13 @@ public class Autonomous6217Red1 extends LinearOpMode {
     DcMotor motorConL;
     DcMotor motorConR;
 
+
     NormalizedColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
     boolean iAmBlue = false;
     boolean iAmRed = true;
+    boolean isBoxSide = true;
+
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -82,6 +85,9 @@ public class Autonomous6217Red1 extends LinearOpMode {
         servoConR.setDirection(CRServo.Direction.REVERSE);
         servoTapper = hardwareMap.servo.get("tapper");
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+        if (colorSensor instanceof SwitchableLight) {
+            ((SwitchableLight) colorSensor).enableLight(true);
+        }
 
         // S t a r t
 
@@ -94,9 +100,9 @@ public class Autonomous6217Red1 extends LinearOpMode {
         telemetry.update();
 
         servoTapper.setPosition(0.0d);
-        Wait(.5);
-        servoTapper.setPosition(0.7d);
-        Wait(.5);
+        Wait(1);
+        servoTapper.setPosition(0.6d);
+        Wait(1);
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
 
@@ -116,24 +122,22 @@ public class Autonomous6217Red1 extends LinearOpMode {
             iSeeRed = false;
         }
 
-        Wait(.5f);
+        Wait(2.5f);
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
             move(0f, .2f, .25f);
-            servoTapper.setPosition(0.1d);
-            Wait(.5);
+            Wait(1);
             move(0f, -.2f, .25f);
         } else {
             telemetry.addData("1", "move left");
             move(0f, -.2f, .25f);
-            servoTapper.setPosition(0.1d);
-            Wait(.5);
+            Wait(1);
             move(0f, .2f, .25f);
         }
         telemetry.update();
+        servoTapper.setPosition(0.1d);
 
-        //G L Y P H  P L A C E M E N T
         move(0f, -0.5f, .47f);
 
         Wait(.5);

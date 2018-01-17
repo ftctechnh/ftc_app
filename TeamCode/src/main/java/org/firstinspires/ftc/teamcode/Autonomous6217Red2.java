@@ -47,11 +47,13 @@ public class Autonomous6217Red2 extends LinearOpMode {
     CRServo servoConR;
     DcMotor motorConL;
     DcMotor motorConR;
-
     NormalizedColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
     boolean iAmBlue = false;
     boolean iAmRed = true;
+    boolean isBoxSide = true;
+
+
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -81,12 +83,18 @@ public class Autonomous6217Red2 extends LinearOpMode {
         servoConR = hardwareMap.crservo.get("servoConR");
         servoConR.setDirection(CRServo.Direction.REVERSE);
         servoTapper = hardwareMap.servo.get("tapper");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+        if (colorSensor instanceof SwitchableLight) {
+            ((SwitchableLight) colorSensor).enableLight(true);
+        }
+
 
         // S t a r t
 
         waitForStart();
 
         // J e w e l s
+
         boolean autoClear = false;
         telemetry.setAutoClear(autoClear);
         telemetry.addLine("starting");
@@ -131,7 +139,6 @@ public class Autonomous6217Red2 extends LinearOpMode {
         telemetry.update();
         servoTapper.setPosition(0.1d);
 
-        //G L Y P H  P L A C E M E N T
         move(0f, -0.5f, .35f);
 
         Wait(1);
