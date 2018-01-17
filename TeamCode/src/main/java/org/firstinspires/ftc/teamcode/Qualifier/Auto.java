@@ -152,7 +152,7 @@ public class Auto extends LinearOpMode {
 
         //Run using encoders
         gromit.driveTrain.runUsingEncoders();
-        AutoTransitioner.transitionOnStop(this, "zMoo");
+        AutoTransitioner.transitionOnStop(this, "zMoo");   // get ready for teleop at the end of auto
 
         // AutoTransitioner used before waitForStart()
         // Actual Init loop
