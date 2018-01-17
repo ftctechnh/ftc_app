@@ -4,6 +4,7 @@ import android.os.Environment;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 
 // This is NOT an opmode
 
@@ -56,8 +58,11 @@ public class NullbotHardware {
     public Servo rightBlockClaw;
     public Servo relicClaw;
     public Servo relicClawFlipper;
+    public Servo leftIntakeFlipper;
+    public Servo rightIntakeFlipper;
 
     public PixyCam leftPixyCam;
+    public AnalogInput frontUltrasonic;
 
     // Sensors
     public ManualHeadingAdjustmentController headingAdjuster;
@@ -75,6 +80,7 @@ public class NullbotHardware {
     OutputStreamWriter oW;
     LinearOpMode opMode;
     ScheduledExecutorService loggerThread;
+    AccelerationIntegrator integrator;
 
     // Utility mechanisms
     public DcMotor[] motorArr;
@@ -107,7 +113,7 @@ public class NullbotHardware {
         imu = hwMap.get(BNO055IMU.class, "primaryIMU");
 
         leftPixyCam = hwMap.get(PixyCam.class, "leftPixy");
-
+        frontUltrasonic = hwMap.get(AnalogInput.class, "us");
 
         if (!isTestChassis) {
             lift = hwMap.dcMotor.get("lift");
@@ -123,12 +129,11 @@ public class NullbotHardware {
 
             relicClawFlipper = hwMap.servo.get("relicClawFlipper");
             retractFlipper();
-            /*ServoControllerEx flipperCtrl = (ServoControllerEx) relicClawFlipper.getController();
-            int flipperPort = relicClawFlipper.getPortNumber();
-            PwmControl.PwmRange flipperRange = new PwmControl.PwmRange(553, 2425);
-            flipperCtrl.setServoPwmRange(flipperPort, flipperRange);*/
 
             relicClaw = hwMap.servo.get("relicClaw");
+
+            leftIntakeFlipper = hwMap.servo.get("leftIntakeFlipper");
+            rightIntakeFlipper = hwMap.servo.get("rightIntakeFlipper");
 
             raiseWhipSnake();
             openBlockClaw();
@@ -189,7 +194,13 @@ public class NullbotHardware {
         parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
 
-        //imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
+        integrator = new AccelerationIntegrator();
+
+        parameters.accelerationIntegrationAlgorithm = integrator;
+
+        imu.initialize(parameters);
+
+        ///imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
 
         updateReadings();
 
@@ -420,8 +431,8 @@ public class NullbotHardware {
     }
 
     public void closeBlockClaw() {
-        leftBlockClaw.setPosition(0.43);
-        rightBlockClaw.setPosition(0.57);
+        leftBlockClaw.setPosition(0.5);
+        rightBlockClaw.setPosition(0.5);
 
     }
 
