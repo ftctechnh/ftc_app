@@ -11,7 +11,6 @@ import static com.sun.tools.doclint.Entity.pi;
 
 public class GlyphTrain {
 
-
 //    public enum SpeedSetting {FAST, SLOW}
 
     //    private SpeedSetting speedMode;
