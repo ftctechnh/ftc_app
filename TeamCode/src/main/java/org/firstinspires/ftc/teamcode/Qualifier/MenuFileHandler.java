@@ -346,7 +346,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[28] = "BLUE Back Distance 2 LEFT";
-            menuvalue[28] = 7;
+            menuvalue[28] = 7.5;
             menulowerlimit[28] = -70;
             menuupperlimit[28] =  70;
             menuincrement[28] = 0.5;
@@ -355,7 +355,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[29] = "BLUE Back Distance 2 CENTER";
-            menuvalue[29] = 7 + 10.5;
+            menuvalue[29] = 20.0;
             menulowerlimit[29] = -70;
             menuupperlimit[29] =  70;
             menuincrement[29] = 0.5;
@@ -364,7 +364,7 @@ public class MenuFileHandler {
 
         if (init) {
             menulabel[30]= "BLUE Back Distance 2 RIGHT";
-            menuvalue[30] = 7 + 22.0;
+            menuvalue[30] = 33.0;
             menulowerlimit[30] = -70;
             menuupperlimit[30] =  70;
             menuincrement[30] = 0.5;

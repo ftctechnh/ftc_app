@@ -26,6 +26,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import org.firstinspires.ftc.teamcode.Qualifier.AutoTransitioner;
+
+
 
 @Autonomous(name = "TheAuto", group = "8045")  // @Autonomous(...) is the other common choice
 //@Disabled
@@ -360,7 +363,7 @@ public class Auto extends LinearOpMode {
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 distance2 = menuFile.BlueBackDistance2Right ;
             }
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, 90);  //-90
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, -90);  //-90
             sleep(1000);
             gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.BlueBackTurn3);   // about face 180.
             sleep(1000);

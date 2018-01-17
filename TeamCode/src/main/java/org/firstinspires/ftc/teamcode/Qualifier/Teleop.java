@@ -257,8 +257,34 @@ public class Teleop extends OpMode {
         rrpower = signum(y)*Math.cos(drive_direction-PI/4);
 */
 
+        //  extends the Relic arm forward and back
+        if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
+            gromit.relicArm.relicArmMotor.setPower(gamepad2.right_stick_y);
+        }
+        else {
+            gromit.relicArm.relicArmMotor.setPower(0);
+        }
+
+        // rotates the smaller arm forward and back (elbow)
+        if (gamepad2.left_bumper) {
+            gromit.relicArm.elbowUp();
+        }
+        else if (gamepad2.left_trigger > 0.1) {
+            gromit.relicArm.elbowDown();
+        }
+
+        // rotates the relic clamp forward or back
+        if (gamepad2.left_stick_y > 0.1){
+            gromit.relicArm.clawOpen();
+        }
+        else if (gamepad2.left_stick_y < -0.1){
+        gromit.relicArm.clawClose();
+        }
+
         telemetry.addLine("Time Left: " + timeLeft);
         telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);
+
+
 
     }
 
