@@ -199,7 +199,7 @@ public class APDS9930 {
         //linearize!
         int dist = (sensor.read8(Regs.PDATAL.REG) & 0xff) | ((sensor.read8(Regs.PDATAH.REG) & 0xff) << 8);
         double out = GainLinearizationCoff.values()[this.PGAIN.ordinal()].linearize(getDist());
-        if(redCorrect) out += 15;
+        if(!redCorrect) out -= 15;
         if(autoGain) {
             if(this.PGAIN.ordinal() > minGain.ordinal() && dist >= LOWER_GAIN_THRESH) setPGAIN(ProxGain.values()[this.PGAIN.ordinal() - 1]);
             else if(this.PGAIN.ordinal() < maxGain.ordinal() && dist <= RAISE_GAIN_THRESH) setPGAIN(ProxGain.values()[this.PGAIN.ordinal() + 1]);

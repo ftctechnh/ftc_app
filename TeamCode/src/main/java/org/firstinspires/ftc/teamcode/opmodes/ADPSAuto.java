@@ -122,12 +122,12 @@ public class ADPSAuto extends VuforiaBallLib {
             findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 155.0f * mul, 600, true, -360.0f, 360.0f));
             findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
-            findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.9, 0.25, false));
+            findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.85, 0.25, false));
             GyroCorrectStep step;
-            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 35.0f, 360.0f);
-            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 35.0f, 360.0f);
+            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 360.0f);
+            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 360.0f);
             if(red) skip--;
-            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.87, 0.7, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.7, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
                     70, 8, skip, 70, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
@@ -219,6 +219,7 @@ public class ADPSAuto extends VuforiaBallLib {
         public boolean loop() {
             //get distance
             double dist = this.sens.getLinearizedDistance(red);
+            if(Double.isInfinite(dist)) dist = 150;
             if(movingAvg == null) movingAvg = new FilterLib.MovingWindowFilter(10, dist);
             movingAvg.appendValue(dist);
             double filteredDist = movingAvg.currentValue();
@@ -229,7 +230,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 float error = (float)(this.mDist - dist);
                 //if we found it, stop
                 //if the peak is within stopping margin, stop
-                if(sens.getPGAIN() == APDS9930.ProxGain.GAIN_1X && Math.abs(error) <= mError) {
+                if(Math.abs(error) <= mError) {
                     setMotorsWithoutGyro(0);
                     return ++foundCount >= APDS_FOUND_COUNT;
                 }
@@ -244,6 +245,8 @@ public class ADPSAuto extends VuforiaBallLib {
                 if(red) pError = -pError;
                 if(pError >= 0) power = Range.clip(gyroStep.getMinPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
                 else power = Range.clip(pError - gyroStep.getMinPower(), -gyroStep.getMaxPower(), -gyroStep.getMinPower());
+                //if(pError >= 0) power = Range.clip(pError, 0, gyroStep.getMaxPower());
+                //else power = Range.clip(pError, -gyroStep.getMaxPower(), 0);
                 setMotorsWithoutGyro(-power);
                 //telem
                 mode.telemetry.addData("APDS dist", error);
@@ -270,8 +273,6 @@ public class ADPSAuto extends VuforiaBallLib {
                 //not done
                 return false;
             }
-
-
         }
 
         private void setMotorsWithoutGyro(float power) {
