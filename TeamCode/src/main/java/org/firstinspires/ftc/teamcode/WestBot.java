@@ -15,6 +15,8 @@ public class WestBot extends LinearOpMode {
     private double rightPower = 0;
     private double leftPower = 0;
 
+    private double sens  = 1;
+
 
     @Override
     public void runOpMode() {
@@ -35,14 +37,19 @@ public class WestBot extends LinearOpMode {
             telemetry.addData("Status", "Running");
             telemetry.update();
 
-            rightPower = Range.clip(gamepad1.left_stick_y - gamepad1.left_stick_x,-0.5,0.5);
-            leftPower = Range.clip(gamepad1.left_stick_y + gamepad1.left_stick_x,-0.5,0.5);
+            rightPower = Range.clip(gamepad1.left_stick_y - gamepad1.left_stick_x,-sens,sens);
+            leftPower = Range.clip(gamepad1.left_stick_y + gamepad1.left_stick_x,-sens,sens);
 
 
+            m1.setPower(-rightPower);
+            m2.setPower(leftPower);
 
-
-            m1.setPower(rightPower);
-            m2.setPower(-leftPower);
+            if (gamepad1.right_bumper && (sens/2 >= 0.125)){
+                sens /= 2;
+            }
+            if (gamepad1.left_bumper && ((sens*2) <= 1)){
+                sens *= 2;
+            }
 
 
         }

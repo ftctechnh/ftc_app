@@ -16,7 +16,7 @@ public class MecanumFinal extends LinearOpMode {
     private double rightPower = 0;
     private double leftPower = 0;
 
-    private boolean openned = false;
+    private boolean opened = false;
 
 
 
@@ -89,13 +89,13 @@ public class MecanumFinal extends LinearOpMode {
                 liftToPosition(150);
             }
 
-            if (gamepad1.right_trigger && !openned){
+            if ((gamepad1.right_trigger > 0) && (!opened)){
                 grabber(true);
-                openned = true;;
+                opened = true;;
             }
-            if (gamepad1.right_trigger && openned){
+            if ((gamepad1.right_trigger > 0) && opened){
                 grabber(false);
-                openned = false;
+                opened = false;
             }
 
 
