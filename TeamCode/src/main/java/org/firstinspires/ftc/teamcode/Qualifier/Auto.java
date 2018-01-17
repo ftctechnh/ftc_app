@@ -25,7 +25,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.AutoTransitioner;
 
 
 @Autonomous(name = "TheAuto", group = "8045")  // @Autonomous(...) is the other common choice
