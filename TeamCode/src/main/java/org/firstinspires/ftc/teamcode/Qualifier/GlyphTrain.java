@@ -51,6 +51,9 @@ public class GlyphTrain {
         left_glyph.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_glyph.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        left_glyph.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right_glyph.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Set all motors to zero power
         stopGlyphMotors();
         // reset encoder to zero for lift (assume you have it down)
@@ -79,8 +82,8 @@ public class GlyphTrain {
 //        }
 
 
-            left_glyph.setPower(glyphpower);
-            right_glyph.setPower(glyphpower-.1);
+            left_glyph.setPower(glyphpower-0.1);
+            right_glyph.setPower(glyphpower-.0);
     }
 
     public void stopGlyphMotors() {
