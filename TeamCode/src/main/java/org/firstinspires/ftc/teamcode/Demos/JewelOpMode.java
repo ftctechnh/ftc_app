@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode.Demos;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="DogeCV Jewel Detector", group="DogeCV")
-
+@Disabled
 public class JewelOpMode extends OpMode
 {
     // Declare OpMode members.

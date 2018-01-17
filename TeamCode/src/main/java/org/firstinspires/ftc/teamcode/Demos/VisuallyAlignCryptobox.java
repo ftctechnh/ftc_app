@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Demos;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.CryptoboxDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.NullbotHardware;
  */
 
 @Autonomous(name="DEMO See cryptobox", group="Demo")
+@Disabled
 public class VisuallyAlignCryptobox extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
