@@ -44,7 +44,6 @@ public class CompTeleFinal extends OpMode
          * GAMEPAD 2
          */
         newRobot.fineMoveLift(gamepad2.left_stick_y, 1);
-
         if (gamepad2.left_bumper)
         {
             newRobot.openOrCloseDoor(false);

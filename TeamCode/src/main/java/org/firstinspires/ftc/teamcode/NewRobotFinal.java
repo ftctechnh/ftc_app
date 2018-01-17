@@ -74,6 +74,8 @@ public class NewRobotFinal
     DigitalChannel bottomLiftMagSwitch;
     DigitalChannel topLiftMagSwitch;
 
+    private boolean touchedBottomMag = false;
+
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
     public final float roboDiameterCm = (float) (38.7 * Math.PI); // can be adjusted
@@ -93,9 +95,9 @@ public class NewRobotFinal
         wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
-        leftDoorWall.scaleRange(.55f, 1f);
+        leftDoorWall.scaleRange(.52f, .91f);
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
-        rightDoorWall.scaleRange(.08f, .53f);
+        rightDoorWall.scaleRange(.11f, .51f);
 
         wingTouchSens = hardwareMap.digitalChannel.get("wingTouchSens");
         bottomLiftMagSwitch = hardwareMap.digitalChannel.get("bottomLiftMagSwitch");
@@ -725,6 +727,27 @@ public class NewRobotFinal
 
     public void fineMoveLift(float y, float factor)
     {
+        if(!bottomLiftMagSwitch.getState())
+        {
+            if (!touchedBottomMag)
+            {
+                liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+            }
+            else
+                touchedBottomMag = true;
+            if (y > 0)
+                y = 0;
+        }
+        else
+            touchedBottomMag = false;
+
+        if (!topLiftMagSwitch.getState())
+        {
+            if (y < 0)
+                y = 0;
+        }
+
         if (y > .3)
         {
             liftDir = STOP_L;
@@ -762,7 +785,6 @@ public class NewRobotFinal
     public void moveWing(boolean moveDown)
     {
         //long endTime = System.currentTimeMillis() + 6000;
-
         if (moveDown)
         {
             wingMotor.setPower(-1f);
@@ -788,11 +810,11 @@ public class NewRobotFinal
         if (close)
         {
             leftDoorWall.setPosition(1f);
-            rightDoorWall.setPosition(.08f);
+            rightDoorWall.setPosition(0f);
         } else
         {
-            leftDoorWall.setPosition(.55f);
-            rightDoorWall.setPosition(0.53f);
+            leftDoorWall.setPosition(0f);
+            rightDoorWall.setPosition(1f);
         }
     }
 
