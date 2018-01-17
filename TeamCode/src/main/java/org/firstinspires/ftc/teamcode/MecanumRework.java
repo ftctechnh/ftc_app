@@ -153,7 +153,7 @@ public class MecanumRework extends OpMode {
             robot.arm.setPosition(1); // outwards
         }
         if(gamepad1.x){
-            robot.arm.setPosition(0.4); // back up towards robot
+            robot.arm.setPosition(0.5); // back up towards robot
         }
         // TODO: gripper implementation and locking setup
 
@@ -176,9 +176,9 @@ public class MecanumRework extends OpMode {
         }
 
         try {
-            if (gamepad2.dpad_left) {
+            if (gamepad2.dpad_up) {
                 robot.clawMotor.setPower(0.25);
-            } else if (gamepad2.dpad_right) {
+            } else if (gamepad2.dpad_down) {
                 robot.clawMotor.setPower(-0.25);
             } else {
                 robot.clawMotor.setPower(0);
