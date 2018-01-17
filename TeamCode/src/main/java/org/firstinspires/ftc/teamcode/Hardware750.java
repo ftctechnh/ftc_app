@@ -100,6 +100,14 @@ public class Hardware750 {
         }
         blockEjector = hwMap.get(Servo.class, "blockEjector");
 
+        try {
+            thiccClaw1 = hwMap.get(Servo.class, "thiccClaw1");
+            thiccClaw2 = hwMap.get(Servo.class, "thiccClaw2");
+        } catch (Exception e) {
+            System.out.println("One or both of the relic claw servos isn't connected. " +
+                    "Caught in HwMap.");
+        }
+
         flDrive = hwMap.get(DcMotor.class, "flDrive");
         frDrive = hwMap.get(DcMotor.class, "frDrive");
         rlDrive = hwMap.get(DcMotor.class, "rlDrive");

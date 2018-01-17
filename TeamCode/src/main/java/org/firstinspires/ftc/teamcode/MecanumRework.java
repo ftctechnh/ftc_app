@@ -207,6 +207,17 @@ public class MecanumRework extends OpMode {
             robot.armExtender.setPower(0);
         }
 
+        double CLOSE_POS = 0;
+        double OPEN_POS = 0.75;
+
+        if (gamepad2.x) {
+            robot.thiccClaw1.setPosition(CLOSE_POS);
+            robot.thiccClaw2.setPosition(CLOSE_POS);
+        }else if (gamepad2.y){
+            robot.thiccClaw1.setPosition(OPEN_POS);
+            robot.thiccClaw2.setPosition(OPEN_POS);
+        }
+
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
         telemetry.addData("ZPB of Lift", robot.lift.getZeroPowerBehavior());
         telemetry.addData("lift power", robot.lift.getPower());
