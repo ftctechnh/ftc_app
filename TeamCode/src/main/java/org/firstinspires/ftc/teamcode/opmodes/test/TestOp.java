@@ -16,11 +16,14 @@ import static org.firstinspires.ftc.teamcode.robot.Claw.CLAW_INCREMENT;
 /**
  * Created by frazierb on 10/18/2017.
  */
-@TeleOp(name="Test", group="Test")
+@TeleOp(name="TestOp", group="Test")
 public class TestOp extends OpMode {
     private DcMotor leftDrive, rightDrive,joint;
     private Claw claw;
     private ColorSensor colorSensor;
+    private double divisor = 0.5;
+    private boolean dpadPressed = false;
+    private boolean aPressed = false;
 
     @Override
     public void init() {
@@ -49,10 +52,25 @@ public class TestOp extends OpMode {
 
     @Override
     public void loop() {
-        leftDrive.setPower(gamepad1.left_stick_y);
-        rightDrive.setPower(gamepad1.right_stick_y);
+        leftDrive.setPower(gamepad1.left_stick_y / divisor);
+        rightDrive.setPower(gamepad1.right_stick_y / divisor);
 
-        joint.setPower(gamepad2.left_stick_y/4);
+        joint.setPower(gamepad2.left_stick_y * (1/3));
+
+        if (gamepad1.dpad_up && !dpadPressed) {
+            divisor =+ CLAW_INCREMENT;
+            dpadPressed = true;
+        }
+
+        if (gamepad1.dpad_down && !dpadPressed) {
+            divisor -= CLAW_INCREMENT;
+            dpadPressed = true;
+        }
+
+        if (!gamepad1.dpad_down && !gamepad1.dpad_up) {
+            dpadPressed = false;
+        }
+
 
         if (gamepad2.x) claw.setPosition(OPEN);
         if (gamepad2.b) claw.setPosition(CLOSED);
@@ -65,6 +83,16 @@ public class TestOp extends OpMode {
         if (gamepad2.dpad_left) {
             claw.setPosition(claw.getPosition() - CLAW_INCREMENT);
         }
+
+        if (gamepad1.a && !aPressed) {
+            divisor = -divisor;
+            aPressed = true;
+        }
+        if (!gamepad1.a) {
+            aPressed = false;
+        }
+
+
 
         telemetry.addData("ColorRGB",colorSensor.red() + ", " + colorSensor.green() + ", " + colorSensor.blue());
     }

@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import org.firstinspires.ftc.teamcode.opmodes.BaseOp;
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.opmodes.RelicBaseOp;
 
 /**
- * Created by Derek on 10/31/2017.
+ * Created by Derek on 12/7/2017.
  */
 
-public class TeleOp extends BaseOp {
-
+public class RelicTeleOp extends RelicBaseOp {
     @Override
     public void init() {
         super.init();
@@ -18,6 +16,6 @@ public class TeleOp extends BaseOp {
     @Override
     public void loop() {
         super.loop();
-
+        driveInfo.setFromNorm();
     }
 }
