@@ -279,7 +279,7 @@ public class Auto extends LinearOpMode {
 
         relicTrackables.deactivate();
 
-        if(menuFile.mode == 3){
+        if(menuFile.mode == 3){   //  test mode
             gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
 
             while (opModeIsActive()) {
