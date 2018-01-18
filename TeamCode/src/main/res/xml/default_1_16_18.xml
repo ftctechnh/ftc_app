@@ -11,7 +11,7 @@
             <Servo name="left_lower" port="2" />
             <AnalogInput name="sharpirsensor" port="1"/>
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
-            <LynxColorSensor name="sensor_color" port="1" bus="0" />
+            <LynxColorSensor name="sensor_color" port="0" bus="1" />
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2">
             <NeveRest60Gearmotor name="left_glyph" port="0" />
