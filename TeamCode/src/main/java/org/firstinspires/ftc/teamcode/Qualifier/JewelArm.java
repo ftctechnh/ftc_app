@@ -12,7 +12,7 @@ public class JewelArm {
     public Servo jewelArmServo;
     public Servo jewelFlickerServo;
     public ColorSensor sensorColor;
-    public DistanceSensor sensorDistance;
+//    public DistanceSensor sensorDistance;
     public double BRRatio = 0;
     public double jewelarmup = 0.22;
 
@@ -34,7 +34,7 @@ public class JewelArm {
         jewelFlickerServo = hardwareMap.servo.get("jewel_flicker");
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
         // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
+ //       sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
 
         jewelArmUp();

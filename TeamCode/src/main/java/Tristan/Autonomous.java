@@ -5,6 +5,7 @@ package Tristan;
  */
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,6 +14,7 @@ import RicksCode.Bill_Adapted.RobotRR;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AUTOTristan",group="Tristan")  // @Autonomous(...) is the other common choice
+@Disabled
 //@Disabled
 public class Autonomous extends LinearOpMode {
 

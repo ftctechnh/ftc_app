@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -59,7 +60,8 @@ import java.util.Locale;
  */
 
 @TeleOp(name="Tele", group="TELE")
-//@Disabled
+@Disabled
+
 public class Tele extends OpMode{
 
     /* Declare OpMode members. */

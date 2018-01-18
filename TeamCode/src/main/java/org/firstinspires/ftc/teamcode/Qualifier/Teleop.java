@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
@@ -37,6 +39,10 @@ public class Teleop extends OpMode {
     public boolean righttriggerIsReleased = true;
     public boolean glyphLiftismoving = false;
     public boolean delayLift = false;
+    public boolean glyphSensed = false;
+    public int manualLiftDelay = 200;
+    public int glyphSensedDelay = 0;
+
 
     public boolean padupIsReleased = true;
     public boolean paddownIsReleased = true;
@@ -74,7 +80,7 @@ public class Teleop extends OpMode {
         double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
         telemetry.addData("Sharp IR V ",sharpIRVoltage);
         telemetry.addData("Sharp IR ","cm %4.1f ",IRdistance);
-        //RobotLog.ii("[Gromit] ", Double.toString(IRdistance) );
+//        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance), " Ticks "+Integer.toString(gromit.driveTrain.left_front.getCurrentPosition()) );
 
         //------------------------------------------------------------------------------
         //toggle  drive direction-when the button was released and it is now pressed.
@@ -109,9 +115,10 @@ public class Teleop extends OpMode {
         } else {
             xIsReleased = true;
         }
-// check to see if enough time has elapsed to start lift
-        if (delayLift && runtime.milliseconds() - startclosetime > 200){     // this is the delay time in milliseconds
+// check to see if enough time has elapsed to start lift   (automatic lift after clamp)
+        if (delayLift && runtime.milliseconds() - startclosetime > manualLiftDelay + glyphSensedDelay){     // this is the delay time in milliseconds
             delayLift = false;
+            glyphSensedDelay = 0;
             gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
         }
 
@@ -152,7 +159,7 @@ public class Teleop extends OpMode {
 
 
         //------------------------------------------------------------------------------
-        // glyph lift
+        // manual glyph lift
         if (gamepad1.y || gamepad2.y) {
             glyphLiftismoving = false;
             if (gromit.glyphTrain.lift_motor.getCurrentPosition() < gromit.glyphTrain.upperLiftLimit) {
@@ -212,6 +219,24 @@ public class Teleop extends OpMode {
         else{
             padupIsReleased =true;
         }
+
+//        //  check for block  here
+//        if(trainon){
+//            if ( gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) <10){     // if block is sensed set boolean
+//                glyphSensed = true;
+//            }else if (glyphSensed && gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) > 7){     // if block was already sensed (sense the back end)
+//                glyphSensed = false;
+//                startclosetime = runtime.milliseconds();    // start timer  set boolean
+//                delayLift = true;                            // check for time to lift
+//                glyphSensedDelay = 500;
+//                // set target  as 1 (assume we're at zero for now
+//                liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
+//                glyphLiftismoving = true;     // turn on manual override
+//
+//            }
+//        }
+
+
         // glyph clamp
         if (gamepad1.right_trigger > 0.1 || gamepad2.right_trigger > 0.1) {
             gromit.glyphTrain.glyphclamp("open");
