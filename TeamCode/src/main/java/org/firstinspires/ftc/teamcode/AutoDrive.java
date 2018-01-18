@@ -58,8 +58,13 @@ public class AutoDrive {
         double rr = clip(-y + -x + z);
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
+        double flTarget = fl/high*clicks;
+        double frTarget = fr/high*clicks;
+        double rlTarget = rl/high*clicks;
+        double rrTarget = rr/high*clicks;
         driveSpeeds(fl, fr, rl, rr);
-        while (!(isMotorAtTarget(FrontLeft, fl / high * clicks)) && (!(isMotorAtTarget(FrontRight, fr / high * clicks))) && (!(isMotorAtTarget(RearLeft, rl / high * clicks))) && (!(isMotorAtTarget(RearRight, rr / high * clicks)))) {
+        while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget)))) {
+            driveSpeeds(fl*(flTarget-FrontLeft.getCurrentPosition())/flTarget, fr*(frTarget-FrontRight.getCurrentPosition())/frTarget, rl*(rlTarget-RearLeft.getCurrentPosition())/rl, rr*(rrTarget-RearRight.getCurrentPosition())/rrTarget);
         }
         stopMotors();
     }
@@ -78,12 +83,10 @@ public class AutoDrive {
 
     private double findHigh(double[] nums) {
         double high = 0;
-        int i = 0;
-        while (i < nums.length) {
+        for (int i=0; i < nums.length; i++) {
             if (Math.abs(nums[i]) > high) {
                 high = Math.abs(nums[i]);
             }
-            i++;
         }
         return high;
     }
