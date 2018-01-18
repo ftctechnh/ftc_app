@@ -220,7 +220,7 @@ public class Teleop extends OpMode {
             padupIsReleased =true;
         }
 
-//        //  check for block  here
+//        //  check for incoming block  here
 //        if(trainon){
 //            if ( gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) <10){     // if block is sensed set boolean
 //                glyphSensed = true;
