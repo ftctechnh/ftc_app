@@ -11,7 +11,7 @@ public class IMUTurns extends LinearOpMode
 {
     NewRobotFinal robot;
     public void runOpMode()
-    {
+    {/*
         robot = new NewRobotFinal(hardwareMap);
         robot.initVuforia(hardwareMap);
         waitForStart();
@@ -24,5 +24,6 @@ public class IMUTurns extends LinearOpMode
         robot.stopAllMotors();
         robot.kill();
         robot.killAuto();
+        */
     }
 }

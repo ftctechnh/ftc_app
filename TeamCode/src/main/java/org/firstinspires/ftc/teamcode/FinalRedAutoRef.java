@@ -15,6 +15,7 @@ public class FinalRedAutoRef extends LinearOpMode
 
     public void runOpMode()
     {
+        /*
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.initVuforia(hardwareMap);
         waitForStart();
@@ -72,5 +73,6 @@ public class FinalRedAutoRef extends LinearOpMode
         newRobot.driveStraight_In(-2); // back up
         newRobot.driveStraight_In(3,.2);
         newRobot.stopAllMotors();
+        */
     }
 }

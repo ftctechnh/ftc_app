@@ -59,19 +59,19 @@ public class FinalUniversalRef extends LinearOpMode
                 {
                     case 'l':
                         newRobot.pivot(-35,.5);
-                        newRobot.driveStraight_In(37.5f);
+                        newRobot.driveStraight_In_Stall(37.5f, .5, telemetry);
                         break;
                     case 'c':
                         newRobot.pivot(-20,.5);
-                        newRobot.driveStraight_In(34);
+                        newRobot.driveStraight_In_Stall(34, .5, telemetry);
                         break;
                     case 'r':
                         newRobot.pivot(-8,.5);
-                        newRobot.driveStraight_In(30.5f);
+                        newRobot.driveStraight_In_Stall(30.5f, .5, telemetry);
                         break;
                     default:
                         newRobot.pivot(-20,.5);
-                        newRobot.driveStraight_In(30.5f);
+                        newRobot.driveStraight_In_Stall(30.5f, .5, telemetry);
                         break;
                 }
                 /*newRobot.pivot_IMU(80, .25);
@@ -120,19 +120,19 @@ public class FinalUniversalRef extends LinearOpMode
                 {
                     case 'l':
                         newRobot.pivot(35,.5);
-                        newRobot.driveStraight_In(37.5f); //needs testing, fix on 11/12
+                        newRobot.driveStraight_In_Stall(37.5f, .5, telemetry); //needs testing, fix on 11/12
                         break;
                     case 'c':
                         newRobot.pivot(20,.5);
-                        newRobot.driveStraight_In(34);
+                        newRobot.driveStraight_In_Stall(34, .5, telemetry);
                         break;
                     case 'r':
                         newRobot.pivot(8,.5);
-                        newRobot.driveStraight_In(30.5f); //positioning is really off, need to fix on 11/12
+                        newRobot.driveStraight_In_Stall(30.5f, .5, telemetry); //positioning is really off, need to fix on 11/12
                         break;
                     default:
                         newRobot.pivot(20,.5);
-                        newRobot.driveStraight_In(30.5f);
+                        newRobot.driveStraight_In_Stall(30.5f, .5, telemetry);
                         break;
                 }
                 /*newRobot.pivot_IMU(-80, .25);
