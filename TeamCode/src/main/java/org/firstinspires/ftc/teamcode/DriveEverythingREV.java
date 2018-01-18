@@ -58,10 +58,10 @@ public class DriveEverythingREV extends OpMode {
                 drive.stop();
             }
         }
-        if (gamepad1.x) {
+        /*if (gamepad1.x) {
             Systems.grabSecondGlyph();
         }
-
+        */
         //ForkLift
         if (gamepad1.a) {
             ForkLift.closeClaw();
