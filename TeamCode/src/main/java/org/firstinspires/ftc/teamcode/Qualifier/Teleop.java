@@ -97,7 +97,7 @@ public class Teleop extends OpMode {
         //------------------------------------------------------------------------------
         //Lift/lower glyph  x/a by increments,   y/b manually
         //------------------------------------------------------------------------------
-        if (gamepad1.x || gamepad2.x ) {  // raise lift
+        if (gamepad1.x || gamepad2.x) {  // raise lift
             if (xIsReleased) {
                 gromit.glyphTrain.glyphclamp("close");
                 startclosetime = runtime.milliseconds();    // start timer  set boolean
@@ -116,12 +116,17 @@ public class Teleop extends OpMode {
             xIsReleased = true;
         }
 // check to see if enough time has elapsed to start lift   (automatic lift after clamp)
+//        if (delayClamp && runtime.milliseconds() - startclosetime > manualLiftDelay + glyphSensedDelay){     // this is the delay time in milliseconds
+//            delayLift = false;
+//            glyphSensedDelay = 0;
+//            gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
+//        }
+
         if (delayLift && runtime.milliseconds() - startclosetime > manualLiftDelay + glyphSensedDelay){     // this is the delay time in milliseconds
             delayLift = false;
             glyphSensedDelay = 0;
             gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
         }
-
 
         if (gamepad1.a || gamepad2.a) {         //lower
             if (aIsReleased) {
@@ -151,7 +156,7 @@ public class Teleop extends OpMode {
                 }
             } else {
                 if (gromit.glyphTrain.lift_motor.getCurrentPosition() >= liftTarget) {
-                    //gromit.glyphTrain.lift_motor.setPower(0.0);
+                    gromit.glyphTrain.lift_motor.setPower(0.0);
                     glyphLiftismoving = false;
                 }
            }
@@ -165,18 +170,18 @@ public class Teleop extends OpMode {
             if (gromit.glyphTrain.lift_motor.getCurrentPosition() < gromit.glyphTrain.upperLiftLimit) {
                 gromit.glyphTrain.lift_motor.setPower(1.0);
             } else {
-                gromit.glyphTrain.lift_motor.setPower(0);
+                gromit.glyphTrain.lift_motor.setPower(0.0);
             }
         } else if (gamepad1.b || gamepad2.b) {
             glyphLiftismoving = false;
             if (gromit.glyphTrain.lift_motor.getCurrentPosition() > gromit.glyphTrain.lowerLiftLimit) {
                 gromit.glyphTrain.lift_motor.setPower(-0.8);
             } else {
-                gromit.glyphTrain.lift_motor.setPower(0);
+                gromit.glyphTrain.lift_motor.setPower(0.0);
             }
 
         } else if (!glyphLiftismoving)  {
-            gromit.glyphTrain.lift_motor.setPower(0);
+            gromit.glyphTrain.lift_motor.setPower(0.0);
         }
 
         //set drive speed
@@ -220,21 +225,21 @@ public class Teleop extends OpMode {
             padupIsReleased =true;
         }
 
-//        //  check for incoming block  here
-//        if(trainon){
-//            if ( gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) <10){     // if block is sensed set boolean
-//                glyphSensed = true;
-//            }else if (glyphSensed && gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) > 7){     // if block was already sensed (sense the back end)
-//                glyphSensed = false;
-//                startclosetime = runtime.milliseconds();    // start timer  set boolean
-//                delayLift = true;                            // check for time to lift
-//                glyphSensedDelay = 500;
-//                // set target  as 1 (assume we're at zero for now
-//                liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
-//                glyphLiftismoving = true;     // turn on manual override
-//
-//            }
-//        }
+        //  check for incoming block  here
+        if(!trainon){
+            if ( gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) <8 && !glyphSensed){     // if block is sensed set boolean
+                glyphSensed = true;
+            }else if (glyphSensed && gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) > 8){     // if block was already sensed (sense the back end)
+                glyphSensed = false;
+                startclosetime = runtime.milliseconds();    // start timer  set boolean
+                delayLift = true;                            // check for time to lift
+                glyphSensedDelay = 500;
+                // set target  as 1 (assume we're at zero for now
+                liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
+                glyphLiftismoving = true;     // turn on manual override
+
+            }
+        }
 
 
         // glyph clamp
