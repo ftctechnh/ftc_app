@@ -58,29 +58,32 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (newRobot.getGlyphCipher())
                 {
                     case 'l':
-                        newRobot.pivot(-35,.6);
-                        newRobot.driveStraight_In(37.5f);
+                        newRobot.pivot(-50,.6);
+                        newRobot.driveStraight_In(18.5f);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(18.5f);
                         break;
                     case 'c':
-                        newRobot.pivot(-20,.6);
-                        newRobot.driveStraight_In(34);
+                        newRobot.pivot(-35,.6);
+                        newRobot.driveStraight_In(17);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(17);
                         break;
                     case 'r':
-                        newRobot.pivot(-12,.6);
-                        newRobot.driveStraight_In(30.5f);
+                        newRobot.pivot(-20,.6);
+                        newRobot.driveStraight_In(15);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(15);
                         break;
                     default:
-                        newRobot.pivot(-20,.6);
-                        newRobot.driveStraight_In(30.5f);
+                        newRobot.pivot(-35,.6);
+                        newRobot.driveStraight_In(17);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(17);
                         break;
                 }
-                /*newRobot.pivot_IMU(80, .25);
-                newRobot.oldMoveLift(-1);
-                newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(20);
-                newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-5,1);
-                newRobot.stopAllMotors();*/
+                newRobot.stopAllMotors();
                 break;
 
             case 'r':
