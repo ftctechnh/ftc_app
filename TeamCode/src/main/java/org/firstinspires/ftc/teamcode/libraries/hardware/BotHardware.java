@@ -152,7 +152,7 @@ public class BotHardware {
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
         //init motor shim array
         shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
-        liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };
+        //liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
         for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);

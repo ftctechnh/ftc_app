@@ -53,9 +53,9 @@ public class Teleop extends OpMode {
         boolean liftSet = false;
         //if(BotHardware.Motor.liftLeft.motor.getCurrentPosition() > )
 
-        if(gamepad2.left_bumper) bot.setLiftMotors(-0.2f);
-        else if(gamepad2.right_bumper) bot.setLiftMotors(0.5f);
-        else bot.setLiftMotors(0.01f);
+        if(gamepad2.left_bumper) bot.setLiftMotors(-1.0f);
+        else if(gamepad2.right_bumper) bot.setLiftMotors(1.0f);
+        else bot.setLiftMotors(0);
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
