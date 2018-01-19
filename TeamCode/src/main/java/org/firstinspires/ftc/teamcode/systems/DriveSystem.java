@@ -1,66 +1,40 @@
 package org.firstinspires.ftc.teamcode.systems;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
- * Created by Mahim on 11/4/2017.
+ * Created by Mahim on 1/12/2018.
  */
 
 public class DriveSystem {
-    private DcMotor rightMotor, leftMotor;
-    private HardwareMap hardwareMap;
-    private Gamepad gamepad;
-    private OpMode opMode;
+    private DcMotor frontRightMotor, rearRightMotor, frontLeftMotor, rearLeftMotor;
 
-    public DriveSystem (HardwareMap hardwareMap, Gamepad gamepad) {
-        this.hardwareMap = hardwareMap;
-        this.gamepad = gamepad;
-        this.rightMotor = hardwareMap.get(DcMotor.class, "right motor");
-        this.leftMotor = hardwareMap.get(DcMotor.class, "left motor");
-        this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    public DriveSystem(DcMotor frontLeftMotor,  DcMotor rearLeftMotor,
+                       DcMotor frontRightMotor, DcMotor rearRightMotor) {
+        this.frontLeftMotor     = frontLeftMotor;
+        this.rearLeftMotor      = rearLeftMotor;
+        this.frontRightMotor    = frontRightMotor;
+        this.rearRightMotor     = rearRightMotor;
     }
 
-    public void drive(double leftSpeed, double rightSpeed) {
-        this.rightMotor.setPower(rightSpeed);
-        this.leftMotor.setPower(leftSpeed);
-    }
-
-    public void driveForward(double speed) {
-        drive(-speed, -speed);
-    }
-
-    public void driveBackwards(double speed) {
-        drive(speed, speed);
-    }
-
-    public void rcCarDrive() {
-        if (gamepad.left_stick_y > 0) {
-            drive(gamepad.left_stick_y + gamepad.right_stick_x, gamepad.left_stick_y - gamepad.right_stick_x);
-        } else if (gamepad.left_stick_y < 0) {
-            drive(gamepad.left_stick_y - gamepad.right_stick_x, gamepad.left_stick_y + gamepad.right_stick_x);
-        } else {
-            drive(-gamepad.right_stick_x, gamepad.right_stick_x);
-        }
+    public void setMode(DcMotor.RunMode runMode) {
+        this.frontLeftMotor.setMode(runMode);
+        this.rearLeftMotor.setMode(runMode);
+        this.frontRightMotor.setMode(runMode);
+        this.rearRightMotor.setMode(runMode);
     }
 
     public void stop() {
-        drive(0.0,0.0);
+        this.frontLeftMotor.setPower(0.0);
+        this.rearLeftMotor.setPower(0.0);
+        this.frontRightMotor.setPower(0.0);
+        this.rearRightMotor.setPower(0.0);
     }
 
-    public void tankDrive() {
-        drive(gamepad.left_stick_y, gamepad.right_stick_y);
+    public boolean isBusy() {
+        return  this.frontLeftMotor.isBusy()    && this.rearLeftMotor.isBusy() &&
+                this.frontRightMotor.isBusy()   && this.rearRightMotor.isBusy();
     }
 
-    public double getRightSpeed() {
-        return this.rightMotor.getPower();
-    }
 
-    public double getLeftSpeed() {
-        return this.leftMotor.getPower();
-    }
 }

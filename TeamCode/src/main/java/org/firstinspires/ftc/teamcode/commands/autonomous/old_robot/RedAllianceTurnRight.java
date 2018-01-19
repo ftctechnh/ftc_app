@@ -1,17 +1,19 @@
-package org.firstinspires.ftc.teamcode.commands.autonomous;
+package org.firstinspires.ftc.teamcode.commands.autonomous.old_robot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.systems.DriveSystem;
+import org.firstinspires.ftc.teamcode.systems.old_robot.ArmSystem;
+import org.firstinspires.ftc.teamcode.systems.old_robot.DriveSystem;
 
 /**
  * Created by Mahim on 12/9/2017.
  */
-@Autonomous(name = "Red Alliance: Turn left", group = "Red Alliance")
-public class RedAllianceTurnLeft extends LinearOpMode {
+@Disabled
+@Autonomous(name = "Red Alliance: Turn right", group = "Red Alliance")
+public class RedAllianceTurnRight extends LinearOpMode {
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
     private ElapsedTime runtime = new ElapsedTime();
@@ -37,8 +39,8 @@ public class RedAllianceTurnLeft extends LinearOpMode {
             sleep(1000);
             this.armSystem.setInitialPosition();
             sleep(2000);
-            this.driveSystem.drive(-1.0, -0.9); // turn left
-            sleep(2500);
+            this.driveSystem.drive(-0.8, -1.0); // turn right
+            sleep(1000);
             count++;
         }
     }

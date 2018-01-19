@@ -1,117 +1,57 @@
 package org.firstinspires.ftc.teamcode.systems;
 
+import android.hardware.Sensor;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 /**
- * Created by Mahim on 11/13/2017.
+ * Created by Mahim on 1/9/18.
  */
 
 public class ArmSystem {
+    private Servo   leftArmServo;
+    private Servo   rightArmServo;
     private DcMotor armMotor;
-    private Servo leftClaw, rightClaw, jewelArmServo;
-    private ColorSensor colorSensor;
-    private HardwareMap hardwareMap;
-    private double initialPosition = 0.07;
-    private double downPosition = 0.8;
-    private int lowThreshold;
 
-
-    public ArmSystem (HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
-        this.armMotor = hardwareMap.get(DcMotor.class, "arm motor");
-        this.leftClaw = hardwareMap.get(Servo.class, "left servo");
-        this.rightClaw = hardwareMap.get(Servo.class, "right servo");
-        this.jewelArmServo = hardwareMap.get(Servo.class, "jewel arm servo");
-        this.colorSensor = hardwareMap.colorSensor.get("color sensor");
-        this.rightClaw.setDirection(Servo.Direction.REVERSE);
-        this.jewelArmServo.setDirection(Servo.Direction.REVERSE);
-    }
-
-    public void init() {
-        this.jewelArmServo.setPosition(initialPosition);
-        this.colorSensor.enableLed(false);
-        this.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public ArmSystem(HardwareMap hardwareMap) {
+        this.leftArmServo   = hardwareMap.get(Servo.class, "left arm servo");
+        this.rightArmServo  = hardwareMap.get(Servo.class, "right arm servo");
+        this.armMotor       = hardwareMap.get(DcMotor.class, "arm motor");
+        this.leftArmServo.setDirection(Servo.Direction.REVERSE);
     }
 
     public void goUp() {
         this.armMotor.setPower(1.0);
     }
 
-    public void enableColorSensor() {
-        this.colorSensor.enableLed(true);
-    }
-
     public void goDown() {
         this.armMotor.setPower(-1.0);
     }
 
-    public void setClaw(float position) {
-        this.rightClaw.setPosition(position);
-        this.leftClaw.setPosition(position);
-    }
-
-    public void setInitialPosition() {
-        this.jewelArmServo.setPosition(initialPosition);
-    }
-
-    public void setDownPosition() {
-        this.jewelArmServo.setPosition(downPosition);
-    }
-
-    public void setJewelArmServo(float position) {
-        this.jewelArmServo.setPosition(position);
-    }
-
-    public double getArmMotorSpeed() {
-        return this.armMotor.getPower();
-    }
-
-    public void stopArm() {
+    public void stopArmMotor() {
         this.armMotor.setPower(0.0);
     }
 
+    public void triggerArmServoBottom(double position) {
+        double pos = position * 0.102;
+        this.leftArmServo.setPosition(pos);
+        this.rightArmServo.setPosition(pos);
+    }
+
+    public void triggerArmServoTop(double position) {
+        this.leftArmServo.setPosition(position);
+        this.rightArmServo.setPosition(position);
+    }
+
     public double getLeftServoPosition() {
-        return this.leftClaw.getPosition();
+        return this.leftArmServo.getPosition();
     }
 
     public double getRightServoPosition() {
-        return this.rightClaw.getPosition();
-    }
-
-    public double getJewelArmPosition() {
-        return this.jewelArmServo.getPosition();
-    }
-
-    public int getRed() {
-        return colorSensor.red();
-    }
-
-    public int getBlue() {
-        return colorSensor.blue();
-    }
-
-    public int getGreen() {
-        return colorSensor.green();
-    }
-
-    public boolean isBlue() {
-        return (getBlue() > getRed()) && (getBlue() > getGreen());
-    }
-
-    public boolean isRed() {
-        return (getRed() > getBlue()) && (getRed() > getGreen());
-    }
-
-    public int getArmEncoderPosition() {
-        return this.armMotor.getCurrentPosition();
-    }
-
-    public int getLowThreshold() {
-        return this.lowThreshold;
+        return this.rightArmServo.getPosition();
     }
 }
