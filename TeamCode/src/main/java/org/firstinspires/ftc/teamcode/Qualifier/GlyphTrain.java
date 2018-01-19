@@ -21,7 +21,7 @@ public class GlyphTrain {
     public int upperLiftLimit = (int) ((15 / (Math.PI * pulleydiameter)) * TICKS_REV);   // was 4700
     public int liftIndex = 0;
     //    public int[] liftPosition ={0,2100,4100};
-    public int[] liftPosition = {0, (int) ((7 / (Math.PI * pulleydiameter)) * TICKS_REV), (int) ((14 / (Math.PI * pulleydiameter)) * TICKS_REV)};
+    public int[] liftPosition = {0, (int) ((8 / (Math.PI * pulleydiameter)) * TICKS_REV), (int) ((15 / (Math.PI * pulleydiameter)) * TICKS_REV)};
 //     0,(int) (7 * TICKS_REV / (pulleydiameter*Math.PI)), (int)( 13 * TICKS_REV / (pulleydiameter*Math.PI) ) };
 
 
