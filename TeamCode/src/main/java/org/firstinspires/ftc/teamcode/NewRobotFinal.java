@@ -54,6 +54,8 @@ public class NewRobotFinal
     private Servo leftDoorWall;
     private Servo rightDoorWall;
     private DcMotorImplEx liftMotor;
+    private double leftDoorPos;
+    private double rightDoorPos;
     //private DcMotorImplEx shiftLiftMotor ;
 
     private DcMotorImplEx tailRelease;
@@ -95,7 +97,7 @@ public class NewRobotFinal
         wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
-        leftDoorWall.scaleRange(.52f, .91f);
+        leftDoorWall.scaleRange(.56f, .91f);
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
         rightDoorWall.scaleRange(.11f, .51f);
 
@@ -265,13 +267,13 @@ public class NewRobotFinal
             return '?';
     }
 
-    public void driveMotors(float lPow, float rPow)
+    public void driveMotors(double lPow, double rPow)
     {
         driveRightOne.setPower(-rPow);
         driveLeftOne.setPower(lPow);
     }
 
-    public void driveMotorsAuto(float lPow, float rPow)
+    public void driveMotorsAuto(double lPow, double rPow)
     {
         driveMotors(-lPow, -rPow);
     }
@@ -573,8 +575,7 @@ public class NewRobotFinal
         //It pivots in the direction of how to unit circle spins
         if (degrees < 0) //Pivot Clockwise
         {
-            driveRightOne.setPower(-Math.abs(pow));
-            driveLeftOne.setPower(-Math.abs(pow));
+            driveMotorsAuto(Math.abs(pow), -Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
@@ -582,8 +583,7 @@ public class NewRobotFinal
 
         } else //CounterClockwise
         {
-            driveRightOne.setPower(Math.abs(pow));
-            driveLeftOne.setPower(Math.abs(pow));
+            driveMotorsAuto(-Math.abs(pow), Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget)
             {
@@ -595,45 +595,45 @@ public class NewRobotFinal
 
     public void pivot(float degrees)
     {
-        pivot(degrees, .23);
+        pivot(degrees, 0.60);
     }
 
-    public void pivot_IMU(float degrees)
-    {
-        pivot_IMU(degrees, .23);
-    }
-
-    public void pivot_IMU(float degrees, double pow)
-    {
-        while (degrees > 180)
-        {
-            degrees -= 360;
-        }
-        while (degrees < -180)
-        {
-            degrees += 360;
-        }
-        initIMU();
-        updateIMUValues();
-
-        if (degrees < 0)
-        {
-            driveRightOne.setPower(-Math.abs(pow));
-            driveLeftOne.setPower(-Math.abs(pow));
-            while (getYaw() > degrees)
-            {
-            }
-        } else
-        {
-            driveRightOne.setPower(Math.abs(pow));
-            driveLeftOne.setPower(Math.abs(pow));
-            while (getYaw() < degrees)
-            {
-            }
-        }
-
-        stopDriveMotors();
-    }
+//    public void pivot_IMU(float degrees)
+//    {
+//        pivot_IMU(degrees, 0.60);
+//    }
+//
+//    public void pivot_IMU(float degrees, double pow)
+//    {
+//        while (degrees > 180)
+//        {
+//            degrees -= 360;
+//        }
+//        while (degrees < -180)
+//        {
+//            degrees += 360;
+//        }
+//        initIMU();
+//        updateIMUValues();
+//
+//        if (degrees < 0)
+//        {
+//            driveRightOne.setPower(-Math.abs(pow));
+//            driveLeftOne.setPower(-Math.abs(pow));
+//            while (getYaw() > degrees)
+//            {
+//            }
+//        } else
+//        {
+//            driveRightOne.setPower(Math.abs(pow));
+//            driveLeftOne.setPower(Math.abs(pow));
+//            while (getYaw() < degrees)
+//            {
+//            }
+//        }
+//
+//        stopDriveMotors();
+//    }
 
     public void oldMoveLift(int adjLevels) //For the lift, I'll use levels or encoders points that stop
     {
@@ -816,12 +816,15 @@ public class NewRobotFinal
             leftDoorWall.setPosition(0f);
             rightDoorWall.setPosition(1f);
         }
+
     }
 
     public void fineAdjDoors(double in) //Note: Check and see if it goes past 0 or 1
     {
-        leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() - in);
+        leftDoorPos = leftDoorWall.getPosition() + in;
+        rightDoorPos = rightDoorWall.getPosition() - in;
+        leftDoorWall.setPosition(leftDoorPos);
+        rightDoorWall.setPosition(rightDoorPos);
     }
 
     public void autoPark() //We saw the angle wasn't detecting it on the new robot.

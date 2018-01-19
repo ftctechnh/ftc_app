@@ -22,12 +22,12 @@ public class CompTeleDev extends OpMode
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
+        newRobot.openOrCloseDoor(false);
     }
 
     public void start()
     {
         // newRobot.initEndGame(hardwareMap);
-
     }
 
     public void loop()
@@ -73,9 +73,9 @@ public class CompTeleDev extends OpMode
             newRobot.fineAdjDoors(-.001f);
           */
         if (gamepad2.left_bumper)
-            newRobot.fineAdjDoors(-.003f);
-        else if (gamepad2.left_trigger > .3f)
-            newRobot.fineAdjDoors(.003f);
+            newRobot.fineAdjDoors(-.16f);
+        else if (gamepad2.left_trigger > .2f)
+            newRobot.fineAdjDoors(.16f);
 
         if (gamepad2.right_bumper)
             newRobot.getTailRelease().setPower(-1);//release
@@ -92,11 +92,11 @@ public class CompTeleDev extends OpMode
 
         if (gamepad2.y)
         {
-            newRobot.fineAdjGrabberRotator(.007f);
+            newRobot.fineAdjGrabberRotator(.008f);
         }
         else if (gamepad2.x)
         {
-            newRobot.fineAdjGrabberRotator(-.007f);
+            newRobot.fineAdjGrabberRotator(-.008f);
         }
 
         /**
