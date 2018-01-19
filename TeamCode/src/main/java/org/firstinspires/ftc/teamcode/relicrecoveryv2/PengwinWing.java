@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import android.text.method.Touch;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,10 +21,10 @@ public class PengwinWing {
     DcMotor motorOne;
     DcMotor motorTwo;
     //servos
-    Servo servoOne;
-    Servo servoTwo;
-    Servo servoThree;
-    Servo servoFour;
+    CRServo upLeft;
+    CRServo upRight;
+    //Servo downLeft;
+    //Servo downRight;
     //sensors
     ColorSensor upperColor;
     ColorSensor lowerColor;
@@ -50,22 +51,37 @@ public class PengwinWing {
     boolean upperGrabberFilledReturn;
     boolean lowerGrabberFilledReturn;
 
-    public PengwinWing(HardwareMap hardwareMap){
+    public PengwinWing(HardwareMap hardwareMap) {
         //sets the things
-        motorOne = hardwareMap.dcMotor.get("motor1");
-        motorTwo = hardwareMap.dcMotor.get("motor2");
-        servoOne = hardwareMap.servo.get("servo1");
-        servoTwo = hardwareMap.servo.get("servo2");
-        servoThree = hardwareMap.servo.get("servo3");
-        servoFour = hardwareMap.servo.get("servo4");
-        upperColor = hardwareMap.colorSensor.get("color1");
+        //<editor-fold desc="HardwareMap">
+        //motorOne = hardwareMap.dcMotor.get("motor1");
+        //motorTwo = hardwareMap.dcMotor.get("motor2");
+        upLeft = hardwareMap.crservo.get("servo1");
+        upRight = hardwareMap.crservo.get("servo2");
+        //downLeft = hardwareMap.servo.get("servo3");
+        //downRight = hardwareMap.servo.get("servo4");
+        /*upperColor = hardwareMap.colorSensor.get("color1");
         lowerColor = hardwareMap.colorSensor.get("color2");
         slHome = hardwareMap.touchSensor.get("touch1");
         slUp = hardwareMap.touchSensor.get("touch2");
         extenderOut = hardwareMap.touchSensor.get("touch3");
         extenderIn = hardwareMap.touchSensor.get("touch4");
         upperGrabberFilled = hardwareMap.touchSensor.get("touch5");
-        lowerGrabberFilled = hardwareMap.touchSensor.get("touch6");
+        lowerGrabberFilled = hardwareMap.touchSensor.get("touch6");*/
+        //</editor-fold>
+        //
+    }
+    public void upLeft(double power) {
+        upLeft.setPower(power);
+    }
+    public void upRight(double power) {
+        upRight.setPower(-power);
+    }
+    /*public void downLeft(double power) {
+        downLeft.setPosition(power);
+    }
+    public void downRight(double power) {
+        downRight.setPosition(-power);
+    }*/
 }
 
-}

@@ -17,7 +17,8 @@ public abstract class MeccyAutoMode extends MeccyMode{
     //
     PengwinFin pengwinFin;
     PengwinWing pengwinWing;
-    double roationInches;
+    double rotationInches;
+    //
     //
     BNO055IMU imu;
     Orientation angles;
@@ -151,7 +152,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
         //</editor-fold>
         double yaw = angles.firstAngle;
         turn(speedDirection);
-        while (Math.abs(yaw - angles.firstAngle) < degrees){}
+        while (yaw == 3){}
         turn(0);
     }
     //</editor-fold>

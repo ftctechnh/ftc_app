@@ -22,7 +22,7 @@ import java.util.Random;
 @TeleOp(name="RelicTelyOp",group="Jeff" )
 public class RelicTelyMode  extends MeccyMode{
     //
-    PengwinFin pengwinFin;
+    //PengwinFin pengwinFin;
     PengwinWing pengwinWing;
     //
     //<editor-fold desc="Startify">
@@ -33,6 +33,8 @@ public class RelicTelyMode  extends MeccyMode{
     //
     double degreeOfRobotPower = 1;
     DrivingAction drivingAction = DrivingAction.Driving;
+    GrabberUp grabberUp = GrabberUp.push;
+    GrabberDown grabberDown = GrabberDown.push;
     //
     //<editor-fold desc="Controls"
     double leftX;
@@ -40,22 +42,27 @@ public class RelicTelyMode  extends MeccyMode{
     double rightX;
     boolean halfPower;
     boolean quarterPower;
+    //
     boolean liftup;
     boolean liftdown;
     boolean retract;
     boolean extend;
     boolean halfSLPower;
+    boolean left;
+    boolean right;
     double pushAbove;
     double pushBelow;
-    boolean onlyRight;
-    boolean onlyLeft;
+    double down;
+    double up;
+    double Rup;
+    double Rdown;
     //</editor-fold>
     //
     //</editor-fold>
     //
     public void runOpMode() {
         //<editor-fold desc="Initialize">
-        pengwinFin = new PengwinFin(hardwareMap);
+        //pengwinFin = new PengwinFin(hardwareMap);
         pengwinWing = new PengwinWing(hardwareMap);
         //<editor-fold desc="Vuforia">
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -87,30 +94,32 @@ public class RelicTelyMode  extends MeccyMode{
         //
         while (opModeIsActive()) {
             //<editor-fold desc="Update">
-            //Joeys controller
-            //<editor-fold desc="Update">
+            //Joey's controller
             leftX = gamepad1.left_stick_x;
             leftY = gamepad1.left_stick_y;
             rightX = gamepad1.right_stick_x;
-            halfPower = gamepad1.left_bumper;
-            quarterPower = gamepad1.right_bumper;
-            //Megs controller
-            liftup = gamepad2.dpad_up;
+            halfPower = gamepad1.right_bumper;
+            quarterPower = gamepad1.left_bumper;
+            //Meg's controller
+            /*liftup = gamepad2.dpad_up;
             liftdown = gamepad2.dpad_down;
             retract = gamepad2.x;
             extend = gamepad2.y;
-            halfSLPower = gamepad2.b;
-            pushAbove = gamepad2.left_stick_y;
-            pushBelow = gamepad2.right_stick_y;
-            onlyRight = gamepad2.right_bumper;
-            onlyLeft = gamepad2.left_bumper;
+            halfSLPower = gamepad2.b;*/
+            up = gamepad2.left_stick_y;
+            down = gamepad2.right_stick_y;
+            Rup = gamepad2.left_stick_x;
+            Rdown = gamepad2.right_stick_x;
+
+            left = !(gamepad2.left_trigger == 0);
+            right = !(gamepad2.right_trigger == 0);
             //
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             //</editor-fold>
             //
             setDegreePower();
             //
-            switchMove();
+            switchs();
             //
             moveTheRobot();
             //
@@ -121,7 +130,7 @@ public class RelicTelyMode  extends MeccyMode{
     //
     //<editor-fold desc="Functions">
     private void setDegreePower() {
-        if(halfPower) {
+        if (halfPower) {
             degreeOfRobotPower = 0.5;
         }
         else if(quarterPower){
@@ -131,7 +140,7 @@ public class RelicTelyMode  extends MeccyMode{
         }
     }
     //
-    private void switchMove(){
+    private void switchs(){
         if (!(rightX == 0)){
             drivingAction = DrivingAction.Turning;
         }else if(Math.abs(leftX) > .15){
@@ -139,23 +148,67 @@ public class RelicTelyMode  extends MeccyMode{
         }else{
             drivingAction = DrivingAction.Driving;
         }
+        //
+        if (Math.abs(up) > Math.abs(Rup)){
+            grabberUp = GrabberUp.push;
+        }else {
+            grabberUp = GrabberUp.rotate;
+        }
+        //
+        if (Math.abs(down) > Math.abs(Rdown)){
+            grabberDown = GrabberDown.push;
+        }else{
+            grabberDown = GrabberDown.rotate;
+        }
     }
     //
     private void moveTheRobot() {
         switch (drivingAction){
             case Driving:
-                    drive(-leftY);
+                    drive(-leftY * degreeOfRobotPower);
                 break;
             case Turning:
-                    turn(rightX);
+                    turn(rightX * degreeOfRobotPower);
                 break;
             case Strafing:
-                    strafe(leftX, -leftY);
+                    strafe(leftX * degreeOfRobotPower, -leftY * degreeOfRobotPower);
                 break;
+        }
+        //
+        if (left){
+            pengwinWing.upLeft(up);
+            //pengwinWing.downLeft(down);
+        }else if (right){
+            pengwinWing.upRight(up);
+            //pengwinWing.downRight(down);
+        }else{
+            switch (grabberUp){
+                case push:
+                    pengwinWing.upLeft(up);
+                    pengwinWing.upRight(up);
+                    break;
+                case rotate:
+                    pengwinWing.upLeft(Rup);
+                    pengwinWing.upRight(-Rup);
+                    break;
+            }
+            switch (grabberDown){
+                case push:
+                    /*pengwinWing.downLeft(down);
+                    pengwinWing.downRight(down);*/
+                    break;
+                case rotate:
+                    /*pengwinWing.downLeft(Rdown);
+                    pengwinWing.downRight(-Rdown);*/
+            }
         }
     }
     //
     private void telemetryJazz(RelicRecoveryVuMark vuMark) {
+        telemetry.addData("Up ", up);
+        telemetry.addData("Down", down);
+        telemetry.addData("Left", left);
+        telemetry.addData("Right", right);
         telemetry.addData("Unicorn Crossing", randy.nextInt(1000000));
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             //

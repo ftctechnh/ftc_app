@@ -39,8 +39,6 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     VuforiaLocalizer vuforia;
     OpenGLMatrix lastLocation = null;
     //
-    @Override
-    //
     public void startify() {
         pengwinFin = new PengwinFin(hardwareMap);
         pengwinWing = new PengwinWing(hardwareMap);
