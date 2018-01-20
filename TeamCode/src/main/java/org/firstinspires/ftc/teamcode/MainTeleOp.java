@@ -23,7 +23,7 @@ public class MainTeleOp extends LinearOpMode {
     final double minSlowModePower = 0.45;
     final int headingLockMS = 1000;
 
-    final int[] liftPresetPositions = new int[]{0, -1000, -2000};
+    final int[] liftPresetPositions = new int[]{0, -1200, -2400};
 
     double initialHeading;
     double desiredHeading;
@@ -41,8 +41,7 @@ public class MainTeleOp extends LinearOpMode {
     boolean wasGP2DownPressed;
 
     boolean nonrelativeDriveModeEnabled;
-    
-    boolean flashMode;
+
     boolean scale;
 
     ElapsedTime timeTillHeadingLock;
@@ -56,19 +55,21 @@ public class MainTeleOp extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap, this, gamepad1, gamepad2);
 
-        lift = new ConstrainedPIDMotor(robot.lift, 100, 0.6, 0.6, 0, -2500, telemetry);
+        lift = new ConstrainedPIDMotor(robot.lift, 100, 1.0, 0.6, 0, -2500, telemetry);
         zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.4, 0, 12288, telemetry);
 
         waitForStart();
 
-        initialHeading = robot.getGyroHeading();
+        initialHeading = robot.getGyroHeading() + Math.PI;
         desiredHeading = initialHeading;
 
         wasGP2LeftBumperPressed = false;
         wasGP2RightBumperPressed = false;
 
-        flashMode = false;
-        //timeTillHeadingLock = new ElapsedTime();
+        wasGP2UpPressed = false;
+        wasGP2DownPressed = false;
+
+        timeTillHeadingLock = new ElapsedTime();
 
         //timeSinceSlowModeToggle = new ElapsedTime();
         totalElapsedTime = new ElapsedTime();
@@ -105,108 +106,110 @@ public class MainTeleOp extends LinearOpMode {
                     lift.setDirection(ConstrainedPIDMotor.Direction.FORWARD);
                 } else if (gamepad1.dpad_down) {
                     lift.setDirection(ConstrainedPIDMotor.Direction.BACKWARD);
-                } else if (gamepad2.dpad_up && !wasGP2UpPressed) {
+                } else if (gamepad2.dpad_up/* && !wasGP2UpPressed*/) {
+                    //lift.setDirection(ConstrainedPIDMotor.Direction.FORWARD);
                     setLiftSeekPosition(1);
-                } else if (gamepad2.dpad_down && !wasGP2DownPressed) {
+                } else if (gamepad2.dpad_down/* && !wasGP2DownPressed*/) {
+                    //lift.setDirection(ConstrainedPIDMotor.Direction.BACKWARD);
                     setLiftSeekPosition(-1);
-                } else{
-                    lift.setDirection(ConstrainedPIDMotor.Direction.HOLD);
+                } else {
+                    lift.setDirection(ConstrainedPIDMotor.Direction.HOLD, false);
                 }
-
-                telemetry.addData("Current lift position", robot.lift.getCurrentPosition());
-
-                wasGP2UpPressed = gamepad2.dpad_up;
-                wasGP2DownPressed = gamepad2.dpad_down;
 
                 if (gamepad1.dpad_right || gamepad2.dpad_right) {
                     zType.setDirection(ConstrainedPIDMotor.Direction.FORWARD);
                 } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                     zType.setDirection(ConstrainedPIDMotor.Direction.BACKWARD);
-                } else if (gamepad2.a){
+                } else if (gamepad2.a) {
                     zType.setTargetToSeek(2500);
-                } else if (gamepad2.x){
+                } else if (gamepad2.x) {
                     zType.setTargetToSeek(0);
-                } else if (!zType.seekingPosition){
+                } else {
                     zType.setDirection(ConstrainedPIDMotor.Direction.HOLD, false);
                 }
+            }
 
-                if (gamepad1.b) {
-                    robot.openBlockClaw();
-                } else if (gamepad1.x) {
-                    robot.closeBlockClaw();
+            if (gamepad1.b || gamepad2.b) {
+                robot.openBlockClaw();
+            } else if (gamepad1.x || gamepad2.x) {
+                robot.closeBlockClaw();
+            }
+
+            if (gamepad2.left_bumper && !wasGP2LeftBumperPressed) {
+                robot.toggleRelicClaw();
+
+            }
+
+            if (gamepad1.right_bumper || gamepad2.right_bumper) {
+                if (gamepad2.back && gamepad2.a) {
+                    robot.relicFipperPosition -= 0.02;
+                    robot.updateFlipperPos();
+
+                } else if (!gamepad2.back && gamepad2.a) { // Explicitly stated for clarity
+                    robot.relicFipperPosition += 0.02;
+                    robot.updateFlipperPos();
+
+                } else if (gamepad2.right_bumper && !wasGP2RightBumperPressed) {
+                    robot.toggleRelicClawFlipper();
                 }
+            }
 
-                if (gamepad2.left_bumper && !wasGP2LeftBumperPressed) {
-                    robot.toggleRelicClaw();
+            wasGP2LeftBumperPressed = gamepad2.left_bumper;
+            wasGP2RightBumperPressed = gamepad2.right_bumper;
 
-                }
-
-                if (gamepad1.right_bumper || gamepad2.right_bumper) {
-                    if (gamepad2.back && gamepad2.a) {
-                        robot.relicFipperPosition -= 0.02;
-                        robot.updateFlipperPos();
-
-                    } else if (!gamepad2.back && gamepad2.a) { // Explicitly stated for clarity
-                        robot.relicFipperPosition += 0.02;
-                        robot.updateFlipperPos();
-
-                    } else if (gamepad2.right_bumper && !wasGP2RightBumperPressed) {
-                        robot.toggleRelicClawFlipper();
-                    }
-                }
-                wasGP2LeftBumperPressed = gamepad2.left_bumper;
-                wasGP2RightBumperPressed = gamepad2.right_bumper;
-
-                // Taunt code
-                if (!gamepad1.y && !gamepad2.y) {
-                    if (zType.seekingPosition) {
-                        if (zType.targetPos == 0) {
-                            robot.almostRaiseWhipSnake();
-                        } else {
-                            robot.raiseWhipSnake();
-                        }
+            // Taunt code
+            if (!gamepad1.y && !gamepad2.y) {
+                if (zType.seekingPosition) {
+                    if (zType.targetPos == 0) {
+                        robot.almostRaiseWhipSnake();
                     } else {
                         robot.raiseWhipSnake();
                     }
                 } else {
-                    robot.almostRaiseWhipSnake();
+                    robot.raiseWhipSnake();
                 }
+            } else {
+                robot.almostRaiseWhipSnake();
+            }
 
-                // Intake speed control
-                if (Math.abs(gamepad2.right_stick_x) > triggerThreshold) {
-                    robot.setIntakeSpeed(gamepad2.right_stick_x);
-                    telemetry.addData("Spinning intake", true);
+            // Intake speed control
+            if (Math.abs(gamepad2.right_stick_x) > triggerThreshold) {
+                robot.setIntakeSpeed(gamepad2.right_stick_x);
+                telemetry.addData("Spinning intake", true);
 
+            } else {
+                robot.setIntakeSpeed(0);
+                telemetry.addData("Spinning intake", false);
+            }
+
+            if (Math.abs(gamepad2.right_stick_y) > 0.5) {
+                if (Math.signum(gamepad2.right_stick_y) > 0) {
+                    robot.raiseIntake();
+                    robot.closeBlockClaw();
                 } else {
-                    robot.setIntakeSpeed(0);
-                    telemetry.addData("Spinning intake", false);
-                }
-
-                if (Math.abs(gamepad2.right_stick_y) > 0.5) {
-                    if (Math.signum(gamepad2.right_stick_y) > 0) {
-                        robot.leftIntakeFlipper.setPosition(1.0);
-                        robot.rightIntakeFlipper.setPosition(0.0);
-                    } else {
-                        robot.leftIntakeFlipper.setPosition(0.0);
-                        robot.rightIntakeFlipper.setPosition(1.0);
-                    }
-                }
-
-                if ((gamepad1.start && gamepad1.a) || (gamepad2.start && gamepad2.a)) {
-                    lift.encoderOffset = robot.lift.getCurrentPosition();
-                }
-
-                if (Math.abs(gamepad2.left_stick_x) > triggerThreshold) {
-                    robot.relicFipperPosition += gamepad1.left_stick_x * 0.01;
-                    robot.relicClawFlipper.setPosition(robot.relicFipperPosition);
+                    robot.lowerIntake();
+                    robot.closeBlockClaw();
                 }
             }
+
+            if ((gamepad1.start && gamepad1.a) || (gamepad2.start && gamepad2.a)) {
+                lift.encoderOffset = robot.lift.getCurrentPosition();
+            }
+
+            if (Math.abs(gamepad2.left_stick_x) > triggerThreshold) {
+                robot.relicFipperPosition += gamepad1.left_stick_x * 0.01;
+                robot.relicClawFlipper.setPosition(robot.relicFipperPosition);
+            }
+
+            telemetry.addData("Current lift position", robot.lift.getCurrentPosition());
+
+            wasGP2UpPressed = gamepad2.dpad_up;
+            wasGP2DownPressed = gamepad2.dpad_down;
 
             boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
 
             // Auto turning code
             heading = robot.getGyroHeading();
-
 
             if (gamepad1.left_bumper && !gamepad1.right_bumper) {
                 turnSpeed = 0.35;
@@ -261,7 +264,7 @@ public class MainTeleOp extends LinearOpMode {
 
             telemetry.addLine()
                     .addData("Current tick", totalElapsedTime.milliseconds());
-            telemetry.addLine().addData("Seeking?", zType.seekingPosition);
+            telemetry.addLine().addData("Ztype seeking?", zType.seekingPosition);
             telemetry.update(); // Send telemetry data to driver station
 
             // Run above code at 1Khz
@@ -282,6 +285,7 @@ public class MainTeleOp extends LinearOpMode {
     }
 
     private void setLiftSeekPosition(int increment) {
+        telemetry.log().add("Adding an increment of " + Integer.toString(increment));
         int currentPosition;
 
         if (robot.lift.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
@@ -290,13 +294,22 @@ public class MainTeleOp extends LinearOpMode {
             currentPosition = robot.lift.getCurrentPosition();
         }
 
+        telemetry.log().add("Current position is " + Integer.toString(currentPosition));
+
         int currentIndex = getClosestTargetIndex(liftPresetPositions, currentPosition);
+
+        telemetry.log().add("Current index is " + Integer.toString(currentIndex));
+
         int desiredIndex = currentIndex + increment;
         if (desiredIndex >= 0 && desiredIndex < liftPresetPositions.length) {
-            lift.setTargetToSeek(desiredIndex);
+            telemetry.log().add("Seeking desired position " + Integer.toString(liftPresetPositions[desiredIndex]));
+            lift.lockPos = liftPresetPositions[desiredIndex];
         } else {
-            lift.setTargetToSeek(currentIndex);
+            telemetry.log().add("Seeking current position " + Integer.toString(liftPresetPositions[desiredIndex]));
+            lift.lockPos = liftPresetPositions[currentIndex];
         }
+        lift.timer = new ElapsedTime(1000);
+        telemetry.update();
     }
 
     private int getClosestTargetIndex(int[] targets, int current) {
