@@ -68,11 +68,7 @@ public class AutoDrive {
         double rrTarget = Math.abs(rr/high*clicks);
         driveSpeeds(fl, fr, rl, rr);
         while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget)))) {
-            flSpeed = calculateSpeed(FrontLeft, flTarget, fl);
-            frSpeed = calculateSpeed(FrontRight, frTarget, fr);
-            rlSpeed = calculateSpeed(RearLeft, rlTarget, rl);
-            rrSpeed = calculateSpeed(RearRight, rrTarget, rr);
-            driveSpeeds(flSpeed, frSpeed, rlSpeed, rrSpeed);
+            driveSpeeds(calculateSpeed(FrontLeft, flTarget, fl), calculateSpeed(FrontRight, frTarget, fr), calculateSpeed(RearLeft, rlTarget, rl), calculateSpeed(RearRight, rrTarget, rr));
             telemetrizeSpeeds();
             telemetry.update();
         }
