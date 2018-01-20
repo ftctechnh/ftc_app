@@ -16,7 +16,7 @@ public class TestStallCompBot extends LinearOpMode
     public void runOpMode()
     {
         newRobot = new NewRobotFinal(hardwareMap);
-        newRobot.initVuforia(hardwareMap);
+        newRobot.initAutoFunctions(hardwareMap);
         waitForStart();
         newRobot.driveStraight_In(33);
         newRobot.pivot(-90);
@@ -24,7 +24,6 @@ public class TestStallCompBot extends LinearOpMode
         while(!gamepad1.a)
         {
             
-        };
-
+        }
     }
 }
