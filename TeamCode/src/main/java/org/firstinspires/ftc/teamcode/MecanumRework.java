@@ -33,7 +33,7 @@ public class MecanumRework extends OpMode {
     double lastRuntime;
     final double GRIPPER_POWER = .5;
     double cooldown = 0;
-    boolean ejectorState = false;
+    boolean clawState = false;
 
     @Override
     public void init() {
@@ -176,46 +176,39 @@ public class MecanumRework extends OpMode {
         }
 
         try {
-            if (gamepad2.dpad_up) {
-                robot.clawMotor.setPower(0.25);
-            } else if (gamepad2.dpad_down) {
-                robot.clawMotor.setPower(-0.25);
+            if (gamepad2.dpad_left) {
+                robot.clawMotor.setPower(0.1);
+            } else if (gamepad2.dpad_right) {
+                robot.clawMotor.setPower(-0.1);
             } else {
                 robot.clawMotor.setPower(0);
             }
         } catch (Exception e) {}
 
-        if(gamepad2.right_bumper && runtime.seconds() > cooldown){
-            ejectorState = !ejectorState;
+        if(gamepad2.y && runtime.seconds() > cooldown){
+            clawState = !clawState;
             cooldown = runtime.seconds() + 1;
-
         }
 
-        if(ejectorState){
-            robot.blockEjector.setPosition(0.75);
-        } else if (!ejectorState) {
-            robot.blockEjector.setPosition(0);
+        double CLOSE_POS = 0;
+        double OPEN_POS = 0.8;
+
+        if(clawState){
+            robot.thiccClaw1.setPosition(CLOSE_POS);
+            robot.thiccClaw2.setPosition(CLOSE_POS);
+        } else if (!clawState) {
+            robot.thiccClaw1.setPosition(OPEN_POS);
+            robot.thiccClaw2.setPosition(OPEN_POS);
         }
 
         final double extendoSpeed = 0.3;
 
-        if(gamepad2.dpad_left) {
+        if(gamepad2.dpad_up) {
             robot.armExtender.setPower(extendoSpeed);
-        } else if (gamepad2.dpad_right) {
+        } else if (gamepad2.dpad_down) {
             robot.armExtender.setPower(-extendoSpeed);
         } else {
             robot.armExtender.setPower(0);
-        }
-
-        double CLOSE_POS = 0;
-        double OPEN_POS = 0.75;
-
-        if (gamepad2.x) {
-            robot.thiccClaw1.setPosition(CLOSE_POS);
-            robot.thiccClaw2.setPosition(CLOSE_POS);
-        }else if (gamepad2.y){
-            robot.thiccClaw1.setPosition(OPEN_POS);
-            robot.thiccClaw2.setPosition(OPEN_POS);
         }
 
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());

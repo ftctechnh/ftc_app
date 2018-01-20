@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -117,6 +118,7 @@ public class Hardware750 {
         frDrive.setDirection(DcMotor.Direction.REVERSE);
         rlDrive.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
         rrDrive.setDirection(DcMotor.Direction.REVERSE);
+        armExtender.setDirection(DcMotor.Direction.REVERSE);
         //gripper.setDirection(DcMotor.Direction.FORWARD); // default this to forward, it might not matter.
 
         // Set all motors to zero power
