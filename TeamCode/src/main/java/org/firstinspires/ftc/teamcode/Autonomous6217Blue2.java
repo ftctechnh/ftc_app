@@ -102,7 +102,7 @@ public class Autonomous6217Blue2 extends LinearOpMode {
 
         servoTapper.setPosition(0.0d);
         Wait(1);
-        servoTapper.setPosition(0.6d);
+        servoTapper.setPosition(0.7d);
         Wait(1);
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
