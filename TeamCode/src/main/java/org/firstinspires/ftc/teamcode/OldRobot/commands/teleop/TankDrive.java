@@ -1,19 +1,19 @@
-package org.firstinspires.ftc.teamcode.commands.teleop.old_robot;
+package org.firstinspires.ftc.teamcode.OldRobot.commands.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.systems.old_robot.ArmSystem;
-import org.firstinspires.ftc.teamcode.systems.old_robot.DriveSystem;
+import org.firstinspires.ftc.teamcode.OldRobot.systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.OldRobot.systems.DriveSystem;
 
 /**
- * Created by Mahim on 11/4/2017.
+ * Created by Mahim on 12/9/2017.
  */
 @Disabled
-@TeleOp(name = "TeleOP Drive: Umayer", group = "TeleOP Drive")
-public class RCDrive extends OpMode {
+@TeleOp(name = "TeleOP Drive: Urid", group = "TeleOP Drive")
+public class TankDrive extends OpMode {
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
     private ElapsedTime runtime = new ElapsedTime();
@@ -33,7 +33,7 @@ public class RCDrive extends OpMode {
 
     @Override
     public void loop() {
-        this.driveSystem.rcCarDrive();
+        this.driveSystem.tankDrive();
         this.armSystem.setClaw(gamepad2.right_trigger);
         if (gamepad2.dpad_up) {
             this.armSystem.goUp();

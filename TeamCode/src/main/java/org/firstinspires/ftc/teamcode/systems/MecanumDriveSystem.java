@@ -53,18 +53,6 @@ public class MecanumDriveSystem {
 
     }
 
-    public MecanumDriveSystem(LinearOpMode linearOpMode) {
-        this.linearOpMode       = linearOpMode;
-        HardwareMap hardwareMap = this.linearOpMode.hardwareMap;
-        this.frontLeftMotor     = hardwareMap.get(DcMotor.class,"front left motor");
-        this.rearLeftMotor      = hardwareMap.get(DcMotor.class,"rear left motor");
-        this.frontRightMotor    = hardwareMap.get(DcMotor.class,"front right motor");
-        this.rearRightMotor     = hardwareMap.get(DcMotor.class,"rear right motor");
-        this.driveSystem        = new DriveSystem(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
-        this.rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
-
     public void resetEncoders() {
         this.driveSystem.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.driveSystem.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -182,16 +170,26 @@ public class MecanumDriveSystem {
         return rearRightMotor.getCurrentPosition();
     }
 
-    public void driveForward(double leftSpeed, double rightSpeed) {
+    private void driveForward(double leftSpeed, double rightSpeed) {
         double left = Math.abs(leftSpeed);
         double right = Math.abs(rightSpeed);
         drive(-left, -right);
     }
 
-    public void driveBackwards(double leftSpeed, double rightSpeed) {
+    private void driveBackwards(double leftSpeed, double rightSpeed) {
         double left = Math.abs(leftSpeed);
         double right = Math.abs(rightSpeed);
         drive(left, right);
+    }
+
+    public void drive(double leftSpeed,  double rightSpeed, Direction directions) {
+        if(directions == Direction.FORWARD) {
+            driveForward(leftSpeed, rightSpeed);
+        } else if(directions == Direction.REVERSE) {
+            driveBackwards(leftSpeed, rightSpeed);
+        } else {
+            stop();
+        }
     }
 
     public double getAngle() {

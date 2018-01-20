@@ -9,15 +9,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class DriveSystem {
     private DcMotor frontRightMotor, rearRightMotor, frontLeftMotor, rearLeftMotor;
 
-    public DriveSystem(DcMotor frontLeftMotor,  DcMotor rearLeftMotor,
-                       DcMotor frontRightMotor, DcMotor rearRightMotor) {
+    DriveSystem(DcMotor frontLeftMotor, DcMotor rearLeftMotor,
+                DcMotor frontRightMotor, DcMotor rearRightMotor) {
         this.frontLeftMotor     = frontLeftMotor;
         this.rearLeftMotor      = rearLeftMotor;
         this.frontRightMotor    = frontRightMotor;
         this.rearRightMotor     = rearRightMotor;
     }
 
-    public void setMode(DcMotor.RunMode runMode) {
+    void setMode(DcMotor.RunMode runMode) {
         this.frontLeftMotor.setMode(runMode);
         this.rearLeftMotor.setMode(runMode);
         this.frontRightMotor.setMode(runMode);
@@ -31,7 +31,7 @@ public class DriveSystem {
         this.rearRightMotor.setPower(0.0);
     }
 
-    public boolean isBusy() {
+    boolean isBusy() {
         return  this.frontLeftMotor.isBusy()    && this.rearLeftMotor.isBusy() &&
                 this.frontRightMotor.isBusy()   && this.rearRightMotor.isBusy();
     }

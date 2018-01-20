@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.ColorSensorSystem;
+import org.firstinspires.ftc.teamcode.systems.Direction;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 /**
@@ -14,13 +15,11 @@ import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 @Autonomous(name = "blue alliance bottom", group = "blue alliance")
 public class BlueBottom extends LinearOpMode {
     private MecanumDriveSystem mecanumDriveSystem;
-    private ArmSystem armSystem;
     private ColorSensorSystem colorSensorSystem;
     private ElapsedTime runtime = new ElapsedTime();
 
     private void initialize() {
         this.mecanumDriveSystem = new MecanumDriveSystem(hardwareMap);
-        this.armSystem          = new ArmSystem(hardwareMap);
         this.colorSensorSystem  = new ColorSensorSystem(hardwareMap);
         this.colorSensorSystem.setInitPosition();
     }
@@ -29,10 +28,10 @@ public class BlueBottom extends LinearOpMode {
         this.colorSensorSystem.goDown();
         sleep(1500);
         if(colorSensorSystem.isRed()) {
-            this.mecanumDriveSystem.driveBackwards(0.5, 0.5);
+            this.mecanumDriveSystem.drive(0.5, 0.5, Direction.REVERSE);
             sleep(250);
         } else if(colorSensorSystem.isBlue()) {
-            this.mecanumDriveSystem.driveForward(0.5, 0.5);
+            this.mecanumDriveSystem.drive(0.5, 0.5, Direction.FORWARD);
             sleep(250);
         } else {
             mecanumDriveSystem.stop();
@@ -52,7 +51,7 @@ public class BlueBottom extends LinearOpMode {
             knockDownRedJewel();
             mecanumDriveSystem.stop();
             sleep(1000);
-            this.mecanumDriveSystem.driveBackwards(0.5, 0.3);
+            this.mecanumDriveSystem.drive(0.5, 0.3, Direction.REVERSE);
             sleep(1000);
             mecanumDriveSystem.stop();
             count++;

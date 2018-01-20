@@ -1,19 +1,19 @@
-package org.firstinspires.ftc.teamcode.commands.autonomous.old_robot;
+package org.firstinspires.ftc.teamcode.OldRobot.commands.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.systems.old_robot.ArmSystem;
-import org.firstinspires.ftc.teamcode.systems.old_robot.DriveSystem;
+import org.firstinspires.ftc.teamcode.OldRobot.systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.OldRobot.systems.DriveSystem;
 
 /**
  * Created by Mahim on 12/9/2017.
  */
 @Disabled
-@Autonomous(name = "Blue Alliance: drive forward right", group = "Blue Alliance")
-public class BlueAllianceTurnRight extends LinearOpMode {
+@Autonomous(name = "Red Alliance: Turn right", group = "Red Alliance")
+public class RedAllianceTurnRight extends LinearOpMode {
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
     private ElapsedTime runtime = new ElapsedTime();
@@ -31,26 +31,26 @@ public class BlueAllianceTurnRight extends LinearOpMode {
         runtime.reset();
         int count = 0;
 
-        while (opModeIsActive() & (count < 1)) {
+        while (opModeIsActive() && (count < 1)) {
             armSystem.setDownPosition();
             sleep(1000);
-            knockDownRedJewel();
+            knockDownBlueJewel();
             driveSystem.stop();
             sleep(1000);
             this.armSystem.setInitialPosition();
             sleep(2000);
-            this.driveSystem.drive(-0.9, -1.0); // turn right
+            this.driveSystem.drive(-0.8, -1.0); // turn right
             sleep(1000);
             count++;
         }
     }
 
-    private void knockDownRedJewel() {
+    private void knockDownBlueJewel() {
         this.armSystem.enableColorSensor();
-        if(armSystem.isRed()) {
+        if(armSystem.isBlue()) {
             this.driveSystem.driveForward(1.0);
             sleep(500);
-        } else if (armSystem.isBlue()) {
+        } else if (armSystem.isRed()) {
             this.driveSystem.driveBackwards(1.0);
             sleep(500);
         }

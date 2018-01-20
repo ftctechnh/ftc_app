@@ -27,15 +27,15 @@ public class ColorSensorSystem {
         this.servo.setPosition(DOWN_POSITION);
     }
 
-    public int getRed() {
+    private int getRed() {
         return colorSensor.red();
     }
 
-    public int getBlue() {
+    private int getBlue() {
         return colorSensor.blue();
     }
 
-    public int getGreen() {
+    private int getGreen() {
         return colorSensor.green();
     }
 

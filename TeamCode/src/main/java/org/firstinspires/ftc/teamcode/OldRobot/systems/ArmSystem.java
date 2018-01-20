@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.systems.old_robot;
+package org.firstinspires.ftc.teamcode.OldRobot.systems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -87,15 +87,15 @@ public class ArmSystem {
         return this.jewelArmServo.getPosition();
     }
 
-    public int getRed() {
+    private int getRed() {
         return colorSensor.red();
     }
 
-    public int getBlue() {
+    private int getBlue() {
         return colorSensor.blue();
     }
 
-    public int getGreen() {
+    private int getGreen() {
         return colorSensor.green();
     }
 
