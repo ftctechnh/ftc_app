@@ -57,13 +57,24 @@ public class APDS9930 {
         byte getVal() { return (byte)(this.bVal << SHIFT); }
     }
 
+    public enum LightGain {
+        GAIN_1X (0),
+        GAIN_8X (1),
+        GAIN_16X (2),
+        GAIN_120X (3);
+
+        private final byte bVal;
+        LightGain(int val) { this.bVal = (byte)val; }
+        byte getVal() { return this.bVal; }
+    }
+
     public static final byte ADDR = 0x39;
     public static final byte ID = 0x39;
     //auto gain thresholds
     private static final int RAISE_GAIN_THRESH = 200;
     private static final int LOWER_GAIN_THRESH = 900;
 
-    private static final byte ENABLE = 1 | (1 << 2);
+    private static final byte ENABLE = 1 | (1 << 1) | (1 << 2);
     private byte PTIME = (byte)0xff;
     private byte WTIME = (byte)0xff;
     private byte PPULSE = (byte)0x08;

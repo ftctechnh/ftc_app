@@ -17,6 +17,7 @@ public class Teleop extends OpMode {
     private static final float slowFactor = 0.5f;
     private static final double SERVO_INC_MAX = 0.02;
     private static final double SERVO_INC_MIN = 0.001;
+    private static final int LIFT_COUNTS = 4250;
 
     BotHardware bot = new BotHardware(this);
     private boolean lastA = false;
@@ -50,10 +51,20 @@ public class Teleop extends OpMode {
         if(gamepad2.left_trigger > 0) bot.setFrontDrop(Range.clip(bot.getFrontDrop() - Range.scale(gamepad2.left_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
         else if(gamepad2.right_trigger > 0) bot.setFrontDrop(Range.clip(bot.getFrontDrop() + Range.scale(gamepad2.right_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
 
-        boolean liftSet = false;
-        //if(BotHardware.Motor.liftLeft.motor.getCurrentPosition() > )
-
-        if(gamepad2.left_bumper) bot.setLiftMotors(-1.0f);
+        if(BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos > LIFT_COUNTS
+                || BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos > LIFT_COUNTS
+                || BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos < 0
+                || BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos < 0) {
+            if(BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos > LIFT_COUNTS) BotHardware.Motor.liftLeft.motor.setPower(-0.2);
+            if(BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos > LIFT_COUNTS) BotHardware.Motor.liftRight.motor.setPower(-0.2);
+            if(BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos < 0) BotHardware.Motor.liftLeft.motor.setPower(0.2);
+            if(BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos < 0) BotHardware.Motor.liftRight.motor.setPower(0.2);
+            if(Math.abs(BotHardware.Motor.liftRight.motor.getCurrentPosition() - BotHardware.Motor.liftLeft.motor.getCurrentPosition()) > 10) {
+                if (BotHardware.Motor.liftRight.motor.getCurrentPosition() > BotHardware.Motor.liftLeft.motor.getCurrentPosition()) BotHardware.Motor.liftRight.motor.setPower(-0.2);
+                else BotHardware.Motor.liftLeft.motor.setPower(-0.2);
+            }
+        }
+        else if(gamepad2.left_bumper) bot.setLiftMotors(-1.0f);
         else if(gamepad2.right_bumper) bot.setLiftMotors(1.0f);
         else bot.setLiftMotors(0);
 
