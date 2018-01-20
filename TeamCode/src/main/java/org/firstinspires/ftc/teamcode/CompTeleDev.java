@@ -22,12 +22,12 @@ public class CompTeleDev extends OpMode
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
+        newRobot.openOrCloseDoor(false);
     }
 
     public void start()
     {
         // newRobot.initEndGame(hardwareMap);
-
     }
 
     public void loop()
@@ -66,16 +66,11 @@ public class CompTeleDev extends OpMode
 
 */
         newRobot.fineMoveLift(gamepad2.left_stick_y, 1);
-        /*
+
         if (gamepad2.left_bumper)
-            newRobot.fineAdjDoors(.001f);
+            newRobot.fineAdjDoors(-.16f);
         else if (gamepad2.left_trigger > .2f)
-            newRobot.fineAdjDoors(-.001f);
-          */
-        if (gamepad2.left_bumper)
-            newRobot.fineAdjDoors(-.003f);
-        else if (gamepad2.left_trigger > .3f)
-            newRobot.fineAdjDoors(.003f);
+            newRobot.fineAdjDoors(.16f);
 
         if (gamepad2.right_bumper)
             newRobot.getTailRelease().setPower(-1);//release
@@ -84,40 +79,29 @@ public class CompTeleDev extends OpMode
         else
             newRobot.getTailRelease().setPower(0f);
 
-        //Doesn't close all the way
-        if (gamepad2.a) //we will measure these values and see if its a mechanical or programming issue
+        if (gamepad2.a)
             newRobot.fineAdjGrabber(.04f);
         else if (gamepad2.b)
             newRobot.fineAdjGrabber(-.04f);
 
         if (gamepad2.y)
         {
-            newRobot.fineAdjGrabberRotator(.007f);
+            newRobot.fineAdjGrabberRotator(.008f);
         }
         else if (gamepad2.x)
         {
-            newRobot.fineAdjGrabberRotator(-.007f);
+            newRobot.fineAdjGrabberRotator(-.008f);
         }
 
         /**
          *DRIVE CONTROLS
          * GAMEPAD 1
          */
-        telemetry.addData("grav perp to gravity", newRobot.anglePerpToGrav());
-
-        if(gamepad1.a)
-        {
-            newRobot.autoPark();
-            telemetry.addData("grav perp to gravity", newRobot.anglePerpToGrav());
-        }
+        if (gamepad1.right_trigger > .4f)
+            newRobot.driveMotors(gamepad1.left_stick_y / 2, gamepad1.right_stick_y / 2);
         else
-        {
-            if (gamepad1.right_trigger > .4f)
-                newRobot.driveMotors(gamepad1.left_stick_y / 2, gamepad1.right_stick_y / 2);
-            else
-                newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
-        }
-        //
+            newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
+
         telemetry.addData("LEFT POW= ", newRobot.getDriveLeftOne().getPower());
         telemetry.addData("RIGHt POW= ", newRobot.getDriveRightOne().getPower());
 
@@ -131,7 +115,6 @@ public class CompTeleDev extends OpMode
         telemetry.addData("LiftEnc", newRobot.getLiftMotor().getCurrentPosition());
         telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
         telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
-        telemetry.addData("AnglePerpToGrav ", newRobot.anglePerpToGrav());
         telemetry.addData("Left Y", gamepad1.left_stick_y);
         telemetry.addData("Right y", gamepad1.right_stick_y);
         telemetry.update();
@@ -140,7 +123,6 @@ public class CompTeleDev extends OpMode
     public void stop()
     {
         newRobot.stopAllMotors();
-        newRobot.kill();
     }
 
 }

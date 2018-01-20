@@ -2,9 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+//import com.qualcomm.hardware.bosch.BNO055IMU;
+//import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -14,14 +13,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+//import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+//import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+//import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
+//import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+//import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -34,13 +34,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class NewRobotFinal
 {
     final int liftLevels[] = {0, 250, 769, 1500, 1538};
-    //Currently not levels or stops
     private short currentLvl = 0;
     private short liftTargetPos;
     private short liftDir;
     private final short UP_L = 1;
     private final short DOWN_L = 2;
     private final short STOP_L = 0;
+    final double defaultTurnPow = .5;
+    final double defaultDrivePow = .75;
+    final double defaultLiftSpeed = 1;
 
     private ColorSensor floorColorSens;
     private ColorSensor rightWingColorSens;
@@ -53,7 +55,8 @@ public class NewRobotFinal
     private Servo leftDoorWall;
     private Servo rightDoorWall;
     private DcMotorImplEx liftMotor;
-    //private DcMotorImplEx shiftLiftMotor ;
+    private double leftDoorPos;
+    private double rightDoorPos;
 
     private DcMotorImplEx tailRelease;
     private Servo grabber;
@@ -65,26 +68,27 @@ public class NewRobotFinal
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
 
-    private BNO055IMU imu;
-    Orientation angles;
-    Acceleration gravity;
+    //private BNO055IMU imu;
+    //Orientation angles;
+    //Acceleration gravity;
 
     DigitalChannel wingTouchSens;
     DigitalChannel bottomLiftMagSwitch;
     DigitalChannel topLiftMagSwitch;
+
+    private boolean touchedBottomMag = false;
 
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
     public final float roboDiameterCm = (float) (38.7 * Math.PI); // can be adjusted
     public final float wheelCircIn = (float) (Math.PI * 4); //Circumference of wheels used
     public final float wheelCircCm = (float) (10.168 * Math.PI);
-    // public final short neverrestMaxRPM =
 
     public NewRobotFinal(HardwareMap hardwareMap)
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
 
-        imu = (hardwareMap.get(BNO055IMU.class, "imu"));
+        //imu = (hardwareMap.get(BNO055IMU.class, "imu"));
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
@@ -92,9 +96,9 @@ public class NewRobotFinal
         wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
-        leftDoorWall.scaleRange(.55f, 1f);
+        leftDoorWall.scaleRange(.56f, .91f);
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
-        rightDoorWall.scaleRange(.08f, .53f);
+        rightDoorWall.scaleRange(.11f, .51f);
 
         wingTouchSens = hardwareMap.digitalChannel.get("wingTouchSens");
         bottomLiftMagSwitch = hardwareMap.digitalChannel.get("bottomLiftMagSwitch");
@@ -103,10 +107,17 @@ public class NewRobotFinal
         bottomLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);
         topLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);
 
+        resetDriveEncoders();
+        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        driveRightOne.setVelocity(0, AngleUnit.RADIANS);
+        driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
+        driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
+        driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
+
         initEndGame(hardwareMap);
-        zeroStuff();
-        initIMU();
-        updateIMUValues();
+        initMouthAndWings();
     }
 
     public void initEndGame(HardwareMap hardwareMap)
@@ -118,21 +129,13 @@ public class NewRobotFinal
         tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
 
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
-        grabberRotator.scaleRange(0, .8f);
+        grabberRotator.scaleRange(0, 1f);
         grabber = hardwareMap.get(Servo.class, "grabber");
+        grabber.scaleRange(0, 1f);
     }
 
-    public void initVuforia(HardwareMap hardwareMap)
+    public void initAutoFunctions(HardwareMap hardwareMap)
     {
-        resetDriveEncoders();
-        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        driveRightOne.setVelocity(0, AngleUnit.RADIANS);
-        driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
-        driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
-        driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //Comment out if you don't want camera view on robo phone
@@ -150,7 +153,7 @@ public class NewRobotFinal
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
     }
 
-    public void zeroStuff() //Methods sets motors at low power to put the motors to their resting positions
+    public void initMouthAndWings() //Methods sets motors at low power to put the motors to their resting positions
     {                       //basically sets up lift's step counts starting at its bottom position
         liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -158,24 +161,17 @@ public class NewRobotFinal
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-
         wingMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         wingMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         wingMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wingMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        
-        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
 
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
         leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
 
-    public void initIMU()
+    /*public void initIMU()
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -186,31 +182,31 @@ public class NewRobotFinal
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters);
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-    }
+    }*/
 
-    public void updateIMUValues()
+    /*public void updateIMUValues()
     {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gravity = imu.getGravity();
-    }
+    }*/
 
-    public float getYaw()
+    /*public float getYaw()
     {
         updateIMUValues();
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-    }
+    }*/
 
-    public double anglePerpToGrav()
+    /*public double anglePerpToGrav()
     {
         updateIMUValues();
         return Math.atan(gravity.yAccel / gravity.zAccel);
-    }
+    }*/
 
-    public String getGravToString()
+    /*public String getGravToString()
     {
         updateIMUValues();
         return gravity.toString();
-    }
+    }*/
 
     public char getGlyphCipher()
     {
@@ -262,13 +258,13 @@ public class NewRobotFinal
             return '?';
     }
 
-    public void driveMotors(float lPow, float rPow)
+    public void driveMotors(double lPow, double rPow)
     {
         driveRightOne.setPower(-rPow);
         driveLeftOne.setPower(lPow);
     }
 
-    public void driveMotorsAuto(float lPow, float rPow)
+    public void driveMotorsAuto(double lPow, double rPow)
     {
         driveMotors(-lPow, -rPow);
     }
@@ -285,12 +281,9 @@ public class NewRobotFinal
     {
         stopDriveMotors();
         float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
-        //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         float absPow = (float) Math.abs(pow);
         resetDriveEncoders();
-        //Notes: We are using Andymark Neverrest 40
-        // 1120 counts per rev
 
         if (pow < 0)
         {
@@ -302,7 +295,7 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
-                // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
+
             }
         } else
         {
@@ -323,13 +316,11 @@ public class NewRobotFinal
 
     public void driveStraight_In_Stall(float inches, double pow)
     {
-        float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
-        //You get the number of encoder counts per unit and multiply it by how far you want to go
+        int loops = 0;
+        float encTarget = 1120 / wheelCircIn * inches;
 
         float absPow = (float) Math.abs(pow);
         resetDriveEncoders();
-        //Notes: We are using Andymark Neverrest 40
-        // 1120 counts per rev
 
         if (pow < 0)
         {
@@ -341,8 +332,7 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
-                // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0)
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
         } else
@@ -351,50 +341,74 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
             {
-                if (driveRightOne.getVelocity(AngleUnit.DEGREES) == 0 || driveLeftOne.getVelocity(AngleUnit.DEGREES) == 0)
-                {
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
-                }
             }
 
             stopDriveMotors();
         }
     }
 
-
-
-    /*public void spin_Right(float degrees)
+    public void driveStraight_In_Stall(float inches, double pow, Telemetry telemetry)
     {
-        spin_Right(degrees, .5);
+        double velocitiesR = 0;
+        double velocitiesL = 0;
+        int loops = 0;
+        float encTarget = 1120 / wheelCircIn * inches;
+
+        float absPow = (float) Math.abs(pow);
+        resetDriveEncoders();
+        if (pow < 0)
+        {
+            inches *= -1;
+        }
+        if (inches < 0)
+        {
+            driveMotorsAuto(-absPow, -absPow);
+
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            {
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.update();
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
+            }
+        }
+        else
+        {
+            driveMotorsAuto(absPow, absPow);
+
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            {
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.update();
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
+            }
+
+            stopDriveMotors();
+        }
     }
 
-    public void spin_Right(float degrees, double pow)// Right Motor only moves!
-    {
-        double degToRad = degrees * Math.PI / 180.0f; // converts it to Radians
-
-        double encTarget = (roboDiameterCm / 2 * degToRad) * (neverrestEncCountsPerRev / wheelCircCm);
-        //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
-        //second set gets encoder counts per centimeter
-
-        resetDriveEncoders();
-
-        if (degrees < 0) //spins clockwise
-        {
-            driveRightOne.setPower(-Math.abs(pow));
-
-            while(driveRightOne.getCurrentPosition() > encTarget){}
-        }
-        else //spins cc
-        {
-            driveRightOne.setPower(Math.abs(pow));
-
-            while(driveRightOne.getCurrentPosition() < encTarget){}
-        }
-
-        stopDriveMotors();
-    }*/
-
-    public void spin_Right_IMU(float degrees, double pow)
+    /*public void spin_Right_IMU(float degrees, double pow)
     {
         while (degrees > 180)
         {
@@ -460,7 +474,7 @@ public class NewRobotFinal
         stopDriveMotors();
     }*/
 
-    public void spin_Left_IMU(float degrees)
+    /*public void spin_Left_IMU(float degrees)
     {
         spin_Left_IMU(degrees, .5);
     }
@@ -492,6 +506,7 @@ public class NewRobotFinal
         }
         stopDriveMotors();
     }
+    */
 
     public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
@@ -509,8 +524,7 @@ public class NewRobotFinal
         //It pivots in the direction of how to unit circle spins
         if (degrees < 0) //Pivot Clockwise
         {
-            driveRightOne.setPower(-Math.abs(pow));
-            driveLeftOne.setPower(-Math.abs(pow));
+            driveMotorsAuto(Math.abs(pow), -Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
@@ -518,8 +532,7 @@ public class NewRobotFinal
 
         } else //CounterClockwise
         {
-            driveRightOne.setPower(Math.abs(pow));
-            driveLeftOne.setPower(Math.abs(pow));
+            driveMotorsAuto(-Math.abs(pow), Math.abs(pow));
 
             while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget)
             {
@@ -531,45 +544,45 @@ public class NewRobotFinal
 
     public void pivot(float degrees)
     {
-        pivot(degrees, .23);
+        pivot(degrees, defaultTurnPow);
     }
 
-    public void pivot_IMU(float degrees)
-    {
-        pivot_IMU(degrees, .23);
-    }
-
-    public void pivot_IMU(float degrees, double pow)
-    {
-        while (degrees > 180)
-        {
-            degrees -= 360;
-        }
-        while (degrees < -180)
-        {
-            degrees += 360;
-        }
-        initIMU();
-        updateIMUValues();
-
-        if (degrees < 0)
-        {
-            driveRightOne.setPower(-Math.abs(pow));
-            driveLeftOne.setPower(-Math.abs(pow));
-            while (getYaw() > degrees)
-            {
-            }
-        } else
-        {
-            driveRightOne.setPower(Math.abs(pow));
-            driveLeftOne.setPower(Math.abs(pow));
-            while (getYaw() < degrees)
-            {
-            }
-        }
-
-        stopDriveMotors();
-    }
+//    public void pivot_IMU(float degrees)
+//    {
+//        pivot_IMU(degrees, 0.60);
+//    }
+//
+//    public void pivot_IMU(float degrees, double pow)
+//    {
+//        while (degrees > 180)
+//        {
+//            degrees -= 360;
+//        }
+//        while (degrees < -180)
+//        {
+//            degrees += 360;
+//        }
+//        initIMU();
+//        updateIMUValues();
+//
+//        if (degrees < 0)
+//        {
+//            driveRightOne.setPower(-Math.abs(pow));
+//            driveLeftOne.setPower(-Math.abs(pow));
+//            while (getYaw() > degrees)
+//            {
+//            }
+//        } else
+//        {
+//            driveRightOne.setPower(Math.abs(pow));
+//            driveLeftOne.setPower(Math.abs(pow));
+//            while (getYaw() < degrees)
+//            {
+//            }
+//        }
+//
+//        stopDriveMotors();
+//    }
 
     public void oldMoveLift(int adjLevels) //For the lift, I'll use levels or encoders points that stop
     {
@@ -600,10 +613,10 @@ public class NewRobotFinal
 
     public void moveLift(int adjLevels)
     {
-        moveLift(adjLevels, .66f);
+        moveLift(adjLevels, defaultLiftSpeed);
     }
 
-    public void moveLift(int adjLevels, float pow) //For the lift, I'll use levels or encoders points that stop
+    public void moveLift(int adjLevels, double pow) //For the lift, I'll use levels or encoders points that stop
     {
         CalcLiftTarget(adjLevels);
         while (liftDir != STOP_L)
@@ -663,13 +676,33 @@ public class NewRobotFinal
 
     public void fineMoveLift(float y, float factor)
     {
+        if(!bottomLiftMagSwitch.getState())
+        {
+            if (!touchedBottomMag)
+            {
+                liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+            }
+            else
+                touchedBottomMag = true;
+            if (y > 0)
+                y = 0;
+        }
+        else
+            touchedBottomMag = false;
 
+        if (!topLiftMagSwitch.getState())
+        {
+            if (y < 0)
+                y = 0;
+        }
 
         if (y > .3)
         {
             liftDir = STOP_L;
             liftMotor.setPower(Math.abs(y * factor));
-        } else if (y < -.3)
+        }
+        else if (y < -.3)
         {
             liftDir = STOP_L;
             liftMotor.setPower(-Math.abs(factor * y));
@@ -701,7 +734,6 @@ public class NewRobotFinal
     public void moveWing(boolean moveDown)
     {
         //long endTime = System.currentTimeMillis() + 6000;
-
         if (moveDown)
         {
             wingMotor.setPower(-1f);
@@ -727,21 +759,24 @@ public class NewRobotFinal
         if (close)
         {
             leftDoorWall.setPosition(1f);
-            rightDoorWall.setPosition(.08f);
+            rightDoorWall.setPosition(0f);
         } else
         {
-            leftDoorWall.setPosition(.55f);
-            rightDoorWall.setPosition(0.53f);
+            leftDoorWall.setPosition(0f);
+            rightDoorWall.setPosition(1f);
         }
+
     }
 
     public void fineAdjDoors(double in) //Note: Check and see if it goes past 0 or 1
     {
-        leftDoorWall.setPosition(leftDoorWall.getPosition() + in);
-        rightDoorWall.setPosition(rightDoorWall.getPosition() - in);
+        leftDoorPos = leftDoorWall.getPosition() + in;
+        rightDoorPos = rightDoorWall.getPosition() - in;
+        leftDoorWall.setPosition(leftDoorPos);
+        rightDoorWall.setPosition(rightDoorPos);
     }
 
-    public void autoPark() //We saw the angle wasn't detecting it on the new robot.
+    /*public void autoPark() //We saw the angle wasn't detecting it on the new robot.
     //Maybe x over z? Look at the data collected
     {
         double angle = anglePerpToGrav();
@@ -760,6 +795,7 @@ public class NewRobotFinal
 
         }
     }
+    */
    /* public void OpenCloseGrabber(boolean close)
     {
         if(close)
@@ -783,20 +819,6 @@ public class NewRobotFinal
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
     }
 
-    public void tiltGrabberRotator(boolean goUp)
-    {
-        /*
-        .81 is pointing towards the robot
-        .69 is over the relic, vertical
-        .21 is horizontal and not pointing towards the robot
-         0 is up.
-         */
-        if (goUp)
-            grabberRotator.setPosition(0f);
-        else
-            grabberRotator.setPosition(.69f);
-    }
-
     public void stopAllMotors()
     {
         stopDriveMotors();
@@ -808,27 +830,6 @@ public class NewRobotFinal
     {
         driveLeftOne.setPower(0);
         driveRightOne.setPower(0);
-    }
-
-    public void kill()
-    {
-        leftDoorWall.close();
-        rightDoorWall.close();
-        driveRightOne.close();
-        driveLeftOne.close();
-        liftMotor.close();
-        grabberRotator.close();
-        imu.close();
-        grabber.close();
-        tailRelease.close();
-        wingMotor.close();
-    }
-
-    public void killAuto()
-    {
-        leftWingColorSens.close();
-        rightWingColorSens.close();
-        floorColorSens.close();
     }
 
     public ColorSensor getleftWingColorSens()
@@ -889,11 +890,6 @@ public class NewRobotFinal
     public DcMotorImplEx getTailRelease()
     {
         return tailRelease;
-    }
-
-    public BNO055IMU getImu()
-    {
-        return imu;
     }
 
     public short getLiftDir()
