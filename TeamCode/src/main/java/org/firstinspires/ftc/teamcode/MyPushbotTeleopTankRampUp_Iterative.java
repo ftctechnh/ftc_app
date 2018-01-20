@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
+@TeleOp(name="Pushbot: Teleop Tank Ramp Up", group="Pushbot")
 //@Disabled
 public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
 
@@ -62,8 +62,11 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
     int             target = 0;                          // lift motor target
-    int             maxlift = 7500;                     // maxiumum lift height
-    int             minlift = 0;                         // minimum lift height
+    int             maxlift = 7200;                     // maxiumum lift height
+    int             minlift = 0;                        // minimum lift height
+    double LeftPower = 0;
+    double RightPower = 0;
+
 
 
     /*
@@ -106,7 +109,18 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
      */
     @Override
     public void loop() {
+
         MotorPower();
+
+        if (gamepad1.dpad_down) {
+            robot.leftDrive.setPower(.5);
+            robot.rightDrive.setPower(.5);
+        }
+        if (gamepad1.dpad_up) {
+            robot.leftDrive.setPower(-.5);
+            robot.rightDrive.setPower(-.5);
+        }
+
 
         // Use right Bumper to toggle claw between open and close position
         // 0 is open, -0.30 is closed
@@ -186,50 +200,30 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
     public void MotorPower(){
         double leftStick;
         double rightStick;
-        double LeftPower;
-        double RightPower;
-        leftStick = gamepad1.left_stick_y;
-        rightStick = gamepad1.right_stick_y;
-        LeftPower = robot.leftDrive.getPower();
-        RightPower = robot.rightDrive.getPower();
-        if (leftStick > 0) {
-            if (leftStick - LeftPower >= 0.1) {
-                LeftPower += 0.1;
+            leftStick = gamepad1.left_stick_y;
+            rightStick = gamepad1.right_stick_y;
+            if (leftStick > 0) {
+                LeftPower = Math.min(leftStick, (LeftPower + (2 - gamepad1.left_trigger)* .02));
+            } else if (leftStick < 0) {
+                LeftPower = Math.max(leftStick, (LeftPower - (2 - gamepad1.left_trigger)* .02));
             }
-            else {
-                LeftPower = leftStick;
+            else if(leftStick == 0) {
+                LeftPower = 0 ;
             }
-        }
-        else{
-            if (leftStick - LeftPower <= -0.1) {
-                LeftPower -= 0.1;
+            if (rightStick > 0) {
+                RightPower = Math.min(rightStick, (RightPower + (2 - gamepad1.left_trigger)* .02));
+            } else if (rightStick < 0) {
+                RightPower = Math.max(rightStick, (RightPower - (2 - gamepad1.left_trigger)* .02));
             }
-            else {
-                LeftPower = leftStick;
+            else if(rightStick == 0) {
+                RightPower = 0 ;
             }
-        }
-        if (rightStick > 0) {
-            if (rightStick -  RightPower >= 0.1) {
-                RightPower += 0.1;
-            }
-            else {
-                RightPower = rightStick;
-            }
-        }
-        else{
-            if (rightStick -  RightPower <= -0.1) {
-                RightPower -= 0.1;
-            }
-            else {
-                RightPower = rightStick;
-            }
-        }
 
-        robot.leftDrive.setPower(LeftPower * (gamepad1.left_trigger + 1) / 2);
-        robot.rightDrive.setPower(RightPower * (gamepad1.left_trigger + 1) / 2);
+            robot.leftDrive.setPower(LeftPower * (gamepad1.left_trigger + 1) / 2);
+            robot.rightDrive.setPower(RightPower * (gamepad1.left_trigger + 1) / 2);
 
-        telemetry.addData("left",  "%.2f", LeftPower);
-        telemetry.addData("right", "%.2f", RightPower);
-        telemetry.update();
+            telemetry.addData("left", "%.2f", LeftPower);
+            telemetry.addData("right", "%.2f", RightPower);
+            telemetry.update();
     }
 }

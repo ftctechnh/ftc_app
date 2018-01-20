@@ -212,7 +212,7 @@ public class BlueRight2 extends LinearOpMode {
             telemetry.update();
             encoderDrive(TURN_SPEED, 6,-6,5);
         }
-        encoderDrive(DRIVE_SPEED, -36,-36,5);   // drive into cryptobox
+        encoderDrive(DRIVE_SPEED, -35,-35,5);   // drive into cryptobox
 
         // release glyph and lower lift
         clawOffset = .0;

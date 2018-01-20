@@ -196,7 +196,7 @@ public class RedLeft extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -6,6,5);
+            encoderDrive(TURN_SPEED, -6.25,6.25,5);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER ) {
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -206,14 +206,14 @@ public class RedLeft extends LinearOpMode {
         else if (vuMark == RelicRecoveryVuMark.LEFT) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -3.6,3.6,5);
+            encoderDrive(TURN_SPEED, -4,4,5);
         }
         else if  (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, -3.6,3.6,5);
+            encoderDrive(TURN_SPEED, -4,4,5);
         }
-        encoderDrive(DRIVE_SPEED, -36,-36,5);   // drive into cryptobox
+        encoderDrive(DRIVE_SPEED, -35,-35,5);   // drive into cryptobox
 
         // release glyph and lower lift
         clawOffset = .0;

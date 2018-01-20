@@ -66,7 +66,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
     int             target = 0;                          // lift motor target
-    int             maxlift = 7500;                     // maxiumum lift height
+    int             maxlift = 7200;                     // maxiumum lift height
     int             minlift = 0;                         // minimum lift height
 
 
@@ -125,6 +125,16 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2);
 
         // Use right Bumper to toggle claw between open and close position
+
+
+        if (gamepad1.dpad_down) {
+            robot.leftDrive.setPower(.5);
+            robot.rightDrive.setPower(.5);
+        }
+        if (gamepad1.dpad_up) {
+            robot.leftDrive.setPower(-.5);
+            robot.rightDrive.setPower(-.5);
+        }
         // 0 is open, -0.30 is closed
 
         if (gamepad1.right_bumper) {

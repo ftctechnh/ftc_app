@@ -203,7 +203,7 @@ public class BlueLeft2 extends LinearOpMode {
             encoderDrive(TURN_SPEED, 15, -15, 5);
         }
 
-        encoderDrive(DRIVE_SPEED, -41, -41, 5);
+        encoderDrive(DRIVE_SPEED, -40, -40, 5);
 
         //drop glyph and lower lift
         clawOffset = .0;
