@@ -53,22 +53,32 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (newRobot.getGlyphCipher())
                 {
                     case 'l':
-                        newRobot.pivot(-35,.5);
-                        newRobot.driveStraight_In_Stall(37.5f, .5, telemetry);
+                        newRobot.pivot(-50,.6);
+                        newRobot.driveStraight_In(18.5f);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(18.5f);
                         break;
                     case 'c':
-                        newRobot.pivot(-20,.5);
-                        newRobot.driveStraight_In_Stall(34, .5, telemetry);
+                        newRobot.pivot(-35,.6);
+                        newRobot.driveStraight_In(17);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(17);
                         break;
                     case 'r':
-                        newRobot.pivot(-8,.5);
-                        newRobot.driveStraight_In_Stall(30.5f, .5, telemetry);
+                        newRobot.pivot(-20,.6);
+                        newRobot.driveStraight_In(15);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(15);
                         break;
                     default:
-                        newRobot.pivot(-20,.5);
-                        newRobot.driveStraight_In_Stall(30.5f, .5, telemetry);
+                        newRobot.pivot(-35,.6);
+                        newRobot.driveStraight_In(17);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(17);
                         break;
                 }
+                newRobot.driveStraight_In(-5,1);
+                newRobot.stopAllMotors();
                 break;
 
             case 'r':
@@ -109,8 +119,8 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In_Stall(34, .5, telemetry);
                         break;
                     case 'r':
-                        newRobot.pivot(8,.5);
-                        newRobot.driveStraight_In_Stall(30.5f, .5, telemetry); //positioning is really off, need to fix on 11/12
+                        newRobot.pivot(12,.5);
+                        newRobot.driveStraight_In(30.5f); //positioning is really off, need to fix on 11/12
                         break;
                     default:
                         newRobot.pivot(20,.5);
