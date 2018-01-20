@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 public class AutoDrive {
     private DcMotor FrontLeft;
@@ -22,6 +21,7 @@ public class AutoDrive {
     double heading;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
+    final double MIN_SPEED = 0.15;
     final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
     final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
     final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
@@ -56,15 +56,25 @@ public class AutoDrive {
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
+        double flSpeed = fl;
+        double frSpeed = fr;
+        double rlSpeed = rl;
+        double rrSpeed = rr;
         double[] list = {fl, fr, rl, rr};
         double high = findHigh(list);
-        double flTarget = fl/high*clicks;
-        double frTarget = fr/high*clicks;
-        double rlTarget = rl/high*clicks;
-        double rrTarget = rr/high*clicks;
+        double flTarget = Math.abs(fl/high*clicks);
+        double frTarget = Math.abs(fr/high*clicks);
+        double rlTarget = Math.abs(rl/high*clicks);
+        double rrTarget = Math.abs(rr/high*clicks);
         driveSpeeds(fl, fr, rl, rr);
         while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget)))) {
-            driveSpeeds(fl*(flTarget-FrontLeft.getCurrentPosition())/flTarget, fr*(frTarget-FrontRight.getCurrentPosition())/frTarget, rl*(rlTarget-RearLeft.getCurrentPosition())/rl, rr*(rrTarget-RearRight.getCurrentPosition())/rrTarget);
+            flSpeed = calculateSpeed(FrontLeft, flTarget, fl);
+            frSpeed = calculateSpeed(FrontRight, frTarget, fr);
+            rlSpeed = calculateSpeed(RearLeft, rlTarget, rl);
+            rrSpeed = calculateSpeed(RearRight, rrTarget, rr);
+            driveSpeeds(flSpeed, frSpeed, rlSpeed, rrSpeed);
+            telemetrizeSpeeds();
+            telemetry.update();
         }
         stopMotors();
     }
@@ -179,10 +189,11 @@ public class AutoDrive {
         telemetry.addData("fourth motor: ", RearRight.getCurrentPosition());
     }
     private void telemetrizeSpeeds() {
-        telemetry.addData("First motor: ", FrontLeft.getPower());
-        telemetry.addData("Second motor: ", FrontRight.getPower());
-        telemetry.addData("third motor: ", RearLeft.getPower());
-        telemetry.addData("fourth motor: ", RearRight.getPower());
+        telemetry.addLine("Motor speeds:");
+        telemetry.addData("Front left motor", FrontLeft.getPower());
+        telemetry.addData("Front right motor", FrontRight.getPower());
+        telemetry.addData("Back left motor", RearLeft.getPower());
+        telemetry.addData("Back right motor", RearRight.getPower());
     }
 
     private void setBRAKE() {
@@ -190,5 +201,16 @@ public class AutoDrive {
         this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    private double calculateSpeed(DcMotor motor, double target, double targetSpeed) {
+        if (targetSpeed>0) {
+            return Range.clip(targetSpeed*(target-Math.abs(motor.getCurrentPosition()))/target, MIN_SPEED, 1);
+        }
+        else if (targetSpeed<0) {
+            return Range.clip(targetSpeed*(target-Math.abs(motor.getCurrentPosition()))/target, -1, -MIN_SPEED);
+        }
+        else {
+            return 0;
+        }
     }
 }

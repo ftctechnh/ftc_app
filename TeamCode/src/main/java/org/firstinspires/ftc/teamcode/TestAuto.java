@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "TestingAutoWithClass", group = "Autonomous")
-@Disabled
+@Autonomous(name = "TestAuto", group = "Autonomous")
 public class TestAuto extends LinearOpMode {
 	AutoDrive drive;
 	ForkLift ForkLift;
@@ -29,6 +28,6 @@ public class TestAuto extends LinearOpMode {
 		telemetry.addLine("NOW YOU CAN PRESS PLAY");
 		telemetry.update();
 		waitForStart();
-		Systems.findJewel(Color.RED);
+		drive.driveTranslateRotate(0,0.2,0, 20);
 	}
 }
