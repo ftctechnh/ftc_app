@@ -16,7 +16,7 @@ public class Callibration_NewRobot extends LinearOpMode
     public void runOpMode()
     {
         robot = new NewRobotFinal(hardwareMap);
-        robot.initVuforia(hardwareMap);
+        robot.initAutoFunctions(hardwareMap);
 
         waitForStart();
 
@@ -37,9 +37,6 @@ public class Callibration_NewRobot extends LinearOpMode
         //robot.pivot(1100, .5);
 
         robot.stopAllMotors();
-        robot.kill();
-        robot.killAuto();
-
     }
 
 }
