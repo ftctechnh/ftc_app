@@ -14,23 +14,19 @@ public class FinalUniversalAudi extends LinearOpMode
     {
         float adjustment = 0;
         newRobot = new NewRobotFinal(hardwareMap);
-        newRobot.initVuforia(hardwareMap);
-        sleep(250);
+        newRobot.initAutoFunctions(hardwareMap);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
         telemetry.update();
         waitForStart();
-        sleep(300);
+        char cipher = newRobot.getGlyphCipher();
         switch (colorOfPlatform)
-                //drive is functional, still needs positional tweaking 12/11
         {
             case 'b':
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
                 newRobot.oldMoveLift(1);
-                sleep(250);
-                char cipher = newRobot.getGlyphCipher();
                 char colorOfJewel = newRobot.getColor(newRobot.getleftWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
                 telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getleftWingColorSens()));
@@ -40,20 +36,18 @@ public class FinalUniversalAudi extends LinearOpMode
                     case'r':
                         adjustment = -3;
                         newRobot.driveStraight_In(adjustment);
-                        sleep(200);
                         newRobot.moveWing(false);
                         break;
                     case 'b':
                         adjustment = 3;
                         newRobot.driveStraight_In(adjustment);
-                        sleep(200);
                         newRobot.moveWing(false);
                         break;
                     default:
                         newRobot.moveWing(false);
                         break;
                 }
-                telemetry.addData("Cipherr = ", cipher);
+                telemetry.addData("Cipher = ", cipher);
                 telemetry.update();
                 switch (cipher)
                 {
@@ -78,7 +72,6 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.openOrCloseDoor(true);
                 newRobot.moveWing(true);
                 newRobot.oldMoveLift(1);
-                sleep(250);
                 cipher = newRobot.getGlyphCipher();
                 colorOfJewel = newRobot.getColor(newRobot.getrightWingColorSens());
                 telemetry.addData("jewel color = ", colorOfJewel);
@@ -89,13 +82,11 @@ public class FinalUniversalAudi extends LinearOpMode
                     case 'r':
                         adjustment = -2;
                         newRobot.driveStraight_In(adjustment);
-                        sleep(200);
                         adjustment = -3;
                         break;
                     case 'b':
                         adjustment = 3;
                         newRobot.driveStraight_In(adjustment);
-                        sleep(200);
                         break;
                     default:
                         break;
@@ -129,7 +120,6 @@ public class FinalUniversalAudi extends LinearOpMode
                 break;
             default:
                 newRobot.openOrCloseDoor(true);
-                sleep(100);
                 newRobot.oldMoveLift(1);
                 newRobot.driveStraight_In(35, .4);
                 break;

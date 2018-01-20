@@ -12,16 +12,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "Original Autopark in Auto", group = "concept")
 public class TestIMU extends LinearOpMode
 {
-    private NewRobotFinal robot;
+   // private NewRobotFinal robot;
     @Override
     public void runOpMode() throws InterruptedException
     {
-        robot = new NewRobotFinal(hardwareMap);
+     /*   robot = new NewRobotFinal(hardwareMap);
         robot.initVuforia(hardwareMap);
         waitForStart();
         while(opModeIsActive())
         {
-            robot.updateIMUValues();
             //double angle = robot.selfBalStraight();
             double y = robot.gravity.yAccel;
             double z = robot.gravity.zAccel;
@@ -42,7 +41,6 @@ public class TestIMU extends LinearOpMode
             {
                 robot.stopDriveMotors();
             }
-
             telemetry.addData("Angle atan y/z",angle);
             telemetry.addData("y", y);
             telemetry.addData("z", z);
@@ -50,7 +48,6 @@ public class TestIMU extends LinearOpMode
             telemetry.update();
         }
         robot.stopAllMotors();
-        robot.killAuto();
-        robot.kill();
+        */
     }
 }
