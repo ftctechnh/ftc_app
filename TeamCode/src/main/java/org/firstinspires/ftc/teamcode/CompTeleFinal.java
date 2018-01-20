@@ -43,9 +43,9 @@ public class CompTeleFinal extends OpMode
             newRobot.getTailRelease().setPower(0f);
 
         if (gamepad2.a)
-            newRobot.fineAdjGrabber(.04f);
+            newRobot.fineAdjGrabber(.02f);
         else if (gamepad2.b)
-            newRobot.fineAdjGrabber(-.04f);
+            newRobot.fineAdjGrabber(-.02f);
 
         if (gamepad2.y)
         {

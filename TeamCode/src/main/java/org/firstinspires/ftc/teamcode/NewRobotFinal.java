@@ -131,7 +131,7 @@ public class NewRobotFinal
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
         grabberRotator.scaleRange(0, 1f);
         grabber = hardwareMap.get(Servo.class, "grabber");
-        grabber.scaleRange(0, 1f);
+        grabber.scaleRange(.15f, .6f);
     }
 
     public void initAutoFunctions(HardwareMap hardwareMap)
@@ -793,18 +793,6 @@ public class NewRobotFinal
             driveLeftOne.setPower(0);
             driveRightOne.setPower(0);
 
-        }
-    }
-    */
-   /* public void OpenCloseGrabber(boolean close)
-    {
-        if(close)
-        {
-            grabber.setPosition(.6f);
-        }
-        else
-        {
-            grabberRotator.setPosition(.15f);
         }
     }
     */
