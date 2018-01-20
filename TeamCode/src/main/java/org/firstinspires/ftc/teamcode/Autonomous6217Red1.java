@@ -99,10 +99,10 @@ public class Autonomous6217Red1 extends LinearOpMode {
         telemetry.addLine("starting");
         telemetry.update();
 
-        servoTapper.setPosition(0.0d);
-        Wait(1);
+        servoTapper.setPosition(0.2d);
+        Wait(.2f);
         servoTapper.setPosition(0.7d);
-        Wait(1);
+        Wait(.2f);
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
 
@@ -122,21 +122,24 @@ public class Autonomous6217Red1 extends LinearOpMode {
             iSeeRed = false;
         }
 
-        Wait(2.5f);
+        Wait(.2f);
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
             move(0f, .2f, .25f);
-            Wait(1);
+            Wait(.2);
+            servoTapper.setPosition(0.1d);
+            Wait(.2);
             move(0f, -.2f, .25f);
         } else {
             telemetry.addData("1", "move left");
             move(0f, -.2f, .25f);
-            Wait(1);
+            Wait(.2);
+            servoTapper.setPosition(0.1d);
+            Wait(.2);
             move(0f, .2f, .25f);
         }
         telemetry.update();
-        servoTapper.setPosition(0.1d);
 
         move(0f, -0.5f, .47f);
 
