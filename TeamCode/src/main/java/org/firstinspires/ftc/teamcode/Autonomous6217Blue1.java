@@ -122,21 +122,20 @@ public class Autonomous6217Blue1 extends LinearOpMode {
         }
 
         Wait(.2f);
-
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            move(0f, .2f, .25f);
+            move(0f, -.2f, .3f);
             Wait(.2);
-            servoTapper.setPosition(0.2d);
+            servoTapper.setPosition(0.1d);
             Wait(.2);
-            move(0f, -.2f, .25f);
+            move(0f, .2f, .3f);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .25f);
+            move(0f, .2f, .3f);
             Wait(.2);
-            servoTapper.setPosition(0.2d);
+            servoTapper.setPosition(0.1d);
             Wait(.2);
-            move(0f, .2f, .25f);
+            move(0f, -.2f, .3f);
         }
         telemetry.update();
 

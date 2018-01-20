@@ -29,7 +29,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name="Preciousss: Autonomous6217Red2", group="Preciousss")
+@Autonomous(name="Preciousss: Autonomous6217Red2 1102", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
@@ -123,21 +123,23 @@ public class Autonomous6217Red2 extends LinearOpMode {
             iSeeRed = false;
         }
 
-        Wait(2.5f);
+        Wait(.2f);
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            move(0f, .2f, .25f);
-            Wait(1);
-            move(0f, -.2f, .25f);
+            move(0f, -.2f, .3f);
+            Wait(.2);
+            servoTapper.setPosition(0.1d);
+            Wait(.2);
+            move(0f, .2f, .3f);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .25f);
-            Wait(1);
-            move(0f, .2f, .25f);
+            move(0f, .2f, .3f);
+            Wait(.2);
+            servoTapper.setPosition(0.1d);
+            Wait(.2);
+            move(0f, -.2f, .3f);
         }
-        telemetry.update();
-        servoTapper.setPosition(0.1d);
 
         move(0f, -0.5f, .35f);
 

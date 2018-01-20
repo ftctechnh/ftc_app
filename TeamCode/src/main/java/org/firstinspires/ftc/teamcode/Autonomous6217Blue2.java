@@ -49,8 +49,8 @@ public class Autonomous6217Blue2 extends LinearOpMode {
     DcMotor motorConR;
     NormalizedColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
-    boolean iAmBlue = true;
-    boolean iAmRed = false;
+    boolean iAmBlue = false;
+    boolean iAmRed = true;
     boolean isBoxSide = true;
 
 
@@ -123,21 +123,23 @@ public class Autonomous6217Blue2 extends LinearOpMode {
             iSeeRed = false;
         }
 
-        Wait(2.5f);
+        Wait(.2f);
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            move(0f, .2f, .25f);
-            Wait(1);
-            move(0f, -.2f, .25f);
+            move(0f, -.2f, .3f);
+            Wait(.2);
+            servoTapper.setPosition(0.1d);
+            Wait(.2);
+            move(0f, .2f, .3f);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .25f);
-            Wait(1);
-            move(0f, .2f, .25f);
+            move(0f, .2f, .3f);
+            Wait(.2);
+            servoTapper.setPosition(0.1d);
+            Wait(.2);
+            move(0f, -.2f, .3f);
         }
-        telemetry.update();
-        servoTapper.setPosition(0.1d);
 
 
         move(0f, 0.5f, .23f);
