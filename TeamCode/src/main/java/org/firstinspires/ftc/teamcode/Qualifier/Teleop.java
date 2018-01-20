@@ -29,16 +29,31 @@ public class Teleop extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     double timeLeft;
     double startclosetime = 0.0;
+    double startclamptime = 0.0;
 
     public boolean backIsReleased = true;
+    public boolean back2IsReleased = true;
     public boolean tristanmode = false;
     public boolean rightbtnIsReleased = true;
     public boolean xIsReleased = true;
     //public boolean aIsReleased = true;
     public boolean rightbumperIsReleased = true;
     public boolean righttriggerIsReleased = true;
+
+    //SLOW SERVO
+    public boolean elbowmoving = false;
+    public double elbowtotalmove = 0;
+    double elbowstarttime = 0.0;
+    double elbowstartpos = 0.0;
+    double movetime = 0;
+    double elbowtarget = 0.0;
+
+
+    public boolean leftbumperIsReleased = true;
+    public boolean leftttriggerIsReleased = true;
     public boolean glyphLiftismoving = false;
     public boolean delayLift = false;
+    public boolean delayClamp = false;
     public boolean glyphSensed = false;
     public int manualLiftDelay = 200;
     public int glyphSensedDelay = 0;
@@ -116,13 +131,14 @@ public class Teleop extends OpMode {
             xIsReleased = true;
         }
 // check to see if enough time has elapsed to start lift   (automatic lift after clamp)
-//        if (delayClamp && runtime.milliseconds() - startclosetime > manualLiftDelay + glyphSensedDelay){     // this is the delay time in milliseconds
-//            delayLift = false;
-//            glyphSensedDelay = 0;
-//            gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
-//        }
-
-        if (delayLift && runtime.milliseconds() - startclosetime > manualLiftDelay + glyphSensedDelay){     // this is the delay time in milliseconds
+        if (delayClamp && runtime.milliseconds() - startclosetime > glyphSensedDelay){     // this is the delay time in milliseconds
+            delayClamp = false;
+            glyphSensedDelay = 0;
+            startclamptime = runtime.milliseconds();            // start timer to make sure lift waits the right amount of time set boolean
+            delayLift = true;
+            gromit.glyphTrain.glyphclamp("close");      //Clamp servo
+        }
+        if (delayLift && runtime.milliseconds() - startclamptime > manualLiftDelay ){     // this is the delay time in milliseconds
             delayLift = false;
             glyphSensedDelay = 0;
             gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
@@ -161,7 +177,6 @@ public class Teleop extends OpMode {
                 }
            }
         }
-
 
         //------------------------------------------------------------------------------
         // manual glyph lift
@@ -226,14 +241,15 @@ public class Teleop extends OpMode {
         }
 
         //  check for incoming block  here
-        if(!trainon){
-            if ( gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) <8 && !glyphSensed){     // if block is sensed set boolean
+        if(trainon){
+            if ( gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) <12 && !glyphSensed){     // if block is sensed set boolean
                 glyphSensed = true;
-            }else if (glyphSensed && gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) > 8){     // if block was already sensed (sense the back end)
+            }else if (glyphSensed && gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) > 12){     // if block was already sensed (sense the back end)
                 glyphSensed = false;
                 startclosetime = runtime.milliseconds();    // start timer  set boolean
-                delayLift = true;                            // check for time to lift
-                glyphSensedDelay = 500;
+                //delayLift = true;                            // check for time to lift
+                delayClamp = true;
+                glyphSensedDelay = 300;
                 // set target  as 1 (assume we're at zero for now
                 liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
                 glyphLiftismoving = true;     // turn on manual override
@@ -257,7 +273,6 @@ public class Teleop extends OpMode {
                     tristanmode = false;
                 }
                 else{tristanmode = true;}
-
             }
         }
         else {
@@ -270,25 +285,59 @@ public class Teleop extends OpMode {
         else{
             gromit.driveTrain.drivesmart(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
         }
-
-
-
-
-
-        /*if (gamepad1.y) {
-            gromit.jewelArm.jewelArmUp();
+        //SLOW RELIC ELBOW
+        //Bottom position
+        if (gamepad2.left_bumper) {
+            if (leftbumperIsReleased) {//IF CHANGE IN STATE
+                leftbumperIsReleased = false;
+                movetime = 500;
+                elbowmoving = true;
+                elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
+                elbowstarttime = runtime.milliseconds();//Start time
+                elbowtarget = gromit.relicArm.elbowup;
+                elbowtotalmove = elbowtarget-elbowstartpos;
+            }
         }
-        if (gamepad1.a){
-            gromit.jewelArm.jewelArmDown();
-        }*/
- //       double vector = toDegrees(PI/4+atan(gamepad1.right_stick_y / gamepad1.right_stick_x));
- //       telemetry.addData("vector: ", vector);
-        /*double drive_direction = atan(y/x);
-        lfpower = signum(y)*Math.cos(drive_direction-PI/4);
-        lrpower = signum(y)*Math.sin(drive_direction-PI/4);
-        rfpower = signum(y)*Math.sin(drive_direction-PI/4);
-        rrpower = signum(y)*Math.cos(drive_direction-PI/4);
-*/
+        else {
+            leftbumperIsReleased = true;
+        }
+        //Middle Position
+        if (gamepad2.left_trigger > 0.1) {
+            if (leftttriggerIsReleased) {//IF CHANGE IN STATE
+                leftttriggerIsReleased = false;
+                movetime = 500;
+                elbowmoving = true;
+                elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
+                elbowstarttime = runtime.milliseconds();//Start time
+                elbowtarget = gromit.relicArm.elbowdown;
+                elbowtotalmove = elbowtarget-elbowstartpos;
+            }
+        }
+        else {
+            leftttriggerIsReleased = true;
+        }
+        //TOP POSITION
+        if (gamepad2.back||gamepad2.right_stick_button) {
+            if (back2IsReleased) {//IF CHANGE IN STATE
+                back2IsReleased = false;
+                movetime = 1000;
+                elbowmoving = true;
+                elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
+                elbowstarttime = runtime.milliseconds();//Start time
+                elbowtarget = gromit.relicArm.elbowtop;
+                elbowtotalmove = elbowtarget-elbowstartpos;
+            }
+        }
+        else {
+            back2IsReleased = true;
+        }
+        if(elbowmoving){
+            gromit.relicArm.relicElbowServo.setPosition(((runtime.milliseconds() - elbowstarttime)/movetime)*elbowtotalmove+elbowstartpos);
+            if(runtime.milliseconds() > elbowstarttime+movetime){
+                elbowmoving = false;
+            }
+        }
+
 
         //  extends the Relic arm forward and back
         if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
@@ -299,24 +348,25 @@ public class Teleop extends OpMode {
         }
 
         // rotates the smaller arm forward and back (elbow)
-        if (gamepad2.left_bumper) {
-            gromit.relicArm.elbowUp();
-        }
-        else if (gamepad2.left_trigger > 0.1) {
-            gromit.relicArm.elbowDown();
-        }
+//        if (gamepad2.left_bumper) {
+//            gromit.relicArm.elbowUp();
+//        }
+//        else if (gamepad2.left_trigger > 0.1) {
+//            gromit.relicArm.elbowDown();
+//        }
 
         // rotates the relic clamp forward or back
-        if (gamepad2.left_stick_y > 0.1){
+        if (gamepad2.left_stick_y > 0.1){//down
             gromit.relicArm.clawOpen();
         }
-        else if (gamepad2.left_stick_y < -0.1){
+        else if (gamepad2.left_stick_y < -0.1){//up
         gromit.relicArm.clawClose();
         }
 
-        telemetry.addLine("Time Left: " + timeLeft);
-        telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);
-        telemetry.addData("liftPosition", gromit.glyphTrain.lift_motor.getCurrentPosition());
+        //telemetry.addLine("Time Left: " + timeLeft);
+        //telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);
+        //telemetry.addData("liftPosition", gromit.glyphTrain.lift_motor.getCurrentPosition());
+        telemetry.addData("glyph sensor", gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM));
 
 
 

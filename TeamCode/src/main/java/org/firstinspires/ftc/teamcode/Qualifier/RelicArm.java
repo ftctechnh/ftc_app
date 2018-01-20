@@ -12,6 +12,9 @@ public class RelicArm {
     public Servo relicElbowServo;
     public Servo relicClawServo;
     public DcMotor relicArmMotor  = null;
+    public double elbowtop = 1.0;
+    public double elbowup = 0.5;
+    public double elbowdown = 0.0;
 
     public void init(HardwareMap hardwareMap) {
         relicClawServo = hardwareMap.servo.get("relic_claw");
@@ -19,8 +22,8 @@ public class RelicArm {
         //jawOpen();
         //jawClosed();
 
-        relicClawServo.setPosition(0.4);
-        relicElbowServo.setPosition(0.5);
+        relicClawServo.setPosition(0.4);//For tucket into the robot
+        relicElbowServo.setPosition(0.0);
 
         relicArmMotor = hardwareMap.get(DcMotor.class, "relic_arm");
         relicArmMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -36,11 +39,11 @@ public class RelicArm {
     }
 
     public void elbowUp() {
-        relicElbowServo.setPosition(0.4);
-    }
+        relicElbowServo.setPosition(elbowup);
+    }//Close to level
 
     public void elbowDown() {
-        relicElbowServo.setPosition(0.5);
+        relicElbowServo.setPosition(0.0);
     }
 
 
