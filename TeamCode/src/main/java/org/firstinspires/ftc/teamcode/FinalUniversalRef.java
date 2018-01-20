@@ -102,11 +102,10 @@ public class FinalUniversalRef extends LinearOpMode
                         adjustment = -2;
                         newRobot.driveStraight_In(adjustment);
                         sleep(200);
-                        adjustment = -3;
                         newRobot.moveWing(false);
                         break;
                     case 'b':
-                        adjustment = 3;
+                        adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         sleep(200);
                         newRobot.moveWing(false);
@@ -122,32 +121,34 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (newRobot.getGlyphCipher())
                 {
                     case 'l':
-                        newRobot.pivot(35,.5);
-                        newRobot.driveStraight_In(37.5f); //needs testing, fix on 11/12
+                        newRobot.pivot(50,.6);
+                        newRobot.driveStraight_In(18.5f);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(18.5f);
                         break;
                     case 'c':
-                        newRobot.pivot(20,.5);
-                        newRobot.driveStraight_In(34);
+                        newRobot.pivot(35,.6);
+                        newRobot.driveStraight_In(17);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(17);
                         break;
                     case 'r':
-                        newRobot.pivot(12,.5);
-                        newRobot.driveStraight_In(30.5f); //positioning is really off, need to fix on 11/12
+                        newRobot.pivot(20,.6);
+                        newRobot.driveStraight_In(15);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(15);
                         break;
                     default:
-                        newRobot.pivot(20,.5);
-                        newRobot.driveStraight_In(30.5f);
+                        newRobot.pivot(35,.6);
+                        newRobot.driveStraight_In(17);
+                        newRobot.openOrCloseDoor(false);
+                        newRobot.driveStraight_In(17);
                         break;
                 }
-                /*newRobot.pivot_IMU(-80, .25);
-                newRobot.oldMoveLift(-1);
-                newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(16,.2);
                 newRobot.driveStraight_In(-5,1);
-                newRobot.driveStraight_In(20);
-                newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-5,1);
-                newRobot.stopAllMotors();*/
+                newRobot.stopAllMotors();
                 break;
+
             default:
                 newRobot.driveStraight_In(29, .4);
                 newRobot.openOrCloseDoor(true);
