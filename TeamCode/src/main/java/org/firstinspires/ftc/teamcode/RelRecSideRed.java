@@ -41,7 +41,7 @@ public class RelRecSideRed extends AutoMaster {
         }
 
         //Lines up the proper box
-        encode(30   , 0.5, MoveType.STRAIGHT);
+        encode(36.5, 0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
         if (vufSpeed != 0) {
             encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);
@@ -52,6 +52,6 @@ public class RelRecSideRed extends AutoMaster {
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
-        encode(4, -0.25, MoveType.STRAIGHT);
+        encode(7, -0.25, MoveType.STRAIGHT);
     }
 }

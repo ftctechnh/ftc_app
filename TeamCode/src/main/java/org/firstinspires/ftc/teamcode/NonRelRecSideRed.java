@@ -18,13 +18,13 @@ public class NonRelRecSideRed extends AutoMaster {
         robot.arm.setPosition(0.9);
         wait(750);
         if (robot.color.red() > 0) {
-            encode(5, -0.25, MoveType.STRAIGHT);
+            encode(3, -0.25, MoveType.STRAIGHT);
             robot.arm.setPosition(0);
-            encode(5, 0.25, MoveType.STRAIGHT);
+            encode(3, 0.25, MoveType.STRAIGHT);
         } else {
-            encode(5, 0.25, MoveType.STRAIGHT);
+            encode(3, 0.25, MoveType.STRAIGHT);
             robot.arm.setPosition(0);
-            encode(5, -0.25, MoveType.STRAIGHT);
+            encode(3, -0.25, MoveType.STRAIGHT);
         }
 
         //Finds Vuforia
@@ -41,7 +41,9 @@ public class NonRelRecSideRed extends AutoMaster {
 
         //Lines up the proper box
         encode(25, 0.5, MoveType.STRAIGHT);
-        encode(18, -0.5, MoveType.LATERALLY);
+        encode(19, -0.5, MoveType.ROT);
+        encode(13 , 0.5, MoveType.STRAIGHT);
+        encode(19, 0.5, MoveType.ROT);
         if (vufSpeed != 0) {
             encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);
         }
@@ -52,6 +54,6 @@ public class NonRelRecSideRed extends AutoMaster {
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
-        encode(4, -0.25, MoveType.STRAIGHT);
+        encode(7, -0.25, MoveType.STRAIGHT);
     }
 }
