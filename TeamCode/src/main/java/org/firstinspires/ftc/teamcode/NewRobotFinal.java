@@ -131,7 +131,6 @@ public class NewRobotFinal
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
         grabberRotator.scaleRange(0, 1f);
         grabber = hardwareMap.get(Servo.class, "grabber");
-        grabber.scaleRange(.15f, .6f);
     }
 
     public void initAutoFunctions(HardwareMap hardwareMap)
@@ -797,15 +796,23 @@ public class NewRobotFinal
     }
     */
 
+    public void OpenCloseGrabber(boolean close)
+    {
+        if (close)
+            grabber.setPosition(.6f);
+    }
+
     public void fineAdjGrabber(float in)
     {
-        grabber.setPosition(grabber.getPosition() + in);
+        if (grabber.getPosition() + in < .6f && grabber.getPosition() + in > .15f)
+             grabber.setPosition(grabber.getPosition() + in);
     }
 
     public void fineAdjGrabberRotator(float in)
     {
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
     }
+
 
     public void stopAllMotors()
     {

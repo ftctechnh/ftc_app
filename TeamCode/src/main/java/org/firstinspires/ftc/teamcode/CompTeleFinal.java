@@ -16,6 +16,7 @@ public class CompTeleFinal extends OpMode
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
+        newRobot.OpenCloseGrabber(true);
     }
 
     public void start()
@@ -43,17 +44,17 @@ public class CompTeleFinal extends OpMode
             newRobot.getTailRelease().setPower(0f);
 
         if (gamepad2.a)
-            newRobot.fineAdjGrabber(.02f);
+            newRobot.fineAdjGrabber(.04f);
         else if (gamepad2.b)
-            newRobot.fineAdjGrabber(-.02f);
+            newRobot.fineAdjGrabber(-.04f);
 
         if (gamepad2.y)
         {
-            newRobot.fineAdjGrabberRotator(.005f);
+            newRobot.fineAdjGrabberRotator(.004f);
         }
         else if (gamepad2.x)
         {
-            newRobot.fineAdjGrabberRotator(-.005f);
+            newRobot.fineAdjGrabberRotator(-.004f);
         }
 
         /**
