@@ -54,31 +54,31 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (cipher)
                 {
                     case 'l':
-                        newRobot.pivot(-50, .6);
+                        newRobot.pivot(-50,.6);
                         newRobot.driveStraight_In(18.5f);
                         newRobot.openOrCloseDoor(false);
                         newRobot.driveStraight_In(18.5f);
                         break;
                     case 'c':
-                        newRobot.pivot(-35, .6);
+                        newRobot.pivot(-35,.6);
                         newRobot.driveStraight_In(17);
                         newRobot.openOrCloseDoor(false);
                         newRobot.driveStraight_In(17);
                         break;
                     case 'r':
-                        newRobot.pivot(-20, .6);
+                        newRobot.pivot(-20,.6);
                         newRobot.driveStraight_In(15);
                         newRobot.openOrCloseDoor(false);
                         newRobot.driveStraight_In(15);
                         break;
                     default:
-                        newRobot.pivot(-35, .6);
+                        newRobot.pivot(-35,.6);
                         newRobot.driveStraight_In(17);
                         newRobot.openOrCloseDoor(false);
                         newRobot.driveStraight_In(17);
                         break;
                 }
-                newRobot.driveStraight_In(-5, 1);
+                newRobot.driveStraight_In(-5,1);
                 newRobot.stopAllMotors();
                 break;
 
@@ -114,7 +114,7 @@ public class FinalUniversalRef extends LinearOpMode
                 {
                     case 'l':
                         newRobot.pivot(35, .5);
-                        newRobot.driveStraight_In_Stall(37.5f, .5, telemetry); //needs testing, fix on 11/12
+                        newRobot.driveStraight_In_Stall(37.5f, .5, telemetry);
                         break;
                     case 'c':
                         newRobot.pivot(20, .5);
