@@ -268,7 +268,7 @@ public class Delta_TeleOp extends OpMode {
 
     public void moveUpInch(double cm) {
         double target_Position;
-        double countsPerCM = 609.6;
+        double countsPerCM = 250;
         double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
@@ -290,7 +290,7 @@ public class Delta_TeleOp extends OpMode {
 
     public void moveDownInch(double cm) {
         double target_Position;
-        double countsPerCM = 300;
+        double countsPerCM = 250;
         double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
@@ -316,13 +316,13 @@ public class Delta_TeleOp extends OpMode {
   }
 
   public void closeGlyph(){
-      glyphServoRight.setPosition(0.85);
+      glyphServoRight.setPosition(0.78);
       glyphServoLeft.setPosition(0.05);
   }
 
   public void middleGlyph(){
-      glyphServoRight.setPosition(0.78);
-      glyphServoLeft.setPosition(0.1);
+     glyphServoRight.setPosition(0.74);
+     glyphServoLeft.setPosition(0.1);
   }
 }
 
