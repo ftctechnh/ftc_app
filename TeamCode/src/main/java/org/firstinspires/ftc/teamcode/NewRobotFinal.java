@@ -658,10 +658,12 @@ public class NewRobotFinal
         if (liftDir == UP_L && -liftMotor.getCurrentPosition() < liftTargetPos)
         {
             liftMotor.setPower(-.7);
-        } else if (liftDir == DOWN_L && -liftMotor.getCurrentPosition() > liftTargetPos)
+        }
+        else if (liftDir == DOWN_L && -liftMotor.getCurrentPosition() > liftTargetPos)
         {
             liftMotor.setPower(.7);
-        } else
+        }
+        else
         {
             liftDir = STOP_L;
             liftMotor.setPower(0);
@@ -686,6 +688,7 @@ public class NewRobotFinal
                 touchedBottomMag = true;
             if (y > 0)
                 y = 0;
+            liftDir = STOP_L;
         }
         else
             touchedBottomMag = false;
@@ -694,6 +697,8 @@ public class NewRobotFinal
         {
             if (y < 0)
                 y = 0;
+
+            liftDir = STOP_L;
         }
 
         if (y > .3)
