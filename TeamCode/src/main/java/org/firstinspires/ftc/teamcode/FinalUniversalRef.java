@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class FinalUniversalRef extends LinearOpMode
 {
     NewRobotFinal newRobot;
-
     public void runOpMode()
     {
         float adjustment = 0;
@@ -35,7 +34,7 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case'r':
-                        adjustment = 3;
+                        adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
                         break;
@@ -43,11 +42,11 @@ public class FinalUniversalRef extends LinearOpMode
                         adjustment = 2;
                         newRobot.driveStraight_In(0 - adjustment);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(adjustment + 4);
+                        newRobot.driveStraight_In(adjustment + 5);
                         break;
                     default:
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(3);
+                        newRobot.driveStraight_In(4);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
@@ -94,19 +93,19 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case 'r':
-                        adjustment = 3;
+                        adjustment = 2;
                         newRobot.driveStraight_In(0 - adjustment);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(adjustment + 4);
+                        newRobot.driveStraight_In(adjustment + 5);
                         break;
                     case 'b':
-                        adjustment = 2;
+                        adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
                         break;
                     default:
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(3);
+                        newRobot.driveStraight_In(4);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
