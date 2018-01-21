@@ -804,7 +804,6 @@ public class NewRobotFinal
 
     public void fineAdjGrabber(float in)
     {
-        if (grabber.getPosition() + in < .6f && grabber.getPosition() + in > .15f)
              grabber.setPosition(grabber.getPosition() + in);
     }
 
@@ -812,7 +811,6 @@ public class NewRobotFinal
     {
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
     }
-
 
     public void stopAllMotors()
     {
