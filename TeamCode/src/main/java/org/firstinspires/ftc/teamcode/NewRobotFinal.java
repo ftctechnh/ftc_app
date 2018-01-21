@@ -152,7 +152,7 @@ public class NewRobotFinal
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
     }
 
-    public void initMouthAndWings() //Methods sets motors at low power to put the motors to their resting positions
+    public void initMouthAndWings()
     {                       //basically sets up lift's step counts starting at its bottom position
         liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -268,7 +268,7 @@ public class NewRobotFinal
         driveMotors(-lPow, -rPow);
     }
 
-    private void resetDriveEncoders()//sets encoders to 0 for motors
+    private void resetDriveEncoders()
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -582,7 +582,6 @@ public class NewRobotFinal
 //
 //        stopDriveMotors();
 //    }
-
     public void oldMoveLift(int adjLevels) //For the lift, I'll use levels or encoders points that stop
     {
         float pow = 1f;
@@ -738,22 +737,19 @@ public class NewRobotFinal
 
     public void moveWing(boolean moveDown)
     {
-        //long endTime = System.currentTimeMillis() + 6000;
         if (moveDown)
         {
             wingMotor.setPower(-1f);
             while (wingMotor.getCurrentPosition() > -2750 && wingTouchSens.getState())
             {
-                // if (System.currentTimeMillis() > endTime)
-                //   break;
+
             }
         } else
         {
             wingMotor.setPower(1f);
             while (wingMotor.getCurrentPosition() < 0 && wingTouchSens.getState())
             {
-                //   if (System.currentTimeMillis() > endTime)
-                //   break;
+
             }
         }
         wingMotor.setPower(0);
