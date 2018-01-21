@@ -705,7 +705,8 @@ public class NewRobotFinal
         {
             liftDir = STOP_L;
             liftMotor.setPower(-Math.abs(factor * y));
-        } else
+        }
+        else
         {
             AdjLiftDir();
         }
