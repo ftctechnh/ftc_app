@@ -34,16 +34,17 @@ public class FinalUniversalRef extends LinearOpMode
                 telemetry.update();
                 switch (colorOfJewel)
                 {
-                    case 'r':
-                        adjustment = -3;
-                        newRobot.driveStraight_In(adjustment);
-                        newRobot.moveWing(false);
-                        break;
-                    case 'b':
-                        newRobot.driveStraight_In(-8);
+                    case'r':
                         adjustment = 3;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
+                        newRobot.driveStraight_In(2);
+                        break;
+                    case 'b':
+                        adjustment = 3;
+                        newRobot.driveStraight_In(0 - adjustment);
+                        newRobot.moveWing(false);
+                        newRobot.driveStraight_In(adjustment + 4);
                         break;
                     default:
                         newRobot.moveWing(false);
@@ -93,14 +94,16 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case 'r':
-                        adjustment = -2;
-                        newRobot.driveStraight_In(adjustment);
+                        adjustment = 3;
+                        newRobot.driveStraight_In(0 - adjustment);
                         newRobot.moveWing(false);
+                        newRobot.driveStraight_In(adjustment + 4);
                         break;
                     case 'b':
                         adjustment = 3;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
+                        newRobot.driveStraight_In(1);
                         break;
                     default:
                         newRobot.moveWing(false);
