@@ -2,40 +2,24 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name="Preciousss: Autonomous6217Red1 1102", group="Preciousss")
+@Autonomous(name="Preciousss: JuryAutonomous6217Red1", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Autonomous6217Red1 extends LinearOpMode {
+public class JuryRiggedRedAuto extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -43,10 +27,6 @@ public class Autonomous6217Red1 extends LinearOpMode {
     DcMotor motorBR;
     DcMotor motorBL;
     Servo servoTapper;
-    CRServo servoConL;
-    CRServo servoConR;
-    DcMotor motorConL;
-    DcMotor motorConR;
 
 
     NormalizedColorSensor colorSensor;
@@ -75,14 +55,6 @@ public class Autonomous6217Red1 extends LinearOpMode {
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.REVERSE);
-        motorConL = hardwareMap.dcMotor.get("motorConL");
-        motorConL.setDirection(DcMotor.Direction.FORWARD);
-        motorConR = hardwareMap.dcMotor.get("motorConR");
-        motorConR.setDirection(DcMotor.Direction.FORWARD);
-        servoConL = hardwareMap.crservo.get("servoConL");
-        servoConL.setDirection(CRServo.Direction.FORWARD);
-        servoConR = hardwareMap.crservo.get("servoConR");
-        servoConR.setDirection(CRServo.Direction.REVERSE);
         servoTapper = hardwareMap.servo.get("tapper");
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
         if (colorSensor instanceof SwitchableLight) {
@@ -154,17 +126,11 @@ public class Autonomous6217Red1 extends LinearOpMode {
 
         Wait(1);
 
-        Conveyor(3f);
-
-        Wait(1);
-
         move(0f,-.25f,.5f);
 
         Wait(1);
 
         move(0f,.25f,.25f);
-
-
 
     }
 
@@ -179,15 +145,7 @@ public class Autonomous6217Red1 extends LinearOpMode {
         sR();
     }
 
-    void Conveyor (float waitTime)   {
-        servoConL.setPower(1);
-        servoConR.setPower(1);
-        motorConL.setPower(1);
-        motorConR.setPower(1);
-        Wait(waitTime);
 
-
-    }
 
     void pivotRight(float waitTime) {
 
