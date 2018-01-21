@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
  */
 
 @Autonomous(name="Red Drive", group="test")
+@Disabled
 public class RedPilliar extends PilliarLib {
     private static final double BALL_WAIT_SEC = 2.0;//10.0;
     private static final int PILLIAR_COUNT_INC = 350;

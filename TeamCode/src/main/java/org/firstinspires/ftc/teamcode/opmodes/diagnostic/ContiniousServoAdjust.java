@@ -4,6 +4,7 @@
 
 package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -11,7 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 
 @TeleOp(name = "Cont Servo Calibrate", group = "Main")
-//@Disabled
+@Disabled
 public class ContiniousServoAdjust extends OpMode {
 
     private enum Incs {

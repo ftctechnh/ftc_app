@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
  */
 
 @Autonomous(name="Turn Testing", group="test")
+@Disabled
 public class GyroTurnDemo extends OpMode {
     BotHardware bot = new BotHardware(this);
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -14,6 +15,7 @@ import java.util.LinkedList;
  */
 
 @Autonomous(name = "APDS Linearization", group = "test")
+@Disabled
 public class APDSDistance extends CrappyGraphLib {
     APDS9930 dist;
     APDS9930 redDist;

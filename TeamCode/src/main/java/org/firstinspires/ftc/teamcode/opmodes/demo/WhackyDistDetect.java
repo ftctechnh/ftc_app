@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.libraries.interfaces.LocationSensor;
  */
 
 @Autonomous(name="Stick Distance Measuring", group="test")
+@Disabled
 public class WhackyDistDetect extends OpMode {
     private static final boolean red = true;
     BotHardware bot = new BotHardware(this);

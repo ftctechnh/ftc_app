@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
  */
 
 @TeleOp(name="Motor Hold Test")
+@Disabled
 public class MotorHoldTest extends OpMode {
     BotHardware bot = new BotHardware(this);
     private static final int MAX_COUNT = 100;

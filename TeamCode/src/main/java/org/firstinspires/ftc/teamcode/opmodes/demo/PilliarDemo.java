@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.libraries.PilliarLib;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
  */
 
 @Autonomous(name="Pilliar Demo", group="test")
+@Disabled
 public class PilliarDemo extends PilliarLib {
     private boolean red = true;
     private boolean lastA = false;

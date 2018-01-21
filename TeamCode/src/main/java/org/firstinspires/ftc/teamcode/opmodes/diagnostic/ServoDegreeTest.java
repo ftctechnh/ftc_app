@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.WhackyDistLib;
  */
 
 @TeleOp(name = "Stick Degrees Test", group = "Main")
+@Disabled
 public class ServoDegreeTest extends OpMode {
 
     private enum Incs {
