@@ -34,38 +34,37 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case'r':
-                        adjustment = -3;
-                        newRobot.driveStraight_In(adjustment);
-                        newRobot.moveWing(false);
-                        break;
-                    case 'b':
                         adjustment = 3;
                         newRobot.driveStraight_In(adjustment);
-                        newRobot.moveWing(false);
+                        break;
+                    case 'b':
+                        adjustment = -2;
+                        newRobot.driveStraight_In(adjustment);
+                        adjustment = -5;
                         break;
                     default:
-                        newRobot.moveWing(false);
                         break;
                 }
+                newRobot.moveWing(false);
                 telemetry.addData("Cipher = ", cipher);
                 telemetry.update();
                 switch (cipher)
                 {
-                    case 'r': newRobot.driveStraight_In(46 + adjustment,.6);
+                    case 'r': newRobot.driveStraight_In(24 - adjustment,.6);
                         break;
-                    case 'c': newRobot.driveStraight_In(36 + adjustment,.6);
+                    case 'l': newRobot.driveStraight_In(13.5f - adjustment,.6);
                         break;
-                    case 'l': newRobot.driveStraight_In(25 + adjustment,.6);
-                        break;
-                    default: newRobot.driveStraight_In(36 + adjustment,.6);
+                    case 'c':
+                    default: newRobot.driveStraight_In(18.5f - adjustment,.6);
                         break;
                 }
-                newRobot.pivot(80, .5); //86 degrees is almost perfect 90
+                newRobot.pivot(-45, .6);
+                //newRobot.pivot(80, .5); //86 degrees is almost perfect 90
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In_Stall(23, .5, telemetry);
+                newRobot.driveStraight_In_Stall(13, .5, telemetry);
                 //newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-5,1);
+                newRobot.driveStraight_In(-3,1);
                 newRobot.stopAllMotors();
                 break;
             case 'r':
@@ -82,7 +81,7 @@ public class FinalUniversalAudi extends LinearOpMode
                     case 'r':
                         adjustment = -2;
                         newRobot.driveStraight_In(adjustment);
-                        adjustment = -3;
+                        adjustment = -5;
                         break;
                     case 'b':
                         adjustment = 3;
@@ -97,19 +96,17 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (cipher)
                 {
                     case 'r':
-                        newRobot.driveStraight_In(17.5f - adjustment,.6);
-                        newRobot.pivot(-45, .6);
+                        newRobot.driveStraight_In(13.5f - adjustment,.6);
                         break;
                     case 'l':
-                        newRobot.driveStraight_In(28 - adjustment,.6);
-                        newRobot.pivot(-45, .6);
+                        newRobot.driveStraight_In(24 - adjustment,.6);
                         break;
                     case 'c':
                     default:
-                        newRobot.driveStraight_In(22.5f - adjustment,.6);
-                        newRobot.pivot(-45, .6);
+                        newRobot.driveStraight_In(18.5f - adjustment,.6);
                         break;
                 }
+                newRobot.pivot(-45, .6);
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In_Stall(13 ,.25);
