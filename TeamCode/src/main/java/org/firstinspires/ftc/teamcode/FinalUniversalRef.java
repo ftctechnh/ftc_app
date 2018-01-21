@@ -34,7 +34,7 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case'r':
-                        adjustment = 4;
+                        adjustment = 5;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
                         break;
@@ -42,11 +42,11 @@ public class FinalUniversalRef extends LinearOpMode
                         adjustment = 2;
                         newRobot.driveStraight_In(0 - adjustment);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(adjustment + 5);
+                        newRobot.driveStraight_In(adjustment + 6);
                         break;
                     default:
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(4);
+                        newRobot.driveStraight_In(5);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
@@ -96,16 +96,16 @@ public class FinalUniversalRef extends LinearOpMode
                         adjustment = 2;
                         newRobot.driveStraight_In(0 - adjustment);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(adjustment + 5);
+                        newRobot.driveStraight_In(adjustment + 6);
                         break;
                     case 'b':
-                        adjustment = 4;
+                        adjustment = 5;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
                         break;
                     default:
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(4);
+                        newRobot.driveStraight_In(5);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
