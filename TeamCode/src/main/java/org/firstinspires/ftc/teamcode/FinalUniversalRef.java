@@ -105,7 +105,7 @@ public class FinalUniversalRef extends LinearOpMode
                         break;
                     default:
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(7);
+                        newRobot.driveStraight_In(20);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
