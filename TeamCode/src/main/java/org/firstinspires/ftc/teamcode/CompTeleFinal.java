@@ -17,6 +17,7 @@ public class CompTeleFinal extends OpMode
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
         //newRobot.OpenCloseGrabber(true);
+        newRobot.openOrCloseDoor(false);
     }
 
     public void start()
