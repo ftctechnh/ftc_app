@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.impl.HDriveTrain;
 import org.firstinspires.ftc.teamcode.mechanism.impl.VisionHelper;
 import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.GlyphLift;
 import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.Intake;
 import org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl.JewelKnocker;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents the Relic Recovery robot.
@@ -23,6 +26,9 @@ public class RelicRecoveryRobot extends Robot {
     private final Intake intake;
     private final JewelKnocker jewelKnocker;
 
+    private final JSONParser parser;
+    private final Map<String, Object> optionsMap;
+
     /**
      * Construct a new Relic Recovery robot, with an op-mode that is using this robot.
      *
@@ -30,6 +36,10 @@ public class RelicRecoveryRobot extends Robot {
      */
     public RelicRecoveryRobot(OpMode opMode) {
         super(opMode);
+
+        this.parser = new JSONParser();
+
+        this.optionsMap = parser.parseFile(new File(AppUtil.FIRST_FOLDER + "/options.json"));
 
         this.hDriveTrain = new HDriveTrain.Builder(this)
                 .setRightMotorDirection(DcMotor.Direction.REVERSE)
@@ -66,4 +76,10 @@ public class RelicRecoveryRobot extends Robot {
     public JewelKnocker getJewelKnocker() {
         return jewelKnocker;
     }
+
+    public Map<String, Object> getOptionsMap() {
+        return optionsMap;
+    }
+
 }
+
