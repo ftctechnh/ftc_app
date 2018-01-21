@@ -84,7 +84,7 @@ public class Auto_B2 extends OpMode {
                     break;
                 case GRAB:
                     robot.blockLift.clamp(false,false, false, true);
-                    state = States.LIFT;
+                    state = States.ARMDOWN;
                     goalSeconds = currentSeconds + 0.4;
                 case LIFT:
                     if (currentSeconds >= goalSeconds) {
@@ -174,12 +174,12 @@ public class Auto_B2 extends OpMode {
                 case STRAFE:
                     //Turns left to face CryptoBox. WORKING
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, 3);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 1.5);
                     } else{
                         isFinished = false;
                         state = States.DRIVEBOX;
-                    } break;
-
+                    }
+                    break;
                 case DRIVEBOX:
                     //Drives into CryptoBox
                     if(!isFinished){

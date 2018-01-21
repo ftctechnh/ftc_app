@@ -55,11 +55,12 @@ public class Robot {
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
     private int ultraRange = 0;
-    private int distanceThreshold = 8;
+    private int distanceThreshold = 4;
     private int columnPassed = 0;
     private boolean distanceChange = false;
     private RelicRecoveryVuMark currentColumn;
     private double strafePower = .25;
+    private int strafetimes = 0;
 
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia;
@@ -179,9 +180,9 @@ public class Robot {
         }
 
     }
-    public boolean firstColumn(AllianceColor color, Telemetry telemetry) {
+    public boolean firstColumn(AllianceColor color, Telemetry telemetry, int goalColumn) {
 
-        if ((rawUltrasonic() <= ultraRange - distanceThreshold) && ultraRange != 0) {
+        if (ultraRange - rawUltrasonic() >= distanceThreshold && ultraRange != 0) {
             columnPassed += 1;
         }
 
@@ -190,9 +191,8 @@ public class Robot {
         telemetry.addData("Column Passed", columnPassed);
         telemetry.addData("Raw Ultrasonic", rawUltrasonic());
 
-        if (columnPassed >= 1) {
-            driveTrain.stop();
-            return true;
+        if (columnPassed >= goalColumn) {
+            return(driveTrain.encoderDrive(DriveTrain.Direction.E, strafePower, .9));
         } else {
             driveDirection(color);
             return false;
