@@ -38,7 +38,7 @@ public class FinalUniversalRef extends LinearOpMode
                         adjustment = 3;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(2);
+                        newRobot.driveStraight_In(1);
                         break;
                     case 'b':
                         adjustment = 3;
