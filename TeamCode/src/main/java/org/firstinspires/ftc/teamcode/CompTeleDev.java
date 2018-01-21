@@ -17,21 +17,20 @@ public class CompTeleDev extends OpMode
     boolean liftArmed = true;
     NewRobotFinal newRobot;
 
-    public void init()
+    public void init ()
     {
-
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.openOrCloseDoor(false);
     }
 
-    public void start()
+    public void start ()
     {
         // newRobot.initEndGame(hardwareMap);
     }
 
-    public void loop()
+    public void loop ()
     {
 
         /**
@@ -50,7 +49,8 @@ public class CompTeleDev extends OpMode
         else if (gamepad2.dpad_down)
         {
             if (liftArmed)
-            {   telemetry.addData("In calclift -1", null);
+            {
+                telemetry.addData("In calclift -1", null);
                 newRobot.CalcLiftTarget(-1);
                 liftArmed = false;
             }
@@ -61,7 +61,17 @@ public class CompTeleDev extends OpMode
             liftArmed = true;
         }
 
-        newRobot.fineMoveLift(gamepad2.left_stick_y, 1);
+        if (gamepad2.left_stick_y == 0)
+        {
+            telemetry.addData("left stick is 0, adj dir", null);
+            telemetry.addData("liftdir", newRobot.getLiftDir());
+            newRobot.AdjLiftDir();
+        }
+        else
+        {
+            newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
+            telemetry.addData("Fine move lift", null);
+        }
 
         if (gamepad2.left_bumper)
             newRobot.fineAdjDoors(-.16f);
@@ -113,7 +123,7 @@ public class CompTeleDev extends OpMode
         telemetry.update();
     }
 
-    public void stop()
+    public void stop ()
     {
         newRobot.stopAllMotors();
     }
