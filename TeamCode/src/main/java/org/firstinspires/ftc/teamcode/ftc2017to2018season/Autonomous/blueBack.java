@@ -27,7 +27,7 @@ public class blueBack extends Autonomous_General {
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
-        initiate();
+        initiate(true);
         telemetry.addData("--->", "Gyro Calibrating");
         telemetry.update();
         gyro.calibrate();

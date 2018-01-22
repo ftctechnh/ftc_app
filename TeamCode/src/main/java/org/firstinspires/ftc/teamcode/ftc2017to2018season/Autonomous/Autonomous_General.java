@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
@@ -14,6 +16,7 @@ import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,6 +29,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import java.util.Locale;
+
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -67,6 +73,8 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
     public DcMotor slideMotor;
+    public BNO055IMU revGyro;
+    public Orientation angles;
     public boolean gyroFail = false;
 
     public Servo jewelServo;
@@ -92,7 +100,7 @@ public class Autonomous_General extends LinearOpMode {
     VuforiaTrackable relicTemplate;
     RelicRecoveryVuMark vuMark;
 
-    public void initiate() {
+    public void initiate(boolean modernRobotics) {
         COUNTS_PER_MOTOR_REV = 1120;
         WHEEL_REV_PER_MOTOR_REV = 1.3;//figured this out by rotating the motor once and measuring how much the wheel rotated (may not be completely accurate)
         WHEEL_PERIMETER_CM = 2*5.08* Math.PI;
@@ -119,7 +127,24 @@ public class Autonomous_General extends LinearOpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
 
-        gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        if (modernRobotics) {
+            gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        }
+        else if (!modernRobotics){
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.loggingEnabled      = true;
+            parameters.loggingTag          = "IMU";
+            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+            // and named "imu".
+            revGyro = hardwareMap.get(BNO055IMU.class, "revGyro");
+            revGyro.initialize(parameters);
+        }
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colorSensor");
         //rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
@@ -154,6 +179,48 @@ public class Autonomous_General extends LinearOpMode {
         light.setPower(0);
     }
 
+    public void composeTelemetry() {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles   = revGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return revGyro.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return revGyro.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+                    }
+                });
+    }
     public void straightDrive(double power) {
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -444,6 +511,8 @@ public class Autonomous_General extends LinearOpMode {
      * @param timeoutS
      * @param direction - -1 is strafe left, 1 is strafe right
      */
+
+
     public void encoderMecanumDrive(double speed,
                                     double rightcm, double leftcm,
                                     double timeoutS, int direction) {
@@ -471,7 +540,7 @@ public class Autonomous_General extends LinearOpMode {
         newLeftBackTarget = back_left_motor.getCurrentPosition() + (int) (leftcm * getCountsPerCm());
         newRightBackTarget = back_right_motor.getCurrentPosition() + (int) (rightcm * getCountsPerCm());
 
-        if(direction == 0) {
+        if (direction == 0) {
             back_left_motor.setTargetPosition(newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(newRightBackTarget);
@@ -481,8 +550,7 @@ public class Autonomous_General extends LinearOpMode {
             front_right_motor.setTargetPosition(newRightFrontTarget);
             //idle();
 
-        }
-        else if (direction == 1){//right
+        } else if (direction == 1) {//right
             back_left_motor.setTargetPosition(-newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(newRightBackTarget);
@@ -492,8 +560,7 @@ public class Autonomous_General extends LinearOpMode {
             front_right_motor.setTargetPosition(-newRightFrontTarget);
             //idle();
 
-        }
-        else if(direction == -1){//left
+        } else if (direction == -1) {//left
             back_left_motor.setTargetPosition(newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(-newRightBackTarget);
@@ -544,16 +611,9 @@ public class Autonomous_General extends LinearOpMode {
         //idle();
 
 
-
-
-
-
-
-
-
         // keep looping while we are still active, and there is time left, and both motors are running.
         while (opModeIsActive() &&
-                (back_left_motor.isBusy() && back_right_motor.isBusy()&&
+                (back_left_motor.isBusy() && back_right_motor.isBusy() &&
                         front_left_motor.isBusy() && front_right_motor.isBusy())) {
             back_left_motor.setPower(Math.abs(leftSpeed));
             //idle();
@@ -568,8 +628,22 @@ public class Autonomous_General extends LinearOpMode {
         idle();
         // Stop all motion;
         stopMotors();
-
     }
+
+
+
+    //----------------------------------------------------------------------------------------------
+    // Formatting
+    //----------------------------------------------------------------------------------------------
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
     public static double getCountsPerCm() {
         return COUNTS_PER_CM;
     }

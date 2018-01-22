@@ -16,7 +16,7 @@ public class encoderTurn extends Autonomous_General {
     public static double ENCODERSPER360 = 5645;
 
     public void runOpMode(){
-        initiate();
+        initiate(true);
 
         waitForStart();
 

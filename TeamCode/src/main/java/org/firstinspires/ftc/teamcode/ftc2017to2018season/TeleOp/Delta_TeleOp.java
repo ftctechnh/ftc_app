@@ -176,17 +176,17 @@ public class Delta_TeleOp extends OpMode {
 
         if (gamepad1.left_trigger > 0) {
 
-            leftWheelMotorFront.setPower(-1);
+            leftWheelMotorFront.setPower(-0.7);
             leftWheelMotorBack.setPower(1);
-            rightWheelMotorFront.setPower(1);
-            rightWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(0.8);
+            rightWheelMotorBack.setPower(-0.8);
 
         } else if (gamepad1.right_trigger > 0) {
 
-            leftWheelMotorFront.setPower(1);
+            leftWheelMotorFront.setPower(0.7);
             leftWheelMotorBack.setPower(-1);
-            rightWheelMotorFront.setPower(-1);
-            rightWheelMotorBack.setPower(1);
+            rightWheelMotorFront.setPower(-0.8);
+            rightWheelMotorBack.setPower(0.8);
 
         } else {
             leftWheelMotorFront.setPower(leftY_gp1);
@@ -312,7 +312,7 @@ public class Delta_TeleOp extends OpMode {
     }
   public void openGlyph(){
         glyphServoRight.setPosition(0.7);
-        glyphServoLeft.setPosition(0.25);
+        glyphServoLeft.setPosition(0.15);
   }
 
   public void closeGlyph(){
@@ -321,8 +321,8 @@ public class Delta_TeleOp extends OpMode {
   }
 
   public void middleGlyph(){
-      glyphServoRight.setPosition(0.8);
-      glyphServoLeft.setPosition(0.15);
+      glyphServoRight.setPosition(0.7);
+      glyphServoLeft.setPosition(0.05);
   }
 }
 

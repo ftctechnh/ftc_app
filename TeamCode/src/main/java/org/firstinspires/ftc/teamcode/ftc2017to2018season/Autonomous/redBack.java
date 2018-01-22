@@ -25,7 +25,7 @@ public class redBack extends Autonomous_General {
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
-        initiate();
+        initiate(true);
 
 
         sleep(500);
