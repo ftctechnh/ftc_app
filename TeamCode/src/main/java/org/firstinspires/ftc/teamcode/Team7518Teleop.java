@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "7518Teleop", group = "7518")
 public class Team7518Teleop extends LinearOpMode{
 
-    private DcMotor  leftFront, rightFront, leftRear, rightRear, absoluteRight, absoluteLeft, yAxis, zAxis;
+    private DcMotor  leftFront, rightFront, leftRear, rightRear, absoluteRight, absoluteLeft, yAxis, rotationMotor;
     private Servo topLeftServo, topRightServo, bottomLeftServo, bottomRightServo, colorSensor;
     int clawPosition=0;
     @Override
@@ -26,7 +26,7 @@ public class Team7518Teleop extends LinearOpMode{
         absoluteRight=hardwareMap.dcMotor.get("absoluteRight");
         absoluteLeft=hardwareMap.dcMotor.get("absoluteLeft");
         yAxis=hardwareMap.dcMotor.get("yAxis");
-        zAxis=hardwareMap.dcMotor.get("zAxis");
+        rotationMotor=hardwareMap.dcMotor.get("rotationMotor");
         topRightServo=hardwareMap.servo.get("topRightServo");
         topLeftServo=hardwareMap.servo.get("topLeftServo");
         bottomLeftServo=hardwareMap.servo.get("bottomLeftServo");
@@ -45,10 +45,10 @@ public class Team7518Teleop extends LinearOpMode{
                         double h = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
                         double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
 
-                        final double leftFrontPower = h * Math.cos(robotAngle) + gamepad1.right_stick_x;
-                        final double rightFrontPower = h * Math.sin(robotAngle) - gamepad1.right_stick_x;
-                        final double leftRearPower = h * Math.sin(robotAngle) + gamepad1.right_stick_x;
-                        final double rightRearPower = h * Math.cos(robotAngle) - gamepad1.right_stick_x;
+                        final double leftFrontPower = h * Math.cos(robotAngle) - gamepad1.right_stick_x;
+                        final double rightFrontPower = h * Math.sin(robotAngle) + gamepad1.right_stick_x;
+                        final double leftRearPower = h * Math.sin(robotAngle) - gamepad1.right_stick_x;
+                        final double rightRearPower = h * Math.cos(robotAngle) + gamepad1.right_stick_x;
 
                         leftFront.setPower(leftFrontPower);
                         rightFront.setPower(-rightFrontPower);
@@ -88,11 +88,11 @@ public class Team7518Teleop extends LinearOpMode{
 
                         //z-axis motor
                         if (gamepad1.dpad_up)
-                            zAxis.setPower(1);
+                            rotationMotor.setPower(.25);
                         else if (gamepad1.dpad_down)
-                            zAxis.setPower(-1);
+                            rotationMotor.setPower(-.25);
                         else
-                            zAxis.setPower(0);
+                            rotationMotor.setPower(0);
 
                         //y-axis motor
                         if (gamepad1.x)
