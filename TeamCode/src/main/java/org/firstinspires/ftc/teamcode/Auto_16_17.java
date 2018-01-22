@@ -75,9 +75,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Preciousss: Auto 6217", group="Preciousss")
+@Autonomous(name="Auto_16_17", group="Preciousss")
 //@Disabled
-public class Auto6217 extends LinearOpMode {
+public class Auto_16_17 extends LinearOpMode {
 
     /*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel*/
      DcMotor motorFR;

@@ -29,7 +29,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name="Preciousss: Autonomous6217Red1 1102", group="Preciousss")
+@Autonomous(name="Preciousss: Autonomous6217Red1", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.

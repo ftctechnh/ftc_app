@@ -1,41 +1,31 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name="Preciousss: Autonomous6217Red2", group="Preciousss")
+@Autonomous(name="Preciousss: AutoPivot", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Autonomous6217Red2 extends LinearOpMode {
+public class AutoPivot extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -47,25 +37,32 @@ public class Autonomous6217Red2 extends LinearOpMode {
     CRServo servoConR;
     DcMotor motorConL;
     DcMotor motorConR;
+    BNO055IMU imu;
+
+    Orientation angles;
+    Acceleration gravity;
     NormalizedColorSensor colorSensor;
     static ModernRoboticsI2cGyro gyro;
     boolean iAmBlue = false;
     boolean iAmRed = true;
     boolean isBoxSide = true;
 
-
-
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        // V u f o r i a  s e t u p
-
-
+        imu.initialize(parameters);
 
         // H a r d w a r e   M a p p i n g
-
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         motorFR = hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.REVERSE);
         motorFL = hardwareMap.dcMotor.get("motorFL");
@@ -88,80 +85,59 @@ public class Autonomous6217Red2 extends LinearOpMode {
             ((SwitchableLight) colorSensor).enableLight(true);
         }
 
-
         // S t a r t
 
         waitForStart();
-
-        // J e w e l s
 
         boolean autoClear = false;
         telemetry.setAutoClear(autoClear);
         telemetry.addLine("starting");
         telemetry.update();
 
-        servoTapper.setPosition(0.0d);
-        Wait(1);
-        servoTapper.setPosition(0.7d);
-        Wait(1);
-        boolean iSeeBlue = false;
-        boolean iSeeRed = false;
+        pivotBy(90);
 
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();
+        Wait(2);
+        pivotBy(180);
+        Wait(2);
+        pivotBy(45);
+    }
+    void pivotBy(int angle) {
 
-        telemetry.addLine()
-                .addData("r", "%.3f", colors.red)
-                .addData("b", "%.3f", colors.blue);
+        // Positive angle turns clockwise with power given
 
-        telemetry.update();
+        // Any faster than this and the gyro is far less accurate
+        float power = .25f;
 
-        if (colors.red > colors.blue) {
-            iSeeRed = true;
-            iSeeBlue = false;
+        // The gyro tends to overestimate the angle
+        float fudgeFactor = 0.97f;
+        int initialHeading = 0;
+        angle = Math.round(angle * fudgeFactor);
+        if (angle < 0) {
+            // Counterclockwise for negative angle
+            power = -power;
+            // Always need a positive angle for later comparison involving absolute value
+            angle = -angle;
         } else {
-            iSeeBlue = true;
-            iSeeRed = false;
+            initialHeading = 360;
         }
 
-        Wait(.2f);
+        gyro.resetZAxisIntegrator();
+        motorFL.setPower(-power);
+        motorBL.setPower(-power);
+        motorFR.setPower(power);
+        motorBR.setPower(power);
 
-        if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
-            telemetry.addData("1", "move right");
-            move(0f, -.2f, .3f);
-            Wait(.2);
-            servoTapper.setPosition(0.2d);
-            Wait(.2);
-            move(0f, .2f, .3f);
-        } else {
-            telemetry.addData("1", "move left");
-            move(0f, .2f, .3f);
-            Wait(.2);
-            servoTapper.setPosition(0.2d);
-            Wait(.2);
-            move(0f, -.2f, .3f);
+        int curHeading = 0;
+        int iCount = 0;
+        while (curHeading < angle) {
+            iCount = iCount + 1;
+            curHeading = Math.abs(angles.firstangle() - initialHeading);
+            telemetry.addData("1", "%03d", curHeading);
+            telemetry.addData("2", "%03d", gyro.getIntegratedZValue());
+            telemetry.addData("3", "%03d", iCount);
+            telemetry.update();
         }
-
-        move(0f, -0.5f, .35f);
-
-        Wait(1);
-
-        move(-.75f,0f,1.0f);
-
-        Wait(1);
-
-        Conveyor(3f);
-
-        Wait(1);
-
-        move(0f,-.25f,.5f);
-
-        Wait(1);
-
-        move(0f,.25f,.25f);
-
-
-
-
+        sR();
     }
 
     void move(float posx, float posy, float waitTime) {
