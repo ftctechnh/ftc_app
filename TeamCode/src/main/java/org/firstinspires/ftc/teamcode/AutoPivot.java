@@ -101,7 +101,22 @@ public class AutoPivot extends LinearOpMode {
         Wait(2);
         pivotBy(45);
     }
+    void pivotTo (int target){
+        //Pivot to counterclockwise is positive.
+        //pivot to clockwise is negative.
+
+        float wheelPower = angles.firstAngle - target;
+        if(target > 0){
+            motorFL.setPower(-wheelPower);
+            motorBL.setPower(-wheelPower);
+            motorFR.setPower(wheelPower);
+            motorBR.setPower(wheelPower);
+
+        }
+    }
     void pivotBy(int angle) {
+
+
 
         // Positive angle turns clockwise with power given
 
