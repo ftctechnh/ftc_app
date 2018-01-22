@@ -34,6 +34,10 @@ public class curious_george_teleop extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
+    DcMotor relicMotor;
+    Servo relicMain;
+    Servo relicLeft;
+    Servo relicRight;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -159,6 +163,36 @@ public class curious_george_teleop extends OpMode {
 
     Functions go here
  */
+
+    public void relicManipulator(){
+
+        boolean rightBumper = gamepad2.right_bumper;
+        boolean leftBumper = gamepad2.left_bumper;
+        float leftY_gp2 = (-gamepad2.left_stick_y);
+        boolean rightButtonY = gamepad2.y;
+        boolean rightButtonA = gamepad2.a;
+
+
+        relicMotor.setPower(leftY_gp2);
+
+        if(leftBumper){
+            relicLeft.setPosition(0.75);
+            relicRight.setPosition(0.25);
+        }
+
+        if (rightBumper){
+            relicLeft.setPosition(0);
+            relicRight.setPosition(1);
+        }
+
+        if (rightButtonY){
+            relicMain.setPosition(0);
+        }
+
+        if (rightButtonA){
+            relicMain.setPosition(1);
+        }
+    }
 
     public void FourWheelDrive() {
         /*
