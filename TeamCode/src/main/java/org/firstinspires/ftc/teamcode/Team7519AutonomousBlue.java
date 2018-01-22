@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -19,6 +20,7 @@ public class Team7519AutonomousBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     private CRServo testServo;
+    private Servo arm;
     private DcMotor motorLift, leftFront, rightFront, leftRear, rightRear;
     private ColorSensor colorSensor;
     private ElapsedTime     runtime = new ElapsedTime();
@@ -38,6 +40,7 @@ public class Team7519AutonomousBlue extends LinearOpMode {
         rightRear = hardwareMap.dcMotor.get("rightRear");
         testServo = hardwareMap.crservo.get("testServo");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        arm = hardwareMap.servo.get("arm");
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -57,19 +60,20 @@ public class Team7519AutonomousBlue extends LinearOpMode {
 
         runtime.reset();
         while(opModeIsActive() && runtime.seconds()<3){
-            if(bColor > rColor)
+            arm.setPosition(0);
+            if(bColor < rColor)//Knocks Off Opposite Colored Jewel
                 color = true;
-            if(color){//Replace true with Team Colored Jewel
+            if(color){
                 leftFront.setPower(speed);
-                rightFront.setPower(speed);
+                rightFront.setPower(-speed);
                 leftRear.setPower(speed);
-                rightRear.setPower(speed);
+                rightRear.setPower(-speed);
             }//end if
             else{
                 leftFront.setPower(-speed);
-                rightFront.setPower(-speed);
+                rightFront.setPower(speed);
                 leftRear.setPower(-speed);
-                rightRear.setPower(-speed);
+                rightRear.setPower(speed);
             }
             telemetry.addData("Status", "Displacing Team Colored Jewel", runtime.seconds());
         }//end while loop
