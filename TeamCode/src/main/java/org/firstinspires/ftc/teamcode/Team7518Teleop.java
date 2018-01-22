@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Team7518Teleop extends LinearOpMode{
 
     private DcMotor  leftFront, rightFront, leftRear, rightRear, absoluteRight, absoluteLeft, yAxis, rotationMotor;
-    private Servo topLeftServo, topRightServo, bottomLeftServo, bottomRightServo, colorSensor;
+    private Servo colorSensor;
     int clawPosition=0;
     @Override
     public void runOpMode() throws InterruptedException
@@ -27,10 +27,6 @@ public class Team7518Teleop extends LinearOpMode{
         absoluteLeft=hardwareMap.dcMotor.get("absoluteLeft");
         yAxis=hardwareMap.dcMotor.get("yAxis");
         rotationMotor=hardwareMap.dcMotor.get("rotationMotor");
-        topRightServo=hardwareMap.servo.get("topRightServo");
-        topLeftServo=hardwareMap.servo.get("topLeftServo");
-        bottomLeftServo=hardwareMap.servo.get("bottomLeftServo");
-        bottomRightServo=hardwareMap.servo.get("bottomRightServo");
 
 
         //Include any code to run only once here
@@ -70,23 +66,9 @@ public class Team7518Teleop extends LinearOpMode{
                         }//end else
            
 
-                        //foldable doors
-                          while (gamepad1.a){
-                              topRightServo.setPosition(.7);
-                              topLeftServo.setPosition(.3);
-                              bottomRightServo.setPosition(.3);
-                              bottomLeftServo.setPosition(.7);
-                          }
-
-                          while (gamepad1.b) {
-                              topRightServo.setPosition(1);
-                              topLeftServo.setPosition(0);
-                              bottomRightServo.setPosition(0);
-                              bottomLeftServo.setPosition(1);
-                          }
 
 
-                        //z-axis motor
+                        //rotation motor
                         if (gamepad1.dpad_up)
                             rotationMotor.setPower(.25);
                         else if (gamepad1.dpad_down)
