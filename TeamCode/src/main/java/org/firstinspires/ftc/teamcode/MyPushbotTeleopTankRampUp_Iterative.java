@@ -66,6 +66,9 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
     int             minlift = 0;                        // minimum lift height
     double LeftPower = 0;
     double RightPower = 0;
+    int             liftstep = 2435;               // how many counts per 6 inches of lift
+    int             liftclaw = 250;
+
 
 
 
@@ -126,8 +129,8 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
         // 0 is open, -0.30 is closed
         if (gamepad1.right_bumper) {
             if (clawOffset == 0)            //if opened, close
-                clawOffset = -0.5;
-            else if (clawOffset == -0.50)    // if closed, open
+                clawOffset = -0.35;
+            else if (clawOffset == -0.35)    // if closed, open
                 clawOffset = -0.25;
             else if (clawOffset == -0.25)    // if closed, open
                 clawOffset = 0;
@@ -142,8 +145,8 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
             }
 
             // every time the claw closes the lift rises by half an inch
-            if (clawOffset == -0.5){
-                target = robot.lift.getCurrentPosition() + 500;
+            if (clawOffset == -0.35){
+                target = robot.lift.getCurrentPosition() + liftclaw;
                 robot.lift.setTargetPosition(target);
                 robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.lift.setPower(0.6);
@@ -152,7 +155,7 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
             }
             // every time the claw opens the lift lowers by half an inch
             if (clawOffset == 0){
-                target = robot.lift.getCurrentPosition() - 500;
+                target = robot.lift.getCurrentPosition() - liftclaw;
                 robot.lift.setTargetPosition(target);
                 robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.lift.setPower(0.6);
@@ -165,17 +168,17 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
         // 556 motor rotations = 1 inch of lift
         // upper and lower limits of 0 to ~13 inches
         if (gamepad1.y  && (robot.lift.getCurrentPosition() < maxlift)) {
-            target = robot.lift.getCurrentPosition() + 3614;
+            target = robot.lift.getCurrentPosition() + liftstep;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.8);
+            robot.lift.setPower(1);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
               MotorPower();
             }   //wait for lift to stop
-            robot.lift.setPower(0.0);
+            robot.lift.setPower(1);
         }
         else if (gamepad1.a && (robot.lift.getCurrentPosition() > minlift)) {
-            target = robot.lift.getCurrentPosition() - 3614;
+            target = robot.lift.getCurrentPosition() - liftstep;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lift.setPower(0.8);
@@ -183,6 +186,42 @@ public class MyPushbotTeleopTankRampUp_Iterative extends OpMode{
                 MotorPower();
             }   // wait for lift to stop
             robot.lift.setPower(0.0);
+        }
+        if (gamepad1.a  && (gamepad1.right_trigger > 0)) {
+            target = robot.lift.getCurrentPosition() - liftstep;
+            robot.lift.setTargetPosition(target);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(1);
+            while (robot.lift.isBusy() ){
+               /* left = gamepad1.left_stick_y;
+                right = gamepad1.right_stick_y;
+
+                //robot.leftDrive.setPower(left);
+                //robot.rightDrive.setPower(right);
+                // when you click R2 it goes double the speed
+                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
+                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2); */
+            }   //wait for lift to stop
+            robot.lift.setPower(0.0);
+            robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        else if (gamepad1.y && (gamepad1.right_trigger > 0)) {
+            target = robot.lift.getCurrentPosition() - liftclaw;
+            robot.lift.setTargetPosition(target);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(1);
+            while (robot.lift.isBusy()) {
+                /*left = gamepad1.left_stick_y;
+                right = gamepad1.right_stick_y;
+
+                //robot.leftDrive.setPower(left);
+                //robot.rightDrive.setPower(right);
+                // when you click R2 it goes double the speed
+                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
+                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2); */
+            }   // wait for lift to stop
+            robot.lift.setPower(0.0);
+            robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
         // end telemetry message to signify robot running;

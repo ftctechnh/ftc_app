@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+// import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -54,20 +54,22 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
+@TeleOp(name="Pushbot: Teleop Test", group="Pushbot")
 //@Disabled
 public class MyPushbotTeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
     MyHardwarePushbot robot       = new MyHardwarePushbot(); // use the class created to define a Pushbot's hardware
-                                                         // could also use HardwarePushbotMatrix class.
+    // could also use HardwarePushbotMatrix class.
 
     private ElapsedTime runtime = new ElapsedTime();
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
     int             target = 0;                          // lift motor target
-    int             maxlift = 7200;                     // maxiumum lift height
-    int             minlift = 0;                         // minimum lift height
+    int             maxlift = 5470;                     // maxiumum lift height one inch is 421
+    int             minlift = 0;                    // mininum lift height
+    int             liftstep = 2435;               // how many counts per 6 inches of lift
+    int             liftclaw = 250;
 
 
     /*
@@ -139,11 +141,11 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
 
         if (gamepad1.right_bumper) {
             if (clawOffset == 0)            //if opened, close
-                   clawOffset = -0.5;
-            else if (clawOffset == -0.50)    // if closed, open
-                   clawOffset = -0.25;
+                clawOffset = -0.35;
+            else if (clawOffset == -0.35)    // if closed, open
+                clawOffset = -0.25;
             else if (clawOffset == -0.25)    // if closed, open
-                    clawOffset = 0;
+                clawOffset = 0;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
             // 0.15 correction factor for difference in hand attachment to left and right servo
@@ -155,20 +157,20 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             }
 
             // every time the claw closes the lift rises by half an inch
-            if (clawOffset == -0.5){
-                target = robot.lift.getCurrentPosition() + 500;
+            if (clawOffset == -0.35){
+                target = robot.lift.getCurrentPosition() + liftclaw;
                 robot.lift.setTargetPosition(target);
                 robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.lift.setPower(0.6);
+                robot.lift.setPower(0.2);
                 while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {}   //wait for lift to stop
                 robot.lift.setPower(0.0);
             }
             // every time the claw opens the lift lowers by half an inch
             if (clawOffset == 0){
-                target = robot.lift.getCurrentPosition() - 500;
+                target = robot.lift.getCurrentPosition() - liftclaw;
                 robot.lift.setTargetPosition(target);
                 robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.lift.setPower(0.6);
+                robot.lift.setPower(0.2);
                 while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {}   //wait for lift to stop
                 robot.lift.setPower(0.0);
             }
@@ -178,10 +180,10 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         // 556 motor rotations = 1 inch of lift
         // upper and lower limits of 0 to ~13 inches
         if (gamepad1.y  && (robot.lift.getCurrentPosition() < maxlift)) {
-            target = robot.lift.getCurrentPosition() + 3614;
+            target = robot.lift.getCurrentPosition() + liftstep;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.8);
+            robot.lift.setPower(.8);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() < maxlift)) {
                 left = gamepad1.left_stick_y;
                 right = gamepad1.right_stick_y;
@@ -195,10 +197,10 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
             robot.lift.setPower(0.0);
         }
         else if (gamepad1.a && (robot.lift.getCurrentPosition() > minlift)) {
-            target = robot.lift.getCurrentPosition() - 3614;
+            target = robot.lift.getCurrentPosition() - liftstep;
             robot.lift.setTargetPosition(target);
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lift.setPower(0.8);
+            robot.lift.setPower(.8);
             while (robot.lift.isBusy() && (robot.lift.getCurrentPosition() > minlift)) {
                 left = gamepad1.left_stick_y;
                 right = gamepad1.right_stick_y;
@@ -210,6 +212,42 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
                 robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2);
             }   // wait for lift to stop
             robot.lift.setPower(0.0);
+        }
+        if (gamepad1.a  && (gamepad1.right_trigger > 0)) {
+            target = robot.lift.getCurrentPosition() - liftstep;
+            robot.lift.setTargetPosition(target);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(1);
+            while (robot.lift.isBusy() ){
+               /* left = gamepad1.left_stick_y;
+                right = gamepad1.right_stick_y;
+
+                //robot.leftDrive.setPower(left);
+                //robot.rightDrive.setPower(right);
+                // when you click R2 it goes double the speed
+                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
+                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2); */
+            }   //wait for lift to stop
+            robot.lift.setPower(0.0);
+            robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        else if (gamepad1.y && (gamepad1.right_trigger > 0)) {
+            target = robot.lift.getCurrentPosition() - liftclaw;
+            robot.lift.setTargetPosition(target);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(1);
+            while (robot.lift.isBusy()) {
+                /*left = gamepad1.left_stick_y;
+                right = gamepad1.right_stick_y;
+
+                //robot.leftDrive.setPower(left);
+                //robot.rightDrive.setPower(right);
+                // when you click R2 it goes double the speed
+                robot.leftDrive.setPower(left * (gamepad1.left_trigger + 1) / 2);
+                robot.rightDrive.setPower(right * (gamepad1.left_trigger + 1) / 2); */
+            }   // wait for lift to stop
+            robot.lift.setPower(0.0);
+            robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
         // end telemetry message to signify robot running;
