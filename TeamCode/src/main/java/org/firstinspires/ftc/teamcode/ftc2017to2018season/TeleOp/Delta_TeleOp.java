@@ -178,7 +178,7 @@ public class Delta_TeleOp extends OpMode {
 
             leftWheelMotorFront.setPower(-0.7);
             leftWheelMotorBack.setPower(1);
-            rightWheelMotorFront.setPower(0.7);
+            rightWheelMotorFront.setPower(0.85);
             rightWheelMotorBack.setPower(-1);
 
         } else if (gamepad1.right_trigger > 0) {
