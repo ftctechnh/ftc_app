@@ -1,10 +1,20 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
+
+
 /**
  * Created by pahel on 1/21/18.
  */
-
-public class curious_george_teleop {
+@TeleOp(name = "Curious George")
+public class curious_george_teleop extends OpMode {
 
 
     /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
@@ -317,5 +327,3 @@ public class curious_george_teleop {
     }
 }
 
-
-}
