@@ -1,16 +1,33 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /**
  * Created by Sahithi on 1/3/18.
  */
-@Autonomous(name = "Test Stall",group = "Auto")
+@Disabled
+@TeleOp(name = "Test Stall Prog Base",group = "Auto")
 public class TestStall extends LinearOpMode
 {
+    TankBase robot;
+    public void runOpMode()
+    {
+        robot = new TankBase(hardwareMap);
+        waitForStart();
+        robot.driveStraight_In_Stall(35, .5, telemetry);
+        while(!gamepad1.a)
+        {
+
+        }
+        telemetry.addData("RightVel ", robot.getDriveRightOne().getVelocity(AngleUnit.DEGREES));
+        telemetry.addData("RightVel ", robot.getDriveRightOne().getVelocity(AngleUnit.DEGREES));
+
+    }/*
     NewRobotFinal newRobot;
     public void runOpMode()
     {
@@ -36,14 +53,14 @@ public class TestStall extends LinearOpMode
                 //left is opposite because drive motors flips it
                 while (newRobot.driveLeftOne.getCurrentPosition() < -encTarget && newRobot.driveRightOne.getCurrentPosition() > encTarget) {
                     // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) > -10 || driveLeftOne.getVelocity(AngleUnit.DEGREES) < 10)
+                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) > -5 || driveLeftOne.getVelocity(AngleUnit.DEGREES) < 5)
                         break;
                 }
             } else {
                 newRobot.driveMotorsAuto(absPow, absPow);
 
                 while (newRobot.driveLeftOne.getCurrentPosition() > -encTarget && newRobot.driveRightOne.getCurrentPosition() < encTarget) {
-                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) < 10 || driveLeftOne.getVelocity(AngleUnit.DEGREES) > -10) {
+                    if (driveRightOne.getVelocity(AngleUnit.DEGREES) < 5 || driveLeftOne.getVelocity(AngleUnit.DEGREES) > -5) {
                         break;
                     }
                 }
@@ -53,4 +70,5 @@ public class TestStall extends LinearOpMode
 
         }
     }
+    */
 }
