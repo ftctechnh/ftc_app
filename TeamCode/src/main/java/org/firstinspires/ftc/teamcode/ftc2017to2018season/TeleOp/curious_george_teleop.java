@@ -189,25 +189,11 @@ public class curious_george_teleop extends OpMode {
             rightWheelMotorBack.setPower(-1);
 
         } else {
-            leftWheelMotorFront.setPower(leftY_gp1);
-            leftWheelMotorBack.setPower(leftY_gp1);
-            rightWheelMotorFront.setPower(rightY_gp1);
-            rightWheelMotorBack.setPower(rightY_gp1);
+            leftWheelMotorFront.setPower(-leftY_gp1);
+            leftWheelMotorBack.setPower(-leftY_gp1);
+            rightWheelMotorFront.setPower(-rightY_gp1);
+            rightWheelMotorBack.setPower(-rightY_gp1);
         }
-
-        // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-        //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-        // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-        //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        //  telemetry.update();
-        //telemetry.addData("",)
-        //telemetry.update();
-        //These were going to be used to find the values of triggers but we couldn't acomplish it
-        //run the motors by setting power to the motors with the game pad values
-        //leftWheelMotorFront.setPower(leftY_gp1);
-        //leftWheelMotorBack.setPower(leftY_gp1);
-        //rightWheelMotorFront.setPower(rightY_gp1);
-        //rightWheelMotorBack.setPower(rightY_gp1);
 
 
     }
