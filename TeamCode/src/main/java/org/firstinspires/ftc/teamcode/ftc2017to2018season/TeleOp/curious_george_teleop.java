@@ -166,17 +166,17 @@ public class curious_george_teleop {
 
         if (gamepad1.left_trigger > 0) {
 
-            leftWheelMotorFront.setPower(-1);
-            leftWheelMotorBack.setPower(1);
-            rightWheelMotorFront.setPower(1);
-            rightWheelMotorBack.setPower(-1);
-
-        } else if (gamepad1.right_trigger > 0) {
-
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
+
+        } else if (gamepad1.right_trigger > 0) {
+
+            leftWheelMotorFront.setPower(-1);
+            leftWheelMotorBack.setPower(1);
+            rightWheelMotorFront.setPower(1);
+            rightWheelMotorBack.setPower(-1);
 
         } else {
             leftWheelMotorFront.setPower(leftY_gp1);
@@ -300,13 +300,15 @@ public class curious_george_teleop {
 
     }
     public void openGlyph(){
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
+
+        //switching values with closeGlyph
+        glyphServoRight.setPosition(0.9);
+        glyphServoLeft.setPosition(0.0);
     }
 
     public void closeGlyph(){
-        glyphServoRight.setPosition(0.9);
-        glyphServoLeft.setPosition(0.0);
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
     }
 
     public void middleGlyph(){
