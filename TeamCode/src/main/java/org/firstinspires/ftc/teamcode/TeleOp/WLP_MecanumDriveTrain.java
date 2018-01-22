@@ -44,6 +44,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class WLP_MecanumDriveTrain {
 
+    final public double max_stick = 1.0;
+    final public double min_stick = -1.0;
+
     // Declare Drive Train modors
     protected DcMotor frontLeft = null;
     protected DcMotor frontRight = null;
@@ -51,13 +54,14 @@ public class WLP_MecanumDriveTrain {
     protected DcMotor rearRight = null;
     protected WLP_MecanumWheels wheels = new WLP_MecanumWheels();
 
+
     // Global variables to be initialized in the constructor
     private Telemetry telemetry = null;
     private HardwareMap hardwareMap = null;
     private Gamepad gamepad1 = null;
     private Gamepad gamepad2 = null;
 
-    private boolean isInitialized =false;
+    private boolean isInitialized = false;
 
     // Constructors
 
@@ -101,14 +105,29 @@ public class WLP_MecanumDriveTrain {
     // During teleop this function runs repeatedly
     public void loop() {
 
-        if (isInitialized == false) {
+        if (!isInitialized) {
             telemetry.addData("Drive Train::", " Not initialized");
             return;
         }
 
-        double left_x = gamepad1.left_stick_x;
-        double left_y = gamepad1.left_stick_y;
-        double right_x = gamepad1.right_stick_x;
+        double left_x = 0.0;
+        double left_y = 0.0;
+        double right_x = 0.0;
+
+        // dpad overrides other joysticks
+        if (gamepad1.dpad_left) {
+            left_x = min_stick;
+        } else if (gamepad1.dpad_right) {
+            left_x = max_stick;
+        } else if (gamepad1.dpad_up) {
+            left_y = max_stick;
+        } else if (gamepad1.dpad_down) {
+            left_y = min_stick;
+        } else {
+            left_x = gamepad1.left_stick_x;
+            left_y = gamepad1.left_stick_y;
+            right_x = gamepad1.right_stick_x;
+        }
 
         // Update the joystick input to calculate  wheel powers
         wheels.UpdateInput(left_x, left_y, right_x);
