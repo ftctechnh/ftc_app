@@ -235,7 +235,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>java.util.concurrent.locks.Lock</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cReadCacheLock--">getI2cReadCacheLock</a></span>()</code>
-<div class="block">Returns access to the lock controlling the read-cache.</div>
+<div class="block">Returns access to the _lock controlling the read-cache.</div>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
@@ -253,7 +253,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDe
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>java.util.concurrent.locks.Lock</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCacheLock--">getI2cWriteCacheLock</a></span>()</code>
-<div class="block">Returns access to the lock controlling the write-cache.</div>
+<div class="block">Returns access to the _lock controlling the write-cache.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
@@ -559,7 +559,7 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <pre>byte[]&nbsp;getI2cReadCache()</pre>
 <div class="block">Returns access to the read-cache into which data from the controller is read. The returned
  byte array may be retained for repeated use; <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cReadCache--"><code>getI2cReadCache()</code></a> need not be repeatedly
- called. The lock returned by <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cReadCacheLock--"><code>getI2cReadCacheLock()</code></a> must be held whenever the data
+ called. The _lock returned by <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cReadCacheLock--"><code>getI2cReadCacheLock()</code></a> must be held whenever the data
  in the returned byte array is accessed. Note that the returned byte array contains an initial
  header section, four bytes in size, which contains the information manipulated by
  <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cReadMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cReadMode(I2cAddr, int, int)</code></a> and <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cWriteMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cWriteMode(I2cAddr, int, int)</code></a>.</div>
@@ -595,11 +595,11 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <li class="blockList">
 <h4>getI2cReadCacheLock</h4>
 <pre>java.util.concurrent.locks.Lock&nbsp;getI2cReadCacheLock()</pre>
-<div class="block">Returns access to the lock controlling the read-cache. This lock must be held a while
+<div class="block">Returns access to the _lock controlling the read-cache. This _lock must be held a while
  the data accessible from <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cReadCache--"><code>getI2cReadCache()</code></a> is accessed.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the lock gating access to the read cache</dd>
+<dd>the _lock gating access to the read cache</dd>
 </dl>
 </li>
 </ul>
@@ -612,7 +612,7 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <pre>byte[]&nbsp;getI2cWriteCache()</pre>
 <div class="block">Returns access to the write-cache from which data is written to the controller. The returned
  byte array may be retained for repeated use; <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCache--"><code>getI2cWriteCache()</code></a> need not be repeatedly
- called. The lock returned by <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCacheLock--"><code>getI2cWriteCacheLock()</code></a> must be held whenever the data
+ called. The _lock returned by <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCacheLock--"><code>getI2cWriteCacheLock()</code></a> must be held whenever the data
  in the returned byte array is accessed or written. Note that the returned byte array contains
  an inital header section, four bytes in size, which contains the information manipulated by
  <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cReadMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cReadMode(I2cAddr, int, int)</code></a> and <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#enableI2cWriteMode-com.qualcomm.robotcore.hardware.I2cAddr-int-int-"><code>enableI2cWriteMode(I2cAddr, int, int)</code></a>.</div>
@@ -632,11 +632,11 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <li class="blockList">
 <h4>getI2cWriteCacheLock</h4>
 <pre>java.util.concurrent.locks.Lock&nbsp;getI2cWriteCacheLock()</pre>
-<div class="block">Returns access to the lock controlling the write-cache. This lock must be held a while
+<div class="block">Returns access to the _lock controlling the write-cache. This _lock must be held a while
  the data accessible from <a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html#getI2cWriteCache--"><code>getI2cWriteCache()</code></a> is accessed</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the lock gating access to the write cache</dd>
+<dd>the _lock gating access to the write cache</dd>
 </dl>
 </li>
 </ul>
@@ -649,7 +649,7 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <pre>byte[]&nbsp;getCopyOfReadBuffer()</pre>
 <div class="block">Atomically returns a copy of that portion of the read-cache which does not include the
  initial four-byte header section: that contains the read payload most recently read from
- the controller. The read-cache lock need not be held while executing this method.</div>
+ the controller. The read-cache _lock need not be held while executing this method.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a copy of the read payload</dd>
@@ -666,7 +666,7 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <h4>getCopyOfWriteBuffer</h4>
 <pre>byte[]&nbsp;getCopyOfWriteBuffer()</pre>
 <div class="block">Atomically returns a copy that portion of the write-cache which does not include the
- initial four-byte header section. The write-cache lock need not be held to execute this
+ initial four-byte header section. The write-cache _lock need not be held to execute this
  method.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -684,7 +684,7 @@ boolean&nbsp;isI2cPortActionFlagSet()</pre>
 <h4>copyBufferIntoWriteBuffer</h4>
 <pre>void&nbsp;copyBufferIntoWriteBuffer(byte[]&nbsp;buffer)</pre>
 <div class="block">Atomically copies the provided buffer into the user portion of the write cache, beginning
- immediately following the four-byte header. The write-cache lock need not be held to execute this
+ immediately following the four-byte header. The write-cache _lock need not be held to execute this
  method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

@@ -1,0 +1,9 @@
+//
+// build.gradle in ChathamRoboticsCommon
+//
+apply plugin: 'com.android.library'
+
+
+apply from: '../build.common.gradle'
+
+apply from: '../library.dependencies.gradle'

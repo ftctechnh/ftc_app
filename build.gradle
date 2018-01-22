@@ -3,13 +3,19 @@
  *
  * It is extraordinarily rare that you will ever need to edit this file.
  */
+
 buildscript {
     repositories {
         jcenter()
+        maven { url 'https://maven.google.com' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.0-alpha03'
     }
+}
+ext {
+    compileSdkVersion = 19
+    buildToolsVersion = "19.0.1"
 }
 
 

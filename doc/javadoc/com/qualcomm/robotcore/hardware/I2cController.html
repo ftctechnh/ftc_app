@@ -255,7 +255,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>java.util.concurrent.locks.Lock</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html#getI2cReadCacheLock-int-">getI2cReadCacheLock</a></span>(int&nbsp;port)</code>
-<div class="block">Get access to the read cache lock.</div>
+<div class="block">Get access to the read cache _lock.</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
@@ -273,7 +273,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>java.util.concurrent.locks.Lock</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html#getI2cWriteCacheLock-int-">getI2cWriteCacheLock</a></span>(int&nbsp;port)</code>
-<div class="block">Get access to the write cache lock.</div>
+<div class="block">Get access to the write cache _lock.</div>
 </td>
 </tr>
 <tr id="i14" class="altColor">
@@ -681,15 +681,15 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getI2cReadCacheLock</h4>
 <pre>java.util.concurrent.locks.Lock&nbsp;getI2cReadCacheLock(int&nbsp;port)</pre>
-<div class="block">Get access to the read cache lock.
+<div class="block">Get access to the read cache _lock.
  <p>
  This is needed if you are accessing the read cache directly. The read
- cache lock needs to be acquired before attempting to interact with the read cache</div>
+ cache _lock needs to be acquired before attempting to interact with the read cache</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - physical port number on the device</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>lock</dd>
+<dd>_lock</dd>
 </dl>
 </li>
 </ul>
@@ -700,16 +700,16 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getI2cWriteCacheLock</h4>
 <pre>java.util.concurrent.locks.Lock&nbsp;getI2cWriteCacheLock(int&nbsp;port)</pre>
-<div class="block">Get access to the write cache lock.
+<div class="block">Get access to the write cache _lock.
  <p>
  This is needed if you are accessing the write cache directly. The write
- cache lock needs to be acquired before attempting to interact with the
+ cache _lock needs to be acquired before attempting to interact with the
  write cache</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - physical port number on the device</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>lock</dd>
+<dd>_lock</dd>
 </dl>
 </li>
 </ul>
@@ -722,7 +722,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <pre>byte[]&nbsp;getI2cReadCache(int&nbsp;port)</pre>
 <div class="block">Get direct access to the cache that I2C reads will be populated into
  <p>
- Please lock the cache before accessing it.</div>
+ Please _lock the cache before accessing it.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - physical port number on the device</dd>
@@ -756,7 +756,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <pre>byte[]&nbsp;getI2cWriteCache(int&nbsp;port)</pre>
 <div class="block">Get direct access to the cache that I2C writes will be populated into
  <p>
- Please lock the cache before accessing it.</div>
+ Please _lock the cache before accessing it.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>port</code> - physical port number on the device</dd>
