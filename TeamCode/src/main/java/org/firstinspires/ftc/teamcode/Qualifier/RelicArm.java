@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Qualifier;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -15,6 +16,9 @@ public class RelicArm {
     public double elbowtop = 1.0;
     public double elbowup = 0.35;
     public double elbowdown = 0.0;
+    public int    relicArmMotorMin = 0;
+    public int    relicArmMotorMax = 5000;
+
 
     public void init(HardwareMap hardwareMap) {
         relicClawServo = hardwareMap.servo.get("relic_claw");
@@ -26,8 +30,9 @@ public class RelicArm {
         relicElbowServo.setPosition(0.0);
 
         relicArmMotor = hardwareMap.get(DcMotor.class, "relic_arm");
-        relicArmMotor.setDirection(DcMotor.Direction.FORWARD);
-        //relicArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        relicArmMotor.setDirection(DcMotor.Direction.REVERSE);
+        relicArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        relicArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void clawOpen() {

@@ -369,12 +369,12 @@ public class Teleop extends OpMode {
 
 
         // RELIC ARM IN/OUT
-        if (gamepad1.dpad_right) {
-            gromit.relicArm.relicArmMotor.setPower(1.0);
+        if (gamepad1.dpad_right && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.relicArmMotorMax) {
+            gromit.relicArm.relicArmMotor.setPower(0.8);
         }
-        else if(gamepad1.dpad_left){
-            gromit.relicArm.relicArmMotor.setPower(-0.5);
-        }
+       else if(gamepad1.dpad_left && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin){
+            gromit.relicArm.relicArmMotor.setPower(-0.7);
+            }
         else {
             gromit.relicArm.relicArmMotor.setPower(0.0);
         }
@@ -385,6 +385,7 @@ public class Teleop extends OpMode {
         //telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);
         //telemetry.addData("liftPosition", gromit.glyphTrain.lift_motor.getCurrentPosition());
         telemetry.addData("glyph sensor", gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM));
+        telemetry.addData("relicArmTicks",gromit.relicArm.relicArmMotor.getCurrentPosition());
 
 
     }
