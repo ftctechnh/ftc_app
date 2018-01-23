@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by Kaden on 112/12/2017.
- */
-
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "REVDriveEverything", group = "linear OpMode")
-public class DriveEverythingREV extends OpMode {
+/**
+ * Created by kaden on 1/23/18.
+ */
+@TeleOp(name = "DriveEverythingRecovery", group = "linear OpMode")
+public class DriveEverythingRecovery extends OpMode {
     private ForkLift ForkLift;
     private RelicClaw RelicClaw;
     private DriveMecanum drive;
@@ -37,9 +36,9 @@ public class DriveEverythingREV extends OpMode {
             }
         } else if (Math.abs(gamepad2.left_stick_x) + Math.abs(gamepad2.left_stick_y) + Math.abs(gamepad2.right_stick_x) + Math.abs(gamepad2.right_stick_y) > Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x) + Math.abs(gamepad1.right_stick_y)) {
             if (gamepad2.right_bumper || gamepad2.left_bumper) {
-              drive.driveLeftRight(gamepad2.left_stick_x * drive.BUMPER_SLOW_SPEED, gamepad2.right_stick_x * drive.BUMPER_SLOW_SPEED, gamepad2.left_stick_y * drive.BUMPER_SLOW_SPEED, gamepad2.right_stick_y * drive.BUMPER_SLOW_SPEED);
+                drive.driveLeftRight(gamepad2.left_stick_x * drive.BUMPER_SLOW_SPEED, gamepad2.right_stick_x * drive.BUMPER_SLOW_SPEED, gamepad2.left_stick_y * drive.BUMPER_SLOW_SPEED, gamepad2.right_stick_y * drive.BUMPER_SLOW_SPEED);
             } else {
-              drive.driveLeftRight(gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_y);
+                drive.driveLeftRight(gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_y);
 
             }
         } else {
@@ -47,13 +46,13 @@ public class DriveEverythingREV extends OpMode {
                 drive.driveTranslateRotate(0, -drive.D_PAD_SLOW_SPEED, 0);
             }
             else if (gamepad1.dpad_left) {
-                drive.driveTranslateRotate(-drive.D_PAD_SLOW_SPEED, 0, 0);
+                drive.driveTranslateRotate(drive.D_PAD_SLOW_SPEED, 0, 0);
             }
             else if (gamepad1.dpad_down) {
                 drive.driveTranslateRotate(0, drive.D_PAD_SLOW_SPEED, 0);
             }
             else if (gamepad1.dpad_right) {
-                drive.driveTranslateRotate(drive.D_PAD_SLOW_SPEED, 0, 0);
+                drive.driveTranslateRotate(-drive.D_PAD_SLOW_SPEED, 0, 0);
             } else {
                 drive.stop();
             }
@@ -93,4 +92,5 @@ public class DriveEverythingREV extends OpMode {
         }
         RelicClaw.moveMotor(gamepad2.left_trigger - gamepad2.right_trigger);
     }
+
 }

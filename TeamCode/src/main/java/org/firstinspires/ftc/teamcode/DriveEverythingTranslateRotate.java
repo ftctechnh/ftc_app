@@ -7,7 +7,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@TeleOp(name = "DriveEverythingTranslateRotate", group = "linear OpMode")
+//@TeleOp(name = "DriveEverythingTranslateRotate", group = "linear OpMode")
 public class DriveEverythingTranslateRotate extends OpMode {
     private ForkLift ForkLift;
     private RelicClaw RelicClaw;
