@@ -14,14 +14,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Ryan Gniadek and Ben Bernstein
  */
 
-@Autonomous(name="7519Autonomous", group="7519")
-@Disabled
+@Autonomous(name="7519AutonomousBlue", group="7519")
 public class Team7519AutonomousBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     private CRServo testServo;
     private Servo arm;
-    private DcMotor motorLift, leftFront, rightFront, leftRear, rightRear;
+    private DcMotor motorLiftBottom, motorLiftTop, leftFront, rightFront, leftRear, rightRear;
     private ColorSensor colorSensor;
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -33,7 +32,8 @@ public class Team7519AutonomousBlue extends LinearOpMode {
     public void runOpMode() {
 
         //Declare hardwareMap here,
-        motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLiftBottom = hardwareMap.dcMotor.get("motorLiftBottom");
+        motorLiftTop = hardwareMap.dcMotor.get("motorLiftTop");
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");
         leftRear = hardwareMap.dcMotor.get("leftRear");
@@ -60,7 +60,7 @@ public class Team7519AutonomousBlue extends LinearOpMode {
 
         runtime.reset();
         while(opModeIsActive() && runtime.seconds()<3){
-            arm.setPosition(0);
+            arm.setPosition(.5);
             if(bColor < rColor)//Knocks Off Opposite Colored Jewel
                 color = true;
             if(color){

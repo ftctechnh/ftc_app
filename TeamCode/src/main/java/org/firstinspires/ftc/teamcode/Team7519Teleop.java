@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,21 +15,24 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Team7519Teleop extends LinearOpMode{
 
     private CRServo testServo;
-    private DcMotor motorLift, leftFront, rightFront, leftRear, rightRear;
+    private DcMotor motorLiftBottom, motorLiftTop, leftFront, rightFront, leftRear, rightRear;
     private Servo arm;
+    private ColorSensor colorSensor;
     int clawPosition=0;
     @Override
     public void runOpMode() throws InterruptedException
     {
 
         //Declare hardwareMap here, example below
-        motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLiftBottom = hardwareMap.dcMotor.get("motorLiftBottom");
+        motorLiftTop = hardwareMap.dcMotor.get("motorLiftTop");
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");
         leftRear = hardwareMap.dcMotor.get("leftRear");
         rightRear = hardwareMap.dcMotor.get("rightRear");
         testServo = hardwareMap.crservo.get("testServo");
         arm = hardwareMap.servo.get("arm");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
 
         //Include any code to run only once here
@@ -37,7 +41,7 @@ public class Team7519Teleop extends LinearOpMode{
         while(opModeIsActive())
         {
 
-            arm.setPosition(0);//Lock Servo Arm in Up Position
+            arm.setPosition(-1);//Lock Servo Arm in Up Position
 
             //Include commands to run on controller presses here
 
@@ -58,12 +62,21 @@ public class Team7519Teleop extends LinearOpMode{
 
             //Manual Lift Control w/Trigger
             while(gamepad1.right_trigger>0) {
-                motorLift.setPower(gamepad1.right_trigger);
+                motorLiftTop.setPower(gamepad1.right_trigger);
             }//end loop
             while (gamepad1.left_trigger>0){
-                motorLift.setPower(-gamepad1.left_trigger);
+                motorLiftTop.setPower(-gamepad1.left_trigger);
             }//end loop
-            motorLift.setPower(0);
+            motorLiftTop.setPower(0);
+            //Lift Control w/Bumper
+            while(gamepad1.right_bumper) {
+                motorLiftBottom.setPower(.7);
+            }//end loop
+            while (gamepad1.left_bumper){
+                motorLiftBottom.setPower(-.7);
+            }//end loop
+            motorLiftBottom.setPower(0);
+
             //Claw Control (A-Move Claw, B-Switch Direction)
             if (gamepad1.a)
                 testServo.setPower(1);
