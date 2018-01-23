@@ -34,9 +34,10 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case'r':
-                        adjustment = 18;
+                        adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
+                        newRobot.driveStraight_In(18 - adjustment);
                         break;
                     case 'b':
                         adjustment = 2;
@@ -93,9 +94,10 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In(adjustment + 19);
                         break;
                     case 'b':
-                        adjustment = 18;
+                        adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
+                        newRobot.driveStraight_In(18 - adjustment);
                         break;
                     default:
                         newRobot.moveWing(false);
