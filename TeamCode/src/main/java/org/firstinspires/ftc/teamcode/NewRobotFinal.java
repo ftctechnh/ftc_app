@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 //import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 //import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+//import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 //import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 //import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -152,7 +152,7 @@ public class NewRobotFinal
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
     }
 
-    public void initMouthAndWings() //Methods sets motors at low power to put the motors to their resting positions
+    public void initMouthAndWings()
     {                       //basically sets up lift's step counts starting at its bottom position
         liftMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -268,7 +268,7 @@ public class NewRobotFinal
         driveMotors(-lPow, -rPow);
     }
 
-    private void resetDriveEncoders()//sets encoders to 0 for motors
+    private void resetDriveEncoders()
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -582,7 +582,6 @@ public class NewRobotFinal
 //
 //        stopDriveMotors();
 //    }
-
     public void oldMoveLift(int adjLevels) //For the lift, I'll use levels or encoders points that stop
     {
         float pow = 1f;
@@ -658,10 +657,12 @@ public class NewRobotFinal
         if (liftDir == UP_L && -liftMotor.getCurrentPosition() < liftTargetPos)
         {
             liftMotor.setPower(-.7);
-        } else if (liftDir == DOWN_L && -liftMotor.getCurrentPosition() > liftTargetPos)
+        }
+        else if (liftDir == DOWN_L && -liftMotor.getCurrentPosition() > liftTargetPos)
         {
             liftMotor.setPower(.7);
-        } else
+        }
+        else
         {
             liftDir = STOP_L;
             liftMotor.setPower(0);
@@ -686,6 +687,7 @@ public class NewRobotFinal
                 touchedBottomMag = true;
             if (y > 0)
                 y = 0;
+            liftDir = STOP_L;
         }
         else
             touchedBottomMag = false;
@@ -694,6 +696,8 @@ public class NewRobotFinal
         {
             if (y < 0)
                 y = 0;
+
+            liftDir = STOP_L;
         }
 
         if (y > .3)
@@ -705,7 +709,8 @@ public class NewRobotFinal
         {
             liftDir = STOP_L;
             liftMotor.setPower(-Math.abs(factor * y));
-        } else
+        }
+        else
         {
             AdjLiftDir();
         }
@@ -732,22 +737,19 @@ public class NewRobotFinal
 
     public void moveWing(boolean moveDown)
     {
-        //long endTime = System.currentTimeMillis() + 6000;
         if (moveDown)
         {
             wingMotor.setPower(-1f);
             while (wingMotor.getCurrentPosition() > -2750 && wingTouchSens.getState())
             {
-                // if (System.currentTimeMillis() > endTime)
-                //   break;
+
             }
         } else
         {
             wingMotor.setPower(1f);
             while (wingMotor.getCurrentPosition() < 0 && wingTouchSens.getState())
             {
-                //   if (System.currentTimeMillis() > endTime)
-                //   break;
+
             }
         }
         wingMotor.setPower(0);
@@ -804,7 +806,6 @@ public class NewRobotFinal
 
     public void fineAdjGrabber(float in)
     {
-        if (grabber.getPosition() + in < .6f && grabber.getPosition() + in > .15f)
              grabber.setPosition(grabber.getPosition() + in);
     }
 
@@ -812,7 +813,6 @@ public class NewRobotFinal
     {
         grabberRotator.setPosition(grabberRotator.getPosition() + in);
     }
-
 
     public void stopAllMotors()
     {
