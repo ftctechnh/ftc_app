@@ -13,7 +13,7 @@ public class RelicArm {
     public Servo relicClawServo;
     public DcMotor relicArmMotor  = null;
     public double elbowtop = 1.0;
-    public double elbowup = 0.5;
+    public double elbowup = 0.35;
     public double elbowdown = 0.0;
 
     public void init(HardwareMap hardwareMap) {
@@ -27,7 +27,7 @@ public class RelicArm {
 
         relicArmMotor = hardwareMap.get(DcMotor.class, "relic_arm");
         relicArmMotor.setDirection(DcMotor.Direction.FORWARD);
-        relicArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //relicArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void clawOpen() {
@@ -35,7 +35,7 @@ public class RelicArm {
     }
 
     public void clawClose() {
-        relicClawServo.setPosition(0.8);
+        relicClawServo.setPosition(0.78);
     }
 
     public void elbowUp() {
