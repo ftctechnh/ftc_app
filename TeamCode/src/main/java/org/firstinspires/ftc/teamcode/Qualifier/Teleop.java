@@ -375,6 +375,7 @@ public class Teleop extends OpMode {
        else if(gamepad1.dpad_left && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin){
             gromit.relicArm.relicArmMotor.setPower(-0.7);
             }
+
         else {
             gromit.relicArm.relicArmMotor.setPower(0.0);
         }
