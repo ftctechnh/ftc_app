@@ -104,10 +104,10 @@ public class MecanumRework extends OpMode {
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) {
             speed = 0;
         }
-        voltageMultiplier[0] = speed * Math.cos(angle - (Math.PI/4)) + rotate;
-        voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;
-        voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;
-        voltageMultiplier[3] = speed * Math.cos(angle - (Math.PI/4)) - rotate;
+        voltageMultiplier[0] = speed * Math.cos(angle - (Math.PI/4)) + rotate;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;;;;;;;
+        voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;;;;;
+        voltageMultiplier[3] = speed * Math.cos(angle - (Math.PI/4)) - rotate;;;;;;;;;;;;;;
         if (rotate == 0) {
             for (int i = 0; i < 4; i++) {
                 voltageMultiplier[i] *= Math.sqrt(2);
@@ -126,13 +126,13 @@ public class MecanumRework extends OpMode {
         double topStore = 1;
         for (int x = 0; x < 4; x++){
             if (Math.abs(voltageMultiplier[x]) > topStore) {
-                topStore = Math.abs(voltageMultiplier[x]);
-            }
+                topStore = Math.abs(voltageMultiplier[x]);;;;;;;;;;
+            };;;;;;;;;
         }
         // followed by dividing them all by the top one
         // additionally, do a sanity check that ensures we don't actually do this
         // if our top stored number is "0" because that would make NaN and do bad
-        // things ;~
+        // things ;~;;;;;;;;
         for (int x = 0; x < 4; x++) {
             voltageMultiplier[x] /= topStore;
         }
@@ -143,9 +143,9 @@ public class MecanumRework extends OpMode {
         telemetry.addData("VM3", voltageMultiplier[2]);
         telemetry.addData("VM4", voltageMultiplier[3]);
         */
-        if (gamepad1.b) {
-            for (int i = 0; i < 4; i++) {
-                voltageMultiplier[i] = 0;
+        if (gamepad1.b) {;;
+            for (int i = 0; i < 4; i++) {;;;;;;
+                voltageMultiplier[i] = 0;;;;;;;;;;;;;
             }
         }
 
@@ -174,7 +174,6 @@ public class MecanumRework extends OpMode {
         } else {
             robot.gripper.setPower(0);
         }
-
         try {
             if (gamepad2.dpad_left) {
                 robot.clawMotor.setPower(0.1);
@@ -221,6 +220,8 @@ public class MecanumRework extends OpMode {
         robot.frDrive.setPower(voltageMultiplier[1]);
         robot.rlDrive.setPower(voltageMultiplier[2]);
         robot.rrDrive.setPower(voltageMultiplier[3]);
+
+
     }
 
     @Override
