@@ -51,6 +51,7 @@ public class NullbotHardware {
 
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
+    public IntakeTarget intakeTarget;
 
     // Servos
     public Servo leftWhipSnake;
@@ -113,7 +114,7 @@ public class NullbotHardware {
         imu = hwMap.get(BNO055IMU.class, "primaryIMU");
 
         leftPixyCam = hwMap.get(PixyCam.class, "leftPixy");
-        frontUltrasonic = hwMap.get(AnalogInput.class, "us");
+        frontUltrasonic = hwMap.get(AnalogInput.class, "frontUltrasonic");
 
         if (!isTestChassis) {
             lift = hwMap.dcMotor.get("lift");
@@ -403,6 +404,19 @@ public class NullbotHardware {
         diff = diff % (Math.PI * 2);
         return diff > Math.PI ? (Math.PI * 2) - diff : diff;
     }
+
+    public double getSignedAngleDifference(double d1, double d2) {
+        double posDiff = (d2 - d1) % (Math.PI * 2);
+        double negDiff = (d1 - d2) % (Math.PI * 2);
+        tel.addData("Pos difference: ", posDiff);
+        tel.addData("Neg difference: ", negDiff);
+        if (Math.abs(posDiff) < Math.abs(negDiff)) {
+            return posDiff;
+        } else {
+            return negDiff;
+        }
+
+    }
     /**
      * @return    The error adjusted gyro position, between 0 and 2pi radians
      */
@@ -426,13 +440,13 @@ public class NullbotHardware {
     }
 
     public void openBlockClaw() {
-        leftBlockClaw.setPosition(0.25);
-        rightBlockClaw.setPosition(0.75);
+        leftBlockClaw.setPosition(0.26);
+        rightBlockClaw.setPosition(0.85);
     }
 
     public void closeBlockClaw() {
-        leftBlockClaw.setPosition(0.5);
-        rightBlockClaw.setPosition(0.5);
+        leftBlockClaw.setPosition(0.4);
+        rightBlockClaw.setPosition(0.65);
 
     }
 
@@ -477,6 +491,22 @@ public class NullbotHardware {
 
     public void updateFlipperPos() {
         relicClawFlipper.setPosition(relicFipperPosition);
+    }
+
+    public enum IntakeTarget {
+        RAISED, LOWERED
+    }
+
+    public void lowerIntake() {
+        leftIntakeFlipper.setPosition(0.7);
+        rightIntakeFlipper.setPosition(0.0);
+        intakeTarget = IntakeTarget.LOWERED;
+    }
+
+    public void raiseIntake() {
+        leftIntakeFlipper.setPosition(0.0); // Don't stress it
+        rightIntakeFlipper.setPosition(1.0);
+        intakeTarget = IntakeTarget.RAISED;
     }
 
     public void setLiftMode(DcMotor.RunMode m) {
