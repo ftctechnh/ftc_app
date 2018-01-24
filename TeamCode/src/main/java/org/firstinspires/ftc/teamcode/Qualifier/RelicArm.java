@@ -36,11 +36,11 @@ public class RelicArm {
     }
 
     public void clawOpen() {
-        relicClawServo.setPosition(0.2);
+        relicClawServo.setPosition(0.6);
     }
 
     public void clawClose() {
-        relicClawServo.setPosition(0.78);
+        relicClawServo.setPosition(1.0);
     }
 
     public void elbowUp() {
