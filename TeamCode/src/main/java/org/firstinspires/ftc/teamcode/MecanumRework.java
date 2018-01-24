@@ -176,9 +176,9 @@ public class MecanumRework extends OpMode {
         }
         try {
             if (gamepad2.dpad_left) {
-                robot.clawMotor.setPower(0.1);
+                robot.clawMotor.setPower(0.2);
             } else if (gamepad2.dpad_right) {
-                robot.clawMotor.setPower(-0.1);
+                robot.clawMotor.setPower(-0.2);
             } else {
                 robot.clawMotor.setPower(0);
             }
