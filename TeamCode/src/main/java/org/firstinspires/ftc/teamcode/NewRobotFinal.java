@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
+import android.graphics.Path;
 
 //import com.qualcomm.hardware.bosch.BNO055IMU;
 //import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -79,6 +81,8 @@ public class NewRobotFinal
 
     private boolean touchedBottomMag = false;
 
+    private LinearOpMode opMode;
+
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
     public final float roboDiameterCm = (float) (38.7 * Math.PI); // can be adjusted
@@ -88,7 +92,6 @@ public class NewRobotFinal
     public NewRobotFinal(HardwareMap hardwareMap)
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-
         //imu = (hardwareMap.get(BNO055IMU.class, "imu"));
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
@@ -134,8 +137,9 @@ public class NewRobotFinal
         grabber = hardwareMap.get(Servo.class, "grabber");
     }
 
-    public void initAutoFunctions(HardwareMap hardwareMap)
+    public void initAutoFunctions(HardwareMap hardwareMap, LinearOpMode opMode_IN)
     {
+        opMode = opMode_IN;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //Comment out if you don't want camera view on robo phone
@@ -576,46 +580,12 @@ public class NewRobotFinal
     }
     */
 
-    public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
-    {
-        //float degrees = (float)(degrees_In * 0.55776 + 8.23819);
-        //float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
-
-        float encTarget = (float) (degrees * 11.79712 - 50.29669);
-
-        //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
-        //second set gets encoder counts per centimeter
-        //we divide it by two at the end to compensate for using two motors
-
-        resetDriveEncoders();
-
-        //It pivots in the direction of how to unit circle spins
-        if (degrees < 0) //Pivot Clockwise
-        {
-            driveMotorsAuto(Math.abs(pow), -Math.abs(pow));
-
-            while (driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget)
-            {
-            }
-
-        } else //CounterClockwise
-        {
-            driveMotorsAuto(-Math.abs(pow), Math.abs(pow));
-
-            while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget)
-            {
-            }
-        }
-
-        stopDriveMotors();
-    }
-
     public void pivot(float degrees)
     {
         pivot(degrees, defaultTurnPow);
     }
 
-    public void pivot(float degrees, double pow, LinearOpMode opMode)//Utilizes two motors at a time; spins in place
+    public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
         //float degrees = (float)(degrees_In * 0.55776 + 8.23819);
         //float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
@@ -637,7 +607,8 @@ public class NewRobotFinal
             {
             }
 
-        } else //CounterClockwise
+        }
+        else //CounterClockwise
         {
             driveMotorsAuto(-Math.abs(pow), Math.abs(pow));
 
@@ -843,30 +814,10 @@ public class NewRobotFinal
         if (moveDown)
         {
             wingMotor.setPower(-1f);
-            while ((wingMotor.getCurrentPosition() > -2750) && (wingTouchSens.getState()))
-            {
-
-            }
-        }
-        else
-        {
-            wingMotor.setPower(1f);
-            while ((wingMotor.getCurrentPosition() < 0) && (wingTouchSens.getState()))
-            {
-
-            }
-        }
-        wingMotor.setPower(0);
-    }
-
-    public void moveWing(boolean moveDown, LinearOpMode opMode)
-    {
-        if (moveDown)
-        {
-            wingMotor.setPower(-1f);
             while ((wingMotor.getCurrentPosition() > -2750) && (wingTouchSens.getState()) && !opMode.isStopRequested())
             {
-
+                if(!wingTouchSens.getState())
+                    break;
             }
         }
         else
@@ -874,7 +825,8 @@ public class NewRobotFinal
             wingMotor.setPower(1f);
             while (((wingMotor.getCurrentPosition() < 0) && (wingTouchSens.getState())) && !opMode.isStopRequested())
             {
-
+                if(!wingTouchSens.getState())
+                    break;
             }
         }
         wingMotor.setPower(0);
