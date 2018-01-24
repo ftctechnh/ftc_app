@@ -279,11 +279,11 @@ public class Teleop extends OpMode {
             backIsReleased = true;
         }
 
-        if (tristanmode) {
-            gromit.driveTrain.drivevector(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
-        } else {
+//        if (tristanmode) {
+           // gromit.driveTrain.drivevector(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
+//        } else {
             gromit.driveTrain.drivesmart(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
-        }
+//        }
         /**
          * RELIC CONTROLS
          */
@@ -310,7 +310,12 @@ public class Teleop extends OpMode {
                 elbowmoving = true;
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();//Start time
-                elbowtarget = gromit.relicArm.elbowup;
+                if(gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMax-1000){
+                    elbowtarget = gromit.relicArm.elbowup+.05;
+                }
+                else {
+                    elbowtarget = gromit.relicArm.elbowup;
+                }
                 elbowtotalmove = elbowtarget - elbowstartpos;
             }
         } else {
@@ -370,7 +375,7 @@ public class Teleop extends OpMode {
 
         // RELIC ARM IN/OUT
         if (gamepad1.dpad_right && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.relicArmMotorMax) {
-            gromit.relicArm.relicArmMotor.setPower(0.8);
+            gromit.relicArm.relicArmMotor.setPower(0.6);
         }
        else if(gamepad1.dpad_left && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin){
             gromit.relicArm.relicArmMotor.setPower(-0.7);
@@ -399,48 +404,4 @@ public class Teleop extends OpMode {
         //               gromit.relicArm.stoprelic...
     }
 
-    public void drivevector(double x, double y, double turn) {
-        //speed change code
-        //   double drive_direction = atan(y/x);
-        //double speedMultiplier = 0.4;
-
-        double lfpower;
-        double lrpower;
-        double rfpower;
-        double rrpower;
-
-        double rotation = turn * 0.75;
-
-        double drive_direction = atan(y / x);
-
-        lfpower = Math.cos(drive_direction - PI / 4);
-        lrpower = Math.sin(drive_direction - PI / 4);
-        rfpower = Math.sin(drive_direction - PI / 4);
-        rrpower = Math.cos(drive_direction - PI / 4);
-
-//        lfbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
-//        lrbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
-//        rfbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
-//        rrbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
-
-
-        //Determine largest power being applied in either direction
-        double max = abs(lfpower);
-        if (abs(lrpower) > max) max = abs(lrpower);
-        if (abs(rfpower) > max) max = abs(rfpower);
-        if (abs(rrpower) > max) max = abs(rrpower);
-
-//            double multiplier = speedMultiplier / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-        double multiplier = 0;//speedMultiplier;
-
-        lfpower *= multiplier;
-        lrpower *= multiplier;
-        rfpower *= multiplier;
-        rrpower *= multiplier;
-
-        gromit.driveTrain.left_front.setPower(lfpower);
-        gromit.driveTrain.left_rear.setPower(lrpower);
-        gromit.driveTrain.right_front.setPower(rfpower);
-        gromit.driveTrain.right_rear.setPower(rrpower);
-    }
 }

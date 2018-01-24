@@ -104,6 +104,12 @@ public class DriveTrain {
         stopMotors();
 
         runWithoutEncoders();
+        //runUsingEncoders();
+
+        left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        left_rear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        right_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        right_rear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         speedMode = SpeedSetting.FAST;
 //        forwardDirection = DirectionSetting.FRONT;
@@ -119,15 +125,15 @@ public class DriveTrain {
     public void runWithoutEncoders() {
         left_front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right_front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        right_rear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left_rear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right_rear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void runUsingEncoders() {
         left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_rear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void drive(double x, double y, double turn) {

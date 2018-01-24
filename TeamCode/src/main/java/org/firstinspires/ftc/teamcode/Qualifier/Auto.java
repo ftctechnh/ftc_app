@@ -63,7 +63,7 @@ public class Auto extends LinearOpMode {
         gromit.driveTrain.left_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gromit.driveTrain.left_rear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gromit.driveTrain.right_front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        gromit.driveTrain.left_rear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gromit.driveTrain.right_rear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
                 // get a reference to the RelativeLayout so we can change the background  for Edit mode
                 // color of the Robot Controller app to match the hue detected by the RGB sensor.
@@ -160,6 +160,10 @@ public class Auto extends LinearOpMode {
             telemetry.addData("IMU", "Heading: %4.2f ", gromit.driveTrain.getheading());
             telemetry.addData("Blue/Red Ratio", " %4.2f ", gromit.jewelArm.BRRatio);
             telemetry.addData("VuMark", "%s is visible", vuMark);
+            double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+            double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+//            telemetry.addData("Sharp IR V ", sharpIRVoltage);
+            telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);//            telemetry.addData("IR Distance", gromit.glyphTrain.)
 
             telemetry.addLine("************ READY TO RUN *************");
             telemetry.addLine("Press BACK or START button to enter EDIT mode");
