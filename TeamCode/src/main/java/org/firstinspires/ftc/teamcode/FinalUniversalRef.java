@@ -54,6 +54,18 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (cipher)
                 {
                     case 'r':
+                        switch (colorOfJewel)
+                        {
+                            case 'r':
+                                newRobot.pivot(-86, .6);
+                                break;
+                            case 'b':
+                                newRobot.pivot(-58, .6);
+                                break;
+                            default:
+                                newRobot.pivot(-76, .6);
+                                break;
+                        }
                         newRobot.pivot(-76,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
@@ -111,7 +123,18 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (cipher)
                 {
                     case 'l':
-                        newRobot.pivot(76,.6);
+                        switch (colorOfJewel)
+                        {
+                            case 'r':
+                                newRobot.pivot(86, .6);
+                                break;
+                            case 'b':
+                                newRobot.pivot(58, .6);
+                                break;
+                            default:
+                                newRobot.pivot(76, .6);
+                                break;
+                        }
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
                         newRobot.driveStraight_In_Stall(15, .5, telemetry);
