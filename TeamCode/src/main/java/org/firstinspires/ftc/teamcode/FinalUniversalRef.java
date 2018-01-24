@@ -14,7 +14,7 @@ public class FinalUniversalRef extends LinearOpMode
     {
         float adjustment = 0;
         newRobot = new NewRobotFinal(hardwareMap);
-        newRobot.initAutoFunctions(hardwareMap);
+        newRobot.initAutoFunctions(hardwareMap, this);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));
@@ -34,9 +34,10 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case'r':
-                        adjustment = 18;
+                        adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
+                        newRobot.driveStraight_In(18 - adjustment);
                         break;
                     case 'b':
                         adjustment = 2;
@@ -53,6 +54,18 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (cipher)
                 {
                     case 'r':
+                        switch (colorOfJewel)
+                        {
+                            case 'r':
+                                newRobot.pivot(-86, .6);
+                                break;
+                            case 'b':
+                                newRobot.pivot(-58, .6);
+                                break;
+                            default:
+                                newRobot.pivot(-76, .6);
+                                break;
+                        }
                         newRobot.pivot(-76,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
@@ -93,9 +106,10 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In(adjustment + 19);
                         break;
                     case 'b':
-                        adjustment = 18;
+                        adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
+                        newRobot.driveStraight_In(18 - adjustment);
                         break;
                     default:
                         newRobot.moveWing(false);
@@ -109,7 +123,18 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (cipher)
                 {
                     case 'l':
-                        newRobot.pivot(76,.6);
+                        switch (colorOfJewel)
+                        {
+                            case 'r':
+                                newRobot.pivot(86, .6);
+                                break;
+                            case 'b':
+                                newRobot.pivot(58, .6);
+                                break;
+                            default:
+                                newRobot.pivot(76, .6);
+                                break;
+                        }
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
                         newRobot.driveStraight_In_Stall(15, .5, telemetry);

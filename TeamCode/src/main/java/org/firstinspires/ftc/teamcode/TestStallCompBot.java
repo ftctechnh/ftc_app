@@ -16,7 +16,7 @@ public class TestStallCompBot extends LinearOpMode
     public void runOpMode()
     {
         newRobot = new NewRobotFinal(hardwareMap);
-        newRobot.initAutoFunctions(hardwareMap);
+        newRobot.initAutoFunctions(hardwareMap, this);
         waitForStart();
         newRobot.driveStraight_In(33);
         newRobot.pivot(-90);

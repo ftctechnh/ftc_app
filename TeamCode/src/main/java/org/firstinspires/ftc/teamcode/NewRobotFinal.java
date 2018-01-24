@@ -4,6 +4,8 @@ import android.graphics.Color;
 
 //import com.qualcomm.hardware.bosch.BNO055IMU;
 //import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -78,6 +80,8 @@ public class NewRobotFinal
 
     private boolean touchedBottomMag = false;
 
+    private LinearOpMode opMode;
+
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
     public final float roboDiameterCm = (float) (38.7 * Math.PI); // can be adjusted
@@ -87,7 +91,6 @@ public class NewRobotFinal
     public NewRobotFinal(HardwareMap hardwareMap)
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-
         //imu = (hardwareMap.get(BNO055IMU.class, "imu"));
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
@@ -133,8 +136,9 @@ public class NewRobotFinal
         grabber = hardwareMap.get(Servo.class, "grabber");
     }
 
-    public void initAutoFunctions(HardwareMap hardwareMap)
+    public void initAutoFunctions(HardwareMap hardwareMap, LinearOpMode opMode_IN)
     {
+        opMode = opMode_IN;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         //Comment out if you don't want camera view on robo phone
@@ -292,7 +296,7 @@ public class NewRobotFinal
         {
             driveMotorsAuto(-absPow, -absPow);
 
-            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget && !opMode.isStopRequested())
             {
 
             }
@@ -300,13 +304,14 @@ public class NewRobotFinal
         {
             driveMotorsAuto(absPow, absPow);
 
-            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget && !opMode.isStopRequested())
             {
             }
         }
 
         stopDriveMotors();
     }
+
 
     public void driveStraight_In(float inches)
     {
@@ -329,16 +334,17 @@ public class NewRobotFinal
         {
             driveMotorsAuto(-absPow, -absPow);
 
-            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            while ((driveLeftOne.getCurrentPosition() < -encTarget) && (driveRightOne.getCurrentPosition() > encTarget) && !opMode.isStopRequested())
             {
                 if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
-        } else
+        }
+        else
         {
             driveMotorsAuto(absPow, absPow);
 
-            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget && !opMode.isStopRequested())
             {
                 if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
@@ -507,6 +513,11 @@ public class NewRobotFinal
     }
     */
 
+    public void pivot(float degrees)
+    {
+        pivot(degrees, defaultTurnPow);
+    }
+
     public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
         //float degrees = (float)(degrees_In * 0.55776 + 8.23819);
@@ -525,25 +536,21 @@ public class NewRobotFinal
         {
             driveMotorsAuto(Math.abs(pow), -Math.abs(pow));
 
-            while (driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            while ((driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget) && !opMode.isStopRequested())
             {
             }
 
-        } else //CounterClockwise
+        }
+        else //CounterClockwise
         {
             driveMotorsAuto(-Math.abs(pow), Math.abs(pow));
 
-            while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            while ((driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) && !opMode.isStopRequested())
             {
             }
         }
 
         stopDriveMotors();
-    }
-
-    public void pivot(float degrees)
-    {
-        pivot(degrees, defaultTurnPow);
     }
 
 //    public void pivot_IMU(float degrees)
@@ -595,13 +602,13 @@ public class NewRobotFinal
         if (adjLevels > 0)
         {
             liftMotor.setPower(-Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl])
+            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl] && !opMode.isStopRequested())
             {
             }
         } else
         {
             liftMotor.setPower(Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl])
+            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl] && !opMode.isStopRequested())
             {
             }
         }
@@ -740,16 +747,19 @@ public class NewRobotFinal
         if (moveDown)
         {
             wingMotor.setPower(-1f);
-            while (wingMotor.getCurrentPosition() > -2750 && wingTouchSens.getState())
+            while ((wingMotor.getCurrentPosition() > -2750) && (wingTouchSens.getState()) && !opMode.isStopRequested())
             {
-
+                if(!wingTouchSens.getState())
+                    break;
             }
-        } else
+        }
+        else
         {
             wingMotor.setPower(1f);
-            while (wingMotor.getCurrentPosition() < 0 && wingTouchSens.getState())
+            while (((wingMotor.getCurrentPosition() < 0) && (wingTouchSens.getState())) && !opMode.isStopRequested())
             {
-
+                if(!wingTouchSens.getState())
+                    break;
             }
         }
         wingMotor.setPower(0);
