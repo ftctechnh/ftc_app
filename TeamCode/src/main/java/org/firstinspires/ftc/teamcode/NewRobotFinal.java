@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
-import android.graphics.Path;
 
 //import com.qualcomm.hardware.bosch.BNO055IMU;
 //import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -281,7 +280,7 @@ public class NewRobotFinal
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void driveStraight_In(float inches, double pow, LinearOpMode opMode)
+    public void driveStraight_In(float inches, double pow)
     {
         stopDriveMotors();
         float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
@@ -313,37 +312,6 @@ public class NewRobotFinal
         stopDriveMotors();
     }
 
-    public void driveStraight_In(float inches, double pow)
-    {
-        stopDriveMotors();
-        float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
-
-        float absPow = (float) Math.abs(pow);
-        resetDriveEncoders();
-
-        if (pow < 0)
-        {
-            inches *= -1;
-        }
-        if (inches < 0)
-        {
-            driveMotorsAuto(-absPow, -absPow);
-
-            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
-            {
-
-            }
-        } else
-        {
-            driveMotorsAuto(absPow, absPow);
-
-            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
-            {
-            }
-        }
-
-        stopDriveMotors();
-    }
 
     public void driveStraight_In(float inches)
     {
@@ -351,41 +319,6 @@ public class NewRobotFinal
     }
 
     public void driveStraight_In_Stall(float inches, double pow)
-    {
-        int loops = 0;
-        float encTarget = 1120 / wheelCircIn * inches;
-
-        float absPow = (float) Math.abs(pow);
-        resetDriveEncoders();
-
-        if (pow < 0)
-        {
-            inches *= -1;
-        }
-        if (inches < 0)
-        {
-            driveMotorsAuto(-absPow, -absPow);
-
-            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
-            {
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
-                    break;
-            }
-        } else
-        {
-            driveMotorsAuto(absPow, absPow);
-
-            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
-            {
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
-                    break;
-            }
-
-            stopDriveMotors();
-        }
-    }
-
-    public void driveStraight_In_Stall(float inches, double pow, LinearOpMode opMode)
     {
         int loops = 0;
         float encTarget = 1120 / wheelCircIn * inches;
@@ -411,7 +344,7 @@ public class NewRobotFinal
         {
             driveMotorsAuto(absPow, absPow);
 
-            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget && !opMode.isStopRequested())
             {
                 if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
