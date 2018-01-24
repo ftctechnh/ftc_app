@@ -17,7 +17,7 @@ public class Callibration_NewRobot extends LinearOpMode
     public void runOpMode()
     {
         robot = new NewRobotFinal(hardwareMap);
-        robot.initAutoFunctions(hardwareMap);
+        robot.initAutoFunctions(hardwareMap, this);
 
         waitForStart();
 

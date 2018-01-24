@@ -14,7 +14,7 @@ public class FinalUniversalRef extends LinearOpMode
     {
         float adjustment = 0;
         newRobot = new NewRobotFinal(hardwareMap);
-        newRobot.initAutoFunctions(hardwareMap);
+        newRobot.initAutoFunctions(hardwareMap, this);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
         telemetry.addData("color = ", colorOfPlatform);
         telemetry.addData("Hue value", newRobot.getHueValue(newRobot.getFloorColorSens()));

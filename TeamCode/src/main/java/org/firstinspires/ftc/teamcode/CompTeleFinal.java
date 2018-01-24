@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by Jeremy on 11/17/2017.
@@ -9,29 +12,63 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "CompTele", group = "Tele")
 public class CompTeleFinal extends OpMode
 {
+    boolean liftArmed = true;
     NewRobotFinal newRobot;
 
-    public void init()
+    public void init ()
     {
         gamepad2.setJoystickDeadzone(.2f);//attachments
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
-        //newRobot.OpenCloseGrabber(true);
         newRobot.openOrCloseDoor(false);
     }
 
-    public void start()
+    public void start ()
     {
-
+        // newRobot.initEndGame(hardwareMap);
     }
 
-    public void loop()
+    public void loop ()
     {
         /**
          * ATTACHMENTS CONTROLLER FIRST
          * GAMEPAD 2
          */
-        newRobot.fineMoveLift(gamepad2.left_stick_y, 1);
+        if (gamepad2.dpad_up)
+        {
+            if (liftArmed)
+            {
+                telemetry.addData("In calclift 1", null);
+                newRobot.CalcLiftTarget(1);
+                liftArmed = false;
+            }
+        }
+        else if (gamepad2.dpad_down)
+        {
+            if (liftArmed)
+            {
+                telemetry.addData("In calclift -1", null);
+                newRobot.CalcLiftTarget(-1);
+                liftArmed = false;
+            }
+        }
+        else
+        {
+            telemetry.addData("Armedlift true", null);
+            liftArmed = true;
+        }
+
+        if (gamepad2.left_stick_y == 0)
+        {
+            telemetry.addData("left stick is 0, adj dir", null);
+            telemetry.addData("liftdir", newRobot.getLiftDir());
+            newRobot.AdjLiftDir();
+        }
+        else
+        {
+            newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
+            telemetry.addData("Fine move lift", null);
+        }
 
         if (gamepad2.left_bumper)
             newRobot.fineAdjDoors(-.16f);
@@ -83,8 +120,9 @@ public class CompTeleFinal extends OpMode
         telemetry.update();
     }
 
-    public void stop()
+    public void stop ()
     {
         newRobot.stopAllMotors();
     }
+
 }
