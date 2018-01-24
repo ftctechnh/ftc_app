@@ -13,8 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 public class POVWest extends LinearOpMode {
 
     private DcMotor m1, m2;
-    private Servo arm;
-    //m3,m4
+
     private double rightPower = 0;
     private double leftPower = 0;
 
@@ -28,12 +27,7 @@ public class POVWest extends LinearOpMode {
         m1 = hardwareMap.get(DcMotor.class, "Motor1");
         m2 = hardwareMap.get(DcMotor.class, "Motor2");
 
-        arm = hardwareMap.get(Servo.class, "Servo1");
 
-
-
-        //m3 = hardwareMap.get(DcMotor.class,"Motor3");
-        //m4 = hardwareMap.get(DcMotor.class,"Motor4");
 
         waitForStart();
 
