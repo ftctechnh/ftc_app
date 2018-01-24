@@ -212,6 +212,7 @@ public class MecanumRework extends OpMode {
 
         telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
         telemetry.addData("ZPB of Lift", robot.lift.getZeroPowerBehavior());
+        telemetry.addData("Lift Encoder Value: ", robot.lift.getCurrentPosition());
         telemetry.addData("lift power", robot.lift.getPower());
         telemetry.addData("gp2 y", gamepad2.left_stick_y);
         telemetry.addData("top limiter", robot.limitTop.getState());

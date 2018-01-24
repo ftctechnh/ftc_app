@@ -21,12 +21,12 @@ public class NonRelRecSideBlue extends AutoMaster {
             encode(5, 0.25, MoveType.STRAIGHT);
             robot.arm.setPosition(0);
             wait(1000);
-            encode(5, -0.1, MoveType.STRAIGHT);
+            encode(5, -0.25, MoveType.STRAIGHT);
         } else {
             encode(5, -0.25, MoveType.STRAIGHT);
             robot.arm.setPosition(0);
             wait(1000);
-            encode(5, 0.1, MoveType.STRAIGHT);
+            encode(5, 0.25, MoveType.STRAIGHT);
         }
 
         //Finds Vuforia
