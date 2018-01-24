@@ -171,7 +171,7 @@ public class blueStrightV2 extends LinearOpMode {
             }
 
             robot.jewelServo.setPosition(1);
-            sleep(1500);
+            sleep(2000);
 
             if (robot.isJewelRed()&& !isDetected) {
                 // the red jewel is on the left of sensor

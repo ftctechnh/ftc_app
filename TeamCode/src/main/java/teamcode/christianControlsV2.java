@@ -68,7 +68,10 @@ public class christianControlsV2 extends LinearOpMode {
                 driveStright(-1);
             }else if(gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0 || gamepad1.left_stick_x != 0) {
                 drive(gamepad1.right_stick_x, -gamepad1.right_stick_y);
-                turn(gamepad1.left_stick_x);
+                if(gamepad1.left_stick_x != 0)
+                {
+                    turn(gamepad1.left_stick_x);
+                }
             }else
             {
                 turnOffMotors();
@@ -81,7 +84,7 @@ public class christianControlsV2 extends LinearOpMode {
             {
                 armServo.setPosition(.432);
             } else if (gamepad1.y) {
-                armServo.setPosition(.25);
+                armServo.setPosition(.225);
             } else if (gamepad1.dpad_down) {
                 lowerArm(armServo.getPosition());
             } else if (gamepad1.dpad_up) {

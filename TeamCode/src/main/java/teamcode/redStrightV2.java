@@ -167,7 +167,7 @@ public class redStrightV2 extends LinearOpMode {
             }
 
             robot.jewelServo.setPosition(CLOSECLAMPPOSITION);
-            sleep(1500);
+            sleep(2000);
 
             if (!robot.isJewelRed() && !isDetected) {
                 // the red jewel is on the left of sensor
@@ -196,7 +196,7 @@ public class redStrightV2 extends LinearOpMode {
 
             robot.turnDegrees(-.5,90);
 
-            double distance = (column - 1) * 8.5;
+            double distance = 4 + (column - 1) * 7.5;
             robot.driveForward(.5,distance,true);
 
             robot.turnDegrees(.5,-90);

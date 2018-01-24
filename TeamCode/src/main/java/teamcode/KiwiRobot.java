@@ -202,7 +202,7 @@ public class KiwiRobot {
         double differenceFactor = 1.5;
         double red = sensorColor.red();
         double blue = sensorColor.blue();
-        if(red >= 1.5 * blue)
+        if(red >= blue)
         {
             return true;
         }
