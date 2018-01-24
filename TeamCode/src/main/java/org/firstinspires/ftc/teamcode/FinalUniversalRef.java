@@ -66,7 +66,6 @@ public class FinalUniversalRef extends LinearOpMode
                                 newRobot.pivot(-76, .6);
                                 break;
                         }
-                        newRobot.pivot(-76,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
                         newRobot.driveStraight_In_Stall(15, .5, telemetry);
