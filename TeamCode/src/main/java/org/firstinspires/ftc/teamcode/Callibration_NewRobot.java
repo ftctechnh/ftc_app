@@ -8,6 +8,7 @@ package org.firstinspires.ftc.teamcode;
 /**
  * Created by Harshini and Satvik on 11/29/2017.
  */
+@Disabled
 @TeleOp(name = "CallibrationPivots", group = "Cal")
 public class Callibration_NewRobot extends LinearOpMode
 {
@@ -16,7 +17,7 @@ public class Callibration_NewRobot extends LinearOpMode
     public void runOpMode()
     {
         robot = new NewRobotFinal(hardwareMap);
-        robot.initVuforia(hardwareMap);
+        robot.initAutoFunctions(hardwareMap, this);
 
         waitForStart();
 
@@ -37,9 +38,6 @@ public class Callibration_NewRobot extends LinearOpMode
         //robot.pivot(1100, .5);
 
         robot.stopAllMotors();
-        robot.kill();
-        robot.killAuto();
-
     }
 
 }

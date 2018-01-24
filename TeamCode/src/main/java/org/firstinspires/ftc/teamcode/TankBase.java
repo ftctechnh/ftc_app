@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -26,6 +27,9 @@ public class TankBase
     private BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
+    int loops = 0;
+    double velocitiesR = 0;
+    double velocitiesL = 0;
 
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
     private float roboDiameterCm = (float)(45.7*Math.PI); // can be adjusted
@@ -96,6 +100,77 @@ public class TankBase
         }
 
         stopAllMotors();
+    }
+
+    public void driveMotorsAuto(float lPow, float rPow)
+    {
+        driveMotors(-lPow, -rPow);
+    }
+
+    public void driveStraight_In_Stall(float inches, double pow, Telemetry telemetry)
+    {
+        float encTarget = 1120 / wheelCircIn * inches;
+        //You get the number of encoder counts per unit and multiply it by how far you want to go
+
+        float absPow = (float) Math.abs(pow);
+        resetDriveEncoders();
+        //Notes: We are using Andymark Neverrest 40
+        // 1120 counts per rev
+
+        if (pow < 0)
+        {
+            inches *= -1;
+        }
+        if (inches < 0)
+        {
+            driveMotorsAuto(-absPow, -absPow);
+
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
+            {
+                // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.update();
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
+            }
+        } else
+        {
+            driveMotorsAuto(absPow, absPow);
+
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            {
+                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
+                loops++;
+                velocitiesR += rVel;
+                velocitiesL += lVel;
+                telemetry.addData("RightVel ",rVel);
+                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("Average", null);
+                telemetry.addData("LAvg ",velocitiesL/loops);
+                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.update();
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                 break;
+            }
+
+            stopDriveMotors();
+        }
+    }
+
+    public void stopDriveMotors()
+    {
+        driveLeftOne.setPower(0);
+        driveRightOne.setPower(0);
     }
 /*
     public void driveStraight_Cm(float cm, double pow)
@@ -321,8 +396,8 @@ public class TankBase
 
     public void driveMotors(float lPow, float rPow)
     {
+        driveRightOne.setPower(-rPow);
         driveLeftOne.setPower(lPow);
-        driveRightOne.setPower(rPow);
     }
 
     public void stopAllMotors()
@@ -375,6 +450,14 @@ public class TankBase
     {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gravity  = imu.getGravity();
+    }
+
+    private void resetDriveEncoders()//sets encoders to 0 for motors
+    {
+        driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public DcMotorImplEx getDriveLeftOne()
