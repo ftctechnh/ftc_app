@@ -48,7 +48,6 @@ public class AutoDrive {
         this.telemetry = telemetry;
         setBRAKE();
     }
-
     public void driveTranslateRotate(double x, double y, double z, double distance) {
         resetEncoders();
         double clicks = Math.abs(distance * CPR / CIRCUMFERENCE_Of_WHEELS);
