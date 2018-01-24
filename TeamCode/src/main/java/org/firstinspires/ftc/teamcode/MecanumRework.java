@@ -160,7 +160,7 @@ public class MecanumRework extends OpMode {
 
 
         //TODO: See if this works
-        if ((gamepad2.left_stick_y < 0) && (robot.lift.getCurrentPosition() < 5900)) {
+        if (!((gamepad2.left_stick_y < 0) && (robot.lift.getCurrentPosition() < -5900))) {
             robot.lift.setPower(gamepad2.left_stick_y / 2);
         } else {
             robot.lift.setPower(0);
