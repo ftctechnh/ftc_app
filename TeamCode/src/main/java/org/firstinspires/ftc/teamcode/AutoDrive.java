@@ -61,13 +61,15 @@ public class AutoDrive {
         double rlSpeed = rl;
         double rrSpeed = rr;
         double[] list = {fl, fr, rl, rr};
-        double high = findHigh(list);
-        double flTarget = Math.abs(fl/high*clicks);
-        double frTarget = Math.abs(fr/high*clicks);
-        double rlTarget = Math.abs(rl/high*clicks);
-        double rrTarget = Math.abs(rr/high*clicks);
+        double highestSpeed = findHigh(list);
+        double flTarget = Math.abs(fl/highestSpeed*clicks);
+        double frTarget = Math.abs(fr/highestSpeed*clicks);
+        double rlTarget = Math.abs(rl/highestSpeed*clicks);
+        double rrTarget = Math.abs(rr/highestSpeed*clicks);
         driveSpeeds(fl, fr, rl, rr);
-        while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget)))) {
+        ElapsedTime time = new ElapsedTime();
+        time.start();
+        while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget))) && time.getElapsedTime() <= 1.2*clicks/420/highestSpeed){
             driveSpeeds(calculateSpeed(FrontLeft, flTarget, fl), calculateSpeed(FrontRight, frTarget, fr), calculateSpeed(RearLeft, rlTarget, rl), calculateSpeed(RearRight, rrTarget, rr));
             telemetrizeSpeeds();
             telemetry.update();
@@ -162,14 +164,6 @@ public class AutoDrive {
         imu.calibrate();
         heading = getHeading();
     }
-    public void pushInBlock(ForkLift ForkLift) {
-        ForkLift.openClaw();
-        driveTranslateRotate(0, -DRIVE_INTO_CRYPTOBOX_SPEED,0,4);
-        ForkLift.closeClaw();
-        ForkLift.moveUntilDown(0.75);
-        driveTranslateRotate(0, DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
-    }
-
     public double getHeading() {
         return imu.getHeading();
     }

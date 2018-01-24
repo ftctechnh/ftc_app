@@ -36,14 +36,14 @@ public class Systems {
     }
     public RelicRecoveryVuMark getMark() {
         RelicRecoveryVuMark vuMark;
+        boolean tryAgain = false;
         vuMark = vuforia.getMark();
-        boolean triedAgain = false;
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             AutoDrive.driveTranslateRotate(0,0,-AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.FIND_VUMARK_DISTANCE);
             vuMark = vuforia.getMark();
-            triedAgain = true;
+            tryAgain = true;
         }
-        if (triedAgain) {
+        if (tryAgain) {
             AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.FIND_VUMARK_DISTANCE);
         }
         return vuMark;
@@ -68,8 +68,8 @@ public class Systems {
                     return;
                 }
             }
-            AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.TRY_AGAIN_JEWEL_DISTANCE);
         }
+        sleep(250);
         int blue = 0;
         int red = 0;
         for (int i = 0; i <= 5; i++) {
@@ -116,6 +116,9 @@ public class Systems {
             } else {
                 JewelArm.up();
             }
+        }
+        if (tryAgain) {
+            AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.TRY_AGAIN_JEWEL_DISTANCE);
         }
     }
     public void grabSecondGlyph() {
