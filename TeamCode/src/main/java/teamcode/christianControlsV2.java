@@ -63,15 +63,14 @@ public class christianControlsV2 extends LinearOpMode {
             elapsedTime = runtime.time();
             // on gamepad movement (controls robot wheel movment)
             if(gamepad1.right_trigger > .5) {
-                driveStright(1);
+                driveStright(.9);
             }else if(gamepad1.left_trigger > .5) {
-                driveStright(-1);
+                driveStright(-.9);
+            }else if(gamepad1.right_stick_y != 0 && gamepad1.left_stick_x == 0 && gamepad1.right_stick_x == 0) {
+                driveStright((-gamepad1.right_stick_y)/2);
             }else if(gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0 || gamepad1.left_stick_x != 0) {
                 drive(gamepad1.right_stick_x, -gamepad1.right_stick_y);
-                if(gamepad1.left_stick_x != 0)
-                {
-                    turn(gamepad1.left_stick_x);
-                }
+                turn(gamepad1.left_stick_x);
             }else
             {
                 turnOffMotors();
@@ -119,7 +118,7 @@ public class christianControlsV2 extends LinearOpMode {
             {
                 if (gamepad1.dpad_right)
                 {
-                    rightClampServo.setPosition(.7);
+                    rightClampServo.setPosition(.65);
                 }
                 else if (gamepad1.dpad_left)
                 {
