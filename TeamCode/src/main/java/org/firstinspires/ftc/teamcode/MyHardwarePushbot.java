@@ -61,7 +61,14 @@ public class MyHardwarePushbot
     public Servo    rightClaw   = null;
     public Servo    ballArm     = null; //sets the servo ball arm to null L.A.S
 
-    public static final double MID_SERVO       =  0.5 ;
+    public static final double MID_SERVO       =  0.5 ;     // mid position of both claw servos
+    public static final double OPEN_offset      =  0.2  ;   // open claws
+    public static final double MID_offset       =  0;       // mid position of claws
+    public static final double CLOSE_offset     =  -.1 ;    // close claws
+    public static final int liftclaw = 300 ;          // adjust lift height when open or close claw
+    public static final int maxlift = 5470;                     // maxiumum lift height one inch is 421
+    public static final int minlift = 0;                    // mininum lift height
+    public static final int liftstep = 2435;               // how many counts per 6 inches of lift
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
     public static final double ballArmUp = .1; //defines starting position of ball arm
