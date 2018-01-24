@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -28,6 +29,8 @@ public class RelicTelyMode  extends MeccyMode{
     //<editor-fold desc="Startify">
     VuforiaLocalizer vuforia;
     OpenGLMatrix lastLocation = null;
+    //
+    ElapsedTime time = new ElapsedTime();
     //
     private Random randy = new Random();
     //
@@ -91,6 +94,8 @@ public class RelicTelyMode  extends MeccyMode{
         telemetry.log().clear();
         //
         relicTrackables.activate();
+        //
+        time.reset();
         //
         while (opModeIsActive()) {
             //<editor-fold desc="Update">
@@ -177,8 +182,10 @@ public class RelicTelyMode  extends MeccyMode{
         //
         if (left){
             pengwinWing.upLeft(up);
+            pengwinWing.upRight(0);
             //pengwinWing.downLeft(down);
         }else if (right){
+            pengwinWing.upLeft(0);
             pengwinWing.upRight(up);
             //pengwinWing.downRight(down);
         }else{
@@ -188,8 +195,8 @@ public class RelicTelyMode  extends MeccyMode{
                     pengwinWing.upRight(up);
                     break;
                 case rotate:
-                    pengwinWing.upLeft(Rup);
-                    pengwinWing.upRight(-Rup);
+                    pengwinWing.upLeft(-Rup);
+                    pengwinWing.upRight(Rup);
                     break;
             }
             switch (grabberDown){
@@ -198,18 +205,14 @@ public class RelicTelyMode  extends MeccyMode{
                     pengwinWing.downRight(down);*/
                     break;
                 case rotate:
-                    /*pengwinWing.downLeft(Rdown);
-                    pengwinWing.downRight(-Rdown);*/
+                    /*pengwinWing.downLeft(-Rdown);
+                    pengwinWing.downRight(Rdown);*/
             }
         }
     }
     //
     private void telemetryJazz(RelicRecoveryVuMark vuMark) {
-        telemetry.addData("Up ", up);
-        telemetry.addData("Down", down);
-        telemetry.addData("Left", left);
-        telemetry.addData("Right", right);
-        telemetry.addData("Unicorn Crossing", randy.nextInt(1000000));
+        telemetry.addData("Unicorn Crossing", time.milliseconds());
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             //
             telemetry.addData("VuMark", vuMark);

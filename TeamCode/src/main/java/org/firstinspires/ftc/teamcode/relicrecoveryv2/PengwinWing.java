@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import android.text.method.Touch;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -34,6 +35,7 @@ public class PengwinWing {
     TouchSensor extenderIn;
     TouchSensor upperGrabberFilled;
     TouchSensor lowerGrabberFilled;
+    ModernRoboticsI2cRangeSensor jeep;
     //setting power and whatnot
     //motors
     double motorOnePower;
