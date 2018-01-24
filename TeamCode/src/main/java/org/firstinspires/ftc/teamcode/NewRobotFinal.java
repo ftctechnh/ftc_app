@@ -602,13 +602,13 @@ public class NewRobotFinal
         if (adjLevels > 0)
         {
             liftMotor.setPower(-Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl])
+            while (-liftMotor.getCurrentPosition() < liftLevels[currentLvl] && !opMode.isStopRequested())
             {
             }
         } else
         {
             liftMotor.setPower(Math.abs(pow));
-            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl])
+            while (-liftMotor.getCurrentPosition() > liftLevels[currentLvl] && !opMode.isStopRequested())
             {
             }
         }
