@@ -159,9 +159,10 @@ public class MecanumRework extends OpMode {
 
 
 
-        if (!(robot.limitTop.getState() && gamepad2.left_stick_y < 0)) {
+        //TODO: See if this works
+        if ((gamepad2.left_stick_y < 0) && (robot.lift.getCurrentPosition() < 5900)) {
             robot.lift.setPower(gamepad2.left_stick_y / 2);
-        } else if (robot.limitTop.getState()) {
+        } else {
             robot.lift.setPower(0);
         }
 
@@ -191,7 +192,7 @@ public class MecanumRework extends OpMode {
             cooldown = runtime.seconds() + 1;
         }
 
-        double CLOSE_POS = .1;
+        double CLOSE_POS = 0.05;
         double OPEN_POS = 0.8;
 
         if(clawState){
