@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by Jeremy on 11/17/2017.
  */
-@TeleOp(name = "CompTele", group = "Tele")
+@Disabled
+@TeleOp(name = "CompTele w/o Dpad", group = "Tele")
 public class CompTeleFinal extends OpMode
 {
     NewRobotFinal newRobot;

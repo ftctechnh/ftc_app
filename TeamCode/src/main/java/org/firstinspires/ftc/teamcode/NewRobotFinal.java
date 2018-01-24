@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 //import com.qualcomm.hardware.bosch.BNO055IMU;
 //import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -276,6 +277,38 @@ public class NewRobotFinal
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void driveStraight_In(float inches, double pow, LinearOpMode opMode)
+    {
+        stopDriveMotors();
+        float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
+
+        float absPow = (float) Math.abs(pow);
+        resetDriveEncoders();
+
+        if (pow < 0)
+        {
+            inches *= -1;
+        }
+        if (inches < 0)
+        {
+            driveMotorsAuto(-absPow, -absPow);
+
+            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget && !opMode.isStopRequested())
+            {
+
+            }
+        } else
+        {
+            driveMotorsAuto(absPow, absPow);
+
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget && !opMode.isStopRequested())
+            {
+            }
+        }
+
+        stopDriveMotors();
+    }
+
     public void driveStraight_In(float inches, double pow)
     {
         stopDriveMotors();
@@ -335,6 +368,42 @@ public class NewRobotFinal
                     break;
             }
         } else
+        {
+            driveMotorsAuto(absPow, absPow);
+
+            while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
+            {
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
+            }
+
+            stopDriveMotors();
+        }
+    }
+
+    public void driveStraight_In_Stall(float inches, double pow, LinearOpMode opMode)
+    {
+        int loops = 0;
+        float encTarget = 1120 / wheelCircIn * inches;
+
+        float absPow = (float) Math.abs(pow);
+        resetDriveEncoders();
+
+        if (pow < 0)
+        {
+            inches *= -1;
+        }
+        if (inches < 0)
+        {
+            driveMotorsAuto(-absPow, -absPow);
+
+            while ((driveLeftOne.getCurrentPosition() < -encTarget) && (driveRightOne.getCurrentPosition() > encTarget) && !opMode.isStopRequested())
+            {
+                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
+            }
+        }
+        else
         {
             driveMotorsAuto(absPow, absPow);
 
@@ -546,6 +615,40 @@ public class NewRobotFinal
         pivot(degrees, defaultTurnPow);
     }
 
+    public void pivot(float degrees, double pow, LinearOpMode opMode)//Utilizes two motors at a time; spins in place
+    {
+        //float degrees = (float)(degrees_In * 0.55776 + 8.23819);
+        //float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
+
+        float encTarget = (float) (degrees * 11.79712 - 50.29669);
+
+        //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
+        //second set gets encoder counts per centimeter
+        //we divide it by two at the end to compensate for using two motors
+
+        resetDriveEncoders();
+
+        //It pivots in the direction of how to unit circle spins
+        if (degrees < 0) //Pivot Clockwise
+        {
+            driveMotorsAuto(Math.abs(pow), -Math.abs(pow));
+
+            while ((driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget) && !opMode.isStopRequested())
+            {
+            }
+
+        } else //CounterClockwise
+        {
+            driveMotorsAuto(-Math.abs(pow), Math.abs(pow));
+
+            while ((driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) && !opMode.isStopRequested())
+            {
+            }
+        }
+
+        stopDriveMotors();
+    }
+
 //    public void pivot_IMU(float degrees)
 //    {
 //        pivot_IMU(degrees, 0.60);
@@ -740,14 +843,36 @@ public class NewRobotFinal
         if (moveDown)
         {
             wingMotor.setPower(-1f);
-            while (wingMotor.getCurrentPosition() > -2750 && wingTouchSens.getState())
+            while ((wingMotor.getCurrentPosition() > -2750) && (wingTouchSens.getState()))
             {
 
             }
-        } else
+        }
+        else
         {
             wingMotor.setPower(1f);
-            while (wingMotor.getCurrentPosition() < 0 && wingTouchSens.getState())
+            while ((wingMotor.getCurrentPosition() < 0) && (wingTouchSens.getState()))
+            {
+
+            }
+        }
+        wingMotor.setPower(0);
+    }
+
+    public void moveWing(boolean moveDown, LinearOpMode opMode)
+    {
+        if (moveDown)
+        {
+            wingMotor.setPower(-1f);
+            while ((wingMotor.getCurrentPosition() > -2750) && (wingTouchSens.getState()) && !opMode.isStopRequested())
+            {
+
+            }
+        }
+        else
+        {
+            wingMotor.setPower(1f);
+            while (((wingMotor.getCurrentPosition() < 0) && (wingTouchSens.getState())) && !opMode.isStopRequested())
             {
 
             }

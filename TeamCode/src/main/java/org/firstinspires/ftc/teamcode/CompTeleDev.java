@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 /**
  * Created by Jeremy on 11/17/2017.
  */
-@TeleOp(name = "CompTele w/ Dpad Lift code (NOT TESTED YET)", group = "Tele")
+@TeleOp(name = "CompTele", group = "Tele")
 public class CompTeleDev extends OpMode
 {
     boolean isWingUp = true;
@@ -31,7 +31,6 @@ public class CompTeleDev extends OpMode
 
     public void loop ()
     {
-
         /**
          * ATTACHMENTS CONTROLLER FIRST
          * GAMEPAD 2
