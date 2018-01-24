@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="asVUFORIA FSTUFF bgk;hasd;j", group="Linear Auto")
 
-public class VufTest extends AutoMaster { 
+public class VufTest extends AutoMaster {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
