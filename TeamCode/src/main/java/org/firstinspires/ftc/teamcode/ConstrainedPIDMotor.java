@@ -48,6 +48,8 @@ public class ConstrainedPIDMotor {
         setDirection(d, true);
     }
     public void setDirection(Direction d, boolean stopPositionSeeking) {
+        logging.addData("Lock position", lockPos);
+
         if (d != HOLD) {
             timer.reset();
         }
@@ -55,17 +57,15 @@ public class ConstrainedPIDMotor {
         if (stopPositionSeeking && seekingPosition) {
             seekingPosition = false;
             targetPos = null;
-            logging.addLine("Was commanded to break out of seek");
 
         } else if (seekingPosition) {
 
             int ticksToGo = targetPos - m.getCurrentPosition();
-            logging.addData("Ticks to go", ticksToGo);
+            //logging.addData("Ticks to go", ticksToGo);
 
             if (Math.abs(ticksToGo) < 100) { // Doesn't work if encoder position jumps for some reason
                 seekingPosition = false;
                 targetPos = null;
-                logging.addLine("Automatically broke out of seek");
 
             } else {
                 goToPos(targetPos, 1, false, (int) Math.signum(ticksToGo));
@@ -73,6 +73,7 @@ public class ConstrainedPIDMotor {
             }
         }
 
+        //logging.addData("Going to lock position?", (d == HOLD && timer.milliseconds() >= timeTillLock));
         switch (d) {
             case COAST:
                 releaseMotor();
@@ -82,12 +83,13 @@ public class ConstrainedPIDMotor {
                 if (timer.milliseconds() < timeTillLock) {
                     setMotorMode(RunMode.RUN_USING_ENCODER);
                     lockPos = m.getCurrentPosition();
+                    logging.addData("lockPos", lockPos);
                     if (m.getZeroPowerBehavior() != DcMotor.ZeroPowerBehavior.BRAKE) {
                         m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     }
                     m.setPower(0);
                 } else {
-                    goToPos(lockPos, 0.05, false, 0);
+                    goToPos(lockPos, 1.0, false, 0);
                 }
                 break;
 
@@ -99,6 +101,8 @@ public class ConstrainedPIDMotor {
                 goToPos(min, backwardRunSpeed, true, -1);
                 break;
         }
+        //logging.addData("Current lock position: ", lockPos);
+        //logging.addData("Current target: ", m.getTargetPosition());
     }
 
     public void setTargetToSeek(int targetEncoderPos) {
