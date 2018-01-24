@@ -13,7 +13,6 @@ public class DriveEverythingRecovery extends OpMode {
     private DriveMecanum drive;
     private JewelArm jewelArm;
     private Systems Systems;
-
     @Override
     public void init() {
         jewelArm = new JewelArm(hardwareMap, telemetry);
@@ -24,7 +23,6 @@ public class DriveEverythingRecovery extends OpMode {
         jewelArm.up();
         Systems = new Systems(drive, ForkLift, RelicClaw);
     }
-
     @Override
     public void loop() {
         //drive
