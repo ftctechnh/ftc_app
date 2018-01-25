@@ -22,7 +22,7 @@ import org.opencv.core.MatOfPoint
 /**
  * Kotlin abstract class for vision processing
  */
-abstract class VisionProcessor()
+abstract class VisionProcessor
 {
     protected val sweeper = Sweeper(20_000)
 

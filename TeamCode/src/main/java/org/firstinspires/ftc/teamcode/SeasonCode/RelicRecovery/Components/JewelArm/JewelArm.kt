@@ -43,7 +43,7 @@ class JewelArm: RobotComponent()
     {
         when(state)
         {
-            State.DOWN -> _armServo?.position = 0.0
+            State.DOWN -> _armServo?.position = 0.27
 
             State.UP -> _armServo?.position = 0.8
         }

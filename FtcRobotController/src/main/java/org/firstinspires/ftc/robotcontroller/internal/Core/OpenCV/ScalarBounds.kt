@@ -30,7 +30,7 @@ val RedJewelUpper = Scalar(20.0 , 255.0 , 255.0)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** Lower HSV bound for the blue jewel */
-val BlueJewelLower = Scalar(90.0 , 190.0 , 90.0)
+val BlueJewelLower = Scalar(70.0 , 170.0 , 70.0)
 
 /** Upper HSV bound for the blue jewel */
-val BlueJewelUpper = Scalar(130.0 , 255.0 , 255.0)
+val BlueJewelUpper = Scalar(150.0 , 255.0 , 255.0)

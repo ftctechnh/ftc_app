@@ -20,6 +20,7 @@ import com.qualcomm.ftcrobotcontroller.R
 import org.directcurrent.opencv.visionprocessors.VisionProcessor
 import org.directcurrent.opencv.visionprocessors.objectfinders.BlueJewelFinder
 import org.directcurrent.opencv.visionprocessors.objectfinders.RedJewelFinder
+import org.firstinspires.ftc.robotcontroller.internal.Core.OpenCV.VisionProcessors.VirtualJewelArm
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
 import org.opencv.android.*
 import org.opencv.core.Mat
@@ -109,6 +110,7 @@ class OpenCVRunner constructor(var mainActivity: FtcRobotControllerActivity ,
         // Add our vision processors
         _visionProcessors.add(RedJewelFinder())
         _visionProcessors.add(BlueJewelFinder())
+        _visionProcessors.add(VirtualJewelArm())
     }
 
 

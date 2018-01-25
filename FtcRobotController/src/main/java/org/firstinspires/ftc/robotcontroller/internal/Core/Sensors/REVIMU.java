@@ -120,9 +120,20 @@ public class REVIMU
      */
     public void fastCalibrate()
     {
-        angle1Offset = angle1;
-        angle2Offset = angle2;
-        angle3Offset = angle3;
+        calibrateTo(0);
+    }
+
+
+    /**
+     * Calibrates the angles to the given offset
+     *
+     * @param OFFSET Offset to set the angles to
+     */
+    public void calibrateTo(final int OFFSET)
+    {
+        angle1Offset = angle1 - OFFSET;
+        angle2Offset = angle2 - OFFSET;
+        angle3Offset = angle3 - OFFSET;
     }
 
 

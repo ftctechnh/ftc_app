@@ -2,11 +2,13 @@
 package org.directcurrent.test.motorramp
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 
 @TeleOp(name = "ramp" , group = "prototypes")
+@Disabled
 class OpRamp: LinearOpMode()
 {
     override fun runOpMode()

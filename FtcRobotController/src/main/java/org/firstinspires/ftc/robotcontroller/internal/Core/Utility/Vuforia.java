@@ -90,6 +90,15 @@ public class Vuforia
 
 
     /**
+     * Deactivates Vuforia
+     */
+    public void deactivate()
+    {
+        _trackables.deactivate();
+    }
+
+
+    /**
      * Returns the current marker seen.
      *
      * @return Enumeration

@@ -28,7 +28,16 @@ public final class Util
      */
     public static double scaleValue(final double VALUE)
     {
-        return Math.pow(VALUE , 3);
+        double result;
+
+        result = Math.pow(VALUE , 2);
+
+        if(result != 0)
+        {
+            result *= VALUE / Math.abs(VALUE);
+        }
+
+        return result;
     }
 
 

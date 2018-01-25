@@ -19,25 +19,58 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Color.ColorID
 
 
 /**
- * Utility for autonomous-specific functionality, including the autonomous pre-run initializer
+ * Manages the display and interaction of an pre-run autonomous menu that appears on the driver
+ * station. It can be used to set delay and team color. Note that this class does not actually
+ * perform any actions such as delaying- it merely holds the values for reading by another class.
  */
 @SuppressWarnings({"unused" , "WeakerAccess"})
-public abstract class AutoMenu extends LinearOpMode
+public class AutoMenu
 {
-    private final long DEFAULT_START_DELAY = 0;             // Default delay before auto executes
-    private final ColorID DEFAULT_TEAM_COLOR = ColorID.RED;     // Default team color
+    // Default values
+    protected final long DEFAULT_START_DELAY = 0;
+    protected ColorID DEFAULT_TEAM_COLOR = ColorID.BLUE;
 
-    protected long startDelay = DEFAULT_START_DELAY;        // Start delay
-    protected ColorID teamColor = DEFAULT_TEAM_COLOR;         // Team color
+    protected long startDelay = DEFAULT_START_DELAY;
+    protected ColorID teamColor = DEFAULT_TEAM_COLOR;
 
-    private Clock adjustPulsar = new Clock();     // Used to adjust period between
-                                                            // adjustment of values
+    protected Clock adjustmentClock = new Clock();
+
+    protected LinearOpMode auto;                // Autonomous the menu is a part of
+
+
+    /**
+     * Creates an auto menu given an OpMode
+     *
+     * @param auto Autonomous that the menu is a part of
+     */
+    public AutoMenu(LinearOpMode auto)
+    {
+        this.auto = auto;
+    }
+
+
+    /**
+     * @return Returns the autonomous start delay
+     */
+    public long startDelay()
+    {
+        return startDelay;
+    }
+
+
+    /**
+     * @return Returns the autonomous team color
+     */
+    public ColorID teamColor()
+    {
+        return teamColor;
+    }
 
 
     /**
      * Called before the autonomous starts. Initializes things such as team color, delay, etc.
      */
-    protected void preRunInit()
+    public void preRunInit()
     {
         final int SMALL_JUMP = 50;
         final int LARGE_JUMP = 500;
@@ -54,73 +87,84 @@ public abstract class AutoMenu extends LinearOpMode
         double startDelayControlSlow;
         double startDelayControlFast;
 
-        while(!quitSetup.isPressed(gamepad1.a) && !isStopRequested())
+        while(!quitSetup.isPressed(auto.gamepad1.a) && !auto.isStopRequested())
         {
             displayInitMenu();
 
-            startDelayControlSlow = gamepad1.right_stick_y * -1;
-            startDelayControlFast = gamepad1.right_stick_x;
+            startDelayControlSlow = auto.gamepad1.right_stick_y * -1;
+            startDelayControlFast = auto.gamepad1.right_stick_x;
 
-            startDelay = (int)editBuffer(startDelay , startDelayControlSlow ,
+            startDelay = (int)editBuffer(startDelay, startDelayControlSlow ,
                             SMALL_JUMP , startingTime);
 
-            startDelay = (int)editBuffer(startDelay , startDelayControlFast ,
+            startDelay = (int)editBuffer(startDelay, startDelayControlFast ,
                             LARGE_JUMP , startingTime);
 
 
-            if(switchAlliance.isPressed(gamepad1.y))
+            if(switchAlliance.isPressed(auto.gamepad1.y))
+            {
                 changeTeamColor();
+            }
 
 
-            if(restoreDefaults.isPressed(gamepad1.x))
+            if(restoreDefaults.isPressed(auto.gamepad1.x))
+            {
                 resetInitValues();
+            }
 
-            telemetry.update();
+            auto.telemetry.update();
         }
 
         displayInitWarning();
-        telemetry.update();
+        auto.telemetry.update();
     }
 
 
     /**
      * Displays an options menu and their respective controls
      */
-    private void displayInitMenu()
+    protected void displayInitMenu()
     {
-        telemetry.addData("Pre-run Initializer" , "");
+        auto.telemetry.addLine("Pre-run Initializer");
 
-        telemetry.addData("\n\nControls" , "\n");
-        telemetry.addData("y" , "\tSwitch Alliance Color");
-        telemetry.addData("x" , "\tRestore Default Settings");
-        telemetry.addData("a" , "\tAccept and Resume");
-        telemetry.addData("Right Joystick (y)" , "\tChange Start Delay");
+        auto.telemetry.addLine();
+        auto.telemetry.addLine();
 
-        telemetry.addData("\n\nCurrent Settings" , "\n");
-        telemetry.addData("Alliance Color" , "\t" + teamColor.asString());
-        telemetry.addData("Start Delay" , "\t" + startDelay);
+        auto.telemetry.addLine("--- Controls ---");
+        auto.telemetry.addLine("Use GamePad 1");
+        auto.telemetry.addData("y" , "\tSwitch Alliance Color");
+        auto.telemetry.addData("x" , "\tRestore Default Settings");
+        auto.telemetry.addData("a" , "\tAccept and Resume");
+        auto.telemetry.addData("Right Joystick (y)" , "\tChange Start Delay");
+
+        auto.telemetry.addLine();
+        auto.telemetry.addLine();
+
+        auto.telemetry.addLine("--- Current Settings ---");
+        auto.telemetry.addData("Alliance Color" , "\t" + teamColor.asString());
+        auto.telemetry.addData("Start Delay" , "\t" + startDelay);
     }
 
 
     /**
      * Displays the warning message that precedes the start of autonomous
      */
-    private void displayInitWarning()
+    protected void displayInitWarning()
     {
-        telemetry.addData("Alert" , "\tAre these values correct?");
-        telemetry.addData("Alert" , "\tMAKE SURE THESE ARE CORRECT BEFORE RUNNING");
-        telemetry.addData("Alert" , "\tIF NOT, PRESS STOP AND REINITIALIZE");
-        telemetry.addData("Alert" , "\tOTHERWISE, PRESS START WHEN READY");
+        auto.telemetry.addData("Alert" , "\tAre these values correct?");
+        auto.telemetry.addData("Alert" , "\tMAKE SURE THESE ARE CORRECT BEFORE RUNNING");
+        auto.telemetry.addData("Alert" , "\tIF NOT, PRESS STOP AND REINITIALIZE");
+        auto.telemetry.addData("Alert" , "\tOTHERWISE, PRESS START WHEN READY");
 
-        telemetry.addData("\n\nAlliance Color" , "\t" + teamColor.asString());
-        telemetry.addData("Start Delay" , "\t" + startDelay);
+        auto.telemetry.addData("\n\nAlliance Color" , "\t" + teamColor.asString());
+        auto.telemetry.addData("Start Delay" , "\t" + startDelay);
     }
 
 
     /**
      * Resets the option values
      */
-    private void resetInitValues()
+    protected void resetInitValues()
     {
         teamColor = DEFAULT_TEAM_COLOR;
         startDelay = DEFAULT_START_DELAY;
@@ -130,7 +174,7 @@ public abstract class AutoMenu extends LinearOpMode
     /**
      * Changes the team color between RED and BLUE
      */
-    private void changeTeamColor()
+    protected void changeTeamColor()
     {
         switch(teamColor)
         {
@@ -154,7 +198,7 @@ public abstract class AutoMenu extends LinearOpMode
      *
      * @return Returns the modified buffer.
      */
-    private double editBuffer(double buffer , double input , final double JUMP , long startingTime[])
+    protected double editBuffer(double buffer , double input , final double JUMP , long startingTime[])
     {
         final int MIN_PERIOD = 100;
         int period;
@@ -164,7 +208,7 @@ public abstract class AutoMenu extends LinearOpMode
         if(input != 0)
             period = (int)Math.abs(1 / input * MIN_PERIOD);
 
-        if(adjustPulsar.tick(period ))
+        if(adjustmentClock.tick(period))
         {
             buffer += JUMP * input / Math.abs(input);
             startingTime[0] = System.currentTimeMillis();

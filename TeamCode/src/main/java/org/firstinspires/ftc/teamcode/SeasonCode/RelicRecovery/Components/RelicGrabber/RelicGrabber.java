@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Relic
 
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
@@ -12,8 +14,8 @@ import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
  */
 public class RelicGrabber extends RobotComponent
 {
-    private CRServo _grabber;
-    private CRServo _twister;
+    private Servo _grabber;
+    private DcMotor _twister;
 
 
     /**
@@ -48,8 +50,8 @@ public class RelicGrabber extends RobotComponent
     {
         super.init(BASE);
 
-        _grabber = mapper.mapCRServo("grabServo", CRServo.Direction.REVERSE);
-        _twister = mapper.mapCRServo("rotateServo", CRServo.Direction.FORWARD);
+        _grabber = mapper.mapServo("grabServo", Servo.Direction.REVERSE);
+        _twister = mapper.mapMotor("flipMotor", CRServo.Direction.FORWARD);
     }
 
 
@@ -63,18 +65,20 @@ public class RelicGrabber extends RobotComponent
         switch (STATE)
         {
             case IN:
-                _grabber.setPower(1);
-
+                _grabber.setPosition(0.1);
                 break;
 
             case OUT:
-                _grabber.setPower(-1);
+                _grabber.setPosition(.25);
                 break;
 
-            case STOP:
-                _grabber.setPower(0);
-                break;
         }
+    }
+
+
+    public void runRotator(double value)
+    {
+        _twister.setPower(value * .3);
     }
 
 
@@ -98,7 +102,7 @@ public class RelicGrabber extends RobotComponent
             break;
 
             case STILL:
-            _twister.setPower(0.05);
+            _twister.setPower(0.00);
 
         }
     }

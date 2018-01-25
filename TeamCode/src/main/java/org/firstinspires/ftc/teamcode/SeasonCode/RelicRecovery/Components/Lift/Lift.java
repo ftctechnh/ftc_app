@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Toggle;
 
 import static org.directcurrent.season.relicrecovery.ToggleTelMetKt.outputLift;
 
@@ -17,6 +18,8 @@ import static org.directcurrent.season.relicrecovery.ToggleTelMetKt.outputLift;
 public class Lift extends RobotComponent
 {
     private DcMotor _liftMotor;
+
+    private Toggle _powered = new Toggle();
 
 
     /**
@@ -64,7 +67,7 @@ public class Lift extends RobotComponent
     {
         super.init(BASE);
 
-        _liftMotor = mapper.mapMotor("liftMotor" , DcMotorSimple.Direction.REVERSE);
+        _liftMotor = mapper.mapMotor("liftMotor" , DcMotorSimple.Direction.FORWARD);
     }
 
 
@@ -103,6 +106,7 @@ public class Lift extends RobotComponent
     {
         _liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         _liftMotor.setTargetPosition(0);
+        _liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 

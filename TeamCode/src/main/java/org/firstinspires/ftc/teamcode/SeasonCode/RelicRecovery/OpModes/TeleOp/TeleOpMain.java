@@ -28,7 +28,7 @@ public class TeleOpMain extends LinearOpMode
 
     /**
      * Runs the main TeleOp
-     *z
+     *
      * @throws InterruptedException Exception when OpMode is interrupted
      */
     @Override
@@ -39,6 +39,7 @@ public class TeleOpMain extends LinearOpMode
         waitForStart();
 
         _base.drivetrain.setState(Drivetrain.State.FORWARD_FAST);
+        _base.drivetrain.encoderOn();
 
         _base.jewelArm.setState(JewelArm.State.UP);
 
@@ -110,29 +111,26 @@ public class TeleOpMain extends LinearOpMode
         // State machine for relic grabber grabber
         if (_controller2.rightTrigger() >= .15)
         {
-            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.IN);
+            _base.relicGrabber.runRotator(_controller2.rightTrigger());
         }
         else if(_controller2.leftTrigger() >= .15)
         {
-            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.OUT);
+            _base.relicGrabber.runRotator(-_controller2.leftTrigger());
         }
         else
         {
-            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.STOP);
+            _base.relicGrabber.runRotator(0);
         }
+
 
         // State machine for relic grabber turning
         if (_controller2.x())
         {
-            _base.relicGrabber.setRotateState(RelicGrabber.RotateState.UP);
+            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.IN);
         }
         else if (_controller2.a())
         {
-            _base.relicGrabber.setRotateState(RelicGrabber.RotateState.DOWN);
-        }
-        else
-        {
-            _base.relicGrabber.setRotateState(RelicGrabber.RotateState.STILL);
+            _base.relicGrabber.setGrabState(RelicGrabber.GrabState.OUT);
         }
 
 

@@ -110,6 +110,7 @@ public class Base extends RobotBase
 
         // Dependency setting
         drivetrain.setDependencies(imu);
+        glyphGrabber.setDependencies();
     }
 
 

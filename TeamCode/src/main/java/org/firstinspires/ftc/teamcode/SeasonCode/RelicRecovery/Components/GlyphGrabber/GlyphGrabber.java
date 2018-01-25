@@ -4,8 +4,11 @@ package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Glyph
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.directcurrent.season.relicrecovery.drivetrain.DriveToDistance;
+import org.directcurrent.season.relicrecovery.drivetrain.TurnTo;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotComponent;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU;
 
 
 /**
@@ -21,6 +24,8 @@ public class GlyphGrabber extends RobotComponent
     public DcMotor leftWheelMotor;
     public DcMotor rightWheelMotor;
     public DcMotor conveyorMotor;
+
+    public ActivateForTime activateForTime;
 
 
     /**
@@ -47,6 +52,20 @@ public class GlyphGrabber extends RobotComponent
         leftWheelMotor = mapper.mapMotor("lInMotor" , DcMotorSimple.Direction.REVERSE);
         rightWheelMotor = mapper.mapMotor("rInMotor" , DcMotorSimple.Direction.REVERSE);
         conveyorMotor = mapper.mapMotor("convMotor" , DcMotorSimple.Direction.FORWARD);
+    }
+
+
+    /**
+     * Sets Glyph Grabber dependencies and performs any additional initializations required
+     *
+     * Call this in your robot base.init(), after all other components have been initialized.
+     *
+     * If you don't, you'll get NullPointerException. How about we don't? Place this where it
+     * belongs
+     */
+    public void setDependencies()
+    {
+        activateForTime = new ActivateForTime(this);
     }
 
 
@@ -87,5 +106,6 @@ public class GlyphGrabber extends RobotComponent
     public void stop()
     {
         setState(State.STOP);
+        activateForTime.stop();
     }
 }

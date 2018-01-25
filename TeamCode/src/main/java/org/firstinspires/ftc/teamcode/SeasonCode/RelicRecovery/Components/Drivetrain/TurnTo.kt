@@ -21,6 +21,7 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
 
     private var _targetAngle = 0.0
     private var _maxSpeed = 0.0
+    private var _timeout = 10_000L
 
     private var _t: Thread? = null
 
@@ -32,8 +33,18 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
      */
     fun setParams(targetAngle: Double , maxSpeed: Double)
     {
+        setParams(targetAngle , maxSpeed , 10_000L)
+    }
+
+
+    /**
+     * Sets the parameters of drivetrain turning. Call this before running the command!
+     */
+    fun setParams(targetAngle: Double , maxSpeed: Double , timeout: Long)
+    {
         _targetAngle = targetAngle
         _maxSpeed = maxSpeed
+        _timeout = timeout
     }
 
 
@@ -42,10 +53,12 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
      */
     override fun runSequentially()
     {
+        _drivetrain.encoderOn()
+
         _imu.pull()
 
         val TOLERANCE = 5                                   // "Close enough" amount
-        val MIN_SPEED = .05                                 // Minimum speed to rotate at
+        val MIN_SPEED = .30                                 // Minimum speed to rotate at
         val SPEED_MULTIPLIER = 3.0                          // Constant to adjust speed
 
         val initHeading = _imu.zAngle()
@@ -56,11 +69,15 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
         // should be slower when there's
         // less distance to cover
 
+        val startTime = System.currentTimeMillis()
+
+
         _busy = true
 
         _drivetrain.setState(Drivetrain.State.FORWARD_FAST)
 
-        while (Math.abs(error) > TOLERANCE && !_interrupted)
+        while (Math.abs(error) > TOLERANCE && System.currentTimeMillis() - startTime < _timeout
+                && !_interrupted)
         {
             _imu.pull()
 
@@ -74,6 +91,12 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
             if (speed > _maxSpeed)
             {
                 speed = _maxSpeed
+            }
+
+
+            if(speed < MIN_SPEED)
+            {
+                speed = MIN_SPEED
             }
 
             _drivetrain.base().telMet().tagWrite("Current Heading" , _imu.zAngle())

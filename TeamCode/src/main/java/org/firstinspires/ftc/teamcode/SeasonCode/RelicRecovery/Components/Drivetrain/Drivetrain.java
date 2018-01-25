@@ -44,6 +44,7 @@ public class Drivetrain extends RobotComponent
     // Commands
     public TurnTo turnTo;
     public DriveToDistance driveTo;
+    public DriveForTime driveForTime;
 
 
     /**
@@ -89,6 +90,7 @@ public class Drivetrain extends RobotComponent
         _imu = IMU;
         turnTo = new TurnTo(this , _imu);
         driveTo = new DriveToDistance(this);
+        driveForTime = new DriveForTime(this);
     }
 
 
@@ -337,6 +339,18 @@ public class Drivetrain extends RobotComponent
     {
         _leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         _rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+
+    /**
+     * Sets the encoder mode to RUN_TO_POSITION
+     *
+     * This means that an internal PID loop will drive the robot to said position
+     */
+    public void encoderToPos()
+    {
+        _leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        _rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 

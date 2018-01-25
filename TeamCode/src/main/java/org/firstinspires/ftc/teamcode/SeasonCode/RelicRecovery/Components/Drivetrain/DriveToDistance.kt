@@ -17,6 +17,8 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
     private var _busy = false
 
     private var _distance = 0.0
+    private var _speed = 1.0
+    private var _timeout = 10_000L
 
     private var _CLOSE_ENOUGH = 10
 
@@ -28,9 +30,18 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
      *
      * Yes, I know you don't want to.
      */
+    @Deprecated("Use setParams()")
     fun setDestination(distance: Double)
     {
         _distance = distance
+    }
+
+
+    fun setParams(distance: Double , speed: Double , timeout: Long)
+    {
+        _distance = distance
+        _speed = speed
+        _timeout = timeout
     }
 
 
@@ -44,7 +55,7 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
         _drivetrain.freezeInput()
 
         _drivetrain.encoderStopReset()
-        _drivetrain.encoderOn()
+        _drivetrain.encoderToPos()
 
         _drivetrain.leftMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt()
         _drivetrain.rightMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt()
@@ -57,13 +68,13 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
         {
             if(_distance > 0)
             {
-                _drivetrain.leftMotor().power = .5
-                _drivetrain.rightMotor().power = .5
+                _drivetrain.leftMotor().power = _speed
+                _drivetrain.rightMotor().power = _speed
             }
             else
             {
-                _drivetrain.leftMotor().power = -.5
-                _drivetrain.rightMotor().power = -.5
+                _drivetrain.leftMotor().power = -_speed
+                _drivetrain.rightMotor().power = -_speed
             }
 
             _drivetrain.base().telMet().tagWrite("Left Target" , _drivetrain.leftEncoderTarget())
@@ -77,11 +88,16 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
             if(Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
                     (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2) > eta)
             {
-                break;
+                break
             }
 
             eta = Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
                     (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2)
+
+//            if(Math.abs(_drivetrain.leftMotor().power <= .2) || _drivetrain.rightMotor().power <= .2)
+//            {
+//                break
+//            }
         }
 
         _drivetrain.leftMotor().power = 0.0
