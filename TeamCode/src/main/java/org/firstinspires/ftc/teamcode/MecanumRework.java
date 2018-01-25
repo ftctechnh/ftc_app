@@ -62,9 +62,9 @@ public class MecanumRework extends OpMode {
         // speed - while our technical value is within the range of [-1,1], we'll just keep it
         // positive.
         if (gamepad1.right_bumper) {
-            speed = -1 * gamepad1.right_trigger;
+            speed = -1 * Math.pow(gamepad1.right_trigger, 2);
         } else {
-            speed = gamepad1.right_trigger;
+            speed = Math.pow(gamepad1.right_trigger, 2);
         }
         // angle - this is calculated using the direction our stick is pointing. should be in a
         // range of [0,2pi] like a unit circle. terrible things, unit circles.
@@ -82,9 +82,9 @@ public class MecanumRework extends OpMode {
 
         // rotation magnitude
         if (gamepad1.left_bumper){
-            rotate = gamepad1.left_trigger * -1;
+            rotate =  Math.pow(gamepad1.left_trigger, 2) * -1;
         } else  {
-            rotate = gamepad1.left_trigger;
+            rotate = Math.pow(gamepad1.left_trigger, 2);
         }
         // alternative rotation mag.
         if (gamepad1.right_stick_x != 0){
@@ -104,10 +104,10 @@ public class MecanumRework extends OpMode {
         if (gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0) {
             speed = 0;
         }
-        voltageMultiplier[0] = speed * Math.cos(angle - (Math.PI/4)) + rotate;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;;;;;;;
-        voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;;;;;
-        voltageMultiplier[3] = speed * Math.cos(angle - (Math.PI/4)) - rotate;;;;;;;;;;;;;;
+        voltageMultiplier[0] = speed * Math.cos(angle - (Math.PI/4)) + rotate;
+        voltageMultiplier[1] = speed * Math.sin(angle - (Math.PI/4)) - rotate;
+        voltageMultiplier[2] = speed * Math.sin(angle - (Math.PI/4)) + rotate;
+        voltageMultiplier[3] = speed * Math.cos(angle - (Math.PI/4)) - rotate;
         if (rotate == 0) {
             for (int i = 0; i < 4; i++) {
                 voltageMultiplier[i] *= Math.sqrt(2);
@@ -126,13 +126,13 @@ public class MecanumRework extends OpMode {
         double topStore = 1;
         for (int x = 0; x < 4; x++){
             if (Math.abs(voltageMultiplier[x]) > topStore) {
-                topStore = Math.abs(voltageMultiplier[x]);;;;;;;;;;
-            };;;;;;;;;
+                topStore = Math.abs(voltageMultiplier[x]);
+            }
         }
         // followed by dividing them all by the top one
         // additionally, do a sanity check that ensures we don't actually do this
         // if our top stored number is "0" because that would make NaN and do bad
-        // things ;~;;;;;;;;
+        // things ;~;
         for (int x = 0; x < 4; x++) {
             voltageMultiplier[x] /= topStore;
         }
@@ -143,9 +143,9 @@ public class MecanumRework extends OpMode {
         telemetry.addData("VM3", voltageMultiplier[2]);
         telemetry.addData("VM4", voltageMultiplier[3]);
         */
-        if (gamepad1.b) {;;
-            for (int i = 0; i < 4; i++) {;;;;;;
-                voltageMultiplier[i] = 0;;;;;;;;;;;;;
+        if (gamepad1.b) {
+            for (int i = 0; i < 4; i++) {
+                voltageMultiplier[i] = 0;
             }
         }
 
@@ -156,6 +156,8 @@ public class MecanumRework extends OpMode {
             robot.arm.setPosition(0.5); // back up towards robot
         }
         // TODO: gripper implementation and locking setup
+
+
 
         if (!(robot.limitTop.getState() && gamepad2.left_stick_y < 0)) {
             robot.lift.setPower(gamepad2.left_stick_y / 2);
@@ -189,7 +191,7 @@ public class MecanumRework extends OpMode {
             cooldown = runtime.seconds() + 1;
         }
 
-        double CLOSE_POS = 0;
+        double CLOSE_POS = .1;
         double OPEN_POS = 0.8;
 
         if(clawState){

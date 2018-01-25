@@ -139,7 +139,7 @@ public class Hardware750 {
         armExtender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // rem: this <i>may</i> cause issues with how the motor's speed
         // functions.
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         try {
             clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         } catch (Exception e) {}
