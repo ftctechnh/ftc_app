@@ -131,7 +131,7 @@ public class ConstrainedPIDMotor {
 
         if (m.getPower() != speed) {
             if (enableOverride && override) {
-                m.setPower(speed * dir);
+                m.setPower(speed * dir / 2.0);
             } else {
                 m.setPower(speed);
             }
