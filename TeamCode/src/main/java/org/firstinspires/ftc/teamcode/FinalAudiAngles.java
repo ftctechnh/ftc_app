@@ -97,7 +97,7 @@ public class FinalAudiAngles extends LinearOpMode
             {
                 case 'r':
                     newRobot.driveStraight_In(18f - adjustment,.6);
-                    newRobot.pivot(-85, .6);
+                    newRobot.pivot(-90, .6);
                     break;
                 case 'l':
                     newRobot.driveStraight_In(24 - adjustment,.6);
