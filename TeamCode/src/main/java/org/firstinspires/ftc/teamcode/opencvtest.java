@@ -42,6 +42,7 @@ public class opencvtest extends OpMode{
                 drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, -1);
             }
             telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
+            sleep(1000);
         }
         //grab the glyph:
         drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, 10);
@@ -50,6 +51,13 @@ public class opencvtest extends OpMode{
         ForkLift.closeClaw();
     }
     public void loop() {
+        sleep(1000);
+    }
 
+    public void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {}
     }
 }
+
