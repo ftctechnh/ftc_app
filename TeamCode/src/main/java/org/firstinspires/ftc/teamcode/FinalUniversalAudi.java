@@ -51,7 +51,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (cipher)
                 {
                     case 'l':
-                        newRobot.driveStraight_In(18f - adjustment,.6);
+                        newRobot.driveStraight_In(20f - adjustment,.6);
                         newRobot.pivot(-90, .6);
                         break;
                     case 'r':
@@ -102,7 +102,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (cipher)
                 {
                     case 'r':
-                        newRobot.driveStraight_In(18f - adjustment,.6);
+                        newRobot.driveStraight_In(20f - adjustment,.6);
                         newRobot.pivot(-90, .6);
                         break;
                     case 'l':
