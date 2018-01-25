@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.GlyphDetector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by Peter on 1/25/2018.
  */
-
+@TeleOp(name = "cvtest", group = "linear OpMode")
 public class opencvtest extends OpMode{
 
     private GlyphDetector glyphDetector;
