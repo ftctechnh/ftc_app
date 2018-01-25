@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Red Front")
-public class redFront extends Autonomous_General {
+@Autonomous(name="Red Front George")
+public class redFront_George extends Autonomous_General {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
@@ -19,7 +19,7 @@ public class redFront extends Autonomous_General {
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
-        initiate();
+        initiate(true);
         telemetry.addData("--->", "Gyro Calibrating");
         telemetry.update();
         gyro.calibrate();

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,14 +11,13 @@ import com.qualcomm.robotcore.hardware.ServoController;
 
 
 /**
- * Created by Rohan on 11/18/17.
+ * Created by pahel on 1/21/18.
  */
+@TeleOp(name = "Curious George")
+public class curious_george_teleop extends OpMode {
 
 
-@TeleOp(name = "DeltaTeleOp")
-//@Disabled
-public class Delta_TeleOp extends OpMode {
-/*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
+    /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
 
@@ -34,6 +34,10 @@ public class Delta_TeleOp extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
+    DcMotor relicMotor;
+    Servo relicMain;
+    Servo relicLeft;
+    Servo relicRight;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -140,7 +144,7 @@ public class Delta_TeleOp extends OpMode {
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
 
-      //  telemetry.addData("jewel pos", jewel_servo.getPosition());
+        //  telemetry.addData("jewel pos", jewel_servo.getPosition());
 
         telemetry.update();
 
@@ -160,6 +164,36 @@ public class Delta_TeleOp extends OpMode {
     Functions go here
  */
 
+    public void relicManipulator(){
+
+        boolean rightBumper = gamepad2.right_bumper;
+        boolean leftBumper = gamepad2.left_bumper;
+        float leftY_gp2 = (-gamepad2.left_stick_y);
+        boolean rightButtonY = gamepad2.y;
+        boolean rightButtonA = gamepad2.a;
+
+
+        relicMotor.setPower(leftY_gp2);
+
+        if(leftBumper){
+            relicLeft.setPosition(0.75);
+            relicRight.setPosition(0.25);
+        }
+
+        if (rightBumper){
+            relicLeft.setPosition(0);
+            relicRight.setPosition(1);
+        }
+
+        if (rightButtonY){
+            relicMain.setPosition(0);
+        }
+
+        if (rightButtonA){
+            relicMain.setPosition(1);
+        }
+    }
+
     public void FourWheelDrive() {
         /*
 
@@ -176,38 +210,24 @@ public class Delta_TeleOp extends OpMode {
 
         if (gamepad1.left_trigger > 0) {
 
-            leftWheelMotorFront.setPower(-0.7);
-            leftWheelMotorBack.setPower(1);
-            rightWheelMotorFront.setPower(1);
-            rightWheelMotorBack.setPower(-1);
-
-        } else if (gamepad1.right_trigger > 0) {
-
-            leftWheelMotorFront.setPower(0.7);
+            leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
 
-        } else {
-            leftWheelMotorFront.setPower(leftY_gp1);
-            leftWheelMotorBack.setPower(leftY_gp1);
-            rightWheelMotorFront.setPower(rightY_gp1);
-            rightWheelMotorBack.setPower(rightY_gp1);
-        }
+        } else if (gamepad1.right_trigger > 0) {
 
-        // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-        //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-        // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-        //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        //  telemetry.update();
-        //telemetry.addData("",)
-        //telemetry.update();
-        //These were going to be used to find the values of triggers but we couldn't acomplish it
-        //run the motors by setting power to the motors with the game pad values
-        //leftWheelMotorFront.setPower(leftY_gp1);
-        //leftWheelMotorBack.setPower(leftY_gp1);
-        //rightWheelMotorFront.setPower(rightY_gp1);
-        //rightWheelMotorBack.setPower(rightY_gp1);
+            leftWheelMotorFront.setPower(-1);
+            leftWheelMotorBack.setPower(1);
+            rightWheelMotorFront.setPower(1);
+            rightWheelMotorBack.setPower(-1);
+
+        } else {
+            leftWheelMotorFront.setPower(-leftY_gp1);
+            leftWheelMotorBack.setPower(-leftY_gp1);
+            rightWheelMotorFront.setPower(-rightY_gp1);
+            rightWheelMotorBack.setPower(-rightY_gp1);
+        }
 
 
     }
@@ -236,13 +256,13 @@ public class Delta_TeleOp extends OpMode {
 
 //opening the claw
 
-           openGlyph();
+            openGlyph();
         } else if (gamepad1.right_bumper) {
 
-          closeGlyph();
+            closeGlyph();
         }
         else if (gamepad1.x){
-           middleGlyph();
+            middleGlyph();
 
         }
 
@@ -268,7 +288,7 @@ public class Delta_TeleOp extends OpMode {
 
     public void moveUpInch(double cm) {
         double target_Position;
-        double countsPerCM = 150;
+        double countsPerCM = 609.6;
         double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
@@ -290,7 +310,7 @@ public class Delta_TeleOp extends OpMode {
 
     public void moveDownInch(double cm) {
         double target_Position;
-        double countsPerCM = 150;
+        double countsPerCM = 609.6;
         double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
@@ -299,7 +319,6 @@ public class Delta_TeleOp extends OpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(0.6);
-
 
         while (slideMotor.isBusy()) {
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
@@ -310,20 +329,21 @@ public class Delta_TeleOp extends OpMode {
         slideMotor.setPower(0);
 
     }
-  public void openGlyph(){
+    public void openGlyph(){
+
+        //switching values with closeGlyph
+        glyphServoRight.setPosition(0.9);
+        glyphServoLeft.setPosition(0.0);
+    }
+
+    public void closeGlyph(){
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
+    }
+
+    public void middleGlyph(){
         glyphServoRight.setPosition(0.7);
-        glyphServoLeft.setPosition(0.15);
-  }
-
-  public void closeGlyph(){
-      glyphServoRight.setPosition(0.78);
-      glyphServoLeft.setPosition(0.00);
-  }
-
-  public void middleGlyph(){
-      glyphServoRight.setPosition(0.7);
-      glyphServoLeft.setPosition(0.05);
-
-  }
+        glyphServoLeft.setPosition(0.25);
+    }
 }
 

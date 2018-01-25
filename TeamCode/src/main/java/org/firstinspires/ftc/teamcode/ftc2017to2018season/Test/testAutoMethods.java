@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 public class testAutoMethods extends Autonomous_General {
 
     public void runOpMode(){
-        initiate();
+        initiate(true);
         telemetry.addData("--->", "Gyro Calibrating");
         telemetry.update();
         gyro.calibrate();

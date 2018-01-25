@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
@@ -14,6 +16,7 @@ import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,6 +29,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import java.util.Locale;
+
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -67,6 +73,8 @@ public class Autonomous_General extends LinearOpMode {
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
     public DcMotor slideMotor;
+    public BNO055IMU revGyro;
+    public Orientation angles;
     public boolean gyroFail = false;
 
     public Servo jewelServo;
@@ -90,9 +98,9 @@ public class Autonomous_General extends LinearOpMode {
     VuforiaLocalizer vuforia;
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
-    RelicRecoveryVuMark vuMark;
+    public RelicRecoveryVuMark vuMark;
 
-    public void initiate() {
+    public void initiate(boolean modernRobotics) {
         COUNTS_PER_MOTOR_REV = 1120;
         WHEEL_REV_PER_MOTOR_REV = 1.3;//figured this out by rotating the motor once and measuring how much the wheel rotated (may not be completely accurate)
         WHEEL_PERIMETER_CM = 2*5.08* Math.PI;
@@ -119,7 +127,24 @@ public class Autonomous_General extends LinearOpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
 
-        gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        if (modernRobotics) {
+            gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        }
+        else if (!modernRobotics){
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.loggingEnabled      = true;
+            parameters.loggingTag          = "IMU";
+            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+            // and named "imu".
+            revGyro = hardwareMap.get(BNO055IMU.class, "revGyro");
+            revGyro.initialize(parameters);
+        }
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colorSensor");
         //rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
@@ -154,6 +179,65 @@ public class Autonomous_General extends LinearOpMode {
         light.setPower(0);
     }
 
+
+    /*
+     * REV GYRO METHODS
+     */
+    public void composeTelemetry() {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles   = revGyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return revGyro.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return revGyro.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+                    }
+                });
+    }
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+
+
+
+    /**
+        MOTOR METHODS WITHOUT ENCODER
+     */
     public void straightDrive(double power) {
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -164,7 +248,6 @@ public class Autonomous_General extends LinearOpMode {
         back_right_motor.setPower(power);
         front_right_motor.setPower(power);
     }
-
     public void strafeRight(double speed){
 
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -176,7 +259,6 @@ public class Autonomous_General extends LinearOpMode {
         front_right_motor.setPower(-speed);
         back_right_motor.setPower(speed);
     }
-
     public void strafeLeft(double speed){
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -187,7 +269,6 @@ public class Autonomous_General extends LinearOpMode {
         front_right_motor.setPower(speed);
         back_right_motor.setPower(-speed);
     }
-
     public void turnLeft(double speed) {
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -200,7 +281,6 @@ public class Autonomous_General extends LinearOpMode {
         front_right_motor.setPower(speed);
         back_right_motor.setPower(speed);
     }
-
     public void turnRight(double speed) {
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -213,7 +293,6 @@ public class Autonomous_General extends LinearOpMode {
         front_left_motor.setPower(speed);
         back_left_motor.setPower(speed);
     }
-
     public void stopMotors() {
         front_right_motor.setPower(0);
         //idle();
@@ -234,6 +313,11 @@ public class Autonomous_General extends LinearOpMode {
         sleep(100);
     }
 
+
+
+    /**
+        MOTOR METHODS WITH ENCODER
+     */
     public void encoderMecanumCrossDrive(double speed,
                                          double leftcm, double rightcm,
                                          double timeoutS, int direction) {
@@ -435,7 +519,6 @@ public class Autonomous_General extends LinearOpMode {
         stopMotors();
 
     }
-
     /**
      *
      * @param speed
@@ -471,7 +554,7 @@ public class Autonomous_General extends LinearOpMode {
         newLeftBackTarget = back_left_motor.getCurrentPosition() + (int) (leftcm * getCountsPerCm());
         newRightBackTarget = back_right_motor.getCurrentPosition() + (int) (rightcm * getCountsPerCm());
 
-        if(direction == 0) {
+        if (direction == 0) {
             back_left_motor.setTargetPosition(newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(newRightBackTarget);
@@ -481,8 +564,7 @@ public class Autonomous_General extends LinearOpMode {
             front_right_motor.setTargetPosition(newRightFrontTarget);
             //idle();
 
-        }
-        else if (direction == 1){//right
+        } else if (direction == 1) {//right
             back_left_motor.setTargetPosition(-newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(newRightBackTarget);
@@ -492,8 +574,7 @@ public class Autonomous_General extends LinearOpMode {
             front_right_motor.setTargetPosition(-newRightFrontTarget);
             //idle();
 
-        }
-        else if(direction == -1){//left
+        } else if (direction == -1) {//left
             back_left_motor.setTargetPosition(newLeftBackTarget);
             //idle();
             back_right_motor.setTargetPosition(-newRightBackTarget);
@@ -544,16 +625,9 @@ public class Autonomous_General extends LinearOpMode {
         //idle();
 
 
-
-
-
-
-
-
-
         // keep looping while we are still active, and there is time left, and both motors are running.
         while (opModeIsActive() &&
-                (back_left_motor.isBusy() && back_right_motor.isBusy()&&
+                (back_left_motor.isBusy() && back_right_motor.isBusy() &&
                         front_left_motor.isBusy() && front_right_motor.isBusy())) {
             back_left_motor.setPower(Math.abs(leftSpeed));
             //idle();
@@ -568,12 +642,15 @@ public class Autonomous_General extends LinearOpMode {
         idle();
         // Stop all motion;
         stopMotors();
-
     }
     public static double getCountsPerCm() {
         return COUNTS_PER_CM;
     }
 
+
+    /**
+        GYRO TURN USING MODERN ROBOTICS GYRO
+     */
     public void gyroTurn(double speed, double angle){
 
         telemetry.addData("starting gyro turn","-----");
@@ -589,7 +666,6 @@ public class Autonomous_General extends LinearOpMode {
         telemetry.addData("done with gyro turn","-----");
         telemetry.update();
     }
-
     boolean onTargetAngle(double speed, double angle, double PCoeff){
         double error;
         double steer;
@@ -648,10 +724,180 @@ public class Autonomous_General extends LinearOpMode {
         return robotError;
 
     }
-
     public double getSteer(double error , double PCoeff){
         return Range.clip(error * PCoeff, -1 , 1);
     }
+
+
+    /**
+     * TURN WITHOUT GYRO
+     */
+    public void encoderTurn(int degrees, double speed){
+
+        double leftSpeed = 0;
+        double rightSpeed = 0;
+        int leftFrontPos;
+        int rightFrontPos;
+        int leftBackPos;
+        int rightBackPos;
+
+        back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        sleep(200);
+
+        leftFrontPos = front_left_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
+        rightFrontPos = front_right_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
+        leftBackPos = back_left_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
+        rightBackPos = back_right_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
+
+        if (degrees > 0){
+            leftSpeed = -speed;
+            rightSpeed = speed;
+
+            front_left_motor.setTargetPosition(-leftFrontPos);
+            front_right_motor.setTargetPosition(rightFrontPos);
+            back_left_motor.setTargetPosition(-leftBackPos);
+            back_right_motor.setTargetPosition(rightBackPos);
+        }
+        else if (degrees < 0){
+            leftSpeed = speed;
+            rightSpeed = -speed;
+
+            front_left_motor.setTargetPosition(leftFrontPos);
+            front_right_motor.setTargetPosition(-rightFrontPos);
+            back_left_motor.setTargetPosition(leftBackPos);
+            back_right_motor.setTargetPosition(-rightBackPos);
+        }
+        //if degrees is more than 0, you'll move counterclockwise
+        //if degrees is less than 0, you'll move clockwise
+        back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        back_right_motor.setPower(rightSpeed);
+        front_right_motor.setPower(rightSpeed);
+        front_left_motor.setPower(leftSpeed);
+        back_left_motor.setPower(leftSpeed);
+
+        telemetry.addData("rightSpeed", rightSpeed);
+        telemetry.addData("leftSpeed", leftSpeed);
+        telemetry.addData("angle", degrees);
+        telemetry.addData("front_left_target", leftFrontPos);
+        while (opModeIsActive() &&
+                (back_left_motor.isBusy() && back_right_motor.isBusy()&&
+                        front_left_motor.isBusy() && front_right_motor.isBusy())) {
+            back_left_motor.setPower(Math.abs(leftSpeed));
+            //idle();
+            back_right_motor.setPower(Math.abs(rightSpeed));
+            //idle();
+            front_left_motor.setPower(Math.abs(leftSpeed));
+            //idle();
+            front_right_motor.setPower(Math.abs(rightSpeed));
+            //idle();
+            telemetry.addData("rightSpeed", rightSpeed);
+            telemetry.addData("leftSpeed", leftSpeed);
+            telemetry.addData("angle", degrees);
+            telemetry.addData("front_left_target", leftFrontPos);
+            telemetry.addData("front_left_current", front_left_motor.getCurrentPosition());
+            telemetry.addData("front_right_target", rightFrontPos);
+            telemetry.addData("front_right_current", front_right_motor.getCurrentPosition());
+            telemetry.update();
+            idle();
+        }
+        idle();
+        // Stop all motion;
+        stopMotors();
+    }
+
+
+    /**
+     * GYRO TURN USING REV ROBOTICS GYRO
+     */
+    public void gyroTurnREV(double speed, double angle){
+
+        telemetry.addData("starting gyro turn","-----");
+        telemetry.update();
+
+        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF)){
+            telemetry.update();
+            idle();
+            telemetry.addData("-->","inside while loop :-(");
+            telemetry.update();
+        }
+        stopMotors();
+        telemetry.addData("done with gyro turn","-----");
+        telemetry.update();
+    }
+    boolean onTargetAngleREV(double speed, double angle, double PCoeff){
+        double error;
+        double steer;
+        boolean onTarget = false;
+        double leftSpeed;
+        double rightSpeed;
+
+        //determine turm power based on error
+        error = getErrorREV(angle);
+
+        if (Math.abs(error) <= TURN_THRESHOLD){
+
+            steer = 0.0;
+            leftSpeed = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        }
+        else{
+
+            steer = getSteerREV(error, PCoeff);
+            rightSpeed = speed * steer;
+            leftSpeed = -rightSpeed;
+            //leftSpeed = -5;
+        }
+
+        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_left_motor.setPower(leftSpeed);
+        front_right_motor.setPower(rightSpeed);
+        back_left_motor.setPower(leftSpeed);
+        back_right_motor.setPower(rightSpeed);
+
+        telemetry.addData("Target angle","%5.2f",angle);
+        telemetry.addData("Error/Steer", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("speed", "%5.2f/%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+    public double getErrorREV(double targetAngle){
+
+        double robotError;
+
+        robotError = targetAngle - angles.firstAngle;
+        //telemetry.addData("Zvalue","%5.2f",gyro.getIntegratedZValue());
+        //telemetry.update();
+
+        while(robotError > 180) robotError -= 360;
+
+        while(robotError <= -180) robotError += 360;
+
+        telemetry.addData("Robot Error","%5.2f",robotError);
+        telemetry.update();
+
+        return robotError;
+
+    }
+    public double getSteerREV(double error , double PCoeff){
+        return Range.clip(error * PCoeff, -1 , 1);
+    }
+
+
+    /**
+        VUFORIA METHODS
+     */
     public void vuforiaInit(boolean cameraView, boolean rearCamera){
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -680,23 +926,19 @@ public class Autonomous_General extends LinearOpMode {
 
         setTargets();
     }
-
     public void toggleLight(boolean onoroff){
         CameraDevice.getInstance().setFlashTorchMode(onoroff) ;
     }
-
     public void setTargets(){
         relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
     }
-
     //should go after play
     public void startTracking(){
         relicTrackables.activate();
 
     }
-
     //initializes vumark and returns whether its unknown or not
     public boolean vuMarkFound(){
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -712,7 +954,6 @@ public class Autonomous_General extends LinearOpMode {
         }
         return false;
     }
-
     public double[] imageAngles(){
         if (!vuMarkFound()){
             return null;
@@ -738,7 +979,6 @@ public class Autonomous_General extends LinearOpMode {
             return null;
         }
     }
-
     public double[] imageTranslation(){
         if (!vuMarkFound()){
             return null;
@@ -764,113 +1004,16 @@ public class Autonomous_General extends LinearOpMode {
         }
         return null;
     }
-    /**
-     * Uses the range sensor in a while loop, you can choose whether it strafes or drives
+    public Enum<RelicRecoveryVuMark> returnImage() {
+        return vuMark;
+    }
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    }
+
+    /*
+        COLOR SENSOR METHOD
      */
-    /*public void RangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
-    if(strafe) {
-        if (!dorangeSensor2) {
-            while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
-                strafeLeft(speed);
-                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-                telemetry.addData("Target Distance", distInCM - rsBufffer);
-                telemetry.update();
-            }
-            stopMotors();
-            sleep(400);
-            while ((rangeSensor.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
-                strafeRight(speed);
-                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-                telemetry.addData("Target Distance", distInCM - rsBufffer);
-                telemetry.update();
-            }
-            stopMotors();
-            telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
-        } else if (dorangeSensor2) {
-            while (rangeSensor2.getDistance(DistanceUnit.CM) > (distInCM - rsBufffer)) {
-                strafeRight(speed);
-                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-                telemetry.addData("Target Distance", distInCM - rsBufffer);
-                telemetry.update();
-            }
-            stopMotors();
-            sleep(400);
-            while ((rangeSensor2.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
-                strafeLeft(speed);
-                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-                telemetry.addData("Target Distance", distInCM - rsBufffer);
-                telemetry.update();
-            }
-            stopMotors();
-            telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
-        }
-    }
-    else if(!strafe){
-            while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
-                straightDrive(-speed);
-                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-                telemetry.addData("Target Distance", distInCM - rsBufffer);
-                telemetry.update();
-            }
-            stopMotors();
-            sleep(400);
-            while ((rangeSensor.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
-                straightDrive(speed);
-                telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-                telemetry.addData("Target Distance", distInCM - rsBufffer);
-                telemetry.update();
-            }
-            stopMotors();
-            telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
-            telemetry.update();
-
-        }
-    }*/
-
-    public void openGlyphManipulator(){
-        glyphServoRight.setPosition(0.4);
-        glyphServoLeft.setPosition(0.5);
-    }
-
-    public void closeGlyphManipulator(){
-        glyphServoRight.setPosition(0.9);
-        glyphServoLeft.setPosition(0);
-
-    }
-
-    public void middleGlyphManipulator(){
-
-        glyphServoRight.setPosition(0.65);
-        glyphServoLeft.setPosition(0.25);
-    }
-
-    public void allOpenGlyphManipulator(){
-        glyphServoRight.setPosition(0.1);
-        glyphServoLeft.setPosition(0.8);
-    }
-    /**
-     * uses range sensor by reading distance and then driving that distance
-        int leftFrontPos;
-        int rightFrontPos;
-     * @param distInCM
-     * @param speed
-     * @param rsBufffer
-     */
-
-
-    public void simpleRangeDistance(double distInCM, double speed, double rsBufffer) {
-
-
-            double distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
-            encoderMecanumDrive(speed,distancetoDrive,distancetoDrive,500,0);
-            sleep(400);
-            distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
-            encoderMecanumDrive(0.1,distancetoDrive,distancetoDrive,500,0);
-
-    }
-
     public void readColor() {
 
         ballColor = "blank";
@@ -889,15 +1032,27 @@ public class Autonomous_General extends LinearOpMode {
         //sleep(5000);
     }
 
-    public Enum<RelicRecoveryVuMark> returnImage() {
-        return vuMark;
+
+    /*
+        GLYPH MANIPULATOR METHODS
+     */
+    public void openGlyphManipulator(){
+        glyphServoRight.setPosition(0.4);
+        glyphServoLeft.setPosition(0.5);
     }
+    public void closeGlyphManipulator(){
+        glyphServoRight.setPosition(0.9);
+        glyphServoLeft.setPosition(0);
 
+    }
+    public void middleGlyphManipulator(){
 
-    @Override public void runOpMode() {}
-
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+        glyphServoRight.setPosition(0.65);
+        glyphServoLeft.setPosition(0.25);
+    }
+    public void allOpenGlyphManipulator(){
+        glyphServoRight.setPosition(0.1);
+        glyphServoLeft.setPosition(0.8);
     }
     public void moveUpGlyph(double cm) {
         double target_Position;
@@ -949,89 +1104,97 @@ public class Autonomous_General extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
-    public void encoderTurn(int degrees, double speed){
 
-        double leftSpeed = 0;
-        double rightSpeed = 0;
+
+
+    /**
+     * uses range sensor by reading distance and then driving that distance
         int leftFrontPos;
         int rightFrontPos;
-        int leftBackPos;
-        int rightBackPos;
-
-        back_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        back_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        front_left_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        front_right_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        sleep(200);
-
-        leftFrontPos = front_left_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
-        rightFrontPos = front_right_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
-        leftBackPos = back_left_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
-        rightBackPos = back_right_motor.getCurrentPosition() + (int)(ENCODERSPER360 * Math.abs(degrees)/360);
-
-        if (degrees > 0){
-            leftSpeed = -speed;
-            rightSpeed = speed;
-
-            front_left_motor.setTargetPosition(-leftFrontPos);
-            front_right_motor.setTargetPosition(rightFrontPos);
-            back_left_motor.setTargetPosition(-leftBackPos);
-            back_right_motor.setTargetPosition(rightBackPos);
-        }
-        else if (degrees < 0){
-            leftSpeed = speed;
-            rightSpeed = -speed;
-
-            front_left_motor.setTargetPosition(leftFrontPos);
-            front_right_motor.setTargetPosition(-rightFrontPos);
-            back_left_motor.setTargetPosition(leftBackPos);
-            back_right_motor.setTargetPosition(-rightBackPos);
-        }
-        //if degrees is more than 0, you'll move counterclockwise
-        //if degrees is less than 0, you'll move clockwise
+     * @param distInCM
+     * @param speed
+     * @param rsBufffer
+     */
+    public void simpleRangeDistance(double distInCM, double speed, double rsBufffer) {
 
 
-        back_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        back_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        front_left_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        front_right_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            double distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
+            encoderMecanumDrive(speed,distancetoDrive,distancetoDrive,500,0);
+            sleep(400);
+            distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
+            encoderMecanumDrive(0.1,distancetoDrive,distancetoDrive,500,0);
 
-        back_right_motor.setPower(rightSpeed);
-        front_right_motor.setPower(rightSpeed);
-        front_left_motor.setPower(leftSpeed);
-        back_left_motor.setPower(leftSpeed);
-
-        telemetry.addData("rightSpeed", rightSpeed);
-        telemetry.addData("leftSpeed", leftSpeed);
-        telemetry.addData("angle", degrees);
-        telemetry.addData("front_left_target", leftFrontPos);
-        while (opModeIsActive() &&
-                (back_left_motor.isBusy() && back_right_motor.isBusy()&&
-                        front_left_motor.isBusy() && front_right_motor.isBusy())) {
-            back_left_motor.setPower(Math.abs(leftSpeed));
-            //idle();
-            back_right_motor.setPower(Math.abs(rightSpeed));
-            //idle();
-            front_left_motor.setPower(Math.abs(leftSpeed));
-            //idle();
-            front_right_motor.setPower(Math.abs(rightSpeed));
-            //idle();
-            telemetry.addData("rightSpeed", rightSpeed);
-            telemetry.addData("leftSpeed", leftSpeed);
-            telemetry.addData("angle", degrees);
-            telemetry.addData("front_left_target", leftFrontPos);
-            telemetry.addData("front_left_current", front_left_motor.getCurrentPosition());
-            telemetry.addData("front_right_target", rightFrontPos);
-            telemetry.addData("front_right_current", front_right_motor.getCurrentPosition());
-            telemetry.update();
-            idle();
-        }
-        idle();
-        // Stop all motion;
-        stopMotors();
     }
 
+
+
+
+    @Override public void runOpMode() {}
+
+    /**
+      Uses the range sensor in a while loop, you can choose whether it strafes or drives
+     */
+    /**public void RangeDistance(double distInCM, double speed, double rsBufffer, boolean dorangeSensor2, boolean strafe) {
+     if(strafe) {
+     if (!dorangeSensor2) {
+     while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
+     strafeLeft(speed);
+     telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.addData("Target Distance", distInCM - rsBufffer);
+     telemetry.update();
+     }
+     stopMotors();
+     sleep(400);
+     while ((rangeSensor.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
+     strafeRight(speed);
+     telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.addData("Target Distance", distInCM - rsBufffer);
+     telemetry.update();
+     }
+     stopMotors();
+     telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.update();
+     } else if (dorangeSensor2) {
+     while (rangeSensor2.getDistance(DistanceUnit.CM) > (distInCM - rsBufffer)) {
+     strafeRight(speed);
+     telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.addData("Target Distance", distInCM - rsBufffer);
+     telemetry.update();
+     }
+     stopMotors();
+     sleep(400);
+     while ((rangeSensor2.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
+     strafeLeft(speed);
+     telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.addData("Target Distance", distInCM - rsBufffer);
+     telemetry.update();
+     }
+     stopMotors();
+     telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.update();
+     }
+     }
+     else if(!strafe){
+     while ((rangeSensor.getDistance(DistanceUnit.CM)) > (distInCM - rsBufffer)) {
+     straightDrive(-speed);
+     telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.addData("Target Distance", distInCM - rsBufffer);
+     telemetry.update();
+     }
+     stopMotors();
+     sleep(400);
+     while ((rangeSensor.getDistance(DistanceUnit.CM) - rsBufffer) < (distInCM - rsBufffer)) {
+     straightDrive(speed);
+     telemetry.addData("Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.addData("Target Distance", distInCM - rsBufffer);
+     telemetry.update();
+     }
+     stopMotors();
+     telemetry.addData("Final Distance from Wall", rangeSensor.getDistance(DistanceUnit.CM));
+     telemetry.update();
+
+     }
+     }**/
 //    old encoder turn. Using the one above ^
 //    public void encoderTurn(int degrees, double speed){
 //

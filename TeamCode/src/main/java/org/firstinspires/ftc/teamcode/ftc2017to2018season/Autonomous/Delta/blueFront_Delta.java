@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Delta;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
 
 //10-28-17
-@Autonomous(group = "Red Front No Gyro")
-public class redFront_NoGyro extends Autonomous_General {
+@Autonomous(group = "Blue Front No Gyro")
+public class blueFront_Delta extends Autonomous_General {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
@@ -20,7 +21,7 @@ public class redFront_NoGyro extends Autonomous_General {
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
-        initiate();
+        initiate(true);
         sleep(500);
         telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
@@ -67,14 +68,14 @@ public class redFront_NoGyro extends Autonomous_General {
 
 
         if(ballColor.equals("blue")){
-            encoderMecanumDrive(0.9, 10,10,5000,0);
+            encoderMecanumDrive(0.9, -10,-10,5000,0);
             jewelServo.setPosition(0);
             sleep(1000);
-            encoderMecanumDrive(0.9,-35,-35,5000,0);
+            encoderMecanumDrive(0.9,35,35,5000,0);
             sleep(1000);
         }
         else if(ballColor.equals("red")){
-            encoderMecanumDrive(0.9,-25,-25,5000,0);
+            encoderMecanumDrive(0.9,25,25,5000,0);
             jewelServo.setPosition(0);
             sleep(1000);
         }
@@ -86,59 +87,62 @@ public class redFront_NoGyro extends Autonomous_General {
             readColor();
             sleep(1000);
             if(ballColor.equals("blue")){
-                encoderMecanumDrive(0.9, 10,10,5000,0);
+                encoderMecanumDrive(0.9, -10,-10,5000,0);
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9,-35,-35,5000,0);
+                encoderMecanumDrive(0.9,35,35,5000,0);
                 sleep(1000);
             }
             else if(ballColor.equals("red")){
-                encoderMecanumDrive(0.9,-25,-25,5000,0);
+                encoderMecanumDrive(0.9,25,25,5000,0);
                 jewelServo.setPosition(0);
                 sleep(1000);
             }
             else {
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9, -25, -25, 5000, 0);
+                encoderMecanumDrive(0.9, 25, 25, 5000, 0);
             }
         }
 
         light.setPower(0);
 
-        encoderMecanumDrive(0.9, -19, -19, 5000, 0);
+        //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
+        sleep(100);
+        encoderMecanumDrive(0.3,15,15,5000,0);
+        sleep(250);
 
-        encoderTurn(-97,0.4);
-        sleep(400);
-        encoderMecanumDrive(0.4,-75,-75,5000,0);
+        encoderTurn(-87, 0.5);
+        sleep(1000);
 
+        encoderMecanumDrive(0.9, -60, -60, 5000, 0);
 
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            encoderMecanumDrive(0.9, 57, 57, 5000, 0);
-        }
-        else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            encoderMecanumDrive(0.9, 37, 37, 5000, 0);
+            encoderMecanumDrive(0.9, 68, 68, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
-            encoderMecanumDrive(0.9, 77, 77, 5000, 0);
+            encoderMecanumDrive(0.9, 83, 83, 5000, 0);
+        }
+        else if (vuMark == RelicRecoveryVuMark.RIGHT){
+            encoderMecanumDrive(0.9, 103, 103, 5000, 0);
 
         }
 
         else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-            encoderMecanumDrive(0.9, 57, 57, 5000, 0);
+            encoderMecanumDrive(0.9, 72, 72, 5000, 0);
 
         }
 
 
         sleep(1000);
 
-        encoderTurn(-90, 0.5);
+        encoderTurn(90, 0.5);
 
         sleep(750);
 
-//        moveDownGlyph(0.5);
-//        sleep(250);
+        moveDownGlyph(0.5);
+        sleep(250);
         openGlyphManipulator();
         sleep(250);
 
