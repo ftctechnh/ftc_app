@@ -82,6 +82,8 @@ public class MockDcMotor implements DcMotor {
         return currentPos;
     }
 
+    public void setCurrentPosition(int m) { currentPos = m;}
+
     @Override
     public void setMode(RunMode mode) {
         this.mode = mode;
