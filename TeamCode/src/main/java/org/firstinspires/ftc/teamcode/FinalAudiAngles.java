@@ -58,7 +58,7 @@ public class FinalAudiAngles extends LinearOpMode
                 default: newRobot.driveStraight_In(18.5f - adjustment,.6);
                     break;
             }
-            newRobot.pivot(-45, .6);
+            newRobot.pivot(45, .6);
             //newRobot.pivot(80, .5); //86 degrees is almost perfect 90
             newRobot.oldMoveLift(-1);
             newRobot.openOrCloseDoor(false);
