@@ -70,7 +70,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In_Stall(13, .5, telemetry);
                 //newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-3,1);
+                newRobot.driveStraight_In(-6,1);
                 newRobot.stopAllMotors();
                 break;
             case 'r':

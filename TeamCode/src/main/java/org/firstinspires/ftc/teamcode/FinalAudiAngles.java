@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by sahithithumuluri on 1/22/18.
  */
-@Autonomous (name = "FinalAudiAngles", group = "Auto")
+@Disabled
 public class FinalAudiAngles extends LinearOpMode
 {
     NewRobotFinal newRobot;
