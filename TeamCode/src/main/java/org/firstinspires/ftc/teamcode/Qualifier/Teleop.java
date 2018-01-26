@@ -40,6 +40,8 @@ public class Teleop extends OpMode {
     public boolean start2IsReleased = true;
     public boolean righttriggerIsReleased = true;
     public boolean tristanmode = false;
+    boolean onehitwonder = false;
+    boolean out = true;
 
     //SLOW SERVO
     public boolean elbowmoving = false;
@@ -359,21 +361,6 @@ public class Teleop extends OpMode {
                 elbowmoving = false;
             }
         }
-//        //Clamp Full speed
-//        if (gamepad2.right_stick_button) {
-//            if (rightbtn2IsReleased) {
-//                rightbtn2IsReleased = false;
-//                if (relicclamped) {
-//                    relicclamped = false;
-//                    gromit.relicArm.clawOpen();
-//                } else {
-//                    relicclamped = true;
-//                    gromit.relicArm.clawClose();
-//                }
-//            }
-//        } else {
-//            rightbtn2IsReleased = true;
-//        }
 
         //Clamp slowly
         if(gamepad2.right_stick_y > 0.1){
@@ -392,22 +379,60 @@ public class Teleop extends OpMode {
 
 
         // RELIC ARM IN/OUT
-        if (gamepad1.dpad_up && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.relicArmMotorMax) {
+        if (gamepad1.dpad_up && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.relicArmMotorMax && !onehitwonder) {
             if(gromit.relicArm.relicArmMotor.getCurrentPosition() > 300 && !glyphinit){
                 glyphinit = true;
                 gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.elbowup);
             }
             gromit.relicArm.relicArmMotor.setPower(relicspeed);
         }
-       else if(gamepad1.dpad_down && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin){
+       else if(gamepad1.dpad_down && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin && !onehitwonder){
             gromit.relicArm.relicArmMotor.setPower(-relicspeed);
             }
 
-        else {
+        else if (!onehitwonder){
             gromit.relicArm.relicArmMotor.setPower(0.0);
         }
 
+        ///ONE BUTTON RELIC RECOVERY
+        if (gamepad2.right_stick_button) {
+            if (rightbtn2IsReleased) {//IF CHANGE IN STATE
+                rightbtn2IsReleased = false;
+                onehitwonder = true;
+                gromit.relicArm.relicArmMotor.setPower(0.8);
 
+                //Begin ELbow move
+                movetime = 1000;
+                elbowmoving = true;
+                elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
+                elbowstarttime = runtime.milliseconds();//Start time
+                elbowtarget = gromit.relicArm.elbowup+.09;
+                elbowtotalmove = elbowtarget - elbowstartpos;
+            }
+        } else {
+            rightbtn2IsReleased = true;
+        }
+        if(onehitwonder){
+           if(gromit.relicArm.relicArmMotor.getCurrentPosition()> 4900 && out){
+               gromit.relicArm.relicArmMotor.setPower(0.0);
+               out = false;
+               gromit.relicArm.clawOpen();
+               while( gromit.relicArm.relicClawServo.getPosition() > 0.45){
+               }
+               gromit.relicArm.relicArmMotor.setPower(-0.7);
+               movetime = 700;
+               elbowmoving = true;
+               elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
+               elbowstarttime = runtime.milliseconds();//Start time
+               elbowtarget = gromit.relicArm.elbowtop;
+               elbowtotalmove = elbowtarget - elbowstartpos;
+           }
+           else if(gromit.relicArm.relicArmMotor.getCurrentPosition()< 300 && !out){
+               gromit.relicArm.relicArmMotor.setPower(0.0);
+               out = true;
+               onehitwonder = false;
+           }
+        }
         //Telemetry
         //telemetry.addLine("Time Left: " + timeLeft);
         //telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);

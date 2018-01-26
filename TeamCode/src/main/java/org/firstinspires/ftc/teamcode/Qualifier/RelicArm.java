@@ -26,7 +26,7 @@ public class RelicArm {
         //jawOpen();
         //jawClosed();
 
-        relicClawServo.setPosition(0.4);//For tucket into the robot
+        relicClawServo.setPosition(0.45);//For tucket into the robot
         relicElbowServo.setPosition(0.0);
 
         relicArmMotor = hardwareMap.get(DcMotor.class, "relic_arm");
@@ -36,7 +36,7 @@ public class RelicArm {
     }
 
     public void clawOpen() {
-        relicClawServo.setPosition(0.5);
+        relicClawServo.setPosition(0.45);
     }
 
     public void clawClose() {
