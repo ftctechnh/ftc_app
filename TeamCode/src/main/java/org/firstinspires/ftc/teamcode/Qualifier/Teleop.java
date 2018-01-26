@@ -447,12 +447,6 @@ public class Teleop extends OpMode {
 
     }
 
-    public void wait(int mSeconds){
-        double startTime =  runtime.milliseconds();
-        while ( runtime.milliseconds() < startTime + mSeconds ){
-
-        }
-    }
 
     /**
      * This method puts the current thread to sleep for the given time in msec.
